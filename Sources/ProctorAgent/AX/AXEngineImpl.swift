@@ -73,7 +73,11 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
         // Chromium and Electron expose nothing until a client sets
         // AXManualAccessibility on the application element, and the first walk
         // after setting it usually still comes back empty.
-        if treeLooksEmpty(windows, log: log), CGWindowIndex.hasVisibleWindows(pid: appPid) {
+        let chromium = isChromiumBased(app)
+        let needsFlag = chromium
+            || treeLooksEmpty(windows, log: log)
+            || treeLooksLikeAnUnexposedShell(windows, log: log)
+        if needsFlag, CGWindowIndex.hasVisibleWindows(pid: appPid) {
             session.manualAccessibilityApplied =
                 AXWrite.set(element, AXAttr.manualAccessibility, kCFBooleanTrue).isSuccess
             session.enhancedUserInterfaceApplied =
@@ -83,7 +87,8 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
                 usleep(250_000)
                 walks = attempt
                 windows = AXRead.elements(element, kAXWindowsAttribute, log: log)
-                if !treeLooksEmpty(windows, log: log) { break }
+                if !treeLooksEmpty(windows, log: log),
+                   !treeLooksLikeAnUnexposedShell(windows, log: log) { break }
             }
         }
         session.warmupWalks = walks
@@ -334,6 +339,49 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
     private func treeLooksEmpty(_ windows: [AXUIElement], log: UnsupportedLog) -> Bool {
         guard let first = windows.first else { return true }
         return AXRead.elements(first, kAXChildrenAttribute, log: log).isEmpty
+    }
+
+    /// A Chromium window with accessibility off is not empty — it is a native
+    /// shell. Slack presents a window with a title bar, three traffic-light
+    /// buttons and a handful of groups, and none of the actual interface. An
+    /// emptiness test passes it and the flag never gets set, so the shallowness
+    /// is measured against the window's size instead: a 1710-point-wide window
+    /// with a dozen nodes in it is not a window that has been exposed.
+    private func treeLooksLikeAnUnexposedShell(_ windows: [AXUIElement],
+                                               log: UnsupportedLog) -> Bool {
+        guard let first = windows.first else { return false }
+        guard let frame = AXRead.frame(first, log: log), frame.w > 400, frame.h > 300
+        else { return false }
+        return countDescendants(first, limit: 40, log: log) < 40
+    }
+
+    private func countDescendants(_ element: AXUIElement, limit: Int,
+                                  log: UnsupportedLog) -> Int {
+        var seen = 0
+        var stack = [element]
+        while let next = stack.popLast(), seen < limit {
+            seen += 1
+            stack.append(contentsOf: AXRead.elements(next, kAXChildrenAttribute, log: log))
+        }
+        return seen
+    }
+
+    /// Chromium-based apps are identified from the bundle rather than inferred
+    /// from the tree, because the tree is exactly what is missing before the
+    /// flag is set.
+    private func isChromiumBased(_ app: NSRunningApplication) -> Bool {
+        guard let url = app.bundleURL else { return false }
+        let frameworks = url.appendingPathComponent("Contents/Frameworks")
+        let fm = FileManager.default
+        for name in ["Electron Framework.framework", "Chromium Framework.framework"] {
+            if fm.fileExists(atPath: frameworks.appendingPathComponent(name).path) { return true }
+        }
+        // Chrome and Edge name their framework after the product.
+        if let entries = try? fm.contentsOfDirectory(atPath: frameworks.path) {
+            return entries.contains { $0.hasSuffix("Framework.framework")
+                && ($0.contains("Chrom") || $0.contains("Edge") || $0.contains("Brave")) }
+        }
+        return false
     }
 
     private func resolve(bundleId: String?, pid: Int32?, name: String?) throws -> NSRunningApplication {
