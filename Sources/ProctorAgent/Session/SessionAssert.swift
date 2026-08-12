@@ -310,9 +310,13 @@ extension Session {
                            reason: "fewer than two focusable nodes with a frame were found, so there "
                                  + "is no order to check")
         }
+        // Rows are quantised rather than compared with a tolerance: a tolerance
+        // comparison is not transitive, so it is not a valid sort ordering and
+        // the result would depend on the input order.
         let visual = focusable.enumerated().sorted { a, b in
             let fa = a.element.frame!, fb = b.element.frame!
-            if abs(fa.y - fb.y) > tolerance { return fa.y < fb.y }
+            let rowA = (fa.y / tolerance).rounded(.down), rowB = (fb.y / tolerance).rounded(.down)
+            if rowA != rowB { return rowA < rowB }
             if fa.x != fb.x { return fa.x < fb.x }
             return a.offset < b.offset
         }

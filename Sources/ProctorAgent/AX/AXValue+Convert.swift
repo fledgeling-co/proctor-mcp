@@ -142,6 +142,23 @@ enum AXRead {
         return list
     }
 
+    /// Roles that can plausibly hold a writable value. Probing settability costs
+    /// one IPC round trip per attribute per element, so probing every node in a
+    /// 2000-node tree is tens of thousands of round trips and takes tens of
+    /// seconds. Restricting it to the roles a test would ever write to, plus any
+    /// node that offers an action, keeps a full walk to a handful of probes.
+    static let valueBearingRoles: Set<String> = [
+        "AXTextField", "AXTextArea", "AXStaticText", "AXComboBox", "AXSlider",
+        "AXIncrementor", "AXStepper", "AXCheckBox", "AXRadioButton", "AXPopUpButton",
+        "AXMenuButton", "AXScrollBar", "AXValueIndicator", "AXProgressIndicator",
+        "AXSearchField", "AXSecureTextField", "AXDisclosureTriangle", "AXSwitch",
+        "AXWindow", "AXCell", "AXRow", "AXOutline", "AXTable", "AXList",
+    ]
+
+    static func shouldProbeSettability(role: String, hasActions: Bool) -> Bool {
+        hasActions || valueBearingRoles.contains(role)
+    }
+
     static func settableAttributes(_ element: AXUIElement, from names: [String]) -> [String] {
         var out: [String] = []
         for name in names where !axStructuralAttributes.contains(name) {
@@ -276,5 +293,62 @@ extension AXError {
         default:
             return AgentError(code: .actionFailed, message: "\(context): \(shortName)")
         }
+    }
+}
+
+// MARK: - Batched reads
+
+extension AXRead {
+    /// One round trip for many attributes instead of one per attribute.
+    ///
+    /// A tree walk is dominated by IPC, not by parsing: reading fifteen
+    /// attributes on two thousand nodes one at a time is thirty thousand
+    /// synchronous round trips to the target process, and a target whose own
+    /// accessibility implementation slows down under load makes that worse than
+    /// linear. `AXUIElementCopyMultipleAttributeValues` asks once.
+    ///
+    /// `.stopOnError` is deliberately not passed: an element that does not
+    /// support one attribute in the list still answers for the rest, and the
+    /// unsupported ones come back as AXValue error placeholders.
+    static func multiple(_ element: AXUIElement, _ names: [String]) -> [String: CFTypeRef] {
+        var values: CFArray?
+        let err = AXUIElementCopyMultipleAttributeValues(
+            element, names as CFArray, AXCopyMultipleAttributeOptions(), &values)
+        guard err == .success, let array = values as? [CFTypeRef],
+              array.count == names.count else { return [:] }
+
+        var out: [String: CFTypeRef] = [:]
+        out.reserveCapacity(names.count)
+        for (name, value) in zip(names, array) {
+            // An unsupported attribute arrives as an AXValue wrapping an
+            // AXError. Keeping it would turn "this element has no title" into a
+            // title, so it is dropped rather than stored.
+            if CFGetTypeID(value) == AXValueGetTypeID(),
+               AXValueGetType(value as! AXValue) == .axError { continue }
+            if CFGetTypeID(value) == CFNullGetTypeID() { continue }
+            out[name] = value
+        }
+        return out
+    }
+
+    static func string(_ box: [String: CFTypeRef], _ name: String) -> String? {
+        guard let v = box[name], CFGetTypeID(v) == CFStringGetTypeID() else { return nil }
+        let s = v as! String
+        return s.isEmpty ? nil : s
+    }
+
+    static func bool(_ box: [String: CFTypeRef], _ name: String) -> Bool? {
+        guard let v = box[name], CFGetTypeID(v) == CFBooleanGetTypeID() else { return nil }
+        return CFBooleanGetValue((v as! CFBoolean))
+    }
+
+    static func rect(_ box: [String: CFTypeRef],
+                     position: String, size: String) -> Rect? {
+        guard let p = box[position], CFGetTypeID(p) == AXValueGetTypeID(),
+              let s = box[size], CFGetTypeID(s) == AXValueGetTypeID() else { return nil }
+        var origin = CGPoint.zero, extent = CGSize.zero
+        guard AXValueGetValue(p as! AXValue, .cgPoint, &origin),
+              AXValueGetValue(s as! AXValue, .cgSize, &extent) else { return nil }
+        return Rect(x: origin.x, y: origin.y, w: extent.width, h: extent.height)
     }
 }

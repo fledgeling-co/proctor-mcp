@@ -88,7 +88,7 @@ public enum ToolCatalogue {
                 "window": .object(["type": .string("string"), "description": .string("Window handle from proctor_apps.")]),
                 "sinceRevision": .object(["type": .string("integer"), "description": .string("Return a diff from this revision instead of the whole tree.")]),
                 "maxDepth": .object(["type": .string("integer"), "description": .string("Depth limit. Defaults to 24; truncation is reported in provenance.")]),
-                "maxNodes": .object(["type": .string("integer"), "description": .string("Node budget. Defaults to 2000; truncation is reported in provenance.")]),
+                "maxNodes": .object(["type": .string("integer"), "description": .string("Node budget. Defaults to 600. A walk is also bounded by wall clock, because some applications answer each element more slowly the deeper into a large list you go — a wide icon-view list can cost tens of seconds where an ordinary window costs milliseconds. Both kinds of truncation are reported in provenance rather than passed off as a whole tree.")]),
                 "includeInvisible": .object(["type": .string("boolean"), "description": .string("Keep zero-area and offscreen nodes. Defaults to false for reading, true when auditing.")]),
                 "root": .object(["type": .string("string"), "description": .string("Walk from this node id instead of the window root.")])
             ]),

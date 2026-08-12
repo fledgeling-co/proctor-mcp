@@ -51,7 +51,11 @@ actor Session {
     struct SnapshotOptions: Sendable {
         var root: String?
         var maxDepth: Int = 24
-        var maxNodes: Int = 2000
+        // 2000 returns promptly on an ordinary window and takes tens of seconds
+        // on a large icon-view list, where the target's own accessibility
+        // implementation is the cost. 600 covers the windows a test actually
+        // drives; raise it deliberately when a wide tree is the subject.
+        var maxNodes: Int = 600
         var includeInvisible: Bool = false
     }
 

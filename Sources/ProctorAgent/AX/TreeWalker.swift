@@ -15,6 +15,12 @@ final class TreeWalker {
     struct Budget {
         var maxDepth: Int
         var maxNodes: Int
+        /// Wall-clock ceiling. A node budget alone does not bound a walk: some
+        /// applications answer each element more slowly the deeper into a large
+        /// list you go, so a budget that returns in a moment on one window takes
+        /// half a minute on another. The deadline makes a walk always return,
+        /// and the truncation is reported rather than passed off as a whole tree.
+        var maxMs: Int = 6000
         var includeInvisible: Bool
     }
 
@@ -25,12 +31,23 @@ final class TreeWalker {
     private(set) var refs: [String: NodeRef] = [:]
     private(set) var truncatedAtDepth: Int?
     private(set) var truncatedAtCount: Int?
+    private(set) var truncatedByDeadline = false
     private var emitted = 0
+    private var deadline = Date.distantFuture
 
     init(windowId: String, budget: Budget) {
         self.windowId = windowId
         self.budget = budget
     }
+
+    /// Read in a single batch per node. Order is irrelevant; membership is not —
+    /// an attribute missing here is a field that will always come back nil.
+    static let nodeAttributes: [String] = [
+        kAXSubroleAttribute, kAXRoleDescriptionAttribute, kAXTitleAttribute,
+        kAXDescriptionAttribute, kAXValueAttribute, kAXHelpAttribute,
+        kAXIdentifierAttribute, kAXPositionAttribute, kAXSizeAttribute,
+        kAXEnabledAttribute, kAXFocusedAttribute, kAXSelectedAttribute,
+    ]
 
     static func nodeId(window: String, path: String) -> String {
         "nd:" + Canonical.hash("\(window)|\(path)").prefix(16)
@@ -39,6 +56,7 @@ final class TreeWalker {
     func walk(root: AXUIElement, rootPath: String? = nil) -> AXNode {
         let role = AXRead.string(root, kAXRoleAttribute, log: log) ?? "AXUnknown"
         let path = rootPath ?? role
+        deadline = Date().addingTimeInterval(Double(max(budget.maxMs, 250)) / 1000)
         return build(root, path: path, depth: 0, forcedRole: role)
     }
 
@@ -51,25 +69,31 @@ final class TreeWalker {
         refs[id] = NodeRef(element: element, window: windowId, path: path)
         emitted += 1
 
-        let attributeNames = AXRead.attributeNames(element)
         let actions = AXRead.actions(element)
+
+        // One round trip for the whole node instead of twelve. A walk is
+        // dominated by IPC, and a target whose accessibility implementation
+        // degrades under load makes per-attribute reads worse than linear.
+        let box = AXRead.multiple(element, Self.nodeAttributes)
 
         var node = AXNode(
             id: id,
             role: role,
-            subrole: AXRead.string(element, kAXSubroleAttribute, log: log),
-            roleDescription: AXRead.string(element, kAXRoleDescriptionAttribute, log: log),
-            title: AXRead.string(element, kAXTitleAttribute, log: log),
-            label: AXRead.string(element, kAXDescriptionAttribute, log: log),
-            value: AXRead.value(element, log: log),
-            help: AXRead.string(element, kAXHelpAttribute, log: log),
-            identifier: AXRead.string(element, kAXIdentifierAttribute, log: log),
-            frame: AXRead.frame(element, log: log),
-            enabled: AXRead.bool(element, kAXEnabledAttribute, log: log),
-            focused: AXRead.bool(element, kAXFocusedAttribute, log: log),
-            selected: AXRead.bool(element, kAXSelectedAttribute, log: log),
+            subrole: AXRead.string(box, kAXSubroleAttribute),
+            roleDescription: AXRead.string(box, kAXRoleDescriptionAttribute),
+            title: AXRead.string(box, kAXTitleAttribute),
+            label: AXRead.string(box, kAXDescriptionAttribute),
+            value: box[kAXValueAttribute].map { AXRead.json($0) },
+            help: AXRead.string(box, kAXHelpAttribute),
+            identifier: AXRead.string(box, kAXIdentifierAttribute),
+            frame: AXRead.rect(box, position: kAXPositionAttribute, size: kAXSizeAttribute),
+            enabled: AXRead.bool(box, kAXEnabledAttribute),
+            focused: AXRead.bool(box, kAXFocusedAttribute),
+            selected: AXRead.bool(box, kAXSelectedAttribute),
             actions: actions,
-            writableAttributes: AXRead.settableAttributes(element, from: attributeNames),
+            writableAttributes: AXRead.shouldProbeSettability(role: role, hasActions: !actions.isEmpty)
+                ? AXRead.settableAttributes(element, from: AXRead.attributeNames(element))
+                : [],
             children: nil,
             childCount: 0
         )
@@ -86,6 +110,11 @@ final class TreeWalker {
         var counts: [String: Int] = [:]
         var kids: [AXNode] = []
         for child in children {
+            if Date() >= deadline {
+                truncatedByDeadline = true
+                truncatedAtCount = emitted
+                break
+            }
             if emitted >= budget.maxNodes {
                 truncatedAtCount = budget.maxNodes
                 break
