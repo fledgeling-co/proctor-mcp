@@ -1,0 +1,322 @@
+import Foundation
+import ProctorCore
+
+// Actuation and waiting.
+
+extension Session {
+
+    /// The step kinds that can only travel through CGEventPost. They enter the
+    /// single WindowServer event stream, so they need the target foreground and
+    /// they are what Secure Event Input blocks.
+    static let syntheticKinds: Set<ActionStep.Kind> = [.dragPath, .hover, .click, .key]
+
+    struct StepRun: Sendable {
+        var results: [StepResult] = []
+        var captures: [JSONValue] = []
+        var failedAt: Int?
+        var completed: Int = 0
+        var finalHash: String?
+        var hashes: [String] = []
+    }
+
+    // MARK: - proctor_act
+
+    func act(window id: String, steps: [ActionStep], settle: SettlePolicy, foreground: Bool,
+             captureEach: Bool, diffEach: Bool, record: String?) async throws -> JSONValue {
+        let window = try windowHandle(id)
+        loadFlowsIfNeeded()
+
+        let target = record ?? recording
+        let run = await runSteps(steps, window: window, settle: settle, foreground: foreground,
+                                 captureEach: captureEach, diffEach: diffEach)
+
+        if let target {
+            try appendToFlow(named: target, window: window, run: run, steps: steps)
+        }
+
+        let result = ActResult(window: id, steps: run.results, completed: run.completed,
+                               failedAt: run.failedAt, finalHash: run.finalHash)
+        var out = try JSONValue.encode(result).objectValue ?? [:]
+        // StepResult has no slot for a capture, so per-step frames are returned
+        // alongside the step list rather than dropped.
+        if captureEach { out["captures"] = .array(run.captures) }
+        if let target { out["recordedInto"] = .string(target) }
+        return .object(out)
+    }
+
+    /// One code path for act, flow replay and stability, so a step behaves
+    /// identically however it was reached.
+    func runSteps(_ steps: [ActionStep], window: WindowHandle, settle: SettlePolicy,
+                  foreground: Bool, captureEach: Bool, diffEach: Bool) async -> StepRun {
+        var run = StepRun()
+        let app = appHandle(forWindow: window)
+
+        for (index, step) in steps.enumerated() {
+            let started = DispatchTime.now().uptimeNanoseconds
+            func elapsed() -> Int {
+                Int((DispatchTime.now().uptimeNanoseconds &- started) / 1_000_000)
+            }
+
+            if let refusal = Self.refusal(for: step, foreground: foreground) {
+                run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
+                                              error: refusal, settle: nil, stateHash: nil,
+                                              diff: nil, elapsedMs: elapsed()))
+                run.failedAt = index
+                break
+            }
+
+            let plane: ActuationPlane
+            do {
+                plane = try ax.perform(step: step, window: window.id, foreground: foreground)
+            } catch let error as AgentError {
+                run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
+                                              error: error, settle: nil, stateHash: nil,
+                                              diff: nil, elapsedMs: elapsed()))
+                run.failedAt = index
+                break
+            } catch {
+                let wrapped = AgentError(code: .actionFailed,
+                                         message: "\(step.kind.rawValue) failed: \(error)",
+                                         remedy: nil)
+                run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
+                                              error: wrapped, settle: nil, stateHash: nil,
+                                              diff: nil, elapsedMs: elapsed()))
+                run.failedAt = index
+                break
+            }
+
+            let policy = step.settle ?? settle
+            let report = await settleNow(window: window, pid: app?.pid, policy: policy)
+
+            var stateHash: String?
+            var diff: SnapshotDiff?
+            var postStateError: AgentError?
+            do {
+                let outcome = try walk(window: window.id)
+                stateHash = outcome.hash
+                if diffEach {
+                    diff = SnapshotDiffer.diff(from: outcome.previous?.node, to: outcome.root,
+                                               fromRevision: outcome.previous?.revision ?? 0)
+                }
+            } catch let error as AgentError {
+                postStateError = error
+            } catch {
+                postStateError = AgentError(code: .internalError,
+                                            message: "reading the post-state failed: \(error)")
+            }
+
+            // The action succeeded even when the post-state read did not — a
+            // `close` step ends with no window to walk. Conflating the two would
+            // report a working step as a failure, so the step stays ok and the
+            // read failure is carried alongside it.
+            run.results.append(StepResult(index: index, step: step, ok: true, plane: plane,
+                                          error: postStateError, settle: report,
+                                          stateHash: stateHash, diff: diff,
+                                          elapsedMs: elapsed()))
+            run.completed += 1
+            if let stateHash {
+                run.finalHash = stateHash
+                run.hashes.append(stateHash)
+            }
+
+            if captureEach {
+                run.captures.append(await captureForStep(index: index, window: window))
+            }
+        }
+        return run
+    }
+
+    /// The AX signal is supplied per settle rather than held on the session:
+    /// each wait counts notifications from the action that started it, so a
+    /// tracker created here starts its clock in the right place.
+    func settleNow(window: WindowHandle, pid: Int32?, policy: SettlePolicy) async -> SettleReport {
+        let tracker = AXQuietTracker(ax: ax, app: window.app)
+        let reflector = self.reflector
+        return await settler.settle(
+            window: window,
+            policy: policy,
+            axQuiet: { tracker.sample() },
+            reflectorIdle: { pid.flatMap { reflector.isIdle(pid: $0) } })
+    }
+
+    private func captureForStep(index: Int, window: WindowHandle) async -> JSONValue {
+        do {
+            let frame = try await capture.capture(window: window, to: nil, waitForComplete: true,
+                                                  timeoutMs: 3000, scale: nil, tileHashes: false,
+                                                  includeCursor: false)
+            return .object(["step": .number(Double(index)),
+                            "capture": (try? JSONValue.encode(frame)) ?? .null])
+        } catch let error as AgentError {
+            return .object(["step": .number(Double(index)),
+                            "error": (try? JSONValue.encode(error)) ?? .string(error.message)])
+        } catch {
+            return .object(["step": .number(Double(index)), "error": .string("\(error)")])
+        }
+    }
+
+    /// Refuse a synthetic-event step rather than quietly satisfying it. Both
+    /// refusals exist because the silent alternative — activating the app, or
+    /// posting an event that Secure Event Input swallows — produces a result
+    /// that looks background-safe or successful and is neither.
+    static func refusal(for step: ActionStep, foreground: Bool) -> AgentError? {
+        guard syntheticKinds.contains(step.kind) else { return nil }
+
+        // The foreground contradiction is checked first: it is a property of
+        // the request, fixable by the caller, where Secure Event Input is a
+        // property of the machine at this instant. Reporting the machine state
+        // as the reason for a malformed request sends the caller after the
+        // wrong thing.
+        if !foreground {
+            return AgentError(
+                code: .invalidArguments,
+                message: "step kind \(step.kind.rawValue) is injected as a synthetic event, which "
+                       + "requires the target application to be frontmost, but foreground is false",
+                remedy: "Set foreground: true for this batch, or express the step through the "
+                      + "accessibility plane instead — press, setValue, focus, menu or type all reach "
+                      + "background and other-Space windows without stealing focus.")
+        }
+        if Grants.secureEventInputActive() {
+            return AgentError(
+                code: .secureInputActive,
+                message: "Secure Event Input is active, so a synthetic \(step.kind.rawValue) event "
+                       + "cannot be delivered",
+                remedy: "Secure Event Input blocks event injection but not the accessibility plane. "
+                      + "An equivalent press or setValue step will work now. Otherwise close whatever "
+                      + "holds secure input — a focused password field, or a terminal in secure "
+                      + "keyboard entry mode — and retry.")
+        }
+        return nil
+    }
+
+    // MARK: - proctor_wait
+
+    func wait(window id: String, condition: String, node: String?, find: FindPredicate?,
+              value: JSONValue?, region: [Double]?, timeoutMs: Int,
+              pollMs: Int) async throws -> JSONValue {
+        let window = try windowHandle(id)
+        let started = DispatchTime.now().uptimeNanoseconds
+        let deadline = started &+ UInt64(max(timeoutMs, 0)) &* 1_000_000
+        var notes: [String] = []
+        var polls = 0
+
+        var watch: (any QuietWatch)?
+        if condition == "regionQuiet" {
+            watch = try? await capture.beginQuietWatch(window: window)
+            if watch == nil {
+                throw AgentError(
+                    code: .captureFailed,
+                    message: "regionQuiet needs a capture stream on \(id) and one could not be started",
+                    remedy: "Confirm the Screen Recording grant with proctor_doctor.")
+            }
+            if region != nil {
+                notes.append("The capture stream reports dirty area for the whole window, not per "
+                           + "region, so the supplied region was not applied; quiet here means the "
+                           + "window was quiet.")
+            }
+        }
+        defer { watch?.stop() }
+
+        var observed: JSONValue = .null
+        var held = false
+        var quietFrames = 0
+
+        while true {
+            polls += 1
+            let (result, sample) = evaluateWaitCondition(condition, window: id, node: node,
+                                                         find: find, value: value, watch: watch,
+                                                         quietFrames: &quietFrames)
+            observed = sample
+            if result {
+                held = true
+                break
+            }
+            if DispatchTime.now().uptimeNanoseconds >= deadline { break }
+            try? await Task.sleep(nanoseconds: UInt64(max(pollMs, 10)) * 1_000_000)
+        }
+
+        let elapsedMs = Int((DispatchTime.now().uptimeNanoseconds &- started) / 1_000_000)
+        var out: [String: JSONValue] = [
+            "window": .string(id),
+            "condition": .string(condition),
+            "ok": .bool(held),
+            "timedOut": .bool(!held),
+            "elapsedMs": .number(Double(elapsedMs)),
+            "polls": .number(Double(polls)),
+            "observed": observed
+        ]
+        if let outcome = try? walk(window: id) {
+            out["revision"] = .number(Double(outcome.revision))
+            out["stateHash"] = .string(outcome.hash)
+        }
+        if !notes.isEmpty { out["notes"] = .array(notes.map { .string($0) }) }
+        return .object(out)
+    }
+
+    private func evaluateWaitCondition(_ condition: String, window id: String, node: String?,
+                                       find: FindPredicate?, value: JSONValue?,
+                                       watch: (any QuietWatch)?,
+                                       quietFrames: inout Int) -> (Bool, JSONValue) {
+        switch condition {
+        case "nodeExists", "nodeGone":
+            let found = resolveNode(window: id, node: node, find: find)
+            let exists = found != nil
+            return (condition == "nodeExists" ? exists : !exists,
+                    found?.summary ?? .object(["found": .bool(false)]))
+
+        case "valueEquals", "valueContains":
+            guard let found = resolveNode(window: id, node: node, find: find) else {
+                return (false, .object(["found": .bool(false)]))
+            }
+            let observed = found.value
+            let hit = condition == "valueEquals"
+                ? JSONText.equal(observed, value)
+                : JSONText.describe(observed).contains(JSONText.describe(value))
+            return (hit, .object(["node": .string(found.id), "value": observed ?? .null]))
+
+        case "enabled", "focused":
+            guard let found = resolveNode(window: id, node: node, find: find) else {
+                return (false, .object(["found": .bool(false)]))
+            }
+            let flag = condition == "enabled" ? found.enabled : found.focused
+            return (flag == true, .object(["node": .string(found.id),
+                                           condition: flag.map(JSONValue.bool) ?? .null]))
+
+        case "regionQuiet":
+            guard let watch else { return (false, .null) }
+            let sample = watch.poll()
+            if sample.dirtyArea <= SettlePolicy.default.dirtyThreshold {
+                quietFrames += 1
+            } else {
+                quietFrames = 0
+            }
+            return (quietFrames >= SettlePolicy.default.quietFrames,
+                    .object(["dirtyArea": .number(sample.dirtyArea),
+                             "status": .string(sample.status.rawValue),
+                             "quietFrames": .number(Double(quietFrames)),
+                             "frames": .number(Double(sample.frames))]))
+
+        case "reflectorIdle":
+            guard let window = windowsByIDLookup(id), let app = appHandle(forWindow: window),
+                  let idle = reflector.isIdle(pid: app.pid) else {
+                return (false, .object(["reflector": .string("unavailable")]))
+            }
+            return (idle, .object(["idle": .bool(idle)]))
+
+        default:
+            return (false, .object(["error": .string("unknown condition \(condition)")]))
+        }
+    }
+
+    private func windowsByIDLookup(_ id: String) -> WindowHandle? { try? windowHandle(id) }
+
+    /// Resolve a subject either by node id or by predicate. A predicate is what
+    /// a caller has before the element exists, which is exactly the case a wait
+    /// is for.
+    func resolveNode(window id: String, node: String?, find: FindPredicate?) -> AXNode? {
+        if let node, let resolved = try? ax.node(id: node) { return resolved }
+        if let find, !find.isEmpty {
+            return (try? ax.find(window: id, predicate: find, limit: 1))?.first
+        }
+        return nil
+    }
+}

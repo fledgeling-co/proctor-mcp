@@ -1,0 +1,31 @@
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Build products
+# Proctor.icns is generated from source art by the icon pipeline; the .iconset
+# and the compiled .icns are both build products. Commit the source art, not these.
+*.icns
+*.iconset/
+Proctor.app/
+*.zip
+
+# Local agent state — flows, sockets, logs. Machine-specific, never shared.
+flows/
+logs/
+*.log
+*.sock
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes

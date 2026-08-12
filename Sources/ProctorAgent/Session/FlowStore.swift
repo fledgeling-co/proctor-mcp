@@ -1,0 +1,108 @@
+import Foundation
+import ProctorCore
+
+/// A recorded flow: the steps, the selector each step resolved through, and the
+/// per-step canonical hashes from the recording run. Replay compares against
+/// those hashes, so a divergent replay says where and how rather than only that
+/// it failed.
+struct RecordedFlow: Codable, Sendable {
+    var name: String
+    var description: String?
+    var window: String?
+    var app: String?
+    var appBundleId: String?
+    var createdAt: Double
+    var updatedAt: Double
+    var steps: [RecordedStep]
+
+    init(name: String, description: String? = nil, window: String? = nil,
+         app: String? = nil, appBundleId: String? = nil,
+         createdAt: Double = Date().timeIntervalSince1970,
+         updatedAt: Double = Date().timeIntervalSince1970,
+         steps: [RecordedStep] = []) {
+        self.name = name; self.description = description; self.window = window
+        self.app = app; self.appBundleId = appBundleId
+        self.createdAt = createdAt; self.updatedAt = updatedAt; self.steps = steps
+    }
+}
+
+struct RecordedStep: Codable, Sendable {
+    var step: ActionStep
+    /// How the step's node was identified at record time — role, identifier,
+    /// title. A raw node id does not survive the app relaunching; this does.
+    var selector: JSONValue?
+    var plane: ActuationPlane?
+    var stateHash: String?
+    var settleReason: SettleReport.Reason?
+
+    init(step: ActionStep, selector: JSONValue? = nil, plane: ActuationPlane? = nil,
+         stateHash: String? = nil, settleReason: SettleReport.Reason? = nil) {
+        self.step = step; self.selector = selector; self.plane = plane
+        self.stateHash = stateHash; self.settleReason = settleReason
+    }
+}
+
+/// Flows live on disk so a campaign survives the MCP host restarting.
+enum FlowStore {
+
+    static var directory: URL {
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        return home.appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)/flows",
+                                           isDirectory: true)
+    }
+
+    /// A flow name becomes a filename, so it is validated rather than escaped.
+    /// Escaping invites two names collapsing onto one file.
+    static func sanitised(_ name: String) throws -> String {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let allowed = CharacterSet(charactersIn:
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ._-")
+        guard !trimmed.isEmpty,
+              trimmed != ".", trimmed != "..",
+              !trimmed.hasPrefix("."),
+              trimmed.unicodeScalars.allSatisfy({ allowed.contains($0) }) else {
+            throw AgentError(
+                code: .invalidArguments,
+                message: "flow name \(name.debugDescription) is not usable as a filename",
+                remedy: "Use letters, digits, spaces, dots, underscores and hyphens, not starting with a dot.")
+        }
+        return trimmed
+    }
+
+    static func url(for name: String) throws -> URL {
+        directory.appendingPathComponent("\(try sanitised(name)).json", isDirectory: false)
+    }
+
+    static func loadAll() -> [String: RecordedFlow] {
+        let fm = FileManager.default
+        guard let entries = try? fm.contentsOfDirectory(at: directory,
+                                                        includingPropertiesForKeys: nil) else {
+            return [:]
+        }
+        var out: [String: RecordedFlow] = [:]
+        let decoder = JSONDecoder()
+        for entry in entries where entry.pathExtension == "json" {
+            guard let data = try? Data(contentsOf: entry),
+                  let flow = try? decoder.decode(RecordedFlow.self, from: data) else { continue }
+            out[flow.name] = flow
+        }
+        return out
+    }
+
+    static func save(_ flow: RecordedFlow) throws {
+        let fm = FileManager.default
+        try fm.createDirectory(at: directory, withIntermediateDirectories: true,
+                               attributes: [.posixPermissions: 0o700])
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(flow)
+        try data.write(to: try url(for: flow.name), options: .atomic)
+    }
+
+    static func delete(_ name: String) throws -> Bool {
+        let target = try url(for: name)
+        guard FileManager.default.fileExists(atPath: target.path) else { return false }
+        try FileManager.default.removeItem(at: target)
+        return true
+    }
+}

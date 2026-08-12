@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Proctor.app — the privileged core, run as a launchd user agent.
+
+  This bundle exists so that macOS has a stable identity to attribute the
+  Accessibility and Screen Recording grants to. TCC walks up the process
+  ancestry to a responsible process; a bare helper spawned by an MCP host has
+  its grant attributed to the host, and one running from a temporary path
+  loses the responsibility chain altogether. A launchd user agent is its own
+  responsible process, so the grant attaches here and survives host changes
+  and upgrades. See docs/architecture.md.
+
+  NSAccessibilityUsageDescription is shown in the consent dialog.
+  NSScreenCaptureUsageDescription is carried for completeness and for
+  macOS 27 declarative App Settings; the current Screen Recording dialog
+  uses fixed system text and does not surface a purpose string.
+-->
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>proctor-agent</string>
+	<key>CFBundleIconFile</key>
+	<string>Proctor</string>
+	<key>CFBundleIdentifier</key>
+	<string>app.fledgeling.proctor</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Proctor</string>
+	<key>CFBundleDisplayName</key>
+	<string>Proctor</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>14.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Proctor is released under the MIT licence.</string>
+	<key>NSAccessibilityUsageDescription</key>
+	<string>Proctor reads the accessibility tree of the apps you ask it to test and performs actions on their controls, so a model can drive and verify your app.</string>
+	<key>NSScreenCaptureUsageDescription</key>
+	<string>Proctor captures images of the windows you ask it to test, so a model can check what your app actually rendered.</string>
+</dict>
+</plist>

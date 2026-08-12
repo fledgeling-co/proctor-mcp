@@ -1,0 +1,330 @@
+import Foundation
+import ProctorCore
+
+// Routing and argument decoding. The schemas in ToolCatalogue are the source of
+// truth for names and defaults; this file is where they are read.
+
+struct Dispatcher: Sendable {
+    let session: Session
+
+    func handle(_ request: AgentRequest) async -> AgentResponse {
+        do {
+            let result = try await route(request)
+            return AgentResponse(id: request.id, ok: true, result: result)
+        } catch let error as AgentError {
+            return AgentResponse(id: request.id, ok: false, error: error)
+        } catch let error as PixelCompare.Failure {
+            return AgentResponse(id: request.id, ok: false,
+                                 error: AgentError(code: .internalError, message: error.reason))
+        } catch {
+            return AgentResponse(id: request.id, ok: false,
+                                 error: AgentError(code: .internalError,
+                                                   message: "\(request.tool) failed: \(error)"))
+        }
+    }
+
+    private func route(_ request: AgentRequest) async throws -> JSONValue {
+        let args = Args(tool: request.tool, raw: request.arguments)
+        switch request.tool {
+        case "proctor_apps":      return try await apps(args)
+        case "proctor_snapshot":  return try await snapshot(args)
+        case "proctor_find":      return try await find(args)
+        case "proctor_act":       return try await act(args)
+        case "proctor_capture":   return try await capture(args)
+        case "proctor_wait":      return try await wait(args)
+        case "proctor_assert":    return try await assert(args)
+        case "proctor_flow":      return try await flow(args)
+        case "proctor_stability": return try await stability(args)
+        case "proctor_inspect":   return try await inspect(args)
+        case "proctor_doctor":    return try await doctor(args)
+        default:
+            throw AgentError(
+                code: .invalidArguments,
+                message: "unknown tool \(request.tool.debugDescription)",
+                remedy: "The agent serves: " + ToolCatalogue.all.map(\.name).joined(separator: ", "))
+        }
+    }
+
+    // MARK: - proctor_apps
+
+    private func apps(_ args: Args) async throws -> JSONValue {
+        switch try args.enumeration("action", of: ["list", "attach", "detach"]) {
+        case "list":
+            return try await session.listApps(includeWindowless: args.bool("includeWindowless", false))
+        case "attach":
+            return try await session.attach(bundleId: args.string("bundleId"),
+                                            pid: args.int("pid").map(Int32.init),
+                                            name: args.string("name"))
+        default:
+            return try await session.detach(app: try args.requiredString("app"))
+        }
+    }
+
+    // MARK: - proctor_snapshot
+
+    private func snapshot(_ args: Args) async throws -> JSONValue {
+        var options = Session.SnapshotOptions()
+        options.root = args.string("root")
+        options.maxDepth = args.int("maxDepth") ?? 24
+        options.maxNodes = args.int("maxNodes") ?? 2000
+        options.includeInvisible = args.bool("includeInvisible", false)
+        let result = try await session.snapshot(window: try args.requiredString("window"),
+                                                options: options,
+                                                sinceRevision: args.int("sinceRevision"))
+        return try JSONValue.encode(result)
+    }
+
+    // MARK: - proctor_find
+
+    private func find(_ args: Args) async throws -> JSONValue {
+        // The find arguments are flat on this tool and nested under `find` on
+        // wait and assert, so the same decoder serves both.
+        let predicate = FindPredicate(json: args.raw)
+        guard !predicate.isEmpty else {
+            throw AgentError(code: .invalidArguments,
+                             message: "proctor_find needs at least one condition",
+                             remedy: "Supply role, subrole, title, label, identifier, valueContains, "
+                                   + "enabled, focused or hasAction. Prefer identifier where the app "
+                                   + "sets accessibilityIdentifier.")
+        }
+        return try await session.find(window: try args.requiredString("window"),
+                                      predicate: predicate,
+                                      limit: args.int("limit") ?? 25)
+    }
+
+    // MARK: - proctor_act
+
+    private func act(_ args: Args) async throws -> JSONValue {
+        let raw = try args.array("steps")
+        guard !raw.isEmpty else {
+            throw AgentError(code: .invalidArguments, message: "proctor_act needs at least one step")
+        }
+        let settle = Args.settlePolicy(args.value("settle"), base: .default)
+        let steps = try raw.enumerated().map { try Args.step($1, at: $0, defaultSettle: settle) }
+
+        return try await session.act(window: try args.requiredString("window"),
+                                     steps: steps,
+                                     settle: settle,
+                                     foreground: args.bool("foreground", false),
+                                     captureEach: args.bool("captureEach", false),
+                                     diffEach: args.bool("diffEach", true),
+                                     record: args.string("record"))
+    }
+
+    // MARK: - proctor_capture
+
+    private func capture(_ args: Args) async throws -> JSONValue {
+        try await session.captureWindow(try args.requiredString("window"),
+                                        path: args.string("path"),
+                                        waitForComplete: args.bool("waitForComplete", true),
+                                        timeoutMs: args.int("timeoutMs") ?? 3000,
+                                        scale: args.double("scale"),
+                                        tileHashes: args.bool("tileHashes", false),
+                                        includeCursor: args.bool("includeCursor", false))
+    }
+
+    // MARK: - proctor_wait
+
+    private func wait(_ args: Args) async throws -> JSONValue {
+        let condition = try args.enumeration("condition", of: [
+            "nodeExists", "nodeGone", "valueEquals", "valueContains",
+            "enabled", "focused", "regionQuiet", "reflectorIdle"
+        ])
+        let find = args.value("find").map { FindPredicate(json: $0) }
+        let region = args.value("region")?.arrayValue?.compactMap(\.doubleValue)
+        return try await session.wait(window: try args.requiredString("window"),
+                                      condition: condition,
+                                      node: args.string("node"),
+                                      find: find,
+                                      value: args.value("value"),
+                                      region: region,
+                                      timeoutMs: args.int("timeoutMs") ?? 10000,
+                                      pollMs: args.int("pollMs") ?? 100)
+    }
+
+    // MARK: - proctor_assert
+
+    private func assert(_ args: Args) async throws -> JSONValue {
+        let assertions = try args.array("assertions")
+        guard !assertions.isEmpty else {
+            throw AgentError(code: .invalidArguments,
+                             message: "proctor_assert needs at least one assertion")
+        }
+        return try await session.assertAll(window: try args.requiredString("window"),
+                                           assertions: assertions,
+                                           captureEvidence: args.bool("captureEvidence", true))
+    }
+
+    // MARK: - proctor_flow
+
+    private func flow(_ args: Args) async throws -> JSONValue {
+        let action = try args.enumeration("action", of: ["start", "stop", "replay", "list",
+                                                         "show", "delete"])
+        switch action {
+        case "start":
+            return try await session.flowStart(name: try args.requiredString("name"),
+                                               window: args.string("window"),
+                                               description: args.string("description"))
+        case "stop":
+            return try await session.flowStop()
+        case "list":
+            return try await session.flowList()
+        case "show":
+            return try await session.flowShow(name: try args.requiredString("name"))
+        case "delete":
+            return try await session.flowDelete(name: try args.requiredString("name"))
+        default:
+            return try await session.flowReplay(
+                name: try args.requiredString("name"),
+                window: args.string("window"),
+                captureEach: args.bool("captureEach", false),
+                settle: Args.settlePolicy(args.value("settle"), base: .default))
+        }
+    }
+
+    // MARK: - proctor_stability
+
+    private func stability(_ args: Args) async throws -> JSONValue {
+        let report = try await session.stability(
+            flow: try args.requiredString("flow"),
+            runs: args.int("runs") ?? 5,
+            window: args.string("window"),
+            resetBetween: try Args.steps(args.value("resetBetween"), field: "resetBetween"),
+            includeTiles: args.bool("includeTiles", false))
+        return try JSONValue.encode(report)
+    }
+
+    // MARK: - proctor_inspect
+
+    private func inspect(_ args: Args) async throws -> JSONValue {
+        try await session.inspect(window: try args.requiredString("window"),
+                                  node: args.string("node"),
+                                  maxDepth: args.int("maxDepth") ?? 24,
+                                  includeConstraints: args.bool("includeConstraints", false),
+                                  presentation: args.bool("presentation", true))
+    }
+
+    // MARK: - proctor_doctor
+
+    private func doctor(_ args: Args) async throws -> JSONValue {
+        try JSONValue.encode(await session.doctor(verbose: args.bool("verbose", false)))
+    }
+}
+
+// MARK: - Arguments
+
+struct Args: Sendable {
+    let tool: String
+    let raw: JSONValue
+
+    func value(_ key: String) -> JSONValue? {
+        guard let value = raw[key], value != .null else { return nil }
+        return value
+    }
+
+    func string(_ key: String) -> String? { value(key)?.stringValue }
+    func int(_ key: String) -> Int? { value(key)?.intValue }
+    func double(_ key: String) -> Double? { value(key)?.doubleValue }
+    func bool(_ key: String, _ fallback: Bool) -> Bool { value(key)?.boolValue ?? fallback }
+
+    func requiredString(_ key: String) throws -> String {
+        guard let out = string(key), !out.isEmpty else {
+            throw AgentError(code: .invalidArguments,
+                             message: "\(tool) requires \(key)",
+                             remedy: hint(for: key))
+        }
+        return out
+    }
+
+    func enumeration(_ key: String, of allowed: [String]) throws -> String {
+        let value = try requiredString(key)
+        guard allowed.contains(value) else {
+            throw AgentError(code: .invalidArguments,
+                             message: "\(key) must be one of \(allowed.joined(separator: ", ")), "
+                                    + "not \(value.debugDescription)")
+        }
+        return value
+    }
+
+    func array(_ key: String) throws -> [JSONValue] {
+        guard let array = value(key)?.arrayValue else {
+            throw AgentError(code: .invalidArguments,
+                             message: "\(tool) requires \(key) as an array")
+        }
+        return array
+    }
+
+    private func hint(for key: String) -> String? {
+        switch key {
+        case "window": return "Window handles come from proctor_apps with action \"attach\"."
+        case "app": return "App handles come from proctor_apps."
+        case "flow", "name": return "Flow names come from proctor_flow with action \"list\"."
+        default: return nil
+        }
+    }
+
+    /// SettlePolicy has no defaults in its Codable conformance, so a partial
+    /// override cannot be decoded whole. Each field is merged over a base
+    /// instead, which is what a caller sending only `timeoutMs` means.
+    static func settlePolicy(_ value: JSONValue?, base: SettlePolicy) -> SettlePolicy {
+        guard let value, value.objectValue != nil else { return base }
+        return SettlePolicy(
+            quietFrames: value["quietFrames"]?.intValue ?? base.quietFrames,
+            dirtyThreshold: value["dirtyThreshold"]?.doubleValue ?? base.dirtyThreshold,
+            axQuietMs: value["axQuietMs"]?.intValue ?? base.axQuietMs,
+            timeoutMs: value["timeoutMs"]?.intValue ?? base.timeoutMs,
+            requireReflectorIdle: value["requireReflectorIdle"]?.boolValue ?? base.requireReflectorIdle)
+    }
+
+    static func step(_ value: JSONValue, at index: Int, defaultSettle: SettlePolicy) throws -> ActionStep {
+        // A bare string is accepted as shorthand for a step with only a kind.
+        let raw: JSONValue = value.stringValue.map { .object(["kind": .string($0)]) } ?? value
+        guard raw.objectValue != nil else {
+            throw AgentError(code: .invalidArguments, message: "step \(index) is not an object")
+        }
+        guard let kindName = raw["kind"]?.stringValue else {
+            throw AgentError(code: .invalidArguments, message: "step \(index) has no kind")
+        }
+        guard let kind = ActionStep.Kind(rawValue: kindName) else {
+            throw AgentError(
+                code: .invalidArguments,
+                message: "step \(index) has unknown kind \(kindName.debugDescription)",
+                remedy: "Known kinds: press, setValue, focus, menu, type, key, scroll, increment, "
+                      + "decrement, pick, confirm, cancel, raise, close, resize, move, dragPath, "
+                      + "hover, click, shortcut, appleScript, waitFor.")
+        }
+        let settleOverride = raw["settle"].flatMap { override -> SettlePolicy? in
+            override.objectValue == nil ? nil : settlePolicy(override, base: defaultSettle)
+        }
+        return ActionStep(
+            kind: kind,
+            node: raw["node"]?.stringValue,
+            value: raw["value"],
+            menuPath: raw["menuPath"]?.arrayValue?.compactMap(\.stringValue),
+            text: raw["text"]?.stringValue,
+            key: raw["key"]?.stringValue,
+            modifiers: raw["modifiers"]?.arrayValue?.compactMap(\.stringValue),
+            delta: raw["delta"]?.arrayValue?.compactMap(\.doubleValue),
+            point: raw["point"]?.arrayValue?.compactMap(\.doubleValue),
+            settle: settleOverride,
+            label: raw["label"]?.stringValue)
+    }
+
+    /// `resetBetween` is declared as an object in the schema but described as
+    /// steps, so both shapes are accepted: an array of steps, or an object with
+    /// a `steps` array.
+    static func steps(_ value: JSONValue?, field: String) throws -> [ActionStep] {
+        guard let value, value != .null else { return [] }
+        let list: [JSONValue]
+        if let array = value.arrayValue {
+            list = array
+        } else if let nested = value["steps"]?.arrayValue {
+            list = nested
+        } else {
+            throw AgentError(code: .invalidArguments,
+                             message: "\(field) must be an array of steps, or an object with a "
+                                    + "`steps` array")
+        }
+        return try list.enumerated().map { try step($1, at: $0, defaultSettle: .default) }
+    }
+}
