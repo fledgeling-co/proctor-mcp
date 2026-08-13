@@ -284,13 +284,15 @@ actor Session {
 
     func captureWindow(_ id: String, path: String?, waitForComplete: Bool, timeoutMs: Int,
                        scale: Double?, tileHashes: Bool, includeCursor: Bool,
+                       normalize: CaptureNormalizeOptions? = nil,
                        annotate: AnnotateOptions = AnnotateOptions()) async throws -> JSONValue {
         let window = try windowHandle(id)
         var result = try await capture.capture(window: window, to: path,
                                                waitForComplete: waitForComplete,
                                                timeoutMs: timeoutMs, scale: scale,
                                                tileHashes: tileHashes,
-                                               includeCursor: includeCursor)
+                                               includeCursor: includeCursor,
+                                               normalize: normalize)
         // Freshness metadata passes through untouched. Rewriting or defaulting
         // any of it would erase the only thing separating a stale frame from a
         // correct one. Annotation is layered on top: it reads the geometry the

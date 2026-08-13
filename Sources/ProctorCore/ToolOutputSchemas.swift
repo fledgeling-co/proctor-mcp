@@ -65,7 +65,8 @@ public extension ToolCatalogue {
                  "contentRect": p("object"), "dirtyRectCount": p("number"),
                  "dirtyArea": p("number"), "capturedAt": p("number"),
                  "framesWaited": p("number"), "trustworthy": p("boolean"),
-                 "caveat": p("string"), "tileHashes": p("array")]),
+                 "caveat": p("string"), "tileHashes": p("array"),
+                 "normalization": p("object")]),
 
             "proctor_wait": openObject(
                 "Whether a named condition held, and the state when it resolved.",

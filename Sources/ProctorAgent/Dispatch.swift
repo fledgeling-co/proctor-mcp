@@ -131,6 +131,12 @@ struct Dispatcher: Sendable {
         annotate.grid = args.bool("grid", false)
         annotate.gridSpacing = args.double("gridSpacing") ?? 100
         annotate.maxMarks = args.int("maxMarks") ?? SetOfMarks.defaultMaxMarks
+        var normalize: CaptureNormalizeOptions?
+        if args.bool("normalize", false) {
+            normalize = CaptureNormalizeOptions(
+                maxLongEdge: args.int("normalizeMaxLongEdge") ?? VisionCapture.defaultMaxLongEdge,
+                maxPixels: args.int("normalizeMaxPixels") ?? VisionCapture.defaultMaxPixels)
+        }
         return try await session.captureWindow(try args.requiredString("window"),
                                         path: args.string("path"),
                                         waitForComplete: args.bool("waitForComplete", true),
@@ -138,6 +144,7 @@ struct Dispatcher: Sendable {
                                         scale: args.double("scale"),
                                         tileHashes: args.bool("tileHashes", false),
                                         includeCursor: args.bool("includeCursor", false),
+                                        normalize: normalize,
                                         annotate: annotate)
     }
 

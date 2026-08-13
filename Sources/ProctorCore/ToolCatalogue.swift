@@ -248,6 +248,18 @@ public enum ToolCatalogue {
         unchanged, while the marked PNG is written alongside it and named in annotation.annotatedPath.
 
         The PNG is written to disk and the path returned. Bytes are never returned inline.
+
+        Set normalize to pre-scale the frame to the vision-API ceiling (~1568px long edge / \
+        ~1.15MP) before returning it, and report the exact scale factor applied under \
+        normalization. An oversized frame handed straight to a vision model is silently \
+        downsampled by the API, so any coordinate the model returns is in a different space \
+        from the pixels Proctor measured — drift that corrupts pixel-plane assertions and \
+        tri-observer geometry. Doing the scaling here, and reporting scale = out/in, keeps the \
+        coordinate round-trip exact: a caller maps a model coordinate back with native = \
+        normalised / scale. Normalisation only ever shrinks; a frame already within the \
+        ceilings comes back unchanged with scale 1 and applied false. Raw capture stays the \
+        default so pixel assertions keep native resolution when they want it. normalizeMaxLongEdge \
+        and normalizeMaxPixels override the ceilings.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -263,7 +275,10 @@ public enum ToolCatalogue {
                 "annotateAll": .object(["type": .string("boolean"), "description": .string("Mark every element carrying a frame, not just actionable ones. Implies annotate. Defaults to false.")]),
                 "grid": .object(["type": .string("boolean"), "description": .string("Overlay reference grid lines. Independent of annotate — a grid can be drawn without marks. Defaults to false.")]),
                 "gridSpacing": .object(["type": .string("number"), "description": .string("Points between grid lines. Defaults to 100.")]),
-                "maxMarks": .object(["type": .string("integer"), "description": .string("Ceiling on marks drawn on a dense window; the overflow is dropped in reading order and reported as truncated. Defaults to 150.")])
+                "maxMarks": .object(["type": .string("integer"), "description": .string("Ceiling on marks drawn on a dense window; the overflow is dropped in reading order and reported as truncated. Defaults to 150.")]),
+                "normalize": .object(["type": .string("boolean"), "description": .string("Pre-scale the frame to the vision-API ceiling and report the exact scale factor under normalization. Opt-in; raw capture stays the default. Defaults to false.")]),
+                "normalizeMaxLongEdge": .object(["type": .string("integer"), "description": .string("Long-edge ceiling in pixels for normalize. Defaults to 1568.")]),
+                "normalizeMaxPixels": .object(["type": .string("integer"), "description": .string("Total-pixel ceiling for normalize. Defaults to 1150000 (~1.15MP).")])
             ]),
             "required": .array([.string("window")])
         ]),
