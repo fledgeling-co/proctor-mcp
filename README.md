@@ -49,10 +49,24 @@ scripts/install.sh
 ```
 
 That builds the release binaries, assembles `Proctor.app`, installs it to
-`~/Applications`, registers `app.fledgeling.procter.agent` with launchd, waits
-for the socket, and opens the two System Settings panes you need.
+`~/Applications`, registers `app.fledgeling.procter.agent` with launchd, and
+waits for the socket.
 
-Then grant both, to **Proctor** — not to your terminal, not to your MCP host:
+Then open Proctor. On a first run it walks you through what it does and asks
+macOS for each grant in turn, moving on by itself as each one lands. Afterwards
+it leaves the Dock and lives in the menu bar, where the same window is a status
+panel: what is granted, what is attached, what the agent is signed with, and the
+snippet to paste into your MCP host. "Run Setup Again…" replays the walkthrough.
+
+Sign it with a real identity if you intend to keep it. An ad-hoc signature ties
+the grants to those exact bytes, so every rebuild silently revokes them and the
+symptom is elements not being found rather than a permission error:
+
+```
+scripts/install.sh "Developer ID Application: Your Name (TEAMID)"
+```
+
+The two grants go to **Proctor** — not to your terminal, not to your MCP host:
 
 | Grant | Pane | Notes |
 |---|---|---|
@@ -68,6 +82,10 @@ does not exist. After granting it, macOS may want the process restarted:
 launchctl kickstart -k gui/$(id -u)/app.fledgeling.procter.agent
 ```
 
+Proctor installs to your *own* `~/Applications`, which is not where the pane's
+file picker opens. The walkthrough has a "Reveal Proctor in Finder" button for
+dragging it in; by hand, ⌘⇧G in the picker and type the path.
+
 Register the shim with your host:
 
 ```
@@ -77,6 +95,15 @@ claude mcp add proctor -- ~/Applications/Proctor.app/Contents/MacOS/proctor-shim
 Check the install with `scripts/doctor.sh` (filesystem and launchd only, runs
 without the agent) or the `proctor_doctor` tool (grants, observers, live state).
 Remove it with `scripts/uninstall.sh`, optionally `--purge`.
+
+To run it on another Mac it also has to be notarised, which needs your own Apple
+credentials — they are never stored in this repo:
+
+```
+xcrun notarytool store-credentials proctor \
+    --apple-id you@example.com --team-id TEAMID --password <app-specific-password>
+scripts/notarize.sh proctor
+```
 
 The development build is ad-hoc signed, which ties the TCC grant to the exact
 bytes of that build. Every rebuild revokes the grants, and the symptom is
