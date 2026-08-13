@@ -11,7 +11,8 @@ set -euo pipefail
 BUNDLE_ID="app.fledgeling.procter"
 LABEL="app.fledgeling.procter.agent"
 
-APP_DEST="$HOME/Applications/Proctor.app"
+APP_DEST="/Applications/Proctor.app"
+OLD_USER_APP="$HOME/Applications/Proctor.app"
 SUPPORT_DIR="$HOME/Library/Application Support/$BUNDLE_ID"
 LOG_DIR="$HOME/Library/Logs/Proctor"
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
@@ -49,10 +50,21 @@ else
 fi
 
 if [ -d "$APP_DEST" ]; then
-  rm -rf "$APP_DEST"
+  if [ -w "$(dirname "$APP_DEST")" ]; then
+    rm -rf "$APP_DEST"
+  else
+    say "$(dirname "$APP_DEST") is not writable — using sudo (you may be prompted)"
+    sudo rm -rf "$APP_DEST"
+  fi
   say "removed $APP_DEST"
 else
   say "no app at $APP_DEST"
+fi
+
+# Clean up an old per-user install if one is still around.
+if [ -d "$OLD_USER_APP" ]; then
+  rm -rf "$OLD_USER_APP"
+  say "removed old per-user install $OLD_USER_APP"
 fi
 
 if [ "$PURGE" -eq 1 ]; then

@@ -48,9 +48,11 @@ be restarted, replaced or run twenty times over; the grants stay where they are.
 scripts/install.sh
 ```
 
-That builds the release binaries, assembles `Proctor.app`, installs it to
-`~/Applications`, registers `app.fledgeling.procter.agent` with launchd, and
-waits for the socket.
+That builds the release binaries, assembles `Proctor.app`, signs it with the
+Developer ID identity in your keychain (falling back to ad-hoc only if there is
+none), notarises it when a `proctor` notary profile is set up, installs it to
+`/Applications`, registers `app.fledgeling.procter.agent` as a per-user launchd
+agent, and waits for the socket.
 
 Then open Proctor. On a first run it walks you through what it does and asks
 macOS for each grant in turn, moving on by itself as each one lands. Afterwards
@@ -58,13 +60,20 @@ it leaves the Dock and lives in the menu bar, where the same window is a status
 panel: what is granted, what is attached, what the agent is signed with, and the
 snippet to paste into your MCP host. "Run Setup Again…" replays the walkthrough.
 
-Sign it with a real identity if you intend to keep it. An ad-hoc signature ties
-the grants to those exact bytes, so every rebuild silently revokes them and the
-symptom is elements not being found rather than a permission error:
+The install auto-detects your Developer ID identity, so a normal run is signed,
+not ad-hoc — which matters because an ad-hoc signature ties the grants to those
+exact bytes and every rebuild silently revokes them (the symptom is elements not
+being found, not a permission error). Pass a specific identity if you have more
+than one:
 
 ```
 scripts/install.sh "Developer ID Application: Your Name (TEAMID)"
 ```
+
+A fresh build is notarised automatically when a notary keychain profile named
+`proctor` exists (`PROCTOR_SKIP_NOTARIZE=1` skips it, `PROCTOR_NOTARY_PROFILE`
+names another). Without one it installs signed but not notarised, which is fine
+on this Mac; distribution to other Macs needs it.
 
 The two grants go to **Proctor** — not to your terminal, not to your MCP host:
 
@@ -82,9 +91,9 @@ does not exist. After granting it, macOS may want the process restarted:
 launchctl kickstart -k gui/$(id -u)/app.fledgeling.procter.agent
 ```
 
-Proctor installs to your *own* `~/Applications`, which is not where the pane's
-file picker opens. The walkthrough has a "Reveal Proctor in Finder" button for
-dragging it in; by hand, ⌘⇧G in the picker and type the path.
+Proctor installs to `/Applications`, which is where the pane's file picker
+opens, so if it is not already listed you can add it with the + button without
+hunting for the path.
 
 Register the shim with your host:
 
@@ -135,11 +144,12 @@ xcrun notarytool store-credentials proctor \
 scripts/notarize.sh proctor
 ```
 
-The development build is ad-hoc signed, which ties the TCC grant to the exact
-bytes of that build. Every rebuild revokes the grants, and the symptom is
-"elements not found" rather than a permission error. That is the cost of ad-hoc
-signing and it is fine for development; distribution needs a Developer ID
-signature and notarisation, which `scripts/build-app.sh` prints.
+`scripts/install.sh` signs with your Developer ID and notarises by default (see
+Install above), so an ordinary build already has stable grants — an ad-hoc
+signature, which ties the TCC grant to the exact bytes and is revoked on every
+rebuild, only happens as a fallback when no Developer ID identity is present.
+Released builds are signed and notarised in CI by `.github/workflows/release.yml`
+on a `v*` tag; `scripts/build-app.sh` prints the signing details for a manual run.
 
 ## Tools
 

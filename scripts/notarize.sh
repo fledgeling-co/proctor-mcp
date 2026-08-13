@@ -8,13 +8,16 @@
 # applies when you give it an identity. So a build you only ever run on this
 # machine does not need this script; one you send anywhere does.
 #
-# Credentials are yours and are never stored here. Create a keychain profile
-# once, with an app-specific password from appleid.apple.com:
+# Credentials are yours and are never stored here. Two ways to supply them:
 #
-#   xcrun notarytool store-credentials proctor \
-#       --apple-id you@example.com --team-id TEAMID --password abcd-efgh-ijkl-mnop
+#   Local — a keychain profile, created once with an app-specific password:
+#     xcrun notarytool store-credentials proctor \
+#         --apple-id you@example.com --team-id TEAMID --password abcd-efgh-ijkl-mnop
+#     scripts/notarize.sh proctor
 #
-# then:  scripts/notarize.sh proctor
+#   CI — an App Store Connect API key (.p8), via environment, no keychain:
+#     NOTARY_KEY=/path/AuthKey.p8 NOTARY_KEY_ID=XXXX NOTARY_ISSUER_ID=uuid \
+#         scripts/notarize.sh
 
 set -euo pipefail
 
@@ -27,11 +30,15 @@ PROFILE="${1:-}"
 say() { printf '%s\n' "$*"; }
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }
 
-[ -n "$PROFILE" ] || die "usage: scripts/notarize.sh <keychain-profile>
-
-Create one first:
-  xcrun notarytool store-credentials <profile> \\
-      --apple-id <you@example.com> --team-id <TEAMID> --password <app-specific-password>"
+# Resolve notarytool auth: a keychain profile (local), or an ASC API key from
+# the environment (CI). Both feed the same submit call below.
+if [ -n "$PROFILE" ]; then
+  NOTARY_AUTH=(--keychain-profile "$PROFILE")
+elif [ -n "${NOTARY_KEY:-}" ] && [ -n "${NOTARY_KEY_ID:-}" ] && [ -n "${NOTARY_ISSUER_ID:-}" ]; then
+  NOTARY_AUTH=(--key "$NOTARY_KEY" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID")
+else
+  die "no credentials — pass a keychain profile, or set NOTARY_KEY / NOTARY_KEY_ID / NOTARY_ISSUER_ID"
+fi
 
 [ -d "$APP" ] || die "no app at $APP — run scripts/build-app.sh first"
 
@@ -61,7 +68,7 @@ rm -f "$ZIP"
 ditto -c -k --keepParent "$APP" "$ZIP"
 
 say "==> submitting (this waits; a first submission often takes a few minutes)"
-xcrun notarytool submit "$ZIP" --keychain-profile "$PROFILE" --wait
+xcrun notarytool submit "$ZIP" "${NOTARY_AUTH[@]}" --wait
 
 say "==> stapling"
 xcrun stapler staple "$APP"
