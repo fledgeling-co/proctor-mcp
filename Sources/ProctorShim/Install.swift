@@ -183,6 +183,7 @@ enum Installer {
         print("  launchd:   \(loaded ? "loaded" : "not loaded")")
         print("  socket:    \(Wire.socketPath)")
         print("  reachable: \(reachable ? "yes" : "no")")
+        print("  remote:    off by default — `proctor-shim serve --remote` for HTTP access")
 
         if !reachable {
             print("")

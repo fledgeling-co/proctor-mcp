@@ -75,9 +75,17 @@ struct MCPServer {
             return
         }
 
+        if let response = response(for: message) { emit(response) }
+    }
+
+    /// The JSON-RPC response for one decoded message, or nil for a notification
+    /// (answered with silence). The stdio loop and the remote HTTP listener both
+    /// call this, so a call behaves identically over either transport — the
+    /// wire is the only thing that differs, never the protocol.
+    func response(for message: JSONValue) -> JSONValue? {
         guard let method = message["method"]?.stringValue else {
             shimLog("message with no method; ignoring")
-            return
+            return nil
         }
         let id = message["id"]
         let params = message["params"]?.objectValue ?? [:]
@@ -87,12 +95,12 @@ struct MCPServer {
             if method != "notifications/initialized" {
                 shimLog("notification \(method)")
             }
-            return
+            return nil
         }
 
         switch method {
         case "initialize":
-            emit(result(id: id, .object([
+            return result(id: id, .object([
                 "protocolVersion": .string(Self.mcpProtocolVersion),
                 "capabilities": .object([
                     "tools": .object(["listChanged": .bool(false)])
@@ -101,20 +109,26 @@ struct MCPServer {
                     "name": .string("proctor"),
                     "version": .string(ShimVersion.value)
                 ])
-            ])))
+            ]))
 
         case "tools/list":
-            emit(result(id: id, .object(["tools": .array(ToolCatalogue.all.map(toolEntry))])))
+            return result(id: id, .object(["tools": .array(ToolCatalogue.all.map(toolEntry))]))
 
         case "tools/call":
-            emit(result(id: id, callTool(params: params)))
+            return result(id: id, callTool(params: params))
 
         case "ping":
-            emit(result(id: id, .object([:])))
+            return result(id: id, .object([:]))
 
         default:
-            emit(errorResponse(id: id, code: -32601, message: "unknown method: \(method)"))
+            return errorResponse(id: id, code: -32601, message: "unknown method: \(method)")
         }
+    }
+
+    /// Serialise a response object to compact JSON bytes for a non-stdio
+    /// transport. Same encoder the stdio path uses.
+    func encode(_ value: JSONValue) -> Data? {
+        try? encoder.encode(value)
     }
 
     private func toolEntry(_ spec: ToolSpec) -> JSONValue {

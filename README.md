@@ -96,6 +96,33 @@ Check the install with `scripts/doctor.sh` (filesystem and launchd only, runs
 without the agent) or the `proctor_doctor` tool (grants, observers, live state).
 Remove it with `scripts/uninstall.sh`, optionally `--purge`.
 
+### Remote access
+
+The shim also speaks MCP over HTTP, for a model that is not on this Mac:
+
+```
+~/Applications/Proctor.app/Contents/MacOS/proctor-shim serve --remote
+```
+
+That binds `127.0.0.1:8787` and serves the same tools at `POST /mcp` as
+newline-free JSON-RPC — identical to the stdio path, forwarded to the same
+agent. `GET /health` answers unauthenticated for liveness. A network front door
+adds no permission: a remote caller reaches exactly the tools a local one does.
+
+Authentication is optional but bounded by where it binds. A loopback bind runs
+unauthenticated for local use; **any non-loopback `--host` requires a token**, or
+the shim refuses to start. Set the token out of the process listing:
+
+```
+PROCTOR_MCP_TOKEN=$(openssl rand -hex 32) proctor-shim serve --remote --host 0.0.0.0 --port 8787
+```
+
+Clients then send `Authorization: Bearer <token>`. The safer shape for remote
+work is to keep the loopback bind and reach it over an SSH tunnel
+(`ssh -L 8787:127.0.0.1:8787 mac`), which needs no token and exposes nothing.
+A present browser `Origin` that is not localhost is refused, to close the
+DNS-rebinding path against the unauthenticated loopback case.
+
 To run it on another Mac it also has to be notarised, which needs your own Apple
 credentials — they are never stored in this repo:
 
