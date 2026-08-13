@@ -249,21 +249,79 @@ public struct CaptureResult: Codable, Sendable {
     public var trustworthy: Bool         // .complete plus a real contentRect
     public var caveat: String?           // why not, when trustworthy is false
     public var tileHashes: [String]?     // for determinism comparison, when requested
+    /// Present only when set-of-marks annotation was requested. Nil keeps the
+    /// un-annotated result byte-identical to what it has always been, so the
+    /// freshness metadata above is unchanged whether or not marks were drawn.
+    public var annotation: MarkAnnotation?
 
     public init(window: String, path: String, width: Int, height: Int, scale: Double,
                 status: FrameStatus, contentRect: Rect?, dirtyRectCount: Int, dirtyArea: Double,
                 capturedAt: Double, framesWaited: Int, trustworthy: Bool,
-                caveat: String? = nil, tileHashes: [String]? = nil) {
+                caveat: String? = nil, tileHashes: [String]? = nil,
+                annotation: MarkAnnotation? = nil) {
         self.window = window; self.path = path; self.width = width; self.height = height
         self.scale = scale; self.status = status; self.contentRect = contentRect
         self.dirtyRectCount = dirtyRectCount; self.dirtyArea = dirtyArea
         self.capturedAt = capturedAt; self.framesWaited = framesWaited
         self.trustworthy = trustworthy; self.caveat = caveat; self.tileHashes = tileHashes
+        self.annotation = annotation
     }
 }
 
 public enum FrameStatus: String, Codable, Sendable {
     case complete, idle, blank, suspended, stopped, unknown
+}
+
+// MARK: - Set-of-marks annotation
+
+/// One numbered mark burned into an annotated capture. The number is what a
+/// vision model references ("click mark 7"); `node` is the accessibility id that
+/// number resolves to, so grounding by mark maps back to a real element.
+public struct Mark: Codable, Sendable, Equatable {
+    public var id: Int               // the number drawn into the pixels
+    public var node: String          // AX node id this mark labels
+    public var role: String
+    public var label: String?        // title/label/identifier, for a human reading the map
+    public var frame: Rect           // the element's frame in screen points, as AX reported it
+    public var pixelRect: Rect       // where the box was drawn, in frame pixels, clamped to the image
+    public init(id: Int, node: String, role: String, label: String?,
+                frame: Rect, pixelRect: Rect) {
+        self.id = id; self.node = node; self.role = role; self.label = label
+        self.frame = frame; self.pixelRect = pixelRect
+    }
+}
+
+/// Reference grid lines drawn over a capture, positions in frame pixels. A caller
+/// reads a coordinate off a line as `position / scale` points from the window's
+/// top-left corner.
+public struct GridOverlay: Codable, Sendable, Equatable {
+    public var spacingPoints: Double
+    public var scale: Double
+    public var verticals: [Double]      // x positions in frame pixels
+    public var horizontals: [Double]    // y positions in frame pixels
+    public init(spacingPoints: Double, scale: Double,
+                verticals: [Double], horizontals: [Double]) {
+        self.spacingPoints = spacingPoints; self.scale = scale
+        self.verticals = verticals; self.horizontals = horizontals
+    }
+}
+
+/// The annotation added to a capture on request. The un-annotated PNG stays at
+/// `CaptureResult.path`; the marked one is written alongside it, so both the
+/// grounding artifact and the original pixels remain available.
+public struct MarkAnnotation: Codable, Sendable {
+    public var annotatedPath: String    // the marked PNG on disk; bytes are never returned inline
+    public var marks: [Mark]
+    public var grid: GridOverlay?
+    public var elementsConsidered: Int  // markable candidates handed in before culling
+    public var markedCount: Int
+    public var truncated: Bool          // more visible candidates than the mark cap allowed
+    public init(annotatedPath: String, marks: [Mark], grid: GridOverlay?,
+                elementsConsidered: Int, markedCount: Int, truncated: Bool) {
+        self.annotatedPath = annotatedPath; self.marks = marks; self.grid = grid
+        self.elementsConsidered = elementsConsidered
+        self.markedCount = markedCount; self.truncated = truncated
+    }
 }
 
 // MARK: - Settle

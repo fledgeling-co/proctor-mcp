@@ -1,9 +1,10 @@
 # PRO-0002: Set-of-marks captures
 
 **ID:** PRO-0002
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
+**Plan:** docs/plans/plan-PRO-0002.md
 
 ## Feature description
 

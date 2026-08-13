@@ -347,7 +347,6 @@ struct RegionDirtTests {
 
 @Suite("Error remedies")
 struct ErrorTests {
-
     @Test("a permission error carries a remedy, because a model will otherwise retry it")
     func remedyPresent() {
         let e = AgentError(code: .permissionAccessibility,
@@ -358,5 +357,145 @@ struct ErrorTests {
 
     private enum Grantless {
         static let fix = "System Settings ▸ Privacy & Security ▸ Accessibility, enable Proctor."
+    }
+}
+
+@Suite("Set of marks")
+struct SetOfMarksTests {
+
+    private func element(_ node: String, _ x: Double, _ y: Double,
+                         _ w: Double = 10, _ h: Double = 10,
+                         role: String = "AXButton", label: String? = nil) -> SetOfMarks.Element {
+        SetOfMarks.Element(node: node, role: role, label: label, frame: Rect(x: x, y: y, w: w, h: h))
+    }
+
+    @Test("an element frame maps to the expected pixel box, window origin subtracted then scaled")
+    func transform() {
+        // A wrong transform is the failure that makes every mark point at the
+        // wrong place, so it is pinned to an exact expected rectangle.
+        let plan = SetOfMarks.plan(
+            elements: [element("a", 150, 260, 40, 20)],
+            window: Rect(x: 100, y: 200, w: 400, h: 300),
+            imageWidth: 800, imageHeight: 600, scale: 2)
+        #expect(plan.marks.count == 1)
+        let m = plan.marks[0]
+        #expect(m.pixelRect == Rect(x: 100, y: 120, w: 80, h: 40))
+        #expect(m.id == 1)
+        #expect(m.node == "a")
+        #expect(m.frame == Rect(x: 150, y: 260, w: 40, h: 20))
+    }
+
+    @Test("marks are numbered in reading order: top to bottom, then left to right")
+    func readingOrder() {
+        let plan = SetOfMarks.plan(
+            elements: [element("a", 50, 100), element("b", 50, 50), element("c", 200, 50)],
+            window: Rect(x: 0, y: 0, w: 1000, h: 1000),
+            imageWidth: 1000, imageHeight: 1000, scale: 1)
+        let ids = Dictionary(uniqueKeysWithValues: plan.marks.map { ($0.node, $0.id) })
+        #expect(ids["b"] == 1)   // topmost
+        #expect(ids["c"] == 2)   // same row, further right
+        #expect(ids["a"] == 3)
+    }
+
+    @Test("the same elements produce the same ids, regardless of input order")
+    func stableIds() {
+        // Stable ids within a snapshot revision is a binding assumption of the
+        // spec: "click mark 7" has to mean the same element on a re-capture.
+        let els = [element("a", 50, 100), element("b", 50, 50), element("c", 200, 50)]
+        let window = Rect(x: 0, y: 0, w: 1000, h: 1000)
+        let first = SetOfMarks.plan(elements: els, window: window,
+                                    imageWidth: 1000, imageHeight: 1000, scale: 1)
+        let shuffled = SetOfMarks.plan(elements: els.reversed(), window: window,
+                                       imageWidth: 1000, imageHeight: 1000, scale: 1)
+        #expect(first.marks == shuffled.marks)
+    }
+
+    @Test("an element outside the captured frame gets no mark")
+    func culledWhenOffFrame() {
+        let plan = SetOfMarks.plan(
+            elements: [element("on", 10, 10), element("off", 1000, 10)],
+            window: Rect(x: 0, y: 0, w: 2000, h: 600),
+            imageWidth: 800, imageHeight: 600, scale: 1)
+        let nodes = Set(plan.marks.map(\.node))
+        #expect(nodes.contains("on"))
+        #expect(!nodes.contains("off"))
+        #expect(plan.elementsConsidered == 2)
+        #expect(plan.markedCount == 1)
+    }
+
+    @Test("a partially visible element is marked with its box clamped to the image")
+    func clampedWhenPartlyOff() {
+        let plan = SetOfMarks.plan(
+            elements: [element("edge", -10, 10, 40, 20)],
+            window: Rect(x: 0, y: 0, w: 800, h: 600),
+            imageWidth: 800, imageHeight: 600, scale: 1)
+        #expect(plan.marks.count == 1)
+        // Raw box (-10,10,40,20) clipped to the image starts at x=0 and keeps 30 wide.
+        #expect(plan.marks[0].pixelRect == Rect(x: 0, y: 10, w: 30, h: 20))
+        // The map still points at the true element frame, so actuation resolves it.
+        #expect(plan.marks[0].frame == Rect(x: -10, y: 10, w: 40, h: 20))
+    }
+
+    @Test("a zero-area element carries no place to draw a box and is dropped")
+    func zeroAreaDropped() {
+        let plan = SetOfMarks.plan(
+            elements: [element("real", 10, 10, 20, 20), element("empty", 40, 40, 0, 12)],
+            window: Rect(x: 0, y: 0, w: 800, h: 600),
+            imageWidth: 800, imageHeight: 600, scale: 1)
+        #expect(plan.marks.map(\.node) == ["real"])
+    }
+
+    @Test("the mark cap truncates in reading order and reports what it dropped")
+    func capped() {
+        let els = (0..<5).map { element("n\($0)", 10, Double($0) * 30) }
+        let plan = SetOfMarks.plan(elements: els, window: Rect(x: 0, y: 0, w: 800, h: 600),
+                                   imageWidth: 800, imageHeight: 600, scale: 1, maxMarks: 3)
+        #expect(plan.markedCount == 3)
+        #expect(plan.elementsConsidered == 5)
+        #expect(plan.truncated == true)
+        #expect(plan.marks.map(\.node) == ["n0", "n1", "n2"])
+    }
+
+    @Test("every mark carries its source node, role and label for the map back")
+    func mapBack() {
+        let plan = SetOfMarks.plan(
+            elements: [element("btn", 10, 10, role: "AXButton", label: "Save")],
+            window: Rect(x: 0, y: 0, w: 800, h: 600),
+            imageWidth: 800, imageHeight: 600, scale: 1)
+        let m = try! #require(plan.marks.first)
+        #expect(m.node == "btn")
+        #expect(m.role == "AXButton")
+        #expect(m.label == "Save")
+    }
+
+    @Test("a grid places interior lines every spacing*scale pixels")
+    func gridLines() {
+        let plan = SetOfMarks.plan(
+            elements: [], window: Rect(x: 0, y: 0, w: 400, h: 300),
+            imageWidth: 800, imageHeight: 600, scale: 2,
+            grid: SetOfMarks.GridOptions(enabled: true, spacingPoints: 100))
+        let grid = try! #require(plan.grid)
+        #expect(grid.verticals == [200, 400, 600])     // step 200px, under 800
+        #expect(grid.horizontals == [200, 400])        // under 600
+        #expect(grid.spacingPoints == 100)
+        #expect(grid.scale == 2)
+    }
+
+    @Test("no grid is produced when it is not asked for")
+    func noGrid() {
+        let plan = SetOfMarks.plan(
+            elements: [element("a", 10, 10)], window: Rect(x: 0, y: 0, w: 800, h: 600),
+            imageWidth: 800, imageHeight: 600, scale: 1)
+        #expect(plan.grid == nil)
+    }
+
+    @Test("proctor_capture advertises the annotate flag and stays read-only")
+    func captureSchema() {
+        let cap = try! #require(ToolCatalogue.spec(named: "proctor_capture"))
+        let props = cap.inputSchema["properties"]?.objectValue
+        #expect(props?["annotate"] != nil)
+        #expect(props?["grid"] != nil)
+        #expect(props?["maxMarks"] != nil)
+        #expect(cap.readOnly == true)   // annotation adds an output, it does not act on the app
     }
 }
