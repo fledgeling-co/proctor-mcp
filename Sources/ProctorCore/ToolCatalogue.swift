@@ -33,7 +33,7 @@ public struct ToolSpec: Sendable {
 public enum ToolCatalogue {
     public static let all: [ToolSpec] = [
         apps, snapshot, find, act, capture, wait, assert_, flow, stability, inspect, doctor, unlock,
-        computer, openaiComputer, menu, dictionary, policy
+        computer, openaiComputer, menu, dictionary, policy, kill
     ]
 
     public static func spec(named name: String) -> ToolSpec? {
@@ -757,5 +757,47 @@ public enum ToolCatalogue {
             ])
         ]),
         readOnly: false
+    )
+
+    // MARK: kill (process list + terminate)
+
+    static let kill = ToolSpec(
+        name: "proctor_kill",
+        title: "List and terminate processes for test setup and teardown",
+        description: """
+        List running processes and terminate the ones a query names, so a campaign can reset state \
+        between runs: kill the application under test, relaunch it clean, and know it started fresh. \
+        Match by bundle identifier, localised name, or process id; all supplied conditions must \
+        hold, so name plus bundle id narrows rather than widens.
+
+        Terminating is destructive, so it goes through the same policy gate that governs driving an \
+        app (proctor_policy): an application on the block list is never killed, an allow list in \
+        force refuses anything it does not name — including a bare pid with no resolvable bundle id, \
+        so the gate fails closed — and a sensitive application requires a current approval token. \
+        Every attempt, allowed or refused, is written to the redacting audit trail naming the \
+        target and the outcome.
+
+        The kernel, launchd and the agent's own process are never signalled. `list` enumerates \
+        matches without touching anything; `kill` delivers a graceful terminate, or a forced one \
+        when force is set, and reports per-target outcome so a partial teardown is visible rather \
+        than reported as a whole success.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "action": .object([
+                    "type": .string("string"),
+                    "enum": .array([.string("list"), .string("kill")]),
+                    "description": .string("list enumerates matching processes and touches nothing; kill terminates them. Defaults to list.")
+                ]),
+                "bundleId": .object(["type": .string("string"), "description": .string("Bundle identifier to match, e.g. com.apple.TextEdit. Case-insensitive exact match.")]),
+                "name": .object(["type": .string("string"), "description": .string("Localised application name to match, case-insensitively, per `match`.")]),
+                "pid": .object(["type": .string("integer"), "description": .string("Process id to match exactly. A pid with no resolvable bundle id is refused whenever an allow list is in force.")]),
+                "match": .object(["type": .string("string"), "enum": .array([.string("substring"), .string("exact")]), "description": .string("How `name` is matched. Defaults to substring.")]),
+                "force": .object(["type": .string("boolean"), "description": .string("Send a forced termination (SIGKILL / forceTerminate) instead of a graceful one, for a hung target. Defaults to false.")])
+            ])
+        ]),
+        readOnly: false,
+        destructive: true, idempotent: false
     )
 }

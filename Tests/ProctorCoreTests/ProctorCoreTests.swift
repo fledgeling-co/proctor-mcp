@@ -191,9 +191,9 @@ struct FrameCodecTests {
 @Suite("Tool catalogue")
 struct CatalogueTests {
 
-    @Test("seventeen tools are advertised")
+    @Test("eighteen tools are advertised")
     func count() {
-        #expect(ToolCatalogue.all.count == 17)
+        #expect(ToolCatalogue.all.count == 18)
     }
 
     @Test("every tool has a unique name, a description and an object schema")
@@ -211,7 +211,7 @@ struct CatalogueTests {
     @Test("the tools that change state are not marked read-only")
     func readOnlyFlags() {
         let mutating = ["proctor_act", "proctor_apps", "proctor_flow", "proctor_stability",
-                        "proctor_computer", "proctor_openai_computer"]
+                        "proctor_computer", "proctor_openai_computer", "proctor_kill"]
         for name in mutating {
             let tool = try! #require(ToolCatalogue.spec(named: name))
             #expect(tool.readOnly == false, "\(name) should not be read-only")
@@ -232,7 +232,7 @@ struct AnnotationTests {
     func destructiveSet() {
         let destructive = Set(ToolCatalogue.all.filter(\.destructive).map(\.name))
         #expect(destructive == ["proctor_act", "proctor_flow",
-                                "proctor_stability", "proctor_unlock"])
+                                "proctor_stability", "proctor_unlock", "proctor_kill"])
     }
 
     @Test("a read-only tool is never destructive and is idempotent")
@@ -256,6 +256,14 @@ struct AnnotationTests {
         let act = try! #require(ToolCatalogue.spec(named: "proctor_act"))
         #expect(act.destructive == true)
         #expect(act.idempotent == false)
+    }
+
+    @Test("kill is destructive and not idempotent, because a killed process cannot be killed again")
+    func killIsDestructive() {
+        let kill = try! #require(ToolCatalogue.spec(named: "proctor_kill"))
+        #expect(kill.readOnly == false)
+        #expect(kill.destructive == true)
+        #expect(kill.idempotent == false)
     }
 }
 
@@ -1409,6 +1417,209 @@ struct RedactingAuditTests {
         #expect(record.outcome == "refused")
         #expect(record.reason == "on the block list")
         #expect(record.jsonLine().contains("refused"))
+    }
+}
+
+// MARK: - Filesystem jail
+
+@Suite("Filesystem jail")
+struct FSJailTests {
+
+    /// A real temporary directory to serve as a declared root, with a matching
+    /// symlink fixture for the escape test. The jail resolves symlinks, so proving
+    /// the escape needs a genuine link on disk rather than a string.
+    private func tempRoot() -> String {
+        let dir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("fsjail-\(UUID().uuidString)", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        // Resolve the root the same way the jail does, so the test compares like
+        // with like on macOS where /var is itself a symlink to /private/var.
+        return FSJail.canonicalize(dir.path)
+    }
+
+    @Test("a path inside a declared root is admitted and resolved")
+    func inRootAllowed() {
+        let root = tempRoot()
+        let jail = FSJail(roots: [root])
+        let target = root + "/session/capture.png"
+        guard case .allow(let resolved) = jail.check(target) else {
+            Issue.record("expected an in-root path to be admitted"); return
+        }
+        #expect(resolved == root + "/session/capture.png")
+    }
+
+    @Test("a \"..\" traversal is refused before resolution, with a reason naming it")
+    func dotDotRefused() {
+        let root = tempRoot()
+        let jail = FSJail(roots: [root])
+        guard case .refuse(let reason) = jail.check(root + "/../escape.png") else {
+            Issue.record("expected a \"..\" path to be refused"); return
+        }
+        #expect(reason.contains(".."))
+    }
+
+    @Test("a symlink inside a root that points outside it is refused, because resolution follows it")
+    func symlinkEscapeRefused() throws {
+        let fm = FileManager.default
+        let root = tempRoot()
+        let outside = tempRoot()   // a separate directory, not under `root`
+        // A link that lives inside the root but points out of it. A lexical check
+        // would admit `root/link/...`; resolution follows the link and refuses it.
+        let link = root + "/link"
+        try fm.createSymbolicLink(atPath: link, withDestinationPath: outside)
+
+        let jail = FSJail(roots: [root])
+        guard case .refuse = jail.check(link + "/secret.png") else {
+            Issue.record("expected a symlink escaping the root to be refused"); return
+        }
+        // And the same target under the root proper is still admitted, so the jail
+        // refuses the escape rather than the root.
+        guard case .allow = jail.check(root + "/real/secret.png") else {
+            Issue.record("expected a genuine in-root path to remain admitted"); return
+        }
+    }
+
+    @Test("an unconfigured jail admits any path, so installing it changes nothing")
+    func emptyIsInert() {
+        let jail = FSJail(roots: [])
+        #expect(jail.isEmpty)
+        guard case .allow = jail.check("/anywhere/at/all/x.png") else {
+            Issue.record("an empty jail must admit every path"); return
+        }
+    }
+
+    @Test("a sibling sharing a root's name prefix is outside it and refused")
+    func prefixBoundaryRefused() {
+        // `/tmp/rootX` must not be admitted by a root of `/tmp/root`: containment is
+        // on a path boundary, not a string prefix.
+        let base = FileManager.default.temporaryDirectory
+            .appendingPathComponent("fsjail-boundary-\(UUID().uuidString)", isDirectory: true).path
+        let root = base + "/root"
+        let sibling = base + "/rootX"
+        try? FileManager.default.createDirectory(atPath: root, withIntermediateDirectories: true)
+        try? FileManager.default.createDirectory(atPath: sibling, withIntermediateDirectories: true)
+
+        let jail = FSJail(roots: [root])
+        guard case .refuse = jail.check(sibling + "/x.png") else {
+            Issue.record("a name-prefix sibling must be treated as outside the root"); return
+        }
+        guard case .allow = jail.check(root + "/x.png") else {
+            Issue.record("the root's own child must be admitted"); return
+        }
+    }
+
+    @Test("FS_ROOTS is parsed as a colon-separated list, dropping empty entries")
+    func parseRoots() {
+        #expect(FSJail.parseRoots("/a:/b:/c") == ["/a", "/b", "/c"])
+        #expect(FSJail.parseRoots(":/a::/b:") == ["/a", "/b"])   // stray colons drop out
+        #expect(FSJail.parseRoots("") == [])
+        #expect(FSJail.parseRoots(nil) == [])
+    }
+}
+
+// MARK: - Process control (process_kill)
+
+@Suite("Process control")
+struct ProcessControlTests {
+
+    private let sample: [ProcessInfoLite] = [
+        ProcessInfoLite(pid: 200, name: "TextEdit", bundleId: "com.apple.TextEdit"),
+        ProcessInfoLite(pid: 201, name: "Safari", bundleId: "com.apple.Safari"),
+        ProcessInfoLite(pid: 202, name: "My Test App", bundleId: "com.example.testapp"),
+        ProcessInfoLite(pid: 203, name: "TextMate", bundleId: "com.macromates.TextMate")
+    ]
+
+    @Test("a query selects by pid, by bundle id and by name, each on its own")
+    func matchByEach() {
+        #expect(ProcessMatcher.select(sample, query: KillQuery(pid: 201)).map(\.pid) == [201])
+        #expect(ProcessMatcher.select(sample, query: KillQuery(bundleId: "com.apple.TextEdit"))
+                    .map(\.pid) == [200])
+        // "text" as a substring matches both TextEdit and TextMate.
+        #expect(Set(ProcessMatcher.select(sample, query: KillQuery(name: "text")).map(\.pid))
+                    == [200, 203])
+    }
+
+    @Test("supplied conditions combine as a conjunction, narrowing the match")
+    func matchConjunction() {
+        // name "text" alone matches two; adding a bundle id narrows to one.
+        let query = KillQuery(bundleId: "com.macromates.TextMate", name: "text")
+        #expect(ProcessMatcher.select(sample, query: query).map(\.pid) == [203])
+    }
+
+    @Test("name matching is case-insensitive and honours exact vs substring")
+    func nameMatchModes() {
+        #expect(ProcessMatcher.select(sample, query: KillQuery(name: "safari")).map(\.pid) == [201])
+        // exact mode does not match a substring...
+        #expect(ProcessMatcher.select(sample, query: KillQuery(name: "Text", match: .exact)).isEmpty)
+        // ...but matches the whole name regardless of case.
+        #expect(ProcessMatcher.select(sample, query: KillQuery(name: "textedit", match: .exact))
+                    .map(\.pid) == [200])
+        // bundle id is matched case-insensitively too.
+        #expect(ProcessMatcher.select(sample, query: KillQuery(bundleId: "COM.APPLE.SAFARI"))
+                    .map(\.pid) == [201])
+    }
+
+    @Test("an empty query names nothing, never everything")
+    func emptyQueryMatchesNothing() {
+        #expect(KillQuery().isEmpty)
+        #expect(ProcessMatcher.select(sample, query: KillQuery()).isEmpty)
+    }
+
+    @Test("the kernel, launchd and the agent itself are protected")
+    func protectedPids() {
+        #expect(ProcessMatcher.isProtected(pid: 0, selfPid: 999))    // kernel_task
+        #expect(ProcessMatcher.isProtected(pid: 1, selfPid: 999))    // launchd
+        #expect(ProcessMatcher.isProtected(pid: 999, selfPid: 999))  // self
+        #expect(!ProcessMatcher.isProtected(pid: 200, selfPid: 999)) // an ordinary app
+    }
+
+    @Test("killing reuses the policy gate: block wins, allow-list fails closed, sensitive needs a token")
+    func policyGateGovernsKill() {
+        // A blocked app is refused, so a kill can never terminate it.
+        let blocked = AppPolicy(block: ["com.apple.Safari"])
+        #expect(blocked.decide(bundleId: "com.apple.Safari", hasValidToken: false)
+                    == .blocked(reason: "com.apple.Safari is on the block list; actuation is refused."))
+
+        // With an allow list in force, a bare pid target — no resolvable bundle id —
+        // is refused. Fail closed: an unknown process is not killed.
+        let allowOnly = AppPolicy(allow: ["com.example.testapp"])
+        if case .blocked = allowOnly.decide(bundleId: nil, hasValidToken: false) {} else {
+            Issue.record("an allow list must refuse a target with no bundle id")
+        }
+        #expect(allowOnly.decide(bundleId: "com.example.testapp", hasValidToken: false) == .allow)
+
+        // A sensitive app needs a current token before it can be killed.
+        let sensitive = AppPolicy(sensitive: ["com.example.testapp"])
+        if case .needsApproval = sensitive.decide(bundleId: "com.example.testapp", hasValidToken: false) {} else {
+            Issue.record("a sensitive app must require a token")
+        }
+        #expect(sensitive.decide(bundleId: "com.example.testapp", hasValidToken: true) == .allow)
+    }
+
+    @Test("a kill audit record names the target and outcome and sets no secret slot")
+    func killAuditShape() {
+        let target = ProcessInfoLite(pid: 202, name: "My Test App", bundleId: "com.example.testapp")
+        let ok = ProcessMatcher.killAudit(target, tool: "proctor_kill", signal: .term,
+                                          outcome: "ok", reason: nil, timestamp: 1_700_000_000)
+        #expect(ok.tool == "proctor_kill")
+        #expect(ok.app == "My Test App")
+        #expect(ok.bundleId == "com.example.testapp")
+        #expect(ok.kind == "terminate")
+        #expect(ok.outcome == "ok")
+        // A kill carries no typed value or script, so those slots stay empty — the
+        // property that lets the trail prove what was killed without a secret.
+        #expect(ok.value == nil && ok.script == nil)
+
+        // A forced kill of a bare pid records the pid as the app and the force kind.
+        let forced = ProcessMatcher.killAudit(ProcessInfoLite(pid: 4321, name: ""),
+                                              tool: "proctor_kill", signal: .kill,
+                                              outcome: "refused", reason: "not on the allow list",
+                                              timestamp: 0)
+        #expect(forced.app == "pid:4321")
+        #expect(forced.kind == "forceTerminate")
+        #expect(forced.outcome == "refused")
+        #expect(forced.reason == "not on the allow list")
+        #expect(!forced.jsonLine().isEmpty)
     }
 }
 

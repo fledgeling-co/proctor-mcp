@@ -43,6 +43,7 @@ struct Dispatcher: Sendable {
         case "proctor_menu":      return try await menu(args)
         case "proctor_dictionary":       return try await dictionary(args)
         case "proctor_policy":           return try await policy(args)
+        case "proctor_kill":             return try await kill(args)
         // Internal verb behind the MCP resources surface. Never in ToolCatalogue,
         // so a host cannot reach it as a tool; the shim forwards resources/read to
         // it. It only re-projects state the agent already holds or reads without a
@@ -380,6 +381,34 @@ struct Dispatcher: Sendable {
                              message: "unknown policy action \(action.debugDescription)",
                              remedy: "Use status, configure, approve, revoke or audit.")
         }
+    }
+
+    // MARK: - proctor_kill (process list + terminate)
+
+    /// Process listing and termination. Actions:
+    ///   list — enumerate the processes the query names, touching nothing
+    ///   kill — terminate them, gated by the app policy and recorded in the audit trail
+    private func kill(_ args: Args) async throws -> JSONValue {
+        let action = args.string("action") ?? "list"
+        guard action == "list" || action == "kill" else {
+            throw AgentError(code: .invalidArguments,
+                             message: "unknown kill action \(action.debugDescription)",
+                             remedy: "Use list or kill.")
+        }
+        let match = KillQuery.Match(rawValue: args.string("match") ?? "substring") ?? .substring
+        let query = KillQuery(pid: args.int("pid").map(Int32.init),
+                              bundleId: args.string("bundleId"),
+                              name: args.string("name"),
+                              match: match)
+        guard !query.isEmpty else {
+            throw AgentError(code: .invalidArguments,
+                             message: "proctor_kill needs a target",
+                             remedy: "Supply pid, bundleId or name. An empty selector would name every "
+                                   + "process, which is never what a teardown step intends.")
+        }
+        return try await session.killProcesses(query: query,
+                                               perform: action == "kill",
+                                               force: args.bool("force", false))
     }
 
     // MARK: - proctor_resource (MCP resources backing)
