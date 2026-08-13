@@ -85,11 +85,20 @@ enum Installer {
             }
         }
 
+        // Keep these keys in step with scripts/install.sh, which writes the
+        // same job for a source build. The two are not copies of one routine —
+        // the script builds, signs and copies the bundle and this only
+        // registers one that already exists — but they must agree on the job.
+        //
+        // ProcessType Interactive keeps launchd from throttling CPU and I/O.
+        // Without it a settling agent is quietly starved, which reads as flaky
+        // waits rather than as a configuration problem.
         let plist: [String: Any] = [
             "Label": Wire.agentLabel,
             "ProgramArguments": [binary],
             "RunAtLoad": true,
             "KeepAlive": ["SuccessfulExit": false],
+            "ProcessType": "Interactive",
             "StandardErrorPath": logPath
         ]
         do {

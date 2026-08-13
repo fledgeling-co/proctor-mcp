@@ -17,6 +17,8 @@ SUPPORT_DIR="$HOME/Library/Application Support/$BUNDLE_ID"
 SOCKET="$SUPPORT_DIR/agent.sock"
 LOG_DIR="$HOME/Library/Logs/Proctor"
 LOG="$LOG_DIR/agent.log"
+# Sources/ProctorShim/Install.swift writes the same job when the shim installs
+# a prebuilt bundle. Change one, change the other.
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 AGENT_BIN="$APP_DEST/Contents/MacOS/proctor-agent"
 SHIM_BIN="$APP_DEST/Contents/MacOS/proctor-shim"
