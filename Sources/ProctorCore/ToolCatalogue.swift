@@ -17,7 +17,7 @@ public struct ToolSpec: Sendable {
 
 public enum ToolCatalogue {
     public static let all: [ToolSpec] = [
-        apps, snapshot, find, act, capture, wait, assert_, flow, stability, inspect, doctor
+        apps, snapshot, find, act, capture, wait, assert_, flow, stability, inspect, doctor, unlock
     ]
 
     public static func spec(named name: String) -> ToolSpec? {
@@ -466,5 +466,42 @@ public enum ToolCatalogue {
             ])
         ]),
         readOnly: true
+    )
+
+    static let unlock = ToolSpec(
+        name: "proctor_unlock",
+        title: "Open, evaluate and end a screen-unlock turn",
+        description: """
+        Control the screen-unlock capability. This works only when the login-path authorization \
+        plugin is installed and armed; without it the actions are inert and `status` says so.
+
+        Actions: `status` reports lock state, whether a turn is authorized right now, and whether \
+        the plugin is installed. `open` opens a short turn without touching the screen, which \
+        proves the mechanism-to-broker handshake in isolation. `unlock` opens a turn and asks \
+        macOS to evaluate the unlock right; the result states plainly whether the right was \
+        granted and whether the lock screen actually dismissed, because the latter depends on \
+        loginwindow behaviour that is not contractual. `relock` relocks immediately and ends the \
+        turn. `close` ends a turn without relocking.
+
+        The turn always carries a TTL, so a crashed caller cannot leave the screen unlockable, and \
+        the authorization rule keeps the normal password prompt as a fallback so a person is never \
+        locked out. Disclose in any test methodology that a run operated the machine while locked.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "action": .object([
+                    "type": .string("string"),
+                    "enum": .array([.string("status"), .string("open"), .string("close"),
+                                    .string("unlock"), .string("relock"), .string("lock")]),
+                    "description": .string("Defaults to status.")
+                ]),
+                "ttlMs": .object([
+                    "type": .string("integer"),
+                    "description": .string("How long the turn stays authorized. Defaults to 15000.")
+                ])
+            ])
+        ]),
+        readOnly: false
     )
 }

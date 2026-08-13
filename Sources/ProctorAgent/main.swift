@@ -66,6 +66,14 @@ do {
 let signalSources = installTerminationHandlers(server)
 _ = signalSources
 
+// The unlock broker answers the SecurityAgent authorization mechanism. It runs
+// whether or not the login-path plugin is installed; with no plugin armed it
+// simply never receives a connection, so starting it is free and keeps the
+// answer ("is a turn authorized") in one place.
+let unlockBroker = UnlockBroker()
+unlockBroker.start()
+_ = unlockBroker
+
 FileHandle.standardError.write(Data("proctor-agent \(AgentBuild.version) listening on \(server.path)\n".utf8))
 
 CFRunLoopRun()

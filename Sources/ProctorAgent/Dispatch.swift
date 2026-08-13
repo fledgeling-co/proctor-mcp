@@ -37,6 +37,7 @@ struct Dispatcher: Sendable {
         case "proctor_stability": return try await stability(args)
         case "proctor_inspect":   return try await inspect(args)
         case "proctor_doctor":    return try await doctor(args)
+        case "proctor_unlock":    return try await unlock(args)
         default:
             throw AgentError(
                 code: .invalidArguments,
@@ -218,6 +219,54 @@ struct Dispatcher: Sendable {
             Grants.promptScreenRecording()
         }
         return try JSONValue.encode(await session.doctor(verbose: args.bool("verbose", false)))
+    }
+
+    /// Screen-unlock turn control. Actions:
+    ///   status  — turn/lock state and whether the login-path plugin is armed
+    ///   open    — open a turn without touching the screen (proves the handshake)
+    ///   close   — end a turn
+    ///   unlock  — open a turn and ask macOS to evaluate the unlock right
+    ///   relock  — relock immediately and end the turn
+    private func unlock(_ args: Args) async throws -> JSONValue {
+        let action = args.string("action") ?? "status"
+        let ttlMs = args.int("ttlMs") ?? 15_000
+        let coord = UnlockCoordinator.shared
+        switch action {
+        case "open":
+            coord.openTurn(ttlMs: ttlMs)
+            return .object(["opened": .bool(true), "ttlMs": .number(Double(ttlMs))])
+        case "close":
+            coord.closeTurn()
+            return .object(["closed": .bool(true)])
+        case "unlock":
+            return try JSONValue.encode(coord.requestUnlock(ttlMs: ttlMs))
+        case "relock":
+            coord.relock()
+            return .object(["relocked": .bool(true)])
+        case "lock":
+            coord.lockOnly()
+            return .object(["locked": .bool(true)])
+        case "status":
+            let info = UnlockTurn.shared.contactInfo()
+            var out: [String: JSONValue] = [
+                "screenLocked": .bool(UnlockCoordinator.screenIsLocked()),
+                "turnAuthorized": .bool(UnlockTurn.shared.authorized()),
+                "pluginInstalled": .bool(FileManager.default.fileExists(
+                    atPath: "/Library/Security/SecurityAgentPlugins/ProctorUnlock.bundle")),
+                "brokerSocket": .string(UnlockBroker.socketPath),
+                "brokerContactCount": .number(Double(info.contactCount))
+            ]
+            // Proof the login-path mechanism reached the broker, readable after
+            // a locked test without having watched the screen.
+            if let at = info.lastContact { out["brokerLastContact"] = .string(ISO8601DateFormatter().string(from: at)) }
+            if let reply = info.lastReply { out["brokerLastReply"] = .string(reply) }
+            if let ok = info.lastPeerVerified { out["brokerLastPeerVerified"] = .bool(ok) }
+            return .object(out)
+        default:
+            throw AgentError(code: .invalidArguments,
+                             message: "unknown unlock action \(action.debugDescription)",
+                             remedy: "Use status, open, close, unlock or relock.")
+        }
     }
 }
 
