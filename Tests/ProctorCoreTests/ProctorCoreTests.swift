@@ -191,9 +191,9 @@ struct FrameCodecTests {
 @Suite("Tool catalogue")
 struct CatalogueTests {
 
-    @Test("seventeen tools are advertised")
+    @Test("eighteen tools are advertised")
     func count() {
-        #expect(ToolCatalogue.all.count == 17)
+        #expect(ToolCatalogue.all.count == 18)
     }
 
     @Test("every tool has a unique name, a description and an object schema")
@@ -216,7 +216,8 @@ struct CatalogueTests {
             let tool = try! #require(ToolCatalogue.spec(named: name))
             #expect(tool.readOnly == false, "\(name) should not be read-only")
         }
-        for name in ["proctor_snapshot", "proctor_find", "proctor_capture", "proctor_doctor"] {
+        for name in ["proctor_snapshot", "proctor_find", "proctor_capture",
+                     "proctor_zoom", "proctor_doctor"] {
             let tool = try! #require(ToolCatalogue.spec(named: name))
             #expect(tool.readOnly == true, "\(name) should be read-only")
         }
@@ -320,9 +321,11 @@ struct ProfileTests {
     func memberships() {
         // ax is accessibility only: no pixels, no reflector, no campaign, no unlock.
         #expect(!names(.ax).contains("proctor_capture"))
+        #expect(!names(.ax).contains("proctor_zoom"))
         #expect(!names(.ax).contains("proctor_inspect"))
         // core adds the capture loop but not campaign authoring.
         #expect(names(.core).contains("proctor_capture"))
+        #expect(names(.core).contains("proctor_zoom"))
         #expect(!names(.core).contains("proctor_flow"))
         #expect(!names(.core).contains("proctor_unlock"))
         // scripting adds flow and stability, still no inspect or unlock.
@@ -1524,9 +1527,9 @@ struct VisionCaptureTests {
 
     // MARK: AC6 — normalisation is an option on capture, not a new tool
 
-    @Test("proctor_capture advertises normalize and the catalogue stays at 17 tools")
+    @Test("proctor_capture advertises normalize without adding a new tool")
     func captureAdvertisesNormalizeWithoutANewTool() {
-        #expect(ToolCatalogue.all.count == 17)      // extended, not added
+        #expect(ToolCatalogue.spec(named: "proctor_normalize") == nil)   // extended capture, not a new tool
         let cap = try! #require(ToolCatalogue.spec(named: "proctor_capture"))
         let props = cap.inputSchema["properties"]?.objectValue
         #expect(props?["normalize"] != nil)
@@ -1535,5 +1538,179 @@ struct VisionCaptureTests {
         #expect(cap.readOnly == true)               // normalisation is a read, not an act
         let out = ToolCatalogue.outputSchema(for: "proctor_capture")
         #expect(out["properties"]?["normalization"] != nil)
+    }
+}
+
+@Suite("Zoom region crop")
+struct ZoomRegionCropTests {
+
+    // MARK: AC1 — the tool exists and is shaped like a read-only capture
+
+    @Test("proctor_zoom is advertised, read-only, and exposes region and node")
+    func toolShape() {
+        let zoom = try! #require(ToolCatalogue.spec(named: "proctor_zoom"))
+        #expect(zoom.readOnly == true)          // a crop reads, it does not act on the app
+        #expect(zoom.destructive == false)
+        #expect(zoom.idempotent == true)
+        #expect(zoom.description.count > 200, "proctor_zoom is under-described")
+        let props = try! #require(zoom.inputSchema["properties"]?.objectValue)
+        #expect(props["window"] != nil)
+        #expect(props["region"] != nil)
+        #expect(props["node"] != nil)
+    }
+
+    @Test("proctor_zoom advertises a bespoke output schema with freshness and crop fields")
+    func outputSchema() {
+        let schema = ToolCatalogue.outputSchema(for: "proctor_zoom")
+        #expect(schema["type"]?.stringValue == "object")
+        let props = try! #require(schema["properties"]?.objectValue)
+        // The freshness metadata that makes a crop as trustworthy as a capture.
+        #expect(props["trustworthy"] != nil)
+        #expect(props["contentRect"] != nil)
+        #expect(props["path"] != nil)
+        // The crop descriptor itself.
+        #expect(props["crop"] != nil)
+    }
+
+    @Test("proctor_zoom rides in the core profile alongside capture, not in ax")
+    func profileMembership() {
+        #expect(ToolCatalogue.toolNames(for: .core).contains("proctor_zoom"))
+        #expect(ToolCatalogue.toolNames(for: .scripting).contains("proctor_zoom"))
+        #expect(ToolCatalogue.toolNames(for: .full).contains("proctor_zoom"))
+        #expect(!ToolCatalogue.toolNames(for: .ax).contains("proctor_zoom"))
+    }
+
+    // MARK: AC2 — points map to native pixels exactly
+
+    @Test("at 1x a region is its own pixel rect")
+    func placeIdentity() {
+        let out = RegionCrop.place(regionPoints: Rect(x: 10, y: 20, w: 30, h: 40),
+                                   imageWidth: 800, imageHeight: 600, scale: 1)
+        let p = try! out.get()
+        #expect(p.pixelRect == Rect(x: 10, y: 20, w: 30, h: 40))
+        #expect(p.clamped == false)
+    }
+
+    @Test("at 2x a region doubles into native pixels")
+    func placeRetina() {
+        // A window captured at native 2x: 30x40 points of a small label become an
+        // 60x80 native crop, which is the detail a downscaled full capture loses.
+        let out = RegionCrop.place(regionPoints: Rect(x: 10, y: 20, w: 30, h: 40),
+                                   imageWidth: 1600, imageHeight: 1200, scale: 2)
+        let p = try! out.get()
+        #expect(p.pixelRect == Rect(x: 20, y: 40, w: 60, h: 80))
+        #expect(p.clamped == false)
+    }
+
+    @Test("a sub-pixel region rounds outward so the whole region is inside the crop")
+    func placeRoundsOutward() {
+        // origin floors, far edge ceils: (10.4,20.6) .. (10.4+5.3, 20.6+5.1)=(15.7,25.7)
+        // -> x0=10, y0=20, x1=16, y1=26 -> 6x6.
+        let out = RegionCrop.place(regionPoints: Rect(x: 10.4, y: 20.6, w: 5.3, h: 5.1),
+                                   imageWidth: 100, imageHeight: 100, scale: 1)
+        let p = try! out.get()
+        #expect(p.pixelRect == Rect(x: 10, y: 20, w: 6, h: 6))
+    }
+
+    // MARK: AC3 — an element frame becomes a window-relative region
+
+    @Test("an element's screen frame converts to a window-relative region")
+    func elementToRegion() {
+        // Element at screen (100,200,50,20); window origin at (80,150).
+        let region = RegionCrop.regionForElement(
+            elementFrame: Rect(x: 100, y: 200, w: 50, h: 20),
+            window: Rect(x: 80, y: 150, w: 900, h: 700))
+        #expect(region == Rect(x: 20, y: 50, w: 50, h: 20))
+    }
+
+    @Test("padding grows the element region on every side")
+    func elementRegionPadding() {
+        let region = RegionCrop.regionForElement(
+            elementFrame: Rect(x: 100, y: 200, w: 50, h: 20),
+            window: Rect(x: 80, y: 150, w: 900, h: 700), padding: 5)
+        #expect(region == Rect(x: 15, y: 45, w: 60, h: 30))
+    }
+
+    @Test("pad grows a region symmetrically and is floored at zero padding")
+    func padRegion() {
+        #expect(RegionCrop.pad(Rect(x: 20, y: 50, w: 30, h: 10), by: 4)
+                == Rect(x: 16, y: 46, w: 38, h: 18))
+        #expect(RegionCrop.pad(Rect(x: 20, y: 50, w: 30, h: 10), by: -3)
+                == Rect(x: 20, y: 50, w: 30, h: 10))
+    }
+
+    // MARK: AC4 — empty, out-of-frame and no-geometry fail with a reason; edges clamp
+
+    @Test("a zero-area region is refused, not cropped to nothing")
+    func emptyRegionFails() {
+        let out = RegionCrop.place(regionPoints: Rect(x: 10, y: 10, w: 0, h: 40),
+                                   imageWidth: 800, imageHeight: 600, scale: 1)
+        #expect(throws: RegionCrop.Failure.emptyRegion) { try out.get() }
+    }
+
+    @Test("a region entirely outside the frame is refused")
+    func outsideFrameFails() {
+        let out = RegionCrop.place(regionPoints: Rect(x: 2000, y: 2000, w: 50, h: 50),
+                                   imageWidth: 800, imageHeight: 600, scale: 1)
+        #expect(throws: RegionCrop.Failure.outsideFrame) { try out.get() }
+    }
+
+    @Test("a frame with no pixels cannot place a region")
+    func noGeometryFails() {
+        let out = RegionCrop.place(regionPoints: Rect(x: 10, y: 10, w: 50, h: 50),
+                                   imageWidth: 0, imageHeight: 0, scale: 2)
+        #expect(throws: RegionCrop.Failure.noFrameGeometry) { try out.get() }
+    }
+
+    @Test("a region straddling the edge clamps to the visible pixels and says so")
+    func straddlingClamps() {
+        // 60 wide starting 20 before the right edge of a 100px-wide image -> keeps 40.
+        let out = RegionCrop.place(regionPoints: Rect(x: 60, y: 10, w: 60, h: 20),
+                                   imageWidth: 100, imageHeight: 100, scale: 1)
+        let p = try! out.get()
+        #expect(p.pixelRect == Rect(x: 60, y: 10, w: 40, h: 20))
+        #expect(p.clamped == true)
+    }
+
+    @Test("a negative-origin region (element near the window edge) clamps to zero")
+    func negativeOriginClamps() {
+        let out = RegionCrop.place(regionPoints: Rect(x: -10, y: -5, w: 30, h: 25),
+                                   imageWidth: 100, imageHeight: 100, scale: 1)
+        let p = try! out.get()
+        #expect(p.pixelRect == Rect(x: 0, y: 0, w: 20, h: 20))
+        #expect(p.clamped == true)
+    }
+
+    // MARK: AC5 — the crop carries capture's freshness; the field is opt-in
+
+    @Test("a normal CaptureResult has no crop, so captures stay byte-identical")
+    func captureResultCropDefaultsNil() throws {
+        let result = CaptureResult(window: "win:1:1", path: "/tmp/a.png", width: 800, height: 600,
+                                   scale: 2, status: .complete, contentRect: Rect(x: 0, y: 0, w: 400, h: 300),
+                                   dirtyRectCount: 0, dirtyArea: 0, capturedAt: 1,
+                                   framesWaited: 1, trustworthy: true)
+        #expect(result.crop == nil)
+        let round = try JSONDecoder().decode(CaptureResult.self,
+                                             from: JSONEncoder().encode(result))
+        #expect(round.crop == nil)
+    }
+
+    @Test("a zoom crop round-trips the crop descriptor and keeps the freshness fields")
+    func cropRegionRoundTrips() throws {
+        let crop = CropRegion(source: "element", node: "n7",
+                              requestedRegion: Rect(x: 20, y: 50, w: 50, h: 20),
+                              pixelRect: Rect(x: 40, y: 100, w: 100, h: 40),
+                              clamped: false, padding: 0, fullPath: "/tmp/full.png")
+        let result = CaptureResult(window: "win:1:1", path: "/tmp/crop.png", width: 100, height: 40,
+                                   scale: 2, status: .complete, contentRect: Rect(x: 0, y: 0, w: 400, h: 300),
+                                   dirtyRectCount: 3, dirtyArea: 0.1, capturedAt: 42,
+                                   framesWaited: 2, trustworthy: true, crop: crop)
+        let round = try JSONDecoder().decode(CaptureResult.self,
+                                             from: JSONEncoder().encode(result))
+        #expect(round.crop == crop)
+        // Freshness is the capture's own, unmodified by cropping.
+        #expect(round.trustworthy == true)
+        #expect(round.framesWaited == 2)
+        #expect(round.contentRect == Rect(x: 0, y: 0, w: 400, h: 300))
     }
 }

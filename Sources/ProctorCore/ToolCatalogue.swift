@@ -32,7 +32,7 @@ public struct ToolSpec: Sendable {
 
 public enum ToolCatalogue {
     public static let all: [ToolSpec] = [
-        apps, snapshot, find, act, capture, wait, assert_, flow, stability, inspect, doctor, unlock,
+        apps, snapshot, find, act, capture, zoom, wait, assert_, flow, stability, inspect, doctor, unlock,
         computer, openaiComputer, menu, dictionary, policy
     ]
 
@@ -279,6 +279,55 @@ public enum ToolCatalogue {
                 "normalize": .object(["type": .string("boolean"), "description": .string("Pre-scale the frame to the vision-API ceiling and report the exact scale factor under normalization. Opt-in; raw capture stays the default. Defaults to false.")]),
                 "normalizeMaxLongEdge": .object(["type": .string("integer"), "description": .string("Long-edge ceiling in pixels for normalize. Defaults to 1568.")]),
                 "normalizeMaxPixels": .object(["type": .string("integer"), "description": .string("Total-pixel ceiling for normalize. Defaults to 1150000 (~1.15MP).")])
+            ]),
+            "required": .array([.string("window")])
+        ]),
+        readOnly: true
+    )
+
+    // MARK: zoom
+
+    static let zoom = ToolSpec(
+        name: "proctor_zoom",
+        title: "Crop a region or element at native resolution",
+        description: """
+        Return a native-resolution PNG crop of one region or one accessibility element, for \
+        reading small text or fine detail that a whole-window capture loses. A full capture is \
+        often normalised down for a vision model, and the pixels a label, a status glyph or a \
+        numeric field is written in do not survive that downscale; a crop of just the region of \
+        interest restores them without shipping a full 2x screenshot every time.
+
+        Give either a region — [x, y, w, h] in points relative to the window's top-left corner, \
+        the same coordinate space proctor_wait uses — or a node id from proctor_find, whose \
+        accessibility frame is resolved and framed for you. padding adds context points on every \
+        side, which helps when the target is a few points tall. The compose path is \
+        find (locate the element) → zoom (read it) → assert.
+
+        The crop is cut from an ordinary window capture taken at the display's native backing \
+        scale, so it carries exactly the same freshness metadata as proctor_capture — frame \
+        status, content rect, dirty-rectangle coverage, frames waited, and the trustworthy flag \
+        with its caveat when a frame could not be confirmed. A stale crop looks identical to a \
+        fresh one, so that metadata is what separates them, and it describes the frame the crop \
+        came from rather than being re-derived. The crop descriptor also names the pixel rectangle \
+        actually cut, whether it was clamped to the window, and the path to the un-cropped \
+        full-window PNG. A region with no area, or one that falls outside the captured frame, is \
+        an error naming the reason rather than an empty image.
+
+        The PNG is written to disk and the path returned. Bytes are never returned inline. Reading \
+        the text in the crop is left to the caller; this tool restores the pixels, it does not OCR them.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "window": .object(["type": .string("string"), "description": .string("Window handle from proctor_apps to capture and crop.")]),
+                "region": .object(["type": .string("array"), "items": .object(["type": .string("number")]), "description": .string("[x, y, w, h] in points relative to the window's top-left corner. Supply this or node.")]),
+                "node": .object(["type": .string("string"), "description": .string("A node id from proctor_find; its accessibility frame is resolved and cropped. Supply this or region.")]),
+                "padding": .object(["type": .string("number"), "description": .string("Context points added on every side of the region or element. Defaults to 0.")]),
+                "path": .object(["type": .string("string"), "description": .string("Where to write the crop PNG. Defaults to a session temp directory.")]),
+                "waitForComplete": .object(["type": .string("boolean"), "description": .string("Keep pulling frames until one is .complete or the timeout expires. Defaults to true.")]),
+                "timeoutMs": .object(["type": .string("integer"), "description": .string("Defaults to 3000.")]),
+                "scale": .object(["type": .string("number"), "description": .string("Capture scale. Defaults to the display's backing scale, which is what makes the crop native-resolution.")]),
+                "includeCursor": .object(["type": .string("boolean"), "description": .string("Defaults to false, since a cursor in the frame is a source of false diffs.")])
             ]),
             "required": .array([.string("window")])
         ]),

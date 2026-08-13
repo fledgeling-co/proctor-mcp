@@ -260,19 +260,24 @@ public struct CaptureResult: Codable, Sendable {
     /// frame, and this block carries the native dimensions and the exact factor
     /// needed to map a model's coordinates back onto native geometry.
     public var normalization: CaptureNormalization?
+    /// Present only for a `proctor_zoom` crop. Nil keeps an ordinary capture
+    /// byte-identical; when set, every field above still describes the frame the
+    /// crop was cut from, because a crop is a window of a real capture and inherits
+    /// its freshness rather than inventing its own.
+    public var crop: CropRegion?
 
     public init(window: String, path: String, width: Int, height: Int, scale: Double,
                 status: FrameStatus, contentRect: Rect?, dirtyRectCount: Int, dirtyArea: Double,
                 capturedAt: Double, framesWaited: Int, trustworthy: Bool,
                 caveat: String? = nil, tileHashes: [String]? = nil,
                 annotation: MarkAnnotation? = nil,
-                normalization: CaptureNormalization? = nil) {
+                normalization: CaptureNormalization? = nil, crop: CropRegion? = nil) {
         self.window = window; self.path = path; self.width = width; self.height = height
         self.scale = scale; self.status = status; self.contentRect = contentRect
         self.dirtyRectCount = dirtyRectCount; self.dirtyArea = dirtyArea
         self.capturedAt = capturedAt; self.framesWaited = framesWaited
         self.trustworthy = trustworthy; self.caveat = caveat; self.tileHashes = tileHashes
-        self.annotation = annotation; self.normalization = normalization
+        self.annotation = annotation; self.normalization = normalization; self.crop = crop
     }
 }
 
@@ -296,6 +301,26 @@ public struct CaptureNormalization: Codable, Sendable, Equatable {
         self.originalWidth = originalWidth; self.originalHeight = originalHeight
         self.width = width; self.height = height
         self.maxLongEdge = maxLongEdge; self.maxPixels = maxPixels
+    }
+}
+
+/// The region a `proctor_zoom` crop cut from a full-window capture. `pixelRect` is
+/// what was actually cut, in frame pixels; `requestedRegion` is the caller's ask in
+/// window points (after padding); `fullPath` is the un-cropped capture it came from,
+/// so the whole window remains available alongside the zoomed detail.
+public struct CropRegion: Codable, Sendable, Equatable {
+    public var source: String            // "region" (a rect) or "element" (a resolved node)
+    public var node: String?             // element mode: the AX node id the crop framed
+    public var requestedRegion: Rect     // window points, top-left origin, padding applied
+    public var pixelRect: Rect           // frame pixels actually cut, clamped and integer-aligned
+    public var clamped: Bool             // the region reached past the frame and was trimmed
+    public var padding: Double           // context points added on every side, 0 when none
+    public var fullPath: String          // the un-cropped full-window PNG on disk
+    public init(source: String, node: String? = nil, requestedRegion: Rect, pixelRect: Rect,
+                clamped: Bool, padding: Double, fullPath: String) {
+        self.source = source; self.node = node; self.requestedRegion = requestedRegion
+        self.pixelRect = pixelRect; self.clamped = clamped; self.padding = padding
+        self.fullPath = fullPath
     }
 }
 

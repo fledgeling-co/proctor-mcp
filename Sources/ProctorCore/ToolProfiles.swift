@@ -32,7 +32,7 @@ public extension ToolCatalogue {
     private static let profileNames: [ToolProfile: [String]] = {
         let ax = ["proctor_apps", "proctor_snapshot", "proctor_find", "proctor_menu",
                   "proctor_act", "proctor_wait", "proctor_assert", "proctor_doctor"]
-        let core = ax + ["proctor_capture"]
+        let core = ax + ["proctor_capture", "proctor_zoom"]
         let scripting = core + ["proctor_flow", "proctor_stability", "proctor_dictionary"]
         let full = all.map(\.name)
         return [.ax: ax, .core: core, .scripting: scripting, .full: full]

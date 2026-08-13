@@ -31,6 +31,7 @@ struct Dispatcher: Sendable {
         case "proctor_find":      return try await find(args)
         case "proctor_act":       return try await act(args)
         case "proctor_capture":   return try await capture(args)
+        case "proctor_zoom":      return try await zoom(args)
         case "proctor_wait":      return try await wait(args)
         case "proctor_assert":    return try await assert(args)
         case "proctor_flow":      return try await flow(args)
@@ -148,8 +149,22 @@ struct Dispatcher: Sendable {
                                         annotate: annotate)
     }
 
-    // MARK: - proctor_wait
+    // MARK: - proctor_zoom
 
+    private func zoom(_ args: Args) async throws -> JSONValue {
+        let region = args.value("region")?.arrayValue?.compactMap(\.doubleValue)
+        return try await session.zoom(window: try args.requiredString("window"),
+                                      region: region,
+                                      node: args.string("node"),
+                                      padding: args.double("padding") ?? 0,
+                                      path: args.string("path"),
+                                      waitForComplete: args.bool("waitForComplete", true),
+                                      timeoutMs: args.int("timeoutMs") ?? 3000,
+                                      scale: args.double("scale"),
+                                      includeCursor: args.bool("includeCursor", false))
+    }
+
+    // MARK: - proctor_wait
     private func wait(_ args: Args) async throws -> JSONValue {
         let condition = try args.enumeration("condition", of: [
             "nodeExists", "nodeGone", "valueEquals", "valueContains",
