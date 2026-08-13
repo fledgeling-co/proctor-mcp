@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
 **Status:** Running
-**Updated:** 2026-08-13 — batch 1 launched (3-concurrent): PRO-0002, PRO-0008, PRO-0001 running.
+**Updated:** 2026-08-13 — batch 1 MERGED (PRO-0001, PRO-0002, PRO-0008); worktrees/branches cleaned; launching batch 2 (PRO-0003, PRO-0004, PRO-0005). main @ 670389b, 82 tests / 13 suites green.
 
 ## How to resume
 You are the fleet orchestrator (ship-fleet skill). Read this file top to bottom, reconcile
@@ -42,16 +42,16 @@ Holding pen (external deps / needs input): none.
 ## Ledger
 | ID | Title | Category | Depends on | Deep research | Mock | Lane | Worktree/branch | Status | Notes / outcome |
 |----|-------|----------|------------|---------------|------|------|-----------------|--------|-----------------|
-| PRO-0001 | CUA schema façade | ready-for-plan | — | none | none | opus | .worktrees/PRO-0001 · ai/pro-0001 | running | batch 1 |
-| PRO-0002 | Set-of-marks captures | ready-for-plan | — | none | none | opus | .worktrees/PRO-0002 · ai/pro-0002 | running | batch 1 · unblocks PRO-0010 |
-| PRO-0003 | Menu-bar key-equivalents | ready-for-plan | — | none | none | opus | — | queued | — |
-| PRO-0004 | App scripting-dictionary | ready-for-plan | — | none | none | opus | — | queued | — |
-| PRO-0005 | Audit trail + policy gate | ready-for-plan | — | none | none | opus | — | queued | — |
+| PRO-0001 | CUA schema façade | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 1 · +2 façade tools → 14 advertised |
+| PRO-0002 | Set-of-marks captures | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 1 · unblocks PRO-0010 · SetOfMarks+MarkRenderer |
+| PRO-0003 | Menu-bar key-equivalents | ready-for-plan | — | none | none | opus | .worktrees/PRO-0003 · ai/pro-0003 | running | batch 2 |
+| PRO-0004 | App scripting-dictionary | ready-for-plan | — | none | none | opus | .worktrees/PRO-0004 · ai/pro-0004 | running | batch 2 |
+| PRO-0005 | Audit trail + policy gate | ready-for-plan | — | none | none | opus | .worktrees/PRO-0005 · ai/pro-0005 | running | batch 2 |
 | PRO-0006 | Vision-capture normalisation | ready-for-plan | — | none | none | opus | — | queued | — |
 | PRO-0007 | Zoom region crop | ready-for-plan | — | none | none | opus | — | queued | — |
-| PRO-0008 | MCP surface modernization | ready-for-plan | — | none | none | opus | .worktrees/PRO-0008 · ai/pro-0008 | running | batch 1 · unblocks PRO-0009 |
-| PRO-0009 | Process kill + fs jail | ready-for-plan | PRO-0008 (soft) | none | none | opus | — | queued | test setup/teardown + containment |
-| PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 | none | none | opus | — | queued | target marker in flow/stability artifacts |
+| PRO-0008 | MCP surface modernization | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 1 · unblocks PRO-0009 · proctor_resource |
+| PRO-0009 | Process kill + fs jail | ready-for-plan | PRO-0008 (soft) ✓ | none | none | opus | — | queued | dep merged; ready when a slot frees |
+| PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 ✓ | none | none | opus | — | queued | dep merged; ready when a slot frees |
 
 ## Deferred children discovered mid-fleet
 | Child | Parent | Where it runs | Status |
@@ -60,5 +60,7 @@ Holding pen (external deps / needs input): none.
 - (none yet)
 
 ## Event log (append-only, newest first)
+- 2026-08-13 batch 2 launched (3-concurrent): PRO-0003, PRO-0004, PRO-0005 in worktrees off 670389b.
+- 2026-08-13 batch 1 MERGED to main (670389b): PRO-0001 (14 tools), PRO-0002 (set-of-marks), PRO-0008 (proctor_resource). Shared-file conflicts (ToolCatalogue/Dispatch/Session/Tests) hand-resolved by union; worktrees+branches cleaned; .worktrees/ gitignored and de-polluted. 82 tests / 13 suites green.
 - 2026-08-13 pre-triage complete: 10 specs written, all Ready for Plan; LEDGER Last allocated: 10.
 - 2026-08-13 baseline committed (8430fd9); site self-hosted its JS (48447f4); scaffold created.
