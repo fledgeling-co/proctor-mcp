@@ -1,9 +1,12 @@
 # PRO-0006: Vision-capture normalisation
 
 **ID:** PRO-0006
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
+
+**Plan:** docs/plans/plan-PRO-0006.md
+**Branch:** ai/pro-0006 (implemented, tests green — not merged)
 
 ## Feature description
 

@@ -28,7 +28,8 @@ final class CaptureEngineImpl: CaptureEngine {
 
     func capture(window: WindowHandle, to path: String?, waitForComplete: Bool,
                  timeoutMs: Int, scale: Double?, tileHashes: Bool,
-                 includeCursor: Bool) async throws -> CaptureResult {
+                 includeCursor: Bool,
+                 normalize: CaptureNormalizeOptions?) async throws -> CaptureResult {
 
         let content = try await StreamBuilder.shareableContent()
         let scWindow = try StreamBuilder.resolve(window: window, in: content)
@@ -85,7 +86,49 @@ final class CaptureEngineImpl: CaptureEngine {
         }
 
         let destination = path ?? defaultPath(for: window)
-        try writePNG(pixels, to: destination)
+
+        // The backing scale of the captured frame, in pixels per point. This is
+        // the number the result has always reported as `scale`; normalisation
+        // multiplies it by the shrink factor so the file and the number agree.
+        let nativePixelScale = pixels.width > 0 && scWindow.frame.width > 0
+            ? Double(pixels.width) / Double(scWindow.frame.width)
+            : effectiveScale
+
+        var outWidth = pixels.width
+        var outHeight = pixels.height
+        var outScale = nativePixelScale
+        var normalization: CaptureNormalization?
+
+        if let normalize {
+            let fit = VisionCapture.fit(width: pixels.width, height: pixels.height,
+                                        maxLongEdge: normalize.maxLongEdge,
+                                        maxPixels: normalize.maxPixels)
+            var wroteScaled = false
+            if fit.applied,
+               let scaled = CaptureEngineImpl.downscale(pixels, toWidth: fit.width, toHeight: fit.height) {
+                try writeImagePNG(scaled, to: destination)
+                outWidth = fit.width
+                outHeight = fit.height
+                outScale = nativePixelScale * fit.scale
+                wroteScaled = true
+            } else {
+                // Already within the ceilings, or a resample the pipeline could
+                // not perform: write the native frame and report scale 1 so the
+                // caller who opted in still learns nothing needed doing.
+                try writePNG(pixels, to: destination)
+            }
+            normalization = CaptureNormalization(
+                scale: wroteScaled ? fit.scale : 1,
+                applied: wroteScaled,
+                originalWidth: pixels.width,
+                originalHeight: pixels.height,
+                width: outWidth,
+                height: outHeight,
+                maxLongEdge: normalize.maxLongEdge,
+                maxPixels: normalize.maxPixels)
+        } else {
+            try writePNG(pixels, to: destination)
+        }
 
         let contentRectIsReal = (meta.contentRect?.w ?? 0) > 0 && (meta.contentRect?.h ?? 0) > 0
         let trustworthy = meta.status == .complete && contentRectIsReal
@@ -116,15 +159,13 @@ final class CaptureEngineImpl: CaptureEngine {
             }
         }
 
-        let effectivePixelScale = pixels.width > 0 && scWindow.frame.width > 0
-            ? Double(pixels.width) / Double(scWindow.frame.width)
-            : effectiveScale
+        let effectivePixelScale = outScale
 
         return CaptureResult(
             window: window.id,
             path: destination,
-            width: pixels.width,
-            height: pixels.height,
+            width: outWidth,
+            height: outHeight,
             scale: effectivePixelScale,
             status: meta.status,
             contentRect: meta.contentRect,
@@ -134,7 +175,8 @@ final class CaptureEngineImpl: CaptureEngine {
             framesWaited: framesWaited,
             trustworthy: trustworthy,
             caveat: caveat,
-            tileHashes: tileHashes ? CaptureEngineImpl.tileHashes(of: pixels) : nil)
+            tileHashes: tileHashes ? CaptureEngineImpl.tileHashes(of: pixels) : nil,
+            normalization: normalization)
     }
 
     // MARK: - Quiet watch
@@ -186,6 +228,13 @@ final class CaptureEngineImpl: CaptureEngine {
             throw AgentError(code: .captureFailed,
                              message: "The captured frame could not be turned into an image.")
         }
+        try writeImagePNG(image, to: path)
+    }
+
+    /// Write a CGImage out as a PNG. Shared by the raw-frame path and the
+    /// normalised path, so both land through one place that creates the
+    /// directory and reports the same failures.
+    private func writeImagePNG(_ image: CGImage, to path: String) throws {
         let url = URL(fileURLWithPath: path)
         try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
                                                  withIntermediateDirectories: true)
@@ -200,6 +249,26 @@ final class CaptureEngineImpl: CaptureEngine {
             throw AgentError(code: .captureFailed,
                              message: "Writing the PNG to \(path) failed.")
         }
+    }
+
+    /// Resample a captured frame down to the given pixel dimensions, for vision
+    /// normalisation. The scale is decided in ProctorCore.VisionCapture; this is
+    /// only the pixel resample. Draws the source into a context of the target
+    /// size with high-quality interpolation, preserving the frame's colour space
+    /// and premultiplied-BGRA layout so the PNG matches the un-normalised one bar
+    /// its size. Returns nil if the frame or the target size is unusable, letting
+    /// the caller fall back to writing the native frame.
+    static func downscale(_ pixels: FramePixels, toWidth width: Int, toHeight height: Int) -> CGImage? {
+        guard width > 0, height > 0, let source = makeImage(pixels) else { return nil }
+        let bitmapInfo = CGImageAlphaInfo.premultipliedFirst.rawValue
+                       | CGBitmapInfo.byteOrder32Little.rawValue
+        guard let context = CGContext(
+            data: nil, width: width, height: height,
+            bitsPerComponent: 8, bytesPerRow: 0,
+            space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: bitmapInfo) else { return nil }
+        context.interpolationQuality = .high
+        context.draw(source, in: CGRect(x: 0, y: 0, width: width, height: height))
+        return context.makeImage()
     }
 
     static func makeImage(_ pixels: FramePixels) -> CGImage? {

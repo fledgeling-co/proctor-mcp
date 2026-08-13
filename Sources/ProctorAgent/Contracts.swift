@@ -66,14 +66,36 @@ struct FindPredicate: Sendable {
 
 // MARK: - Capture
 
+/// Opt-in vision normalisation for a capture. The ceilings default to the
+/// vision-API limits; a caller overrides them per call. The decision and the
+/// coordinate round-trip both live in ProctorCore.VisionCapture — this only
+/// carries the request from the tool boundary to the engine.
+struct CaptureNormalizeOptions: Sendable {
+    var maxLongEdge: Int = VisionCapture.defaultMaxLongEdge
+    var maxPixels: Int = VisionCapture.defaultMaxPixels
+}
+
 protocol CaptureEngine: AnyObject, Sendable {
     func capture(window: WindowHandle, to path: String?, waitForComplete: Bool,
                  timeoutMs: Int, scale: Double?, tileHashes: Bool,
-                 includeCursor: Bool) async throws -> CaptureResult
+                 includeCursor: Bool, normalize: CaptureNormalizeOptions?) async throws -> CaptureResult
 
     /// A running stream used by settle: report dirty area per frame without
     /// writing anything to disk.
     func beginQuietWatch(window: WindowHandle) async throws -> QuietWatch
+}
+
+extension CaptureEngine {
+    /// Convenience for the callers that never normalise — the settle probe, the
+    /// act/assert/flow evidence captures, the tri-observer frame. They keep the
+    /// original argument list; only proctor_capture reaches the normalising form.
+    func capture(window: WindowHandle, to path: String?, waitForComplete: Bool,
+                 timeoutMs: Int, scale: Double?, tileHashes: Bool,
+                 includeCursor: Bool) async throws -> CaptureResult {
+        try await capture(window: window, to: path, waitForComplete: waitForComplete,
+                          timeoutMs: timeoutMs, scale: scale, tileHashes: tileHashes,
+                          includeCursor: includeCursor, normalize: nil)
+    }
 }
 
 protocol QuietWatch: AnyObject, Sendable {

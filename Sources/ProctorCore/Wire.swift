@@ -254,18 +254,48 @@ public struct CaptureResult: Codable, Sendable {
     /// un-annotated result byte-identical to what it has always been, so the
     /// freshness metadata above is unchanged whether or not marks were drawn.
     public var annotation: MarkAnnotation?
+    /// Present only when vision normalisation was requested. Nil keeps a raw
+    /// capture byte-identical to what it has always been. When set, the PNG at
+    /// `path` and the `width`/`height`/`scale` above describe the normalised
+    /// frame, and this block carries the native dimensions and the exact factor
+    /// needed to map a model's coordinates back onto native geometry.
+    public var normalization: CaptureNormalization?
 
     public init(window: String, path: String, width: Int, height: Int, scale: Double,
                 status: FrameStatus, contentRect: Rect?, dirtyRectCount: Int, dirtyArea: Double,
                 capturedAt: Double, framesWaited: Int, trustworthy: Bool,
                 caveat: String? = nil, tileHashes: [String]? = nil,
-                annotation: MarkAnnotation? = nil) {
+                annotation: MarkAnnotation? = nil,
+                normalization: CaptureNormalization? = nil) {
         self.window = window; self.path = path; self.width = width; self.height = height
         self.scale = scale; self.status = status; self.contentRect = contentRect
         self.dirtyRectCount = dirtyRectCount; self.dirtyArea = dirtyArea
         self.capturedAt = capturedAt; self.framesWaited = framesWaited
         self.trustworthy = trustworthy; self.caveat = caveat; self.tileHashes = tileHashes
-        self.annotation = annotation
+        self.annotation = annotation; self.normalization = normalization
+    }
+}
+
+/// What vision normalisation did to a capture. Reported whenever normalisation
+/// was requested — including when the frame was already within the ceilings, so
+/// a caller who asked always learns the factor (`scale == 1` then, not a missing
+/// field). `scale` is the exact `out/in` factor a caller inverts to place a
+/// model coordinate back in native space: `native = normalised / scale`.
+public struct CaptureNormalization: Codable, Sendable, Equatable {
+    public var scale: Double            // out/in, ≤ 1; 1 when nothing was scaled
+    public var applied: Bool            // whether the frame actually needed shrinking
+    public var originalWidth: Int       // native pixel width, before normalisation
+    public var originalHeight: Int      // native pixel height, before normalisation
+    public var width: Int               // normalised pixel width (== CaptureResult.width)
+    public var height: Int              // normalised pixel height (== CaptureResult.height)
+    public var maxLongEdge: Int         // the long-edge ceiling enforced
+    public var maxPixels: Int           // the pixel-count ceiling enforced
+    public init(scale: Double, applied: Bool, originalWidth: Int, originalHeight: Int,
+                width: Int, height: Int, maxLongEdge: Int, maxPixels: Int) {
+        self.scale = scale; self.applied = applied
+        self.originalWidth = originalWidth; self.originalHeight = originalHeight
+        self.width = width; self.height = height
+        self.maxLongEdge = maxLongEdge; self.maxPixels = maxPixels
     }
 }
 

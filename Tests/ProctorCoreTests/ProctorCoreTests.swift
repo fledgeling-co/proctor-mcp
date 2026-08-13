@@ -1412,3 +1412,128 @@ struct RedactingAuditTests {
     }
 }
 
+
+@Suite("Vision-capture normalisation")
+struct VisionCaptureTests {
+
+    // The whole feature exists to stop a vision API silently downsampling an
+    // oversized frame to an unknown factor. These pin the factor it must apply
+    // and prove the coordinate round-trip that factor is reported for.
+
+    // MARK: AC1 — the long-edge ceiling binds and aspect is preserved
+
+    @Test("a frame over the long-edge ceiling scales its long edge to the ceiling")
+    func longEdgeCeiling() {
+        // 3000x1500 is under 1.15MP-per-nothing on the edge but way over 1568 wide.
+        let fit = VisionCapture.fit(width: 3000, height: 1500,
+                                    maxLongEdge: 1568, maxPixels: 100_000_000)
+        #expect(fit.applied)
+        #expect(fit.width == 1568)                      // long edge sits exactly on the ceiling
+        #expect(fit.height == 784)                      // aspect 2:1 preserved
+        #expect(abs(fit.scale - 1568.0 / 3000.0) < 1e-9) // scale == out/in
+        #expect(fit.scale < 1)
+    }
+
+    // MARK: AC2 — the pixel-count ceiling binds independently of the long edge
+
+    @Test("a near-square frame under the edge ceiling is scaled by the pixel budget")
+    func pixelCountCeiling() {
+        // 1500x1500 = 2.25MP: each side is under 1568, but the area is over 1.15MP.
+        let fit = VisionCapture.fit(width: 1500, height: 1500,
+                                    maxLongEdge: 1568, maxPixels: 1_150_000)
+        #expect(fit.applied)
+        #expect(fit.width * fit.height <= 1_150_000)     // brought under the pixel budget
+        // One pixel more per side would breach it, so the fit is tight, not timid.
+        #expect((fit.width + 1) * (fit.height + 1) > 1_150_000)
+        let expected = (1_150_000.0 / (1500.0 * 1500.0)).squareRoot()
+        #expect(abs(fit.scale - expected) < 1e-9)
+    }
+
+    // MARK: AC3 — opting in never touches a frame already within the ceilings
+
+    @Test("a frame within both ceilings is returned unchanged with scale 1")
+    func withinCeilingIsNoOp() {
+        let fit = VisionCapture.fit(width: 1200, height: 800,
+                                    maxLongEdge: 1568, maxPixels: 1_150_000)
+        #expect(!fit.applied)
+        #expect(fit.scale == 1)
+        #expect(fit.width == 1200 && fit.height == 800) // no upscale, no degrade
+    }
+
+    // MARK: AC4 — the reported factor makes the coordinate round-trip exact
+
+    @Test("mapping a coordinate to normalised space and back returns it")
+    func roundTripIsExact() {
+        let fit = VisionCapture.fit(width: 3000, height: 1500)   // real ceilings
+        let nativeX = 2200.0, nativeY = 900.0
+        let nx = VisionCapture.toNormalized(nativeX, scale: fit.scale)
+        let ny = VisionCapture.toNormalized(nativeY, scale: fit.scale)
+        #expect(abs(VisionCapture.toNative(nx, scale: fit.scale) - nativeX) < 1e-9)
+        #expect(abs(VisionCapture.toNative(ny, scale: fit.scale) - nativeY) < 1e-9)
+    }
+
+    @Test("a model coordinate in the normalised frame maps onto native geometry")
+    func modelCoordinateMapsToNative() {
+        // A model looking at the downscaled 1568-wide frame clicks its centre.
+        let fit = VisionCapture.fit(width: 3136, height: 1568,
+                                    maxLongEdge: 1568, maxPixels: 100_000_000)
+        #expect(fit.scale == 0.5)
+        let modelX = 784.0            // centre of the 1568-wide normalised frame
+        #expect(VisionCapture.toNative(modelX, scale: fit.scale) == 1568.0) // native centre of 3136
+        // A rectangle maps whole, so a set-of-marks box round-trips too.
+        let box = VisionCapture.toNative(Rect(x: 100, y: 50, w: 40, h: 20), scale: fit.scale)
+        #expect(box == Rect(x: 200, y: 100, w: 80, h: 40))
+    }
+
+    @Test("a non-positive scale is treated as identity rather than dividing by zero")
+    func degenerateScaleIsIdentity() {
+        #expect(VisionCapture.toNative(123.0, scale: 0) == 123.0)
+        #expect(VisionCapture.toNormalized(123.0, scale: -1) == 123.0)
+    }
+
+    // MARK: AC5 — the result carries the factor, and stays byte-compatible when absent
+
+    @Test("a CaptureResult round-trips its normalization block through JSON")
+    func normalizationEncodes() throws {
+        let norm = CaptureNormalization(scale: 0.5, applied: true,
+                                        originalWidth: 3136, originalHeight: 1568,
+                                        width: 1568, height: 784,
+                                        maxLongEdge: 1568, maxPixels: 1_150_000)
+        let result = CaptureResult(window: "win:1:1", path: "/tmp/x.png",
+                                   width: 1568, height: 784, scale: 1.0,
+                                   status: .complete, contentRect: nil,
+                                   dirtyRectCount: 0, dirtyArea: 0, capturedAt: 1,
+                                   framesWaited: 1, trustworthy: true,
+                                   normalization: norm)
+        let data = try JSONEncoder().encode(result)
+        let back = try JSONDecoder().decode(CaptureResult.self, from: data)
+        #expect(back.normalization == norm)
+        #expect(back.normalization?.scale == 0.5)
+    }
+
+    @Test("a raw capture omits the normalization key entirely")
+    func rawCaptureHasNoNormalizationKey() throws {
+        let result = CaptureResult(window: "win:1:1", path: "/tmp/x.png",
+                                   width: 800, height: 600, scale: 2.0,
+                                   status: .complete, contentRect: nil,
+                                   dirtyRectCount: 0, dirtyArea: 0, capturedAt: 1,
+                                   framesWaited: 1, trustworthy: true)
+        let json = String(data: try JSONEncoder().encode(result), encoding: .utf8) ?? ""
+        #expect(!json.contains("normalization"))   // default stays byte-compatible
+    }
+
+    // MARK: AC6 — normalisation is an option on capture, not a new tool
+
+    @Test("proctor_capture advertises normalize and the catalogue stays at 17 tools")
+    func captureAdvertisesNormalizeWithoutANewTool() {
+        #expect(ToolCatalogue.all.count == 17)      // extended, not added
+        let cap = try! #require(ToolCatalogue.spec(named: "proctor_capture"))
+        let props = cap.inputSchema["properties"]?.objectValue
+        #expect(props?["normalize"] != nil)
+        #expect(props?["normalizeMaxLongEdge"] != nil)
+        #expect(props?["normalizeMaxPixels"] != nil)
+        #expect(cap.readOnly == true)               // normalisation is a read, not an act
+        let out = ToolCatalogue.outputSchema(for: "proctor_capture")
+        #expect(out["properties"]?["normalization"] != nil)
+    }
+}
