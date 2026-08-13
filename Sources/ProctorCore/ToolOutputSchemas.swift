@@ -67,6 +67,15 @@ public extension ToolCatalogue {
                  "framesWaited": p("number"), "trustworthy": p("boolean"),
                  "caveat": p("string"), "tileHashes": p("array")]),
 
+            "proctor_zoom": openObject(
+                "A native-resolution crop of a region or element, with the same freshness metadata as a capture; the crop PNG is on disk at `path`, never inline, and `crop` names what was cut.",
+                ["window": p("string"), "path": p("string"), "width": p("number"),
+                 "height": p("number"), "scale": p("number"), "status": p("string"),
+                 "contentRect": p("object"), "dirtyRectCount": p("number"),
+                 "dirtyArea": p("number"), "capturedAt": p("number"),
+                 "framesWaited": p("number"), "trustworthy": p("boolean"),
+                 "caveat": p("string"), "crop": p("object")]),
+
             "proctor_wait": openObject(
                 "Whether a named condition held, and the state when it resolved.",
                 ["window": p("string"), "condition": p("string"), "ok": p("boolean"),

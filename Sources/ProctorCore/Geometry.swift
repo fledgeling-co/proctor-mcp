@@ -135,3 +135,84 @@ public enum RegionDirt {
         return min(1, max(0, unionArea(clipped) / area))
     }
 }
+
+// MARK: - Region crop
+
+/// The arithmetic behind a native-resolution zoom crop: turning a region given in
+/// window points into the integer pixel rectangle to cut from a captured frame,
+/// and turning an accessibility element's screen frame into such a region. It
+/// lives here, away from ScreenCaptureKit and the Accessibility grant, because it
+/// is the part of `proctor_zoom` a wrong answer would make quietly useless — a
+/// crop of the wrong pixels reads exactly like a crop of the right ones. Mirrors
+/// how `SetOfMarks.toPixels` and `RegionDirt` keep the transform in Core.
+public enum RegionCrop {
+
+    /// A region placed into a captured frame: the pixel rectangle to cut, and
+    /// whether it had to be clamped to the frame to fit.
+    public struct Placement: Sendable, Equatable {
+        /// Integer-aligned, clamped to the image bounds, in frame pixels.
+        public var pixelRect: Rect
+        /// True when the requested region extended beyond the captured frame, so
+        /// the crop is of the visible part only.
+        public var clamped: Bool
+        public init(pixelRect: Rect, clamped: Bool) {
+            self.pixelRect = pixelRect; self.clamped = clamped
+        }
+    }
+
+    /// Why a region could not be placed. A crop of nothing, or of pixels that were
+    /// never captured, is an error with a reason rather than an empty image.
+    public enum Failure: String, Error, Equatable, Sendable {
+        case emptyRegion        // the region has no area
+        case noFrameGeometry    // the frame reports no pixels to cut from
+        case outsideFrame       // the region falls entirely outside the captured frame
+    }
+
+    /// Place a region (window points, top-left origin) into a frame of the given
+    /// pixel dimensions captured at `scale` pixels per point.
+    ///
+    /// The origin floors and the far edge ceils, so the whole of the requested
+    /// region is inside the returned crop rather than shaved by rounding, and the
+    /// result is then clamped to the image bounds. A region with no area, no frame
+    /// to cut from, or no overlap with the frame is a named failure.
+    public static func place(regionPoints region: Rect,
+                             imageWidth: Int, imageHeight: Int,
+                             scale: Double) -> Result<Placement, Failure> {
+        guard region.w > 0, region.h > 0 else { return .failure(.emptyRegion) }
+        guard imageWidth > 0, imageHeight > 0 else { return .failure(.noFrameGeometry) }
+        let s = scale > 0 ? scale : 1
+
+        let x0 = (region.x * s).rounded(.down)
+        let y0 = (region.y * s).rounded(.down)
+        let x1 = ((region.x + region.w) * s).rounded(.up)
+        let y1 = ((region.y + region.h) * s).rounded(.up)
+        let raw = Rect(x: x0, y: y0, w: x1 - x0, h: y1 - y0)
+
+        let bounds = Rect(x: 0, y: 0, w: Double(imageWidth), h: Double(imageHeight))
+        guard let clip = RegionDirt.intersection(raw, bounds), clip.w >= 1, clip.h >= 1 else {
+            return .failure(.outsideFrame)
+        }
+        let clamped = clip.x != raw.x || clip.y != raw.y || clip.w != raw.w || clip.h != raw.h
+        return .success(Placement(pixelRect: clip, clamped: clamped))
+    }
+
+    /// An accessibility element's frame (screen points) as a region relative to
+    /// its window's top-left, optionally padded on every side so a tiny element
+    /// is read with a little surrounding context. Padding is floored at zero.
+    public static func regionForElement(elementFrame element: Rect,
+                                        window: Rect, padding: Double = 0) -> Rect {
+        let p = max(0, padding)
+        return Rect(x: element.x - window.x - p,
+                    y: element.y - window.y - p,
+                    w: element.w + 2 * p,
+                    h: element.h + 2 * p)
+    }
+
+    /// Grow a region symmetrically by `padding` points on every side. Padding is
+    /// floored at zero, so a negative value is a no-op rather than a shrink.
+    public static func pad(_ region: Rect, by padding: Double) -> Rect {
+        let p = max(0, padding)
+        return Rect(x: region.x - p, y: region.y - p,
+                    w: region.w + 2 * p, h: region.h + 2 * p)
+    }
+}
