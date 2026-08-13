@@ -17,7 +17,8 @@ public struct ToolSpec: Sendable {
 
 public enum ToolCatalogue {
     public static let all: [ToolSpec] = [
-        apps, snapshot, find, act, capture, wait, assert_, flow, stability, inspect, doctor, unlock
+        apps, snapshot, find, act, capture, wait, assert_, flow, stability, inspect, doctor, unlock,
+        computer, openaiComputer
     ]
 
     public static func spec(named name: String) -> ToolSpec? {
@@ -501,6 +502,89 @@ public enum ToolCatalogue {
                     "description": .string("How long the turn stays authorized. Defaults to 15000.")
                 ])
             ])
+        ]),
+        readOnly: false
+    )
+
+    // MARK: computer (Anthropic façade)
+
+    static let computer = ToolSpec(
+        name: "proctor_computer",
+        title: "Drive a window with the stock Anthropic computer-use schema",
+        description: """
+        Accept a single Anthropic `computer` action in its stock schema and run it against a \
+        window, so a model trained on that tool drives Proctor with no prompt changes. This is an \
+        additive adapter: the native eleven tools are unchanged, and a run that does not use this \
+        tool is unaffected.
+
+        Supported actions map onto Proctor's own step vocabulary: screenshot (a window capture), \
+        left_click / double_click / triple_click, mouse_move, type, key (an xdotool combo such as \
+        "cmd+s"), scroll (scroll_direction plus scroll_amount), left_click_drag (needs a \
+        start_coordinate, since the façade tracks no cursor), and wait. Coordinates are read in \
+        the screenshot's own space — the target window's top-left is the origin — and mapped to \
+        the global screen point the actuation needs; pass scale for a screenshot taken at other \
+        than 1x.
+
+        These are synthetic-event actions: they need the window frontmost and are reported with \
+        plane=syntheticEvent, never as a background-safe result. foreground therefore defaults to \
+        true. right_click, middle_click and cursor_position have no faithful mapping today and are \
+        refused with a reason rather than mis-actuated. Every step is returned with the original \
+        action, what it became, the plane it travelled and the post-state hash, so a façade-driven \
+        run is as auditable as a native one.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "window": .object(["type": .string("string"), "description": .string("Window handle from proctor_apps to drive and observe.")]),
+                "action": .object([
+                    "type": .string("object"),
+                    "description": .string("One Anthropic computer action in its stock schema, e.g. {\"action\":\"left_click\",\"coordinate\":[x,y]}.")
+                ]),
+                "scale": .object(["type": .string("number"), "description": .string("Coordinate scale of the screenshot the model was shown. Defaults to 1 (point space); pass 2 for a 2x retina capture.")]),
+                "foreground": .object(["type": .string("boolean"), "description": .string("Activate the app first. Defaults to true, because computer-use actions are synthetic events that need the window frontmost.")])
+            ]),
+            "required": .array([.string("window"), .string("action")])
+        ]),
+        readOnly: false
+    )
+
+    // MARK: openai_computer (OpenAI façade)
+
+    static let openaiComputer = ToolSpec(
+        name: "proctor_openai_computer",
+        title: "Drive a window with the stock OpenAI computer-use schema",
+        description: """
+        Accept OpenAI `openai_computer` actions in their stock schema — a single action or a batch \
+        array — and run them against a window in order, stopping on the first failure and \
+        reporting per-step outcome, which is the shape an OpenAI computer-use agent expects. Like \
+        its Anthropic counterpart this is additive and opt-in; the native tool surface is \
+        unchanged.
+
+        Supported action types map onto Proctor's step vocabulary: screenshot, click (left button \
+        only), double_click, move, type, keypress (a keys array such as ["ctrl","c"]), scroll \
+        (scroll_x / scroll_y at a point), drag (a path of points), and wait. Coordinates are read \
+        in the screenshot's own space — the window's top-left is the origin — and mapped to the \
+        global screen point actuation needs; pass scale for a non-1x screenshot.
+
+        The mapped actions are synthetic events, so they need the window frontmost and are \
+        reported with plane=syntheticEvent; foreground defaults to true. A non-left mouse button \
+        has no faithful mapping today and is refused rather than turned into a left click. The \
+        batch stops at the first failing step and reports failedAt, and every step carries the \
+        original action, its translation and the post-state hash for audit.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "window": .object(["type": .string("string"), "description": .string("Window handle from proctor_apps to drive and observe.")]),
+                "actions": .object([
+                    "type": .string("array"),
+                    "description": .string("An ordered batch of OpenAI computer actions in the stock schema, e.g. [{\"type\":\"click\",\"button\":\"left\",\"x\":..,\"y\":..}]. A single action object is also accepted."),
+                    "items": .object(["type": .string("object")])
+                ]),
+                "scale": .object(["type": .string("number"), "description": .string("Coordinate scale of the screenshot the model was shown. Defaults to 1; pass 2 for a 2x retina capture.")]),
+                "foreground": .object(["type": .string("boolean"), "description": .string("Activate the app first. Defaults to true, because computer-use actions are synthetic events that need the window frontmost.")])
+            ]),
+            "required": .array([.string("window"), .string("actions")])
         ]),
         readOnly: false
     )

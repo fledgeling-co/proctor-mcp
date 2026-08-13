@@ -38,6 +38,8 @@ struct Dispatcher: Sendable {
         case "proctor_inspect":   return try await inspect(args)
         case "proctor_doctor":    return try await doctor(args)
         case "proctor_unlock":    return try await unlock(args)
+        case "proctor_computer":         return try await computer(args)
+        case "proctor_openai_computer":  return try await openaiComputer(args)
         default:
             throw AgentError(
                 code: .invalidArguments,
@@ -267,6 +269,39 @@ struct Dispatcher: Sendable {
                              message: "unknown unlock action \(action.debugDescription)",
                              remedy: "Use status, open, close, unlock or relock.")
         }
+    }
+
+    // MARK: - proctor_computer (Anthropic façade)
+
+    private func computer(_ args: Args) async throws -> JSONValue {
+        let window = try args.requiredString("window")
+        guard let action = args.value("action"), action.objectValue != nil else {
+            throw AgentError(
+                code: .invalidArguments,
+                message: "proctor_computer requires an `action` object",
+                remedy: "Send a stock Anthropic computer action, e.g. "
+                      + "{\"action\":\"left_click\",\"coordinate\":[x,y]}.")
+        }
+        return try await session.computerUse(schema: .anthropic, window: window, payload: action,
+                                             scale: args.double("scale") ?? 1,
+                                             foreground: args.bool("foreground", true))
+    }
+
+    // MARK: - proctor_openai_computer (OpenAI façade)
+
+    private func openaiComputer(_ args: Args) async throws -> JSONValue {
+        let window = try args.requiredString("window")
+        guard let actions = args.value("actions"),
+              actions.arrayValue != nil || actions.objectValue != nil else {
+            throw AgentError(
+                code: .invalidArguments,
+                message: "proctor_openai_computer requires `actions`",
+                remedy: "Send an array of OpenAI computer actions, or a single action object, e.g. "
+                      + "[{\"type\":\"click\",\"button\":\"left\",\"x\":10,\"y\":20}].")
+        }
+        return try await session.computerUse(schema: .openai, window: window, payload: actions,
+                                             scale: args.double("scale") ?? 1,
+                                             foreground: args.bool("foreground", true))
     }
 }
 

@@ -1,9 +1,10 @@
 # PRO-0001: CUA schema façade
 
 **ID:** PRO-0001
-**Status:** Ready for Plan
+**Status:** Ready for Work
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
+**Plan:** [plan-PRO-0001.md](../plans/plan-PRO-0001.md)
 
 ## Feature description
 
