@@ -191,9 +191,9 @@ struct FrameCodecTests {
 @Suite("Tool catalogue")
 struct CatalogueTests {
 
-    @Test("fourteen tools are advertised")
+    @Test("fifteen tools are advertised")
     func count() {
-        #expect(ToolCatalogue.all.count == 14)
+        #expect(ToolCatalogue.all.count == 15)
     }
 
     @Test("every tool has a unique name, a description and an object schema")
@@ -886,5 +886,171 @@ struct SetOfMarksTests {
         #expect(props?["grid"] != nil)
         #expect(props?["maxMarks"] != nil)
         #expect(cap.readOnly == true)   // annotation adds an output, it does not act on the app
+    }
+}
+
+@Suite("Menu key-equivalents")
+struct MenuKeyEquivalentTests {
+
+    // MARK: AC1 — Carbon modifier decode (command implied)
+
+    @Test("command is implied unless the no-command bit is set")
+    func modifierDecode() {
+        // A wrong reading here inverts every shortcut the tool reports, so each
+        // case is pinned. Order is canonical: cmd, ctrl, opt, shift.
+        #expect(MenuKeyEquivalent.modifiers(fromCarbonMask: 0x00) == ["cmd"])
+        #expect(MenuKeyEquivalent.modifiers(fromCarbonMask: 0x01) == ["cmd", "shift"])
+        #expect(MenuKeyEquivalent.modifiers(fromCarbonMask: 0x02) == ["cmd", "opt"])
+        #expect(MenuKeyEquivalent.modifiers(fromCarbonMask: 0x04) == ["cmd", "ctrl"])
+        // The no-command bit removes ⌘ — a menu item whose equivalent is a bare F-key.
+        #expect(MenuKeyEquivalent.modifiers(fromCarbonMask: 0x08) == [])
+        #expect(MenuKeyEquivalent.modifiers(fromCarbonMask: 0x09) == ["shift"])
+        // Everything at once, command still implied.
+        #expect(MenuKeyEquivalent.modifiers(fromCarbonMask: 0x07) == ["cmd", "ctrl", "opt", "shift"])
+    }
+
+    // MARK: AC2 — normalised shortcut string
+
+    @Test("a character equivalent normalises cmd-first and lowercased")
+    func shortcutFromChar() {
+        #expect(MenuKeyEquivalent.shortcut(char: "N", virtualKey: nil, glyph: nil, carbonMask: 0)
+                == "cmd+n")
+        // The spec's own example.
+        #expect(MenuKeyEquivalent.shortcut(char: "N", virtualKey: nil, glyph: nil, carbonMask: 0x01)
+                == "cmd+shift+n")
+    }
+
+    @Test("no resolvable key means no shortcut, whatever the modifiers say")
+    func noKeyNoShortcut() {
+        // A parent menu ("File") carries no equivalent; modifiers alone are not one.
+        #expect(MenuKeyEquivalent.shortcut(char: nil, virtualKey: nil, glyph: nil, carbonMask: 0)
+                == nil)
+        #expect(MenuKeyEquivalent.shortcut(char: "", virtualKey: nil, glyph: nil, carbonMask: 0)
+                == nil)
+    }
+
+    // MARK: AC3 — non-character equivalents (virtual key + glyph)
+
+    @Test("a virtual keycode resolves to its key name")
+    func shortcutFromVirtualKey() {
+        // cmd + left arrow — no printable char, so it arrives as a virtual key.
+        #expect(MenuKeyEquivalent.shortcut(char: nil, virtualKey: 123, glyph: nil, carbonMask: 0)
+                == "cmd+left")
+        // Bare F2 (no-command bit set), the classic modifier-less menu equivalent.
+        #expect(MenuKeyEquivalent.shortcut(char: nil, virtualKey: 120, glyph: nil, carbonMask: 0x08)
+                == "f2")
+    }
+
+    @Test("a menu glyph resolves to its key name")
+    func shortcutFromGlyph() {
+        // Page Up glyph (0x62) and Escape glyph (0x1B).
+        #expect(MenuKeyEquivalent.shortcut(char: nil, virtualKey: nil, glyph: 0x62, carbonMask: 0)
+                == "cmd+pageup")
+        #expect(MenuKeyEquivalent.shortcut(char: nil, virtualKey: nil, glyph: 0x1B, carbonMask: 0x08)
+                == "escape")
+    }
+
+    @Test("a function-key character is rejected so the virtual key wins")
+    func functionKeyCharFallsThrough() {
+        // AppKit reports arrow/function equivalents with a private-use scalar in
+        // cmdChar; treating it as printable would emit a garbage shortcut, so it is
+        // rejected and the virtual key is used instead.
+        let functionKeyChar = String(UnicodeScalar(0xF702)!)   // NSLeftArrowFunctionKey
+        #expect(MenuKeyEquivalent.normalisedChar(functionKeyChar) == nil)
+        #expect(MenuKeyEquivalent.shortcut(char: functionKeyChar, virtualKey: 123, glyph: nil,
+                                           carbonMask: 0) == "cmd+left")
+    }
+
+    // MARK: AC5 — flatten
+
+    private func tree() -> [RawMenuItem] {
+        [
+            RawMenuItem(title: "File", enabled: true, hasSubmenu: true, submenuPopulated: true,
+                        children: [
+                            RawMenuItem(title: "New", enabled: true, cmdChar: "N", cmdModifiers: 0),
+                            RawMenuItem(title: nil, enabled: false, isSeparator: true),
+                            RawMenuItem(title: "New from Clipboard", enabled: false,
+                                        cmdChar: "N", cmdModifiers: 0x01),
+                            // A submenu macOS has not built yet — must not be fabricated.
+                            RawMenuItem(title: "Open Recent", enabled: true,
+                                        hasSubmenu: true, submenuPopulated: false,
+                                        children: []),
+                        ]),
+        ]
+    }
+
+    @Test("every non-separator item becomes a row with its full menu path")
+    func flattenPaths() {
+        let rows = MenuKeyEquivalent.flatten(bar: tree())
+        let paths = rows.map(\.path)
+        #expect(paths.contains(["File"]))
+        #expect(paths.contains(["File", "New"]))
+        #expect(paths.contains(["File", "New from Clipboard"]))
+        #expect(paths.contains(["File", "Open Recent"]))
+    }
+
+    @Test("separators are dropped, not emitted as blank rows")
+    func flattenDropsSeparators() {
+        let rows = MenuKeyEquivalent.flatten(bar: tree())
+        // File, New, New from Clipboard, Open Recent — the separator is gone.
+        #expect(rows.count == 4)
+        #expect(rows.allSatisfy { !$0.title.isEmpty })
+    }
+
+    @Test("a leaf carries its shortcut decomposed for the act key step")
+    func flattenLeafShortcut() {
+        let rows = MenuKeyEquivalent.flatten(bar: tree())
+        let new = try! #require(rows.first { $0.path == ["File", "New"] })
+        #expect(new.shortcut == "cmd+n")
+        #expect(new.key == "n")
+        #expect(new.modifiers == ["cmd"])
+        #expect(new.enabled == true)
+        #expect(new.hasSubmenu == false)
+
+        let shifted = try! #require(rows.first { $0.path == ["File", "New from Clipboard"] })
+        #expect(shifted.shortcut == "cmd+shift+n")
+        #expect(shifted.enabled == false)
+    }
+
+    @Test("a parent menu is a row with a submenu and no shortcut")
+    func flattenParentRow() {
+        let rows = MenuKeyEquivalent.flatten(bar: tree())
+        let file = try! #require(rows.first { $0.path == ["File"] })
+        #expect(file.hasSubmenu == true)
+        #expect(file.submenuPopulated == true)
+        #expect(file.shortcut == nil)
+        #expect(file.key == nil)
+    }
+
+    @Test("a lazily-populated submenu is one row and its contents are not fabricated")
+    func flattenLazySubmenu() {
+        let rows = MenuKeyEquivalent.flatten(bar: tree())
+        let recent = try! #require(rows.first { $0.path == ["File", "Open Recent"] })
+        #expect(recent.hasSubmenu == true)
+        #expect(recent.submenuPopulated == false)
+        // Nothing was invented beneath a submenu that had not been read.
+        #expect(rows.allSatisfy { $0.path.count <= 2 })
+        #expect(!rows.contains { $0.path.starts(with: ["File", "Open Recent"]) && $0.path.count > 2 })
+    }
+
+    // MARK: AC4 — catalogue
+
+    @Test("proctor_menu is advertised, read-only, non-destructive and idempotent")
+    func catalogueEntry() {
+        let menu = try! #require(ToolCatalogue.spec(named: "proctor_menu"))
+        #expect(menu.readOnly == true)
+        #expect(menu.destructive == false)
+        #expect(menu.idempotent == true)
+        #expect(menu.name.hasPrefix("proctor_"))
+        #expect(menu.inputSchema["type"]?.stringValue == "object")
+        #expect(ToolCatalogue.outputSchema(for: "proctor_menu")["type"]?.stringValue == "object")
+    }
+
+    @Test("every tool profile exposes proctor_menu, since it is a pure accessibility read")
+    func inEveryProfile() {
+        for profile in ToolProfile.allCases {
+            #expect(ToolCatalogue.toolNames(for: profile).contains("proctor_menu"),
+                    "\(profile.rawValue) drops proctor_menu")
+        }
     }
 }

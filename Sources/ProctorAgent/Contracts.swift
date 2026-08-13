@@ -35,6 +35,10 @@ protocol AXEngine: AnyObject, Sendable {
     /// actually used, since a step may fall back from a declared contract.
     func perform(step: ActionStep, window: String, foreground: Bool) throws -> ActuationPlane
 
+    /// Read the app's menu bar as a raw tree for key-equivalent reconstruction.
+    /// Returns nil when the app exposes no menu bar (agent-style apps have none).
+    func menuBar(app: String) throws -> [RawMenuItem]?
+
     /// Notifications seen on this app since a mark. Backs the AX half of settle.
     func notificationCount(app: String, since: UInt64) -> Int
     func notificationMark(app: String) -> UInt64

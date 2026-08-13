@@ -33,7 +33,7 @@ public struct ToolSpec: Sendable {
 public enum ToolCatalogue {
     public static let all: [ToolSpec] = [
         apps, snapshot, find, act, capture, wait, assert_, flow, stability, inspect, doctor, unlock,
-        computer, openaiComputer
+        computer, openaiComputer, menu
     ]
 
     public static func spec(named name: String) -> ToolSpec? {
@@ -620,5 +620,43 @@ public enum ToolCatalogue {
             "required": .array([.string("window"), .string("actions")])
         ]),
         readOnly: false
+    )
+
+    // MARK: menu
+
+    static let menu = ToolSpec(
+        name: "proctor_menu",
+        title: "Enumerate the menu bar with key-equivalents",
+        description: """
+        Walk the attached application's menu bar and return every item with its menu path, title, \
+        enabled state, and its keyboard shortcut — the key-equivalent reconstructed from the \
+        accessibility attributes, e.g. cmd+shift+n. Pressing a known shortcut is faster and more \
+        robust than walking AXMenuBar to a submenu item, which is slow, focus-sensitive and \
+        brittle across localisations, so surfacing the shortcut lets a model choose the keystroke \
+        path when one exists.
+
+        Each item carries the shortcut two ways: the normalised string, and a key plus modifiers \
+        pair in the exact shape the proctor_act `key` step reads — so an item can be invoked by \
+        its shortcut straight from this enumeration. That `key` step is a synthetic event and needs \
+        the app frontmost; for a background-safe invocation use the `menu` step with the menuPath \
+        this tool returns, which actuates the same command through the accessibility plane without \
+        stealing focus. Both routes come from the one walk.
+
+        This is a pure accessibility read: no synthetic events, no new permission beyond the \
+        Accessibility grant attach already required, and it reaches a background or other-Space \
+        app. macOS builds some submenus only when they are opened; such a submenu is reported as a \
+        single item with submenuPopulated false and is not descended into, rather than fabricating \
+        contents that were never read. Open it with a menu or press step and re-read to see inside.
+
+        Takes an app handle, or a window handle whose owning app is used.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "app": .object(["type": .string("string"), "description": .string("App handle from proctor_apps to read the menu bar of.")]),
+                "window": .object(["type": .string("string"), "description": .string("A window handle, as an alternative to app; its owning application's menu bar is read.")])
+            ])
+        ]),
+        readOnly: true
     )
 }

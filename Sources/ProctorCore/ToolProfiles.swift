@@ -30,7 +30,7 @@ public extension ToolCatalogue {
     /// The tool names each profile advertises, smallest first. Defined as names so
     /// the nesting is verifiable independently of the spec order in `all`.
     private static let profileNames: [ToolProfile: [String]] = {
-        let ax = ["proctor_apps", "proctor_snapshot", "proctor_find",
+        let ax = ["proctor_apps", "proctor_snapshot", "proctor_find", "proctor_menu",
                   "proctor_act", "proctor_wait", "proctor_assert", "proctor_doctor"]
         let core = ax + ["proctor_capture"]
         let scripting = core + ["proctor_flow", "proctor_stability"]
