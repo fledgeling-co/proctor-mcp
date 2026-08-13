@@ -20,11 +20,13 @@ struct RemoteConfig {
     /// The bearer token a client must present. `nil` means no auth, which is
     /// only permitted on a loopback bind — see `run()`.
     var token: String?
+    /// The advertised tool profile, applied identically to the HTTP path.
+    var profile: ToolProfile = .full
 }
 
 final class RemoteServer: @unchecked Sendable {
     private let config: RemoteConfig
-    private let mcp = MCPServer()
+    private let mcp: MCPServer
     private let acceptQueue = DispatchQueue(label: "app.fledgeling.procter.remote.accept")
     private let workerQueue = DispatchQueue(
         label: "app.fledgeling.procter.remote.worker", attributes: .concurrent)
@@ -33,7 +35,10 @@ final class RemoteServer: @unchecked Sendable {
     private let slots = DispatchSemaphore(value: 16)
     private let maxBodyBytes = 16 * 1024 * 1024
 
-    init(config: RemoteConfig) { self.config = config }
+    init(config: RemoteConfig) {
+        self.config = config
+        self.mcp = MCPServer(profile: config.profile)
+    }
 
     private var isLoopback: Bool {
         config.host == "127.0.0.1" || config.host == "localhost" || config.host == "::1"
@@ -83,7 +88,7 @@ final class RemoteServer: @unchecked Sendable {
         }
 
         let auth = config.token == nil ? "no auth (loopback only)" : "bearer token required"
-        shimLog("serving MCP over HTTP on http://\(host):\(config.port)/mcp — \(auth); agent socket \(Wire.socketPath)")
+        shimLog("serving MCP over HTTP on http://\(host):\(config.port)/mcp — \(auth); profile \(config.profile.rawValue); agent socket \(Wire.socketPath)")
 
         while true {
             let client = accept(fd, nil, nil)

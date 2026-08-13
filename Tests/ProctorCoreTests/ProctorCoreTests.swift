@@ -223,6 +223,164 @@ struct CatalogueTests {
     }
 }
 
+@Suite("Tool annotations")
+struct AnnotationTests {
+
+    // The destructive hint is what a host gates behind its own confirmation. Only
+    // the tools that actuate or unlock earn it; attach/detach and every read do not.
+    @Test("exactly the actuating tools are destructive")
+    func destructiveSet() {
+        let destructive = Set(ToolCatalogue.all.filter(\.destructive).map(\.name))
+        #expect(destructive == ["proctor_act", "proctor_flow",
+                                "proctor_stability", "proctor_unlock"])
+    }
+
+    @Test("a read-only tool is never destructive and is idempotent")
+    func readOnlyNeverDestructive() {
+        for tool in ToolCatalogue.all where tool.readOnly {
+            #expect(tool.destructive == false, "\(tool.name) is read-only yet destructive")
+            #expect(tool.idempotent == true, "\(tool.name) is read-only yet not idempotent")
+        }
+    }
+
+    @Test("apps mutates session state but is non-destructive and idempotent")
+    func appsIsIdempotent() {
+        let apps = try! #require(ToolCatalogue.spec(named: "proctor_apps"))
+        #expect(apps.readOnly == false)
+        #expect(apps.destructive == false)
+        #expect(apps.idempotent == true)
+    }
+
+    @Test("act is not idempotent, because typing twice types twice")
+    func actNotIdempotent() {
+        let act = try! #require(ToolCatalogue.spec(named: "proctor_act"))
+        #expect(act.destructive == true)
+        #expect(act.idempotent == false)
+    }
+}
+
+@Suite("Output schemas")
+struct OutputSchemaTests {
+
+    @Test("every tool advertises an object output schema")
+    func everyToolHasObjectSchema() {
+        for tool in ToolCatalogue.all {
+            let schema = ToolCatalogue.outputSchema(for: tool.name)
+            #expect(schema["type"]?.stringValue == "object",
+                    "\(tool.name) output schema is not an object")
+        }
+    }
+
+    @Test("an unknown tool falls back to an open object rather than nothing")
+    func unknownFallsBack() {
+        #expect(ToolCatalogue.outputSchema(for: "proctor_nonexistent")["type"]?.stringValue == "object")
+    }
+
+    @Test("a bespoke schema documents the tool's own fields")
+    func captureDocumentsPath() {
+        let schema = ToolCatalogue.outputSchema(for: "proctor_capture")
+        #expect(schema["properties"]?["path"] != nil)
+        #expect(schema["properties"]?["trustworthy"] != nil)
+    }
+}
+
+@Suite("Tool profiles")
+struct ProfileTests {
+
+    private func names(_ p: ToolProfile) -> Set<String> {
+        Set(ToolCatalogue.toolNames(for: p))
+    }
+
+    @Test("full is the whole catalogue")
+    func fullIsEverything() {
+        #expect(names(.full) == Set(ToolCatalogue.all.map(\.name)))
+    }
+
+    @Test("the profiles nest ax ⊂ core ⊂ scripting ⊂ full")
+    func nesting() {
+        let ax = names(.ax), core = names(.core)
+        let scripting = names(.scripting), full = names(.full)
+        #expect(ax.isStrictSubset(of: core))
+        #expect(core.isStrictSubset(of: scripting))
+        #expect(scripting.isStrictSubset(of: full))
+    }
+
+    @Test("every profile is a real subset of the catalogue and keeps apps and doctor")
+    func wellFormed() {
+        let all = Set(ToolCatalogue.all.map(\.name))
+        for profile in ToolProfile.allCases {
+            let n = names(profile)
+            #expect(n.isSubset(of: all), "\(profile.rawValue) advertises an unknown tool")
+            #expect(n.contains("proctor_apps"), "\(profile.rawValue) drops apps")
+            #expect(n.contains("proctor_doctor"), "\(profile.rawValue) drops doctor")
+        }
+    }
+
+    @Test("membership matches the documented clusters")
+    func memberships() {
+        // ax is accessibility only: no pixels, no reflector, no campaign, no unlock.
+        #expect(!names(.ax).contains("proctor_capture"))
+        #expect(!names(.ax).contains("proctor_inspect"))
+        // core adds the capture loop but not campaign authoring.
+        #expect(names(.core).contains("proctor_capture"))
+        #expect(!names(.core).contains("proctor_flow"))
+        #expect(!names(.core).contains("proctor_unlock"))
+        // scripting adds flow and stability, still no inspect or unlock.
+        #expect(names(.scripting).contains("proctor_flow"))
+        #expect(names(.scripting).contains("proctor_stability"))
+        #expect(!names(.scripting).contains("proctor_unlock"))
+        // full has the specialist tools.
+        #expect(names(.full).contains("proctor_inspect"))
+        #expect(names(.full).contains("proctor_unlock"))
+    }
+
+    @Test("a profile argument parses case-insensitively; junk and empty do not")
+    func parsing() {
+        #expect(ToolProfile(argument: "core") == .core)
+        #expect(ToolProfile(argument: "FULL") == .full)
+        #expect(ToolProfile(argument: "Scripting") == .scripting)
+        #expect(ToolProfile(argument: nil) == nil)
+        #expect(ToolProfile(argument: "") == nil)
+        #expect(ToolProfile(argument: "bogus") == nil)
+    }
+}
+
+@Suite("Resource catalogue")
+struct ResourceCatalogueTests {
+
+    @Test("the four resources are advertised with the expected URIs")
+    func fourResources() {
+        let uris = Set(ResourceCatalogue.all.map(\.uri))
+        #expect(uris == ["proctor://display", "proctor://windows",
+                         "proctor://frontmost", "proctor://screenshot/latest"])
+    }
+
+    @Test("a URI resolves to its spec and back to the same URI")
+    func uriRoundTrips() {
+        for spec in ResourceCatalogue.all {
+            let resolved = try! #require(ResourceCatalogue.spec(uri: spec.uri))
+            #expect(resolved.uri == spec.uri)
+            #expect(resolved.key == spec.key)
+        }
+    }
+
+    @Test("an unknown URI resolves to nothing rather than a wrong resource")
+    func unknownURI() {
+        #expect(ResourceCatalogue.spec(uri: "proctor://nope") == nil)
+        #expect(ResourceCatalogue.spec(uri: "file:///etc/passwd") == nil)
+    }
+
+    @Test("every resource is JSON with a non-empty key and description")
+    func wellFormed() {
+        for spec in ResourceCatalogue.all {
+            #expect(spec.mimeType == "application/json")
+            #expect(!spec.key.isEmpty)
+            #expect(spec.description.count > 20, "\(spec.uri) is under-described")
+            #expect(ResourceCatalogue.spec(key: spec.key)?.uri == spec.uri)
+        }
+    }
+}
+
 @Suite("Drag path interpolation")
 struct PointerPathTests {
 

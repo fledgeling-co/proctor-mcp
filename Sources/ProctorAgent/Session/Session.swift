@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 import ProctorCore
 
 enum AgentBuild {
@@ -68,6 +69,12 @@ actor Session {
     private(set) var flows: [String: RecordedFlow] = [:]
     private(set) var recording: String?
     private var flowsLoaded = false
+
+    /// The most recent capture's encoded metadata, served cache-only by the
+    /// screenshot/latest resource. Holding the metadata (not the bytes) keeps the
+    /// resource readable without a Screen Recording grant and without triggering a
+    /// new capture.
+    private var lastCapture: JSONValue?
 
     init(ax: any AXEngine,
          capture: any CaptureEngine,
@@ -259,7 +266,9 @@ actor Session {
         // Freshness metadata passes through untouched. Rewriting or defaulting
         // any of it would erase the only thing separating a stale frame from a
         // correct one.
-        return try JSONValue.encode(result)
+        let encoded = try JSONValue.encode(result)
+        lastCapture = encoded
+        return encoded
     }
 
     // MARK: - proctor_inspect
@@ -307,5 +316,92 @@ actor Session {
 
     func healthSnapshot() -> (apps: [DoctorReport.AttachedAppHealth], observers: Int) {
         (ax.health(), ax.observersLive)
+    }
+
+    // MARK: - MCP resources
+
+    /// Read-only state re-projected as an MCP resource. Every branch reads state
+    /// the agent already holds or that needs no TCC grant, so a resource is never
+    /// a new capability — only a second door onto what a tool already exposes.
+    func resource(key: String) throws -> JSONValue {
+        switch key {
+        case "windows":
+            return try listApps(includeWindowless: false)
+        case "frontmost":
+            return frontmostResource()
+        case "display":
+            return displayResource()
+        case "screenshot.latest":
+            if let last = lastCapture {
+                return .object(["cached": .bool(true), "capture": last])
+            }
+            return .object([
+                "cached": .bool(false),
+                "note": .string("No capture has been taken this session. Call proctor_capture; "
+                              + "reading this resource never triggers one.")
+            ])
+        default:
+            throw AgentError(code: .invalidArguments,
+                             message: "unknown resource key \(key.debugDescription)")
+        }
+    }
+
+    private func frontmostResource() -> JSONValue {
+        guard let app = NSWorkspace.shared.frontmostApplication else {
+            return .object(["frontmost": .null,
+                            "note": .string("No application currently reports as frontmost.")])
+        }
+        var obj: [String: JSONValue] = [
+            "pid": .number(Double(app.processIdentifier)),
+            "name": .string(app.localizedName ?? "")
+        ]
+        if let bundleId = app.bundleIdentifier { obj["bundleId"] = .string(bundleId) }
+        // If this app is attached, hand back its handle and main window so a caller
+        // can act on it without re-listing.
+        if let attached = apps.values.first(where: { $0.pid == app.processIdentifier }) {
+            obj["attached"] = .bool(true)
+            obj["app"] = .string(attached.id)
+            let windows = windowsByID.values.filter { $0.app == attached.id }
+            if let main = windows.first(where: { $0.isMain }) ?? windows.first,
+               let encoded = try? JSONValue.encode(main) {
+                obj["mainWindow"] = encoded
+            }
+        } else {
+            obj["attached"] = .bool(false)
+        }
+        return .object(["frontmost": .object(obj)])
+    }
+
+    /// Displays via CoreGraphics rather than NSScreen, which is main-actor bound
+    /// while this actor is not — the same reason StreamCapture reads scale from
+    /// CGDisplayMode.
+    private func displayResource() -> JSONValue {
+        var count: UInt32 = 0
+        CGGetActiveDisplayList(0, nil, &count)
+        var ids = [CGDirectDisplayID](repeating: 0, count: Int(count))
+        if count > 0 { CGGetActiveDisplayList(count, &ids, &count) }
+        let main = CGMainDisplayID()
+        let displays: [JSONValue] = ids.prefix(Int(count)).map { id in
+            let bounds = CGDisplayBounds(id)
+            var obj: [String: JSONValue] = [
+                "displayID": .number(Double(id)),
+                "frame": rectJSON(bounds),
+                "isMain": .bool(id == main)
+            ]
+            if let mode = CGDisplayCopyDisplayMode(id), mode.width > 0 {
+                let scale = Double(mode.pixelWidth) / Double(mode.width)
+                obj["backingScaleFactor"] = .number(scale > 0 ? scale : 1)
+                obj["pixelWidth"] = .number(Double(mode.pixelWidth))
+                obj["pixelHeight"] = .number(Double(mode.pixelHeight))
+            }
+            return .object(obj)
+        }
+        return .object(["displays": .array(displays),
+                        "count": .number(Double(displays.count))])
+    }
+
+    private func rectJSON(_ r: CGRect) -> JSONValue {
+        .object(["x": .number(Double(r.origin.x)), "y": .number(Double(r.origin.y)),
+                 "w": .number(Double(r.size.width)), "h": .number(Double(r.size.height))])
     }
 }
