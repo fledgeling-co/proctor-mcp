@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
 **Status:** Running
-**Updated:** 2026-08-13 — batch 2 MERGED (PRO-0003/0004/0005); worktrees cleaned. main @ 07d7ea3, 118 tests / 18 suites green, 17 tools advertised. Launching batch 3: PRO-0006, PRO-0007, PRO-0009 (PRO-0010 follows as a slot frees).
+**Updated:** 2026-08-13 — batch 3 MERGED (PRO-0006/0007/0009); worktrees cleaned. main @ bd3a08c, 157 tests / 22 suites green, 19 tools. Launching batch 4 (final): PRO-0010.
 
 ## How to resume
 You are the fleet orchestrator (ship-fleet skill). Read this file top to bottom, reconcile
@@ -47,11 +47,11 @@ Holding pen (external deps / needs input): none.
 | PRO-0003 | Menu-bar key-equivalents | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 2 · proctor_menu |
 | PRO-0004 | App scripting-dictionary | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 2 · proctor_dictionary |
 | PRO-0005 | Audit trail + policy gate | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 2 · proctor_policy (fail-closed gate + redacting audit) |
-| PRO-0006 | Vision-capture normalisation | ready-for-plan | — | none | none | opus | .worktrees/PRO-0006 · ai/pro-0006 | running | batch 3 |
-| PRO-0007 | Zoom region crop | ready-for-plan | — | none | none | opus | .worktrees/PRO-0007 · ai/pro-0007 | running | batch 3 |
+| PRO-0006 | Vision-capture normalisation | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 3 · capture normalize option (no new tool) |
+| PRO-0007 | Zoom region crop | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 3 · proctor_zoom |
 | PRO-0008 | MCP surface modernization | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 1 · proctor_resource |
-| PRO-0009 | Process kill + fs jail | ready-for-plan | PRO-0008 ✓ | none | none | opus | .worktrees/PRO-0009 · ai/pro-0009 | running | batch 3 · dep merged |
-| PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 ✓ | none | none | opus | — | queued | dep merged; runs as a slot frees (batch 4) |
+| PRO-0009 | Process kill + fs jail | ready-for-plan | PRO-0008 ✓ | none | none | opus | merged (cleaned) | **MERGED** | batch 3 · proctor_kill + FSJail (reuses PRO-0005 rails) |
+| PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 ✓ | none | none | opus | .worktrees/PRO-0010 · ai/pro-0010 | running | batch 4 (final) |
 
 ## Deferred children discovered mid-fleet
 | Child | Parent | Where it runs | Status |
@@ -60,6 +60,8 @@ Holding pen (external deps / needs input): none.
 - (none yet)
 
 ## Event log (append-only, newest first)
+- 2026-08-13 batch 4 launched (final): PRO-0010 off bd3a08c.
+- 2026-08-13 batch 3 MERGED to main (bd3a08c): PRO-0006 (capture normalize), PRO-0007 (proctor_zoom), PRO-0009 (proctor_kill + FSJail). Wire.CaptureResult carries both normalization+crop; count 17->19; 157 tests / 22 suites green. Worktrees+branches cleaned.
 - 2026-08-13 batch 3 launched (3-concurrent): PRO-0006, PRO-0007, PRO-0009 off 07d7ea3. PRO-0010 queued for batch 4.
 - 2026-08-13 batch 2 MERGED to main (07d7ea3): PRO-0003 (proctor_menu), PRO-0004 (proctor_dictionary), PRO-0005 (proctor_policy). Three tool specs split apart in ToolCatalogue; count 14->17; 118 tests / 18 suites green. Worktrees+branches cleaned.
 - 2026-08-13 batch 2 launched (3-concurrent): PRO-0003, PRO-0004, PRO-0005 in worktrees off 670389b.
