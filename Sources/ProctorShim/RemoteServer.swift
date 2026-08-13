@@ -146,6 +146,19 @@ final class RemoteServer: @unchecked Sendable {
             return
         }
 
+        // Require application/json, which the MCP Streamable HTTP spec mandates.
+        // It also closes the cross-origin CSRF path: a browser can only omit the
+        // CORS preflight for a "simple request", and a simple request cannot
+        // carry this content type — so a malicious page cannot POST here without
+        // a preflight this server never answers.
+        let contentType = (request.headers["content-type"] ?? "").lowercased()
+        guard contentType.hasPrefix("application/json") else {
+            writeResponse(client, status: 415, reason: "Unsupported Media Type",
+                          contentType: "text/plain",
+                          body: Data("POST /mcp requires Content-Type: application/json\n".utf8))
+            return
+        }
+
         let message: JSONValue
         do {
             message = try JSONDecoder().decode(JSONValue.self, from: request.body)
@@ -179,10 +192,13 @@ final class RemoteServer: @unchecked Sendable {
     }
 
     private func originIsLocal(_ origin: String) -> Bool {
-        let o = origin.lowercased()
-        return o.hasPrefix("http://localhost") || o.hasPrefix("https://localhost")
-            || o.hasPrefix("http://127.0.0.1") || o.hasPrefix("https://127.0.0.1")
-            || o == "null"
+        // Match the host exactly — a prefix test treats http://localhost.evil.com
+        // and http://127.0.0.1.evil.com as local and hands a malicious page the
+        // unauthenticated loopback door. An opaque origin ("null", from a
+        // sandboxed iframe or file://) is not trusted either.
+        if origin.lowercased() == "null" { return false }
+        guard let host = URL(string: origin)?.host?.lowercased() else { return false }
+        return host == "localhost" || host == "127.0.0.1" || host == "::1"
     }
 
     // MARK: - HTTP plumbing

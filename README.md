@@ -120,8 +120,11 @@ PROCTOR_MCP_TOKEN=$(openssl rand -hex 32) proctor-shim serve --remote --host 0.0
 Clients then send `Authorization: Bearer <token>`. The safer shape for remote
 work is to keep the loopback bind and reach it over an SSH tunnel
 (`ssh -L 8787:127.0.0.1:8787 mac`), which needs no token and exposes nothing.
-A present browser `Origin` that is not localhost is refused, to close the
-DNS-rebinding path against the unauthenticated loopback case.
+Against the unauthenticated loopback case, two things close the browser
+cross-origin path: `POST /mcp` requires `Content-Type: application/json` (which
+a cross-origin "simple request" cannot set without a CORS preflight this server
+never grants), and a present `Origin` is matched on its exact host, so
+`localhost.evil.com` is refused where a prefix check would have let it through.
 
 To run it on another Mac it also has to be notarised, which needs your own Apple
 credentials — they are never stored in this repo:
