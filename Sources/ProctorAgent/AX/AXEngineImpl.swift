@@ -252,6 +252,16 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
         return try Actuator.perform(step, target: target, foreground: foreground)
     }
 
+    // MARK: - Menu bar
+
+    func menuBar(app: String) throws -> [RawMenuItem]? {
+        // The app element is grabbed under the lock, then read outside it — the
+        // menu walk is many AX round trips and must not hold the session lock,
+        // mirroring how windows(app:) reads elements after releasing it.
+        let element = try withLock { try requireSession(app).appElement }
+        return MenuBarReader.read(appElement: element)
+    }
+
     // MARK: - Notifications
 
     func notificationMark(app: String) -> UInt64 {

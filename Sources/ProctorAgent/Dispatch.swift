@@ -40,6 +40,7 @@ struct Dispatcher: Sendable {
         case "proctor_unlock":    return try await unlock(args)
         case "proctor_computer":         return try await computer(args)
         case "proctor_openai_computer":  return try await openaiComputer(args)
+        case "proctor_menu":      return try await menu(args)
         // Internal verb behind the MCP resources surface. Never in ToolCatalogue,
         // so a host cannot reach it as a tool; the shim forwards resources/read to
         // it. It only re-projects state the agent already holds or reads without a
@@ -314,6 +315,12 @@ struct Dispatcher: Sendable {
         return try await session.computerUse(schema: .openai, window: window, payload: actions,
                                              scale: args.double("scale") ?? 1,
                                              foreground: args.bool("foreground", true))
+    }
+
+    // MARK: - proctor_menu
+
+    private func menu(_ args: Args) async throws -> JSONValue {
+        try await session.menuBar(app: args.string("app"), window: args.string("window"))
     }
 
     // MARK: - proctor_resource (MCP resources backing)

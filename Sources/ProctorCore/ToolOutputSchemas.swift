@@ -115,6 +115,11 @@ public extension ToolCatalogue {
                  "opened": p("boolean"), "closed": p("boolean"),
                  "relocked": p("boolean"), "locked": p("boolean"),
                  "ttlMs": p("number")]),
+
+            "proctor_menu": openObject(
+                "The menu bar flattened to rows, each with its path, enabled state and reconstructed key-equivalent.",
+                ["app": p("string"), "itemCount": p("number"), "items": p("array"),
+                 "note": p("string")]),
         ]
     }()
 }
