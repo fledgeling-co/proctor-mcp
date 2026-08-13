@@ -70,6 +70,11 @@ actor Session {
     private(set) var recording: String?
     private var flowsLoaded = false
 
+    /// Parsed scripting dictionaries, keyed by app handle id. The id carries the
+    /// launch epoch, so a relaunched app is a different key and its stale entry
+    /// is never served — per-PID caching that invalidates on relaunch for free.
+    var dictionaryCache = ScriptingDictionaryCache()
+
     /// The most recent capture's encoded metadata, served cache-only by the
     /// screenshot/latest resource. Holding the metadata (not the bytes) keeps the
     /// resource readable without a Screen Recording grant and without triggering a
@@ -102,6 +107,9 @@ actor Session {
     }
 
     func appHandle(forWindow window: WindowHandle) -> AppHandle? { apps[window.app] }
+
+    /// An attached app by its handle id, or nil if nothing is attached under it.
+    func appHandle(id: String) -> AppHandle? { apps[id] }
 
     private func refreshWindows() {
         for appID in apps.keys {
@@ -175,6 +183,7 @@ actor Session {
         try ax.detach(app: id)
         apps.removeValue(forKey: id)
         provenanceByApp.removeValue(forKey: id)
+        dictionaryCache.dropHandle(id)
         let dropped = windowsByID.filter { $0.value.app == id }.map(\.key)
         for window in dropped {
             windowsByID.removeValue(forKey: window)

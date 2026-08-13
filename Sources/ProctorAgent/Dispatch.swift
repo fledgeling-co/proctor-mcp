@@ -40,6 +40,7 @@ struct Dispatcher: Sendable {
         case "proctor_unlock":    return try await unlock(args)
         case "proctor_computer":         return try await computer(args)
         case "proctor_openai_computer":  return try await openaiComputer(args)
+        case "proctor_dictionary":       return try await dictionary(args)
         // Internal verb behind the MCP resources surface. Never in ToolCatalogue,
         // so a host cannot reach it as a tool; the shim forwards resources/read to
         // it. It only re-projects state the agent already holds or reads without a
@@ -316,8 +317,25 @@ struct Dispatcher: Sendable {
                                              foreground: args.bool("foreground", true))
     }
 
-    // MARK: - proctor_resource (MCP resources backing)
+    // MARK: - proctor_dictionary
 
+    private func dictionary(_ args: Args) async throws -> JSONValue {
+        // Either an app handle or a window handle identifies the target; the
+        // window's owning app is used when only a window is given.
+        guard args.string("app") != nil || args.string("window") != nil else {
+            throw AgentError(
+                code: .invalidArguments,
+                message: "proctor_dictionary requires app or window",
+                remedy: "Pass an app handle from proctor_apps (action \"attach\"), or a window "
+                      + "handle whose owning app should be read.")
+        }
+        return try await session.dictionary(app: args.string("app"),
+                                            window: args.string("window"),
+                                            summaryOnly: args.bool("summaryOnly", false),
+                                            refresh: args.bool("refresh", false))
+    }
+
+    // MARK: - proctor_resource (MCP resources backing)
     private func resource(_ args: Args) async throws -> JSONValue {
         let key = try args.requiredString("key")
         guard ResourceCatalogue.spec(key: key) != nil else {

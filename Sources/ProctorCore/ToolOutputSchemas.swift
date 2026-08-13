@@ -115,6 +115,13 @@ public extension ToolCatalogue {
                  "opened": p("boolean"), "closed": p("boolean"),
                  "relocked": p("boolean"), "locked": p("boolean"),
                  "ttlMs": p("number")]),
+
+            "proctor_dictionary": openObject(
+                "An app's parsed scripting dictionary: scriptability, a capability summary, per-suite structure and counts.",
+                ["app": p("string"), "pid": p("number"), "name": p("string"),
+                 "bundleId": p("string"), "scriptable": p("boolean"),
+                 "summary": p("string"), "suites": p("array"), "counts": p("object"),
+                 "cached": p("boolean"), "caveat": p("string")]),
         ]
     }()
 }
