@@ -149,13 +149,21 @@ signature and notarisation, which `scripts/build-app.sh` prints.
 | `proctor_snapshot` | Return the pruned semantic accessibility tree for a window, with a stable node id on every node. Pass `sinceRevision` for a diff instead of a full tree. |
 | `proctor_find` | Return only the nodes matching a predicate, so locating one button does not cost a whole tree. Prefer `identifier`, the one selector a developer sets deliberately. |
 | `proctor_act` | Run a sequence of steps, settling after each and returning per-step outcome, actuation plane, post-state hash and tree diff. A six-step flow is one call. |
-| `proctor_capture` | Screenshot a window through a window-scoped ScreenCaptureKit filter, with frame status, dirty-rect coverage, frames waited and a `trustworthy` verdict. |
+| `proctor_capture` | Screenshot a window through a window-scoped ScreenCaptureKit filter, with frame status, dirty-rect coverage, frames waited and a `trustworthy` verdict. Optionally burns numbered marks over interactable elements (with a mark→node map) plus a reference grid, or normalises the frame to the vision-API ceiling and reports the exact scale factor applied. |
+| `proctor_zoom` | Return a native-resolution PNG crop of one region or one accessibility element, for reading small text a normalised whole-window capture loses. Carries the same freshness metadata as `proctor_capture`; the compose path is `find → zoom → assert`. |
 | `proctor_wait` | Block until a nameable condition holds — an element appearing, a value reaching a target, a region going quiet, the app's own idle endpoint — bounded by a timeout. |
 | `proctor_assert` | Evaluate assertions and return pass/fail with the observed value beside the expected one. Covers tree, geometry, pixels and accessibility auditing. |
 | `proctor_flow` | Record, list, show, replay and delete named step sequences. A recorded flow stores its selectors and per-step hashes, so a divergent replay says where and how. |
 | `proctor_stability` | Replay a flow N times and report `firstDivergence` and a per-step instability score. This is what separates a real defect from a flaky test. |
 | `proctor_inspect` | Read resolved styles and layer geometry from an app embedding `ProctorReflector`: colours, fonts, radii, opacity, constraints, and CALayer model versus presentation values. |
 | `proctor_doctor` | Report agent liveness, TCC grants with the exact fix for the running OS, attachments, observer health, Secure Event Input, and shortcuts CLI availability. |
+| `proctor_unlock` | Open, evaluate and end a screen-unlock turn, when the login-path authorization plugin is installed and armed. Each turn is TTL-bounded so a crashed caller cannot leave the screen unlockable, and the password prompt stays a fallback. |
+| `proctor_computer` | Accept a single Anthropic `computer` action in its stock schema and run it against a window, so a model trained on that tool drives Proctor with no prompt changes. Additive; synthetic-event actions, reported `plane=syntheticEvent`. |
+| `proctor_openai_computer` | The same adapter for the OpenAI `openai_computer` schema — one action or a batch, stopping at the first failure with `failedAt`. Also additive, also synthetic-event. |
+| `proctor_menu` | Walk the attached app's menu bar and return every item with its path, enabled state and reconstructed key-equivalent. A pure accessibility read that reaches background apps; invoke by shortcut (`key`) or background-safe (`menu` step). |
+| `proctor_dictionary` | Read an app's scripting definition (sdef) — suites, commands, classes, properties — as structured data, so the Apple-Events plane is self-describing. Reports `scriptable=false` plainly rather than erroring; cached per app handle. |
+| `proctor_policy` | Operator safety plumbing: a fail-closed policy gate (allow / block / sensitive by bundle id, with TTL-bounded approval tokens) and a redacting audit trail that stores typed values as length + SHA-256, never in the clear. |
+| `proctor_kill` | List and terminate processes for test setup and teardown, so a campaign resets state between runs. Termination goes through the same `proctor_policy` gate and audit; the kernel, launchd and the agent itself are never signalled. |
 
 ## What it can and cannot do
 
@@ -241,5 +249,5 @@ work.
 | `Sources/ProctorShim` | The permissionless stdio MCP front end. Holds no grants. |
 | `Sources/ProctorReflector` | Embeddable in-process style and layer source. |
 | `Apps/Proctor` | Bundle `Info.plist` and icon. |
-| `scripts` | `build-app.sh`, `install.sh`, `uninstall.sh`, `doctor.sh`. |
+| `scripts` | `build-app.sh`, `install.sh`, `uninstall.sh`, `doctor.sh`, `notarize.sh`. |
 | `docs/architecture.md` | Process model, planes, settling, determinism. Read before changing anything load-bearing. |
