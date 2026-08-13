@@ -121,7 +121,8 @@ struct Dispatcher: Sendable {
                                      foreground: args.bool("foreground", false),
                                      captureEach: args.bool("captureEach", false),
                                      diffEach: args.bool("diffEach", true),
-                                     record: args.string("record"))
+                                     record: args.string("record"),
+                                     pointerMarks: args.bool("pointerMarks", false))
     }
 
     // MARK: - proctor_capture
@@ -219,7 +220,8 @@ struct Dispatcher: Sendable {
                 name: try args.requiredString("name"),
                 window: args.string("window"),
                 captureEach: args.bool("captureEach", false),
-                settle: Args.settlePolicy(args.value("settle"), base: .default))
+                settle: Args.settlePolicy(args.value("settle"), base: .default),
+                pointerMarks: args.bool("pointerMarks", false))
         }
     }
 

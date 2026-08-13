@@ -125,7 +125,7 @@ extension Session {
     }
 
     func flowReplay(name: String, window: String?, captureEach: Bool,
-                    settle: SettlePolicy) async throws -> JSONValue {
+                    settle: SettlePolicy, pointerMarks: Bool = false) async throws -> JSONValue {
         let flow = try flowNamed(name)
         let targetID = try replayWindow(flow: flow, override: window)
         let handle = try windowHandle(targetID)
@@ -135,7 +135,8 @@ extension Session {
         // one way when recorded cannot behave another way when replayed.
         let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
         let run = await runSteps(steps, window: handle, settle: settle, foreground: foreground,
-                                 captureEach: captureEach, diffEach: false)
+                                 captureEach: captureEach, diffEach: false,
+                                 pointerMarks: pointerMarks)
 
         var comparisons: [JSONValue] = []
         var firstDivergence: Int?

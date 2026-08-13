@@ -900,9 +900,144 @@ struct SetOfMarksTests {
     }
 }
 
+@Suite("Pointer overlay")
+struct PointerOverlayTests {
+
+    private func step(kind: ActionStep.Kind, point: [Double]? = nil,
+                      node: String? = nil) -> ActionStep {
+        ActionStep(kind: kind, node: node, point: point)
+    }
+
+    // MARK: AC1-3 — resolving the point a step acted on
+
+    @Test("an explicit point is the target, tagged as a point")
+    func targetFromPoint() {
+        let t = try! #require(PointerMarker.targetPoint(
+            for: step(kind: .click, point: [110, 70]), elementFrame: nil))
+        #expect(t.x == 110)
+        #expect(t.y == 70)
+        #expect(t.source == .point)
+    }
+
+    @Test("with no point, the acted element's frame centre is the target")
+    func targetFromElementCentre() {
+        // Element at screen (100,200,50,20) -> centre (125, 210).
+        let t = try! #require(PointerMarker.targetPoint(
+            for: step(kind: .press, node: "n7"),
+            elementFrame: Rect(x: 100, y: 200, w: 50, h: 20)))
+        #expect(t.x == 125)
+        #expect(t.y == 210)
+        #expect(t.source == .element)
+    }
+
+    @Test("an explicit point wins over the element frame, matching the actuator")
+    func pointWinsOverElement() {
+        let t = try! #require(PointerMarker.targetPoint(
+            for: step(kind: .click, point: [5, 6], node: "n7"),
+            elementFrame: Rect(x: 100, y: 200, w: 50, h: 20)))
+        #expect(t.x == 5)
+        #expect(t.y == 6)
+        #expect(t.source == .point)
+    }
+
+    @Test("a coordinate-less step marks nothing")
+    func targetNilWhenNothingToMark() {
+        // A bare type/key step, no point and no framed element: nothing was acted
+        // on at a place, so there is nothing to mark.
+        #expect(PointerMarker.targetPoint(for: step(kind: .type), elementFrame: nil) == nil)
+        #expect(PointerMarker.targetPoint(for: step(kind: .press, node: "n"),
+                                          elementFrame: nil) == nil)
+        // A zero-area frame carries no centre worth marking.
+        #expect(PointerMarker.targetPoint(for: step(kind: .press, node: "n"),
+                                          elementFrame: Rect(x: 10, y: 10, w: 0, h: 20)) == nil)
+    }
+
+    // MARK: AC4 — screen point to frame pixel, the load-bearing transform
+
+    @Test("a screen point maps to the expected pixel: origin subtracted then scaled")
+    func placeTransform() {
+        // Window origin (100,200), scale 2. A target at screen (150,260) is
+        // (50,60) window points -> (100,120) frame pixels. Same transform as
+        // SetOfMarks.toPixels, pinned exactly because a wrong one marks the wrong spot.
+        let p = try! #require(PointerMarker.place(
+            x: 150, y: 260, window: Rect(x: 100, y: 200, w: 400, h: 300),
+            imageWidth: 800, imageHeight: 600, scale: 2))
+        #expect(p.pixelX == 100)
+        #expect(p.pixelY == 120)
+        #expect(p.onFrame == true)
+    }
+
+    @Test("an off-frame target clamps to the nearest edge and is flagged")
+    func placeOffFrameClamps() {
+        // Target well to the right and below a 800x600 frame at scale 1.
+        let p = try! #require(PointerMarker.place(
+            x: 5000, y: 5000, window: Rect(x: 0, y: 0, w: 400, h: 300),
+            imageWidth: 800, imageHeight: 600, scale: 1))
+        #expect(p.pixelX == 799)   // clamped to width-1
+        #expect(p.pixelY == 599)   // clamped to height-1
+        #expect(p.onFrame == false)
+    }
+
+    @Test("a frame with no pixels has nowhere to place a marker")
+    func placeNoGeometry() {
+        #expect(PointerMarker.place(x: 10, y: 10, window: Rect(x: 0, y: 0, w: 100, h: 100),
+                                    imageWidth: 0, imageHeight: 0, scale: 2) == nil)
+    }
+
+    // MARK: AC5 — the field is opt-in and round-trips
+
+    @Test("a normal CaptureResult has no pointer, so captures stay byte-identical")
+    func captureResultPointerDefaultsNil() throws {
+        let result = CaptureResult(window: "win:1:1", path: "/tmp/a.png", width: 800, height: 600,
+                                   scale: 2, status: .complete, contentRect: nil,
+                                   dirtyRectCount: 0, dirtyArea: 0, capturedAt: 1,
+                                   framesWaited: 1, trustworthy: true)
+        #expect(result.pointer == nil)
+        let round = try JSONDecoder().decode(CaptureResult.self,
+                                             from: JSONEncoder().encode(result))
+        #expect(round.pointer == nil)
+    }
+
+    @Test("a pointer overlay round-trips every field")
+    func pointerOverlayRoundTrips() throws {
+        let overlay = PointerOverlay(annotatedPath: "/tmp/a.pointer.png",
+                                     pixelX: 100, pixelY: 120, source: "element",
+                                     node: "n7", onFrame: true)
+        let result = CaptureResult(window: "win:1:1", path: "/tmp/a.png", width: 800, height: 600,
+                                   scale: 2, status: .complete, contentRect: nil,
+                                   dirtyRectCount: 0, dirtyArea: 0, capturedAt: 1,
+                                   framesWaited: 1, trustworthy: true, pointer: overlay)
+        let round = try JSONDecoder().decode(CaptureResult.self,
+                                             from: JSONEncoder().encode(result))
+        #expect(round.pointer == overlay)
+    }
+
+    // MARK: AC6 — the tools that produce per-step artifacts advertise the opt-in
+
+    @Test("proctor_act advertises pointerMarks and stays a non-idempotent actuator")
+    func actAdvertisesPointerMarks() {
+        let act = try! #require(ToolCatalogue.spec(named: "proctor_act"))
+        #expect(act.inputSchema["properties"]?["pointerMarks"] != nil)
+        #expect(act.readOnly == false)
+        #expect(act.destructive == true)
+        #expect(act.idempotent == false)
+    }
+
+    @Test("proctor_flow advertises pointerMarks for replay")
+    func flowAdvertisesPointerMarks() {
+        let flow = try! #require(ToolCatalogue.spec(named: "proctor_flow"))
+        #expect(flow.inputSchema["properties"]?["pointerMarks"] != nil)
+    }
+
+    @Test("the catalogue still advertises exactly nineteen tools")
+    func toolCountUnchanged() {
+        // The pointer overlay extends proctor_act and proctor_flow; it adds no tool.
+        #expect(ToolCatalogue.all.count == 19)
+    }
+}
+
 @Suite("Menu key-equivalents")
 struct MenuKeyEquivalentTests {
-
     // MARK: AC1 — Carbon modifier decode (command implied)
 
     @Test("command is implied unless the no-command bit is set")
