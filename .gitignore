@@ -32,3 +32,7 @@ logs/
 
 # ship-fleet worktrees (never committed)
 .worktrees/
+
+# Private status pages (whats-left). Written for one reader; names live state,
+# credentials and decisions. Never pushed to a remote, public or otherwise.
+docs/status/
