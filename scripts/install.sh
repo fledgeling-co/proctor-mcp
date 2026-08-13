@@ -34,11 +34,23 @@ say() { printf '%s\n' "$*"; }
 #   PROCTOR_SIGN_IDENTITY="..." scripts/install.sh
 IDENTITY="${1:-${PROCTOR_SIGN_IDENTITY:-}}"
 
-say "==> building"
-if [ -n "$IDENTITY" ]; then
-  "$REPO_ROOT/scripts/build-app.sh" "$IDENTITY"
+# Rebuilding re-signs, and re-signing throws away a stapled notarisation
+# ticket. So a bundle that is already notarised is installed as it stands
+# unless PROCTOR_FORCE_BUILD says otherwise.
+STAPLED=no
+if [ -d "$BUILT_APP" ] && xcrun stapler validate "$BUILT_APP" >/dev/null 2>&1; then
+  STAPLED=yes
+fi
+
+if [ "$STAPLED" = yes ] && [ -z "${PROCTOR_FORCE_BUILD:-}" ]; then
+  say "==> using the notarised bundle as built (PROCTOR_FORCE_BUILD=1 to rebuild)"
 else
-  "$REPO_ROOT/scripts/build-app.sh"
+  say "==> building"
+  if [ -n "$IDENTITY" ]; then
+    "$REPO_ROOT/scripts/build-app.sh" "$IDENTITY"
+  else
+    "$REPO_ROOT/scripts/build-app.sh"
+  fi
 fi
 
 if [ ! -d "$BUILT_APP" ]; then

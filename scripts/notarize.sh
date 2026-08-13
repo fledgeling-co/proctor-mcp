@@ -35,19 +35,24 @@ Create one first:
 
 [ -d "$APP" ] || die "no app at $APP — run scripts/build-app.sh first"
 
+# Read the signature once. Piping codesign into `grep -q` looks equivalent and
+# is not: grep exits at the first match, codesign takes SIGPIPE, and under
+# `set -o pipefail` the whole check fails on a bundle that is perfectly fine.
+SIGINFO="$(codesign -dv "$APP" 2>&1 || true)"
+
 # An ad-hoc signature cannot be notarised, and finding that out from Apple's
 # rejection email is a slow way to learn it.
-if codesign -dv "$APP" 2>&1 | grep -q 'Signature=adhoc'; then
+if printf '%s' "$SIGINFO" | grep -q 'Signature=adhoc'; then
   die "$APP is ad-hoc signed. Rebuild with a Developer ID identity first:
   scripts/build-app.sh \"Developer ID Application: Your Name (TEAMID)\""
 fi
 
 say "==> signature"
-codesign -dv "$APP" 2>&1 | grep -E 'Authority|TeamIdentifier|Signature' | sed 's/^/    /'
+printf '%s\n' "$SIGINFO" | grep -E 'Authority|TeamIdentifier|Signature' | sed 's/^/    /'
 
 say "==> hardened runtime check"
 codesign -d --entitlements - "$APP" 2>/dev/null | sed 's/^/    /' || true
-codesign -dv "$APP" 2>&1 | grep -q 'flags=.*runtime' \
+printf '%s' "$SIGINFO" | grep -q 'flags=.*runtime' \
   || die "the hardened runtime is not enabled; notarisation will be rejected"
 
 say "==> zipping"
