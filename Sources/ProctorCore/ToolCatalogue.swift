@@ -213,6 +213,7 @@ public enum ToolCatalogue {
                 "settle": .object(["type": .string("object"), "description": .string("Default settle policy for every step: quietFrames, dirtyThreshold, axQuietMs, timeoutMs, requireReflectorIdle.")]),
                 "foreground": .object(["type": .string("boolean"), "description": .string("Activate the app first. Required for synthetic-event step kinds; defaults to false so background windows stay in the background.")]),
                 "captureEach": .object(["type": .string("boolean"), "description": .string("Capture a frame after every step. Defaults to false.")]),
+                "pointerMarks": .object(["type": .string("boolean"), "description": .string("With captureEach, composite a marker at each step's target point — where the step acted — onto that step's frame, written as a marked sibling PNG. It annotates the intended target, not a live cursor; Proctor does not move the system pointer. Defaults to false.")]),
                 "diffEach": .object(["type": .string("boolean"), "description": .string("Return a tree diff after every step. Defaults to true.")]),
                 "record": .object(["type": .string("string"), "description": .string("Append these steps to the named flow as they run.")])
             ]),
@@ -450,6 +451,7 @@ public enum ToolCatalogue {
                 "window": .object(["type": .string("string"), "description": .string("Target window for replay; the flow's recorded window otherwise.")]),
                 "description": .object(["type": .string("string"), "description": .string("What this flow covers, carried into the report.")]),
                 "captureEach": .object(["type": .string("boolean")]),
+                "pointerMarks": .object(["type": .string("boolean"), "description": .string("With captureEach on a replay, composite a marker at each step's target point — where the step acted — onto that step's frame. Annotates the intended target, not a live cursor. Defaults to false.")]),
                 "settle": .object(["type": .string("object")])
             ]),
             "required": .array([.string("action")])

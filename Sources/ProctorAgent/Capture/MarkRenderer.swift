@@ -200,6 +200,87 @@ enum MarkRenderer {
         return dir.appendingPathComponent(name).path
     }
 
+    // MARK: - Pointer marker
+
+    /// Draw a single pointer marker at `placement` onto the PNG at `basePath` and
+    /// write the result to a `.pointer.png` sibling. This is PRO-0010's mechanical
+    /// half: PointerMarker already decided the pixel position; this composites a
+    /// ring-and-crosshair marker there, honestly annotating where a step acted —
+    /// Proctor does not move the system cursor, so this is a pixel-plane target, not
+    /// a picture of a live pointer. Reuses the same y-up context, base draw and PNG
+    /// write the set-of-marks path uses.
+    static func renderPointer(basePath: String, width: Int, height: Int, scale: Double,
+                              placement: PointerMarker.Placement) throws -> String {
+        guard width > 0, height > 0 else {
+            throw AgentError(code: .captureFailed,
+                             message: "Cannot mark a capture with no pixel dimensions "
+                                    + "(\(width)x\(height)).")
+        }
+        guard let source = CGImageSourceCreateWithURL(URL(fileURLWithPath: basePath) as CFURL, nil),
+              let base = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
+            throw AgentError(code: .captureFailed,
+                             message: "Could not read the captured PNG at \(basePath) to mark it.",
+                             remedy: "Confirm the capture wrote a file before marking.")
+        }
+
+        let bitmapInfo = CGImageAlphaInfo.premultipliedFirst.rawValue
+                       | CGBitmapInfo.byteOrder32Little.rawValue
+        guard let ctx = CGContext(data: nil, width: width, height: height,
+                                  bitsPerComponent: 8, bytesPerRow: 0,
+                                  space: CGColorSpaceCreateDeviceRGB(),
+                                  bitmapInfo: bitmapInfo) else {
+            throw AgentError(code: .captureFailed,
+                             message: "Could not create a drawing context to mark the capture.")
+        }
+        ctx.interpolationQuality = .none
+        ctx.draw(base, in: CGRect(x: 0, y: 0, width: width, height: height))
+
+        let s = scale > 0 ? scale : 1
+        // Top-left pixel to y-up.
+        let cx = CGFloat(placement.pixelX)
+        let cy = CGFloat(height) - CGFloat(placement.pixelY)
+        let radius = max(6, 7 * s)
+        let accent = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(),
+                             components: [0.95, 0.15, 0.30, 1.0])!   // red, high-chroma on arbitrary UI
+        let halo = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(),
+                           components: [1, 1, 1, 0.9])!
+
+        // A white halo ring under a red ring, so the marker reads on any background.
+        ctx.setLineWidth(max(3, s * 1.5))
+        ctx.setStrokeColor(halo)
+        ctx.strokeEllipse(in: CGRect(x: cx - radius, y: cy - radius, width: radius * 2, height: radius * 2))
+        ctx.setLineWidth(max(2, s))
+        ctx.setStrokeColor(accent)
+        ctx.strokeEllipse(in: CGRect(x: cx - radius, y: cy - radius, width: radius * 2, height: radius * 2))
+
+        // A crosshair through the centre pinpoints the exact acted pixel.
+        let arm = radius + max(3, s * 2)
+        ctx.setLineWidth(max(1, s * 0.75))
+        ctx.setStrokeColor(accent)
+        ctx.move(to: CGPoint(x: cx - arm, y: cy)); ctx.addLine(to: CGPoint(x: cx + arm, y: cy))
+        ctx.move(to: CGPoint(x: cx, y: cy - arm)); ctx.addLine(to: CGPoint(x: cx, y: cy + arm))
+        ctx.strokePath()
+
+        guard let image = ctx.makeImage() else {
+            throw AgentError(code: .captureFailed,
+                             message: "The marked frame could not be turned into an image.")
+        }
+        let outPath = pointerPath(for: basePath)
+        try writePNG(image, to: outPath)
+        return outPath
+    }
+
+    /// `/dir/foo.png` -> `/dir/foo.pointer.png`, alongside the original and the
+    /// set-of-marks `.marked.png`, so all artifacts of one frame sit together.
+    static func pointerPath(for basePath: String) -> String {
+        let url = URL(fileURLWithPath: basePath)
+        let ext = url.pathExtension
+        let stem = url.deletingPathExtension().lastPathComponent
+        let dir = url.deletingLastPathComponent()
+        let name = ext.isEmpty ? "\(stem).pointer.png" : "\(stem).pointer.\(ext)"
+        return dir.appendingPathComponent(name).path
+    }
+
     private static func writePNG(_ image: CGImage, to path: String) throws {
         let url = URL(fileURLWithPath: path)
         try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(),

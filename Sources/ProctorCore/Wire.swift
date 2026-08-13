@@ -265,19 +265,46 @@ public struct CaptureResult: Codable, Sendable {
     /// crop was cut from, because a crop is a window of a real capture and inherits
     /// its freshness rather than inventing its own.
     public var crop: CropRegion?
+    /// Present only when a step's target point was composited onto a per-step
+    /// capture (proctor_act / proctor_flow replay with pointerMarks). Nil keeps a
+    /// plain capture byte-identical. When set, the un-marked PNG stays at `path`
+    /// and the marked sibling is at `pointer.annotatedPath`, so both remain
+    /// available. It marks where the step acted, not a live cursor.
+    public var pointer: PointerOverlay?
 
     public init(window: String, path: String, width: Int, height: Int, scale: Double,
                 status: FrameStatus, contentRect: Rect?, dirtyRectCount: Int, dirtyArea: Double,
                 capturedAt: Double, framesWaited: Int, trustworthy: Bool,
                 caveat: String? = nil, tileHashes: [String]? = nil,
                 annotation: MarkAnnotation? = nil,
-                normalization: CaptureNormalization? = nil, crop: CropRegion? = nil) {
+                normalization: CaptureNormalization? = nil, crop: CropRegion? = nil,
+                pointer: PointerOverlay? = nil) {
         self.window = window; self.path = path; self.width = width; self.height = height
         self.scale = scale; self.status = status; self.contentRect = contentRect
         self.dirtyRectCount = dirtyRectCount; self.dirtyArea = dirtyArea
         self.capturedAt = capturedAt; self.framesWaited = framesWaited
         self.trustworthy = trustworthy; self.caveat = caveat; self.tileHashes = tileHashes
         self.annotation = annotation; self.normalization = normalization; self.crop = crop
+        self.pointer = pointer
+    }
+}
+
+/// A marker composited onto a per-step capture at the point the step acted on.
+/// The un-marked PNG stays at `CaptureResult.path`; the marked one is written
+/// alongside at `annotatedPath`. It is a pixel-plane annotation of the intended
+/// target — where the step acted — not a picture of a live cursor: Proctor drives
+/// through AX / Apple Events and does not move the system pointer.
+public struct PointerOverlay: Codable, Sendable, Equatable {
+    public var annotatedPath: String    // the marked PNG on disk; bytes are never returned inline
+    public var pixelX: Double           // marker position in frame pixels
+    public var pixelY: Double
+    public var source: String           // "point" (explicit [x,y]) or "element" (acted node's centre)
+    public var node: String?            // the AX node id acted on, when the target was an element
+    public var onFrame: Bool            // false when the target fell outside the frame and was edge-clamped
+    public init(annotatedPath: String, pixelX: Double, pixelY: Double,
+                source: String, node: String?, onFrame: Bool) {
+        self.annotatedPath = annotatedPath; self.pixelX = pixelX; self.pixelY = pixelY
+        self.source = source; self.node = node; self.onFrame = onFrame
     }
 }
 

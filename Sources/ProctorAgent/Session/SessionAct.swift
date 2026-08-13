@@ -22,7 +22,8 @@ extension Session {
     // MARK: - proctor_act
 
     func act(window id: String, steps: [ActionStep], settle: SettlePolicy, foreground: Bool,
-             captureEach: Bool, diffEach: Bool, record: String?) async throws -> JSONValue {
+             captureEach: Bool, diffEach: Bool, record: String?,
+             pointerMarks: Bool = false) async throws -> JSONValue {
         let window = try windowHandle(id)
         // The policy gate runs before anything is actuated: a blocked app, or a
         // sensitive one with no current token, is refused here (and the refusal is
@@ -33,7 +34,8 @@ extension Session {
 
         let target = record ?? recording
         let run = await runSteps(steps, window: window, settle: settle, foreground: foreground,
-                                 captureEach: captureEach, diffEach: diffEach, audit: audit)
+                                 captureEach: captureEach, diffEach: diffEach, audit: audit,
+                                 pointerMarks: pointerMarks)
 
         if let target {
             try appendToFlow(named: target, window: window, run: run, steps: steps)
@@ -55,7 +57,7 @@ extension Session {
     /// leaves a trail that accounts for each action.
     func runSteps(_ steps: [ActionStep], window: WindowHandle, settle: SettlePolicy,
                   foreground: Bool, captureEach: Bool, diffEach: Bool,
-                  audit: AuditContext? = nil) async -> StepRun {
+                  audit: AuditContext? = nil, pointerMarks: Bool = false) async -> StepRun {
         var run = StepRun()
         let app = appHandle(forWindow: window)
 
@@ -136,7 +138,8 @@ extension Session {
             }
 
             if captureEach {
-                run.captures.append(await captureForStep(index: index, window: window))
+                run.captures.append(await captureForStep(index: index, window: window,
+                                                          step: step, pointerMarks: pointerMarks))
             }
         }
         return run
@@ -155,11 +158,17 @@ extension Session {
             reflectorIdle: { pid.flatMap { reflector.isIdle(pid: $0) } })
     }
 
-    private func captureForStep(index: Int, window: WindowHandle) async -> JSONValue {
+    private func captureForStep(index: Int, window: WindowHandle,
+                                step: ActionStep, pointerMarks: Bool) async -> JSONValue {
         do {
-            let frame = try await capture.capture(window: window, to: nil, waitForComplete: true,
+            var frame = try await capture.capture(window: window, to: nil, waitForComplete: true,
                                                   timeoutMs: 3000, scale: nil, tileHashes: false,
                                                   includeCursor: false)
+            // Composite the marker at the point this step acted on, when asked. It
+            // annotates the intended target, not a live cursor.
+            if pointerMarks {
+                frame.pointer = pointerOverlay(for: step, window: window, capture: frame)
+            }
             return .object(["step": .number(Double(index)),
                             "capture": (try? JSONValue.encode(frame)) ?? .null])
         } catch let error as AgentError {
