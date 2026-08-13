@@ -1,0 +1,1383 @@
+<!doctype html>
+<html lang="en" data-appearance="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proctor — onboarding & menu mock</title>
+<style>
+/* ============================================================
+   Proctor UI mock — native macOS 27 grammar, Proctor brand.
+   Self-contained. No external assets. Light + dark authored
+   independently. Motion: transform/opacity only, 150/250/400ms,
+   reduced-motion + reduced-transparency honoured.
+   Type ramp + control ladder + 8pt grid are the macOS 27 kit's
+   (specified) values; the vermilion accent is Proctor's brand.
+   ============================================================ */
+
+:root{
+  /* 8pt grid */
+  --u: 8px;
+
+  /* Type ramp — SF Pro via system stack (specified sizes/leading) */
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Helvetica Neue", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --largeTitle: 26px/32px var(--font);
+  --title2: 17px/22px var(--font);
+  --title3: 15px/20px var(--font);
+  --headline: 13px/16px var(--font);
+  --body: 13px/16px var(--font);
+  --callout: 12px/15px var(--font);
+  --subhead: 11px/14px var(--font);
+  --footnote: 10px/13px var(--font);
+
+  /* spring + durations */
+  --spring: cubic-bezier(.32,.72,0,1);
+  --fast: 150ms;
+  --med: 250ms;
+  --slow: 400ms;
+
+  /* Proctor brand accent — vermilion (icon delta). One accent, bound
+     to primary-action / selection / focus. Status colours are separate. */
+  --accent: #E24A18;
+  --accent-hover: #C93F12;
+  --accent-press: #B0380F;
+  --accent-tint: #E24A181f;
+  --accent-ring: #E24A1866;
+
+  /* status hues (specified system light) — always paired with a glyph */
+  --green:#1E9E4A;   /* granted (darkened from #34C759 for text contrast) */
+  --amber:#C8721A;   /* required, not granted */
+  --red:#D8322F;     /* agent down / destructive */
+}
+
+/* ---- Light appearance (warm porcelain ground, slate ink) ---- */
+:root[data-appearance="light"]{
+  --desktop:#c9c2b6;                 /* neutral warm desktop behind windows */
+  --desktop-2:#b8b0a2;
+  --win:#ffffff;                     /* opaque content window */
+  --win-warm:#FDFBF7;                /* onboarding hero surface (warm white) */
+  --card:#F6F3EE;                    /* card / controlBackground, warm */
+  --card-2:#EFEBE3;
+  --field:#00000008;                 /* quaternary fill */
+  --field-strong:#0000000f;
+  --sep:#0000001a;                   /* separator */
+  --sep-soft:#00000010;
+  --ink:rgba(31,27,22,.92);          /* primary label — warm near-black, not pure */
+  --ink-2:rgba(31,27,22,.55);        /* secondary */
+  --ink-3:rgba(31,27,22,.34);        /* tertiary */
+  --ink-4:rgba(31,27,22,.18);        /* quaternary */
+  --titlebar:#F2EEE7;                /* window titlebar */
+  --titlebar-2:#EAE5DC;
+  --glass:rgba(249,246,240,.72);     /* Liquid Glass floating chrome */
+  --glass-brd:rgba(0,0,0,.10);
+  --shadow: 0 22px 60px -12px rgba(40,30,20,.42), 0 6px 16px -6px rgba(40,30,20,.30);
+  --shadow-pop: 0 16px 44px -8px rgba(40,30,20,.44), 0 2px 8px rgba(40,30,20,.20);
+  --on-accent:#fff;
+}
+
+/* ---- Dark appearance (graphite, authored independently) ---- */
+:root[data-appearance="dark"]{
+  --accent:#FF6A3D;
+  --accent-hover:#FF7C54;
+  --accent-press:#E85A30;
+  --accent-tint:#FF6A3d24;
+  --accent-ring:#FF6A3d70;
+  --green:#43D168;
+  --amber:#F0A03A;
+  --red:#FF5A54;
+
+  --desktop:#141210;
+  --desktop-2:#1c1917;
+  --win:#1E1E1E;
+  --win-warm:#232120;
+  --card:#2A2724;                    /* warm graphite */
+  --card-2:#322E2A;
+  --field:#ffffff0d;
+  --field-strong:#ffffff17;
+  --sep:#ffffff1a;
+  --sep-soft:#ffffff10;
+  --ink:rgba(247,243,238,.96);
+  --ink-2:rgba(247,243,238,.56);
+  --ink-3:rgba(247,243,238,.34);
+  --ink-4:rgba(247,243,238,.20);
+  --titlebar:#2C2A28;
+  --titlebar-2:#262422;
+  --glass:rgba(44,41,38,.66);
+  --glass-brd:rgba(255,255,255,.12);
+  --shadow: 0 26px 64px -12px rgba(0,0,0,.66), 0 8px 18px -6px rgba(0,0,0,.5);
+  --shadow-pop: 0 18px 48px -8px rgba(0,0,0,.7), 0 2px 8px rgba(0,0,0,.5);
+  --on-accent:#1a1210;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font:var(--body);
+  color:var(--ink);
+  background:
+    radial-gradient(120% 120% at 50% 0%, var(--desktop-2), var(--desktop));
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow-x:hidden;
+}
+
+/* ============================================================
+   Mock harness — clearly NOT the app. Sits above the desktop.
+   ============================================================ */
+.harness{
+  position:sticky; top:0; z-index:50;
+  display:flex; flex-wrap:wrap; align-items:center; gap:calc(var(--u)*2);
+  padding:12px 18px;
+  background:color-mix(in srgb, var(--desktop) 70%, #000 6%);
+  border-bottom:1px solid rgba(0,0,0,.28);
+  backdrop-filter:blur(20px) saturate(1.3);
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset;
+}
+.harness .brandtag{
+  display:flex; align-items:center; gap:8px;
+  color:#fff; font:var(--callout); font-weight:600; letter-spacing:.2px;
+  opacity:.92;
+}
+.harness .brandtag .dot{width:9px;height:9px;border-radius:50%;
+  background:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%, transparent)}
+.harness .grp{display:flex;align-items:center;gap:8px}
+.harness label.gl{color:rgba(255,255,255,.62); font:var(--footnote); font-weight:600;
+  text-transform:none; letter-spacing:.2px}
+
+/* segmented control (harness variant — dark chrome) */
+.seg{display:inline-flex; background:rgba(0,0,0,.28); border-radius:8px; padding:2px;
+  border:1px solid rgba(255,255,255,.08)}
+.seg button{
+  appearance:none; border:0; background:transparent; color:rgba(255,255,255,.72);
+  font:var(--subhead); font-weight:600; padding:5px 11px; border-radius:6px; cursor:pointer;
+  white-space:nowrap;
+  transition:background var(--fast) var(--spring), color var(--fast) var(--spring);
+}
+.seg button[aria-pressed="true"]{background:rgba(255,255,255,.16); color:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* harness switch */
+.hsw{display:inline-flex; align-items:center; gap:8px; color:rgba(255,255,255,.8); font:var(--subhead); font-weight:600}
+.sw{--w:38px;--h:22px; appearance:none; border:0; width:var(--w); height:var(--h); border-radius:999px;
+  background:rgba(255,255,255,.22); position:relative; cursor:pointer; flex:0 0 auto;
+  transition:background var(--med) var(--spring)}
+.sw::after{content:""; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.4);
+  transition:transform var(--med) var(--spring)}
+.sw[aria-checked="true"]{background:var(--accent)}
+.sw[aria-checked="true"]::after{transform:translateX(16px)}
+.sw:focus-visible{outline:2px solid #fff; outline-offset:2px}
+
+/* ============================================================
+   Stage — the macOS desktop where app windows float.
+   ============================================================ */
+.stage{flex:1; display:flex; align-items:flex-start; justify-content:center;
+  padding:56px 24px 90px; position:relative}
+.surface{display:none}
+.surface.active{display:block}
+
+/* a menu bar sits at the very top of the "desktop" for the menu-bar surface */
+.menubar{
+  position:absolute; top:0; left:0; right:0; height:26px;
+  background:var(--glass); backdrop-filter:blur(24px) saturate(1.5);
+  border-bottom:1px solid var(--glass-brd);
+  display:flex; align-items:center; justify-content:flex-end; gap:2px;
+  padding:0 8px; z-index:5;
+}
+
+/* ---- macOS window frame ---- */
+.window{
+  width:640px; max-width:calc(100vw - 48px);
+  background:var(--win); border-radius:11px; overflow:hidden;
+  box-shadow:var(--shadow);
+  border:.5px solid var(--sep);
+}
+.titlebar{
+  height:38px; background:linear-gradient(var(--titlebar),var(--titlebar-2));
+  border-bottom:1px solid var(--sep-soft);
+  display:flex; align-items:center; gap:8px; padding:0 13px; position:relative;
+}
+.traffic{display:flex; gap:8px; align-items:center}
+.traffic i{width:12px;height:12px;border-radius:50%; display:block; border:.5px solid rgba(0,0,0,.14)}
+.traffic .r{background:#FF5F57}
+.traffic .y{background:#FEBC2E}
+.traffic .g{background:#28C840}
+.titlebar .wtitle{position:absolute; left:0; right:0; text-align:center;
+  font:var(--subhead); font-weight:600; color:var(--ink-2); pointer-events:none}
+
+/* ============================================================
+   ONBOARDING — Walkthrough (620×540 content)
+   ============================================================ */
+#onboarding .window{width:620px}
+.wt{padding:26px 30px 20px; min-height:496px; display:flex; flex-direction:column;
+  background:var(--win-warm)}
+.wt-progress{display:flex; gap:7px; margin-bottom:22px}
+.wt-progress .pd{height:5px; flex:1; border-radius:999px; background:var(--ink-4);
+  transition:background var(--med) var(--spring)}
+.wt-progress .pd.on{background:var(--accent)}
+.wt-title{font:var(--largeTitle); font-weight:700; letter-spacing:-.4px; color:var(--ink);
+  margin-bottom:14px}
+.wt-body{flex:1}
+.para{font:var(--body); color:var(--ink-2); margin-bottom:12px; max-width:62ch}
+.para strong{color:var(--ink); font-weight:600}
+
+/* Callout (icon + title + message on tinted ground) */
+.callout{display:flex; gap:10px; align-items:flex-start; padding:11px 12px; border-radius:8px;
+  background:var(--accent-tint); margin-top:6px}
+.callout.warn{background:color-mix(in srgb, var(--amber) 12%, transparent)}
+.callout.info{background:color-mix(in srgb, var(--amber) 12%, transparent)}
+.callout.ok{background:color-mix(in srgb, var(--green) 11%, transparent)}
+.callout .ic{flex:0 0 auto; margin-top:1px}
+.callout .ct{font:var(--callout); font-weight:600; color:var(--ink); margin-bottom:2px}
+.callout .cm{font:var(--subhead); color:var(--ink-2); line-height:15px}
+
+/* GrantStep (onboarding) */
+.grantstep{border-radius:8px; padding:14px; margin-top:4px;
+  transition:background var(--med) var(--spring)}
+.grantstep[data-granted="true"]{background:color-mix(in srgb, var(--green) 9%, transparent)}
+.grantstep[data-granted="false"]{background:color-mix(in srgb, var(--amber) 9%, transparent)}
+.gs-head{display:flex; align-items:center; gap:10px}
+.gs-name{font:var(--body); font-weight:600; color:var(--ink)}
+.gs-note{font:var(--subhead); color:var(--ink-2); margin-top:10px; line-height:15px; max-width:56ch}
+.gs-actions{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap}
+.reveal-row{display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap}
+.reveal-row .rt{font:var(--footnote); color:var(--ink-3); max-width:46ch; line-height:13px}
+
+/* connect snippet */
+.snippet{font:12px/18px var(--mono); color:var(--ink); background:var(--field-strong);
+  border-radius:6px; padding:11px 12px; white-space:pre; overflow-x:auto; margin:6px 0 12px;
+  border:.5px solid var(--sep-soft)}
+.snippet .k{color:var(--accent)}
+.snippet .s{color:var(--green)}
+
+.wt-actions{display:flex; align-items:center; gap:10px; margin-top:18px;
+  padding-top:16px; border-top:1px solid var(--sep-soft)}
+
+/* ---- native push buttons (kit ladder: Regular 24 / here padded to feel real) ---- */
+.btn{appearance:none; border:0; font:var(--body); font-weight:500; border-radius:7px;
+  padding:6px 14px; min-height:26px; cursor:default; color:var(--ink);
+  background:var(--card); border:.5px solid var(--sep); white-space:nowrap;
+  transition:transform var(--fast) var(--spring), background var(--fast) var(--spring), filter var(--fast);
+}
+.btn:hover{background:var(--card-2)}
+.btn:active{transform:scale(.975)}
+.btn.small{font:var(--callout); padding:3px 9px; min-height:20px; border-radius:6px}
+.btn.prominent{background:var(--accent); color:var(--on-accent); border-color:transparent;
+  font-weight:600; box-shadow:0 1px 2px color-mix(in srgb,var(--accent) 50%, transparent)}
+.btn.prominent:hover{background:var(--accent-hover)}
+.btn.prominent:active{background:var(--accent-press); transform:scale(.975)}
+.btn.borderless{background:transparent; border-color:transparent; color:var(--accent)}
+.btn.borderless:hover{background:var(--field)}
+.btn:focus-visible{outline:2px solid var(--accent-ring); outline-offset:2px}
+.btn:disabled{opacity:.4; cursor:default}
+.spacer{flex:1}
+
+/* ============================================================
+   MENU BAR extra
+   ============================================================ */
+.mb-anchor{position:relative; display:flex; align-items:center; height:26px; padding:0 8px;
+  border-radius:5px; cursor:default}
+.mb-anchor[aria-expanded="true"]{background:var(--accent); color:var(--on-accent)}
+.mb-anchor:hover{background:var(--field-strong)}
+.mb-anchor[aria-expanded="true"]:hover{background:var(--accent)}
+.mb-glyph{display:flex; align-items:center}
+
+.popover{
+  position:absolute; top:30px; right:6px; width:264px; z-index:6;
+  background:var(--glass); backdrop-filter:blur(30px) saturate(1.6);
+  border:.5px solid var(--glass-brd); border-radius:12px;
+  box-shadow:var(--shadow-pop); padding:5px;
+  transform-origin:top right;
+  transition:transform var(--med) var(--spring), opacity var(--med) var(--spring);
+}
+.popover[hidden]{display:none}
+.popover.enter{opacity:0; transform:scale(.94) translateY(-4px)}
+.mi{display:flex; align-items:center; gap:9px; height:24px; padding:0 10px; border-radius:6px;
+  font:var(--body); color:var(--ink); cursor:default}
+.mi.header{color:var(--ink-2); font:var(--callout); font-weight:600; height:auto; padding:6px 10px 4px; cursor:auto}
+.mi.header .sl{display:flex; align-items:center; gap:8px}
+.mi.act:hover{background:var(--accent); color:var(--on-accent)}
+.mi.act:hover :is(.mi-shortcut){color:color-mix(in srgb,var(--on-accent) 80%, transparent)}
+.mi .mi-shortcut{margin-left:auto; font:var(--callout); color:var(--ink-3)}
+.mi.destructive.act:hover{background:var(--red)}
+.mdiv{height:1px; background:var(--sep); margin:5px 8px}
+
+.mb-hint{margin-top:16px; text-align:center; color:rgba(255,255,255,.7); font:var(--callout)}
+.mb-stage{position:relative; width:640px; max-width:calc(100vw - 48px); height:420px;
+  display:flex; align-items:flex-start; justify-content:center}
+
+/* ============================================================
+   STATUS WINDOW (MainWindow)
+   ============================================================ */
+#status .window{width:640px}
+.mw{padding:26px 26px 22px; display:flex; flex-direction:column; gap:22px;
+  max-height:640px; overflow-y:auto; background:var(--win)}
+.mw-head{display:flex; flex-direction:column; gap:9px}
+.mw-head .brandline{display:flex; align-items:center; gap:10px}
+.mw-head .brandline h1{font:var(--largeTitle); font-weight:700; letter-spacing:-.4px}
+.mw-head .d1{font:var(--body); color:var(--ink-2); max-width:64ch}
+.mw-head .d2{font:var(--callout); color:var(--ink-3); max-width:66ch}
+
+.sectitle{font:11px/14px var(--mono); font-weight:600; letter-spacing:.8px; color:var(--ink-2);
+  text-transform:uppercase}
+.card{background:var(--card); border:.5px solid var(--sep); border-radius:10px; padding:16px;
+  display:flex; flex-direction:column; gap:12px}
+.card .row1{display:flex; align-items:baseline; justify-content:space-between}
+
+/* status pill */
+.pill{font:var(--footnote); font-weight:600; padding:3px 9px; border-radius:999px;
+  display:inline-flex; align-items:center; gap:5px}
+.pill.green{background:color-mix(in srgb,var(--green) 16%,transparent); color:var(--green)}
+.pill.amber{background:color-mix(in srgb,var(--amber) 16%,transparent); color:var(--amber)}
+.pill.red{background:color-mix(in srgb,var(--red) 16%,transparent); color:var(--red)}
+.pill.grey{background:var(--field-strong); color:var(--ink-3)}
+
+/* grant rows */
+.grantlist{display:flex; flex-direction:column}
+.grow{display:flex; flex-direction:column; gap:6px; padding:7px 0}
+.grow .gr-head{display:flex; align-items:center; gap:10px}
+.grow .gr-tt{display:flex; flex-direction:column; gap:1px}
+.grow .gr-name{font:var(--body); font-weight:600}
+.grow .gr-sub{font:var(--subhead); color:var(--ink-2)}
+.grow .gr-sp{flex:1}
+.grow .gr-how{font:var(--subhead); color:var(--ink-2); padding-left:26px; max-width:58ch; line-height:15px}
+.grow[hidden]{display:none}
+.rowdiv{height:1px; background:var(--sep-soft); margin:2px 0}
+
+.readylabel{display:flex; align-items:center; gap:7px; font:var(--callout); color:var(--green);
+  margin-top:2px; font-weight:500}
+
+/* agent grid */
+.agrid{display:grid; grid-template-columns:auto 1fr; gap:6px 18px; align-items:baseline}
+.agrid .k{font:var(--subhead); color:var(--ink-2)}
+.agrid .v{font:12px/16px var(--mono); color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+
+.mw-foot{display:flex; align-items:center; gap:10px}
+.mw-foot .stamp{font:var(--footnote); color:var(--ink-3)}
+
+/* unreachable block */
+.downblock{display:flex; flex-direction:column; gap:10px}
+.downblock .d-t{font:var(--body); font-weight:600}
+.downblock .d-w{font:var(--callout); color:var(--ink-2)}
+.downblock .d-h{font:var(--callout); color:var(--ink-3)}
+.checking{font:var(--callout); color:var(--ink-2); display:flex; align-items:center; gap:8px}
+
+/* spin */
+.spin{width:12px;height:12px;border-radius:50%; border:2px solid var(--ink-4);
+  border-top-color:var(--accent); animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* essence caption under the stage */
+.legend{position:fixed; bottom:0; left:0; right:0; z-index:40;
+  background:color-mix(in srgb,var(--desktop) 72%, #000 8%);
+  border-top:1px solid rgba(0,0,0,.28); backdrop-filter:blur(14px);
+  color:rgba(255,255,255,.72); font:var(--footnote); padding:7px 18px;
+  display:flex; gap:18px; flex-wrap:wrap; justify-content:center}
+.legend b{color:#fff; font-weight:600}
+
+@media (prefers-reduced-transparency: reduce){
+  .harness,.popover,.menubar,.legend{backdrop-filter:none}
+  :root[data-appearance="light"]{--glass:#F4F0E9}
+  :root[data-appearance="dark"]{--glass:#2C2A28}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition-duration:1ms !important; animation-duration:1ms !important}
+}
+@media (prefers-contrast: more){
+  :root{--ink-2:rgba(31,27,22,.75); --sep:#00000040}
+  :root[data-appearance="dark"]{--ink-2:rgba(247,243,238,.78); --sep:#ffffff40}
+}
+
+/* icon stroke inherits currentColor */
+svg.sym{display:block; flex:0 0 auto}
+
+/* ============================================================
+   Micro-interactions — transform/opacity, spring-timed,
+   interruptible, all gated on no-preference so Reduce Motion
+   drops straight to the static end-state.
+   ============================================================ */
+
+/* prominent button lifts on hover; every button springs on press */
+.btn.prominent{transition:transform var(--fast) var(--spring),
+  background var(--fast) var(--spring), box-shadow var(--med) var(--spring)}
+.btn.borderless{transition:background var(--fast) var(--spring), color var(--fast)}
+
+/* copy confirmed — in-place state change, never a toast (mac grammar) */
+.btn.copied{color:var(--green); border-color:color-mix(in srgb,var(--green) 45%, transparent)}
+.btn.copied.borderless{background:color-mix(in srgb,var(--green) 12%, transparent)}
+
+/* the "How" reveal animates its own height */
+.gr-how-wrap{display:grid; grid-template-rows:0fr; opacity:0;
+  transition:grid-template-rows var(--med) var(--spring), opacity var(--fast) linear}
+.gr-how-wrap.open{grid-template-rows:1fr; opacity:1}
+.gr-how-wrap > .gr-how{overflow:hidden; min-height:0}
+
+/* grant icon can host a radiating ring */
+.gs-icon{position:relative; display:inline-flex}
+
+/* traffic lights reveal their glyphs on hover, like real macOS */
+.traffic i{position:relative}
+.traffic:hover i::after{position:absolute; inset:0; display:flex; align-items:center;
+  justify-content:center; font:800 9px/1 var(--font); color:rgba(0,0,0,.48)}
+.traffic:hover i.r::after{content:"\00d7"}   /* × */
+.traffic:hover i.y::after{content:"\2013"}   /* – */
+.traffic:hover i.g::after{content:"+"}
+
+@media (prefers-reduced-motion: no-preference){
+  .btn:active{transform:scale(.965)}
+  .btn.prominent:hover{box-shadow:
+    0 5px 14px -3px color-mix(in srgb,var(--accent) 55%, transparent),
+    0 1px 2px color-mix(in srgb,var(--accent) 40%, transparent)}
+
+  /* onboarding content slides in the direction of travel */
+  .enter-fwd{animation:enterFwd .34s var(--spring) both}
+  .enter-back{animation:enterBack .34s var(--spring) both}
+  .wt-title.enter-fwd,.wt-title.enter-back{animation-duration:.3s}
+
+  /* the progress dot that just filled gives a quick spring */
+  .pd.justfilled{animation:dotFill .42s var(--spring)}
+
+  /* grant success: check pops in, draws, one ring settles out */
+  .icon-pop{animation:pop .44s var(--spring) both}
+  .ring{position:absolute; inset:-2px; border-radius:50%; border:2px solid var(--green);
+    animation:ring .62s ease-out forwards; pointer-events:none}
+  .check-draw{stroke-dasharray:15; stroke-dashoffset:15;
+    animation:draw .36s .08s var(--spring) forwards}
+
+  /* status pill springs in when the state changes */
+  .pill.in{animation:pillIn .28s var(--spring) both}
+
+  /* menu items materialize with a short stagger from the anchor */
+  .popover.opening .mi{animation:miIn .3s var(--spring) both}
+  .popover.opening .mi:nth-child(1){animation-delay:.00s}
+  .popover.opening .mi:nth-child(3){animation-delay:.04s}
+  .popover.opening .mi:nth-child(4){animation-delay:.07s}
+  .popover.opening .mi:nth-child(5){animation-delay:.10s}
+  .popover.opening .mi:nth-child(7){animation-delay:.14s}
+}
+
+@keyframes enterFwd{from{opacity:0; transform:translateX(15px)} to{opacity:1; transform:none}}
+@keyframes enterBack{from{opacity:0; transform:translateX(-15px)} to{opacity:1; transform:none}}
+@keyframes pop{0%{transform:scale(.2); opacity:0} 58%{transform:scale(1.15); opacity:1} 100%{transform:scale(1)}}
+@keyframes ring{from{transform:scale(.55); opacity:.55} to{transform:scale(2.4); opacity:0}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes dotFill{0%{transform:scaleY(1)} 42%{transform:scaleY(2.2)} 100%{transform:scaleY(1)}}
+@keyframes pillIn{from{opacity:0; transform:scale(.88)} to{opacity:1; transform:none}}
+@keyframes miIn{from{opacity:0; transform:translateY(-5px)} to{opacity:1; transform:none}}
+
+/* ============================================================
+   Hero permission sheet (Codex register) — the permission
+   moment is a guide surface, so it earns more visual weight
+   than the operate-mode windows: floating app icon under a
+   glow, confident title, one Allow per permission.
+   ============================================================ */
+.hero{display:flex; flex-direction:column; align-items:center; text-align:center}
+.hero .appicon{width:78px; height:78px; margin:2px 0 17px; position:relative;
+  filter:drop-shadow(0 12px 24px color-mix(in srgb,var(--accent) 30%, transparent))}
+.hero h2{font:var(--largeTitle); font-weight:700; letter-spacing:-.5px; margin-bottom:8px}
+.hero .sub{font:var(--body); color:var(--ink-2); max-width:47ch; margin-bottom:22px}
+.perms{width:100%; display:flex; flex-direction:column; gap:10px}
+.permrow{display:flex; align-items:center; gap:13px; padding:12px 14px; border-radius:13px;
+  background:var(--card); border:.5px solid var(--sep);
+  transition:border-color var(--med) var(--spring), background var(--med) var(--spring)}
+.permrow[data-granted="true"]{border-color:color-mix(in srgb,var(--green) 42%,transparent);
+  background:color-mix(in srgb,var(--green) 8%,var(--card))}
+.permrow .pg{width:40px; height:40px; flex:0 0 auto; color:var(--ink-2); display:flex}
+.permrow .pt{flex:1; text-align:left; min-width:0}
+.permrow .pn{font:var(--body); font-weight:600}
+.permrow .pd{font:var(--subhead); color:var(--ink-2)}
+.allow{appearance:none; border:0; border-radius:999px; padding:7px 17px; min-height:30px; white-space:nowrap;
+  font:var(--callout); font-weight:600; background:var(--accent); color:var(--on-accent); cursor:default;
+  box-shadow:0 1px 2px color-mix(in srgb,var(--accent) 45%,transparent);
+  transition:transform var(--fast) var(--spring), background var(--fast) var(--spring), box-shadow var(--med) var(--spring)}
+.allow:hover{background:var(--accent-hover); box-shadow:0 4px 12px -3px color-mix(in srgb,var(--accent) 55%,transparent)}
+.allow:active{transform:scale(.94)}
+.allow.done{background:color-mix(in srgb,var(--green) 15%,transparent); color:var(--green);
+  box-shadow:none; display:inline-flex; align-items:center; gap:5px}
+
+/* ============================================================
+   Drag-to-allow guided flow — System Settings on top, Proctor
+   helper window tucked underneath, an animated ghost showing
+   the drag, and a real draggable tile. This is the moment the
+   app icon has to travel from ~/Applications into the list.
+   ============================================================ */
+.dragflow{position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
+  padding:44px 20px; background:rgba(12,9,7,.6); backdrop-filter:blur(5px)}
+.dragflow.show{display:flex}
+.df-inner{position:relative; width:520px; max-width:100%; display:flex; flex-direction:column; align-items:center}
+.df-close{position:absolute; top:-30px; right:0; color:rgba(255,255,255,.72); font:var(--callout);
+  cursor:pointer; display:flex; align-items:center; gap:5px}
+.df-close:hover{color:#fff}
+
+.settings-win{width:100%; background:var(--win); border-radius:11px; overflow:hidden;
+  box-shadow:var(--shadow); border:.5px solid var(--sep); position:relative; z-index:2}
+.set-toolbar{display:flex; align-items:center; gap:8px; padding:8px 12px;
+  border-bottom:1px solid var(--sep-soft); font:var(--subhead); color:var(--ink-2);
+  background:linear-gradient(var(--titlebar),var(--titlebar-2))}
+.set-body{padding:15px 16px 16px}
+.set-body h3{font:var(--title3); font-weight:600; margin-bottom:3px}
+.set-body .sd{font:var(--subhead); color:var(--ink-2); margin-bottom:13px; max-width:52ch}
+.set-list{border:.5px solid var(--sep); border-radius:9px; overflow:hidden; background:var(--card)}
+.set-item{display:flex; align-items:center; gap:11px; padding:9px 12px}
+.set-item + .set-item{border-top:.5px solid var(--sep-soft)}
+.si-ic{width:22px; height:22px; flex:0 0 auto; border-radius:5px; display:flex; align-items:center; justify-content:center}
+.si-n{flex:1; font:var(--body)}
+.set-item.fresh{animation:freshRow .5s var(--spring) both}
+@keyframes freshRow{from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:none}}
+.dz-wrap{padding:8px}
+.dropzone{display:flex; align-items:center; justify-content:center; gap:8px; padding:15px;
+  border:2px dashed var(--ink-4); border-radius:9px; color:var(--ink-3); font:var(--callout);
+  transition:border-color var(--med) var(--spring), background var(--med) var(--spring), color var(--med)}
+.dropzone.hot{border-color:var(--accent); background:var(--accent-tint); color:var(--accent)}
+.set-addrow{display:flex; gap:6px; padding:9px 12px 2px; align-items:center}
+.set-pm{width:20px; height:20px; border-radius:5px; border:.5px solid var(--sep); background:var(--card);
+  display:flex; align-items:center; justify-content:center; color:var(--ink-2); font:600 13px/1 var(--font)}
+
+.mswitch{width:38px; height:22px; border-radius:999px; background:var(--ink-4);
+  position:relative; flex:0 0 auto; cursor:default; transition:background var(--med) var(--spring)}
+.mswitch::after{content:""; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.35); transition:transform var(--med) var(--spring)}
+.mswitch.on{background:var(--green)}
+.mswitch.on::after{transform:translateX(16px)}
+.mswitch.pulse{animation:swPulse .5s var(--spring)}
+@keyframes swPulse{0%{transform:scale(1)}45%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+.helper-win{width:92%; margin-top:-6px; z-index:1; position:relative;
+  background:var(--glass); backdrop-filter:blur(30px) saturate(1.5);
+  border:.5px solid var(--glass-brd); border-top:0; border-radius:0 0 15px 15px;
+  box-shadow:var(--shadow-pop); padding:18px 18px 18px}
+.helper-win .hh{display:flex; align-items:center; gap:8px; margin-bottom:3px}
+.helper-win .hh h4{font:var(--title3); font-weight:600}
+.helper-win .hsub{font:var(--subhead); color:var(--ink-2); margin-bottom:15px}
+.helper-grid{display:flex; gap:18px; align-items:center}
+.ptile{width:98px; flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding:13px 10px; border-radius:13px; background:var(--card); border:.5px solid var(--sep);
+  cursor:grab; user-select:none; touch-action:none;
+  transition:transform var(--fast) var(--spring), box-shadow var(--fast) var(--spring), opacity var(--fast)}
+.ptile:hover{transform:translateY(-2px); box-shadow:0 8px 20px -6px rgba(40,30,20,.4)}
+.ptile.grabbing{opacity:.35}
+.ptile .pn{font:var(--subhead); font-weight:600}
+.ptile .grab{font:var(--footnote); color:var(--ink-3); display:flex; align-items:center; gap:4px}
+.hsteps{flex:1; display:flex; flex-direction:column; gap:12px}
+.hstep{display:flex; gap:11px; align-items:flex-start; transition:opacity var(--med) var(--spring)}
+.hstep .num{width:21px; height:21px; flex:0 0 auto; border-radius:50%; background:var(--accent);
+  color:var(--on-accent); font:700 11px/1 var(--font); display:flex; align-items:center; justify-content:center}
+.hstep .ht{font:var(--callout); color:var(--ink); padding-top:2px}
+.hstep .ht b{font-weight:600}
+.hstep.todo{opacity:.42}
+.hstep.todo .num{background:var(--ink-4); color:var(--ink-2)}
+.hstep.done .num{background:var(--green)}
+
+.drag-clone{position:fixed; z-index:80; pointer-events:none; width:98px; margin:0;
+  display:flex; flex-direction:column; align-items:center; gap:8px; padding:13px 10px; border-radius:13px;
+  background:var(--card); border:.5px solid var(--sep); box-shadow:0 22px 44px -8px rgba(18,12,7,.55);
+  transform:scale(1.06) rotate(-2.5deg)}
+
+/* idle demonstration: a ghost tile + cursor trace the drag path, looping */
+.demo{position:absolute; inset:0; pointer-events:none; z-index:5; overflow:visible}
+.demo .ghost{position:absolute; left:0; top:0; width:74px; display:flex; flex-direction:column;
+  align-items:center; gap:6px; padding:10px 8px; border-radius:12px; background:var(--card);
+  border:.5px solid var(--sep); box-shadow:0 14px 30px -8px rgba(18,12,7,.42); opacity:0}
+.demo .cursor{position:absolute; left:0; top:0; opacity:0; color:var(--ink)}
+@media (prefers-reduced-motion: no-preference){
+  .demo.run .ghost{animation:ghostDrag 3.6s cubic-bezier(.5,0,.2,1) infinite}
+  .demo.run .cursor{animation:ghostDrag 3.6s cubic-bezier(.5,0,.2,1) infinite}
+}
+@keyframes ghostDrag{
+  0%  {opacity:0; transform:translate(var(--x0),var(--y0)) scale(1)}
+  7%  {opacity:1}
+  13% {transform:translate(var(--x0),calc(var(--y0) - 7px)) scale(1.07)}
+  50% {opacity:1; transform:translate(var(--x1),var(--y1)) scale(1.07)}
+  62% {transform:translate(var(--x1),var(--y1)) scale(1)}
+  73% {opacity:1}
+  85% {opacity:0; transform:translate(var(--x1),var(--y1)) scale(1)}
+  100%{opacity:0; transform:translate(var(--x1),var(--y1)) scale(1)}
+}
+
+/* ============================================================
+   The agent cursor — Proctor's own pointer. It's how the app
+   shows a model is driving: a vermilion pointer that glides
+   and clicks on its own, tagged so it's never mistaken for the
+   user's cursor, which keeps working independently.
+   ============================================================ */
+.agent-cursor{position:absolute; left:0; top:0; z-index:7; pointer-events:none;
+  filter:drop-shadow(0 3px 6px rgba(20,14,8,.4)); will-change:transform}
+.agent-cursor .tag{position:absolute; left:13px; top:16px; background:var(--accent); color:var(--on-accent);
+  font:700 8.5px/1 var(--font); padding:3px 5px; border-radius:5px; white-space:nowrap;
+  box-shadow:0 2px 6px rgba(0,0,0,.28)}
+.agent-cursor .click{position:absolute; left:-1px; top:-1px; width:20px; height:20px; border-radius:50%;
+  border:2px solid var(--accent); opacity:0}
+
+/* ---- intro's live "Proctor drives your app" demonstration ---- */
+.showcase{position:relative; margin-top:4px; height:150px; border-radius:11px; overflow:hidden;
+  background:linear-gradient(160deg, color-mix(in srgb,var(--accent) 8%, var(--card)), var(--card));
+  border:.5px solid var(--sep)}
+.mini-win{position:absolute; left:155px; top:16px; width:250px;
+  background:var(--win); border-radius:9px; overflow:hidden; box-shadow:0 12px 30px -10px rgba(20,14,8,.4);
+  border:.5px solid var(--sep)}
+.mini-tb{height:22px; background:linear-gradient(var(--titlebar),var(--titlebar-2));
+  border-bottom:.5px solid var(--sep-soft); display:flex; align-items:center; gap:5px; padding:0 8px}
+.mini-tb i{width:8px; height:8px; border-radius:50%}
+.mini-tb .mt{font:9px/1 var(--font); color:var(--ink-3); margin-left:4px}
+.mini-body{padding:11px 12px; display:flex; flex-direction:column; gap:9px}
+.mini-row{display:flex; align-items:center; justify-content:space-between}
+.mini-row .ml{font:11px/1 var(--font); color:var(--ink-2)}
+.mini-switch{width:32px; height:18px; border-radius:999px; background:var(--ink-4); position:relative}
+.mini-switch::after{content:""; position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.mini-btn{align-self:flex-start; font:600 11px/1 var(--font); color:var(--on-accent); background:var(--accent);
+  border-radius:6px; padding:6px 12px}
+.mini-result{display:flex; align-items:center; gap:5px; font:600 10px/1 var(--font); color:var(--green); opacity:0}
+.showcase .label{position:absolute; left:12px; bottom:9px; font:var(--footnote); color:var(--ink-3)}
+.showcase .agent-cursor{left:0; top:0; transform:translate(150px,112px)}
+
+@media (prefers-reduced-motion: no-preference){
+  .showcase.run .agent-cursor{animation:acPath 5.4s cubic-bezier(.5,0,.2,1) infinite}
+  .showcase.run .agent-cursor .click{animation:acClick 5.4s linear infinite}
+  .showcase.run .mini-switch::after{animation:acToggle 5.4s linear infinite}
+  .showcase.run .mini-switch{animation:acToggleBg 5.4s linear infinite}
+  .showcase.run .mini-btn{animation:acBtn 5.4s linear infinite}
+  .showcase.run .mini-result{animation:acResult 5.4s linear infinite}
+}
+/* cursor tip travels: rest → toggle → Run test → rest. coords match the mini-win at left:155. */
+@keyframes acPath{
+  0%  {transform:translate(150px,112px)}
+  10% {transform:translate(150px,112px)}
+  22% {transform:translate(372px,48px)}   /* over the toggle */
+  30% {transform:translate(372px,48px)}
+  48% {transform:translate(185px,82px)}   /* over Run test */
+  56% {transform:translate(185px,82px)}
+  86% {transform:translate(185px,82px)}
+  100%{transform:translate(150px,112px)}
+}
+@keyframes acClick{ 0%,24%{opacity:0;transform:scale(.4)} 26%{opacity:.6;transform:scale(.5)}
+  33%{opacity:0;transform:scale(2.3)} 50%{opacity:0;transform:scale(.4)} 52%{opacity:.6;transform:scale(.5)}
+  59%{opacity:0;transform:scale(2.3)} 100%{opacity:0} }
+@keyframes acToggle{ 0%,28%{transform:translateX(0)} 32%,100%{transform:translateX(14px)} 96%,100%{transform:translateX(0)} }
+@keyframes acToggleBg{ 0%,28%{background:var(--ink-4)} 32%,95%{background:var(--green)} 100%{background:var(--ink-4)} }
+@keyframes acBtn{ 0%,52%{transform:scale(1)} 55%{transform:scale(.92)} 60%{transform:scale(1)} }
+@keyframes acResult{ 0%,54%{opacity:0} 60%,90%{opacity:1} 96%,100%{opacity:0} }
+
+</style>
+</head>
+<body>
+
+<!-- ===================== MOCK HARNESS ===================== -->
+<div class="harness" role="toolbar" aria-label="Mock controls">
+  <div class="brandtag"><span class="dot"></span> Proctor · mock</div>
+
+  <div class="grp">
+    <label class="gl">Surface</label>
+    <div class="seg" id="segSurface" role="group" aria-label="Surface">
+      <button data-surf="onboarding" aria-pressed="true">Onboarding</button>
+      <button data-surf="dragflow" aria-pressed="false">Grant flow</button>
+      <button data-surf="menubar" aria-pressed="false">Menu bar</button>
+      <button data-surf="status" aria-pressed="false">Status window</button>
+    </div>
+  </div>
+
+  <div class="grp">
+    <label class="gl">Agent state</label>
+    <div class="seg" id="segState" role="group" aria-label="Agent state">
+      <button data-state="unknown" aria-pressed="false">Checking</button>
+      <button data-state="down" aria-pressed="false">Agent down</button>
+      <button data-state="needs" aria-pressed="true">Needs permission</button>
+      <button data-state="ready" aria-pressed="false">Ready</button>
+    </div>
+  </div>
+
+  <div class="grp">
+    <label class="gl">Appearance</label>
+    <div class="seg" id="segAppear" role="group" aria-label="Appearance">
+      <button data-appear="light" aria-pressed="true">Light</button>
+      <button data-appear="dark" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+
+  <label class="hsw">Ad-hoc build
+    <button class="sw" id="swAdhoc" role="switch" aria-checked="false"></button></label>
+  <label class="hsw">Secure Event Input
+    <button class="sw" id="swSecure" role="switch" aria-checked="false"></button></label>
+</div>
+
+<!-- ===================== STAGE ===================== -->
+<main class="stage">
+
+  <!-- ---------- ONBOARDING ---------- -->
+  <section class="surface active" id="onboarding" aria-label="Onboarding walkthrough">
+    <div class="window">
+      <div class="titlebar">
+        <div class="traffic"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+        <div class="wtitle">Proctor</div>
+      </div>
+      <div class="wt">
+        <div class="wt-progress" id="wtProgress" aria-hidden="true"></div>
+        <h2 class="wt-title" id="wtTitle"></h2>
+        <div class="wt-body" id="wtBody"></div>
+        <div class="wt-actions" id="wtActions"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- MENU BAR ---------- -->
+  <section class="surface" id="menubar" aria-label="Menu bar extra">
+    <div class="menubar">
+      <div class="mb-anchor" id="mbAnchor" role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false">
+        <span class="mb-glyph" id="mbGlyph"></span>
+      </div>
+      <div class="popover" id="mbPopover" role="menu" hidden></div>
+    </div>
+    <div class="mb-stage">
+      <div class="mb-hint">Click Proctor’s menu-bar glyph (top-right) to open the menu.</div>
+    </div>
+  </section>
+
+  <!-- ---------- STATUS WINDOW ---------- -->
+  <section class="surface" id="status" aria-label="Proctor status window">
+    <div class="window">
+      <div class="titlebar">
+        <div class="traffic"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+        <div class="wtitle">Proctor</div>
+      </div>
+      <div class="mw" id="mwBody"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- drag-to-allow guided overlay (filled by JS) -->
+<div class="dragflow" id="dragflow" role="dialog" aria-modal="true" aria-label="Add Proctor to the allow list"></div>
+
+<div class="legend">
+  <span><b>Question each surface answers</b></span>
+  <span>Onboarding — <b>what does Proctor need, am I done?</b></span>
+  <span>Menu bar — <b>is it ready right now?</b></span>
+  <span>Status — <b>which grant is missing, how do I fix it?</b></span>
+  <span>Signature — <b>the vermilion delta accent</b></span>
+</div>
+
+<script>
+/* ============================================================
+   Icons — authored monochrome SVG (SF-Symbol register).
+   currentColor so they inherit tier/status colour.
+   ============================================================ */
+const I = {
+  lockShield:(s=15)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.5 13 3.3V8c0 3.2-2.2 5.3-5 6.5C5.2 13.3 3 11.2 3 8V3.3L8 1.5Z"/><rect x="6" y="7" width="4" height="3.4" rx="1"/><path d="M6.6 7V6a1.4 1.4 0 0 1 2.8 0v1"/></svg>`,
+  checkCircle:(s=16,draw=false)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="currentColor"/><path class="${draw?'check-draw':''}" d="M4.7 8.2 7 10.4l4.2-4.6" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  circleOpen:(s=16)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.6"/></svg>`,
+  circleDashed:(s=16)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2.2 2.2"><circle cx="8" cy="8" r="6.6"/></svg>`,
+  triangle:(s=15)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 16 16"><path d="M8 2 15 14H1L8 2Z" fill="currentColor"/><rect x="7.25" y="6.2" width="1.5" height="4" rx=".7" fill="#fff"/><circle cx="8" cy="11.6" r=".85" fill="#fff"/></svg>`,
+  rectangles:(s=22)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.4" y="6.4" width="12.2" height="9.6" rx="2.2" transform="rotate(-7 9.5 11.2)"/><rect x="8.4" y="8.4" width="12.2" height="9.6" rx="2.2" transform="rotate(-7 14.5 13.2)"/></svg>`,
+  seal:(s=15)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 16 16"><path d="M8 1l1.6 1.2 2-.2.6 1.9 1.8.9-.6 1.9L14 8l-.6 1.4.6 1.9-1.8.9-.6 1.9-2-.2L8 15l-1.6-1.2-2 .2-.6-1.9-1.8-.9.6-1.9L2 8l.6-1.4L2 4.7l1.8-.9.6-1.9 2 .2L8 1Z" fill="currentColor"/><path d="M5.4 8.1 7 9.7l3.4-3.6" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  bolt:(s=15)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6.6"/><path d="M8.6 4.5 5.6 8.4h2.2l-.4 3 3-3.9H8.2l.4-3Z" fill="currentColor" stroke="none"/></svg>`,
+  keyboard:(s=15)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1.5" y="4" width="13" height="8" rx="1.6"/><path d="M4 6.4h.01M6.3 6.4h.01M8.6 6.4h.01M10.9 6.4h.01M5 9.4h6" stroke-linecap="round"/></svg>`,
+  finder:(s=13)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2.5 2.5v11M8 2.5c-2 3-2 8 0 11M5 6.5c1.5.8 4.5.8 6 0" stroke-linecap="round"/></svg>`,
+  // Proctor app tile — three stacked observation planes + the vermilion delta
+  appIcon:(s=78)=>`<svg width="${s}" height="${s}" viewBox="0 0 78 78"><defs>
+      <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF6EC"/><stop offset="1" stop-color="#ECE2D2"/></linearGradient></defs>
+    <rect x="2" y="2" width="74" height="74" rx="18" fill="url(#ag)" stroke="rgba(0,0,0,.09)"/>
+    <rect x="17" y="15" width="31" height="25" rx="5" fill="none" stroke="#95897A" stroke-width="2.2"/>
+    <rect x="23" y="23" width="31" height="25" rx="5" fill="#3B4650"/>
+    <rect x="27" y="30" width="20" height="2.6" rx="1.3" fill="#fff" opacity=".55"/>
+    <rect x="27" y="35.5" width="14" height="2.6" rx="1.3" fill="#fff" opacity=".38"/>
+    <rect x="30" y="35" width="30" height="24" rx="5" fill="#E24A18"/>
+    <path d="M60 47l6 4-6 4z" fill="#F58C5E"/>
+    <path d="M38 47.5l4 4 8-8.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  // macOS Accessibility glyph — white figure on the system blue circle
+  axGlyph:(s=40)=>`<svg width="${s}" height="${s}" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#0A84FF"/>
+    <circle cx="20" cy="11" r="2.7" fill="#fff"/>
+    <path d="M11 16c6 2.4 12 2.4 18 0" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M20 15v9m0 0-4.5 6.5M20 24l4.5 6.5" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>`,
+  // Screen Recording glyph — viewfinder on a subtle ground (mono, like Codex's Screenshots row)
+  srGlyph:(s=40)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="color-mix(in srgb, currentColor 14%, transparent)"/>
+    <path d="M14 16v-2h2M24 14h2v2M26 24v2h-2M16 26h-2v-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="20" cy="20" r="3.4" fill="currentColor"/></svg>`,
+  // the agent pointer (macOS-style arrow, filled with the accent)
+  arrow:(s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 22 22"><path d="M4 2l13 8-5.5 1.2L9 17 4 2z" fill="var(--accent)" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>`,
+  grip:(s=11)=>`<svg class="sym" width="${s}" height="${s}" viewBox="0 0 12 12" fill="currentColor"><circle cx="3" cy="3" r="1"/><circle cx="9" cy="3" r="1"/><circle cx="3" cy="6" r="1"/><circle cx="9" cy="6" r="1"/><circle cx="3" cy="9" r="1"/><circle cx="9" cy="9" r="1"/></svg>`,
+};
+
+/* ============================================================
+   Mock state
+   ============================================================ */
+const S = {
+  appearance:'light',
+  surface:'onboarding',
+  agent:'needs',        // unknown | down | needs | ready
+  adhoc:false,
+  secure:false,
+  // onboarding local grant flags (seeded from agent state)
+  ax:true, sr:false,
+  step:0,               // 0..4
+};
+
+const STEPS = ['intro','permissions','connect'];
+const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let _prevAgent = null;
+
+function seedGrants(){
+  if(S.agent==='ready'){ S.ax=true; S.sr=true; }
+  else if(S.agent==='needs'){ S.ax=true; S.sr=false; }
+  else { S.ax=false; S.sr=false; }
+}
+
+/* the derived doctor "report" for the status window / menu */
+function report(){
+  const grants = [
+    {name:'Accessibility', required:true, granted:S.ax,
+      how:'Open System Settings › Privacy & Security › Accessibility, then add Proctor and switch it on. macOS shows the consent dialog only once per app; after that this is the only route.'},
+    {name:'Screen Recording', required:true, granted:S.sr,
+      how:'Open System Settings › Privacy & Security › Screen Recording, add Proctor and switch it on. This grant can never be applied silently — macOS requires you to set it yourself.'},
+    {name:'Automation', required:false, granted:false,
+      how:'Asked for per app the first time Proctor sends it an Apple Event. Approve the prompt for that app, or add it under Automation in System Settings.'},
+  ];
+  const ready = S.ax && S.sr;
+  return {ready, grants,
+    attached: S.agent==='ready' ? ['Ledger'] : [],
+    observers: S.agent==='ready' ? 3 : (S.agent==='needs'?1:0)};
+}
+
+/* ============================================================
+   ONBOARDING renderer
+   ============================================================ */
+function renderOnboarding(dir=null, justGranted=null){
+  const prog = document.getElementById('wtProgress');
+  const title = document.getElementById('wtTitle');
+  const body = document.getElementById('wtBody');
+  const actions = document.getElementById('wtActions');
+  const step = STEPS[S.step];
+  const DOTS = STEPS.length-1;                 // drop the 'done' step from the spine
+  const filledTo = Math.min(S.step, DOTS-1);
+
+  // progress dots: on when <= current
+  prog.innerHTML='';
+  for(let i=0;i<DOTS;i++){
+    const d=document.createElement('div');
+    d.className='pd'+(i<=filledTo?' on':'');
+    if(dir==='fwd' && i===filledTo) d.classList.add('justfilled');
+    prog.appendChild(d);
+  }
+
+  const titles={intro:'What Proctor does', permissions:'', connect:'Point a model at it', done:'Ready'};
+  title.textContent=titles[step]||'';
+  title.style.display = titles[step] ? '' : 'none';
+
+  if(step==='intro'){
+    body.innerHTML=`
+      <p class="para">Proctor lets a model <strong>test a Mac app the way a person would</strong> — read what’s on
+        screen, move the pointer, click and type, then check what the app actually drew. It reaches background
+        windows and other Spaces, and it never takes your pointer.</p>
+      <div class="showcase" id="showcase">
+        <div class="mini-win">
+          <div class="mini-tb"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span class="mt">Ledger</span></div>
+          <div class="mini-body">
+            <div class="mini-row"><span class="ml">Round up spare change</span><span class="mini-switch"></span></div>
+            <div class="mini-row"><span class="mini-btn">Run test</span><span class="mini-result">${I.checkCircle(11)} Passed</span></div>
+          </div>
+        </div>
+        <span class="agent-cursor">${I.arrow(22)}<span class="click"></span><span class="tag">Proctor</span></span>
+        <span class="label">Proctor moves the pointer and clicks — your own cursor stays yours</span>
+      </div>`;
+  }
+  else if(step==='permissions'){
+    body.innerHTML=`
+      <div class="hero">
+        <div class="appicon">${I.appIcon(78)}</div>
+        <h2>Enable Proctor</h2>
+        <p class="sub">Proctor needs two macOS permissions to read and drive your apps. They go to Proctor
+          itself, asked once, and are used only when a model you connect asks it to run a test.</p>
+        <div class="perms">
+          ${permRowHTML('Accessibility','Lets Proctor read the control tree and drive it','ax',S.ax)}
+          ${permRowHTML('Screen Recording','Lets Proctor see what your app drew','sr',S.sr)}
+        </div>
+      </div>`;
+  }
+  else if(step==='connect'){
+    const allSet = S.ax && S.sr;
+    const tail = allSet
+      ? `<div class="callout ok">
+          <span class="ic gs-icon" style="color:var(--green)">${I.checkCircle(16,true)}</span>
+          <div><div class="ct">You’re all set</div>
+            <div class="cm">Both permissions are granted. Proctor stays running in the background and lives in the
+              menu bar — no Dock icon. Open Proctor Status any time to re-check, see attached apps, or copy this again.</div></div>
+        </div>`
+      : `<div class="callout">
+          <span class="ic" style="color:var(--accent)">${I.lockShield(16)}</span>
+          <div><div class="ct">Proctor lives in the menu bar</div>
+            <div class="cm">It stays running in the background — no Dock icon, because it’s something a model drives.
+              You can grant the remaining permission any time from Proctor Status.</div></div>
+        </div>`;
+    body.innerHTML=`
+      <p class="para">Last step. Add this to your MCP host’s config — the command holds no permissions of its own,
+        it forwards to Proctor, which does.</p>
+      <div class="snippet"><span class="k">{</span>
+  <span class="k">"mcpServers"</span>: <span class="k">{</span>
+    <span class="k">"proctor"</span>: { <span class="k">"command"</span>: <span class="s">"…/Proctor.app/Contents/MacOS/proctor-shim"</span> }
+  <span class="k">}</span>
+<span class="k">}</span></div>
+      <div class="gs-actions">
+        <button class="btn small" data-copy="config">Copy config</button>
+        <button class="btn small borderless" data-copy="path">Copy command path only</button>
+      </div>
+      ${tail}`;
+  }
+
+  // direction-aware entrance for the step's content
+  if(dir && !RM){
+    const cls = dir==='back' ? 'enter-back' : 'enter-fwd';
+    title.classList.remove('enter-fwd','enter-back'); body.classList.remove('enter-fwd','enter-back');
+    void title.offsetWidth; // restart
+    title.classList.add(cls); body.classList.add(cls);
+  }
+  // start the live agent-cursor showcase on the intro
+  const sc=document.getElementById('showcase');
+  if(sc && !RM) requestAnimationFrame(()=>sc.classList.add('run'));
+
+  // actions row
+  const isFirst=S.step===0, isLast=S.step===STEPS.length-1;
+  actions.innerHTML='';
+  if(!isFirst){
+    const back=btn('Back'); back.onclick=()=>{S.step--; renderOnboarding('back');}; actions.appendChild(back);
+  }
+  const sp=document.createElement('div'); sp.className='spacer'; actions.appendChild(sp);
+  if(!isLast){
+    const skip=btn('Skip setup','borderless'); skip.onclick=()=>{S.step=STEPS.length-1; renderOnboarding('fwd');}; actions.appendChild(skip);
+  }
+  const prim=btn(isLast?'Finish':'Continue','prominent');
+  prim.onclick=()=>{ if(!isLast){S.step++; renderOnboarding('fwd');} };
+  actions.appendChild(prim);
+}
+
+function permRowHTML(name, desc, kind, granted){
+  const glyph = kind==='ax'
+    ? `<span class="pg">${I.axGlyph(40)}</span>`
+    : `<span class="pg" style="color:var(--ink-2)">${I.srGlyph(40)}</span>`;
+  const action = granted
+    ? `<span class="allow done">${I.checkCircle(13)} Allowed</span>`
+    : `<button class="allow" data-allow="${name}">Allow</button>`;
+  return `<div class="permrow" data-granted="${granted}">
+    ${glyph}
+    <div class="pt"><div class="pn">${name}</div><div class="pd">${desc}</div></div>
+    ${action}</div>`;
+}
+
+/* ============================================================
+   MENU BAR renderer
+   ============================================================ */
+function menuGlyph(){
+  if(S.agent==='ready') return `<span style="color:inherit">${I.seal(15)}</span>`;
+  if(S.agent==='needs') return `<span style="color:inherit">${I.triangle(15)}</span>`;
+  if(S.agent==='down')  return `<span style="color:inherit">${I.bolt(15)}</span>`;
+  return `<span style="color:inherit">${I.circleDashed(15)}</span>`;
+}
+function statusLine(){
+  if(S.agent==='unknown') return 'Checking…';
+  if(S.agent==='down') return 'Agent not answering';
+  const r=report();
+  if(r.ready) return `Ready · ${r.attached.length} app${r.attached.length===1?'':'s'} attached`;
+  const missing=r.grants.filter(g=>g.required&&!g.granted).length;
+  return `${missing} permission${missing===1?'':'s'} needed`;
+}
+function renderMenu(){
+  document.getElementById('mbGlyph').innerHTML=menuGlyph();
+  const pop=document.getElementById('mbPopover');
+  const slColor = S.agent==='down'?'var(--red)':(S.agent==='ready'?'var(--green)':(S.agent==='needs'?'var(--amber)':'var(--ink-3)'));
+  pop.innerHTML=`
+    <div class="mi header"><div class="sl"><span style="color:${slColor}; width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block"></span>${statusLine()}</div></div>
+    <div class="mdiv"></div>
+    <div class="mi act" role="menuitem">Proctor Status…</div>
+    <div class="mi act" role="menuitem">Run Setup Again…</div>
+    <div class="mi act" role="menuitem">Re-check now</div>
+    <div class="mdiv"></div>
+    <div class="mi act destructive" role="menuitem">Quit Proctor’s window</div>`;
+  // wire menu item demo behaviour
+  pop.querySelectorAll('.mi.act').forEach(el=>{
+    el.onclick=()=>{
+      const t=el.textContent.trim();
+      if(t.startsWith('Proctor Status')){ setSurface('status'); closePop(); }
+      else if(t.startsWith('Run Setup')){ S.step=0; setSurface('onboarding'); closePop(); }
+      else if(t.startsWith('Re-check')){ pulseGlyph(); }
+      else if(t.startsWith('Quit')){ closePop(); }
+    };
+  });
+}
+function openPop(){
+  const pop=document.getElementById('mbPopover'); const a=document.getElementById('mbAnchor');
+  pop.hidden=false; a.setAttribute('aria-expanded','true');
+  pop.classList.add('enter');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    pop.classList.remove('enter');
+    if(!RM){ pop.classList.add('opening'); setTimeout(()=>pop.classList.remove('opening'), 480); }
+  }));
+}
+function closePop(){
+  const pop=document.getElementById('mbPopover'); const a=document.getElementById('mbAnchor');
+  pop.classList.add('enter'); a.setAttribute('aria-expanded','false');
+  setTimeout(()=>{pop.hidden=true;}, 180);
+}
+function pulseGlyph(){
+  const g=document.getElementById('mbGlyph');
+  if(RM) return;
+  g.animate([{transform:'scale(1) rotate(0)'},{transform:'scale(.8) rotate(-8deg)'},{transform:'scale(1) rotate(0)'}],{duration:320,easing:'cubic-bezier(.32,.72,0,1)'});
+}
+
+/* ============================================================
+   STATUS WINDOW renderer
+   ============================================================ */
+function renderStatus(){
+  const mw=document.getElementById('mwBody');
+  const r=report();
+  // pill — springs in only when the agent state actually changed
+  const pa = (_prevAgent!==S.agent && !RM) ? ' in' : '';
+  _prevAgent = S.agent;
+  let pill;
+  if(S.agent==='unknown') pill=`<span class="pill grey${pa}">Checking</span>`;
+  else if(S.agent==='down') pill=`<span class="pill red${pa}">Agent down</span>`;
+  else pill = r.ready?`<span class="pill green${pa}">${I.checkCircle(11)} Ready</span>`
+                     :`<span class="pill amber${pa}">Needs permission</span>`;
+
+  // readiness body
+  let readiness;
+  if(S.agent==='unknown'){
+    readiness=`<div class="checking"><span class="spin"></span> Checking…</div>`;
+  } else if(S.agent==='down'){
+    readiness=`<div class="downblock">
+      <div class="d-t">The background agent is not answering.</div>
+      <div class="d-w">The launchd agent isn’t running, or it exited. Proctor tried its socket at
+        ~/Library/Application&nbsp;Support/Proctor/proctor.sock and got no reply.</div>
+      <div class="d-h">Until it is running, permissions can’t be read and no test can run.</div>
+      <div class="gs-actions">
+        <button class="btn prominent" data-act="start">Start the agent</button>
+        <button class="btn" data-act="recheck">Re-check</button>
+      </div></div>`;
+  } else {
+    const rows = r.grants.map((g,i)=>{
+      const isLastReq = g.required && !r.grants[i+1]?.required;
+      const glyph = g.granted?`<span style="color:var(--green)">${I.checkCircle(16)}</span>`
+        :(g.required?`<span style="color:var(--amber)">${I.circleOpen(16)}</span>`
+                    :`<span style="color:var(--ink-3)">${I.circleOpen(16)}</span>`);
+      const sub = g.granted?'Granted':(g.required?'Required — not granted yet':'Optional — asked for per app');
+      const openBtn = (!g.granted && g.name!=='Automation') || (!g.granted && g.name==='Automation')
+        ? `<button class="btn small" data-openpane="${g.name}">Open Settings</button>` : '';
+      const howBtn = !g.granted?`<button class="btn small borderless" data-how="${g.name}">How</button>`:'';
+      return `<div class="grow-wrap">
+        <div class="grow">
+          <div class="gr-head">${glyph}
+            <div class="gr-tt"><span class="gr-name">${g.name}</span><span class="gr-sub">${sub}</span></div>
+            <span class="gr-sp"></span>${g.granted?'':openBtn}${howBtn}
+          </div>
+          <div class="gr-how-wrap" data-howwrap="${g.name}"><div class="gr-how" data-howfor="${g.name}">${g.how}</div></div>
+        </div>
+        ${i<r.grants.length-1?'<div class="rowdiv"></div>':''}
+      </div>`;
+    }).join('');
+    const readyLabel = r.ready?`<div class="readylabel">${I.checkCircle(13)} Ready. Every permission Proctor needs is granted.</div>`:'';
+    const adhoc = S.adhoc?`<div class="callout warn"><span class="ic" style="color:var(--amber)">${I.triangle(15)}</span>
+      <div><div class="ct">This build is ad-hoc signed</div>
+      <div class="cm">macOS ties these grants to the exact bytes of this build, so rebuilding Proctor silently
+        revokes them — and a revoked grant shows up as “element not found”, not as a permission error. A
+        Developer&nbsp;ID signed and notarised build keeps its grants across upgrades.</div></div></div>`:'';
+    readiness=`<div class="grantlist">${rows}</div>${readyLabel}${adhoc}`;
+  }
+
+  // agent grid
+  const sig = S.adhoc ? 'Ad-hoc — grants tied to these exact bytes'
+                      : 'Developer ID Application: Fledgeling (7QX82K9M4C)';
+  const secure = S.secure?`<div class="callout info"><span class="ic" style="color:var(--amber)">${I.keyboard(15)}</span>
+    <div><div class="ct">Secure Event Input is active</div>
+    <div class="cm">Something on this Mac — usually a password field — is holding secure input. Reading the
+      accessibility tree and driving controls still work; synthesised keystrokes do not.</div></div></div>`:'';
+  const agentCard = (S.agent==='down' || S.agent==='unknown')
+    ? `<div class="card"><div class="sectitle">Background agent</div>
+        <div class="checking" style="color:var(--ink-2)">${S.agent==='down'?'No agent to report on.':'Waiting for the agent…'}</div></div>`
+    : `<div class="card"><div class="sectitle">Background agent</div>
+        <div class="agrid">
+          <span class="k">Version</span><span class="v">0.2.0 · protocol 2025-06-18</span>
+          <span class="k">macOS</span><span class="v">26.6 (Tahoe)</span>
+          <span class="k">Socket</span><span class="v">~/Library/Application Support/Proctor/proctor.sock</span>
+          <span class="k">Attached apps</span><span class="v">${r.attached.length?r.attached.join(', '):'none'}</span>
+          <span class="k">Live observers</span><span class="v">${r.observers}</span>
+          <span class="k">Shortcuts CLI</span><span class="v">available</span>
+          <span class="k">Signature</span><span class="v">${sig}</span>
+        </div>${secure}</div>`;
+
+  mw.innerHTML=`
+    <div class="mw-head">
+      <div class="brandline"><span style="color:var(--accent)">${I.rectangles(24)}</span><h1>Proctor</h1></div>
+      <div class="d1">Proctor lets a model test a Mac app: read what is actually on screen, drive the controls,
+        and check what the app rendered.</div>
+      <div class="d2">It runs in the background as its own process. That is deliberate — macOS attributes a
+        permission to the process responsible for asking, so the grants below belong to Proctor and keep
+        working when you change or upgrade the tool driving it.</div>
+    </div>
+
+    <div class="card">
+      <div class="row1"><div class="sectitle">Permissions</div>${pill}</div>
+      ${readiness}
+    </div>
+
+    <div class="card">
+      <div class="sectitle">Connect a model to it</div>
+      <div class="para" style="margin:0">Add this to your MCP host’s config. The command below holds no
+        permissions of its own — it forwards to Proctor, which does.</div>
+      <div class="snippet"><span class="k">{</span>
+  <span class="k">"mcpServers"</span>: <span class="k">{</span>
+    <span class="k">"proctor"</span>: { <span class="k">"command"</span>: <span class="s">"…/proctor-shim"</span> }
+  <span class="k">}</span>
+<span class="k">}</span></div>
+      <div class="gs-actions">
+        <button class="btn small" data-copy="config">Copy config</button>
+        <button class="btn small borderless" data-copy="path">Copy command path only</button>
+      </div>
+    </div>
+
+    ${agentCard}
+
+    <div class="mw-foot">
+      <button class="btn small" data-act="log">Open log</button>
+      <button class="btn small" data-act="restart">Restart agent</button>
+      <span class="gr-sp" style="flex:1"></span>
+      <span class="stamp">Checked ${new Date? '14:21:07':'—'}</span>
+      <button class="btn small" data-act="recheck">Re-check</button>
+    </div>`;
+
+  // wire "How" expanders (animated grid-rows reveal)
+  mw.querySelectorAll('[data-how]').forEach(b=>{
+    b.onclick=()=>{
+      const wrap=mw.querySelector(`[data-howwrap="${b.dataset.how}"]`);
+      const open=wrap.classList.toggle('open');
+      b.textContent=open?'Hide':'How';
+    };
+  });
+}
+
+/* ============================================================
+   Drag-to-allow guided flow — System Settings + a helper window
+   underneath, an animated agent-cursor demo, and a real drag.
+   ============================================================ */
+function openDragflow(perm){
+  const df=document.getElementById('dragflow');
+  df.classList.add('show');
+  renderDragflow(perm);
+}
+function closeDragflow(grantedName){
+  const df=document.getElementById('dragflow');
+  df.classList.remove('show'); df.innerHTML='';
+  if(grantedName){
+    if(S.surface==='onboarding' && STEPS[S.step]==='permissions') renderOnboarding(null, grantedName);
+    renderStatus();
+  }
+}
+function renderDragflow(perm){
+  const df=document.getElementById('dragflow');
+  const pane = perm==='Screen Recording' ? 'Screen Recording' : 'Accessibility';
+  const blurb = perm==='Screen Recording'
+    ? 'Allow the applications below to record the contents of your screen.'
+    : 'Allow the applications below to control your Mac.';
+  df.innerHTML=`
+    <div class="df-inner">
+      <div class="df-close" id="dfClose">Back to setup&nbsp;&nbsp;✕</div>
+      <div class="settings-win">
+        <div class="set-toolbar"><span style="font-weight:600;color:var(--ink)">‹ Privacy &amp; Security</span><span>›</span><span>${pane}</span></div>
+        <div class="set-body">
+          <h3>${pane}</h3>
+          <div class="sd">${blurb}</div>
+          <div class="set-list" id="setList">
+            <div class="set-item"><span class="si-ic" style="background:#1c1c1e;color:#eee;font:700 9px/1 var(--mono)">&gt;_</span><span class="si-n">Terminal</span><span class="mswitch on"></span></div>
+            <div class="set-item"><span class="si-ic" style="background:linear-gradient(135deg,#8E7BF0,#4BC0FF)"></span><span class="si-n">Shortcuts</span><span class="mswitch"></span></div>
+            <div class="dz-wrap" id="dzWrap"><div class="dropzone" id="dropzone">Drag Proctor here to add it</div></div>
+          </div>
+          <div class="set-addrow"><span class="set-pm">+</span><span class="set-pm">−</span></div>
+        </div>
+      </div>
+      <div class="helper-win">
+        <div class="hh"><span style="color:var(--accent)">${I.lockShield(15)}</span><h4>Add Proctor to ${pane}</h4></div>
+        <div class="hsub">Proctor lives in your <b>~/Applications</b> folder, so it isn’t in the list yet and the “+” picker won’t find it there. Drag it straight in.</div>
+        <div class="helper-grid">
+          <div class="ptile" id="ptile"><span style="width:44px;height:44px">${I.appIcon(44)}</span><span class="pn">Proctor</span><span class="grab">${I.grip(11)}&nbsp;drag me</span></div>
+          <div class="hsteps">
+            <div class="hstep done" id="hstep1"><span class="num">1</span><span class="ht"><b>Drag Proctor</b> into the list above</span></div>
+            <div class="hstep todo" id="hstep2"><span class="num">2</span><span class="ht"><b>Turn its switch on</b> to grant the permission</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo" id="demo">
+        <span class="ghost">${I.appIcon(44)}</span>
+        <span class="cursor agent-cursor">${I.arrow(22)}<span class="tag">Proctor</span></span>
+      </div>
+    </div>`;
+  document.getElementById('dfClose').onclick=()=>closeDragflow(null);
+  setupDrag(perm);
+  positionDemo();
+}
+function positionDemo(){
+  if(RM) return;
+  const df=document.getElementById('dragflow');
+  const inner=df.querySelector('.df-inner'), demo=df.querySelector('#demo');
+  const tile=df.querySelector('#ptile'), dz=df.querySelector('#dropzone');
+  if(!inner||!demo||!tile||!dz) return;
+  const ir=inner.getBoundingClientRect(), tr=tile.getBoundingClientRect(), dr=dz.getBoundingClientRect();
+  demo.style.setProperty('--x0', (tr.left-ir.left+tr.width/2-37)+'px');
+  demo.style.setProperty('--y0', (tr.top-ir.top+tr.height/2-30)+'px');
+  demo.style.setProperty('--x1', (dr.left-ir.left+dr.width/2-37)+'px');
+  demo.style.setProperty('--y1', (dr.top-ir.top+dr.height/2-30)+'px');
+  demo.style.display=''; demo.classList.add('run');
+}
+function setupDrag(perm){
+  const tile=document.getElementById('ptile'), dz=document.getElementById('dropzone'), demo=document.getElementById('demo');
+  let clone=null, dragging=false;
+  const move=(x,y)=>{ if(clone){ clone.style.left=(x-49)+'px'; clone.style.top=(y-40)+'px'; } };
+  const over=(x,y)=>{ const r=dz.getBoundingClientRect(); return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom; };
+  tile.onpointerdown=(e)=>{
+    e.preventDefault(); dragging=true; tile.classList.add('grabbing');
+    if(demo){ demo.classList.remove('run'); demo.style.display='none'; }   // stand aside while the user drives
+    clone=document.createElement('div'); clone.className='drag-clone';
+    clone.innerHTML=`<span style="width:44px;height:44px">${I.appIcon(44)}</span><span style="font:var(--subhead);font-weight:600">Proctor</span>`;
+    document.body.appendChild(clone); move(e.clientX,e.clientY);
+    try{ tile.setPointerCapture(e.pointerId); }catch(_){}
+  };
+  tile.onpointermove=(e)=>{ if(!dragging) return; move(e.clientX,e.clientY); dz.classList.toggle('hot', over(e.clientX,e.clientY)); };
+  tile.onpointerup=(e)=>{
+    if(!dragging) return; dragging=false; tile.classList.remove('grabbing');
+    const hit=over(e.clientX,e.clientY);
+    if(clone){ clone.remove(); clone=null; } dz.classList.remove('hot');
+    if(hit) dropProctor(perm);
+    else if(demo && !RM){ demo.style.display=''; positionDemo(); }        // missed: resume the demo
+  };
+}
+function dropProctor(perm){
+  const demo=document.getElementById('demo'); if(demo) demo.style.display='none';
+  const tile=document.getElementById('ptile'); if(tile) tile.style.visibility='hidden';
+  const dzWrap=document.getElementById('dzWrap');
+  dzWrap.outerHTML=`<div class="set-item fresh"><span class="si-ic" style="background:none">${I.appIcon(22)}</span><span class="si-n">Proctor</span><span class="mswitch" id="pSwitch"></span></div>`;
+  document.getElementById('hstep2').classList.remove('todo');
+  const hint=document.querySelector('.helper-win .hsub');
+  if(hint) hint.innerHTML='Proctor is in the list now. <b>Switch it on</b> to finish.';
+  const sw=document.getElementById('pSwitch');
+  sw.onclick=()=>{
+    if(sw.classList.contains('on')) return;
+    sw.classList.add('on'); if(!RM) sw.classList.add('pulse');
+    document.getElementById('hstep2').classList.add('done');
+    if(perm==='Screen Recording') S.sr=true; else S.ax=true;
+    setTimeout(()=>closeDragflow(perm), 1000);
+  };
+}
+
+/* ============================================================
+   Shared helpers + wiring
+   ============================================================ */
+function btn(label, cls=''){ const b=document.createElement('button');
+  b.className='btn'+(cls?' '+cls.split(' ').join(' '):''); b.textContent=label; return b; }
+
+/* copy → in-place confirmation, then revert (macOS uses no toast for this) */
+function confirmCopy(el){
+  if(el.dataset.busy) return;
+  const original=el.textContent, wasBorderless=el.classList.contains('borderless');
+  el.dataset.busy='1'; el.classList.add('copied');
+  el.textContent = wasBorderless ? 'Copied path' : 'Copied';
+  if(!RM) el.animate([{transform:'scale(1)'},{transform:'scale(.94)'},{transform:'scale(1)'}],{duration:260,easing:'cubic-bezier(.32,.72,0,1)'});
+  setTimeout(()=>{ el.classList.remove('copied'); el.textContent=original; delete el.dataset.busy; }, 1400);
+}
+
+function setAppearance(a){ S.appearance=a; document.documentElement.dataset.appearance=a;
+  press('#segAppear','appear',a); }
+function setSurface(s){
+  const df=document.getElementById('dragflow');
+  if(s==='dragflow'){
+    press('#segSurface','surf','dragflow');
+    S.surface='onboarding';
+    document.querySelectorAll('.surface').forEach(el=>el.classList.toggle('active', el.id==='onboarding'));
+    S.step=1; renderOnboarding();               // permissions sheet behind the overlay
+    openDragflow('Accessibility');
+    return;
+  }
+  if(df.classList.contains('show')){ df.classList.remove('show'); df.innerHTML=''; }
+  S.surface=s;
+  document.querySelectorAll('.surface').forEach(el=>el.classList.toggle('active', el.id===s));
+  press('#segSurface','surf',s);
+  if(s==='menubar'){ renderMenu(); }
+}
+function setState(st){ S.agent=st; seedGrants(); press('#segState','state',st); renderAll(); }
+function press(sel,attr,val){ document.querySelectorAll(sel+' button').forEach(b=>
+  b.setAttribute('aria-pressed', String(b.dataset[attr]===val))); }
+
+function renderAll(){ renderOnboarding(); renderMenu(); renderStatus(); }
+
+/* harness controls */
+document.getElementById('segSurface').onclick=e=>{const b=e.target.closest('button'); if(b) setSurface(b.dataset.surf);};
+document.getElementById('segState').onclick=e=>{const b=e.target.closest('button'); if(b) setState(b.dataset.state);};
+document.getElementById('segAppear').onclick=e=>{const b=e.target.closest('button'); if(b) setAppearance(b.dataset.appear);};
+document.getElementById('swAdhoc').onclick=function(){S.adhoc=!S.adhoc; this.setAttribute('aria-checked',String(S.adhoc)); renderStatus();};
+document.getElementById('swSecure').onclick=function(){S.secure=!S.secure; this.setAttribute('aria-checked',String(S.secure)); renderStatus();};
+
+/* menu-bar anchor */
+document.getElementById('mbAnchor').onclick=()=>{
+  const pop=document.getElementById('mbPopover');
+  if(pop.hidden) openPop(); else closePop();
+};
+document.getElementById('mbAnchor').onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();
+  const pop=document.getElementById('mbPopover'); if(pop.hidden) openPop(); else closePop();}};
+document.addEventListener('click',e=>{
+  if(S.surface!=='menubar') return;
+  if(!e.target.closest('#mbAnchor') && !e.target.closest('#mbPopover')){
+    const pop=document.getElementById('mbPopover'); if(!pop.hidden) closePop();
+  }
+});
+
+/* onboarding grant / demo actions (delegated) */
+document.getElementById('onboarding').addEventListener('click',e=>{
+  const allow=e.target.closest('[data-allow]');
+  if(allow){ openDragflow(allow.dataset.allow); return; }
+  // Copy → in-place confirmation; other demos flash
+  const copy=e.target.closest('[data-copy]');
+  if(copy){ confirmCopy(copy); return; }
+  const demo=e.target.closest('[data-settings],[data-reveal]');
+  if(demo && !RM){ demo.animate([{opacity:1},{opacity:.45},{opacity:1}],{duration:260}); }
+});
+
+/* status window demo actions */
+document.getElementById('status').addEventListener('click',e=>{
+  const copy=e.target.closest('[data-copy]');
+  if(copy){ confirmCopy(copy); return; }
+  const pane=e.target.closest('[data-openpane]');
+  if(pane){
+    const name=pane.dataset.openpane;
+    if(name==='Accessibility'||name==='Screen Recording') openDragflow(name);
+    else if(!RM) pane.animate([{opacity:1},{opacity:.45},{opacity:1}],{duration:260});
+    return;
+  }
+  const a=e.target.closest('[data-act]');
+  if(!a) return;
+  if(a.dataset.act==='start'||a.dataset.act==='restart'){ setState('needs'); }
+  else if(a.dataset.act==='recheck'){ renderStatus(); }
+  else if(!RM){ a.animate([{opacity:1},{opacity:.45},{opacity:1}],{duration:260}); }
+});
+
+/* init — honour URL query so each render is reproducible/capturable
+   e.g. ?surface=status&state=ready&appear=dark&step=2&adhoc=1&secure=1&pop=1 */
+document.getElementById('dragflow').addEventListener('click',e=>{
+  if(e.target.id==='dragflow') closeDragflow(null);   // click the dim backdrop to dismiss
+});
+(function initFromQuery(){
+  const q=new URLSearchParams(location.search);
+  const appear = q.get('appear')==='dark'?'dark':'light';
+  const st = ['unknown','down','needs','ready'].includes(q.get('state'))?q.get('state'):'needs';
+  const surf = ['onboarding','menubar','status','dragflow'].includes(q.get('surface'))?q.get('surface'):'onboarding';
+  if(q.get('adhoc')==='1'){S.adhoc=true; document.getElementById('swAdhoc').setAttribute('aria-checked','true');}
+  if(q.get('secure')==='1'){S.secure=true; document.getElementById('swSecure').setAttribute('aria-checked','true');}
+  S.agent=st; seedGrants();
+  const stp=parseInt(q.get('step'),10); if(stp>=0&&stp<=STEPS.length-1) S.step=stp;
+  setAppearance(appear); press('#segState','state',st);
+  renderAll();
+  setSurface(surf);
+  if(surf==='menubar' && q.get('pop')==='1'){ openPop(); }
+  const drag=q.get('drag');
+  if(drag==='Accessibility'||drag==='Screen Recording') openDragflow(drag);
+})();
+</script>
+</body>
+</html>

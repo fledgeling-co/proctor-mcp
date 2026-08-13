@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proctor · computer use for macOS</title>
+<meta name="description" content="Proctor gives any agent or harness real hands on a Mac: read the screen, drive the controls, check what the app drew. On background windows, without taking over your machine. And a proper Mac test harness." />
+<meta property="og:title" content="Proctor · computer use for macOS" />
+<meta property="og:description" content="Give any agent real hands on a Mac. And a test harness that measures itself." />
+<meta property="og:image" content="assets/hero-ambient-ca536f.jpg" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png" />
+<link rel="icon" type="image/png" sizes="128x128" href="assets/icon-128.png" />
+<link rel="icon" type="image/png" sizes="256x256" href="assets/icon-256.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<style>
+/* =====================================================================
+   Proctor marketing site — "Instrument" direction.
+   Near-black graphite, one warm vermilion accent (Proctor's delta),
+   a monospace technical register, SF as the display face (deliberate:
+   the product is a macOS tool, so the platform typeface reinforces it).
+   ===================================================================== */
+:root{
+  --sans:-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  --mono:ui-monospace, "SF Mono", "SFMono-Regular", Menlo, monospace;
+
+  --bg:#0A0A0C;
+  --bg-2:#0E0E12;
+  --panel:#151519;
+  --panel-2:#1B1B21;
+  --panel-3:#212128;
+  --line:rgba(255,255,255,.08);
+  --line-2:rgba(255,255,255,.14);
+  --line-3:rgba(255,255,255,.22);
+
+  --ink:rgba(247,244,240,.96);
+  --ink-2:rgba(247,244,240,.60);
+  --ink-3:rgba(247,244,240,.38);
+  --ink-4:rgba(247,244,240,.22);
+
+  --accent:#F1552A;              /* vermilion — Proctor's delta */
+  --accent-2:#FF6A3D;
+  --accent-deep:#C93F12;
+  --accent-soft:rgba(241,85,42,.14);
+  --accent-line:rgba(241,85,42,.42);
+
+  --green:#3AD07E;
+  --amber:#F0A83A;
+  --blue:#4EA1FF;
+
+  --maxw:1140px;
+  --spring:cubic-bezier(.32,.72,0,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font:400 16px/1.6 var(--sans);
+  color:var(--ink);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent);color:#160a06}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+.mono{font-family:var(--mono)}
+.kicker{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.eyebrow{font:600 12px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:40;
+  backdrop-filter:blur(18px) saturate(1.4);
+  background:linear-gradient(rgba(10,10,12,.82),rgba(10,10,12,.5));
+  border-bottom:1px solid transparent;transition:border-color .3s}
+nav.scrolled{border-bottom-color:var(--line)}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:15px 28px;display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.01em}
+.brand .mk{width:26px;height:26px;flex:0 0 auto}
+.nav-links{display:flex;gap:26px;margin-left:14px}
+.nav-links a{font-size:14px;color:var(--ink-2);transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-sp{flex:1}
+.nav-ghost{font-size:14px;color:var(--ink-2)}
+.nav-ghost:hover{color:var(--ink)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px/1 var(--sans);
+  padding:11px 18px;border-radius:9px;cursor:pointer;border:1px solid transparent;
+  transition:transform .18s var(--spring), background .18s, box-shadow .3s, border-color .2s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--accent);color:#170b06;box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 8px 24px -10px var(--accent)}
+.btn-primary:hover{background:var(--accent-2);box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 10px 30px -8px var(--accent)}
+.btn-ghost{background:rgba(255,255,255,.04);color:var(--ink);border-color:var(--line-2)}
+.btn-ghost:hover{background:rgba(255,255,255,.08);border-color:var(--line-3)}
+.btn-sm{padding:8px 13px;font-size:13px;border-radius:8px}
+
+/* ---------- hero ---------- */
+header.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;
+  border-bottom:1px solid var(--line)}
+.hero-bg{position:absolute;inset:0;z-index:0;background:#000}
+.hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.72}
+.hero-bg::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 50% 12%, transparent 30%, var(--bg) 82%),
+             linear-gradient(rgba(10,10,12,.2), rgba(10,10,12,.65))}
+#hero3d{position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none}
+.hero-in{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto;padding:150px 28px 90px}
+.hero h1{font:650 clamp(42px,7vw,86px)/0.98 var(--sans);letter-spacing:-.035em;max-width:14ch;margin:20px 0 0}
+.hero h1 .accent{color:var(--accent)}
+.hero .standfirst{font-size:clamp(16px,1.7vw,20px);line-height:1.55;color:var(--ink-2);max-width:56ch;margin-top:24px}
+.hero-cta{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+.hero-meta{display:flex;gap:22px;margin-top:40px;flex-wrap:wrap;color:var(--ink-3);font:500 12.5px/1 var(--mono)}
+.hero-meta span{display:flex;align-items:center;gap:7px}
+.hero-meta .dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+
+/* ---------- section shells ---------- */
+section{position:relative;padding:100px 0}
+.sec-head{max-width:60ch}
+.sec-head h2{font:640 clamp(28px,4vw,44px)/1.05 var(--sans);letter-spacing:-.025em;margin-top:14px}
+.sec-head p{color:var(--ink-2);font-size:17px;margin-top:16px;max-width:52ch}
+
+/* ---------- dual positioning ---------- */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:8px}
+.dcard{position:relative;padding:30px;border-radius:16px;border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--panel),var(--bg-2));overflow:hidden}
+.dcard::before{content:"";position:absolute;inset:0;border-radius:16px;padding:1px;
+  background:linear-gradient(180deg,var(--accent-line),transparent 40%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.5}
+.dcard .tag{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.dcard h3{font:600 22px/1.2 var(--sans);letter-spacing:-.02em;margin:14px 0 10px}
+.dcard p{color:var(--ink-2);font-size:15.5px;line-height:1.6}
+.dcard .art{margin-top:22px}
+
+/* ---------- feature slices ---------- */
+.slice{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;padding:64px 0;
+  border-top:1px solid var(--line)}
+.slice:nth-child(even) .slice-copy{order:2}
+.slice-copy h3{font:640 clamp(24px,3vw,34px)/1.1 var(--sans);letter-spacing:-.025em;margin:12px 0 0}
+.slice-copy p{color:var(--ink-2);font-size:16.5px;line-height:1.62;margin-top:16px;max-width:44ch}
+.slice-art{position:relative}
+
+/* generic mock window */
+.mockwin{border-radius:12px;overflow:hidden;border:1px solid var(--line-2);
+  background:var(--panel);box-shadow:0 30px 70px -30px rgba(0,0,0,.8),0 2px 0 rgba(255,255,255,.03) inset}
+.mock-tb{height:34px;display:flex;align-items:center;gap:7px;padding:0 12px;
+  background:linear-gradient(#26262d,#1e1e24);border-bottom:1px solid var(--line)}
+.mock-tb i{width:11px;height:11px;border-radius:50%;display:block}
+.tl-r{background:#FF5F57}.tl-y{background:#FEBC2E}.tl-g{background:#28C840}
+.mock-tb .tt{margin-left:8px;font:500 11.5px/1 var(--mono);color:var(--ink-3)}
+.mock-body{padding:16px}
+
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 11px/1 var(--mono);
+  padding:4px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-2)}
+.chip.ok{color:var(--green);border-color:rgba(58,208,126,.3);background:rgba(58,208,126,.08)}
+.chip.warn{color:var(--amber);border-color:rgba(240,168,58,.3);background:rgba(240,168,58,.08)}
+.chip.accent{color:var(--accent);border-color:var(--accent-line);background:var(--accent-soft)}
+.mono-row{font:500 12.5px/1.9 var(--mono);color:var(--ink-2)}
+.mono-row .k{color:var(--ink-3)}
+.mono-row .v{color:var(--ink)}
+.mono-row .a{color:var(--accent)}
+.mono-row .g{color:var(--green)}
+
+/* AX tree */
+.axtree{font:500 12.5px/1.8 var(--mono)}
+.axnode{display:flex;align-items:center;gap:8px;padding:2px 0;color:var(--ink-2);border-radius:5px}
+.axnode .role{color:var(--blue)}
+.axnode .frame{color:var(--ink-3)}
+.axnode.sel{background:var(--accent-soft);color:var(--ink)}
+.axnode.sel .role{color:var(--accent)}
+.stylepanel{border-left:1px solid var(--line);padding-left:16px}
+.styleline{display:flex;justify-content:space-between;gap:12px;font:500 12px/2.1 var(--mono)}
+.styleline .k{color:var(--ink-3)}
+.styleline .v{color:var(--ink);display:flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:3px;border:1px solid var(--line-2)}
+
+/* settle timeline */
+.settle{display:flex;flex-direction:column;gap:11px}
+.sig{display:grid;grid-template-columns:132px 1fr auto;gap:12px;align-items:center}
+.sig .lab{font:500 12px/1 var(--mono);color:var(--ink-2)}
+.sig .track{height:10px;border-radius:999px;background:rgba(255,255,255,.05);overflow:hidden;position:relative}
+.sig .fill{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);border-radius:999px}
+.sig.f1 .fill{background:linear-gradient(90deg,#2a5a3f,var(--green))}
+.sig .st{font:600 11px/1 var(--mono);color:var(--ink-3)}
+.settle-verdict{display:flex;align-items:center;gap:9px;margin-top:6px;padding-top:12px;border-top:1px solid var(--line);
+  font:600 13px/1 var(--mono)}
+
+/* tool call */
+.toolcall{font:500 12.5px/1.85 var(--mono)}
+.toolcall .fn{color:var(--accent)}
+.toolcall .arg{color:var(--ink)}
+.toolcall .cm{color:var(--ink-3)}
+.step{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.03);
+  border:1px solid var(--line);margin-top:7px;font:500 12px/1 var(--mono)}
+.step .ix{color:var(--ink-3)}
+.step .nm{color:var(--ink);flex:1}
+.step .hash{color:var(--ink-3);font-size:11px}
+
+/* agent cursor (reused motif) */
+.stage-mini{position:relative;overflow:hidden}
+.agent-cur{position:absolute;z-index:5;pointer-events:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5));left:0;top:0}
+.agent-cur .tag{position:absolute;left:13px;top:15px;background:var(--accent);color:#170b06;
+  font:700 8.5px/1 var(--sans);padding:3px 5px;border-radius:5px;white-space:nowrap}
+.you-cur{position:absolute;z-index:5;pointer-events:none;color:var(--ink-2)}
+.you-cur .tag{position:absolute;left:13px;top:15px;background:rgba(255,255,255,.14);color:var(--ink);
+  font:700 8.5px/1 var(--sans);padding:3px 5px;border-radius:5px}
+
+/* testing section */
+.tri{position:relative;height:340px;border-radius:16px;border:1px solid var(--line);overflow:hidden;
+  background:radial-gradient(120% 120% at 70% 20%,#141419,var(--bg))}
+#tri3d{position:absolute;inset:0}
+.tri-legend{position:absolute;left:20px;bottom:18px;display:flex;flex-direction:column;gap:7px;font:500 12px/1 var(--mono)}
+.tri-legend div{display:flex;align-items:center;gap:8px;color:var(--ink-2)}
+.tri-legend .d{width:9px;height:9px;border-radius:2px}
+.testgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px 40px;margin-top:26px}
+.testitem{display:flex;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+.testitem .n{font:600 12px/1 var(--mono);color:var(--accent);flex:0 0 auto;padding-top:2px}
+.testitem .t{color:var(--ink-2);font-size:14.5px;line-height:1.5}
+.testitem .t b{color:var(--ink);font-weight:600}
+
+/* stack line */
+.stack{text-align:center;padding:80px 0;border-top:1px solid var(--line)}
+.stack h2{font:640 clamp(24px,3.4vw,38px)/1.1 var(--sans);letter-spacing:-.025em;max-width:20ch;margin:0 auto}
+.stack .hosts{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:26px;
+  font:500 13px/1 var(--mono);color:var(--ink-3)}
+.stack .hosts span{padding:8px 14px;border:1px solid var(--line);border-radius:999px}
+
+/* CTA band */
+.cta{position:relative;overflow:hidden;border-top:1px solid var(--line)}
+.cta-bg{position:absolute;inset:0;z-index:0}
+.cta-bg img{width:100%;height:100%;object-fit:cover;opacity:.5}
+.cta-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(10,10,12,.6),var(--bg))}
+.cta-in{position:relative;z-index:1;text-align:center;padding:120px 28px}
+.cta-in h2{font:660 clamp(30px,5vw,56px)/1.02 var(--sans);letter-spacing:-.03em;max-width:16ch;margin:0 auto}
+.cta-in p{color:var(--ink-2);font-size:18px;margin:18px auto 0;max-width:44ch}
+.cta-in .btn{margin-top:30px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:64px 0 48px;background:var(--bg-2)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:start}
+.foot-note{color:var(--ink-3);font-size:13.5px;line-height:1.7;max-width:60ch}
+.foot-note b{color:var(--ink-2);font-weight:600}
+.foot-links{display:flex;gap:60px;justify-content:flex-end}
+.foot-col h4{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.foot-col a{display:block;color:var(--ink-2);font-size:14px;padding:5px 0;transition:color .2s}
+.foot-col a:hover{color:var(--ink)}
+.foot-base{max-width:var(--maxw);margin:40px auto 0;padding:22px 28px 0;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;color:var(--ink-4);font:500 12px/1 var(--mono);flex-wrap:wrap;gap:10px}
+
+/* reveal */
+.rev{opacity:0;transform:translateY(22px)}
+.rev.in{opacity:1;transform:none;transition:opacity .7s var(--spring),transform .7s var(--spring)}
+
+@media (max-width:860px){
+  .dual,.slice,.foot-grid,.testgrid{grid-template-columns:1fr}
+  .slice{gap:32px}
+  .slice:nth-child(even) .slice-copy{order:0}
+  .nav-links{display:none}
+  .foot-links{justify-content:flex-start;gap:40px}
+  .hero-in{padding-top:130px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .rev{opacity:1;transform:none}
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<nav id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top">
+      <img class="mk" src="assets/icon-256.png" alt="Proctor" width="26" height="26" />
+      Proctor
+    </a>
+    <div class="nav-links">
+      <a href="#computeruse">Computer use</a>
+      <a href="#features">Capabilities</a>
+      <a href="#testing">Testing</a>
+    </div>
+    <div class="nav-sp"></div>
+    <a class="nav-ghost" href="#">Docs</a>
+    <a class="btn btn-primary btn-sm" href="#get">Get started</a>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<header class="hero" id="top">
+  <div class="hero-bg"><img src="assets/hero-ambient-ca536f.jpg" alt="" /></div>
+  <canvas id="hero3d"></canvas>
+  <div class="hero-in">
+    <div class="eyebrow rev">Computer use for macOS</div>
+    <h1 class="rev">Give any agent real <span class="accent">hands</span> on a Mac</h1>
+    <p class="standfirst rev">Proctor lets any model or harness read what's on screen and drive it; click, type, check what the app actually drew. It works on background windows, without taking over your machine. The same primitives make it a proper Mac test harness.</p>
+    <div class="hero-cta rev">
+      <a class="btn btn-primary" href="#get">Get started</a>
+      <a class="btn btn-ghost" href="#computeruse">See it drive an app</a>
+    </div>
+    <div class="hero-meta rev">
+      <span><i class="dot"></i>Runs locked or unattended</span>
+      <span><i class="dot"></i>Accessibility + Apple Events plane</span>
+      <span><i class="dot"></i>ScreenCaptureKit with freshness</span>
+      <span><i class="dot"></i>MCP, stdio or HTTP</span>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== DUAL POSITIONING ==================== -->
+<section id="computeruse">
+  <div class="wrap">
+    <div class="dual">
+      <div class="dcard rev">
+        <div class="tag">01 / Any agent</div>
+        <h3>Computer use for any agent</h3>
+        <p>Any MCP host, any harness. Proctor hands the model on the other end a real Mac to work: the accessibility tree to read, the pointer and keyboard to drive, the screen to check what happened. It isn't a script. It's hands.</p>
+      </div>
+      <div class="dcard rev">
+        <div class="tag">02 / Any test</div>
+        <h3>A test harness that measures itself</h3>
+        <p>The same tools, plus the discipline testing needs. Settle before you assert, replay to tell flaky from broken, measure a build against its mock with real numbers. You get a result you can trust, and the gaps stated instead of hidden.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FEATURE SLICES ==================== -->
+<section id="features" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head rev">
+      <div class="kicker">What it does</div>
+      <h2>Primitives that hold up under a real run</h2>
+      <p>Every tool returns evidence, not a promise. Here is what that looks like.</p>
+    </div>
+
+    <div class="slices">
+
+      <!-- background -->
+      <div class="slice">
+        <div class="slice-copy rev">
+          <div class="kicker">Runs in the background</div>
+          <h3>It works on windows you're not looking at</h3>
+          <p>Proctor drives through the accessibility and Apple Events planes. They don't need a window in front, or even on screen, so it reaches background and occluded windows and other Spaces without stealing your focus. You keep working; it keeps going.</p>
+        </div>
+        <div class="slice-art rev">
+          <div class="mockwin stage-mini" id="mock-bg" style="height:238px">
+            <div class="mock-tb"><i class="tl-r"></i><i class="tl-y"></i><i class="tl-g"></i><span class="tt">Ledger · background</span></div>
+            <div class="mock-body" style="position:relative;height:calc(100% - 34px)">
+              <div class="mono-row"><span class="k">window</span> <span class="v">Ledger · Preferences</span>  <span class="chip" style="margin-left:6px">Space 2 · occluded</span></div>
+              <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px">
+                <div class="settle-mini-row"><span class="mono-row"><span class="k">toggle</span> <span class="v">Round up spare change</span></span></div>
+                <div class="settle-mini-row"><span class="mono-row"><span class="k">button</span> <span class="v">Run reconciliation</span></span></div>
+              </div>
+              <span class="agent-cur" id="bgcur"><svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 2l13 8-5.5 1.2L9 17 4 2z" fill="#F1552A" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="tag">Proctor</span></span>
+              <div style="position:absolute;left:14px;bottom:12px;font:500 11px/1 var(--mono);color:var(--ink-3)">focus unchanged · no window raised</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- runs while locked -->
+      <div class="slice">
+        <div class="slice-copy rev">
+          <div class="kicker">Runs while locked</div>
+          <h3>It keeps going when the Mac is locked</h3>
+          <p>The planes Proctor drives through don't need the screen, so a run carries on while the Mac is locked and you're away from it. When a task genuinely needs the machine unlocked, an optional login-path capability opens a short turn bounded by a timeout, does the work, and relocks; the password prompt stays as the fallback, so nobody gets locked out.</p>
+        </div>
+        <div class="slice-art rev">
+          <div class="mockwin" id="mock-locked">
+            <div class="mock-tb"><i class="tl-r"></i><i class="tl-y"></i><i class="tl-g"></i><span class="tt">proctor_unlock · turn</span></div>
+            <div class="mock-body">
+              <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.02)">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                  <rect x="5" y="11" width="16" height="12" rx="2.5" fill="none" stroke="var(--amber)" stroke-width="1.6"/>
+                  <path d="M8.5 11V8.5a4.5 4.5 0 0 1 9 0V11" fill="none" stroke="var(--amber)" stroke-width="1.6"/>
+                  <circle cx="13" cy="16.5" r="1.6" fill="var(--amber)"/>
+                </svg>
+                <div>
+                  <div class="mono-row"><span class="v" style="color:var(--amber)">screen locked</span> · <span class="k">you're away</span></div>
+                  <div class="mono-row"><span class="g">agent still running</span> · driving through AX + Apple Events</div>
+                </div>
+              </div>
+              <div style="margin-top:12px;display:flex;flex-direction:column;gap:5px">
+                <div class="mono-row"><span class="k">turn</span>&nbsp;&nbsp;<span class="v">authorized</span> · <span class="a">ttl 90s</span> <span class="cm" style="color:var(--ink-3)">// a crashed caller can't leave it open</span></div>
+                <div class="mono-row"><span class="k">unlock right</span>&nbsp;&nbsp;evaluated → <span class="g">granted</span></div>
+                <div class="mono-row"><span class="k">on finish</span>&nbsp;&nbsp;<span class="v">relock</span> · password prompt stays as fallback</div>
+              </div>
+              <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                <span class="chip accent">gated: login-path plugin, armed</span>
+                <span class="chip">disclosed in the methodology</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- capture -->
+      <div class="slice">
+        <div class="slice-copy rev">
+          <div class="kicker">Capture</div>
+          <h3>A screenshot you can trust, or a flag</h3>
+          <p>Every window capture carries its freshness: the frame status, the dirty rects, the content rect. A stale frame gets flagged, not handed back as if it were current. A green run never rests on a picture of the old state.</p>
+        </div>
+        <div class="slice-art rev">
+          <div class="mockwin" id="mock-capture">
+            <div class="mock-tb"><i class="tl-r"></i><i class="tl-y"></i><i class="tl-g"></i><span class="tt">capture · window 0x3F2</span></div>
+            <div class="mock-body">
+              <div style="height:120px;border-radius:8px;border:1px solid var(--line);background:
+                repeating-linear-gradient(135deg,#17171c,#17171c 12px,#191920 12px,#191920 24px);position:relative">
+                <span class="chip ok" style="position:absolute;top:10px;right:10px" id="freshbadge">SCFrameStatus.complete</span>
+              </div>
+              <div style="margin-top:14px;display:flex;flex-direction:column;gap:5px">
+                <div class="mono-row"><span class="k">status</span>&nbsp;&nbsp;<span class="g" id="freshstatus">complete</span></div>
+                <div class="mono-row"><span class="k">dirtyRects</span>&nbsp;&nbsp;<span class="v">[ {0,0,480,300} ]</span></div>
+                <div class="mono-row"><span class="k">contentRect</span>&nbsp;&nbsp;<span class="v">{0,0,480,300}</span> · <span class="k">scale</span> <span class="v">2.0</span></div>
+                <div class="mono-row"><span class="k">trustworthy</span>&nbsp;&nbsp;<span class="g" id="freshtrust">true</span></div>
+              </div>
+              <button class="btn btn-ghost btn-sm" style="margin-top:14px" id="staletoggle">Simulate an off-screen frame</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- read layout -->
+      <div class="slice">
+        <div class="slice-copy rev">
+          <div class="kicker">Read the real layout</div>
+          <h3>Geometry, and the style behind it</h3>
+          <p>The accessibility tree gives you roles, values, and frames. For an app you own, an in-process reflector adds the resolved colours, fonts, corner radius, constraints, and the CALayer model and presentation values, with a render revision. Those are the numbers that check a build against a mock and stand behind a real assertion.</p>
+        </div>
+        <div class="slice-art rev">
+          <div class="mockwin" id="mock-ax">
+            <div class="mock-tb"><i class="tl-r"></i><i class="tl-y"></i><i class="tl-g"></i><span class="tt">snapshot + reflector</span></div>
+            <div class="mock-body" style="display:grid;grid-template-columns:1.15fr 1fr;gap:16px">
+              <div class="axtree">
+                <div class="axnode"><span class="role">AXWindow</span> <span class="frame">1200×760</span></div>
+                <div class="axnode" style="padding-left:14px"><span class="role">AXGroup</span> <span class="frame">toolbar</span></div>
+                <div class="axnode" style="padding-left:14px"><span class="role">AXButton</span> <span class="frame">"New"</span></div>
+                <div class="axnode sel" style="padding-left:14px"><span class="role">AXButton</span> <span class="frame">"Save" · {24,690,96,28}</span></div>
+                <div class="axnode" style="padding-left:14px"><span class="role">AXTable</span> <span class="frame">12 rows</span></div>
+              </div>
+              <div class="stylepanel">
+                <div style="font:600 10.5px/1 var(--mono);letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin-bottom:10px">Reflector · rev 118</div>
+                <div class="styleline"><span class="k">fill</span><span class="v"><span class="sw" style="background:#F1552A"></span>#F1552A</span></div>
+                <div class="styleline"><span class="k">label</span><span class="v">SF Pro · 600 · 13pt</span></div>
+                <div class="styleline"><span class="k">radius</span><span class="v">7.0</span></div>
+                <div class="styleline"><span class="k">layer.model</span><span class="v">{24,690,96,28}</span></div>
+                <div class="styleline"><span class="k">layer.pres</span><span class="v">{24,690,96,28}</span></div>
+                <div class="styleline"><span class="k">opacity</span><span class="v">1.0</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- tools -->
+      <div class="slice">
+        <div class="slice-copy rev">
+          <div class="kicker">The tools</div>
+          <h3>One tool per decision, actions batched</h3>
+          <p>Attach to an app, snapshot a pruned tree with stable ids and since-revision diffs, find by predicate, act on a batch of steps. A six-step flow is one call; each step settles and reports its outcome, a post-state hash, and what changed.</p>
+        </div>
+        <div class="slice-art rev">
+          <div class="mockwin" id="mock-tools">
+            <div class="mock-tb"><i class="tl-r"></i><i class="tl-y"></i><i class="tl-g"></i><span class="tt">proctor_act</span></div>
+            <div class="mock-body">
+              <div class="toolcall"><span class="fn">act</span>(<span class="cm">// one call, six steps, each settles</span></div>
+              <div id="toolsteps"></div>
+              <div class="toolcall" style="margin-top:10px">) <span class="cm">→ 6 ok · state 0x9c…21</span></div>
+              <div style="margin-top:14px;padding-top:13px;border-top:1px solid var(--line)">
+                <div class="mono-row" style="color:var(--ink-3);margin-bottom:8px">the full surface</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span class="chip">attach</span><span class="chip">snapshot</span><span class="chip">find</span>
+                  <span class="chip accent">act</span><span class="chip">capture</span><span class="chip">wait</span>
+                  <span class="chip">assert</span><span class="chip">flow</span><span class="chip">stability</span>
+                  <span class="chip">inspect</span><span class="chip">doctor</span>
+                </div>
+                <div class="mono-row" style="margin-top:11px;color:var(--ink-3)">actuation the AX + Apple Events way, so <span class="v" style="color:var(--ink-2)">Secure Event Input doesn't block it</span> where synthetic keystrokes would be dropped.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- settle -->
+      <div class="slice">
+        <div class="slice-copy rev">
+          <div class="kicker">Settle, then assert</div>
+          <h3>No bare sleeps, no guessed waits</h3>
+          <p>Settle is a conjunction: quiet frames, and no relevant accessibility notifications, and the app's own idle signal when it has one, and a timeout. Determinism is measured by replay, so a race is filed as flaky, not as a bug.</p>
+        </div>
+        <div class="slice-art rev">
+          <div class="mockwin" id="mock-settle">
+            <div class="mock-tb"><i class="tl-r"></i><i class="tl-y"></i><i class="tl-g"></i><span class="tt">settle · step 3</span></div>
+            <div class="mock-body">
+              <div class="settle">
+                <div class="sig f1"><span class="lab">frames quiet</span><span class="track"><span class="fill"></span></span><span class="st">3 / 3</span></div>
+                <div class="sig f1"><span class="lab">ax notifications</span><span class="track"><span class="fill"></span></span><span class="st">none</span></div>
+                <div class="sig f1"><span class="lab">app idle signal</span><span class="track"><span class="fill"></span></span><span class="st">idle</span></div>
+                <div class="sig f1"><span class="lab">within timeout</span><span class="track"><span class="fill"></span></span><span class="st">412ms</span></div>
+                <div class="settle-verdict"><span class="chip ok">settled</span><span style="color:var(--ink-3)">reason: allSignalsQuiet</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- permissions -->
+      <div class="slice">
+        <div class="slice-copy rev">
+          <div class="kicker">Permissions</div>
+          <h3>Granted once, to a stable identity</h3>
+          <p>Proctor installs as its own signed background agent, so macOS attributes the grant to Proctor itself, not to whatever tool is driving it. Grant it once, drag it into the list, and it keeps working when you change the model or the harness.</p>
+        </div>
+        <div class="slice-art rev">
+          <div class="mockwin" id="mock-perms">
+            <div class="mock-tb"><i class="tl-r"></i><i class="tl-y"></i><i class="tl-g"></i><span class="tt">responsible process</span></div>
+            <div class="mock-body">
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <div class="perm-lane"><span class="chip accent">Proctor.app</span><span class="mono-row" style="color:var(--ink-3)">Developer ID · launchd user agent · stable identity</span></div>
+                <div style="height:1px;background:var(--line);margin:4px 0"></div>
+                <div class="mono-row"><span class="g">✓</span> <span class="k">Accessibility</span> <span class="v">granted → Proctor</span></div>
+                <div class="mono-row"><span class="g">✓</span> <span class="k">Screen Recording</span> <span class="v">granted → Proctor</span></div>
+                <div style="margin-top:8px;padding:11px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.02)">
+                  <div class="mono-row" style="color:var(--ink-3)">driver today</div>
+                  <div class="mono-row"><span class="v">Claude</span> → shim → Proctor</div>
+                  <div class="mono-row" style="color:var(--ink-3)">swap the driver tomorrow; grants stay put</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- remote -->
+      <div class="slice">
+        <div class="slice-copy rev">
+          <div class="kicker">Remote</div>
+          <h3>Drive it from another machine, on your terms</h3>
+          <p>There's a built-in MCP server over HTTP, with optional bearer-token auth. Local by default; you open it up only when you mean to.</p>
+        </div>
+        <div class="slice-art rev">
+          <div class="mockwin" id="mock-remote">
+            <div class="mock-tb"><i class="tl-r"></i><i class="tl-y"></i><i class="tl-g"></i><span class="tt">proctor serve --remote</span></div>
+            <div class="mock-body toolcall">
+              <div><span class="cm">$ </span><span class="arg">proctor serve --remote --token $PROCTOR_MCP_TOKEN</span></div>
+              <div style="color:var(--ink-3)">listening · 127.0.0.1:8787 · POST /mcp · GET /health</div>
+              <div style="margin-top:10px"><span class="cm"># from your harness</span></div>
+              <div><span class="fn">POST</span> <span class="arg">/mcp</span></div>
+              <div><span class="k">Authorization:</span> <span class="v">Bearer ••••••••</span></div>
+              <div><span class="k">Origin:</span> <span class="v">exact-match, or refused</span></div>
+              <div style="margin-top:8px"><span class="chip accent">local by default</span> <span class="chip">tunnel when you mean to</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOR TESTING ==================== -->
+<section id="testing" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="sec-head rev">
+      <div class="kicker">For testing</div>
+      <h2>Built to run a real test campaign</h2>
+      <p>Driving an app is the easy half. Proctor carries the parts a test actually needs: a way to know a step finished, a way to tell a flake from a defect, and a report that admits what it didn't cover.</p>
+    </div>
+
+    <div class="tri rev" style="margin-top:36px">
+      <svg id="tri-viz" viewBox="150 40 470 380" preserveAspectRatio="xMidYMid meet" aria-hidden="true"
+           style="position:absolute;inset:0;width:100%;height:100%;z-index:0"></svg>
+      <div class="tri-legend">
+        <div><span class="d" style="background:#6B7787"></span>accessibility tree</div>
+        <div><span class="d" style="background:#4EA1FF"></span>layer geometry</div>
+        <div><span class="d" style="background:#F1552A"></span>captured pixels · disagreement = a finding</div>
+      </div>
+    </div>
+
+    <div class="testgrid">
+      <div class="testitem rev"><span class="n">01</span><span class="t"><b>Exploratory sweep</b> to map the app before you script a thing.</span></div>
+      <div class="testitem rev"><span class="n">02</span><span class="t"><b>Acceptance criteria</b> turned into executable flows.</span></div>
+      <div class="testitem rev"><span class="n">03</span><span class="t"><b>State-matrix coverage</b>: light and dark, text sizes, displays.</span></div>
+      <div class="testitem rev"><span class="n">04</span><span class="t"><b>Accessibility audit</b> against the platform's own rules.</span></div>
+      <div class="testitem rev"><span class="n">05</span><span class="t"><b>Fidelity checking</b>: the build measured against its mock, not eyeballed.</span></div>
+      <div class="testitem rev"><span class="n">06</span><span class="t"><b>Determinism and flake</b> measured by replay, with the first divergence named.</span></div>
+      <div class="testitem rev"><span class="n">07</span><span class="t"><b>Honest coverage</b>; skipped is never counted as passed.</span></div>
+      <div class="testitem rev"><span class="n">08</span><span class="t"><b>The observer effect disclosed</b>, because setting the accessibility flag changes what you're testing.</span></div>
+      <div class="testitem rev"><span class="n">09</span><span class="t"><b>Tri-observer disagreement</b> as a defect oracle: tree, layout and pixels disagreeing about one instant is a finding, not noise.</span></div>
+      <div class="testitem rev"><span class="n">10</span><span class="t"><b>Given a suite</b>, every case is traced to the flow and the assertion that verifies it.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== STACK ==================== -->
+<div class="stack">
+  <div class="wrap">
+    <h2 class="rev">Works with any MCP host and any harness. If your model can call a tool, it can drive a Mac.</h2>
+    <div class="hosts rev">
+      <span>Claude Desktop</span><span>Claude Code</span><span>Cursor</span><span>Your own harness</span><span>stdio or HTTP</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CTA ==================== -->
+<div class="cta" id="get">
+  <div class="cta-bg"><img src="assets/hero-ambient-ca536f.jpg" alt="" /></div>
+  <div class="cta-in">
+    <h2 class="rev">Give your agent a Mac to work</h2>
+    <p class="rev">Install the agent, point your model at it, and let it read and drive a real app.</p>
+    <a class="btn btn-primary rev" href="#" style="font-size:15px;padding:14px 24px">Get started</a>
+  </div>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <a class="brand" href="#top" style="font-size:17px">
+        <img class="mk" src="assets/icon-256.png" alt="Proctor" width="26" height="26" />
+        Proctor
+      </a>
+      <p class="foot-note" style="margin-top:16px">
+        <b>Two honest limits.</b> macOS has no cross-process way to read computed styles, so for an app you don't own, accessibility geometry and sampled pixels are the ceiling; the reflector that reads resolved styles is for apps you build. And real parallelism is bounded by the hardware, so Proctor scales across many windows in one session rather than pretending a laptop is a fleet.
+      </p>
+    </div>
+    <div class="foot-links">
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="#computeruse">Computer use</a>
+        <a href="#features">Capabilities</a>
+        <a href="#testing">Testing</a>
+      </div>
+      <div class="foot-col">
+        <h4>Build</h4>
+        <a href="#">Docs</a>
+        <a href="#">Tool reference</a>
+        <a href="#get">Get started</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-base">
+    <span>Proctor · computer use for macOS</span>
+    <span>Runs on the accessibility, Apple Events and ScreenCaptureKit planes</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* nav shadow on scroll */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled', scrollY>10),{passive:true});
+
+/* ---------- reveals (GSAP if present, else IntersectionObserver) ---------- */
+function reveals(){
+  const items=[...document.querySelectorAll('.rev')];
+  if(RM){ items.forEach(el=>el.classList.add('in')); return; }
+  if(window.gsap && window.ScrollTrigger){
+    gsap.registerPlugin(ScrollTrigger);
+    // hero items stagger immediately
+    document.querySelectorAll('.hero .rev').forEach((el,i)=>
+      gsap.to(el,{opacity:1,y:0,duration:.8,delay:.1+i*.09,ease:'power3.out',onStart:()=>el.classList.add('in')}));
+    // the rest on scroll
+    items.filter(el=>!el.closest('.hero')).forEach(el=>{
+      ScrollTrigger.create({trigger:el,start:'top 86%',once:true,
+        onEnter:()=>gsap.to(el,{opacity:1,y:0,duration:.7,ease:'power3.out',onStart:()=>el.classList.add('in')})});
+    });
+  } else {
+    const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.15});
+    items.forEach(el=>io.observe(el));
+  }
+}
+
+/* ---------- hero three.js: three observation planes reading a topology ---------- */
+function heroThree(){
+  const canvas=document.getElementById('hero3d');
+  if(!canvas || RM || typeof THREE==='undefined') return;
+  let renderer;
+  try{ renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true}); }
+  catch(e){ return; }   // no GPU/WebGL — ambient backdrop stands on its own
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(40,1,.1,100); cam.position.set(0,.25,5.4);
+  const group=new THREE.Group(); scene.add(group); group.rotation.x=-.38;
+
+  const cols=20, rows=12, W=4.8, H=2.9;
+  const layers=[{z:-1.0,c:0x39424e,o:.18,s:.018},{z:0,c:0x6b7787,o:.2,s:.02},{z:1.0,c:0xF1552A,o:.5,s:.032}];
+  const meshes=[];
+  layers.forEach(L=>{
+    const geo=new THREE.PlaneGeometry(W,H,cols,rows);
+    const wire=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:L.c,wireframe:true,transparent:true,opacity:L.o}));
+    wire.position.z=L.z; group.add(wire);
+    const pts=new THREE.Points(geo,new THREE.PointsMaterial({color:L.c,size:L.s,transparent:true,opacity:L.o*1.8}));
+    pts.position.z=L.z; group.add(pts);
+    meshes.push({geo,z:L.z});
+  });
+  const marker=new THREE.Mesh(new THREE.SphereGeometry(.05,18,18),new THREE.MeshBasicMaterial({color:0xF1552A}));
+  group.add(marker);
+
+  let mx=0,my=0;
+  addEventListener('pointermove',e=>{mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5);},{passive:true});
+  function resize(){const r=canvas.getBoundingClientRect();renderer.setSize(r.width,r.height,false);cam.aspect=r.width/Math.max(r.height,1);cam.updateProjectionMatrix();}
+  resize(); addEventListener('resize',resize);
+
+  let t=0, run=true;
+  document.addEventListener('visibilitychange',()=>{run=!document.hidden; if(run) loop();});
+  function loop(){
+    if(!run) return;
+    t+=.014;
+    meshes.forEach((m,li)=>{
+      const p=m.geo.attributes.position;
+      for(let i=0;i<p.count;i++){
+        const x=p.getX(i),y=p.getY(i);
+        p.setZ(i, Math.sin(x*1.1+t+li*1.3)*.07 + Math.cos(y*1.3+t*.8)*.05);
+      }
+      p.needsUpdate=true;
+    });
+    group.rotation.y=Math.sin(t*.14)*.22 + mx*.5;
+    group.rotation.x=-.38 + my*.18;
+    marker.position.set(Math.sin(t*.55)*1.9, Math.cos(t*.4)*1.0, 1.02);
+    renderer.render(scene,cam);
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+/* ---------- tri-observer: three gridded planes + a disagreement column (SVG, always renders) ---------- */
+function buildTri(){
+  const svg=document.getElementById('tri-viz'); if(!svg) return;
+  const NS='http://www.w3.org/2000/svg';
+  const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const e1=[300,74], e2=[-118,92];                 // perspective axes (width, depth)
+  const U=4, V=3, ox=320;
+  const planes=[{y:70,c:'#6B7787',o:.55},{y:150,c:'#4EA1FF',o:.68},{y:230,c:'#F1552A',o:.92}];
+  const P=(o,u,v)=>[o[0]+(u/U)*e1[0]+(v/V)*e2[0], o[1]+(u/U)*e1[1]+(v/V)*e2[1]];
+  const groups=[];
+  planes.forEach(pl=>{
+    const o=[ox,pl.y], g=mk('g',{opacity:pl.o});
+    const c=[P(o,0,0),P(o,U,0),P(o,U,V),P(o,0,V)];
+    g.appendChild(mk('path',{d:`M${c[0]} L${c[1]} L${c[2]} L${c[3]} Z`,fill:pl.c,'fill-opacity':.05,stroke:pl.c,'stroke-width':1.3}));
+    for(let u=1;u<U;u++){const a=P(o,u,0),b=P(o,u,V);g.appendChild(mk('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:pl.c,'stroke-width':.5,opacity:.45}));}
+    for(let v=1;v<V;v++){const a=P(o,0,v),b=P(o,U,v);g.appendChild(mk('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:pl.c,'stroke-width':.5,opacity:.45}));}
+    for(let u=0;u<=U;u++)for(let v=0;v<=V;v++){const p=P(o,u,v);g.appendChild(mk('circle',{cx:p[0],cy:p[1],r:1.5,fill:pl.c}));}
+    svg.appendChild(g); groups.push(g);
+  });
+  // the delta: same cell on every plane, plus a vertical guide — where the three observers disagree
+  const du=3, dv=1, dg=mk('g',{});
+  planes.forEach(pl=>{const o=[ox,pl.y],c=[P(o,du,dv),P(o,du+1,dv),P(o,du+1,dv+1),P(o,du,dv+1)];
+    dg.appendChild(mk('path',{d:`M${c[0]} L${c[1]} L${c[2]} L${c[3]} Z`,fill:'#F1552A','fill-opacity':.18,stroke:'#F1552A','stroke-width':1,'stroke-dasharray':'3 2'}));});
+  const gt=P([ox,planes[0].y],du+.5,dv+.5), gb=P([ox,planes[2].y],du+.5,dv+.5);
+  dg.appendChild(mk('line',{x1:gt[0],y1:gt[1],x2:gb[0],y2:gb[1],stroke:'#F1552A','stroke-width':1,'stroke-dasharray':'2 3',opacity:.6}));
+  svg.appendChild(dg);
+  if(!RM && window.gsap){
+    groups.forEach((g,i)=>gsap.to(g,{y:8,duration:2.4+i*.35,yoyo:true,repeat:-1,ease:'sine.inOut',delay:i*.25}));
+    gsap.fromTo(dg,{opacity:.5},{opacity:1,duration:1.5,yoyo:true,repeat:-1,ease:'sine.inOut'});
+  }
+}
+
+/* ---------- settle bars fill on view ---------- */
+function settleAnim(){
+  const win=document.getElementById('mock-settle'); if(!win) return;
+  const fills=win.querySelectorAll('.fill');
+  const play=()=>fills.forEach((f,i)=>{ if(RM){f.style.transform='scaleX(1)';return;}
+    setTimeout(()=>{ f.style.transition='transform .5s cubic-bezier(.32,.72,0,1)'; f.style.transform='scaleX(1)'; }, 180*i); });
+  if(window.gsap && window.ScrollTrigger){ ScrollTrigger.create({trigger:win,start:'top 80%',once:true,onEnter:play}); }
+  else { new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){play();o.disconnect();}},{threshold:.4}).observe(win); }
+}
+
+/* ---------- tool steps build in ---------- */
+function toolSteps(){
+  const host=document.getElementById('toolsteps'); if(!host) return;
+  const steps=[['press','"New"','0x11'],['setValue','field ← "Rent"','0x2a'],['press','"Category"','0x3c'],
+    ['pick','"Housing"','0x51'],['press','"Save"','0x74'],['assert','balance == 1,240','0x9c']];
+  steps.forEach((s,i)=>{
+    const el=document.createElement('div'); el.className='step rev';
+    el.innerHTML=`<span class="ix">${i+1}</span><span class="nm"><b style="color:var(--accent)">${s[0]}</b> ${s[1]}</span><span class="chip ok" style="padding:2px 7px">ok</span><span class="hash">${s[2]}</span>`;
+    host.appendChild(el);
+  });
+}
+
+/* ---------- background agent cursor loop ---------- */
+function bgCursor(){
+  const cur=document.getElementById('bgcur'); if(!cur || RM) return;
+  const pts=[[40,150],[120,70],[210,110],[120,150]];
+  let i=0;
+  function step(){
+    const [x,y]=pts[i%pts.length];
+    cur.animate([{transform:cur.style.transform||'translate(40px,150px)'},{transform:`translate(${x}px,${y}px)`}],
+      {duration:900,easing:'cubic-bezier(.5,0,.2,1)',fill:'forwards'});
+    cur.style.transform=`translate(${x}px,${y}px)`;
+    i++; setTimeout(step,1150);
+  }
+  step();
+}
+
+/* ---------- capture freshness toggle ---------- */
+function captureToggle(){
+  const btn=document.getElementById('staletoggle'); if(!btn) return;
+  let stale=false;
+  btn.onclick=()=>{
+    stale=!stale;
+    const badge=document.getElementById('freshbadge'), st=document.getElementById('freshstatus'), tr=document.getElementById('freshtrust');
+    if(stale){ badge.textContent='SCFrameStatus.idle'; badge.className='chip warn'; st.textContent='idle'; st.className='v'; st.style.color='var(--amber)';
+      tr.textContent='false, pointer never moved on that display'; tr.style.color='var(--amber)'; btn.textContent='Back to a live frame'; }
+    else { badge.textContent='SCFrameStatus.complete'; badge.className='chip ok'; st.textContent='complete'; st.style.color='var(--green)';
+      tr.textContent='true'; tr.style.color='var(--green)'; btn.textContent='Simulate an off-screen frame'; }
+  };
+}
+
+/* ---------- boot (fault-isolated: one widget failing never takes the page down) ---------- */
+[reveals, heroThree, buildTri, settleAnim, toolSteps, bgCursor, captureToggle]
+  .forEach(fn=>{ try{ fn(); }catch(e){ console.warn('proctor widget skipped:', e && e.message); } });
+</script>
+</body>
+</html>
