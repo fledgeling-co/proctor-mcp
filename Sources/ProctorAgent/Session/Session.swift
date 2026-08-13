@@ -84,6 +84,13 @@ actor Session {
     var approvalToken: ApprovalToken?
     var policyLoadedFlag = false
 
+    /// The filesystem jail: the declared roots any caller-supplied path must stay
+    /// within, resolved on first use from PROCTOR_FS_ROOTS. Nil-then-empty until
+    /// loaded; an unset environment variable yields an empty jail, which admits
+    /// every path, so the containment convention is dormant until configured.
+    var fsJail: FSJail?
+    var fsJailLoadedFlag = false
+
     /// The most recent capture's encoded metadata, served cache-only by the
     /// screenshot/latest resource. Holding the metadata (not the bytes) keeps the
     /// resource readable without a Screen Recording grant and without triggering a
@@ -287,6 +294,10 @@ actor Session {
                        normalize: CaptureNormalizeOptions? = nil,
                        annotate: AnnotateOptions = AnnotateOptions()) async throws -> JSONValue {
         let window = try windowHandle(id)
+        // A caller redirecting the write outside the declared filesystem roots is
+        // refused before the frame is taken. Enforced only on a supplied path; the
+        // default session directory is the agent's own and trusted.
+        try enforceFSJail(path: path)
         var result = try await capture.capture(window: window, to: path,
                                                waitForComplete: waitForComplete,
                                                timeoutMs: timeoutMs, scale: scale,

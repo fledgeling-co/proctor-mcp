@@ -1,9 +1,10 @@
 # PRO-0009: Process kill + filesystem jail
 
 **ID:** PRO-0009
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
+**Plan:** docs/plans/plan-PRO-0009.md
 
 ## Feature description
 
@@ -52,3 +53,27 @@ A test flow kills and relaunches the target app to reset state; a file operation
 *If any of these are wrong, edit it inline (or correct an assumption) in this file and re-run `/triage PRO-0009` before the planner picks this up.*
 
 **Grounding note:** the plane/tool this builds on exists in `Sources/` today (AX + Apple Events driver, ScreenCaptureKit capture, the tool catalogue in ProctorCore). This spec is Swift/macOS backend work; the pipeline is running Swift-adapted (gate = `swift build` + `swift test`; web design/e2e stages N/A). The out-of-family Codex review gate is unavailable on this machine, so triage review ran in-family (logged downgrade).
+
+---
+
+## Progress — 2026-08-13
+
+**Status: In Review** (branch `ai/pro-0009`, not merged)
+
+Delivered on `ai/pro-0009`:
+- **Filesystem jail** — `Sources/ProctorCore/FSJail.swift` (pure: symlink-resolved
+  containment, `..` rejection, path-boundary check, inert when unconfigured),
+  loaded from `PROCTOR_FS_ROOTS` and enforced on caller-supplied `proctor_capture`
+  paths (`Session/SessionFSJail.swift`). Declared roots surfaced in
+  `proctor_policy status` (`fsRoots`) for auditability.
+- **process_kill** — `proctor_kill` tool (list/kill by pid/bundleId/name); pure
+  matcher + authorisation in `Sources/ProctorCore/ProcessControl.swift`, agent
+  signal delivery in `Session/SessionKill.swift`. Reuses the PRO-0005 policy gate
+  (`AppPolicy.decide`) and audit trail (`AuditLog`); kernel/launchd/self protected.
+- Tool count 17 → 18.
+
+Gate: `swift build` clean; `swift test` 132 tests / 20 suites pass, including new
+suites "Filesystem jail" and "Process control".
+
+Downgrade: Codex gpt-5.6-sol lane unavailable on this machine — executor and
+review gates ran in-family (Claude).

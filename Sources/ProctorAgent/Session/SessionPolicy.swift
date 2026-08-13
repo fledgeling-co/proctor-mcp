@@ -82,7 +82,11 @@ extension Session {
             "block": .array(policy.block.sorted().map(JSONValue.string)),
             "sensitive": .array(policy.sensitive.sorted().map(JSONValue.string)),
             "auditPath": .string(AuditLog.url.path),
-            "auditCount": .number(Double(AuditLog.lineCount()))
+            "auditCount": .number(Double(AuditLog.lineCount())),
+            // The declared filesystem roots sit alongside the app lists: both are
+            // the operator-facing containment surface, and stating the roots here is
+            // what makes the jail's guarantee auditable rather than implicit.
+            "fsRoots": .array(fsRootsList().map(JSONValue.string))
         ]
         let now = Date().timeIntervalSince1970
         if let token = approvalToken, now < token.expiresAt {
