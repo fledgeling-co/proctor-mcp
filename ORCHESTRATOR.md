@@ -1,13 +1,13 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** Planning
-**Updated:** 2026-08-13 — pre-triage complete (10 specs, PRO-0001..0010, all Ready for Plan); artifacts written; awaiting launch go.
+**Status:** Running
+**Updated:** 2026-08-13 — batch 1 launched (3-concurrent): PRO-0002, PRO-0008, PRO-0001 running.
 
 ## How to resume
 You are the fleet orchestrator (ship-fleet skill). Read this file top to bottom, reconcile
 the ledger below against reality (`docs/feature-specs/LEDGER.md`, `docs/specs/*`,
 `git worktree list`, merged branches), correct drifted rows, then continue filling slots. Rules:
-- ≤ 8 concurrent runners; an item starts only when every "Depends on" ID has **MERGED**.
+- ≤ **3** concurrent runners (user-chosen, 2026-08-13); an item starts only when every "Depends on" ID has **MERGED**.
 - Runners are Opus agents (launched via the verified single-agent-Workflow lane, `model:'opus'`,
   `effort:'high'`, `agentType:'claude'`) that invoke the ship-feature skill and **STOP BEFORE MERGE**;
   the orchestrator serializes all finalization (rebase → gate → merge → worktree cleanup) one branch at a time.
@@ -42,14 +42,14 @@ Holding pen (external deps / needs input): none.
 ## Ledger
 | ID | Title | Category | Depends on | Deep research | Mock | Lane | Worktree/branch | Status | Notes / outcome |
 |----|-------|----------|------------|---------------|------|------|-----------------|--------|-----------------|
-| PRO-0001 | CUA schema façade | ready-for-plan | — | none | none | opus | — | queued | maps Anthropic/OpenAI CUA schema onto `act` |
-| PRO-0002 | Set-of-marks captures | ready-for-plan | — | none | none | opus | — | queued | numbered marks + grid + mark→AX-id map |
-| PRO-0003 | Menu-bar key-equivalents | ready-for-plan | — | none | none | opus | — | queued | AXMenuBar walk + shortcuts |
-| PRO-0004 | App scripting-dictionary | ready-for-plan | — | none | none | opus | — | queued | sdef parse, cached per PID |
-| PRO-0005 | Audit trail + policy gate | ready-for-plan | — | none | none | opus | — | queued | allow/block, approval token, redacting JSONL |
-| PRO-0006 | Vision-capture normalisation | ready-for-plan | — | none | none | opus | — | queued | scale to vision ceiling + report factor |
-| PRO-0007 | Zoom region crop | ready-for-plan | — | none | none | opus | — | queued | native-res region crop |
-| PRO-0008 | MCP surface modernization | ready-for-plan | — | none | none | opus | — | queued | profiles, resources, annotations, outputSchema |
+| PRO-0001 | CUA schema façade | ready-for-plan | — | none | none | opus | .worktrees/PRO-0001 · ai/pro-0001 | running | batch 1 |
+| PRO-0002 | Set-of-marks captures | ready-for-plan | — | none | none | opus | .worktrees/PRO-0002 · ai/pro-0002 | running | batch 1 · unblocks PRO-0010 |
+| PRO-0003 | Menu-bar key-equivalents | ready-for-plan | — | none | none | opus | — | queued | — |
+| PRO-0004 | App scripting-dictionary | ready-for-plan | — | none | none | opus | — | queued | — |
+| PRO-0005 | Audit trail + policy gate | ready-for-plan | — | none | none | opus | — | queued | — |
+| PRO-0006 | Vision-capture normalisation | ready-for-plan | — | none | none | opus | — | queued | — |
+| PRO-0007 | Zoom region crop | ready-for-plan | — | none | none | opus | — | queued | — |
+| PRO-0008 | MCP surface modernization | ready-for-plan | — | none | none | opus | .worktrees/PRO-0008 · ai/pro-0008 | running | batch 1 · unblocks PRO-0009 |
 | PRO-0009 | Process kill + fs jail | ready-for-plan | PRO-0008 (soft) | none | none | opus | — | queued | test setup/teardown + containment |
 | PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 | none | none | opus | — | queued | target marker in flow/stability artifacts |
 
