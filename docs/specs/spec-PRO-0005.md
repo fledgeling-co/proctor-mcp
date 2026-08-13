@@ -1,9 +1,10 @@
 # PRO-0005: Audit trail + policy gate
 
 **ID:** PRO-0005
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
+**Plan:** docs/plans/plan-PRO-0005.md
 
 ## Feature description
 

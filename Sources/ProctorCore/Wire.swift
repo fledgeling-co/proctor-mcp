@@ -74,6 +74,7 @@ public struct AgentError: Codable, Sendable, Error {
         case captureStale              // a frame came back, but not a trustworthy one
         case reflectorUnavailable      // owned-app introspection asked for where none is embedded
         case secureInputActive         // synthetic-event mode blocked by Secure Event Input
+        case policyDenied              // the app policy gate refused this actuation (blocked or needs a token)
         case invalidArguments
         case notImplemented
         case internalError
