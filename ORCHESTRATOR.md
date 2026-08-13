@@ -54,16 +54,18 @@ Holding pen (external deps / needs input): none.
 | PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 ✓ | none | none | opus | merged (cleaned) | **MERGED** | batch 4 · opt-in pointer marker on act/flow per-step captures |
 
 ## Deferred children discovered mid-fleet
-| Child | Parent | Where it runs | Status |
-| Pointer marker in proctor_stability per-step artifacts | PRO-0010 | new item (stability emits hashes, not per-step PNGs — needs per-step PNG emission first) | Open / not scheduled |
-| Re-gate flow replay + stability through the policy gate & audit | PRO-0005 | new item (act + both computer facades are gated this pass; recorded flows are not) | Open / not scheduled |
-| Encryption-at-rest for the JSONL audit log | PRO-0005 | new item (explicit spec exclusion) | Open / not scheduled |
+All three SCHEDULED 2026-08-13 (whats-left ingest, reader answered "all three") — promoted to backlog briefs + ledger rows, not yet triaged.
+| Child | Parent | Backlog item | Status |
+| Pointer marker in proctor_stability per-step artifacts | PRO-0010 | PRO-0011 (`docs/features-to-triage/11-stability-per-step-pointer.md`) | **Scheduled** — untriaged (needs per-step PNG emission first) |
+| Re-gate flow replay + stability through the policy gate & audit | PRO-0005 | PRO-0012 (`docs/features-to-triage/12-gate-flow-replay-stability.md`) | **Scheduled** — untriaged (security) |
+| Encryption-at-rest for the JSONL audit log | PRO-0005 | PRO-0013 (`docs/features-to-triage/13-audit-log-encryption-at-rest.md`) | **Scheduled** — untriaged (security) |
 
 ## Needs input (consolidated for the user)
 - **Runner model was Opus 4.8, not Opus 5.** Every runner self-checked as `claude-opus-4-8[1m]` at high effort; the fleet convention names `claude-opus-5`, which is not the model actually served on this machine. All work is gated green (build + red→green tests per clause), so this did not degrade the run — flagging only so the convention string can be corrected if desired.
 - **Three deferred children above** are logged, not scheduled. Say if you want any promoted to a new fleet item.
 
 ## Event log (append-only, newest first)
+- 2026-08-13 whats-left ingest: reader answered the 6 status-page questions. Only actioned answer was `deferred → all-three` (enables-planning): the three deferred children promoted to backlog briefs PRO-0011/0012/0013 + ledger rows (Last allocated 10→13). The other answers are blocked or unconfirmed — rebuild-signed / notarise / publish are all blocksAutomation:true (need the reader's hands, Apple creds, outward confirmation); git-remote came back `as-found` (not confirmed). None acted on. Domain in notes is spelled inconsistently (proctor-mcp vs procter-mcp). No git remote created; main stays local-only.
 - 2026-08-13 FLEET COMPLETE. All 10 features merged to local main @ d237361; 19 tools, 169 tests / 23 suites green. PRO-0010 runner mis-wrote to the main path first, self-detected via empty worktree diff, and relocated cleanly via git stash (verified: main clean, no residual stash, branch held the full diff). All worktrees + ai/* branches removed.
 - 2026-08-13 batch 4 launched (final): PRO-0010 off bd3a08c.
 - 2026-08-13 batch 3 MERGED to main (bd3a08c): PRO-0006 (capture normalize), PRO-0007 (proctor_zoom), PRO-0009 (proctor_kill + FSJail). Wire.CaptureResult carries both normalization+crop; count 17->19; 157 tests / 22 suites green. Worktrees+branches cleaned.
