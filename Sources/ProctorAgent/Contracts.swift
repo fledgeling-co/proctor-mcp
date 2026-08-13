@@ -74,7 +74,25 @@ protocol CaptureEngine: AnyObject, Sendable {
 protocol QuietWatch: AnyObject, Sendable {
     /// Fraction of the frame that changed in the most recent frame, and its status.
     func poll() -> (dirtyArea: Double, status: FrameStatus, frames: Int)
+
+    /// The same question asked of one rectangle, given in points relative to the
+    /// window's top-left corner. The answer is either a measurement or the reason
+    /// there is none, because a region that could not be measured is not a region
+    /// that was quiet.
+    func poll(region: Rect) -> RegionQuietSample
+
     func stop()
+}
+
+struct RegionQuietSample: Sendable {
+    /// Dirty area inside the region as a fraction of the region, 0..1. Nil when
+    /// the region could not be measured; `error` then says why.
+    var dirtyArea: Double?
+    var status: FrameStatus
+    var frames: Int
+    /// The rectangle as it was actually measured, in frame pixels.
+    var regionPixels: Rect?
+    var error: AgentError?
 }
 
 // MARK: - Owned-app reflector

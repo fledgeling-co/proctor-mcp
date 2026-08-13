@@ -323,6 +323,14 @@ public struct ActionStep: Codable, Sendable {
     public var modifiers: [String]?
     public var delta: [Double]?
     public var point: [Double]?
+    /// A path of [x, y] points in window coordinates, for dragPath. A start and
+    /// a delta cannot describe a path, so a gesture that follows a shape says so
+    /// here; absent, a drag runs from `point` to `point + delta`.
+    public var path: [[Double]]?
+    /// How long the whole gesture should take. Posting a gesture as fast as the
+    /// loop runs outruns what many applications process, so the pacing is part
+    /// of the step rather than a constant.
+    public var durationMs: Int?
     public var settle: SettlePolicy?
     public var label: String?
 
@@ -338,10 +346,12 @@ public struct ActionStep: Codable, Sendable {
     public init(kind: Kind, node: String? = nil, value: JSONValue? = nil,
                 menuPath: [String]? = nil, text: String? = nil, key: String? = nil,
                 modifiers: [String]? = nil, delta: [Double]? = nil, point: [Double]? = nil,
+                path: [[Double]]? = nil, durationMs: Int? = nil,
                 settle: SettlePolicy? = nil, label: String? = nil) {
         self.kind = kind; self.node = node; self.value = value; self.menuPath = menuPath
         self.text = text; self.key = key; self.modifiers = modifiers; self.delta = delta
-        self.point = point; self.settle = settle; self.label = label
+        self.point = point; self.path = path; self.durationMs = durationMs
+        self.settle = settle; self.label = label
     }
 }
 

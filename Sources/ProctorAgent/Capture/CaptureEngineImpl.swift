@@ -163,7 +163,12 @@ final class CaptureEngineImpl: CaptureEngine {
                 remedy: "Confirm Screen Recording is granted and the window still exists.")
         }
 
-        return QuietWatchImpl(sink: sink, holder: StreamHolder(stream: stream))
+        return QuietWatchImpl(sink: sink, holder: StreamHolder(stream: stream),
+                              windowSize: Rect(x: scWindow.frame.origin.x,
+                                               y: scWindow.frame.origin.y,
+                                               w: scWindow.frame.width,
+                                               h: scWindow.frame.height),
+                              configuredScale: scale)
     }
 
     // MARK: - Output
@@ -256,10 +261,17 @@ final class CaptureEngineImpl: CaptureEngine {
 final class QuietWatchImpl: QuietWatch {
     private let sink: FrameSink
     private let holder: StreamHolder
+    /// The window as the capture sees it, in points, and the scale the stream was
+    /// configured at. Both are needed to place a window-coordinate rectangle in
+    /// the frame, and neither can be read back off a frame alone.
+    private let windowSize: Rect
+    private let configuredScale: Double
 
-    init(sink: FrameSink, holder: StreamHolder) {
+    init(sink: FrameSink, holder: StreamHolder, windowSize: Rect, configuredScale: Double) {
         self.sink = sink
         self.holder = holder
+        self.windowSize = windowSize
+        self.configuredScale = configuredScale
     }
 
     func poll() -> (dirtyArea: Double, status: FrameStatus, frames: Int) {
@@ -272,8 +284,79 @@ final class QuietWatchImpl: QuietWatch {
         return (s.dirtyArea, s.status, s.frames)
     }
 
+    func poll(region: Rect) -> RegionQuietSample {
+        let s = sink.regionSnapshot()
+        let status: FrameStatus = (holder.isStopped || s.stopped) ? .stopped : s.meta.status
+
+        func unmeasured(_ code: AgentError.Code, _ message: String,
+                        remedy: String? = nil, pixels: Rect? = nil) -> RegionQuietSample {
+            RegionQuietSample(dirtyArea: nil, status: status, frames: s.frames,
+                              regionPixels: pixels,
+                              error: AgentError(code: code, message: message, remedy: remedy))
+        }
+
+        if holder.isStopped || s.stopped {
+            return unmeasured(.captureStale,
+                              "the capture stream for this window has stopped, so nothing is "
+                            + "being measured in the region",
+                              remedy: "Start the wait again; if it keeps stopping, check the "
+                                    + "Screen Recording grant with proctor_doctor.")
+        }
+        guard s.frames > 0 else {
+            return unmeasured(.captureStale,
+                              "no frame has arrived from the capture stream yet, so the region "
+                            + "has not been measured",
+                              remedy: "ScreenCaptureKit emits a frame when the window changes; "
+                                    + "an off-screen window may emit none until the pointer moves "
+                                    + "on its display.")
+        }
+
+        let scale = s.meta.pixelWidth > 0 && windowSize.w > 0
+            ? Double(s.meta.pixelWidth) / windowSize.w
+            : configuredScale
+        guard scale > 0, s.meta.pixelWidth > 0, s.meta.pixelHeight > 0 else {
+            return unmeasured(.captureFailed,
+                              "the frame reports no pixel dimensions, so points cannot be "
+                            + "converted to pixels and the region cannot be placed")
+        }
+
+        let origin = s.meta.contentRect ?? Rect(x: 0, y: 0, w: 0, h: 0)
+        let wanted = Rect(x: (origin.x + region.x) * scale, y: (origin.y + region.y) * scale,
+                          w: region.w * scale, h: region.h * scale)
+        guard wanted.w > 0, wanted.h > 0 else {
+            return unmeasured(.invalidArguments,
+                              "the region is \(describe(wanted)) in frame pixels, which has no area",
+                              remedy: "Give region as [x, y, w, h] with a positive width and height.",
+                              pixels: wanted)
+        }
+
+        let frame = Rect(x: 0, y: 0, w: Double(s.meta.pixelWidth), h: Double(s.meta.pixelHeight))
+        guard let visible = RegionDirt.intersection(wanted, frame),
+              visible.w * visible.h >= wanted.w * wanted.h * 0.999 else {
+            return unmeasured(.invalidArguments,
+                              "the region maps to \(describe(wanted)) in frame pixels, which falls "
+                            + "outside the captured frame of \(s.meta.pixelWidth)x\(s.meta.pixelHeight)",
+                              remedy: "region is in points relative to the window's top-left corner; "
+                                    + "subtract the window frame's origin from a node frame before "
+                                    + "passing it.",
+                              pixels: wanted)
+        }
+        guard let fraction = RegionDirt.dirtyFraction(s.meta.dirtyRects, in: visible) else {
+            return unmeasured(.internalError,
+                              "the region resolved to \(describe(visible)) in frame pixels and "
+                            + "still had no measurable area",
+                              pixels: visible)
+        }
+        return RegionQuietSample(dirtyArea: fraction, status: status, frames: s.frames,
+                                 regionPixels: visible, error: nil)
+    }
+
     func stop() {
         sink.markStopped("stopped by caller")
         holder.stopNow()
+    }
+
+    private func describe(_ r: Rect) -> String {
+        String(format: "%.0f,%.0f %.0fx%.0f", r.x, r.y, r.w, r.h)
     }
 }

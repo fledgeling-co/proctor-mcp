@@ -78,10 +78,7 @@ enum Actuator {
             return try pointer(step, target)
 
         case .dragPath:
-            throw AgentError(code: .notImplemented,
-                             message: "dragPath is a synthetic-event gesture owned by the event layer",
-                             remedy: "Drive the drag through the synthetic-event subsystem, "
-                                   + "or express the intent as an AX action on the target element.")
+            return try drag(step, target, foreground: foreground)
 
         case .appleScript:
             return try appleScript(step)
@@ -404,6 +401,96 @@ enum Actuator {
                     mouseCursorPosition: point, mouseButton: .left)?.post(tap: .cghidEventTap)
         }
         return .syntheticEvent
+    }
+
+    /// There is no accessibility expression for a drag, so this is a synthetic
+    /// gesture and reports itself as one.
+    private static func drag(_ step: ActionStep, _ target: ActuationTarget,
+                             foreground: Bool) throws -> ActuationPlane {
+        let route = try dragRoute(step, target)
+
+        // Activating the app to post the gesture answers a narrower question
+        // than a background-safe caller asked, so the substitution is refused
+        // rather than made quietly.
+        guard foreground else {
+            throw AgentError(
+                code: .actionUnsupported,
+                message: "a drag can only be expressed as synthetic events, which need the app "
+                       + "in the foreground",
+                remedy: "Re-run this step with foreground true, or reach the same end state "
+                      + "through the accessibility plane — a value write on the control being "
+                      + "dragged, or its increment and decrement actions, both stay in the "
+                      + "background.",
+                detail: .object(["node": .string(target.nodeId ?? "")]))
+        }
+        try activate(target.pid)
+        try requireEventPlaneAvailable()
+
+        let points = PointerPath.interpolate(route)
+        // One event source for the whole gesture, so the WindowServer sees one
+        // device pressing, moving and releasing rather than three unrelated ones.
+        let source = CGEventSource(stateID: .hidSystemState)
+        // Posting the sequence in a tight loop outruns what many apps process,
+        // so the events are spread across the requested duration, with a floor
+        // of 2ms an app can still see and a ceiling no gesture needs.
+        let totalMs = min(max(step.durationMs ?? 300, 1), 30_000)
+        let intervalUs = UInt32(max(2, totalMs / max(1, points.count)) * 1000)
+
+        warpCursor(to: points[0])
+        post(.leftMouseDown, at: points[0], source: source)
+        // The movement between the press and the release is the drag. An app
+        // that tracks dragging sees nothing without it, and reads a press and a
+        // release at two positions as a click.
+        for point in points.dropFirst() {
+            usleep(intervalUs)
+            post(.leftMouseDragged, at: point, source: source)
+        }
+        usleep(intervalUs)
+        post(.leftMouseUp, at: points[points.count - 1], source: source)
+        return .syntheticEvent
+    }
+
+    /// The route in window coordinates: the supplied path, or the two-point path
+    /// a start and a delta describe.
+    private static func dragRoute(_ step: ActionStep,
+                                  _ target: ActuationTarget) throws -> [CGPoint] {
+        if let path = step.path, !path.isEmpty {
+            let points = path.filter { $0.count >= 2 }.map { CGPoint(x: $0[0], y: $0[1]) }
+            guard points.count == path.count else {
+                throw AgentError(code: .invalidArguments,
+                                 message: "every entry in a dragPath path must be [x, y]")
+            }
+            guard points.count >= 2 else {
+                throw AgentError(code: .invalidArguments,
+                                 message: "a dragPath path needs at least two points",
+                                 remedy: "Supply the end of the drag as a second point, or drop "
+                                       + "path and give point plus delta.")
+            }
+            return points
+        }
+
+        let start: CGPoint
+        if let p = step.point, p.count >= 2 {
+            start = CGPoint(x: p[0], y: p[1])
+        } else if let node = target.node, let centre = centre(of: node) {
+            start = centre
+        } else {
+            throw AgentError(code: .invalidArguments,
+                             message: "dragPath needs path, or point, or a node with a frame")
+        }
+        guard let delta = step.delta, delta.count >= 2 else {
+            throw AgentError(code: .invalidArguments,
+                             message: "dragPath with no path needs delta: [dx, dy]",
+                             remedy: "Give path as [[x,y], ...] for a route with a shape.")
+        }
+        return [start, CGPoint(x: start.x + delta[0], y: start.y + delta[1])]
+    }
+
+    private static func post(_ type: CGEventType, at point: CGPoint, source: CGEventSource?) {
+        // The button number travels on the drag events too; without it a
+        // dragged event carries no button and reads as a bare mouse move.
+        CGEvent(mouseEventSource: source, mouseType: type,
+                mouseCursorPosition: point, mouseButton: .left)?.post(tap: .cghidEventTap)
     }
 
     private static func warpCursor(to point: CGPoint) {

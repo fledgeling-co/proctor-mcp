@@ -306,6 +306,8 @@ struct Args: Sendable {
             modifiers: raw["modifiers"]?.arrayValue?.compactMap(\.stringValue),
             delta: raw["delta"]?.arrayValue?.compactMap(\.doubleValue),
             point: raw["point"]?.arrayValue?.compactMap(\.doubleValue),
+            path: raw["path"]?.arrayValue?.map { $0.arrayValue?.compactMap(\.doubleValue) ?? [] },
+            durationMs: raw["durationMs"]?.intValue,
             settle: settleOverride,
             label: raw["label"]?.stringValue)
     }

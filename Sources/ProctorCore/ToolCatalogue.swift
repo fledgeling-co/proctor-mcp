@@ -186,6 +186,8 @@ public enum ToolCatalogue {
                             "modifiers": .object(["type": .string("array"), "items": .object(["type": .string("string")])]),
                             "delta": .object(["type": .string("array"), "items": .object(["type": .string("number")])]),
                             "point": .object(["type": .string("array"), "items": .object(["type": .string("number")])]),
+                            "path": .object(["type": .string("array"), "items": .object(["type": .string("array"), "items": .object(["type": .string("number")])]), "description": .string("For dragPath: the route to drag along, as [[x,y], ...] in window coordinates. A press and a release at two positions is a click, so the gesture is interpolated to intermediate movements no more than 10 points apart and capped at 240 events. Omit it and the drag runs from point (or the node's centre) to point + delta.")]),
+                            "durationMs": .object(["type": .string("integer"), "description": .string("For dragPath: how long the whole gesture should take, clamped to 30s. Defaults to 300. Events are spaced evenly across it with a 2ms floor per event, so a long path can take longer than asked; raise it for an application that drops fast drags.")]),
                             "label": .object(["type": .string("string"), "description": .string("Human name for this step, carried into reports.")]),
                             "settle": .object(["type": .string("object"), "description": .string("Per-step settle override.")])
                         ]),
@@ -262,7 +264,7 @@ public enum ToolCatalogue {
                 "node": .object(["type": .string("string")]),
                 "find": .object(["type": .string("object"), "description": .string("A find predicate, when the node does not exist yet and so has no id.")]),
                 "value": .object(["description": .string("Target value for valueEquals / valueContains.")]),
-                "region": .object(["type": .string("array"), "items": .object(["type": .string("number")]), "description": .string("[x,y,w,h] in window coordinates, for regionQuiet.")]),
+                "region": .object(["type": .string("array"), "items": .object(["type": .string("number")]), "description": .string("[x,y,w,h] for regionQuiet, in points relative to the window's top-left corner. Subtract the window frame's origin from a node frame to get one. The dirty rectangles the compositor reports are intersected with this rectangle, so the answer is the fraction of the region that changed, not of the window. A region that maps outside the captured frame, or that cannot be placed because the frame reports no geometry, comes back as an error naming the reason rather than as a quiet region. Omit it to wait on the whole window.")]),
                 "timeoutMs": .object(["type": .string("integer"), "description": .string("Defaults to 10000.")]),
                 "pollMs": .object(["type": .string("integer"), "description": .string("Defaults to 100.")])
             ]),

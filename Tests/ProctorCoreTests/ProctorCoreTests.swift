@@ -222,6 +222,129 @@ struct CatalogueTests {
     }
 }
 
+@Suite("Drag path interpolation")
+struct PointerPathTests {
+
+    private func distances(_ points: [CGPoint]) -> [Double] {
+        guard points.count > 1 else { return [] }
+        return (1..<points.count).map { PointerPath.distance(points[$0 - 1], points[$0]) }
+    }
+
+    @Test("the endpoints the caller asked for are the endpoints posted")
+    func endpoints() {
+        let out = PointerPath.interpolate([CGPoint(x: 10, y: 20), CGPoint(x: 310, y: 220)])
+        #expect(out.first == CGPoint(x: 10, y: 20))
+        #expect(out.last == CGPoint(x: 310, y: 220))
+    }
+
+    @Test("consecutive points are no more than the spacing apart")
+    func spacing() {
+        // An app tracking a drag needs to see the movement; a hop of 300 points
+        // between two events is a jump it can miss entirely.
+        let out = PointerPath.interpolate([CGPoint(x: 0, y: 0), CGPoint(x: 300, y: 0)])
+        #expect(out.count > 2)
+        #expect(distances(out).allSatisfy { $0 <= 10 + 1e-9 })
+    }
+
+    @Test("a long path is capped rather than posting thousands of events")
+    func capped() {
+        let out = PointerPath.interpolate([CGPoint(x: 0, y: 0), CGPoint(x: 100_000, y: 0)])
+        #expect(out.count <= PointerPath.defaultMaxPoints)
+        #expect(out.first == CGPoint(x: 0, y: 0))
+        #expect(out.last == CGPoint(x: 100_000, y: 0))
+    }
+
+    @Test("the cap holds even when the supplied path already exceeds it")
+    func cappedByDecimation() {
+        let dense = (0...500).map { CGPoint(x: Double($0), y: 0) }
+        let out = PointerPath.interpolate(dense)
+        #expect(out.count <= PointerPath.defaultMaxPoints)
+        #expect(out.first == dense.first)
+        #expect(out.last == dense.last)
+    }
+
+    @Test("every supplied vertex survives, so a path with a corner keeps its corner")
+    func verticesKept() {
+        let corner = CGPoint(x: 100, y: 0)
+        let out = PointerPath.interpolate([CGPoint(x: 0, y: 0), corner, CGPoint(x: 100, y: 100)])
+        #expect(out.contains(corner))
+        #expect(distances(out).allSatisfy { $0 <= 10 + 1e-9 })
+    }
+
+    @Test("a path that does not move still yields a press and a release")
+    func zeroLength() {
+        let out = PointerPath.interpolate([CGPoint(x: 5, y: 5), CGPoint(x: 5, y: 5)])
+        #expect(out.count >= 2)
+        #expect(out.first == out.last)
+    }
+
+    @Test("a single point cannot be a drag and is returned untouched")
+    func single() {
+        #expect(PointerPath.interpolate([CGPoint(x: 1, y: 2)]).count == 1)
+    }
+}
+
+@Suite("Region dirty area")
+struct RegionDirtTests {
+
+    private let region = Rect(x: 100, y: 100, w: 200, h: 200)   // 40,000 square units
+
+    @Test("a dirty rect inside the region contributes all of itself")
+    func inside() {
+        let dirty = Rect(x: 150, y: 150, w: 50, h: 50)
+        #expect(RegionDirt.intersectionArea(dirty, region) == 2500)
+        #expect(RegionDirt.dirtyFraction([dirty], in: region) == 2500.0 / 40000.0)
+    }
+
+    @Test("a dirty rect that only overlaps contributes its intersection")
+    func partial() {
+        // Half in, half out: counting the whole rect would report twice the
+        // change that happened inside the region.
+        let dirty = Rect(x: 50, y: 100, w: 100, h: 200)
+        #expect(RegionDirt.intersectionArea(dirty, region) == 50 * 200)
+        #expect(RegionDirt.dirtyFraction([dirty], in: region) == 10000.0 / 40000.0)
+    }
+
+    @Test("a dirty rect outside the region contributes nothing")
+    func outside() {
+        let dirty = Rect(x: 0, y: 0, w: 50, h: 50)
+        #expect(RegionDirt.intersection(dirty, region) == nil)
+        #expect(RegionDirt.intersectionArea(dirty, region) == 0)
+        #expect(RegionDirt.dirtyFraction([dirty], in: region) == 0)
+    }
+
+    @Test("touching edges do not overlap")
+    func edgeTouch() {
+        #expect(RegionDirt.intersectionArea(Rect(x: 0, y: 100, w: 100, h: 200), region) == 0)
+    }
+
+    @Test("a dirty rect covering the region reads as fully dirty")
+    func covered() {
+        #expect(RegionDirt.dirtyFraction([Rect(x: 0, y: 0, w: 1000, h: 1000)], in: region) == 1)
+    }
+
+    @Test("overlapping dirty rects are not double counted")
+    func overlapping() {
+        let a = Rect(x: 100, y: 100, w: 100, h: 200)
+        let b = Rect(x: 150, y: 100, w: 100, h: 200)
+        // Union is 150 wide, not 200; summing the two would report 100%.
+        #expect(RegionDirt.unionArea([a, b]) == 150 * 200)
+        #expect(RegionDirt.dirtyFraction([a, b], in: region) == 30000.0 / 40000.0)
+    }
+
+    @Test("a region with no area is unmeasurable, not quiet")
+    func degenerate() {
+        // Reporting 0 would say the region was quiet, which is a claim about a
+        // rectangle nothing was ever measured in.
+        #expect(RegionDirt.dirtyFraction([], in: Rect(x: 10, y: 10, w: 0, h: 50)) == nil)
+    }
+
+    @Test("no dirty rects at all is a measured zero")
+    func noDirt() {
+        #expect(RegionDirt.dirtyFraction([], in: region) == 0)
+    }
+}
+
 @Suite("Error remedies")
 struct ErrorTests {
 

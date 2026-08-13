@@ -19,6 +19,10 @@ struct FrameMeta: Sendable {
     var contentRect: Rect?
     var dirtyRectCount: Int
     var dirtyArea: Double        // union of dirty rects over frame area, 0..1
+    /// The rects themselves, in frame pixels. Kept rather than reduced to the
+    /// number above, because a question about a sub-rectangle of the window
+    /// cannot be answered from a whole-frame fraction.
+    var dirtyRects: [Rect]
     var scaleFactor: Double
     var contentScale: Double
     var pixelWidth: Int
@@ -26,7 +30,7 @@ struct FrameMeta: Sendable {
     var receivedAt: Double
 
     static let empty = FrameMeta(status: .unknown, contentRect: nil, dirtyRectCount: 0,
-                                 dirtyArea: 0, scaleFactor: 1, contentScale: 1,
+                                 dirtyArea: 0, dirtyRects: [], scaleFactor: 1, contentScale: 1,
                                  pixelWidth: 0, pixelHeight: 0, receivedAt: 0)
 }
 
@@ -96,6 +100,13 @@ final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Se
         return (lastMeta.dirtyArea, stoppedFlag ? .stopped : lastMeta.status, frames, stoppedFlag)
     }
 
+    /// The same read with the last frame's geometry intact, for a question about
+    /// part of the window rather than all of it. Still no image data.
+    func regionSnapshot() -> (meta: FrameMeta, frames: Int, stopped: Bool) {
+        lock.lock(); defer { lock.unlock() }
+        return (lastMeta, frames, stoppedFlag)
+    }
+
     func markStopped(_ reason: String?) {
         lock.lock(); defer { lock.unlock() }
         stoppedFlag = true
@@ -157,7 +168,7 @@ final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Se
             let attachments = (raw as? [[SCStreamFrameInfo: Any]])?.first
         else {
             return FrameMeta(status: .unknown, contentRect: nil, dirtyRectCount: 0,
-                             dirtyArea: 0, scaleFactor: 1, contentScale: 1,
+                             dirtyArea: 0, dirtyRects: [], scaleFactor: 1, contentScale: 1,
                              pixelWidth: pw, pixelHeight: ph, receivedAt: now)
         }
 
@@ -175,9 +186,10 @@ final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Se
             contentRect = Rect(x: r.origin.x, y: r.origin.y, w: r.width, h: r.height)
         }
 
-        var dirty: [CGRect] = []
+        var dirty: [Rect] = []
         if let list = attachments[.dirtyRects] as? [[String: Any]] {
             dirty = list.compactMap { CGRect(dictionaryRepresentation: $0 as CFDictionary) }
+                        .map { Rect(x: $0.origin.x, y: $0.origin.y, w: $0.width, h: $0.height) }
         }
 
         let scaleFactor = number(attachments[.scaleFactor]) ?? 1
@@ -186,12 +198,13 @@ final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Se
         let frameArea = Double(pw * ph)
         var dirtyArea = 0.0
         if frameArea > 0 && !dirty.isEmpty {
-            dirtyArea = min(1, max(0, unionArea(dirty) / frameArea))
+            dirtyArea = min(1, max(0, RegionDirt.unionArea(dirty) / frameArea))
         }
 
         return FrameMeta(status: status, contentRect: contentRect, dirtyRectCount: dirty.count,
-                         dirtyArea: dirtyArea, scaleFactor: scaleFactor, contentScale: contentScale,
-                         pixelWidth: pw, pixelHeight: ph, receivedAt: now)
+                         dirtyArea: dirtyArea, dirtyRects: dirty, scaleFactor: scaleFactor,
+                         contentScale: contentScale, pixelWidth: pw, pixelHeight: ph,
+                         receivedAt: now)
     }
 
     private static func number(_ any: Any?) -> Double? {
@@ -211,38 +224,6 @@ final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Se
         case .started: return .unknown
         @unknown default: return .unknown
         }
-    }
-
-    /// Overlapping dirty rects would double-count, so the area is a true union:
-    /// split into vertical strips at every distinct x edge, union the y intervals
-    /// inside each strip. Frames carry a handful of rects, so O(n^2) is free.
-    static func unionArea(_ rects: [CGRect]) -> Double {
-        let boxes = rects.filter { $0.width > 0 && $0.height > 0 }
-        guard !boxes.isEmpty else { return 0 }
-        var xs = Set<Double>()
-        for r in boxes { xs.insert(r.minX); xs.insert(r.maxX) }
-        let edges = xs.sorted()
-        var total = 0.0
-        for i in 0..<(edges.count - 1) {
-            let x0 = edges[i], x1 = edges[i + 1]
-            let width = x1 - x0
-            if width <= 0 { continue }
-            var spans: [(Double, Double)] = []
-            for r in boxes where r.minX <= x0 && r.maxX >= x1 {
-                spans.append((r.minY, r.maxY))
-            }
-            if spans.isEmpty { continue }
-            spans.sort { $0.0 < $1.0 }
-            var covered = 0.0
-            var curLo = spans[0].0, curHi = spans[0].1
-            for s in spans.dropFirst() {
-                if s.0 > curHi { covered += curHi - curLo; curLo = s.0; curHi = s.1 }
-                else { curHi = max(curHi, s.1) }
-            }
-            covered += curHi - curLo
-            total += covered * width
-        }
-        return total
     }
 
     /// Repack to a tight BGRA buffer. The source row stride is padded for the GPU

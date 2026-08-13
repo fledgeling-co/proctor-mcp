@@ -200,7 +200,20 @@ extension Session {
         var polls = 0
 
         var watch: (any QuietWatch)?
+        var regionRect: Rect?
         if condition == "regionQuiet" {
+            if let region {
+                guard region.count == 4, region[2] > 0, region[3] > 0 else {
+                    throw AgentError(
+                        code: .invalidArguments,
+                        message: "region must be [x, y, w, h] with a positive width and height",
+                        remedy: "Coordinates are points relative to the window's top-left corner.")
+                }
+                regionRect = Rect(x: region[0], y: region[1], w: region[2], h: region[3])
+                notes.append("Dirty area was measured inside the supplied region only, so quiet "
+                           + "here means the region was quiet; the rest of the window may have "
+                           + "been changing.")
+            }
             watch = try? await capture.beginQuietWatch(window: window)
             if watch == nil {
                 throw AgentError(
@@ -208,23 +221,21 @@ extension Session {
                     message: "regionQuiet needs a capture stream on \(id) and one could not be started",
                     remedy: "Confirm the Screen Recording grant with proctor_doctor.")
             }
-            if region != nil {
-                notes.append("The capture stream reports dirty area for the whole window, not per "
-                           + "region, so the supplied region was not applied; quiet here means the "
-                           + "window was quiet.")
-            }
         }
         defer { watch?.stop() }
 
         var observed: JSONValue = .null
         var held = false
         var quietFrames = 0
+        var lastFrameCount = -1
 
         while true {
             polls += 1
-            let (result, sample) = evaluateWaitCondition(condition, window: id, node: node,
-                                                         find: find, value: value, watch: watch,
-                                                         quietFrames: &quietFrames)
+            let (result, sample) = try evaluateWaitCondition(condition, window: id, node: node,
+                                                             find: find, value: value, watch: watch,
+                                                             region: regionRect,
+                                                             quietFrames: &quietFrames,
+                                                             lastFrameCount: &lastFrameCount)
             observed = sample
             if result {
                 held = true
@@ -254,8 +265,9 @@ extension Session {
 
     private func evaluateWaitCondition(_ condition: String, window id: String, node: String?,
                                        find: FindPredicate?, value: JSONValue?,
-                                       watch: (any QuietWatch)?,
-                                       quietFrames: inout Int) -> (Bool, JSONValue) {
+                                       watch: (any QuietWatch)?, region: Rect?,
+                                       quietFrames: inout Int,
+                                       lastFrameCount: inout Int) throws -> (Bool, JSONValue) {
         switch condition {
         case "nodeExists", "nodeGone":
             let found = resolveNode(window: id, node: node, find: find)
@@ -283,14 +295,56 @@ extension Session {
 
         case "regionQuiet":
             guard let watch else { return (false, .null) }
-            let sample = watch.poll()
-            if sample.dirtyArea <= SettlePolicy.default.dirtyThreshold {
-                quietFrames += 1
-            } else {
-                quietFrames = 0
+            let threshold = SettlePolicy.default.dirtyThreshold
+            let wanted = SettlePolicy.default.quietFrames
+
+            guard let region else {
+                let sample = watch.poll()
+                let delivered = sample.frames != lastFrameCount
+                lastFrameCount = sample.frames
+                quietFrames = quiet(delivered: delivered, dirty: sample.dirtyArea,
+                                    status: sample.status, threshold: threshold,
+                                    soFar: quietFrames)
+                return (quietFrames >= wanted,
+                        .object(["dirtyArea": .number(sample.dirtyArea),
+                                 "scope": .string("window"),
+                                 "status": .string(sample.status.rawValue),
+                                 "quietFrames": .number(Double(quietFrames)),
+                                 "frames": .number(Double(sample.frames))]))
             }
-            return (quietFrames >= SettlePolicy.default.quietFrames,
-                    .object(["dirtyArea": .number(sample.dirtyArea),
+
+            let sample = watch.poll(region: region)
+            guard let dirtyArea = sample.dirtyArea else {
+                let error = sample.error ?? AgentError(
+                    code: .internalError,
+                    message: "the region could not be measured and no reason was recorded")
+                // A caller-fixable geometry error will not come right by waiting,
+                // so it is raised now rather than spent as a timeout. Anything
+                // else — no frame yet, a stream that has not settled — may still
+                // resolve, so the wait continues and carries the reason with it.
+                // Either way the region is not reported as quiet: a region that
+                // could not be measured is not a region that was quiet.
+                if error.code == .invalidArguments { throw error }
+                quietFrames = 0
+                return (false, .object([
+                    "measured": .bool(false),
+                    "scope": .string("region"),
+                    "region": region.json,
+                    "regionPixels": sample.regionPixels?.json ?? .null,
+                    "status": .string(sample.status.rawValue),
+                    "frames": .number(Double(sample.frames)),
+                    "error": (try? JSONValue.encode(error)) ?? .string(error.message)
+                ]))
+            }
+            let delivered = sample.frames != lastFrameCount
+            lastFrameCount = sample.frames
+            quietFrames = quiet(delivered: delivered, dirty: dirtyArea, status: sample.status,
+                                threshold: threshold, soFar: quietFrames)
+            return (quietFrames >= wanted,
+                    .object(["dirtyArea": .number(dirtyArea),
+                             "scope": .string("region"),
+                             "region": region.json,
+                             "regionPixels": sample.regionPixels?.json ?? .null,
                              "status": .string(sample.status.rawValue),
                              "quietFrames": .number(Double(quietFrames)),
                              "frames": .number(Double(sample.frames))]))
@@ -308,6 +362,19 @@ extension Session {
     }
 
     private func windowsByIDLookup(_ id: String) -> WindowHandle? { try? windowHandle(id) }
+
+    /// One frame's contribution to a run of quiet ones. A poll with no new frame
+    /// counts as quiet for the same reason it does in the settler: the stream
+    /// delivers a frame when something changes and then goes silent, so reading
+    /// the last frame's dirty area again would hold a wait open forever on a
+    /// window that stopped moving before the wait started.
+    private func quiet(delivered: Bool, dirty: Double, status: FrameStatus,
+                       threshold: Double, soFar: Int) -> Int {
+        if status == .stopped { return 0 }
+        if !delivered { return soFar + 1 }
+        if status == .idle { return soFar + 1 }
+        return dirty <= threshold ? soFar + 1 : 0
+    }
 
     /// Resolve a subject either by node id or by predicate. A predicate is what
     /// a caller has before the element exists, which is exactly the case a wait
