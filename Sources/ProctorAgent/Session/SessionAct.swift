@@ -24,11 +24,16 @@ extension Session {
     func act(window id: String, steps: [ActionStep], settle: SettlePolicy, foreground: Bool,
              captureEach: Bool, diffEach: Bool, record: String?) async throws -> JSONValue {
         let window = try windowHandle(id)
+        // The policy gate runs before anything is actuated: a blocked app, or a
+        // sensitive one with no current token, is refused here (and the refusal is
+        // audited) rather than driven. The returned context names the target for
+        // the per-step audit records.
+        let audit = try enforcePolicy(tool: "proctor_act", window: window)
         loadFlowsIfNeeded()
 
         let target = record ?? recording
         let run = await runSteps(steps, window: window, settle: settle, foreground: foreground,
-                                 captureEach: captureEach, diffEach: diffEach)
+                                 captureEach: captureEach, diffEach: diffEach, audit: audit)
 
         if let target {
             try appendToFlow(named: target, window: window, run: run, steps: steps)
@@ -45,9 +50,12 @@ extension Session {
     }
 
     /// One code path for act, flow replay and stability, so a step behaves
-    /// identically however it was reached.
+    /// identically however it was reached. When an audit context is supplied,
+    /// every step it runs is recorded — secrets redacted — so a completed run
+    /// leaves a trail that accounts for each action.
     func runSteps(_ steps: [ActionStep], window: WindowHandle, settle: SettlePolicy,
-                  foreground: Bool, captureEach: Bool, diffEach: Bool) async -> StepRun {
+                  foreground: Bool, captureEach: Bool, diffEach: Bool,
+                  audit: AuditContext? = nil) async -> StepRun {
         var run = StepRun()
         let app = appHandle(forWindow: window)
 
@@ -61,6 +69,8 @@ extension Session {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: refusal, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: elapsed()))
+                if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
+                                         reason: refusal.message) }
                 run.failedAt = index
                 break
             }
@@ -72,6 +82,8 @@ extension Session {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: error, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: elapsed()))
+                if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
+                                         reason: error.message) }
                 run.failedAt = index
                 break
             } catch {
@@ -81,6 +93,8 @@ extension Session {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: wrapped, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: elapsed()))
+                if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
+                                         reason: wrapped.message) }
                 run.failedAt = index
                 break
             }
@@ -113,6 +127,8 @@ extension Session {
                                           error: postStateError, settle: report,
                                           stateHash: stateHash, diff: diff,
                                           elapsedMs: elapsed()))
+            if let audit { auditStep(step, context: audit, ok: true, postStateHash: stateHash,
+                                     reason: postStateError?.message) }
             run.completed += 1
             if let stateHash {
                 run.finalHash = stateHash

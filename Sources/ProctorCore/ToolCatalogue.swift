@@ -1,6 +1,6 @@
 import Foundation
 
-// The eleven tools, defined once. The shim advertises these to the MCP host;
+// The Proctor tools, defined once. The shim advertises these to the MCP host;
 // the agent dispatches on the same names. Keeping the catalogue in shared code
 // is what stops the two drifting.
 //
@@ -33,7 +33,7 @@ public struct ToolSpec: Sendable {
 public enum ToolCatalogue {
     public static let all: [ToolSpec] = [
         apps, snapshot, find, act, capture, wait, assert_, flow, stability, inspect, doctor, unlock,
-        computer, openaiComputer
+        computer, openaiComputer, policy
     ]
 
     public static func spec(named name: String) -> ToolSpec? {
@@ -618,6 +618,68 @@ public enum ToolCatalogue {
                 "foreground": .object(["type": .string("boolean"), "description": .string("Activate the app first. Defaults to true, because computer-use actions are synthetic events that need the window frontmost.")])
             ]),
             "required": .array([.string("window"), .string("actions")])
+        ]),
+        readOnly: false
+    )
+
+    // MARK: policy (audit trail + policy gate)
+
+    static let policy = ToolSpec(
+        name: "proctor_policy",
+        title: "Configure the app policy gate and read the redacting audit trail",
+        description: """
+        Operator-facing safety plumbing, not a product surface. Two paired rails: a policy gate \
+        that decides which applications Proctor may drive, and a redacting audit trail that records \
+        every action without storing what was typed.
+
+        The gate is keyed by bundle identifier and fails closed. `block` lists apps that are always \
+        refused. `allow`, when non-empty, is an allow list: anything not on it — including an app \
+        whose bundle id cannot be resolved — is refused, so the agent cannot wander into a password \
+        manager or banking app by accident. `sensitive` lists apps that may be driven only while a \
+        short-lived approval token is held, exactly as the unlock turn is time-bounded, so a crashed \
+        caller leaves no standing authority.
+
+        Actions: `status` reports the current lists, whether an approval token is live and where the \
+        audit log lives; `configure` replaces any of the allow/block/sensitive sets you supply; \
+        `approve` mints an approval token, optionally scoped to one bundle id, with a TTL; `revoke` \
+        drops it; `audit` returns the most recent JSONL lines. In the audit, typed values and script \
+        bodies are stored as length plus SHA-256 — never in the clear — so the trail proves what was \
+        entered without leaking the secret, and is safe to keep after an unattended run.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "action": .object([
+                    "type": .string("string"),
+                    "enum": .array([.string("status"), .string("configure"), .string("approve"),
+                                    .string("revoke"), .string("audit")]),
+                    "description": .string("Defaults to status.")
+                ]),
+                "allow": .object([
+                    "type": .string("array"), "items": .object(["type": .string("string")]),
+                    "description": .string("For configure: bundle ids that may be driven. Non-empty turns on allow-list mode (everything else is refused). Supplying the key replaces the whole set.")
+                ]),
+                "block": .object([
+                    "type": .string("array"), "items": .object(["type": .string("string")]),
+                    "description": .string("For configure: bundle ids that are always refused. Wins over allow. Supplying the key replaces the whole set.")
+                ]),
+                "sensitive": .object([
+                    "type": .string("array"), "items": .object(["type": .string("string")]),
+                    "description": .string("For configure: bundle ids that require a current approval token before actuation. Supplying the key replaces the whole set.")
+                ]),
+                "bundleId": .object([
+                    "type": .string("string"),
+                    "description": .string("For approve: scope the token to one bundle id. Omit to authorize any sensitive app.")
+                ]),
+                "ttlMs": .object([
+                    "type": .string("integer"),
+                    "description": .string("For approve: how long the token stays valid. Defaults to 15000, like the unlock turn.")
+                ]),
+                "limit": .object([
+                    "type": .string("integer"),
+                    "description": .string("For audit: how many of the most recent lines to return. Defaults to 50.")
+                ])
+            ])
         ]),
         readOnly: false
     )

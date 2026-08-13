@@ -40,6 +40,7 @@ struct Dispatcher: Sendable {
         case "proctor_unlock":    return try await unlock(args)
         case "proctor_computer":         return try await computer(args)
         case "proctor_openai_computer":  return try await openaiComputer(args)
+        case "proctor_policy":           return try await policy(args)
         // Internal verb behind the MCP resources surface. Never in ToolCatalogue,
         // so a host cannot reach it as a tool; the shim forwards resources/read to
         // it. It only re-projects state the agent already holds or reads without a
@@ -232,7 +233,14 @@ struct Dispatcher: Sendable {
         if args.bool("requestScreenRecording", false) {
             Grants.promptScreenRecording()
         }
-        return try JSONValue.encode(await session.doctor(verbose: args.bool("verbose", false)))
+        // The policy gate is part of readiness: an operator checking health should
+        // see the lists in force and whether an approval token is live, alongside
+        // the grants. The doctor output schema is an open object, so this extra
+        // block validates without a schema change.
+        var report = try JSONValue.encode(await session.doctor(verbose: args.bool("verbose", false)))
+            .objectValue ?? [:]
+        report["policy"] = await session.policyStatus()
+        return .object(report)
     }
 
     /// Screen-unlock turn control. Actions:
@@ -316,8 +324,39 @@ struct Dispatcher: Sendable {
                                              foreground: args.bool("foreground", true))
     }
 
-    // MARK: - proctor_resource (MCP resources backing)
+    // MARK: - proctor_policy (audit trail + policy gate)
 
+    /// Policy gate configuration and audit-trail reads. Actions:
+    ///   status    — the current lists, whether a token is live, and the audit path
+    ///   configure — replace any of the allow/block/sensitive sets supplied
+    ///   approve   — mint a TTL-bounded approval token, optionally scoped to a bundle id
+    ///   revoke    — drop the live token
+    ///   audit     — the most recent JSONL records
+    private func policy(_ args: Args) async throws -> JSONValue {
+        let action = args.string("action") ?? "status"
+        switch action {
+        case "status":
+            return await session.policyStatus()
+        case "configure":
+            return try await session.configurePolicy(
+                allow: args.value("allow")?.arrayValue?.compactMap(\.stringValue),
+                block: args.value("block")?.arrayValue?.compactMap(\.stringValue),
+                sensitive: args.value("sensitive")?.arrayValue?.compactMap(\.stringValue))
+        case "approve":
+            return await session.approve(bundleId: args.string("bundleId"),
+                                         ttlMs: args.int("ttlMs") ?? 15_000)
+        case "revoke":
+            return await session.revokeApproval()
+        case "audit":
+            return await session.auditTail(limit: args.int("limit") ?? 50)
+        default:
+            throw AgentError(code: .invalidArguments,
+                             message: "unknown policy action \(action.debugDescription)",
+                             remedy: "Use status, configure, approve, revoke or audit.")
+        }
+    }
+
+    // MARK: - proctor_resource (MCP resources backing)
     private func resource(_ args: Args) async throws -> JSONValue {
         let key = try args.requiredString("key")
         guard ResourceCatalogue.spec(key: key) != nil else {

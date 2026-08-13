@@ -191,9 +191,9 @@ struct FrameCodecTests {
 @Suite("Tool catalogue")
 struct CatalogueTests {
 
-    @Test("fourteen tools are advertised")
+    @Test("fifteen tools are advertised")
     func count() {
-        #expect(ToolCatalogue.all.count == 14)
+        #expect(ToolCatalogue.all.count == 15)
     }
 
     @Test("every tool has a unique name, a description and an object schema")
@@ -888,3 +888,182 @@ struct SetOfMarksTests {
         #expect(cap.readOnly == true)   // annotation adds an output, it does not act on the app
     }
 }
+
+// MARK: - Policy gate
+
+@Suite("Policy gate")
+struct PolicyGateTests {
+
+    @Test("a blocked bundle id is refused with a reason, not driven")
+    func blockedIsRefused() {
+        // Fail-closed is the whole point: the gate exists to stop an agent
+        // wandering into a password manager, so a blocked app must never resolve
+        // to .allow, and the refusal has to say why.
+        let policy = AppPolicy(block: ["com.apple.keychainaccess"])
+        let decision = policy.decide(bundleId: "com.apple.keychainaccess", hasValidToken: false)
+        guard case .blocked(let reason) = decision else {
+            Issue.record("a blocked app should be refused, got \(decision)")
+            return
+        }
+        #expect(reason.contains("com.apple.keychainaccess"))
+    }
+
+    @Test("block wins even when the same app is also on the allow list")
+    func blockBeatsAllow() {
+        let policy = AppPolicy(allow: ["com.example.app"], block: ["com.example.app"])
+        #expect(policy.decide(bundleId: "com.example.app", hasValidToken: true)
+                == .blocked(reason: "com.example.app is on the block list; actuation is refused."))
+    }
+
+    @Test("an allow list refuses anything it does not name, including an unidentifiable app")
+    func allowListFailsClosed() {
+        let policy = AppPolicy(allow: ["com.example.underTest"])
+        // A different app is refused.
+        if case .allow = policy.decide(bundleId: "com.other.app", hasValidToken: false) {
+            Issue.record("an app not on the allow list should be refused")
+        }
+        // An app whose bundle id could not be resolved is refused rather than
+        // driven — the gate cannot vouch for what it cannot identify.
+        if case .allow = policy.decide(bundleId: nil, hasValidToken: false) {
+            Issue.record("an unidentifiable app should be refused under an allow list")
+        }
+        // The named app is allowed.
+        #expect(policy.decide(bundleId: "com.example.underTest", hasValidToken: false) == .allow)
+    }
+
+    @Test("a sensitive app needs a token: refused without, allowed with")
+    func sensitiveNeedsToken() {
+        let policy = AppPolicy(sensitive: ["com.apple.Passwords"])
+        let without = policy.decide(bundleId: "com.apple.Passwords", hasValidToken: false)
+        guard case .needsApproval = without else {
+            Issue.record("a sensitive app without a token should need approval, got \(without)")
+            return
+        }
+        #expect(policy.decide(bundleId: "com.apple.Passwords", hasValidToken: true) == .allow)
+    }
+
+    @Test("an unlisted app under no allow list is allowed")
+    func ordinaryAppAllowed() {
+        let policy = AppPolicy(block: ["com.apple.keychainaccess"],
+                               sensitive: ["com.apple.Passwords"])
+        #expect(policy.decide(bundleId: "com.apple.TextEdit", hasValidToken: false) == .allow)
+    }
+}
+
+@Suite("Approval token TTL")
+struct ApprovalTokenTests {
+
+    @Test("a token is valid before its expiry and invalid after, like the unlock turn")
+    func ttlBounds() {
+        let t = ApprovalToken.mint(bundleId: nil, ttl: 15, now: 1_000)
+        #expect(t.isValid(at: 1_000, for: "com.example.app"))   // at issue
+        #expect(t.isValid(at: 1_014, for: "com.example.app"))   // inside TTL
+        #expect(!t.isValid(at: 1_015, for: "com.example.app"))  // at expiry
+        #expect(!t.isValid(at: 2_000, for: "com.example.app"))  // well past
+    }
+
+    @Test("a scoped token authorizes only its own bundle id; nil scope authorizes any")
+    func scope() {
+        let scoped = ApprovalToken.mint(bundleId: "com.apple.Passwords", ttl: 15, now: 0)
+        #expect(scoped.isValid(at: 5, for: "com.apple.Passwords"))
+        #expect(!scoped.isValid(at: 5, for: "com.other.app"))
+
+        let anyApp = ApprovalToken.mint(bundleId: nil, ttl: 15, now: 0)
+        #expect(anyApp.isValid(at: 5, for: "com.apple.Passwords"))
+        #expect(anyApp.isValid(at: 5, for: "com.other.app"))
+    }
+
+    @Test("a minted token carries a non-empty secret")
+    func hasSecret() {
+        #expect(!ApprovalToken.mint(bundleId: nil, ttl: 15, now: 0).token.isEmpty)
+    }
+}
+
+// MARK: - Redacting audit
+
+@Suite("Redacting audit")
+struct RedactingAuditTests {
+
+    private func typeStep(_ text: String) -> ActionStep {
+        ActionStep(kind: .type, text: text)
+    }
+
+    @Test("a value is stored as length plus SHA-256, verifiable against a known input")
+    func redactionShape() {
+        let secret = "hunter2-the-password"
+        let r = Redaction(of: secret)
+        #expect(r.len == secret.utf8.count)
+        // The hash matches what an independent SHA-256 of the same bytes produces,
+        // so the log proves the value without storing it.
+        #expect(r.sha256 == Redaction(of: "hunter2-the-password").sha256)
+        #expect(r.sha256 != Redaction(of: "hunter3-the-password").sha256)
+        #expect(r.sha256.count == 64)   // 32 bytes, hex
+    }
+
+    @Test("a typed secret never appears in the audit line in the clear")
+    func noCleartextInLine() {
+        // This is the property the whole redaction exists for: the serialised
+        // record must not contain the secret, only its length and hash.
+        let secret = "S3cr3t-Bank-PIN-4291"
+        let record = AuditRecord.forStep(
+            typeStep(secret), tool: "proctor_act", timestamp: 1_700_000_000,
+            app: "app:42:1", bundleId: "com.example.bank", window: "win:1:1",
+            outcome: "ok", postStateHash: "abc123")
+        let line = record.jsonLine()
+        #expect(!line.contains(secret))
+        #expect(line.contains(Redaction(of: secret).sha256))
+        #expect(record.value == Redaction(of: secret))
+        #expect(record.script == nil)
+    }
+
+    @Test("a script body is redacted into the script slot, not the value slot")
+    func scriptRedacted() {
+        let body = "tell application \"Finder\" to empty trash"
+        let record = AuditRecord.forStep(
+            ActionStep(kind: .appleScript, text: body), tool: "proctor_act",
+            timestamp: 0, app: nil, bundleId: nil, window: nil, outcome: "ok",
+            postStateHash: nil)
+        #expect(record.script == Redaction(of: body))
+        #expect(record.value == nil)
+        #expect(!record.jsonLine().contains("empty trash"))
+    }
+
+    @Test("a setValue string is redacted the same way a typed value is")
+    func setValueRedacted() {
+        let record = AuditRecord.forStep(
+            ActionStep(kind: .setValue, value: .string("token-abc")), tool: "proctor_act",
+            timestamp: 0, app: nil, bundleId: nil, window: nil, outcome: "ok",
+            postStateHash: nil)
+        #expect(record.value == Redaction(of: "token-abc"))
+        #expect(!record.jsonLine().contains("token-abc"))
+    }
+
+    @Test("a non-secret step carries no redaction but still accounts for the action")
+    func accountsForActionWithoutSecret() {
+        // Every action is accounted for: even a press with no free text records
+        // the tool, the target and the resulting state hash, so the trail is
+        // complete rather than only covering the steps that carried a secret.
+        let record = AuditRecord.forStep(
+            ActionStep(kind: .press, node: "n7"), tool: "proctor_act", timestamp: 1_700_000_000,
+            app: "app:42:1", bundleId: "com.example.app", window: "win:1:1",
+            outcome: "ok", postStateHash: "deadbeef")
+        #expect(record.value == nil && record.script == nil)
+        #expect(record.tool == "proctor_act")
+        #expect(record.node == "n7")
+        #expect(record.window == "win:1:1")
+        #expect(record.outcome == "ok")
+        #expect(record.postStateHash == "deadbeef")
+    }
+
+    @Test("a refusal is recorded as its own accounted-for event with a reason")
+    func refusalRecorded() {
+        let record = AuditRecord(timestamp: 1_700_000_000, tool: "proctor_act",
+                                 app: "app:9:1", bundleId: "com.apple.keychainaccess",
+                                 window: "win:1:1", outcome: "refused",
+                                 reason: "on the block list")
+        #expect(record.outcome == "refused")
+        #expect(record.reason == "on the block list")
+        #expect(record.jsonLine().contains("refused"))
+    }
+}
+

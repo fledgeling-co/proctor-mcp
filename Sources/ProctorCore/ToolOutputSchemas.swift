@@ -115,6 +115,15 @@ public extension ToolCatalogue {
                  "opened": p("boolean"), "closed": p("boolean"),
                  "relocked": p("boolean"), "locked": p("boolean"),
                  "ttlMs": p("number")]),
+
+            "proctor_policy": openObject(
+                "Policy gate state (status), a configure result, an approve (token/expiresAt), a revoke, or recent audit lines.",
+                ["allow": p("array"), "block": p("array"), "sensitive": p("array"),
+                 "tokenLive": p("boolean"), "tokenExpiresAt": p("number"),
+                 "tokenBundleId": p("string"), "auditPath": p("string"),
+                 "auditCount": p("number"), "token": p("string"),
+                 "expiresAt": p("number"), "ttlMs": p("number"),
+                 "revoked": p("boolean"), "lines": p("array")]),
         ]
     }()
 }

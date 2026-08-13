@@ -70,6 +70,15 @@ actor Session {
     private(set) var recording: String?
     private var flowsLoaded = false
 
+    /// The app policy gate and the live approval token. The policy is loaded from
+    /// disk on first use; an absent file is an empty policy, which allows every
+    /// app, so the gate is inert until an operator configures it. The token is
+    /// session-only and TTL-bounded — nothing persists a standing authority to
+    /// drive a sensitive app across a restart.
+    var policy = AppPolicy()
+    var approvalToken: ApprovalToken?
+    var policyLoadedFlag = false
+
     /// The most recent capture's encoded metadata, served cache-only by the
     /// screenshot/latest resource. Holding the metadata (not the bytes) keeps the
     /// resource readable without a Screen Recording grant and without triggering a

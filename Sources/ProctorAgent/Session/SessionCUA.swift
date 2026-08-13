@@ -18,6 +18,10 @@ extension Session {
     func computerUse(schema: CUASchema, window id: String, payload: JSONValue,
                      scale: Double, foreground: Bool) async throws -> JSONValue {
         let window = try windowHandle(id)
+        // A façade-driven run is gated exactly as a native one: the policy check
+        // and audit are on the drive path, not on any one tool's schema.
+        let tool = schema == .anthropic ? "proctor_computer" : "proctor_openai_computer"
+        let audit = try enforcePolicy(tool: tool, window: window)
 
         let plan: [CUAStep]
         switch schema {
@@ -41,7 +45,8 @@ extension Session {
             switch cua.operation {
             case .act(let step):
                 let run = await runSteps([step], window: window, settle: .default,
-                                         foreground: foreground, captureEach: false, diffEach: true)
+                                         foreground: foreground, captureEach: false, diffEach: true,
+                                         audit: audit)
                 if let result = run.results.first {
                     entry["ok"] = .bool(result.ok)
                     if let plane = result.plane { entry["plane"] = .string(plane.rawValue) }
