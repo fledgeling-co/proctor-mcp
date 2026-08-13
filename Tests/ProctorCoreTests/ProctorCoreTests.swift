@@ -191,9 +191,9 @@ struct FrameCodecTests {
 @Suite("Tool catalogue")
 struct CatalogueTests {
 
-    @Test("eleven tools are advertised")
+    @Test("fourteen tools are advertised")
     func count() {
-        #expect(ToolCatalogue.all.count == 11)
+        #expect(ToolCatalogue.all.count == 14)
     }
 
     @Test("every tool has a unique name, a description and an object schema")
@@ -210,7 +210,8 @@ struct CatalogueTests {
 
     @Test("the tools that change state are not marked read-only")
     func readOnlyFlags() {
-        let mutating = ["proctor_act", "proctor_apps", "proctor_flow", "proctor_stability"]
+        let mutating = ["proctor_act", "proctor_apps", "proctor_flow", "proctor_stability",
+                        "proctor_computer", "proctor_openai_computer"]
         for name in mutating {
             let tool = try! #require(ToolCatalogue.spec(named: name))
             #expect(tool.readOnly == false, "\(name) should not be read-only")
@@ -360,3 +361,234 @@ struct ErrorTests {
         static let fix = "System Settings ▸ Privacy & Security ▸ Accessibility, enable Proctor."
     }
 }
+
+// MARK: - CUA schema façade
+
+@Suite("CUA schema façade")
+struct CUAFacadeTests {
+
+    // A window whose top-left is not the origin, so a coordinate that was mapped
+    // and one that was not are distinguishable.
+    private let frame = Rect(x: 100, y: 50, w: 800, h: 600)
+
+    private func step(_ cua: CUAStep) -> ActionStep? {
+        if case .act(let s) = cua.operation { return s }
+        return nil
+    }
+
+    // MARK: Anthropic
+
+    @Test("left_click maps to a synthetic click at the window-mapped global point")
+    func anthropicLeftClick() throws {
+        let plan = try CUATranslator.anthropic(
+            .object(["action": .string("left_click"),
+                     "coordinate": .array([.number(10), .number(20)])]),
+            windowFrame: frame)
+        #expect(plan.count == 1)
+        let s = try #require(step(plan[0]))
+        #expect(s.kind == .click)
+        #expect(s.point == [110, 70])   // 100+10, 50+20
+    }
+
+    @Test("type carries the text through")
+    func anthropicType() throws {
+        let plan = try CUATranslator.anthropic(
+            .object(["action": .string("type"), "text": .string("hello world")]),
+            windowFrame: frame)
+        let s = try #require(step(plan[0]))
+        #expect(s.kind == .type)
+        #expect(s.text == "hello world")
+    }
+
+    @Test("key combos split into a key and its modifiers")
+    func anthropicKey() throws {
+        func parse(_ combo: String) throws -> ActionStep {
+            let plan = try CUATranslator.anthropic(
+                .object(["action": .string("key"), "text": .string(combo)]), windowFrame: frame)
+            return try #require(step(plan[0]))
+        }
+        let save = try parse("cmd+s")
+        #expect(save.kind == .key)
+        #expect(save.key == "s")
+        #expect(save.modifiers == ["cmd"])
+
+        let ret = try parse("Return")
+        #expect(ret.key == "return")
+        #expect(ret.modifiers?.isEmpty ?? true)
+
+        let combo = try parse("ctrl+shift+t")
+        #expect(combo.key == "t")
+        #expect(Set(combo.modifiers ?? []) == ["ctrl", "shift"])
+    }
+
+    @Test("mouse_move maps to a hover at the mapped point")
+    func anthropicMouseMove() throws {
+        let plan = try CUATranslator.anthropic(
+            .object(["action": .string("mouse_move"),
+                     "coordinate": .array([.number(5), .number(5)])]),
+            windowFrame: frame)
+        let s = try #require(step(plan[0]))
+        #expect(s.kind == .hover)
+        #expect(s.point == [105, 55])
+    }
+
+    @Test("scroll down becomes a negative dy the actuator reads as down")
+    func anthropicScroll() throws {
+        let plan = try CUATranslator.anthropic(
+            .object(["action": .string("scroll"),
+                     "coordinate": .array([.number(5), .number(5)]),
+                     "scroll_direction": .string("down"),
+                     "scroll_amount": .number(3)]),
+            windowFrame: frame)
+        let s = try #require(step(plan[0]))
+        #expect(s.kind == .scroll)
+        #expect(s.delta == [0, -3])
+    }
+
+    @Test("screenshot maps to the screenshot operation")
+    func anthropicScreenshot() throws {
+        let plan = try CUATranslator.anthropic(
+            .object(["action": .string("screenshot")]), windowFrame: frame)
+        #expect(plan.count == 1)
+        if case .screenshot = plan[0].operation {} else {
+            Issue.record("expected a screenshot operation")
+        }
+    }
+
+    @Test("double_click expands to two clicks at the same point")
+    func anthropicDoubleClick() throws {
+        let plan = try CUATranslator.anthropic(
+            .object(["action": .string("double_click"),
+                     "coordinate": .array([.number(10), .number(20)])]),
+            windowFrame: frame)
+        #expect(plan.count == 2)
+        for cua in plan {
+            let s = try #require(step(cua))
+            #expect(s.kind == .click)
+            #expect(s.point == [110, 70])
+        }
+    }
+
+    @Test("left_click_drag maps to a dragPath from start to end, both in global coords")
+    func anthropicDrag() throws {
+        let plan = try CUATranslator.anthropic(
+            .object(["action": .string("left_click_drag"),
+                     "start_coordinate": .array([.number(0), .number(0)]),
+                     "coordinate": .array([.number(10), .number(20)])]),
+            windowFrame: frame)
+        let s = try #require(step(plan[0]))
+        #expect(s.kind == .dragPath)
+        #expect(s.path == [[100, 50], [110, 70]])
+    }
+
+    @Test("wait becomes a wait operation with the duration in milliseconds")
+    func anthropicWait() throws {
+        let plan = try CUATranslator.anthropic(
+            .object(["action": .string("wait"), "duration": .number(2)]), windowFrame: frame)
+        if case .wait(let ms) = plan[0].operation {
+            #expect(ms == 2000)
+        } else {
+            Issue.record("expected a wait operation")
+        }
+    }
+
+    @Test("an unmapped action is refused, not silently dropped")
+    func anthropicUnknownRefused() {
+        #expect(throws: AgentError.self) {
+            _ = try CUATranslator.anthropic(
+                .object(["action": .string("teleport")]), windowFrame: frame)
+        }
+    }
+
+    @Test("right_click is refused rather than turned into a left click")
+    func anthropicRightClickRefused() {
+        #expect(throws: AgentError.self) {
+            _ = try CUATranslator.anthropic(
+                .object(["action": .string("right_click"),
+                         "coordinate": .array([.number(1), .number(1)])]), windowFrame: frame)
+        }
+    }
+
+    // MARK: OpenAI
+
+    @Test("an OpenAI batch flattens into an ordered plan")
+    func openaiBatch() throws {
+        let plan = try CUATranslator.openai(
+            .array([
+                .object(["type": .string("click"), "button": .string("left"),
+                         "x": .number(10), "y": .number(20)]),
+                .object(["type": .string("type"), "text": .string("hi")]),
+                .object(["type": .string("keypress"),
+                         "keys": .array([.string("ctrl"), .string("c")])])
+            ]),
+            windowFrame: frame)
+        #expect(plan.count == 3)
+
+        let click = try #require(step(plan[0]))
+        #expect(click.kind == .click)
+        #expect(click.point == [110, 70])
+
+        let type = try #require(step(plan[1]))
+        #expect(type.kind == .type)
+        #expect(type.text == "hi")
+
+        let key = try #require(step(plan[2]))
+        #expect(key.kind == .key)
+        #expect(key.key == "c")
+        #expect(key.modifiers == ["ctrl"])
+    }
+
+    @Test("a single OpenAI action object is accepted without an array wrapper")
+    func openaiSingle() throws {
+        let plan = try CUATranslator.openai(
+            .object(["type": .string("type"), "text": .string("x")]), windowFrame: frame)
+        #expect(plan.count == 1)
+        #expect(step(plan[0])?.kind == .type)
+    }
+
+    @Test("OpenAI scroll flips the sign so positive scroll_y reads as scroll down")
+    func openaiScroll() throws {
+        let plan = try CUATranslator.openai(
+            .object(["type": .string("scroll"), "x": .number(5), "y": .number(5),
+                     "scroll_x": .number(0), "scroll_y": .number(3)]),
+            windowFrame: frame)
+        let s = try #require(step(plan[0]))
+        #expect(s.kind == .scroll)
+        #expect(s.delta == [0, -3])
+    }
+
+    @Test("OpenAI drag maps its path into global coordinates")
+    func openaiDrag() throws {
+        let plan = try CUATranslator.openai(
+            .object(["type": .string("drag"), "path": .array([
+                .object(["x": .number(0), "y": .number(0)]),
+                .object(["x": .number(10), "y": .number(20)])
+            ])]),
+            windowFrame: frame)
+        let s = try #require(step(plan[0]))
+        #expect(s.kind == .dragPath)
+        #expect(s.path == [[100, 50], [110, 70]])
+    }
+
+    @Test("a non-left OpenAI click button is refused")
+    func openaiRightClickRefused() {
+        #expect(throws: AgentError.self) {
+            _ = try CUATranslator.openai(
+                .object(["type": .string("click"), "button": .string("right"),
+                         "x": .number(1), "y": .number(1)]), windowFrame: frame)
+        }
+    }
+
+    // MARK: Coordinate mapping
+
+    @Test("scale divides the CUA offset before it is added to the window origin")
+    func scaleMapping() throws {
+        let plan = try CUATranslator.anthropic(
+            .object(["action": .string("left_click"),
+                     "coordinate": .array([.number(20), .number(40)])]),
+            windowFrame: frame, scale: 2)
+        let s = try #require(step(plan[0]))
+        #expect(s.point == [110, 70])   // 100 + 20/2, 50 + 40/2
+    }
+}
+
