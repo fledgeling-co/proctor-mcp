@@ -11,6 +11,10 @@
   responsible process, so the grant attaches here and survives host changes
   and upgrades. See docs/architecture.md.
 
+  CFBundleExecutable is the UI. Opening the app shows the setup walkthrough and
+  the status window; the agent itself is started by launchd, from the same
+  bundle, so both share the identity the TCC grants are attached to.
+
   NSAccessibilityUsageDescription is shown in the consent dialog.
   NSScreenCaptureUsageDescription is carried for completeness and for
   macOS 27 declarative App Settings; the current Screen Recording dialog
@@ -21,11 +25,11 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
-	<string>proctor-agent</string>
+	<string>Proctor</string>
 	<key>CFBundleIconFile</key>
 	<string>Proctor</string>
 	<key>CFBundleIdentifier</key>
-	<string>app.fledgeling.proctor</string>
+	<string>app.fledgeling.procter</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -40,8 +44,12 @@
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
+	<!-- Not an LSUIElement in the plist. An accessory app's SwiftUI Window scene
+	     does not present itself at launch, so a first run would show nothing at
+	     all. Proctor launches as a normal app for setup and then demotes itself
+	     to a menu-bar accessory once configured — see ProctorUIApp. -->
 	<key>LSUIElement</key>
-	<true/>
+	<false/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Proctor is released under the MIT licence.</string>
 	<key>NSAccessibilityUsageDescription</key>

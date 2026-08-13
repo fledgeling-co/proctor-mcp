@@ -12,11 +12,11 @@ not visible from the code alone.
       v
   proctor-shim ..................... no TCC grants, no state
       | connects, AF_UNIX SOCK_STREAM
-      | ~/Library/Application Support/app.fledgeling.proctor/agent.sock
+      | ~/Library/Application Support/app.fledgeling.procter/agent.sock
       | 4-byte big-endian length prefix, then JSON
       v
   proctor-agent .................... inside ~/Applications/Proctor.app
-      | launched by launchd as gui/$UID/app.fledgeling.proctor.agent
+      | launched by launchd as gui/$UID/app.fledgeling.procter.agent
       | -> its own responsible process, so TCC grants attach HERE
       |
       +-- AXUIElement ............. accessibility tree, observers, actuation
@@ -39,7 +39,7 @@ process, walking up the process ancestry. A helper spawned by a host inherits
 the host's identity; a helper under `node` hands accessibility to every Node
 script on the machine; a helper from a temporary path has no stable designated
 requirement and re-prompts on every version bump. launchd starts the agent with
-no such ancestry, so the grant attaches to `app.fledgeling.proctor` at a fixed
+no such ancestry, so the grant attaches to `app.fledgeling.procter` at a fixed
 path and survives host changes and upgrades.
 
 Both sides derive the socket path from `Wire.socketPath`, so neither can drift

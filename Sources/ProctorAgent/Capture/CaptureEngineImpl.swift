@@ -20,7 +20,7 @@ final class CaptureEngineImpl: CaptureEngine {
             self.captureDirectory = captureDirectory
         } else {
             let home = FileManager.default.homeDirectoryForCurrentUser.path
-            self.captureDirectory = "\(home)/Library/Application Support/app.fledgeling.proctor/captures"
+            self.captureDirectory = "\(home)/Library/Application Support/app.fledgeling.procter/captures"
         }
     }
 
@@ -39,7 +39,7 @@ final class CaptureEngineImpl: CaptureEngine {
                                                  showsCursor: includeCursor)
         let sink = FrameSink(keepPixels: true)
         let stream = SCStream(filter: filter, configuration: config, delegate: sink)
-        let queue = DispatchQueue(label: "app.fledgeling.proctor.capture", qos: .userInitiated)
+        let queue = DispatchQueue(label: "app.fledgeling.procter.capture", qos: .userInitiated)
 
         do {
             try stream.addStreamOutput(sink, type: .screen, sampleHandlerQueue: queue)
@@ -150,7 +150,7 @@ final class CaptureEngineImpl: CaptureEngine {
         // to answer "how much changed" cheaply, many times a second.
         let sink = FrameSink(keepPixels: false)
         let stream = SCStream(filter: filter, configuration: config, delegate: sink)
-        let queue = DispatchQueue(label: "app.fledgeling.proctor.quietwatch", qos: .userInitiated)
+        let queue = DispatchQueue(label: "app.fledgeling.procter.quietwatch", qos: .userInitiated)
 
         do {
             try stream.addStreamOutput(sink, type: .screen, sampleHandlerQueue: queue)

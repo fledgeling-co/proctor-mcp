@@ -1,0 +1,382 @@
+import SwiftUI
+import AppKit
+import ProctorCore
+
+struct MainWindow: View {
+    let model: AgentModel
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 26) {
+                Header()
+                ReadinessSection(model: model)
+                ConnectSection(model: model)
+                AgentSection(model: model)
+                FooterSection(model: model)
+            }
+            .padding(28)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .background(Color(nsColor: .textBackgroundColor))
+    }
+}
+
+// MARK: - Header
+
+private struct Header: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 10) {
+                Image(systemName: "rectangle.on.rectangle.angled")
+                    .font(.system(size: 22, weight: .medium))
+                    .foregroundStyle(.tint)
+                Text("Proctor").font(.system(size: 26, weight: .semibold))
+                Spacer()
+            }
+            Text("Proctor lets a model test a Mac app: read what is actually on screen, "
+                 + "drive the controls, and check what the app rendered.")
+                .font(.system(size: 13))
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("It runs in the background as its own process. That is deliberate — macOS "
+                 + "attributes a permission to the process responsible for asking, so the "
+                 + "grants below belong to Proctor and keep working when you change or "
+                 + "upgrade the tool driving it.")
+                .font(.system(size: 12))
+                .foregroundStyle(.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+// MARK: - Readiness
+
+private struct ReadinessSection: View {
+    let model: AgentModel
+
+    var body: some View {
+        Card {
+            HStack(alignment: .firstTextBaseline) {
+                SectionTitle("Permissions")
+                Spacer()
+                StatusPill(model: model)
+            }
+
+            switch model.reachability {
+            case .unknown:
+                Text("Checking…").font(.system(size: 12)).foregroundStyle(.secondary)
+
+            case .unreachable(let why):
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("The background agent is not answering.")
+                        .font(.system(size: 13, weight: .medium))
+                    Text(why).font(.system(size: 12)).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text("Until it is running, permissions cannot be read and no test can run.")
+                        .font(.system(size: 12)).foregroundStyle(.tertiary)
+                    HStack {
+                        Button("Start the agent") { Actions.loadAgent(); model.refresh() }
+                            .buttonStyle(.borderedProminent)
+                        Button("Re-check") { model.refresh() }
+                    }
+                }
+
+            case .reachable:
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(model.requiredGrants, id: \.name) { grant in
+                        GrantRow(grant: grant)
+                        Divider().padding(.vertical, 2)
+                    }
+                    ForEach(model.optionalGrants, id: \.name) { grant in
+                        GrantRow(grant: grant)
+                    }
+                }
+                if model.ready {
+                    Label("Ready. Every permission Proctor needs is granted.",
+                          systemImage: "checkmark.circle.fill")
+                        .font(.system(size: 12))
+                        .foregroundStyle(.green)
+                        .padding(.top, 4)
+                }
+                if model.signature.isAdHoc {
+                    Callout(
+                        icon: "exclamationmark.triangle.fill",
+                        tint: .orange,
+                        title: "This build is ad-hoc signed",
+                        message: "macOS ties these grants to the exact bytes of this build, so "
+                            + "rebuilding Proctor silently revokes them — and a revoked grant "
+                            + "shows up as \"element not found\", not as a permission error. "
+                            + "A Developer ID signed and notarised build keeps its grants "
+                            + "across upgrades.")
+                }
+            }
+        }
+    }
+}
+
+private struct GrantRow: View {
+    let grant: DoctorReport.Grant
+    @State private var showHow = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 10) {
+                Image(systemName: grant.granted ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(grant.granted ? Color.green
+                                     : (grant.required ? Color.orange : Color.secondary))
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(grant.name).font(.system(size: 13, weight: .medium))
+                    Text(grant.granted ? "Granted"
+                         : (grant.required ? "Required — not granted yet" : "Optional — asked for per app"))
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                }
+                Spacer()
+                if !grant.granted, let pane = Actions.pane(for: grant.name) {
+                    Button("Open Settings") { Actions.openPane(pane) }
+                        .controlSize(.small)
+                }
+                if !grant.granted {
+                    Button(showHow ? "Hide" : "How") { showHow.toggle() }
+                        .controlSize(.small).buttonStyle(.borderless)
+                }
+            }
+            if showHow {
+                Text(grant.howToFix)
+                    .font(.system(size: 11))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.leading, 26)
+                if grant.name == "Accessibility" || grant.name == "Screen Recording" {
+                    HStack(spacing: 8) {
+                        Button("Reveal Proctor in Finder") { Actions.revealSelf() }
+                            .controlSize(.small)
+                        Text("Proctor lives in your user Applications folder, so the "
+                             + "picker's default location will not show it.")
+                            .font(.system(size: 10)).foregroundStyle(.tertiary)
+                    }
+                    .padding(.leading, 26)
+                }
+            }
+        }
+        .padding(.vertical, 7)
+    }
+}
+
+// MARK: - Connect
+
+private struct ConnectSection: View {
+    let model: AgentModel
+
+    private var shimPath: String {
+        Bundle.main.bundlePath + "/Contents/MacOS/proctor-shim"
+    }
+
+    private var snippet: String {
+        """
+        {
+          "mcpServers": {
+            "proctor": { "command": "\(shimPath)" }
+          }
+        }
+        """
+    }
+
+    var body: some View {
+        Card {
+            SectionTitle("Connect a model to it")
+            Text("Add this to your MCP host's config. The command below holds no "
+                 + "permissions of its own — it forwards to Proctor, which does.")
+                .font(.system(size: 12)).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(snippet)
+                .font(.system(size: 11, design: .monospaced))
+                .textSelection(.enabled)
+                .padding(10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(nsColor: .quaternarySystemFill), in: RoundedRectangle(cornerRadius: 6))
+            HStack {
+                Button("Copy config") { Actions.copy(snippet) }
+                Button("Copy command path only") { Actions.copy(shimPath) }
+                    .buttonStyle(.borderless).controlSize(.small)
+            }
+        }
+    }
+}
+
+// MARK: - Agent
+
+private struct AgentSection: View {
+    let model: AgentModel
+
+    var body: some View {
+        Card {
+            SectionTitle("Background agent")
+            if let r = model.report {
+                Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 6) {
+                    Row("Version", "\(r.agentVersion)  ·  protocol \(r.protocolVersion)")
+                    Row("macOS", r.osVersion)
+                    Row("Socket", r.socketPath)
+                    Row("Attached apps", r.attachedApps.isEmpty
+                        ? "none" : r.attachedApps.map(\.name).joined(separator: ", "))
+                    Row("Live observers", "\(r.observersLive)")
+                    Row("Shortcuts CLI", r.shortcutsCLIAvailable ? "available" : "not available")
+                    Row("Signature", model.signature.summary)
+                }
+                if r.secureEventInputActive {
+                    Callout(
+                        icon: "keyboard.badge.ellipsis",
+                        tint: .orange,
+                        title: "Secure Event Input is active",
+                        message: "Something on this Mac — usually a password field — is holding "
+                            + "secure input. Reading the accessibility tree and driving "
+                            + "controls still work; synthesised keystrokes do not.")
+                }
+            } else {
+                Text("No agent to report on.").font(.system(size: 12)).foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private struct Row: View {
+        let k: String, v: String
+        init(_ k: String, _ v: String) { self.k = k; self.v = v }
+        var body: some View {
+            GridRow {
+                Text(k).font(.system(size: 11)).foregroundStyle(.secondary)
+                Text(v).font(.system(size: 11, design: .monospaced))
+                    .textSelection(.enabled)
+                    .lineLimit(2).truncationMode(.middle)
+            }
+        }
+    }
+}
+
+// MARK: - Footer
+
+private struct FooterSection: View {
+    let model: AgentModel
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Button("Open log") { Actions.openLog() }
+            Button("Restart agent") { Actions.restartAgent(); model.refresh() }
+            Spacer()
+            if let t = model.lastChecked {
+                Text("Checked \(t.formatted(date: .omitted, time: .standard))")
+                    .font(.system(size: 10)).foregroundStyle(.tertiary)
+            }
+            Button("Re-check") { model.refresh() }.controlSize(.small)
+        }
+    }
+}
+
+// MARK: - Pieces
+
+private struct SectionTitle: View {
+    let text: String
+    init(_ text: String) { self.text = text }
+    var body: some View {
+        Text(text.uppercased())
+            .font(.system(size: 10, weight: .semibold, design: .monospaced))
+            .tracking(0.8)
+            .foregroundStyle(.secondary)
+    }
+}
+
+private struct StatusPill: View {
+    let model: AgentModel
+    var body: some View {
+        let (label, tint): (String, Color) = {
+            switch model.reachability {
+            case .unknown: return ("Checking", .secondary)
+            case .unreachable: return ("Agent down", .red)
+            case .reachable: return model.ready ? ("Ready", .green) : ("Needs permission", .orange)
+            }
+        }()
+        Text(label)
+            .font(.system(size: 10, weight: .medium))
+            .padding(.horizontal, 8).padding(.vertical, 3)
+            .background(tint.opacity(0.14), in: Capsule())
+            .foregroundStyle(tint)
+    }
+}
+
+private struct Card<Content: View>: View {
+    @ViewBuilder var content: Content
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) { content }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(nsColor: .controlBackgroundColor),
+                        in: RoundedRectangle(cornerRadius: 10))
+            .overlay(RoundedRectangle(cornerRadius: 10)
+                .stroke(Color(nsColor: .separatorColor), lineWidth: 1))
+    }
+}
+
+private struct Callout: View {
+    let icon: String, tint: Color, title: String, message: String
+    var body: some View {
+        HStack(alignment: .top, spacing: 9) {
+            Image(systemName: icon).foregroundStyle(tint).font(.system(size: 12))
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title).font(.system(size: 12, weight: .medium))
+                Text(message).font(.system(size: 11)).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(tint.opacity(0.08), in: RoundedRectangle(cornerRadius: 7))
+    }
+}
+
+// MARK: - Side effects
+
+enum Actions {
+    static func pane(for grant: String) -> String? {
+        switch grant {
+        case "Accessibility":   return "Privacy_Accessibility"
+        case "Screen Recording": return "Privacy_ScreenCapture"
+        case "Automation":      return "Privacy_Automation"
+        default:                return nil
+        }
+    }
+
+    static func openPane(_ anchor: String) {
+        let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?\(anchor)")!
+        NSWorkspace.shared.open(url)
+    }
+
+    /// The picker in System Settings opens at /Applications, and Proctor is
+    /// installed under the user's own Applications folder, so browsing to it
+    /// fails. Revealing it lets the user drag it straight in.
+    static func revealSelf() {
+        NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: Bundle.main.bundlePath)])
+    }
+
+    static func copy(_ s: String) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(s, forType: .string)
+    }
+
+    static func openLog() {
+        let log = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Logs/Proctor/agent.log")
+        NSWorkspace.shared.open(log)
+    }
+
+    static let label = "app.fledgeling.procter.agent"
+
+    static func loadAgent()    { launchctl(["kickstart", "-k", "gui/\(getuid())/\(label)"]) }
+    static func restartAgent() { launchctl(["kickstart", "-k", "gui/\(getuid())/\(label)"]) }
+
+    private static func launchctl(_ args: [String]) {
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/bin/launchctl")
+        p.arguments = args
+        p.standardOutput = Pipe(); p.standardError = Pipe()
+        try? p.run()
+        p.waitUntilExit()
+    }
+}

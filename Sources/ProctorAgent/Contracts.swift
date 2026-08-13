@@ -1,4 +1,5 @@
 import Foundation
+import CoreGraphics
 import ApplicationServices
 import Carbon.HIToolbox
 import ProctorCore
@@ -115,6 +116,18 @@ enum Grants {
     static func promptAccessibility() {
         let key = "AXTrustedCheckOptionPrompt" as CFString
         _ = AXIsProcessTrustedWithOptions([key: true] as CFDictionary)
+    }
+
+    /// Ask macOS for the Screen Recording consent dialog.
+    ///
+    /// `CGRequestScreenCaptureAccess` is the only way to get the system's own
+    /// dialog rather than dumping the user in System Settings to find a switch.
+    /// Like every TCC prompt it is shown once per app identity; after that it
+    /// returns the recorded answer without showing anything, which is why the
+    /// UI still offers the Settings route beside it.
+    @discardableResult
+    static func promptScreenRecording() -> Bool {
+        CGRequestScreenCaptureAccess()
     }
 
     /// Screen Recording cannot be probed without side effects on every version,

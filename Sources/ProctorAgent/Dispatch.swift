@@ -207,7 +207,17 @@ struct Dispatcher: Sendable {
     // MARK: - proctor_doctor
 
     private func doctor(_ args: Args) async throws -> JSONValue {
-        try JSONValue.encode(await session.doctor(verbose: args.bool("verbose", false)))
+        // The consent dialog is only ever shown to the process macOS holds
+        // responsible for asking — this one. Triggering it from the UI would
+        // put the request on the wrong identity, and calling it unasked would
+        // pop a dialog during an ordinary health check, so it is opt-in.
+        if args.bool("requestAccessibility", false), !Grants.accessibility() {
+            Grants.promptAccessibility()
+        }
+        if args.bool("requestScreenRecording", false) {
+            Grants.promptScreenRecording()
+        }
+        return try JSONValue.encode(await session.doctor(verbose: args.bool("verbose", false)))
     }
 }
 

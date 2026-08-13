@@ -11,7 +11,7 @@ final class SocketServer: @unchecked Sendable {
 
     let path: String
     private let handler: Handler
-    private let queue = DispatchQueue(label: "app.fledgeling.proctor.reflector",
+    private let queue = DispatchQueue(label: "app.fledgeling.procter.reflector",
                                       qos: .userInitiated, attributes: .concurrent)
     private let lock = NSLock()
     private var listenFD: Int32 = -1

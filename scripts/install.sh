@@ -9,8 +9,8 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILT_APP="$REPO_ROOT/.build/Proctor.app"
 
-BUNDLE_ID="app.fledgeling.proctor"
-LABEL="app.fledgeling.proctor.agent"
+BUNDLE_ID="app.fledgeling.procter"
+LABEL="app.fledgeling.procter.agent"
 
 APP_DEST="$HOME/Applications/Proctor.app"
 SUPPORT_DIR="$HOME/Library/Application Support/$BUNDLE_ID"
@@ -24,8 +24,20 @@ TARGET="gui/$(id -u)"
 
 say() { printf '%s\n' "$*"; }
 
+# Forward the signing identity. Without this the build falls back to ad-hoc and
+# silently discards a Developer ID signature you just applied — and because TCC
+# keys on the signature, that also throws away every grant the app had.
+#
+#   scripts/install.sh "Developer ID Application: Your Name (TEAMID)"
+#   PROCTOR_SIGN_IDENTITY="..." scripts/install.sh
+IDENTITY="${1:-${PROCTOR_SIGN_IDENTITY:-}}"
+
 say "==> building"
-"$REPO_ROOT/scripts/build-app.sh"
+if [ -n "$IDENTITY" ]; then
+  "$REPO_ROOT/scripts/build-app.sh" "$IDENTITY"
+else
+  "$REPO_ROOT/scripts/build-app.sh"
+fi
 
 if [ ! -d "$BUILT_APP" ]; then
   say "error: $BUILT_APP was not produced by the build" >&2
@@ -39,7 +51,17 @@ mkdir -p "$HOME/Applications"
 # launchd, which is what leaves a zombie holding the socket.
 launchctl bootout "$TARGET/$LABEL" >/dev/null 2>&1 || true
 rm -rf "$APP_DEST"
-cp -R "$BUILT_APP" "$APP_DEST"
+# ditto preserves the signature's extended attributes; cp -R on some paths does
+# not, and a broken signature reads as a revoked grant.
+ditto "$BUILT_APP" "$APP_DEST"
+
+if codesign -dv "$APP_DEST" 2>&1 | grep -q 'Signature=adhoc'; then
+  say "    signature: ad-hoc — grants are tied to these exact bytes and will be"
+  say "               revoked by the next rebuild. Pass a Developer ID identity"
+  say "               to scripts/install.sh to make them stick."
+else
+  say "    signature: $(codesign -dv "$APP_DEST" 2>&1 | grep '^Authority' | head -1 | cut -d= -f2-)"
+fi
 
 mkdir -p "$SUPPORT_DIR" "$LOG_DIR" "$HOME/Library/LaunchAgents"
 # A socket left behind by a killed agent stops the new one binding.

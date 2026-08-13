@@ -12,8 +12,8 @@
 
 set -u
 
-BUNDLE_ID="app.fledgeling.proctor"
-LABEL="app.fledgeling.proctor.agent"
+BUNDLE_ID="app.fledgeling.procter"
+LABEL="app.fledgeling.procter.agent"
 MIN_MACOS_MAJOR=14
 
 SUPPORT_DIR="$HOME/Library/Application Support/$BUNDLE_ID"

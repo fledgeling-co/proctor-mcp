@@ -19,11 +19,11 @@ public enum Wire {
         if let override = ProcessInfo.processInfo.environment["PROCTOR_SOCKET"],
            !override.isEmpty { return override }
         let home = FileManager.default.homeDirectoryForCurrentUser.path
-        return "\(home)/Library/Application Support/app.fledgeling.proctor/agent.sock"
+        return "\(home)/Library/Application Support/app.fledgeling.procter/agent.sock"
     }
 
-    public static let bundleIdentifier = "app.fledgeling.proctor"
-    public static let agentLabel = "app.fledgeling.proctor.agent"
+    public static let bundleIdentifier = "app.fledgeling.procter"
+    public static let agentLabel = "app.fledgeling.procter.agent"
     public static let protocolVersion = 1
 
     /// Length-prefixed JSON framing: 4-byte big-endian byte count, then payload.

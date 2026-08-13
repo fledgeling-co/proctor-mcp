@@ -8,8 +8,8 @@
 
 set -euo pipefail
 
-BUNDLE_ID="app.fledgeling.proctor"
-LABEL="app.fledgeling.proctor.agent"
+BUNDLE_ID="app.fledgeling.procter"
+LABEL="app.fledgeling.procter.agent"
 
 APP_DEST="$HOME/Applications/Proctor.app"
 SUPPORT_DIR="$HOME/Library/Application Support/$BUNDLE_ID"

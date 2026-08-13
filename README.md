@@ -49,7 +49,7 @@ scripts/install.sh
 ```
 
 That builds the release binaries, assembles `Proctor.app`, installs it to
-`~/Applications`, registers `app.fledgeling.proctor.agent` with launchd, waits
+`~/Applications`, registers `app.fledgeling.procter.agent` with launchd, waits
 for the socket, and opens the two System Settings panes you need.
 
 Then grant both, to **Proctor** — not to your terminal, not to your MCP host:
@@ -65,7 +65,7 @@ switch. Any tool that claims otherwise is describing a version of macOS that
 does not exist. After granting it, macOS may want the process restarted:
 
 ```
-launchctl kickstart -k gui/$(id -u)/app.fledgeling.proctor.agent
+launchctl kickstart -k gui/$(id -u)/app.fledgeling.procter.agent
 ```
 
 Register the shim with your host:

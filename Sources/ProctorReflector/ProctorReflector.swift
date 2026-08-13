@@ -38,7 +38,7 @@ public enum ProctorReflector {
 
     static var supportDirectory: String {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
-        return "\(home)/Library/Application Support/app.fledgeling.proctor"
+        return "\(home)/Library/Application Support/app.fledgeling.procter"
     }
 
     /// Protocol version carried in every `ping` reply.

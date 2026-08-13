@@ -60,7 +60,7 @@ final class Server: @unchecked Sendable {
         lock.lock(); listenFD = fd; stopping = false; lock.unlock()
 
         let thread = Thread { [weak self] in self?.acceptLoop(fd) }
-        thread.name = "app.fledgeling.proctor.accept"
+        thread.name = "app.fledgeling.procter.accept"
         thread.stackSize = 512 * 1024
         thread.start()
     }
@@ -106,7 +106,7 @@ final class Server: @unchecked Sendable {
             setsockopt(client, SOL_SOCKET, SO_NOSIGPIPE, &on, socklen_t(MemoryLayout<Int32>.size))
 
             let worker = Thread { [weak self] in self?.serve(client) }
-            worker.name = "app.fledgeling.proctor.conn"
+            worker.name = "app.fledgeling.procter.conn"
             worker.stackSize = 1024 * 1024
             worker.start()
         }

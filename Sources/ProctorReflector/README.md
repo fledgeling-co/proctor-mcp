@@ -28,7 +28,7 @@ func applicationDidFinishLaunching(_ note: Notification) {
 ```
 
 That is the whole adoption. The default socket is
-`~/Library/Application Support/app.fledgeling.proctor/reflector-<pid>.sock`; the agent
+`~/Library/Application Support/app.fledgeling.procter/reflector-<pid>.sock`; the agent
 discovers reflectors by scanning that directory and matching the pid, so keep the name
 unless you also configure the agent.
 

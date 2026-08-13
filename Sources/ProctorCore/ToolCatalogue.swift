@@ -447,7 +447,22 @@ public enum ToolCatalogue {
         inputSchema: .object([
             "type": .string("object"),
             "properties": .object([
-                "verbose": .object(["type": .string("boolean"), "description": .string("Include per-app observer and cache detail.")])
+                "verbose": .object(["type": .string("boolean"), "description": .string("Include per-app observer and cache detail.")]),
+                "requestAccessibility": .object([
+                    "type": .string("boolean"),
+                    "description": .string(
+                        "Ask macOS to show its Accessibility consent dialog if the grant is missing. "
+                        + "The dialog appears once per app identity; if the user has already answered it, "
+                        + "macOS shows nothing and the grant must be changed in System Settings instead. "
+                        + "Report the result from a fresh doctor call rather than assuming the prompt was seen.")
+                ]),
+                "requestScreenRecording": .object([
+                    "type": .string("boolean"),
+                    "description": .string(
+                        "Ask macOS for the Screen Recording consent dialog. Shown once per app "
+                        + "identity; afterwards it returns the recorded answer silently, so pair "
+                        + "it with the System Settings route in any UI.")
+                ])
             ])
         ]),
         readOnly: true

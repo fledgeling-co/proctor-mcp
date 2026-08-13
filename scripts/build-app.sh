@@ -13,6 +13,8 @@ BUILD_DIR="$REPO_ROOT/.build"
 APP="$BUILD_DIR/Proctor.app"
 CONTENTS="$APP/Contents"
 MACOS_DIR="$CONTENTS/MacOS"
+# Read from the plist so the identifier has exactly one home.
+BUNDLE_ID="$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$REPO_ROOT/Apps/Proctor/Info.plist")"
 RESOURCES_DIR="$CONTENTS/Resources"
 PLIST_SRC="$REPO_ROOT/Apps/Proctor/Info.plist"
 ICNS_SRC="$REPO_ROOT/Apps/Proctor/Proctor.icns"
@@ -27,8 +29,9 @@ swift build -c release
 BIN_DIR="$(swift build -c release --show-bin-path)"
 AGENT_BIN="$BIN_DIR/proctor-agent"
 SHIM_BIN="$BIN_DIR/proctor-shim"
+UI_BIN="$BIN_DIR/Proctor"
 
-for binary in "$AGENT_BIN" "$SHIM_BIN"; do
+for binary in "$AGENT_BIN" "$SHIM_BIN" "$UI_BIN"; do
   if [ ! -x "$binary" ]; then
     say "error: expected a built binary at $binary" >&2
     exit 1
@@ -44,6 +47,11 @@ cp "$AGENT_BIN" "$MACOS_DIR/proctor-agent"
 # registered with an MCP host from. It holds no permissions either way, and its
 # own installer knows how to find the bundle it is sitting inside.
 cp "$SHIM_BIN" "$MACOS_DIR/proctor-shim"
+# The bundle's main executable: the setup walkthrough and status window. It
+# holds no permissions of its own and only reads the agent's health, but it
+# lives in this bundle so that opening Proctor shows something rather than
+# silently doing nothing.
+cp "$UI_BIN" "$MACOS_DIR/Proctor"
 cp "$PLIST_SRC" "$CONTENTS/Info.plist"
 
 if [ -f "$ICNS_SRC" ]; then
@@ -58,12 +66,54 @@ fi
 # PkgInfo is legacy but costs nothing and keeps older tooling happy.
 printf 'APPL????' > "$CONTENTS/PkgInfo"
 
-say "==> ad-hoc signing"
-codesign --force --deep --sign - --options runtime "$APP"
-codesign --verify --strict "$APP"
+# Signing. Pass a Developer ID identity to get a stable designated requirement;
+# without one this falls back to ad-hoc, which is fine for development and
+# costs you the grants on every rebuild.
+#
+#   scripts/build-app.sh "Developer ID Application: Your Name (TEAMID)"
+#
+# --deep is deprecated and signs inner code in the wrong order, so each nested
+# binary is signed first and the bundle last.
+IDENTITY="${1:-${PROCTOR_SIGN_IDENTITY:--}}"
+
+if [ "$IDENTITY" = "-" ]; then
+  say "==> ad-hoc signing (no identity given)"
+  TIMESTAMP_FLAG=""
+else
+  say "==> signing as: $IDENTITY"
+  TIMESTAMP_FLAG="--timestamp"
+fi
+
+# -i pins every nested binary to the bundle identifier. Without it each one is
+# signed under its own filename, so the agent's identity is "proctor-agent"
+# rather than the bundle's — and TCC then has three identities to reason about
+# where the user granted permission to one app.
+for binary in "$MACOS_DIR/proctor-agent" "$MACOS_DIR/proctor-shim" "$MACOS_DIR/Proctor"; do
+  codesign --force --sign "$IDENTITY" -i "$BUNDLE_ID" --options runtime $TIMESTAMP_FLAG "$binary"
+done
+codesign --force --sign "$IDENTITY" --options runtime $TIMESTAMP_FLAG "$APP"
+codesign --verify --strict --deep "$APP"
+
+if [ "$IDENTITY" != "-" ]; then
+  say ""
+  say "    designated requirement:"
+  codesign -d -r- "$APP" 2>&1 | sed 's/^/      /'
+fi
 
 say ""
 say "Built $APP"
+if [ "$IDENTITY" != "-" ]; then
+  say ""
+  say "Signed with a real identity. The designated requirement is team-scoped, so"
+  say "Accessibility and Screen Recording survive rebuilds and upgrades."
+  say ""
+  say "To distribute this to another Mac it also has to be notarised:"
+  say "  scripts/notarize.sh <keychain-profile>"
+  say ""
+  say "Next: scripts/install.sh"
+  exit 0
+fi
+
 say ""
 say "Signing caveat — read this before wondering where your grant went."
 say ""
