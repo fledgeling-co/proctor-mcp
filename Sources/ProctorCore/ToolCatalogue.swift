@@ -238,6 +238,15 @@ public enum ToolCatalogue {
         emit complete frames only when the pointer moves on their display; when that happens the \
         result comes back with trustworthy=false and a caveat naming the reason.
 
+        Set annotate to burn numbered marks over the window's interactable accessibility elements \
+        (annotateAll marks every element with a frame, not just actionable ones). The marks are \
+        derived from the same pruned AX geometry proctor_snapshot returns, and the response \
+        carries a mark→node map so a vision model that references a numbered box — "click mark 7" \
+        — resolves it to a real element id. Mark numbers run in reading order and are stable for a \
+        given tree revision. Set grid to overlay reference lines every gridSpacing points. \
+        Annotation is additive: the un-annotated PNG stays at path and its freshness metadata is \
+        unchanged, while the marked PNG is written alongside it and named in annotation.annotatedPath.
+
         The PNG is written to disk and the path returned. Bytes are never returned inline.
         """,
         inputSchema: .object([
@@ -249,7 +258,12 @@ public enum ToolCatalogue {
                 "timeoutMs": .object(["type": .string("integer"), "description": .string("Defaults to 3000.")]),
                 "scale": .object(["type": .string("number"), "description": .string("Output scale. Defaults to the display's backing scale.")]),
                 "tileHashes": .object(["type": .string("boolean"), "description": .string("Also return per-tile perceptual hashes, for determinism comparison.")]),
-                "includeCursor": .object(["type": .string("boolean"), "description": .string("Defaults to false, since a cursor in the frame is a source of false diffs.")])
+                "includeCursor": .object(["type": .string("boolean"), "description": .string("Defaults to false, since a cursor in the frame is a source of false diffs.")]),
+                "annotate": .object(["type": .string("boolean"), "description": .string("Burn numbered marks over interactable elements and return the mark→node map. Writes the marked PNG alongside the un-annotated one. Defaults to false.")]),
+                "annotateAll": .object(["type": .string("boolean"), "description": .string("Mark every element carrying a frame, not just actionable ones. Implies annotate. Defaults to false.")]),
+                "grid": .object(["type": .string("boolean"), "description": .string("Overlay reference grid lines. Independent of annotate — a grid can be drawn without marks. Defaults to false.")]),
+                "gridSpacing": .object(["type": .string("number"), "description": .string("Points between grid lines. Defaults to 100.")]),
+                "maxMarks": .object(["type": .string("integer"), "description": .string("Ceiling on marks drawn on a dense window; the overflow is dropped in reading order and reported as truncated. Defaults to 150.")])
             ]),
             "required": .array([.string("window")])
         ]),

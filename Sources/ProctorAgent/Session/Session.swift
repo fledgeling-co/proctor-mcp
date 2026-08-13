@@ -255,20 +255,86 @@ actor Session {
 
     // MARK: - proctor_capture
 
+    struct AnnotateOptions: Sendable {
+        var marks: Bool = false
+        var all: Bool = false          // mark every framed node, not just actionable ones
+        var grid: Bool = false
+        var gridSpacing: Double = 100
+        var maxMarks: Int = SetOfMarks.defaultMaxMarks
+        var requested: Bool { marks || all || grid }
+    }
+
     func captureWindow(_ id: String, path: String?, waitForComplete: Bool, timeoutMs: Int,
-                       scale: Double?, tileHashes: Bool, includeCursor: Bool) async throws -> JSONValue {
+                       scale: Double?, tileHashes: Bool, includeCursor: Bool,
+                       annotate: AnnotateOptions = AnnotateOptions()) async throws -> JSONValue {
         let window = try windowHandle(id)
-        let result = try await capture.capture(window: window, to: path,
+        var result = try await capture.capture(window: window, to: path,
                                                waitForComplete: waitForComplete,
                                                timeoutMs: timeoutMs, scale: scale,
                                                tileHashes: tileHashes,
                                                includeCursor: includeCursor)
         // Freshness metadata passes through untouched. Rewriting or defaulting
         // any of it would erase the only thing separating a stale frame from a
-        // correct one.
+        // correct one. Annotation is layered on top: it reads the geometry the
+        // AX tree already reports and the PNG capture already wrote, and adds a
+        // marked sibling image plus the mark→node map, leaving every field above
+        // describing the original frame.
+        if annotate.requested {
+            result.annotation = try annotateCapture(window: window, result: result,
+                                                     options: annotate)
+        }
         let encoded = try JSONValue.encode(result)
         lastCapture = encoded
         return encoded
+    }
+
+    /// Walk the window for element geometry, place the marks, and composite them.
+    /// The tree walk is allowed to throw — a caller who asked for marks and hit a
+    /// missing Accessibility grant needs the error, not a quietly un-marked image.
+    private func annotateCapture(window: WindowHandle, result: CaptureResult,
+                                 options: AnnotateOptions) throws -> MarkAnnotation {
+        let elements: [SetOfMarks.Element]
+        if options.marks || options.all {
+            let outcome = try walk(window: window.id)
+            elements = Session.markableElements(from: outcome.root, all: options.all)
+        } else {
+            elements = []   // a grid was asked for on its own; no tree walk needed
+        }
+
+        let plan = SetOfMarks.plan(
+            elements: elements,
+            window: window.frame,
+            imageWidth: result.width,
+            imageHeight: result.height,
+            scale: result.scale,
+            grid: SetOfMarks.GridOptions(enabled: options.grid, spacingPoints: options.gridSpacing),
+            maxMarks: options.maxMarks)
+
+        let annotatedPath = try MarkRenderer.render(basePath: result.path,
+                                                    width: result.width, height: result.height,
+                                                    scale: result.scale, plan: plan)
+        return MarkAnnotation(annotatedPath: annotatedPath,
+                              marks: plan.marks,
+                              grid: plan.grid,
+                              elementsConsidered: plan.elementsConsidered,
+                              markedCount: plan.markedCount,
+                              truncated: plan.truncated)
+    }
+
+    /// Flatten a tree to the nodes worth marking. Nodes with no frame carry no
+    /// place to draw a box, so they are dropped whichever mode is on; otherwise
+    /// `all` keeps everything framed and the default keeps only the interactable
+    /// elements a vision model actually actuates against.
+    static func markableElements(from root: AXNode, all: Bool) -> [SetOfMarks.Element] {
+        var out: [SetOfMarks.Element] = []
+        TriObserver.walk(node: root, parent: nil) { node, _ in
+            guard let frame = node.frame else { return }
+            guard all || TriObserver.isActionable(node) else { return }
+            let label = node.title ?? node.label ?? node.identifier
+            out.append(SetOfMarks.Element(node: node.id, role: node.role,
+                                          label: label, frame: frame))
+        }
+        return out
     }
 
     // MARK: - proctor_inspect

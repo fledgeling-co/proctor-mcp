@@ -29,3 +29,6 @@ logs/
 ._*
 .Spotlight-V100
 .Trashes
+
+# ship-fleet worktrees (never committed)
+.worktrees/

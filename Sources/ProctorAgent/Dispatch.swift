@@ -122,13 +122,20 @@ struct Dispatcher: Sendable {
     // MARK: - proctor_capture
 
     private func capture(_ args: Args) async throws -> JSONValue {
-        try await session.captureWindow(try args.requiredString("window"),
+        var annotate = Session.AnnotateOptions()
+        annotate.marks = args.bool("annotate", false)
+        annotate.all = args.bool("annotateAll", false)
+        annotate.grid = args.bool("grid", false)
+        annotate.gridSpacing = args.double("gridSpacing") ?? 100
+        annotate.maxMarks = args.int("maxMarks") ?? SetOfMarks.defaultMaxMarks
+        return try await session.captureWindow(try args.requiredString("window"),
                                         path: args.string("path"),
                                         waitForComplete: args.bool("waitForComplete", true),
                                         timeoutMs: args.int("timeoutMs") ?? 3000,
                                         scale: args.double("scale"),
                                         tileHashes: args.bool("tileHashes", false),
-                                        includeCursor: args.bool("includeCursor", false))
+                                        includeCursor: args.bool("includeCursor", false),
+                                        annotate: annotate)
     }
 
     // MARK: - proctor_wait
