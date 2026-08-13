@@ -1,6 +1,6 @@
 import Foundation
 
-// The eleven tools, defined once. The shim advertises these to the MCP host;
+// The tools, defined once. The shim advertises these to the MCP host;
 // the agent dispatches on the same names. Keeping the catalogue in shared code
 // is what stops the two drifting.
 //
@@ -33,7 +33,7 @@ public struct ToolSpec: Sendable {
 public enum ToolCatalogue {
     public static let all: [ToolSpec] = [
         apps, snapshot, find, act, capture, wait, assert_, flow, stability, inspect, doctor, unlock,
-        computer, openaiComputer, menu
+        computer, openaiComputer, menu, dictionary
     ]
 
     public static func spec(named name: String) -> ToolSpec? {
@@ -655,6 +655,43 @@ public enum ToolCatalogue {
             "properties": .object([
                 "app": .object(["type": .string("string"), "description": .string("App handle from proctor_apps to read the menu bar of.")]),
                 "window": .object(["type": .string("string"), "description": .string("A window handle, as an alternative to app; its owning application's menu bar is read.")])
+            ])
+        ]),
+        readOnly: true
+    )
+
+    // MARK: dictionary
+
+    static let dictionary = ToolSpec(
+        name: "proctor_dictionary",
+        title: "Read an app's scripting dictionary (sdef)",
+        description: """
+        Read an attached application's scripting definition — its suites, commands, classes, \
+        properties and enumerations — and return it as structured data plus a one-line capability \
+        summary. This makes the Apple-Events plane self-describing: instead of guessing whether an \
+        app is scriptable or hard-coding AppleScript, a caller queries the app's own dictionary and \
+        chooses the cheapest reliable route per task — scripting where a command is exact, \
+        accessibility where it is not.
+
+        The dictionary is resolved from the running app's bundle (via the same merge the `sdef` \
+        tool performs, so the standard suite and terminology are already folded in) and cached per \
+        app handle. Because a handle's identity changes when the app relaunches, the cache \
+        invalidates on relaunch on its own; pass refresh to re-read regardless.
+
+        An app that exposes no scripting commands is reported plainly with scriptable=false and a \
+        route hint, not as an error — "not scriptable" is exactly the signal that tells a caller to \
+        use proctor_snapshot and proctor_act instead. This tool only reads; actuation stays through \
+        proctor_act (its appleScript and shortcut steps) with settle and provenance.
+
+        Pass summaryOnly to get the capability summary and counts without the full suite listing.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "app": .object(["type": .string("string"), "description": .string("App handle from proctor_apps. Supply this or window.")]),
+                "window": .object(["type": .string("string"), "description": .string("Window handle from proctor_apps; its owning app is used. Supply this or app.")]),
+                "summaryOnly": .object(["type": .string("boolean"), "description": .string("Return the capability summary and counts without the full suite listing. Defaults to false.")]),
+                "refresh": .object(["type": .string("boolean"), "description": .string("Re-read the sdef even if a cached dictionary exists for this app handle. Defaults to false.")])
             ])
         ]),
         readOnly: true

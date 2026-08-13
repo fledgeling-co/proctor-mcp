@@ -1,7 +1,8 @@
 # PRO-0004: App scripting-dictionary introspection
 
 **ID:** PRO-0004
-**Status:** Ready for Plan
+**Status:** In Review
+**Plan:** docs/plans/plan-PRO-0004.md
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
 

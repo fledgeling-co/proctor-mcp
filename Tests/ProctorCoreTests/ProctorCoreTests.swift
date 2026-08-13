@@ -191,9 +191,9 @@ struct FrameCodecTests {
 @Suite("Tool catalogue")
 struct CatalogueTests {
 
-    @Test("fifteen tools are advertised")
+    @Test("sixteen tools are advertised")
     func count() {
-        #expect(ToolCatalogue.all.count == 15)
+        #expect(ToolCatalogue.all.count == 16)
     }
 
     @Test("every tool has a unique name, a description and an object schema")
@@ -1052,5 +1052,185 @@ struct MenuKeyEquivalentTests {
             #expect(ToolCatalogue.toolNames(for: profile).contains("proctor_menu"),
                     "\(profile.rawValue) drops proctor_menu")
         }
+    }
+}
+
+@Suite("Scripting dictionary")
+struct ScriptingDictionaryTests {
+
+    // A compact but faithful sdef: a standard suite with commands, a class with
+    // properties and elements, and an enumeration; an app suite that extends the
+    // application class. Modelled on real merged `sdef` output.
+    private static let sdef = """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+    <dictionary>
+      <suite name="Standard Suite" code="????" description="Common commands.">
+        <command name="open" code="aevtodoc" description="Open an object.">
+          <direct-parameter type="alias" description="The file(s) to open."/>
+          <result type="document"/>
+        </command>
+        <command name="save" code="coresave" description="Save an object.">
+          <direct-parameter type="specifier" description="the object"/>
+          <parameter name="in" code="kfil" type="alias" optional="yes" description="The file."/>
+        </command>
+        <class name="document" code="docu" description="A document." inherits="item" plural="documents">
+          <element type="window"/>
+          <property name="name" code="pnam" type="text" description="The name."/>
+          <property name="modified" code="imod" type="boolean" access="r" description="Modified?"/>
+        </class>
+        <enumeration name="savo" code="savo">
+          <enumerator name="yes" code="yes " description="Save."/>
+          <enumerator name="no" code="no  " description="Do not save."/>
+        </enumeration>
+      </suite>
+      <suite name="App Suite" code="txdt" description="App specific.">
+        <class-extension extends="application" description="Top level object.">
+          <property name="frontDocument" code="pfrd" type="document" access="r" description="Front doc."/>
+        </class-extension>
+      </suite>
+    </dictionary>
+    """
+
+    private func parsed() -> AppScriptingDictionary {
+        ScriptingDictionary.parse(sdefXML: Data(Self.sdef.utf8), appName: "Editor")
+    }
+
+    @Test("a realistic sdef parses into suites, commands, classes and enumerations")
+    func parsesSdefIntoStructure() {
+        let dict = parsed()
+        #expect(dict.appName == "Editor")
+        #expect(dict.scriptable == true)
+        #expect(dict.suites.count == 2)
+
+        let standard = try! #require(dict.suites.first { $0.name == "Standard Suite" })
+        #expect(standard.code == "????")
+        #expect(standard.commands.map(\.name) == ["open", "save"])
+
+        let open = try! #require(standard.commands.first { $0.name == "open" })
+        #expect(open.code == "aevtodoc")
+        #expect(open.resultType == "document")
+        #expect(open.parameters.first?.direct == true)
+
+        let save = try! #require(standard.commands.first { $0.name == "save" })
+        // A named optional parameter carries its code and its optional flag.
+        let inParam = try! #require(save.parameters.first { $0.name == "in" })
+        #expect(inParam.code == "kfil")
+        #expect(inParam.optional == true)
+        #expect(inParam.direct == false)
+
+        let document = try! #require(standard.classes.first { $0.name == "document" })
+        #expect(document.code == "docu")
+        #expect(document.inherits == "item")
+        #expect(document.plural == "documents")
+        #expect(document.elements == ["window"])
+        #expect(document.properties.map(\.name) == ["name", "modified"])
+        // sdef omits access for read-write; a read-only property keeps its "r".
+        #expect(document.properties.first { $0.name == "name" }?.access == "rw")
+        #expect(document.properties.first { $0.name == "modified" }?.access == "r")
+
+        let savo = try! #require(standard.enumerations.first { $0.name == "savo" })
+        #expect(savo.enumerators.map(\.name) == ["yes", "no"])
+    }
+
+    @Test("counts aggregate across every suite")
+    func countsAggregateAcrossSuites() {
+        let c = parsed().counts
+        #expect(c.suites == 2)
+        #expect(c.commands == 2)          // open, save
+        #expect(c.classes == 2)           // document + the application extension
+        #expect(c.properties == 3)        // name, modified, frontDocument
+        #expect(c.enumerations == 1)
+    }
+
+    @Test("a class-extension is captured, named by what it extends, and its properties count")
+    func classExtensionCaptured() {
+        let dict = parsed()
+        let appSuite = try! #require(dict.suites.first { $0.name == "App Suite" })
+        let ext = try! #require(appSuite.classes.first)
+        #expect(ext.isExtension == true)
+        #expect(ext.name == "application")     // the class it extends, not a new name
+        #expect(ext.properties.map(\.name) == ["frontDocument"])
+    }
+
+    @Test("the capability summary is one line naming the app, scriptability and counts")
+    func summaryIsOneLine() {
+        let summary = parsed().summary
+        #expect(!summary.contains("\n"))
+        #expect(summary.contains("Editor"))
+        #expect(summary.contains("scriptable"))
+        #expect(summary.contains("2 commands"))
+        #expect(summary.contains("open"))   // a few command names for orientation
+    }
+
+    @Test("an app with no commands is classified not scriptable with a route hint")
+    func noCommandsIsNotScriptable() {
+        let onlyTypes = """
+        <?xml version="1.0"?>
+        <dictionary>
+          <suite name="Type Definitions" code="tpdf" description="Records only.">
+            <class name="print settings" code="pset">
+              <property name="copies" code="lwcp" type="integer"/>
+            </class>
+          </suite>
+        </dictionary>
+        """
+        let dict = ScriptingDictionary.parse(sdefXML: Data(onlyTypes.utf8), appName: "Widget")
+        #expect(dict.scriptable == false)
+        #expect(dict.counts.commands == 0)
+        #expect(dict.summary.contains("not scriptable"))
+        #expect(dict.summary.lowercased().contains("accessibility"))
+    }
+
+    @Test("empty or malformed input degrades to a not-scriptable result rather than throwing")
+    func emptyInputDoesNotThrow() {
+        let empty = ScriptingDictionary.parse(sdefXML: Data(), appName: "Nothing")
+        #expect(empty.scriptable == false)
+        #expect(empty.suites.isEmpty)
+        #expect(empty.summary.contains("not scriptable"))
+
+        let junk = ScriptingDictionary.parse(sdefXML: Data("not xml at all <<<".utf8), appName: "Junk")
+        #expect(junk.scriptable == false)
+        #expect(junk.suites.isEmpty)
+    }
+
+    @Test("the per-app cache hits for the same handle and misses after a relaunch")
+    func cacheInvalidatesOnRelaunch() {
+        // A relaunch keeps the pid but advances the epoch in the handle id, so a
+        // cache keyed on the id serves per-PID and invalidates on relaunch.
+        let before = AppHandle(id: "app:4242:100", pid: 4242, bundleId: "com.example.editor", name: "Editor")
+        let afterRelaunch = AppHandle(id: "app:4242:200", pid: 4242, bundleId: "com.example.editor", name: "Editor")
+
+        var cache = ScriptingDictionaryCache()
+        cache.store(parsed(), for: before)
+
+        #expect(cache.value(for: before) != nil)          // same handle: a hit
+        #expect(cache.value(for: afterRelaunch) == nil)   // relaunched: a miss, so a fresh read
+
+        cache.store(parsed(), for: afterRelaunch)
+        #expect(cache.count == 2)
+        cache.drop(for: before)
+        #expect(cache.value(for: before) == nil)
+        #expect(cache.value(for: afterRelaunch) != nil)
+    }
+
+    @Test("proctor_dictionary is advertised, read-only, non-destructive and object-schema'd")
+    func dictionaryToolAdvertised() {
+        let spec = try! #require(ToolCatalogue.spec(named: "proctor_dictionary"))
+        #expect(spec.readOnly == true)
+        #expect(spec.destructive == false)
+        #expect(spec.idempotent == true)
+        let props = spec.inputSchema["properties"]?.objectValue
+        #expect(props?["app"] != nil)
+        #expect(props?["window"] != nil)
+        let schema = ToolCatalogue.outputSchema(for: "proctor_dictionary")
+        #expect(schema["type"]?.stringValue == "object")
+        #expect(schema["properties"]?["scriptable"] != nil)
+    }
+
+    @Test("the dictionary tool sits in the scripting profile, preserving the nesting")
+    func dictionaryInScriptingProfile() {
+        #expect(ToolCatalogue.toolNames(for: .scripting).contains("proctor_dictionary"))
+        #expect(!ToolCatalogue.toolNames(for: .core).contains("proctor_dictionary"))
     }
 }

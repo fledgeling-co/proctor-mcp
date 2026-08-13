@@ -120,6 +120,12 @@ public extension ToolCatalogue {
                 "The menu bar flattened to rows, each with its path, enabled state and reconstructed key-equivalent.",
                 ["app": p("string"), "itemCount": p("number"), "items": p("array"),
                  "note": p("string")]),
+            "proctor_dictionary": openObject(
+                "An app's parsed scripting dictionary: scriptability, a capability summary, per-suite structure and counts.",
+                ["app": p("string"), "pid": p("number"), "name": p("string"),
+                 "bundleId": p("string"), "scriptable": p("boolean"),
+                 "summary": p("string"), "suites": p("array"), "counts": p("object"),
+                 "cached": p("boolean"), "caveat": p("string")]),
         ]
     }()
 }
