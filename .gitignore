@@ -36,3 +36,11 @@ logs/
 # Private status pages (whats-left). Written for one reader; names live state,
 # credentials and decisions. Never pushed to a remote, public or otherwise.
 docs/status/
+
+# Icon commission: keep the editable master (svg + build script + 1024 render),
+# drop the heavy iteration provenance so the public repo stays lean.
+design/icon/runs/
+design/icon/audit-renders/
+design/icon/audit.html
+design/icon/*-raster-*.png
+design/icon/*-arrow-*.svg

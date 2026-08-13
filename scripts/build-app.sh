@@ -18,6 +18,7 @@ BUNDLE_ID="$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$REPO_ROOT/
 RESOURCES_DIR="$CONTENTS/Resources"
 PLIST_SRC="$REPO_ROOT/Apps/Proctor/Info.plist"
 ICNS_SRC="$REPO_ROOT/Apps/Proctor/Proctor.icns"
+ICON_SRC_PNG="$REPO_ROOT/Apps/Proctor/icon-1024.png"
 
 say() { printf '%s\n' "$*"; }
 
@@ -56,9 +57,18 @@ cp "$PLIST_SRC" "$CONTENTS/Info.plist"
 
 if [ -f "$ICNS_SRC" ]; then
   cp "$ICNS_SRC" "$RESOURCES_DIR/Proctor.icns"
-  say "    icon: Proctor.icns"
+  say "    icon: Proctor.icns (committed)"
+elif [ -f "$ICON_SRC_PNG" ]; then
+  say "    icon: generating Proctor.icns from icon-1024.png"
+  ICONSET="$BUILD_DIR/Proctor.iconset"
+  rm -rf "$ICONSET"; mkdir -p "$ICONSET"
+  for s in 16 32 128 256 512; do
+    sips -z "$s" "$s" "$ICON_SRC_PNG" --out "$ICONSET/icon_${s}x${s}.png" >/dev/null
+    sips -z "$((s * 2))" "$((s * 2))" "$ICON_SRC_PNG" --out "$ICONSET/icon_${s}x${s}@2x.png" >/dev/null
+  done
+  iconutil -c icns "$ICONSET" -o "$RESOURCES_DIR/Proctor.icns"
 else
-  say "    notice: no icon at Apps/Proctor/Proctor.icns — building without one."
+  say "    notice: no icon at Apps/Proctor/Proctor.icns or icon-1024.png — building without one."
   say "            The consent dialog will show a generic icon. CFBundleIconFile"
   say "            already points at Proctor.icns, so dropping one in is enough."
 fi
