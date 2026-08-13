@@ -38,6 +38,11 @@ struct Dispatcher: Sendable {
         case "proctor_inspect":   return try await inspect(args)
         case "proctor_doctor":    return try await doctor(args)
         case "proctor_unlock":    return try await unlock(args)
+        // Internal verb behind the MCP resources surface. Never in ToolCatalogue,
+        // so a host cannot reach it as a tool; the shim forwards resources/read to
+        // it. It only re-projects state the agent already holds or reads without a
+        // TCC grant — no new capability.
+        case "proctor_resource":  return try await resource(args)
         default:
             throw AgentError(
                 code: .invalidArguments,
@@ -267,6 +272,18 @@ struct Dispatcher: Sendable {
                              message: "unknown unlock action \(action.debugDescription)",
                              remedy: "Use status, open, close, unlock or relock.")
         }
+    }
+
+    // MARK: - proctor_resource (MCP resources backing)
+
+    private func resource(_ args: Args) async throws -> JSONValue {
+        let key = try args.requiredString("key")
+        guard ResourceCatalogue.spec(key: key) != nil else {
+            throw AgentError(code: .invalidArguments,
+                             message: "unknown resource key \(key.debugDescription)",
+                             remedy: "Keys: " + ResourceCatalogue.all.map(\.key).joined(separator: ", "))
+        }
+        return try await session.resource(key: key)
     }
 }
 

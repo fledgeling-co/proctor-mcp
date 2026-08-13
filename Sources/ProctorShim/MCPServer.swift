@@ -19,6 +19,15 @@ func shimLog(_ message: String) {
 struct MCPServer {
     private static let mcpProtocolVersion = "2025-06-18"
 
+    /// The advertised tool profile. Chosen where the shim is launched, because the
+    /// shim keeps no per-connection state and the HTTP path closes each connection —
+    /// a profile negotiated in `initialize` could not survive to `tools/list`.
+    let profile: ToolProfile
+
+    init(profile: ToolProfile = .full) {
+        self.profile = profile
+    }
+
     private let encoder: JSONEncoder = {
         let e = JSONEncoder()
         e.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
@@ -32,7 +41,7 @@ struct MCPServer {
     }()
 
     func run() {
-        shimLog("serving MCP on stdio; agent socket \(Wire.socketPath)")
+        shimLog("serving MCP on stdio; profile \(profile.rawValue); agent socket \(Wire.socketPath)")
         var buffer = Data()
         var chunk = [UInt8](repeating: 0, count: 65536)
 
@@ -103,7 +112,10 @@ struct MCPServer {
             return result(id: id, .object([
                 "protocolVersion": .string(Self.mcpProtocolVersion),
                 "capabilities": .object([
-                    "tools": .object(["listChanged": .bool(false)])
+                    "tools": .object(["listChanged": .bool(false)]),
+                    // Neither subscribe nor listChanged: the four resources are a
+                    // fixed set of static URIs.
+                    "resources": .object([:])
                 ]),
                 "serverInfo": .object([
                     "name": .string("proctor"),
@@ -112,10 +124,22 @@ struct MCPServer {
             ]))
 
         case "tools/list":
-            return result(id: id, .object(["tools": .array(ToolCatalogue.all.map(toolEntry))]))
+            // The profile trims discovery only. tools/call still accepts any real
+            // tool, so a host that widens its own surface is never blocked.
+            return result(id: id, .object([
+                "tools": .array(ToolCatalogue.tools(for: profile).map(toolEntry))
+            ]))
 
         case "tools/call":
             return result(id: id, callTool(params: params))
+
+        case "resources/list":
+            return result(id: id, .object([
+                "resources": .array(ResourceCatalogue.all.map(resourceEntry))
+            ]))
+
+        case "resources/read":
+            return readResource(id: id, params: params)
 
         case "ping":
             return result(id: id, .object([:]))
@@ -132,13 +156,64 @@ struct MCPServer {
     }
 
     private func toolEntry(_ spec: ToolSpec) -> JSONValue {
-        .object([
+        var annotations: [String: JSONValue] = ["readOnlyHint": .bool(spec.readOnly)]
+        // destructiveHint / idempotentHint are meaningful only for non-read-only
+        // tools (MCP 2025-06-18), so a read-only tool advertises just readOnlyHint.
+        if !spec.readOnly {
+            annotations["destructiveHint"] = .bool(spec.destructive)
+            annotations["idempotentHint"] = .bool(spec.idempotent)
+        }
+        return .object([
             "name": .string(spec.name),
             "title": .string(spec.title),
             "description": .string(spec.description),
             "inputSchema": spec.inputSchema,
-            "annotations": .object(["readOnlyHint": .bool(spec.readOnly)])
+            "outputSchema": ToolCatalogue.outputSchema(for: spec.name),
+            "annotations": .object(annotations)
         ])
+    }
+
+    private func resourceEntry(_ spec: ResourceSpec) -> JSONValue {
+        .object([
+            "uri": .string(spec.uri),
+            "name": .string(spec.name),
+            "title": .string(spec.title),
+            "description": .string(spec.description),
+            "mimeType": .string(spec.mimeType)
+        ])
+    }
+
+    // MARK: - resources/read
+
+    private func readResource(id: JSONValue, params: [String: JSONValue]) -> JSONValue {
+        guard let uri = params["uri"]?.stringValue else {
+            return errorResponse(id: id, code: -32602,
+                                 message: "resources/read requires a uri", data: nil)
+        }
+        guard let spec = ResourceCatalogue.spec(uri: uri) else {
+            // -32002 is MCP's defined code for an unknown resource.
+            return errorResponse(id: id, code: -32002,
+                                 message: "no such resource: \(uri)",
+                                 data: .object(["uri": .string(uri)]))
+        }
+        switch callAgent(tool: "proctor_resource",
+                         arguments: .object(["key": .string(spec.key)])) {
+        case .success(let value):
+            return result(id: id, .object([
+                "contents": .array([.object([
+                    "uri": .string(spec.uri),
+                    "mimeType": .string(spec.mimeType),
+                    "text": .string(render(value))
+                ])])
+            ]))
+        case .failure(let error):
+            return errorResponse(id: id, code: -32603,
+                                 message: "proctor: \(error.message)",
+                                 data: .object([
+                                    "code": .string(error.code.rawValue),
+                                    "remedy": .string(error.remedy ?? "")
+                                 ]))
+        }
     }
 
     // MARK: - tools/call
@@ -158,24 +233,33 @@ struct MCPServer {
         }
 
         let arguments = params["arguments"] ?? .object([:])
+        switch callAgent(tool: name, arguments: arguments) {
+        case .success(let value): return toolSuccess(value)
+        case .failure(let error): return toolError(error)
+        }
+    }
+
+    /// Forward one request to the privileged agent. This is the shim's only job
+    /// beyond protocol shaping, so both tools/call and resources/read route
+    /// through it rather than each opening its own socket.
+    private func callAgent(tool: String, arguments: JSONValue) -> Result<JSONValue, AgentError> {
         let client = SocketClient()
         defer { client.disconnect() }
-
         do {
             let response = try client.send(AgentRequest(id: UUID().uuidString,
-                                                        tool: name,
+                                                        tool: tool,
                                                         arguments: arguments))
             if response.ok {
-                return toolSuccess(response.result ?? .object([:]))
+                return .success(response.result ?? .object([:]))
             }
-            return toolError(response.error ?? AgentError(
+            return .failure(response.error ?? AgentError(
                 code: .internalError,
                 message: "the agent reported failure without an error",
                 remedy: "Run proctor_doctor, and check ~/Library/Logs/Proctor/agent.log."))
         } catch let error as AgentError {
-            return toolError(error)
+            return .failure(error)
         } catch {
-            return toolError(AgentError(
+            return .failure(AgentError(
                 code: .internalError,
                 message: "the call to the agent failed: \(error)",
                 remedy: "Run `proctor-shim status`, then check ~/Library/Logs/Proctor/agent.log."))
@@ -254,10 +338,20 @@ struct MCPServer {
     }
 
     private func errorResponse(id: JSONValue, code: Int, message: String) -> JSONValue {
-        .object([
+        errorResponse(id: id, code: code, message: message, data: nil)
+    }
+
+    private func errorResponse(id: JSONValue, code: Int, message: String,
+                               data: JSONValue?) -> JSONValue {
+        var err: [String: JSONValue] = [
+            "code": .number(Double(code)),
+            "message": .string(message)
+        ]
+        if let data { err["data"] = data }
+        return .object([
             "jsonrpc": .string("2.0"),
             "id": id,
-            "error": .object(["code": .number(Double(code)), "message": .string(message)])
+            "error": .object(err)
         ])
     }
 

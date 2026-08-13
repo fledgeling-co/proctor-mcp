@@ -15,6 +15,11 @@ Usage:
                            requires a token. The token is read from --token or the
                            PROCTOR_MCP_TOKEN environment variable; with neither, a
                            loopback bind runs unauthenticated for local use.
+  proctor-shim serve --profile P
+                           Advertise a trimmed tool surface: core, ax, scripting or
+                           full (default). Also read from PROCTOR_PROFILE. Nested:
+                           ax ⊂ core ⊂ scripting ⊂ full. Trims discovery only —
+                           tools/call still accepts any tool.
   proctor-shim install     Install and load the launchd user agent, then print host config.
   proctor-shim uninstall   Unload the agent and remove its launchd plist.
   proctor-shim status      Report whether the agent is reachable. Exits 0 when it is.
@@ -48,14 +53,34 @@ func parseRemoteConfig(_ args: [String]) -> RemoteConfig {
     return RemoteConfig(host: host, port: port, token: token)
 }
 
+/// The advertised tool profile: `--profile` wins over PROCTOR_PROFILE, and an
+/// unrecognised value falls back to `full` with a warning rather than a silent
+/// wrong surface.
+func parseProfile(_ args: [String]) -> ToolProfile {
+    var raw = ProcessInfo.processInfo.environment["PROCTOR_PROFILE"]
+    var i = 0
+    while i < args.count {
+        if args[i] == "--profile" { i += 1; if i < args.count { raw = args[i] } }
+        i += 1
+    }
+    if let raw, !raw.isEmpty, ToolProfile(argument: raw) == nil {
+        shimLog("unknown profile \(raw.debugDescription); serving the full tool surface. "
+              + "Valid: \(ToolProfile.names.joined(separator: ", ")).")
+    }
+    return ToolProfile(argument: raw) ?? .full
+}
+
 let arguments = Array(CommandLine.arguments.dropFirst())
 switch arguments.first {
 case nil, "serve":
     let rest = Array(arguments.dropFirst())
+    let profile = parseProfile(rest)
     if rest.contains("--remote") || rest.contains("--http") {
-        RemoteServer(config: parseRemoteConfig(rest)).run()
+        var config = parseRemoteConfig(rest)
+        config.profile = profile
+        RemoteServer(config: config).run()
     } else {
-        MCPServer().run()
+        MCPServer(profile: profile).run()
     }
 
 case "install":

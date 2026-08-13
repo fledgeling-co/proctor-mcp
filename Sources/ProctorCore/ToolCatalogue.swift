@@ -13,6 +13,21 @@ public struct ToolSpec: Sendable {
     public let description: String
     public let inputSchema: JSONValue
     public let readOnly: Bool
+    /// Whether a call can alter target-app or system state a host would want to
+    /// gate behind its own confirmation. Meaningful only when `readOnly` is false
+    /// (MCP treats `destructiveHint`/`idempotentHint` as ignorable for read-only
+    /// tools), so read-only tools keep the harmless defaults.
+    public let destructive: Bool
+    /// Whether repeating the same call has no additional effect. Meaningful only
+    /// when `readOnly` is false.
+    public let idempotent: Bool
+
+    public init(name: String, title: String, description: String, inputSchema: JSONValue,
+                readOnly: Bool, destructive: Bool = false, idempotent: Bool = true) {
+        self.name = name; self.title = title; self.description = description
+        self.inputSchema = inputSchema; self.readOnly = readOnly
+        self.destructive = destructive; self.idempotent = idempotent
+    }
 }
 
 public enum ToolCatalogue {
@@ -202,7 +217,8 @@ public enum ToolCatalogue {
             ]),
             "required": .array([.string("window"), .string("steps")])
         ]),
-        readOnly: false
+        readOnly: false,
+        destructive: true, idempotent: false
     )
 
     // MARK: capture
@@ -359,7 +375,8 @@ public enum ToolCatalogue {
             ]),
             "required": .array([.string("action")])
         ]),
-        readOnly: false
+        readOnly: false,
+        destructive: true, idempotent: false
     )
 
     // MARK: stability
@@ -392,7 +409,8 @@ public enum ToolCatalogue {
             ]),
             "required": .array([.string("flow")])
         ]),
-        readOnly: false
+        readOnly: false,
+        destructive: true, idempotent: false
     )
 
     // MARK: inspect
@@ -502,6 +520,7 @@ public enum ToolCatalogue {
                 ])
             ])
         ]),
-        readOnly: false
+        readOnly: false,
+        destructive: true, idempotent: false
     )
 }
