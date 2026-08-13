@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** Running
-**Updated:** 2026-08-13 — batch 3 MERGED (PRO-0006/0007/0009); worktrees cleaned. main @ bd3a08c, 157 tests / 22 suites green, 19 tools. Launching batch 4 (final): PRO-0010.
+**Status:** Complete
+**Updated:** 2026-08-13 — ALL 10 features MERGED to local `main` @ d237361. 169 tests / 23 suites green, 19 tools advertised. Worktrees + ai/* branches cleaned. One deferred child recorded (pointer marker in stability artifacts).
 
 ## How to resume
 You are the fleet orchestrator (ship-fleet skill). Read this file top to bottom, reconcile
@@ -51,15 +51,20 @@ Holding pen (external deps / needs input): none.
 | PRO-0007 | Zoom region crop | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 3 · proctor_zoom |
 | PRO-0008 | MCP surface modernization | ready-for-plan | — | none | none | opus | merged (cleaned) | **MERGED** | batch 1 · proctor_resource |
 | PRO-0009 | Process kill + fs jail | ready-for-plan | PRO-0008 ✓ | none | none | opus | merged (cleaned) | **MERGED** | batch 3 · proctor_kill + FSJail (reuses PRO-0005 rails) |
-| PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 ✓ | none | none | opus | .worktrees/PRO-0010 · ai/pro-0010 | running | batch 4 (final) |
+| PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 ✓ | none | none | opus | merged (cleaned) | **MERGED** | batch 4 · opt-in pointer marker on act/flow per-step captures |
 
 ## Deferred children discovered mid-fleet
 | Child | Parent | Where it runs | Status |
+| Pointer marker in proctor_stability per-step artifacts | PRO-0010 | new item (stability emits hashes, not per-step PNGs — needs per-step PNG emission first) | Open / not scheduled |
+| Re-gate flow replay + stability through the policy gate & audit | PRO-0005 | new item (act + both computer facades are gated this pass; recorded flows are not) | Open / not scheduled |
+| Encryption-at-rest for the JSONL audit log | PRO-0005 | new item (explicit spec exclusion) | Open / not scheduled |
 
 ## Needs input (consolidated for the user)
-- (none yet)
+- **Runner model was Opus 4.8, not Opus 5.** Every runner self-checked as `claude-opus-4-8[1m]` at high effort; the fleet convention names `claude-opus-5`, which is not the model actually served on this machine. All work is gated green (build + red→green tests per clause), so this did not degrade the run — flagging only so the convention string can be corrected if desired.
+- **Three deferred children above** are logged, not scheduled. Say if you want any promoted to a new fleet item.
 
 ## Event log (append-only, newest first)
+- 2026-08-13 FLEET COMPLETE. All 10 features merged to local main @ d237361; 19 tools, 169 tests / 23 suites green. PRO-0010 runner mis-wrote to the main path first, self-detected via empty worktree diff, and relocated cleanly via git stash (verified: main clean, no residual stash, branch held the full diff). All worktrees + ai/* branches removed.
 - 2026-08-13 batch 4 launched (final): PRO-0010 off bd3a08c.
 - 2026-08-13 batch 3 MERGED to main (bd3a08c): PRO-0006 (capture normalize), PRO-0007 (proctor_zoom), PRO-0009 (proctor_kill + FSJail). Wire.CaptureResult carries both normalization+crop; count 17->19; 157 tests / 22 suites green. Worktrees+branches cleaned.
 - 2026-08-13 batch 3 launched (3-concurrent): PRO-0006, PRO-0007, PRO-0009 off 07d7ea3. PRO-0010 queued for batch 4.

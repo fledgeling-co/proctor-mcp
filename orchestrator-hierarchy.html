@@ -58,7 +58,7 @@ const items=[
  ['PRO-0009','Process kill + fs jail','test setup/teardown + containment','PRO-0008 (soft)',2],
  ['PRO-0010','Pointer overlay in captures','target marker in flow/stability artifacts','PRO-0002',2],
 ];
-const status='queued'; // all queued at plan time
+const status='merged'; // FLEET COMPLETE — all 10 merged to main @ d237361 (19 tools, 169 tests / 23 suites)
 const colour={queued:'var(--queued)',running:'var(--running)','ready-to-merge':'var(--merge)',merged:'var(--merged)',parked:'var(--parked)'};
 for(const [id,title,note,dep,wave] of items){
   const c=document.createElement('div'); c.className='card';
