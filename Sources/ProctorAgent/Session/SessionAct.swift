@@ -12,11 +12,17 @@ extension Session {
 
     struct StepRun: Sendable {
         var results: [StepResult] = []
-        var captures: [JSONValue] = []
+        /// What each captured step produced, typed rather than as JSON, so the
+        /// determinism instrument can read the file locations without re-parsing
+        /// its own output. `StepArtifact.json` in ProctorCore fixes the shape act
+        /// and flow replay have always emitted, with golden coverage there.
+        var stepArtifacts: [StepArtifact] = []
         var failedAt: Int?
         var completed: Int = 0
         var finalHash: String?
         var hashes: [String] = []
+
+        var captures: [JSONValue] { stepArtifacts.map(\.json) }
     }
 
     // MARK: - proctor_act
@@ -145,8 +151,8 @@ extension Session {
             }
 
             if captureEach {
-                run.captures.append(await captureForStep(index: index, window: window,
-                                                          step: step, pointerMarks: pointerMarks))
+                run.stepArtifacts.append(await captureForStep(index: index, window: window,
+                                                              step: step, pointerMarks: pointerMarks))
             }
         }
         // The batch is over, whether it completed or broke early, so the
@@ -169,7 +175,7 @@ extension Session {
     }
 
     private func captureForStep(index: Int, window: WindowHandle,
-                                step: ActionStep, pointerMarks: Bool) async -> JSONValue {
+                                step: ActionStep, pointerMarks: Bool) async -> StepArtifact {
         do {
             var frame = try await capture.capture(window: window, to: nil, waitForComplete: true,
                                                   timeoutMs: 3000, scale: nil, tileHashes: false,
@@ -179,13 +185,11 @@ extension Session {
             if pointerMarks {
                 frame.pointer = pointerOverlay(for: step, window: window, capture: frame)
             }
-            return .object(["step": .number(Double(index)),
-                            "capture": (try? JSONValue.encode(frame)) ?? .null])
+            return StepArtifact(step: index, capture: frame)
         } catch let error as AgentError {
-            return .object(["step": .number(Double(index)),
-                            "error": (try? JSONValue.encode(error)) ?? .string(error.message)])
+            return StepArtifact(step: index, error: error)
         } catch {
-            return .object(["step": .number(Double(index)), "error": .string("\(error)")])
+            return StepArtifact(step: index, errorText: "\(error)")
         }
     }
 

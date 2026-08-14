@@ -2115,3 +2115,320 @@ struct ImageEncodingTests {
         #expect(ImageFormat.png.retarget("/tmp/shot") == "/tmp/shot.png")
     }
 }
+
+
+// MARK: - PRO-0011: per-step artifacts on the determinism instrument
+
+@Suite("Stability per-step artifacts")
+struct StabilityCaptureTests {
+
+    private func frame(path: String, pointer: PointerOverlay? = nil) -> CaptureResult {
+        CaptureResult(window: "win:1:1", path: path, width: 800, height: 600, scale: 2.0,
+                      status: .complete, contentRect: nil, dirtyRectCount: 0, dirtyArea: 0,
+                      capturedAt: 1, framesWaited: 1, trustworthy: true, pointer: pointer)
+    }
+
+    private func report(captures: [StabilityCapture]?) -> StabilityReport {
+        StabilityReport(flow: "login", runs: 3, stepCount: 2, firstDivergence: 1,
+                        stepInstability: [0, 0.5], deterministic: false,
+                        divergenceDetail: ["1": ["a", "b"]], notes: ["n"], captures: captures)
+    }
+
+    // MARK: AC1 — both switches off is exactly today's run
+
+    @Test("with neither switch set nothing is captured and the run says nothing new")
+    func defaultRunIsUnchanged() {
+        let resolved = StabilityCaptureOptions.resolve(captureEach: false, pointerMarks: false)
+        #expect(resolved.captureEach == false)
+        #expect(resolved.pointerMarks == false)
+        #expect(resolved.notes.isEmpty)   // no note means no behaviour to explain
+    }
+
+    @Test("a report with no captures omits the key entirely, so an existing caller's JSON is unchanged")
+    func noCapturesOmitsTheKey() throws {
+        let json = String(data: try JSONEncoder().encode(report(captures: nil)), encoding: .utf8) ?? ""
+        #expect(!json.contains("captures"))
+        // And through the encoder the dispatcher actually returns the report with,
+        // since an encoder that wrote an explicit null would change today's payload.
+        let wire = try! #require(try JSONValue.encode(report(captures: nil)).objectValue)
+        #expect(wire["captures"] == nil)
+    }
+
+    // MARK: AC2 — the marker with capture off turns capture on and says so
+
+    @Test("asking for the marker with capture off switches capture on rather than doing nothing")
+    func markerForcesCapture() {
+        let resolved = StabilityCaptureOptions.resolve(captureEach: false, pointerMarks: true)
+        #expect(resolved.captureEach == true)
+        #expect(resolved.pointerMarks == true)
+        // A switch that silently did nothing would read as a broken feature, so
+        // the run has to say it changed the request.
+        let forced = resolved.notes.first { $0.contains("pointerMarks") }
+        #expect(forced != nil)
+        #expect(forced?.contains("captureEach off") == true)
+    }
+
+    // MARK: AC3 — a capturing run reports that its timings moved
+
+    @Test("a capturing run warns that its timings are not comparable with one captured off")
+    func capturingRunWarnsAboutTimings() {
+        let resolved = StabilityCaptureOptions.resolve(captureEach: true, pointerMarks: false)
+        #expect(resolved.captureEach == true)
+        #expect(resolved.pointerMarks == false)
+        let timing = try! #require(resolved.notes.first { $0.contains("timings") })
+        #expect(timing.contains("not comparable"))
+        // Both routes into capturing carry it, including the forced one.
+        let forcedResolved = StabilityCaptureOptions.resolve(captureEach: false, pointerMarks: true)
+        #expect(forcedResolved.notes.contains { $0.contains("timings") })
+    }
+
+    // MARK: AC4 — every entry names its replay, its step and its files
+
+    @Test("a captured step with a marker carries both file locations")
+    func entryCarriesBothPaths() {
+        let overlay = PointerOverlay(annotatedPath: "/tmp/f-marked.png", pixelX: 10, pixelY: 20,
+                                     source: "element", node: "n1", onFrame: true)
+        let entry = StabilityCaptureOptions.entry(
+            run: 2, step: 5, capture: frame(path: "/tmp/f.png", pointer: overlay),
+            failure: nil, pointerMarksRequested: true)
+        #expect(entry.run == 2)
+        #expect(entry.step == 5)
+        #expect(entry.path == "/tmp/f.png")
+        #expect(entry.markedPath == "/tmp/f-marked.png")
+        #expect(entry.note == nil)
+    }
+
+    @Test("the ledger keeps replay identity across runs, so one step is comparable between them")
+    func ledgerKeepsReplayIdentity() throws {
+        let ledger = (0..<3).map { run in
+            StabilityCaptureOptions.entry(run: run, step: 1,
+                                          capture: frame(path: "/tmp/r\(run)-s1.png"),
+                                          failure: nil, pointerMarksRequested: false)
+        }
+        let back = try JSONDecoder().decode([StabilityCapture].self,
+                                            from: JSONEncoder().encode(ledger))
+        #expect(back.map(\.run) == [0, 1, 2])
+        #expect(back.allSatisfy { $0.step == 1 })
+        // A flat per-step list could not distinguish these; the run index is what
+        // makes the same step comparable across replays.
+        #expect(Set(back.compactMap(\.path)).count == 3)
+    }
+
+    // MARK: AC5 — a step that produced no frame, or no marker, says so and costs nothing
+
+    @Test("a step whose capture failed is reported as producing nothing, without touching the run")
+    func failedCaptureIsReportedNotFatal() {
+        let entry = StabilityCaptureOptions.entry(run: 0, step: 3, capture: nil,
+                                                  failure: "the window went away",
+                                                  pointerMarksRequested: true)
+        #expect(entry.path == nil)
+        #expect(entry.markedPath == nil)
+        let note = try! #require(entry.note)
+        #expect(note.contains("the window went away"))
+        #expect(note.contains("score are unaffected"))
+    }
+
+    @Test("a frame with no marker says the marker had no target, but only when one was asked for")
+    func missingMarkerIsReportedOnlyWhenRequested() {
+        let asked = StabilityCaptureOptions.entry(run: 0, step: 1,
+                                                  capture: frame(path: "/tmp/f.png"),
+                                                  failure: nil, pointerMarksRequested: true)
+        #expect(asked.path == "/tmp/f.png")
+        #expect(asked.markedPath == nil)
+        // The marker is best-effort: it is missing because the step had no target
+        // *or* because the drawing failed, and the note does not pick one.
+        #expect(asked.note?.contains("no marker was drawn") == true)
+
+        // Not asked for: a plain frame is the whole answer and there is nothing
+        // to explain, so no note is invented.
+        let plain = StabilityCaptureOptions.entry(run: 0, step: 1,
+                                                  capture: frame(path: "/tmp/f.png"),
+                                                  failure: nil, pointerMarksRequested: false)
+        #expect(plain.path == "/tmp/f.png")
+        #expect(plain.markedPath == nil)
+        #expect(plain.note == nil)
+
+        // An overlay carrying no file on disk is not a marked frame. Writing its
+        // empty path would send a reader looking for something that isn't there.
+        let empty = PointerOverlay(annotatedPath: "", pixelX: 1, pixelY: 1,
+                                   source: "point", node: nil, onFrame: true)
+        let hollow = StabilityCaptureOptions.entry(
+            run: 0, step: 1, capture: frame(path: "/tmp/f.png", pointer: empty),
+            failure: nil, pointerMarksRequested: true)
+        #expect(hollow.markedPath == nil)
+        #expect(hollow.note?.contains("no marker was drawn") == true)
+    }
+
+    // MARK: AC6 — the scoring is untouched by the artifacts
+
+    @Test("the determinism fold reads hashes and nothing else, so no artifact can reach a score")
+    func foldTakesHashesOnly() {
+        let perRun = [["a", "b", "c"], ["a", "x", "c"], ["a", "b", "c"]]
+        let fold = StabilityScore.fold(perRun: perRun, stepCount: 3, runs: 3)
+        #expect(fold.firstDivergence == 1)
+        #expect(fold.stepInstability == [0, 0.5, 0])
+        #expect(fold.deterministic == false)
+        #expect(fold.divergenceDetail["1"] == ["b", "x"])
+        #expect(fold.undersampled.isEmpty)
+
+        // An all-agreeing set over more than one run is the deterministic verdict,
+        // and it is reached from the same hashes whether or not the run captured.
+        let clean = StabilityScore.fold(perRun: [["a", "b"], ["a", "b"]], stepCount: 2, runs: 2)
+        #expect(clean.deterministic)
+        #expect(clean.firstDivergence == nil)
+        #expect(clean.divergenceDetail.isEmpty)
+
+        // One run compares nothing, so it is never called deterministic.
+        #expect(StabilityScore.fold(perRun: [["a"]], stepCount: 1, runs: 1).deterministic == false)
+    }
+
+    @Test("a replay that ended early is a divergence and its later steps are undersampled")
+    func foldReportsShortRuns() {
+        let fold = StabilityScore.fold(perRun: [["a", "b", "c"], ["a"]], stepCount: 3, runs: 2)
+        #expect(fold.firstDivergence == 1)      // the short run is itself a disagreement
+        #expect(fold.deterministic == false)
+        #expect(fold.undersampled == [1: 1, 2: 1])
+    }
+
+    @Test("the determinism numbers survive the ledger being present, unchanged")
+    func scoringUntouched() throws {
+        // Every step's frame failed. The ledger records that; the scores are the
+        // ones the fold computed from state hashes, and the fold has no parameter
+        // an artifact could arrive through.
+        let ledger = StabilityCaptureOptions.ledger(
+            run: 0,
+            artifacts: (0..<2).map { StepArtifact(step: $0, errorText: "no frame") },
+            failedStep: nil, pointerMarksRequested: true)
+        #expect(ledger.allSatisfy { $0.path == nil && $0.note != nil })
+
+        let fold = StabilityScore.fold(perRun: [["a", "b"], ["a", "b"]], stepCount: 2, runs: 2)
+        #expect(fold.deterministic)   // frames all failed; the run is still deterministic
+
+        let back = try JSONDecoder().decode(StabilityReport.self,
+                                            from: JSONEncoder().encode(report(captures: ledger)))
+        #expect(back.firstDivergence == 1)
+        #expect(back.stepInstability == [0, 0.5])
+        #expect(back.deterministic == false)
+        #expect(back.divergenceDetail?["1"] == ["a", "b"])
+        #expect(back.captures?.count == 2)
+    }
+
+    // MARK: AC7 / AC8 — the switches and the ledger are advertised
+
+    @Test("proctor_stability advertises both switches, with the cost and the honesty caveat on them")
+    func stabilityAdvertisesTheSwitches() {
+        let spec = try! #require(ToolCatalogue.spec(named: "proctor_stability"))
+        let props = try! #require(spec.inputSchema["properties"]?.objectValue)
+
+        let capture = try! #require(props["captureEach"]?["description"]?.stringValue)
+        // The volume is a named cost rather than a solved problem, so the switch
+        // has to say what an opt-in run writes before anyone turns it on.
+        #expect(capture.contains("runs × steps"))
+        #expect(capture.contains("nothing cleans them up"))
+
+        let marks = try! #require(props["pointerMarks"]?["description"]?.stringValue)
+        #expect(marks.contains("where the step acted"))
+        #expect(marks.contains("not a live cursor"))
+        #expect(marks.contains("captureEach"))   // says it turns capture on
+
+        // Still an extension of the determinism tool, not a new one.
+        #expect(ToolCatalogue.all.count == 19)
+    }
+
+    @Test("the stability output schema describes a ledger entry, not just an array")
+    func outputSchemaAdvertisesCaptures() {
+        let schema = ToolCatalogue.outputSchema(for: "proctor_stability")
+        let captures = try! #require(schema["properties"]?["captures"])
+        #expect(captures["type"] == .string("array"))
+        // A bare array tells a host nothing it can check. The entry's identity
+        // fields are the part a caller has to read.
+        let item = try! #require(captures["items"]?["properties"]?.objectValue)
+        for field in ["run", "step", "path", "markedPath", "note"] {
+            #expect(item[field] != nil)
+        }
+    }
+
+    @Test("the advertised switch names are the same constants the dispatcher reads")
+    func argumentNamesAreShared() {
+        let spec = try! #require(ToolCatalogue.spec(named: "proctor_stability"))
+        let props = try! #require(spec.inputSchema["properties"]?.objectValue)
+        // A rename that touched only one side would leave a tool advertising a
+        // switch its handler never reads, which is invisible from either file.
+        #expect(props[StabilityCaptureOptions.captureEachArg] != nil)
+        #expect(props[StabilityCaptureOptions.pointerMarksArg] != nil)
+        #expect(StabilityCaptureOptions.captureEachArg == "captureEach")
+        #expect(StabilityCaptureOptions.pointerMarksArg == "pointerMarks")
+    }
+
+    // MARK: AC4 (cont.) — every step of every replay is in the ledger
+
+    @Test("a clean two-replay run yields one entry per step per replay, in step order")
+    func ledgerCoversEveryStepOfEveryReplay() {
+        let ledger = (0..<2).flatMap { run in
+            StabilityCaptureOptions.ledger(
+                run: run,
+                artifacts: (0..<3).map { StepArtifact(step: $0, capture: frame(path: "/tmp/r\(run)-s\($0).png")) },
+                failedStep: nil, pointerMarksRequested: false)
+        }
+        // Six rows, not three: a ledger that recorded only the steps that later
+        // disagreed, or only one replay, could not support comparing a step
+        // across replays, which is the whole point of the artifact.
+        #expect(ledger.count == 6)
+        #expect(ledger.map { [$0.run, $0.step] } == [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2]])
+        #expect(ledger.allSatisfy { $0.path != nil })
+    }
+
+    @Test("a replay that broke mid-flow reports the failing step and stops there")
+    func ledgerReportsTheFailingStepAndNothingAfterIt() {
+        // Capture only happens after a step succeeds, so the step that failed has
+        // no artifact at all — but it ran, so it gets an entry saying no frame
+        // exists. Step 2 was never attempted and gets none.
+        let ledger = StabilityCaptureOptions.ledger(
+            run: 0, artifacts: [StepArtifact(step: 0, capture: frame(path: "/tmp/s0.png"))],
+            failedStep: 1, pointerMarksRequested: false)
+        #expect(ledger.map(\.step) == [0, 1])
+        #expect(ledger[0].path == "/tmp/s0.png")
+        #expect(ledger[1].path == nil)
+        #expect(ledger[1].note?.contains("the step itself failed") == true)
+        #expect(!ledger.contains { $0.step == 2 })
+    }
+
+    @Test("a step whose capture failed still occupies its slot in the ledger")
+    func ledgerKeepsFailedCapturesInPlace() {
+        let ledger = StabilityCaptureOptions.ledger(
+            run: 4,
+            artifacts: [StepArtifact(step: 0, capture: frame(path: "/tmp/s0.png")),
+                        StepArtifact(step: 1, error: AgentError(code: .captureFailed,
+                                                                message: "no frame arrived"))],
+            failedStep: nil, pointerMarksRequested: false)
+        #expect(ledger.map(\.step) == [0, 1])
+        #expect(ledger.allSatisfy { $0.run == 4 })
+        #expect(ledger[1].path == nil)
+        #expect(ledger[1].note?.contains("no frame arrived") == true)
+    }
+
+    // MARK: the per-step JSON act and flow replay have always emitted
+
+    @Test("a captured step encodes as step plus capture, unchanged")
+    func stepArtifactEncodesACapture() throws {
+        let capture = frame(path: "/tmp/f.png")
+        // Full equality against the literal act and flow replay have always
+        // emitted, not a spot check: an extra key here is a change to two tools
+        // that have no test target of their own.
+        #expect(StepArtifact(step: 2, capture: capture).json
+                == .object(["step": .number(2),
+                            "capture": (try? JSONValue.encode(capture)) ?? .null]))
+    }
+
+    @Test("a failed step encodes as step plus the error, in the two shapes it has")
+    func stepArtifactEncodesAFailure() throws {
+        let error = AgentError(code: .captureFailed, message: "no frame arrived")
+        #expect(StepArtifact(step: 3, error: error).json
+                == .object(["step": .number(3),
+                            "error": (try? JSONValue.encode(error)) ?? .string(error.message)]))
+
+        // The non-AgentError path stays a plain string, as it always has.
+        #expect(StepArtifact(step: 4, errorText: "boom").json
+                == .object(["step": .number(4), "error": .string("boom")]))
+    }
+}

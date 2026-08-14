@@ -558,13 +558,19 @@ public struct StabilityReport: Codable, Sendable {
     public var deterministic: Bool
     public var divergenceDetail: [String: [String]]?   // step index -> distinct hashes seen
     public var notes: [String]
+    /// Present only when per-step capture was switched on for the run. Nil keeps
+    /// a default determinism run byte-identical to what it has always been. Every
+    /// entry names its replay and its step, so one step can be compared across
+    /// replays — which is what a determinism artifact is for.
+    public var captures: [StabilityCapture]?
     public init(flow: String, runs: Int, stepCount: Int, firstDivergence: Int?,
                 stepInstability: [Double], deterministic: Bool,
-                divergenceDetail: [String: [String]]?, notes: [String]) {
+                divergenceDetail: [String: [String]]?, notes: [String],
+                captures: [StabilityCapture]? = nil) {
         self.flow = flow; self.runs = runs; self.stepCount = stepCount
         self.firstDivergence = firstDivergence; self.stepInstability = stepInstability
         self.deterministic = deterministic; self.divergenceDetail = divergenceDetail
-        self.notes = notes
+        self.notes = notes; self.captures = captures
     }
 }
 

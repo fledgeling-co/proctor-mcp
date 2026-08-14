@@ -299,7 +299,9 @@ struct Dispatcher: Sendable {
             runs: args.int("runs") ?? 5,
             window: args.string("window"),
             resetBetween: try Args.steps(args.value("resetBetween"), field: "resetBetween"),
-            includeTiles: args.bool("includeTiles", false))
+            includeTiles: args.bool("includeTiles", false),
+            captureEach: args.bool(StabilityCaptureOptions.captureEachArg, false),
+            pointerMarks: args.bool(StabilityCaptureOptions.pointerMarksArg, false))
         return try JSONValue.encode(report)
     }
 

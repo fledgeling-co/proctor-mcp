@@ -101,7 +101,17 @@ public extension ToolCatalogue {
                 ["flow": p("string"), "runs": p("number"), "stepCount": p("number"),
                  "firstDivergence": p("number"), "stepInstability": p("array"),
                  "deterministic": p("boolean"), "divergenceDetail": p("object"),
-                 "notes": p("array")]),
+                 "notes": p("array"),
+                 // Present only when per-step capture was on. Each entry is
+                 // {run, step, path?, markedPath?, note?}: the replay and step it
+                 // came from, the plain PNG, the marked sibling where one was
+                 // drawn, and why either is missing when it is.
+                 "captures": .object([
+                    "type": .string("array"),
+                    "items": openObject(
+                        "One saved per-step frame, identified by which replay and which step produced it.",
+                        ["run": p("number"), "step": p("number"), "path": p("string"),
+                         "markedPath": p("string"), "note": p("string")])])]),
 
             "proctor_inspect": openObject(
                 "Resolved styles and layer geometry from an instrumented app.",

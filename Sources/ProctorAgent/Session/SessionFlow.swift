@@ -184,14 +184,22 @@ extension Session {
     // MARK: - proctor_stability
 
     func stability(flow name: String, runs requestedRuns: Int, window: String?,
-                   resetBetween: [ActionStep], includeTiles: Bool) async throws -> StabilityReport {
+                   resetBetween: [ActionStep], includeTiles: Bool,
+                   captureEach: Bool = false,
+                   pointerMarks: Bool = false) async throws -> StabilityReport {
         let flow = try flowNamed(name)
         let targetID = try replayWindow(flow: flow, override: window)
         let handle = try windowHandle(targetID)
         let steps = flow.steps.map(\.step)
         let runs = max(requestedRuns, 1)
 
-        var notes: [String] = []
+        // Reconcile the two opt-in switches once, up front: asking for the marker
+        // with capture off switches capture on rather than accepting a switch that
+        // does nothing, and any capturing run says that its timings moved.
+        let artifacts = StabilityCaptureOptions.resolve(captureEach: captureEach,
+                                                        pointerMarks: pointerMarks)
+
+        var notes: [String] = artifacts.notes
         if runs < 2 {
             notes.append("A single run cannot measure divergence; firstDivergence and every "
                        + "instability score are reported as zero because nothing was compared.")
@@ -204,9 +212,14 @@ extension Session {
 
         let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
         var perRun: [[String]] = []
+        var captures: [StabilityCapture] = []
 
         for runIndex in 0..<runs {
             if runIndex > 0 && !resetBetween.isEmpty {
+                // The reset is scaffolding that returns the app to its start state,
+                // not part of the flow being measured, so it is never captured: its
+                // frames would sit in the ledger under step indices that belong to
+                // the flow's own steps.
                 let reset = await runSteps(resetBetween, window: handle,
                                            settle: .default, foreground: foreground,
                                            captureEach: false, diffEach: false)
@@ -219,8 +232,19 @@ extension Session {
             }
 
             let run = await runSteps(steps, window: handle, settle: .default,
-                                     foreground: foreground, captureEach: false, diffEach: false)
+                                     foreground: foreground, captureEach: artifacts.captureEach,
+                                     diffEach: false, pointerMarks: artifacts.pointerMarks)
             var hashes: [String] = []
+
+            // One ledger entry per step this replay attempted, whether or not it
+            // produced a frame. Steps after a failure were never attempted and get
+            // none; the failing step itself does, because it ran and produced
+            // nothing (capture only happens after a step succeeds).
+            if artifacts.captureEach {
+                captures.append(contentsOf: StabilityCaptureOptions.ledger(
+                    run: runIndex, artifacts: run.stepArtifacts, failedStep: run.failedAt,
+                    pointerMarksRequested: artifacts.pointerMarks))
+            }
 
             for index in 0..<steps.count {
                 guard index < run.results.count, let treeHash = run.results[index].stateHash else {
@@ -262,22 +286,13 @@ extension Session {
             perRun.append(hashes)
         }
 
-        var stepInstability: [Double] = []
-        var divergenceDetail: [String: [String]] = [:]
-        for index in 0..<steps.count {
-            let column = perRun.compactMap { index < $0.count ? $0[index] : nil }
-            stepInstability.append(Canonical.instability(hashes: column))
-            let distinct = Set(column)
-            if distinct.count > 1 {
-                divergenceDetail[String(index)] = distinct.sorted()
-            }
-            if column.count < perRun.count {
-                notes.append("Step \(index) was measured on \(column.count) of \(perRun.count) runs.")
-            }
+        // The fold takes hash columns and nothing else, so no artifact — a frame,
+        // a marker, a failed capture — has a route into a score.
+        let score = StabilityScore.fold(perRun: perRun, stepCount: steps.count, runs: runs)
+        for (index, samples) in score.undersampled.sorted(by: { $0.key < $1.key }) {
+            notes.append("Step \(index) was measured on \(samples) of \(perRun.count) runs.")
         }
 
-        let firstDivergence = Canonical.firstDivergence(perRun: perRun)
-        let complete = perRun.allSatisfy { $0.count == steps.count }
         notes.append(includeTiles
             ? "Pixel tile hashes were folded into each step hash alongside the tree."
             : "Comparison was on the accessibility tree only. Rendering nondeterminism that leaves "
@@ -288,11 +303,11 @@ extension Session {
             flow: flow.name,
             runs: runs,
             stepCount: steps.count,
-            firstDivergence: firstDivergence,
-            stepInstability: stepInstability,
-            deterministic: firstDivergence == nil && complete
-                && stepInstability.allSatisfy { $0 == 0 } && runs > 1,
-            divergenceDetail: divergenceDetail.isEmpty ? nil : divergenceDetail,
-            notes: notes)
+            firstDivergence: score.firstDivergence,
+            stepInstability: score.stepInstability,
+            deterministic: score.deterministic,
+            divergenceDetail: score.divergenceDetail.isEmpty ? nil : score.divergenceDetail,
+            notes: notes,
+            captures: artifacts.captureEach ? captures : nil)
     }
 }
