@@ -141,6 +141,40 @@ the blur, the animation, the light/dark appearance, and the drag. `swift test`
 has no window server and obscura is web-only. These are code-complete against
 the mock and need a human glance.
 
+## Plan review — out-of-family, grok `grok-4.6` (xhigh, read-only), 2026-08-14
+
+Lane ran, no downgrade. Six findings; five accepted and folded in above, one
+half-accepted.
+
+1. **Accepted (High).** A borderless panel can report `canBecomeKey == false`
+   and views reject first-mouse, so an inactive `.accessory` app never sees the
+   click. `RunHUDPanel` overrides `canBecomeKey` and implements
+   `acceptsFirstMouse(for:)` on the content view and every control.
+2. **Accepted (High).** Above `.screenSaver` is a *shielding* level — clicks can
+   fall through and the panel can sit over the lock screen. The HUD sits at
+   `.statusBar` with `canJoinAllSpaces`, `stationary`, `fullScreenAuxiliary` and
+   `hidesOnDeactivate = false`. The pointer overlay stays at `.screenSaver` and
+   is click-through, so it may draw over the panel and cannot block it.
+3. **Accepted (High).** A pause that waits holding the lock, or sleeps on the
+   actor's executor, deadlocks Stop and starves the cooperative pool.
+   `RunControl` holds its lock for a flag read only and parks with
+   `await Task.sleep`.
+4. **Accepted (Medium), as confirmation.** `NSApp.run()` still fires
+   `commonModes` AX sources and leaves a socket server on its own threads alone;
+   `CFRunLoopStop` would no longer exit the process. Termination already goes
+   through `exit(0)` in the signal sources, so nothing changes there.
+5. **Accepted (Medium).** Never call `activate(_:)` — an agent that activates
+   takes focus from the app under test and breaks both settling and synthetic
+   input. Only `orderFrontRegardless()`.
+6. **Half accepted (Medium).** `sharingType = .none` adopted, so "never in a
+   capture" is a property of the window rather than an argument about capture
+   filters. Its second half — move the panel off the driven window — is
+   **rejected**: the docked bottom-right position is the settled design. Its
+   third — that a raw SwiftPM executable may get no WindowServer mouse events —
+   does not apply: the agent ships inside `Proctor.app/Contents/MacOS` and is
+   started by launchd as a GUI agent, which is why the pointer overlay already
+   draws.
+
 ## Order of work
 
 1. Core: `OverlaySwitch`, `RunHUDPlacement`, `RunHUD` state + tests (red → green).

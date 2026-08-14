@@ -1,9 +1,10 @@
 # PRO-0015: Run HUD panel
 
 **ID:** PRO-0015
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
+**Plan:** `docs/plans/plan-PRO-0015.md`
 
 ## Feature description
 
@@ -99,3 +100,121 @@ A run driven from an MCP client shows the panel over the driven app; the live li
 **Grounding note:** the panel's blocker is cleared — the one-panel-per-screen finding that fixed the agent's existing overlay is recorded in that overlay's own header, with the measurement, and this panel must follow it. Proctor already draws from this process, already switches that drawing off through one setting, and already runs every kind of run — a batch, the simplified façade, a replayed flow and a stability sweep — through one shared step loop, which is where the panel's state, the pause check and the stop check belong so all of them behave the same. The one new thing is input: the panel's buttons are the first thing this process has ever had to receive a click on, and it deliberately runs no application event loop. The refusal a stop produces has no existing code that fits — the nearest is the policy gate's, which would misreport a person's decision as a configured rule — so this adds one. This spec is Swift/macOS work; the gate is `swift build` + `swift test` (web design and end-to-end stages are not applicable here), and the panel's own behaviour is testable without a window wherever the state, the wording and the pause/stop decisions are kept separate from the drawing, matching how the existing pointer and marker logic is kept testable.
 
 **Out-of-family spec review:** grok `grok-4.6` (xhigh, read-only) ran and returned 9 findings — **7 accepted** (the reported shape of a stop, so the finished steps survive and the refusal lands on the first step that never ran; a named five-minute give-up for a pause nobody resumes; an event-to-state mapping including where a person's own stop lands; the counter tracking one batch rather than a whole sweep; a named linger; the off-switch named; the panel's absence surfaced in the health report), **1 sharpened rather than added** (its Critical — that a click has no way in on a process with no application event loop — was already the last assumption and is now stated as a requirement with the settling behaviour named as the regression to watch), and **1 rejected** (it read the derived step wording as an external dependency; it is PRO-0014, triaged and scheduled ahead of this item in the same backlog). It verified three grounding claims as true and could not confirm a fourth from its read set — that replay and stability share the step loop — which was checked here directly and holds. The first invocation hit the 240-second deadline mid-reasoning; the retry, scoped to four files, completed. Lane ran, no downgrade.
+
+---
+
+## Progress — 2026-08-14
+
+**In Review.** Branch `ai/pro-0015`, worktree `.worktrees/PRO-0015`. Plan:
+`docs/plans/plan-PRO-0015.md`. Gate: `swift build` clean, `swift test`
+**313 tests / 35 suites green** (258/29 at HEAD; +55 tests, +6 suites).
+
+**The event-loop problem, solved:** `main.swift` now ends in
+`NSApplication.shared.run()` rather than `CFRunLoopRun()`. Both spin the same
+main run loop; only the second drains the event queue, which is what a button
+needs. The named regression — settling — is covered by a property the repo
+already had: `AXObservers` registers every source on `CFRunLoopMode.commonModes`
+(`Observers.swift:63`), so the default and tracking modes both deliver. The
+panel's drag is `mouseDragged` + `setFrameOrigin`, never `performDrag`, so the
+agent never enters a nested tracking loop of its own. The socket server, the
+`.accessory` policy, the cursor overlay and the signal-driven exit are unchanged.
+
+**Halt semantics:** `RunControl` is a lock-guarded latch the panel writes and the
+`Session` actor reads between steps; the lock is never held across a wait. A halt
+appends the refusal to the first step that never ran under a new code
+`haltedByPerson`, keeps every completed step, and is audited like any other
+refused step. Reset happens at the four run entry points rather than in
+`runSteps`, so a Stop during pass two of a stability sweep ends the sweep instead
+of one pass.
+
+**Not machine-witnessable here:** the panel rendering, a click reaching Pause or
+Stop, the blur, light/dark, and the drag. `swift test` has no window server and
+obscura is web-only. Code-complete against `mocks/run-hud.html`; needs a human
+glance.
+
+**Scoped out as planned:** the queue bar (PRO-0016) and the character sprite
+(PRO-0017). The panel lays its sections as a stack with the queue's slot between
+the trail and the footer, and draws the 38pt bay empty.
+
+**Out-of-family plan review:** grok `grok-4.6` (xhigh, read-only) ran and returned
+6 findings; 5 accepted and folded in (first-mouse and `canBecomeKey`, the window
+level moved off the screen-saver shield, no waiting under the lock, never call
+`activate`, `sharingType = .none`), 1 half-rejected (it proposed moving the panel
+off the driven window, which the settled design forbids). Lane ran, no downgrade.
+
+### Completeness critic — 2026-08-14 (downgraded to in-family)
+
+**Lane failure, logged.** grok `grok-4.6` (xhigh, read-only) was tried twice on
+the critic and returned nothing both times (exit 144, the 240s and 200s alarms,
+no output), matching the behaviour PRO-0014 recorded: it answers a short prompt
+and dies on a long one. The first in-family attempt also failed, for a different
+reason worth writing down — `claude --model claude-fable-5` run from inside the
+repo loads the CLAUDE.md chain and the plugin skill list before the prompt and
+came back "prompt is too long". Re-running it from an empty directory with the
+evidence inlined worked. So the critic on this item was **Claude reviewing
+Claude**; the plan review before it did run out-of-family on grok.
+
+Five findings, two accepted:
+
+1. **Accepted, and it was a real bug.** A synthetic `click`, `hover` or
+   `dragPath` step is posted at a screen point, and the window at that point
+   wins — which for a point under the panel is the panel. The step would have
+   been swallowed, or worse, would have landed on Stop and halted the run that
+   posted it. The panel now sets `ignoresMouseEvents` for exactly as long as a
+   synthetic step is in flight.
+2. **Accepted as a guard.** A pause waited on from the main thread would block
+   the click that releases it. `Session` is an actor and the checkpoint is
+   non-isolated, so neither runs on main today; a debug assertion now turns a
+   later main-actor change into a test failure rather than a hung kill switch.
+3. **Accepted in part.** With `PROCTOR_HUD` off there are no buttons to click,
+   so `main.swift` keeps `CFRunLoopRun()` and the process is exactly the shape
+   that shipped. The rest of the finding was wrong: `.accessory` is set first
+   thing and unchanged, `.prohibited` is documented as not permitting windows,
+   and the cannot-draw path already reaches the health report with a test.
+4. **Rejected, with the design's reason.** It wanted a Stop to survive across run
+   boundaries. Pause and Stop act on the run the panel is showing; a sticky stop
+   would kill an unrelated later run for a decision made about a finished one.
+   Concurrent calls are already serialised by the `Session` actor.
+5. **No gap.** A 1 Hz timer on the main run loop redraws while a run is live,
+   including through a pause.
+
+**One clause is not fully met, and it is recorded rather than papered over.** The
+reference's panel is `pointer-events: none` outside its controls. Natively, only
+the grip and the two buttons are live, but the panel's backing store is opaque,
+so a click on the body is discarded rather than passed to the application
+underneath. Real pass-through needs the window to ignore mouse events except
+while the pointer is over a control, which needs a global mouse monitor: an
+always-on input observer inside an agent that already holds Accessibility. That
+is a decision to ask about, not to take. Flagged as child work.
+
+## Decision: the panel body swallows clicks rather than passing them through (2026-08-14)
+
+The mock has `pointer-events: none` outside the controls and the native panel does
+not, because its backing store is opaque. The runner correctly declined to close the
+gap on its own, since the only mechanism that would is a global mouse monitor: an
+always-on input observer inside an agent that already holds Accessibility.
+
+**Resolved: leave it. The clause is wrong, not the build, and it is corrected here.**
+
+Two reasons, and the second is the load-bearing one.
+
+The panel is 352pt in a corner with a drag grip, not a full-viewport overlay. The
+mock inherited `pointer-events: none` from being an HTML page where the card sits on
+a surface standing in for the whole screen; a real panel that size does not have the
+problem that rule solves.
+
+More importantly, a click-through on a supervision surface forwards an unintended
+action into the app Proctor is *currently driving*. Someone reaching for the HUD has
+by definition decided to intervene in a run; sending that click into the app under
+test instead is the worst available outcome, because it corrupts the run they were
+trying to supervise and does it invisibly. A swallowed click costs one repeated
+gesture. A forwarded one costs the run's integrity, and nothing in the trail would
+say it came from a person's hand rather than from a step.
+
+So the panel keeps its opaque body deliberately, and the still-open question is not
+"how do we pass clicks through" but "should the panel be moveable out of the way more
+easily", which the drag grip already answers.
+
+Not adding the global monitor also keeps the agent's input-observation surface as it
+is. That is worth something on its own: this process holds Accessibility, and every
+capability it does not additionally acquire is one fewer thing to justify.
