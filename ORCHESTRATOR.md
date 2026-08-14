@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** In Progress — wave 3 stage 1 **MERGED** (4 features), stage 2 running
-**Updated:** 2026-08-14 — wave 1+2 remain MERGED (10 features). Wave 3 stage 1 merged @ 62cd969: PRO-0014, PRO-0011, PRO-0012, PRO-0013. **258 tests / 29 suites green on `main`**, up from 173/24. Worktrees and `ai/*` branches removed. Stage 2 (PRO-0015) launched.
+**Status:** In Progress — wave 3 stages 1+2 **MERGED** (5 features), stage 3 running
+**Updated:** 2026-08-14 — wave 1+2 remain MERGED (10 features). Wave 3: stage 1 @ 62cd969 (PRO-0014, 0011, 0012, 0013), stage 2 @ 9f497b4 (PRO-0015, the run HUD panel). **315 tests / 35 suites green on `main`**, up from 173/24. Stage 3 (PRO-0016 + PRO-0017) launched, both runners concurrent.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
 - **This repo DOES now have a git remote** (`origin` → github.com/fledgeling-co/proctor-mcp). The earlier "no git remote, main is LOCAL-ONLY" note is stale. Local `main` is **4 commits AHEAD** of `origin/main` and those commits carry unreviewed WIP: **merge to local `main` only, never push.**
@@ -109,13 +109,23 @@ and the orchestrator serialises every merge — so the fleet runs in three stage
 | PRO-0011 | Pointer marker in stability artifacts | `spec-PRO-0011.md` | — | — | 1 | **MERGED** `a8d9a7a` · `captureEach`/`pointerMarks` on stability, +19 tests |
 | PRO-0012 | Re-gate flow replay + stability (security) | `spec-PRO-0012.md` | — | — | 1 | **MERGED** `d9ae7fd` · `ReplayGate` + new `ProctorAgentTests` target, +23 tests |
 | PRO-0013 | Audit-log encryption at rest (security) | `spec-PRO-0013.md` | — | — | 1 | **MERGED** `62cd969` · `AuditSeal` + `AuditKeyStore`, +10 tests |
-| PRO-0015 | Run HUD panel | `spec-PRO-0015.md` | PRO-0014 ✓ | `mocks/run-hud.html` (binding) | 2 | **RUNNING** |
-| PRO-0016 | Multi-session queue | `spec-PRO-0016.md` | PRO-0015 merged | `docs/design/run-hud-queue.md` | 3 | **Blocked** on stage 2 merge |
-| PRO-0017 | HUD character assets | `spec-PRO-0017.md` | PRO-0015 merged | `docs/design/run-hud-character.md` | 3 | **Blocked** on stage 2 merge |
+| PRO-0015 | Run HUD panel | `spec-PRO-0015.md` | PRO-0014 ✓ | `mocks/run-hud.html` (binding) | 2 | **MERGED** `9f497b4` · panel + run controls, +57 tests. Agent now runs `NSApplication.shared.run()` |
+| PRO-0016 | Multi-session queue | `spec-PRO-0016.md` | PRO-0015 ✓ | `docs/design/run-hud-queue.md` | 3 | **RUNNING** |
+| PRO-0017 | HUD character assets | `spec-PRO-0017.md` | PRO-0015 ✓ | `docs/design/run-hud-character.md` | 3 | **RUNNING** |
 
-**PRO-0015 carries a second architectural blocker its runner must solve, not discover late:** the agent
-process runs a bare `CFRunLoopRun()` with no `NSApplication` event loop, so a panel's Pause/Stop buttons
-have no way to receive a click. It is recorded as a spec requirement; the runner owns the fix.
+**Two things PRO-0015 settled that later work must not re-litigate.** The agent's run
+loop is now `NSApplication.shared.run()`, because a bare `CFRunLoopRun()` spins the same
+loop without draining the event queue, so a button can never receive a click. Three
+constraints hold it together: the panel drags via `mouseDragged` + `setFrameOrigin` and
+never `performDrag`, it never calls `activate(_:)`, and it ignores mouse events while a
+synthetic step is in flight — without that last one a synthetic `click` posted under the
+panel can land on Stop and halt the run that posted it. That bug was found by the
+completeness critic, not by the build. With `PROCTOR_HUD` off, `main.swift` keeps the old
+`CFRunLoopRun()`, so an opted-out run has exactly the process shape that shipped.
+
+**The event-loop blocker is SOLVED** — see the note above the ledger table. It was the load-bearing
+problem of the HUD line: a bare `CFRunLoopRun()` spins the same loop without draining the event queue,
+so a kill switch's buttons could never be pressed.
 
 ## Deferred children discovered mid-fleet
 All three SCHEDULED 2026-08-13 (whats-left ingest, reader answered "all three") — promoted to backlog briefs + ledger rows, **still not triaged as of 2026-08-14**.
@@ -138,6 +148,11 @@ All three SCHEDULED 2026-08-13 (whats-left ingest, reader answered "all three") 
 - **Three deferred children above** are logged, not scheduled. Say if you want any promoted to a new fleet item.
 
 ## Event log (append-only, newest first)
+- 2026-08-14 **Wave 3 stage 3 LAUNCHED** — PRO-0016 (queue) and PRO-0017 (character assets), concurrent, both dependent on PRO-0015 and independent of each other.
+- 2026-08-14 **Wave 3 stage 2 MERGED** @ 9f497b4 — PRO-0015, the run HUD panel. **315 tests / 35 suites green**. The event-loop blocker was solved by swapping `CFRunLoopRun()` for `NSApplication.shared.run()`; the feared settling regression turned out to be already covered, because `AXObservers` registers every source on `CFRunLoopMode.commonModes`, so default and tracking modes both deliver. The rebase onto `b60e906` cost five test expectations and no conflicts: the uniform object fence reached the HUD's own lines, `objectText` feeds `"Paused before …"` which is a line like any other, and one test that claimed to cover supplied names now says what it actually covers.
+  - **Clause corrected rather than built** @ 9f497b4: the mock's `pointer-events: none` outside the controls does not carry to the native panel, and closing it would need a global mouse monitor, an always-on input observer inside an agent that already holds Accessibility. Declined. A click forwarded from a supervision surface lands in the app Proctor is *currently driving*, corrupting the run someone reached over to supervise, with nothing in the trail to say a person's hand caused it. A swallowed click costs one repeated gesture. Reasoning written into spec-PRO-0015.md.
+  - **Real bug caught by the completeness critic**, not by the build: a synthetic `click`, `hover` or `dragPath` posted at a point under the panel would hit the panel, and could land on Stop and halt the run that posted it. Fixed by ignoring mouse events for exactly as long as a synthetic step is in flight.
+- 2026-08-14 **PRO-0014 quoting question CLOSED** @ b60e906 — fence every object, supplied or derived. The quotes were containment rather than attribution, and an app's own accessibility title carries the same clause-injection payload a caller's label does; `sanitised` already conceded that by running on both, and only `render` treated them differently.
 - 2026-08-14 **Wave 3 stage 1 MERGED** @ 62cd969 — four features, **258 tests / 29 suites green** on `main` (was 173/24). Merge order was chosen to isolate the overlap: PRO-0014 (untouched files) → PRO-0011 → PRO-0012 → PRO-0013, each rebased onto the growing `main`, built and tested in its own worktree before a fast-forward. Two real conflicts, both resolved by combining rather than choosing:
   - `SessionFlow.stability()`: PRO-0011 had lifted the determinism fold into `StabilityScore.fold` in Core so that "an artifact cannot move a score" is a property of the signature; PRO-0012 had extracted a `stabilityReport` helper with truncation semantics so that a run cut short is never reported deterministic. The merged code keeps the helper *and* scores through the hash-only fold, ANDing `!truncated` at the call site — the fold still cannot see a capture, and a truncated run still cannot claim determinism. PRO-0012 had also renamed `runs` to `requested`; the `runs < 2` note moved into the helper, where it counts repeats **measured** rather than repeats **asked for**, which is the more honest of the two.
   - `SessionPolicy.policyStatus()`: PRO-0013's audit-state fields kept, read through PRO-0012's injectable `clock()` seam rather than the wall clock it replaced.
