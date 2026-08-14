@@ -1,0 +1,73 @@
+import Foundation
+import CoreGraphics
+import ProctorCore
+
+// Where the drawn pointer goes for a given step.
+//
+// The resolution deliberately mirrors PointerMarker, which mirrors the
+// actuator: an explicit point wins, otherwise the acted element's frame centre.
+// Three different answers to "which point did this step act on" would be three
+// things to keep in step, and the one drawn live has to agree with the one
+// composited into a capture, or the overlay and the evidence disagree about the
+// same action.
+//
+// A step with neither a point nor a framed element — a bare `type`, a `key`, a
+// menu path — has no place on screen that it acted on, so nothing moves and the
+// pointer stays where the last step left it.
+
+extension Session {
+
+    /// Step kinds that actuate something at a point, and so earn a pulse.
+    static let pulsingKinds: Set<ActionStep.Kind> = [
+        .press, .click, .pick, .confirm, .cancel, .increment, .decrement
+    ]
+
+    /// Draw the step before it runs. Best-effort throughout: the overlay is an
+    /// annotation, so a target that cannot be resolved yields no movement rather
+    /// than a failed step.
+    func showCursor(for step: ActionStep) async {
+        guard CursorOverlay.isEnabled else { return }
+
+        if step.kind == .dragPath {
+            let route = cursorRoute(for: step)
+            if route.count >= 2 {
+                await CursorOverlay.shared.drag(along: route,
+                                                durationMs: step.durationMs ?? 300)
+                return
+            }
+        }
+
+        guard let target = cursorTarget(for: step) else { return }
+        await CursorOverlay.shared.travel(to: target)
+        if Self.pulsingKinds.contains(step.kind) {
+            await CursorOverlay.shared.click()
+        }
+    }
+
+    /// The point a step acts on, in screen points.
+    func cursorTarget(for step: ActionStep) -> CGPoint? {
+        let elementFrame: Rect?
+        if step.point == nil, let node = step.node {
+            elementFrame = (try? ax.node(id: node))?.frame
+        } else {
+            elementFrame = nil
+        }
+        guard let target = PointerMarker.targetPoint(for: step, elementFrame: elementFrame) else {
+            return nil
+        }
+        return CGPoint(x: target.x, y: target.y)
+    }
+
+    /// The route a drag will follow, resolved the way the actuator resolves it:
+    /// an explicit path, otherwise the start point plus its delta.
+    func cursorRoute(for step: ActionStep) -> [CGPoint] {
+        if let path = step.path {
+            let points = path.filter { $0.count >= 2 }.map { CGPoint(x: $0[0], y: $0[1]) }
+            if points.count >= 2 { return points }
+        }
+        guard let start = cursorTarget(for: step), let delta = step.delta, delta.count >= 2 else {
+            return []
+        }
+        return [start, CGPoint(x: start.x + delta[0], y: start.y + delta[1])]
+    }
+}

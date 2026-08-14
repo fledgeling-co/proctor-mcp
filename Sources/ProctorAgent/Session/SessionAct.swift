@@ -62,12 +62,19 @@ extension Session {
         let app = appHandle(forWindow: window)
 
         for (index, step) in steps.enumerated() {
+            let refusal = Self.refusal(for: step, foreground: foreground)
+            // The pointer travels before the clock starts, so the drawing does
+            // not land inside the step's own elapsed time, and only for a step
+            // that is actually going to run — animating toward something about
+            // to be refused would show an action that never happened.
+            if refusal == nil { await showCursor(for: step) }
+
             let started = DispatchTime.now().uptimeNanoseconds
             func elapsed() -> Int {
                 Int((DispatchTime.now().uptimeNanoseconds &- started) / 1_000_000)
             }
 
-            if let refusal = Self.refusal(for: step, foreground: foreground) {
+            if let refusal {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: refusal, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: elapsed()))
