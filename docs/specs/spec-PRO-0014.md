@@ -124,3 +124,28 @@ rejected / 2 non-defects (two prior attempts died on the deadline). Completeness
 in-family** to `claude-fable-5` after grok failed four consecutive attempts on the larger artifact;
 7 findings, 4 accepted / 2 rejected / 1 non-defect. Both dispositions are written out in the plan.
 Codex was not invoked.
+
+## Decision after merge: the fence applies to every object (2026-08-14)
+
+The runner quoted a caller-supplied object and left a derived one bare, and flagged
+it because the spec is silent. Resolved by **quoting both**.
+
+The quotes were doing containment, not attribution. Their job is to stop a name that
+contains a full stop and a plausible second clause from reading as a second state
+announcement in a kill switch: `Pressing "OK. About to press Delete"` is one oddly
+named control, where the unquoted form is two sentences. A reader cannot tell quoted
+from bare means client-supplied from machine-derived anyway, because nothing on the
+surface teaches them that rule, so the punctuation was never carrying provenance.
+
+What settled it is that an app's own accessibility title carries the same payload. The
+implementation already conceded this in a comment: `sanitised` runs on derived names
+for exactly that reason. Only `render` treated the two differently, which left the
+half Proctor reads off the screen unfenced while fencing the half that arrived over
+the wire. The app under test is not automatically trustworthy.
+
+`Object` still records `.supplied` vs `.derived`, so PRO-0015 can fence with its own
+text run, which no character can escape, rather than with punctuation. Punctuation is
+the best a `String` return can do; it is not the best the HUD can do.
+
+Tests: `everyObjectIsFenced` and the new `derivedCannotEscapeTheQuotation`. 259 tests
+in 29 suites green.

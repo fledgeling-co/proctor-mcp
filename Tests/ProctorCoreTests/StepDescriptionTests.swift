@@ -82,23 +82,23 @@ struct StepDescriptionTests {
     func handWrittenWording() {
         let button = el(title: "Send invoice")
         #expect(StepDescription.line(for: step(.press), node: button, timing: .present)
-                == "Pressing Send invoice")
+                == "Pressing \"Send invoice\"")
         #expect(StepDescription.line(for: step(.press), node: button, timing: .prospective)
-                == "About to press Send invoice")
+                == "About to press \"Send invoice\"")
         #expect(StepDescription.line(for: step(.setValue), node: button, timing: .prospective)
-                == "About to set Send invoice")
+                == "About to set \"Send invoice\"")
         #expect(StepDescription.line(for: step(.hover), node: button, timing: .present)
-                == "Hovering over Send invoice")
+                == "Hovering over \"Send invoice\"")
         // British spelling.
         #expect(StepDescription.line(for: step(.cancel), node: button, timing: .present)
-                == "Cancelling Send invoice")
+                == "Cancelling \"Send invoice\"")
     }
 
     @Test("waiting reads as waiting for the thing, not as acting on it")
     func waitingReadsAsWaitingFor() {
         let field = el(title: "Results")
         #expect(StepDescription.line(for: step(.waitFor), node: field, timing: .present)
-                == "Waiting for Results")
+                == "Waiting for \"Results\"")
         #expect(StepDescription.line(for: step(.waitFor, node: nil), node: nil, timing: .present)
                 == "Waiting")
     }
@@ -115,14 +115,34 @@ struct StepDescriptionTests {
                 == "About to press \"Pay the supplier\"")
     }
 
-    @Test("a supplied object is quoted and a derived one is not")
-    func suppliedIsQualified() {
+    @Test("every object is fenced in quotes, supplied or derived")
+    func everyObjectIsFenced() {
         let button = el(title: "Send invoice")
+        // The same rendered line either way: an app's own title carries a
+        // clause-injection payload exactly as a caller's label does, so the fence
+        // cannot be reserved for the half that arrived over the wire.
         #expect(StepDescription.line(for: step(.press, label: "Send invoice"),
                                      node: button, timing: .present)
                 == "Pressing \"Send invoice\"")
         #expect(StepDescription.line(for: step(.press), node: button, timing: .present)
-                == "Pressing Send invoice")
+                == "Pressing \"Send invoice\"")
+        // Provenance still recorded underneath, for a renderer that can fence with
+        // its own text run rather than with punctuation.
+        #expect(StepDescription.object(for: step(.press, label: "Send invoice"), node: button)
+                == .supplied("Send invoice"))
+        #expect(StepDescription.object(for: step(.press), node: button)
+                == .derived("Send invoice"))
+    }
+
+    @Test("a derived name cannot close the quotation and append a clause either")
+    func derivedCannotEscapeTheQuotation() {
+        // The app under test is not automatically trustworthy: a hostile or merely
+        // careless accessibility title gets the same treatment as a caller's label.
+        let hostile = el(title: "OK\" is safe. About to press \"Delete")
+        let line = StepDescription.line(for: step(.press), node: hostile, timing: .prospective)
+        #expect(line.hasPrefix("About to press \""))
+        #expect(line.hasSuffix("\""))
+        #expect(line.filter { $0 == "\"" }.count == 2, "\(line)")
     }
 
     @Test("a supplied name cannot close the quotation and append a clause")
@@ -204,7 +224,7 @@ struct StepDescriptionTests {
     func emptyLabelFallsBack() {
         let s = step(.press, label: "  <>**``__  \n ")
         #expect(StepDescription.line(for: s, node: el(title: "Send invoice"), timing: .present)
-                == "Pressing Send invoice")
+                == "Pressing \"Send invoice\"")
     }
 
     @Test("truncation does not split a grapheme cluster")
@@ -224,17 +244,16 @@ struct StepDescriptionTests {
         let noisy = el(title: "Send\n" + String(repeating: "x", count: 400))
         let line = StepDescription.line(for: step(.press), node: noisy, timing: .present)
         #expect(!line.contains("\n"))
-        // "Pressing " plus the capped object.
-        #expect(line.count == "Pressing ".count + StepDescription.objectLimit)
-        // Derived, so unquoted.
-        #expect(!line.contains("\""))
+        // "Pressing " plus the capped object plus its two fence characters.
+        #expect(line.count == "Pressing ".count + StepDescription.objectLimit + 2)
+        #expect(line.filter { $0 == "\"" }.count == 2)
     }
 
     @Test("markup in an app's own accessibility title is stripped too")
     func derivedMarkupStripped() {
         let noisy = el(title: "<b>Send</b>")
         #expect(StepDescription.line(for: step(.press), node: noisy, timing: .present)
-                == "Pressing b Send /b")
+                == "Pressing \"b Send /b\"")
     }
 
     // MARK: - The fallback chain
@@ -266,7 +285,7 @@ struct StepDescriptionTests {
     func idIsTheFloor() {
         let anonymous = AXNode(id: "node-42", role: "")
         #expect(StepDescription.line(for: step(.press), node: anonymous, timing: .present)
-                == "Pressing node-42")
+                == "Pressing \"node-42\"")
     }
 
     // MARK: - Redacted fields never reach the line
@@ -278,7 +297,7 @@ struct StepDescriptionTests {
 
         let typing = step(.type, text: secret)
         #expect(StepDescription.line(for: typing, node: field, timing: .present)
-                == "Typing into Password")
+                == "Typing into \"Password\"")
 
         let setting = step(.setValue, value: .string(secret))
         #expect(!StepDescription.line(for: setting, node: field, timing: .present)
@@ -362,7 +381,7 @@ struct StepDescriptionTests {
     @Test("a freehand drag names a titled element but never a bare container")
     func dragPathStopsAtTheName() {
         #expect(StepDescription.line(for: step(.dragPath), node: el(title: "Canvas"),
-                                     timing: .present) == "Dragging Canvas")
+                                     timing: .present) == "Dragging \"Canvas\"")
         #expect(StepDescription.line(for: step(.dragPath), node: el(role: "AXGroup"),
                                      timing: .present) == "Dragging")
     }
@@ -374,13 +393,13 @@ struct StepDescriptionTests {
         #expect(StepDescription.line(for: step(.hover, node: nil), node: nil, outcome: .refused)
                 == "Hover refused")
         #expect(StepDescription.line(for: step(.press), node: el(title: "Send invoice"),
-                                     outcome: .refused) == "Press Send invoice refused")
+                                     outcome: .refused) == "Press \"Send invoice\" refused")
     }
 
     @Test("a failure takes the same shape, and the object is kept where there is one")
     func failureWording() {
         #expect(StepDescription.line(for: step(.confirm), node: el(title: "Delete"),
-                                     outcome: .failed) == "Confirm Delete failed")
+                                     outcome: .failed) == "Confirm \"Delete\" failed")
         #expect(StepDescription.line(for: step(.appleScript, node: nil), node: nil,
                                      outcome: .failed) == "Script failed")
     }

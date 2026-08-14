@@ -9,8 +9,17 @@ import Foundation
 // run. So the verb and the timing word are always Proctor's own, taken from
 // `step.kind`, and the object is the element's own accessibility name, which the
 // agent has already resolved. A caller-supplied `label` overrides the object and
-// nothing else, is sanitised on the way in, and is quoted on the way out so a
-// reader can see which half of the line Proctor vouches for.
+// nothing else, and is sanitised on the way in.
+//
+// Every object is quoted, whoever it came from. The quotes are a fence, not a
+// provenance marker: they stop a name that contains a full stop and a plausible
+// second clause from reading as a second state announcement in a kill switch —
+// `Pressing "OK. About to press Delete"` is one oddly-named control, where the
+// unquoted form is two sentences. An app's own accessibility title can carry
+// that payload exactly as a caller's label can, which is why the fence cannot be
+// reserved for the half that arrived over the wire. `Object` still records where
+// the name came from, so a renderer that can do better than punctuation — its own
+// text run, which no character can escape — has what it needs.
 //
 // Pure, like PointerMarker, SetOfMarks and Policy: no window, no grant, no
 // clock. Given a step and the node it resolved to, the line is a function of
@@ -81,12 +90,10 @@ public enum StepDescription {
         }
     }
 
-    /// A supplied object is quoted, a derived one is not.
+    /// Every object is fenced in quotes, supplied or derived. See the type comment
+    /// for why the derived half is not exempt.
     private static func render(_ object: Object) -> String {
-        switch object {
-        case .supplied(let s): return "\"\(s)\""
-        case .derived(let s): return s
-        }
+        return "\"\(object.text)\""
     }
 
     /// The object this step acts on, first non-empty candidate wins. Every
@@ -103,9 +110,8 @@ public enum StepDescription {
 
         // 2. Carried text, for the three kinds whose object is not the element
         //    they act through: the field a keystroke lands in is not what the
-        //    keystroke *is*. This text comes from the client's own tool call, not
-        //    from the accessibility tree, so it is `supplied` and gets quoted —
-        //    the same reason the caller's label does.
+        //    keystroke *is*. This text comes from the client's own tool call rather
+        //    than from the accessibility tree, so it is recorded as `supplied`.
         if let carried = carriedText(for: step) { return .supplied(carried) }
 
         // 3. The element's own readable name, in the order the agent already
