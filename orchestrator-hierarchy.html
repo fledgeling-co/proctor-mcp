@@ -1,74 +1,169 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>Proctor fleet — orchestrator hierarchy</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proctor — fleet hierarchy</title>
 <style>
-:root{--bg:#0A0A0C;--panel:#151519;--line:rgba(255,255,255,.1);--ink:#F7F4F0;--ink2:rgba(247,244,240,.6);
---accent:#F1552A;--queued:#6B7280;--running:#4EA1FF;--merge:#F0A83A;--merged:#3AD07E;--parked:#FF5F57;}
-*{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;padding:32px}
-h1{font-size:20px;letter-spacing:-.02em}
-.sub{color:var(--ink2);font:12px/1.5 ui-monospace,Menlo,monospace;margin:6px 0 24px}
-.wave{border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px;background:linear-gradient(180deg,var(--panel),#0E0E12)}
-.wave h2{font:600 12px/1 ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
-.cards{display:flex;flex-wrap:wrap;gap:12px}
-.card{width:250px;border:1px solid var(--line);border-radius:11px;padding:13px;background:rgba(255,255,255,.02);position:relative}
-.card .id{font:600 12px/1 ui-monospace,monospace;color:var(--ink)}
-.card .t{font-size:13px;margin:7px 0 9px}
-.card .meta{font:11px/1.5 ui-monospace,monospace;color:var(--ink2)}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
-.badge{position:absolute;top:11px;right:11px;font:600 9px/1 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;padding:4px 6px;border-radius:5px;border:1px solid var(--line);color:var(--ink2)}
-.dep{color:var(--accent)}
-.legend{display:flex;gap:18px;flex-wrap:wrap;font:11px/1 ui-monospace,monospace;color:var(--ink2);margin-top:8px}
-.legend span{display:flex;align-items:center}
+  :root {
+    --bg: #fbfbfa; --panel: #ffffff; --line: #e4e2dd; --ink: #17181b;
+    --ink2: #5c5f66; --ink3: #8a8d94;
+    --merged: #16a34a; --running: #e24a18; --queued: #b45309; --blocked: #8a8d94;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #131417; --panel: #191a1e; --line: #2a2c31; --ink: #f2f2f3;
+      --ink2: #a3a6ad; --ink3: #70737a;
+      --merged: #4ade80; --running: #ff6a3d; --queued: #fbbf24; --blocked: #70737a;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #131417; --panel: #191a1e; --line: #2a2c31; --ink: #f2f2f3;
+    --ink2: #a3a6ad; --ink3: #70737a;
+    --merged: #4ade80; --running: #ff6a3d; --queued: #fbbf24; --blocked: #70737a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 14px/1.55 ui-sans-serif, -apple-system, "SF Pro Text", system-ui, sans-serif;
+    padding: 40px 28px 72px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 620; margin: 0 0 4px; letter-spacing: -.01em; }
+  .sub { color: var(--ink2); margin: 0 0 6px; }
+  .gate { color: var(--ink2); font-variant-numeric: tabular-nums; margin: 0 0 28px; }
+  .gate b { color: var(--ink); font-weight: 600; }
+
+  .key { display: flex; flex-wrap: wrap; gap: 16px; margin: 0 0 30px;
+         padding: 12px 14px; background: var(--panel); border: 1px solid var(--line);
+         border-radius: 10px; }
+  .key span { display: inline-flex; align-items: center; gap: 7px; color: var(--ink2); font-size: 13px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+
+  .wave { margin: 0 0 30px; }
+  .wave > h2 {
+    font-size: 12px; font-weight: 620; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--ink3); margin: 0 0 12px; display: flex; align-items: baseline; gap: 10px;
+  }
+  .wave > h2 em { font-style: normal; text-transform: none; letter-spacing: 0;
+                  font-weight: 400; color: var(--ink3); font-size: 12px; }
+
+  .row { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); }
+
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 13px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+  }
+  .card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--blocked); }
+  .card.merged::before { background: var(--merged); }
+  .card.running::before { background: var(--running); }
+  .card.queued::before { background: var(--queued); }
+
+  .id { font: 600 11px/1 ui-monospace, "SF Mono", Menlo, monospace;
+        letter-spacing: .04em; color: var(--ink3); }
+  .title { font-weight: 560; margin: 5px 0 6px; letter-spacing: -.005em; }
+  .meta { font-size: 12px; color: var(--ink2); }
+  .meta code { font: 11px/1.4 ui-monospace, "SF Mono", Menlo, monospace;
+               color: var(--ink2); word-break: break-all; }
+  .dep { font-size: 12px; color: var(--ink3); margin-top: 6px; }
+  .dep b { color: var(--ink2); font-weight: 560; }
+
+  .note { margin: 26px 0 0; padding: 14px 16px; background: var(--panel);
+          border: 1px solid var(--line); border-radius: 10px; color: var(--ink2); }
+  .note h3 { margin: 0 0 6px; font-size: 13px; font-weight: 620; color: var(--ink); }
+  .note p { margin: 0 0 8px; }
+  .note p:last-child { margin-bottom: 0; }
+  @media (max-width: 560px) { body { padding: 26px 16px 56px; } .row { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<h1>Proctor — remaining-work fleet</h1>
-<div class="sub">10 items · Swift-adapted (gate: swift build + swift test) · ≤8 concurrent · external-model-clis: off · Updated 2026-08-13 (Planning)</div>
+<div class="wrap">
 
-<div class="wave">
-  <h2>Wave 1 — ready now (8 slots)</h2>
-  <div class="cards" id="w1"></div>
-</div>
-<div class="wave">
-  <h2>Wave 2 — after dependencies merge</h2>
-  <div class="cards" id="w2"></div>
-</div>
+  <h1>Proctor — remaining work</h1>
+  <p class="sub">Companion to <code>ORCHESTRATOR.md</code>, which is the authority. This is the shape; that file is the state.</p>
+  <p class="gate"><b>387</b> tests in <b>47</b> suites green on local <code>main</code> @ <b>b4a29e5</b> · 19 tools · 22 items, 18 merged</p>
 
-<div class="legend">
-  <span><i class="dot" style="background:var(--queued)"></i>queued</span>
-  <span><i class="dot" style="background:var(--running)"></i>running</span>
-  <span><i class="dot" style="background:var(--merge)"></i>ready-to-merge</span>
-  <span><i class="dot" style="background:var(--merged)"></i>merged</span>
-  <span><i class="dot" style="background:var(--parked)"></i>parked</span>
-</div>
+  <div class="key">
+    <span><i class="dot" style="background:var(--merged)"></i> Merged</span>
+    <span><i class="dot" style="background:var(--running)"></i> Running</span>
+    <span><i class="dot" style="background:var(--queued)"></i> Queued</span>
+    <span><i class="dot" style="background:var(--blocked)"></i> Blocked on a dependency</span>
+  </div>
 
-<script>
-const items=[
- ['PRO-0001','CUA schema façade','maps Anthropic/OpenAI CUA schema onto act',null,1],
- ['PRO-0002','Set-of-marks captures','numbered marks + grid + mark→AX-id map',null,1],
- ['PRO-0003','Menu-bar key-equivalents','AXMenuBar walk + shortcuts',null,1],
- ['PRO-0004','App scripting-dictionary','sdef parse, cached per PID',null,1],
- ['PRO-0005','Audit trail + policy gate','allow/block, approval token, redacting JSONL',null,1],
- ['PRO-0006','Vision-capture normalisation','scale to vision ceiling + report factor',null,1],
- ['PRO-0007','Zoom region crop','native-res region crop',null,1],
- ['PRO-0008','MCP surface modernization','profiles, resources, annotations, outputSchema',null,1],
- ['PRO-0009','Process kill + fs jail','test setup/teardown + containment','PRO-0008 (soft)',2],
- ['PRO-0010','Pointer overlay in captures','target marker in flow/stability artifacts','PRO-0002',2],
-];
-const status='merged'; // FLEET COMPLETE — all 10 merged to main @ d237361 (19 tools, 169 tests / 23 suites)
-const colour={queued:'var(--queued)',running:'var(--running)','ready-to-merge':'var(--merge)',merged:'var(--merged)',parked:'var(--parked)'};
-for(const [id,title,note,dep,wave] of items){
-  const c=document.createElement('div'); c.className='card';
-  c.innerHTML=`<div class="badge">opus</div>
-    <div class="id"><i class="dot" style="background:${colour[status]}"></i>${id}</div>
-    <div class="t">${title}</div>
-    <div class="meta">${note}</div>
-    ${dep?`<div class="meta dep" style="margin-top:6px">↳ after ${dep}</div>`:''}`;
-  document.getElementById(wave===1?'w1':'w2').appendChild(c);
-}
-</script>
+  <section class="wave">
+    <h2>Waves 1–3 <em>17 features, all merged — 173 → 387 tests</em></h2>
+    <div class="row">
+      <div class="card merged">
+        <div class="id">PRO-0001 … PRO-0010</div>
+        <div class="title">The tool surface</div>
+        <div class="meta">CUA façade, set-of-marks, menu key-equivalents, scripting dictionary, audit + policy gate, capture normalisation, zoom, MCP surface, kill + fs jail, pointer overlay.</div>
+      </div>
+      <div class="card merged">
+        <div class="id">PRO-0011 · PRO-0012 · PRO-0013</div>
+        <div class="title">Determinism and the security follow-ups</div>
+        <div class="meta">Per-step frames on the sweep; replay and stability behind the same policy gate as a live drive; the audit trail sealed at rest with no recovery copy, by explicit choice.</div>
+      </div>
+      <div class="card merged">
+        <div class="id">PRO-0014 … PRO-0017</div>
+        <div class="title">The run HUD line</div>
+        <div class="meta">Derived step descriptions, the panel with Pause and Stop, the three-lane multi-session scheduler, the character sprite.</div>
+      </div>
+      <div class="card merged">
+        <div class="id">PRO-0022</div>
+        <div class="title">A drawing fault must not kill the agent</div>
+        <div class="meta">Built ahead of the fleet: a HUD drawing exception was aborting the agent mid-session, taking the run and the MCP server with it.</div>
+        <div class="dep"><b>Merged</b> b4a29e5</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wave">
+    <h2>Wave 4 · stage 1 <em>three concurrent, no internal dependencies</em></h2>
+    <div class="row">
+      <div class="card queued">
+        <div class="id">PRO-0019</div>
+        <div class="title">A foreground-only run is obvious before it takes the machine</div>
+        <div class="meta">Disclosure, not a change to the planes. Say it before the run takes the foreground, and somewhere that does not depend on which display the panel landed on.</div>
+        <div class="dep"><code>docs/features-to-triage/20-foreground-run-is-obvious.md</code></div>
+      </div>
+      <div class="card queued">
+        <div class="id">PRO-0020</div>
+        <div class="title">Route browser work to Obscura</div>
+        <div class="meta">A page driven through AX gives up the DOM, the console and a durable selector for a flattened tree and coordinates. Carries Obscura's measured edges so a spec does not rediscover them.</div>
+        <div class="dep"><code>docs/features-to-triage/21-route-browser-work-to-obscura.md</code></div>
+      </div>
+      <div class="card queued">
+        <div class="id">PRO-0021</div>
+        <div class="title">Menu bar switch, and the icon as the character</div>
+        <div class="meta">Reach: the panel places bottom-right per display and landed on an external screen. Two real forks — template rendering would discard the character's colour, and hiding the panel hides the stop button.</div>
+        <div class="dep"><code>docs/features-to-triage/22-menu-bar-switch-and-character.md</code></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wave">
+    <h2>Wave 4 · stage 2 <em>after stage 1 merges</em></h2>
+    <div class="row">
+      <div class="card">
+        <div class="id">PRO-0018</div>
+        <div class="title">Yield when a person takes the machine back</div>
+        <div class="meta">Hold the run when a person's own input arrives against it, and ask rather than only pausing. The whole feature is signal quality: Proctor's own synthetic events must never read as the person's, or it pauses itself forever.</div>
+        <div class="dep"><b>Waits on</b> PRO-0019 · <code>docs/features-to-triage/19-yield-when-a-person-takes-the-machine.md</code></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <h3>Why PRO-0018 waits</h3>
+    <p>Both items answer one question: is this batch going to take the foreground. PRO-0019 computes and discloses it, PRO-0018 acts on it. Building them concurrently means two answers to one question, and the briefs already say to triage them together.</p>
+    <h3>Two things the fleet must not re-litigate</h3>
+    <p>An overlay panel sized to the union of the displays is a ~26-megapixel backing store that the window server accepts and reports <code>onscreen=1, alpha=1</code> while never presenting. One panel per screen.</p>
+    <p>And <code>hud.onScreen</code> reports whether the panel was <em>built</em>, not whether it is presented. It is a belief. The window list is the instrument that works.</p>
+  </div>
+
+</div>
 </body>
 </html>

@@ -147,17 +147,33 @@ All three SCHEDULED 2026-08-13 (whats-left ingest, reader answered "all three") 
 - **Runner model was Opus 4.8, not Opus 5**, in the wave-1/2 fleet. Wave 3's four runners self-reported `claude-opus-5[1m]` on the wire, so the convention string and the served model now agree.
 - **Three deferred children above** are logged, not scheduled. Say if you want any promoted to a new fleet item.
 
-## Wave 4 — briefed, untriaged (2026-08-14)
-Five briefs in `docs/features-to-triage/`, four from the reader and one found by running the wave-3 build.
-None triaged; no ids allocated (LEDGER Last allocated is still 17).
+## Wave 4 (2026-08-14) — four from the reader, one already shipped
+Ids allocated to 22. **PRO-0022 is already MERGED** — the crash barrier was built directly
+because a HUD drawing fault was killing the agent mid-session and the reader chose to fix it
+before the fleet.
 
-| Brief | What | Note |
-|---|---|---|
-| `19-yield-when-a-person-takes-the-machine.md` | Notice a person taking the machine back mid-run, hold, and ask | Signal quality is the whole feature. Proctor's own synthetic events must never read as the person's, or it pauses itself forever. Overlaps 20. |
-| `20-foreground-run-is-obvious.md` | Say a run needs the foreground before and while it takes it | Disclosure, not a change to the planes. Triage with 19. |
-| `21-route-browser-work-to-obscura.md` | Reach a page through Obscura instead of driving a browser through AX | Carries Obscura's measured edges so a spec does not rediscover them. |
-| `22-menu-bar-switch-and-character.md` | Menu bar show/hide for the panel, and the menu bar icon as the same character in the same state | Reach: the panel landed on an external display and was missable. Two real forks — template vs colour, and whether hiding the panel hides the stop button. |
-| `23-drawing-fault-must-not-kill-the-agent.md` | A HUD drawing exception must disable the panel, not abort the process | Found in use. See the event log below. |
+### Pre-triage adaptation, and why it is still safe
+Phase 4 exists because `LEDGER.md` id allocation is a read-modify-write and concurrent runners
+corrupt it. **The orchestrator has allocated all four ids serially, by hand, up front**, so no
+runner allocates anything; each triages its own brief into `docs/specs/spec-<ID>.md` against an
+id that is already fixed. The invariant Phase 4 protects is held. A runner that needs a *child*
+spec still takes the ledger lock.
+
+| ID | Title | Brief | Depends on | Stage | Status |
+|----|-------|-------|------------|-------|--------|
+| PRO-0019 | A foreground-only run is obvious before it takes the machine | `20-foreground-run-is-obvious.md` | — | 1 | **Queued** |
+| PRO-0020 | Route browser work to Obscura | `21-route-browser-work-to-obscura.md` | — | 1 | **Queued** |
+| PRO-0021 | Menu bar switch for the panel, and the icon as the character | `22-menu-bar-switch-and-character.md` | — | 1 | **Queued** |
+| PRO-0018 | Yield when a person takes the machine back | `19-yield-when-a-person-takes-the-machine.md` | PRO-0019 merged | 2 | **Blocked** |
+| PRO-0022 | A drawing fault must not kill the agent | `23-drawing-fault-must-not-kill-the-agent.md` | — | — | **MERGED** `b4a29e5` |
+
+**Why PRO-0018 waits on PRO-0019.** Both answer "is this batch going to take the foreground";
+0019 computes and discloses it, 0018 acts on it. Building them concurrently means two answers to
+one question, and the briefs already say to triage them together. 0018 also needs 0019's decision
+about whether a batch declares its synthetic content up front or at the first such step.
+
+**Three concurrent runners**, the cap this repo has used since wave 1. Runners stop before merge;
+the orchestrator serialises every merge to local `main` and never pushes.
 
 ## Event log (append-only, newest first)
 - 2026-08-14 **Installed the wave-3 build and verified it in use.** Developer ID signed (H4HGFL52W7), grants survived the swap, 19 tools, doctor clean. Two findings, one of them a crash:
