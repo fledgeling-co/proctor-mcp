@@ -33,6 +33,36 @@ struct RunHUDStateTests {
 
     // MARK: - One line, one source of words
 
+    @Test("a run starting inside the linger keeps the panel, even if the timer still fires")
+    func aNewRunSurvivesTheOldLinger() {
+        var state = RunHUDState()
+        state.apply(.runBegan(total: 2, app: "Acme", foreground: ForegroundDemand()))
+        state.apply(.runEnded(.completed))
+        #expect(state.model.lingerSeconds == RunHUDState.quietLinger)
+        #expect(state.model.visible)
+
+        // The next run starts before the timer fires. The panel cancels the
+        // pending item, but an item already dequeued and waiting behind this very
+        // call cannot be cancelled, so the stale event still arrives.
+        state.apply(.runBegan(total: 3, app: "Acme", foreground: ForegroundDemand()))
+        state.apply(.lingerElapsed)
+        #expect(state.model.visible, "the stale linger took the panel from a live run")
+        #expect(state.model.phase == .travelling)
+    }
+
+    @Test("an ending still lingers away, and a quiet one waits three seconds")
+    func anEndingStillLingersAway() {
+        var state = RunHUDState()
+        state.apply(.runBegan(total: 1, app: "Acme", foreground: ForegroundDemand()))
+        state.apply(.runEnded(.completed))
+        state.apply(.lingerElapsed)
+        #expect(state.model.visible == false)
+        // Long enough to read "Run complete"; an ending somebody needs to act on
+        // holds far longer, which is what separates the two.
+        #expect(RunHUDState.quietLinger == 3)
+        #expect(RunHUDState.loudLinger > RunHUDState.quietLinger)
+    }
+
     @Test("the live line is StepDescription's, in both timings, with no second wording table")
     func lineComesFromStepDescription() {
         var state = running()

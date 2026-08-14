@@ -406,6 +406,21 @@ public struct RunHUDState: Sendable {
             }
 
         case .lingerElapsed:
+            // Only an ending can be lingered away, and `lingerSeconds` is set by
+            // exactly the four endings and cleared by the fresh model a new run
+            // starts from. So this is "the run this timer was armed for is still
+            // the run on screen".
+            //
+            // The panel already cancels the pending timer when a run begins, and
+            // that covers the ordinary case. It cannot cover a timer that had
+            // already been dequeued and was waiting its turn on the main queue
+            // behind the very call that starts the next run: cancelling an item
+            // that has begun does nothing. Without this guard that ordering
+            // hides the panel a few milliseconds into a live run, which is a run
+            // with no visible stop button — the one state this panel exists to
+            // prevent. Cheap to refuse here, and it makes the reducer safe on its
+            // own rather than only in company with a correct caller.
+            guard model.lingerSeconds != nil else { break }
             model.visible = false
         }
     }
