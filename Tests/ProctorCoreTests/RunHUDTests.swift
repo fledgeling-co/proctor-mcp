@@ -266,6 +266,41 @@ struct RunHUDStateTests {
 
     // MARK: - Colour
 
+    @Test("every state a run reaches is readable from its words and colour alone")
+    func readableWithoutMotion() {
+        // The clause reduced motion has to satisfy: with nothing animating, each
+        // state a person can land on still tells them which one it is. Tone
+        // alone is not enough (travelling and acting share one, as the reference
+        // intends), so the pair has to be distinct.
+        var seen: Set<String> = []
+        func record(_ state: RunHUDState) {
+            seen.insert("\(state.model.tone.rawValue)|\(state.model.line)")
+        }
+        var travelling = running()
+        travelling.apply(.stepApproaching(step: step(.press), node: el(), synthetic: false))
+        record(travelling)
+        var acting = running()
+        acting.apply(.stepActing(step: step(.press), node: el(), synthetic: false))
+        record(acting)
+        var blocked = running()
+        blocked.apply(.stepRefused(step: step(.hover), node: el()))
+        record(blocked)
+        var failed = running()
+        failed.apply(.stepFailed(step: step(.press), node: el()))
+        record(failed)
+        var paused = running()
+        paused.apply(.paused(step: step(.press), node: el()))
+        record(paused)
+        var finished = running()
+        finished.apply(.runEnded(.completed))
+        record(finished)
+        var stopped = running()
+        stopped.apply(.runEnded(.stoppedByPerson))
+        record(stopped)
+
+        #expect(seen.count == 7)
+    }
+
     @Test("one state variable drives the whole panel, and every phase has a tone")
     func everyPhaseHasATone() {
         let expected: [RunHUDPhase: RunHUDTone] = [
