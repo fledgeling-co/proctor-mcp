@@ -1,5 +1,6 @@
 import Foundation
 import CoreFoundation
+import AppKit
 import ProctorCore
 
 // Entry point.
@@ -9,6 +10,21 @@ import ProctorCore
 // loop runs on its own threads. Inverting that gives a server that answers
 // every call and never sees an accessibility notification, which then presents
 // as settling that always times out.
+
+// The activation policy is claimed before anything else runs, and it has to be.
+// This binary lives in Proctor.app/Contents/MacOS, so it inherits the bundle's
+// Info.plist — where LSUIElement is false, because the UI app deliberately
+// starts as a regular app so its first-run window can appear. The agent is not
+// that app. The moment it touches the window server (NSWorkspace on activate,
+// ScreenCaptureKit on capture) the Dock reads the enclosing bundle, gives this
+// process a tile, and then waits for a launch that never completes, because
+// nothing here ever runs an NSApplication event loop. The tile bounces forever.
+//
+// Accessory rather than prohibited: prohibited is documented as not permitting
+// windows, and the cursor overlay is a window. Accessory keeps the process out
+// of the Dock and out of the app switcher while still allowing a panel to be
+// ordered in, which is exactly the shape of a background agent that draws.
+NSApplication.shared.setActivationPolicy(.accessory)
 
 /// The concrete engines are constructed here so the rest of the agent depends
 /// only on the protocols in Contracts.swift.

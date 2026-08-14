@@ -75,10 +75,21 @@ struct CaptureNormalizeOptions: Sendable {
     var maxPixels: Int = VisionCapture.defaultMaxPixels
 }
 
+/// How the frame is written to disk. Defaults to lossless PNG; a caller trades
+/// text fidelity for bytes explicitly, never by omission. See
+/// ProctorCore.ImageFormat for the measurements behind that default.
+struct ImageEncodingOptions: Sendable {
+    var format: ImageFormat = ImageFormat.defaultFormat
+    var quality: Int?
+
+    static let `default` = ImageEncodingOptions()
+}
+
 protocol CaptureEngine: AnyObject, Sendable {
     func capture(window: WindowHandle, to path: String?, waitForComplete: Bool,
                  timeoutMs: Int, scale: Double?, tileHashes: Bool,
-                 includeCursor: Bool, normalize: CaptureNormalizeOptions?) async throws -> CaptureResult
+                 includeCursor: Bool, normalize: CaptureNormalizeOptions?,
+                 encoding: ImageEncodingOptions) async throws -> CaptureResult
 
     /// A running stream used by settle: report dirty area per frame without
     /// writing anything to disk.
@@ -87,14 +98,29 @@ protocol CaptureEngine: AnyObject, Sendable {
 
 extension CaptureEngine {
     /// Convenience for the callers that never normalise — the settle probe, the
-    /// act/assert/flow evidence captures, the tri-observer frame. They keep the
-    /// original argument list; only proctor_capture reaches the normalising form.
+    /// act/assert/flow evidence captures, the tri-observer frame, and the
+    /// full-window capture proctor_zoom crops from. They keep the original
+    /// argument list and stay native, lossless PNG; only proctor_capture reaches
+    /// the normalising form.
     func capture(window: WindowHandle, to path: String?, waitForComplete: Bool,
                  timeoutMs: Int, scale: Double?, tileHashes: Bool,
                  includeCursor: Bool) async throws -> CaptureResult {
         try await capture(window: window, to: path, waitForComplete: waitForComplete,
                           timeoutMs: timeoutMs, scale: scale, tileHashes: tileHashes,
-                          includeCursor: includeCursor, normalize: nil)
+                          includeCursor: includeCursor, normalize: nil,
+                          encoding: .default)
+    }
+
+    /// The normalising form with default encoding, for callers that care about
+    /// the vision ceiling but not the container.
+    func capture(window: WindowHandle, to path: String?, waitForComplete: Bool,
+                 timeoutMs: Int, scale: Double?, tileHashes: Bool,
+                 includeCursor: Bool,
+                 normalize: CaptureNormalizeOptions?) async throws -> CaptureResult {
+        try await capture(window: window, to: path, waitForComplete: waitForComplete,
+                          timeoutMs: timeoutMs, scale: scale, tileHashes: tileHashes,
+                          includeCursor: includeCursor, normalize: normalize,
+                          encoding: .default)
     }
 }
 

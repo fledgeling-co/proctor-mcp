@@ -2060,3 +2060,58 @@ struct ProcessControlTests {
     }
 }
 
+
+// MARK: - Image encoding
+
+@Suite("Image encoding")
+struct ImageEncodingTests {
+
+    @Test("the default container is lossless, because a lossy default would trade text for bytes nobody is billed for")
+    func defaultIsLossless() {
+        #expect(ImageFormat.defaultFormat == .png)
+        #expect(ImageFormat.png.isLossy == false)
+        #expect(ImageFormat.jpeg.isLossy)
+    }
+
+    @Test("the spellings a caller actually types all parse, and an unknown one is refused rather than guessed")
+    func parsing() {
+        #expect(ImageFormat.parse("png") == .png)
+        #expect(ImageFormat.parse("PNG") == .png)
+        #expect(ImageFormat.parse(" jpeg ") == .jpeg)
+        #expect(ImageFormat.parse("jpg") == .jpeg)
+        #expect(ImageFormat.parse("JPG") == .jpeg)
+        // WebP is the container the evidence prefers, but macOS ships no encoder,
+        // so it must fail loudly rather than silently yielding a PNG.
+        #expect(ImageFormat.parse("webp") == nil)
+        #expect(ImageFormat.parse("gif") == nil)
+        #expect(ImageFormat.parse(nil) == nil)
+        #expect(ImageFormat.parse("") == nil)
+    }
+
+    @Test("quality is clamped into the band where UI text survives, and defaults inside it")
+    func qualityClamp() {
+        #expect(ImageFormat.clampQuality(nil) == 0.9)
+        #expect(ImageFormat.clampQuality(90) == 0.9)
+        #expect(ImageFormat.clampQuality(100) == 1.0)
+        // Below the floor, JPEG stops blurring text and starts turning it into
+        // different, confidently-wrong words; the floor is what refuses that.
+        #expect(ImageFormat.clampQuality(10) == 0.6)
+        #expect(ImageFormat.clampQuality(-5) == 0.6)
+        #expect(ImageFormat.clampQuality(150) == 1.0)
+    }
+
+    @Test("the written file's extension matches what was written into it")
+    func retargetsExtension() {
+        #expect(ImageFormat.jpeg.retarget("/tmp/shot.png") == "/tmp/shot.jpg")
+        #expect(ImageFormat.png.retarget("/tmp/shot.jpg") == "/tmp/shot.png")
+        // Already correct: left alone rather than doubled up.
+        #expect(ImageFormat.png.retarget("/tmp/shot.png") == "/tmp/shot.png")
+        // ".jpeg" and ".jpg" name the same container; the written file settles on
+        // one spelling so a caller globbing for it does not have to try both.
+        #expect(ImageFormat.jpeg.retarget("/tmp/shot.jpeg") == "/tmp/shot.jpg")
+        // A caller's deliberate filename that is not an image extension keeps it
+        // and gains ours, rather than having a meaningful suffix truncated.
+        #expect(ImageFormat.png.retarget("/tmp/window-1.frame") == "/tmp/window-1.frame.png")
+        #expect(ImageFormat.png.retarget("/tmp/shot") == "/tmp/shot.png")
+    }
+}

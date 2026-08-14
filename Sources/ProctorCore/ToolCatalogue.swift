@@ -46,13 +46,21 @@ public enum ToolCatalogue {
         name: "proctor_apps",
         title: "List and attach applications",
         description: """
-        Enumerate running applications and their windows, and attach to the ones under test.
+        Enumerate running applications and their windows, attach to the ones under test, and \
+        bring one to the front.
 
         Attaching is what makes everything else work. It warms the accessibility tree, applies \
         AXManualAccessibility where the app is Chromium- or Electron-based, starts long-lived \
         observers, and begins retaining element references. A retained reference keeps resolving \
         when its window moves to another Space or behind other windows; a fresh enumeration will \
         not find it. Attach once per app at the start of a campaign and reuse the handles.
+
+        Use activate when an app is running but reports no windows, or is not running at all. \
+        Every actuating tool resolves a window handle first, so an app whose windows are all \
+        closed cannot be driven, and the menu item that would reopen one cannot be reached \
+        without the window it creates. activate launches or reopens the app the way a Dock click \
+        does, waits for a window to appear, attaches, and returns the handles. It goes through \
+        the same policy gate and audit trail as driving the app.
 
         Applying AXManualAccessibility is detectable by the target app and changes its \
         performance. The response reports whether it was applied so any methodology written on \
@@ -66,13 +74,14 @@ public enum ToolCatalogue {
             "properties": .object([
                 "action": .object([
                     "type": .string("string"),
-                    "enum": .array([.string("list"), .string("attach"), .string("detach")]),
-                    "description": .string("list enumerates without touching anything; attach begins a stateful session; detach releases refs and observers.")
+                    "enum": .array([.string("list"), .string("attach"), .string("activate"), .string("detach")]),
+                    "description": .string("list enumerates without touching anything; attach begins a stateful session; activate brings the app to the front, launching or reopening it so it has a window, then attaches; detach releases refs and observers.")
                 ]),
-                "bundleId": .object(["type": .string("string"), "description": .string("Bundle identifier to attach, e.g. com.apple.TextEdit.")]),
+                "bundleId": .object(["type": .string("string"), "description": .string("Bundle identifier to attach or activate, e.g. com.apple.TextEdit.")]),
                 "pid": .object(["type": .string("integer"), "description": .string("Process id, when the bundle identifier is ambiguous or absent.")]),
                 "name": .object(["type": .string("string"), "description": .string("Localised application name, matched case-insensitively.")]),
-                "app": .object(["type": .string("string"), "description": .string("An existing app handle, for detach.")]),
+                "app": .object(["type": .string("string"), "description": .string("An existing app handle, for detach or activate.")]),
+                "timeoutMs": .object(["type": .string("integer"), "description": .string("activate only: how long to wait for a window to appear. Defaults to 5000.")]),
                 "includeWindowless": .object(["type": .string("boolean"), "description": .string("Include background applications with no windows. Defaults to false.")])
             ]),
             "required": .array([.string("action")])
@@ -154,27 +163,21 @@ public enum ToolCatalogue {
         name: "proctor_act",
         title: "Perform a batch of actions, settling after each",
         description: """
-        Run a sequence of steps against a window, settling after each one and returning per-step \
-        outcome, the plane the action travelled through, a post-state hash and a tree diff. A \
-        six-step flow is one call.
+        Run a sequence of steps against a window, settling after each and returning per-step \
+        outcome, the plane the action travelled, a post-state hash and a tree diff. A six-step \
+        flow is one call.
 
-        Actions go through the process-directed plane by default — AXUIElementPerformAction, \
-        AXUIElementSetAttributeValue, Apple Events — which reaches non-frontmost, occluded and \
-        other-Space windows without stealing focus, and which Secure Event Input does not block. \
-        The step kinds dragPath, hover, click and key use synthetic event injection instead; \
-        those need the target foreground and are reported with plane=syntheticEvent so a result \
-        is never mistaken for a background-safe one. A step whose accessibility route is refused \
-        by the element fails rather than falling back to a synthetic event, since substituting \
-        one silently would turn a background-safe request into a foreground action. Reserve them for what accessibility genuinely \
-        cannot express: drag paths, canvas surfaces, hover-only states, and testing keyboard \
-        focus behaviour as such.
+        Steps use the process-directed plane by default (accessibility actions and Apple Events), \
+        which reaches non-frontmost, occluded and other-Space windows without stealing focus and \
+        survives Secure Event Input. The kinds dragPath, hover, click and key inject synthetic \
+        events instead: they need the window foreground and report plane=syntheticEvent, so a \
+        background-safe result is never faked. Reserve them for what accessibility cannot express \
+        — drags, canvas surfaces, hover states, keyboard-focus behaviour itself. A refused \
+        accessibility route fails rather than falling back silently.
 
         Settling is a conjunction of quiet capture frames, quiet accessibility notifications and \
         the app's own idle signal where a reflector is embedded, bounded by a timeout — never a \
-        sleep. Each step reports which signals were available and which one ended the wait.
-
-        On a step failure the batch stops and reports failedAt, so the model sees the state at \
-        the point of failure rather than a cascade.
+        sleep. On a step failure the batch stops and reports failedAt.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -229,57 +232,52 @@ public enum ToolCatalogue {
         name: "proctor_capture",
         title: "Screenshot a window, with freshness metadata",
         description: """
-        Capture a window with ScreenCaptureKit using a window-scoped filter, so the result \
-        contains that window alone rather than whatever happens to be on top of it.
+        Screenshot one window with ScreenCaptureKit, window-scoped, so the result contains that \
+        window alone rather than whatever is on top of it. The image is written to disk and the \
+        path returned; bytes are never returned inline.
 
-        Every capture reports its own trustworthiness: the frame status, the content rect, how \
-        many dirty rectangles the compositor reported and what fraction of the frame they cover, \
-        and how many frames were waited for. A stale frame looks identical to a correct one, so \
-        the metadata is the only thing that separates them. Off-screen windows in particular may \
-        emit complete frames only when the pointer moves on their display; when that happens the \
-        result comes back with trustworthy=false and a caveat naming the reason.
+        Check trustworthy before believing the frame. A stale frame looks identical to a correct \
+        one, so the freshness fields — status, contentRect, dirty-rectangle coverage, framesWaited \
+        — are the only thing separating them, and caveat names the reason when one cannot be \
+        confirmed. Off-screen windows may only emit complete frames when the pointer moves on \
+        their display.
 
-        Set annotate to burn numbered marks over the window's interactable accessibility elements \
-        (annotateAll marks every element with a frame, not just actionable ones). The marks are \
-        derived from the same pruned AX geometry proctor_snapshot returns, and the response \
-        carries a mark→node map so a vision model that references a numbered box — "click mark 7" \
-        — resolves it to a real element id. Mark numbers run in reading order and are stable for a \
-        given tree revision. Set grid to overlay reference lines every gridSpacing points. \
-        Annotation is additive: the un-annotated PNG stays at path and its freshness metadata is \
-        unchanged, while the marked PNG is written alongside it and named in annotation.annotatedPath.
+        normalize is on by default: the frame is scaled to fit ~1568px on the long edge and \
+        ~1.15MP, and normalization.scale reports the exact factor. Map a model coordinate back \
+        with native = normalised / scale. Pass normalize false for native pixels when asserting \
+        against native geometry. Raise normalizeMaxLongEdge/normalizeMaxPixels for a model with a \
+        larger ceiling, or set them to a provider's tile grid (768 for Gemini) to avoid paying for \
+        a tile holding a sliver of screen.
 
-        The PNG is written to disk and the path returned. Bytes are never returned inline.
+        annotate burns numbered marks over interactable elements and returns a mark→node map, so \
+        "click mark 7" resolves to a real element id; annotateAll marks everything with a frame, \
+        grid overlays reference lines. The un-annotated image stays at path, the marked one at \
+        annotation.annotatedPath.
 
-        Set normalize to pre-scale the frame to the vision-API ceiling (~1568px long edge / \
-        ~1.15MP) before returning it, and report the exact scale factor applied under \
-        normalization. An oversized frame handed straight to a vision model is silently \
-        downsampled by the API, so any coordinate the model returns is in a different space \
-        from the pixels Proctor measured — drift that corrupts pixel-plane assertions and \
-        tri-observer geometry. Doing the scaling here, and reporting scale = out/in, keeps the \
-        coordinate round-trip exact: a caller maps a model coordinate back with native = \
-        normalised / scale. Normalisation only ever shrinks; a frame already within the \
-        ceilings comes back unchanged with scale 1 and applied false. Raw capture stays the \
-        default so pixel assertions keep native resolution when they want it. normalizeMaxLongEdge \
-        and normalizeMaxPixels override the ceilings.
+        format defaults to png. jpeg is available for archiving many frames, and costs UI text: \
+        measured against a native-resolution baseline, OCR recall fell from 94% (png) to 91% at \
+        q85 and 78% at q50, with misread-as-different-word errors rising sixfold.
         """,
         inputSchema: .object([
             "type": .string("object"),
             "properties": .object([
                 "window": .object(["type": .string("string")]),
-                "path": .object(["type": .string("string"), "description": .string("Where to write the PNG. Defaults to a session temp directory.")]),
+                "path": .object(["type": .string("string"), "description": .string("Where to write the image. Defaults to a session temp directory.")]),
+                "format": .object(["type": .string("string"), "enum": .array([.string("png"), .string("jpeg")]), "description": .string("Container. Defaults to png; jpeg costs UI-text accuracy.")]),
+                "quality": .object(["type": .string("integer"), "description": .string("Lossy quality 60-100. Defaults to 90. Ignored for png.")]),
                 "waitForComplete": .object(["type": .string("boolean"), "description": .string("Keep pulling frames until one is .complete or the timeout expires. Defaults to true.")]),
                 "timeoutMs": .object(["type": .string("integer"), "description": .string("Defaults to 3000.")]),
                 "scale": .object(["type": .string("number"), "description": .string("Output scale. Defaults to the display's backing scale.")]),
                 "tileHashes": .object(["type": .string("boolean"), "description": .string("Also return per-tile perceptual hashes, for determinism comparison.")]),
                 "includeCursor": .object(["type": .string("boolean"), "description": .string("Defaults to false, since a cursor in the frame is a source of false diffs.")]),
-                "annotate": .object(["type": .string("boolean"), "description": .string("Burn numbered marks over interactable elements and return the mark→node map. Writes the marked PNG alongside the un-annotated one. Defaults to false.")]),
-                "annotateAll": .object(["type": .string("boolean"), "description": .string("Mark every element carrying a frame, not just actionable ones. Implies annotate. Defaults to false.")]),
-                "grid": .object(["type": .string("boolean"), "description": .string("Overlay reference grid lines. Independent of annotate — a grid can be drawn without marks. Defaults to false.")]),
+                "annotate": .object(["type": .string("boolean"), "description": .string("Burn numbered marks over interactable elements and return the mark→node map. Defaults to false.")]),
+                "annotateAll": .object(["type": .string("boolean"), "description": .string("Mark every element carrying a frame. Implies annotate. Defaults to false.")]),
+                "grid": .object(["type": .string("boolean"), "description": .string("Overlay reference grid lines. Independent of annotate. Defaults to false.")]),
                 "gridSpacing": .object(["type": .string("number"), "description": .string("Points between grid lines. Defaults to 100.")]),
-                "maxMarks": .object(["type": .string("integer"), "description": .string("Ceiling on marks drawn on a dense window; the overflow is dropped in reading order and reported as truncated. Defaults to 150.")]),
-                "normalize": .object(["type": .string("boolean"), "description": .string("Pre-scale the frame to the vision-API ceiling and report the exact scale factor under normalization. Opt-in; raw capture stays the default. Defaults to false.")]),
-                "normalizeMaxLongEdge": .object(["type": .string("integer"), "description": .string("Long-edge ceiling in pixels for normalize. Defaults to 1568.")]),
-                "normalizeMaxPixels": .object(["type": .string("integer"), "description": .string("Total-pixel ceiling for normalize. Defaults to 1150000 (~1.15MP).")])
+                "maxMarks": .object(["type": .string("integer"), "description": .string("Ceiling on marks drawn; the overflow is dropped in reading order and reported as truncated. Defaults to 150.")]),
+                "normalize": .object(["type": .string("boolean"), "description": .string("Fit the frame to the vision ceiling and report the exact scale. Defaults to true; pass false for native pixels.")]),
+                "normalizeMaxLongEdge": .object(["type": .string("integer"), "description": .string("Long-edge ceiling in pixels. Defaults to 1568.")]),
+                "normalizeMaxPixels": .object(["type": .string("integer"), "description": .string("Total-pixel ceiling. Defaults to 1150000 (~1.15MP).")])
             ]),
             "required": .array([.string("window")])
         ]),
@@ -292,39 +290,36 @@ public enum ToolCatalogue {
         name: "proctor_zoom",
         title: "Crop a region or element at native resolution",
         description: """
-        Return a native-resolution PNG crop of one region or one accessibility element, for \
-        reading small text or fine detail that a whole-window capture loses. A full capture is \
-        often normalised down for a vision model, and the pixels a label, a status glyph or a \
-        numeric field is written in do not survive that downscale; a crop of just the region of \
-        interest restores them without shipping a full 2x screenshot every time.
+        Return a native-resolution crop of one region or one accessibility element, for reading \
+        small text or fine detail a whole-window capture loses. proctor_capture normalises to the \
+        vision ceiling by default, and the pixels a label, glyph or numeric field is written in do \
+        not survive that downscale; this restores them without shipping a full 2x screenshot. \
+        Published benchmarks put the gain large: iterative crop-and-zoom lifts GUI grounding \
+        accuracy on high-resolution desktop software from roughly 19% to 48-73%.
 
-        Give either a region — [x, y, w, h] in points relative to the window's top-left corner, \
-        the same coordinate space proctor_wait uses — or a node id from proctor_find, whose \
-        accessibility frame is resolved and framed for you. padding adds context points on every \
-        side, which helps when the target is a few points tall. The compose path is \
-        find (locate the element) → zoom (read it) → assert.
+        Give either region — [x, y, w, h] in points from the window's top-left, the space \
+        proctor_wait uses — or node, an id from proctor_find whose frame is resolved for you. \
+        padding adds context points on every side. Aim for a region around 1000px on its long \
+        edge: much smaller and the model loses the surrounding context that disambiguates the \
+        target. The compose path is find → zoom → assert.
 
-        The crop is cut from an ordinary window capture taken at the display's native backing \
-        scale, so it carries exactly the same freshness metadata as proctor_capture — frame \
-        status, content rect, dirty-rectangle coverage, frames waited, and the trustworthy flag \
-        with its caveat when a frame could not be confirmed. A stale crop looks identical to a \
-        fresh one, so that metadata is what separates them, and it describes the frame the crop \
-        came from rather than being re-derived. The crop descriptor also names the pixel rectangle \
-        actually cut, whether it was clamped to the window, and the path to the un-cropped \
-        full-window PNG. A region with no area, or one that falls outside the captured frame, is \
-        an error naming the reason rather than an empty image.
-
-        The PNG is written to disk and the path returned. Bytes are never returned inline. Reading \
-        the text in the crop is left to the caller; this tool restores the pixels, it does not OCR them.
+        The crop is cut from a native-scale window capture, so it carries that capture's freshness \
+        metadata unchanged — check trustworthy and caveat as with proctor_capture. The descriptor \
+        names the pixel rect actually cut, whether it was clamped to the window, and the path to \
+        the un-cropped full-window image. A region with no area, or one outside the frame, is an \
+        error naming the reason rather than an empty image. Reading the text is left to the \
+        caller; this restores the pixels, it does not OCR them.
         """,
         inputSchema: .object([
             "type": .string("object"),
             "properties": .object([
                 "window": .object(["type": .string("string"), "description": .string("Window handle from proctor_apps to capture and crop.")]),
-                "region": .object(["type": .string("array"), "items": .object(["type": .string("number")]), "description": .string("[x, y, w, h] in points relative to the window's top-left corner. Supply this or node.")]),
-                "node": .object(["type": .string("string"), "description": .string("A node id from proctor_find; its accessibility frame is resolved and cropped. Supply this or region.")]),
-                "padding": .object(["type": .string("number"), "description": .string("Context points added on every side of the region or element. Defaults to 0.")]),
-                "path": .object(["type": .string("string"), "description": .string("Where to write the crop PNG. Defaults to a session temp directory.")]),
+                "region": .object(["type": .string("array"), "items": .object(["type": .string("number")]), "description": .string("[x, y, w, h] in points from the window's top-left. Supply this or node.")]),
+                "node": .object(["type": .string("string"), "description": .string("A node id from proctor_find; its frame is resolved and cropped. Supply this or region.")]),
+                "padding": .object(["type": .string("number"), "description": .string("Context points added on every side. Defaults to 0.")]),
+                "path": .object(["type": .string("string"), "description": .string("Where to write the crop. Defaults to a session temp directory.")]),
+                "format": .object(["type": .string("string"), "enum": .array([.string("png"), .string("jpeg")]), "description": .string("Container for the crop. Defaults to png, which is what makes small text readable.")]),
+                "quality": .object(["type": .string("integer"), "description": .string("Lossy quality 60-100. Defaults to 90. Ignored for png.")]),
                 "waitForComplete": .object(["type": .string("boolean"), "description": .string("Keep pulling frames until one is .complete or the timeout expires. Defaults to true.")]),
                 "timeoutMs": .object(["type": .string("integer"), "description": .string("Defaults to 3000.")]),
                 "scale": .object(["type": .string("number"), "description": .string("Capture scale. Defaults to the display's backing scale, which is what makes the crop native-resolution.")]),
@@ -612,24 +607,19 @@ public enum ToolCatalogue {
         title: "Drive a window with the stock Anthropic computer-use schema",
         description: """
         Accept a single Anthropic `computer` action in its stock schema and run it against a \
-        window, so a model trained on that tool drives Proctor with no prompt changes. This is an \
-        additive adapter: the native eleven tools are unchanged, and a run that does not use this \
-        tool is unaffected.
+        window, so a model trained on that tool drives Proctor unchanged. Additive: the native \
+        tools are unaffected.
 
-        Supported actions map onto Proctor's own step vocabulary: screenshot (a window capture), \
-        left_click / double_click / triple_click, mouse_move, type, key (an xdotool combo such as \
-        "cmd+s"), scroll (scroll_direction plus scroll_amount), left_click_drag (needs a \
-        start_coordinate, since the façade tracks no cursor), and wait. Coordinates are read in \
-        the screenshot's own space — the target window's top-left is the origin — and mapped to \
-        the global screen point the actuation needs; pass scale for a screenshot taken at other \
-        than 1x.
+        Maps: screenshot, left_click / double_click / triple_click, mouse_move, type, key (an \
+        xdotool combo such as "cmd+s"), scroll (scroll_direction plus scroll_amount), \
+        left_click_drag (needs start_coordinate, since the façade tracks no cursor), and wait. \
+        Coordinates are read in the screenshot's own space, origin at the window's top-left, and \
+        mapped to the global screen point; pass scale for a non-1x screenshot.
 
-        These are synthetic-event actions: they need the window frontmost and are reported with \
-        plane=syntheticEvent, never as a background-safe result. foreground therefore defaults to \
-        true. right_click, middle_click and cursor_position have no faithful mapping today and are \
-        refused with a reason rather than mis-actuated. Every step is returned with the original \
-        action, what it became, the plane it travelled and the post-state hash, so a façade-driven \
-        run is as auditable as a native one.
+        These are synthetic events, so they need the window frontmost and report \
+        plane=syntheticEvent; foreground defaults to true. right_click, middle_click and \
+        cursor_position are refused with a reason rather than mis-actuated. Each step returns the \
+        original action, its translation, the plane travelled and the post-state hash.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -653,23 +643,19 @@ public enum ToolCatalogue {
         name: "proctor_openai_computer",
         title: "Drive a window with the stock OpenAI computer-use schema",
         description: """
-        Accept OpenAI `openai_computer` actions in their stock schema — a single action or a batch \
-        array — and run them against a window in order, stopping on the first failure and \
-        reporting per-step outcome, which is the shape an OpenAI computer-use agent expects. Like \
-        its Anthropic counterpart this is additive and opt-in; the native tool surface is \
-        unchanged.
+        Accept OpenAI `openai_computer` actions in their stock schema — a single action or a \
+        batch array — and run them against a window in order, stopping at the first failure and \
+        reporting failedAt. Additive and opt-in; the native surface is unchanged.
 
-        Supported action types map onto Proctor's step vocabulary: screenshot, click (left button \
-        only), double_click, move, type, keypress (a keys array such as ["ctrl","c"]), scroll \
-        (scroll_x / scroll_y at a point), drag (a path of points), and wait. Coordinates are read \
-        in the screenshot's own space — the window's top-left is the origin — and mapped to the \
-        global screen point actuation needs; pass scale for a non-1x screenshot.
+        Maps: screenshot, click (left button only), double_click, move, type, keypress (a keys \
+        array such as ["ctrl","c"]), scroll (scroll_x / scroll_y at a point), drag (a path of \
+        points), and wait. Coordinates are read in the screenshot's own space, origin at the \
+        window's top-left; pass scale for a non-1x screenshot.
 
-        The mapped actions are synthetic events, so they need the window frontmost and are \
-        reported with plane=syntheticEvent; foreground defaults to true. A non-left mouse button \
-        has no faithful mapping today and is refused rather than turned into a left click. The \
-        batch stops at the first failing step and reports failedAt, and every step carries the \
-        original action, its translation and the post-state hash for audit.
+        Mapped actions are synthetic events: they need the window frontmost, report \
+        plane=syntheticEvent, and foreground defaults to true. A non-left mouse button is refused \
+        rather than turned into a left click. Each step carries the original action, its \
+        translation and the post-state hash.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -732,24 +718,18 @@ public enum ToolCatalogue {
         name: "proctor_dictionary",
         title: "Read an app's scripting dictionary (sdef)",
         description: """
-        Read an attached application's scripting definition — its suites, commands, classes, \
-        properties and enumerations — and return it as structured data plus a one-line capability \
-        summary. This makes the Apple-Events plane self-describing: instead of guessing whether an \
-        app is scriptable or hard-coding AppleScript, a caller queries the app's own dictionary and \
-        chooses the cheapest reliable route per task — scripting where a command is exact, \
-        accessibility where it is not.
+        Read an attached application's scripting definition — suites, commands, classes, \
+        properties and enumerations — as structured data plus a one-line capability summary. This \
+        makes the Apple-Events plane self-describing, so a caller picks the cheapest reliable route \
+        per task: scripting where a command is exact, accessibility where it is not.
 
-        The dictionary is resolved from the running app's bundle (via the same merge the `sdef` \
-        tool performs, so the standard suite and terminology are already folded in) and cached per \
-        app handle. Because a handle's identity changes when the app relaunches, the cache \
-        invalidates on relaunch on its own; pass refresh to re-read regardless.
+        Resolved from the running app's bundle with the standard suite already merged, and cached \
+        per app handle; the cache invalidates on relaunch on its own, and refresh re-reads \
+        regardless. An app exposing no scripting commands returns scriptable=false with a route \
+        hint rather than an error — that is the signal to use proctor_snapshot and proctor_act.
 
-        An app that exposes no scripting commands is reported plainly with scriptable=false and a \
-        route hint, not as an error — "not scriptable" is exactly the signal that tells a caller to \
-        use proctor_snapshot and proctor_act instead. This tool only reads; actuation stays through \
-        proctor_act (its appleScript and shortcut steps) with settle and provenance.
-
-        Pass summaryOnly to get the capability summary and counts without the full suite listing.
+        Read-only; actuation stays in proctor_act. summaryOnly returns the summary and counts \
+        without the full suite listing.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -769,23 +749,18 @@ public enum ToolCatalogue {
         name: "proctor_policy",
         title: "Configure the app policy gate and read the redacting audit trail",
         description: """
-        Operator-facing safety plumbing, not a product surface. Two paired rails: a policy gate \
-        that decides which applications Proctor may drive, and a redacting audit trail that records \
-        every action without storing what was typed.
+        Operator-facing safety plumbing: a policy gate deciding which applications Proctor may \
+        drive, and a redacting audit trail recording every action without storing what was typed.
 
-        The gate is keyed by bundle identifier and fails closed. `block` lists apps that are always \
-        refused. `allow`, when non-empty, is an allow list: anything not on it — including an app \
-        whose bundle id cannot be resolved — is refused, so the agent cannot wander into a password \
-        manager or banking app by accident. `sensitive` lists apps that may be driven only while a \
-        short-lived approval token is held, exactly as the unlock turn is time-bounded, so a crashed \
-        caller leaves no standing authority.
+        The gate is keyed by bundle identifier and fails closed. block is always refused. allow, \
+        when non-empty, is an allow list — anything not on it, including an app whose bundle id \
+        cannot be resolved, is refused. sensitive applications may be driven only while a \
+        short-lived approval token is held, so a crashed caller leaves no standing authority.
 
-        Actions: `status` reports the current lists, whether an approval token is live and where the \
-        audit log lives; `configure` replaces any of the allow/block/sensitive sets you supply; \
-        `approve` mints an approval token, optionally scoped to one bundle id, with a TTL; `revoke` \
-        drops it; `audit` returns the most recent JSONL lines. In the audit, typed values and script \
-        bodies are stored as length plus SHA-256 — never in the clear — so the trail proves what was \
-        entered without leaking the secret, and is safe to keep after an unattended run.
+        Actions: status reports the lists, whether a token is live and where the audit log lives; \
+        configure replaces any of the sets you supply; approve mints a token, optionally scoped to \
+        one bundle id, with a TTL; revoke drops it; audit returns recent JSONL lines. Typed values \
+        and script bodies are stored as length plus SHA-256, never in the clear.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -831,22 +806,19 @@ public enum ToolCatalogue {
         name: "proctor_kill",
         title: "List and terminate processes for test setup and teardown",
         description: """
-        List running processes and terminate the ones a query names, so a campaign can reset state \
-        between runs: kill the application under test, relaunch it clean, and know it started fresh. \
-        Match by bundle identifier, localised name, or process id; all supplied conditions must \
-        hold, so name plus bundle id narrows rather than widens.
+        List running processes and terminate the ones a query names, so a campaign can reset \
+        state between runs. Match by bundle identifier, localised name, or process id; all supplied \
+        conditions must hold, so name plus bundle id narrows rather than widens.
 
-        Terminating is destructive, so it goes through the same policy gate that governs driving an \
-        app (proctor_policy): an application on the block list is never killed, an allow list in \
-        force refuses anything it does not name — including a bare pid with no resolvable bundle id, \
-        so the gate fails closed — and a sensitive application requires a current approval token. \
-        Every attempt, allowed or refused, is written to the redacting audit trail naming the \
-        target and the outcome.
+        Terminating is destructive and goes through the proctor_policy gate: a blocked application \
+        is never killed, an allow list in force refuses anything it does not name — including a \
+        bare pid with no resolvable bundle id — and a sensitive application requires a current \
+        approval token. Every attempt, allowed or refused, is audited. The kernel, launchd and the \
+        agent's own process are never signalled.
 
-        The kernel, launchd and the agent's own process are never signalled. `list` enumerates \
-        matches without touching anything; `kill` delivers a graceful terminate, or a forced one \
-        when force is set, and reports per-target outcome so a partial teardown is visible rather \
-        than reported as a whole success.
+        list enumerates matches without touching anything; kill delivers a graceful terminate, or \
+        a forced one when force is set, reporting per-target outcome so a partial teardown is \
+        visible rather than reported as a whole success.
         """,
         inputSchema: .object([
             "type": .string("object"),

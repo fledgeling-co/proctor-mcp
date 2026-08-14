@@ -25,7 +25,8 @@ extension Session {
               waitForComplete: Bool,
               timeoutMs: Int,
               scale: Double?,
-              includeCursor: Bool) async throws -> JSONValue {
+              includeCursor: Bool,
+              encoding: ImageEncodingOptions = .default) async throws -> JSONValue {
         let window = try windowHandle(id)
 
         // Resolve the region in window points, from an explicit rect or a node's
@@ -68,7 +69,11 @@ extension Session {
 
         // Capture the whole window at native scale; the crop is cut from it, and
         // the un-cropped PNG is kept alongside so the full context stays available.
-        let cropPath = path ?? Session.defaultZoomPath(for: window)
+        // The full-window frame the crop is cut from is always written lossless
+        // and at native scale: it is the source of the cut, and re-encoding it
+        // would put compression artefacts into the very pixels zoom exists to
+        // preserve. Only the crop honours the caller's format.
+        let cropPath = encoding.format.retarget(path ?? Session.defaultZoomPath(for: window))
         let fullPath = Session.fullPath(besideCrop: cropPath)
         let full = try await capture.capture(window: window, to: fullPath,
                                              waitForComplete: waitForComplete,
@@ -85,7 +90,8 @@ extension Session {
                                       width: full.width, height: full.height, scale: full.scale)
         }
 
-        try Session.cropPNG(from: full.path, to: cropPath, pixelRect: placement.pixelRect)
+        try Session.cropPNG(from: full.path, to: cropPath, pixelRect: placement.pixelRect,
+                            format: encoding.format, quality: encoding.quality)
 
         // Freshness is the capture's own, unmodified: the crop is part of the same
         // frame, so its status, dirty coverage, frames waited and trustworthiness
@@ -159,15 +165,17 @@ extension Session {
 
     // MARK: - Cropping
 
-    /// Cut a pixel rectangle out of a PNG on disk and write it as a new PNG. The
-    /// source is the lossless full-window capture, so the cut is the exact native
-    /// pixels of the region — nothing is rescaled.
-    static func cropPNG(from sourcePath: String, to destPath: String, pixelRect: Rect) throws {
+    /// Cut a pixel rectangle out of the full-window capture on disk and write it
+    /// as a new file. The source is the lossless native-scale capture, so the cut
+    /// is the exact native pixels of the region — nothing is rescaled, which is
+    /// the whole point of zooming rather than enlarging a normalised frame.
+    static func cropPNG(from sourcePath: String, to destPath: String, pixelRect: Rect,
+                        format: ImageFormat = .png, quality: Int? = nil) throws {
         let url = URL(fileURLWithPath: sourcePath)
         guard let src = CGImageSourceCreateWithURL(url as CFURL, nil),
               let image = CGImageSourceCreateImageAtIndex(src, 0, nil) else {
             throw AgentError(code: .captureFailed,
-                             message: "the captured PNG at \(sourcePath) could not be read back to crop",
+                             message: "the captured image at \(sourcePath) could not be read back to crop",
                              remedy: "Retry; if it persists, check the capture directory is writable.")
         }
         let rect = CGRect(x: pixelRect.x, y: pixelRect.y, width: pixelRect.w, height: pixelRect.h)
@@ -176,19 +184,7 @@ extension Session {
             throw AgentError(code: .internalError,
                              message: "cropping the frame to \(describe(pixelRect)) pixels failed")
         }
-        let destURL = URL(fileURLWithPath: destPath)
-        try? FileManager.default.createDirectory(at: destURL.deletingLastPathComponent(),
-                                                 withIntermediateDirectories: true)
-        guard let dest = CGImageDestinationCreateWithURL(
-            destURL as CFURL, UTType.png.identifier as CFString, 1, nil) else {
-            throw AgentError(code: .captureFailed,
-                             message: "could not open \(destPath) for writing the crop PNG",
-                             remedy: "Check the directory exists and is writable.")
-        }
-        CGImageDestinationAddImage(dest, cropped, nil)
-        guard CGImageDestinationFinalize(dest) else {
-            throw AgentError(code: .captureFailed,
-                             message: "writing the crop PNG to \(destPath) failed")
-        }
+        try ImageWriter.write(cropped, to: destPath, format: format, quality: quality,
+                              what: "crop")
     }
 }

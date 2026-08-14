@@ -13,6 +13,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Self.applyPolicy()
         Self.registerLoginItem()
 
+        // Opening Proctor should leave the agent running: the agent is the
+        // thing an MCP host actually talks to, and a window reporting that it
+        // is down — with a button to fix it — is a worse answer than starting
+        // it. Off the main thread because bootstrapping can take a moment and
+        // the fallback shells out to the installer; the model's own polling
+        // picks the change up and updates the window.
+        DispatchQueue.global(qos: .userInitiated).async { Actions.ensureAgent() }
+
         let firstRun = !UserDefaults.standard.bool(forKey: "walkthroughCompleted")
         let window = NSApp.windows.first(where: { $0.title == "Proctor" })
 

@@ -16,7 +16,9 @@ extension Session {
         let tool: String
         let app: String?
         let bundleId: String?
-        let window: String
+        /// Nil for an app-scoped action (activation), which has no window to key
+        /// on. The audit record's own window field is optional for the same reason.
+        let window: String?
     }
 
     func loadPolicyIfNeeded() {
@@ -37,24 +39,36 @@ extension Session {
     /// is in force.
     @discardableResult
     func enforcePolicy(tool: String, window: WindowHandle) throws -> AuditContext {
-        loadPolicyIfNeeded()
         let app = appHandle(forWindow: window)
-        let bundleId = app?.bundleId
-        let context = AuditContext(tool: tool, app: app?.id, bundleId: bundleId, window: window.id)
+        return try enforcePolicy(tool: tool, app: app, bundleId: app?.bundleId,
+                                 window: window.id)
+    }
 
-        switch policy.decide(bundleId: bundleId, hasValidToken: tokenValid(for: bundleId)) {
+    /// The same gate for a tool acting on a whole application rather than one of
+    /// its windows. Activating an app has no window to key on (an app with every
+    /// window closed is exactly the case that needs it), so the decision is made
+    /// on the bundle id alone. It fails closed the same way: an app whose bundle
+    /// id cannot be resolved is refused whenever an allow list is in force.
+    @discardableResult
+    func enforcePolicy(tool: String, app: AppHandle?, bundleId: String?,
+                       window: String? = nil) throws -> AuditContext {
+        loadPolicyIfNeeded()
+        let resolved = bundleId ?? app?.bundleId
+        let context = AuditContext(tool: tool, app: app?.id, bundleId: resolved, window: window)
+
+        switch policy.decide(bundleId: resolved, hasValidToken: tokenValid(for: resolved)) {
         case .allow:
             return context
         case .blocked(let reason):
             AuditLog.append(AuditRecord(timestamp: Date().timeIntervalSince1970, tool: tool,
-                                        app: app?.id, bundleId: bundleId, window: window.id,
+                                        app: app?.id, bundleId: resolved, window: window,
                                         outcome: "refused", reason: reason))
             throw AgentError(code: .policyDenied, message: reason,
                              remedy: "Remove the app from the block list with proctor_policy action "
                                    + "\"configure\", or drive a different application.")
         case .needsApproval(let reason):
             AuditLog.append(AuditRecord(timestamp: Date().timeIntervalSince1970, tool: tool,
-                                        app: app?.id, bundleId: bundleId, window: window.id,
+                                        app: app?.id, bundleId: resolved, window: window,
                                         outcome: "refused", reason: reason))
             throw AgentError(code: .policyDenied, message: reason,
                              remedy: "Mint an approval token with proctor_policy action \"approve\" "

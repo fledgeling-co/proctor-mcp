@@ -221,18 +221,33 @@ actor Session {
                              message: "attach needs one of bundleId, pid or name",
                              remedy: "Call proctor_apps with action \"list\" to find one.")
         }
-        let (app, provenance) = try ax.attach(bundleId: bundleId, pid: pid, name: name)
-        apps[app.id] = app
-        provenanceByApp[app.id] = provenance
-
-        let windows = (try? ax.windows(app: app.id)) ?? []
-        for window in windows { windowsByID[window.id] = window }
+        let (app, windows, provenance) = try attachResolved(bundleId: bundleId, pid: pid, name: name)
 
         return .object([
             "app": try JSONValue.encode(app),
             "windows": .array(try windows.map { try JSONValue.encode($0) }),
             "provenance": try JSONValue.encode(provenance)
         ])
+    }
+
+    /// Attach and record the bookkeeping, returning the handles rather than the
+    /// wire shape. Shared with activate, which attaches repeatedly while it waits
+    /// for a window to appear and needs the handles rather than encoded JSON.
+    func attachResolved(bundleId: String?, pid: Int32?,
+                        name: String?) throws -> (AppHandle, [WindowHandle], TreeProvenance) {
+        let (app, provenance) = try ax.attach(bundleId: bundleId, pid: pid, name: name)
+        apps[app.id] = app
+        provenanceByApp[app.id] = provenance
+
+        let windows = (try? ax.windows(app: app.id)) ?? []
+        for window in windows { windowsByID[window.id] = window }
+        return (app, windows, provenance)
+    }
+
+    /// The attached app whose process matches `pid`, if any. Activation needs it
+    /// to name the target in an audit record before anything is brought forward.
+    func attachedApp(pid: Int32) -> AppHandle? {
+        apps.values.first { $0.pid == pid }
     }
 
     func detach(app id: String) throws -> JSONValue {
@@ -337,6 +352,7 @@ actor Session {
     func captureWindow(_ id: String, path: String?, waitForComplete: Bool, timeoutMs: Int,
                        scale: Double?, tileHashes: Bool, includeCursor: Bool,
                        normalize: CaptureNormalizeOptions? = nil,
+                       encoding: ImageEncodingOptions = .default,
                        annotate: AnnotateOptions = AnnotateOptions()) async throws -> JSONValue {
         let window = try windowHandle(id)
         // A caller redirecting the write outside the declared filesystem roots is
@@ -348,7 +364,8 @@ actor Session {
                                                timeoutMs: timeoutMs, scale: scale,
                                                tileHashes: tileHashes,
                                                includeCursor: includeCursor,
-                                               normalize: normalize)
+                                               normalize: normalize,
+                                               encoding: encoding)
         // Freshness metadata passes through untouched. Rewriting or defaulting
         // any of it would erase the only thing separating a stale frame from a
         // correct one. Annotation is layered on top: it reads the geometry the

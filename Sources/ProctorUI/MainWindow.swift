@@ -83,7 +83,7 @@ private struct ReadinessSection: View {
                     Text("Until it is running, permissions cannot be read and no test can run.")
                         .font(.system(size: 12)).foregroundStyle(.tertiary)
                     HStack {
-                        Button("Start the agent") { Actions.loadAgent(); model.refresh() }
+                        Button("Start the agent") { Actions.ensureAgent(); model.refresh() }
                             .buttonStyle(.borderedProminent)
                         Button("Re-check") { model.refresh() }
                     }
@@ -440,20 +440,64 @@ enum Actions {
 
     static let label = "app.fledgeling.procter.agent"
 
-    static func loadAgent()    { launchctl(["kickstart", "-k", "gui/\(getuid())/\(label)"]) }
-    static func restartAgent() { launchctl(["kickstart", "-k", "gui/\(getuid())/\(label)"]) }
+    private static var domain: String { "gui/\(getuid())" }
+
+    private static var plistPath: String {
+        FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/LaunchAgents/\(label).plist").path
+    }
+
+    /// Make sure the agent is loaded into the launchd domain and running.
+    ///
+    /// `kickstart` starts a job that is already in the domain and fails on one
+    /// that is not — and quitting Proctor boots the job out of the domain,
+    /// which is what "quit everything" means. So the pair left a hole: after a
+    /// quit, opening the app again found no job to kickstart and the agent
+    /// stayed down until somebody pressed Start. Bootstrap it back from the
+    /// plist when it is missing, and fall back to the bundled shim's installer
+    /// when the plist has never been written at all.
+    static func ensureAgent() {
+        if launchctl(["print", "\(domain)/\(label)"]) == 0 {
+            launchctl(["kickstart", "\(domain)/\(label)"])
+            return
+        }
+        if FileManager.default.fileExists(atPath: plistPath),
+           launchctl(["bootstrap", domain, plistPath]) == 0 {
+            launchctl(["kickstart", "\(domain)/\(label)"])
+            return
+        }
+        installViaShim()
+    }
+
+    /// The installer of record lives in the shim, which writes the plist,
+    /// bootstraps the job and waits for the socket. Shelling out to it keeps
+    /// one definition of the launchd job rather than a second copy here.
+    private static func installViaShim() {
+        guard let shim = Bundle.main.url(forAuxiliaryExecutable: "proctor-shim") else { return }
+        let process = Process()
+        process.executableURL = shim
+        process.arguments = ["install"]
+        process.standardOutput = Pipe()
+        process.standardError = Pipe()
+        try? process.run()
+        process.waitUntilExit()
+    }
+
+    static func restartAgent() { launchctl(["kickstart", "-k", "\(domain)/\(label)"]) }
 
     /// Stop the background agent. Used on quit so "Quit Proctor" means everything
     /// off, not just this window. The LaunchAgent plist stays on disk, so the
     /// agent is loaded again at the next login — this is "off now", not uninstall.
-    static func stopAgent() { launchctl(["bootout", "gui/\(getuid())/\(label)"]) }
+    static func stopAgent() { launchctl(["bootout", "\(domain)/\(label)"]) }
 
-    private static func launchctl(_ args: [String]) {
+    @discardableResult
+    private static func launchctl(_ args: [String]) -> Int32 {
         let p = Process()
         p.executableURL = URL(fileURLWithPath: "/bin/launchctl")
         p.arguments = args
         p.standardOutput = Pipe(); p.standardError = Pipe()
-        try? p.run()
+        do { try p.run() } catch { return -1 }
         p.waitUntilExit()
+        return p.terminationStatus
     }
 }

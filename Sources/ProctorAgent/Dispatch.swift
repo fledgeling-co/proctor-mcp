@@ -93,13 +93,19 @@ struct Dispatcher: Sendable {
     // MARK: - proctor_apps
 
     private func apps(_ args: Args) async throws -> JSONValue {
-        switch try args.enumeration("action", of: ["list", "attach", "detach"]) {
+        switch try args.enumeration("action", of: ["list", "attach", "activate", "detach"]) {
         case "list":
             return try await session.listApps(includeWindowless: args.bool("includeWindowless", false))
         case "attach":
             return try await session.attach(bundleId: args.string("bundleId"),
                                             pid: args.int("pid").map(Int32.init),
                                             name: args.string("name"))
+        case "activate":
+            return try await session.activate(bundleId: args.string("bundleId"),
+                                              pid: args.int("pid").map(Int32.init),
+                                              name: args.string("name"),
+                                              app: args.string("app"),
+                                              timeoutMs: args.int("timeoutMs") ?? 5000)
         default:
             return try await session.detach(app: try args.requiredString("app"))
         }
@@ -166,8 +172,16 @@ struct Dispatcher: Sendable {
         annotate.grid = args.bool("grid", false)
         annotate.gridSpacing = args.double("gridSpacing") ?? 100
         annotate.maxMarks = args.int("maxMarks") ?? SetOfMarks.defaultMaxMarks
+        // Normalisation is on by default on the model-facing path. An oversized
+        // frame is downsampled by the vision API anyway, so the choice is not
+        // "full resolution or not" — it is whether the shrink happens here, where
+        // the factor is measured and reported, or there, where it is silent and
+        // every coordinate the model returns is in a space Proctor cannot invert.
+        // Callers that genuinely need native pixels (pixel-plane assertions) pass
+        // normalize: false; the internal capture paths — settle, act/assert/flow
+        // evidence, tri-observer — never reach here and stay native regardless.
         var normalize: CaptureNormalizeOptions?
-        if args.bool("normalize", false) {
+        if args.bool("normalize", true) {
             normalize = CaptureNormalizeOptions(
                 maxLongEdge: args.int("normalizeMaxLongEdge") ?? VisionCapture.defaultMaxLongEdge,
                 maxPixels: args.int("normalizeMaxPixels") ?? VisionCapture.defaultMaxPixels)
@@ -180,7 +194,26 @@ struct Dispatcher: Sendable {
                                         tileHashes: args.bool("tileHashes", false),
                                         includeCursor: args.bool("includeCursor", false),
                                         normalize: normalize,
+                                        encoding: try Self.encoding(args),
                                         annotate: annotate)
+    }
+
+    /// Parse the shared `format` / `quality` pair. An unrecognised format is an
+    /// error naming what is accepted rather than a silent fall back to PNG — a
+    /// caller who asked for WebP needs to learn macOS cannot write it, not to
+    /// receive a PNG and wonder why the file is large.
+    private static func encoding(_ args: Args) throws -> ImageEncodingOptions {
+        guard let raw = args.string("format"), !raw.isEmpty else {
+            return ImageEncodingOptions(format: .png, quality: args.int("quality"))
+        }
+        guard let format = ImageFormat.parse(raw) else {
+            throw AgentError(
+                code: .invalidArguments,
+                message: "format \"\(raw)\" is not a container Proctor can write",
+                remedy: "Use \"png\" (lossless, the default) or \"jpeg\". macOS ships no WebP "
+                      + "encoder, so WebP is not available.")
+        }
+        return ImageEncodingOptions(format: format, quality: args.int("quality"))
     }
 
     // MARK: - proctor_zoom
@@ -195,7 +228,8 @@ struct Dispatcher: Sendable {
                                       waitForComplete: args.bool("waitForComplete", true),
                                       timeoutMs: args.int("timeoutMs") ?? 3000,
                                       scale: args.double("scale"),
-                                      includeCursor: args.bool("includeCursor", false))
+                                      includeCursor: args.bool("includeCursor", false),
+                                      encoding: try Self.encoding(args))
     }
 
     // MARK: - proctor_wait

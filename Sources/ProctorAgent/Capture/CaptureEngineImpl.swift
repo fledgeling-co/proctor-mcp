@@ -29,7 +29,8 @@ final class CaptureEngineImpl: CaptureEngine {
     func capture(window: WindowHandle, to path: String?, waitForComplete: Bool,
                  timeoutMs: Int, scale: Double?, tileHashes: Bool,
                  includeCursor: Bool,
-                 normalize: CaptureNormalizeOptions?) async throws -> CaptureResult {
+                 normalize: CaptureNormalizeOptions?,
+                 encoding: ImageEncodingOptions) async throws -> CaptureResult {
 
         let content = try await StreamBuilder.shareableContent()
         let scWindow = try StreamBuilder.resolve(window: window, in: content)
@@ -85,7 +86,8 @@ final class CaptureEngineImpl: CaptureEngine {
                     + "to the active Space or retry with a longer timeout.")
         }
 
-        let destination = path ?? defaultPath(for: window)
+        let destination = encoding.format.retarget(path ?? defaultPath(for: window,
+                                                                      format: encoding.format))
 
         // The backing scale of the captured frame, in pixels per point. This is
         // the number the result has always reported as `scale`; normalisation
@@ -106,7 +108,8 @@ final class CaptureEngineImpl: CaptureEngine {
             var wroteScaled = false
             if fit.applied,
                let scaled = CaptureEngineImpl.downscale(pixels, toWidth: fit.width, toHeight: fit.height) {
-                try writeImagePNG(scaled, to: destination)
+                try ImageWriter.write(scaled, to: destination,
+                                      format: encoding.format, quality: encoding.quality)
                 outWidth = fit.width
                 outHeight = fit.height
                 outScale = nativePixelScale * fit.scale
@@ -115,7 +118,8 @@ final class CaptureEngineImpl: CaptureEngine {
                 // Already within the ceilings, or a resample the pipeline could
                 // not perform: write the native frame and report scale 1 so the
                 // caller who opted in still learns nothing needed doing.
-                try writePNG(pixels, to: destination)
+                try writePNG(pixels, to: destination,
+                             format: encoding.format, quality: encoding.quality)
             }
             normalization = CaptureNormalization(
                 scale: wroteScaled ? fit.scale : 1,
@@ -127,7 +131,8 @@ final class CaptureEngineImpl: CaptureEngine {
                 maxLongEdge: normalize.maxLongEdge,
                 maxPixels: normalize.maxPixels)
         } else {
-            try writePNG(pixels, to: destination)
+            try writePNG(pixels, to: destination,
+                         format: encoding.format, quality: encoding.quality)
         }
 
         let contentRectIsReal = (meta.contentRect?.w ?? 0) > 0 && (meta.contentRect?.h ?? 0) > 0
@@ -215,40 +220,21 @@ final class CaptureEngineImpl: CaptureEngine {
 
     // MARK: - Output
 
-    private func defaultPath(for window: WindowHandle) -> String {
+    private func defaultPath(for window: WindowHandle, format: ImageFormat) -> String {
         try? FileManager.default.createDirectory(atPath: captureDirectory,
                                                  withIntermediateDirectories: true)
         let stamp = Int(Date().timeIntervalSince1970 * 1000)
         let safe = window.id.replacingOccurrences(of: ":", with: "-")
-        return "\(captureDirectory)/\(safe)-\(stamp).png"
+        return "\(captureDirectory)/\(safe)-\(stamp).\(format.fileExtension)"
     }
 
-    private func writePNG(_ pixels: FramePixels, to path: String) throws {
+    private func writePNG(_ pixels: FramePixels, to path: String,
+                          format: ImageFormat, quality: Int?) throws {
         guard let image = CaptureEngineImpl.makeImage(pixels) else {
             throw AgentError(code: .captureFailed,
                              message: "The captured frame could not be turned into an image.")
         }
-        try writeImagePNG(image, to: path)
-    }
-
-    /// Write a CGImage out as a PNG. Shared by the raw-frame path and the
-    /// normalised path, so both land through one place that creates the
-    /// directory and reports the same failures.
-    private func writeImagePNG(_ image: CGImage, to path: String) throws {
-        let url = URL(fileURLWithPath: path)
-        try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
-                                                 withIntermediateDirectories: true)
-        guard let dest = CGImageDestinationCreateWithURL(
-            url as CFURL, UTType.png.identifier as CFString, 1, nil) else {
-            throw AgentError(code: .captureFailed,
-                             message: "Could not open \(path) for writing a PNG.",
-                             remedy: "Check the directory exists and is writable.")
-        }
-        CGImageDestinationAddImage(dest, image, nil)
-        guard CGImageDestinationFinalize(dest) else {
-            throw AgentError(code: .captureFailed,
-                             message: "Writing the PNG to \(path) failed.")
-        }
+        try ImageWriter.write(image, to: path, format: format, quality: quality)
     }
 
     /// Resample a captured frame down to the given pixel dimensions, for vision

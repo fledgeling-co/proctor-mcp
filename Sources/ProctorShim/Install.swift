@@ -209,7 +209,13 @@ enum Installer {
         print("")
         print("Add Proctor to an MCP host:")
         print("")
-        print("  claude mcp add proctor -- \(shimPath) serve")
+        print("  claude mcp add proctor -- \(shimPath) serve --profile core")
+        print("")
+        print("The tool catalogue is re-sent on every turn and survives context")
+        print("compaction, so the advertised surface is a standing cost. --profile core")
+        print("advertises the ten tools that drive a Mac (~6.8k tokens); the default,")
+        print("--profile full, advertises all nineteen (~11.3k). Widen with --profile")
+        print("scripting or full when you need flows, policy, kill or the CUA adapters.")
         print("")
         print("Or, for a host that takes an mcpServers block:")
         print("")
@@ -218,7 +224,7 @@ enum Installer {
                 "mcpServers": {
                   "proctor": {
                     "command": "\(shimPath)",
-                    "args": ["serve"]
+                    "args": ["serve", "--profile", "core"]
                   }
                 }
               }
