@@ -1,7 +1,8 @@
 # PRO-0016: Multi-session queue
 
 **ID:** PRO-0016
-**Status:** Ready for Plan
+**Status:** In Review
+**Plan:** `docs/plans/plan-PRO-0016.md`
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
 
@@ -121,3 +122,58 @@ Two MCP clients driving the same app serialise and both complete. Two driving di
 
 
 **Assumptions review:** an independent in-family pass over the Assumptions block (would this default surprise the owner, reverse a locked decision, or hide an external question) failed two and passed the rest. Both were fixed rather than escalated. The give-up ceiling's own reasoning contradicted its number — ninety seconds sits past the host cutoff it cited, so the refusal it exists to deliver would have been lost anyway; it is now forty-five seconds, inside that cutoff. The Hold default was flagged as reversing the design note's recorded leaning, and it does: the note leans toward holding only other sessions while its own controls table reads as holding everything. Escalating it was rejected because the brief hands these three open questions to triage explicitly, and the choice is one cheap, reversible setting rather than an expensive external dependency — but the assumption now names the leaning it went against, so it can be vetoed knowingly.
+
+---
+
+## Progress — 2026-08-14
+
+**In Review.** Branch `ai/pro-0016`, worktree `.worktrees/PRO-0016`. Plan:
+`docs/plans/plan-PRO-0016.md`. Gate: `swift build` clean, `swift test`
+**357 tests / 42 suites green** (315/35 at HEAD; +42 tests, +7 suites).
+
+**The reentrancy fact, and why the keeper is separate.** `runSteps` is a method on
+`Session`, which is a Swift actor, and actors are reentrant: isolation drops at
+every settle and capture `await`, which is exactly why two clients' steps
+interleaved. So the lane is held by `RunScheduler`, an actor of its own, for the
+whole length of a call. `Session` owns one, because there is one `Session` and
+every connection goes through it, so one session is one machine's worth of lanes.
+This is proved rather than argued: with `Session.scheduled` short-circuited, the
+recorded step order across two concurrent runs is `one, two, one, two, one, two,
+two, one`; with it, one switch.
+
+**Three lanes.** `.app(id)` always; `.global` when a step is synthetic, when the
+batch asked for `foreground`, or when a step is a `raise`. Reads never reach
+`runSteps` and so never reach the scheduler at all.
+
+**One acquisition per call**, at the four entry points, after the permission gate
+and re-checking it once the lane is ours. A sweep holds its lanes across every
+repeat rather than rejoining the line between them.
+
+**Identity from the peer process:** `LOCAL_PEERPID` at accept, `proc_pidinfo` for
+the working directory and start time. Equality and the waiting cap key on the full
+`pid:startTime`; the four-hex id is display only. Carried by a task-local set
+inside the dispatching task, so it is never on the wire.
+
+**Not machine-witnessable here:** the queue bar rendering, a click on Hold, Clear
+or a row's drop, the expand, and the menu bar's mirrored count. `swift test` has
+no window server and obscura is web-only. Code-complete against
+`mocks/run-hud.html`; needs a human glance.
+
+**One departure from the mock, deliberate.** The mock hides the bar whenever the
+waiting count is zero. Natively that made Hold unreleasable: Hold lives inside the
+bar, so holding the queue and then clearing it left the machine held with nothing
+on screen to release it and every later run waiting out its ceiling. The bar now
+stays while the queue is held and says which state it is in.
+
+**Child work found, not done:** `proctor_apps.activate` brings an app to the front
+and takes no lane, because the spec scopes queueing to a batch, a replay and a
+sweep; there is no process-wide cap on held-open waiting calls, only the
+per-session three and the ceiling.
+
+**Out-of-family gates:** both ran on grok `grok-4.6` (xhigh, read-only), no
+downgrade, Codex not invoked. Plan review: 10 findings, 3 accepted and folded in,
+4 confirmed already held, 3 rejected with reasons. Completeness critic: 20
+findings, 4 accepted and fixed (the unreleasable hold, `raise` taking the global
+lane, the gate re-read after a wait, identity documented as not an authorisation
+boundary), 13 rejected, 3 logged as child work. Both dispositions are written out
+in full in the plan.

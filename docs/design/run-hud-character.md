@@ -39,24 +39,34 @@ without relying on colour.
 
 ## Current assets, and what is still owed
 
-- `design/character/sprite-states-sheet-42b853.png` — all seven states in one
-  render. Generating them as a single sheet is what kept the character identical
+- `design/character/sprite-states-sheet-42b853.png` — the first render, all seven
+  states. Generating them as a single sheet is what kept the character identical
   across states; seven separate calls did not hold consistency in testing.
 - `design/character/states/*.png` — sliced 260×260 cells, wired into
-  `mocks/run-hud.html`.
+  `mocks/run-hud.html`. These are the mock's art and stay as they are.
 
-Still owed before this ships:
+**Shipped (PRO-0017, 2026-08-14.)** The four things owed are done, from a second
+whole-grid render rather than by patching the first:
 
-1. **Real alpha.** Every render carries a charcoal background. The mock hides
-   this by seating the character in a dark inset bay — which is also what keeps
-   the white body legible on the light panel, so the bay stays either way — but
-   the shipping assets need cutting out.
-2. **Even footprints.** The slices are hand-estimated and the character's size
-   drifts slightly between cells. Redraw or re-crop to a common baseline so it
-   doesn't jump as the state changes.
-3. **Animation frames.** Idle, travelling and acting want 4–6 frame loops rather
-   than the CSS transform stand-ins currently in the mock.
-4. **@2x and @3x.**
+- `design/character/sprite-frames-sheet-d03536.png` — one 4×4 render carrying
+  four idle cells, four travelling, four acting, and the four still states, drawn
+  with the first sheet passed back as a reference image so the character carried
+  over.
+- `design/character/build-sprites.py` — the committed slicer. Real alpha (the
+  charcoal is flood-filled from the border, because the character's own outline
+  is `(5,5,5)` against a `(20,20,20)` ground and a colour-distance cut eats it),
+  one common footprint (every frame anchored on the feet's baseline and the
+  case's own centre), and @1x/@2x/@3x integer-scaled from a single 38px master.
+  Downsampling takes the most common palette colour under each target pixel
+  rather than the average, because averaging a white/black edge yields grey and
+  grey belongs to paused alone.
+- Frames: travelling and acting are four drawn frames each. Idle is the slow
+  one-pixel bob this record already specifies, carried as two frames — the
+  render's four idle cells are four attempts at the same still, so cycling them
+  boils rather than bobs.
+- The extras still go at small sizes, as this record says they should: measured,
+  the error state's puff of smoke loses seven pixels to the bay's rounded corner
+  and nothing else is clipped. No state loses any of its footing.
 
 ## Regenerating
 

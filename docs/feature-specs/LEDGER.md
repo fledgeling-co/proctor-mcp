@@ -22,5 +22,5 @@
 | PRO-0013 | Encryption-at-rest for the audit log | 2026-08-13 | In Review |
 | PRO-0014 | Human-readable step descriptions, derived not supplied | 2026-08-14 | Ready for Plan |
 | PRO-0015 | Run HUD panel | 2026-08-14 | In Review |
-| PRO-0016 | Multi-session queue | 2026-08-14 | Ready for Plan |
-| PRO-0017 | HUD character sprite assets | 2026-08-14 | Ready for Plan |
+| PRO-0016 | Multi-session queue | 2026-08-14 | In Review |
+| PRO-0017 | HUD character sprite assets | 2026-08-14 | In Review |

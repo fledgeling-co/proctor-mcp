@@ -1,9 +1,10 @@
 # PRO-0017: HUD character sprite assets
 
 **ID:** PRO-0017
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
+**Plan:** `docs/plans/plan-PRO-0017.md`
 
 ## Feature description
 
@@ -86,3 +87,90 @@ The character changes with run state in the built HUD, holds a stable footprint 
 **Assumptions review:** an independent pass over the block (would this default surprise the owner, reverse a locked decision, or hide an external question) failed one and passed the rest. The failure was the animation default, which had picked the whole-picture sliding that the brief and the design record both name as the stand-in to be replaced; it now defaults to drawn frames, with sliding demoted to a written-down fallback for the case where one sheet cannot hold the character steady.
 
 
+---
+
+## Progress — 2026-08-14
+
+**In Review.** Branch `ai/pro-0017`, worktree `.worktrees/PRO-0017`. Plan:
+`docs/plans/plan-PRO-0017.md`. Gate: `swift build` clean with no warnings,
+`swift test` **338 tests / 38 suites green** (315/35 at HEAD; +23 tests,
++3 suites).
+
+**The sheet held, and that decided the frames.** One 4×4 regeneration
+(`design/character/sprite-frames-sheet-d03536.png`, GPT Image 2, flat charcoal,
+the first sheet passed back as a reference image) carried the character across
+all sixteen cells. Measured after slicing: every state's case sits on rows 5-34
+of a 38px canvas, so the footprint the mock's hand-estimated slices lost is back.
+Travelling and acting are four genuinely different drawings each — the speed
+lines grow and reset, the arm reaches and returns — so both are drawn loops. Idle
+is not: its four cells are four attempts at the same still, and cycling them
+boils rather than bobs, so idle is the design record's own one-pixel bob carried
+as two frames. That is the assumption block's stated fallback firing for one
+state and not for three, and it is written into the code and the design record
+rather than left to be rediscovered.
+
+**The slicer is committed, because the record says regenerate the grid rather
+than a cell.** `design/character/build-sprites.py`. Four decisions in it each
+answer something measured: segment by ink projection (the model overruns the
+nominal 4×4 pitch by tens of pixels); flood-fill the background from the border
+(the outline is `(5,5,5)` against a `(20,20,20)` ground, so a colour-distance cut
+eats it); anchor on the feet and the case's own centre (an arm or a speed line
+must not pull the character sideways); and downsample by the most common palette
+colour, never the average (averaging a white/black edge yields grey, and grey is
+what makes paused readable without colour). A test now proves grey exists only in
+the paused asset.
+
+**Motion is handed over once.** `RunHUDCharacter` and `RunHUDMotion` in Core hold
+the frame table and the reduce-motion rule as values, so both are checkable
+without a window. In the agent the sprite is a hosted `CALayer` sublayer, never
+the view's own backing layer, and the loop is one discrete `contents` keyframe
+animation added under a stable key and flushed — the cursor overlay's argument,
+that this process is busy settling and must not service frames. The rail glow is
+the same shape. The panel now observes
+`accessibilityDisplayOptionsDidChangeNotification`, so turning Reduce Motion on
+mid-run stops both rather than waiting for the next state change.
+
+**Deliberately not matched to the reference:** the rail's width transition. The
+mock transitions it; here the width is set with implicit actions disabled, so it
+steps. A width that never animates cannot violate a reduced-motion setting, and
+a rail that jumps a step at a time is honest about what it is counting.
+
+**Not machine-witnessable here:** the sprite drawn in the bay, the loop playing,
+the rail pulsing, and the character against light and dark. `swift test` has no
+window server and obscura is web-only. Code-complete against
+`mocks/run-hud.html`; needs a human glance. What *is* witnessed is stronger than
+a code reading: the shipped bytes are decoded through the real loading path and
+asserted on for size at three densities, real alpha with no ground left opaque, a
+baseline identical across all seven states, loop frames vertically steady, grey
+confined to paused, and nothing lost to the bay's rounded clip below the midline.
+
+**Out-of-family plan review:** grok `grok-4.6` (xhigh, read-only) ran and returned
+12 findings, **4 accepted**. The serious one was real and is the reason the sprite
+is a hosted sublayer: AppKit owns a layer-backed view's root layer and rewrites
+its `contents` on a display pass, which would have stamped on the animation. Also
+accepted: resetting the rail's opacity inside a disabled-actions transaction (the
+reset was itself animating, which is motion under a reduce-motion setting), a
+test pinning grey to paused, and a test on what the bay's rounded clip removes.
+Rejected with reasons: that discrete keyframes need `keyTimes.count ==
+values.count` (Core Animation takes one *more* for `.discrete`, and a mismatch
+falls back to even spacing rather than to a dead animation — checked against the
+documentation, not from memory); that `Bundle.module` would look in the wrong
+target (the loader and the pictures are in the same target, and the tests prove
+it); that the mode downsample could still emit grey (it snaps to a fixed palette
+first, and the grey test proves it); and that ink-projection could merge cells
+(the script hard-fails unless it finds exactly four rows of four).
+
+**Out-of-family completeness critic:** grok `grok-4.6` (xhigh, read-only) ran on
+the delivered work and returned 6 findings, **1 accepted** (tighten the clip test
+from a loose bound to an exact one, so a regenerated sheet that pushed a case top
+into a corner fails rather than ships). The other five were already handled and
+are answered above or in the code: the stills path does assign `contents`
+unconditionally, per-frame durations do become key times, the 14 shipped files
+are the 16-cell sheet minus three duplicate idle cells plus the synthesised bob
+frame, and `viewDidChangeBackingProperties` re-applies on a move to another
+display. Lane ran on both gates, no downgrade.
+
+**Child work found:** none. The mock still points at the old
+`design/character/states/*.png` slices; those are the reference's art and were
+left alone deliberately, since the reference is settled and re-pointing it would
+be editing a design artifact to match a build.
