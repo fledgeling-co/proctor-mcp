@@ -283,3 +283,81 @@ struct WebContentProbeTests {
         #expect(!frameless.contains(x: 10, y: 10))
     }
 }
+
+// MARK: - PRO-0023: what the handoff says when Obscura is not installed
+
+@Suite("Browser handoff when Obscura is missing")
+struct BrowserHandoffToolAvailabilityTests {
+
+    private let chrome = KnownBrowser(name: "Google Chrome", bundleId: "com.google.Chrome")
+    private let page = WebContentProbe(areas: [
+        WebArea(url: "https://example.com/dashboard", frame: Rect(x: 0, y: 0, w: 800, h: 600))
+    ])
+    private let internalPage = WebContentProbe(areas: [
+        WebArea(url: "chrome://settings", frame: Rect(x: 0, y: 0, w: 800, h: 600))
+    ])
+
+    private func handoff(_ probe: WebContentProbe, _ detail: BrowserTarget.Detail,
+                         available: Bool) -> BrowserHandoff {
+        BrowserTarget.withTool(BrowserTarget.handoff(for: chrome, probe: probe, detail: detail),
+                               available: available, absence: ObscuraTool.absence)
+    }
+
+    @Test("a missing tool drops the recommendation, keeps the URL, and says why")
+    func aMissingToolDropsTheRecommendationAndKeepsTheURL() {
+        let out = handoff(page, .full, available: false)
+        // Printing `obscura fetch` on a machine with no obscura is the thing this
+        // feature exists to stop.
+        #expect(out.use == nil)
+        #expect(out.commands == nil)
+        #expect(out.toolUnavailable == ObscuraTool.absence)
+        // The URL is a fact about the page rather than advice, and it is what
+        // makes the recommendation actionable the moment the install finishes.
+        #expect(out.url == "https://example.com/dashboard")
+        // Which half of the window is Proctor's does not depend on what happens to
+        // be installed.
+        #expect(out.boundary == BrowserTarget.boundary)
+        #expect(out.continuity == BrowserTarget.continuity)
+        #expect(out.evidence == BrowserTarget.evidence)
+        #expect(out.caveats == BrowserTarget.caveats)
+    }
+
+    @Test("a present tool changes nothing at all")
+    func aPresentToolChangesNothing() {
+        let untouched = BrowserTarget.handoff(for: chrome, probe: page, detail: .full)
+        #expect(handoff(page, .full, available: true) == untouched)
+        #expect(handoff(page, .brief, available: true)
+                == BrowserTarget.handoff(for: chrome, probe: page, detail: .brief))
+        #expect(handoff(page, .full, available: true).toolUnavailable == nil)
+    }
+
+    @Test("a page Obscura could not open anyway gains no absence")
+    func aPageObscuraCannotOpenGainsNoAbsence() {
+        // There was no recommendation to repair, so naming a missing tool that
+        // would not help this page is noise.
+        let out = handoff(internalPage, .full, available: false)
+        #expect(out.toolUnavailable == nil)
+        #expect(out.use == nil)
+        #expect(out.urlUnavailable == BrowserTarget.notOpenable)
+        #expect(out == BrowserTarget.handoff(for: chrome, probe: internalPage, detail: .full))
+    }
+
+    @Test("both detail levels carry the same absence")
+    func bothDetailLevelsCarryTheSameAbsence() {
+        // It is the reason the recommendation is absent, so a brief handoff that
+        // merely lacked `use` would be indistinguishable from the chrome:// case.
+        // The evidence — where Proctor looked — lives on proctor_doctor instead.
+        #expect(handoff(page, .brief, available: false).toolUnavailable
+                == handoff(page, .full, available: false).toolUnavailable)
+        #expect(handoff(page, .brief, available: false).commands == nil)
+    }
+
+    @Test("an app-level handoff with no window discloses the absence too")
+    func anAppLevelHandoffDisclosesTheAbsence() {
+        let out = BrowserTarget.withTool(
+            BrowserTarget.handoff(for: chrome, probe: nil, detail: .full),
+            available: false, absence: ObscuraTool.absence)
+        #expect(out.toolUnavailable != nil)
+        #expect(out.use == nil)
+    }
+}

@@ -675,6 +675,22 @@ public struct DoctorReport: Codable, Sendable {
     public var observersLive: Int
     public var secureEventInputActive: Bool
     public var shortcutsCLIAvailable: Bool
+    /// Whether Obscura — the tool the browser handoff recommends — is on this
+    /// machine. Flat and top-level, in the shape `shortcutsCLIAvailable` already
+    /// uses, so it does not have to be dug out of anything.
+    public var obscuraAvailable: Bool
+    /// The evidence behind that answer: where it was found and everywhere it was
+    /// looked for. On the wire because a reader whose own shell disagrees with
+    /// Proctor can only settle it by comparing paths. **Always present.**
+    public var obscura: ToolPresence?
+    /// What to do about it, present **exactly when `obscuraAvailable` is false**.
+    /// The same object the browser handoff carries, so there is one description of
+    /// this situation rather than two — and, like that one, it carries no shell
+    /// commands.
+    public var obscuraUnavailable: ToolAbsence?
+    /// Untouched by Obscura either way: `ready` means Proctor can do its own job,
+    /// and Proctor drives native applications without it. A health report that
+    /// failed on an advisory tool would be lying about what is broken.
     public var ready: Bool
     public var blockers: [String]
 
@@ -709,12 +725,17 @@ public struct DoctorReport: Codable, Sendable {
                 agentRunning: Bool, socketPath: String, grants: [Grant],
                 attachedApps: [AttachedAppHealth], observersLive: Int,
                 secureEventInputActive: Bool, shortcutsCLIAvailable: Bool,
+                obscuraAvailable: Bool = false, obscura: ToolPresence? = nil,
+                obscuraUnavailable: ToolAbsence? = nil,
                 ready: Bool, blockers: [String]) {
         self.agentVersion = agentVersion; self.protocolVersion = protocolVersion
         self.osVersion = osVersion; self.agentRunning = agentRunning
         self.socketPath = socketPath; self.grants = grants; self.attachedApps = attachedApps
         self.observersLive = observersLive; self.secureEventInputActive = secureEventInputActive
-        self.shortcutsCLIAvailable = shortcutsCLIAvailable; self.ready = ready
+        self.shortcutsCLIAvailable = shortcutsCLIAvailable
+        self.obscuraAvailable = obscuraAvailable; self.obscura = obscura
+        self.obscuraUnavailable = obscuraUnavailable
+        self.ready = ready
         self.blockers = blockers
     }
 }

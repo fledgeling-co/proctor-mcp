@@ -174,7 +174,7 @@ on a `v*` tag; `scripts/build-app.sh` prints the signing details for a manual ru
 | `proctor_flow` | Record, list, show, replay and delete named step sequences. A recorded flow stores its selectors and per-step hashes, so a divergent replay says where and how. |
 | `proctor_stability` | Replay a flow N times and report `firstDivergence` and a per-step instability score. This is what separates a real defect from a flaky test. |
 | `proctor_inspect` | Read resolved styles and layer geometry from an app embedding `ProctorReflector`: colours, fonts, radii, opacity, constraints, and CALayer model versus presentation values. |
-| `proctor_doctor` | Report agent liveness, TCC grants with the exact fix for the running OS, attachments, observer health, Secure Event Input, and shortcuts CLI availability. |
+| `proctor_doctor` | Report agent liveness, TCC grants with the exact fix for the running OS, attachments, observer health, Secure Event Input, and whether the shortcuts CLI and Obscura are installed. |
 | `proctor_unlock` | Open, evaluate and end a screen-unlock turn, when the login-path authorization plugin is installed and armed. Each turn is TTL-bounded so a crashed caller cannot leave the screen unlockable, and the password prompt stays a fallback. |
 | `proctor_computer` | Accept a single Anthropic `computer` action in its stock schema and run it against a window, so a model trained on that tool drives Proctor with no prompt changes. Additive; synthetic-event actions, reported `plane=syntheticEvent`. |
 | `proctor_openai_computer` | The same adapter for the OpenAI `openai_computer` schema — one action or a batch, stopping at the first failure with `failedAt`. Also additive, also synthetic-event. |
@@ -240,6 +240,19 @@ hashes, but over a browser's render tree, so a determinism score there measures
 the page's churn as much as the app's. A web view inside a native Mac app is
 **not** routed — reaching it means attaching to the host process, which is
 Proctor's job.
+
+When Obscura is not installed, the object says so instead of naming a command
+this Mac does not have: no `use`, no command templates, and a `toolUnavailable`
+saying who installs it. It carries no shell command, deliberately — a command in
+a tool result is something a model will run, and the install is a download of an
+unsigned binary from the internet by a process holding Accessibility and Screen
+Recording. **Proctor never installs anything.** The commands live in the status
+window, one click from the clipboard, beside a Re-check. Detection reads the
+filesystem and never executes what it finds, because the directories a launchd
+agent has to check by name — `~/.local/bin`, `~/.cargo/bin`, `/opt/homebrew/bin`
+— are ones anything can write to. `proctor_doctor` reports `obscuraAvailable`
+and every path it looked at, and never lets it affect `ready`: Proctor drives
+native applications without it.
 
 **It does not see inside a window it was not granted.** No Accessibility grant
 means an empty tree; no Screen Recording grant means no pixels. Neither

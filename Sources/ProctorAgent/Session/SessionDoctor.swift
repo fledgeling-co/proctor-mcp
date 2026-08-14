@@ -18,6 +18,10 @@ extension Session {
         let shortcutsAvailable = FileManager.default.isExecutableFile(atPath: "/usr/bin/shortcuts")
         let secureInput = Grants.secureEventInputActive()
         let (attached, observers) = healthSnapshot()
+        // Re-probed rather than read from the cache, and written back through it:
+        // this is the "now" answer, and after it the health report and the browser
+        // handoffs cannot disagree. The status window's Re-check drives this path.
+        let obscura = tools.refreshed()
 
         var grants: [DoctorReport.Grant] = [
             .init(name: "Accessibility", granted: accessibilityGranted, required: true,
@@ -66,6 +70,13 @@ extension Session {
             observersLive: observers,
             secureEventInputActive: secureInput,
             shortcutsCLIAvailable: shortcutsAvailable,
+            // Deliberately not a blocker and not a grant: Proctor drives native
+            // applications without Obscura, so `ready` is unaffected. Obscura is
+            // what Proctor recommends for a browser page, which is a different
+            // question from whether Proctor works.
+            obscuraAvailable: obscura.available,
+            obscura: obscura,
+            obscuraUnavailable: obscura.available ? nil : ObscuraTool.absence,
             ready: blockers.isEmpty,
             blockers: blockers)
     }

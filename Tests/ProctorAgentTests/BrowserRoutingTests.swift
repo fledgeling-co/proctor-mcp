@@ -36,7 +36,15 @@ struct BrowserRoutingTests {
         let ax = FakeAX(bundleId: bundleId)
         ax.webContentProbe = probe
         if let nodeFrame { ax.nodeFrame = nodeFrame }
-        let session = Session(ax: ax, capture: FakeCapture())
+        // PRO-0023: pinned installed, deliberately. The default probe reads the
+        // real filesystem, so without this these tests would assert one thing on a
+        // machine with Obscura and the opposite on a machine without it. What
+        // happens when it is missing is ObscuraPresenceWiringTests' subject.
+        let session = Session(ax: ax, capture: FakeCapture(),
+                              tools: ToolProbe(probe: {
+                                  ToolPresence(tool: ObscuraTool.binary, available: true,
+                                               path: "/opt/homebrew/bin/obscura")
+                              }))
         // The trail is a real file for a real agent; a test that forgets this
         // writes to the operator's own history.
         await session.setAuditSink(AuditCollector().sink)

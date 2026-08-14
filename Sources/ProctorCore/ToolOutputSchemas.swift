@@ -38,25 +38,25 @@ public extension ToolCatalogue {
 
         return [
             "proctor_apps": openObject(
-                "Enumeration (apps/attached/note), an attach (app/windows/provenance), or a detach (detached/windowsReleased). `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not.",
+                "Enumeration (apps/attached/note), an attach (app/windows/provenance), or a detach (detached/windowsReleased). `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not. Its `toolUnavailable` says Obscura is not installed here, and then no command is recommended.",
                 ["apps": p("array"), "attached": p("array"), "note": p("string"),
                  "app": p("object"), "windows": p("array"), "provenance": p("object"),
                  "detached": p("string"), "windowsReleased": p("number"),
                  "browser": p("object")]),
 
             "proctor_snapshot": openObject(
-                "A pruned accessibility tree, or a diff when sinceRevision was supplied. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not.",
+                "A pruned accessibility tree, or a diff when sinceRevision was supplied. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not. Its `toolUnavailable` says Obscura is not installed here, and then no command is recommended.",
                 ["window": p("string"), "revision": p("number"), "root": p("object"),
                  "diff": p("object"), "provenance": p("object"), "stateHash": p("string"),
                  "browser": p("object")]),
 
             "proctor_find": openObject(
-                "The nodes matching a predicate. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not.",
+                "The nodes matching a predicate. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not. Its `toolUnavailable` says Obscura is not installed here, and then no command is recommended.",
                 ["window": p("string"), "predicate": p("string"), "count": p("number"),
                  "truncated": p("boolean"), "nodes": p("array"), "browser": p("object")]),
 
             "proctor_act": openObject(
-                "Per-step outcome for a batch of actions. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not.",
+                "Per-step outcome for a batch of actions. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not. Its `toolUnavailable` says Obscura is not installed here, and then no command is recommended.",
                 ["window": p("string"), "steps": p("array"), "completed": p("number"),
                  "failedAt": p("number"), "finalHash": p("string"),
                  "foreground": p("object"), "browser": p("object")]),
@@ -122,13 +122,15 @@ public extension ToolCatalogue {
                  "renderRevision": p("number")]),
 
             "proctor_doctor": openObject(
-                "Agent liveness, grants, attachments and observer health.",
+                "Agent liveness, grants, attachments and observer health. `obscuraAvailable` reports whether the tool the browser handoff recommends is installed; it never affects `ready`, because Proctor drives native applications without it.",
                 ["agentVersion": p("string"), "protocolVersion": p("number"),
                  "osVersion": p("string"), "agentRunning": p("boolean"),
                  "socketPath": p("string"), "grants": p("array"),
                  "attachedApps": p("array"), "observersLive": p("number"),
                  "secureEventInputActive": p("boolean"),
-                 "shortcutsCLIAvailable": p("boolean"), "ready": p("boolean"),
+                 "shortcutsCLIAvailable": p("boolean"),
+                 "obscuraAvailable": p("boolean"), "obscura": p("object"),
+                 "obscuraUnavailable": p("object"), "ready": p("boolean"),
                  "blockers": p("array")]),
 
             "proctor_unlock": openObject(

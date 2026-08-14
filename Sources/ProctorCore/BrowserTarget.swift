@@ -161,6 +161,11 @@ public struct BrowserHandoff: Codable, Sendable, Equatable {
     public var evidence: String?
     public var url: String?
     public var urlUnavailable: String?
+    /// Why there is no recommendation: the tool it would have named is not on
+    /// this machine. Sits beside `urlUnavailable` because it is the same kind of
+    /// fact — a reason the advice is not what it would otherwise be — and carries
+    /// no shell command, deliberately. See `ToolAbsence`.
+    public var toolUnavailable: ToolAbsence?
     /// A caveat that applies to *this* page and is therefore worth carrying even in
     /// the brief form, where the full list is omitted.
     public var note: String?
@@ -169,11 +174,12 @@ public struct BrowserHandoff: Codable, Sendable, Equatable {
 
     public init(boundary: String, browser: String, bundleId: String, use: String?,
                 continuity: String, evidence: String? = nil, url: String? = nil,
-                urlUnavailable: String? = nil, note: String? = nil,
-                commands: [String]? = nil, caveats: [String]? = nil) {
+                urlUnavailable: String? = nil, toolUnavailable: ToolAbsence? = nil,
+                note: String? = nil, commands: [String]? = nil, caveats: [String]? = nil) {
         self.boundary = boundary; self.browser = browser; self.bundleId = bundleId
         self.use = use; self.continuity = continuity; self.evidence = evidence
-        self.url = url; self.urlUnavailable = urlUnavailable; self.note = note
+        self.url = url; self.urlUnavailable = urlUnavailable
+        self.toolUnavailable = toolUnavailable; self.note = note
         self.commands = commands; self.caveats = caveats
     }
 }
@@ -300,6 +306,34 @@ public enum BrowserTarget {
             note: note,
             commands: openable && detail == .full ? commands : nil,
             caveats: detail == .full ? caveats : nil)
+    }
+
+    /// Fold the availability of the tool the handoff names into the handoff.
+    ///
+    /// A recommendation to run `obscura` on a machine with no `obscura` is worse
+    /// than no recommendation: the handoff reads as an instruction from something
+    /// that knows what it is talking about, and the person following it gets a
+    /// confusing shell error instead of a fact. So `use` and `commands` go, and
+    /// `toolUnavailable` says why.
+    ///
+    /// `url` stays. The address is a fact about the page rather than a
+    /// recommendation, and it is what makes the advice actionable the moment the
+    /// install finishes. `boundary`, `continuity`, `evidence` and `caveats` stay
+    /// too: which half of a browser window is Proctor's does not depend on what
+    /// happens to be installed.
+    ///
+    /// A handoff that recommended nothing in the first place — a `chrome://` page,
+    /// or any other scheme Obscura cannot open — is returned untouched. There was
+    /// no recommendation to repair, and naming a missing tool that would not help
+    /// this page anyway is noise.
+    public static func withTool(_ handoff: BrowserHandoff, available: Bool,
+                                absence: ToolAbsence) -> BrowserHandoff {
+        guard !available, handoff.use != nil else { return handoff }
+        var out = handoff
+        out.use = nil
+        out.commands = nil
+        out.toolUnavailable = absence
+        return out
     }
 
     /// Distinct URLs, comparing on a normalised form so that a trailing slash or a

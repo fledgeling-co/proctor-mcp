@@ -293,7 +293,11 @@ private struct AgentSection: View {
                         ? "none" : r.attachedApps.map(\.name).joined(separator: ", "))
                     Row("Live observers", "\(r.observersLive)")
                     Row("Shortcuts CLI", r.shortcutsCLIAvailable ? "available" : "not available")
+                    Row("Obscura", obscuraSummary(r))
                     Row("Signature", model.signature.summary)
+                }
+                if let absence = r.obscuraUnavailable {
+                    ObscuraOffer(absence: absence, model: model)
                 }
                 if r.secureEventInputActive {
                     Callout(
@@ -319,6 +323,60 @@ private struct AgentSection: View {
                 Text(v).font(.system(size: 11, design: .monospaced))
                     .textSelection(.enabled)
                     .lineLimit(2).truncationMode(.middle)
+            }
+        }
+    }
+
+    /// A half install is its own state: `obscura` without `obscura-worker` beside
+    /// it runs `fetch` and `serve` and fails `scrape`, which is worth naming here
+    /// rather than leaving somebody to meet it mid-run.
+    private func obscuraSummary(_ r: DoctorReport) -> String {
+        guard r.obscuraAvailable else { return "not installed" }
+        let missing = r.obscura?.missingCompanions ?? []
+        guard !missing.isEmpty else { return "available" }
+        return "available, without \(missing.joined(separator: ", "))"
+    }
+}
+
+/// What "offer to install" means here: the exact command for this Mac, one click
+/// away, and a re-check that confirms it worked.
+///
+/// Proctor does not run it. The install is a download of an unsigned binary from
+/// the internet, and this process holds Accessibility and Screen Recording; the
+/// window's answer to a missing permission is *Open Settings* rather than granting
+/// it, and a missing tool gets the same shape of answer.
+private struct ObscuraOffer: View {
+    let absence: ToolAbsence
+    let model: AgentModel
+
+    private var commands: [String] {
+        ObscuraTool.installCommands(architecture: Actions.hardwareArchitecture())
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Callout(
+                icon: "arrow.down.circle",
+                tint: .orange,
+                title: "Obscura is not installed",
+                message: "Proctor hands browser pages to Obscura rather than driving them "
+                    + "through the accessibility tree, so without it that advice names a "
+                    + "command this Mac does not have. Proctor does not install it: these "
+                    + "commands download a binary from the internet, and this process holds "
+                    + "Accessibility and Screen Recording.")
+            Text(commands.joined(separator: "\n"))
+                .font(.system(size: 11, design: .monospaced))
+                .textSelection(.enabled)
+                .padding(10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(nsColor: .quaternarySystemFill),
+                            in: RoundedRectangle(cornerRadius: 6))
+            HStack {
+                Button("Copy install commands") { Actions.copy(commands.joined(separator: "\n")) }
+                Button("Open the project page") { Actions.open(absence.docs) }
+                    .buttonStyle(.borderless).controlSize(.small)
+                Button("Re-check") { model.refresh() }
+                    .buttonStyle(.borderless).controlSize(.small)
             }
         }
     }
@@ -430,6 +488,25 @@ enum Actions {
     static func copy(_ s: String) {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(s, forType: .string)
+    }
+
+    static func open(_ urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        NSWorkspace.shared.open(url)
+    }
+
+    /// Which Obscura release archive this Mac needs.
+    ///
+    /// `hw.optional.arm64` describes the **hardware**, so a Proctor translated by
+    /// Rosetta still names the Apple Silicon build. Reading the process's own
+    /// architecture would hand somebody the Intel tarball on an M-series Mac.
+    static func hardwareArchitecture() -> ObscuraTool.Architecture {
+        var arm64: Int32 = 0
+        var size = MemoryLayout<Int32>.size
+        if sysctlbyname("hw.optional.arm64", &arm64, &size, nil, 0) == 0, arm64 == 1 {
+            return .appleSilicon
+        }
+        return .intel
     }
 
     static func openLog() {
