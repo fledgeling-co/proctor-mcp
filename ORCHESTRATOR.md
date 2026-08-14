@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** In Progress — wave 3 planned, awaiting go-ahead
-**Updated:** 2026-08-14 — wave 1+2 remain MERGED (10 features, local `main`). Wave 3 added: the run-HUD line of work (4 briefs) plus the 3 security/follow-up items scheduled on 2026-08-13 and still untriaged. 173 tests / 24 suites green @ 2e478ec.
+**Status:** In Progress — wave 3 pre-triage complete (7 specs), **stage 1 of the fleet RUNNING**
+**Updated:** 2026-08-14 — wave 1+2 remain MERGED (10 features, local `main`). Wave 3 triaged @ 8e0206c: 7 specs, all Ready for Plan. Stage 1 launched (PRO-0014, PRO-0012, PRO-0013 in slots; PRO-0011 queued). 173 tests / 24 suites green @ 8e0206c.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
 - **This repo DOES now have a git remote** (`origin` → github.com/fledgeling-co/proctor-mcp). The earlier "no git remote, main is LOCAL-ONLY" note is stale. Local `main` is **4 commits AHEAD** of `origin/main` and those commits carry unreviewed WIP: **merge to local `main` only, never push.**
@@ -16,7 +16,7 @@ the ledger below against reality (`docs/feature-specs/LEDGER.md`, `docs/specs/*`
 - Runners are Opus agents (launched via the verified single-agent-Workflow lane, `model:'opus'`,
   `effort:'high'`, `agentType:'claude'`) that invoke the ship-feature skill and **STOP BEFORE MERGE**;
   the orchestrator serializes all finalization (rebase → gate → merge → worktree cleanup) one branch at a time.
-- **This repo has no git remote — `main` is LOCAL-ONLY. "Merge" means merge to local `main`; never push.**
+- **`main` is the integration branch and is AHEAD of `origin`. "Merge" means merge to local `main`; NEVER push.**
 - Serial-only shared writes: `LEDGER.md` (id allocation, done), this file (orchestrator is sole writer),
   the `Sources/` tool catalogue (all items touch it → serialize at merge), integration-branch merges.
 
@@ -99,16 +99,23 @@ Holding pen (external deps / needs input): none.
 | PRO-0009 | Process kill + fs jail | ready-for-plan | PRO-0008 ✓ | none | none | opus | merged (cleaned) | **MERGED** | batch 3 · proctor_kill + FSJail (reuses PRO-0005 rails) |
 | PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 ✓ | none | none | opus | merged (cleaned) | **MERGED** | batch 4 · opt-in pointer marker on act/flow per-step captures |
 
-## Wave 3 ledger (untriaged; ids 0014-0017 allocated at pre-triage)
-| Brief | Item | Category | Depends on | Mock / spec | Status |
-|-------|------|----------|------------|-------------|--------|
-| `15-step-descriptions.md` | PRO-0014 | untriaged | — | — | **Queued** |
-| `16-run-hud-panel.md` | PRO-0015 | untriaged | PRO-0014 | `mocks/run-hud.html` (binding) | **Queued** |
-| `17-multi-session-queue.md` | PRO-0016 | untriaged | PRO-0015 (UI half) | `docs/design/run-hud-queue.md` | **Queued** |
-| `18-hud-character-assets.md` | PRO-0017 | untriaged | PRO-0015 | `docs/design/run-hud-character.md` | **Queued** |
-| `11-stability-per-step-pointer.md` | PRO-0011 | untriaged | — (needs per-step PNG emission, in scope) | — | **Queued** |
-| `12-gate-flow-replay-stability.md` | PRO-0012 | untriaged (security) | — | — | **Queued** |
-| `13-audit-log-encryption-at-rest.md` | PRO-0013 | untriaged (security) | — | — | **Queued** |
+## Wave 3 ledger (triaged 2026-08-14 @ 8e0206c; ids 0011-0017 allocated, LEDGER Last allocated: 17)
+Runners STOP BEFORE MERGE. Stages exist because a dependency must be **merged**, not merely finished,
+and the orchestrator serialises every merge — so the fleet runs in three stages with merges between.
+
+| ID | Title | Spec | Depends on | Mock / design | Stage | Status |
+|----|-------|------|------------|---------------|-------|--------|
+| PRO-0014 | Step descriptions, derived not supplied | `spec-PRO-0014.md` | — | — | 1 | **RUNNING** (slot 1) |
+| PRO-0012 | Re-gate flow replay + stability (security) | `spec-PRO-0012.md` | — | — | 1 | **RUNNING** (slot 2) |
+| PRO-0013 | Audit-log encryption at rest (security) | `spec-PRO-0013.md` | — | — | 1 | **RUNNING** (slot 3) |
+| PRO-0011 | Pointer marker in stability artifacts | `spec-PRO-0011.md` | — | — | 1 | **Queued** (next free slot) |
+| PRO-0015 | Run HUD panel | `spec-PRO-0015.md` | PRO-0014 merged | `mocks/run-hud.html` (binding) | 2 | **Blocked** on stage 1 merge |
+| PRO-0016 | Multi-session queue | `spec-PRO-0016.md` | PRO-0015 merged | `docs/design/run-hud-queue.md` | 3 | **Blocked** on stage 2 merge |
+| PRO-0017 | HUD character assets | `spec-PRO-0017.md` | PRO-0015 merged | `docs/design/run-hud-character.md` | 3 | **Blocked** on stage 2 merge |
+
+**PRO-0015 carries a second architectural blocker its runner must solve, not discover late:** the agent
+process runs a bare `CFRunLoopRun()` with no `NSApplication` event loop, so a panel's Pause/Stop buttons
+have no way to receive a click. It is recorded as a spec requirement; the runner owns the fix.
 
 ## Deferred children discovered mid-fleet
 All three SCHEDULED 2026-08-13 (whats-left ingest, reader answered "all three") — promoted to backlog briefs + ledger rows, **still not triaged as of 2026-08-14**.
@@ -122,6 +129,9 @@ All three SCHEDULED 2026-08-13 (whats-left ingest, reader answered "all three") 
 - **Three deferred children above** are logged, not scheduled. Say if you want any promoted to a new fleet item.
 
 ## Event log (append-only, newest first)
+- 2026-08-14 **Wave 3 fleet stage 1 LAUNCHED** — PRO-0014, PRO-0012, PRO-0013 in the three slots, PRO-0011 refilling the first free one. Runners are Opus at high effort via the workflow lane, invoking ship-feature, stopping before merge. The fleet runs in **three stages** rather than one continuous slot loop, because PRO-0015 depends on PRO-0014 having *merged* and only the orchestrator merges: stage 1 (the four independent items) → merges → stage 2 (PRO-0015) → merge → stage 3 (PRO-0016 + PRO-0017).
+- 2026-08-14 **Wave 3 pre-triage COMPLETE** @ 8e0206c — seven specs written serially under the ledger lock, all now Ready for Plan (LEDGER Last allocated: 17). PRO-0013 was the one Needs More Info item; its single Essential Question (recovery copy for the audit-log unsealing key) was answered by the reader as **(a) no recovery copy** — convert the existing trail in place, a lost key means a permanently unreadable history, and no export path, second secret, or "just in case" plaintext copy, each of which would weaken the guarantee the option was chosen for. The destructive first run must be obvious in whatever performs it. Answer recorded in `spec-PRO-0013.md`; its runner folds it in and flips the status as its first action.
+- 2026-08-14 **Out-of-family review lane switched from Codex to grok** at the reader's instruction (`grok -p … --model grok-4.6 --effort xhigh --sandbox read-only`, 240s alarm). Codex is OFF for this repo, not a fallback and not for a retry. Measured behaviour during triage: five of seven gates hit the deadline mid-reasoning and needed the evidence inlined into the prompt rather than read from disk; PRO-0013 failed twice and fell back in-family with a logged downgrade.
 - 2026-08-14 UI: permission-state fix + always-on menu bar + live activity + quit-everything + mock redesign. Three problems from real use, all fixed. (1) **Permission bug:** the window polled the agent with `tool:"doctor"` but dispatch only matches `"proctor_doctor"`, so every check read "agent not answering" even with both grants on — one-line fix in `AgentModel.swift`; verified by socket probe (`proctor_doctor` ok + grants, bare `doctor` = unknown tool). Granting Screen Recording now kickstarts the agent so its cached `SCShareableContent` probe re-runs, with an "Applying…" transient. Dropped the stale `~/Applications` reveal-and-drag copy (now `/Applications`, listed in the picker). (2) **Menu bar always-visible:** app registers as a login item via `SMAppService.mainApp` and both installers (`install.sh`, `Install.swift`) `open` the app after loading the agent; polling moved to app-lifetime (model `init`) so the menu stays live with the window closed; login start is quiet (window `orderOut`). (3) **Live activity:** ring buffer `(tool, at, ok)` + in-flight marker on the `Session` actor, recorded at the `Dispatcher.handle` choke point, tracked set derived from `ToolCatalogue` (so health polls, internal verbs, and unknown tools are all excluded automatically — caught a leak during verify where a stale UI's bare-`doctor` polls flooded the feed). Exposed as internal `proctor_recent_activity` (NOT in ToolCatalogue); rendered in the menu line + a status-window Activity card. (4) **Quit = everything:** `applicationWillTerminate` boots out the agent on every quit path; label "Quit Proctor". Both return at next login. Native look kept; mock's motion implemented in SwiftUI (`Motion.swift`: spring `cubic-bezier(.32,.72,0,1)`, step slide, dot-fill keyframe, grant-success pop+ring, status-pill spring-in) all gated on Reduce Motion. Mock `mocks/onboarding-and-menu.html` redesigned as the design source (Codex-register hero sheet, 3 dots, live-activity surfaces, de-staled). **Verified live** (signed Developer ID reinstall, grants survived the same-identity rebuild): runtime `tools/list` = 19, internal verbs hidden, doctor reflects grants (ready), activity feed excludes polls and captures real tools. Not machine-witnessable here (obscura is web-only): the native app's visual/animation fidelity and the login-item/quit GUI paths — code-complete against the mock, need a human glance.
 - 2026-08-14 Install relocated to /Applications + notarised-by-default + CI release pipeline + CHANGELOG. install.sh now installs to `/Applications` (was `~/Applications`; sudo fallback), auto-detects the Developer ID identity, and notarises fresh builds by default (keychain profile `proctor`; `PROCTOR_SKIP_NOTARIZE=1` to skip). uninstall.sh + README follow the path change. notarize.sh generalised to accept an ASC API key via env (`NOTARY_KEY`/`NOTARY_KEY_ID`/`NOTARY_ISSUER_ID`) for CI alongside the local keychain-profile path. Added `.github/workflows/release.yml`: on a `v*` tag it imports the Developer ID cert into a temp keychain, builds+signs, notarises+staples via ASC API key, packages, extracts the matching CHANGELOG section, and publishes the GitHub release (6 repo secrets documented in the header). CHANGELOG.md created (Keep a Changelog; v0.1.0 entry written via create-luke-content, lint clean). **Live relocation performed:** booted out the old `~/Applications` agent, installed the already-stapled build to `/Applications` (reused, no rebuild), agent running, doctor clean, runtime `tools/list` = 19, Gatekeeper Accepted/Notarized. Grants did NOT carry: prior install was ad-hoc, so the new Developer ID identity is a fresh TCC identity needing a one-time manual re-grant (Accessibility + Screen Recording) — panes opened; future upgrades keep the identity and will survive. Left uncommitted + flagged: stale `design/icon/build_icon.py` + `design/icon/icon-proctor.svg` working changes from the icon rounds (unrelated to this request).
 - 2026-08-13 Icon finalised = raster C. Reader judged the GPT-Image raster take (proctor-raster-7c3d62-2, glowing glass-gel cubes) decisively better than the hand-authored SVG master even after 4+ fidelity rounds ("C wins by a landslide") — the known vector-can't-out-material-a-diffusion-raster ceiling. Shipped the raster directly: squircle-masked via design/icon/apply-squircle.sh (reproducible) into app-icon-shaped source art, verified legible at 16/32/48px. App rebuilt + re-notarised (Accepted) + stapled; v0.1.0 asset replaced (4.58MB); site icons regenerated (Pages redeploys). Tradeoff: shipped icon is now the raster, not the parametric SVG — future tweaks need a new generation/pixel edit, not a build_icon.py param. SVG master kept as superseded provenance. Local reinstall still the reader's step.
