@@ -244,8 +244,9 @@ final class RunHUDPanel {
         content.elapsed = runStarted.map { Date().timeIntervalSince($0) } ?? 0
         content.needsDisplay = true
 
-        // The exception line adds a row, so the panel grows upward from a
-        // bottom-docked corner and the live line never moves.
+        // The exception line adds a row, so the panel grows upward from its
+        // bottom-docked corner: the footer stays where it is and Pause and Stop
+        // never move out from under the cursor of somebody reaching for them.
         let wanted = height()
         if abs(panel.frame.height - wanted) > 0.5 {
             panel.setFrame(CGRect(x: panel.frame.minX, y: panel.frame.minY,
