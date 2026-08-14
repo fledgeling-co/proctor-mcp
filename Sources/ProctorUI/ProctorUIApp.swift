@@ -164,6 +164,24 @@ struct MenuBarContent: View {
             Text("Proctor was updated. Relaunch to use the new version.")
             Button("Relaunch Proctor") { Actions.relaunch(alsoAgent: model.agentBuildReplaced) }
         }
+        // Below the stale build, above everything else, and only when there is
+        // something it can fix. This is what "Re-check now" became.
+        //
+        // That row called the model's refresh — the same call a 2-second timer has
+        // been making all along, window open or closed — so it advanced a read by
+        // about two seconds. And for the case it was defended for, a grant made in
+        // System Settings, it advanced nothing: the agent probes Screen Recording
+        // through ScreenCaptureKit, whose answer macOS caches for the life of the
+        // process, so asking the same agent again returns the same denial. Only a
+        // restart clears it, which is why granting through Proctor's own dialog
+        // already restarts the agent. This is that remedy, reached by hand, for a
+        // grant that arrived from somewhere else — and a start for the other state
+        // the menu had nothing to say about, a wedged agent.
+        if let recovery = model.recovery {
+            Divider()
+            Text(recovery.reason)
+            Button(recovery.action) { model.take(recovery) }
+        }
         if let activityLine {
             Label(activityLine, systemImage: activityIcon)
         }
@@ -199,7 +217,6 @@ struct MenuBarContent: View {
         Divider()
         Button("Proctor Status…") { NSApp.activate(ignoringOtherApps: true); openMain() }
         Button("Run Setup Again…") { NSApp.activate(ignoringOtherApps: true); rerunSetup() }
-        Button("Re-check now") { model.refresh() }
         Divider()
         Button("Quit Proctor", role: .destructive) { NSApp.terminate(nil) }
     }

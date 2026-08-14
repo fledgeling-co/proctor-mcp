@@ -131,6 +131,25 @@ final class AgentModel {
     private let appStamps: [BuildStamp?] = appPaths.map(BuildStamp.of(path:))
     private let agentStamps: [BuildStamp?] = agentPaths.map(BuildStamp.of(path:))
 
+    /// The menu's one action when something is wrong with the agent, or nil.
+    ///
+    /// This replaced a menu row labelled "Re-check now", which called `refresh()`
+    /// — the same call a 2-second timer has been making all along. The row was
+    /// defended for the case of a grant made in System Settings, and that is the
+    /// one case it could not serve: the agent reads Screen Recording through
+    /// ScreenCaptureKit, whose answer macOS caches for the life of the process, so
+    /// re-asking the same agent returns the same denial however often it is asked.
+    /// A restart is the only thing that clears it. `AgentRecovery` carries the
+    /// reasoning, and the reason a restart is offered only where this window can
+    /// see the grant for itself.
+    private(set) var recovery: AgentRecovery.Offer?
+
+    /// This process's own live read of Screen Recording, refreshed on the doctor
+    /// tick. `CGPreflightScreenCaptureAccess` reads the recorded grant without
+    /// prompting, and `build-app.sh` signs every nested binary with `-i` the
+    /// bundle identifier, so it is the same TCC record the agent answers from.
+    private var windowSeesScreenRecording: Bool?
+
     /// Polling starts with the model and runs for the app's whole life, not just
     /// while the window is open — the menu-bar glyph and status line have to stay
     /// live after the window is closed.
@@ -207,6 +226,13 @@ final class AgentModel {
             agentBuildReplaced = BuildStamp.replaced(
                 running: agentStamps, onDisk: Self.agentPaths.map(BuildStamp.of(path:)))
         }
+        // This window's own answer about Screen Recording, taken fresh beside the
+        // stamps. `CGPreflightScreenCaptureAccess` reads the recorded grant without
+        // prompting, and both binaries live in Proctor.app under one bundle
+        // identifier, so it is the same record the agent is answering from — which
+        // is what makes a disagreement between them mean "the agent is holding a
+        // stale answer" rather than "one of these is about a different app".
+        windowSeesScreenRecording = CGPreflightScreenCaptureAccess()
         Task.detached(priority: .utility) {
             let outcome = Self.callDoctor(requestAccessibility: false, requestScreenRecording: false)
             await MainActor.run { self.apply(outcome) }
@@ -290,13 +316,21 @@ final class AgentModel {
     /// Restart the agent so it re-probes a permission it had cached as denied,
     /// holding an "applying" state across the restart so the momentary socket
     /// drop doesn't read as the agent falling over.
+    ///
+    /// Two callers, deliberately one path: the grant made through Proctor's own
+    /// dialog, and the grant made in System Settings and then noticed here. The
+    /// remedy is identical because the problem is — a running agent that cannot be
+    /// told — and having the hand-driven route be the same code is what stops the
+    /// two surfaces drifting into two answers.
     private func reprobeAfterGrant() {
         isApplying = true
+        recomputeRecovery()
         Actions.restartAgent()
         // launchd needs a beat to bring the agent back; polling immediately
         // races the restart and reports it as down.
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
             self?.isApplying = false
+            self?.recomputeRecovery()
             self?.refresh()
         }
     }
@@ -312,6 +346,45 @@ final class AgentModel {
         }
         lastChecked = Date()
         isChecking = false
+        recomputeRecovery()
+    }
+
+    /// Recomputed wherever any input lands: the doctor report carries the agent's
+    /// cached grant and its reachability, the HUD state carries whether a run is
+    /// in flight, and `isApplying` is set around a restart. They arrive on
+    /// different cadences and from different calls.
+    private func recomputeRecovery() {
+        let reachable: Bool
+        if case .reachable = reachability { reachable = true } else { reachable = false }
+        let agentSees = report?.grants
+            .first { $0.name == "Screen Recording" }?.granted ?? false
+        recovery = AgentRecovery.decide(
+            applying: isApplying,
+            reachable: reachable,
+            agentSeesScreenRecording: agentSees,
+            windowSeesScreenRecording: windowSeesScreenRecording,
+            runInFlight: hudRunning)
+    }
+
+    /// The menu's offers, taken.
+    ///
+    /// The restart is the same call the in-app grant already makes, deliberately
+    /// one path: the problem is identical — a running agent that cannot be told —
+    /// and having the hand-driven route share the code is what stops the two
+    /// surfaces drifting into two answers.
+    func take(_ offer: AgentRecovery.Offer) {
+        switch offer.kind {
+        case .startAgent:
+            // Off the main thread: bootstrapping takes a moment and the fallback
+            // shells out to the installer, exactly as the app delegate does at
+            // launch. The poll picks the change up.
+            DispatchQueue.global(qos: .userInitiated).async {
+                Actions.ensureAgent()
+                Task { @MainActor in self.refresh() }
+            }
+        case .restartAgent:
+            reprobeAfterGrant()
+        }
     }
 
     private func applyActivity(_ snapshot: ActivitySnapshot?) {
@@ -337,6 +410,9 @@ final class AgentModel {
         if let refusal = state.refusal { hudShowRefusal = refusal }
         else if state.canShow { hudShowRefusal = nil }
         character.show(state.phase)
+        // A run starting or ending changes what the restart offer costs, and that
+        // arrives here on the fast cadence rather than with the doctor report.
+        recomputeRecovery()
     }
 
     /// What the menu bar item draws. Readiness outranks the character: a calm
