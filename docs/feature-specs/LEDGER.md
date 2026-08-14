@@ -32,6 +32,6 @@
 | PRO-0023 | Offer to install Obscura when it is missing | 2026-08-15 | Merged |
 | PRO-0024 | A second browser lane for what Obscura cannot do | 2026-08-15 | Untriaged |
 | PRO-0025 | Prefer the background, and draw the pointer in the target's plane | 2026-08-15 | Merged |
-| PRO-0026 | Foreground takeover overlay that holds the machine visibly | 2026-08-15 | Untriaged |
+| PRO-0026 | Foreground takeover overlay that holds the machine visibly | 2026-08-15 | In Review |
 | PRO-0027 | The menu bar shows the character when idle | 2026-08-15 | Merged |
-| PRO-0028 | Re-check now says what it checks | 2026-08-15 | Untriaged |
+| PRO-0028 | Re-check now says what it checks | 2026-08-15 | In Review |
