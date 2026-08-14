@@ -341,7 +341,19 @@ struct YieldWiringTests {
         ])
 
         // Let the run hold, then release it the way a person does.
-        let running = Task { try await act(h, [step(.click), step(.click)], foreground: true) }
+        // Three steps, not two, and the third is what makes this deterministic.
+        //
+        // `checkpoint` probes at the top of its loop and then tests the latch, so
+        // a Resume landing between `look()` and that test returns without a
+        // further probe — and the pending person-resume is then consumed by
+        // nothing, leaving the hold to be closed by the run ending instead. With
+        // only two steps the parked checkpoint is the last one there is, so that
+        // window decides the assertion and the test fails about one run in three.
+        // A third step guarantees another checkpoint, and therefore another probe,
+        // after the Resume.
+        let running = Task {
+            try await act(h, [step(.click), step(.click), step(.click)], foreground: true)
+        }
         // Wait for the hold to exist before lifting it, rather than sleeping a
         // guessed interval. A Resume that lands before the run has yielded is
         // spent on an empty condition set: the override marks nothing, the yield
