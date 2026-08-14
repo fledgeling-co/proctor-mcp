@@ -28,6 +28,9 @@ struct RunQueueWiringTests {
         let ax = FakeAX(bundleId: Self.target)
         let scheduler = RunScheduler(waitLimit: waitLimit, now: { 0 })
         let session = Session(ax: ax, capture: FakeCapture(), scheduler: scheduler)
+        // Every step these tests drive is audited, and without a sink of its own
+        // that lands in the operator's live trail. Its siblings already do this.
+        await session.setAuditSink(AuditCollector().sink)
         await session.setDrawsHUD(false)
         await session.setRunControl(RunControl(pauseLimit: 900, now: { 0 }))
         _ = try await session.attachResolved(bundleId: Self.target, pid: nil, name: nil)
@@ -474,3 +477,26 @@ private actor Sampler {
     func record(_ value: Int) { samples.append(value) }
 }
 
+
+// MARK: - The interlock that keeps a test off the operator's trail
+
+@Suite("Audit trail isolation")
+struct AuditIsolationTests {
+
+    @Test("a test process resolves the audit trail away from the operator's own")
+    func testsNeverWriteTheLiveTrail() {
+        // This exists because the absence of it cost real data. A wiring test drove
+        // a Session without redirecting its sink, wrote 17 entries into the live
+        // trail, and fired the deliberately one-way plaintext-to-sealed conversion
+        // on real history. Discipline alone is not enough here: forgetting one line
+        // in one future test is all it takes, and the failure is silent and
+        // irreversible.
+        #expect(AuditLog.isTestProcess)
+        let live = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)/audit")
+        #expect(AuditLog.directory.standardizedFileURL != live.standardizedFileURL)
+        #expect(!AuditLog.url.path.hasPrefix(
+            FileManager.default.homeDirectoryForCurrentUser
+                .appendingPathComponent("Library/Application Support").path))
+    }
+}

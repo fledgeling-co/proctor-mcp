@@ -94,8 +94,39 @@ enum AuditLog {
 
     static let state = State()
 
+    /// A test process never writes the operator's trail, whatever it forgets to
+    /// inject. This is a safety interlock rather than a test hook, and it earns
+    /// its place: a test that drove a real `Session` without redirecting its sink
+    /// wrote 17 entries into a live trail and, worse, fired the one-way
+    /// plaintext-to-sealed conversion on real history — a conversion that is
+    /// deliberately irreversible and is supposed to be a decision somebody makes.
+    /// Relying on every future test remembering `setAuditSink` puts real data one
+    /// forgotten line away from a destructive migration, so the floor is here.
+    static var isTestProcess: Bool {
+        let env = ProcessInfo.processInfo.environment
+        // Xcode's XCTest host announces itself in the environment; `swift test`
+        // does not, and runs the suite inside `swiftpm-testing-helper`, so the
+        // host executable is the only thing that identifies it. Checked rather
+        // than assumed: the first version of this looked only for the XCTest
+        // variables, was inert under `swift test`, and the regression test below
+        // is what caught it. The agent's own executable is `proctor-agent` and
+        // matches none of these.
+        let host = (ProcessInfo.processInfo.arguments.first as NSString?)?
+            .lastPathComponent ?? ""
+        return env["XCTestConfigurationFilePath"] != nil
+            || env["XCTestBundlePath"] != nil
+            || host == "swiftpm-testing-helper"
+            || host.hasSuffix(".xctest")
+            || ProcessInfo.processInfo.arguments.contains { $0.hasSuffix(".xctest") }
+            || Bundle.main.bundlePath.hasSuffix(".xctest")
+    }
+
     static var directory: URL {
-        FileManager.default.homeDirectoryForCurrentUser
+        guard !isTestProcess else {
+            return URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+                .appendingPathComponent("proctor-test-audit", isDirectory: true)
+        }
+        return FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)/audit",
                                     isDirectory: true)
     }
