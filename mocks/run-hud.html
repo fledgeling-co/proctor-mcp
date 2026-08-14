@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en" data-appearance="dark" data-state="acting" data-queue="2" data-qopen="0">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proctor — run HUD mock</title>
+<style>
+/* ============================================================
+   Proctor run HUD v2. Three things drove this revision:
+
+   1. NEUTRAL GROUND. The onboarding mock's warm porcelain is right
+      for an app window and wrong for a panel floating over someone
+      else's app — it reads as brown mud against anything cool. The
+      HUD ground is neutral near-black / neutral white. Vermilion
+      stays; it is the brand and the only colour on the panel.
+
+   2. ONE LINE, ONE SIZE. v1 stacked a 10px caps lead over 13px body
+      with four chips competing for one row, so text ellipsed and the
+      type size appeared to change between states. Here the verb
+      carries the state ("Pressing", "About to press", "Refused"), so
+      there is no second line and nothing truncates. Every numeric
+      slot is tabular and fixed-width, so a value change never moves
+      its neighbour.
+
+   3. THE EXCEPTION GETS SURFACED, NOT THE RULE. Accessibility is the
+      normal plane, so it is never announced. A synthetic step is the
+      exception and says so, in words, once.
+   ============================================================ */
+
+:root{
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Helvetica Neue", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --spring: cubic-bezier(.32,.72,0,1);
+  --fast: 150ms; --med: 250ms; --slow: 400ms;
+  --accent:#FF6A3D; --green:#4ADE80; --amber:#FBBF24; --red:#FF5A54;
+}
+
+/* neutral graphite — no warm cast */
+:root[data-appearance="dark"]{
+  --hud:rgba(24,25,28,.74); --hud-solid:#18191C;
+  --brd:rgba(255,255,255,.13);
+  --ink:rgba(255,255,255,.95); --ink-2:rgba(255,255,255,.56);
+  --ink-3:rgba(255,255,255,.34); --ink-4:rgba(255,255,255,.15);
+  --fill:rgba(255,255,255,.08); --fill-2:rgba(255,255,255,.13);
+  --sep:rgba(255,255,255,.10);
+  --shadow:0 24px 60px -14px rgba(0,0,0,.72), 0 4px 14px -4px rgba(0,0,0,.5);
+  --scrim:rgba(10,10,12,.42); --on-accent:#1a0d07;
+  --well:inset 0 1px 2px rgba(0,0,0,.6), inset 0 -1px 1px rgba(255,255,255,.06);
+}
+:root[data-appearance="light"]{
+  --hud:rgba(252,252,253,.78); --hud-solid:#FBFBFC;
+  --brd:rgba(0,0,0,.10);
+  --ink:rgba(17,18,21,.94); --ink-2:rgba(17,18,21,.56);
+  --ink-3:rgba(17,18,21,.36); --ink-4:rgba(17,18,21,.16);
+  --fill:rgba(17,18,21,.05); --fill-2:rgba(17,18,21,.09);
+  --sep:rgba(17,18,21,.09);
+  --shadow:0 22px 54px -14px rgba(20,22,28,.34), 0 3px 10px -3px rgba(20,22,28,.18);
+  --scrim:rgba(255,255,255,.5); --on-accent:#fff;
+  --accent:#E24A18; --green:#16A34A; --amber:#B45309; --red:#DC2626;
+  --well:inset 0 1px 2px rgba(0,0,0,.14), inset 0 -1px 1px rgba(255,255,255,.7);
+}
+
+/* the colour the run is currently wearing — one variable, everything follows */
+[data-state="blocked"]{--live:var(--amber)}
+[data-state="error"]{--live:var(--red)}
+[data-state="finished"]{--live:var(--green)}
+[data-state="paused"],[data-state="idle"]{--live:var(--ink-3)}
+[data-state="acting"],[data-state="travelling"]{--live:var(--accent)}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font:13px/16px var(--font); color:var(--ink); background:#0e0f11;
+  -webkit-font-smoothing:antialiased; display:flex; flex-direction:column; overflow:hidden}
+::selection{background:color-mix(in oklab, var(--accent) 30%, transparent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:5px}
+
+/* ---------------- harness (not part of the design) ---------------- */
+.harness{flex:0 0 auto; display:flex; align-items:center; gap:13px; flex-wrap:wrap;
+  padding:8px 14px; background:#121316; border-bottom:1px solid rgba(255,255,255,.08); color:#fff}
+.brandtag{display:flex; align-items:center; gap:8px; font:11px/14px var(--font); font-weight:700;
+  letter-spacing:.09em; text-transform:uppercase}
+.brandtag .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 3px color-mix(in oklab, var(--accent) 22%, transparent)}
+.hgroup{display:flex; align-items:center; gap:6px}
+.hgroup > label{font:10px/13px var(--font); font-weight:700; letter-spacing:.09em;
+  text-transform:uppercase; color:rgba(255,255,255,.34)}
+.seg{display:inline-flex; background:rgba(255,255,255,.06); border-radius:8px; padding:2px; gap:2px}
+.seg button{appearance:none; border:0; background:transparent; color:rgba(255,255,255,.6);
+  font:11px/14px var(--font); font-weight:600; padding:4px 8px; border-radius:6px; cursor:pointer;
+  transition:background var(--fast) var(--spring), color var(--fast) var(--spring)}
+.seg button:hover{color:#fff; background:rgba(255,255,255,.08)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:#1a0d07}
+
+/* ------------- stage: a cool app, to prove the panel is neutral ------------- */
+.stage{flex:1 1 auto; position:relative; overflow:hidden}
+.app{position:absolute; inset:0; background:#F7F8FA; display:flex; flex-direction:column}
+.app-tb{height:38px; flex:0 0 auto; background:#EDEFF3; border-bottom:1px solid rgba(0,0,0,.07);
+  display:flex; align-items:center; gap:8px; padding:0 13px}
+.app-tb i{width:12px;height:12px;border-radius:50%;display:block}
+.app-tb .t{font:12px/15px var(--font); color:#5B6270; margin-left:6px}
+.app-body{flex:1 1 auto; display:grid; grid-template-columns:196px minmax(0,1fr); min-height:0}
+.app-side{border-right:1px solid rgba(0,0,0,.07); background:#F1F3F6; padding:11px 9px;
+  display:flex; flex-direction:column; gap:2px}
+.app-side b{font:10px/13px var(--font); font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+  color:#98A0AE; padding:9px 8px 4px}
+.app-row{font:12px/15px var(--font); color:#5B6270; padding:6px 8px; border-radius:6px}
+.app-row.on{background:#DDE3EC; color:#1D2430; font-weight:600}
+.app-main{padding:20px 24px; display:flex; flex-direction:column; gap:13px; overflow:hidden}
+.app-h{font:19px/24px var(--font); font-weight:650; color:#1D2430}
+.app-p{font:13px/19px var(--font); color:#5B6270; max-width:64ch}
+.app-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:11px}
+.app-card{background:#fff; border:1px solid rgba(0,0,0,.07); border-radius:10px; padding:13px;
+  display:flex; flex-direction:column; gap:6px}
+.app-card .k{font:10px/13px var(--font); font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  color:#98A0AE}
+.app-card .v{font:20px/24px var(--font); font-weight:650; color:#1D2430; font-variant-numeric:tabular-nums}
+.app-bars{display:flex; align-items:flex-end; gap:6px; height:100px}
+.app-bars span{flex:1; background:#DDE3EC; border-radius:3px 3px 0 0}
+
+.ptr{position:absolute; z-index:20; pointer-events:none;
+  transition:transform var(--slow) var(--spring), opacity var(--med) linear}
+.ptr svg{display:block; filter:drop-shadow(0 2px 5px rgba(0,0,0,.4))}
+.ptr .ring{position:absolute; left:-15px; top:-15px; width:36px; height:36px; border-radius:50%;
+  border:2px solid var(--accent); opacity:0}
+[data-state="acting"] .ptr .ring{animation:pulse 1.15s var(--spring) infinite}
+@keyframes pulse{0%{opacity:.9; transform:scale(.3)} 70%{opacity:0; transform:scale(1)} 100%{opacity:0}}
+[data-state="idle"] .ptr,[data-state="finished"] .ptr{opacity:0}
+
+/* ================= the panel ================= */
+.hud{position:absolute; z-index:30; pointer-events:none;
+  background:var(--hud); backdrop-filter:blur(34px) saturate(1.7);
+  border:.5px solid var(--brd); box-shadow:var(--shadow); color:var(--ink); overflow:hidden}
+.hud::before{content:""; position:absolute; inset:0; background:var(--scrim); z-index:-1}
+.hud button,.hud .grip{pointer-events:auto}
+
+/* --- the live line: one size, one row, nothing truncates --- */
+.line{display:flex; align-items:center; gap:11px; min-width:0; position:relative}
+.say{font:15px/20px var(--font); font-weight:600; letter-spacing:-.005em;
+  flex:1 1 auto; min-width:0; white-space:nowrap}
+.say em{font-style:normal; color:var(--live)}
+.say .v{color:var(--ink-2); font-weight:500}
+
+/* fixed-width numeric slots */
+.count{font:12px/15px var(--mono); color:var(--ink-3); font-variant-numeric:tabular-nums;
+  flex:0 0 auto; min-width:4ch; text-align:right}
+.clock{font:12px/15px var(--mono); color:var(--ink-2); font-variant-numeric:tabular-nums;
+  flex:0 0 auto; min-width:5ch}
+
+/* --- the character ---
+   The compact-Mac sprite, one PNG per run state, sliced from
+   design/character/sprite-states-sheet-42b853.png. It sits in a dark inset
+   bay in BOTH appearances: the sprite is white-bodied and would vanish on
+   the light panel, and the bay also hides the fact that these renders carry
+   a charcoal background rather than real alpha. Final assets get cut out. */
+.well{position:relative; flex:0 0 auto; width:38px; height:38px; border-radius:9px;
+  background:#131315; overflow:hidden; display:grid; place-items:center;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.7), 0 0 0 .5px var(--brd)}
+.well img{width:38px; height:38px; display:block; image-rendering:pixelated}
+[data-state="idle"] .well img{animation:breathe 3.6s steps(2, jump-none) infinite}
+[data-state="travelling"] .well img{animation:lean 1.15s steps(2, jump-none) infinite}
+[data-state="blocked"] .well img,[data-state="error"] .well img{animation:shake .5s var(--spring)}
+@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+@keyframes lean{0%,100%{transform:translateX(0)}50%{transform:translateX(2px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}60%{transform:translateX(2px)}}
+
+/* --- progress: the panel's own edge is the track --- */
+.rail{position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--fill)}
+.rail i{position:absolute; inset:0 auto 0 0; background:var(--live); border-radius:0 2px 2px 0;
+  transition:width var(--slow) var(--spring)}
+[data-state="travelling"] .rail i,[data-state="acting"] .rail i{animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:.65}50%{opacity:1}}
+
+/* --- controls --- */
+.ctl{appearance:none; border:0; background:var(--fill-2); color:var(--ink);
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  height:30px; padding:0 12px; border-radius:8px; cursor:pointer; flex:0 0 auto;
+  font:13px/16px var(--font); font-weight:600;
+  transition:background var(--fast) var(--spring), transform var(--fast) var(--spring)}
+.ctl:hover{background:color-mix(in oklab, var(--fill-2) 55%, var(--ink-4))}
+.ctl:active{transform:scale(.96)}
+.ctl svg{width:11px;height:11px;display:block}
+.ctl.icon{padding:0; width:30px}
+.ctl.stop{color:var(--red); background:color-mix(in oklab, var(--red) 16%, transparent)}
+.ctl.stop:hover{background:color-mix(in oklab, var(--red) 28%, transparent)}
+.ctl.go{background:var(--accent); color:var(--on-accent)}
+.ctl.go:hover{background:var(--accent); filter:brightness(1.1)}
+
+.grip{width:10px; height:18px; flex:0 0 auto; cursor:grab; border-radius:4px;
+  background:radial-gradient(circle at 50% 50%, var(--ink-4) .9px, transparent 1.1px);
+  background-size:4px 5px}
+
+/* the exception, stated once, in words */
+.exception{display:flex; align-items:center; gap:7px; font:12px/15px var(--font); color:var(--amber)}
+.exception svg{width:11px;height:11px;flex:0 0 auto}
+[data-plane="ax"] .exception{display:none}
+
+/* ================= B · Ledger ================= */
+.hud.b{right:34px; bottom:34px; width:352px; border-radius:16px; display:flex; flex-direction:column}
+.hud.b .line{padding:13px 14px 13px 16px}
+.hud.b .exception{padding:2px 16px 13px}
+.hud.b .trail{border-top:.5px solid var(--sep); padding:6px 16px 8px; display:flex; flex-direction:column}
+.tr{display:flex; align-items:center; gap:9px; height:24px; font:12px/15px var(--font);
+  color:var(--ink-3); min-width:0}
+.tr .g{width:11px; flex:0 0 auto; display:grid; place-items:center; color:var(--ink-4)}
+.tr .g svg{width:10px;height:10px;display:block}
+.tr .n{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0}
+.tr.done .g{color:var(--green)}
+.tr.refused .g{color:var(--amber)}
+.tr .ms{margin-left:auto; padding-left:10px; font:10px/13px var(--mono); color:var(--ink-3);
+  font-variant-numeric:tabular-nums; flex:0 0 auto; min-width:5ch; text-align:right}
+.hud.b .foot{border-top:.5px solid var(--sep); padding:9px 12px 11px 16px;
+  display:flex; align-items:center; gap:8px}
+.hud.b .foot .clock{margin-right:auto}
+
+/* ================= queue ================= */
+.qbar{display:flex; align-items:center; gap:9px; padding:9px 12px 9px 16px; width:100%;
+  border:0; border-top:.5px solid var(--sep); cursor:pointer; pointer-events:auto;
+  background:transparent; font:12px/15px var(--font); color:var(--ink-2); text-align:left;
+  transition:background var(--fast) linear}
+.qbar:hover{background:var(--fill)}
+.qbar .stack{position:relative; width:13px; height:11px; flex:0 0 auto}
+.qbar .stack i{position:absolute; left:0; right:0; height:3px; border-radius:1px; background:var(--ink-3)}
+.qbar .stack i:nth-child(1){top:0; right:3px}
+.qbar .stack i:nth-child(2){top:4px}
+.qbar .stack i:nth-child(3){top:8px; right:3px}
+.qbar .lbl{margin-right:auto}
+.qbar .lbl b{color:var(--ink); font-variant-numeric:tabular-nums}
+.qbar .chev{width:10px;height:10px; color:var(--ink-3); flex:0 0 auto;
+  transition:transform var(--fast) var(--spring)}
+[data-qopen="1"] .qbar .chev{transform:rotate(180deg)}
+[data-queue="0"] .qbar{display:none}
+
+.qbody{display:none; border-top:.5px solid var(--sep)}
+[data-qopen="1"] .qbody{display:block}
+[data-queue="0"] .qbody{display:none}
+.qacts{display:flex; align-items:center; gap:6px; padding:9px 12px 3px 16px}
+.qacts .lbl{margin-right:auto; font:10px/13px var(--font); font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-3)}
+.qmini{appearance:none; border:0; background:transparent; cursor:pointer; pointer-events:auto;
+  font:12px/15px var(--font); font-weight:600; color:var(--ink-2); padding:4px 9px; border-radius:6px;
+  transition:background var(--fast) linear, color var(--fast) linear}
+.qmini:hover{background:var(--fill-2); color:var(--ink)}
+.qmini.danger:hover{background:color-mix(in oklab, var(--red) 20%, transparent); color:var(--red)}
+.qmini[aria-pressed="true"]{background:color-mix(in oklab, var(--amber) 20%, transparent); color:var(--amber)}
+.qlist{display:flex; flex-direction:column; padding:2px 12px 10px 16px}
+.q{display:flex; align-items:center; gap:9px; height:28px; min-width:0}
+.q .pos{font:10px/13px var(--mono); color:var(--ink-4); width:1.5ch; flex:0 0 auto;
+  font-variant-numeric:tabular-nums}
+.q .who{font:12px/15px var(--font); font-weight:600; color:var(--ink); flex:0 0 auto}
+.q .sid{font:10px/13px var(--mono); color:var(--ink-3); flex:0 0 auto}
+.q .task{font:12px/15px var(--font); color:var(--ink-3); overflow:hidden; text-overflow:ellipsis;
+  white-space:nowrap; min-width:0; flex:1 1 auto}
+.q .wait{font:10px/13px var(--mono); color:var(--ink-3); font-variant-numeric:tabular-nums;
+  flex:0 0 auto; min-width:4ch; text-align:right}
+.q .drop{appearance:none; border:0; background:transparent; cursor:pointer; pointer-events:auto;
+  color:var(--ink-4); width:19px; height:19px; border-radius:5px; display:grid; place-items:center;
+  opacity:0; flex:0 0 auto; transition:opacity var(--fast) linear, background var(--fast) linear}
+.q:hover .drop,.q .drop:focus-visible{opacity:1}
+.q .drop:hover{background:color-mix(in oklab, var(--red) 20%, transparent); color:var(--red)}
+.q .drop svg{width:9px;height:9px;display:block}
+
+@media (prefers-reduced-transparency: reduce){ .hud{backdrop-filter:none; background:var(--hud-solid)} }
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important;
+    transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div class="harness">
+  <div class="brandtag"><span class="dot"></span> Proctor · run HUD</div>
+  <div class="hgroup"><label>State</label>
+    <div class="seg" id="segState">
+      <button data-v="idle" aria-pressed="false">Idle</button>
+      <button data-v="travelling" aria-pressed="false">Travelling</button>
+      <button data-v="acting" aria-pressed="true">Acting</button>
+      <button data-v="blocked" aria-pressed="false">Blocked</button>
+      <button data-v="paused" aria-pressed="false">Paused</button>
+      <button data-v="finished" aria-pressed="false">Finished</button>
+      <button data-v="error" aria-pressed="false">Error</button>
+    </div>
+  </div>
+  <div class="hgroup"><label>Queue</label>
+    <div class="seg" id="segQueue">
+      <button data-v="0" aria-pressed="false">None</button>
+      <button data-v="2" aria-pressed="true">2</button>
+      <button data-v="5" aria-pressed="false">5</button>
+    </div>
+  </div>
+  <div class="hgroup"><label>Appearance</label>
+    <div class="seg" id="segAppear">
+      <button data-v="light" aria-pressed="false">Light</button>
+      <button data-v="dark" aria-pressed="true">Dark</button>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <section class="app" aria-hidden="true">
+    <div class="app-tb">
+      <i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i>
+      <span class="t">Acme Console — Billing</span>
+    </div>
+    <div class="app-body">
+      <nav class="app-side">
+        <b>Workspace</b>
+        <div class="app-row">Overview</div>
+        <div class="app-row on">Billing</div>
+        <div class="app-row">Members</div>
+        <div class="app-row">Integrations</div>
+        <div class="app-row">Audit log</div>
+      </nav>
+      <div class="app-main">
+        <h2 class="app-h">Billing</h2>
+        <p class="app-p">Usage is billed monthly in arrears. Changing the plan takes effect at the start of the next cycle.</p>
+        <div class="app-grid">
+          <div class="app-card"><span class="k">This month</span><span class="v">$4,182</span></div>
+          <div class="app-card"><span class="k">Forecast</span><span class="v">$5,940</span></div>
+          <div class="app-card"><span class="k">Seats</span><span class="v">148</span></div>
+        </div>
+        <div class="app-bars">
+          <span style="height:38%"></span><span style="height:54%"></span><span style="height:44%"></span>
+          <span style="height:71%"></span><span style="height:62%"></span><span style="height:88%"></span>
+          <span style="height:76%"></span><span style="height:95%"></span><span style="height:81%"></span>
+          <span style="height:66%"></span><span style="height:58%"></span><span style="height:49%"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ptr" id="ptr" style="transform:translate(380px,300px)">
+    <span class="ring"></span>
+    <svg width="19" height="32" viewBox="0 0 19 32" aria-hidden="true">
+      <path d="M0 0 L0 28.2 L6.7 21.4 L10.5 31.4 L14.4 29.8 L10.8 20.2 L19 19.5 Z"
+            fill="#fff" stroke="rgba(0,0,0,.82)" stroke-width="1.25" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- ============ B · Ledger ============ -->
+  <aside class="hud b" role="status" aria-live="polite" aria-label="Proctor run status">
+    <div class="line">
+      <span class="grip"></span>
+      <span class="well"><img data-char src="../design/character/states/acting.png" alt="" /></span>
+      <span class="say" data-say></span>
+      <span class="count" data-count>3/7</span>
+      <span class="rail"><i data-fill></i></span>
+    </div>
+    <p class="exception">
+      <svg viewBox="0 0 10 10" fill="currentColor"><path d="M5 0 10 9H0z"/></svg>
+      Synthetic event — Acme Console must stay in front
+    </p>
+
+    <div class="trail" aria-label="Recent steps">
+      <div class="tr done"><span class="g"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 5.2 3.9 7.6 8.5 2.6"/></svg></span><span class="n">Focused Amount</span><span class="ms">412ms</span></div>
+      <div class="tr done"><span class="g"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 5.2 3.9 7.6 8.5 2.6"/></svg></span><span class="n">Picked “Net 30” from Terms</span><span class="ms">1.2s</span></div>
+      <div class="tr refused"><span class="g"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 1.6v4.2M5 8.2v.2"/></svg></span><span class="n">Hover refused</span><span class="ms">—</span></div>
+    </div>
+
+    <button class="qbar" data-act="qtoggle" aria-expanded="false">
+      <span class="stack"><i></i><i></i><i></i></span>
+      <span class="lbl"><b data-qcount>2</b> sessions waiting</span>
+      <svg class="chev" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6"
+           stroke-linecap="round" stroke-linejoin="round"><path d="M2 3.6 5 6.6 8 3.6"/></svg>
+    </button>
+    <div class="qbody">
+      <div class="qacts">
+        <span class="lbl">Queue</span>
+        <button class="qmini" data-act="hold" aria-pressed="false">Hold</button>
+        <button class="qmini danger" data-act="clear">Clear</button>
+      </div>
+      <div class="qlist" data-qlist></div>
+    </div>
+
+    <div class="foot">
+      <span class="clock" data-clock>0:14</span>
+      <button class="ctl" data-act="pause"><span data-pauseicon></span><span data-pauselabel>Pause</span></button>
+      <button class="ctl stop" data-act="stop">
+        <svg viewBox="0 0 10 10" fill="currentColor"><rect x="1.4" y="1.4" width="7.2" height="7.2" rx="1.7"/></svg>
+        Stop
+      </button>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+const root = document.documentElement;
+
+const PAUSE = `<svg viewBox="0 0 10 10" fill="currentColor"><rect x="1.6" y="1" width="2.5" height="8" rx="1"/><rect x="5.9" y="1" width="2.5" height="8" rx="1"/></svg>`;
+const PLAY  = `<svg viewBox="0 0 10 10" fill="currentColor"><path d="M2.4 1.3 8.6 5 2.4 8.7z"/></svg>`;
+const XSVG  = `<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2.4 2.4 7.6 7.6M7.6 2.4 2.4 7.6"/></svg>`;
+
+/* The verb carries the state, so there is no separate status label and no
+   second type size. Copy is written to fit — nothing here ellipses. */
+const STATES = {
+  idle:       {say:'Attached to <span class="v">Acme Console</span>', done:0, plane:"ax",  pause:"Pause"},
+  travelling: {say:'About to press <em>Send invoice</em>',            done:2, plane:"ax",  pause:"Pause"},
+  acting:     {say:'Pressing <em>Send invoice</em>',                  done:3, plane:"ax",  pause:"Pause"},
+  blocked:    {say:'Hover refused',                                   done:2, plane:"syn", pause:"Pause"},
+  paused:     {say:'Paused before <em>Send invoice</em>',             done:2, plane:"ax",  pause:"Resume"},
+  finished:   {say:'Run complete',                                    done:7, plane:"ax",  pause:"Pause"},
+  error:      {say:'<em>Send invoice</em> never settled',             done:3, plane:"ax",  pause:"Pause"}
+};
+const TOTAL = 7;
+
+const QUEUE = [
+  {who:"diolog-web",  sid:"7c02", task:"Checkout flow · Safari", wait:"0:22"},
+  {who:"armada",      sid:"b915", task:"Snapshot Mail",          wait:"1:04"},
+  {who:"proctor-mcp", sid:"a3f1", task:"Stability ×5",           wait:"1:47"},
+  {who:"bella-ios",   sid:"4d8e", task:"Capture Simulator",      wait:"2:31"},
+  {who:"open-design", sid:"e660", task:"Assert contrast",        wait:"3:09"}
+];
+let held = false, dropped = new Set();
+
+function depth(){
+  const on = document.querySelector("#segQueue button[aria-pressed='true']");
+  return on ? Number(on.dataset.v) : 2;
+}
+const visibleQueue = () => QUEUE.slice(0, depth()).filter((_, i) => !dropped.has(i));
+
+function renderQueue(){
+  const q = visibleQueue();
+  root.dataset.queue = String(q.length);
+  document.querySelectorAll("[data-qcount]").forEach(n => n.textContent = q.length);
+  document.querySelectorAll(".qmini[data-act='hold']").forEach(n => {
+    n.setAttribute("aria-pressed", String(held));
+    n.textContent = held ? "Held" : "Hold";
+  });
+  document.querySelectorAll(".qbar").forEach(n =>
+    n.setAttribute("aria-expanded", root.dataset.qopen === "1"));
+  document.querySelectorAll("[data-qlist]").forEach(list => {
+    list.innerHTML = q.map((r, i) => `
+      <div class="q">
+        <span class="pos">${i + 1}</span>
+        <span class="who">${r.who}</span><span class="sid">${r.sid}</span>
+        <span class="task">${r.task}</span>
+        <span class="wait">${r.wait}</span>
+        <button class="drop" aria-label="Remove ${r.who} from the queue" data-drop="${QUEUE.indexOf(r)}">${XSVG}</button>
+      </div>`).join("");
+  });
+}
+
+function apply(){
+  const s = STATES[root.dataset.state];
+  root.dataset.plane = s.plane;
+  document.querySelectorAll("[data-char]").forEach(n =>
+    n.src = `../design/character/states/${root.dataset.state}.png`);
+  document.querySelectorAll("[data-say]").forEach(n => n.innerHTML = s.say);
+  document.querySelectorAll("[data-count]").forEach(n => n.textContent = `${s.done}/${TOTAL}`);
+  document.querySelectorAll("[data-fill]").forEach(n => n.style.width = `${(s.done / TOTAL) * 100}%`);
+  document.querySelectorAll("[data-pauseicon]").forEach(n => n.innerHTML = s.pause === "Resume" ? PLAY : PAUSE);
+  document.querySelectorAll("[data-pauselabel]").forEach(n => n.textContent = s.pause);
+  document.querySelectorAll(".ctl[data-act='pause']").forEach(n =>
+    n.classList.toggle("go", s.pause === "Resume"));
+  renderQueue();
+}
+
+function wire(id, key){
+  const seg = document.getElementById(id);
+  seg.addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b) return;
+    seg.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    root.dataset[key] = b.dataset.v;
+    if(key === "queue") dropped.clear();
+    localStorage.setItem("proctor-hud-" + key, b.dataset.v);
+    apply();
+  });
+  const saved = localStorage.getItem("proctor-hud-" + key);
+  if(saved){
+    const b = seg.querySelector(`[data-v="${saved}"]`);
+    if(b){ seg.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+           root.dataset[key] = saved; }
+  }
+}
+["segState:state","segQueue:queue","segAppear:appearance"]
+  .forEach(p => wire(...p.split(":")));
+
+const params = new URLSearchParams(location.search);
+params.forEach((v, k) => {
+  const seg = {state:"segState", appearance:"segAppear", queue:"segQueue"}[k];
+  if(!seg) return;
+  const b = document.querySelector(`#${seg} [data-v="${v}"]`); if(!b) return;
+  document.querySelectorAll(`#${seg} button`).forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  root.dataset[k] = v;
+});
+if(params.get("qopen") === "1") root.dataset.qopen = "1";
+
+/* Run controls (Pause / Stop) act on the active run.
+   Queue controls (Hold / Clear) act on waiting runs. Never the same verb. */
+document.addEventListener("click", e => {
+  const drop = e.target.closest("[data-drop]");
+  if(drop){ dropped.add(Number(drop.dataset.drop)); renderQueue(); return; }
+
+  const q = e.target.closest(".qmini, .qbar");
+  if(q){
+    if(q.dataset.act === "hold")    held = !held;
+    if(q.dataset.act === "clear")   visibleQueue().forEach(r => dropped.add(QUEUE.indexOf(r)));
+    if(q.dataset.act === "qtoggle") root.dataset.qopen = root.dataset.qopen === "1" ? "0" : "1";
+    renderQueue(); return;
+  }
+
+  const b = e.target.closest(".ctl"); if(!b) return;
+  root.dataset.state = b.dataset.act === "stop" ? "finished"
+                     : root.dataset.state === "paused" ? "acting" : "paused";
+  document.querySelectorAll("#segState button").forEach(x =>
+    x.setAttribute("aria-pressed", String(x.dataset.v === root.dataset.state)));
+  apply();
+});
+
+apply();
+</script>
+</body>
+</html>
