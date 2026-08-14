@@ -12,10 +12,10 @@ import QuartzCore
 // where it acts.
 //
 // It is an annotation, not the system cursor. Nothing here moves the real
-// pointer or takes focus. The panel is non-activating, click-through and joins
-// every Space, so it floats over whatever is being driven without touching it.
+// pointer or takes focus. The panels are non-activating, click-through and join
+// every Space, so they float over whatever is being driven without touching it.
 //
-// Two properties make this safe to leave on by default. The panel belongs to
+// Two properties make this safe to leave on by default. The panels belong to
 // this process, and every capture is window-scoped to the app under test, so
 // the overlay never appears in a frame, never moves a state hash, and never
 // changes a pixel assertion. And every animation is committed to the render
@@ -23,6 +23,20 @@ import QuartzCore
 // process drawing a frame — the agent is busy settling and walking trees, and
 // an overlay that needed servicing would stutter exactly when it was most
 // worth watching.
+//
+// ONE PANEL PER SCREEN, and that is not a stylistic choice. The first version
+// used a single panel sized to the union of every display, which on a
+// 1728x1117 laptop beside a 2560x1440 display is 2560x2557pt — a 5120x5114
+// backing store, about 26 megapixels. The window server accepts such a window
+// and reports it perfectly healthy: CGWindowListCopyWindowInfo returns it at
+// the requested level with `onscreen = 1` and `alpha = 1`. It simply never
+// presents. Sixty full-screen captures across a six-step run were
+// byte-identical, and no amount of explicit CATransaction flushing changed
+// that, because nothing was wrong with the transactions. Measured on macOS
+// 26.6: a panel matching either screen individually (7Mpx and 14Mpx backing)
+// presents immediately; the union panel never does, whether its origin is
+// negative or zero. So each screen gets its own panel, and the pointer lives
+// on the one containing its target.
 @MainActor
 final class CursorOverlay {
 
@@ -39,15 +53,30 @@ final class CursorOverlay {
 
     private static let pointerSize = CGSize(width: 19, height: 32)
     private static let ringDiameter: CGFloat = 46
-    /// How long the pointer stays on screen after the last step before it fades.
+    /// How long the pointer stays on screen after a batch of steps finishes.
     private static let idleTimeout: TimeInterval = 2.5
+    /// The backstop: how long it may stay if nobody ever says the batch ended,
+    /// because a run that dies mid-flight should not leave a pointer on the
+    /// screen forever. Long enough to outlive any single settling step.
+    private static let abandonedTimeout: TimeInterval = 45
 
-    private var panel: NSPanel?
-    private var pointer: CAShapeLayer?
-    private var ring: CAShapeLayer?
-    /// The panel's origin in AppKit screen coordinates, so a screen point can be
-    /// turned into a layer point without asking the window each time.
-    private var panelOrigin: CGPoint = .zero
+    /// One screen's worth of overlay. The frame is the screen's AppKit frame,
+    /// kept here so a screen point can be turned into a layer point without
+    /// asking the window or the screen list again.
+    private struct Surface {
+        let panel: NSPanel
+        let pointer: CAShapeLayer
+        let ring: CAShapeLayer
+        let frame: CGRect
+    }
+
+    private var surfaces: [Surface] = []
+    /// The arrangement the current surfaces were built for. Displays come and
+    /// go — a laptop lid, a dock, a resolution change — and surfaces built for
+    /// yesterday's arrangement leave the pointer on a screen that is not there.
+    private var builtFor: [CGRect] = []
+    /// Which surface the pointer is currently living on.
+    private var activeIndex: Int?
     /// The last target, in screen points as the actuator and the AX tree state
     /// them: y down from the top of the primary display.
     private var lastTarget: CGPoint?
@@ -60,8 +89,25 @@ final class CursorOverlay {
     /// would draw a click arriving before the pointer did, which reads as the
     /// overlay being decorative rather than as a record of what happened.
     func travel(to target: CGPoint) async {
-        guard ensureShown(), let pointer else { return }
-        let duration = beginTravel(to: target, pointer: pointer)
+        ensureSurfaces()
+        guard let index = surfaceIndex(containing: target) else { return }
+
+        // Crossing to another display is a jump, not a flight: there is no
+        // continuous surface between two panels to animate across, and a
+        // pointer that slid through the gap would be describing a path the
+        // actuator never took.
+        let crossed = activeIndex != index
+        if crossed, let previous = activeIndex, surfaces.indices.contains(previous) {
+            let old = surfaces[previous]
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            old.pointer.opacity = 0
+            old.ring.opacity = 0
+            CATransaction.commit()
+        }
+        activeIndex = index
+
+        let duration = beginTravel(to: target, on: surfaces[index], landing: crossed)
         Self.flush()
         if duration > 0.01 {
             try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
@@ -70,7 +116,8 @@ final class CursorOverlay {
 
     /// A pulse where the pointer is standing, for a step that actuates.
     func click() async {
-        guard let pointer, let ring else { return }
+        guard let surface = activeSurface else { return }
+        let pointer = surface.pointer, ring = surface.ring
         ring.position = pointer.position
         armFade()
 
@@ -103,12 +150,13 @@ final class CursorOverlay {
     func drag(along route: [CGPoint], durationMs: Int) async {
         guard route.count >= 2, let start = route.first else { return }
         await travel(to: start)
-        guard let pointer, let ring else { return }
+        guard let surface = activeSurface else { return }
+        let pointer = surface.pointer, ring = surface.ring
 
         let seconds = min(6.0, max(0.15, Double(durationMs) / 1000))
         let path = CGMutablePath()
-        path.move(to: layerPoint(for: start))
-        for point in route.dropFirst() { path.addLine(to: layerPoint(for: point)) }
+        path.move(to: layerPoint(for: start, on: surface))
+        for point in route.dropFirst() { path.addLine(to: layerPoint(for: point, on: surface)) }
 
         let follow = CAKeyframeAnimation(keyPath: "position")
         follow.path = path
@@ -126,7 +174,7 @@ final class CursorOverlay {
         let destination = route[route.count - 1]
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        pointer.position = layerPoint(for: destination)
+        pointer.position = layerPoint(for: destination, on: surface)
         ring.position = pointer.position
         CATransaction.commit()
         lastTarget = destination
@@ -144,9 +192,14 @@ final class CursorOverlay {
     func hide() {
         fadeOut?.cancel()
         fadeOut = nil
-        guard let pointer, let ring else { return }
-        pointer.opacity = 0
-        ring.opacity = 0
+        guard !surfaces.isEmpty else { return }
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        for surface in surfaces {
+            surface.pointer.opacity = 0
+            surface.ring.opacity = 0
+        }
+        CATransaction.commit()
         Self.flush()
     }
 
@@ -155,20 +208,23 @@ final class CursorOverlay {
     /// Commit the move and report how long it will take. Split out from
     /// `travel` so the animation is committed in one synchronous pass and only
     /// the waiting is asynchronous.
-    private func beginTravel(to target: CGPoint, pointer: CAShapeLayer) -> TimeInterval {
-        let from = lastTarget
-        let destination = layerPoint(for: target)
-        let origin = from.map(layerPoint(for:)) ?? destination
+    ///
+    /// `landing` forces the no-flight case: a first appearance and a crossing
+    /// to another display both have nowhere to travel from.
+    private func beginTravel(to target: CGPoint, on surface: Surface,
+                             landing: Bool) -> TimeInterval {
+        let pointer = surface.pointer
+        let from = landing ? nil : lastTarget
+        let destination = layerPoint(for: target, on: surface)
+        let origin = from.map { layerPoint(for: $0, on: surface) } ?? destination
 
-        // A first appearance has nowhere to travel from, so it lands rather
-        // than flying in from a corner it was never at.
         let distance = from == nil ? 0 : hypot(destination.x - origin.x, destination.y - origin.y)
         let duration = distance < 2 ? 0 : min(0.62, 0.16 + distance / 1400)
 
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         pointer.position = destination
-        ring?.position = destination
+        surface.ring.position = destination
         pointer.opacity = 1
         CATransaction.commit()
         lastTarget = target
@@ -203,86 +259,116 @@ final class CursorOverlay {
         return duration
     }
 
-    private func armFade() {
+    /// The batch is over: fade on the short timer. Called once when a run of
+    /// steps finishes, which is the only moment that actually knows the pointer
+    /// has nothing left to point at.
+    ///
+    /// This exists because arming the short fade at draw time was wrong in a way
+    /// that hid the overlay for a whole debugging session: `beginTravel` runs
+    /// BEFORE the step it is drawing for, and a step that settles for a second
+    /// and a half spends most of the 2.5s timeout still executing. The pointer
+    /// was being drawn correctly and then fading while the step it belonged to
+    /// was still running.
+    func idle() {
+        armFade(after: Self.idleTimeout)
+    }
+
+    private func armFade(after seconds: TimeInterval = CursorOverlay.abandonedTimeout) {
         fadeOut?.cancel()
         let work = DispatchWorkItem { [weak self] in
-            guard let self, let pointer = self.pointer, let ring = self.ring else { return }
+            guard let self, let surface = self.activeSurface else { return }
             let fade = CABasicAnimation(keyPath: "opacity")
-            fade.fromValue = pointer.opacity
+            fade.fromValue = surface.pointer.opacity
             fade.toValue = 0
             fade.duration = 0.45
             fade.timingFunction = CAMediaTimingFunction(name: .easeIn)
-            pointer.opacity = 0
-            ring.opacity = 0
-            pointer.add(fade, forKey: "fade")
+            surface.pointer.opacity = 0
+            surface.ring.opacity = 0
+            surface.pointer.add(fade, forKey: "fade")
             Self.flush()
         }
         fadeOut = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + Self.idleTimeout, execute: work)
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: work)
     }
 
     // MARK: - Committing
 
     /// Push the layer tree to the render server now.
     ///
-    /// The agent owns main with a bare `CFRunLoopRun`, deliberately — see
-    /// `main.swift`. It never runs an NSApplication event loop, and without one
-    /// the implicit transaction that would normally carry these mutations across
-    /// is not reliably drained: the panel arrives in the window server at the
-    /// right level, the right size and fully opaque, and stays empty. Measured
-    /// on this machine, that is exactly what happened — 60 full-screen frames
-    /// captured across a six-step run were byte-identical over the region the
-    /// pointer was travelling through.
-    ///
-    /// Flushing at the end of each entry point makes the crossing explicit
-    /// rather than dependent on a loop this process does not run. It is cheap,
-    /// it is called once per step rather than per frame, and the animations
-    /// themselves still play on the render server without this process drawing.
+    /// The agent owns main with a bare `CFRunLoopRun` — see `main.swift` — and
+    /// never runs an NSApplication event loop. Flushing at the end of each
+    /// entry point makes the crossing to the render server explicit rather than
+    /// dependent on a loop this process does not run. It is called once per
+    /// step rather than per frame, and the animations still play on the render
+    /// server without this process drawing.
     ///
     /// Never call this from inside a `begin`/`commit` pair — every call site
-    /// below is outside one.
+    /// above is outside one.
     private static func flush() {
         CATransaction.flush()
     }
 
     // MARK: - Coordinates
 
-    /// Screen points to layer points. The actuator posts a step's point through
-    /// CGEventPost and an AX frame is stated the same way — y down from the top
-    /// of the primary display — while AppKit measures y up from its bottom. The
-    /// flip is against the primary screen specifically, which is the one that
-    /// defines the origin both spaces are stated against.
-    private func layerPoint(for screenPoint: CGPoint) -> CGPoint {
+    private var activeSurface: Surface? {
+        guard let index = activeIndex, surfaces.indices.contains(index) else { return nil }
+        return surfaces[index]
+    }
+
+    /// A screen point stated y-down from the top of the primary display, as the
+    /// actuator posts it through CGEventPost and as an AX frame states it,
+    /// converted to AppKit's y-up-from-the-bottom space.
+    private func appKitPoint(for screenPoint: CGPoint) -> CGPoint {
         let flip = NSScreen.screens.first?.frame.maxY ?? 0
-        return CGPoint(x: screenPoint.x - panelOrigin.x,
-                       y: (flip - screenPoint.y) - panelOrigin.y)
+        return CGPoint(x: screenPoint.x, y: flip - screenPoint.y)
     }
 
-    // MARK: - The panel
+    /// Screen points to one surface's layer points.
+    private func layerPoint(for screenPoint: CGPoint, on surface: Surface) -> CGPoint {
+        let appKit = appKitPoint(for: screenPoint)
+        return CGPoint(x: appKit.x - surface.frame.minX,
+                       y: appKit.y - surface.frame.minY)
+    }
 
-    /// Build the panel on first use and keep it fitted to the current display
-    /// arrangement. False means there is no screen to draw on.
-    @discardableResult
-    private func ensureShown() -> Bool {
-        if pointer == nil { build() }
-        guard let panel else { return false }
-        // Displays come and go — a laptop lid, a dock, a resolution change —
-        // and a panel sized to yesterday's arrangement leaves the pointer
-        // clipped or invisible on the display that was added.
-        let wanted = Self.desktopBounds()
-        if panel.frame != wanted {
-            panel.setFrame(wanted, display: false)
-            panel.contentView?.frame = CGRect(origin: .zero, size: wanted.size)
-            panel.contentView?.layer?.frame = CGRect(origin: .zero, size: wanted.size)
-            panelOrigin = wanted.origin
+    /// Which screen a target belongs on. A point in the dead space between two
+    /// unaligned displays belongs to no screen, and rather than dropping the
+    /// step's drawing entirely it goes to the nearest surface, which is where
+    /// somebody looking for it would look.
+    private func surfaceIndex(containing screenPoint: CGPoint) -> Int? {
+        guard !surfaces.isEmpty else { return nil }
+        let appKit = appKitPoint(for: screenPoint)
+        if let hit = surfaces.firstIndex(where: { $0.frame.contains(appKit) }) { return hit }
+        return surfaces.indices.min { a, b in
+            distance(from: appKit, to: surfaces[a].frame) < distance(from: appKit, to: surfaces[b].frame)
         }
-        panel.orderFrontRegardless()
-        Self.flush()
-        return true
     }
 
-    private func build() {
-        let frame = Self.desktopBounds()
+    private func distance(from point: CGPoint, to rect: CGRect) -> CGFloat {
+        let dx = max(rect.minX - point.x, 0, point.x - rect.maxX)
+        let dy = max(rect.minY - point.y, 0, point.y - rect.maxY)
+        return hypot(dx, dy)
+    }
+
+    // MARK: - The panels
+
+    /// Build one panel per screen, and rebuild when the arrangement changes.
+    private func ensureSurfaces() {
+        let arrangement = NSScreen.screens.map(\.frame)
+        guard arrangement != builtFor else {
+            for surface in surfaces { surface.panel.orderFrontRegardless() }
+            Self.flush()
+            return
+        }
+
+        for surface in surfaces { surface.panel.orderOut(nil) }
+        surfaces = arrangement.map(build(for:))
+        builtFor = arrangement
+        activeIndex = nil
+        lastTarget = nil
+        Self.flush()
+    }
+
+    private func build(for frame: CGRect) -> Surface {
         let panel = NSPanel(contentRect: frame,
                             styleMask: [.borderless, .nonactivatingPanel],
                             backing: .buffered,
@@ -293,7 +379,7 @@ final class CursorOverlay {
         panel.isFloatingPanel = true
         panel.hidesOnDeactivate = false
         panel.isReleasedWhenClosed = false
-        // Click-through is the whole safety story: the panel covers every
+        // Click-through is the whole safety story: the panels cover every
         // display, so anything less would put a sheet of glass over the machine.
         panel.ignoresMouseEvents = true
         panel.level = .screenSaver
@@ -338,26 +424,11 @@ final class CursorOverlay {
         pointer.opacity = 0
         root.addSublayer(pointer)
 
-        self.panel = panel
-        self.pointer = pointer
-        self.ring = ring
-        self.panelOrigin = frame.origin
         panel.orderFrontRegardless()
+        return Surface(panel: panel, pointer: pointer, ring: ring, frame: frame)
     }
 
-    /// Every display as one rectangle, so a single panel and a single layer
-    /// tree cover a move that crosses from one screen to another.
-    private static func desktopBounds() -> CGRect {
-        let screens = NSScreen.screens
-        guard var union = screens.first?.frame else {
-            return CGRect(x: 0, y: 0, width: 1440, height: 900)
-        }
-        for screen in screens.dropFirst() { union = union.union(screen.frame) }
-        return union
-    }
-
-    /// The classic pointer outline, stated as fractions of the bounds with the
-    /// tip at the top-left corner, which is where the anchor sits.
+    /// The arrow glyph, in a unit-ish outline scaled to `pointerSize`.
     private static func arrowPath() -> CGPath {
         let w = pointerSize.width, h = pointerSize.height
         let outline: [(CGFloat, CGFloat)] = [

@@ -70,4 +70,10 @@ extension Session {
         }
         return [start, CGPoint(x: start.x + delta[0], y: start.y + delta[1])]
     }
+
+    /// Let the pointer fade, now that a batch of steps has finished.
+    func restCursor() async {
+        guard CursorOverlay.isEnabled else { return }
+        await CursorOverlay.shared.idle()
+    }
 }

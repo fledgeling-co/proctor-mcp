@@ -149,6 +149,9 @@ extension Session {
                                                           step: step, pointerMarks: pointerMarks))
             }
         }
+        // The batch is over, whether it completed or broke early, so the
+        // pointer has nothing left to point at and may fade on the short timer.
+        await restCursor()
         return run
     }
 
