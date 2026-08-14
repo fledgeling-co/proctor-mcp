@@ -38,6 +38,32 @@ extension Session {
         let audit = try enforcePolicy(tool: "proctor_act", window: window)
         loadFlowsIfNeeded()
 
+        // The lanes for this batch, taken once and held to the last step. Which
+        // ones it needs is knowable from the steps and from `foreground` before
+        // anything runs, and it never asks for another after it starts.
+        let demand = lanes(for: steps, window: window, foreground: foreground)
+        let summary = StepDescription.runLine(.act(steps: steps.count),
+                                              app: appHandle(forWindow: window)?.name)
+        return try await scheduled(lanes: demand, summary: summary) {
+            try await actInLane(window: id, handle: window, steps: steps, settle: settle,
+                                foreground: foreground, captureEach: captureEach,
+                                diffEach: diffEach, record: record,
+                                pointerMarks: pointerMarks, audit: audit)
+        }
+    }
+
+    private func actInLane(window id: String, handle window: WindowHandle, steps: [ActionStep],
+                           settle: SettlePolicy, foreground: Bool, captureEach: Bool,
+                           diffEach: Bool, record: String?, pointerMarks: Bool,
+                           audit: AuditContext) async throws -> JSONValue {
+        // Re-read the gate now that the lane is ours. The check before the queue
+        // is what stops a refused run taking a place in the line; this one is the
+        // authority at the moment of driving, which is not the same thing when a
+        // run waited forty seconds for its turn and the approval token that let
+        // it through was TTL-bounded. The same principle a repeated sweep already
+        // follows between its repeats. It reads settings and a token and touches
+        // no window, so re-running it costs nothing.
+        let audit = try enforcePolicy(tool: audit.tool, window: window)
         hudRunControlBegin()
 
         let target = record ?? recording

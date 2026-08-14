@@ -38,6 +38,13 @@ public struct CUAStep: Sendable {
         case wait(ms: Int)       // a bounded pause; the app is left to settle
     }
     public var operation: Operation
+
+    /// The actuating step this maps to, if it actuates at all. A screenshot and a
+    /// pause drive nothing, so a plan's lanes are decided from the steps that do.
+    public var actionStep: ActionStep? {
+        if case .act(let step) = operation { return step }
+        return nil
+    }
     /// The CUA action name, carried into the result so a façade-driven run is
     /// auditable against the schema it claimed to speak.
     public var action: String

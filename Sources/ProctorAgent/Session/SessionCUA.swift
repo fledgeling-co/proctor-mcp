@@ -29,6 +29,28 @@ extension Session {
         case .openai:    plan = try CUATranslator.openai(payload, windowFrame: window.frame, scale: scale)
         }
 
+        // The façade's whole plan is one run and takes one lane set, decided from
+        // the translated steps before any of them runs. Queueing per translated
+        // action would let another session act between a click and the type that
+        // follows it, which is the same split this queue exists to prevent — the
+        // façade's callers just express it in somebody else's schema.
+        let demand = lanes(for: plan.compactMap(\.actionStep), window: window,
+                           foreground: foreground)
+        let summary = StepDescription.runLine(.computerUse,
+                                              app: appHandle(forWindow: window)?.name)
+        return try await scheduled(lanes: demand, summary: summary) {
+            try await computerUseInLane(schema: schema, window: id, handle: window, plan: plan,
+                                        foreground: foreground, audit: audit)
+        }
+    }
+
+    private func computerUseInLane(schema: CUASchema, window id: String, handle window: WindowHandle,
+                                   plan: [CUAStep], foreground: Bool,
+                                   audit: AuditContext) async throws -> JSONValue {
+        // Re-read the gate now the lane is ours, for the reason `act` gives: a
+        // run that waited for its turn may have been admitted by an approval that
+        // has since run out.
+        let audit = try enforcePolicy(tool: audit.tool, window: window)
         var stepsOut: [JSONValue] = []
         var completed = 0
         var failedAt: Int?

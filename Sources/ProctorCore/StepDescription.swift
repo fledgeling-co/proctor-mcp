@@ -390,3 +390,40 @@ public enum StepDescription {
         }
     }
 }
+
+// MARK: - Whole runs
+
+public extension StepDescription {
+
+    /// What a whole run wants, for the queue's list — the row a person reads to
+    /// decide whether to drop somebody's work.
+    ///
+    /// It lives here rather than in the scheduler for the reason the type comment
+    /// gives: one description of a run, shared by every surface. In particular the
+    /// fence is the same. A flow name is caller-supplied and an application name is
+    /// read off the screen, and both are shown to a person deciding what to stop,
+    /// so both are contained exactly as a step's object is.
+    enum RunSummary: Sendable, Equatable {
+        case act(steps: Int)
+        case replay(flow: String)
+        case stability(flow: String, runs: Int)
+        case computerUse
+    }
+
+    static func runLine(_ summary: RunSummary, app: String?) -> String {
+        let subject: String
+        switch summary {
+        case .act(let steps):
+            subject = "Act ×\(steps)"
+        case .replay(let flow):
+            subject = sanitised(flow).map { "Replay \"\($0)\"" } ?? "Replay"
+        case .stability(let flow, let runs):
+            subject = sanitised(flow).map { "Stability ×\(runs) of \"\($0)\"" }
+                ?? "Stability ×\(runs)"
+        case .computerUse:
+            subject = "Computer use"
+        }
+        guard let app = sanitised(app) else { return subject }
+        return "\(subject) · \"\(app)\""
+    }
+}

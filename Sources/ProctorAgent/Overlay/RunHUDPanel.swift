@@ -82,6 +82,20 @@ final class RunHUDPanel {
     private var clockTimer: Timer?
     private var linger: DispatchWorkItem?
     private var themeObserver: NSObjectProtocol?
+    /// The scheduler's latest state, held with absolute timestamps so the 1 Hz
+    /// redraw can age the wait times without the scheduler having to tick.
+    private var queue = RunQueueSnapshot()
+    /// Whether the list is open. A person's choice about this panel, so it lives
+    /// here and never in the scheduler.
+    private var queueExpanded = false
+    /// Which run is on the live line, so it is not repeated in the list below it.
+    private var liveRun: Int?
+    /// The keeper the queue's controls act on, handed over at start-up. Nil until
+    /// then, and a nil keeper means there is nothing queued for a button to act
+    /// on — the scheduler and the session are created together.
+    private var scheduler: RunScheduler?
+
+    func bind(scheduler: RunScheduler) { self.scheduler = scheduler }
     /// Bumped every time the panel is presented. A fade started for one run must
     /// not order the panel out from under the next one — a stability sweep can
     /// start its next pass well inside the fade it just triggered.
@@ -104,6 +118,86 @@ final class RunHUDPanel {
         state.apply(event)
         if case .runEnded = event { scheduleLinger() }
         render()
+    }
+
+    // MARK: - The queue's side
+
+    /// The scheduler's state changed. Pushed rather than polled, so the bar is
+    /// right the moment somebody else's run joins the line.
+    func queueChanged(_ snapshot: RunQueueSnapshot) {
+        queue = snapshot
+        // The live line shows the most recently started run, and Pause and Stop
+        // act on that one — one panel, one run in focus. So the newest active id
+        // is the run already on screen, and it is not repeated in the list below.
+        liveRun = snapshot.active.map(\.id).max()
+        // A list nobody can see is not open. Collapsing it when the bar goes
+        // means the next contention opens at the resting footprint rather than
+        // at whatever height the last one was left at.
+        if snapshot.waitingCount == 0 { queueExpanded = false }
+        render()
+    }
+
+    /// The bar expands in place. Nothing else on the panel moves: the footer is
+    /// docked and the panel grows upward, so Pause and Stop stay where they are
+    /// under the cursor of somebody reaching for them.
+    func toggleQueue() {
+        queueExpanded.toggle()
+        render()
+    }
+
+    /// Hold stops any waiting run starting — including the active session's own
+    /// next one, because a hold a session can jump by sending its next batch is
+    /// not a control. The run in flight is untouched and finishes.
+    func toggleHold() {
+        guard let scheduler else { return }
+        let wanted = !queue.held
+        Task {
+            let held = await scheduler.setHeld(wanted)
+            await RunHUDPanel.audit(held ? "hold" : "release",
+                                    detail: held
+                                        ? "a person held Proctor's queue, so no waiting run starts"
+                                        : "a person released Proctor's queue")
+            _ = held
+        }
+    }
+
+    /// Every waiting run goes and every one of their calls returns saying a
+    /// person did it. The active run is untouched — that is what Stop is for, and
+    /// it is deliberately a different word on a different row.
+    func clearQueue() {
+        guard let scheduler else { return }
+        Task {
+            let removed = await scheduler.clear()
+            guard removed > 0 else { return }
+            await RunHUDPanel.audit("clear",
+                                    detail: "a person cleared Proctor's queue, removing \(removed) "
+                                          + "waiting run\(removed == 1 ? "" : "s")")
+        }
+    }
+
+    /// One waiting run goes; everything else keeps its position. Immediate, with
+    /// no undo window: the removed caller is being held open on this decision, so
+    /// a delay would be paid by that caller rather than by the person deciding.
+    func dropFromQueue(_ run: Int) {
+        guard let scheduler else { return }
+        Task {
+            guard await scheduler.drop(id: run) else { return }
+            await RunHUDPanel.audit("drop",
+                                    detail: "a person removed a waiting run from Proctor's queue")
+        }
+    }
+
+    /// A person's hold, clear or drop is recorded the way a stop already is:
+    /// these decide whether somebody's agent runs, which is the same class of
+    /// event and worth the same accounting.
+    nonisolated(unsafe) static var auditSink: @Sendable (String, String) -> Void = { what, detail in
+        _ = AuditLog.append(AuditRecord(timestamp: Date().timeIntervalSince1970,
+                                        tool: "proctor_queue.\(what)",
+                                        outcome: "refused", reason: detail))
+    }
+
+    private nonisolated static func audit(_ what: String, detail: String) async {
+        auditSink(what, detail)
     }
 
     // MARK: - Presenting
@@ -240,6 +334,12 @@ final class RunHUDPanel {
 
     private func render() {
         guard let panel, let content else { return }
+        // Aged here rather than in the scheduler: the wait times are the only
+        // thing on the panel that changes with nothing happening, and the 1 Hz
+        // clock timer that draws the run clock already ticks.
+        state.setQueue(RunQueueModel.from(queue, live: liveRun,
+                                          now: Date().timeIntervalSince1970,
+                                          expanded: queueExpanded))
         content.model = state.model
         content.elapsed = runStarted.map { Date().timeIntervalSince($0) } ?? 0
         content.needsDisplay = true
@@ -268,7 +368,7 @@ final class RunHUDPanel {
     }
 
     private func height() -> CGFloat {
-        RunHUDLayout.height(exception: state.model.exception != nil)
+        RunHUDLayout.height(exception: state.model.exception != nil, queue: state.model.queue)
     }
 
     private func startClock() {
@@ -299,6 +399,7 @@ final class RunHUDPanel {
     /// that moves, which is why it is also the only thing that setting gates.
     private func hide() {
         clockTimer?.invalidate(); clockTimer = nil
+
         RunHUDAvailability.shared.record(built: false, reason: nil)
         guard let panel else { return }
         guard !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion else {

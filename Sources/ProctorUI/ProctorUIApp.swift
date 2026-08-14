@@ -166,9 +166,16 @@ struct MenuBarContent: View {
     /// is nothing to report until it answers.
     private var activityLine: String? {
         guard case .reachable = model.reachability else { return nil }
-        if let current = model.currentActivity { return "Running \(current)" }
-        if let last = model.recentActivity.first { return "Last: \(last.tool)" }
-        return "Idle — no model connected"
+        // The waiting count rides alongside whatever is running, so somebody can
+        // answer "is something of mine stuck behind another session" without
+        // opening the run panel.
+        let waiting = model.queueWaiting > 0
+            ? " · \(model.queueWaiting) waiting" : ""
+        if let current = model.currentActivity { return "Running \(current)\(waiting)" }
+        if let last = model.recentActivity.first { return "Last: \(last.tool)\(waiting)" }
+        return model.queueWaiting > 0
+            ? "\(model.queueWaiting) session\(model.queueWaiting == 1 ? "" : "s") waiting"
+            : "Idle — no model connected"
     }
 
     private var activityIcon: String {

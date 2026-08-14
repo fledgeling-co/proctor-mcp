@@ -76,6 +76,7 @@ public struct AgentError: Codable, Sendable, Error {
         case secureInputActive         // synthetic-event mode blocked by Secure Event Input
         case policyDenied              // the app policy gate refused this actuation (blocked or needs a token)
         case haltedByPerson            // a person stopped or held the run from the run HUD — not a fault
+        case queueBusy                 // another session held the lane and this run never started — nothing actuated
         case invalidArguments
         case notImplemented
         case internalError

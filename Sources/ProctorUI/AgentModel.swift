@@ -29,6 +29,10 @@ final class AgentModel {
     /// menu bar and status window can show what a model is driving.
     private(set) var currentActivity: String?
     private(set) var recentActivity: [ActivityItem] = []
+    /// How many other sessions are waiting for their turn. Mirrored here so the
+    /// queue is answerable from the menu bar without the run panel being on
+    /// screen — the scheduler runs whether or not anything is drawn.
+    private(set) var queueWaiting = 0
 
     struct ActivityItem: Identifiable, Sendable {
         let id = UUID()
@@ -163,11 +167,13 @@ final class AgentModel {
         guard let snapshot else { return }
         currentActivity = snapshot.current
         recentActivity = snapshot.items
+        queueWaiting = snapshot.queueWaiting
     }
 
     struct ActivitySnapshot: Sendable {
         let current: String?
         let items: [ActivityItem]
+        let queueWaiting: Int
     }
 
     private enum Outcome {
@@ -215,7 +221,8 @@ final class AgentModel {
             let at = entry["at"]?.stringValue.flatMap(iso.date(from:)) ?? Date()
             return ActivityItem(tool: tool, at: at, ok: entry["ok"]?.boolValue ?? true)
         } ?? []
-        return ActivitySnapshot(current: result["current"]?.stringValue, items: items)
+        return ActivitySnapshot(current: result["current"]?.stringValue, items: items,
+                                queueWaiting: result["queueWaiting"]?.intValue ?? 0)
     }
 }
 

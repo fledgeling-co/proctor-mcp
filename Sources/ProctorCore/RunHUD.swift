@@ -78,6 +78,98 @@ public enum RunHUDEvent: Sendable {
     case lingerElapsed
 }
 
+/// What the queue bar shows, as a value.
+///
+/// The bar sits between the trail and the run controls and expands in place. It
+/// is absent entirely when nothing is waiting — the queue costs nothing until
+/// there is contention.
+///
+/// Two controls, and they are deliberately not the run's two. Pause and Stop act
+/// on the run; Hold and Clear act on the list, live in its header, and never sit
+/// beside the run controls or share a word with them. Calling both "pause" is
+/// how somebody stops the wrong thing.
+public struct RunQueueModel: Sendable, Equatable {
+
+    /// One row in the expanded list. Every run the scheduler knows about except
+    /// the one on the live line appears here — a run in another lane is not
+    /// queued, and listing it as queued would understate what the scheduler can
+    /// actually do — so a row is either running or waiting at a position.
+    public struct Row: Sendable, Equatable {
+        /// Its place in the line, or nil when it is already running.
+        public var position: Int?
+        public var session: String
+        public var connection: String
+        public var summary: String
+        /// How long it has waited, `m:ss`, tabular where it is drawn.
+        public var waited: String
+        /// The scheduler's own id, so a drop removes the run a person pointed at
+        /// rather than whatever is at that index a moment later.
+        public var run: Int
+
+        public init(position: Int?, session: String, connection: String,
+                    summary: String, waited: String, run: Int) {
+            self.position = position; self.session = session; self.connection = connection
+            self.summary = summary; self.waited = waited; self.run = run
+        }
+
+        public var isWaiting: Bool { position != nil }
+    }
+
+    public var rows: [Row] = []
+    /// Only the waiting ones. Counting the running ones would overstate how
+    /// blocked the machine is.
+    public var waitingCount: Int = 0
+    public var held: Bool = false
+    /// Whether the list is open. A person's choice, so it lives with the panel
+    /// and is passed in rather than derived from the scheduler.
+    public var expanded: Bool = false
+
+    public init() {}
+
+    /// Absent entirely when nothing is waiting — the queue costs nothing until
+    /// there is contention — with one exception that is not decoration. A held
+    /// queue starts nothing, and Hold lives inside this bar, so a bar that
+    /// vanished when the last waiter left would hold the machine with no way on
+    /// screen to release it: every later run would wait out its ceiling and
+    /// nothing would say why.
+    public var visible: Bool { waitingCount > 0 || held }
+
+    public var label: String {
+        guard waitingCount > 0 else { return "Queue held — nothing will start" }
+        return "\(waitingCount) session\(waitingCount == 1 ? "" : "s") waiting"
+    }
+
+    /// The button says what it is, and what it says changes when it is on. Never
+    /// "pause".
+    public var holdLabel: String { held ? "Held" : "Hold" }
+
+    public static func waited(seconds: Double) -> String {
+        let whole = max(0, Int(seconds))
+        return String(format: "%d:%02d", whole / 60, whole % 60)
+    }
+
+    /// Fold a scheduler snapshot into the rows the panel draws. `live` is the run
+    /// on the live line, which is shown there and not repeated in the list.
+    public static func from(_ snapshot: RunQueueSnapshot, live: Int?, now: Double,
+                            expanded: Bool) -> RunQueueModel {
+        var out = RunQueueModel()
+        out.held = snapshot.held
+        out.expanded = expanded
+        out.waitingCount = snapshot.waitingCount
+        let running = snapshot.active.filter { $0.id != live }.map { run in
+            Row(position: nil, session: run.identity.project, connection: run.identity.connection,
+                summary: run.summary, waited: waited(seconds: now - run.since), run: run.id)
+        }
+        let queued = snapshot.waiting.enumerated().map { index, run in
+            Row(position: index + 1, session: run.identity.project,
+                connection: run.identity.connection, summary: run.summary,
+                waited: waited(seconds: now - run.since), run: run.id)
+        }
+        out.rows = running + queued
+        return out
+    }
+}
+
 public struct RunHUDModel: Sendable, Equatable {
 
     /// One finished step in the trail.
@@ -106,6 +198,9 @@ public struct RunHUDModel: Sendable, Equatable {
     /// the rule is never announced, only the exception is.
     public var exception: String?
     public var visible: Bool = false
+    /// The queue bar's state. It belongs to the machine rather than to this run,
+    /// so it survives a run beginning and ending.
+    public var queue = RunQueueModel()
     /// Set when a run ends: how long the panel stays before it goes.
     public var lingerSeconds: Double?
 
@@ -153,6 +248,10 @@ public struct RunHUDState: Sendable {
             fresh.visible = true
             fresh.phase = .travelling
             fresh.line = "Starting"
+            // The queue is a property of the machine, not of this run: other
+            // sessions are still waiting on the far side of a run beginning, and
+            // a bar that emptied itself every time one started would be lying.
+            fresh.queue = model.queue
             self.app = app
             self.pending = nil
             model = fresh
@@ -229,6 +328,10 @@ public struct RunHUDState: Sendable {
             model.visible = false
         }
     }
+
+    /// The queue's state, pushed in rather than reduced from an event: it is the
+    /// scheduler's business and changes whether or not this run does anything.
+    public mutating func setQueue(_ queue: RunQueueModel) { model.queue = queue }
 
     private mutating func push(_ row: RunHUDModel.Row) {
         model.trail.append(row)

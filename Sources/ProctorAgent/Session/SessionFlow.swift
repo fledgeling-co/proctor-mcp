@@ -140,13 +140,34 @@ extension Session {
         // be resolved is refused whenever an allow list is in force.
         let audit = try enforcePolicy(tool: AuditTool.flowReplay, window: handle)
         let steps = flow.steps.map(\.step)
+        let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
 
+        // A replay drives an application exactly as `act` does, so it queues
+        // exactly as `act` does: one lane set, taken after the gate and held from
+        // the first replayed step to the last.
+        let demand = lanes(for: steps, window: handle, foreground: foreground)
+        let summary = StepDescription.runLine(.replay(flow: flow.name),
+                                              app: appHandle(forWindow: handle)?.name)
+        return try await scheduled(lanes: demand, summary: summary) {
+            try await replayInLane(flow: flow, targetID: targetID, handle: handle, steps: steps,
+                                   foreground: foreground, captureEach: captureEach,
+                                   settle: settle, pointerMarks: pointerMarks, audit: audit)
+        }
+    }
+
+    private func replayInLane(flow: RecordedFlow, targetID: String, handle: WindowHandle,
+                              steps: [ActionStep], foreground: Bool, captureEach: Bool,
+                              settle: SettlePolicy, pointerMarks: Bool,
+                              audit: AuditContext) async throws -> JSONValue {
+        // Re-read the gate now the lane is ours: a run that waited for its turn
+        // may have been let through by an approval that has since expired, and
+        // the authority that matters is the one held when the app is touched.
+        let audit = try enforcePolicy(tool: audit.tool, window: handle)
         // Replay uses the same actuation path as act, so a step that behaves
         // one way when recorded cannot behave another way when replayed. Handing
         // it the audit context is what puts each replayed step in the trail
         // individually, redacted the same way a live step is.
         hudRunControlBegin()
-        let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
         let run = await runSteps(steps, window: handle, settle: settle, foreground: foreground,
                                  captureEach: captureEach, diffEach: false, audit: audit,
                                  pointerMarks: pointerMarks)
@@ -219,8 +240,33 @@ extension Session {
                              remedy: "Record some with proctor_flow action \"start\" and proctor_act.")
         }
 
-        hudRunControlBegin()
         let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
+
+        // A sweep takes its lanes ONCE, for the whole call, and holds them across
+        // every repeat. Rejoining the line between passes would let another
+        // session drive the app in the middle of a determinism measurement, which
+        // is both the interleaving this exists to prevent and a guaranteed false
+        // divergence. A long sweep may therefore hold its lanes for its whole
+        // length; only a person's Stop shortens it, and the give-up ceiling caps
+        // how long anybody *waits*, never how long a run may take.
+        let demand = lanes(for: steps, window: handle, foreground: foreground)
+        let summary = StepDescription.runLine(.stability(flow: flow.name, runs: requested),
+                                              app: appHandle(forWindow: handle)?.name)
+        return try await scheduled(lanes: demand, summary: summary) {
+            try await stabilityInLane(flow: flow, handle: handle, steps: steps,
+                                      requested: requested, resetBetween: resetBetween,
+                                      includeTiles: includeTiles, artifacts: artifacts,
+                                      foreground: foreground, notes: notes)
+        }
+    }
+
+    private func stabilityInLane(flow: RecordedFlow, handle: WindowHandle, steps: [ActionStep],
+                                 requested: Int, resetBetween: [ActionStep], includeTiles: Bool,
+                                 artifacts: StabilityCaptureOptions.Resolved,
+                                 foreground: Bool,
+                                 notes initialNotes: [String]) async throws -> StabilityReport {
+        var notes = initialNotes
+        hudRunControlBegin()
         var perRun: [[String]] = []
         var captures: [StabilityCapture] = []
 

@@ -92,6 +92,23 @@ _ = unlockBroker
 
 FileHandle.standardError.write(Data("proctor-agent \(AgentBuild.version) listening on \(server.path)\n".utf8))
 
+// The scheduler runs whether or not anything is drawn — taking turns is
+// correctness, not decoration — so this only wires up who is *told* about it.
+// The panel draws the bar; the session keeps the count so the menu bar can
+// mirror it without the panel being on screen at all.
+if Session.hudEnabledByDefault {
+    Task { @MainActor in RunHUDPanel.shared.bind(scheduler: session.runScheduler) }
+}
+Task {
+    await session.runScheduler.observe { snapshot in
+        Task { await session.setQueueWaiting(snapshot.waitingCount) }
+        guard Session.hudEnabledByDefault else { return }
+        Task { @MainActor in
+            RunHUDPanel.shared.queueChanged(snapshot)
+        }
+    }
+}
+
 // The event loop, and why it is AppKit's rather than a bare CFRunLoopRun().
 //
 // The run HUD carries Pause and Stop. A kill switch nobody can press is not a

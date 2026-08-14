@@ -341,6 +341,11 @@ struct Dispatcher: Sendable {
         // worse, but somebody who believes they have a stop button and does not
         // is the state this block exists to prevent.
         report["hud"] = await session.hudStatus()
+        // Contention, per lane. The scheduler runs whether or not the panel is on
+        // screen — taking turns is correctness, not decoration — so a wedged lane
+        // has to be answerable from the health report rather than only from a
+        // window somebody may have switched off.
+        report["queue"] = await session.queueStatus()
         return .object(report)
     }
 

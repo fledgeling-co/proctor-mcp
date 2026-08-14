@@ -111,6 +111,15 @@ actor Session {
     var runControl = RunControl.shared
     func setRunControl(_ control: RunControl) { runControl = control }
 
+    /// The keeper that holds a run's lanes for the length of a call.
+    ///
+    /// Owned by the session rather than reached for as a global, and that is the
+    /// right shape rather than a convenience: there is exactly one `Session` in
+    /// the agent and every connection goes through it, so one session is one
+    /// machine's worth of lanes. `nonisolated` because it is an actor of its own
+    /// and the panel reads it before hopping anywhere.
+    nonisolated let runScheduler: RunScheduler
+
     /// The most recent capture's encoded metadata, served cache-only by the
     /// screenshot/latest resource. Holding the metadata (not the bytes) keeps the
     /// resource readable without a Screen Recording grant and without triggering a
@@ -158,14 +167,24 @@ actor Session {
         }
         return .object([
             "current": activityCurrent.map(JSONValue.string) ?? .null,
-            "recent": .array(Array(recent))
+            "recent": .array(Array(recent)),
+            // The menu bar mirrors the waiting count, so the queue is answerable
+            // without the run panel being on screen at all.
+            "queueWaiting": .number(Double(queueWaitingMirror))
         ])
     }
+
+    /// The waiting count, kept here so the UI's own poll answers without hopping
+    /// to the scheduler. Written by the scheduler's observer at start-up.
+    private var queueWaitingMirror = 0
+    func setQueueWaiting(_ count: Int) { queueWaitingMirror = count }
 
     init(ax: any AXEngine,
          capture: any CaptureEngine,
          reflector: any ReflectorBridge = NullReflectorBridge(),
-         tri: (any TriObserving)? = nil) {
+         tri: (any TriObserving)? = nil,
+         scheduler: RunScheduler = RunScheduler()) {
+        self.runScheduler = scheduler
         self.ax = ax
         self.capture = capture
         self.reflector = reflector

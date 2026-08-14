@@ -13,6 +13,12 @@ final class Server: @unchecked Sendable {
     private var listenFD: Int32 = -1
     private var stopping = false
 
+    /// How long a reply may take to be accepted by the client before the
+    /// connection is given up on. Generous, because a large capture payload on a
+    /// slow reader is normal; finite, because the alternative is a thread parked
+    /// for the life of the process.
+    static let replyDeadlineSeconds = 30
+
     init(dispatcher: Dispatcher, path: String = Wire.socketPath) {
         self.dispatcher = dispatcher
         self.path = path
@@ -104,8 +110,22 @@ final class Server: @unchecked Sendable {
             }
             var on: Int32 = 1
             setsockopt(client, SOL_SOCKET, SO_NOSIGPIPE, &on, socklen_t(MemoryLayout<Int32>.size))
+            // A reply nobody is reading is abandoned rather than held for ever.
+            // A caller that died with its window full leaves `send` blocking on a
+            // connection thread that will never come back, and with the queue in
+            // place that thread may also be holding a lane. A dead socket errors
+            // immediately; this is for the one that is merely gone.
+            var replyDeadline = timeval(tv_sec: Server.replyDeadlineSeconds, tv_usec: 0)
+            setsockopt(client, SOL_SOCKET, SO_SNDTIMEO, &replyDeadline,
+                       socklen_t(MemoryLayout<timeval>.size))
 
-            let worker = Thread { [weak self] in self?.serve(client) }
+            // Who this is, read from the kernel's view of the process on the
+            // other end and never from anything the client sends. Read here,
+            // once, while the socket is open: the peer is only knowable from an
+            // accepted fd.
+            let identity = SessionIdentity.fromPeer(of: client)
+
+            let worker = Thread { [weak self] in self?.serve(client, as: identity) }
             worker.name = "app.fledgeling.procter.conn"
             worker.stackSize = 1024 * 1024
             worker.start()
@@ -114,7 +134,7 @@ final class Server: @unchecked Sendable {
 
     // MARK: - One connection
 
-    private func serve(_ fd: Int32) {
+    private func serve(_ fd: Int32, as identity: RunSessionIdentity) {
         defer { close(fd) }
         let reader = FrameCodec.Reader()
         var chunk = [UInt8](repeating: 0, count: 65536)
@@ -135,13 +155,13 @@ final class Server: @unchecked Sendable {
                     return
                 }
                 guard let body else { break }
-                let response = respond(to: body)
+                let response = respond(to: body, as: identity)
                 guard write(frame: response, to: fd) else { return }
             }
         }
     }
 
-    private func respond(to body: Data) -> AgentResponse {
+    private func respond(to body: Data, as identity: RunSessionIdentity) -> AgentResponse {
         let request: AgentRequest
         do {
             request = try JSONDecoder().decode(AgentRequest.self, from: body)
@@ -153,7 +173,7 @@ final class Server: @unchecked Sendable {
                                   message: "the request frame is not a valid AgentRequest: \(error)",
                                   remedy: "Send {id, tool, arguments}."))
         }
-        return dispatchBlocking(request)
+        return dispatchBlocking(request, as: identity)
     }
 
     /// A frame that failed to decode may still carry a usable id, and a reply
@@ -167,12 +187,21 @@ final class Server: @unchecked Sendable {
     /// Each connection owns a dedicated thread, not a cooperative one, so
     /// blocking it on the actor is legal and keeps the read loop sequential —
     /// which is what the wire protocol promises.
-    private func dispatchBlocking(_ request: AgentRequest) -> AgentResponse {
+    private func dispatchBlocking(_ request: AgentRequest,
+                                  as identity: RunSessionIdentity) -> AgentResponse {
         let box = ResponseBox()
         let semaphore = DispatchSemaphore(value: 0)
         let dispatcher = self.dispatcher
         Task.detached {
-            box.set(await dispatcher.handle(request))
+            // The session's name is bound for the whole of one request. A
+            // task-local rides every actor hop the request makes, so the run that
+            // eventually joins the queue knows whose it is without the identity
+            // ever becoming an argument on the wire — which is the one place a
+            // client could have named itself as somebody else.
+            let response = await SessionIdentity.$current.withValue(identity) {
+                await dispatcher.handle(request)
+            }
+            box.set(response)
             semaphore.signal()
         }
         semaphore.wait()
