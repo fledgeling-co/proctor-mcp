@@ -147,11 +147,17 @@ public extension ToolCatalogue {
                  "summary": p("string"), "suites": p("array"), "counts": p("object"),
                  "cached": p("boolean"), "caveat": p("string")]),
             "proctor_policy": openObject(
-                "Policy gate state (status), a configure result, an approve (token/expiresAt), a revoke, or recent audit lines.",
+                "Policy gate state (status), a configure result, an approve (token/expiresAt), a revoke, or recent audit lines. The trail is encrypted at rest; an entry that cannot be unsealed comes back marked unreadable.",
                 ["allow": p("array"), "block": p("array"), "sensitive": p("array"),
                  "tokenLive": p("boolean"), "tokenExpiresAt": p("number"),
                  "tokenBundleId": p("string"), "auditPath": p("string"),
                  "auditCount": p("number"), "token": p("string"),
+                 "auditEncrypted": p("boolean"), "auditWritable": p("boolean"),
+                 "auditKeyId": p("string"), "auditError": p("string"),
+                 "auditConverted": p("number"), "auditConvertedNote": p("string"),
+                 "auditDropped": p("number"), "auditKeyMismatch": p("boolean"),
+                 "auditKeyMismatchNote": p("string"),
+                 "unreadableCount": p("number"),
                  "expiresAt": p("number"), "ttlMs": p("number"),
                  "revoked": p("boolean"), "lines": p("array")]),
         ]

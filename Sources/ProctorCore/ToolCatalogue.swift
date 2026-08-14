@@ -774,6 +774,15 @@ public enum ToolCatalogue {
         configure replaces any of the sets you supply; approve mints a token, optionally scoped to \
         one bundle id, with a TTL; revoke drops it; audit returns recent JSONL lines. Typed values \
         and script bodies are stored as length plus SHA-256, never in the clear.
+
+        The trail is encrypted at rest. Each entry is sealed on its own to a key held in this Mac's \
+        login keychain, so the file is unreadable if it is copied off the machine, restored from a \
+        backup, or opened by another account; reading it back through audit needs that keychain. \
+        There is no recovery copy of that key and no export: if it is lost, so is the history. A \
+        readable trail left by an earlier version is converted in place on first use, which removes \
+        the last readable copy of it. status reports auditWritable, and an entry that cannot be \
+        sealed is dropped rather than written readable, so a trail that has stopped is visible \
+        rather than silent.
         """,
         inputSchema: .object([
             "type": .string("object"),

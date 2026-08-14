@@ -134,17 +134,36 @@ extension Session {
 
     func policyStatus() -> JSONValue {
         loadPolicyIfNeeded()
+        let audit = AuditLog.status()
         var out: [String: JSONValue] = [
             "allow": .array(policy.allow.sorted().map(JSONValue.string)),
             "block": .array(policy.block.sorted().map(JSONValue.string)),
             "sensitive": .array(policy.sensitive.sorted().map(JSONValue.string)),
             "auditPath": .string(AuditLog.url.path),
             "auditCount": .number(Double(AuditLog.lineCount())),
+            // The trail is encrypted at rest, so its path and size are the two
+            // things an operator can still see without the key — and whether it is
+            // being written at all, which used to fail silently.
+            "auditEncrypted": .bool(true),
+            "auditWritable": .bool(audit.writable),
             // The declared filesystem roots sit alongside the app lists: both are
             // the operator-facing containment surface, and stating the roots here is
             // what makes the jail's guarantee auditable rather than implicit.
             "fsRoots": .array(fsRootsList().map(JSONValue.string))
         ]
+        if let kid = audit.keyId { out["auditKeyId"] = .string(kid) }
+        if let error = audit.error { out["auditError"] = .string(error) }
+        // Monotonic: a later success does not erase the fact that entries were
+        // lost, because a trail with a hole in it must not read as a clean one.
+        if audit.dropped > 0 { out["auditDropped"] = .number(Double(audit.dropped)) }
+        if audit.keyMismatch { out["auditKeyMismatch"] = .bool(true) }
+        if let converted = audit.converted {
+            out["auditConverted"] = .number(Double(converted))
+            out["auditConvertedNote"] = .string(
+                "This run converted \(converted) previously readable \(converted == 1 ? "entry" : "entries") "
+                + "in place. The readable copy no longer exists and there is no backup: the trail can be "
+                + "read only on this Mac with this login keychain.")
+        }
         let now = clock()
         if let token = approvalToken, now < token.expiresAt {
             out["tokenLive"] = .bool(true)
@@ -193,20 +212,50 @@ extension Session {
     }
 
     func auditTail(limit: Int) -> JSONValue {
-        // Each stored line is already a JSON object; parse it back so the caller
-        // gets structured records rather than strings-of-JSON.
+        // The trail is sealed on disk, so reading it needs this Mac's login
+        // keychain. Callers get the same records in the same shape and order as
+        // before; an entry that cannot be unsealed comes back as a marked
+        // placeholder rather than breaking the whole read.
         let decoder = JSONDecoder()
-        let lines: [JSONValue] = AuditLog.tail(limit).map { line in
-            guard let data = line.data(using: .utf8),
-                  let value = try? decoder.decode(JSONValue.self, from: data) else {
-                return .string(line)
+        var unreadable = 0
+        let lines: [JSONValue] = AuditLog.openedTail(limit).map { entry in
+            switch entry {
+            case .opened(let line):
+                guard let data = line.data(using: .utf8),
+                      let value = try? decoder.decode(JSONValue.self, from: data) else {
+                    return .string(line)
+                }
+                return value
+            case .unreadable(let kid, let reason):
+                unreadable += 1
+                var placeholder: [String: JSONValue] = [
+                    "unreadable": .bool(true),
+                    "reason": .string(reason)
+                ]
+                if let kid { placeholder["kid"] = .string(kid) }
+                return .object(placeholder)
             }
-            return value
         }
-        return .object([
+        let audit = AuditLog.status()
+        var out: [String: JSONValue] = [
             "auditPath": .string(AuditLog.url.path),
             "auditCount": .number(Double(AuditLog.lineCount())),
+            "auditEncrypted": .bool(true),
+            "auditWritable": .bool(audit.writable),
+            "unreadableCount": .number(Double(unreadable)),
             "lines": .array(lines)
-        ])
+        ]
+        if let kid = audit.keyId { out["auditKeyId"] = .string(kid) }
+        if let error = audit.error { out["auditError"] = .string(error) }
+        if audit.dropped > 0 { out["auditDropped"] = .number(Double(audit.dropped)) }
+        if audit.keyMismatch {
+            // Caught here because reading is the only moment both halves are in
+            // hand: the write path holds the public key alone, by design.
+            out["auditKeyMismatch"] = .bool(true)
+            out["auditKeyMismatchNote"] = .string(
+                "The sealing key file beside the trail is not the public half of the key this Mac "
+                + "holds, so entries sealed with it cannot be read here.")
+        }
+        return .object(out)
     }
 }

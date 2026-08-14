@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import CryptoKit
 @testable import ProctorCore
 
 // These cover the parts of the contract that a wrong answer would make quietly
@@ -2542,5 +2543,208 @@ struct ReplayGateTests {
         #expect(replayed.value == live.value)
         #expect(!replayed.jsonLine().contains(secret))
         #expect(replayed.tool == "proctor_flow.replay")
+    }
+}
+
+// MARK: - Audit encryption at rest
+
+@Suite("Audit encryption at rest")
+struct AuditSealTests {
+
+    private func record(_ secret: String = "hunter2-the-password") -> AuditRecord {
+        AuditRecord.forStep(ActionStep(kind: .type, text: secret),
+                            tool: "proctor_act", timestamp: 1_700_000_000,
+                            app: "app-1", bundleId: "com.apple.TextEdit", window: "win-1",
+                            outcome: "ok", postStateHash: "abc123")
+    }
+
+    @Test("a sealed line carries none of the record's text")
+    func sealHidesTheRecordText() {
+        // The property the whole feature exists for: what lands on disk must not
+        // contain the record. Redaction already keeps the typed secret out of the
+        // record; this keeps the record itself out of the file.
+        let key = Curve25519.KeyAgreement.PrivateKey()
+        let line = record().jsonLine()
+        let sealed = AuditSeal.seal(line: line, to: key.publicKey)
+        #expect(sealed != nil)
+        guard let sealed else { return }
+        #expect(sealed != line)
+        #expect(!sealed.contains("proctor_act"))
+        #expect(!sealed.contains("com.apple.TextEdit"))
+        #expect(!sealed.contains("abc123"))
+        #expect(!sealed.contains("1700000000"))
+    }
+
+    @Test("the key that sealed it reads it back byte for byte")
+    func sealRoundTripsTheLine() {
+        let key = Curve25519.KeyAgreement.PrivateKey()
+        let line = record().jsonLine()
+        guard let sealed = AuditSeal.seal(line: line, to: key.publicKey) else {
+            Issue.record("sealing failed"); return
+        }
+        #expect(AuditSeal.open(sealed, with: key) == line)
+        // And the reader still gets a decodable record out the other side, which is
+        // what keeps the existing read path unchanged for callers.
+        let reopened = AuditSeal.open(sealed, with: key).flatMap { $0.data(using: .utf8) }
+            .flatMap { try? JSONDecoder().decode(AuditRecord.self, from: $0) }
+        #expect(reopened == record())
+    }
+
+    @Test("another key cannot read it")
+    func wrongKeyCannotOpen() {
+        // A copied file, a backup, another account: all of them are this case.
+        let mine = Curve25519.KeyAgreement.PrivateKey()
+        let theirs = Curve25519.KeyAgreement.PrivateKey()
+        guard let sealed = AuditSeal.seal(line: record().jsonLine(), to: mine.publicKey) else {
+            Issue.record("sealing failed"); return
+        }
+        #expect(AuditSeal.open(sealed, with: theirs) == nil)
+    }
+
+    @Test("a tampered ciphertext or header fails to open rather than decoding to something else")
+    func tamperingFailsToOpen() {
+        let key = Curve25519.KeyAgreement.PrivateKey()
+        guard let sealed = AuditSeal.seal(line: record().jsonLine(), to: key.publicKey),
+              let data = sealed.data(using: .utf8),
+              let box = try? JSONDecoder().decode(AuditSeal.SealedLine.self, from: data) else {
+            Issue.record("sealing failed"); return
+        }
+
+        // Flip one byte of the ciphertext: GCM's tag catches it.
+        var raw = Data(base64Encoded: box.ct)!
+        raw[raw.count - 1] ^= 0x01
+        let mangled = AuditSeal.SealedLine(v: box.v, kid: box.kid, epk: box.epk,
+                                           ct: raw.base64EncodedString())
+        #expect(AuditSeal.open(encode(mangled), with: key) == nil)
+
+        // Swap the ephemeral public key from a different sealing of the same line.
+        // The header is bound as authenticated data, so this is detected instead of
+        // producing a different plaintext.
+        guard let other = AuditSeal.seal(line: "{\"x\":1}", to: key.publicKey),
+              let otherData = other.data(using: .utf8),
+              let otherBox = try? JSONDecoder().decode(AuditSeal.SealedLine.self, from: otherData) else {
+            Issue.record("second sealing failed"); return
+        }
+        let swapped = AuditSeal.SealedLine(v: box.v, kid: box.kid, epk: otherBox.epk, ct: box.ct)
+        #expect(AuditSeal.open(encode(swapped), with: key) == nil)
+
+        // An unknown format version is refused rather than guessed at.
+        let futureVersion = AuditSeal.SealedLine(v: box.v + 1, kid: box.kid, epk: box.epk, ct: box.ct)
+        #expect(AuditSeal.open(encode(futureVersion), with: key) == nil)
+    }
+
+    @Test("a sealed entry is still exactly one JSONL line")
+    func sealedLineIsSingleLineJSON() {
+        // The file stays append-only and line-per-record, which is what keeps the
+        // append a single write and lets an operator count entries without the key.
+        let key = Curve25519.KeyAgreement.PrivateKey()
+        let multiline = "{\"a\":\"one\\ntwo\",\"b\":\"three\nfour\"}"
+        guard let sealed = AuditSeal.seal(line: multiline, to: key.publicKey) else {
+            Issue.record("sealing failed"); return
+        }
+        #expect(!sealed.contains("\n"))
+        #expect(sealed.hasPrefix("{") && sealed.hasSuffix("}"))
+        #expect(AuditSeal.open(sealed, with: key) == multiline)
+    }
+
+    @Test("each entry is sealed independently, so two identical entries do not look identical")
+    func eachEntryIsSealedIndependently() {
+        // Per-entry sealing with a fresh ephemeral key is what keeps writing a
+        // single append with no shared nonce for concurrent writers to coordinate.
+        let key = Curve25519.KeyAgreement.PrivateKey()
+        let line = record().jsonLine()
+        guard let a = AuditSeal.seal(line: line, to: key.publicKey),
+              let b = AuditSeal.seal(line: line, to: key.publicKey),
+              let boxA = decode(a), let boxB = decode(b) else {
+            Issue.record("sealing failed"); return
+        }
+        #expect(a != b)
+        #expect(boxA.epk != boxB.epk)
+        #expect(boxA.ct != boxB.ct)
+        #expect(AuditSeal.open(a, with: key) == line)
+        #expect(AuditSeal.open(b, with: key) == line)
+    }
+
+    @Test("every entry records which key sealed it")
+    func keyIdIsStableAndDistinguishes() {
+        // This is what leaves a later key change possible without a format change,
+        // and what lets a line sealed to a key this Mac no longer holds be marked
+        // rather than fed to the wrong key.
+        let one = Curve25519.KeyAgreement.PrivateKey()
+        let two = Curve25519.KeyAgreement.PrivateKey()
+        let kid = AuditSeal.keyId(for: one.publicKey)
+        #expect(kid == AuditSeal.keyId(for: one.publicKey))
+        #expect(kid != AuditSeal.keyId(for: two.publicKey))
+        #expect(kid.count == 16)
+        guard let sealed = AuditSeal.seal(line: "{\"a\":1}", to: one.publicKey),
+              let box = decode(sealed) else { Issue.record("sealing failed"); return }
+        #expect(box.kid == kid)
+    }
+
+    @Test("a readable entry is told apart from a sealed one")
+    func isSealedDiscriminatesPlaintextRecords() {
+        // The one-time in-place conversion turns on exactly this: a plaintext trail
+        // must be recognised so it can be converted, and an already-converted one
+        // must not be sealed twice.
+        let key = Curve25519.KeyAgreement.PrivateKey()
+        let plain = record().jsonLine()
+        #expect(!AuditSeal.isSealed(plain))
+        #expect(!AuditSeal.isSealed("{\"timestamp\":1,\"tool\":\"proctor_act\",\"outcome\":\"ok\"}"))
+        guard let sealed = AuditSeal.seal(line: plain, to: key.publicKey) else {
+            Issue.record("sealing failed"); return
+        }
+        #expect(AuditSeal.isSealed(sealed))
+    }
+
+    @Test("a corrupt line comes back as nil instead of throwing into the read path")
+    func openReturnsNilOnGarbage() {
+        // One bad or truncated line must cost one entry, not the whole trail.
+        let key = Curve25519.KeyAgreement.PrivateKey()
+        #expect(AuditSeal.open("", with: key) == nil)
+        #expect(AuditSeal.open("not json at all", with: key) == nil)
+        #expect(AuditSeal.open("{\"v\":1}", with: key) == nil)
+        #expect(AuditSeal.open("{\"v\":1,\"kid\":\"zz\",\"epk\":\"!!\",\"ct\":\"!!\"}", with: key) == nil)
+        #expect(AuditSeal.open(record().jsonLine(), with: key) == nil)
+        #expect(!AuditSeal.isSealed("truncated {"))
+    }
+
+    @Test("a trail of entries opens back in the same shape and the same order")
+    func trailRoundTripsInOrder() {
+        // Callers need no change: the read path hands back the same records, in the
+        // order they were written, with a bad entry costing one entry rather than
+        // the whole trail.
+        let key = Curve25519.KeyAgreement.PrivateKey()
+        let trail = (0..<5).map { i in
+            AuditRecord(timestamp: 1_700_000_000 + Double(i), tool: "proctor_act",
+                        window: "win-\(i)", outcome: i == 3 ? "refused" : "ok").jsonLine()
+        }
+        let sealed = trail.compactMap { AuditSeal.seal(line: $0, to: key.publicKey) }
+        #expect(sealed.count == trail.count)
+
+        // One entry sealed to a key this Mac does not hold, dropped in the middle.
+        var stored = sealed
+        stored[2] = AuditSeal.seal(line: trail[2],
+                                   to: Curve25519.KeyAgreement.PrivateKey().publicKey)!
+
+        let opened = stored.map { AuditSeal.open($0, with: key) }
+        #expect(opened[0] == trail[0])
+        #expect(opened[1] == trail[1])
+        #expect(opened[2] == nil)          // marked unreadable by the reader, not fatal
+        #expect(opened[3] == trail[3])
+        #expect(opened[4] == trail[4])
+        #expect(opened.compactMap { $0 } == [trail[0], trail[1], trail[3], trail[4]])
+    }
+
+    // MARK: helpers
+
+    private func encode(_ box: AuditSeal.SealedLine) -> String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
+        return String(data: try! encoder.encode(box), encoding: .utf8)!
+    }
+
+    private func decode(_ line: String) -> AuditSeal.SealedLine? {
+        guard let data = line.data(using: .utf8) else { return nil }
+        return try? JSONDecoder().decode(AuditSeal.SealedLine.self, from: data)
     }
 }
