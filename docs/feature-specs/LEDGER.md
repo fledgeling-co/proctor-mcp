@@ -24,8 +24,8 @@
 | PRO-0015 | Run HUD panel | 2026-08-14 | Merged |
 | PRO-0016 | Multi-session queue | 2026-08-14 | Merged |
 | PRO-0017 | HUD character sprite assets | 2026-08-14 | Merged |
-| PRO-0018 | Yield when a person takes the machine back | 2026-08-14 | In Review |
-| PRO-0019 | A foreground-only run is obvious before it takes the machine | 2026-08-14 | In Review |
-| PRO-0020 | Route browser work to Obscura | 2026-08-14 | In Review |
-| PRO-0021 | Menu bar switch for the panel, and the icon as the character | 2026-08-14 | In Review |
+| PRO-0018 | Yield when a person takes the machine back | 2026-08-14 | Merged |
+| PRO-0019 | A foreground-only run is obvious before it takes the machine | 2026-08-14 | Merged |
+| PRO-0020 | Route browser work to Obscura | 2026-08-14 | Merged |
+| PRO-0021 | Menu bar switch for the panel, and the icon as the character | 2026-08-14 | Merged |
 | PRO-0022 | A drawing fault must not kill the agent | 2026-08-14 | Merged |

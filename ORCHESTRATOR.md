@@ -1,6 +1,6 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **WAVE 3 COMPLETE.** All 17 items merged; nothing open in the pipeline.
+**Status:** **BACKLOG EMPTY.** All 22 items merged; nothing open in the pipeline.
 **Updated:** 2026-08-14 — wave 1+2 MERGED (10 features), wave 3 MERGED (7 features). **382 tests / 46 suites green on `main` @ 484e54e**, up from 173/24 at the start of the wave. No worktrees, no `ai/*` branches, clean tree, nothing pushed.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
@@ -164,7 +164,7 @@ spec still takes the ledger lock.
 | PRO-0021 | Menu bar switch for the panel, and the icon as the character | `22-menu-bar-switch-and-character.md` | — | 1 | **MERGED** `58b3ce4` |
 | PRO-0019 | A foreground-only run is obvious before it takes the machine | `20-foreground-run-is-obvious.md` | — | 1 | **MERGED** `619bb30` |
 | PRO-0020 | Route browser work to Obscura | `21-route-browser-work-to-obscura.md` | — | 1 | **MERGED** `3a3bb5f` |
-| PRO-0018 | Yield when a person takes the machine back | `19-yield-when-a-person-takes-the-machine.md` | PRO-0019 ✓ | 2 | **RUNNING** |
+| PRO-0018 | Yield when a person takes the machine back | `19-yield-when-a-person-takes-the-machine.md` | PRO-0019 ✓ | 2 | **MERGED** `f0f6e2f` · +42 tests |
 | PRO-0022 | A drawing fault must not kill the agent | `23-drawing-fault-must-not-kill-the-agent.md` | — | — | **MERGED** `b4a29e5` |
 
 **Why PRO-0018 waits on PRO-0019.** Both answer "is this batch going to take the foreground";
@@ -176,6 +176,12 @@ about whether a batch declares its synthetic content up front or at the first su
 the orchestrator serialises every merge to local `main` and never pushes.
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0018 MERGED — the backlog is empty.** **542 tests / 66 suites green** on `main`, from 173/24 when the first fleet started. Its second runner also died on a gateway 503 (`9 of 11 accounts at or over their usage reserve`), but 93 minutes in, with triage, plan and a building implementation on disk and only its critic gate outstanding. Rather than a third launch into an exhausted gateway, the orchestrator finished it in-session. **The implementation compiled and every test passed individually, and the suite deadlocked** — three defects the build could never have caught, all of them test-isolation rather than product logic:
+  - The fake contention source repeated one frozen sample where the real monitor stamps its clock on every read. `releaseDelay` is measured against the sample's own timestamp, so a stopped clock meant a hold could never be released and the suite sat out a 900-second backstop instead of failing in seconds.
+  - The harness injected a `RunControl` only when a test asked for one, so every other test drove the production `RunControl.shared` and left its state behind. `.serialized` stops tests overlapping, not from leaking.
+  - `aHeldRunSaysSo` resumed after a fixed sleep that could land before the run had yielded. A Resume spent on an empty condition set marks nothing as overridden, the yield latches immediately after, and nothing lifts it short of the backstop.
+  - **A method note worth keeping:** the first bisection of this hang was worthless. `swift test --filter` matches the Swift function name, not the `@Test` display string, so nineteen "passing" runs had each executed **zero tests**. Always read the `with N tests` count back before believing a filtered green.
+  - The completeness critic was run here on grok rather than skipped: 12 findings, none blocking. The two worth a child spec are a run resumed while somebody else's app is still in front continuing to post into it, and `secureInput` being session-global so a run legitimately driving a password field holds itself until the backstop. Full dispositions in `spec-PRO-0018.md`.
 - 2026-08-14 **PRO-0018's first runner died on a gateway 503**, not on the work: `no-eligible-account`, "8 of 10 accounts at or over their usage reserve (1 needing re-login, 1 cooling down after upstream rate limits)". It failed 22 tool calls in, still reading, and wrote nothing — no worktree, no branch, no spec, `main` clean. Relaunched from the same script. If a retry hits the same wall the item is **parked on capacity, not blocked on anything in the repo**, and resumes whenever the gateway has headroom.
 - 2026-08-14 **Wave 4 stage 1 MERGED** — PRO-0021 `58b3ce4`, PRO-0019 `619bb30`, PRO-0020 `3a3bb5f`. **500 tests / 64 suites green** on `main`, up from 387/47. Merged in that order deliberately: PRO-0021 restructured `RunHUDPanel` most (it no longer owns `RunHUDState`), and resolving two small edits into a new structure beats rebasing a restructure onto small edits.
   - **One conflict needed a judgement rather than a union.** PRO-0019 added "a run taking the foreground outranks everything else this glyph says" to a symbol-based `menuIcon`; PRO-0021 deleted that function outright, replacing it with `MenuBarIcon.decide`, whose own rule is "readiness outranks the character". Both kept, ordered: reachability, then grants, then foreground, then phase. A Proctor that cannot work must not wear a calm face, which is why the guards come first; but between a character saying "acting" and the fact that the next event goes into the reader's own keyboard, the second is what reaches somebody from across the room. Pinned by `foregroundSitsBetweenReadinessAndThePhase`, because the ordering was decided at a merge and belongs to neither spec.
