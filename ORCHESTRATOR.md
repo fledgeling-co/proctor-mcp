@@ -1,7 +1,12 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** Complete
-**Updated:** 2026-08-13 — ALL 10 features MERGED to local `main` @ d237361. 169 tests / 23 suites green, 19 tools advertised. Worktrees + ai/* branches cleaned. One deferred child recorded (pointer marker in stability artifacts).
+**Status:** In Progress — wave 3 planned, awaiting go-ahead
+**Updated:** 2026-08-14 — wave 1+2 remain MERGED (10 features, local `main`). Wave 3 added: the run-HUD line of work (4 briefs) plus the 3 security/follow-up items scheduled on 2026-08-13 and still untriaged. 173 tests / 24 suites green @ 2e478ec.
+
+### Corrections to earlier rows (reconciled 2026-08-14)
+- **This repo DOES now have a git remote** (`origin` → github.com/fledgeling-co/proctor-mcp). The earlier "no git remote, main is LOCAL-ONLY" note is stale. Local `main` is **4 commits AHEAD** of `origin/main` and those commits carry unreviewed WIP: **merge to local `main` only, never push.**
+- Worktrees branch from **local HEAD**, set via `.claude/settings.local.json` (`worktree.baseRef: head`), because `origin/main` does not contain the design artifacts wave 3 depends on.
+- The agent-panel rendering blocker that gated the run HUD is **FIXED** at `2e478ec` (one panel per screen; the union panel's 26Mpx backing store is accepted by the window server and never presented). Its brief has been deleted from `docs/features-to-triage/`.
 
 ## How to resume
 You are the fleet orchestrator (ship-fleet skill). Read this file top to bottom, reconcile
@@ -25,11 +30,31 @@ the ledger below against reality (`docs/feature-specs/LEDGER.md`, `docs/specs/*`
 - Verification is NOT dropped — it is Swift-shaped: typed acceptance evidence = a red→green `swift test`
   per acceptance clause, plus the affected-test sweep. Never ship "verified by code reading".
 
-### External model CLIs
-- `external-model-clis: off` — the Codex `gpt-5.6-sol` lane (executor + the three out-of-family review gates)
-  is **unavailable on this machine** (relay down). Every gate and executor slice runs **in-family** with a
-  **logged downgrade** in the artifact/ledger. This is a **correct** run, not degraded — do NOT burn attempts
-  probing Codex. (Recorded as the repo opt-out so any in-flight runner's grep honours it.)
+### External model CLIs — READ THIS BEFORE EVERY EXTERNAL CALL
+Superseded 2026-08-14 by the reader's explicit choice. The 2026-08-13 line
+(`external-model-clis: off`, Codex relay down) no longer describes this repo.
+
+- **Codex / `gpt-5.6-sol`: OFF.** Do not invoke it, for gates or for executor slices. Not a
+  fallback, not for a retry.
+- **The three out-of-family review gates run on GROK instead** — the triage spec review, the plan
+  review gate, and work Phase D's completeness critic. Verified working on this machine
+  2026-08-14 (read a real repo file and returned its content accurately):
+
+  ```
+  perl -e 'alarm shift @ARGV; exec @ARGV' 240 \
+    grok -p "<prompt>" --model grok-4.6 --effort xhigh --sandbox read-only
+  ```
+
+  `grok 1.0.3`, logged in to grok.com, `grok-4.6` is the default model. `-p` is single-turn and
+  prints to stdout. An **empty or absent response is a LANE FAILURE, not a pass** — on any failure
+  the gate falls back **in-family with a logged downgrade in the artifact**, never to Codex and
+  never silently skipped.
+- **Executor slices stay in-family.** Grok is seated as the independent *reviewer* only; there is no
+  cheap-executor lane on this run.
+- **Egress warning, and it is load-bearing for two items in this wave.** A grok call transmits the
+  artifact and every source file it opens to xAI. PRO-0012 (policy gate + audit) and PRO-0013
+  (audit-log encryption-at-rest) are security features. The reader chose this lane knowing that;
+  do not widen it beyond the three named gates.
 
 ## Wave plan
 Wave 1 (no unmerged internal deps — 8 slots): PRO-0001 CUA façade, PRO-0002 set-of-marks, PRO-0003 menu-bar
@@ -37,7 +62,28 @@ Wave 1 (no unmerged internal deps — 8 slots): PRO-0001 CUA façade, PRO-0002 s
   PRO-0008 MCP-surface.
 Wave 2 (after their dep merges): PRO-0009 process-kill+fs-jail (soft after PRO-0008 — annotation/gating
   conventions), PRO-0010 pointer-overlay (after PRO-0002 — shared overlay path).
+Wave 3 (2026-08-14, reader chose the full backlog — all 7): the run HUD line PRO-0014 → PRO-0015 →
+  {PRO-0016, PRO-0017}, run alongside the three items scheduled 2026-08-13 and never triaged
+  (PRO-0011 stability pointer marker, PRO-0012 re-gate flow/stability, PRO-0013 audit encryption).
+  The three carry no dependency on the HUD line or on each other, so they fill slots freely.
+  IDs 0014-0017 are allocated at pre-triage, serially, under the ledger lock.
+
 Holding pen (external deps / needs input): none.
+
+### Wave 3 dependency order
+- **PRO-0014 step descriptions** — independent. Pure agent logic, no window. Goes first.
+- **PRO-0015 run HUD panel** — after PRO-0014 (needs its derived descriptions for the live line).
+  Design is SETTLED and binding: `mocks/run-hud.html` is the rendered reference, with
+  `docs/design/run-hud-queue.md` and `docs/design/run-hud-character.md` as the specs. Do NOT re-open
+  the design and do NOT run design-craft on it. The HUD is a borderless NSPanel from the agent
+  process and MUST follow the one-panel-per-screen rule; the header comment in
+  `Sources/ProctorAgent/Overlay/CursorOverlay.swift` explains why, with the measurement.
+- **PRO-0016 multi-session queue** — scheduler half is independent of the UI; the queue UI is after
+  PRO-0015. Spec: `docs/design/run-hud-queue.md`, whose open questions triage should settle rather
+  than leave to the implementer.
+- **PRO-0017 HUD character assets** — after PRO-0015. Design settled; scope is asset production and
+  binding, not choosing a character.
+- **PRO-0011/0012/0013** — independent of the HUD line and of each other. 0012 and 0013 are security.
 
 ## Ledger
 | ID | Title | Category | Depends on | Deep research | Mock | Lane | Worktree/branch | Status | Notes / outcome |
@@ -53,8 +99,19 @@ Holding pen (external deps / needs input): none.
 | PRO-0009 | Process kill + fs jail | ready-for-plan | PRO-0008 ✓ | none | none | opus | merged (cleaned) | **MERGED** | batch 3 · proctor_kill + FSJail (reuses PRO-0005 rails) |
 | PRO-0010 | Pointer overlay in captures | ready-for-plan | PRO-0002 ✓ | none | none | opus | merged (cleaned) | **MERGED** | batch 4 · opt-in pointer marker on act/flow per-step captures |
 
+## Wave 3 ledger (untriaged; ids 0014-0017 allocated at pre-triage)
+| Brief | Item | Category | Depends on | Mock / spec | Status |
+|-------|------|----------|------------|-------------|--------|
+| `15-step-descriptions.md` | PRO-0014 | untriaged | — | — | **Queued** |
+| `16-run-hud-panel.md` | PRO-0015 | untriaged | PRO-0014 | `mocks/run-hud.html` (binding) | **Queued** |
+| `17-multi-session-queue.md` | PRO-0016 | untriaged | PRO-0015 (UI half) | `docs/design/run-hud-queue.md` | **Queued** |
+| `18-hud-character-assets.md` | PRO-0017 | untriaged | PRO-0015 | `docs/design/run-hud-character.md` | **Queued** |
+| `11-stability-per-step-pointer.md` | PRO-0011 | untriaged | — (needs per-step PNG emission, in scope) | — | **Queued** |
+| `12-gate-flow-replay-stability.md` | PRO-0012 | untriaged (security) | — | — | **Queued** |
+| `13-audit-log-encryption-at-rest.md` | PRO-0013 | untriaged (security) | — | — | **Queued** |
+
 ## Deferred children discovered mid-fleet
-All three SCHEDULED 2026-08-13 (whats-left ingest, reader answered "all three") — promoted to backlog briefs + ledger rows, not yet triaged.
+All three SCHEDULED 2026-08-13 (whats-left ingest, reader answered "all three") — promoted to backlog briefs + ledger rows, **still not triaged as of 2026-08-14**.
 | Child | Parent | Backlog item | Status |
 | Pointer marker in proctor_stability per-step artifacts | PRO-0010 | PRO-0011 (`docs/features-to-triage/11-stability-per-step-pointer.md`) | **Scheduled** — untriaged (needs per-step PNG emission first) |
 | Re-gate flow replay + stability through the policy gate & audit | PRO-0005 | PRO-0012 (`docs/features-to-triage/12-gate-flow-replay-stability.md`) | **Scheduled** — untriaged (security) |
