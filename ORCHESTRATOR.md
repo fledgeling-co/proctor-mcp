@@ -1,6 +1,6 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **BACKLOG EMPTY.** All 28 items merged; nothing open in the pipeline.
+**Status:** **Wave 6 running.** 28 merged; 11 deferred children promoted to PRO-0029 … PRO-0039 and staged 5/4/2.
 **Updated:** 2026-08-14 — wave 1+2 MERGED (10 features), wave 3 MERGED (7 features). **382 tests / 46 suites green on `main` @ 484e54e**, up from 173/24 at the start of the wave. No worktrees, no `ai/*` branches, clean tree, nothing pushed.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
@@ -209,6 +209,43 @@ rules for one glyph.
   on the Accessibility grant this process already holds. A real escalation of what
   the agent does. Three readings are in the brief; the spec picks one and defends it,
   under two invariants: Stop always works, and the block never survives the process.
+
+## Wave 6 (2026-08-15) — the deferred children, promoted
+
+Every child item logged across PRO-0005 … PRO-0028 and left unscheduled, swept out
+of the specs' own `Child work found` sections rather than from memory. Twenty-one
+raw children group into eleven items; ids 0029-0039 allocated serially, LEDGER
+`Last allocated: 39`.
+
+Staged on **file contention**, not on dependency: none of these blocks another
+logically, but several would collide in the same file if run together.
+
+| Stage | Items | Held apart because |
+|---|---|---|
+| 1 | PRO-0030 · PRO-0032 · PRO-0033 · PRO-0035 · PRO-0037 | disjoint |
+| 2 | PRO-0029 · PRO-0031 · PRO-0034 · PRO-0038 | PRO-0034 shares `SessionAct` with PRO-0033; PRO-0029 reshapes the status window |
+| 3 | PRO-0036 · PRO-0039 | PRO-0036 follows PRO-0029 into the status window; PRO-0039 follows PRO-0031's decision on what `doctor` may expose about the gate |
+
+| Id | Item | Brief | Children folded in | Stage | Status |
+|---|---|---|---|---|---|
+| PRO-0030 | The build says which build it is | `31-the-build-says-which-build-it-is.md` | PRO-0027 staleness · PRO-0028 `agentVersion` | 1 | **QUEUED** |
+| PRO-0032 | The audit trail is signed, and records what Proctor recommended | `33-the-audit-trail-is-signed.md` | PRO-0013 unsigned · PRO-0024 lane recommendation | 1 | **QUEUED** |
+| PRO-0033 | A person's click reaches Stop | `34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **QUEUED** |
+| PRO-0035 | The browser catalogue stops guessing | `36-the-browser-catalogue-stops-guessing.md` | PRO-0024 PWA prefix · `chromiumFamily` drift · prose-only `why` | 1 | **QUEUED** |
+| PRO-0037 | A hold names whose run it is | `38-a-hold-names-whose-run-it-is.md` | PRO-0018 unattributed hold · PRO-0016 `activate` takes no lane | 1 | **QUEUED** |
+| PRO-0029 | A home for the PROCTOR_* switches | `30-a-home-for-the-proctor-switches.md` | PRO-0026 env-var knob · PRO-0024 `PROCTOR_SECOND_LANE` control | 2 | **QUEUED** |
+| PRO-0031 | The health report is complete | `32-the-health-report-is-complete.md` | PRO-0005/0013 no `policy` block · PRO-0023/0024 `doctor.sh` | 2 | **QUEUED** |
+| PRO-0034 | Scroll moves by what was asked | `35-scroll-moves-by-what-was-asked.md` | PRO-0025 delta units · page action ordering | 2 | **QUEUED** |
+| PRO-0038 | Stability knows when it is scoring a page | `39-stability-knows-when-it-is-scoring-a-page.md` | PRO-0020 page churn · PRO-0024 unexecuted lane | 2 | **QUEUED** |
+| PRO-0036 | The status window's checks say what they can check | `37-the-status-windows-checks-say-what-they-can-check.md` | PRO-0028 three Re-check buttons · PRO-0023 Shortcuts row heading | 3 | **QUEUED** |
+| PRO-0039 | Page-scoped refusal | `40-page-scoped-refusal.md` | PRO-0020 refusal rule | 3 | **QUEUED** |
+
+**Two children are not fleet items, because they are questions rather than work.**
+A model told "Obscura is missing" may install it anyway, and Proctor cannot remove
+a model's own reach by withholding a command (PRO-0023). And the takeover overlay
+signals mechanism rather than consequence, so an all-accessibility run can delete a
+file through `AXPress` in silence (PRO-0026 finding 10). Both are recorded here and
+carried to the reader rather than specced.
 
 ## Event log (append-only, newest first)
 - 2026-08-15 **Wave 5 stage 2 MERGED — the backlog is empty again.** PRO-0026 `f198936`, PRO-0024 `4afc99c`, PRO-0028 `6f696c6`. **692 tests / 84 suites green**, from 173/24 when the first fleet started. No conflicts across the three, which is what the pair-staging was for.

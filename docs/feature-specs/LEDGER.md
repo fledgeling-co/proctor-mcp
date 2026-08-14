@@ -35,3 +35,14 @@
 | PRO-0026 | Foreground takeover overlay that holds the machine visibly | 2026-08-15 | Merged |
 | PRO-0027 | The menu bar shows the character when idle | 2026-08-15 | Merged |
 | PRO-0028 | Re-check now says what it checks | 2026-08-15 | Merged |
+| PRO-0029 | A home for the PROCTOR_* switches | 2026-08-15 | Triaged |
+| PRO-0030 | The build says which build it is | 2026-08-15 | Triaged |
+| PRO-0031 | The health report is complete | 2026-08-15 | Triaged |
+| PRO-0032 | The audit trail is signed, and records what Proctor recommended | 2026-08-15 | Triaged |
+| PRO-0033 | A person's click reaches Stop | 2026-08-15 | Triaged |
+| PRO-0034 | Scroll moves by what was asked | 2026-08-15 | Triaged |
+| PRO-0035 | The browser catalogue stops guessing | 2026-08-15 | Triaged |
+| PRO-0036 | The status window's checks say what they can check | 2026-08-15 | Triaged |
+| PRO-0037 | A hold names whose run it is | 2026-08-15 | Triaged |
+| PRO-0038 | Stability knows when it is scoring a page | 2026-08-15 | Triaged |
+| PRO-0039 | Page-scoped refusal | 2026-08-15 | Triaged |
