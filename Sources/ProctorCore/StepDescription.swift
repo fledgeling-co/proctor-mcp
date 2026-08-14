@@ -83,9 +83,10 @@ public enum StepDescription {
         return "\(verbs.past) \(render(object))"
     }
 
-    /// The object alone, rendered the way a line would render it — quoted when
-    /// the caller supplied it, bare when Proctor derived it. For a surface that
-    /// needs its own verb in front of the same object, so the two never drift.
+    /// The object alone, fenced the way a line would fence it, for a surface that
+    /// needs its own verb in front of the same object so the two never drift.
+    /// `"Paused before \(objectText)"` is a line like any other and gets the same
+    /// containment; see the type comment for why the fence is not optional.
     public static func objectText(for step: ActionStep, node: AXNode?) -> String? {
         object(for: step, node: node).map(render)
     }

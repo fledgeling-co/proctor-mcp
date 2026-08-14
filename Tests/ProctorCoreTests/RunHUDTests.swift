@@ -40,13 +40,13 @@ struct RunHUDStateTests {
         state.apply(.stepApproaching(step: press, node: el(), synthetic: false))
         #expect(state.model.line == StepDescription.line(for: press, node: el(),
                                                          timing: .prospective))
-        #expect(state.model.line == "About to press Send invoice")
+        #expect(state.model.line == "About to press \"Send invoice\"")
         #expect(state.model.phase == .travelling)
 
         state.apply(.stepActing(step: press, node: el(), synthetic: false))
         #expect(state.model.line == StepDescription.line(for: press, node: el(),
                                                          timing: .present))
-        #expect(state.model.line == "Pressing Send invoice")
+        #expect(state.model.line == "Pressing \"Send invoice\"")
         #expect(state.model.phase == .acting)
     }
 
@@ -65,7 +65,7 @@ struct RunHUDStateTests {
         state.apply(.runEnded(.completed))
         lines.insert(state.model.line)
         #expect(lines.count == 4)
-        #expect(lines.contains("Paused before Send invoice"))
+        #expect(lines.contains("Paused before \"Send invoice\""))
         #expect(lines.contains("Run complete"))
     }
 
@@ -161,7 +161,7 @@ struct RunHUDStateTests {
         state.apply(.stepSettled(step: focus, node: el("Amount"), settleMs: 412))
         #expect(state.model.trail.last?.text
                 == StepDescription.completedLine(for: focus, node: el("Amount")))
-        #expect(state.model.trail.last?.text == "Focused Amount")
+        #expect(state.model.trail.last?.text == "Focused \"Amount\"")
     }
 
     @Test("a refused step lands in the trail with no settle time rather than a fabricated one")
@@ -464,14 +464,14 @@ struct RunHUDWordingTests {
         }
     }
 
-    @Test("a caller-supplied name is quoted wherever it appears, live line or trail")
-    func suppliedNamesStayQuoted() {
+    @Test("a name is fenced wherever it appears, live line or trail, whoever supplied it")
+    func namesStayFenced() {
         let supplied = step(.press, label: "Pay the supplier")
         #expect(StepDescription.completedLine(for: supplied, node: el())
                 == "Pressed \"Pay the supplier\"")
         #expect(StepDescription.objectText(for: supplied, node: el())
                 == "\"Pay the supplier\"")
-        #expect(StepDescription.objectText(for: step(.press), node: el()) == "Send invoice")
+        #expect(StepDescription.objectText(for: step(.press), node: el()) == "\"Send invoice\"")
     }
 
     @Test("a step naming nothing has no object, so a pause says so rather than trailing off")
