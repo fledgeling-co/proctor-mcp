@@ -82,6 +82,10 @@ final class RunHUDPanel {
     private var clockTimer: Timer?
     private var linger: DispatchWorkItem?
     private var themeObserver: NSObjectProtocol?
+    /// Bumped every time the panel is presented. A fade started for one run must
+    /// not order the panel out from under the next one — a stability sweep can
+    /// start its next pass well inside the fade it just triggered.
+    private var presentation = 0
 
     // MARK: - The run's side
 
@@ -159,6 +163,14 @@ final class RunHUDPanel {
                        display: false)
         // Never `activate(_:)`. An agent that activates takes focus from the
         // application under test, which breaks settling and every synthetic step.
+        presentation += 1
+        // Replaces any fade still running rather than fighting it: assigning
+        // through the animator with a zero duration cancels the old animation.
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0
+            panel.animator().alphaValue = 1
+        }
+        panel.alphaValue = 1
         panel.orderFrontRegardless()
         RunHUDAvailability.shared.record(built: true, reason: nil)
     }
@@ -269,10 +281,27 @@ final class RunHUDPanel {
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: work)
     }
 
+    /// The panel goes on the linger, fading rather than vanishing — except under
+    /// reduced motion, where it simply goes. This is the only thing on the panel
+    /// that moves, which is why it is also the only thing that setting gates.
     private func hide() {
         clockTimer?.invalidate(); clockTimer = nil
-        panel?.orderOut(nil)
         RunHUDAvailability.shared.record(built: false, reason: nil)
+        guard let panel else { return }
+        guard !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion else {
+            panel.orderOut(nil)
+            return
+        }
+        let generation = presentation
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.45
+            panel.animator().alphaValue = 0
+        } completionHandler: { [weak self] in
+            MainActor.assumeIsolated {
+                guard let self, self.presentation == generation else { return }
+                panel.orderOut(nil)
+            }
+        }
     }
 
     // MARK: - The controls
