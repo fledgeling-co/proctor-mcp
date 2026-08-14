@@ -315,7 +315,18 @@ private struct AgentSection: View {
                     Row("Live observers", "\(r.observersLive)")
                     Row("Shortcuts CLI", r.shortcutsCLIAvailable ? "available" : "not available")
                     Row("Obscura", obscuraSummary(r))
+                    if let second = secondLaneSummary(r) {
+                        Row("browser-use", second)
+                    }
                     Row("Signature", model.signature.summary)
+                }
+                if let second = secondLaneSummary(r), second.hasPrefix("second lane on") {
+                    Text("Proctor names browser-use for pages Obscura cannot open. It is an "
+                         + "autonomous agent driving a real browser with real credentials, and "
+                         + "nothing it does reaches Proctor's audit trail. Set by "
+                         + "PROCTOR_SECOND_LANE in the agent's launchd environment.")
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 if let absence = r.obscuraUnavailable {
                     ObscuraOffer(absence: absence, model: model)
@@ -356,6 +367,14 @@ private struct AgentSection: View {
         let missing = r.obscura?.missingCompanions ?? []
         guard !missing.isEmpty else { return "available" }
         return "available, without \(missing.joined(separator: ", "))"
+    }
+
+    /// The second lane's row, or nothing. The decision is `BrowserUseTool`'s so it
+    /// can be tested without a window server; this only reads the report.
+    private func secondLaneSummary(_ r: DoctorReport) -> String? {
+        BrowserUseTool.statusSummary(
+            secondLane: SecondLaneState(rawValue: r.secondLane) ?? .off,
+            found: r.tools.first { $0.tool == BrowserUseTool.binary }?.available ?? false)
     }
 }
 

@@ -21,7 +21,9 @@ extension Session {
         // Re-probed rather than read from the cache, and written back through it:
         // this is the "now" answer, and after it the health report and the browser
         // handoffs cannot disagree. The status window's Re-check drives this path.
-        let obscura = tools.refreshed()
+        let (obscura, browserUse) = tools.refreshBoth()
+        let lanes = BrowserLanes.make(obscura: obscura, browserUse: browserUse,
+                                      environment: tools.environment)
 
         var grants: [DoctorReport.Grant] = [
             .init(name: "Accessibility", granted: accessibilityGranted, required: true,
@@ -77,6 +79,18 @@ extension Session {
             obscuraAvailable: obscura.available,
             obscura: obscura,
             obscuraUnavailable: obscura.available ? nil : ObscuraTool.absence,
+            // The growth surface. Every *located* tool, in a fixed order, present
+            // or absent; a fourth goes here rather than becoming a fourth boolean.
+            // /usr/bin/shortcuts stays out on merit: it is an OS component at a
+            // fixed absolute path, so a ToolPresence for it would be a shape with
+            // three empty fields.
+            // browser-use is listed **only when the operator named it**. With the
+            // lane off the string does not appear in a tool result at all, which
+            // makes the gate a total invariant rather than one about handoffs.
+            tools: lanes.secondLane == .off ? [obscura] : [obscura, browserUse],
+            // Three states, not two: "enabled and not installed" is a real
+            // situation an operator who set the variable has to be able to see.
+            secondLane: lanes.secondLane.rawValue,
             ready: blockers.isEmpty,
             blockers: blockers)
     }

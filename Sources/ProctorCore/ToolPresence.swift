@@ -68,6 +68,18 @@ public struct ToolAbsence: Codable, Sendable, Equatable {
 
 public enum ToolLocator {
 
+    /// The directories a launchd agent has to be told about, shared by every tool
+    /// Proctor looks for. One list rather than one per tool: a launchd agent's
+    /// lookup problem is the same problem whatever the binary is, and two lists
+    /// would drift.
+    public static let commonToolDirectories = [
+        "/opt/homebrew/bin",    // Apple Silicon Homebrew
+        "/usr/local/bin",       // Intel Homebrew, and most manual installs
+        "~/.local/bin",         // pipx and `uv tool`; the verified Obscura install here too
+        "~/.cargo/bin",         // Obscura is Rust; cargo install is a real path to it
+        "/opt/local/bin"        // MacPorts
+    ]
+
     /// The directories to check, in order: the inherited `PATH` first, then the
     /// explicit list. The explicit list is not a convenience — a launchd agent
     /// inherits no login shell's `PATH`, so `/opt/homebrew/bin` and the rest have

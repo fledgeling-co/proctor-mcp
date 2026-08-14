@@ -122,7 +122,7 @@ public extension ToolCatalogue {
                  "renderRevision": p("number")]),
 
             "proctor_doctor": openObject(
-                "Agent liveness, grants, attachments and observer health. `obscuraAvailable` reports whether the tool the browser handoff recommends is installed; it never affects `ready`, because Proctor drives native applications without it.",
+                "Agent liveness, grants, attachments and observer health. `tools` lists every command-line tool Proctor looks for, with where it was found and everywhere it looked; `obscuraAvailable` and `obscura` are the grandfathered spelling of its first entry. `secondLane` is `off`, `enabled` or `unavailable` — the second browser lane is named only when PROCTOR_SECOND_LANE names it, and usable only when that tool is also installed. None of this affects `ready`, because Proctor drives native applications without any browser tool.",
                 ["agentVersion": p("string"), "protocolVersion": p("number"),
                  "osVersion": p("string"), "agentRunning": p("boolean"),
                  "socketPath": p("string"), "grants": p("array"),
@@ -130,7 +130,8 @@ public extension ToolCatalogue {
                  "secureEventInputActive": p("boolean"),
                  "shortcutsCLIAvailable": p("boolean"),
                  "obscuraAvailable": p("boolean"), "obscura": p("object"),
-                 "obscuraUnavailable": p("object"), "ready": p("boolean"),
+                 "obscuraUnavailable": p("object"), "tools": p("array"),
+                 "secondLane": p("string"), "ready": p("boolean"),
                  "blockers": p("array")]),
 
             "proctor_unlock": openObject(

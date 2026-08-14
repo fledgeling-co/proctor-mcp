@@ -31,7 +31,7 @@ actor Session {
     /// Whether the tool the browser handoff names is actually installed. Owned
     /// here rather than reached for as a shared singleton, so a test drives its
     /// own and leaves nothing behind.
-    let tools: ToolProbe
+    let tools: ToolProbes
 
     /// How many past trees are retained per window to serve a sinceRevision
     /// diff. A caller more than this far behind is diffed from the oldest tree
@@ -445,7 +445,7 @@ actor Session {
          reflector: any ReflectorBridge = NullReflectorBridge(),
          tri: (any TriObserving)? = nil,
          scheduler: RunScheduler = RunScheduler(),
-         tools: ToolProbe = ToolProbe()) {
+         tools: ToolProbes = ToolProbes()) {
         self.runScheduler = scheduler
         self.ax = ax
         self.capture = capture
@@ -478,7 +478,8 @@ actor Session {
     /// so: no window was named, so no page URL was read.
     func browserHandoff(bundleId: String?, detail: BrowserTarget.Detail) -> BrowserHandoff? {
         guard let browser = BrowserCatalogue.identify(bundleId: bundleId) else { return nil }
-        return withTool(BrowserTarget.handoff(for: browser, probe: nil, detail: detail))
+        return BrowserTarget.handoff(for: browser, probe: nil, detail: detail,
+                                     lanes: tools.lanes)
     }
 
     /// The advisory for a window that is showing a page, or nil.
@@ -498,14 +499,8 @@ actor Session {
         guard let probe = try? ax.webContent(window: window.id), !probe.areas.isEmpty
         else { return nil }
         if !targets.isEmpty, !targets.contains(where: { probe.contains($0) }) { return nil }
-        return withTool(BrowserTarget.handoff(for: browser, probe: probe, detail: detail))
-    }
-
-    /// Every browser advisory leaves through here, so a missing Obscura is
-    /// disclosed on all five surfaces rather than on whichever one was wired last.
-    private func withTool(_ handoff: BrowserHandoff) -> BrowserHandoff {
-        BrowserTarget.withTool(handoff, available: tools.presence().available,
-                               absence: ObscuraTool.absence)
+        return BrowserTarget.handoff(for: browser, probe: probe, detail: detail,
+                                     lanes: tools.lanes)
     }
 
     /// An attached app by its handle id, or nil if nothing is attached under it.

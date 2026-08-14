@@ -70,7 +70,7 @@ struct BrowserHandoffTests {
     @Test("one page URL is reported, and reported once")
     func singleURL() {
         let handoff = BrowserTarget.handoff(for: chrome, probe: probe("https://example.com/a"),
-                                            detail: .brief)
+                                            detail: .brief, lanes: .obscuraOnly)
         #expect(handoff.url == "https://example.com/a")
         #expect(handoff.urlUnavailable == nil)
         #expect(handoff.use == "obscura")
@@ -78,7 +78,7 @@ struct BrowserHandoffTests {
 
     @Test("a window with no readable URL says so rather than guessing")
     func absentURL() {
-        let handoff = BrowserTarget.handoff(for: chrome, probe: probe(nil), detail: .brief)
+        let handoff = BrowserTarget.handoff(for: chrome, probe: probe(nil), detail: .brief, lanes: .obscuraOnly)
         #expect(handoff.url == nil)
         #expect(handoff.urlUnavailable == BrowserTarget.urlAbsent)
     }
@@ -88,7 +88,7 @@ struct BrowserHandoffTests {
         // Proctor does not pick one. A URL that is the wrong tab is worse than no
         // URL, because a model cannot tell it is wrong.
         let handoff = BrowserTarget.handoff(
-            for: chrome, probe: probe("https://a.example", "https://b.example"), detail: .brief)
+            for: chrome, probe: probe("https://a.example", "https://b.example"), detail: .brief, lanes: .obscuraOnly)
         #expect(handoff.url == nil)
         #expect(handoff.urlUnavailable == BrowserTarget.severalURLs)
     }
@@ -98,7 +98,7 @@ struct BrowserHandoffTests {
         let handoff = BrowserTarget.handoff(
             for: chrome,
             probe: probe("https://example.com/a", "https://example.com/a/", "https://example.com/a#x"),
-            detail: .brief)
+            detail: .brief, lanes: .obscuraOnly)
         #expect(handoff.url == "https://example.com/a")
         #expect(handoff.urlUnavailable == nil)
     }
@@ -110,15 +110,15 @@ struct BrowserHandoffTests {
         // is worse advice than naming none; staying silent would be worse still,
         // because a model would drive the page believing nothing was said about it.
         for url in ["chrome://newtab", "about:blank", "devtools://devtools/bundled/x.html",
-                    "chrome-extension://abcdef/popup.html", "file:///tmp/x.pdf"] {
-            let handoff = BrowserTarget.handoff(for: chrome, probe: probe(url), detail: .full)
+                    "chrome-extension://abcdef/popup.html"] {
+            let handoff = BrowserTarget.handoff(for: chrome, probe: probe(url), detail: .full, lanes: .obscuraOnly)
             #expect(handoff.use == nil, "\(url) should not recommend a tool")
             #expect(handoff.url == nil)
             #expect(handoff.commands == nil)
             #expect(handoff.urlUnavailable == BrowserTarget.notOpenable)
             // The disclosure itself survives.
-            #expect(handoff.boundary == BrowserTarget.boundary)
-            #expect(handoff.continuity == BrowserTarget.continuity)
+            #expect(handoff.boundary == BrowserTarget.boundary(for: .obscura))
+            #expect(handoff.continuity == BrowserTarget.continuity(for: .obscura))
         }
     }
 
@@ -126,7 +126,7 @@ struct BrowserHandoffTests {
     func webSchemeWinsOverASiblingNonWebArea() {
         let handoff = BrowserTarget.handoff(
             for: chrome, probe: probe("devtools://devtools/x.html", "https://example.com"),
-            detail: .brief)
+            detail: .brief, lanes: .obscuraOnly)
         #expect(handoff.url == "https://example.com")
         #expect(handoff.use == "obscura")
     }
@@ -138,12 +138,12 @@ struct BrowserHandoffTests {
         for url in ["http://localhost:3000/x", "http://127.0.0.1:8080",
                     "http://192.168.1.4:5173", "http://10.0.0.2", "http://172.20.1.1",
                     "http://dev.local"] {
-            let handoff = BrowserTarget.handoff(for: chrome, probe: probe(url), detail: .brief)
-            #expect(handoff.note == BrowserTarget.privateNetworkNote, "\(url) is private")
+            let handoff = BrowserTarget.handoff(for: chrome, probe: probe(url), detail: .brief, lanes: .obscuraOnly)
+            #expect(handoff.notes?.first == BrowserTarget.privateNetworkNote, "\(url) is private")
         }
         let public_ = BrowserTarget.handoff(for: chrome, probe: probe("https://example.com"),
-                                            detail: .brief)
-        #expect(public_.note == nil)
+                                            detail: .brief, lanes: .obscuraOnly)
+        #expect(public_.notes == nil)
     }
 
     @Test("a collapsed or frameless web area does not count as a second page")
@@ -157,7 +157,7 @@ struct BrowserHandoffTests {
             WebArea(url: "https://hidden.example", frame: Rect(x: 0, y: 0, w: 0, h: 0)),
             WebArea(url: "https://frameless.example", frame: nil)
         ])
-        let handoff = BrowserTarget.handoff(for: chrome, probe: probe, detail: .brief)
+        let handoff = BrowserTarget.handoff(for: chrome, probe: probe, detail: .brief, lanes: .obscuraOnly)
         #expect(handoff.url == "https://example.com")
     }
 
@@ -169,7 +169,7 @@ struct BrowserHandoffTests {
             WebArea(url: "https://a.example", frame: nil),
             WebArea(url: "https://b.example", frame: nil)
         ])
-        let handoff = BrowserTarget.handoff(for: chrome, probe: probe, detail: .brief)
+        let handoff = BrowserTarget.handoff(for: chrome, probe: probe, detail: .brief, lanes: .obscuraOnly)
         #expect(handoff.urlUnavailable == BrowserTarget.severalURLs)
     }
 
@@ -179,7 +179,7 @@ struct BrowserHandoffTests {
         // the command templates keep their literal placeholder, so nothing a page
         // can name ends up inside a string a model may paste into a shell.
         let hostile = "https://evil.example/\"; rm -rf ~ #"
-        let handoff = BrowserTarget.handoff(for: chrome, probe: probe(hostile), detail: .full)
+        let handoff = BrowserTarget.handoff(for: chrome, probe: probe(hostile), detail: .full, lanes: .obscuraOnly)
         #expect(handoff.url == hostile)
 
         let commands = try! #require(handoff.commands)
@@ -201,9 +201,9 @@ struct BrowserHandoffTests {
     @Test("full says everything once; brief says the part that is always true")
     func detailLevels() {
         let full = BrowserTarget.handoff(for: chrome, probe: probe("https://example.com"),
-                                         detail: .full)
+                                         detail: .full, lanes: .obscuraOnly)
         let brief = BrowserTarget.handoff(for: chrome, probe: probe("https://example.com"),
-                                          detail: .brief)
+                                          detail: .brief, lanes: .obscuraOnly)
 
         #expect(full.caveats?.count == 7)
         #expect(full.commands?.isEmpty == false)
@@ -221,7 +221,7 @@ struct BrowserHandoffTests {
 
     @Test("without a window there is no page, and it says that rather than nothing")
     func appLevelHandoff() {
-        let handoff = BrowserTarget.handoff(for: chrome, probe: nil, detail: .full)
+        let handoff = BrowserTarget.handoff(for: chrome, probe: nil, detail: .full, lanes: .obscuraOnly)
         #expect(handoff.url == nil)
         #expect(handoff.urlUnavailable == BrowserTarget.noWindowNamed)
         #expect(handoff.caveats?.count == 7)
@@ -230,7 +230,7 @@ struct BrowserHandoffTests {
     @Test("omitted fields are absent on the wire, not null")
     func encodingOmitsAbsentFields() throws {
         let brief = BrowserTarget.handoff(for: chrome, probe: probe("https://example.com"),
-                                          detail: .brief)
+                                          detail: .brief, lanes: .obscuraOnly)
         let json = try JSONValue.encode(brief).objectValue ?? [:]
         #expect(json["caveats"] == nil)
         #expect(json["commands"] == nil)
@@ -283,24 +283,28 @@ struct WebContentProbeTests {
         #expect(!frameless.contains(x: 10, y: 10))
     }
 }
-
 // MARK: - PRO-0023: what the handoff says when Obscura is not installed
 
 @Suite("Browser handoff when Obscura is missing")
 struct BrowserHandoffToolAvailabilityTests {
 
-    private let chrome = KnownBrowser(name: "Google Chrome", bundleId: "com.google.Chrome")
+    private let chrome = KnownBrowser(name: "Google Chrome", bundleId: "com.google.Chrome",
+                                      chromiumFamily: true)
     private let page = WebContentProbe(areas: [
         WebArea(url: "https://example.com/dashboard", frame: Rect(x: 0, y: 0, w: 800, h: 600))
     ])
     private let internalPage = WebContentProbe(areas: [
-        WebArea(url: "chrome://settings", frame: Rect(x: 0, y: 0, w: 800, h: 600))
+        WebArea(url: "chrome://newtab", frame: Rect(x: 0, y: 0, w: 800, h: 600))
     ])
 
-    private func handoff(_ probe: WebContentProbe, _ detail: BrowserTarget.Detail,
+    /// PRO-0024 replaced the post-hoc `withTool` patch with a `lanes` argument,
+    /// because the lane now decides the boundary text, the continuity text, the
+    /// caveats and the commands together and a patch could no longer express it.
+    /// The clauses these tests pin are PRO-0023's, unchanged; only the call is new.
+    private func handoff(_ probe: WebContentProbe?, _ detail: BrowserTarget.Detail,
                          available: Bool) -> BrowserHandoff {
-        BrowserTarget.withTool(BrowserTarget.handoff(for: chrome, probe: probe, detail: detail),
-                               available: available, absence: ObscuraTool.absence)
+        BrowserTarget.handoff(for: chrome, probe: probe, detail: detail,
+                              lanes: BrowserLanes(obscuraAvailable: available, secondLane: .off))
     }
 
     @Test("a missing tool drops the recommendation, keeps the URL, and says why")
@@ -316,19 +320,19 @@ struct BrowserHandoffToolAvailabilityTests {
         #expect(out.url == "https://example.com/dashboard")
         // Which half of the window is Proctor's does not depend on what happens to
         // be installed.
-        #expect(out.boundary == BrowserTarget.boundary)
-        #expect(out.continuity == BrowserTarget.continuity)
+        #expect(out.boundary == BrowserTarget.boundary(for: .obscura))
+        #expect(out.continuity == BrowserTarget.continuity(for: .obscura))
         #expect(out.evidence == BrowserTarget.evidence)
-        #expect(out.caveats == BrowserTarget.caveats)
+        #expect(out.caveats == BrowserTarget.caveats(for: .obscura))
     }
 
     @Test("a present tool changes nothing at all")
     func aPresentToolChangesNothing() {
-        let untouched = BrowserTarget.handoff(for: chrome, probe: page, detail: .full)
-        #expect(handoff(page, .full, available: true) == untouched)
-        #expect(handoff(page, .brief, available: true)
-                == BrowserTarget.handoff(for: chrome, probe: page, detail: .brief))
-        #expect(handoff(page, .full, available: true).toolUnavailable == nil)
+        let out = handoff(page, .full, available: true)
+        #expect(out.toolUnavailable == nil)
+        #expect(out.use == "obscura")
+        #expect(out.commands == BrowserTarget.commands(for: .obscura))
+        #expect(handoff(page, .brief, available: true).commands == nil)
     }
 
     @Test("a page Obscura could not open anyway gains no absence")
@@ -339,7 +343,7 @@ struct BrowserHandoffToolAvailabilityTests {
         #expect(out.toolUnavailable == nil)
         #expect(out.use == nil)
         #expect(out.urlUnavailable == BrowserTarget.notOpenable)
-        #expect(out == BrowserTarget.handoff(for: chrome, probe: internalPage, detail: .full))
+        #expect(out == handoff(internalPage, .full, available: true))
     }
 
     @Test("both detail levels carry the same absence")
@@ -354,9 +358,7 @@ struct BrowserHandoffToolAvailabilityTests {
 
     @Test("an app-level handoff with no window discloses the absence too")
     func anAppLevelHandoffDisclosesTheAbsence() {
-        let out = BrowserTarget.withTool(
-            BrowserTarget.handoff(for: chrome, probe: nil, detail: .full),
-            available: false, absence: ObscuraTool.absence)
+        let out = handoff(nil, .full, available: false)
         #expect(out.toolUnavailable != nil)
         #expect(out.use == nil)
     }

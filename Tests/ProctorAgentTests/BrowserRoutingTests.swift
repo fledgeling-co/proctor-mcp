@@ -41,10 +41,17 @@ struct BrowserRoutingTests {
         // machine with Obscura and the opposite on a machine without it. What
         // happens when it is missing is ObscuraPresenceWiringTests' subject.
         let session = Session(ax: ax, capture: FakeCapture(),
-                              tools: ToolProbe(probe: {
-                                  ToolPresence(tool: ObscuraTool.binary, available: true,
-                                               path: "/opt/homebrew/bin/obscura")
-                              }))
+                              tools: ToolProbes(
+                                obscura: ToolProbe(probe: {
+                                    ToolPresence(tool: ObscuraTool.binary, available: true,
+                                                 path: "/opt/homebrew/bin/obscura")
+                                }),
+                                browserUse: ToolProbe(probe: {
+                                    ToolPresence(tool: BrowserUseTool.binary, available: false)
+                                }),
+                                // PRO-0024: an empty environment, so the second lane is off
+                                // and these assertions do not depend on the machine's own.
+                                environment: [:]))
         // The trail is a real file for a real agent; a test that forgets this
         // writes to the operator's own history.
         await session.setAuditSink(AuditCollector().sink)
@@ -65,7 +72,7 @@ struct BrowserRoutingTests {
         let row = try #require(rows?.first?.objectValue)
         let handoff = try #require(row["browser"]?.objectValue)
         #expect(handoff["browser"]?.stringValue == "Google Chrome")
-        #expect(handoff["boundary"]?.stringValue == BrowserTarget.boundary)
+        #expect(handoff["boundary"]?.stringValue == BrowserTarget.boundary(for: .obscura))
         // Brief: the caveats belong to attach, not to every row of a list.
         #expect(handoff["caveats"] == nil)
 
@@ -85,7 +92,7 @@ struct BrowserRoutingTests {
         #expect(handoff["caveats"]?.arrayValue?.count == 7)
         #expect(handoff["commands"]?.arrayValue?.isEmpty == false)
         #expect(handoff["use"]?.stringValue == "obscura")
-        #expect(handoff["continuity"]?.stringValue == BrowserTarget.continuity)
+        #expect(handoff["continuity"]?.stringValue == BrowserTarget.continuity(for: .obscura))
     }
 
     @Test("attaching to a native app says nothing about browsers")

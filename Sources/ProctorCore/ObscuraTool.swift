@@ -28,14 +28,9 @@ public enum ObscuraTool {
     public static let docs = "https://github.com/h4ckf0r0day/obscura"
 
     /// Checked in addition to whatever `PATH` the agent inherited, because a
-    /// launchd agent's `PATH` is usually /usr/bin:/bin:/usr/sbin:/sbin.
-    public static let extraDirectories = [
-        "/opt/homebrew/bin",    // Apple Silicon Homebrew
-        "/usr/local/bin",       // Intel Homebrew, and most manual installs
-        "~/.local/bin",         // where the verified install on this machine lives
-        "~/.cargo/bin",         // Obscura is Rust; cargo install is a real path to it
-        "/opt/local/bin"        // MacPorts
-    ]
+    /// launchd agent's `PATH` is usually /usr/bin:/bin:/usr/sbin:/sbin. Shared
+    /// with every other tool Proctor looks for; see `ToolLocator`.
+    public static let extraDirectories = ToolLocator.commonToolDirectories
 
     /// Where the install commands put it. On the candidate list above, and it
     /// needs no administrator rights.

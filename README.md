@@ -254,6 +254,30 @@ agent has to check by name — `~/.local/bin`, `~/.cargo/bin`, `/opt/homebrew/bi
 and every path it looked at, and never lets it affect `ready`: Proctor drives
 native applications without it.
 
+**There is a second lane, and it is off unless you turn it on.** Some of Obscura's
+measured limits stop a job rather than degrading it, and a page that lives inside
+the browser itself — `chrome://`, an extension page, DevTools — has no equivalent
+in Obscura's engine at all. For those, Proctor can name the
+[browser-use](https://docs.browser-use.com) CLI instead, and the `why` field says
+which rule chose it, so the advice is checkable rather than oracular. Two gates
+stand in front of it, and they do different jobs: `PROCTOR_SECOND_LANE=browser-use`
+in the agent's launchd environment decides whether the tool may be **named** at
+all, and finding the binary decides whether the lane is **usable**. Unset is
+Obscura-only. The reason for the switch is what the tool is: browser-use is an
+autonomous agent, its default local mode drives a real browser with real
+credentials, and nothing it does reaches Proctor's audit trail — so the handoff
+says all three at both detail levels, and it ships **no command templates** for
+that lane, only prose about which mode to run it in. Installing a CLI is consent
+to have a file; it is not consent for a process holding Accessibility to name that
+file to a model with a shell. Routing is on the URL's scheme and nothing else: the
+step kind and the accessibility shape were examined and neither discriminates
+between the lanes. Two things it will not do, both deliberate. It is **never a
+fallback** — a missing Obscura is a fact about the machine, not about the page, so
+an ordinary web page is never handed to an autonomous agent because the bounded
+reader is absent. And it is **never pointed at the browser's own configuration,
+credential, extension or history pages**, or at DevTools: an agent acting as this
+person has no business in the place their saved passwords live.
+
 **It does not see inside a window it was not granted.** No Accessibility grant
 means an empty tree; no Screen Recording grant means no pixels. Neither
 degrades gracefully into something that looks like a test result.

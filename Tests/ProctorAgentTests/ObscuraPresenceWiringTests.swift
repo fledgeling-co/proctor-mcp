@@ -73,7 +73,14 @@ struct ObscuraPresenceWiringTests {
         let scripted = ScriptedProbe(available: available)
         let clock = Clock()
         let session = Session(ax: ax, capture: FakeCapture(),
-                              tools: ToolProbe(probe: { scripted.read() }, now: { clock.now }))
+                              tools: ToolProbes(
+                                obscura: ToolProbe(probe: { scripted.read() }, now: { clock.now }),
+                                browserUse: ToolProbe(probe: {
+                                    ToolPresence(tool: BrowserUseTool.binary, available: false)
+                                }, now: { clock.now },
+                                   presentTTL: ToolProbe.presentTTL,
+                                   absentTTL: ToolProbe.presentTTL),
+                                environment: [:]))
         await session.setAuditSink(AuditCollector().sink)
         _ = try await session.attachResolved(bundleId: bundleId, pid: nil, name: nil)
         // One handoff up front, so the cache is primed and every call count below
@@ -105,8 +112,8 @@ struct ObscuraPresenceWiringTests {
         #expect(handoff["commands"] == nil)
         // Still a disclosure about the boundary, and still the caveats: what
         // Proctor can prove about a page does not change with what is installed.
-        #expect(handoff["boundary"]?.stringValue == BrowserTarget.boundary)
-        #expect(handoff["caveats"]?.arrayValue?.count == BrowserTarget.caveats.count)
+        #expect(handoff["boundary"]?.stringValue == BrowserTarget.boundary(for: .obscura))
+        #expect(handoff["caveats"]?.arrayValue?.count == BrowserTarget.caveats(for: .obscura).count)
     }
 
     @Test("with Obscura installed the handoff still recommends it")
@@ -115,7 +122,7 @@ struct ObscuraPresenceWiringTests {
         let handoff = try await attachHandoff(session)
         #expect(handoff["toolUnavailable"] == nil)
         #expect(handoff["use"]?.stringValue == "obscura")
-        #expect(handoff["commands"]?.arrayValue?.count == BrowserTarget.commands.count)
+        #expect(handoff["commands"]?.arrayValue?.count == BrowserTarget.commands(for: .obscura)?.count)
     }
 
     @Test("a snapshot of a page discloses the absence too")

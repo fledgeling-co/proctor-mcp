@@ -694,6 +694,23 @@ public struct DoctorReport: Codable, Sendable {
     /// this situation rather than two — and, like that one, it carries no shell
     /// commands.
     public var obscuraUnavailable: ToolAbsence?
+    /// Every tool Proctor *locates* — obscura then browser-use — present or absent,
+    /// always both. This is the growth surface: a fourth tool is an entry here
+    /// rather than a fourth top-level boolean. `obscuraAvailable` and `obscura`
+    /// above are the grandfathered spelling of this array's first entry and must
+    /// agree with it; they stay because they are already consumed and breaking them
+    /// would be a protocol change for a cosmetic win.
+    ///
+    /// `shortcutsCLIAvailable` is not in here, on merit rather than for
+    /// compatibility: `/usr/bin/shortcuts` is an OS component at a fixed absolute
+    /// path, with no search list, no candidates and no companions.
+    public var tools: [ToolPresence]
+    /// The second browser lane: `off`, `enabled` or `unavailable`. Three states
+    /// because the two gates in front of it do different jobs — the environment
+    /// variable decides whether the tool may be named at all, and the binary
+    /// decides whether the lane is usable. An operator who enabled a lane that is
+    /// not installed sees `unavailable` rather than a silence they cannot explain.
+    public var secondLane: String
     /// Untouched by Obscura either way: `ready` means Proctor can do its own job,
     /// and Proctor drives native applications without it. A health report that
     /// failed on an advisory tool would be lying about what is broken.
@@ -733,6 +750,7 @@ public struct DoctorReport: Codable, Sendable {
                 secureEventInputActive: Bool, shortcutsCLIAvailable: Bool,
                 obscuraAvailable: Bool = false, obscura: ToolPresence? = nil,
                 obscuraUnavailable: ToolAbsence? = nil,
+                tools: [ToolPresence] = [], secondLane: String = SecondLaneState.off.rawValue,
                 ready: Bool, blockers: [String]) {
         self.agentVersion = agentVersion; self.protocolVersion = protocolVersion
         self.osVersion = osVersion; self.agentRunning = agentRunning
@@ -741,6 +759,7 @@ public struct DoctorReport: Codable, Sendable {
         self.shortcutsCLIAvailable = shortcutsCLIAvailable
         self.obscuraAvailable = obscuraAvailable; self.obscura = obscura
         self.obscuraUnavailable = obscuraUnavailable
+        self.tools = tools; self.secondLane = secondLane
         self.ready = ready
         self.blockers = blockers
     }
