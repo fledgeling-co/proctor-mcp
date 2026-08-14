@@ -44,3 +44,7 @@ design/icon/audit-renders/
 design/icon/audit.html
 design/icon/*-raster-*.png
 design/icon/*-arrow-*.svg
+
+# Runner worktrees and Python bytecode, neither of which belongs in history.
+.claude/worktrees/
+__pycache__/

@@ -237,9 +237,15 @@ final class RunHUDPanel {
         let size = RunHUDPlacement.Size(w: Double(Self.width), h: Double(height()))
         let primaryMaxY = Double(screens[0].frame.maxY)
         let target = RunHUDPlacement.appKit(from: window, primaryMaxY: primaryMaxY)
+        // `visibleFrame`, not `frame`: the usable area, with the Dock and the menu
+        // bar already taken out. The panel docks 34pt off the bottom-right corner,
+        // and on this machine the laptop's Dock is 67pt tall — so measuring from
+        // `frame` put the panel's lower third behind the Dock on every screen that
+        // has one. The external display reports the two rects as identical, which
+        // is exactly why the fault showed on one screen and not the other.
         let frames = screens.map {
-            Rect(x: Double($0.frame.minX), y: Double($0.frame.minY),
-                 w: Double($0.frame.width), h: Double($0.frame.height))
+            Rect(x: Double($0.visibleFrame.minX), y: Double($0.visibleFrame.minY),
+                 w: Double($0.visibleFrame.width), h: Double($0.visibleFrame.height))
         }
 
         let origin: CGPoint

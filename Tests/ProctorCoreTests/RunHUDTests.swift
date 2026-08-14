@@ -316,6 +316,48 @@ struct RunHUDStateTests {
 @Suite("Run HUD placement")
 struct RunHUDPlacementTests {
 
+    @Test("the panel docks off the usable corner, so a Dock cannot sit on top of it")
+    func docksClearOfTheDock() {
+        // The real arrangement this was found on: a laptop whose Dock takes the
+        // bottom 67pt, and an external display above and to the left that reports
+        // no inset at all. Placement is given the USABLE rect, so the caller hands
+        // it `visibleFrame`; measuring from the full frame put the panel's lower
+        // third behind the Dock on the one screen that had one, which is why the
+        // fault looked like it only happened sometimes.
+        let laptopUsable = Rect(x: 0, y: 67, w: 1728, h: 1017)
+        let panel = RunHUDPlacement.Size(w: 352, h: 200)
+        let target = Rect(x: 411, y: 493, w: 905, h: 448)
+
+        guard let placed = RunHUDPlacement.place(panel: panel, in: [laptopUsable],
+                                                 target: target) else {
+            Issue.record("no placement"); return
+        }
+        #expect(placed.screen == 0)
+        // Bottom edge clears the Dock by the inset, rather than starting 34pt off
+        // a screen edge that is 67pt of Dock.
+        #expect(placed.origin.y == 67 + RunHUDPlacement.defaultInset)
+        #expect(placed.origin.y >= laptopUsable.y)
+        #expect(placed.origin.x + panel.w <= laptopUsable.x + laptopUsable.w)
+    }
+
+    @Test("the panel follows the driven window to the screen it is actually on")
+    func followsTheWindowAcrossScreens() {
+        // Both screens as macOS reports them here: the external sits ABOVE and to
+        // the left of the laptop, so its origin is negative in x and positive in y.
+        // A window on it must not pull the panel to the laptop, or vice versa.
+        let laptop = Rect(x: 0, y: 67, w: 1728, h: 1017)
+        let external = Rect(x: -716, y: 1117, w: 2560, h: 1440)
+        let panel = RunHUDPlacement.Size(w: 352, h: 200)
+
+        let onLaptop = Rect(x: 411, y: 493, w: 905, h: 448)
+        let onExternal = Rect(x: -349, y: 1908, w: 586, h: 488)
+
+        #expect(RunHUDPlacement.place(panel: panel, in: [laptop, external],
+                                      target: onLaptop)?.screen == 0)
+        #expect(RunHUDPlacement.place(panel: panel, in: [laptop, external],
+                                      target: onExternal)?.screen == 1)
+    }
+
     private let panel = RunHUDPlacement.Size(w: 352, h: 200)
     /// A laptop beside a larger display, the arrangement the union-panel bug was
     /// measured on.
