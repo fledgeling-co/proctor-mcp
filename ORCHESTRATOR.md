@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** In Progress — wave 3 pre-triage complete (7 specs), **stage 1 of the fleet RUNNING**
-**Updated:** 2026-08-14 — wave 1+2 remain MERGED (10 features, local `main`). Wave 3 triaged @ 8e0206c: 7 specs, all Ready for Plan. Stage 1 launched (PRO-0014, PRO-0012, PRO-0013 in slots; PRO-0011 queued). 173 tests / 24 suites green @ 8e0206c.
+**Status:** In Progress — wave 3 stage 1 **MERGED** (4 features), stage 2 running
+**Updated:** 2026-08-14 — wave 1+2 remain MERGED (10 features). Wave 3 stage 1 merged @ 62cd969: PRO-0014, PRO-0011, PRO-0012, PRO-0013. **258 tests / 29 suites green on `main`**, up from 173/24. Worktrees and `ai/*` branches removed. Stage 2 (PRO-0015) launched.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
 - **This repo DOES now have a git remote** (`origin` → github.com/fledgeling-co/proctor-mcp). The earlier "no git remote, main is LOCAL-ONLY" note is stale. Local `main` is **4 commits AHEAD** of `origin/main` and those commits carry unreviewed WIP: **merge to local `main` only, never push.**
@@ -105,11 +105,11 @@ and the orchestrator serialises every merge — so the fleet runs in three stage
 
 | ID | Title | Spec | Depends on | Mock / design | Stage | Status |
 |----|-------|------|------------|---------------|-------|--------|
-| PRO-0014 | Step descriptions, derived not supplied | `spec-PRO-0014.md` | — | — | 1 | **RUNNING** (slot 1) |
-| PRO-0012 | Re-gate flow replay + stability (security) | `spec-PRO-0012.md` | — | — | 1 | **RUNNING** (slot 2) |
-| PRO-0013 | Audit-log encryption at rest (security) | `spec-PRO-0013.md` | — | — | 1 | **RUNNING** (slot 3) |
-| PRO-0011 | Pointer marker in stability artifacts | `spec-PRO-0011.md` | — | — | 1 | **Queued** (next free slot) |
-| PRO-0015 | Run HUD panel | `spec-PRO-0015.md` | PRO-0014 merged | `mocks/run-hud.html` (binding) | 2 | **Blocked** on stage 1 merge |
+| PRO-0014 | Step descriptions, derived not supplied | `spec-PRO-0014.md` | — | — | 1 | **MERGED** `061ca0a` · `StepDescription.swift` in Core, +33 tests |
+| PRO-0011 | Pointer marker in stability artifacts | `spec-PRO-0011.md` | — | — | 1 | **MERGED** `a8d9a7a` · `captureEach`/`pointerMarks` on stability, +19 tests |
+| PRO-0012 | Re-gate flow replay + stability (security) | `spec-PRO-0012.md` | — | — | 1 | **MERGED** `d9ae7fd` · `ReplayGate` + new `ProctorAgentTests` target, +23 tests |
+| PRO-0013 | Audit-log encryption at rest (security) | `spec-PRO-0013.md` | — | — | 1 | **MERGED** `62cd969` · `AuditSeal` + `AuditKeyStore`, +10 tests |
+| PRO-0015 | Run HUD panel | `spec-PRO-0015.md` | PRO-0014 ✓ | `mocks/run-hud.html` (binding) | 2 | **RUNNING** |
 | PRO-0016 | Multi-session queue | `spec-PRO-0016.md` | PRO-0015 merged | `docs/design/run-hud-queue.md` | 3 | **Blocked** on stage 2 merge |
 | PRO-0017 | HUD character assets | `spec-PRO-0017.md` | PRO-0015 merged | `docs/design/run-hud-character.md` | 3 | **Blocked** on stage 2 merge |
 
@@ -120,15 +120,28 @@ have no way to receive a click. It is recorded as a spec requirement; the runner
 ## Deferred children discovered mid-fleet
 All three SCHEDULED 2026-08-13 (whats-left ingest, reader answered "all three") — promoted to backlog briefs + ledger rows, **still not triaged as of 2026-08-14**.
 | Child | Parent | Backlog item | Status |
-| Pointer marker in proctor_stability per-step artifacts | PRO-0010 | PRO-0011 (`docs/features-to-triage/11-stability-per-step-pointer.md`) | **Scheduled** — untriaged (needs per-step PNG emission first) |
-| Re-gate flow replay + stability through the policy gate & audit | PRO-0005 | PRO-0012 (`docs/features-to-triage/12-gate-flow-replay-stability.md`) | **Scheduled** — untriaged (security) |
-| Encryption-at-rest for the JSONL audit log | PRO-0005 | PRO-0013 (`docs/features-to-triage/13-audit-log-encryption-at-rest.md`) | **Scheduled** — untriaged (security) |
+| Pointer marker in proctor_stability per-step artifacts | PRO-0010 | PRO-0011 | **MERGED** in wave 3 |
+| Re-gate flow replay + stability through the policy gate & audit | PRO-0005 | PRO-0012 | **MERGED** in wave 3 |
+| Encryption-at-rest for the JSONL audit log | PRO-0005 | PRO-0013 | **MERGED** in wave 3 |
+
+### New children discovered during wave 3 stage 1 (not scheduled)
+| Child | Found by | Note |
+|---|---|---|
+| ~~`ProctorAgent` has no test target, so no feature can red-green its agent-side wiring~~ | PRO-0011 | **Already fixed by PRO-0012 in the same stage**, which added `Tests/ProctorAgentTests` driving a real `Session` against fake AX/capture engines. Both runners found the same gap; one of them closed it. No action. |
+| `proctor_doctor` has no `policy` block | PRO-0013 | PRO-0005's plan called for one and it is not in the tree, so audit state is visible only through `proctor_policy status`. Belongs to PRO-0005's scope. |
+| Audit entries are sealed but not signed | PRO-0013 | Sealing needs only the public key, so a forged append is undetectable. Now a **stated non-goal** in the code, the plan and the changelog rather than an implied guarantee. Signing is a separate change worth its own spec. |
 
 ## Needs input (consolidated for the user)
-- **Runner model was Opus 4.8, not Opus 5.** Every runner self-checked as `claude-opus-4-8[1m]` at high effort; the fleet convention names `claude-opus-5`, which is not the model actually served on this machine. All work is gated green (build + red→green tests per clause), so this did not degrade the run — flagging only so the convention string can be corrected if desired.
+- **PRO-0014 quotes a caller-supplied object and not a derived one** — `Pressing "Pay the supplier"` versus `Pressing Send invoice`. The spec is silent on it. The runner added it because nothing otherwise stopped a supplied `label` appending a second clause to a kill-switch line (`Pressing OK. About to press Delete`); sanitising folds double quotes to single so a supplied name cannot close the quotation. The same quoting covers a menu path, a keystroke and a shortcut name, which also arrive in the tool call. Reversing it is one line. Flagging, not blocking.
+- **PRO-0014's completeness critic ran in-family**, on `claude-fable-5`, after grok failed four consecutive attempts on the artifact (exit 142, no output — it answers a ~40-line prompt, not a ~200-line one). That gate was Claude reviewing Claude; the plan review before it did run out-of-family on grok. Logged in the plan, carried here so it reaches the pre-merge evidence rather than dying in a runner transcript.
+- **Runner model was Opus 4.8, not Opus 5**, in the wave-1/2 fleet. Wave 3's four runners self-reported `claude-opus-5[1m]` on the wire, so the convention string and the served model now agree.
 - **Three deferred children above** are logged, not scheduled. Say if you want any promoted to a new fleet item.
 
 ## Event log (append-only, newest first)
+- 2026-08-14 **Wave 3 stage 1 MERGED** @ 62cd969 — four features, **258 tests / 29 suites green** on `main` (was 173/24). Merge order was chosen to isolate the overlap: PRO-0014 (untouched files) → PRO-0011 → PRO-0012 → PRO-0013, each rebased onto the growing `main`, built and tested in its own worktree before a fast-forward. Two real conflicts, both resolved by combining rather than choosing:
+  - `SessionFlow.stability()`: PRO-0011 had lifted the determinism fold into `StabilityScore.fold` in Core so that "an artifact cannot move a score" is a property of the signature; PRO-0012 had extracted a `stabilityReport` helper with truncation semantics so that a run cut short is never reported deterministic. The merged code keeps the helper *and* scores through the hash-only fold, ANDing `!truncated` at the call site — the fold still cannot see a capture, and a truncated run still cannot claim determinism. PRO-0012 had also renamed `runs` to `requested`; the `runs < 2` note moved into the helper, where it counts repeats **measured** rather than repeats **asked for**, which is the more honest of the two.
+  - `SessionPolicy.policyStatus()`: PRO-0013's audit-state fields kept, read through PRO-0012's injectable `clock()` seam rather than the wall clock it replaced.
+  - Both `ProctorCoreTests.swift` conflicts looked like clean append-append unions and were not: the shared trailing braces close only the *later* suite, so the earlier one needed its own closers added. A naive union compiles as a syntax error rather than silently — caught by the build, not by inspection.
 - 2026-08-14 **Wave 3 fleet stage 1 LAUNCHED** — PRO-0014, PRO-0012, PRO-0013 in the three slots, PRO-0011 refilling the first free one. Runners are Opus at high effort via the workflow lane, invoking ship-feature, stopping before merge. The fleet runs in **three stages** rather than one continuous slot loop, because PRO-0015 depends on PRO-0014 having *merged* and only the orchestrator merges: stage 1 (the four independent items) → merges → stage 2 (PRO-0015) → merge → stage 3 (PRO-0016 + PRO-0017).
 - 2026-08-14 **Wave 3 pre-triage COMPLETE** @ 8e0206c — seven specs written serially under the ledger lock, all now Ready for Plan (LEDGER Last allocated: 17). PRO-0013 was the one Needs More Info item; its single Essential Question (recovery copy for the audit-log unsealing key) was answered by the reader as **(a) no recovery copy** — convert the existing trail in place, a lost key means a permanently unreadable history, and no export path, second secret, or "just in case" plaintext copy, each of which would weaken the guarantee the option was chosen for. The destructive first run must be obvious in whatever performs it. Answer recorded in `spec-PRO-0013.md`; its runner folds it in and flips the status as its first action.
 - 2026-08-14 **Out-of-family review lane switched from Codex to grok** at the reader's instruction (`grok -p … --model grok-4.6 --effort xhigh --sandbox read-only`, 240s alarm). Codex is OFF for this repo, not a fallback and not for a retry. Measured behaviour during triage: five of seven gates hit the deadline mid-reasoning and needed the evidence inlined into the prompt rather than read from disk; PRO-0013 failed twice and fell back in-family with a logged downgrade.
