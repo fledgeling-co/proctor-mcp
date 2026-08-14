@@ -209,7 +209,7 @@ extension Session {
             Self.foregroundDemand(for: steps, foreground: foreground),
             planes: run.results.map(\.plane))
         out["foreground"] = (try? JSONValue.encode(report)) ?? .null
-        if let note = report.note { out["note"] = .string(note) }
+        if let note = report.note { out["foregroundNote"] = .string(note) }
         // And every time the replay got out of somebody's way, for the same
         // reason act reports it: a suite that took four minutes because a person
         // was at the machine should say so rather than look slow.

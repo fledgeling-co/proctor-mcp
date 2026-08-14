@@ -74,6 +74,11 @@ struct BackgroundRouteTests {
         #expect(block["ranInForeground"]?.boolValue == false)
         // And the run really did stay on the accessibility plane throughout.
         #expect(block["measured"]?.intValue == 0)
+        // In words as well as as a flag, beside the records the way the yield
+        // note already rides alongside. A caller reading prose is the one most
+        // likely to be passing `foreground: true` out of habit.
+        let note = try #require(result["foregroundNote"]?.stringValue)
+        #expect(note.contains("the request was ignored"))
     }
 
     @Test("a foreground request a step could use is honoured as before")

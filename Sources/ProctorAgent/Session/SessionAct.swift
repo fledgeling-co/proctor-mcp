@@ -104,6 +104,11 @@ extension Session {
         // the run took longer than its work did. Alongside rather than inside,
         // exactly as `captures` and `browser` already ride alongside.
         if let note = YieldRecord.note(for: run.yields) { out["yieldNote"] = .string(note) }
+        // And the same for the foreground, which is where a `foreground: true`
+        // nothing could use gets said in words. The flag is in the block; the
+        // sentence is what a caller reading prose actually reads, and without
+        // this it had no surface on `act` at all.
+        if let note = result.foreground?.note { out["foregroundNote"] = .string(note) }
         // StepResult has no slot for a capture, so per-step frames are returned
         // alongside the step list rather than dropped.
         if captureEach { out["captures"] = .array(run.captures) }

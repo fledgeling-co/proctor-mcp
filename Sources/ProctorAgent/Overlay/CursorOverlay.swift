@@ -272,6 +272,14 @@ final class CursorOverlay {
             return true
 
         case .inPlane(let target):
+            // Every other display's panel goes back to the floating band first.
+            // They hold a pointer at zero opacity so they are invisible either
+            // way, but a sibling left in the normal band from an earlier step
+            // can land between this panel and its target and fail the read-back
+            // below for a placement that was actually correct.
+            for other in surfaces where other.panel !== surface.panel {
+                other.panel.level = Self.floatingLevel
+            }
             surface.panel.level = Self.inPlaneLevel
             surface.panel.orderFrontRegardless()
             surface.panel.order(.above, relativeTo: Int(target))
@@ -282,6 +290,10 @@ final class CursorOverlay {
                 mark(surface, opacity: 1, dashed: false)
                 return true
             }
+            // The ordering did not hold — a target on a level this panel cannot
+            // reach, or a macOS that no longer honours the call. `orderFront`
+            // above left it at the head of the normal band, which is not a
+            // position it can justify, so it goes back to floating and says so.
             float(surface)
             return true
         }
