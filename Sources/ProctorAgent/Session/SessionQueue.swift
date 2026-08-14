@@ -23,6 +23,9 @@ extension Session {
     /// touching anything, which is what makes this schedulable rather than
     /// guesswork.
     func lanes(for steps: [ActionStep], window: WindowHandle, foreground: Bool) -> LaneDemand {
+        // `LaneDemand` answers this through `ForegroundDemand.takesForeground`,
+        // which is the same question the panel and the menu bar ask. Conditional
+        // kinds are deliberately not part of that predicate: see the note there.
         LaneDemand.forBatch(kinds: steps.map(\.kind),
                             synthetic: Self.syntheticKinds,
                             app: window.app,

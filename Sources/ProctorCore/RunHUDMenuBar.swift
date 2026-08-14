@@ -123,9 +123,19 @@ public enum MenuBarIcon: Sendable, Equatable {
 
     /// `reachable` is whether the agent answered; `ready` is whether every
     /// required grant is in place; `phase` is what the run is doing.
-    public static func decide(reachable: Bool, ready: Bool, phase: RunHUDPhase) -> MenuBarIcon {
+    ///
+    /// `takingForeground` outranks the phase and is outranked by both guards, and
+    /// that order is the whole of the rule. A Proctor that cannot work must not
+    /// wear a calm idle face, which is why readiness comes first. But between a
+    /// character saying "acting" and the fact that the next event goes into YOUR
+    /// keyboard and pointer, the second is the one somebody needs from across the
+    /// room — the phase says what Proctor is doing, this says it is about to
+    /// happen to you.
+    public static func decide(reachable: Bool, ready: Bool, phase: RunHUDPhase,
+                              takingForeground: Bool = false) -> MenuBarIcon {
         guard reachable else { return .symbol("bolt.horizontal.circle") }
         guard ready else { return .symbol("exclamationmark.triangle") }
+        if takingForeground { return .symbol("cursorarrow.rays") }
         return .character(phase)
     }
 

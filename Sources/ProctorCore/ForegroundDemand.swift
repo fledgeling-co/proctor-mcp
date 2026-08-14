@@ -1,0 +1,177 @@
+import Foundation
+
+// Will this batch take the foreground?
+//
+// One value answers it, computed before anything runs, and everything that
+// needs the answer reads this rather than re-deriving it. `LaneDemand` asks it
+// to decide whether a run takes the exclusive global lane; the run HUD asks it
+// to say so on the panel before the machine is taken; the menu bar asks it to
+// say so while it is happening. Three answers to one question is how they drift
+// apart.
+//
+// The distinction that makes it non-trivial is that a step's plane is not
+// always knowable up front:
+//
+//   CERTAIN      `click`, `hover`, `dragPath`, `key`. There is no accessibility
+//                expression for them at all, so they enter the WindowServer
+//                event stream and need the target frontmost. Known from the
+//                kind alone.
+//   CONDITIONAL  `type` into a field the accessibility plane cannot write, and
+//                `scroll` with no scroll action to perform. Both prefer the
+//                accessibility plane and fall to a synthetic event only when the
+//                element refuses — which is a property of the element, not of
+//                the request, so it is not knowable until the step is reached.
+//
+// So an up-front count is a FLOOR. It is stated as one (the wording below never
+// says a bare "N of M" when a conditional step could add to N), it revises
+// upward when a fallback actually happens, and what a finished run reports is
+// measured from the planes the steps actually travelled rather than predicted a
+// second time.
+//
+// Which kinds are which is the agent's business — it owns the actuator — so
+// both sets are passed in rather than named here, exactly as `LaneDemand`
+// already takes `synthetic`.
+
+/// What a batch will do to the foreground, decided from its steps before it runs.
+public struct ForegroundDemand: Hashable, Sendable {
+    /// Steps that can only travel the event stream.
+    public var certainSteps: Int
+    /// Steps that may fall to it, depending on the element they reach.
+    public var conditionalSteps: Int
+    /// Which kinds those were, so a reader of this value can tell when one of
+    /// them has settled and the uncertainty it carried is spent. Without it the
+    /// hedge on the wording would never come off: a `type` that stayed on the
+    /// accessibility plane resolves the doubt without changing any count.
+    public var conditionalKinds: Set<ActionStep.Kind> = []
+    /// A `raise` brings a window forward, which moves the ground under every
+    /// synthetic event anybody else is posting.
+    public var raises: Bool
+    /// The batch asked for the app in front outright.
+    public var requestedForeground: Bool
+    public var totalSteps: Int
+
+    public init(certainSteps: Int = 0, conditionalSteps: Int = 0,
+                conditionalKinds: Set<ActionStep.Kind> = [], raises: Bool = false,
+                requestedForeground: Bool = false, totalSteps: Int = 0) {
+        self.certainSteps = certainSteps
+        self.conditionalSteps = conditionalSteps
+        self.conditionalKinds = conditionalKinds
+        self.raises = raises
+        self.requestedForeground = requestedForeground
+        self.totalSteps = totalSteps
+    }
+
+    /// It will take the foreground. This is the predicate the scheduler applies
+    /// and the one a decision to hold a run should be made on: everything it
+    /// counts is knowable now and cannot turn out otherwise.
+    public var takesForeground: Bool {
+        certainSteps > 0 || raises || requestedForeground
+    }
+
+    /// It might. Disclosure only, and deliberately not the scheduler's predicate
+    /// — a `type` batch that took the exclusive global lane on the chance it
+    /// falls back would serialise runs that never touch the foreground.
+    public var mayTakeForeground: Bool {
+        takesForeground || conditionalSteps > 0
+    }
+
+    public static func forBatch(kinds: [ActionStep.Kind],
+                                synthetic: Set<ActionStep.Kind>,
+                                conditional: Set<ActionStep.Kind>,
+                                foreground: Bool) -> ForegroundDemand {
+        ForegroundDemand(
+            certainSteps: kinds.count(where: { synthetic.contains($0) }),
+            conditionalSteps: kinds.count(where: { conditional.contains($0) }),
+            conditionalKinds: conditional,
+            raises: kinds.contains(.raise),
+            requestedForeground: foreground,
+            totalSteps: kinds.count)
+    }
+
+    /// The panel's up-front row, or nil when the batch leaves the machine alone.
+    ///
+    /// The one sentence Proctor says about a plane before a run, and it is only
+    /// ever said about the exception — accessibility is the rule and is never
+    /// announced. `known` is the count as it stands, which starts at
+    /// `certainSteps` and rises if a conditional step turns out to need the
+    /// front, so the number a person is reading is never behind what has
+    /// actually happened.
+    public func notice(app: String?, known: Int? = nil,
+                       resolvedConditional: Int = 0) -> String? {
+        // Sanitised, and unfenced — deliberately the same treatment
+        // `RunHUDState.exceptionLine` already gives the app name on this very
+        // row. Two quoting conventions on one line would be worse than either.
+        let who = StepDescription.sanitised(app) ?? "the app under test"
+        let count = max(known ?? certainSteps, certainSteps)
+        // A conditional step that has not run yet could still add to the count.
+        // One that has run cannot, whichever plane it took, so the hedge comes
+        // off as the doubt is spent rather than staying up for the whole run.
+        let pending = max(0, conditionalSteps - resolvedConditional)
+        let of = "\(count) of \(totalSteps) step\(totalSteps == 1 ? "" : "s")"
+
+        if count > 0 {
+            return pending > 0
+                ? "At least \(of) need \(who) in front"
+                : "\(of) need \(who) in front"
+        }
+        if pending > 0 {
+            let upTo = "\(pending) of \(totalSteps) step\(totalSteps == 1 ? "" : "s")"
+            return "Up to \(upTo) may need \(who) in front"
+        }
+        // `raise` and a bare `foreground: true` change what is in front without
+        // any step needing the event stream. Worth saying, and there is no count
+        // to put on it.
+        if takesForeground { return "This run brings \(who) to the front" }
+        return nil
+    }
+}
+
+/// How much of a finished run actually needed the foreground.
+///
+/// Measured, not predicted a second time: `measured` counts the steps whose
+/// reported plane was `syntheticEvent`, so it accounts for a `type` that fell
+/// back as well as for the kinds that were never going to travel any other way.
+/// That is what makes "this suite cannot run unattended" a fact about the suite
+/// rather than something you find out by watching it.
+public struct ForegroundReport: Codable, Sendable, Equatable {
+    /// What was knowable before the run: steps that could only be synthetic.
+    public var declaredCertain: Int
+    /// And the ones that might have been, before anything was tried.
+    public var declaredConditional: Int
+    /// What actually travelled the event stream.
+    public var measured: Int
+    public var totalSteps: Int
+    /// Whether the batch took the foreground at all, on the same predicate the
+    /// scheduler used.
+    public var ranInForeground: Bool
+
+    public init(declaredCertain: Int, declaredConditional: Int, measured: Int,
+                totalSteps: Int, ranInForeground: Bool) {
+        self.declaredCertain = declaredCertain
+        self.declaredConditional = declaredConditional
+        self.measured = measured
+        self.totalSteps = totalSteps
+        self.ranInForeground = ranInForeground
+    }
+
+    public static func from(_ demand: ForegroundDemand, planes: [ActuationPlane?]) -> ForegroundReport {
+        ForegroundReport(declaredCertain: demand.certainSteps,
+                         declaredConditional: demand.conditionalSteps,
+                         measured: planes.count(where: { $0 == .syntheticEvent }),
+                         totalSteps: demand.totalSteps,
+                         ranInForeground: demand.takesForeground)
+    }
+
+    /// One sentence for a caller that reads prose rather than fields. Nil when
+    /// nothing needed the front, because there is nothing to disclose.
+    public var note: String? {
+        guard measured > 0 || ranInForeground else { return nil }
+        guard measured > 0 else {
+            return "This run brought the application to the front, so the result is not a "
+                 + "background-safe one."
+        }
+        return "\(measured) of \(totalSteps) step\(totalSteps == 1 ? "" : "s") travelled as "
+             + "synthetic events, which required the application to be frontmost. The result is "
+             + "not a background-safe one, and this run cannot be repeated unattended."
+    }
+}

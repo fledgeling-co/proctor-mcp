@@ -22,6 +22,10 @@ final class FakeAX: AXEngine, @unchecked Sendable {
     /// that needs something to happen *during* a run — a person pressing Stop
     /// between two steps — hangs it here.
     var onPerform: (@Sendable (Int) -> Void)?
+    /// The plane a given step index reports having travelled. Absent means the
+    /// accessibility plane, which is what a fake app answers unless a test is
+    /// specifically about a step that could not travel that way.
+    var planeAt: [Int: ActuationPlane] = [:]
 
     init(bundleId: String, appID: String = "app-1", windowID: String = "win-1") {
         app = AppHandle(id: appID, pid: 4242, bundleId: bundleId, name: "Fake")
@@ -56,7 +60,7 @@ final class FakeAX: AXEngine, @unchecked Sendable {
         if failPerformAt == index {
             throw AgentError(code: .actionFailed, message: "fake failure at step \(index)")
         }
-        return .accessibility
+        return planeAt[index] ?? .accessibility
     }
 
     func menuBar(app: String) throws -> [RawMenuItem]? { nil }

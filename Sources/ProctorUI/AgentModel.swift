@@ -33,6 +33,21 @@ final class AgentModel {
     /// queue is answerable from the menu bar without the run panel being on
     /// screen — the scheduler runs whether or not anything is drawn.
     private(set) var queueWaiting = 0
+    /// Whether a run is going to take the machine, and whether it is taking it
+    /// right now. Mirrored into the menu bar because the run panel lands on one
+    /// display and the person whose machine it is may be looking at another.
+    private(set) var foreground = ForegroundStatus()
+
+    struct ForegroundStatus: Sendable, Equatable {
+        var running = false
+        /// A synthetic step travelled on the last poll. Sampled at the polling
+        /// interval, so a step shorter than one poll can pass unseen here — the
+        /// panel is the instantaneous surface, this is the one on every display.
+        var active = false
+        var takesForeground = false
+        var mayTakeForeground = false
+        var notice: String?
+    }
 
     /// What the run HUD is doing, mirrored from the agent so the menu bar can
     /// draw the same character in the same state. `hudPhase` is the phase the one
@@ -238,6 +253,7 @@ final class AgentModel {
         recentActivity = snapshot.items
         queueWaiting = snapshot.queueWaiting
         applyHUD(snapshot.hud)
+        foreground = snapshot.foreground
     }
 
     /// Apply a hud state, from a poll or from the reply to a control. Both carry
@@ -261,7 +277,9 @@ final class AgentModel {
         switch reachability {
         case .unknown: return .checking
         case .unreachable: return MenuBarIcon.decide(reachable: false, ready: false, phase: hudPhase)
-        case .reachable: return MenuBarIcon.decide(reachable: true, ready: ready, phase: hudPhase)
+        case .reachable: return MenuBarIcon.decide(reachable: true, ready: ready,
+                                                   phase: hudPhase,
+                                                   takingForeground: foreground.active)
         }
     }
 
@@ -289,6 +307,7 @@ final class AgentModel {
         let items: [ActivityItem]
         let queueWaiting: Int
         let hud: HUDState?
+        let foreground: ForegroundStatus
     }
 
     private enum Outcome {
@@ -336,9 +355,17 @@ final class AgentModel {
             let at = entry["at"]?.stringValue.flatMap(iso.date(from:)) ?? Date()
             return ActivityItem(tool: tool, at: at, ok: entry["ok"]?.boolValue ?? true)
         } ?? []
+        let f = result["foreground"]
+        let foreground = ForegroundStatus(
+            running: f?["running"]?.boolValue ?? false,
+            active: f?["active"]?.boolValue ?? false,
+            takesForeground: f?["takesForeground"]?.boolValue ?? false,
+            mayTakeForeground: f?["mayTakeForeground"]?.boolValue ?? false,
+            notice: f?["notice"]?.stringValue)
         return ActivitySnapshot(current: result["current"]?.stringValue, items: items,
                                 queueWaiting: result["queueWaiting"]?.intValue ?? 0,
-                                hud: HUDState(result["hud"]))
+                                hud: HUDState(result["hud"]),
+                                foreground: foreground)
     }
 
     /// The run panel's switch and the run's controls, over the same socket. An

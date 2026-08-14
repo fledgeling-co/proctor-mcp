@@ -70,12 +70,19 @@ public struct LaneDemand: Hashable, Sendable {
     /// `foreground` says so outright (which is also what covers a foreground
     /// `type`); and a `raise` step brings a window forward, which moves the
     /// ground under every synthetic event anybody else is posting.
+    ///
+    /// All three are `ForegroundDemand.takesForeground`, which is where that
+    /// question is now answered for the scheduler, the panel and the menu bar
+    /// alike. Conditional kinds (`type`, `scroll`) are deliberately absent from
+    /// this predicate: they usually travel the accessibility plane, and taking
+    /// the exclusive global lane on the chance one falls back would serialise
+    /// runs that never touch the foreground.
     public static func forBatch(kinds: [ActionStep.Kind], synthetic: Set<ActionStep.Kind>,
                                 app: String, foreground: Bool) -> LaneDemand {
+        let demand = ForegroundDemand.forBatch(kinds: kinds, synthetic: synthetic,
+                                               conditional: [], foreground: foreground)
         var lanes: Set<RunLane> = [.app(app)]
-        if foreground || kinds.contains(where: { synthetic.contains($0) || $0 == .raise }) {
-            lanes.insert(.global)
-        }
+        if demand.takesForeground { lanes.insert(.global) }
         return LaneDemand(lanes: lanes)
     }
 }

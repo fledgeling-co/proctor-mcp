@@ -10,6 +10,22 @@ extension Session {
     /// they are what Secure Event Input blocks.
     static let syntheticKinds: Set<ActionStep.Kind> = [.dragPath, .hover, .click, .key]
 
+    /// The kinds that *may* end up there. Both prefer the accessibility plane
+    /// and fall to a synthetic event only when the element refuses — `type` into
+    /// a field whose value cannot be set, `scroll` with no scroll action to
+    /// perform. That is a property of the element, so it is not knowable until
+    /// the step is reached, which is why an up-front disclosure counts these
+    /// separately and a finished run reports what actually travelled.
+    static let conditionalKinds: Set<ActionStep.Kind> = [.type, .scroll]
+
+    /// What this batch will do to the foreground, from its own steps, before any
+    /// of them runs. One value, read by the scheduler, the panel and the menu
+    /// bar alike.
+    static func foregroundDemand(for steps: [ActionStep], foreground: Bool) -> ForegroundDemand {
+        ForegroundDemand.forBatch(kinds: steps.map(\.kind), synthetic: syntheticKinds,
+                                  conditional: conditionalKinds, foreground: foreground)
+    }
+
     struct StepRun: Sendable {
         var results: [StepResult] = []
         /// What each captured step produced, typed rather than as JSON, so the
@@ -75,8 +91,11 @@ extension Session {
             try appendToFlow(named: target, window: window, run: run, steps: steps)
         }
 
+        let demandForReport = Self.foregroundDemand(for: steps, foreground: foreground)
         let result = ActResult(window: id, steps: run.results, completed: run.completed,
-                               failedAt: run.failedAt, finalHash: run.finalHash)
+                               failedAt: run.failedAt, finalHash: run.finalHash,
+                               foreground: ForegroundReport.from(demandForReport,
+                                                                 planes: run.results.map(\.plane)))
         var out = try JSONValue.encode(result).objectValue ?? [:]
         // StepResult has no slot for a capture, so per-step frames are returned
         // alongside the step list rather than dropped.
@@ -98,7 +117,11 @@ extension Session {
         // however the batch was reached — act, a replayed flow, one pass of a
         // stability sweep, the CUA façade. A stop control that is present for
         // some kinds of run and absent for others is worse than none.
-        await hudRunBegan(total: steps.count, window: window)
+        let demand = Self.foregroundDemand(for: steps, foreground: foreground)
+        await hudRunBegan(total: steps.count, window: window, demand: demand)
+        // The same fact, reachable without the panel: the menu bar mirrors this
+        // and is on every display, where the panel is on one.
+        let foregroundRun = foregroundBegan(demand: demand, app: app?.name)
         var ending: RunHUDEnding = .completed
 
         for (index, step) in steps.enumerated() {
@@ -212,7 +235,9 @@ extension Session {
             if let audit { auditStep(step, context: audit, ok: true, postStateHash: stateHash,
                                      reason: postStateError?.message) }
             run.completed += 1
-            await hud(.stepSettled(step: step, node: node, settleMs: report.elapsedMs))
+            await hud(.stepSettled(step: step, node: node, settleMs: report.elapsedMs,
+                                   plane: plane))
+            foregroundStep(run: foregroundRun, plane: plane)
             if let stateHash {
                 run.finalHash = stateHash
                 run.hashes.append(stateHash)
@@ -228,6 +253,7 @@ extension Session {
         // and the panel says how it ended and starts its own linger.
         await restCursor()
         await hud(.runEnded(ending))
+        foregroundEnded(run: foregroundRun)
         return run
     }
 

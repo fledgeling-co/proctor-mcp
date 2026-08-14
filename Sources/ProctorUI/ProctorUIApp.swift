@@ -152,6 +152,12 @@ struct MenuBarContent: View {
         if let activityLine {
             Label(activityLine, systemImage: activityIcon)
         }
+        // Before it happens, not only while it does. The wording is the panel's
+        // own — one sentence, computed once from the batch's steps — so the two
+        // surfaces cannot say different things about the same run.
+        if let notice = foregroundNotice {
+            Label(notice, systemImage: "rectangle.inset.filled.and.person.filled")
+        }
         if runControlsShown {
             Divider()
             // The run's own two controls, and the reason they are here: hiding
@@ -193,6 +199,12 @@ struct MenuBarContent: View {
         // opening the run panel.
         let waiting = model.queueWaiting > 0
             ? " · \(model.queueWaiting) waiting" : ""
+        // A run taking the machine is the thing worth reading first, and the
+        // reason this line exists on a surface that does not depend on which
+        // display the panel landed on.
+        if model.foreground.active {
+            return "Taking the foreground now\(waiting)"
+        }
         if let current = model.currentActivity { return "Running \(current)\(waiting)" }
         if let last = model.recentActivity.first { return "Last: \(last.tool)\(waiting)" }
         return model.queueWaiting > 0
@@ -225,7 +237,17 @@ struct MenuBarContent: View {
     }
 
     private var activityIcon: String {
-        model.currentActivity != nil ? "dot.radiowaves.left.and.right" : "moon.zzz"
+        if model.foreground.active { return "cursorarrow.rays" }
+        return model.currentActivity != nil ? "dot.radiowaves.left.and.right" : "moon.zzz"
+    }
+
+    /// What the run in flight is going to do to the foreground. Absent while a
+    /// synthetic step is actually being posted, because the line above is
+    /// already saying so in the present tense and saying it twice is noise.
+    private var foregroundNotice: String? {
+        guard case .reachable = model.reachability,
+              model.foreground.running, !model.foreground.active else { return nil }
+        return model.foreground.notice
     }
 
     private var statusLine: String {

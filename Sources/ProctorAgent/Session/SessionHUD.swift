@@ -44,10 +44,12 @@ extension Session {
 
     /// Show the panel for a batch about to run, on the screen holding the driven
     /// window.
-    func hudRunBegan(total: Int, window: WindowHandle) async {
+    func hudRunBegan(total: Int, window: WindowHandle,
+                     demand: ForegroundDemand = ForegroundDemand()) async {
         guard drawsHUD else { return }
         let app = appHandle(forWindow: window)?.name
-        await RunHUDPanel.shared.begin(total: total, app: app, window: window.frame)
+        await RunHUDPanel.shared.begin(total: total, app: app, window: window.frame,
+                                       foreground: demand)
     }
 
     /// A whole run is starting, so nobody's hand is on it yet. Deliberately not

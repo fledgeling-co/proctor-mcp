@@ -58,14 +58,19 @@ public enum RunHUDEnding: String, Sendable, Equatable {
 
 public enum RunHUDEvent: Sendable {
     /// A batch is starting. `total` is known before the first step runs, which is
-    /// what lets the counter and the rail mean anything.
-    case runBegan(total: Int, app: String?)
+    /// what lets the counter and the rail mean anything — and so is how much of
+    /// it will need the foreground, which is what lets the panel say so before
+    /// the machine is taken rather than as it goes.
+    case runBegan(total: Int, app: String?, foreground: ForegroundDemand = ForegroundDemand())
     /// Travelling to a step's target, before it actuates.
     case stepApproaching(step: ActionStep, node: AXNode?, synthetic: Bool)
     /// Actuating it.
     case stepActing(step: ActionStep, node: AXNode?, synthetic: Bool)
-    /// It finished, with how long it took to settle.
-    case stepSettled(step: ActionStep, node: AXNode?, settleMs: Int?)
+    /// It finished, with how long it took to settle and which plane it actually
+    /// travelled — a `type` or `scroll` that fell back to the event stream is
+    /// only knowable here, and the notice revises upward when one does.
+    case stepSettled(step: ActionStep, node: AXNode?, settleMs: Int?,
+                     plane: ActuationPlane? = nil)
     /// It was refused — a synthetic step with the app behind, a blocked app.
     case stepRefused(step: ActionStep, node: AXNode?)
     /// It failed or never settled.
@@ -194,9 +199,20 @@ public struct RunHUDModel: Sendable, Equatable {
     /// The three most recent finished steps, oldest first so the newest is at the
     /// bottom, as the reference draws it.
     public var trail: [Row] = []
-    /// The exception, stated once, in words. Nil on the accessibility plane —
-    /// the rule is never announced, only the exception is.
+    /// The exception, stated in words. Nil for a run that leaves the machine
+    /// alone — the accessibility plane is the rule and is never announced, only
+    /// the exception is. It says what the batch *contains* from the moment the
+    /// run appears, and swaps to the present tense while such a step is
+    /// actually in flight.
     public var exception: String?
+    /// Whether the step being actuated *right now* travels the event stream.
+    ///
+    /// Separate from `exception` because the two answer different questions and
+    /// only this one may gate the panel's mouse handling. `exception` is now
+    /// non-nil for the whole of a batch that contains a synthetic step; a panel
+    /// that ignored mouse events for as long as that text was on screen would
+    /// leave Pause and Stop dead for the entire run.
+    public var syntheticInFlight: Bool = false
     public var visible: Bool = false
     /// The queue bar's state. It belongs to the machine rather than to this run,
     /// so it survives a run beginning and ending.
@@ -235,6 +251,18 @@ public struct RunHUDState: Sendable {
     public private(set) var model = RunHUDModel()
     /// The app under test, for the synthetic-plane exception line.
     private var app: String?
+    /// What this batch is going to do to the foreground, known before its first
+    /// step runs. Held for the run so the notice can go back up after a step
+    /// that was not itself synthetic.
+    private var demand = ForegroundDemand()
+    /// How many steps are now known to need the front. Starts at the demand's
+    /// certain count and rises when a conditional step turns out to have fallen
+    /// back, so the number on screen never lags what has already happened.
+    private var knownForeground = 0
+    /// How many conditional steps have run. Each one that has spends the doubt
+    /// it carried, whichever plane it took, so the hedge on the wording comes
+    /// off as the batch resolves rather than staying up to the last step.
+    private var resolvedConditional = 0
     /// The step being held, so a pause can name what it is holding before.
     private var pending: (step: ActionStep, node: AXNode?)?
 
@@ -242,7 +270,7 @@ public struct RunHUDState: Sendable {
 
     public mutating func apply(_ event: RunHUDEvent) {
         switch event {
-        case .runBegan(let total, let app):
+        case .runBegan(let total, let app, let foreground):
             var fresh = RunHUDModel()
             fresh.total = max(0, total)
             fresh.visible = true
@@ -253,35 +281,59 @@ public struct RunHUDState: Sendable {
             // a bar that emptied itself every time one started would be lying.
             fresh.queue = model.queue
             self.app = app
+            self.demand = foreground
+            self.knownForeground = foreground.certainSteps
+            self.resolvedConditional = 0
             self.pending = nil
+            // Before anything runs, and stated as what the batch contains rather
+            // than as a prediction about what will happen. A batch can end before
+            // it reaches its first synthetic step; it cannot stop containing one.
+            fresh.exception = foreground.notice(app: app, known: knownForeground,
+                                                resolvedConditional: resolvedConditional)
             model = fresh
 
         case .stepApproaching(let step, let node, let synthetic):
             pending = (step, node)
             model.phase = .travelling
             model.line = StepDescription.line(for: step, node: node, timing: .prospective)
-            model.exception = synthetic ? Self.exceptionLine(app: app) : nil
+            setPlaneStatement(synthetic: synthetic)
 
         case .stepActing(let step, let node, let synthetic):
             pending = (step, node)
             model.phase = .acting
             model.line = StepDescription.line(for: step, node: node, timing: .present)
-            model.exception = synthetic ? Self.exceptionLine(app: app) : nil
+            setPlaneStatement(synthetic: synthetic)
 
-        case .stepSettled(let step, let node, let settleMs):
+        case .stepSettled(let step, let node, let settleMs, let plane):
             pending = nil
             model.completed += 1
+            // A `type` or `scroll` that could not be written through the
+            // accessibility plane has just taken the machine, and nothing before
+            // this moment could have known it would. Count it, so the notice
+            // that goes back up says the larger, truer number.
+            // Only a conditional step can move the number. A certain one was
+            // already counted before the run and counting it again on its way
+            // out would double it — the count is what is KNOWN to need the
+            // front, not a tally of events posted.
+            if demand.conditionalKinds.contains(step.kind) {
+                resolvedConditional += 1
+                if plane == .syntheticEvent {
+                    knownForeground = min(knownForeground + 1, demand.totalSteps)
+                }
+            }
             push(RunHUDModel.Row(text: StepDescription.completedLine(for: step, node: node),
                                  settleMs: settleMs, outcome: .done))
 
         case .stepRefused(let step, let node):
             pending = nil
+            model.syntheticInFlight = false
             model.phase = .blocked
             model.line = StepDescription.line(for: step, node: node, outcome: .refused)
             push(RunHUDModel.Row(text: model.line, settleMs: nil, outcome: .refused))
 
         case .stepFailed(let step, let node):
             pending = nil
+            model.syntheticInFlight = false
             model.phase = .error
             model.line = StepDescription.line(for: step, node: node, outcome: .failed)
             push(RunHUDModel.Row(text: model.line, settleMs: nil, outcome: .failed))
@@ -305,6 +357,7 @@ public struct RunHUDState: Sendable {
         case .runEnded(let ending):
             pending = nil
             model.exception = nil
+            model.syntheticInFlight = false
             switch ending {
             case .completed:
                 model.phase = .finished
@@ -338,6 +391,23 @@ public struct RunHUDState: Sendable {
         if model.trail.count > Self.trailDepth {
             model.trail.removeFirst(model.trail.count - Self.trailDepth)
         }
+    }
+
+    /// The one thing the panel ever says about a plane, and it is only ever said
+    /// about the exception. Two tenses of the same fact: what this batch
+    /// contains, and — while one of those steps is actually being posted — that
+    /// it is happening now.
+    ///
+    /// `syntheticInFlight` tracks exactly the window the present-tense line used
+    /// to occupy on its own: open from the moment a synthetic step is approached,
+    /// through its whole gesture, until the next step that is not one. It is what
+    /// the panel gates its mouse handling on, and nothing else may.
+    private mutating func setPlaneStatement(synthetic: Bool) {
+        model.syntheticInFlight = synthetic
+        model.exception = synthetic
+            ? Self.exceptionLine(app: app)
+            : demand.notice(app: app, known: knownForeground,
+                            resolvedConditional: resolvedConditional)
     }
 
     /// The one sentence the panel ever says about a plane, and it is only ever

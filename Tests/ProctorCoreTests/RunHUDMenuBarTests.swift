@@ -131,6 +131,29 @@ struct RunHUDMenuBarPhaseTests {
 @Suite("Menu bar icon")
 struct MenuBarIconTests {
 
+    @Test("a run taking the foreground outranks the phase, and readiness outranks it")
+    func foregroundSitsBetweenReadinessAndThePhase() {
+        // Decided at the merge of PRO-0019 and PRO-0021, which arrived with two
+        // rules for one glyph: readiness outranks the character, and a foreground
+        // step outranks everything. Both are kept, in this order, and the order is
+        // the argument — a Proctor that cannot work must not wear a calm face, but
+        // between "acting" and "the next event goes into your keyboard", the
+        // second is what somebody needs from across the room.
+        #expect(MenuBarIcon.decide(reachable: true, ready: true, phase: .acting,
+                                   takingForeground: true) == .symbol("cursorarrow.rays"))
+        #expect(MenuBarIcon.decide(reachable: true, ready: true, phase: .acting,
+                                   takingForeground: false) == .character(.acting))
+        // Both guards still win, because a broken agent that looks busy is a
+        // picture telling you something untrue about your Mac.
+        #expect(MenuBarIcon.decide(reachable: false, ready: true, phase: .acting,
+                                   takingForeground: true) == .symbol("bolt.horizontal.circle"))
+        #expect(MenuBarIcon.decide(reachable: true, ready: false, phase: .acting,
+                                   takingForeground: true) == .symbol("exclamationmark.triangle"))
+        // And the default keeps every existing caller on the old behaviour.
+        #expect(MenuBarIcon.decide(reachable: true, ready: true, phase: .idle)
+                == .character(.idle))
+    }
+
     @Test("an unreachable agent keeps its status symbol, whatever the phase says")
     func unreachableKeepsTheSymbol() {
         for phase in RunHUDPhase.allCases {

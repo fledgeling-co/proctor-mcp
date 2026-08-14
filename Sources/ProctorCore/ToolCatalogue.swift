@@ -175,6 +175,13 @@ public enum ToolCatalogue {
         — drags, canvas surfaces, hover states, keyboard-focus behaviour itself. A refused \
         accessibility route fails rather than falling back silently.
 
+        The result carries a foreground block: how many steps were known before the run to need \
+        the app in front, how many might have, and how many actually travelled as synthetic \
+        events. Read measured rather than re-deriving it from the kinds, because a type or scroll \
+        into an element the accessibility plane cannot write falls back to the event stream and \
+        no count made from the step list would show it. A run whose measured count is above zero \
+        cannot be repeated unattended.
+
         Settling is a conjunction of quiet capture frames, quiet accessibility notifications and \
         the app's own idle signal where a reflector is embedded, bounded by a timeout — never a \
         sleep. On a step failure the batch stops and reports failedAt.

@@ -542,10 +542,17 @@ public struct ActResult: Codable, Sendable {
     public var completed: Int
     public var failedAt: Int?
     public var finalHash: String?
+    /// How much of this run needed the application in front, measured from the
+    /// planes its steps actually travelled. A caller deciding whether a suite
+    /// can run unattended reads this rather than re-deriving it from the step
+    /// list, and a suite that cannot is a fact about the suite rather than
+    /// something you find out by watching it.
+    public var foreground: ForegroundReport?
     public init(window: String, steps: [StepResult], completed: Int,
-                failedAt: Int?, finalHash: String?) {
+                failedAt: Int?, finalHash: String?, foreground: ForegroundReport? = nil) {
         self.window = window; self.steps = steps; self.completed = completed
         self.failedAt = failedAt; self.finalHash = finalHash
+        self.foreground = foreground
     }
 }
 

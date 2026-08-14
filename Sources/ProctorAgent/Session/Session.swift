@@ -187,11 +187,86 @@ actor Session {
             // And the run HUD's phase, which is what lets the menu bar draw the
             // same character in the same state — the one `RunHUDState` reduced,
             // never a second one derived here.
-            "hud": hudFeed.wire
+            "hud": hudFeed.wire,
+            "foreground": foregroundJSON
         ])
     }
 
-    /// The waiting count, kept here so the UI's own poll answers without hopping
+    // MARK: - Whether a run is taking the machine
+
+    /// The live answer to "is Proctor about to take the foreground, or taking it
+    /// right now", mirrored here for the menu bar.
+    ///
+    /// The run panel already says this, and says it the instant it changes — but
+    /// it lands on one display, and the person whose machine it is may be
+    /// looking at another. The menu bar is on every display's menu bar and is
+    /// already Proctor's, so the same fact is readable there whichever screen
+    /// the panel went to, and readable with the panel switched off entirely.
+    ///
+    /// The UI polls at a fixed interval, so `active` is a sample rather than a
+    /// trace: a synthetic step shorter than one poll can begin and end between
+    /// two of them and never be seen there. The panel is the instantaneous
+    /// surface; this is the one that does not depend on which screen you are
+    /// looking at. Neither replaces the other.
+    struct ForegroundState: Sendable {
+        var demand = ForegroundDemand()
+        var app: String?
+        /// A step is travelling the event stream at this moment.
+        var active = false
+    }
+
+    /// Keyed by run, not held as one value. Two runs driving DIFFERENT
+    /// applications are not serialised — that is the point of the app lanes —
+    /// so a single slot would let a background-safe run finishing wipe the state
+    /// of a foreground run still posting events, and the menu bar would say the
+    /// machine was free while it was being taken.
+    private var foregroundRuns: [Int: ForegroundState] = [:]
+    private var nextForegroundRun = 0
+
+    /// A batch is starting, and what it is going to do to the foreground is
+    /// already known from its steps. The token is the run's own; hand it back to
+    /// `foregroundStep` and `foregroundEnded` so a run only ever edits its own
+    /// entry.
+    func foregroundBegan(demand: ForegroundDemand, app: String?) -> Int {
+        nextForegroundRun += 1
+        let token = nextForegroundRun
+        foregroundRuns[token] = ForegroundState(demand: demand, app: app)
+        return token
+    }
+
+    /// One step travelled. `active` is set from the plane it actually used, so a
+    /// `type` that fell back to the event stream shows here exactly as a click
+    /// does — the menu bar reports what happened, not what was predicted.
+    func foregroundStep(run token: Int, plane: ActuationPlane?) {
+        foregroundRuns[token]?.active = plane == .syntheticEvent
+    }
+
+    func foregroundEnded(run token: Int) {
+        foregroundRuns.removeValue(forKey: token)
+    }
+
+    /// The whole machine's answer, folded over every run in flight. Any run
+    /// posting an event means the machine is being taken; the notice shown is
+    /// the one from a run that will take it, since that is the one worth
+    /// reading when a harmless run is going on beside it.
+    private var foregroundJSON: JSONValue {
+        let runs = foregroundRuns.values
+        let taking = runs.filter(\.demand.takesForeground)
+        let subject = taking.first ?? runs.first
+        return .object([
+            "running": .bool(!runs.isEmpty),
+            "active": .bool(runs.contains { $0.active }),
+            "takesForeground": .bool(!taking.isEmpty),
+            "mayTakeForeground": .bool(runs.contains { $0.demand.mayTakeForeground }),
+            "certain": .number(Double(subject?.demand.certainSteps ?? 0)),
+            "conditional": .number(Double(subject?.demand.conditionalSteps ?? 0)),
+            "total": .number(Double(subject?.demand.totalSteps ?? 0)),
+            "runs": .number(Double(runs.count)),
+            "app": subject?.app.map(JSONValue.string) ?? .null,
+            "notice": subject.flatMap { $0.demand.notice(app: $0.app) }
+                .map(JSONValue.string) ?? .null
+        ])
+    } /// The waiting count, kept here so the UI's own poll answers without hopping
     /// to the scheduler. Written by the scheduler's observer at start-up.
     private var queueWaitingMirror = 0
     func setQueueWaiting(_ count: Int) { queueWaitingMirror = count }

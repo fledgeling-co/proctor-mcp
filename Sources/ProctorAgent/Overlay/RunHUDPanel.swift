@@ -112,8 +112,9 @@ final class RunHUDPanel {
 
     /// A batch is starting: place the panel on the screen holding the driven
     /// window and show it.
-    func begin(total: Int, app: String?, window: Rect) {
-        feed.apply(.runBegan(total: total, app: app))
+    func begin(total: Int, app: String?, window: Rect,
+               foreground: ForegroundDemand = ForegroundDemand()) {
+        feed.apply(.runBegan(total: total, app: app, foreground: foreground))
         feed.rememberWindow(window)
         runStarted = Date()
         linger?.cancel(); linger = nil
@@ -436,10 +437,16 @@ final class RunHUDPanel {
         // the application under test would be swallowed by the panel body, or
         // worse, would land on Stop and halt the run that posted it. So while a
         // synthetic step is in flight the whole window ignores mouse events and
-        // the posted click reaches what it was aimed at. `exception` is exactly
-        // "the step in flight is synthetic", so the one thing the panel says
-        // about a plane is also the thing that governs this.
-        panel.ignoresMouseEvents = model.exception != nil
+
+        // the posted click reaches what it was aimed at.
+        //
+        // `syntheticInFlight` is exactly "the step in flight is synthetic", and
+        // it is the only thing that may govern this. It used to be read off
+        // `exception != nil`, which was the same fact while the exception row
+        // only ever appeared during such a step; the row now also states what a
+        // batch contains before it starts, so reading the text here would leave
+        // Pause and Stop dead for the whole of any run holding a click.
+        panel.ignoresMouseEvents = feed.model.syntheticInFlight
 
         // The exception line adds a row, so the panel grows upward from its
         // bottom-docked corner: the footer stays where it is and Pause and Stop

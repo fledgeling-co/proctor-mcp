@@ -56,7 +56,8 @@ public extension ToolCatalogue {
             "proctor_act": openObject(
                 "Per-step outcome for a batch of actions.",
                 ["window": p("string"), "steps": p("array"), "completed": p("number"),
-                 "failedAt": p("number"), "finalHash": p("string")]),
+                 "failedAt": p("number"), "finalHash": p("string"),
+                 "foreground": p("object")]),
 
             "proctor_capture": openObject(
                 "A window capture with its freshness metadata; the PNG is on disk at `path`, never inline.",

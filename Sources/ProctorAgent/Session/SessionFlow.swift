@@ -200,10 +200,16 @@ extension Session {
             "comparison": .array(comparisons)
         ]
         if captureEach { out["captures"] = .array(run.captures) }
-        if foreground {
-            out["note"] = .string("This flow contains synthetic-event steps, so the replay activated "
-                                + "the application. The result is not a background-safe one.")
-        }
+        // How much of the replay needed the front, measured from the planes its
+        // steps actually travelled rather than inferred from the recorded kinds.
+        // A recorded `type` that fell back to the event stream is invisible to a
+        // kind-based note and shows here, which is the difference between
+        // "contains synthetic steps" and "cannot be replayed unattended".
+        let report = ForegroundReport.from(
+            Self.foregroundDemand(for: steps, foreground: foreground),
+            planes: run.results.map(\.plane))
+        out["foreground"] = (try? JSONValue.encode(report)) ?? .null
+        if let note = report.note { out["note"] = .string(note) }
         return .object(out)
     }
 
