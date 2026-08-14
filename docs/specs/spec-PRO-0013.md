@@ -1,9 +1,10 @@
 # PRO-0013: Encryption-at-rest for the audit log
 
 **ID:** PRO-0013
-**Status:** Needs More Info
+**Status:** In Review
 **Created:** 2026-08-13
 **Last updated:** 2026-08-14
+**Plan:** [docs/plans/plan-PRO-0013.md](../plans/plan-PRO-0013.md)
 
 ## Feature description
 
@@ -83,10 +84,70 @@ or a "just in case" plaintext copy: each of those is the guarantee this option w
 chosen for, weakened. The destructive first run needs to be obvious in whatever
 performs it, not silent.
 
-*Once that is answered I'll mark this Ready for Implementation Plan.*
+**Resolution — folded in 2026-08-14, spec now Ready for Plan.** The answer becomes
+binding scope, promoted here out of the question block so no later stage re-reads it
+as open:
+
+- `[Compliance]` The unsealing key exists in exactly one place, the Mac's own key
+  store, non-exportable and not synced. There is **no** recovery key, no export
+  command, no escrow file. Losing it is a permanent loss of the whole history, and
+  that is the accepted trade. *(reader's answer (a))*
+- `[Data & scope]` A readable trail found on disk is converted **in place** on the
+  first run that can seal, and the readable content is gone from the live file when
+  it succeeds. No plaintext copy — not `.bak`, not `.orig`, not a sidecar — survives
+  that conversion. *(reader's answer (a); a fallback copy reinstates the exposure)*
+- `[Operations]` The conversion is loud, not silent: the run that performs it says
+  so on stderr and the trail's status carries the fact that a conversion happened,
+  with how many entries it moved. *(reader's answer (a), final line)*
+- Assumption "Conversion is all-or-nothing" above stands unchanged and governs
+  failure: a conversion that cannot finish leaves the original byte-for-byte, appends
+  nothing, and reports the trail unavailable.
 
 **Out-of-family spec review:** lane failure, logged downgrade. The repo's out-of-family reviewer (grok-4.6 at `xhigh`, read-only — Codex is off per ORCHESTRATOR.md) was tried twice: the first attempt returned preamble and no verdict before its deadline, the second returned nothing. Per ORCHESTRATOR.md an empty response is a lane failure, so the gate fell back **in-family** to a strong-model one-shot review of the same prompt. Verdict: material defects, 6 findings, **all 6 accepted**, none rejected — a key that cannot be reached would have silently disabled the whole trail (today's write failure is not surfaced anywhere); the conversion-failure state was undefined and contradicted the "nothing readable left behind" line; that line over-claimed against backups and snapshots; the stated threat was already closed by the file's existing permissions, so the real boundary needed naming; "reported" had no channel and the unreadable-entry marker contradicted "same shape"; and the automated checks cannot reach the key store. Each is now an assumption above. The next reader should know this gate was in-family, which is weaker evidence than the out-of-family one it replaced.
 
 **Assumptions review gate:** a separate reviewer flagged 2 of 18 defaults. One was fixed rather than raised: requiring the protected key to write meant the trail of an unattended agent would go dark for a whole session after a restart, so writing no longer needs it — the key is needed only to read, which is the attended half. The other is the Essential Question above; it is a risk-tolerance call that destroys an existing readable history on first run, which is not a default triage should pick silently.
 
 **Grounding note:** the pipeline is running Swift-adapted for this repo — the acceptance gate is `swift build` + `swift test`; the web design and end-to-end stages do not apply. The trail, its redaction and its reader all exist today and this change sits behind them.
+
+---
+
+## Progress — 2026-08-14 (ship-feature runner, PRO-0013)
+
+**Branch:** `ai/pro-0013` · **Worktree:** `.worktrees/PRO-0013` (from local HEAD `101511b`)
+**Status:** In Review, ready to merge. STOPPED BEFORE MERGE per the fleet rule.
+**Gate:** `swift build` clean; `swift test` **183 tests in 25 suites passed** (173/24 at HEAD, +10 tests, +1 suite).
+
+Built: `ProctorCore/AuditSeal.swift` (pure, unit-tested) seals each line with a fresh
+ephemeral X25519 pair, HKDF-SHA256 and AES-GCM, header AAD-bound, one JSON line out.
+`ProctorAgent/Session/AuditKeyStore.swift` holds the private key in the login keychain
+(`WhenUnlockedThisDeviceOnly`, non-synchronizable, no export path anywhere) and caches
+the public half beside the log so writing never needs the keychain. `AuditLog` seals or
+drops with no plaintext path, converts an existing readable trail in place once per run
+(all-or-nothing, atomic replace, no backup copy, loud on stderr), and reports
+`auditWritable` / `auditDropped` / `auditKeyId` / `auditKeyMismatch` / `auditConverted`.
+The reader returns the same records in the same order, with a marked placeholder for an
+entry it cannot open.
+
+| Acceptance clause | Proof |
+|---|---|
+| Sealed on disk, unreadable without the key | `sealHidesTheRecordText`, `wrongKeyCannotOpen` |
+| The same records come back | `sealRoundTripsTheLine`, `trailRoundTripsInOrder` |
+| One bad entry costs one entry | `openReturnsNilOnGarbage`, `trailRoundTripsInOrder` |
+| Tamper is detected, not decoded | `tamperingFailsToOpen` |
+| Still one JSONL line, still append-only | `sealedLineIsSingleLineJSON`, `eachEntryIsSealedIndependently` |
+| Which key sealed it is recorded | `keyIdIsStableAndDistinguishes` |
+| A readable trail is recognised for conversion | `isSealedDiscriminatesPlaintextRecords` |
+| A dropped entry never fails the action | all 7 `AuditLog.append` call sites still discard the result and none throws |
+| Key store bound to this Mac, no recovery copy | build-verified; the spec records that automated checks cannot reach the keychain |
+
+**Gates.** Plan review: grok lane FAILED twice (empty response, exit 0), logged downgrade
+to in-family; verdict DEFECTS (6), all 6 accepted and fixed, recorded in the plan.
+Completeness critic: grok answered, 5 items raised, all 5 verified as covered in code
+(elisions in the critic's brief, not gaps); one, order preservation on read, gained a
+test rather than an argument.
+
+**Deferred / discovered.** `proctor_doctor` has no `policy` block, so the audit state is
+visible through `proctor_policy status` only; PRO-0005's plan called for one and it is not
+in the tree. Left alone as PRO-0005's scope. Entry authenticity (a forged append cannot be
+detected, because sealing needs only the public key) is now stated as a non-goal in the
+code and the plan; signing is a separate change.

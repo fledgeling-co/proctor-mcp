@@ -1,9 +1,11 @@
 # PRO-0014: Human-readable step descriptions, derived not supplied
 
 **ID:** PRO-0014
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
+**Plan:** `docs/plans/plan-PRO-0014.md`
+**Branch:** `ai/pro-0014` (worktree `.worktrees/PRO-0014`) — ready to merge, not merged
 
 ## Feature description
 
@@ -67,3 +69,58 @@ Every `ActionStep` kind produces a sensible line with no caller input, verified 
 **Grounding note:** the step shape (its kind list, its optional caller-supplied name) and the element fields the wording draws on (name, sub-kind, kind, identifier) both exist today, as does the activity record this feeds and its redaction of typed text. The existing element-naming order used elsewhere in the agent is name, then description, then identifier, and this reuses it. This spec is Swift/macOS backend work; the pipeline is running Swift-adapted (gate = `swift build` + `swift test`; web design/e2e stages N/A). Independent of the overlay-panel work, per the brief.
 
 **Out-of-family spec review:** grok `grok-4.6` (xhigh, read-only) ran and returned 16 findings — **10 accepted** (every kind needs hand-written wording; the cleaning must run on derived names too, not only the caller's; the element must be handed in alongside the step; menu object = last path component; a failure form as well as a refusal; the object kept in the outcome line; waiting reads as waiting *for*; the primary name order stated explicitly ahead of the fallbacks; nameless steps degrade to the action alone), **4 rejected** (it read the wording as printing the kind's internal name, which the spec never said; it thought a run-a-shortcut step carries no name, but the actuator already reads one; two findings were about the existing activity record's redaction rules rather than this feature, so they stay out of scope), and **2 recorded as stated boundaries** rather than changes — the caller-supplied name is display text and is not itself reduced, and the 48-character cut is the brief's own decision. Its one Critical was that boundary; it is internal and documented above rather than escalated, since the brief chose the shared line deliberately.
+
+---
+
+## Progress — 2026-08-14
+
+**Status: In Review (ready to merge, not merged).** Branch `ai/pro-0014`, worktree
+`.worktrees/PRO-0014`, one commit `00a0b8b`. Plan: `docs/plans/plan-PRO-0014.md`.
+
+**Gate:** `swift build` clean; `swift test` **206 tests in 25 suites passed** (HEAD baseline was
+173 in 24 — this adds 33 tests and one suite, `Step descriptions`). No existing test changed.
+
+**Built:** `Sources/ProctorCore/StepDescription.swift` — a pure enum, no window and no grant, beside
+`PointerMarker` and `Policy` for the reason the spec gave. `ActionStep.Kind` gains `CaseIterable`
+(one line in `Wire.swift`) so a new kind cannot be added without the wording table growing a row.
+Nothing else in the repo changed.
+
+| Acceptance clause | Test |
+|---|---|
+| every kind produces a sensible line with no caller input | `everyKindPresent`, `handWrittenWording` |
+| prospective and present from one step object | `everyKindProspective` |
+| never rendered by printing the kind's internal name | `neverPrintsRawValue` |
+| a 400-character label comes out within the cap, no ellipsis | `longLabelIsCapped` |
+| newlines, tabs, control and bidi characters collapse to one line | `labelIsFlattened` |
+| markup does not survive; a legitimate `<Untitled>` does | `markupStripped`, `legitimateNamesSurvive` |
+| a label that cleans to nothing falls back to the derived object | `emptyLabelFallsBack` |
+| the label replaces the object, never the verb or the timing word | `labelReplacesObjectOnly` |
+| the same cleaning runs on the app's own names | `derivedNamesAreCleanedToo`, `derivedMarkupStripped` |
+| fallback chain, and never empty | `nameOrder`, `kindOrder`, `idIsTheFloor` |
+| typed text, script bodies and set values never appear | `redactedFieldsNeverPrinted`, `scriptTakesNoDerivedObject` |
+| a menu item, a keystroke and a shortcut are named from what the step carries | `menuNamesLastComponent`, `keyNamesTheKeystroke`, `shortcutNamesTheShortcut`, `carriedTextPrecedesTheElement` |
+| nothing nameable reads as the action alone, no dangling preposition | `objectlessFormsAreClean`, `dragPathStopsAtTheName` |
+| waiting reads as waiting *for* | `waitingReadsAsWaitingFor` |
+| outcome = action as a noun plus what happened, object kept | `refusalWording`, `failureWording`, `everyKindHasOutcomes` |
+| the cap is grapheme-safe | `truncationIsGraphemeSafe`, `hugeTitleIsBounded` |
+
+**One decision beyond the spec, flagged.** A caller-supplied object is rendered in quotes and a
+derived one is not — `Pressing "Pay the supplier"` versus `Pressing Send invoice`. The spec is silent
+on this; the plan review found that nothing otherwise stopped a supplied `label` appending a second
+clause to a kill-switch line ("Pressing OK. About to press Delete"), and the brief's own reason for
+deriving is that client text "does not belong there *unqualified*". Sanitising folds double quotes to
+single ones so a supplied name cannot close the quotation. The same quoting applies to a menu path,
+a keystroke and a shortcut name, which also arrive in the tool call. Reversing it is one line if the
+reader would rather the two look alike.
+
+**Deferred, with reason.** No consumer is wired: `AuditRecord` gains no description field and
+`SessionAct` emits no line. The HUD that shows the live line is PRO-0015 and the audit record's
+shape is being changed concurrently by PRO-0013; this delivers the derivation both adopt, which is
+what the brief scoped. No `CHANGELOG.md` entry either — nothing user-visible ships until PRO-0015
+renders the line, and that item carries the entry.
+
+**Gate accounting.** Plan review: grok `grok-4.6` xhigh read-only, 10 findings, 5 accepted / 3
+rejected / 2 non-defects (two prior attempts died on the deadline). Completeness critic: **downgraded
+in-family** to `claude-fable-5` after grok failed four consecutive attempts on the larger artifact;
+7 findings, 4 accepted / 2 rejected / 1 non-defect. Both dispositions are written out in the plan.
+Codex was not invoked.

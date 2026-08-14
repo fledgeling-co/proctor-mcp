@@ -1,9 +1,11 @@
 # PRO-0011: Pointer marker in stability per-step artifacts
 
 **ID:** PRO-0011
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-13
 **Last updated:** 2026-08-14
+**Plan:** docs/plans/plan-PRO-0011.md
+**Branch:** ai/pro-0011 (worktree `.worktrees/PRO-0011`)
 
 ## Feature description
 
@@ -61,3 +63,62 @@ A divergent stability run shows, per step, exactly where Proctor acted, the same
 **Grounding note:** the determinism tool today replays a flow N times with per-step capture switched off and returns hashes only, so there is genuinely no image to mark — the brief's framing is accurate. The shared step-running path already supports per-step capture and the marker compositing that its parent added, so the work is exposing those two switches on this tool, carrying the resulting picture locations into its report shape, and covering it in tests. Pictures must come from that step-running path: the captures `includeTiles` takes today happen in a loop that runs *after* the replay has finished, so they all show the same end state and are not per-step images. That existing tile-hash behaviour is noted for the planner, not changed here. Swift package; the gate is `swift build` + `swift test` (web design and end-to-end stages do not apply). Its parent is In Progress, so this one should not start before that lands.
 
 **Out-of-family review:** ran on grok (`grok-4.6`, effort `xhigh`, read-only) per the repo's external-CLI policy — Codex is off in this repo and was not invoked. Verdict: grounding confirmed; one High and two Medium findings, all four findings accepted and folded in (the multi-replay shape of the picture list, the contradiction over what the marker switch does with pictures off, the file-naming claim, and the tile-capture caveat above), none rejected, none escalated to a question. The assumptions review is covered by that pass, which reviewed the assumption set for internal consistency and missing defaults.
+
+---
+
+## Progress — 2026-08-14
+
+**Built.** `proctor_stability` takes `captureEach` and `pointerMarks`, both off by
+default. `captureEach` routes the replay through the same per-step capture
+`proctor_act` and `proctor_flow` replay already use, so the frames are genuinely
+per-step rather than the post-replay `includeTiles` captures (untouched). The report
+gains a `captures` ledger; the scoring is computed from the same hashes as before and
+is built from a different array than the ledger.
+
+| File | Change |
+|---|---|
+| `Sources/ProctorCore/StabilityCaptures.swift` | **new** — `StepArtifact` (+ its JSON), `StabilityCapture`, `StabilityCaptureOptions.resolve` / `.entry` / `.ledger`, `StabilityScore.fold` (lifted unchanged out of `stability()`), the two arg-name constants |
+| `Sources/ProctorCore/Wire.swift` | `StabilityReport.captures: [StabilityCapture]?`, defaulted nil |
+| `Sources/ProctorCore/ToolCatalogue.swift` | the two switches on the stability input schema |
+| `Sources/ProctorCore/ToolOutputSchemas.swift` | `captures` on the stability output schema |
+| `Sources/ProctorAgent/Session/SessionAct.swift` | `StepRun.stepArtifacts` typed; `captures` computed; `captureForStep` returns `StepArtifact` |
+| `Sources/ProctorAgent/Session/SessionFlow.swift` | `stability` honours both switches and assembles the ledger |
+| `Sources/ProctorAgent/Dispatch.swift` | reads the two args via the shared constants |
+| `Tests/ProctorCoreTests/ProctorCoreTests.swift` | `Stability per-step artifacts` suite, 19 tests |
+
+**Gate.** `swift build` clean; `swift test` 192 tests / 25 suites passing from a clean `.build` (173 / 24 at
+HEAD `101511b`, so +19 tests, +1 suite, none dropped).
+
+| Clause | Proved by |
+|---|---|
+| Both switches off = today's run, byte for byte | `defaultRunIsUnchanged`, `noCapturesOmitsTheKey` (both encoders) |
+| Marker with capture off turns capture on and says so | `markerForcesCapture` |
+| A capturing run reports its timings moved | `capturingRunWarnsAboutTimings` |
+| Every entry names replay, step and files, for every step a replay attempted | `entryCarriesBothPaths`, `ledgerKeepsReplayIdentity`, `ledgerCoversEveryStepOfEveryReplay` |
+| A step producing no frame or no marker is reported, not fatal | `failedCaptureIsReportedNotFatal`, `missingMarkerIsReportedOnlyWhenRequested`, `ledgerReportsTheFailingStepAndNothingAfterIt`, `ledgerKeepsFailedCapturesInPlace` |
+| Scoring untouched | `foldTakesHashesOnly`, `foldReportsShortRuns`, `scoringUntouched` (the fold takes hash columns and has no artifact parameter) |
+| Volume cost + honesty caveat on the switches | `stabilityAdvertisesTheSwitches` |
+| Ledger advertised on the output schema | `outputSchemaAdvertisesCaptures`, `argumentNamesAreShared` |
+| act / flow replay output unchanged by the shared-path rewrite | `stepArtifactEncodesACapture`, `stepArtifactEncodesAFailure` (golden JSON for all three shapes) |
+
+**Known limit of the gate.** The agent wiring in `Session.stability` is not covered:
+`ProctorCoreTests` depends on `ProctorCore` alone, and `ProctorAgent` is an
+`executableTarget`, which SwiftPM cannot link into a test target. So a regression that
+stopped calling the ledger, or dropped `failedAt`, would not turn a test red. Both grok
+passes raised this; extracting `StabilityScore.fold` into Core closed the score half of it
+and shrank what is left to argument passing and ledger accumulation. Closing the rest
+means splitting `ProctorAgent` into a library plus a thin `main` — a repo-wide change
+affecting every feature, so it is logged as child work rather than taken here.
+
+**Deferred.** Nothing in this item. Retention and size limits for the written PNGs stay out of scope
+per the spec (named as a known cost); the policy/audit gating of this tool belongs to
+PRO-0012.
+
+**Discovered child work.** `ProctorAgent` is an `executableTarget` with no test target, so no feature in this repo can red-green its agent-side wiring. Splitting it into `ProctorAgentCore` (library) plus a thin executable would give every feature that coverage. Repo-wide, orchestrator's call.
+
+**Out-of-family gates.** Plan review ran on grok (`grok-4.6`, `xhigh`, read-only): 3
+High, 3 Medium, 1 Low, all seven dispositioned in the plan (six accepted outright, H2
+accepted in part with the claim narrowed rather than overstated). Completeness critic ran twice on grok: one High, one Medium and two Low accepted and
+fixed (the vacuous A6 test, the empty-`annotatedPath` marker, the spot-check goldens, the
+bare output schema, the A4 overclaim), and one High accepted as a stated limit rather than
+closed (see above). Codex is off in this repo and was not invoked.
