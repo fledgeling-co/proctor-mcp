@@ -62,11 +62,24 @@ struct RunHUDPalette {
     var accent: NSColor, green: NSColor, amber: NSColor, red: NSColor
     var onAccent: NSColor, bay: NSColor
 
+    // sRGB rather than the calibrated space, deliberately.
+    //
+    // A calibrated NSColor has to be converted before CoreText can use it, and a
+    // conversion that fails yields nil where a colour was expected. This agent
+    // aborted once inside `drawLiveLine` with `-[__NSPlaceholderDictionary
+    // initWithObjects:forKeys:count:]: attempt to insert nil object from
+    // objects[2]`, thrown from `TAttributes::ApplyFont` while it copied the
+    // attributes dictionary. Every font in that dictionary is a system font and
+    // cannot be nil, and the paragraph style is constructed inline, which leaves
+    // the colour. The crash is intermittent and did not reproduce across four
+    // attempts, so treat this as hardening the plausible cause rather than as a
+    // confirmed diagnosis — the barrier that stops a drawing fault killing the
+    // agent at all is the real fix and is tracked separately.
     static func white(_ v: CGFloat, _ a: CGFloat) -> NSColor {
-        NSColor(calibratedWhite: v, alpha: a)
+        NSColor(srgbRed: v, green: v, blue: v, alpha: a)
     }
     static func hex(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, _ a: CGFloat = 1) -> NSColor {
-        NSColor(calibratedRed: r / 255, green: g / 255, blue: b / 255, alpha: a)
+        NSColor(srgbRed: r / 255, green: g / 255, blue: b / 255, alpha: a)
     }
 
     static let dark = RunHUDPalette(
@@ -85,7 +98,7 @@ struct RunHUDPalette {
         separator: hex(17, 18, 21, 0.09),
         accent: hex(226, 74, 24), green: hex(22, 163, 74),
         amber: hex(180, 83, 9), red: hex(220, 38, 38),
-        onAccent: .white, bay: hex(19, 19, 21))
+        onAccent: white(1, 1), bay: hex(19, 19, 21))
 
     func colour(for tone: RunHUDTone) -> NSColor {
         switch tone {
