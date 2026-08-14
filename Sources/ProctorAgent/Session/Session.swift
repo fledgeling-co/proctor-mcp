@@ -124,6 +124,22 @@ actor Session {
     var runControl = RunControl.shared
     func setRunControl(_ control: RunControl) { runControl = control }
 
+    /// Where "is a person using this Mac" is read from. The real one in
+    /// production; substitutable so a test can feed samples without AppKit, a
+    /// window server, or a hand.
+    var contentionMonitor: any ContentionSampling = ContentionMonitor.shared
+    func setContentionMonitor(_ monitor: any ContentionSampling) { contentionMonitor = monitor }
+
+    /// Both switches, read once. `PROCTOR_YIELD` is on unless turned off;
+    /// `PROCTOR_YIELD_INPUT` is off unless turned on, and the asymmetry is the
+    /// point — the input monitor is an opt-in, not a default with an escape.
+    var yieldEnabled = ContentionMonitor.enabled(in: ProcessInfo.processInfo.environment)
+    var yieldInputObserved = ContentionMonitor.inputObserved(in: ProcessInfo.processInfo.environment)
+    func setYieldSwitches(enabled: Bool, observesInput: Bool) {
+        yieldEnabled = enabled
+        yieldInputObserved = observesInput
+    }
+
     /// The keeper that holds a run's lanes for the length of a call.
     ///
     /// Owned by the session rather than reached for as a global, and that is the
@@ -231,6 +247,10 @@ actor Session {
         nextForegroundRun += 1
         let token = nextForegroundRun
         foregroundRuns[token] = ForegroundState(demand: demand, app: app)
+        // The yield watch is keyed by the same token for the same reason: two
+        // runs on different applications overlap, and a harmless one ending must
+        // not throw away what a contending one is holding.
+        yieldRuns[token] = YieldRun()
         return token
     }
 
@@ -243,6 +263,140 @@ actor Session {
 
     func foregroundEnded(run token: Int) {
         foregroundRuns.removeValue(forKey: token)
+    }
+
+    // MARK: - Whether a person is taking it back
+
+    /// One run's contention bookkeeping: the decision value, what it is holding
+    /// now, and every hold it has already finished.
+    struct YieldRun: Sendable {
+        var watch = ContentionWatch()
+        var records: [YieldRecord] = []
+        var armed = false
+        /// The open hold, if any: when it started and what it is holding before.
+        var openedAt: Double?
+        var openReason: YieldReason?
+        var openStep: Int?
+    }
+
+    private var yieldRuns: [Int: YieldRun] = [:]
+
+    func yieldRun(_ token: Int) -> YieldRun? { yieldRuns[token] }
+    func setYieldWatch(_ watch: ContentionWatch, run token: Int) {
+        yieldRuns[token]?.watch = watch
+    }
+
+    /// Arm the watch for a run that is actually going to contend. An
+    /// accessibility-plane run samples nothing, installs nothing, and can never
+    /// be held — holding it would be noise about a run that never took anything.
+    func armContention(run token: Int, because reason: String) {
+        guard yieldEnabled, yieldRuns[token]?.armed == false else { return }
+        yieldRuns[token]?.armed = true
+        contentionMonitor.arm(observeInput: yieldInputObserved)
+        _ = reason
+    }
+
+    func disarmContention(run token: Int) {
+        guard let run = yieldRuns[token] else { return }
+        if run.armed { contentionMonitor.disarm() }
+        // A hold still open when the run ends is closed against the run rather
+        // than left dangling, so the record accounts for the whole of it. Read
+        // from the latch rather than passed in, because the panel's own Stop
+        // writes `RunControl.shared` directly and never comes through here.
+        if var run = yieldRuns[token], run.openReason != nil {
+            closeOpenHold(&run, endedBy: runControl.isStopped ? .stopped : .runEnded)
+            yieldRuns[token] = run
+        }
+    }
+
+    /// What the run reports afterwards. Removes the run's entry, so this is
+    /// called once, at the end.
+    func takeYieldRecords(run token: Int) -> [YieldRecord] {
+        let records = yieldRuns.removeValue(forKey: token)?.records ?? []
+        return records
+    }
+
+    /// Proctor has demonstrably put an application in front — a step whose
+    /// measured plane was the event stream, or a settled raise. Only now is
+    /// there something for a person to take back, which is why this is set from
+    /// what happened rather than from what was predicted.
+    func noteTookForeground(pid: Int32?) {
+        contentionMonitor.setExpectedPid(pid)
+        contentionMonitor.noteSyntheticPost()
+    }
+
+    /// The probe `RunControl` runs at every checkpoint and on every poll while
+    /// the run is parked. It is the only place contention policy lives: sample,
+    /// decide, and move the same latch a person's Pause moves.
+    func contentionProbe(run token: Int, step: Int) async {
+        guard var run = yieldRuns[token], run.armed else { return }
+        // A person's decision is read first and consumed here, whichever surface
+        // took it. Doing it before the sample is what stops the same still-true
+        // condition re-yielding in the very poll that followed the Resume.
+        if runControl.takePersonResume() {
+            run.watch.resumedByPerson()
+            closeOpenHold(&run, endedBy: .person)
+        }
+        let change = run.watch.sample(contentionMonitor.sample())
+        switch change {
+        case .none:
+            yieldRuns[token] = run
+        case .yielded(let reason):
+            // A hold already open under a different reason is closed and a new
+            // one opened, so the record says what actually held it and for how
+            // long rather than blaming the last reason for the whole wait.
+            closeOpenHold(&run, endedBy: .released)
+            run.openReason = reason
+            run.openedAt = monotonicNow()
+            run.openStep = step
+            yieldRuns[token] = run
+            runControl.yield(reason)
+            await hud(.yielded(reason: reason))
+            RunHUDPanel.audit("run.yielded", detail: reason.detail)
+            // Gated exactly as `hud()` is. A hop to the main actor to redraw a
+            // panel this session is not feeding is a dependency the run does
+            // not need, and one it can be made to wait on.
+            if drawsHUD { await RunHUDPanel.shared.refresh() }
+        case .released(let reason):
+            closeOpenHold(&run, endedBy: .released)
+            yieldRuns[token] = run
+            runControl.release()
+            // A person's own Pause is not lifted by a contention clearing. The
+            // latch keeps both causes apart; this only says so on the panel when
+            // the run is actually carrying on again.
+            if !runControl.isPaused {
+                await hud(.unyielded)
+                RunHUDPanel.audit("run.resumed",
+                                  detail: "the run carried on: \(reason.rawValue) cleared")
+                if drawsHUD { await RunHUDPanel.shared.refresh() }
+            }
+        }
+    }
+
+    private func closeOpenHold(_ run: inout YieldRun, endedBy: YieldEnd) {
+        guard let reason = run.openReason, let at = run.openedAt else { return }
+        run.records.append(YieldRecord(reason: reason, step: run.openStep,
+                                       heldMs: Int(max(0, monotonicNow() - at) * 1000),
+                                       endedBy: endedBy))
+        run.openReason = nil
+        run.openedAt = nil
+        run.openStep = nil
+    }
+
+    /// Substitutable so a held-for-N-milliseconds assertion does not need to
+    /// wait N milliseconds.
+    var monotonicNow: @Sendable () -> Double = { Date().timeIntervalSince1970 }
+    func setMonotonicNow(_ clock: @escaping @Sendable () -> Double) { monotonicNow = clock }
+
+    /// What the menu bar reads: whether anything is held right now and why.
+    private var yieldJSON: JSONValue {
+        let held = yieldRuns.values.compactMap(\.openReason)
+        guard let reason = YieldReason.allCases.first(where: { held.contains($0) }) else {
+            return .object(["active": .bool(false), "reason": .null, "line": .null])
+        }
+        return .object(["active": .bool(true),
+                        "reason": .string(reason.rawValue),
+                        "line": .string(reason.line)])
     }
 
     /// The whole machine's answer, folded over every run in flight. Any run
@@ -264,7 +418,11 @@ actor Session {
             "runs": .number(Double(runs.count)),
             "app": subject?.app.map(JSONValue.string) ?? .null,
             "notice": subject.flatMap { $0.demand.notice(app: $0.app) }
-                .map(JSONValue.string) ?? .null
+                .map(JSONValue.string) ?? .null,
+            // Held, and why. Read ahead of `active` by the menu bar: a run that
+            // has got out of somebody's way is not taking the machine, and
+            // saying both at once would be two claims about one instant.
+            "yield": yieldJSON
         ])
     } /// The waiting count, kept here so the UI's own poll answers without hopping
     /// to the scheduler. Written by the scheduler's observer at start-up.

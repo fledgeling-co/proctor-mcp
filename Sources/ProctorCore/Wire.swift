@@ -553,11 +553,18 @@ public struct ActResult: Codable, Sendable {
     /// list, and a suite that cannot is a fact about the suite rather than
     /// something you find out by watching it.
     public var foreground: ForegroundReport?
+    /// Every time this run was held because somebody was using the machine.
+    /// Nil when it never was, so a result from a run nothing contended with
+    /// encodes exactly as it did before this existed — a slow suite has a reason
+    /// in a field, and a normal one carries no new noise.
+    public var yields: [YieldRecord]?
     public init(window: String, steps: [StepResult], completed: Int,
-                failedAt: Int?, finalHash: String?, foreground: ForegroundReport? = nil) {
+                failedAt: Int?, finalHash: String?, foreground: ForegroundReport? = nil,
+                yields: [YieldRecord]? = nil) {
         self.window = window; self.steps = steps; self.completed = completed
         self.failedAt = failedAt; self.finalHash = finalHash
         self.foreground = foreground
+        self.yields = yields
     }
 }
 

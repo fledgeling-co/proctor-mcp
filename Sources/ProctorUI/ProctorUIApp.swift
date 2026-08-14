@@ -202,6 +202,12 @@ struct MenuBarContent: View {
         // A run taking the machine is the thing worth reading first, and the
         // reason this line exists on a surface that does not depend on which
         // display the panel landed on.
+        // A held run first. It is the state somebody most needs to see from
+        // across the room, and it is the one they can do something about — the
+        // Resume below this line is the answer to it.
+        if model.foreground.yielded, let held = model.foreground.yieldLine {
+            return "\(held)\(waiting)"
+        }
         if model.foreground.active {
             return "Taking the foreground now\(waiting)"
         }

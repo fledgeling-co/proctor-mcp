@@ -210,6 +210,13 @@ extension Session {
             planes: run.results.map(\.plane))
         out["foreground"] = (try? JSONValue.encode(report)) ?? .null
         if let note = report.note { out["note"] = .string(note) }
+        // And every time the replay got out of somebody's way, for the same
+        // reason act reports it: a suite that took four minutes because a person
+        // was at the machine should say so rather than look slow.
+        if !run.yields.isEmpty {
+            out["yields"] = .array(run.yields.compactMap { try? JSONValue.encode($0) })
+            if let held = YieldRecord.note(for: run.yields) { out["yieldNote"] = .string(held) }
+        }
         return .object(out)
     }
 

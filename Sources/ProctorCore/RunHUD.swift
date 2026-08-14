@@ -77,6 +77,12 @@ public enum RunHUDEvent: Sendable {
     case stepFailed(step: ActionStep, node: AXNode?)
     /// A person pressed Pause; the step named is the one being held before.
     case paused(step: ActionStep?, node: AXNode?)
+    /// Nobody pressed anything: the run noticed somebody using the machine and
+    /// got out of the way. The same held state a person's Pause produces — quiet,
+    /// resumable, not a fault — with the reason stated instead of the step.
+    case yielded(reason: YieldReason)
+    /// The contention cleared by itself and the run carries on.
+    case unyielded
     case resumed
     case runEnded(RunHUDEnding)
     /// The linger is over and the panel goes.
@@ -352,6 +358,28 @@ public struct RunHUDState: Sendable {
             if let pending {
                 model.line = StepDescription.line(for: pending.step, node: pending.node,
                                                   timing: .present)
+            }
+
+        case .yielded(let reason):
+            // The same held state Pause produces, and deliberately the same
+            // phase: a person using their own Mac is not a fault, so it wears
+            // the quiet tone and the Resume label rather than a new colour or a
+            // second control. The line is the ask — Resume and Stop are its two
+            // answers, and both are already on the panel.
+            model.phase = .paused
+            model.line = reason.line
+            // Nothing is being posted while the run is held, and the panel's
+            // mouse gate reads this: leaving it set would make Resume itself
+            // unclickable, which is the one thing a held run must never be.
+            model.syntheticInFlight = false
+
+        case .unyielded:
+            model.phase = pending == nil ? .travelling : .acting
+            if let pending {
+                model.line = StepDescription.line(for: pending.step, node: pending.node,
+                                                  timing: .present)
+            } else {
+                model.line = "Carrying on"
             }
 
         case .runEnded(let ending):

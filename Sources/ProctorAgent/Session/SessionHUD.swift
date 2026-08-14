@@ -172,6 +172,10 @@ extension Session {
             await RunHUDPanel.shared.refresh()
         case .resume:
             runControl.resume()
+            // The override that keeps Resume from being undone on the next
+            // poll is recorded by `runControl.resume()` itself, so it holds for
+            // the panel's own button too — that one reaches for the shared latch
+            // and never comes through here.
             feed.apply(.resumed)
             await RunHUDPanel.shared.refresh()
         case .stop:
@@ -187,8 +191,15 @@ extension Session {
         return .object(out)
     }
 
-    /// Ask whether a person has halted the run. Nil means carry on.
-    func haltCheckpoint() async -> RunControl.Halt? {
-        await runControl.checkpoint()
+    /// Ask whether a person has halted the run. Nil means carry on. The probe is
+    /// where contention is read — see `Session.contentionProbe`.
+    func haltCheckpoint(probe: (@Sendable () async -> Void)? = nil) async -> RunControl.Halt? {
+        await runControl.checkpoint(probe: probe)
+    }
+
+    /// Proctor is about to post, or has just posted, a synthetic event. Opens
+    /// the grace window the input monitor discards arrivals inside.
+    func noteSyntheticPost() {
+        contentionMonitor.noteSyntheticPost()
     }
 }

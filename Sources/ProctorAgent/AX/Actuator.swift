@@ -343,7 +343,7 @@ enum Actuator {
         try activate(target.pid)
         try requireEventPlaneAvailable()
         warpCursor(to: centre)
-        let source = CGEventSource(stateID: .hidSystemState)
+        let source = eventSource()
         let event = CGEvent(scrollWheelEvent2Source: source, units: .pixel, wheelCount: 2,
                             wheel1: Int32(dy), wheel2: Int32(dx), wheel3: 0)
         event?.post(tap: .cghidEventTap)
@@ -351,6 +351,21 @@ enum Actuator {
     }
 
     // MARK: - Synthetic events
+
+    /// The one place a synthetic event's source is built, so every event Proctor
+    /// posts carries Proctor's tag.
+    ///
+    /// It exists for the yield watch (PRO-0018): an input monitor that could not
+    /// tell Proctor's own events from a person's would pause every synthetic run
+    /// on its own first step. The tag is one of three independent filters and
+    /// costs a single assignment here. Routing every construction through this
+    /// function is what makes "every post is tagged" a property of the code
+    /// rather than of somebody remembering at the next post site.
+    static func eventSource() -> CGEventSource? {
+        let source = CGEventSource(stateID: .hidSystemState)
+        source?.userData = ProctorEventTag.value
+        return source
+    }
 
     private static func key(_ step: ActionStep, _ target: ActuationTarget) throws -> ActuationPlane {
         guard let name = step.key, !name.isEmpty else {
@@ -369,7 +384,7 @@ enum Actuator {
             postUnicode(name)
             return .syntheticEvent
         }
-        let source = CGEventSource(stateID: .hidSystemState)
+        let source = eventSource()
         for down in [true, false] {
             guard let event = CGEvent(keyboardEventSource: source, virtualKey: code, keyDown: down)
             else { continue }
@@ -395,7 +410,7 @@ enum Actuator {
         warpCursor(to: point)
         guard step.kind == .click else { return .syntheticEvent }
 
-        let source = CGEventSource(stateID: .hidSystemState)
+        let source = eventSource()
         for type in [CGEventType.leftMouseDown, .leftMouseUp] {
             CGEvent(mouseEventSource: source, mouseType: type,
                     mouseCursorPosition: point, mouseButton: .left)?.post(tap: .cghidEventTap)
@@ -429,7 +444,7 @@ enum Actuator {
         let points = PointerPath.interpolate(route)
         // One event source for the whole gesture, so the WindowServer sees one
         // device pressing, moving and releasing rather than three unrelated ones.
-        let source = CGEventSource(stateID: .hidSystemState)
+        let source = eventSource()
         // Posting the sequence in a tight loop outruns what many apps process,
         // so the events are spread across the requested duration, with a floor
         // of 2ms an app can still see and a ceiling no gesture needs.
@@ -494,14 +509,14 @@ enum Actuator {
     }
 
     private static func warpCursor(to point: CGPoint) {
-        let source = CGEventSource(stateID: .hidSystemState)
+        let source = eventSource()
         CGEvent(mouseEventSource: source, mouseType: .mouseMoved,
                 mouseCursorPosition: point, mouseButton: .left)?.post(tap: .cghidEventTap)
     }
 
     private static func postUnicode(_ text: String) {
         guard !text.isEmpty else { return }
-        let source = CGEventSource(stateID: .hidSystemState)
+        let source = eventSource()
         for scalar in text.unicodeScalars {
             var units = Array(String(scalar).utf16)
             for down in [true, false] {

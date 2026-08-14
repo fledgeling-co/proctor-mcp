@@ -37,6 +37,8 @@ extension Session {
         var completed: Int = 0
         var finalHash: String?
         var hashes: [String] = []
+        /// Every time this run was held because somebody was using the machine.
+        var yields: [YieldRecord] = []
 
         var captures: [JSONValue] { stepArtifacts.map(\.json) }
     }
@@ -95,8 +97,13 @@ extension Session {
         let result = ActResult(window: id, steps: run.results, completed: run.completed,
                                failedAt: run.failedAt, finalHash: run.finalHash,
                                foreground: ForegroundReport.from(demandForReport,
-                                                                 planes: run.results.map(\.plane)))
+                                                                 planes: run.results.map(\.plane)),
+                               yields: run.yields.isEmpty ? nil : run.yields)
         var out = try JSONValue.encode(result).objectValue ?? [:]
+        // One sentence beside the records, so a caller reading prose knows why
+        // the run took longer than its work did. Alongside rather than inside,
+        // exactly as `captures` and `browser` already ride alongside.
+        if let note = YieldRecord.note(for: run.yields) { out["yieldNote"] = .string(note) }
         // StepResult has no slot for a capture, so per-step frames are returned
         // alongside the step list rather than dropped.
         if captureEach { out["captures"] = .array(run.captures) }
@@ -161,6 +168,14 @@ extension Session {
         // The same fact, reachable without the panel: the menu bar mirrors this
         // and is on every display, where the panel is on one.
         let foregroundRun = foregroundBegan(demand: demand, app: app?.name)
+        // A run that is going to take the machine watches for the person whose
+        // machine it is. One that is not never arms anything: an accessibility
+        // run takes nothing, so holding it would be noise about a contention
+        // that cannot happen. `takesForeground` is PRO-0019's value, not a
+        // second derivation of the same question.
+        if demand.takesForeground {
+            armContention(run: foregroundRun, because: "the batch takes the foreground")
+        }
         var ending: RunHUDEnding = .completed
 
         for (index, step) in steps.enumerated() {
@@ -170,7 +185,9 @@ extension Session {
             // and the run stops before the next one. The refusal lands on the
             // first step that never ran, so everything already done is still
             // reported alongside it.
-            if let halt = await haltCheckpoint() {
+            if let halt = await haltCheckpoint(probe: { [weak self] in
+                await self?.contentionProbe(run: foregroundRun, step: index)
+            }) {
                 let refusal = halt.refusal
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: refusal, settle: nil, stateHash: nil,
@@ -217,6 +234,13 @@ extension Session {
             let plane: ActuationPlane
             do {
                 await hud(.stepActing(step: step, node: node, synthetic: synthetic))
+                // The grace window has to be open BEFORE the post, not after it.
+                // An input monitor delivers asynchronously, so an event Proctor
+                // posts at T can be considered before `perform` returns; opening
+                // the window only afterwards would leave exactly that arrival
+                // looking like a person's. Marked again after the step, from the
+                // measured plane, to cover a late delivery.
+                if synthetic { noteSyntheticPost() }
                 plane = try ax.perform(step: step, window: window.id, foreground: foreground)
             } catch let error as AgentError {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
@@ -277,6 +301,16 @@ extension Session {
             await hud(.stepSettled(step: step, node: node, settleMs: report.elapsedMs,
                                    plane: plane))
             foregroundStep(run: foregroundRun, plane: plane)
+            // Measured, not predicted. Only now is there an application Proctor
+            // has demonstrably put in front, so only now can "somebody moved it
+            // to the back" mean anything — and a `type` that fell back to the
+            // event stream arms the watch exactly as a click does, which is a
+            // batch that turned out to contend and could not have been known to
+            // in advance.
+            if plane == .syntheticEvent {
+                noteTookForeground(pid: app?.pid)
+                armContention(run: foregroundRun, because: "a step travelled the event stream")
+            }
             if let stateHash {
                 run.finalHash = stateHash
                 run.hashes.append(stateHash)
@@ -292,6 +326,8 @@ extension Session {
         // and the panel says how it ended and starts its own linger.
         await restCursor()
         await hud(.runEnded(ending))
+        disarmContention(run: foregroundRun)
+        run.yields = takeYieldRecords(run: foregroundRun)
         foregroundEnded(run: foregroundRun)
         return run
     }

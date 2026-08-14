@@ -40,9 +40,26 @@ final class RunControl: @unchecked Sendable {
     }
 
     private let lock = NSLock()
-    private var paused = false
+    /// One latch with two causes, deliberately not two latches.
+    ///
+    /// A person's Pause and an automatic yield hold the run the same way, on the
+    /// same clock, under the same backstop. A separate yield flag beside this
+    /// one would be a second mechanism with a second way to strand a run, and
+    /// the only thing it would buy is the attribution — which is one more field.
+    private var pausedByPerson = false
+    private var yieldReason: YieldReason?
+    private var paused: Bool { pausedByPerson || yieldReason != nil }
     private var stopped = false
+    /// When the hold started, whichever cause started it. Set when the first
+    /// cause latches and cleared when the last one lets go, so the backstop
+    /// bounds a yield exactly as it bounds a person's pause and a run cannot be
+    /// held by a cause that forgot to start the clock.
     private var pausedAt: Double?
+    private var personResumePending = false
+    /// How long this run has ALREADY spent yielded, across every hold. The
+    /// backstop bounds the run rather than the episode, so a condition that
+    /// flaps cannot hold a run forever in individually-legal chunks.
+    private var yieldHeldTotal: Double = 0
 
     /// Substitutable so the backstop is testable in milliseconds rather than in
     /// fifteen minutes.
@@ -60,41 +77,97 @@ final class RunControl: @unchecked Sendable {
 
     func pause() {
         lock.lock(); defer { lock.unlock() }
-        guard !paused else { return }
-        paused = true
-        pausedAt = now()
+        guard !pausedByPerson else { return }
+        pausedByPerson = true
+        if pausedAt == nil { pausedAt = now() }
     }
 
     func resume() {
         lock.lock(); defer { lock.unlock() }
-        paused = false
+        pausedByPerson = false
+        yieldReason = nil
         pausedAt = nil
+        // A person has decided. Recorded here rather than at either call site
+        // because BOTH surfaces write this latch directly — the panel's own
+        // button reaches for `RunControl.shared`, and the menu bar goes through
+        // the agent's `proctor_hud` verb — and a decision that only one of them
+        // registered would make Resume work from one surface and be undone on
+        // the next poll from the other.
+        personResumePending = true
     }
 
     func stop() {
         lock.lock(); defer { lock.unlock() }
         stopped = true
-        paused = false
+        pausedByPerson = false
+        yieldReason = nil
         pausedAt = nil
+    }
+
+    // MARK: - The automatic half
+
+    /// Hold the run because somebody is using the machine. The same latch and
+    /// the same clock as `pause`; only the attribution differs.
+    func yield(_ reason: YieldReason) {
+        lock.lock(); defer { lock.unlock() }
+        yieldReason = reason
+        if pausedAt == nil { pausedAt = now() }
+    }
+
+    /// The contention cleared. Lifts ONLY the yield — a pause a person pressed
+    /// while the run happened to be yielded stays exactly where they put it.
+    func release() {
+        lock.lock(); defer { lock.unlock() }
+        guard yieldReason != nil else { return }
+        // Bank what this hold cost before letting go. Without this a condition
+        // that flaps — an application taking and losing the front, secure input
+        // going on and off — would start a fresh backstop every time it
+        // re-latched, and a run could be held indefinitely in chunks each one
+        // of which is individually within the bound. The bound is on the run,
+        // not on the episode.
+        if let since = pausedAt { yieldHeldTotal += max(0, now() - since) }
+        yieldReason = nil
+        if !pausedByPerson { pausedAt = nil }
     }
 
     var isPaused: Bool { lock.lock(); defer { lock.unlock() }; return paused }
     var isStopped: Bool { lock.lock(); defer { lock.unlock() }; return stopped }
+    var isYielded: Bool { lock.lock(); defer { lock.unlock() }; return yieldReason != nil }
+    var pausedByAPerson: Bool { lock.lock(); defer { lock.unlock() }; return pausedByPerson }
+
+    /// Whether a person has resumed since this was last asked, consumed in the
+    /// asking. The contention probe reads it to override the reasons that were
+    /// holding the run, so a still-true condition cannot re-yield on the next
+    /// poll and leave Resume looking like a dead button.
+    func takePersonResume() -> Bool {
+        lock.lock(); defer { lock.unlock() }
+        defer { personResumePending = false }
+        return personResumePending
+    }
 
     /// A new run starts with nobody's hand on it. Pause and Stop act on the run
     /// the panel is showing, so a decision made about a run that has already
     /// ended does not carry into the next one.
     func begin() {
         lock.lock(); defer { lock.unlock() }
-        paused = false
+        pausedByPerson = false
+        yieldReason = nil
         stopped = false
         pausedAt = nil
+        personResumePending = false
+        yieldHeldTotal = 0
     }
 
     // MARK: - The run's side
 
     /// Called before each step. Nil means carry on.
-    func checkpoint() async -> Halt? {
+    ///
+    /// `probe` is where contention is read: it runs once before the first look
+    /// and once per poll while the run is parked, so a yield can both BEGIN at a
+    /// checkpoint and END while the run is already held, with no second timer
+    /// anywhere. It is supplied by the session, which owns the policy; this
+    /// class knows only that something may set or clear the latch.
+    func checkpoint(probe: (@Sendable () async -> Void)? = nil) async -> Halt? {
         // The run loop is where the buttons live. A pause waited on from the main
         // thread would block the click that releases it, and the run would hang
         // until the backstop gave up — a deadlock that looks exactly like a slow
@@ -105,6 +178,7 @@ final class RunControl: @unchecked Sendable {
         assert(!Thread.isMainThread,
                "the halt checkpoint must never be waited on from the main thread")
         while true {
+            await probe?()
             if let halt = look() { return halt }
             if !isPaused { return nil }
             try? await Task.sleep(nanoseconds: pollNanoseconds)
@@ -116,13 +190,22 @@ final class RunControl: @unchecked Sendable {
         lock.lock(); defer { lock.unlock() }
         if stopped { return .stopped }
         guard paused, let since = pausedAt else { return nil }
-        let held = now() - since
+        // What this hold has cost, plus what earlier automatic holds already
+        // cost this run. A person's own pause is judged on this episode alone,
+        // because a person deciding again is a person deciding; an automatic
+        // hold that keeps re-latching is not.
+        let held = (now() - since) + (yieldReason != nil ? yieldHeldTotal : 0)
         guard held >= pauseLimit else { return nil }
         // A pause nobody ever lifts gives up the way a stop does, and says so —
-        // reported as a fault it is not would send somebody after the app.
+        // reported as a fault it is not would send somebody after the app. A
+        // yield reaches this the same way, which is the whole reason it rides
+        // this latch: an automatic hold cannot outlast the bound a person's own
+        // hold has.
         stopped = true
-        paused = false
+        pausedByPerson = false
+        yieldReason = nil
         pausedAt = nil
+        yieldHeldTotal = 0
         return .pauseExpired(seconds: pauseLimit)
     }
 }

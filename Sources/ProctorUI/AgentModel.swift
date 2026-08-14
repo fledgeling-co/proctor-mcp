@@ -47,6 +47,12 @@ final class AgentModel {
         var takesForeground = false
         var mayTakeForeground = false
         var notice: String?
+        /// The run got out of somebody's way and is holding. Read ahead of
+        /// `active` wherever both are shown: a held run is not taking the
+        /// machine, and saying both at once would be two claims about one
+        /// instant.
+        var yielded = false
+        var yieldLine: String?
     }
 
     /// What the run HUD is doing, mirrored from the agent so the menu bar can
@@ -361,7 +367,9 @@ final class AgentModel {
             active: f?["active"]?.boolValue ?? false,
             takesForeground: f?["takesForeground"]?.boolValue ?? false,
             mayTakeForeground: f?["mayTakeForeground"]?.boolValue ?? false,
-            notice: f?["notice"]?.stringValue)
+            notice: f?["notice"]?.stringValue,
+            yielded: f?["yield"]?["active"]?.boolValue ?? false,
+            yieldLine: f?["yield"]?["line"]?.stringValue)
         return ActivitySnapshot(current: result["current"]?.stringValue, items: items,
                                 queueWaiting: result["queueWaiting"]?.intValue ?? 0,
                                 hud: HUDState(result["hud"]),
