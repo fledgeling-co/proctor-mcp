@@ -244,6 +244,18 @@ final class RunHUDPanel {
         content.elapsed = runStarted.map { Date().timeIntervalSince($0) } ?? 0
         content.needsDisplay = true
 
+        // Get out of the way of the agent's own synthetic events. A `click`,
+        // `hover` or `dragPath` step is posted into the WindowServer stream at a
+        // screen point, and the window at that point wins — which, for a point
+        // under this panel, is this panel. Left alone, a synthetic click aimed at
+        // the application under test would be swallowed by the panel body, or
+        // worse, would land on Stop and halt the run that posted it. So while a
+        // synthetic step is in flight the whole window ignores mouse events and
+        // the posted click reaches what it was aimed at. `exception` is exactly
+        // "the step in flight is synthetic", so the one thing the panel says
+        // about a plane is also the thing that governs this.
+        panel.ignoresMouseEvents = state.model.exception != nil
+
         // The exception line adds a row, so the panel grows upward from its
         // bottom-docked corner: the footer stays where it is and Pause and Stop
         // never move out from under the cursor of somebody reaching for them.
@@ -341,11 +353,20 @@ final class RunHUDPanel {
 /// Key status is refused by a borderless window by default, which is one of the
 /// two reasons a HUD button silently never fires. The panel still never
 /// activates the application — that is what `.nonactivatingPanel` is for.
-/// Click-through is the safety story. Everything but the grip and the two
-/// controls passes to the application underneath, and that has to be decided at
-/// the top of the view tree: a root view that answered a hit test for its whole
-/// bounds would put a sheet of glass over somebody's work whatever the content
-/// view said, and the blur behind it would do the same.
+/// Hit testing is decided at the top of the view tree: a root view that answered
+/// for its whole bounds would make the blur and every decorative subview a
+/// target, and a click meant for the grip would land on whichever of them
+/// happened to be under it.
+///
+/// Note what this does and does not buy. Only the grip and the two controls are
+/// live, so nothing else on the panel reacts. It is NOT the mock's
+/// `pointer-events: none`: the panel's backing store is opaque, so the window
+/// server routes a click on the body to this window and AppKit then discards it,
+/// rather than passing it to the application underneath. Genuine pass-through
+/// would need the window to ignore mouse events except while the pointer is over
+/// a control, which needs a global mouse monitor — an always-on input observer
+/// in an agent that already holds Accessibility, and not a thing to add without
+/// asking. The panel is 352pt in a corner and can be dragged elsewhere.
 private final class RunHUDRootView: NSView {
     weak var content: RunHUDContentView?
     override func hitTest(_ point: NSPoint) -> NSView? { content?.hitTest(point) }

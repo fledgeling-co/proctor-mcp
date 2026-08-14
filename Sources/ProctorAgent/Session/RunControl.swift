@@ -95,6 +95,15 @@ final class RunControl: @unchecked Sendable {
 
     /// Called before each step. Nil means carry on.
     func checkpoint() async -> Halt? {
+        // The run loop is where the buttons live. A pause waited on from the main
+        // thread would block the click that releases it, and the run would hang
+        // until the backstop gave up — a deadlock that looks exactly like a slow
+        // step. `Session` is an actor with its own executor and this method is
+        // non-isolated, so neither runs on main today; the assertion is here so
+        // that a later change making either main-actor-bound fails a test rather
+        // than hanging a person's kill switch.
+        assert(!Thread.isMainThread,
+               "the halt checkpoint must never be waited on from the main thread")
         while true {
             if let halt = look() { return halt }
             if !isPaused { return nil }

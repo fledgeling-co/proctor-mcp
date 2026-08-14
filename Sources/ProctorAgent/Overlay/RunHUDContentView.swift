@@ -162,9 +162,10 @@ final class RunHUDContentView: NSView {
         return nil
     }
 
-    /// Everything but the grip and the two controls passes clicks through to the
-    /// application underneath. The panel is a thing to read, not a sheet of glass
-    /// over somebody's work.
+    /// Only the grip and the two controls are live; nothing else on the panel
+    /// reacts to a click. See the note on `RunHUDRootView` for what that does and
+    /// does not buy: a click on the body is discarded rather than handed to the
+    /// application underneath.
     override func hitTest(_ point: NSPoint) -> NSView? {
         let local = convert(point, from: superview)
         return control(at: local) == nil ? nil : self

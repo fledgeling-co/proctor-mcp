@@ -115,5 +115,12 @@ FileHandle.standardError.write(Data("proctor-agent \(AgentBuild.version) listeni
 // non-activating panel, so a click on it never activates this process and never
 // takes focus from the application under test. Termination still goes through
 // the signal sources, which call exit(0) directly rather than stopping a loop.
-RunHUDPanel.markEventLoopRunning()
-NSApplication.shared.run()
+// And with the HUD switched off there are no buttons to receive a click, so the
+// process keeps exactly the shape it shipped with. An unattended run that opted
+// out of the drawing opts out of the event loop too.
+if Session.hudEnabledByDefault {
+    RunHUDPanel.markEventLoopRunning()
+    NSApplication.shared.run()
+} else {
+    CFRunLoopRun()
+}
