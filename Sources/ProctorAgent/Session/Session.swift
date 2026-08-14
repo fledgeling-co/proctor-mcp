@@ -97,6 +97,51 @@ actor Session {
     /// new capture.
     private var lastCapture: JSONValue?
 
+    /// A small ring of the tools most recently dispatched, plus whichever is
+    /// in flight, so the menu bar and status window can answer "what is Proctor
+    /// doing right now". Only the model-driven tools land here — the UI's own
+    /// health and activity polls are filtered out at the dispatch choke point so
+    /// they don't drown the real work. Names are stored without the `proctor_`
+    /// prefix, the way the surfaces show them.
+    struct ActivityEntry: Sendable {
+        let tool: String
+        let at: Date
+        let ok: Bool
+    }
+    private var activityRing: [ActivityEntry] = []
+    private var activityCurrent: String?
+    private static let activityDepth = 20
+
+    /// A tool started. Recorded as in-flight until `activityEnd` completes it.
+    func activityBegin(tool: String) { activityCurrent = tool }
+
+    /// A tool finished; move it from in-flight into the completed ring.
+    func activityEnd(tool: String, ok: Bool) {
+        if activityCurrent == tool { activityCurrent = nil }
+        activityRing.append(ActivityEntry(tool: tool, at: Date(), ok: ok))
+        if activityRing.count > Self.activityDepth {
+            activityRing.removeFirst(activityRing.count - Self.activityDepth)
+        }
+    }
+
+    /// The recent-activity feed for the internal `proctor_recent_activity` verb
+    /// the UI polls: the tool in flight now (if any) and the completed ring,
+    /// newest first. Never a ToolCatalogue tool, so a host cannot reach it.
+    func recentActivity(limit: Int = 12) -> JSONValue {
+        let iso = ISO8601DateFormatter()
+        let recent = activityRing.suffix(limit).reversed().map { entry in
+            JSONValue.object([
+                "tool": .string(entry.tool),
+                "at": .string(iso.string(from: entry.at)),
+                "ok": .bool(entry.ok)
+            ])
+        }
+        return .object([
+            "current": activityCurrent.map(JSONValue.string) ?? .null,
+            "recent": .array(Array(recent))
+        ])
+    }
+
     init(ax: any AXEngine,
          capture: any CaptureEngine,
          reflector: any ReflectorBridge = NullReflectorBridge(),

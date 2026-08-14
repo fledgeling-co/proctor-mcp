@@ -192,25 +192,22 @@ else
 fi
 
 say ""
-say "==> grants"
+say "==> opening Proctor"
 say ""
-say "Two grants are needed, and both attach to Proctor — not to this terminal,"
-say "not to the shim, and not to your MCP host. Opening both panes now."
+say "Proctor's window walks the two grants (Accessibility and Screen Recording),"
+say "and both attach to Proctor itself — not this terminal, not the shim, and not"
+say "your MCP host. After that it stays in the menu bar and starts at login."
 say ""
-say "  Accessibility     turn on the switch next to Proctor."
-say "  Screen Recording  turn on the switch next to Proctor."
-say ""
-say "If Proctor is not listed, use the + button and pick $APP_DEST."
-say "Screen Recording cannot be granted silently on any macOS version, so this"
-say "step is manual by design. After granting Screen Recording, macOS may ask"
-say "you to quit and reopen Proctor: run"
+say "Screen Recording cannot be granted silently on any macOS version, so a person"
+say "has to click it. After granting it, macOS may ask you to quit and reopen"
+say "Proctor; the window does this for you, or run"
 say ""
 say "  launchctl kickstart -k $TARGET/$LABEL"
 say ""
 
-open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility" || true
-sleep 1
-open "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture" || true
+# Launch the app: it registers itself as a login item, shows the menu-bar icon,
+# and on first run walks the grants. -F ignores any saved window state.
+open -F "$APP_DEST" || true
 
 say "==> register with an MCP host"
 say ""

@@ -8,19 +8,46 @@ struct Dispatcher: Sendable {
     let session: Session
 
     func handle(_ request: AgentRequest) async -> AgentResponse {
+        // One choke point for every request, so the recent-activity feed the UI
+        // shows is recorded in exactly one place. Health and introspection polls
+        // are excluded: the window polls doctor and recent-activity every couple
+        // of seconds, and recording those would bury the tools a model drives.
+        let track = Self.tracksActivity(request.tool)
+        let short = Self.shortName(request.tool)
+        if track { await session.activityBegin(tool: short) }
         do {
             let result = try await route(request)
+            if track { await session.activityEnd(tool: short, ok: true) }
             return AgentResponse(id: request.id, ok: true, result: result)
         } catch let error as AgentError {
+            if track { await session.activityEnd(tool: short, ok: false) }
             return AgentResponse(id: request.id, ok: false, error: error)
         } catch let error as PixelCompare.Failure {
+            if track { await session.activityEnd(tool: short, ok: false) }
             return AgentResponse(id: request.id, ok: false,
                                  error: AgentError(code: .internalError, message: error.reason))
         } catch {
+            if track { await session.activityEnd(tool: short, ok: false) }
             return AgentResponse(id: request.id, ok: false,
                                  error: AgentError(code: .internalError,
                                                    message: "\(request.tool) failed: \(error)"))
         }
+    }
+
+    /// What counts as activity: the public, model-driven tools, minus the doctor
+    /// health poll the UI runs every couple of seconds. Derived from the catalogue
+    /// so a new tool is tracked automatically, while the internal verbs (resource,
+    /// recent_activity) and any unknown or malformed tool — none of which are in
+    /// the catalogue — are excluded without a hand-maintained list.
+    private static let trackedTools: Set<String> =
+        Set(ToolCatalogue.all.map(\.name)).subtracting(["proctor_doctor"])
+
+    private static func tracksActivity(_ tool: String) -> Bool {
+        trackedTools.contains(tool)
+    }
+
+    private static func shortName(_ tool: String) -> String {
+        tool.hasPrefix("proctor_") ? String(tool.dropFirst("proctor_".count)) : tool
     }
 
     private func route(_ request: AgentRequest) async throws -> JSONValue {
@@ -50,6 +77,11 @@ struct Dispatcher: Sendable {
         // it. It only re-projects state the agent already holds or reads without a
         // TCC grant — no new capability.
         case "proctor_resource":  return try await resource(args)
+        // Internal read-only verb the UI polls for the "what is it doing now"
+        // feed. Like proctor_resource it is never in ToolCatalogue, so the public
+        // tool count is unchanged and no host can reach it as a tool.
+        case "proctor_recent_activity":
+            return await session.recentActivity(limit: args.int("limit") ?? 12)
         default:
             throw AgentError(
                 code: .invalidArguments,

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **A menu-bar icon that is always there, and starts with your Mac.** Proctor registers itself to launch at login and lives in the menu bar, so it is one click away without hunting for the app. The menu shows what it is doing right now: the tool it is running, the last one it ran, or that it is idle.
+- **Onboarding that asks for both permissions on one screen.** First run is now a single sheet in the register of a system permission prompt: the two grants side by side, each with an Allow button that triggers the real macOS dialog, and the steps animate rather than jump. Motion respects Reduce Motion.
+
+### Changed
+
+- **Quit means everything.** Quitting Proctor now stops the background agent as well as the window. Both come back at your next login.
+
+### Fixed
+
+- **The window shows the permissions you have already granted.** A name mismatch between the window and the agent meant every check read as "agent not answering", even with both grants in place. The window reads the agent correctly now, and reflects a grant within a couple of seconds of you making it. Granting Screen Recording restarts the agent for you, so it stops asking for a permission you just gave.
+
 ## [0.1.0] - 2026-08-14
 
 First public release.

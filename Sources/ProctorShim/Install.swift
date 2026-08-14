@@ -134,6 +134,11 @@ enum Installer {
             print("         Check \(logPath), then run `proctor-shim status`.")
         }
 
+        // Launch the app so its menu-bar icon appears, it registers itself as a
+        // login item, and first-run setup walks the grants. Kept in step with
+        // scripts/install.sh, which opens the same bundle after loading the job.
+        launchApp(at: app)
+
         printHostConfiguration()
         printGrantsNote()
         return up
@@ -237,6 +242,18 @@ enum Installer {
             Thread.sleep(forTimeInterval: 0.25)
         }
         return probeSocket()
+    }
+
+    /// Launch Proctor.app after the agent loads, so the menu-bar icon appears,
+    /// the app registers itself as a login item, and first-run setup runs.
+    /// Best-effort: a failure to open it does not fail the install. `-F` ignores
+    /// any saved window state so a first run starts clean.
+    private static func launchApp(at app: String) {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
+        process.arguments = ["-F", app]
+        do { try process.run(); process.waitUntilExit() }
+        catch { print("proctor: could not open \(app): \(error.localizedDescription)") }
     }
 
     private static func probeSocket() -> Bool {

@@ -1,7 +1,8 @@
 import SwiftUI
 import AppKit
+import ServiceManagement
 
-/// Owns the activation policy.
+/// Owns the activation policy and the login-item registration.
 ///
 /// Proctor is a background agent, so it belongs in the menu bar rather than the
 /// Dock — but an app that is already an accessory at launch never presents its
@@ -10,17 +11,36 @@ import AppKit
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         Self.applyPolicy()
-        NSApp.activate(ignoringOtherApps: true)
-        // A SwiftUI Window restores its saved frame and ignores the content's
-        // own .frame, so a window sized once by a previous layout stays that
-        // size forever. Setting it here is the one place that actually holds.
-        if let window = NSApp.windows.first(where: { $0.title == "Proctor" }) {
-            let wanted = NSSize(width: 640, height: 560)
-            if abs(window.frame.width - wanted.width) > 1 || abs(window.frame.height - wanted.height) > 1 {
-                window.setContentSize(wanted)
-                window.center()
+        Self.registerLoginItem()
+
+        let firstRun = !UserDefaults.standard.bool(forKey: "walkthroughCompleted")
+        let window = NSApp.windows.first(where: { $0.title == "Proctor" })
+
+        if firstRun {
+            NSApp.activate(ignoringOtherApps: true)
+            // A SwiftUI Window restores its saved frame and ignores the content's
+            // own .frame, so a window sized once by a previous layout stays that
+            // size forever. Setting it here is the one place that actually holds.
+            if let window {
+                let wanted = NSSize(width: 640, height: 560)
+                if abs(window.frame.width - wanted.width) > 1 || abs(window.frame.height - wanted.height) > 1 {
+                    window.setContentSize(wanted)
+                    window.center()
+                }
             }
+        } else {
+            // Setup is done — this is a menu-bar (or login) start, so live in the
+            // menu bar quietly rather than popping the window in the user's face.
+            window?.orderOut(nil)
         }
+    }
+
+    /// Quit means everything off. Any quit path — the menu's Quit Proctor, the
+    /// app menu, ⌘Q — runs through here and stops the background agent as well
+    /// as this window. Both return at the next login (the LaunchAgent plist and
+    /// the login-item registration persist), so this is "off now", not uninstall.
+    func applicationWillTerminate(_ notification: Notification) {
+        Actions.stopAgent()
     }
 
     /// Reopening from the Dock or the menu bar should bring the window back
@@ -34,6 +54,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     static func applyPolicy() {
         let configured = UserDefaults.standard.bool(forKey: "walkthroughCompleted")
         NSApp.setActivationPolicy(configured ? .accessory : .regular)
+    }
+
+    /// Register the app to start at login, so the menu-bar icon is present after
+    /// every reboot without the user reopening it. Idempotent; only registers
+    /// when it is not already enabled, and a failure is logged rather than
+    /// surfaced — a missing login item degrades convenience, not function.
+    static func registerLoginItem() {
+        let service = SMAppService.mainApp
+        guard service.status != .enabled else { return }
+        do { try service.register() }
+        catch { NSLog("Proctor: could not register login item — \(error.localizedDescription)") }
     }
 }
 
@@ -65,10 +96,11 @@ struct ProctorUIApp: App {
                 }
             }
             .onAppear {
-                model.startPolling()
-                NSApp.activate(ignoringOtherApps: true)
+                // Polling is app-lifetime (started in the model), so the menu
+                // bar stays live with the window closed. Only pull focus on
+                // first-run setup; a menu-bar reopen shouldn't steal the front.
+                if !walkthroughCompleted { NSApp.activate(ignoringOtherApps: true) }
             }
-            .onDisappear { model.stopPolling() }
         }
         .windowResizability(.contentMinSize)
         .defaultPosition(.center)
@@ -110,12 +142,29 @@ struct MenuBarContent: View {
 
     var body: some View {
         Text(statusLine)
+        if let activityLine {
+            Label(activityLine, systemImage: activityIcon)
+        }
         Divider()
         Button("Proctor Status…") { NSApp.activate(ignoringOtherApps: true); openMain() }
         Button("Run Setup Again…") { NSApp.activate(ignoringOtherApps: true); rerunSetup() }
         Button("Re-check now") { model.refresh() }
         Divider()
-        Button("Quit Proctor's window") { NSApp.terminate(nil) }
+        Button("Quit Proctor", role: .destructive) { NSApp.terminate(nil) }
+    }
+
+    /// The live "what is it doing" line: the tool in flight, or the last one it
+    /// ran, or that it is idle. Nil while the agent is unreachable, since there
+    /// is nothing to report until it answers.
+    private var activityLine: String? {
+        guard case .reachable = model.reachability else { return nil }
+        if let current = model.currentActivity { return "Running \(current)" }
+        if let last = model.recentActivity.first { return "Last: \(last.tool)" }
+        return "Idle — no model connected"
+    }
+
+    private var activityIcon: String {
+        model.currentActivity != nil ? "dot.radiowaves.left.and.right" : "moon.zzz"
     }
 
     private var statusLine: String {

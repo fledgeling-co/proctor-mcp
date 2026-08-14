@@ -24,12 +24,35 @@ final class AgentModel {
     private(set) var lastChecked: Date?
     private(set) var isChecking = false
 
+    /// The tool Proctor is running right now (nil when idle) and a newest-first
+    /// ring of the ones it just ran, polled alongside the doctor report so the
+    /// menu bar and status window can show what a model is driving.
+    private(set) var currentActivity: String?
+    private(set) var recentActivity: [ActivityItem] = []
+
+    struct ActivityItem: Identifiable, Sendable {
+        let id = UUID()
+        let tool: String
+        let at: Date
+        let ok: Bool
+    }
+
+    /// True while the agent is being restarted to pick up a permission it had
+    /// already cached as denied. The socket is briefly down during this, so the
+    /// UI reads this rather than flashing "agent not answering".
+    private(set) var isApplying = false
+
     /// Ad-hoc signed builds lose their grants on every rebuild, which presents
     /// as elements not being found rather than as a permission error. Worth
     /// saying on the face of the window rather than in a log.
     let signature = SignatureInfo.current()
 
     private var timer: Timer?
+
+    /// Polling starts with the model and runs for the app's whole life, not just
+    /// while the window is open — the menu-bar glyph and status line have to stay
+    /// live after the window is closed.
+    init() { startPolling() }
 
     var ready: Bool { report?.ready == true }
 
@@ -61,7 +84,8 @@ final class AgentModel {
         isChecking = true
         Task.detached(priority: .utility) {
             let outcome = Self.callDoctor(requestAccessibility: false, requestScreenRecording: false)
-            await MainActor.run { self.apply(outcome) }
+            let activity = Self.callActivity()
+            await MainActor.run { self.apply(outcome); self.applyActivity(activity) }
         }
     }
 
@@ -88,12 +112,35 @@ final class AgentModel {
 
     /// Same reasoning as Accessibility. `CGRequestScreenCaptureAccess` blocks
     /// until the dialog is answered, so it runs off the main actor.
+    ///
+    /// The agent probes Screen Recording through `SCShareableContent`, which
+    /// macOS caches per process for the life of that process. So a grant made
+    /// here is invisible to the already-running agent until it restarts and
+    /// re-probes — restart it on a fresh grant rather than leaving the window
+    /// stuck reporting "not granted yet" against a permission the user just gave.
     func requestScreenRecordingPrompt() {
         NSApp.activate(ignoringOtherApps: true)
         isChecking = true
         Task.detached(priority: .userInitiated) {
-            _ = CGRequestScreenCaptureAccess()
-            await MainActor.run { self.isChecking = false; self.refresh() }
+            let granted = CGRequestScreenCaptureAccess()
+            await MainActor.run {
+                self.isChecking = false
+                if granted { self.reprobeAfterGrant() } else { self.refresh() }
+            }
+        }
+    }
+
+    /// Restart the agent so it re-probes a permission it had cached as denied,
+    /// holding an "applying" state across the restart so the momentary socket
+    /// drop doesn't read as the agent falling over.
+    private func reprobeAfterGrant() {
+        isApplying = true
+        Actions.restartAgent()
+        // launchd needs a beat to bring the agent back; polling immediately
+        // races the restart and reports it as down.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
+            self?.isApplying = false
+            self?.refresh()
         }
     }
 
@@ -108,6 +155,19 @@ final class AgentModel {
         }
         lastChecked = Date()
         isChecking = false
+    }
+
+    private func applyActivity(_ snapshot: ActivitySnapshot?) {
+        // A failed activity poll (agent restarting) leaves the last feed in
+        // place rather than blanking it, which would flicker on every restart.
+        guard let snapshot else { return }
+        currentActivity = snapshot.current
+        recentActivity = snapshot.items
+    }
+
+    struct ActivitySnapshot: Sendable {
+        let current: String?
+        let items: [ActivityItem]
     }
 
     private enum Outcome {
@@ -125,7 +185,7 @@ final class AgentModel {
         defer { client.disconnect() }
         do {
             let response = try client.send(
-                AgentRequest(id: UUID().uuidString, tool: "doctor",
+                AgentRequest(id: UUID().uuidString, tool: "proctor_doctor",
                               arguments: .object(flags)))
             guard response.ok, let result = response.result else {
                 return .failure(response.error?.message ?? "the agent refused the request")
@@ -137,6 +197,25 @@ final class AgentModel {
         } catch {
             return .failure(error.localizedDescription)
         }
+    }
+
+    /// The recent-activity feed over the same socket. Best-effort: any failure
+    /// returns nil and the last feed is kept, since the menu bar showing a
+    /// slightly stale "last tool" beats it blanking whenever a poll misses.
+    private nonisolated static func callActivity() -> ActivitySnapshot? {
+        let client = SocketClient()
+        defer { client.disconnect() }
+        guard let response = try? client.send(
+                AgentRequest(id: UUID().uuidString, tool: "proctor_recent_activity",
+                             arguments: .object([:]))),
+              response.ok, let result = response.result else { return nil }
+        let iso = ISO8601DateFormatter()
+        let items = result["recent"]?.arrayValue?.compactMap { entry -> ActivityItem? in
+            guard let tool = entry["tool"]?.stringValue else { return nil }
+            let at = entry["at"]?.stringValue.flatMap(iso.date(from:)) ?? Date()
+            return ActivityItem(tool: tool, at: at, ok: entry["ok"]?.boolValue ?? true)
+        } ?? []
+        return ActivitySnapshot(current: result["current"]?.stringValue, items: items)
     }
 }
 

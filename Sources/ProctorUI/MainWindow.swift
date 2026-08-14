@@ -10,6 +10,7 @@ struct MainWindow: View {
             VStack(alignment: .leading, spacing: 26) {
                 Header()
                 ReadinessSection(model: model)
+                ActivitySection(model: model)
                 ConnectSection(model: model)
                 AgentSection(model: model)
                 FooterSection(model: model)
@@ -67,6 +68,13 @@ private struct ReadinessSection: View {
                 Text("Checking…").font(.system(size: 12)).foregroundStyle(.secondary)
 
             case .unreachable(let why):
+                if model.isApplying {
+                    HStack(spacing: 8) {
+                        ProgressView().controlSize(.small)
+                        Text("Applying the new permission…")
+                            .font(.system(size: 13, weight: .medium))
+                    }
+                } else {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("The background agent is not answering.")
                         .font(.system(size: 13, weight: .medium))
@@ -79,6 +87,7 @@ private struct ReadinessSection: View {
                             .buttonStyle(.borderedProminent)
                         Button("Re-check") { model.refresh() }
                     }
+                }
                 }
 
             case .reachable:
@@ -146,19 +155,83 @@ private struct GrantRow: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.leading, 26)
-                if grant.name == "Accessibility" || grant.name == "Screen Recording" {
-                    HStack(spacing: 8) {
-                        Button("Reveal Proctor in Finder") { Actions.revealSelf() }
-                            .controlSize(.small)
-                        Text("Proctor lives in your user Applications folder, so the "
-                             + "picker's default location will not show it.")
-                            .font(.system(size: 10)).foregroundStyle(.tertiary)
-                    }
-                    .padding(.leading, 26)
-                }
             }
         }
         .padding(.vertical, 7)
+    }
+}
+
+// MARK: - Activity
+
+private struct ActivitySection: View {
+    let model: AgentModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Card {
+            SectionTitle("Activity")
+            if let current = model.currentActivity {
+                HStack(spacing: 8) {
+                    LiveDot(reduceMotion: reduceMotion)
+                    Text("Running").font(.system(size: 13, weight: .medium))
+                    Text(current).font(.system(size: 12, weight: .semibold, design: .monospaced))
+                        .foregroundStyle(.tint)
+                    Spacer()
+                }
+            } else if model.recentActivity.isEmpty {
+                Text(model.reachability == .reachable
+                     ? "Idle — no model is driving Proctor right now."
+                     : "No activity to report.")
+                    .font(.system(size: 12)).foregroundStyle(.secondary)
+            } else {
+                Text("Idle — last actions below.")
+                    .font(.system(size: 12)).foregroundStyle(.secondary)
+            }
+
+            if !model.recentActivity.isEmpty {
+                Divider().padding(.vertical, 2)
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(model.recentActivity.prefix(6)) { item in
+                        ActivityRow(item: item)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct ActivityRow: View {
+    let item: AgentModel.ActivityItem
+    var body: some View {
+        HStack(spacing: 9) {
+            Image(systemName: item.ok ? "checkmark.circle.fill" : "xmark.circle.fill")
+                .font(.system(size: 11))
+                .foregroundStyle(item.ok ? Color.green : Color.orange)
+            Text(item.tool)
+                .font(.system(size: 12, design: .monospaced))
+            Spacer()
+            Text(item.at, format: .relative(presentation: .numeric))
+                .font(.system(size: 10)).foregroundStyle(.tertiary)
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+/// A green dot that softly pulses while a tool is in flight; static under
+/// reduced motion so the "running" state is still legible without animation.
+private struct LiveDot: View {
+    let reduceMotion: Bool
+    @State private var on = false
+    var body: some View {
+        Circle().fill(Color.green)
+            .frame(width: 8, height: 8)
+            .opacity(reduceMotion ? 1 : (on ? 1 : 0.35))
+            .onAppear {
+                guard !reduceMotion else { return }
+                withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
+                    on = true
+                }
+            }
     }
 }
 
@@ -285,8 +358,10 @@ private struct SectionTitle: View {
 
 private struct StatusPill: View {
     let model: AgentModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
         let (label, tint): (String, Color) = {
+            if model.isApplying { return ("Applying", .secondary) }
             switch model.reachability {
             case .unknown: return ("Checking", .secondary)
             case .unreachable: return ("Agent down", .red)
@@ -298,6 +373,10 @@ private struct StatusPill: View {
             .padding(.horizontal, 8).padding(.vertical, 3)
             .background(tint.opacity(0.14), in: Capsule())
             .foregroundStyle(tint)
+            .id(label)
+            .transition(reduceMotion ? .opacity
+                        : .scale(scale: 0.88).combined(with: .opacity))
+            .animation(reduceMotion ? nil : Motion.med, value: label)
     }
 }
 
@@ -348,13 +427,6 @@ enum Actions {
         NSWorkspace.shared.open(url)
     }
 
-    /// The picker in System Settings opens at /Applications, and Proctor is
-    /// installed under the user's own Applications folder, so browsing to it
-    /// fails. Revealing it lets the user drag it straight in.
-    static func revealSelf() {
-        NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: Bundle.main.bundlePath)])
-    }
-
     static func copy(_ s: String) {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(s, forType: .string)
@@ -370,6 +442,11 @@ enum Actions {
 
     static func loadAgent()    { launchctl(["kickstart", "-k", "gui/\(getuid())/\(label)"]) }
     static func restartAgent() { launchctl(["kickstart", "-k", "gui/\(getuid())/\(label)"]) }
+
+    /// Stop the background agent. Used on quit so "Quit Proctor" means everything
+    /// off, not just this window. The LaunchAgent plist stays on disk, so the
+    /// agent is loaded again at the next login — this is "off now", not uninstall.
+    static func stopAgent() { launchctl(["bootout", "gui/\(getuid())/\(label)"]) }
 
     private static func launchctl(_ args: [String]) {
         let p = Process()

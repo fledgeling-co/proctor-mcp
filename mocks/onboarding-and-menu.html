@@ -306,6 +306,32 @@ body{
 .mi.destructive.act:hover{background:var(--red)}
 .mdiv{height:1px; background:var(--sep); margin:5px 8px}
 
+/* ---- live activity: what a model has Proctor doing right now ---- */
+.act-now{display:flex; align-items:center; gap:8px; padding:3px 10px 5px}
+.act-dot{width:7px;height:7px;border-radius:50%;background:var(--ink-4);flex:0 0 auto}
+.act-dot.live{background:var(--green)}
+.act-lbl{font:var(--callout); color:var(--ink-2)}
+.act-tool{font:11px/1 var(--mono); color:var(--ink); font-weight:600}
+.act-app{font:var(--footnote); color:var(--ink-3); margin-left:auto}
+@media (prefers-reduced-motion: no-preference){
+  .act-dot.live{animation:actPulse 1.7s ease-in-out infinite}
+}
+@keyframes actPulse{
+  0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 60%,transparent)}
+  50%{box-shadow:0 0 0 5px transparent}
+}
+/* status-window activity card */
+.actlist{display:flex; flex-direction:column}
+.actrow{display:flex; align-items:center; gap:10px; padding:6px 0}
+.actrow + .actrow{border-top:.5px solid var(--sep-soft)}
+.actrow .ao{width:6px;height:6px;border-radius:50%;background:var(--green);flex:0 0 auto}
+.actrow .ao.bad{background:var(--red)}
+.actrow .at{font:12px/1 var(--mono); color:var(--ink); font-weight:600; min-width:90px}
+.actrow .aa{font:var(--callout); color:var(--ink-2); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.actrow .ag{font:var(--footnote); color:var(--ink-3)}
+.act-idle{font:var(--callout); color:var(--ink-3)}
+.act-idle b{color:var(--ink-2); font-weight:600}
+
 .mb-hint{margin-top:16px; text-align:center; color:rgba(255,255,255,.7); font:var(--callout)}
 .mb-stage{position:relative; width:640px; max-width:calc(100vw - 48px); height:420px;
   display:flex; align-items:flex-start; justify-content:center}
@@ -451,13 +477,16 @@ svg.sym{display:block; flex:0 0 auto}
   /* status pill springs in when the state changes */
   .pill.in{animation:pillIn .28s var(--spring) both}
 
-  /* menu items materialize with a short stagger from the anchor */
+  /* menu items materialize with a short stagger from the anchor.
+     Child order: 1 header · 2 activity · 3 divider · 4 Status · 5 Setup ·
+     6 Re-check · 7 divider · 8 Quit — the .mi rows sit at 1,4,5,6,8. */
   .popover.opening .mi{animation:miIn .3s var(--spring) both}
+  .popover.opening .act-now{animation:miIn .3s var(--spring) both; animation-delay:.02s}
   .popover.opening .mi:nth-child(1){animation-delay:.00s}
-  .popover.opening .mi:nth-child(3){animation-delay:.04s}
-  .popover.opening .mi:nth-child(4){animation-delay:.07s}
-  .popover.opening .mi:nth-child(5){animation-delay:.10s}
-  .popover.opening .mi:nth-child(7){animation-delay:.14s}
+  .popover.opening .mi:nth-child(4){animation-delay:.05s}
+  .popover.opening .mi:nth-child(5){animation-delay:.08s}
+  .popover.opening .mi:nth-child(6){animation-delay:.11s}
+  .popover.opening .mi:nth-child(8){animation-delay:.15s}
 }
 
 @keyframes enterFwd{from{opacity:0; transform:translateX(15px)} to{opacity:1; transform:none}}
@@ -498,105 +527,6 @@ svg.sym{display:block; flex:0 0 auto}
 .allow:active{transform:scale(.94)}
 .allow.done{background:color-mix(in srgb,var(--green) 15%,transparent); color:var(--green);
   box-shadow:none; display:inline-flex; align-items:center; gap:5px}
-
-/* ============================================================
-   Drag-to-allow guided flow — System Settings on top, Proctor
-   helper window tucked underneath, an animated ghost showing
-   the drag, and a real draggable tile. This is the moment the
-   app icon has to travel from ~/Applications into the list.
-   ============================================================ */
-.dragflow{position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
-  padding:44px 20px; background:rgba(12,9,7,.6); backdrop-filter:blur(5px)}
-.dragflow.show{display:flex}
-.df-inner{position:relative; width:520px; max-width:100%; display:flex; flex-direction:column; align-items:center}
-.df-close{position:absolute; top:-30px; right:0; color:rgba(255,255,255,.72); font:var(--callout);
-  cursor:pointer; display:flex; align-items:center; gap:5px}
-.df-close:hover{color:#fff}
-
-.settings-win{width:100%; background:var(--win); border-radius:11px; overflow:hidden;
-  box-shadow:var(--shadow); border:.5px solid var(--sep); position:relative; z-index:2}
-.set-toolbar{display:flex; align-items:center; gap:8px; padding:8px 12px;
-  border-bottom:1px solid var(--sep-soft); font:var(--subhead); color:var(--ink-2);
-  background:linear-gradient(var(--titlebar),var(--titlebar-2))}
-.set-body{padding:15px 16px 16px}
-.set-body h3{font:var(--title3); font-weight:600; margin-bottom:3px}
-.set-body .sd{font:var(--subhead); color:var(--ink-2); margin-bottom:13px; max-width:52ch}
-.set-list{border:.5px solid var(--sep); border-radius:9px; overflow:hidden; background:var(--card)}
-.set-item{display:flex; align-items:center; gap:11px; padding:9px 12px}
-.set-item + .set-item{border-top:.5px solid var(--sep-soft)}
-.si-ic{width:22px; height:22px; flex:0 0 auto; border-radius:5px; display:flex; align-items:center; justify-content:center}
-.si-n{flex:1; font:var(--body)}
-.set-item.fresh{animation:freshRow .5s var(--spring) both}
-@keyframes freshRow{from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:none}}
-.dz-wrap{padding:8px}
-.dropzone{display:flex; align-items:center; justify-content:center; gap:8px; padding:15px;
-  border:2px dashed var(--ink-4); border-radius:9px; color:var(--ink-3); font:var(--callout);
-  transition:border-color var(--med) var(--spring), background var(--med) var(--spring), color var(--med)}
-.dropzone.hot{border-color:var(--accent); background:var(--accent-tint); color:var(--accent)}
-.set-addrow{display:flex; gap:6px; padding:9px 12px 2px; align-items:center}
-.set-pm{width:20px; height:20px; border-radius:5px; border:.5px solid var(--sep); background:var(--card);
-  display:flex; align-items:center; justify-content:center; color:var(--ink-2); font:600 13px/1 var(--font)}
-
-.mswitch{width:38px; height:22px; border-radius:999px; background:var(--ink-4);
-  position:relative; flex:0 0 auto; cursor:default; transition:background var(--med) var(--spring)}
-.mswitch::after{content:""; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%;
-  background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.35); transition:transform var(--med) var(--spring)}
-.mswitch.on{background:var(--green)}
-.mswitch.on::after{transform:translateX(16px)}
-.mswitch.pulse{animation:swPulse .5s var(--spring)}
-@keyframes swPulse{0%{transform:scale(1)}45%{transform:scale(1.12)}100%{transform:scale(1)}}
-
-.helper-win{width:92%; margin-top:-6px; z-index:1; position:relative;
-  background:var(--glass); backdrop-filter:blur(30px) saturate(1.5);
-  border:.5px solid var(--glass-brd); border-top:0; border-radius:0 0 15px 15px;
-  box-shadow:var(--shadow-pop); padding:18px 18px 18px}
-.helper-win .hh{display:flex; align-items:center; gap:8px; margin-bottom:3px}
-.helper-win .hh h4{font:var(--title3); font-weight:600}
-.helper-win .hsub{font:var(--subhead); color:var(--ink-2); margin-bottom:15px}
-.helper-grid{display:flex; gap:18px; align-items:center}
-.ptile{width:98px; flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:8px;
-  padding:13px 10px; border-radius:13px; background:var(--card); border:.5px solid var(--sep);
-  cursor:grab; user-select:none; touch-action:none;
-  transition:transform var(--fast) var(--spring), box-shadow var(--fast) var(--spring), opacity var(--fast)}
-.ptile:hover{transform:translateY(-2px); box-shadow:0 8px 20px -6px rgba(40,30,20,.4)}
-.ptile.grabbing{opacity:.35}
-.ptile .pn{font:var(--subhead); font-weight:600}
-.ptile .grab{font:var(--footnote); color:var(--ink-3); display:flex; align-items:center; gap:4px}
-.hsteps{flex:1; display:flex; flex-direction:column; gap:12px}
-.hstep{display:flex; gap:11px; align-items:flex-start; transition:opacity var(--med) var(--spring)}
-.hstep .num{width:21px; height:21px; flex:0 0 auto; border-radius:50%; background:var(--accent);
-  color:var(--on-accent); font:700 11px/1 var(--font); display:flex; align-items:center; justify-content:center}
-.hstep .ht{font:var(--callout); color:var(--ink); padding-top:2px}
-.hstep .ht b{font-weight:600}
-.hstep.todo{opacity:.42}
-.hstep.todo .num{background:var(--ink-4); color:var(--ink-2)}
-.hstep.done .num{background:var(--green)}
-
-.drag-clone{position:fixed; z-index:80; pointer-events:none; width:98px; margin:0;
-  display:flex; flex-direction:column; align-items:center; gap:8px; padding:13px 10px; border-radius:13px;
-  background:var(--card); border:.5px solid var(--sep); box-shadow:0 22px 44px -8px rgba(18,12,7,.55);
-  transform:scale(1.06) rotate(-2.5deg)}
-
-/* idle demonstration: a ghost tile + cursor trace the drag path, looping */
-.demo{position:absolute; inset:0; pointer-events:none; z-index:5; overflow:visible}
-.demo .ghost{position:absolute; left:0; top:0; width:74px; display:flex; flex-direction:column;
-  align-items:center; gap:6px; padding:10px 8px; border-radius:12px; background:var(--card);
-  border:.5px solid var(--sep); box-shadow:0 14px 30px -8px rgba(18,12,7,.42); opacity:0}
-.demo .cursor{position:absolute; left:0; top:0; opacity:0; color:var(--ink)}
-@media (prefers-reduced-motion: no-preference){
-  .demo.run .ghost{animation:ghostDrag 3.6s cubic-bezier(.5,0,.2,1) infinite}
-  .demo.run .cursor{animation:ghostDrag 3.6s cubic-bezier(.5,0,.2,1) infinite}
-}
-@keyframes ghostDrag{
-  0%  {opacity:0; transform:translate(var(--x0),var(--y0)) scale(1)}
-  7%  {opacity:1}
-  13% {transform:translate(var(--x0),calc(var(--y0) - 7px)) scale(1.07)}
-  50% {opacity:1; transform:translate(var(--x1),var(--y1)) scale(1.07)}
-  62% {transform:translate(var(--x1),var(--y1)) scale(1)}
-  73% {opacity:1}
-  85% {opacity:0; transform:translate(var(--x1),var(--y1)) scale(1)}
-  100%{opacity:0; transform:translate(var(--x1),var(--y1)) scale(1)}
-}
 
 /* ============================================================
    The agent cursor — Proctor's own pointer. It's how the app
@@ -674,7 +604,6 @@ svg.sym{display:block; flex:0 0 auto}
     <label class="gl">Surface</label>
     <div class="seg" id="segSurface" role="group" aria-label="Surface">
       <button data-surf="onboarding" aria-pressed="true">Onboarding</button>
-      <button data-surf="dragflow" aria-pressed="false">Grant flow</button>
       <button data-surf="menubar" aria-pressed="false">Menu bar</button>
       <button data-surf="status" aria-pressed="false">Status window</button>
     </div>
@@ -748,9 +677,6 @@ svg.sym{display:block; flex:0 0 auto}
   </section>
 
 </main>
-
-<!-- drag-to-allow guided overlay (filled by JS) -->
-<div class="dragflow" id="dragflow" role="dialog" aria-modal="true" aria-label="Add Proctor to the allow list"></div>
 
 <div class="legend">
   <span><b>Question each surface answers</b></span>
@@ -841,6 +767,24 @@ function report(){
     observers: S.agent==='ready' ? 3 : (S.agent==='needs'?1:0)};
 }
 
+/* Live activity — what a connected model currently has Proctor doing. Seeded to
+   representative values per agent state; the app fills this from a small ring
+   buffer the agent keeps at its tool-dispatch choke point. 'active' = a model is
+   driving, 'idle' = agent up but nothing driving, 'offline' = no agent. */
+function activity(){
+  if(S.agent==='ready') return {
+    state:'active',
+    current:{tool:'capture', app:'Ledger'},
+    recent:[
+      {tool:'assert',   app:'Ledger', ago:'2s', ok:true},
+      {tool:'act',      app:'Ledger', ago:'4s', ok:true},
+      {tool:'find',     app:'Ledger', ago:'6s', ok:true},
+      {tool:'snapshot', app:'Ledger', ago:'9s', ok:true},
+    ]};
+  if(S.agent==='needs') return {state:'idle', current:null, recent:[]};
+  return {state:'offline', current:null, recent:[]};
+}
+
 /* ============================================================
    ONBOARDING renderer
    ============================================================ */
@@ -850,7 +794,7 @@ function renderOnboarding(dir=null, justGranted=null){
   const body = document.getElementById('wtBody');
   const actions = document.getElementById('wtActions');
   const step = STEPS[S.step];
-  const DOTS = STEPS.length-1;                 // drop the 'done' step from the spine
+  const DOTS = STEPS.length;                    // one dot per step: intro, permissions, connect
   const filledTo = Math.min(S.step, DOTS-1);
 
   // progress dots: on when <= current
@@ -891,9 +835,10 @@ function renderOnboarding(dir=null, justGranted=null){
         <p class="sub">Proctor needs two macOS permissions to read and drive your apps. They go to Proctor
           itself, asked once, and are used only when a model you connect asks it to run a test.</p>
         <div class="perms">
-          ${permRowHTML('Accessibility','Lets Proctor read the control tree and drive it','ax',S.ax)}
-          ${permRowHTML('Screen Recording','Lets Proctor see what your app drew','sr',S.sr)}
+          ${permRowHTML('Accessibility','Lets Proctor read the control tree and drive it','ax',S.ax, justGranted==='Accessibility')}
+          ${permRowHTML('Screen Recording','Lets Proctor see what your app drew','sr',S.sr, justGranted==='Screen Recording')}
         </div>
+        ${(S.ax && S.sr) ? '' : `<button class="btn small borderless perms-fallback" data-settings="1">Already allowed? Open System Settings</button>`}
       </div>`;
   }
   else if(step==='connect'){
@@ -952,13 +897,23 @@ function renderOnboarding(dir=null, justGranted=null){
   actions.appendChild(prim);
 }
 
-function permRowHTML(name, desc, kind, granted){
+/* Allow → macOS shows its own consent dialog; approving it records the grant
+   to Proctor. In the mock we jump to the granted state and play the success
+   animation on that row, which is what the app sees when the prompt returns. */
+function grantPermission(name){
+  if(name==='Screen Recording') S.sr=true; else S.ax=true;
+  renderOnboarding(null, name);
+  renderStatus();
+}
+
+function permRowHTML(name, desc, kind, granted, justGranted=false){
   const glyph = kind==='ax'
     ? `<span class="pg">${I.axGlyph(40)}</span>`
     : `<span class="pg" style="color:var(--ink-2)">${I.srGlyph(40)}</span>`;
-  const action = granted
-    ? `<span class="allow done">${I.checkCircle(13)} Allowed</span>`
-    : `<button class="allow" data-allow="${name}">Allow</button>`;
+  const done = justGranted
+    ? `<span class="allow done"><span class="gs-icon"><span class="ring"></span><span class="icon-pop">${I.checkCircle(13,true)}</span></span> Allowed</span>`
+    : `<span class="allow done">${I.checkCircle(13)} Allowed</span>`;
+  const action = granted ? done : `<button class="allow" data-allow="${name}">Allow</button>`;
   return `<div class="permrow" data-granted="${granted}">
     ${glyph}
     <div class="pt"><div class="pn">${name}</div><div class="pd">${desc}</div></div>
@@ -988,12 +943,13 @@ function renderMenu(){
   const slColor = S.agent==='down'?'var(--red)':(S.agent==='ready'?'var(--green)':(S.agent==='needs'?'var(--amber)':'var(--ink-3)'));
   pop.innerHTML=`
     <div class="mi header"><div class="sl"><span style="color:${slColor}; width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block"></span>${statusLine()}</div></div>
+    ${activityMenuHTML()}
     <div class="mdiv"></div>
     <div class="mi act" role="menuitem">Proctor Status…</div>
     <div class="mi act" role="menuitem">Run Setup Again…</div>
     <div class="mi act" role="menuitem">Re-check now</div>
     <div class="mdiv"></div>
-    <div class="mi act destructive" role="menuitem">Quit Proctor’s window</div>`;
+    <div class="mi act destructive" role="menuitem">Quit Proctor</div>`;
   // wire menu item demo behaviour
   pop.querySelectorAll('.mi.act').forEach(el=>{
     el.onclick=()=>{
@@ -1004,6 +960,27 @@ function renderMenu(){
       else if(t.startsWith('Quit')){ closePop(); }
     };
   });
+}
+
+/* the menu's live-activity line — the answer to "what is it doing right now" */
+function activityMenuHTML(){
+  const a=activity();
+  if(a.state==='offline') return '';
+  if(a.state==='idle')
+    return `<div class="act-now"><span class="act-dot"></span><span class="act-lbl">Idle — no model connected</span></div>`;
+  return `<div class="act-now"><span class="act-dot live"></span><span class="act-lbl">Running</span>`
+       + `<span class="act-tool">${a.current.tool}</span><span class="act-app">${a.current.app}</span></div>`;
+}
+
+/* the status window's Activity card — the current tool plus a short recent list */
+function activityCardHTML(){
+  const a=activity();
+  if(a.state==='offline') return '';
+  const inner = a.state==='idle'
+    ? `<div class="act-idle">Nothing running. Connect a model and what Proctor is doing shows up here.</div>`
+    : `<div class="act-now" style="padding:0 0 6px"><span class="act-dot live"></span><span class="act-lbl">Running now</span><span class="act-tool">${a.current.tool}</span><span class="act-app">${a.current.app}</span></div>
+       <div class="actlist">${a.recent.map(r=>`<div class="actrow"><span class="ao${r.ok?'':' bad'}"></span><span class="at">${r.tool}</span><span class="aa">${r.app}</span><span class="ag">${r.ago} ago</span></div>`).join('')}</div>`;
+  return `<div class="card"><div class="sectitle">Activity</div>${inner}</div>`;
 }
 function openPop(){
   const pop=document.getElementById('mbPopover'); const a=document.getElementById('mbAnchor');
@@ -1048,7 +1025,7 @@ function renderStatus(){
     readiness=`<div class="downblock">
       <div class="d-t">The background agent is not answering.</div>
       <div class="d-w">The launchd agent isn’t running, or it exited. Proctor tried its socket at
-        ~/Library/Application&nbsp;Support/Proctor/proctor.sock and got no reply.</div>
+        ~/Library/Application&nbsp;Support/app.fledgeling.procter/agent.sock and got no reply.</div>
       <div class="d-h">Until it is running, permissions can’t be read and no test can run.</div>
       <div class="gs-actions">
         <button class="btn prominent" data-act="start">Start the agent</button>
@@ -1086,7 +1063,7 @@ function renderStatus(){
 
   // agent grid
   const sig = S.adhoc ? 'Ad-hoc — grants tied to these exact bytes'
-                      : 'Developer ID Application: Fledgeling (7QX82K9M4C)';
+                      : 'Developer ID Application: Luke Rhodes (H4HGFL52W7)';
   const secure = S.secure?`<div class="callout info"><span class="ic" style="color:var(--amber)">${I.keyboard(15)}</span>
     <div><div class="ct">Secure Event Input is active</div>
     <div class="cm">Something on this Mac — usually a password field — is holding secure input. Reading the
@@ -1096,9 +1073,9 @@ function renderStatus(){
         <div class="checking" style="color:var(--ink-2)">${S.agent==='down'?'No agent to report on.':'Waiting for the agent…'}</div></div>`
     : `<div class="card"><div class="sectitle">Background agent</div>
         <div class="agrid">
-          <span class="k">Version</span><span class="v">0.2.0 · protocol 2025-06-18</span>
+          <span class="k">Version</span><span class="v">0.1.0 · protocol 1</span>
           <span class="k">macOS</span><span class="v">26.6 (Tahoe)</span>
-          <span class="k">Socket</span><span class="v">~/Library/Application Support/Proctor/proctor.sock</span>
+          <span class="k">Socket</span><span class="v">~/Library/Application Support/app.fledgeling.procter/agent.sock</span>
           <span class="k">Attached apps</span><span class="v">${r.attached.length?r.attached.join(', '):'none'}</span>
           <span class="k">Live observers</span><span class="v">${r.observers}</span>
           <span class="k">Shortcuts CLI</span><span class="v">available</span>
@@ -1119,6 +1096,8 @@ function renderStatus(){
       <div class="row1"><div class="sectitle">Permissions</div>${pill}</div>
       ${readiness}
     </div>
+
+    ${activityCardHTML()}
 
     <div class="card">
       <div class="sectitle">Connect a model to it</div>
@@ -1156,118 +1135,6 @@ function renderStatus(){
 }
 
 /* ============================================================
-   Drag-to-allow guided flow — System Settings + a helper window
-   underneath, an animated agent-cursor demo, and a real drag.
-   ============================================================ */
-function openDragflow(perm){
-  const df=document.getElementById('dragflow');
-  df.classList.add('show');
-  renderDragflow(perm);
-}
-function closeDragflow(grantedName){
-  const df=document.getElementById('dragflow');
-  df.classList.remove('show'); df.innerHTML='';
-  if(grantedName){
-    if(S.surface==='onboarding' && STEPS[S.step]==='permissions') renderOnboarding(null, grantedName);
-    renderStatus();
-  }
-}
-function renderDragflow(perm){
-  const df=document.getElementById('dragflow');
-  const pane = perm==='Screen Recording' ? 'Screen Recording' : 'Accessibility';
-  const blurb = perm==='Screen Recording'
-    ? 'Allow the applications below to record the contents of your screen.'
-    : 'Allow the applications below to control your Mac.';
-  df.innerHTML=`
-    <div class="df-inner">
-      <div class="df-close" id="dfClose">Back to setup&nbsp;&nbsp;✕</div>
-      <div class="settings-win">
-        <div class="set-toolbar"><span style="font-weight:600;color:var(--ink)">‹ Privacy &amp; Security</span><span>›</span><span>${pane}</span></div>
-        <div class="set-body">
-          <h3>${pane}</h3>
-          <div class="sd">${blurb}</div>
-          <div class="set-list" id="setList">
-            <div class="set-item"><span class="si-ic" style="background:#1c1c1e;color:#eee;font:700 9px/1 var(--mono)">&gt;_</span><span class="si-n">Terminal</span><span class="mswitch on"></span></div>
-            <div class="set-item"><span class="si-ic" style="background:linear-gradient(135deg,#8E7BF0,#4BC0FF)"></span><span class="si-n">Shortcuts</span><span class="mswitch"></span></div>
-            <div class="dz-wrap" id="dzWrap"><div class="dropzone" id="dropzone">Drag Proctor here to add it</div></div>
-          </div>
-          <div class="set-addrow"><span class="set-pm">+</span><span class="set-pm">−</span></div>
-        </div>
-      </div>
-      <div class="helper-win">
-        <div class="hh"><span style="color:var(--accent)">${I.lockShield(15)}</span><h4>Add Proctor to ${pane}</h4></div>
-        <div class="hsub">Proctor lives in your <b>~/Applications</b> folder, so it isn’t in the list yet and the “+” picker won’t find it there. Drag it straight in.</div>
-        <div class="helper-grid">
-          <div class="ptile" id="ptile"><span style="width:44px;height:44px">${I.appIcon(44)}</span><span class="pn">Proctor</span><span class="grab">${I.grip(11)}&nbsp;drag me</span></div>
-          <div class="hsteps">
-            <div class="hstep done" id="hstep1"><span class="num">1</span><span class="ht"><b>Drag Proctor</b> into the list above</span></div>
-            <div class="hstep todo" id="hstep2"><span class="num">2</span><span class="ht"><b>Turn its switch on</b> to grant the permission</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="demo" id="demo">
-        <span class="ghost">${I.appIcon(44)}</span>
-        <span class="cursor agent-cursor">${I.arrow(22)}<span class="tag">Proctor</span></span>
-      </div>
-    </div>`;
-  document.getElementById('dfClose').onclick=()=>closeDragflow(null);
-  setupDrag(perm);
-  positionDemo();
-}
-function positionDemo(){
-  if(RM) return;
-  const df=document.getElementById('dragflow');
-  const inner=df.querySelector('.df-inner'), demo=df.querySelector('#demo');
-  const tile=df.querySelector('#ptile'), dz=df.querySelector('#dropzone');
-  if(!inner||!demo||!tile||!dz) return;
-  const ir=inner.getBoundingClientRect(), tr=tile.getBoundingClientRect(), dr=dz.getBoundingClientRect();
-  demo.style.setProperty('--x0', (tr.left-ir.left+tr.width/2-37)+'px');
-  demo.style.setProperty('--y0', (tr.top-ir.top+tr.height/2-30)+'px');
-  demo.style.setProperty('--x1', (dr.left-ir.left+dr.width/2-37)+'px');
-  demo.style.setProperty('--y1', (dr.top-ir.top+dr.height/2-30)+'px');
-  demo.style.display=''; demo.classList.add('run');
-}
-function setupDrag(perm){
-  const tile=document.getElementById('ptile'), dz=document.getElementById('dropzone'), demo=document.getElementById('demo');
-  let clone=null, dragging=false;
-  const move=(x,y)=>{ if(clone){ clone.style.left=(x-49)+'px'; clone.style.top=(y-40)+'px'; } };
-  const over=(x,y)=>{ const r=dz.getBoundingClientRect(); return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom; };
-  tile.onpointerdown=(e)=>{
-    e.preventDefault(); dragging=true; tile.classList.add('grabbing');
-    if(demo){ demo.classList.remove('run'); demo.style.display='none'; }   // stand aside while the user drives
-    clone=document.createElement('div'); clone.className='drag-clone';
-    clone.innerHTML=`<span style="width:44px;height:44px">${I.appIcon(44)}</span><span style="font:var(--subhead);font-weight:600">Proctor</span>`;
-    document.body.appendChild(clone); move(e.clientX,e.clientY);
-    try{ tile.setPointerCapture(e.pointerId); }catch(_){}
-  };
-  tile.onpointermove=(e)=>{ if(!dragging) return; move(e.clientX,e.clientY); dz.classList.toggle('hot', over(e.clientX,e.clientY)); };
-  tile.onpointerup=(e)=>{
-    if(!dragging) return; dragging=false; tile.classList.remove('grabbing');
-    const hit=over(e.clientX,e.clientY);
-    if(clone){ clone.remove(); clone=null; } dz.classList.remove('hot');
-    if(hit) dropProctor(perm);
-    else if(demo && !RM){ demo.style.display=''; positionDemo(); }        // missed: resume the demo
-  };
-}
-function dropProctor(perm){
-  const demo=document.getElementById('demo'); if(demo) demo.style.display='none';
-  const tile=document.getElementById('ptile'); if(tile) tile.style.visibility='hidden';
-  const dzWrap=document.getElementById('dzWrap');
-  dzWrap.outerHTML=`<div class="set-item fresh"><span class="si-ic" style="background:none">${I.appIcon(22)}</span><span class="si-n">Proctor</span><span class="mswitch" id="pSwitch"></span></div>`;
-  document.getElementById('hstep2').classList.remove('todo');
-  const hint=document.querySelector('.helper-win .hsub');
-  if(hint) hint.innerHTML='Proctor is in the list now. <b>Switch it on</b> to finish.';
-  const sw=document.getElementById('pSwitch');
-  sw.onclick=()=>{
-    if(sw.classList.contains('on')) return;
-    sw.classList.add('on'); if(!RM) sw.classList.add('pulse');
-    document.getElementById('hstep2').classList.add('done');
-    if(perm==='Screen Recording') S.sr=true; else S.ax=true;
-    setTimeout(()=>closeDragflow(perm), 1000);
-  };
-}
-
-/* ============================================================
    Shared helpers + wiring
    ============================================================ */
 function btn(label, cls=''){ const b=document.createElement('button');
@@ -1286,16 +1153,6 @@ function confirmCopy(el){
 function setAppearance(a){ S.appearance=a; document.documentElement.dataset.appearance=a;
   press('#segAppear','appear',a); }
 function setSurface(s){
-  const df=document.getElementById('dragflow');
-  if(s==='dragflow'){
-    press('#segSurface','surf','dragflow');
-    S.surface='onboarding';
-    document.querySelectorAll('.surface').forEach(el=>el.classList.toggle('active', el.id==='onboarding'));
-    S.step=1; renderOnboarding();               // permissions sheet behind the overlay
-    openDragflow('Accessibility');
-    return;
-  }
-  if(df.classList.contains('show')){ df.classList.remove('show'); df.innerHTML=''; }
   S.surface=s;
   document.querySelectorAll('.surface').forEach(el=>el.classList.toggle('active', el.id===s));
   press('#segSurface','surf',s);
@@ -1330,13 +1187,15 @@ document.addEventListener('click',e=>{
 
 /* onboarding grant / demo actions (delegated) */
 document.getElementById('onboarding').addEventListener('click',e=>{
+  // "Allow" stands for approving macOS's own consent dialog, which Proctor
+  // triggers directly now that it lives in /Applications — no drag-in needed.
   const allow=e.target.closest('[data-allow]');
-  if(allow){ openDragflow(allow.dataset.allow); return; }
-  // Copy → in-place confirmation; other demos flash
+  if(allow){ grantPermission(allow.dataset.allow); return; }
+  // "Open Settings" is the fallback macOS forces after its once-per-app dialog.
+  const settings=e.target.closest('[data-settings]');
+  if(settings){ if(!RM) settings.animate([{opacity:1},{opacity:.45},{opacity:1}],{duration:260}); return; }
   const copy=e.target.closest('[data-copy]');
   if(copy){ confirmCopy(copy); return; }
-  const demo=e.target.closest('[data-settings],[data-reveal]');
-  if(demo && !RM){ demo.animate([{opacity:1},{opacity:.45},{opacity:1}],{duration:260}); }
 });
 
 /* status window demo actions */
@@ -1345,9 +1204,10 @@ document.getElementById('status').addEventListener('click',e=>{
   if(copy){ confirmCopy(copy); return; }
   const pane=e.target.closest('[data-openpane]');
   if(pane){
-    const name=pane.dataset.openpane;
-    if(name==='Accessibility'||name==='Screen Recording') openDragflow(name);
-    else if(!RM) pane.animate([{opacity:1},{opacity:.45},{opacity:1}],{duration:260});
+    // Opens the matching System Settings pane. Proctor lives in /Applications
+    // now, so it appears in the pane's list and the "+" picker finds it — no
+    // drag-in step. In the mock this just flashes to acknowledge the click.
+    if(!RM) pane.animate([{opacity:1},{opacity:.45},{opacity:1}],{duration:260});
     return;
   }
   const a=e.target.closest('[data-act]');
@@ -1359,14 +1219,11 @@ document.getElementById('status').addEventListener('click',e=>{
 
 /* init — honour URL query so each render is reproducible/capturable
    e.g. ?surface=status&state=ready&appear=dark&step=2&adhoc=1&secure=1&pop=1 */
-document.getElementById('dragflow').addEventListener('click',e=>{
-  if(e.target.id==='dragflow') closeDragflow(null);   // click the dim backdrop to dismiss
-});
 (function initFromQuery(){
   const q=new URLSearchParams(location.search);
   const appear = q.get('appear')==='dark'?'dark':'light';
   const st = ['unknown','down','needs','ready'].includes(q.get('state'))?q.get('state'):'needs';
-  const surf = ['onboarding','menubar','status','dragflow'].includes(q.get('surface'))?q.get('surface'):'onboarding';
+  const surf = ['onboarding','menubar','status'].includes(q.get('surface'))?q.get('surface'):'onboarding';
   if(q.get('adhoc')==='1'){S.adhoc=true; document.getElementById('swAdhoc').setAttribute('aria-checked','true');}
   if(q.get('secure')==='1'){S.secure=true; document.getElementById('swSecure').setAttribute('aria-checked','true');}
   S.agent=st; seedGrants();
@@ -1375,8 +1232,6 @@ document.getElementById('dragflow').addEventListener('click',e=>{
   renderAll();
   setSurface(surf);
   if(surf==='menubar' && q.get('pop')==='1'){ openPop(); }
-  const drag=q.get('drag');
-  if(drag==='Accessibility'||drag==='Screen Recording') openDragflow(drag);
 })();
 </script>
 </body>
