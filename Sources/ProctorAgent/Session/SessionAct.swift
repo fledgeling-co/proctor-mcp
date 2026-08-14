@@ -101,7 +101,46 @@ extension Session {
         // alongside the step list rather than dropped.
         if captureEach { out["captures"] = .array(run.captures) }
         if let target { out["recordedInto"] = .string(target) }
+        // Once per call, never per step. Emitted only when a step this batch
+        // actually addressed lies inside the page, so driving the reload button is
+        // not told to use a different tool. Nothing here refuses anything and no
+        // step's plane changes: the batch ran, and it arrives carrying a note that
+        // the page belongs to Obscura.
+        if let handoff = browserHandoff(window: window,
+                                        targets: browserTargets(for: steps, window: window)) {
+            out["browser"] = try JSONValue.encode(handoff)
+        }
         return .object(out)
+    }
+
+    /// The screen-space frames this batch addressed, for the browser boundary
+    /// check. A step naming an element contributes that element's frame; a step
+    /// naming a coordinate contributes the point, converted from the window
+    /// coordinates the tool takes into the screen coordinates accessibility frames
+    /// are in. A batch of steps that name neither — a menu path, a keystroke —
+    /// contributes nothing, so the question falls back to the window itself.
+    ///
+    /// Every step is considered rather than a prefix of them, because a batch that
+    /// opens a menu and then clicks something on the page reaches the page. Element
+    /// ids are resolved once each, so a twenty-step batch against one field costs
+    /// one accessibility round trip rather than twenty.
+    private func browserTargets(for steps: [ActionStep], window: WindowHandle) -> [Rect] {
+        var out: [Rect] = []
+        var resolved: [String: Rect?] = [:]
+        for step in steps {
+            if let id = step.node {
+                let frame = resolved[id] ?? { () -> Rect? in
+                    let frame = (try? ax.node(id: id))?.frame
+                    resolved[id] = frame
+                    return frame
+                }()
+                if let frame { out.append(frame) }
+            } else if let point = step.point, point.count >= 2 {
+                out.append(Rect(x: window.frame.x + point[0], y: window.frame.y + point[1],
+                                w: 0, h: 0))
+            }
+        }
+        return out
     }
 
     /// One code path for act, flow replay and stability, so a step behaves

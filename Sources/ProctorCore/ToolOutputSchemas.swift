@@ -38,26 +38,28 @@ public extension ToolCatalogue {
 
         return [
             "proctor_apps": openObject(
-                "Enumeration (apps/attached/note), an attach (app/windows/provenance), or a detach (detached/windowsReleased).",
+                "Enumeration (apps/attached/note), an attach (app/windows/provenance), or a detach (detached/windowsReleased). `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not.",
                 ["apps": p("array"), "attached": p("array"), "note": p("string"),
                  "app": p("object"), "windows": p("array"), "provenance": p("object"),
-                 "detached": p("string"), "windowsReleased": p("number")]),
+                 "detached": p("string"), "windowsReleased": p("number"),
+                 "browser": p("object")]),
 
             "proctor_snapshot": openObject(
-                "A pruned accessibility tree, or a diff when sinceRevision was supplied.",
+                "A pruned accessibility tree, or a diff when sinceRevision was supplied. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not.",
                 ["window": p("string"), "revision": p("number"), "root": p("object"),
-                 "diff": p("object"), "provenance": p("object"), "stateHash": p("string")]),
+                 "diff": p("object"), "provenance": p("object"), "stateHash": p("string"),
+                 "browser": p("object")]),
 
             "proctor_find": openObject(
-                "The nodes matching a predicate.",
+                "The nodes matching a predicate. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not.",
                 ["window": p("string"), "predicate": p("string"), "count": p("number"),
-                 "truncated": p("boolean"), "nodes": p("array")]),
+                 "truncated": p("boolean"), "nodes": p("array"), "browser": p("object")]),
 
             "proctor_act": openObject(
-                "Per-step outcome for a batch of actions.",
+                "Per-step outcome for a batch of actions. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not.",
                 ["window": p("string"), "steps": p("array"), "completed": p("number"),
                  "failedAt": p("number"), "finalHash": p("string"),
-                 "foreground": p("object")]),
+                 "foreground": p("object"), "browser": p("object")]),
 
             "proctor_capture": openObject(
                 "A window capture with its freshness metadata; the PNG is on disk at `path`, never inline.",

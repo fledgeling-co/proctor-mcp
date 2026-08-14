@@ -27,6 +27,18 @@ final class FakeAX: AXEngine, @unchecked Sendable {
     /// specifically about a step that could not travel that way.
     var planeAt: [Int: ActuationPlane] = [:]
 
+    /// What the window reports as web content. Nil is a window with no page in it,
+    /// which is what every non-browser test wants and what a browser's About panel
+    /// would report. Implemented on the class rather than left to a protocol
+    /// default, so a test that forgets to set it fails a positive assertion rather
+    /// than passing vacuously.
+    var webContentProbe: WebContentProbe?
+
+    /// The role and frame the fake's single node reports, so a test can place a
+    /// match inside or outside a web area.
+    var nodeRole = "AXButton"
+    var nodeFrame = Rect(x: 0, y: 0, w: 40, h: 20)
+
     init(bundleId: String, appID: String = "app-1", windowID: String = "win-1") {
         app = AppHandle(id: appID, pid: 4242, bundleId: bundleId, name: "Fake")
         window = WindowHandle(id: windowID, app: appID, title: "Fake Window",
@@ -70,9 +82,10 @@ final class FakeAX: AXEngine, @unchecked Sendable {
     var observersLive: Int { 0 }
     func windowOf(node: String) -> String? { window.id }
 
+    func webContent(window: String) throws -> WebContentProbe? { webContentProbe }
+
     private var node: AXNode {
-        AXNode(id: "node-1", role: "AXButton", title: "OK",
-               frame: Rect(x: 0, y: 0, w: 40, h: 20))
+        AXNode(id: "node-1", role: nodeRole, title: "OK", frame: nodeFrame)
     }
 }
 

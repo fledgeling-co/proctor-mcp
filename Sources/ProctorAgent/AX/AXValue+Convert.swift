@@ -76,6 +76,17 @@ enum AXRead {
         return nil
     }
 
+    /// A URL-valued attribute, read as its absolute string. `AXURL` comes back as
+    /// a CFURL on Safari and as a plain string on some Chromium builds, so both
+    /// are accepted rather than one being assumed.
+    static func url(_ element: AXUIElement, _ attribute: String,
+                    log: UnsupportedLog? = nil) -> String? {
+        guard let v = raw(element, attribute, log: log) else { return nil }
+        if CFGetTypeID(v) == CFURLGetTypeID() { return ((v as! CFURL) as URL).absoluteString }
+        if CFGetTypeID(v) == CFStringGetTypeID() { return (v as! CFString) as String }
+        return nil
+    }
+
     static func element(_ element: AXUIElement, _ attribute: String,
                         log: UnsupportedLog? = nil) -> AXUIElement? {
         guard let v = raw(element, attribute, log: log) else { return nil }

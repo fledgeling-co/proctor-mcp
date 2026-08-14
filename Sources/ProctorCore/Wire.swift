@@ -200,10 +200,15 @@ public struct Snapshot: Codable, Sendable {
     public var diff: SnapshotDiff?   // present instead of root when since_revision was supplied
     public var provenance: TreeProvenance
     public var stateHash: String     // canonical hash of the normalised tree
+    /// Present when this window is a browser showing a page. The page belongs to
+    /// Obscura; the native chrome around it does not. See BrowserTarget.
+    public var browser: BrowserHandoff?
     public init(window: String, revision: Int, root: AXNode?, diff: SnapshotDiff?,
-                provenance: TreeProvenance, stateHash: String) {
+                provenance: TreeProvenance, stateHash: String,
+                browser: BrowserHandoff? = nil) {
         self.window = window; self.revision = revision; self.root = root
         self.diff = diff; self.provenance = provenance; self.stateHash = stateHash
+        self.browser = browser
     }
 }
 

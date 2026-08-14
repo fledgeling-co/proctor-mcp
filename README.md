@@ -211,6 +211,23 @@ virtual machines. Scaling happens across windows within one session — attach t
 several apps, keep their trees warm, drive them in the background — and past
 that, more real parallelism is a hardware purchase.
 
+**It does not drive pages in a browser, and says so.** Proctor owns native macOS
+applications. A page in Chrome or Safari is not one: walking its accessibility
+tree trades the DOM, computed styles, the console, the network log and a selector
+that survives a re-render for a flattened tree and a set of coordinates. When a
+result's target is a browser showing a page, it carries a `browser` object naming
+[Obscura](https://github.com/h4ckf0r0day/obscura) as the tool for the page, with
+the page's URL, command templates and Obscura's own measured limits. Nothing is
+refused — the native chrome around the page (toolbar, tab bar, menus, sheets)
+stays Proctor's, and driving it is what Proctor is for. Two things the object
+says out loud, because both are easy to get wrong: Obscura runs its own engine
+with its own cookie jar, so following the advice restarts at a URL rather than
+continuing that window's signed-in session; and a step into page content still
+hashes, but over a browser's render tree, so a determinism score there measures
+the page's churn as much as the app's. A web view inside a native Mac app is
+**not** routed — reaching it means attaching to the host process, which is
+Proctor's job.
+
 **It does not see inside a window it was not granted.** No Accessibility grant
 means an empty tree; no Screen Recording grant means no pixels. Neither
 degrades gracefully into something that looks like a test result.

@@ -228,6 +228,47 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
         return walker.walk(root: ref.element, rootPath: ref.path)
     }
 
+    // MARK: - Web content
+
+    /// The web areas in a window, read in one downward walk.
+    ///
+    /// Only reached for an application the browser catalogue matched, so the cost
+    /// is paid by browsers and by nothing else. The walk stops at each web area
+    /// rather than descending into it: a page's interior holds no second web area
+    /// worth reading, and descending would pull a whole DOM through the
+    /// accessibility API one round trip at a time.
+    func webContent(window: String) throws -> WebContentProbe? {
+        let (_, element, _) = try withLock { try resolveWalkRoot(window: window, root: nil) }
+        var areas: [WebArea] = []
+        collectWebAreas(from: element, into: &areas, depth: 0, budget: WebAreaScan())
+        return areas.isEmpty ? nil : WebContentProbe(areas: areas)
+    }
+
+    private final class WebAreaScan {
+        var visited = 0
+        let maxNodes = 4_000
+        let maxDepth = 40
+    }
+
+    private func collectWebAreas(from element: AXUIElement, into areas: inout [WebArea],
+                                 depth: Int, budget: WebAreaScan) {
+        guard depth <= budget.maxDepth, budget.visited < budget.maxNodes else { return }
+        budget.visited += 1
+
+        if AXRead.string(element, kAXRoleAttribute as String) == BrowserTarget.webAreaRole {
+            // Safari answers AXURL; some Chromium builds carry it on AXDocument
+            // instead, so both are tried before the URL is reported as absent.
+            let url = AXRead.url(element, kAXURLAttribute as String)
+                ?? AXRead.url(element, kAXDocumentAttribute as String)
+            areas.append(WebArea(url: url, frame: AXRead.frame(element)))
+            return
+        }
+
+        for child in AXRead.elements(element, kAXChildrenAttribute as String) {
+            collectWebAreas(from: child, into: &areas, depth: depth + 1, budget: budget)
+        }
+    }
+
     // MARK: - Actuation
 
     func perform(step: ActionStep, window: String, foreground: Bool) throws -> ActuationPlane {

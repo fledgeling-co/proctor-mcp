@@ -300,6 +300,36 @@ actor Session {
 
     func appHandle(forWindow window: WindowHandle) -> AppHandle? { apps[window.app] }
 
+    // MARK: - Browser handoff
+
+    /// The advisory for an application that is a browser, without a window in hand.
+    /// Emitted where the instrument is chosen — listing and attaching — and it says
+    /// so: no window was named, so no page URL was read.
+    func browserHandoff(bundleId: String?, detail: BrowserTarget.Detail) -> BrowserHandoff? {
+        guard let browser = BrowserCatalogue.identify(bundleId: bundleId) else { return nil }
+        return BrowserTarget.handoff(for: browser, probe: nil, detail: detail)
+    }
+
+    /// The advisory for a window that is showing a page, or nil.
+    ///
+    /// The catalogue lookup runs first, so a native application costs one dictionary
+    /// lookup and no accessibility traffic — a web view inside a Mac app is never
+    /// routed, because reaching it means attaching to the host process.
+    ///
+    /// `targets` are the frames the call actually addressed, in screen coordinates.
+    /// Empty means the question is about the window as a whole. Non-empty means the
+    /// advisory is emitted only when one of them lies inside a web area, which is
+    /// what keeps a click on the reload button from being told to use Obscura.
+    func browserHandoff(window: WindowHandle, targets: [Rect] = [],
+                        detail: BrowserTarget.Detail = .brief) -> BrowserHandoff? {
+        guard let browser = BrowserCatalogue.identify(bundleId: appHandle(forWindow: window)?.bundleId)
+        else { return nil }
+        guard let probe = try? ax.webContent(window: window.id), !probe.areas.isEmpty
+        else { return nil }
+        if !targets.isEmpty, !targets.contains(where: { probe.contains($0) }) { return nil }
+        return BrowserTarget.handoff(for: browser, probe: probe, detail: detail)
+    }
+
     /// An attached app by its handle id, or nil if nothing is attached under it.
     func appHandle(id: String) -> AppHandle? { apps[id] }
 
@@ -325,6 +355,9 @@ actor Session {
                 "attached": .bool(apps[app.id] != nil)
             ]
             if let bundleId = app.bundleId { obj["bundleId"] = .string(bundleId) }
+            if let handoff = browserHandoff(bundleId: app.bundleId, detail: .brief) {
+                obj["browser"] = try JSONValue.encode(handoff)
+            }
             if apps[app.id] != nil {
                 let windows = windowsByID.values.filter { $0.app == app.id }
                 obj["windows"] = .array(try windows.sorted { $0.id < $1.id }
@@ -354,11 +387,19 @@ actor Session {
         }
         let (app, windows, provenance) = try attachResolved(bundleId: bundleId, pid: pid, name: name)
 
-        return .object([
+        var out: [String: JSONValue] = [
             "app": try JSONValue.encode(app),
             "windows": .array(try windows.map { try JSONValue.encode($0) }),
             "provenance": try JSONValue.encode(provenance)
-        ])
+        ]
+        // Attaching is the moment the instrument is chosen, so this is the one
+        // place the full advisory is emitted — the measured Obscura edges and the
+        // command templates. Everywhere else carries the brief form, because
+        // repeating seven caveats on every step of a batch is noise that is skimmed.
+        if let handoff = browserHandoff(bundleId: app.bundleId, detail: .full) {
+            out["browser"] = try JSONValue.encode(handoff)
+        }
+        return .object(out)
     }
 
     /// Attach and record the bookkeeping, returning the handles rather than the
@@ -439,12 +480,14 @@ actor Session {
     }
 
     func snapshot(window id: String, options: SnapshotOptions, sinceRevision: Int?) throws -> Snapshot {
-        _ = try windowHandle(id)
+        let handle = try windowHandle(id)
         let outcome = try walk(window: id, options: options)
+        let browser = browserHandoff(window: handle)
 
         guard let since = sinceRevision else {
             return Snapshot(window: id, revision: outcome.revision, root: outcome.root,
-                            diff: nil, provenance: outcome.provenance, stateHash: outcome.hash)
+                            diff: nil, provenance: outcome.provenance, stateHash: outcome.hash,
+                            browser: browser)
         }
 
         // The diff is taken from the retained tree closest to what was asked
@@ -454,19 +497,29 @@ actor Session {
         let diff = SnapshotDiffer.diff(from: base?.node, to: outcome.root,
                                        fromRevision: base?.revision ?? 0)
         return Snapshot(window: id, revision: outcome.revision, root: nil, diff: diff,
-                        provenance: outcome.provenance, stateHash: outcome.hash)
+                        provenance: outcome.provenance, stateHash: outcome.hash,
+                        browser: browser)
     }
 
     func find(window id: String, predicate: FindPredicate, limit: Int) throws -> JSONValue {
-        _ = try windowHandle(id)
+        let handle = try windowHandle(id)
         let nodes = try ax.find(window: id, predicate: predicate, limit: limit)
-        return .object([
+        var out: [String: JSONValue] = [
             "window": .string(id),
             "predicate": predicate.described,
             "count": .number(Double(nodes.count)),
             "truncated": .bool(nodes.count >= limit),
             "nodes": .array(try nodes.map { try JSONValue.encode($0) })
-        ])
+        ]
+        // The matched nodes already carry their frames, so deciding whether this
+        // find reached page content costs no extra accessibility traffic — every
+        // match is considered, not a prefix of them. A predicate that ranks the
+        // toolbar first and the page fifth still reaches the page.
+        let targets = nodes.compactMap(\.frame)
+        if let handoff = browserHandoff(window: handle, targets: targets) {
+            out["browser"] = try JSONValue.encode(handoff)
+        }
+        return .object(out)
     }
 
     // MARK: - proctor_capture

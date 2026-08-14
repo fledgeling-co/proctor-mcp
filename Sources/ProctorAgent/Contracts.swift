@@ -48,6 +48,17 @@ protocol AXEngine: AnyObject, Sendable {
 
     /// Which window a node belongs to; used to route capture and settle.
     func windowOf(node: String) -> String?
+
+    /// The web areas in a window: what each says its URL is, and where it sits.
+    /// Nil when the window holds none.
+    ///
+    /// One downward walk answers every question this feature asks — is the window
+    /// showing a page, is a named element inside it, is a coordinate inside it —
+    /// because containment is geometric. Walking up from each element instead
+    /// would be an accessibility round trip per level of a DOM, per target.
+    /// Only ever called for an application the browser catalogue already matched,
+    /// so a native app pays nothing for it.
+    func webContent(window: String) throws -> WebContentProbe?
 }
 
 struct FindPredicate: Sendable {
