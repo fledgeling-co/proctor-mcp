@@ -96,6 +96,7 @@ final class RunHUDPanel {
     private var scheduler: RunScheduler?
 
     func bind(scheduler: RunScheduler) { self.scheduler = scheduler }
+    private var motionObserver: NSObjectProtocol?
     /// Bumped every time the panel is presented. A fade started for one run must
     /// not order the panel out from under the next one — a stability sweep can
     /// start its next pass well inside the fade it just triggered.
@@ -327,6 +328,20 @@ final class RunHUDPanel {
             object: nil, queue: .main) { [weak view] _ in
                 MainActor.assumeIsolated { view?.needsDisplay = true }
             }
+
+        // Reduce Motion is read at the moment a loop is handed over, so a run
+        // already in flight when somebody turns it on would keep moving until
+        // its next state change. The panel's fade was the only thing that read
+        // this setting before the character and the rail glow arrived; both are
+        // re-applied here rather than left to the next step.
+        motionObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+            object: nil, queue: .main) { [weak view] _ in
+                MainActor.assumeIsolated {
+                    view?.needsDisplay = true
+                    view?.syncAccessories()
+                }
+            }
         return created
     }
 
@@ -343,6 +358,10 @@ final class RunHUDPanel {
         content.model = state.model
         content.elapsed = runStarted.map { Date().timeIntervalSince($0) } ?? 0
         content.needsDisplay = true
+        // The character's loop and the rail's pulse are handed to the render
+        // server, not redrawn: this pushes the state into them and they decide
+        // whether anything actually changed.
+        content.syncAccessories()
 
         // Get out of the way of the agent's own synthetic events. A `click`,
         // `hover` or `dragPath` step is posted into the WindowServer stream at a

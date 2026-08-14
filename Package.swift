@@ -18,7 +18,12 @@ let package = Package(
     ],
     targets: [
         .target(name: "ProctorCore"),
-        .executableTarget(name: "ProctorAgent", dependencies: ["ProctorCore"]),
+        // The run HUD's character ships inside the binary's resource bundle: an
+        // agent holding these permissions has no business reaching the network
+        // to draw itself, and a picture fetched mid-run is a picture that can
+        // fail mid-run.
+        .executableTarget(name: "ProctorAgent", dependencies: ["ProctorCore"],
+                          resources: [.copy("Resources/character")]),
         .executableTarget(name: "ProctorShim", dependencies: ["ProctorCore"]),
         .executableTarget(name: "ProctorUI", dependencies: ["ProctorCore"]),
         .target(name: "ProctorReflector", exclude: ["README.md"]),

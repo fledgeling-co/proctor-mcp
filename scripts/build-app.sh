@@ -73,6 +73,17 @@ else
   say "            already points at Proctor.icns, so dropping one in is enough."
 fi
 
+# SwiftPM puts a target's resources in its own bundle beside the binary, and
+# `Bundle.module` looks for that bundle in the main bundle's Resources. Copying
+# it here — before signing, so the signature seals it — is what puts the run
+# HUD's character in a build that anyone else runs. Without it the bay is empty
+# and the run carries on, which is deliberate but is not what shipped art is for.
+for resource_bundle in "$BIN_DIR"/*.bundle; do
+  [ -e "$resource_bundle" ] || continue
+  cp -R "$resource_bundle" "$RESOURCES_DIR/"
+  say "    resources: $(basename "$resource_bundle")"
+done
+
 # PkgInfo is legacy but costs nothing and keeps older tooling happy.
 printf 'APPL????' > "$CONTENTS/PkgInfo"
 

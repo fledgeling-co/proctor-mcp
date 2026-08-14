@@ -129,6 +129,50 @@ final class RunHUDContentView: NSView {
     /// position.
     private var dropRects: [(rect: NSRect, run: Int)] = []
 
+    /// The two things on this panel that move, as subviews rather than as
+    /// sublayers: a subview's frame is unambiguously in this view's own flipped
+    /// coordinates, where a raw sublayer's depends on whether AppKit flipped the
+    /// backing layer's geometry — a difference nothing here could check without
+    /// a display.
+    private let character = RunHUDCharacterView(frame: .zero)
+    private let railFill = RunHUDRailView(frame: .zero)
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        addSubview(character)
+        addSubview(railFill)
+    }
+
+    required init?(coder: NSCoder) { fatalError("not from a nib") }
+
+    /// Where the character sits: the bay, inset from the grip.
+    static func bayRect() -> NSRect {
+        let gripMaxX = RunHUDLayout.pad + 10
+        return NSRect(x: gripMaxX + 11, y: 13,
+                      width: RunHUDLayout.bay, height: RunHUDLayout.bay)
+    }
+
+    override func layout() {
+        super.layout()
+        character.frame = Self.bayRect()
+        let width = bounds.width * CGFloat(model.progress)
+        railFill.frame = NSRect(x: 0, y: bounds.height - RunHUDLayout.rail,
+                                width: width, height: RunHUDLayout.rail)
+    }
+
+    /// Push the model into the two moving pieces. Separate from `needsDisplay`
+    /// because a loop restarted on every 1 Hz clock tick is a twitch, not a
+    /// motion, and because what moves is decided in Core rather than here.
+    func syncAccessories() {
+        needsLayout = true
+        character.show(model.phase)
+        railFill.apply(
+            colour: palette.colour(for: model.tone),
+            glow: RunHUDMotion.railGlow(
+                for: model.phase,
+                reduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion))
+    }
+
     override var isFlipped: Bool { true }
 
     /// An application that is never frontmost gets the first click only if its
@@ -252,7 +296,9 @@ final class RunHUDContentView: NSView {
         let queueTop = RunHUDLayout.queueTop(exception: hasException)
         drawQueue(p: p, top: queueTop)
         drawFoot(p: p, live: live, top: queueTop + RunHUDLayout.queueBlock(model.queue))
-        drawRail(p: p, live: live)
+        // Only the track. PRO-0017 moved the progress fill into `railFill`, a
+        // hosted layer, so that it can pulse without the width transitioning.
+        drawRail(p: p)
     }
 
     private func drawLiveLine(p: RunHUDPalette, live: NSColor) {
@@ -269,11 +315,12 @@ final class RunHUDContentView: NSView {
             }
         }
 
-        // The character's bay. Empty here by design: the sprite is PRO-0017, and
-        // the bay stays dark in both appearances because the character is
-        // white-bodied and would vanish on the light panel.
-        let bay = NSRect(x: gripRect.maxX + 11, y: 13,
-                         width: RunHUDLayout.bay, height: RunHUDLayout.bay)
+        // The character's bay. The well is drawn here and the sprite sits in it
+        // as a subview, clipped to the same rounded rect — so a raised arm or a
+        // trail of speed lines runs off the edge of the well rather than out
+        // across the panel. The bay stays dark in both appearances because the
+        // character is white-bodied and would vanish on the light panel.
+        let bay = Self.bayRect()
         let bayPath = NSBezierPath(roundedRect: bay, xRadius: 9, yRadius: 9)
         p.bay.setFill()
         bayPath.fill()
@@ -613,18 +660,16 @@ final class RunHUDContentView: NSView {
 
     /// The rail is the panel's own bottom edge, filled in the live colour.
     ///
-    /// Nothing on this panel animates in this build — the reference's rail glow
-    /// and the character's motion arrive with the sprite (PRO-0017) — so reduced
-    /// motion has nothing to suppress here, and every state stays readable from
-    /// its words and its colour alone, which is the property that has to hold
-    /// whether or not anything moves.
-    private func drawRail(p: RunHUDPalette, live: NSColor) {
+    /// Only the track is drawn here. The filled part is a layer, so the
+    /// reference's pulse while a run is moving is committed to the render server
+    /// once rather than serviced by this process — and so a person's Reduce
+    /// Motion setting can stop it by simply not adding the animation. Every
+    /// state stays readable from its words and its colour with nothing moving,
+    /// which is the property that has to hold either way.
+    private func drawRail(p: RunHUDPalette) {
         let y = bounds.height - RunHUDLayout.rail
         p.fill.setFill()
         NSRect(x: 0, y: y, width: bounds.width, height: RunHUDLayout.rail).fill()
-        live.setFill()
-        NSRect(x: 0, y: y, width: bounds.width * CGFloat(model.progress),
-               height: RunHUDLayout.rail).fill()
     }
 
     private func drawGlyph(_ outcome: RunHUDModel.Row.Outcome, colour: NSColor, in rect: NSRect) {
