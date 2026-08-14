@@ -77,6 +77,17 @@ The distinction is not a performance detail. A test that passed via
 `accessibility` — it proves the app responds when it owns the screen, not that
 the control is reachable. Never collapse the two into a single "it worked".
 
+**The route, beside the plane.** `ActuationPlane` stays coarse because
+`ForegroundReport` counts `syntheticEvent` on it, and splitting it would change
+what "this run took the foreground" measures. But two steps can both report
+`accessibility` and have got there differently, so `StepResult.route` names how:
+`valueWrite`, `selectedText`, `scrollBar`, `scrollAction`, `action`,
+`eventStream`, `appleEvent`, `declared`. That is what makes "an attribute write
+was found rather than the foreground being taken" visible instead of inferred.
+`type` and `scroll` each hold more than one accessibility route and try all of
+them before conceding, and every write is judged by reading it back, because AX
+reports success for a set the application then discards.
+
 ## Settling
 
 Settling is a conjunction of independent signals, never a sleep. `SettlePolicy`

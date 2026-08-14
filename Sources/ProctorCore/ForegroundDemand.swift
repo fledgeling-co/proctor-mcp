@@ -31,6 +31,15 @@ import Foundation
 // Which kinds are which is the agent's business — it owns the actuator — so
 // both sets are passed in rather than named here, exactly as `LaneDemand`
 // already takes `synthetic`.
+//
+// And asking for the foreground is not the same as needing it. Nothing
+// activates an application except a synthetic post, so `foreground: true` on a
+// batch with no step that could ever post is a request with nothing to spend
+// itself on: it used to take the exclusive global lane, arm a contention watch
+// and announce a takeover, all for a run that then travelled the accessibility
+// plane and left the machine alone. The predicate below is "might post, or
+// raises" rather than "was asked", and the dead request is disclosed on the
+// report instead of being honoured.
 
 /// What a batch will do to the foreground, decided from its steps before it runs.
 public struct ForegroundDemand: Hashable, Sendable {
@@ -65,7 +74,32 @@ public struct ForegroundDemand: Hashable, Sendable {
     /// and the one a decision to hold a run should be made on: everything it
     /// counts is knowable now and cannot turn out otherwise.
     public var takesForeground: Bool {
-        certainSteps > 0 || raises || requestedForeground
+        mightPost || raises
+    }
+
+    /// Could any step in this batch reach the event stream?
+    ///
+    /// A certain step always can. A conditional one can only when the batch
+    /// asked for the front, because the actuator *refuses* the synthetic
+    /// fallback outright when `foreground` is false rather than activating
+    /// behind the caller's back — so `requestedForeground` is a precondition of
+    /// posting rather than a second reason for it.
+    ///
+    /// Which is why `requestedForeground` alone is not enough. A batch of
+    /// `press` and `setValue` steps that asked for the front never calls
+    /// `activate`, because nothing in it has anywhere to use the front: the
+    /// request is a habit, not a plan, and honouring it costs the exclusive
+    /// global lane, a contention watch and a line on the panel announcing a
+    /// takeover that never happens.
+    public var mightPost: Bool {
+        certainSteps > 0 || (requestedForeground && conditionalSteps > 0)
+    }
+
+    /// The batch asked for the front and no step in it could ever have used
+    /// one. Disclosed rather than silently corrected, so a caller passing
+    /// `foreground: true` out of habit finds out.
+    public var requestWasInert: Bool {
+        requestedForeground && !mightPost && !raises
     }
 
     /// It might. Disclosure only, and deliberately not the scheduler's predicate
@@ -122,6 +156,9 @@ public struct ForegroundDemand: Hashable, Sendable {
         // any step needing the event stream. Worth saying, and there is no count
         // to put on it.
         if takesForeground { return "This run brings \(who) to the front" }
+        // A `foreground: true` no step can use is not an exception to announce.
+        // Accessibility is the rule and is never announced, and this batch is
+        // going to travel it whatever the flag says.
         return nil
     }
 }
@@ -144,14 +181,20 @@ public struct ForegroundReport: Codable, Sendable, Equatable {
     /// Whether the batch took the foreground at all, on the same predicate the
     /// scheduler used.
     public var ranInForeground: Bool
+    /// The batch asked for the foreground and nothing in it could use one, so
+    /// the request was not honoured. Said rather than silently corrected: a
+    /// caller passing `foreground: true` by habit is paying nothing for it now,
+    /// and would otherwise never learn that it was doing nothing before.
+    public var requestIgnored: Bool
 
     public init(declaredCertain: Int, declaredConditional: Int, measured: Int,
-                totalSteps: Int, ranInForeground: Bool) {
+                totalSteps: Int, ranInForeground: Bool, requestIgnored: Bool = false) {
         self.declaredCertain = declaredCertain
         self.declaredConditional = declaredConditional
         self.measured = measured
         self.totalSteps = totalSteps
         self.ranInForeground = ranInForeground
+        self.requestIgnored = requestIgnored
     }
 
     public static func from(_ demand: ForegroundDemand, planes: [ActuationPlane?]) -> ForegroundReport {
@@ -159,13 +202,23 @@ public struct ForegroundReport: Codable, Sendable, Equatable {
                          declaredConditional: demand.conditionalSteps,
                          measured: planes.count(where: { $0 == .syntheticEvent }),
                          totalSteps: demand.totalSteps,
-                         ranInForeground: demand.takesForeground)
+                         ranInForeground: demand.takesForeground,
+                         requestIgnored: demand.requestWasInert)
     }
 
     /// One sentence for a caller that reads prose rather than fields. Nil when
     /// nothing needed the front, because there is nothing to disclose.
     public var note: String? {
-        guard measured > 0 || ranInForeground else { return nil }
+        guard measured > 0 || ranInForeground else {
+            // One exception to "nothing to disclose": the caller asked for the
+            // front and no step could have used it. Nothing was taken, which is
+            // the good outcome, but the request is dead weight in whatever
+            // produced it and will go on being so until somebody is told.
+            return requestIgnored
+                ? "This run asked for the foreground and no step in it could use one, so "
+                + "the request was ignored and the run stayed in the background."
+                : nil
+        }
         guard measured > 0 else {
             return "This run brought the application to the front, so the result is not a "
                  + "background-safe one."

@@ -461,6 +461,37 @@ public enum ActuationPlane: String, Codable, Sendable {
     case syntheticEvent  // CGEventPost — foreground session only, flagged as a different mode
 }
 
+/// *How* a step travelled, where the plane says only *which side* it travelled.
+///
+/// The plane is the fact that matters to a caller deciding whether a run was
+/// background-safe, and it stays coarse for that reason: `ForegroundReport`
+/// counts `.syntheticEvent` on it, so splitting the plane would change what
+/// "this run took the foreground" measures. But two steps can both report
+/// `.accessibility` and have got there by different means — a value write, a
+/// write into the selection when the value refused, an action, a scroll bar —
+/// and the difference is exactly what "we found another route rather than
+/// taking the foreground" looks like from outside.
+public enum ActuationRoute: String, Codable, Sendable {
+    case action          // AXUIElementPerformAction
+    case valueWrite      // AXValue set
+    case selectedText    // AXSelectedText set over the whole value
+    case scrollBar       // a scroll bar's AXValue set
+    case scrollAction    // AXScrollDownByPage and friends
+    case eventStream     // CGEventPost
+    case appleEvent
+    case declared
+}
+
+/// What one actuation did: the plane it travelled and the route it took there.
+public struct Actuation: Sendable, Equatable {
+    public var plane: ActuationPlane
+    public var route: ActuationRoute?
+    public init(_ plane: ActuationPlane, _ route: ActuationRoute? = nil) {
+        self.plane = plane
+        self.route = route
+    }
+}
+
 public struct ActionStep: Codable, Sendable {
     public var kind: Kind
     public var node: String?
@@ -527,6 +558,8 @@ public struct StepResult: Codable, Sendable {
     public var step: ActionStep
     public var ok: Bool
     public var plane: ActuationPlane?
+    /// How it got there. Absent for a step that never ran.
+    public var route: ActuationRoute?
     public var error: AgentError?
     public var settle: SettleReport?
     public var stateHash: String?
@@ -534,10 +567,10 @@ public struct StepResult: Codable, Sendable {
     public var elapsedMs: Int
     public init(index: Int, step: ActionStep, ok: Bool, plane: ActuationPlane?,
                 error: AgentError?, settle: SettleReport?, stateHash: String?,
-                diff: SnapshotDiff?, elapsedMs: Int) {
+                diff: SnapshotDiff?, elapsedMs: Int, route: ActuationRoute? = nil) {
         self.index = index; self.step = step; self.ok = ok; self.plane = plane
         self.error = error; self.settle = settle; self.stateHash = stateHash
-        self.diff = diff; self.elapsedMs = elapsedMs
+        self.diff = diff; self.elapsedMs = elapsedMs; self.route = route
     }
 }
 

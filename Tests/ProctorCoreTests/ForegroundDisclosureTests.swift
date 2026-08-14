@@ -55,11 +55,60 @@ struct ForegroundDemandTests {
         #expect(d.mayTakeForeground)
     }
 
-    @Test("a raise and a bare foreground request both take the front without a synthetic step")
+    @Test("a raise takes the front without a synthetic step; a bare request does not")
     func raiseAndRequest() {
         #expect(demand([.press, .raise]).takesForeground)
-        #expect(demand([.press], foreground: true).takesForeground)
+        // PRO-0025. Nothing activates an application except a synthetic post, so
+        // `foreground: true` over a batch that cannot post is a request with
+        // nothing to spend itself on. It used to take the exclusive lane, arm a
+        // contention watch and announce a takeover for a run that then travelled
+        // the accessibility plane and left the machine alone.
+        #expect(!demand([.press], foreground: true).takesForeground)
+        #expect(demand([.press], foreground: true).requestWasInert)
         #expect(!demand([.press]).takesForeground)
+    }
+
+    @Test("a foreground request still counts when a step in the batch could use it")
+    func requestWithSomethingToSpendItOn() {
+        // A `type` reaches the event stream only when the batch asked for the
+        // front — the actuator refuses the fallback outright otherwise — so the
+        // request is a precondition of posting here, not a habit.
+        let typing = demand([.type], foreground: true)
+        #expect(typing.mightPost)
+        #expect(typing.takesForeground)
+        #expect(!typing.requestWasInert)
+        // And without the request the same batch cannot post at all.
+        #expect(!demand([.type]).takesForeground)
+        // A certain kind needs no request.
+        #expect(demand([.click]).takesForeground)
+    }
+
+    @Test("a raise with a dead foreground request is still a raise")
+    func raiseOutranksInertness() {
+        let d = demand([.raise], foreground: true)
+        #expect(d.takesForeground)
+        #expect(!d.requestWasInert)
+    }
+
+    @Test("an ignored request is reported rather than silently corrected")
+    func inertRequestIsDisclosed() {
+        let d = demand([.press, .setValue], foreground: true)
+        let report = ForegroundReport.from(d, planes: [.accessibility, .accessibility])
+        #expect(report.requestIgnored)
+        #expect(!report.ranInForeground)
+        #expect(report.measured == 0)
+        #expect(report.note?.contains("the request was ignored") == true)
+        // And a batch that asked for nothing has nothing to say.
+        let quiet = ForegroundReport.from(demand([.press]), planes: [.accessibility])
+        #expect(!quiet.requestIgnored)
+        #expect(quiet.note == nil)
+    }
+
+    @Test("an inert request says nothing on the panel either")
+    func inertRequestIsNotAnnounced() {
+        // Accessibility is the rule and is never announced, and this batch is
+        // going to travel it whatever the flag said.
+        #expect(demand([.press, .menu], foreground: true).notice(app: "Acme Console") == nil)
     }
 
     @Test("takesForeground is exactly the predicate the scheduler already applied")
@@ -71,7 +120,12 @@ struct ForegroundDemandTests {
             for other in ActionStep.Kind.allCases {
                 for foreground in [false, true] {
                     let kinds = [kind, other]
+                    // The conditional set goes to both, which is the whole point:
+                    // a predicate that cannot see `type` and `scroll` cannot tell
+                    // a foreground batch that could post from one that asked out
+                    // of habit, and the two would drift apart on exactly that.
                     let lanes = LaneDemand.forBatch(kinds: kinds, synthetic: synthetic,
+                                                    conditional: conditional,
                                                     app: "app-1", foreground: foreground)
                     let d = demand(kinds, foreground: foreground)
                     #expect(lanes.needsGlobal == d.takesForeground,

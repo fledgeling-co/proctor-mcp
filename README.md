@@ -198,6 +198,19 @@ Event Input, and they are returned with `plane=syntheticEvent` so a result is
 never mistaken for a background-safe one. Reserve them for what accessibility
 genuinely cannot express.
 
+**The background route is taken wherever one exists.** `type` and `scroll`
+prefer the accessibility plane and try more than one route on it before
+conceding the front: a field that refuses an `AXValue` write is written through
+a selection covering its whole value, and an element with no scroll action of
+its own is scrolled by the enclosing scroll area's bar. Every write is read back
+rather than believed, because AX reports success for a set the application then
+discards. Each step result says which route it took in `route` — `valueWrite`,
+`selectedText`, `scrollBar`, `scrollAction`, `action`, `eventStream`,
+`appleEvent`, `declared` — beside the coarser `plane`. And `foreground: true`
+over a batch where no step could use it is ignored rather than honoured, since
+nothing brings an application forward except a synthetic post; the `foreground`
+block reports that as `requestIgnored`.
+
 **There is no cross-process computed-style API on macOS.** Nothing is equivalent
 to `getComputedStyle` across a process boundary. For an app you do not own, the
 ceiling is the accessibility tree plus pixels — which is a real ceiling, not a

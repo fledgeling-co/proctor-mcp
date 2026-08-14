@@ -271,7 +271,7 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
 
     // MARK: - Actuation
 
-    func perform(step: ActionStep, window: String, foreground: Bool) throws -> ActuationPlane {
+    func perform(step: ActionStep, window: String, foreground: Bool) throws -> Actuation {
         let target = try withLock { () -> ActuationTarget in
             let session = try sessionOwning(window: window)
             var node: AXUIElement?

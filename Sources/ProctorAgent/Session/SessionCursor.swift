@@ -25,23 +25,43 @@ extension Session {
     /// Draw the step before it runs. Best-effort throughout: the overlay is an
     /// annotation, so a target that cannot be resolved yields no movement rather
     /// than a failed step.
-    func showCursor(for step: ActionStep) async {
+    ///
+    /// The window is passed in because where the pointer belongs is a fact about
+    /// the window being driven, not about the step: it is drawn in that window's
+    /// own plane, so a window stacked above the target covers it, and it is not
+    /// drawn at all when the target is not on screen.
+    func showCursor(for step: ActionStep, window: WindowHandle) async {
         guard CursorOverlay.isEnabled else { return }
+        let plane = cursorPlane(for: window)
 
         if step.kind == .dragPath {
             let route = cursorRoute(for: step)
             if route.count >= 2 {
                 await CursorOverlay.shared.drag(along: route,
-                                                durationMs: step.durationMs ?? 300)
+                                                durationMs: step.durationMs ?? 300,
+                                                plane: plane)
                 return
             }
         }
 
         guard let target = cursorTarget(for: step) else { return }
-        await CursorOverlay.shared.travel(to: target)
+        await CursorOverlay.shared.travel(to: target, plane: plane)
         if Self.pulsingKinds.contains(step.kind) {
             await CursorOverlay.shared.click()
         }
+    }
+
+    /// Where this window's pointer belongs, from the window list rather than
+    /// from accessibility. A window that is minimised, hidden, or on another
+    /// Space is absent from the on-screen list, and all three mean the same
+    /// thing: there is nothing in front of anybody for this pointer to annotate.
+    /// `WindowHandle.isMinimized` and `isOnActiveSpace` are beliefs recorded
+    /// when the handle was made; the list is the instrument.
+    func cursorPlane(for window: WindowHandle) -> PointerPlane {
+        let onScreen = CGWindowIndex.records(option: .optionOnScreenOnly)
+            .contains { $0.number == window.cgWindowID }
+        return PointerPlanePolicy.decide(targetWindowID: window.cgWindowID,
+                                         targetIsOnScreen: onScreen)
     }
 
     /// The point a step acts on, in screen points.

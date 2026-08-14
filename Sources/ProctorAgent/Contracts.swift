@@ -33,7 +33,7 @@ protocol AXEngine: AnyObject, Sendable {
 
     /// Perform one step through the process-directed plane. Returns the plane
     /// actually used, since a step may fall back from a declared contract.
-    func perform(step: ActionStep, window: String, foreground: Bool) throws -> ActuationPlane
+    func perform(step: ActionStep, window: String, foreground: Bool) throws -> Actuation
 
     /// Read the app's menu bar as a raw tree for key-equivalent reconstruction.
     /// Returns nil when the app exposes no menu bar (agent-style apps have none).

@@ -9,6 +9,21 @@ import ProctorCore
 // is not frontmost, is occluded, or is on another Space, without stealing
 // focus, and Secure Event Input does not block it. The synthetic-event kinds
 // are the exception and say so in the plane they return.
+//
+// Two kinds have more than one accessibility route, and they try all of them
+// before conceding the foreground. `type` writes the value, and if that is
+// refused — or accepted and quietly ignored, which is what a web input usually
+// does — writes into a full-value selection instead. `scroll` moves the
+// element's own scroll bar, then its by-page action, then the scroll bar of the
+// scroll area that encloses it. Every one of those keeps the run in the
+// background, and which one was taken is reported rather than left to be
+// inferred from a plane that cannot tell them apart.
+//
+// A write is judged by reading it back, never by its return code. AX reports
+// success for a set that the application then discards, and a step that reports
+// a background success while having done nothing is worse than one that falls
+// back honestly: it is indistinguishable, from outside, from the case this
+// whole file exists to produce.
 
 struct ActuationTarget {
     var pid: pid_t
@@ -22,8 +37,14 @@ enum Actuator {
 
     static let shortcutTimeout: TimeInterval = 10
 
+    /// How far up the parent chain to look for the scroll area enclosing an
+    /// element. Deep enough to clear the handful of groups a scrollable list is
+    /// usually wrapped in, shallow enough that a miss costs a bounded number of
+    /// round trips rather than a walk to the application element.
+    static let scrollAncestorLimit = 12
+
     static func perform(_ step: ActionStep, target: ActuationTarget,
-                        foreground: Bool) throws -> ActuationPlane {
+                        foreground: Bool) throws -> Actuation {
         if let node = target.node { AXUIElementSetMessagingTimeout(node, AXTimeout.action) }
         if let window = target.windowElement {
             AXUIElementSetMessagingTimeout(window, AXTimeout.action)
@@ -50,14 +71,14 @@ enum Actuator {
             let element = try element(step, target)
             let err = AXWrite.set(element, kAXFocusedAttribute, kCFBooleanTrue)
             guard err.isSuccess else { throw err.asAgentError("focus") }
-            return .accessibility
+            return Actuation(.accessibility, .valueWrite)
 
         case .setValue:
             let element = try element(step, target)
             let value = step.value ?? (step.text.map { JSONValue.string($0) } ?? .null)
             let err = AXWrite.set(element, kAXValueAttribute, AXWrite.cfValue(from: value))
             guard err.isSuccess else { throw err.asAgentError("setValue") }
-            return .accessibility
+            return Actuation(.accessibility, .valueWrite)
 
         case .type:
             return try type(step, target, foreground: foreground)
@@ -89,7 +110,7 @@ enum Actuator {
         case .waitFor:
             // The session layer owns waiting; the step exists so a flow can
             // express the pause without the engine inventing a policy.
-            return .accessibility
+            return Actuation(.accessibility, .action)
         }
     }
 
@@ -104,7 +125,7 @@ enum Actuator {
     }
 
     private static func act(_ step: ActionStep, _ target: ActuationTarget,
-                            _ action: String, preferWindow: Bool = false) throws -> ActuationPlane {
+                            _ action: String, preferWindow: Bool = false) throws -> Actuation {
         let element: AXUIElement
         if preferWindow, target.node == nil, let window = target.windowElement {
             element = window
@@ -127,10 +148,10 @@ enum Actuator {
         }
         let err = AXUIElementPerformAction(element, action as CFString)
         guard err.isSuccess else { throw err.asAgentError(action) }
-        return .accessibility
+        return Actuation(.accessibility, .action)
     }
 
-    private static func close(_ step: ActionStep, _ target: ActuationTarget) throws -> ActuationPlane {
+    private static func close(_ step: ActionStep, _ target: ActuationTarget) throws -> Actuation {
         let window = target.node ?? target.windowElement
         guard let window else {
             throw AgentError(code: .windowNotFound, message: "close needs a window")
@@ -138,39 +159,64 @@ enum Actuator {
         if let button = AXRead.element(window, kAXCloseButtonAttribute) {
             let err = AXUIElementPerformAction(button, kAXPressAction as CFString)
             guard err.isSuccess else { throw err.asAgentError("close") }
-            return .accessibility
+            return Actuation(.accessibility, .action)
         }
         for child in AXRead.elements(window, kAXChildrenAttribute)
         where AXRead.string(child, kAXSubroleAttribute) == "AXCloseButton" {
             let err = AXUIElementPerformAction(child, kAXPressAction as CFString)
             guard err.isSuccess else { throw err.asAgentError("close") }
-            return .accessibility
+            return Actuation(.accessibility, .action)
         }
         throw AgentError(code: .actionUnsupported,
                          message: "no AXCloseButton on this window",
                          remedy: "Close it through the app's File menu instead.")
     }
 
+    // MARK: - Typing
+
+    /// Two accessibility routes before the one that costs the foreground.
+    ///
+    /// The value write is tried first and **read back**, because a web input or
+    /// a custom text view commonly accepts the write and does nothing with it.
+    /// Without the read-back that case reports a background success that never
+    /// happened, and — worse for this step — it would stop the second route
+    /// from ever being reached on exactly the fields that need it.
+    ///
+    /// The second route writes into a selection covering the whole value, which
+    /// is what a text view that refuses `AXValue` usually does accept. It is
+    /// only attempted when the value can be read (to know the length) and the
+    /// existing selection can be read (to put it back), because `AXSelectedText`
+    /// with no selection *inserts at the caret* — a different outcome from the
+    /// replace this verb has always meant — and a field left selected end to end
+    /// would be emptied by the first keystroke of the fallback below.
     private static func type(_ step: ActionStep, _ target: ActuationTarget,
-                             foreground: Bool) throws -> ActuationPlane {
+                             foreground: Bool) throws -> Actuation {
         let element = try self.element(step, target)
         let text = step.text ?? step.value?.stringValue ?? ""
 
         if AXWrite.isSettable(element, kAXValueAttribute) {
             let err = AXWrite.set(element, kAXValueAttribute, text as CFString)
-            if err.isSuccess { return .accessibility }
+            if err.isSuccess, valueReads(element, as: text) {
+                return Actuation(.accessibility, .valueWrite)
+            }
         }
 
-        // Not settable: the field is a custom text view or a web input, and the
-        // only route left enters the shared event stream, so the app has to be
-        // frontmost and the plane reported is a different one. A caller who asked
-        // to stay in the background gets told, rather than getting a foreground
-        // action wearing a background result.
+        if typeIntoSelection(element, text) {
+            return Actuation(.accessibility, .selectedText)
+        }
+
+        // No accessibility route left: the field is a custom text view or a web
+        // input that refuses both, and the only route remaining enters the
+        // shared event stream, so the app has to be frontmost and the plane
+        // reported is a different one. A caller who asked to stay in the
+        // background gets told, rather than getting a foreground action wearing
+        // a background result.
         guard foreground else {
             throw AgentError(
                 code: .actionUnsupported,
-                message: "this field's value is not settable through the accessibility plane, "
-                       + "and typing into it needs the app in the foreground",
+                message: "this field's value is settable through neither an accessibility value "
+                       + "write nor a write into its selection, and typing into it needs the app "
+                       + "in the foreground",
                 remedy: "Re-run this step with foreground true, or set the value on an "
                       + "ancestor or sibling element that does accept a value write.",
                 detail: .object(["node": .string(target.nodeId ?? "")]))
@@ -179,10 +225,43 @@ enum Actuator {
         try activate(target.pid)
         try requireEventPlaneAvailable()
         postUnicode(text)
-        return .syntheticEvent
+        return Actuation(.syntheticEvent, .eventStream)
     }
 
-    private static func geometry(_ step: ActionStep, _ target: ActuationTarget) throws -> ActuationPlane {
+    /// Replace the whole value by writing into a selection that covers it.
+    /// Returns whether the text actually landed; on any failure the selection is
+    /// put back where it was.
+    private static func typeIntoSelection(_ element: AXUIElement, _ text: String) -> Bool {
+        guard AXWrite.isSettable(element, kAXSelectedTextAttribute),
+              let current = AXRead.string(element, kAXValueAttribute),
+              let original = AXRead.raw(element, kAXSelectedTextRangeAttribute)
+        else { return false }
+
+        var whole = CFRange(location: 0, length: current.utf16.count)
+        guard let range = AXValueCreate(.cfRange, &whole) else { return false }
+        guard AXWrite.set(element, kAXSelectedTextRangeAttribute, range).isSuccess else {
+            return false
+        }
+        let wrote = AXWrite.set(element, kAXSelectedTextAttribute, text as CFString)
+        if wrote.isSuccess, valueReads(element, as: text) { return true }
+        AXWrite.set(element, kAXSelectedTextRangeAttribute, original)
+        return false
+    }
+
+    /// Did the write take? An unreadable value is treated as "took": a field
+    /// that will not report its own value cannot be checked, and refusing to
+    /// believe an accepted write on that ground would push every such field to
+    /// the event stream, which is the cost this whole path exists to avoid.
+    static func tookValue(read: String?, expected: String) -> Bool {
+        guard let read else { return true }
+        return read == expected
+    }
+
+    private static func valueReads(_ element: AXUIElement, as text: String) -> Bool {
+        tookValue(read: AXRead.string(element, kAXValueAttribute), expected: text)
+    }
+
+    private static func geometry(_ step: ActionStep, _ target: ActuationTarget) throws -> Actuation {
         let element = target.node ?? target.windowElement
         guard let element else {
             throw AgentError(code: .windowNotFound, message: "\(step.kind.rawValue) needs a window")
@@ -207,7 +286,7 @@ enum Actuator {
             let err = AXWrite.set(element, kAXSizeAttribute, value)
             guard err.isSuccess else { throw err.asAgentError("resize") }
         }
-        return .accessibility
+        return Actuation(.accessibility, .valueWrite)
     }
 
     // MARK: - Menus
@@ -215,7 +294,7 @@ enum Actuator {
     /// Driving the menu bar is the most reliable background-safe route into an
     /// app: the menu tree is process-directed, so it works while the app is
     /// behind other windows and needs no synthetic event.
-    private static func menu(_ step: ActionStep, _ target: ActuationTarget) throws -> ActuationPlane {
+    private static func menu(_ step: ActionStep, _ target: ActuationTarget) throws -> Actuation {
         guard let path = step.menuPath, !path.isEmpty else {
             throw AgentError(code: .invalidArguments, message: "menu needs menuPath")
         }
@@ -242,7 +321,7 @@ enum Actuator {
             if index == path.count - 1 {
                 let err = AXUIElementPerformAction(match, kAXPressAction as CFString)
                 guard err.isSuccess else { throw err.asAgentError("menu press") }
-                return .accessibility
+                return Actuation(.accessibility, .action)
             }
             container = descend(into: match)
         }
@@ -293,18 +372,15 @@ enum Actuator {
     // MARK: - Scrolling
 
     private static func scroll(_ step: ActionStep, _ target: ActuationTarget,
-                               foreground: Bool) throws -> ActuationPlane {
+                               foreground: Bool) throws -> Actuation {
         let element = try self.element(step, target)
         let delta = step.delta ?? [0, -3]
         let dy = delta.count > 1 ? delta[1] : 0
         let dx = delta.first ?? 0
 
         if AXRead.string(element, kAXRoleAttribute) == kAXScrollBarRole,
-           AXWrite.isSettable(element, kAXValueAttribute) {
-            let current = AXRead.value(element)?.doubleValue ?? 0
-            let next = max(0, min(1, current + (dy / 100)))
-            let err = AXWrite.set(element, kAXValueAttribute, NSNumber(value: next))
-            if err.isSuccess { return .accessibility }
+           writeBar(element, by: dy != 0 ? dy : dx) {
+            return Actuation(.accessibility, .scrollBar)
         }
 
         let available = AXRead.actions(element)
@@ -315,7 +391,15 @@ enum Actuator {
             else { nil }
         if let wanted, available.contains(wanted) {
             let err = AXUIElementPerformAction(element, wanted as CFString)
-            if err.isSuccess { return .accessibility }
+            if err.isSuccess { return Actuation(.accessibility, .scrollAction) }
+        }
+
+        // The element is inside something scrollable even when it offers nothing
+        // itself — a cell in a list, a label in a document. The scroll area that
+        // encloses it owns bars that do take a value, and driving those is still
+        // the accessibility plane, so it is tried before conceding the front.
+        if scrollEnclosingArea(of: element, dx: dx, dy: dy) {
+            return Actuation(.accessibility, .scrollBar)
         }
 
         // Falling back to a scroll wheel event activates the app and enters the
@@ -325,8 +409,9 @@ enum Actuator {
         guard foreground else {
             throw AgentError(
                 code: .actionUnsupported,
-                message: "the accessibility scroll action was not accepted by this element, "
-                       + "and the scroll-wheel fallback needs the app in the foreground",
+                message: "the accessibility scroll action was not accepted by this element, no "
+                       + "enclosing scroll area's bar would take the value, and the scroll-wheel "
+                       + "fallback needs the app in the foreground",
                 remedy: "Re-run this step with foreground true to allow a synthetic scroll, "
                       + "or scroll by setting the scroll bar's value, which stays on the "
                       + "accessibility plane.",
@@ -347,7 +432,76 @@ enum Actuator {
         let event = CGEvent(scrollWheelEvent2Source: source, units: .pixel, wheelCount: 2,
                             wheel1: Int32(dy), wheel2: Int32(dx), wheel3: 0)
         event?.post(tap: .cghidEventTap)
-        return .syntheticEvent
+        return Actuation(.syntheticEvent, .eventStream)
+    }
+
+    /// Walk up to the nearest enclosing scroll area whose bars will take the
+    /// delta, and move every axis that was asked for. All-or-nothing per call:
+    /// a diagonal scroll that only moved sideways is not the scroll that was
+    /// asked for, so a partial result hands on to the next route rather than
+    /// reporting a success the caller cannot act on.
+    private static func scrollEnclosingArea(of element: AXUIElement,
+                                            dx: Double, dy: Double) -> Bool {
+        guard dx != 0 || dy != 0 else { return false }
+        var current: AXUIElement? = element
+        var depth = 0
+        while let node = current, depth < scrollAncestorLimit {
+            defer {
+                current = AXRead.element(node, kAXParentAttribute)
+                depth += 1
+            }
+            guard AXRead.string(node, kAXRoleAttribute) == kAXScrollAreaRole else { continue }
+
+            var wanted = 0, moved = 0
+            if dy != 0, let bar = AXRead.element(node, kAXVerticalScrollBarAttribute) {
+                wanted += 1
+                if writeBar(bar, by: dy) { moved += 1 }
+            }
+            if dx != 0, let bar = AXRead.element(node, kAXHorizontalScrollBarAttribute) {
+                wanted += 1
+                if writeBar(bar, by: dx) { moved += 1 }
+            }
+            // The first scroll area that answers at all is the one this element
+            // sits in; a further ancestor is somebody else's scroller.
+            if wanted > 0 { return moved == wanted }
+        }
+        return false
+    }
+
+    /// Move one scroll bar by a delta and confirm it moved.
+    ///
+    /// A bar's `AXValue` is its position in the document as a fraction, so the
+    /// delta is mapped the way the scroll-bar branch has always mapped it —
+    /// a hundredth of the document per unit. That mapping is crude, and it is
+    /// deliberately unchanged here: correcting it would change what every
+    /// already-working scroll does, which is a different item.
+    ///
+    /// A bar already at the end reads back unchanged and reports failure, which
+    /// is right: nothing moved, and a caller told otherwise would believe the
+    /// document had scrolled.
+    private static func writeBar(_ bar: AXUIElement, by delta: Double) -> Bool {
+        guard AXWrite.isSettable(bar, kAXValueAttribute) else { return false }
+        let before = AXRead.value(bar)?.doubleValue ?? 0
+        let next = scrollFraction(from: before, by: delta)
+        guard AXWrite.set(bar, kAXValueAttribute, NSNumber(value: next)).isSuccess else {
+            return false
+        }
+        guard let after = AXRead.value(bar)?.doubleValue else { return true }
+        return moved(from: before, to: after)
+    }
+
+    /// Where a bar ends up after a delta. A hundredth of the document per unit,
+    /// clamped to the ends, which is the mapping the scroll-bar branch has
+    /// always used.
+    static func scrollFraction(from current: Double, by delta: Double) -> Double {
+        max(0, min(1, current + (delta / 100)))
+    }
+
+    /// Whether a bar actually moved. A bar already at the end reads back
+    /// unchanged and counts as not moved, which is right: nothing scrolled, and
+    /// a caller told otherwise would believe the document had.
+    static func moved(from before: Double, to after: Double) -> Bool {
+        abs(after - before) > 1e-9
     }
 
     // MARK: - Synthetic events
@@ -367,7 +521,7 @@ enum Actuator {
         return source
     }
 
-    private static func key(_ step: ActionStep, _ target: ActuationTarget) throws -> ActuationPlane {
+    private static func key(_ step: ActionStep, _ target: ActuationTarget) throws -> Actuation {
         guard let name = step.key, !name.isEmpty else {
             throw AgentError(code: .invalidArguments, message: "key needs a key name")
         }
@@ -382,7 +536,7 @@ enum Actuator {
                                  remedy: "Use a name from the key table, or a single character.")
             }
             postUnicode(name)
-            return .syntheticEvent
+            return Actuation(.syntheticEvent, .eventStream)
         }
         let source = eventSource()
         for down in [true, false] {
@@ -391,10 +545,10 @@ enum Actuator {
             event.flags = flags
             event.post(tap: .cghidEventTap)
         }
-        return .syntheticEvent
+        return Actuation(.syntheticEvent, .eventStream)
     }
 
-    private static func pointer(_ step: ActionStep, _ target: ActuationTarget) throws -> ActuationPlane {
+    private static func pointer(_ step: ActionStep, _ target: ActuationTarget) throws -> Actuation {
         let point: CGPoint
         if let p = step.point, p.count >= 2 {
             point = CGPoint(x: p[0], y: p[1])
@@ -408,20 +562,20 @@ enum Actuator {
         try activate(target.pid)
         try requireEventPlaneAvailable()
         warpCursor(to: point)
-        guard step.kind == .click else { return .syntheticEvent }
+        guard step.kind == .click else { return Actuation(.syntheticEvent, .eventStream) }
 
         let source = eventSource()
         for type in [CGEventType.leftMouseDown, .leftMouseUp] {
             CGEvent(mouseEventSource: source, mouseType: type,
                     mouseCursorPosition: point, mouseButton: .left)?.post(tap: .cghidEventTap)
         }
-        return .syntheticEvent
+        return Actuation(.syntheticEvent, .eventStream)
     }
 
     /// There is no accessibility expression for a drag, so this is a synthetic
     /// gesture and reports itself as one.
     private static func drag(_ step: ActionStep, _ target: ActuationTarget,
-                             foreground: Bool) throws -> ActuationPlane {
+                             foreground: Bool) throws -> Actuation {
         let route = try dragRoute(step, target)
 
         // Activating the app to post the gesture answers a narrower question
@@ -462,7 +616,7 @@ enum Actuator {
         }
         usleep(intervalUs)
         post(.leftMouseUp, at: points[points.count - 1], source: source)
-        return .syntheticEvent
+        return Actuation(.syntheticEvent, .eventStream)
     }
 
     /// The route in window coordinates: the supplied path, or the two-point path
@@ -554,7 +708,7 @@ enum Actuator {
 
     // MARK: - Declared contracts
 
-    private static func appleScript(_ step: ActionStep) throws -> ActuationPlane {
+    private static func appleScript(_ step: ActionStep) throws -> Actuation {
         guard let source = step.text ?? step.value?.stringValue, !source.isEmpty else {
             throw AgentError(code: .invalidArguments, message: "appleScript needs text")
         }
@@ -575,12 +729,12 @@ enum Actuator {
             throw AgentError(code: .actionFailed, message: message,
                              detail: .object(["errorNumber": .number(Double(number))]))
         }
-        return .appleEvents
+        return Actuation(.appleEvents, .appleEvent)
     }
 
     /// A shortcut that prompts waits for a person forever, so the timeout is
     /// part of the contract rather than a safety net.
-    private static func shortcut(_ step: ActionStep) throws -> ActuationPlane {
+    private static func shortcut(_ step: ActionStep) throws -> Actuation {
         guard let name = step.text ?? step.label ?? step.value?.stringValue, !name.isEmpty else {
             throw AgentError(code: .invalidArguments, message: "shortcut needs a name in text")
         }
@@ -615,6 +769,6 @@ enum Actuator {
                              message: "shortcut \"\(name)\" exited \(process.terminationStatus)",
                              detail: .object(["output": .string(text)]))
         }
-        return .declared
+        return Actuation(.declared, .declared)
     }
 }

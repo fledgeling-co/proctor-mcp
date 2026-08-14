@@ -24,10 +24,13 @@ extension Session {
     /// guesswork.
     func lanes(for steps: [ActionStep], window: WindowHandle, foreground: Bool) -> LaneDemand {
         // `LaneDemand` answers this through `ForegroundDemand.takesForeground`,
-        // which is the same question the panel and the menu bar ask. Conditional
-        // kinds are deliberately not part of that predicate: see the note there.
+        // which is the same question the panel and the menu bar ask. The
+        // conditional kinds go with it so the predicate can tell a `foreground`
+        // batch that could post from one that asked out of habit: see the note
+        // there.
         LaneDemand.forBatch(kinds: steps.map(\.kind),
                             synthetic: Self.syntheticKinds,
+                            conditional: Self.conditionalKinds,
                             app: window.app,
                             foreground: foreground)
     }

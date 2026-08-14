@@ -26,6 +26,9 @@ final class FakeAX: AXEngine, @unchecked Sendable {
     /// accessibility plane, which is what a fake app answers unless a test is
     /// specifically about a step that could not travel that way.
     var planeAt: [Int: ActuationPlane] = [:]
+    /// The route a given step index reports having taken. Absent means the
+    /// plain value write a fake element would accept.
+    var routeAt: [Int: ActuationRoute] = [:]
 
     /// What the window reports as web content. Nil is a window with no page in it,
     /// which is what every non-browser test wants and what a browser's About panel
@@ -65,14 +68,16 @@ final class FakeAX: AXEngine, @unchecked Sendable {
 
     func node(id: String) throws -> AXNode { node }
 
-    func perform(step: ActionStep, window: String, foreground: Bool) throws -> ActuationPlane {
+    func perform(step: ActionStep, window: String, foreground: Bool) throws -> Actuation {
         let index = performed.count
         performed.append(step)
         onPerform?(index)
         if failPerformAt == index {
             throw AgentError(code: .actionFailed, message: "fake failure at step \(index)")
         }
-        return planeAt[index] ?? .accessibility
+        let plane = planeAt[index] ?? .accessibility
+        return Actuation(plane, routeAt[index] ?? (plane == .syntheticEvent ? .eventStream
+                                                                           : .valueWrite))
     }
 
     func menuBar(app: String) throws -> [RawMenuItem]? { nil }

@@ -15,10 +15,12 @@ import Testing
 struct RunLaneTests {
 
     private let synthetic: Set<ActionStep.Kind> = [.dragPath, .hover, .click, .key]
+    private let conditional: Set<ActionStep.Kind> = [.type, .scroll]
 
     private func demand(_ kinds: [ActionStep.Kind], app: String = "app:1",
                         foreground: Bool = false) -> LaneDemand {
-        LaneDemand.forBatch(kinds: kinds, synthetic: synthetic, app: app, foreground: foreground)
+        LaneDemand.forBatch(kinds: kinds, synthetic: synthetic, conditional: conditional,
+                            app: app, foreground: foreground)
     }
 
     @Test("an accessibility batch contends for its own app and nothing else")
@@ -49,10 +51,21 @@ struct RunLaneTests {
         #expect(!demand([.press, .focus]).needsGlobal)
     }
 
-    @Test("asking for the app in front is enough on its own")
+    @Test("asking for the app in front takes the machine only when a step could use it")
     func foregroundTakesTheMachine() {
-        #expect(demand([.press], foreground: true).needsGlobal)
+        // PRO-0025. `foreground: true` over a batch that cannot reach the event
+        // stream promises a takeover that never happens: nothing activates an
+        // application except a synthetic post. Such a run took the exclusive
+        // global lane and serialised against every other session for nothing.
+        #expect(!demand([.press], foreground: true).needsGlobal)
         #expect(!demand([.press], foreground: false).needsGlobal)
+        // A batch holding a `type` is a different matter: the actuator will post
+        // if the element refuses the value, and it is allowed to precisely
+        // because the caller asked for the front.
+        #expect(demand([.press, .type], foreground: true).needsGlobal)
+        #expect(!demand([.press, .type], foreground: false).needsGlobal)
+        // And a certain kind never needed asking.
+        #expect(demand([.click], foreground: true).needsGlobal)
     }
 
     @Test("the lane set is fixed before the run and never grows")

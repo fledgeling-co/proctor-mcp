@@ -14,7 +14,9 @@ import ProctorCore
 //
 // It is an annotation, not the system cursor. Nothing here moves the real
 // pointer or takes focus. The panels are non-activating, click-through and join
-// every Space, so they float over whatever is being driven without touching it.
+// every Space, so they draw over what is being driven without touching it — and
+// they sit in that window's own plane rather than above the machine, for the
+// reason recorded further down.
 //
 // Two properties make this safe to leave on by default. The panels belong to
 // this process, and every capture is window-scoped to the app under test, so
@@ -38,6 +40,35 @@ import ProctorCore
 // presents immediately; the union panel never does, whether its origin is
 // negative or zero. So each screen gets its own panel, and the pointer lives
 // on the one containing its target.
+//
+// THE POINTER SITS IN THE TARGET WINDOW'S PLANE, and that is also measured
+// rather than reasoned. A panel's level is not a position in another
+// application's stacking order, so the panel is ordered relative to the target
+// window's CGWindowID — a window belonging to another process, which is not a
+// documented use of `order(_:relativeTo:)`. Measured on macOS 26.6, 2026-08-15,
+// against real Chrome and Ghostty windows, by capturing the screen and sampling
+// the pixel at the drawn point rather than by asking the window server what it
+// believed:
+//
+//   at level .screenSaver, over a target fully covered by another app
+//                                         → pointer VISIBLE (the misstatement)
+//   at level .normal + order(.above, relativeTo: <foreign id>), same target
+//                                         → pointer ABSENT: the covering
+//                                           window's own pixels, which is the
+//                                           truthful picture
+//   same restack, target frontmost        → pointer VISIBLE
+//
+// The panel landed at window-list index 28 with the target at 29 and the app
+// above it at 27 — genuinely sandwiched between two windows of another process
+// — and was still immediately above the target after three seconds idle. The
+// level is what makes it work: at .screenSaver the ordering call is accepted
+// and inert, because level dominates.
+//
+// It is verified per use anyway. `PointerPlanePolicy.held` re-reads the window
+// list after the ordering call, and a placement that did not hold demotes to a
+// dimmed pointer at the old floating level. An undocumented ordering that stops
+// working on some future macOS then degrades to a pointer that admits it cannot
+// vouch for its position, rather than to one that quietly lies about it.
 @MainActor
 final class CursorOverlay {
 
@@ -52,6 +83,14 @@ final class CursorOverlay {
 
     private static let pointerSize = CGSize(width: 19, height: 32)
     private static let ringDiameter: CGFloat = 46
+    /// The band the pointer joins to sit in a target window's plane. It has to
+    /// share a band with ordinary application windows, because a level always
+    /// beats an ordering.
+    private static let inPlaneLevel: NSWindow.Level = .normal
+    /// Where the pointer goes when its plane could not be established: back
+    /// above everything, dimmed and marked, which is the honest way to say "I
+    /// cannot vouch for where this belongs".
+    private static let floatingLevel: NSWindow.Level = .screenSaver
     /// How long the pointer stays on screen after a batch of steps finishes.
     private static let idleTimeout: TimeInterval = 2.5
     /// The backstop: how long it may stay if nobody ever says the batch ended,
@@ -79,6 +118,11 @@ final class CursorOverlay {
     /// The last target, in screen points as the actuator and the AX tree state
     /// them: y down from the top of the primary display.
     private var lastTarget: CGPoint?
+    /// The opacity the pointer is currently entitled to, from the last plane
+    /// that was applied. Full when the panel is genuinely in the target's plane,
+    /// dimmed when it is floating above everything without being able to say it
+    /// belongs there.
+    private var activeOpacity: Float = 1
     private var fadeOut: DispatchWorkItem?
 
     // MARK: - Public surface
@@ -87,9 +131,10 @@ final class CursorOverlay {
     /// follows fires with the pointer already there. A caller that did not wait
     /// would draw a click arriving before the pointer did, which reads as the
     /// overlay being decorative rather than as a record of what happened.
-    func travel(to target: CGPoint) async {
+    func travel(to target: CGPoint, plane: PointerPlane = .floatingDimmed) async {
         ensureSurfaces()
         guard let index = surfaceIndex(containing: target) else { return }
+        guard applyPlane(plane, on: surfaces[index]) else { return }
 
         // Crossing to another display is a jump, not a flight: there is no
         // continuous surface between two panels to animate across, and a
@@ -124,7 +169,9 @@ final class CursorOverlay {
         grow.fromValue = 0.3
         grow.toValue = 1.0
         let vanish = CABasicAnimation(keyPath: "opacity")
-        vanish.fromValue = 0.75
+        // The pulse is as qualified as the pointer that made it: a dimmed
+        // pointer that punched a full-strength ring would undo the marking.
+        vanish.fromValue = 0.75 * Double(activeOpacity)
         vanish.toValue = 0.0
         let pulse = CAAnimationGroup()
         pulse.animations = [grow, vanish]
@@ -146,9 +193,10 @@ final class CursorOverlay {
 
     /// Follow a drag route, pressed, at the pace the gesture itself will run at
     /// so the drawing and the posted events describe the same movement.
-    func drag(along route: [CGPoint], durationMs: Int) async {
+    func drag(along route: [CGPoint], durationMs: Int,
+              plane: PointerPlane = .floatingDimmed) async {
         guard route.count >= 2, let start = route.first else { return }
-        await travel(to: start)
+        await travel(to: start, plane: plane)
         guard let surface = activeSurface else { return }
         let pointer = surface.pointer, ring = surface.ring
 
@@ -202,6 +250,66 @@ final class CursorOverlay {
         Self.flush()
     }
 
+    // MARK: - Placement
+
+    /// Put this surface's panel where the plane says, and set the opacity the
+    /// pointer has earned. Returns whether there is anything to draw at all.
+    ///
+    /// The in-plane placement is attempted and then *checked*: ordering a panel
+    /// relative to another process's window is measured behaviour rather than a
+    /// documented capability, so a placement that did not hold falls back to the
+    /// floating level with the pointer dimmed and its ring dashed. That is the
+    /// same treatment an uncorrelated window gets, and it means the pointer
+    /// never occupies a position it cannot justify.
+    private func applyPlane(_ plane: PointerPlane, on surface: Surface) -> Bool {
+        switch plane {
+        case .hidden:
+            hide()
+            return false
+
+        case .floatingDimmed:
+            float(surface)
+            return true
+
+        case .inPlane(let target):
+            surface.panel.level = Self.inPlaneLevel
+            surface.panel.orderFrontRegardless()
+            surface.panel.order(.above, relativeTo: Int(target))
+            let panelNumber = surface.panel.windowNumber
+            if panelNumber > 0,
+               PointerPlanePolicy.held(panel: UInt32(panelNumber), above: target,
+                                       order: Self.onScreenOrder()) {
+                mark(surface, opacity: 1, dashed: false)
+                return true
+            }
+            float(surface)
+            return true
+        }
+    }
+
+    private func float(_ surface: Surface) {
+        surface.panel.level = Self.floatingLevel
+        surface.panel.orderFrontRegardless()
+        mark(surface, opacity: PointerPlanePolicy.dimmedOpacity, dashed: true)
+    }
+
+    /// Dimmed *and* marked, not dimmed alone: a faint pointer could be read as a
+    /// pointer fading out, where a dashed ring says the drawing is qualified.
+    private func mark(_ surface: Surface, opacity: Float, dashed: Bool) {
+        activeOpacity = opacity
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        surface.ring.lineDashPattern = dashed ? [4, 3] : nil
+        CATransaction.commit()
+    }
+
+    /// Every window on screen, front to back. The window list is the instrument
+    /// that works here — a panel's own belief that it was ordered in is not
+    /// evidence of where it landed.
+    private static func onScreenOrder() -> [UInt32] {
+        CGWindowIndex.records(option: .optionOnScreenOnly).map(\.number)
+    }
+
     // MARK: - Travel
 
     /// Commit the move and report how long it will take. Split out from
@@ -224,7 +332,7 @@ final class CursorOverlay {
         CATransaction.setDisableActions(true)
         pointer.position = destination
         surface.ring.position = destination
-        pointer.opacity = 1
+        pointer.opacity = activeOpacity
         CATransaction.commit()
         lastTarget = target
 
@@ -381,7 +489,7 @@ final class CursorOverlay {
         // Click-through is the whole safety story: the panels cover every
         // display, so anything less would put a sheet of glass over the machine.
         panel.ignoresMouseEvents = true
-        panel.level = .screenSaver
+        panel.level = Self.floatingLevel
         panel.collectionBehavior = [.canJoinAllSpaces, .stationary,
                                     .ignoresCycle, .fullScreenAuxiliary]
 

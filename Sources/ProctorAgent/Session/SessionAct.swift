@@ -211,7 +211,7 @@ extension Session {
             // to be refused would show an action that never happened.
             if refusal == nil {
                 await hud(.stepApproaching(step: step, node: node, synthetic: synthetic))
-                await showCursor(for: step)
+                await showCursor(for: step, window: window)
             }
 
             let started = DispatchTime.now().uptimeNanoseconds
@@ -231,7 +231,7 @@ extension Session {
                 break
             }
 
-            let plane: ActuationPlane
+            let outcome: Actuation
             do {
                 await hud(.stepActing(step: step, node: node, synthetic: synthetic))
                 // The grace window has to be open BEFORE the post, not after it.
@@ -241,7 +241,7 @@ extension Session {
                 // looking like a person's. Marked again after the step, from the
                 // measured plane, to cover a late delivery.
                 if synthetic { noteSyntheticPost() }
-                plane = try ax.perform(step: step, window: window.id, foreground: foreground)
+                outcome = try ax.perform(step: step, window: window.id, foreground: foreground)
             } catch let error as AgentError {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: error, settle: nil, stateHash: nil,
@@ -267,6 +267,7 @@ extension Session {
                 break
             }
 
+            let plane = outcome.plane
             let policy = step.settle ?? settle
             let report = await settleNow(window: window, pid: app?.pid, policy: policy)
 
@@ -294,7 +295,7 @@ extension Session {
             run.results.append(StepResult(index: index, step: step, ok: true, plane: plane,
                                           error: postStateError, settle: report,
                                           stateHash: stateHash, diff: diff,
-                                          elapsedMs: elapsed()))
+                                          elapsedMs: elapsed(), route: outcome.route))
             if let audit { auditStep(step, context: audit, ok: true, postStateHash: stateHash,
                                      reason: postStateError?.message) }
             run.completed += 1

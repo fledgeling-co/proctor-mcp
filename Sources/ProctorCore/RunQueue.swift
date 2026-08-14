@@ -64,23 +64,28 @@ public struct LaneDemand: Hashable, Sendable {
     /// duplicated: the agent already names that set once, and a second copy here
     /// would be a second thing to keep true.
     ///
-    /// The global lane is taken in three cases, and they are the same case seen
-    /// three ways: the run changes what is in front. A step that travels through
-    /// the event stream needs the target frontmost; a batch that asked for
-    /// `foreground` says so outright (which is also what covers a foreground
-    /// `type`); and a `raise` step brings a window forward, which moves the
-    /// ground under every synthetic event anybody else is posting.
+    /// The global lane is taken in two cases, and they are one case seen twice:
+    /// the run changes what is in front. A step that could travel through the
+    /// event stream needs the target frontmost, and a `raise` step brings a
+    /// window forward, which moves the ground under every synthetic event
+    /// anybody else is posting.
     ///
-    /// All three are `ForegroundDemand.takesForeground`, which is where that
-    /// question is now answered for the scheduler, the panel and the menu bar
-    /// alike. Conditional kinds (`type`, `scroll`) are deliberately absent from
-    /// this predicate: they usually travel the accessibility plane, and taking
-    /// the exclusive global lane on the chance one falls back would serialise
-    /// runs that never touch the foreground.
+    /// Both are `ForegroundDemand.takesForeground`, which is where that question
+    /// is now answered for the scheduler, the panel and the menu bar alike.
+    ///
+    /// The conditional kinds (`type`, `scroll`) are supplied rather than assumed
+    /// away, and the reason is narrow. They are still absent from the predicate
+    /// on their own — taking the exclusive lane on the chance one falls back
+    /// would serialise runs that never touch the foreground — but a batch that
+    /// asked for `foreground` **and** contains one can post, so the lane is
+    /// exactly as it was for that case. What changes is the other case: a batch
+    /// that asked for the front while containing nothing that could use it now
+    /// runs in its app's lane like the background run it always was.
     public static func forBatch(kinds: [ActionStep.Kind], synthetic: Set<ActionStep.Kind>,
+                                conditional: Set<ActionStep.Kind> = [],
                                 app: String, foreground: Bool) -> LaneDemand {
         let demand = ForegroundDemand.forBatch(kinds: kinds, synthetic: synthetic,
-                                               conditional: [], foreground: foreground)
+                                               conditional: conditional, foreground: foreground)
         var lanes: Set<RunLane> = [.app(app)]
         if demand.takesForeground { lanes.insert(.global) }
         return LaneDemand(lanes: lanes)
