@@ -158,6 +158,10 @@ struct RunHUDWiringTests {
         control.pollNanoseconds = 1_000_000
         await session.setAuditSink(audit.sink)
         await session.setDrawsHUD(false)
+        // A feed of this session's own, so the switch and the phase can be driven
+        // without reaching into the singleton another test is also using. Started
+        // off, which is what an agent launched with PROCTOR_HUD off looks like.
+        await session.setHUDFeed(RunHUDFeed(drawing: false))
         await session.setRunControl(control)
         _ = try await session.attachResolved(bundleId: Self.target, pid: nil, name: nil)
 
@@ -358,6 +362,7 @@ struct RunHUDWiringTests {
     func hudOnReportsPresence() async throws {
         let h = try await harness(steps: 1)
         await h.session.setDrawsHUD(true)
+        await h.session.setHUDFeed(RunHUDFeed(drawing: true))
         let status = try #require(await h.session.hudStatus().objectValue)
         #expect(status["enabled"]?.boolValue == true)
         #expect(status["pauseLimitSeconds"]?.doubleValue == 900)

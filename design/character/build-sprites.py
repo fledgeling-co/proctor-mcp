@@ -33,13 +33,15 @@ What this does, and why each step is here rather than done by hand:
   relying on colour. A mode filter cannot invent it.
 
 Output is `Sources/ProctorAgent/Resources/character/<frame>@Nx.png` at 1x, 2x and
-3x, integer-scaled from one 38px master so the three densities are the same art.
+3x, integer-scaled from one master per rendition so the three densities are the
+same art. Two renditions ship: the panel's 38px bay and the menu bar's 22px item.
 """
 
 from __future__ import annotations
 
 import sys
 from collections import deque
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -48,16 +50,40 @@ from PIL import Image
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent
 SHEET = HERE / "sprite-frames-sheet-d03536.png"
-OUT = REPO / "Sources" / "ProctorAgent" / "Resources" / "character"
 
-# The bay is 38pt. One art pixel is one point, so @1x is 1:1 and the pixel grid
-# stays visible — pixel art is the one concept of the four that gains legibility
-# as it shrinks, and a fractional grid is how that gets thrown away.
-CANVAS = 38
-# The case, not the whole drawing. Extras (speed lines, sparkles, smoke) are
-# allowed to run off the edges of the bay; the case never moves.
-CASE_HEIGHT = 29
-BASELINE = 35
+
+@dataclass(frozen=True)
+class Rendition:
+    """One shipping size, cut from the same sheet.
+
+    Two ship. The panel's bay is 38pt; the menu bar's is 22pt, which is the menu
+    bar's own thickness, so it draws 1:1 there the way the bay does at 38.
+
+    `regenerate the grid, not a cell` is the design record's rule and it is about
+    art GENERATION drift — a second size is sliced from the one committed sheet,
+    never drawn again, so the character cannot drift between the two.
+
+    The menu bar size was chosen by rendering rather than assumed. At 16 and 18
+    the screen glyph collapses: idle loses its dot eyes and blocked and acting
+    both become one solid vermilion block, which breaks the record's binding rule
+    that every state must be readable from its screen alone. At 22 with a 19px
+    case all seven read.
+    """
+
+    name: str
+    canvas: int
+    case_height: int
+    baseline: int
+    out: Path
+
+
+RENDITIONS = [
+    Rendition("panel", 38, 29, 35,
+              REPO / "Sources" / "ProctorAgent" / "Resources" / "character"),
+    Rendition("menu bar", 22, 19, 21,
+              REPO / "Sources" / "ProctorCore" / "Resources" / "character-menubar"),
+]
+
 
 # White, black, vermilion and one grey. `docs/design/run-hud-character.md` fixes
 # the first three; the grey exists only so the paused screen can be told apart
@@ -183,21 +209,22 @@ def snap(rgb: np.ndarray) -> np.ndarray:
 
 
 def render(rgb: np.ndarray, opaque: np.ndarray, body: np.ndarray,
-           scale: float) -> tuple[np.ndarray, dict[str, int]]:
-    """Resample one cell onto the shared 38px canvas at the shared scale."""
+           scale: float, size: Rendition) -> tuple[np.ndarray, dict[str, int]]:
+    """Resample one cell onto the rendition's canvas at its shared scale."""
     index = snap(rgb)
     centre_x = case_centre(body)
     baseline_y = float(np.where(body.any(axis=1))[0].max()) + 1
 
-    out = np.zeros((CANVAS, CANVAS, 4), dtype=np.uint8)
+    canvas = size.canvas
+    out = np.zeros((canvas, canvas, 4), dtype=np.uint8)
     used: dict[str, int] = {}
-    for ty in range(CANVAS):
-        # Source window for this target pixel, placed so the feet land on
-        # BASELINE and the case's centre lands on the canvas centre.
-        sy0 = baseline_y + (ty - BASELINE) / scale
+    for ty in range(canvas):
+        # Source window for this target pixel, placed so the feet land on the
+        # rendition's baseline and the case's centre lands on the canvas centre.
+        sy0 = baseline_y + (ty - size.baseline) / scale
         sy1 = sy0 + 1 / scale
-        for tx in range(CANVAS):
-            sx0 = centre_x + (tx - CANVAS / 2) / scale
+        for tx in range(canvas):
+            sx0 = centre_x + (tx - canvas / 2) / scale
             sx1 = sx0 + 1 / scale
             y0, y1 = int(np.floor(sy0)), max(int(np.ceil(sy1)), int(np.floor(sy0)) + 1)
             x0, x1 = int(np.floor(sx0)), max(int(np.ceil(sx1)), int(np.floor(sx0)) + 1)
@@ -244,30 +271,33 @@ def main() -> int:
     # drift this whole step exists to remove.
     uprights = [c for c in cells if c[0].startswith("idle")]
     heights = [int(np.ptp(np.where(c[3].any(axis=1))[0])) + 1 for c in uprights]
-    scale = CASE_HEIGHT / float(np.median(heights))
-    print(f"case heights {heights} -> scale {scale:.4f}")
+    median = float(np.median(heights))
 
-    OUT.mkdir(parents=True, exist_ok=True)
-    for name, rgb, opaque, body in cells:
-        if name.endswith("-src"):
-            continue
-        art, used = render(rgb, opaque, body, scale)
-        write(name, art)
-        print(f"{name:14s} {used}")
-        if name == "idle-0":
-            lifted = np.zeros_like(art)
-            lifted[:-IDLE_LIFT] = art[IDLE_LIFT:]
-            write("idle-1", lifted)
-            print("idle-1         (idle-0 lifted one pixel — the record's bob)")
+    for size in RENDITIONS:
+        scale = size.case_height / median
+        print(f"\n{size.name}: canvas {size.canvas}, case heights {heights} "
+              f"-> scale {scale:.4f}")
+        size.out.mkdir(parents=True, exist_ok=True)
+        for name, rgb, opaque, body in cells:
+            if name.endswith("-src"):
+                continue
+            art, used = render(rgb, opaque, body, scale, size)
+            write(name, art, size)
+            print(f"  {name:14s} {used}")
+            if name == "idle-0":
+                lifted = np.zeros_like(art)
+                lifted[:-IDLE_LIFT] = art[IDLE_LIFT:]
+                write("idle-1", lifted, size)
+                print("  idle-1         (idle-0 lifted one pixel — the record's bob)")
     return 0
 
 
-def write(name: str, art: np.ndarray) -> None:
+def write(name: str, art: np.ndarray, size: Rendition) -> None:
     base = Image.fromarray(art, mode="RGBA")
-    base.save(OUT / f"{name}.png")
+    base.save(size.out / f"{name}.png")
     for factor in (2, 3):
-        base.resize((CANVAS * factor, CANVAS * factor), Image.NEAREST).save(
-            OUT / f"{name}@{factor}x.png")
+        base.resize((size.canvas * factor, size.canvas * factor), Image.NEAREST).save(
+            size.out / f"{name}@{factor}x.png")
 
 
 if __name__ == "__main__":

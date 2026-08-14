@@ -17,7 +17,13 @@ let package = Package(
         .library(name: "ProctorReflector", targets: ["ProctorReflector"]),
     ],
     targets: [
-        .target(name: "ProctorCore"),
+        // The menu bar's rendition of the run-HUD character lives here rather
+        // than in either executable: both the agent and the UI reach Core, the
+        // frame table and the motion rule are already here, and a test can prove
+        // every picture is present at every density without a test target for a
+        // SwiftUI app. The panel's own 38pt set stays in the agent's bundle,
+        // beside the view that draws it.
+        .target(name: "ProctorCore", resources: [.copy("Resources/character-menubar")]),
         // One Objective-C function, and it needs its own target because SwiftPM
         // has no mixed-language ones. Swift cannot catch an NSException, AppKit
         // still raises them, and an uncaught one aborts the process — which for a

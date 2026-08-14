@@ -68,6 +68,51 @@ whole-grid render rather than by patching the first:
   the error state's puff of smoke loses seven pixels to the bay's rounded corner
   and nothing else is clipped. No state loses any of its footing.
 
+## The menu bar rendition (PRO-0021, 2026-08-14)
+
+The character has a second home: Proctor's menu bar item. The reasoning is reach
+rather than decoration — the panel may be on a display nobody is looking at and
+can now be hidden outright, while the menu bar is on every display and always
+there. The character was drawn to make state legible at 38px; the menu bar is the
+surface where that job actually pays.
+
+**22pt, chosen by rendering rather than assumed.** The menu bar's own thickness,
+so one art pixel is one point there exactly as it is in the 38pt bay. Measured on
+the shipped sheet:
+
+| Canvas | What happens |
+|---|---|
+| 16px, 18px | Fails the record's binding rule. The screen glyph collapses: idle loses its dot eyes, and blocked and acting both become one solid vermilion block. |
+| 22px, case 17 | Better; blocked still weak. |
+| **22px, case 19, baseline 21** | All seven read — two dot eyes, a bold `!`, two grey bars, a check, a dark `X`, a plain vermilion screen. |
+
+Cut from the same committed sheet by the same slicer, never drawn again, so
+"regenerate the grid, not a cell" holds: the two sizes cannot drift because they
+come from one render. `build-sprites.py` now carries both as `RENDITIONS` and
+writes the menu bar set to `Sources/ProctorCore/Resources/character-menubar`,
+where both the agent and the UI can reach it.
+
+**Full colour, never a template.** A menu bar image is normally a template, which
+keys off the alpha channel and paints the whole silhouette in one tint. That would
+discard the thing that makes these states readable — vermilion carries acting,
+blocked, finished and error, and grey belongs to paused alone, which is what lets
+paused be told apart without relying on colour at all. It would also invert the
+character: the case is white with a `#111113` outline, so as a template the case
+becomes the tint and the screen becomes a hole. Rendered on both a light
+(`#F6F6F6`) and a dark (`#1E1E20`) ground at 22px, the full-colour sprite reads on
+both. The cost accepted is that the item does not adopt menu bar tinting.
+
+**Still when nothing is running.** The panel's idle bob is fine on something only
+on screen during a run; the menu bar is on screen for as long as the Mac is, and a
+permanently moving item is an irritation and a battery cost carrying no
+information. Only travelling and acting move there, and neither does under Reduce
+Motion. `RunHUDMotion.menuBar` holds that rule, in Core.
+
+**And the character yields.** It has the menu bar only when the agent is reachable
+and every required grant is in place; otherwise the item keeps its status symbol.
+A calm idle character over an agent that is not answering, or one missing
+Accessibility, is a picture telling somebody a falsehood about their machine.
+
 ## Regenerating
 
 `media-gen-pro`, `style: "openai"` — GPT Image 2 is the model that honours

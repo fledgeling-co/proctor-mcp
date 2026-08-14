@@ -27,5 +27,5 @@
 | PRO-0018 | Yield when a person takes the machine back | 2026-08-14 | Untriaged |
 | PRO-0019 | A foreground-only run is obvious before it takes the machine | 2026-08-14 | Untriaged |
 | PRO-0020 | Route browser work to Obscura | 2026-08-14 | Untriaged |
-| PRO-0021 | Menu bar switch for the panel, and the icon as the character | 2026-08-14 | Untriaged |
+| PRO-0021 | Menu bar switch for the panel, and the icon as the character | 2026-08-14 | In Review |
 | PRO-0022 | A drawing fault must not kill the agent | 2026-08-14 | Merged |

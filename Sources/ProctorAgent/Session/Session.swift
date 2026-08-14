@@ -98,11 +98,24 @@ actor Session {
     var fsJail: FSJail?
     var fsJailLoadedFlag = false
 
-    /// Whether this session puts the run HUD on screen. Defaults from
-    /// `PROCTOR_HUD`; settable so the halt wiring can be exercised without a
-    /// window server, which is also where a panel would be meaningless.
-    var drawsHUD = Session.hudEnabledByDefault
+    /// Whether this session feeds the run HUD at all.
+    ///
+    /// Not the same question as whether a panel is on screen. That one belongs to
+    /// `RunHUDFeed`, is seeded from `PROCTOR_HUD`, and can be moved from the menu
+    /// bar mid-run — and the events reduce either way, because the menu bar's
+    /// character reads the same phase and has to stay truthful with no panel
+    /// anywhere. This flag exists so a unit test can keep the whole HUD path out
+    /// of its way.
+    var drawsHUD = true
     func setDrawsHUD(_ on: Bool) { drawsHUD = on }
+
+    /// Where the HUD's state actually lives. The shared one in production, so the
+    /// panel, the run and Proctor's menu bar are all talking about one run;
+    /// substitutable so a test can drive the switch and read the phase without
+    /// reaching into a singleton another test is also using.
+    nonisolated let hudFeedBox = HUDFeedBox()
+    var hudFeed: RunHUDFeed { hudFeedBox.feed }
+    func setHUDFeed(_ feed: RunHUDFeed) { hudFeedBox.feed = feed }
 
     /// The pause/stop latch the panel's buttons write to. The shared one in
     /// production, so the panel and the run are talking about the same run;
@@ -170,7 +183,11 @@ actor Session {
             "recent": .array(Array(recent)),
             // The menu bar mirrors the waiting count, so the queue is answerable
             // without the run panel being on screen at all.
-            "queueWaiting": .number(Double(queueWaitingMirror))
+            "queueWaiting": .number(Double(queueWaitingMirror)),
+            // And the run HUD's phase, which is what lets the menu bar draw the
+            // same character in the same state — the one `RunHUDState` reduced,
+            // never a second one derived here.
+            "hud": hudFeed.wire
         ])
     }
 

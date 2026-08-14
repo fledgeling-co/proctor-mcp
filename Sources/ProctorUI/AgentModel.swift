@@ -34,6 +34,23 @@ final class AgentModel {
     /// screen — the scheduler runs whether or not anything is drawn.
     private(set) var queueWaiting = 0
 
+    /// What the run HUD is doing, mirrored from the agent so the menu bar can
+    /// draw the same character in the same state. `hudPhase` is the phase the one
+    /// `RunHUDState` reduced — nothing here derives a second one.
+    private(set) var hudPhase: RunHUDPhase = .idle
+    private(set) var hudRunning = false
+    private(set) var hudDrawing = true
+    /// Whether the panel could be brought back at all. False on an agent started
+    /// with `PROCTOR_HUD` off: that launch runs a bare run loop, so a panel drawn
+    /// now would have a Pause and a Stop nobody could click.
+    private(set) var hudCanShow = false
+    /// Why Show is unavailable, in the agent's own words. Nil when it is.
+    private(set) var hudShowRefusal: String?
+
+    /// The menu bar's own sprite clock. Owned here because the phase arrives
+    /// here; the label only reads it.
+    let character = MenuBarCharacter()
+
     struct ActivityItem: Identifiable, Sendable {
         let id = UUID()
         let tool: String
@@ -51,7 +68,14 @@ final class AgentModel {
     /// saying on the face of the window rather than in a log.
     let signature = SignatureInfo.current()
 
-    private var timer: Timer?
+    /// Two cadences, because the two answers age differently. The activity feed
+    /// is a projection of state the agent already holds, over a local socket, and
+    /// it carries the run phase the menu bar draws — so it runs fast enough that
+    /// the character and the Pause and Stop items are not visibly behind the run
+    /// they belong to. The doctor report probes permissions and enumerates apps,
+    /// changes only when somebody touches System Settings, and stays slow.
+    private var activityTimer: Timer?
+    private var doctorTimer: Timer?
 
     /// Polling starts with the model and runs for the app's whole life, not just
     /// while the window is open — the menu-bar glyph and status line have to stay
@@ -70,26 +94,71 @@ final class AgentModel {
 
     func startPolling() {
         refresh()
-        timer?.invalidate()
+        doctorTimer?.invalidate()
         // Two seconds is fast enough that toggling a grant in System Settings
         // reflects here while the user is still looking at both windows.
-        timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.refresh() }
+        doctorTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+            Task { @MainActor in self?.refreshDoctor() }
+        }
+        activityTimer?.invalidate()
+        // Half a second, always — not only while a run is going. Gating the fast
+        // cadence on "a run is live" would mean learning that a run had *started*
+        // on the slow one, which puts the character and the menu's Pause and Stop
+        // up to two seconds behind exactly when they matter most.
+        activityTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            Task { @MainActor in self?.refreshActivity() }
         }
     }
 
     func stopPolling() {
-        timer?.invalidate()
-        timer = nil
+        activityTimer?.invalidate(); activityTimer = nil
+        doctorTimer?.invalidate(); doctorTimer = nil
     }
 
     func refresh() {
+        refreshDoctor()
+        refreshActivity()
+    }
+
+    private func refreshDoctor() {
         guard !isChecking else { return }
         isChecking = true
         Task.detached(priority: .utility) {
             let outcome = Self.callDoctor(requestAccessibility: false, requestScreenRecording: false)
+            await MainActor.run { self.apply(outcome) }
+        }
+    }
+
+    private func refreshActivity() {
+        guard !isPollingActivity else { return }
+        isPollingActivity = true
+        Task.detached(priority: .utility) {
             let activity = Self.callActivity()
-            await MainActor.run { self.apply(outcome); self.applyActivity(activity) }
+            await MainActor.run { self.isPollingActivity = false; self.applyActivity(activity) }
+        }
+    }
+
+    private var isPollingActivity = false
+
+    // MARK: - The run panel, from the menu bar
+
+    /// Show or hide the run panel now, for the current run.
+    ///
+    /// The same switch `PROCTOR_HUD` sets, moved from the menu bar instead of
+    /// from the environment. Nothing is written to disk, so the environment is
+    /// still the default at the next launch.
+    func setPanel(visible: Bool) { control(visible ? .show : .hide) }
+
+    /// The run's own controls, so hiding the panel never hides the kill switch.
+    /// Pause and Stop, never the queue's Hold and Clear — those live on the panel
+    /// and the two pairs are deliberately never together.
+    func togglePause() { control(hudPhase == .paused ? .resume : .pause) }
+    func stopRun() { control(.stop) }
+
+    private func control(_ action: RunHUDControl) {
+        Task.detached(priority: .userInitiated) {
+            let result = Self.callHUD(action)
+            await MainActor.run { self.applyHUD(result) }
         }
     }
 
@@ -168,12 +237,58 @@ final class AgentModel {
         currentActivity = snapshot.current
         recentActivity = snapshot.items
         queueWaiting = snapshot.queueWaiting
+        applyHUD(snapshot.hud)
+    }
+
+    /// Apply a hud state, from a poll or from the reply to a control. Both carry
+    /// the same shape, so a control's effect shows the moment it is answered
+    /// rather than at the next poll.
+    private func applyHUD(_ state: HUDState?) {
+        guard let state else { return }
+        hudPhase = state.phase
+        hudRunning = state.running
+        hudDrawing = state.drawing
+        hudCanShow = state.canShow
+        if let refusal = state.refusal { hudShowRefusal = refusal }
+        else if state.canShow { hudShowRefusal = nil }
+        character.show(state.phase)
+    }
+
+    /// What the menu bar item draws. Readiness outranks the character: a calm
+    /// idle picture over an agent that is not answering would be a falsehood
+    /// about the machine.
+    var menuBarIcon: MenuBarIcon {
+        switch reachability {
+        case .unknown: return .checking
+        case .unreachable: return MenuBarIcon.decide(reachable: false, ready: false, phase: hudPhase)
+        case .reachable: return MenuBarIcon.decide(reachable: true, ready: ready, phase: hudPhase)
+        }
+    }
+
+    struct HUDState: Sendable {
+        let phase: RunHUDPhase
+        let running: Bool
+        let drawing: Bool
+        let canShow: Bool
+        let refusal: String?
+
+        init?(_ value: JSONValue?, refusal: String? = nil) {
+            guard let value,
+                  let phase = value["phase"]?.stringValue.flatMap(RunHUDPhase.init(rawValue:))
+            else { return nil }
+            self.phase = phase
+            self.running = value["running"]?.boolValue ?? false
+            self.drawing = value["drawing"]?.boolValue ?? true
+            self.canShow = value["canShow"]?.boolValue ?? false
+            self.refusal = refusal
+        }
     }
 
     struct ActivitySnapshot: Sendable {
         let current: String?
         let items: [ActivityItem]
         let queueWaiting: Int
+        let hud: HUDState?
     }
 
     private enum Outcome {
@@ -222,7 +337,21 @@ final class AgentModel {
             return ActivityItem(tool: tool, at: at, ok: entry["ok"]?.boolValue ?? true)
         } ?? []
         return ActivitySnapshot(current: result["current"]?.stringValue, items: items,
-                                queueWaiting: result["queueWaiting"]?.intValue ?? 0)
+                                queueWaiting: result["queueWaiting"]?.intValue ?? 0,
+                                hud: HUDState(result["hud"]))
+    }
+
+    /// The run panel's switch and the run's controls, over the same socket. An
+    /// internal verb: it is not in the tool catalogue, so no MCP host can reach
+    /// it and put a person's stop button away.
+    private nonisolated static func callHUD(_ action: RunHUDControl) -> HUDState? {
+        let client = SocketClient()
+        defer { client.disconnect() }
+        guard let response = try? client.send(
+                AgentRequest(id: UUID().uuidString, tool: "proctor_hud",
+                             arguments: .object(["action": .string(action.rawValue)]))),
+              response.ok, let result = response.result else { return nil }
+        return HUDState(result["hud"], refusal: result["refused"]?.stringValue)
     }
 }
 

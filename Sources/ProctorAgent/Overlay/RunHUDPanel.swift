@@ -71,7 +71,10 @@ final class RunHUDPanel {
     /// The reference's own width.
     static let width: CGFloat = 352
 
-    private var state = RunHUDState()
+    /// The state lives in `RunHUDFeed`, not here. This panel renders it and owns
+    /// nothing but pixels — see that file's header for why the view stopped being
+    /// the source of truth.
+    private var feed: RunHUDFeed { .shared }
     private var panel: HUDPanel?
     private var content: RunHUDContentView?
     /// Where a drag left it, remembered for the life of the process and never
@@ -110,16 +113,20 @@ final class RunHUDPanel {
     /// A batch is starting: place the panel on the screen holding the driven
     /// window and show it.
     func begin(total: Int, app: String?, window: Rect) {
-        state.apply(.runBegan(total: total, app: app))
+        feed.apply(.runBegan(total: total, app: app))
+        feed.rememberWindow(window)
         runStarted = Date()
         linger?.cancel(); linger = nil
+        // Hidden panels still reduce — that is the whole point of the feed — but
+        // nothing here draws or ticks a clock for a window nobody can see.
+        guard feed.drawing else { return }
         present(for: window)
         startClock()
         render()
     }
 
     func apply(_ event: RunHUDEvent) {
-        state.apply(event)
+        feed.apply(event)
         if case .runEnded = event { scheduleLinger() }
         render()
     }
@@ -157,7 +164,7 @@ final class RunHUDPanel {
         let wanted = !queue.held
         Task {
             let held = await scheduler.setHeld(wanted)
-            await RunHUDPanel.audit(held ? "hold" : "release",
+            RunHUDPanel.audit(held ? "proctor_queue.hold" : "proctor_queue.release",
                                     detail: held
                                         ? "a person held Proctor's queue, so no waiting run starts"
                                         : "a person released Proctor's queue")
@@ -173,7 +180,7 @@ final class RunHUDPanel {
         Task {
             let removed = await scheduler.clear()
             guard removed > 0 else { return }
-            await RunHUDPanel.audit("clear",
+            RunHUDPanel.audit("proctor_queue.clear",
                                     detail: "a person cleared Proctor's queue, removing \(removed) "
                                           + "waiting run\(removed == 1 ? "" : "s")")
         }
@@ -186,7 +193,7 @@ final class RunHUDPanel {
         guard let scheduler else { return }
         Task {
             guard await scheduler.drop(id: run) else { return }
-            await RunHUDPanel.audit("drop",
+            RunHUDPanel.audit("proctor_queue.drop",
                                     detail: "a person removed a waiting run from Proctor's queue")
         }
     }
@@ -194,14 +201,20 @@ final class RunHUDPanel {
     /// A person's hold, clear or drop is recorded the way a stop already is:
     /// these decide whether somebody's agent runs, which is the same class of
     /// event and worth the same accounting.
-    nonisolated(unsafe) static var auditSink: @Sendable (String, String) -> Void = { what, detail in
+    /// The first argument is the whole verb, not a suffix: the queue's decisions
+    /// and the panel's own are different surfaces and an audit trail that filed
+    /// "hide the panel" under the queue would be one to argue with later.
+    nonisolated(unsafe) static var auditSink: @Sendable (String, String) -> Void = { tool, detail in
         _ = AuditLog.append(AuditRecord(timestamp: Date().timeIntervalSince1970,
-                                        tool: "proctor_queue.\(what)",
+                                        tool: tool,
                                         outcome: "refused", reason: detail))
     }
 
-    private nonisolated static func audit(_ what: String, detail: String) async {
-        auditSink(what, detail)
+    /// Not private and not async: the menu bar's hide, show and stop are the same
+    /// class of decision as the panel's own hold and clear, and they arrive on the
+    /// socket rather than on the main thread.
+    nonisolated static func audit(_ tool: String, detail: String) {
+        auditSink(tool, detail)
     }
 
     // MARK: - Presenting
@@ -214,9 +227,49 @@ final class RunHUDPanel {
 
     nonisolated static func markEventLoopRunning() {
         eventLoopRunning = true
+        RunHUDFeed.shared.setCanShow(true)
     }
 
+    /// The switch moved. Take the panel down, or bring it back mid-run.
+    ///
+    /// The switch itself lives in `RunHUDFeed`, seeded from `PROCTOR_HUD` and
+    /// moved from the menu bar — one switch, not two, because a person who set
+    /// `PROCTOR_HUD=0` and a person who chose Hide want the same thing. Nothing
+    /// is written to disk, so the environment is still the default at the next
+    /// launch, which is what "for the current run, not at the next relaunch"
+    /// means.
+    ///
+    /// Hiding takes Pause and Stop off the screen, which is why Proctor's menu
+    /// bar carries them for as long as the panel is hidden, and why
+    /// `proctor_doctor` keeps reporting the absence with its reason.
+    func drawingChanged() {
+        guard feed.drawing else {
+            clockTimer?.invalidate(); clockTimer = nil
+            linger?.cancel(); linger = nil
+            panel?.orderOut(nil)
+            RunHUDAvailability.shared.record(
+                built: false,
+                reason: "a person hid the run panel from Proctor's menu bar. Pause and Stop are "
+                      + "in the menu bar while a run is going, and Show Run Panel brings it back.")
+            return
+        }
+        // Coming back mid-run: put it where it would have been, against the
+        // window this run is driving, and start the clock the hide stopped.
+        guard feed.model.visible, let window = feed.window else { return }
+        present(for: window)
+        startClock()
+        render()
+    }
+
+    /// Redraw from whatever the feed now holds. What the menu bar's own Pause,
+    /// Resume and Stop reach when they have already reduced their event.
+    func refresh() { render() }
+
     private func present(for window: Rect) {
+        // Hidden from the menu bar. Not a fault and not an absence to explain
+        // twice — `setDrawing(false)` already recorded the reason, and the menu
+        // bar is holding the stop path while this is off.
+        guard feed.drawing else { return }
         // A panel whose drawing raised does not come back. The reason recorded at
         // the fault stays in `proctor_doctor`, so this reads as an explained
         // absence rather than a panel that quietly stopped appearing.
@@ -361,14 +414,14 @@ final class RunHUDPanel {
     // MARK: - Rendering
 
     private func render() {
-        guard let panel, let content else { return }
+        guard let panel, let content, feed.drawing else { return }
         // Aged here rather than in the scheduler: the wait times are the only
         // thing on the panel that changes with nothing happening, and the 1 Hz
         // clock timer that draws the run clock already ticks.
-        state.setQueue(RunQueueModel.from(queue, live: liveRun,
-                                          now: Date().timeIntervalSince1970,
-                                          expanded: queueExpanded))
-        content.model = state.model
+        let model = feed.setQueue(RunQueueModel.from(queue, live: liveRun,
+                                                     now: Date().timeIntervalSince1970,
+                                                     expanded: queueExpanded))
+        content.model = model
         content.elapsed = runStarted.map { Date().timeIntervalSince($0) } ?? 0
         content.needsDisplay = true
         // The character's loop and the rail's pulse are handed to the render
@@ -386,7 +439,7 @@ final class RunHUDPanel {
         // the posted click reaches what it was aimed at. `exception` is exactly
         // "the step in flight is synthetic", so the one thing the panel says
         // about a plane is also the thing that governs this.
-        panel.ignoresMouseEvents = state.model.exception != nil
+        panel.ignoresMouseEvents = model.exception != nil
 
         // The exception line adds a row, so the panel grows upward from its
         // bottom-docked corner: the footer stays where it is and Pause and Stop
@@ -396,11 +449,12 @@ final class RunHUDPanel {
             panel.setFrame(CGRect(x: panel.frame.minX, y: panel.frame.minY,
                                   width: Self.width, height: wanted), display: true)
         }
-        if !state.model.visible { hide() }
+        if !model.visible { hide() }
     }
 
     private func height() -> CGFloat {
-        RunHUDLayout.height(exception: state.model.exception != nil, queue: state.model.queue)
+        let model = feed.model
+        return RunHUDLayout.height(exception: model.exception != nil, queue: model.queue)
     }
 
     private func startClock() {
@@ -413,12 +467,12 @@ final class RunHUDPanel {
     }
 
     private func scheduleLinger() {
-        guard let seconds = state.model.lingerSeconds else { return }
+        guard let seconds = feed.model.lingerSeconds else { return }
         linger?.cancel()
         let work = DispatchWorkItem { [weak self] in
             MainActor.assumeIsolated {
                 guard let self else { return }
-                self.state.apply(.lingerElapsed)
+                self.feed.apply(.lingerElapsed)
                 self.render()
             }
         }
@@ -475,12 +529,12 @@ final class RunHUDPanel {
     /// Pause and Resume are the same button. The queue's Hold and Clear are a
     /// different pair of words on a different row, by design.
     func togglePause() {
-        if state.model.phase == .paused {
+        if feed.model.phase == .paused {
             RunControl.shared.resume()
-            state.apply(.resumed)
+            feed.apply(.resumed)
         } else {
             RunControl.shared.pause()
-            state.apply(.paused(step: nil, node: nil))
+            feed.apply(.paused(step: nil, node: nil))
         }
         render()
     }
@@ -489,7 +543,7 @@ final class RunHUDPanel {
         RunControl.shared.stop()
         // The panel says a person stopped it and ends in the quiet grey. Red is
         // for something going wrong; this went right.
-        state.apply(.runEnded(.stoppedByPerson))
+        feed.apply(.runEnded(.stoppedByPerson))
         scheduleLinger()
         render()
     }

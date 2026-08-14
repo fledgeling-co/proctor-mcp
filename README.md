@@ -60,6 +60,14 @@ it leaves the Dock and lives in the menu bar, where the same window is a status
 panel: what is granted, what is attached, what the agent is signed with, and the
 snippet to paste into your MCP host. "Run Setup Again…" replays the walkthrough.
 
+The menu bar item is the run HUD's own character, in the state the run is in, so
+a glance at the top of the screen answers what Proctor is doing without finding
+the panel. Its menu shows and hides that panel at once for the current run, and
+carries Pause and Stop while a run is live, because the panel is the kill switch
+and putting it away must not put the kill switch away. When Proctor is
+unreachable or missing a permission it needs, the item goes back to the status
+symbol: that is the more urgent thing to say.
+
 The install auto-detects your Developer ID identity, so a normal run is signed,
 not ad-hoc — which matters because an ad-hoc signature ties the grants to those
 exact bytes and every rebuild silently revokes them (the symptom is elements not

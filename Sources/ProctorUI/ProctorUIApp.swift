@@ -123,7 +123,7 @@ struct ProctorUIApp: App {
             }
         }
 
-        MenuBarExtra("Proctor", systemImage: menuIcon) {
+        MenuBarExtra {
             MenuBarContent(model: model,
                            openMain: { openWindow(id: "main") },
                            rerunSetup: {
@@ -131,14 +131,13 @@ struct ProctorUIApp: App {
                                AppDelegate.applyPolicy()
                                openWindow(id: "main")
                            })
-        }
-    }
-
-    private var menuIcon: String {
-        switch model.reachability {
-        case .reachable:   return model.ready ? "checkmark.seal" : "exclamationmark.triangle"
-        case .unreachable: return "bolt.horizontal.circle"
-        case .unknown:     return "circle.dashed"
+        } label: {
+            // The character, in the state the agent's own run HUD is in — so a
+            // glance at the top of the screen answers "what is Proctor doing"
+            // without finding the panel, which may be on a display nobody is
+            // looking at or hidden outright. Falls back to the agent's status
+            // symbol when there is something more urgent to say than a phase.
+            MenuBarLabel(icon: model.menuBarIcon, character: model.character)
         }
     }
 }
@@ -152,6 +151,29 @@ struct MenuBarContent: View {
         Text(statusLine)
         if let activityLine {
             Label(activityLine, systemImage: activityIcon)
+        }
+        if runControlsShown {
+            Divider()
+            // The run's own two controls, and the reason they are here: hiding
+            // the panel takes Pause and Stop off the screen, and the panel is the
+            // kill switch. So they live where the switch that hid it lives.
+            //
+            // These are the run's words. Hold and Clear act on the queue, live on
+            // the panel's queue bar, and are deliberately not here — the two
+            // pairs never sit together and never share a word, because calling
+            // both "pause" is how somebody stops the wrong thing.
+            Button(model.hudPhase == .paused ? "Resume Run" : "Pause Run") {
+                model.togglePause()
+            }
+            Button("Stop Run") { model.stopRun() }
+        }
+        Divider()
+        Toggle("Show Run Panel", isOn: Binding(
+            get: { model.hudDrawing },
+            set: { model.setPanel(visible: $0) }))
+            .disabled(!panelSwitchEnabled)
+        if let refusal = panelRefusal {
+            Text(refusal)
         }
         Divider()
         Button("Proctor Status…") { NSApp.activate(ignoringOtherApps: true); openMain() }
@@ -176,6 +198,30 @@ struct MenuBarContent: View {
         return model.queueWaiting > 0
             ? "\(model.queueWaiting) session\(model.queueWaiting == 1 ? "" : "s") waiting"
             : "Idle — no model connected"
+    }
+
+    /// Pause and Stop appear only while there is a run for them to act on. A
+    /// control that does nothing is worse than an absent one on a menu whose job
+    /// is to say what is going on.
+    private var runControlsShown: Bool {
+        guard case .reachable = model.reachability else { return false }
+        return model.hudRunning
+    }
+
+    /// The switch itself is off-limits on an agent launched with the run panel
+    /// switched off: that launch runs a bare run loop, so a panel drawn now would
+    /// carry a Pause and a Stop that could not be clicked. Hiding is always
+    /// available, and always reversible within the launch.
+    private var panelSwitchEnabled: Bool {
+        guard case .reachable = model.reachability else { return false }
+        return model.hudDrawing || model.hudCanShow
+    }
+
+    /// Said plainly rather than left as a greyed-out item nobody can explain.
+    private var panelRefusal: String? {
+        guard case .reachable = model.reachability, !model.hudDrawing, !model.hudCanShow
+        else { return nil }
+        return "Started with PROCTOR_HUD off — restart the agent to bring the panel back"
     }
 
     private var activityIcon: String {

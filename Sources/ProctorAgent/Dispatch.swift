@@ -82,6 +82,13 @@ struct Dispatcher: Sendable {
         // tool count is unchanged and no host can reach it as a tool.
         case "proctor_recent_activity":
             return await session.recentActivity(limit: args.int("limit") ?? 12)
+        // Internal verb behind Proctor's menu bar: the show/hide switch for the
+        // run panel and the run's own Pause, Resume and Stop, so hiding the panel
+        // never hides the kill switch. Never in ToolCatalogue either, so the shim
+        // — which gates tools/call on the catalogue — cannot reach it and no MCP
+        // host can put a person's stop button away.
+        case "proctor_hud":
+            return try await session.hudControl(RunHUDControl.parse(args.string("action")))
         default:
             throw AgentError(
                 code: .invalidArguments,

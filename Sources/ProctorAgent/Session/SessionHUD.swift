@@ -63,27 +63,125 @@ extension Session {
     }
 
     /// What `proctor_doctor` says about the panel.
+    ///
+    /// Three states, and a person deciding whether to trust an unattended run has
+    /// to be able to tell them apart: drawn, hidden from the menu bar with the
+    /// controls still reachable there, and switched off at launch with no panel
+    /// this launch at all.
     func hudStatus() -> JSONValue {
-        guard drawsHUD else {
-            return .object([
-                "enabled": .bool(false),
-                "available": .bool(false),
-                "note": .string("The run HUD is switched off by PROCTOR_HUD, so a run shows no "
-                              + "panel and there is no Pause or Stop control on screen. Runs are "
-                              + "unaffected. Unset PROCTOR_HUD to bring it back.")
-            ])
-        }
+        let feed = hudFeed
         let status = RunHUDAvailability.shared.status
         var out: [String: JSONValue] = [
-            "enabled": .bool(true),
+            "enabled": .bool(feed.drawing),
             "onScreen": .bool(status.available),
-            "available": .bool(status.reason == nil),
+            // Whether there is actually a working stop control on screen. Every
+            // one of the four ways there is not — switched off at launch, hidden
+            // from the menu bar, no event loop to deliver a click, a drawing
+            // fault — answers false here, because a person reading this is asking
+            // one question and it is that one.
+            "available": .bool(feed.drawing && feed.canShow && status.reason == nil),
+            "canShow": .bool(feed.canShow),
             "pauseLimitSeconds": .number(runControl.pauseLimit)
         ]
-        if let reason = status.reason {
-            out["note"] = .string("The run HUD could not be drawn (\(reason)). Runs still proceed, "
-                                + "but there is no Pause or Stop control on screen.")
+        // Four different absences, and a person deciding whether to trust an
+        // unattended run has to be able to tell them apart. `drawing` is the
+        // switch; `canShow` is whether this process could draw a panel whose
+        // buttons work at all.
+        switch (feed.drawing, feed.canShow) {
+        case (false, false):
+            out["note"] = .string("The run panel is switched off by PROCTOR_HUD, so this run shows "
+                                + "no panel and there is no Pause or Stop control on screen. Runs "
+                                + "are unaffected, and Proctor's menu bar still shows what the run "
+                                + "is doing. Unset PROCTOR_HUD and restart the agent to bring the "
+                                + "panel back.")
+        case (false, true):
+            out["note"] = .string("A person hid the run panel from Proctor's menu bar, so there is "
+                                + "no Pause or Stop control on screen. Both are in Proctor's menu "
+                                + "bar while a run is going, and Show Run Panel brings the panel "
+                                + "back.")
+        case (true, false):
+            out["note"] = .string("This process is not running an application event loop, so a "
+                                + "panel drawn now would have Pause and Stop that cannot receive a "
+                                + "click, and none is drawn. Runs are unaffected.")
+        case (true, true):
+            if let reason = status.reason {
+                out["note"] = .string("The run HUD could not be drawn (\(reason)). Runs still "
+                                    + "proceed, but there is no Pause or Stop control on screen.")
+            }
         }
+        return .object(out)
+    }
+
+    /// The internal `proctor_hud` verb: the menu bar's side of the panel.
+    ///
+    /// Never in `ToolCatalogue`, so the public tool count is unchanged and the
+    /// shim — which gates `tools/call` on the catalogue — cannot reach it. Only a
+    /// local process of the same user can, which is the same boundary
+    /// `proctor_recent_activity` already sits behind.
+    ///
+    /// Every action answers with the resulting state, so the menu updates on the
+    /// reply rather than on the next poll.
+    func hudControl(_ action: RunHUDControl?) async throws -> JSONValue {
+        guard let action else {
+            throw AgentError(
+                code: .invalidArguments,
+                message: "proctor_hud needs an action",
+                remedy: "Pass action as one of: "
+                      + RunHUDControl.allCases.map(\.rawValue).joined(separator: ", "))
+        }
+        let feed = hudFeed
+        var refused: String?
+
+        // Pause, Resume and Stop act on a run, so with no run in flight they are
+        // refused rather than reduced. Latching a stop against nothing would put a
+        // "Stopped by a person" ending on a panel that was not running, and the
+        // menu bar would report an ending nobody caused.
+        guard !action.needsRun || feed.snapshot.running else {
+            return .object([
+                "hud": feed.wire,
+                "refused": .string("there is no run in flight, so there is nothing to "
+                                 + "\(action.rawValue).")
+            ])
+        }
+
+        switch action {
+        case .show:
+            if let reason = feed.showRefusal {
+                refused = reason
+            } else if !feed.drawing {
+                RunHUDPanel.audit("proctor_hud.show",
+                                  detail: "a person brought Proctor's run panel back from the "
+                                        + "menu bar, so Pause and Stop are on screen again")
+                feed.setDrawing(true)
+                await RunHUDPanel.shared.drawingChanged()
+            }
+        case .hide:
+            if feed.drawing {
+                RunHUDPanel.audit("proctor_hud.hide",
+                                  detail: "a person hid Proctor's run panel from the menu bar, so "
+                                        + "Pause and Stop are in the menu bar rather than on "
+                                        + "screen")
+                feed.setDrawing(false)
+                await RunHUDPanel.shared.drawingChanged()
+            }
+        case .pause:
+            runControl.pause()
+            feed.apply(.paused(step: nil, node: nil))
+            await RunHUDPanel.shared.refresh()
+        case .resume:
+            runControl.resume()
+            feed.apply(.resumed)
+            await RunHUDPanel.shared.refresh()
+        case .stop:
+            runControl.stop()
+            // The same ending the panel's own Stop reduces: grey, not red. Red is
+            // for something going wrong; a person deciding to stop went right.
+            feed.apply(.runEnded(.stoppedByPerson))
+            await RunHUDPanel.shared.refresh()
+        }
+
+        var out: [String: JSONValue] = ["hud": feed.wire]
+        if let refused { out["refused"] = .string(refused) }
         return .object(out)
     }
 
