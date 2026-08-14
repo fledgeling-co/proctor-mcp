@@ -84,6 +84,13 @@ actor Session {
     var approvalToken: ApprovalToken?
     var policyLoadedFlag = false
 
+    /// Where every audit record goes, and what time it is when the approval
+    /// token's TTL is judged. Both are the real thing by default; they are
+    /// substitutable so the gate's wiring can be exercised without writing to the
+    /// operator's trail or sleeping across a token expiry. See SessionPolicy.
+    var auditSink: @Sendable (AuditRecord) -> Void = { _ = AuditLog.append($0) }
+    var clock: @Sendable () -> Double = { Date().timeIntervalSince1970 }
+
     /// The filesystem jail: the declared roots any caller-supplied path must stay
     /// within, resolved on first use from PROCTOR_FS_ROOTS. Nil-then-empty until
     /// loaded; an unset environment variable yields an empty jail, which admits
@@ -470,6 +477,14 @@ actor Session {
     func setRecording(_ name: String?) { recording = name }
     func putFlow(_ flow: RecordedFlow) { flows[flow.name] = flow }
     func removeFlow(_ name: String) { flows.removeValue(forKey: name) }
+
+    /// Install a recorded flow in memory without reading or writing the flow
+    /// directory. Replay's gating is only checkable against a known flow, and a
+    /// test must not leave one behind in the operator's own store to get it.
+    func installFlow(_ flow: RecordedFlow) {
+        flowsLoaded = true
+        flows[flow.name] = flow
+    }
 
     // MARK: - Health inputs
 

@@ -23,5 +23,10 @@ let package = Package(
         .executableTarget(name: "ProctorUI", dependencies: ["ProctorCore"]),
         .target(name: "ProctorReflector", exclude: ["README.md"]),
         .testTarget(name: "ProctorCoreTests", dependencies: ["ProctorCore"]),
+        // The agent's own wiring — the policy gate and the audit trail around the
+        // drive paths — against fake AX/capture engines. Session takes both as
+        // injected protocols, so the gate ordering and the trail contents are
+        // checkable without a Mac, a grant, or a real application.
+        .testTarget(name: "ProctorAgentTests", dependencies: ["ProctorAgent", "ProctorCore"]),
     ]
 )

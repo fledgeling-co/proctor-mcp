@@ -2432,3 +2432,115 @@ struct StabilityCaptureTests {
                 == .object(["step": .number(4), "error": .string("boom")]))
     }
 }
+
+// MARK: - Replay gate (PRO-0012)
+
+@Suite("Replay gate")
+struct ReplayGateTests {
+
+    @Test("a refusal reads identically whichever tool asked")
+    func refusalTextIsShared() {
+        // The spec's rule: a replay refused is refused in the same words a live
+        // drive is, so there is one behaviour to learn rather than one per tool.
+        // Sharing the text is what makes that structural instead of a duplicate
+        // string somebody edits on one path only.
+        let blocked = AppPolicy(block: ["com.apple.keychainaccess"])
+            .decide(bundleId: "com.apple.keychainaccess", hasValidToken: false)
+        let refusal = try! #require(blocked.refusal)
+        #expect(refusal.reason.contains("block list"))
+        #expect(refusal.remedy.contains("proctor_policy action \"configure\""))
+
+        let sensitive = AppPolicy(sensitive: ["com.apple.Passwords"])
+            .decide(bundleId: "com.apple.Passwords", hasValidToken: false)
+        let needsApproval = try! #require(sensitive.refusal)
+        #expect(needsApproval.remedy.contains("proctor_policy action \"approve\""))
+        #expect(needsApproval.remedy.contains("TTL"))
+
+        // An allowed decision carries no refusal at all.
+        #expect(AppPolicy().decide(bundleId: "com.example.app", hasValidToken: false).refusal == nil)
+    }
+
+    @Test("an unidentifiable replay target fails closed under an allow list")
+    func unidentifiableTargetIsRefused() {
+        // A recording can be pointed at a window whose app has no bundle id. That
+        // is the case a shared tool must not wave through.
+        let policy = AppPolicy(allow: ["com.example.allowed"])
+        let refusal = try! #require(policy.decide(bundleId: nil, hasValidToken: false).refusal)
+        #expect(refusal.reason.contains("no bundle identifier"))
+    }
+
+    @Test("refused before the first repeat fails the call; refused later stops it")
+    func verdictDependsOnWhatAlreadyRan() {
+        // The split that keeps a report honest: nothing measured yet means there
+        // is nothing to report, so the call fails. Something measured means the
+        // run stops and keeps it.
+        let blocked = AppPolicy(block: ["com.example.app"])
+            .decide(bundleId: "com.example.app", hasValidToken: false)
+        let refusal = try! #require(blocked.refusal)
+
+        #expect(ReplayGate.verdict(for: blocked, completedRuns: 0) == .refuseRun(refusal))
+        #expect(ReplayGate.verdict(for: blocked, completedRuns: 1) == .stopRun(refusal))
+        #expect(ReplayGate.verdict(for: blocked, completedRuns: 4) == .stopRun(refusal))
+        #expect(ReplayGate.verdict(for: .allow, completedRuns: 0) == .proceed)
+        #expect(ReplayGate.verdict(for: .allow, completedRuns: 4) == .proceed)
+    }
+
+    @Test("an approval valid at the first repeat can be invalid at a later one")
+    func approvalExpiresBetweenRepeats() {
+        // The property the per-repeat re-check exists for. Checking once at the
+        // start would carry minute one's authority to the last repeat.
+        let policy = AppPolicy(sensitive: ["com.apple.Passwords"])
+        let token = ApprovalToken.mint(bundleId: "com.apple.Passwords", ttl: 30, now: 1_000)
+
+        let atStart = policy.decide(bundleId: "com.apple.Passwords",
+                                    hasValidToken: token.isValid(at: 1_000, for: "com.apple.Passwords"))
+        #expect(ReplayGate.verdict(for: atStart, completedRuns: 0) == .proceed)
+
+        let later = policy.decide(bundleId: "com.apple.Passwords",
+                                  hasValidToken: token.isValid(at: 1_100, for: "com.apple.Passwords"))
+        guard case .stopRun = ReplayGate.verdict(for: later, completedRuns: 3) else {
+            Issue.record("an expired approval part-way through must stop the run, not fail it")
+            return
+        }
+    }
+
+    @Test("a cut-short run says how many repeats it measured and why it stopped")
+    func earlyStopNoteCarriesCountAndReason() {
+        let note = ReplayGate.earlyStopNote(completedRuns: 3, requestedRuns: 10,
+                                            reason: "com.example.app is a sensitive application.")
+        #expect(note.contains("3 of 10 repeats"))
+        #expect(note.contains("com.example.app is a sensitive application."))
+        // The provenance is the point: the numbers are real, they are just fewer.
+        #expect(note.contains("measured on the 3 repeats that completed"))
+    }
+
+    @Test("the drive paths are named distinctly, in the tool.subaction form")
+    func toolNamesAreDistinct() {
+        // A trail that cannot tell a replay from a live action cannot answer
+        // "who did this".
+        #expect(Set(AuditTool.all).count == AuditTool.all.count)
+        #expect(AuditTool.act == "proctor_act")
+        for sub in [AuditTool.appsActivate, AuditTool.flowReplay,
+                    AuditTool.stabilityReplay, AuditTool.stabilityReset] {
+            let parts = sub.split(separator: ".")
+            #expect(parts.count == 2)
+            #expect(parts[0].hasPrefix("proctor_"))
+        }
+    }
+
+    @Test("a replayed step is redacted exactly as a live one, under the replay's name")
+    func replayedStepIsRedacted() {
+        let secret = "hunter2-the-password"
+        let live = AuditRecord.forStep(ActionStep(kind: .type, text: secret),
+                                       tool: AuditTool.act, timestamp: 1_700_000_000,
+                                       app: "app-1", bundleId: "com.example.app",
+                                       window: "win-1", outcome: "ok", postStateHash: nil)
+        let replayed = AuditRecord.forStep(ActionStep(kind: .type, text: secret),
+                                           tool: AuditTool.flowReplay, timestamp: 1_700_000_000,
+                                           app: "app-1", bundleId: "com.example.app",
+                                           window: "win-1", outcome: "ok", postStateHash: nil)
+        #expect(replayed.value == live.value)
+        #expect(!replayed.jsonLine().contains(secret))
+        #expect(replayed.tool == "proctor_flow.replay")
+    }
+}

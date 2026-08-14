@@ -27,9 +27,29 @@ extension Session {
         policyLoadedFlag = true
     }
 
+    // MARK: - Seams
+
+    /// Install a policy without touching disk, and mark it loaded so the on-disk
+    /// one is not read over the top of it. The gate's wiring — which paths check
+    /// it, in what order, and what they write to the trail — is only checkable
+    /// against a known policy, and a test must not write to the operator's real
+    /// policy file to get one.
+    func installPolicy(_ policy: AppPolicy, token: ApprovalToken? = nil) {
+        self.policy = policy
+        self.approvalToken = token
+        self.policyLoadedFlag = true
+    }
+
+    /// Where audit records go, and what time it is for the approval token. Both
+    /// default to the real thing — the on-disk trail and the wall clock — and are
+    /// substituted only so a test can read what was recorded and cross a TTL
+    /// boundary exactly rather than by sleeping.
+    func setAuditSink(_ sink: @escaping @Sendable (AuditRecord) -> Void) { auditSink = sink }
+    func setClock(_ clock: @escaping @Sendable () -> Double) { self.clock = clock }
+
     private func tokenValid(for bundleId: String?) -> Bool {
         guard let token = approvalToken else { return false }
-        return token.isValid(at: Date().timeIntervalSince1970, for: bundleId)
+        return token.isValid(at: clock(), for: bundleId)
     }
 
     /// Enforce the gate for a tool about to drive `window`. On refusal it writes a
@@ -52,39 +72,62 @@ extension Session {
     @discardableResult
     func enforcePolicy(tool: String, app: AppHandle?, bundleId: String?,
                        window: String? = nil) throws -> AuditContext {
+        let outcome = policyGate(tool: tool, app: app, bundleId: bundleId, window: window)
+        if let refusal = outcome.refusal {
+            throw AgentError(code: .policyDenied, message: refusal.reason, remedy: refusal.remedy)
+        }
+        return outcome.context
+    }
+
+    /// The gate without the throw, for a caller that has to decide what a refusal
+    /// means rather than simply fail — a repeated replay part-way through a run
+    /// has numbers to report and cannot just unwind. The refusal record is written
+    /// here either way, so the trail is identical whichever caller asked; the
+    /// reason and remedy come from the shared `PolicyDecision.refusal`, so every
+    /// gated path says the same thing and only the audited tool name differs.
+    ///
+    /// `bundleId` must be the identity of the application actually being driven.
+    /// It is a separate parameter only because an app-scoped action resolves it
+    /// before it has an `AppHandle`; passing anything else — the bundle id a
+    /// recording carries, or one a caller supplied — would have the gate judge a
+    /// name instead of the app under the pointer, which is the hole this feature
+    /// exists to close.
+    func policyGate(tool: String, app: AppHandle?, bundleId: String?,
+                    window: String? = nil) -> (context: AuditContext, refusal: PolicyRefusal?) {
         loadPolicyIfNeeded()
         let resolved = bundleId ?? app?.bundleId
         let context = AuditContext(tool: tool, app: app?.id, bundleId: resolved, window: window)
 
-        switch policy.decide(bundleId: resolved, hasValidToken: tokenValid(for: resolved)) {
-        case .allow:
-            return context
-        case .blocked(let reason):
-            AuditLog.append(AuditRecord(timestamp: Date().timeIntervalSince1970, tool: tool,
-                                        app: app?.id, bundleId: resolved, window: window,
-                                        outcome: "refused", reason: reason))
-            throw AgentError(code: .policyDenied, message: reason,
-                             remedy: "Remove the app from the block list with proctor_policy action "
-                                   + "\"configure\", or drive a different application.")
-        case .needsApproval(let reason):
-            AuditLog.append(AuditRecord(timestamp: Date().timeIntervalSince1970, tool: tool,
-                                        app: app?.id, bundleId: resolved, window: window,
-                                        outcome: "refused", reason: reason))
-            throw AgentError(code: .policyDenied, message: reason,
-                             remedy: "Mint an approval token with proctor_policy action \"approve\" "
-                                   + "(optionally scoped to this bundle id), then retry within its TTL.")
-        }
+        let decision = policy.decide(bundleId: resolved, hasValidToken: tokenValid(for: resolved))
+        guard let refusal = decision.refusal else { return (context, nil) }
+        auditSink(AuditRecord(timestamp: clock(), tool: tool,
+                              app: app?.id, bundleId: resolved, window: window,
+                              outcome: "refused", reason: refusal.reason))
+        return (context, refusal)
+    }
+
+    /// The gate for one repeat of a repeated replay. The decision is made on the
+    /// application being driven now — never on the one the recording names — and
+    /// the verdict depends on how much of the run already happened: refused before
+    /// the first repeat fails the call, refused between repeats stops it with the
+    /// numbers it managed to measure.
+    func repeatGate(tool: String, window: WindowHandle,
+                    completedRuns: Int) -> (context: AuditContext, verdict: ReplayGate.Verdict) {
+        let app = appHandle(forWindow: window)
+        let outcome = policyGate(tool: tool, app: app, bundleId: app?.bundleId, window: window.id)
+        guard let refusal = outcome.refusal else { return (outcome.context, .proceed) }
+        return (outcome.context,
+                completedRuns > 0 ? .stopRun(refusal) : .refuseRun(refusal))
     }
 
     /// Record one executed step, redacting anything it carried.
     func auditStep(_ step: ActionStep, context: AuditContext, ok: Bool,
                    postStateHash: String?, reason: String?) {
-        AuditLog.append(AuditRecord.forStep(step, tool: context.tool,
-                                            timestamp: Date().timeIntervalSince1970,
-                                            app: context.app, bundleId: context.bundleId,
-                                            window: context.window,
-                                            outcome: ok ? "ok" : "failed",
-                                            postStateHash: postStateHash, reason: reason))
+        auditSink(AuditRecord.forStep(step, tool: context.tool, timestamp: clock(),
+                                      app: context.app, bundleId: context.bundleId,
+                                      window: context.window,
+                                      outcome: ok ? "ok" : "failed",
+                                      postStateHash: postStateHash, reason: reason))
     }
 
     // MARK: - proctor_policy
@@ -102,7 +145,7 @@ extension Session {
             // what makes the jail's guarantee auditable rather than implicit.
             "fsRoots": .array(fsRootsList().map(JSONValue.string))
         ]
-        let now = Date().timeIntervalSince1970
+        let now = clock()
         if let token = approvalToken, now < token.expiresAt {
             out["tokenLive"] = .bool(true)
             out["tokenExpiresAt"] = .number(token.expiresAt)
@@ -125,7 +168,7 @@ extension Session {
     }
 
     func approve(bundleId: String?, ttlMs: Int) -> JSONValue {
-        let now = Date().timeIntervalSince1970
+        let now = clock()
         let token = ApprovalToken.mint(bundleId: bundleId, ttl: Double(ttlMs) / 1000, now: now)
         approvalToken = token
         var out: [String: JSONValue] = [
@@ -134,8 +177,8 @@ extension Session {
             "ttlMs": .number(Double(ttlMs))
         ]
         if let scope = token.bundleId { out["bundleId"] = .string(scope) }
-        AuditLog.append(AuditRecord(timestamp: now, tool: "proctor_policy", bundleId: bundleId,
-                                    outcome: "ok", reason: "approval token issued"))
+        auditSink(AuditRecord(timestamp: now, tool: "proctor_policy", bundleId: bundleId,
+                              outcome: "ok", reason: "approval token issued"))
         return .object(out)
     }
 
@@ -143,9 +186,8 @@ extension Session {
         let had = approvalToken != nil
         approvalToken = nil
         if had {
-            AuditLog.append(AuditRecord(timestamp: Date().timeIntervalSince1970,
-                                        tool: "proctor_policy", outcome: "ok",
-                                        reason: "approval token revoked"))
+            auditSink(AuditRecord(timestamp: clock(), tool: "proctor_policy", outcome: "ok",
+                                  reason: "approval token revoked"))
         }
         return .object(["revoked": .bool(had)])
     }

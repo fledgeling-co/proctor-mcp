@@ -434,6 +434,12 @@ public enum ToolCatalogue {
         replay that diverges says where and how, rather than only that it failed.
 
         Flows persist under the session directory, so a campaign survives the MCP host restarting.
+
+        Replay drives an application, so it passes the same policy gate and writes to the same \
+        redacting audit trail as proctor_act: a blocked app, or a sensitive one with no current \
+        approval token, is refused before the first step. The decision is made on the application \
+        behind the window being driven now, not the one the recording names. Recording, listing, \
+        showing and deleting drive nothing and are not gated.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -473,6 +479,11 @@ public enum ToolCatalogue {
 
         Three runs detects gross nondeterminism; five to ten is the useful range for a flow \
         about to be trusted as a gate.
+
+        Every repeat replays the flow, so each one passes the policy gate and is written to the \
+        redacting audit trail, resets included. Permission is re-checked before each repeat: an \
+        approval token that expires part-way through stops the run there, and the report says how \
+        many repeats it managed — a truncated run is never reported deterministic.
         """,
         inputSchema: .object([
             "type": .string("object"),

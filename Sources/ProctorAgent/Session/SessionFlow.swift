@@ -129,13 +129,25 @@ extension Session {
         let flow = try flowNamed(name)
         let targetID = try replayWindow(flow: flow, override: window)
         let handle = try windowHandle(targetID)
+        // A replay drives an application exactly as `act` does, so it passes the
+        // same gate before anything is actuated: a blocked app, or a sensitive one
+        // with no current token, is refused here (and the refusal audited) rather
+        // than replayed. The decision is made on the application behind the window
+        // being driven *now* — `flow.appBundleId` is deliberately not consulted,
+        // because a recording can be pointed at a different window and the
+        // authority that matters is over the app actually being touched. It fails
+        // closed the same way the live path does: a target whose bundle id cannot
+        // be resolved is refused whenever an allow list is in force.
+        let audit = try enforcePolicy(tool: AuditTool.flowReplay, window: handle)
         let steps = flow.steps.map(\.step)
 
         // Replay uses the same actuation path as act, so a step that behaves
-        // one way when recorded cannot behave another way when replayed.
+        // one way when recorded cannot behave another way when replayed. Handing
+        // it the audit context is what puts each replayed step in the trail
+        // individually, redacted the same way a live step is.
         let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
         let run = await runSteps(steps, window: handle, settle: settle, foreground: foreground,
-                                 captureEach: captureEach, diffEach: false,
+                                 captureEach: captureEach, diffEach: false, audit: audit,
                                  pointerMarks: pointerMarks)
 
         var comparisons: [JSONValue] = []
@@ -191,7 +203,7 @@ extension Session {
         let targetID = try replayWindow(flow: flow, override: window)
         let handle = try windowHandle(targetID)
         let steps = flow.steps.map(\.step)
-        let runs = max(requestedRuns, 1)
+        let requested = max(requestedRuns, 1)
 
         // Reconcile the two opt-in switches once, up front: asking for the marker
         // with capture off switches capture on rather than accepting a switch that
@@ -200,10 +212,6 @@ extension Session {
                                                         pointerMarks: pointerMarks)
 
         var notes: [String] = artifacts.notes
-        if runs < 2 {
-            notes.append("A single run cannot measure divergence; firstDivergence and every "
-                       + "instability score are reported as zero because nothing was compared.")
-        }
         guard !steps.isEmpty else {
             throw AgentError(code: .invalidArguments,
                              message: "flow \(flow.name.debugDescription) has no steps to replay",
@@ -214,26 +222,79 @@ extension Session {
         var perRun: [[String]] = []
         var captures: [StabilityCapture] = []
 
-        for runIndex in 0..<runs {
+        for runIndex in 0..<requested {
+            // The reset runs first in a repeat and drives the app exactly as a
+            // replayed step does, so it gets its own gate under its own name: a
+            // refused reset ends the run the same way a refused replay does, and
+            // the refusal entry says which of the two was refused.
             if runIndex > 0 && !resetBetween.isEmpty {
                 // The reset is scaffolding that returns the app to its start state,
                 // not part of the flow being measured, so it is never captured: its
                 // frames would sit in the ledger under step indices that belong to
                 // the flow's own steps.
-                let reset = await runSteps(resetBetween, window: handle,
-                                           settle: .default, foreground: foreground,
-                                           captureEach: false, diffEach: false)
-                if let failed = reset.failedAt {
-                    let message = reset.results[failed].error?.message ?? "unknown"
-                    notes.append("Run \(runIndex): the reset sequence failed at step \(failed) "
-                               + "(\(message)), so this run did not start from the same state as the "
-                               + "others and any divergence it shows may be an artefact of that.")
+                let resetGate = repeatGate(tool: AuditTool.stabilityReset, window: handle,
+                                           completedRuns: perRun.count)
+                switch resetGate.verdict {
+                case .proceed:
+                    let reset = await runSteps(resetBetween, window: handle,
+                                               settle: .default, foreground: foreground,
+                                               captureEach: false, diffEach: false,
+                                               audit: resetGate.context)
+                    if let failed = reset.failedAt {
+                        let message = reset.results[failed].error?.message ?? "unknown"
+                        notes.append("Run \(runIndex): the reset sequence failed at step \(failed) "
+                                   + "(\(message)), so this run did not start from the same state as "
+                                   + "the others and any divergence it shows may be an artefact "
+                                   + "of that.")
+                    }
+                case .refuseRun(let refusal):
+                    throw AgentError(code: .policyDenied, message: refusal.reason,
+                                     remedy: refusal.remedy)
+                case .stopRun(let refusal):
+                    notes.append(ReplayGate.earlyStopNote(completedRuns: perRun.count,
+                                                          requestedRuns: requested,
+                                                          reason: refusal.reason))
+                    return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
+                                                notes: &notes, includeTiles: includeTiles,
+                                                truncated: true,
+                                                captures: artifacts.captureEach ? captures : nil)
                 }
+            }
+
+            // Permission is re-checked at the top of every measured repeat, on the
+            // application being driven now. A repeated run is where a TTL-bounded
+            // approval has to actually expire: checking once at the start would
+            // carry the authority of minute one to the last repeat an hour later.
+            // `perRun.count` is the number of repeats that have already finished
+            // measuring, which is what separates "refuse the call" from "stop and
+            // report what we have".
+            let gate = repeatGate(tool: AuditTool.stabilityReplay, window: handle,
+                                  completedRuns: perRun.count)
+            switch gate.verdict {
+            case .proceed:
+                break
+            case .refuseRun(let refusal):
+                // Nothing ran, so there is nothing to measure and no report to
+                // make — the caller gets the same refusal a live drive would give.
+                throw AgentError(code: .policyDenied, message: refusal.reason,
+                                 remedy: refusal.remedy)
+            case .stopRun(let refusal):
+                // Authority went away between repeats. There is nobody to ask for
+                // a fresh approval mid-run, so the run ends here and reports what
+                // it did measure, marked as measured on fewer repeats.
+                notes.append(ReplayGate.earlyStopNote(completedRuns: perRun.count,
+                                                      requestedRuns: requested,
+                                                      reason: refusal.reason))
+                return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
+                                            notes: &notes, includeTiles: includeTiles,
+                                            truncated: true,
+                                            captures: artifacts.captureEach ? captures : nil)
             }
 
             let run = await runSteps(steps, window: handle, settle: .default,
                                      foreground: foreground, captureEach: artifacts.captureEach,
-                                     diffEach: false, pointerMarks: artifacts.pointerMarks)
+                                     diffEach: false, audit: gate.context,
+                                     pointerMarks: artifacts.pointerMarks)
             var hashes: [String] = []
 
             // One ledger entry per step this replay attempted, whether or not it
@@ -286,13 +347,34 @@ extension Session {
             perRun.append(hashes)
         }
 
+        return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
+                                    notes: &notes, includeTiles: includeTiles, truncated: false,
+                                    captures: artifacts.captureEach ? captures : nil)
+    }
+
+    /// Score whatever was measured. Called from two places on purpose: the end of
+    /// a full run, and the point a run stops early because permission went away
+    /// between repeats. Both report on the repeats that completed rather than the
+    /// number asked for, so `runs` counts what was measured. A `truncated` run is
+    /// never reported deterministic: agreement across three repeats when five were
+    /// asked for is a weaker claim than the one the caller commissioned, and this
+    /// instrument's whole value is that it does not overstate its evidence.
+    private static func stabilityReport(flow: String, steps: [ActionStep], perRun: [[String]],
+                                        notes: inout [String], includeTiles: Bool,
+                                        truncated: Bool,
+                                        captures: [StabilityCapture]?) -> StabilityReport {
+        let runs = perRun.count
+        if runs < 2 {
+            notes.append("A single run cannot measure divergence; firstDivergence and every "
+                       + "instability score are reported as zero because nothing was compared.")
+        }
+
         // The fold takes hash columns and nothing else, so no artifact — a frame,
         // a marker, a failed capture — has a route into a score.
         let score = StabilityScore.fold(perRun: perRun, stepCount: steps.count, runs: runs)
         for (index, samples) in score.undersampled.sorted(by: { $0.key < $1.key }) {
-            notes.append("Step \(index) was measured on \(samples) of \(perRun.count) runs.")
+            notes.append("Step \(index) was measured on \(samples) of \(runs) runs.")
         }
-
         notes.append(includeTiles
             ? "Pixel tile hashes were folded into each step hash alongside the tree."
             : "Comparison was on the accessibility tree only. Rendering nondeterminism that leaves "
@@ -300,14 +382,17 @@ extension Session {
             + "this run; pass includeTiles to cover it.")
 
         return StabilityReport(
-            flow: flow.name,
+            flow: flow,
             runs: runs,
             stepCount: steps.count,
             firstDivergence: score.firstDivergence,
             stepInstability: score.stepInstability,
-            deterministic: score.deterministic,
+            // The fold cannot know a run was cut short, and a run that agreed
+            // across three repeats when five were commissioned is a weaker claim
+            // than the one asked for, so truncation suppresses the verdict here.
+            deterministic: score.deterministic && !truncated,
             divergenceDetail: score.divergenceDetail.isEmpty ? nil : score.divergenceDetail,
             notes: notes,
-            captures: artifacts.captureEach ? captures : nil)
+            captures: captures)
     }
 }
