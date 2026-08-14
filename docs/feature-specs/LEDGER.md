@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 22
+**Last allocated:** 28
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -29,3 +29,9 @@
 | PRO-0020 | Route browser work to Obscura | 2026-08-14 | Merged |
 | PRO-0021 | Menu bar switch for the panel, and the icon as the character | 2026-08-14 | Merged |
 | PRO-0022 | A drawing fault must not kill the agent | 2026-08-14 | Merged |
+| PRO-0023 | Offer to install Obscura when it is missing | 2026-08-15 | Untriaged |
+| PRO-0024 | A second browser lane for what Obscura cannot do | 2026-08-15 | Untriaged |
+| PRO-0025 | Prefer the background, and draw the pointer in the target's plane | 2026-08-15 | Untriaged |
+| PRO-0026 | Foreground takeover overlay that holds the machine visibly | 2026-08-15 | Untriaged |
+| PRO-0027 | The menu bar shows the character when idle | 2026-08-15 | Untriaged |
+| PRO-0028 | Re-check now says what it checks | 2026-08-15 | Untriaged |

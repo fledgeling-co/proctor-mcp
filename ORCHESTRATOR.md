@@ -175,13 +175,40 @@ about whether a batch declares its synthetic content up front or at the first su
 **Three concurrent runners**, the cap this repo has used since wave 1. Runners stop before merge;
 the orchestrator serialises every merge to local `main` and never pushes.
 
-## Wave 5 — briefed, untriaged (2026-08-15)
-No ids allocated; LEDGER Last allocated stays 22.
+## Wave 5 (2026-08-15) — six items, ids allocated to 28
+Ids allocated in one serial write by the orchestrator, so no runner touches allocation
+and the four triages run concurrently. Phase 4's invariant holds. A child spec still
+takes the ledger lock.
 
-| Brief | What | The decision it turns on |
-|---|---|---|
-| `24-offer-to-install-obscura.md` | Detect a missing Obscura, say so where the handoff is made, offer to install | Whether an agent holding Accessibility and Screen Recording may install software at all, and the rule that an install must never be a side effect of a tool call |
-| `25-second-browser-lane-for-obscuras-limits.md` | A browser-use lane for what Obscura measurably cannot do | **Conflicts with the operator's own standing instruction**, which names browser-use among tools that are removed and routes every browser task through Obscura. The reader asked for it, which is theirs to decide; the spec has to say whether the lane is capability-gated, detection-gated, or a preference defaulting to Obscura-only |
+**Three concurrent runners**, the cap since wave 1. Runners stop before merge; the
+orchestrator serialises every merge to local `main` and never pushes.
+
+| ID | Title | Brief | Depends on | Stage | Status |
+|----|-------|-------|------------|-------|--------|
+| PRO-0023 | Offer to install Obscura when it is missing | `24-offer-to-install-obscura.md` | — | 1 | **Queued** |
+| PRO-0025 | Prefer the background, pointer in the target's plane | `26-prefer-background-and-pointer-in-plane.md` | — | 1 | **Queued** |
+| PRO-0027 | The menu bar shows the character when idle | `28-menu-bar-character-when-idle.md` | — | 1 | **Queued** |
+| PRO-0024 | A second browser lane for Obscura's limits | `25-second-browser-lane-for-obscuras-limits.md` | PRO-0023 merged | 2 | **Blocked** |
+| PRO-0026 | Foreground takeover overlay | `27-foreground-takeover-overlay.md` | PRO-0025 merged | 2 | **Blocked** |
+| PRO-0028 | Re-check now says what it checks | `29-re-check-now-says-what-it-checks.md` | PRO-0027 merged | 2 | **Blocked** |
+
+**Why the stages pair up the way they do.** Each stage-2 item lands in the same files
+as its stage-1 sibling, so sequencing them costs nothing and removes the whole
+conflict surface: 0023/0024 both rewrite the browser handoff, 0025/0026 both touch
+`Sources/ProctorAgent/Overlay/`, and 0027/0028 both edit the menu bar. Running the
+pairs concurrently would mean resolving two designs against each other at merge, and
+wave 4 already showed what that costs when PRO-0019 and PRO-0021 arrived with two
+rules for one glyph.
+
+### Two items carry a decision that is the reader's, not the runner's
+- **PRO-0024 conflicts with the reader's own standing instruction**, which names
+  browser-use among tools that are removed and routes every browser task through
+  Obscura. The reader asked for the lane; the spec must say whether it is
+  capability-gated, detection-gated, or a preference defaulting to Obscura-only.
+- **PRO-0026 needs a `CGEventTap` to swallow input** — the same API a keylogger uses,
+  on the Accessibility grant this process already holds. A real escalation of what
+  the agent does. Three readings are in the brief; the spec picks one and defends it,
+  under two invariants: Stop always works, and the block never survives the process.
 
 ## Event log (append-only, newest first)
 - 2026-08-15 **The three-second linger was already the behaviour; the guard around it was not.** `quietLinger` has been 3s since PRO-0015 (a blocked or failed ending holds 15s, deliberately, because it is the one somebody needs to read). What was missing was protection against a stale timer: the panel cancels the pending item when a run begins, but cancelling a work item already dequeued does nothing, so a timer waiting its turn on the main queue behind the call that starts the next run would hide the panel a few milliseconds into a live run — a run with no visible stop button, which is the one state the panel exists to prevent. The reducer now refuses a linger unless the run it was armed for is still the run on screen, making it safe on its own rather than only in company with a correct caller. 544 tests / 66 suites.
