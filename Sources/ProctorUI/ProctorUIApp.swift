@@ -47,7 +47,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// app menu, ⌘Q — runs through here and stops the background agent as well
     /// as this window. Both return at the next login (the LaunchAgent plist and
     /// the login-item registration persist), so this is "off now", not uninstall.
+    ///
+    /// A relaunch is the exception and is not a quit: the agent holds the grants
+    /// and may be running something, and swapping this window's build is no
+    /// reason to take it down.
     func applicationWillTerminate(_ notification: Notification) {
+        guard !Actions.isRelaunching else { return }
         Actions.stopAgent()
     }
 
@@ -149,6 +154,16 @@ struct MenuBarContent: View {
 
     var body: some View {
         Text(statusLine)
+        // The app on disk is not the app running. Above everything else because
+        // it changes what every line below it is worth: a status read from a
+        // build that was replaced hours ago is a status about the wrong Proctor,
+        // which is exactly how the character's absence got reported as a fault in
+        // a rule that was working.
+        if model.buildReplaced {
+            Divider()
+            Text("Proctor was updated. Relaunch to use the new version.")
+            Button("Relaunch Proctor") { Actions.relaunch(alsoAgent: model.agentBuildReplaced) }
+        }
         if let activityLine {
             Label(activityLine, systemImage: activityIcon)
         }

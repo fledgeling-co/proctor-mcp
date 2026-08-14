@@ -182,9 +182,15 @@ struct MenuBarLabel: View {
                     .frame(width: CGFloat(RunHUDCharacter.menuBarSide),
                            height: CGFloat(RunHUDCharacter.menuBarSide))
             } else {
-                // The pictures did not decode. Say Proctor is fine rather than
-                // showing nothing at all.
-                Image(systemName: "checkmark.seal")
+                // The pictures did not decode. An unknown, not an all-clear.
+                //
+                // This used to be `checkmark.seal`, which said everything was
+                // fine while the one thing this view exists to draw was missing —
+                // and `checkmark.seal` was *also* the ready glyph before the
+                // character arrived, so the same picture meant three different
+                // things at once. That collision is what made a stale menu bar
+                // read as a broken readiness rule for long enough to file a bug.
+                Image(systemName: "questionmark.circle")
             }
         }
     }

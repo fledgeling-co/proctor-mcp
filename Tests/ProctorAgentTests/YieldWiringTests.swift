@@ -421,7 +421,7 @@ struct YieldWiringTests {
         // A held run is not acting, so `takingForeground` is false and the
         // existing order — reachability, grants, foreground, phase — reaches the
         // character with no new case.
-        #expect(MenuBarIcon.decide(reachable: true, ready: true, phase: .paused,
+        #expect(MenuBarIcon.decide(reachable: true, block: nil, phase: .paused,
                                    takingForeground: false) == .character(.paused))
     }
 

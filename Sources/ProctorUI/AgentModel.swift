@@ -98,12 +98,63 @@ final class AgentModel {
     private var activityTimer: Timer?
     private var doctorTimer: Timer?
 
+    /// Whether the app on disk is a different build from the one running.
+    ///
+    /// An upgrade replaces the bundle underneath this process. `scripts/install.sh`
+    /// kickstarts the agent, so *it* comes back on the new binary; nothing brings
+    /// this window back, and until this existed nothing said so — which is how a
+    /// menu bar running an eight-hour-old build got reported as a bug in a rule
+    /// that was working correctly. Measured on 2026-08-15: the agent restarted ten
+    /// seconds after the install, the window did not restart at all.
+    private(set) var buildReplaced = false
+
+    /// Whether the *agent's* binary moved too. Tracked apart from the window's
+    /// because the fix differs: this one is a launchd kickstart, and doing it
+    /// unasked would drop a run in flight. The installer normally does it, so
+    /// this is usually false while `buildReplaced` is true.
+    private(set) var agentBuildReplaced = false
+
+    /// This app's own build: the executable, and the idle picture from Core's
+    /// resource bundle. Two, not one, because the thing that goes missing is an
+    /// asset — a reinstall that replaced only the resource bundle would leave a
+    /// Mach-O stamp untouched and the character wrong anyway.
+    private static var appPaths: [String] {
+        [Bundle.main.executablePath,
+         RunHUDCharacter.menuBarAssetURL(asset: "idle-0", scale: 1)?.path].compactMap { $0 }
+    }
+
+    /// The agent's binary, beside this one in the same bundle.
+    private static var agentPaths: [String] {
+        [Bundle.main.bundleURL.appendingPathComponent("Contents/MacOS/proctor-agent").path]
+    }
+
+    private let appStamps: [BuildStamp?] = appPaths.map(BuildStamp.of(path:))
+    private let agentStamps: [BuildStamp?] = agentPaths.map(BuildStamp.of(path:))
+
     /// Polling starts with the model and runs for the app's whole life, not just
     /// while the window is open — the menu-bar glyph and status line have to stay
     /// live after the window is closed.
     init() { startPolling() }
 
     var ready: Bool { report?.ready == true }
+
+    /// Whether every grant Proctor cannot work without is in place.
+    ///
+    /// Narrower than `ready`, on purpose, and the menu bar reads this one. `ready`
+    /// is `blockers.isEmpty` and the doctor's blockers include Secure Event Input,
+    /// which is not a grant and does not want the same picture — see `MenuBarBlock`.
+    /// Every other consumer of `ready` still asks the wider question, which is the
+    /// right one for a status line.
+    ///
+    /// A report carrying no required grants at all answers false. An empty list is
+    /// absence of evidence, not evidence of a grant, and `allSatisfy` over nothing
+    /// is true — which would have quietly put a calm character over a report that
+    /// said nothing about permissions.
+    var requiredGrantsGranted: Bool {
+        guard let report else { return false }
+        let required = report.grants.filter(\.required)
+        return !required.isEmpty && required.allSatisfy(\.granted)
+    }
 
     var requiredGrants: [DoctorReport.Grant] {
         report?.grants.filter(\.required) ?? []
@@ -144,6 +195,18 @@ final class AgentModel {
     private func refreshDoctor() {
         guard !isChecking else { return }
         isChecking = true
+        // The stale-build check rides this tick rather than bringing a timer of
+        // its own: two stats against a socket round trip already running at this
+        // cadence is not worth a second clock. Once true it stays true — the
+        // build on disk does not go back.
+        if !buildReplaced {
+            buildReplaced = BuildStamp.replaced(
+                running: appStamps, onDisk: Self.appPaths.map(BuildStamp.of(path:)))
+        }
+        if !agentBuildReplaced {
+            agentBuildReplaced = BuildStamp.replaced(
+                running: agentStamps, onDisk: Self.agentPaths.map(BuildStamp.of(path:)))
+        }
         Task.detached(priority: .utility) {
             let outcome = Self.callDoctor(requestAccessibility: false, requestScreenRecording: false)
             await MainActor.run { self.apply(outcome) }
@@ -282,10 +345,15 @@ final class AgentModel {
     var menuBarIcon: MenuBarIcon {
         switch reachability {
         case .unknown: return .checking
-        case .unreachable: return MenuBarIcon.decide(reachable: false, ready: false, phase: hudPhase)
-        case .reachable: return MenuBarIcon.decide(reachable: true, ready: ready,
-                                                   phase: hudPhase,
-                                                   takingForeground: foreground.active)
+        case .unreachable:
+            return MenuBarIcon.decide(reachable: false, block: .missingGrant, phase: hudPhase)
+        case .reachable:
+            let block = MenuBarIcon.block(
+                requiredGrantsGranted: requiredGrantsGranted,
+                secureEventInputActive: report?.secureEventInputActive == true,
+                ready: ready)
+            return MenuBarIcon.decide(reachable: true, block: block, phase: hudPhase,
+                                      takingForeground: foreground.active)
         }
     }
 

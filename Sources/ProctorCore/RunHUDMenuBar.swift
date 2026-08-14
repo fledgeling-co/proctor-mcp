@@ -121,8 +121,8 @@ public enum MenuBarIcon: Sendable, Equatable {
     /// The character, in a run phase.
     case character(RunHUDPhase)
 
-    /// `reachable` is whether the agent answered; `ready` is whether every
-    /// required grant is in place; `phase` is what the run is doing.
+    /// `reachable` is whether the agent answered; `block` is what is standing
+    /// between Proctor and working at all; `phase` is what the run is doing.
     ///
     /// `takingForeground` outranks the phase and is outranked by both guards, and
     /// that order is the whole of the rule. A Proctor that cannot work must not
@@ -131,16 +131,70 @@ public enum MenuBarIcon: Sendable, Equatable {
     /// keyboard and pointer, the second is the one somebody needs from across the
     /// room — the phase says what Proctor is doing, this says it is about to
     /// happen to you.
-    public static func decide(reachable: Bool, ready: Bool, phase: RunHUDPhase,
+    public static func decide(reachable: Bool, block: MenuBarBlock?, phase: RunHUDPhase,
                               takingForeground: Bool = false) -> MenuBarIcon {
         guard reachable else { return .symbol("bolt.horizontal.circle") }
-        guard ready else { return .symbol("exclamationmark.triangle") }
+        if let block { return .symbol(block.symbol) }
         if takingForeground { return .symbol("cursorarrow.rays") }
         return .character(phase)
     }
 
     /// Before the first poll answers, there is nothing to report either way.
     public static let checking = MenuBarIcon.symbol("circle.dashed")
+}
+
+/// What is standing between Proctor and working, when something is.
+///
+/// This rung used to read `DoctorReport.ready`, which is `blockers.isEmpty` — and
+/// the doctor's blockers are two different facts about a Mac wearing one word.
+/// A missing grant is a Proctor that will not work until somebody visits System
+/// Settings. Secure Event Input is a Proctor that is fine and is being kept out
+/// of the keyboard for as long as a password field has focus, which is seconds at
+/// a time, several times a day. Showing the missing-permission triangle for the
+/// second is a machine reporting a fault it does not have.
+///
+/// Both still take the menu bar off the character, because neither is healthy
+/// rest: while Secure Event Input is on, click, key, hover and dragPath are dead,
+/// and somebody about to start a run needs that before they start it rather than
+/// as a failure partway through. They just stop sharing a picture.
+public enum MenuBarBlock: Sendable, Equatable {
+    /// A required grant is not in place. Nothing works until it is.
+    case missingGrant
+    /// Secure Event Input is active, so the synthetic plane cannot be reached.
+    /// The accessibility plane is unaffected, which is why this is its own state
+    /// and not the permission one.
+    case secureInput
+
+    public var symbol: String {
+        switch self {
+        case .missingGrant: return "exclamationmark.triangle"
+        case .secureInput: return "lock.laptopcomputer"
+        }
+    }
+}
+
+public extension MenuBarIcon {
+
+    /// The rung, from the doctor's own report rather than from a boolean somebody
+    /// upstream already reduced.
+    ///
+    /// Ordered: a missing permission outranks a locked keyboard, because one is a
+    /// Mac that will never work and the other is a Mac that is momentarily busy.
+    ///
+    /// And total, deliberately. `ready` is passed in as well as the two facts this
+    /// knows how to name, so a `ready` that is false for a *third* reason — a
+    /// blocker added to the doctor later, in a change nobody remembers to trace
+    /// here — still blocks, as the permission symbol. A rung whose whole job is
+    /// keeping a calm face off a Proctor that cannot work has to fail in that
+    /// direction; the alternative is a future blocker silently putting the
+    /// character back up.
+    static func block(requiredGrantsGranted: Bool, secureEventInputActive: Bool,
+                      ready: Bool) -> MenuBarBlock? {
+        if !requiredGrantsGranted { return .missingGrant }
+        if secureEventInputActive { return .secureInput }
+        if !ready { return .missingGrant }
+        return nil
+    }
 }
 
 /// The run HUD's own controls, as the agent's internal verb takes them.

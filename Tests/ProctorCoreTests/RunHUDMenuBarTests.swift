@@ -139,27 +139,27 @@ struct MenuBarIconTests {
         // the argument — a Proctor that cannot work must not wear a calm face, but
         // between "acting" and "the next event goes into your keyboard", the
         // second is what somebody needs from across the room.
-        #expect(MenuBarIcon.decide(reachable: true, ready: true, phase: .acting,
+        #expect(MenuBarIcon.decide(reachable: true, block: nil, phase: .acting,
                                    takingForeground: true) == .symbol("cursorarrow.rays"))
-        #expect(MenuBarIcon.decide(reachable: true, ready: true, phase: .acting,
+        #expect(MenuBarIcon.decide(reachable: true, block: nil, phase: .acting,
                                    takingForeground: false) == .character(.acting))
         // Both guards still win, because a broken agent that looks busy is a
         // picture telling you something untrue about your Mac.
-        #expect(MenuBarIcon.decide(reachable: false, ready: true, phase: .acting,
+        #expect(MenuBarIcon.decide(reachable: false, block: nil, phase: .acting,
                                    takingForeground: true) == .symbol("bolt.horizontal.circle"))
-        #expect(MenuBarIcon.decide(reachable: true, ready: false, phase: .acting,
+        #expect(MenuBarIcon.decide(reachable: true, block: .missingGrant, phase: .acting,
                                    takingForeground: true) == .symbol("exclamationmark.triangle"))
         // And the default keeps every existing caller on the old behaviour.
-        #expect(MenuBarIcon.decide(reachable: true, ready: true, phase: .idle)
+        #expect(MenuBarIcon.decide(reachable: true, block: nil, phase: .idle)
                 == .character(.idle))
     }
 
     @Test("an unreachable agent keeps its status symbol, whatever the phase says")
     func unreachableKeepsTheSymbol() {
         for phase in RunHUDPhase.allCases {
-            #expect(MenuBarIcon.decide(reachable: false, ready: false, phase: phase)
+            #expect(MenuBarIcon.decide(reachable: false, block: .missingGrant, phase: phase)
                     == .symbol("bolt.horizontal.circle"), "\(phase)")
-            #expect(MenuBarIcon.decide(reachable: false, ready: true, phase: phase)
+            #expect(MenuBarIcon.decide(reachable: false, block: nil, phase: phase)
                     == .symbol("bolt.horizontal.circle"), "\(phase)")
         }
     }
@@ -168,16 +168,16 @@ struct MenuBarIconTests {
     func notReadyKeepsTheWarning() {
         // A calm idle character over an agent missing Accessibility is a picture
         // telling somebody a falsehood about their machine.
-        #expect(MenuBarIcon.decide(reachable: true, ready: false, phase: .idle)
+        #expect(MenuBarIcon.decide(reachable: true, block: .missingGrant, phase: .idle)
                 == .symbol("exclamationmark.triangle"))
-        #expect(MenuBarIcon.decide(reachable: true, ready: false, phase: .acting)
+        #expect(MenuBarIcon.decide(reachable: true, block: .missingGrant, phase: .acting)
                 == .symbol("exclamationmark.triangle"))
     }
 
     @Test("a working agent shows the character in the run's own state")
     func readyShowsTheCharacter() {
         for phase in RunHUDPhase.allCases {
-            #expect(MenuBarIcon.decide(reachable: true, ready: true, phase: phase)
+            #expect(MenuBarIcon.decide(reachable: true, block: nil, phase: phase)
                     == .character(phase), "\(phase)")
         }
     }

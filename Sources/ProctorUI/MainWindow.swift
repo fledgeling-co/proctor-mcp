@@ -118,6 +118,27 @@ private struct ReadinessSection: View {
                             + "A Developer ID signed and notarised build keeps its grants "
                             + "across upgrades.")
                 }
+                if model.buildReplaced {
+                    // Said here as well as in the menu, because this window is
+                    // where somebody comes to find out why Proctor is behaving
+                    // oddly — and "the window you are reading was built before the
+                    // thing you are asking about" is the first useful answer.
+                    VStack(alignment: .leading, spacing: 6) {
+                        Callout(
+                            icon: "arrow.triangle.2.circlepath",
+                            tint: .orange,
+                            title: "Proctor was updated",
+                            message: "The app on disk is a newer build than the one running, so "
+                                + "anything this window reports comes from the old one. "
+                                + (model.agentBuildReplaced
+                                   ? "The agent's binary changed too, so relaunching restarts it "
+                                     + "as well — which ends any run in flight."
+                                   : "The installer already restarted the agent on the new build; "
+                                     + "relaunching leaves it, and any run in flight, alone."))
+                        Button("Relaunch Proctor") { Actions.relaunch(alsoAgent: model.agentBuildReplaced) }
+                            .buttonStyle(.borderedProminent)
+                    }
+                }
             }
         }
     }
@@ -561,6 +582,42 @@ enum Actions {
     }
 
     static func restartAgent() { launchctl(["kickstart", "-k", "\(domain)/\(label)"]) }
+
+    /// Set while a relaunch is in flight, and read by `applicationWillTerminate`.
+    ///
+    /// A quit means everything off; a relaunch does not. The agent is the
+    /// long-lived party holding the grants, this window is a bystander, and
+    /// booting the agent out to swap the bystander's build would be exactly
+    /// backwards — as well as dropping any run in flight.
+    @MainActor
+    static var isRelaunching = false
+
+    /// Quit and come back on the build that is now on disk.
+    ///
+    /// `open` on a running single-instance menu bar app activates the instance
+    /// already there rather than starting the new one, and terminating first then
+    /// opening races the launch. So a detached shell waits for this process to go
+    /// and opens the bundle afterwards; the command it runs is built and tested in
+    /// Core, because a shell string assembled in a view is a shell string nobody
+    /// checks.
+    ///
+    /// `alsoAgent` restarts the agent as well, and only the caller who knows the
+    /// agent's own binary moved should pass it. The installer normally kickstarts
+    /// the agent itself, so the usual case is a window that is stale beside an
+    /// agent that is not — and kickstarting unasked would drop a run in flight to
+    /// fix a problem that was not there.
+    @MainActor
+    static func relaunch(alsoAgent: Bool = false) {
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/bin/sh")
+        p.arguments = RelaunchCommand.arguments(pid: ProcessInfo.processInfo.processIdentifier,
+                                                bundlePath: Bundle.main.bundlePath)
+        // Not waited on, on purpose: it has to outlive this process.
+        guard (try? p.run()) != nil else { return }
+        if alsoAgent { restartAgent() }
+        isRelaunching = true
+        NSApp.terminate(nil)
+    }
 
     /// Stop the background agent. Used on quit so "Quit Proctor" means everything
     /// off, not just this window. The LaunchAgent plist stays on disk, so the
