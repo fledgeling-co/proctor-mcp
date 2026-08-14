@@ -1,6 +1,6 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **BACKLOG EMPTY.** All 22 items merged; nothing open in the pipeline.
+**Status:** All 22 items merged. **Two new briefs (wave 5) untriaged**, both about the browser lane.
 **Updated:** 2026-08-14 — wave 1+2 MERGED (10 features), wave 3 MERGED (7 features). **382 tests / 46 suites green on `main` @ 484e54e**, up from 173/24 at the start of the wave. No worktrees, no `ai/*` branches, clean tree, nothing pushed.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
@@ -175,7 +175,16 @@ about whether a batch declares its synthetic content up front or at the first su
 **Three concurrent runners**, the cap this repo has used since wave 1. Runners stop before merge;
 the orchestrator serialises every merge to local `main` and never pushes.
 
+## Wave 5 — briefed, untriaged (2026-08-15)
+No ids allocated; LEDGER Last allocated stays 22.
+
+| Brief | What | The decision it turns on |
+|---|---|---|
+| `24-offer-to-install-obscura.md` | Detect a missing Obscura, say so where the handoff is made, offer to install | Whether an agent holding Accessibility and Screen Recording may install software at all, and the rule that an install must never be a side effect of a tool call |
+| `25-second-browser-lane-for-obscuras-limits.md` | A browser-use lane for what Obscura measurably cannot do | **Conflicts with the operator's own standing instruction**, which names browser-use among tools that are removed and routes every browser task through Obscura. The reader asked for it, which is theirs to decide; the spec has to say whether the lane is capability-gated, detection-gated, or a preference defaulting to Obscura-only |
+
 ## Event log (append-only, newest first)
+- 2026-08-15 **The three-second linger was already the behaviour; the guard around it was not.** `quietLinger` has been 3s since PRO-0015 (a blocked or failed ending holds 15s, deliberately, because it is the one somebody needs to read). What was missing was protection against a stale timer: the panel cancels the pending item when a run begins, but cancelling a work item already dequeued does nothing, so a timer waiting its turn on the main queue behind the call that starts the next run would hide the panel a few milliseconds into a live run — a run with no visible stop button, which is the one state the panel exists to prevent. The reducer now refuses a linger unless the run it was armed for is still the run on screen, making it safe on its own rather than only in company with a correct caller. 544 tests / 66 suites.
 - 2026-08-15 **PRO-0018 MERGED — the backlog is empty.** **542 tests / 66 suites green** on `main`, from 173/24 when the first fleet started. Its second runner also died on a gateway 503 (`9 of 11 accounts at or over their usage reserve`), but 93 minutes in, with triage, plan and a building implementation on disk and only its critic gate outstanding. Rather than a third launch into an exhausted gateway, the orchestrator finished it in-session. **The implementation compiled and every test passed individually, and the suite deadlocked** — three defects the build could never have caught, all of them test-isolation rather than product logic:
   - The fake contention source repeated one frozen sample where the real monitor stamps its clock on every read. `releaseDelay` is measured against the sample's own timestamp, so a stopped clock meant a hold could never be released and the suite sat out a 900-second backstop instead of failing in seconds.
   - The harness injected a `RunControl` only when a test asked for one, so every other test drove the production `RunControl.shared` and left its state behind. `.serialized` stops tests overlapping, not from leaking.
