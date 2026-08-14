@@ -475,7 +475,9 @@ public struct ActionStep: Codable, Sendable {
     public var settle: SettlePolicy?
     public var label: String?
 
-    public enum Kind: String, Codable, Sendable {
+    /// CaseIterable so a new kind cannot be added without the wording table in
+    /// StepDescription growing a row for it — the test walks every case.
+    public enum Kind: String, Codable, Sendable, CaseIterable {
         case press, setValue, focus, menu, type, key, scroll, increment, decrement
         case pick, confirm, cancel, raise, close, resize, move
         case dragPath, hover, click        // synthetic-event kinds; foreground mode only
