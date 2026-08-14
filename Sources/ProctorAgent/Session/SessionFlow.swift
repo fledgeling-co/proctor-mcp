@@ -233,7 +233,7 @@ extension Session {
         let artifacts = StabilityCaptureOptions.resolve(captureEach: captureEach,
                                                         pointerMarks: pointerMarks)
 
-        var notes: [String] = artifacts.notes
+        let notes: [String] = artifacts.notes
         guard !steps.isEmpty else {
             throw AgentError(code: .invalidArguments,
                              message: "flow \(flow.name.debugDescription) has no steps to replay",

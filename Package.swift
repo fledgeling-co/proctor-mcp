@@ -18,11 +18,17 @@ let package = Package(
     ],
     targets: [
         .target(name: "ProctorCore"),
+        // One Objective-C function, and it needs its own target because SwiftPM
+        // has no mixed-language ones. Swift cannot catch an NSException, AppKit
+        // still raises them, and an uncaught one aborts the process — which for a
+        // drawing fault in the run HUD means the panel takes down the agent, the
+        // run and the MCP server with it.
+        .target(name: "ProctorCatch"),
         // The run HUD's character ships inside the binary's resource bundle: an
         // agent holding these permissions has no business reaching the network
         // to draw itself, and a picture fetched mid-run is a picture that can
         // fail mid-run.
-        .executableTarget(name: "ProctorAgent", dependencies: ["ProctorCore"],
+        .executableTarget(name: "ProctorAgent", dependencies: ["ProctorCore", "ProctorCatch"],
                           resources: [.copy("Resources/character")]),
         .executableTarget(name: "ProctorShim", dependencies: ["ProctorCore"]),
         .executableTarget(name: "ProctorUI", dependencies: ["ProctorCore"]),
@@ -32,6 +38,7 @@ let package = Package(
         // drive paths — against fake AX/capture engines. Session takes both as
         // injected protocols, so the gate ordering and the trail contents are
         // checkable without a Mac, a grant, or a real application.
-        .testTarget(name: "ProctorAgentTests", dependencies: ["ProctorAgent", "ProctorCore"]),
+        .testTarget(name: "ProctorAgentTests",
+                    dependencies: ["ProctorAgent", "ProctorCore", "ProctorCatch"]),
     ]
 )

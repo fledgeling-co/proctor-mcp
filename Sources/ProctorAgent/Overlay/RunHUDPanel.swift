@@ -82,6 +82,9 @@ final class RunHUDPanel {
     private var clockTimer: Timer?
     private var linger: DispatchWorkItem?
     private var themeObserver: NSObjectProtocol?
+    /// Latched once the panel's drawing has raised. Never cleared: a fault that
+    /// happened once will happen again on the next display pass.
+    private var drawingFaulted = false
     /// The scheduler's latest state, held with absolute timestamps so the 1 Hz
     /// redraw can age the wait times without the scheduler having to tick.
     private var queue = RunQueueSnapshot()
@@ -214,6 +217,10 @@ final class RunHUDPanel {
     }
 
     private func present(for window: Rect) {
+        // A panel whose drawing raised does not come back. The reason recorded at
+        // the fault stays in `proctor_doctor`, so this reads as an explained
+        // absence rather than a panel that quietly stopped appearing.
+        guard !drawingFaulted else { return }
         guard Self.eventLoopRunning else {
             RunHUDAvailability.shared.record(
                 built: false,
@@ -411,6 +418,26 @@ final class RunHUDPanel {
         }
         linger = work
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: work)
+    }
+
+    /// Take the panel down for good after its drawing raised.
+    ///
+    /// Not a hide: a hidden panel comes back on the next run and would raise
+    /// again on its first display pass, so a fault that is going to recur would
+    /// have the panel flickering between half-drawn and caught for the life of
+    /// the process. `drawingFaulted` latches, so nothing rebuilds it.
+    ///
+    /// The run is untouched. Losing the panel costs the Pause and Stop controls,
+    /// which `proctor_doctor` now reports as absent along with the reason, and
+    /// that is the trade PRO-0015's spec already chose for a panel that cannot be
+    /// drawn: a run with no stop button beats no run and no agent.
+    func takeDownAfterDrawingFault() {
+        drawingFaulted = true
+        clockTimer?.invalidate(); clockTimer = nil
+        linger?.cancel(); linger = nil
+        panel?.orderOut(nil)
+        panel = nil
+        content = nil
     }
 
     /// The panel goes on the linger, fading rather than vanishing — except under

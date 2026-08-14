@@ -1,4 +1,5 @@
 import AppKit
+import ProctorCatch
 import ProctorCore
 
 // The panel's drawing and its mouse handling. Everything here is a rendering of
@@ -282,7 +283,35 @@ final class RunHUDContentView: NSView {
         return match == .darkAqua ? .dark : .light
     }
 
+    /// The drawing pass, behind a barrier.
+    ///
+    /// AppKit raises Objective-C exceptions and Swift cannot catch them, so an
+    /// exception anywhere in a draw aborts the process. For this view that is the
+    /// wrong failure mode twice over: the panel is a supervision surface, and the
+    /// process it would take down is the agent, the run in flight, and the MCP
+    /// server every connected session is using. An annotation must not be able to
+    /// kill the thing it annotates.
+    ///
+    /// PRO-0015's spec already promises the behaviour this restores — panel
+    /// absent, run still proceeds, `proctor_doctor` says why. That promise held
+    /// for a panel that failed to *build* and not for one that failed to *draw*,
+    /// which is exactly how this agent aborted on 2026-08-14 inside
+    /// `drawLiveLine`, with a nil in a CoreText attributes dictionary that four
+    /// attempts could not reproduce.
     override func draw(_ dirtyRect: NSRect) {
+        guard let fault = ProctorCatchNSException({ self.drawPanel(dirtyRect) }) else { return }
+        // Report it, then stop drawing. Left alone, every subsequent display pass
+        // would raise the same exception again, so the panel is taken down rather
+        // than left flickering between a half-drawn state and a caught fault.
+        FileHandle.standardError.write(Data(
+            ("proctor: the run HUD could not be drawn and has been taken down.\n"
+             + "  \(fault)\n").utf8))
+        RunHUDAvailability.shared.record(built: false, reason: fault
+            .split(separator: "\n").first.map(String.init) ?? "a drawing fault")
+        owner?.takeDownAfterDrawingFault()
+    }
+
+    private func drawPanel(_ dirtyRect: NSRect) {
         let p = palette
         let live = p.colour(for: model.tone)
         let hasException = model.exception != nil
