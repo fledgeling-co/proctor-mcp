@@ -34,6 +34,12 @@ struct LiveTakeover: TakeoverDriving {
               onPersonInput: @escaping @Sendable () -> Void) {
         InputBlocker.shared.onStop = onStop
         InputBlocker.shared.onPersonInput = onPersonInput
+        // A hold that ended on the tap's own thread — a deadline, secure input,
+        // a tap macOS gave up on — must move the label too, or the overlay goes
+        // on claiming a hold that ended.
+        InputBlocker.shared.onReleased = {
+            Task { @MainActor in TakeoverOverlay.shared.refresh() }
+        }
     }
 
     // The panels are main-actor work and the run is not on the main actor, so

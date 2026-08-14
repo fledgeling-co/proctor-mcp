@@ -60,6 +60,9 @@ struct TakeoverPolicyTests {
         let open = Takeover.label(app: "Acme Console", blocking: false)
         #expect(held.line.contains("held"))
         #expect(held.line.contains("Esc"))
+        // Worded for the batch rather than for the instant, so it does not
+        // flicker several times a second across a run of fast steps.
+        #expect(held.line.contains("while it acts"))
         #expect(!open.line.contains("held"))
         // And when nothing is held it says so in as many words, because a
         // full-screen veil reads as a modal sheet and somebody who clicks it to
@@ -289,9 +292,36 @@ struct InputBlockTests {
         // screen and photograph what is happening, whoever sent the event.
         for chord in InputBlock.panicChords {
             var gate = InputBlock.Gate()
-            #expect(gate.decide(kind: .keyDown, sourcePid: 0, userData: 0, ourPid: Self.ourPid,
-                                keyCode: chord.keyCode, modifiers: chord.modifiers) == .pass)
+            let decision = gate.decide(kind: .keyDown, sourcePid: 0, userData: 0,
+                                       ourPid: Self.ourPid, keyCode: chord.keyCode,
+                                       modifiers: chord.modifiers)
+            #expect(decision.delivers)
         }
+    }
+
+    @Test("the two chords that mean stop also stop the run")
+    func forceQuitAndLockAlsoStop() {
+        // Passing Ctrl-Cmd-Q and going on posting is the worst end state this
+        // has: locking the screen raises Secure Event Input, which releases the
+        // block, and the run would carry on driving a locked session with the
+        // hold gone. Somebody reaching for Force Quit or the lock means make
+        // this stop, so it does.
+        var gate = InputBlock.Gate()
+        let forceQuit = gate.decide(kind: .keyDown, sourcePid: 0, userData: 0, ourPid: Self.ourPid,
+                                    keyCode: 53, modifiers: [.command, .option])
+        #expect(forceQuit == .passAndStop)
+        #expect(forceQuit.delivers && forceQuit.stops)
+        var second = InputBlock.Gate()
+        let lock = second.decide(kind: .keyDown, sourcePid: 0, userData: 0, ourPid: Self.ourPid,
+                                 keyCode: 12, modifiers: [.command, .control])
+        #expect(lock == .passAndStop)
+        // Switching application and taking a screenshot are not aborts, so they
+        // pass without ending anything.
+        var third = InputBlock.Gate()
+        let switcher = third.decide(kind: .keyDown, sourcePid: 0, userData: 0, ourPid: Self.ourPid,
+                                    keyCode: 48, modifiers: [.command])
+        #expect(switcher == .pass)
+        #expect(!switcher.stops)
     }
 
     @Test("a chord is exact, so the list cannot widen into anything with Command held")
@@ -377,11 +407,12 @@ struct InputBlockTests {
                             button: 0) == .pass)
     }
 
-    @Test("only a passing decision delivers the event")
-    func onlyPassDelivers() {
-        #expect(InputBlockDecision.pass.delivers)
-        #expect(!InputBlockDecision.swallow.delivers)
-        #expect(!InputBlockDecision.stopRun.delivers)
+    @Test("delivery and stopping are separate questions, and one case is both")
+    func deliveryAndStoppingAreSeparate() {
+        #expect(InputBlockDecision.pass.delivers && !InputBlockDecision.pass.stops)
+        #expect(!InputBlockDecision.swallow.delivers && !InputBlockDecision.swallow.stops)
+        #expect(!InputBlockDecision.stopRun.delivers && InputBlockDecision.stopRun.stops)
+        #expect(InputBlockDecision.passAndStop.delivers && InputBlockDecision.passAndStop.stops)
     }
 
     // MARK: - The two predicates point opposite ways, on purpose

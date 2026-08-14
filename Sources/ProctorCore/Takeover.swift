@@ -22,8 +22,9 @@ import Foundation
 // stronger capability on by default while the weaker one stays opt-in would
 // reverse that decision in the direction of more power.
 //
-// WHAT WAS MEASURED, on macOS 26.6, 2026-08-15, with probes that touched only
-// `.mouseMoved` posted at the cursor's existing position:
+// WHAT WAS MEASURED, on macOS 26.6, 2026-08-15. T1 to T3 touched only
+// `.mouseMoved` posted at the cursor's existing position, so nothing moved and
+// nothing was clicked; T5 posted one F13, which almost nothing binds:
 //
 //   T1  A session tap DOES see events this process posts to `.cghidEventTap`,
 //       and a `.headInsertEventTap` `.defaultTap` returning nil removes them: a
@@ -43,8 +44,15 @@ import Foundation
 //       must never survive the process" — it is structural, because the tap is a
 //       Mach port this process owns.
 //
+//   T5  Keyboard events reach a session tap in this process too, carrying the
+//       same two fields: a posted F13 arrived at a listen-only tap as
+//       `(key 105, our pid, our tag)`. T1 to T3 all used the mouse, so without
+//       this the keyboard half of the mask would be an assumption. What none of
+//       them shows is a HARDWARE key being swallowed — that needs a hand at the
+//       keyboard and is stated as unverified rather than implied.
+//
 // T3 says nothing about a block left armed inside a process that is still
-// alive, which is what `armWindow` exists for.
+// alive, which is what the deadline exists for.
 public enum Takeover {
 
     /// The overlay. On by default, the drawn pointer's and the run panel's
@@ -113,8 +121,13 @@ public extension Takeover {
     static func label(app: String?, blocking: Bool) -> TakeoverLabel {
         let name = StepDescription.sanitised(app)
         let title = name.map { "Proctor is driving \"\($0)\"" } ?? "Proctor is driving this Mac"
+        // Worded for the batch rather than for the instant. The block arms and
+        // releases around each posting moment, so a line that said "held" only
+        // while genuinely armed would flicker several times a second across a
+        // run of fast steps, and a message that flickers is one people learn to
+        // ignore. "While it acts" is true either way and never strobes.
         let line = blocking
-            ? "Your keyboard and mouse are held — press Esc to stop"
+            ? "Your keyboard and mouse are held while it acts — press Esc to stop"
             : "Your clicks and keys still reach it — Pause and Stop are in Proctor's run panel"
         return TakeoverLabel(title: title, line: line)
     }
@@ -185,10 +198,19 @@ public enum InputBlockDecision: String, Equatable, Sendable {
     case pass
     case swallow
     case stopRun
+    /// Delivered AND stops the run. The panic chords that mean "make this
+    /// stop" — Force Quit and lock the screen — must reach the system, and it
+    /// would be a strange reading of somebody pressing them to go on posting
+    /// events afterwards. Locking the screen is the sharper case: it raises
+    /// Secure Event Input, which releases the block, and an agent that kept
+    /// posting into a locked session with the hold gone is the worst end state
+    /// this feature has.
+    case passAndStop
 
-    /// Whether the event continues to the application. The tap callback returns
-    /// the event for `pass` and nil for the other two.
-    public var delivers: Bool { self == .pass }
+    /// Whether the event continues to the application.
+    public var delivers: Bool { self == .pass || self == .passAndStop }
+    /// Whether the run ends here.
+    public var stops: Bool { self == .stopRun || self == .passAndStop }
 }
 
 /// The classes of event the block reasons about. A Core-side enum rather than
@@ -222,9 +244,14 @@ public struct InputModifiers: OptionSet, Equatable, Sendable {
 public struct InputChord: Equatable, Sendable {
     public var keyCode: Int64
     public var modifiers: InputModifiers
-    public init(_ keyCode: Int64, _ modifiers: InputModifiers) {
+    /// Whether pressing it also ends the run. True for the two that mean "make
+    /// this stop" and false for the ones that mean "let me look at something
+    /// else for a moment".
+    public var stopsRun: Bool
+    public init(_ keyCode: Int64, _ modifiers: InputModifiers, stopsRun: Bool = false) {
         self.keyCode = keyCode
         self.modifiers = modifiers
+        self.stopsRun = stopsRun
     }
     /// Exact rather than superset: Cmd-Tab is Cmd-Tab, and Cmd-Shift-Tab is its
     /// own entry, so a chord list cannot quietly widen into "anything with
@@ -248,13 +275,13 @@ public enum InputBlock {
     /// while Proctor holds it. `systemDefined` — media, brightness, power — is
     /// not in the tap's mask at all, for the same reason.
     public static let panicChords: [InputChord] = [
-        InputChord(48, [.command]),                    // Cmd-Tab, switch application
-        InputChord(48, [.command, .shift]),            // Cmd-Shift-Tab
-        InputChord(53, [.command, .option]),           // Cmd-Opt-Esc, Force Quit
-        InputChord(12, [.command, .control]),          // Ctrl-Cmd-Q, lock the screen
-        InputChord(20, [.command, .shift]),            // Cmd-Shift-3
-        InputChord(21, [.command, .shift]),            // Cmd-Shift-4
-        InputChord(23, [.command, .shift])             // Cmd-Shift-5
+        InputChord(48, [.command]),                              // Cmd-Tab
+        InputChord(48, [.command, .shift]),                      // Cmd-Shift-Tab
+        InputChord(53, [.command, .option], stopsRun: true),     // Cmd-Opt-Esc, Force Quit
+        InputChord(12, [.command, .control], stopsRun: true),    // Ctrl-Cmd-Q, lock the screen
+        InputChord(20, [.command, .shift]),                      // Cmd-Shift-3
+        InputChord(21, [.command, .shift]),                      // Cmd-Shift-4
+        InputChord(23, [.command, .shift])                       // Cmd-Shift-5
     ]
 
     /// Whether Proctor posted this. The ONLY pass rule, and deliberately the
@@ -314,9 +341,15 @@ public enum InputBlock {
 
             switch kind {
             case .keyDown:
-                if panicChords.contains(where: { $0.matches(keyCode: keyCode,
-                                                            modifiers: modifiers) }) {
-                    return .pass
+                // The modifier set arrives already reduced to the four bits that
+                // mean something here, so a resting Caps Lock, an Fn key or a
+                // keyboard's own left/right device bits cannot stop a chord
+                // matching. A panic chord that failed to match on somebody
+                // else's keyboard would be the safety mechanism failing
+                // silently, per-machine, having passed every test here.
+                if let chord = panicChords.first(where: { $0.matches(keyCode: keyCode,
+                                                                     modifiers: modifiers) }) {
+                    return chord.stopsRun ? .passAndStop : .pass
                 }
                 if let keyCode { swallowedKeys.insert(keyCode) }
                 return keyCode == releaseKeyCode ? .stopRun : .swallow

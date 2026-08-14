@@ -66,6 +66,11 @@ final class InputBlocker: @unchecked Sendable {
     /// timestamp is what PRO-0018 yields on, so a swallowed keystroke is not a
     /// discarded one.
     var onPersonInput: (@Sendable () -> Void)?
+    /// The hold ended on this thread rather than on the caller's — a deadline,
+    /// secure input, a tap macOS gave up on. The label has to follow, or the
+    /// overlay goes on claiming a hold that ended, which is the one thing it
+    /// must never do.
+    var onReleased: (@Sendable () -> Void)?
 
     private let lock = NSLock()
     private var tap: CFMachPort?
@@ -242,6 +247,7 @@ final class InputBlocker: @unchecked Sendable {
             finishHoldLocked(.secureInput)
             lock.unlock()
             enableOnThread(false)
+            onReleased?()
             return
         }
         lock.lock()
@@ -250,6 +256,7 @@ final class InputBlocker: @unchecked Sendable {
         finishHoldLocked(.deadline)
         lock.unlock()
         enableOnThread(false)
+        onReleased?()
     }
 
     // MARK: Creating and enabling
@@ -358,7 +365,11 @@ final class InputBlocker: @unchecked Sendable {
                 finishHoldLocked(.tapDisabled)
             }
             lock.unlock()
-            if firstTime, let port { CGEvent.tapEnable(tap: port, enable: true) }
+            if firstTime, let port {
+                CGEvent.tapEnable(tap: port, enable: true)
+            } else {
+                onReleased?()
+            }
             return Unmanaged.passUnretained(event)
         }
 
@@ -386,21 +397,13 @@ final class InputBlocker: @unchecked Sendable {
                                    userData: event.getIntegerValueField(.eventSourceUserData),
                                    ourPid: ourPid, keyCode: keyCode, button: button,
                                    modifiers: modifiers)
-        if decision != .pass { swallowed += 1 }
-        if decision == .stopRun { release = .stopped }
+        if !decision.delivers { swallowed += 1 }
+        if decision.stops { release = .stopped }
         lock.unlock()
 
-        switch decision {
-        case .pass:
-            return Unmanaged.passUnretained(event)
-        case .swallow:
-            onPersonInput?()
-            return nil
-        case .stopRun:
-            onStop?()
-            onPersonInput?()
-            return nil
-        }
+        if decision.stops { onStop?() }
+        if !decision.delivers { onPersonInput?() }
+        return decision.delivers ? Unmanaged.passUnretained(event) : nil
     }
 
     /// The one place a `CGEventType` becomes something Core reasons about.
@@ -465,6 +468,17 @@ final class TakeoverOverlay {
             }
         }
         visible = true
+        // A tint and a line of text reach nobody using VoiceOver, and with the
+        // block on that person meets a dead keyboard with no account of why or
+        // how to get out of it. The announcement carries both.
+        announce("\(label.title). \(label.line)")
+    }
+
+    private func announce(_ message: String) {
+        NSAccessibility.post(element: NSApp as Any,
+                             notification: .announcementRequested,
+                             userInfo: [.announcement: message,
+                                        .priority: NSAccessibilityPriorityLevel.high.rawValue])
     }
 
     /// The label is re-read whenever the hold starts or stops, so it never
