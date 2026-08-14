@@ -1,4 +1,5 @@
 import Foundation
+import IOKit.hid
 import CoreGraphics
 import ApplicationServices
 import Carbon.HIToolbox
@@ -174,6 +175,23 @@ protocol ReflectorBridge: AnyObject, Sendable {
 enum Grants {
     static func accessibility() -> Bool {
         AXIsProcessTrusted()
+    }
+
+    /// Input Monitoring, read without asking anybody for anything.
+    ///
+    /// `IOHIDCheckAccess` reports the recorded answer and shows no dialog, which
+    /// is what makes it safe to call from a health report. It matters here
+    /// because a keyboard event tap is gated on a grant that is NOT the one
+    /// Proctor needs for everything else, so an operator who turned the input
+    /// block on can find it silently unavailable. Which service macOS 26 gates a
+    /// `.defaultTap` on is not verified in this repo, so this is reported as a
+    /// fact about the machine rather than as the cause of a failure.
+    static func inputMonitoringState() -> String {
+        switch IOHIDCheckAccess(kIOHIDRequestTypeListenEvent) {
+        case kIOHIDAccessTypeGranted: return "granted"
+        case kIOHIDAccessTypeDenied: return "denied"
+        default: return "unknown"
+        }
     }
 
     static func promptAccessibility() {

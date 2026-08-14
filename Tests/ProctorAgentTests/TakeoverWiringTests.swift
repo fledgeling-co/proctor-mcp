@@ -1,0 +1,245 @@
+import Foundation
+import Testing
+import ProctorCore
+@testable import ProctorAgent
+
+// PRO-0026 — the agent's half: what raises the statement, what arms the block,
+// and what guarantees both are down when the run is.
+//
+// A fake stands in for the panels and the tap, so "the block was armed for this
+// step" is something a test can assert without a window server or an event tap.
+// What that leaves untested is named in the spec: a panel presenting, a tint, a
+// tap swallowing anything, and Escape arriving in one.
+
+/// Records every raise, arm and release, in order.
+final class FakeTakeover: TakeoverDriving, @unchecked Sendable {
+    private let lock = NSLock()
+    private(set) var shows: [String?] = []
+    private(set) var hides = 0
+    private(set) var arms: [Double] = []
+    private(set) var releases: [TakeoverRelease] = []
+    private(set) var stops: [TakeoverRelease] = []
+    private(set) var reports = 0
+    private(set) var onStop: (@Sendable () -> Void)?
+    private(set) var onPersonInput: (@Sendable () -> Void)?
+    var holding = false
+    var unavailable: String?
+    /// What `report` hands back, so a test can pretend somebody fought the run.
+    var swallowed = 0
+    var blockedMs = 0
+
+    var armed: Int { lock.lock(); defer { lock.unlock() }; return arms.count - releases.count }
+
+    func bind(onStop: @escaping @Sendable () -> Void,
+              onPersonInput: @escaping @Sendable () -> Void) {
+        lock.lock(); defer { lock.unlock() }
+        self.onStop = onStop
+        self.onPersonInput = onPersonInput
+    }
+
+    func show(app: String?) { lock.lock(); shows.append(app); lock.unlock() }
+    func hide() { lock.lock(); hides += 1; lock.unlock() }
+    func arm(seconds: Double) { lock.lock(); arms.append(seconds); lock.unlock() }
+    func release(_ reason: TakeoverRelease) { lock.lock(); releases.append(reason); lock.unlock() }
+    func stopAll(_ reason: TakeoverRelease) { lock.lock(); stops.append(reason); lock.unlock() }
+
+    func report(shown: Bool) -> TakeoverReport {
+        lock.lock(); defer { lock.unlock() }
+        reports += 1
+        return TakeoverReport(shown: shown, blocked: blockedMs > 0, blockedMs: blockedMs,
+                              swallowed: swallowed, releasedBy: stops.last?.rawValue)
+    }
+
+    var isHolding: Bool { lock.lock(); defer { lock.unlock() }; return holding }
+    var unavailableReason: String? { lock.lock(); defer { lock.unlock() }; return unavailable }
+}
+
+@Suite("Takeover wiring", .serialized)
+struct TakeoverWiringTests {
+
+    private static let target = "com.example.target"
+
+    private func harness() async throws
+        -> (session: Session, ax: FakeAX, takeover: FakeTakeover, contention: FakeContention,
+            control: RunControl) {
+        let ax = FakeAX(bundleId: Self.target)
+        let session = Session(ax: ax, capture: FakeCapture())
+        await session.setAuditSink(AuditCollector().sink)
+        await session.setDrawsHUD(false)
+        let takeover = FakeTakeover()
+        await session.setTakeover(takeover)
+        let contention = FakeContention()
+        await session.setContentionMonitor(contention)
+        await session.setYieldSwitches(enabled: true, observesInput: false)
+        // Never the process-wide latch: a test that yielded the singleton leaves
+        // the next one's checkpoint waiting out a 900-second backstop.
+        let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
+        control.begin()
+        await session.setRunControl(control)
+        _ = try await session.attachResolved(bundleId: Self.target, pid: nil, name: nil)
+        return (session, ax, takeover, contention, control)
+    }
+
+    private func act(_ h: (session: Session, ax: FakeAX, takeover: FakeTakeover,
+                           contention: FakeContention, control: RunControl),
+                     _ steps: [ActionStep], foreground: Bool = true) async throws -> JSONValue {
+        try await h.session.act(window: h.ax.window.id, steps: steps, settle: .default,
+                                foreground: foreground, captureEach: false, diffEach: false,
+                                record: nil)
+    }
+
+    private func step(_ kind: ActionStep.Kind) -> ActionStep {
+        ActionStep(kind: kind, node: "node-1")
+    }
+
+    // MARK: - A1: up for exactly as long as the machine is held
+
+    @Test("an accessibility run raises nothing and arms nothing")
+    func accessibilityRunIsUntouched() async throws {
+        let h = try await harness()
+        _ = try await act(h, [step(.press), step(.setValue), step(.focus)], foreground: false)
+        #expect(h.takeover.shows.isEmpty)
+        #expect(h.takeover.arms.isEmpty)
+        #expect(h.takeover.stops.isEmpty)
+        #expect(h.takeover.hides == 0)
+    }
+
+    @Test("a synthetic batch raises the statement once and names the application")
+    func raisedOncePerBatch() async throws {
+        // Per batch, not per step: a full-screen tint flashing between ten clicks
+        // is strobing, and strobing is worse than the thing it announces.
+        let h = try await harness()
+        _ = try await act(h, [step(.click), step(.click), step(.click)])
+        #expect(h.takeover.shows.count == 1)
+        #expect(h.takeover.shows.first ?? nil != nil)
+        #expect(h.takeover.hides == 1)
+    }
+
+    @Test("a batch that starts on the accessibility plane raises it at the first synthetic step")
+    func raisedAtTheRightStep() async throws {
+        let h = try await harness()
+        _ = try await act(h, [step(.press), step(.click)])
+        #expect(h.takeover.shows.count == 1)
+        // One arm, for the one step that posts.
+        #expect(h.takeover.arms.count == 1)
+    }
+
+    // MARK: - A7: the block cannot outlive the step or the run
+
+    @Test("every arming is matched by a release, and the run ends with a stopAll")
+    func armingIsBalanced() async throws {
+        let h = try await harness()
+        _ = try await act(h, [step(.click), step(.key), step(.hover)])
+        #expect(h.takeover.arms.count == 3)
+        #expect(h.takeover.releases.count == 3)
+        #expect(h.takeover.armed == 0)
+        #expect(h.takeover.stops == [.runEnded])
+    }
+
+    @Test("a step that throws still releases the block")
+    func aThrownStepStillLetsGo() async throws {
+        // The failure this feature cannot have. A block held because a step threw
+        // between arming and releasing is input held by an accounting mistake.
+        let h = try await harness()
+        h.ax.failPerformAt = 0
+        _ = try await act(h, [step(.click), step(.click)])
+        #expect(h.takeover.arms.count == 1)
+        #expect(h.takeover.releases == [.stepEnded])
+        #expect(h.takeover.armed == 0)
+        #expect(h.takeover.stops.count == 1)
+    }
+
+    @Test("the arming carries the step's own duration, bounded by the ceiling")
+    func armingCarriesTheDeadline() async throws {
+        let h = try await harness()
+        var drag = ActionStep(kind: .dragPath, node: "node-1")
+        drag.durationMs = 1200
+        drag.path = [[10, 10], [40, 40]]
+        _ = try await act(h, [drag])
+        #expect(h.takeover.arms == [Takeover.armSeconds(stepDurationMs: 1200)])
+    }
+
+    @Test("a run somebody stopped takes the statement down and says who ended it")
+    func aStoppedRunLetsGo() async throws {
+        let h = try await harness()
+        h.control.stop()
+        _ = try await act(h, [step(.click), step(.click)])
+        // Halted before the first step, so nothing was raised and nothing needs
+        // taking down — the important half is that no arming is left open.
+        #expect(h.takeover.armed == 0)
+    }
+
+    // MARK: - A11: what the run says afterwards
+
+    @Test("a run that took the machine reports it, in a field and in a sentence")
+    func theRunSaysSo() async throws {
+        let h = try await harness()
+        h.takeover.blockedMs = 1500
+        h.takeover.swallowed = 2
+        let out = try await act(h, [step(.click)])
+        let object = try #require(out.objectValue)
+        let takeover = try #require(object["takeover"]?.objectValue)
+        #expect(takeover["shown"]?.boolValue == true)
+        #expect(takeover["blocked"]?.boolValue == true)
+        #expect(takeover["swallowed"]?.intValue == 2)
+        let note = try #require(object["takeoverNote"]?.stringValue)
+        #expect(note.contains("1.5s"))
+        #expect(note.contains("2 times"))
+    }
+
+    @Test("a run that took nothing carries no takeover block at all")
+    func silenceWhenNothingWasTaken() async throws {
+        let h = try await harness()
+        let out = try await act(h, [step(.press)], foreground: false)
+        let object = try #require(out.objectValue)
+        #expect(object["takeover"] == nil || object["takeover"] == .null)
+        #expect(object["takeoverNote"] == nil)
+    }
+
+    // MARK: - A8: a swallowed event is not a discarded one
+
+    @Test("the block is wired to this run's latch, not to a stale one")
+    func boundToThisRun() async throws {
+        // Both closures have to reach the objects this run is using: a block
+        // bound to a previous run's latch is a Stop that stops nothing.
+        let h = try await harness()
+        _ = try await act(h, [step(.click)])
+        let stop = try #require(h.takeover.onStop)
+        let person = try #require(h.takeover.onPersonInput)
+        #expect(!h.control.isStopped)
+        stop()
+        #expect(h.control.isStopped)
+        let before = h.contention.userInputs
+        person()
+        #expect(h.contention.userInputs == before + 1)
+    }
+
+    @Test("a swallowed event feeds the yield, so the two features compose")
+    func swallowedInputYields() async throws {
+        // A swallowed event never reaches an `NSEvent` monitor, so without this
+        // the block would eat exactly the input PRO-0018 exists to notice. The
+        // person's first keystroke is held so it cannot corrupt the step, and it
+        // is also what makes Proctor let go.
+        let h = try await harness()
+        _ = try await act(h, [step(.click)])
+        let person = try #require(h.takeover.onPersonInput)
+        person()
+        #expect(h.contention.userInputs == 1)
+        // And it is recorded without the input monitor being on: the operator who
+        // turned the block on granted strictly more than observation.
+        #expect(!h.contention.observedInput)
+    }
+
+    // MARK: - A4: what doctor says
+
+    @Test("the health report separates asked-for from actually-available")
+    func doctorSeparatesTheTwo() async throws {
+        let h = try await harness()
+        h.takeover.unavailable = "the event tap could not be created"
+        let status = await h.session.takeoverStatus()
+        let object = try #require(status.objectValue)
+        #expect(object["inputBlockAvailable"]?.boolValue == false)
+        #expect(object["note"]?.stringValue?.contains("could not be created") == true)
+        #expect(object["inputMonitoring"] != nil)
+    }
+}

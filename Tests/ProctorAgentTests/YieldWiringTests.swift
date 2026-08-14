@@ -60,6 +60,14 @@ final class FakeContention: ContentionSampling, @unchecked Sendable {
         syntheticPosts += 1
     }
 
+    /// PRO-0026's block hands a person's swallowed event over here, because a
+    /// swallowed event never reaches an `NSEvent` monitor.
+    private(set) var userInputs = 0
+    func noteUserInput() {
+        lock.lock(); defer { lock.unlock() }
+        userInputs += 1
+    }
+
     /// How far the repeating tail's clock moves on each read.
     ///
     /// The real monitor stamps `now` from the clock every time it is asked, so a

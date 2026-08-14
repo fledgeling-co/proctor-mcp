@@ -591,13 +591,19 @@ public struct ActResult: Codable, Sendable {
     /// encodes exactly as it did before this existed — a slow suite has a reason
     /// in a field, and a normal one carries no new noise.
     public var yields: [YieldRecord]?
+    /// What this run put on the screen while it held the front, and whether it
+    /// held the person's input as well. Nil when it drew nothing, so a result
+    /// from a run that took nothing encodes exactly as it did before this
+    /// existed.
+    public var takeover: TakeoverReport?
     public init(window: String, steps: [StepResult], completed: Int,
                 failedAt: Int?, finalHash: String?, foreground: ForegroundReport? = nil,
-                yields: [YieldRecord]? = nil) {
+                yields: [YieldRecord]? = nil, takeover: TakeoverReport? = nil) {
         self.window = window; self.steps = steps; self.completed = completed
         self.failedAt = failedAt; self.finalHash = finalHash
         self.foreground = foreground
         self.yields = yields
+        self.takeover = takeover
     }
 }
 

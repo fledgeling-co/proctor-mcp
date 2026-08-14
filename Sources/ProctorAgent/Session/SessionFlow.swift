@@ -217,6 +217,12 @@ extension Session {
             out["yields"] = .array(run.yields.compactMap { try? JSONValue.encode($0) })
             if let held = YieldRecord.note(for: run.yields) { out["yieldNote"] = .string(held) }
         }
+        // And the same block act reports: a replay that took the machine said so
+        // on every display, and may have held it.
+        if let takeover = run.takeover {
+            out["takeover"] = (try? JSONValue.encode(takeover)) ?? .null
+            if let note = takeover.note { out["takeoverNote"] = .string(note) }
+        }
         return .object(out)
     }
 

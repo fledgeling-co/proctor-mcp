@@ -353,6 +353,12 @@ struct Dispatcher: Sendable {
         // has to be answerable from the health report rather than only from a
         // window somebody may have switched off.
         report["queue"] = await session.queueStatus()
+        // Whether a foreground step says so on the screen, and whether it holds
+        // input. The second one is an opt-in and can be asked for and still not
+        // be there, because a keyboard tap is gated on a grant Proctor does not
+        // otherwise need, so it reports what is actually true rather than what
+        // was asked for.
+        report["takeover"] = await session.takeoverStatus()
         return .object(report)
     }
 

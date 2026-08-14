@@ -36,6 +36,12 @@ protocol ContentionSampling: Sendable {
     func setExpectedPid(_ pid: Int32?)
     /// Proctor just posted a synthetic event, for the grace window.
     func noteSyntheticPost()
+    /// Somebody used the machine, from a source that has already decided it was
+    /// a person. PRO-0026's block calls this for every event it swallows: a
+    /// swallowed event never reaches an `NSEvent` monitor, so without this the
+    /// two features would cancel — the block would eat the very input the yield
+    /// exists to notice.
+    func noteUserInput()
     func sample() -> ContentionSample
 }
 
@@ -178,6 +184,16 @@ final class ContentionMonitor: ContentionSampling, @unchecked Sendable {
     func noteSyntheticPost() {
         lock.lock(); defer { lock.unlock() }
         lastSyntheticPostAt = now()
+    }
+
+    /// Recorded without going through `considerInput`'s filters, because the
+    /// caller has already applied a stricter one: the block swallows only what
+    /// Proctor did not post, so anything it hands over is by definition somebody
+    /// else driving this machine. One timestamp, as ever — no keycode, no
+    /// character, no location.
+    func noteUserInput() {
+        lock.lock(); defer { lock.unlock() }
+        lastUserInputAt = now()
     }
 
     func sample() -> ContentionSample {

@@ -39,6 +39,9 @@ extension Session {
         var hashes: [String] = []
         /// Every time this run was held because somebody was using the machine.
         var yields: [YieldRecord] = []
+        /// What the run said on the screen, and whether it held the machine.
+        /// Nil when it drew nothing.
+        var takeover: TakeoverReport?
 
         var captures: [JSONValue] { stepArtifacts.map(\.json) }
     }
@@ -98,7 +101,8 @@ extension Session {
                                failedAt: run.failedAt, finalHash: run.finalHash,
                                foreground: ForegroundReport.from(demandForReport,
                                                                  planes: run.results.map(\.plane)),
-                               yields: run.yields.isEmpty ? nil : run.yields)
+                               yields: run.yields.isEmpty ? nil : run.yields,
+                               takeover: run.takeover)
         var out = try JSONValue.encode(result).objectValue ?? [:]
         // One sentence beside the records, so a caller reading prose knows why
         // the run took longer than its work did. Alongside rather than inside,
@@ -109,6 +113,9 @@ extension Session {
         // sentence is what a caller reading prose actually reads, and without
         // this it had no surface on `act` at all.
         if let note = result.foreground?.note { out["foregroundNote"] = .string(note) }
+        // And the same again for the machine having been taken visibly, and
+        // perhaps held. Alongside rather than inside, exactly as the other two.
+        if let note = run.takeover?.note { out["takeoverNote"] = .string(note) }
         // StepResult has no slot for a capture, so per-step frames are returned
         // alongside the step list rather than dropped.
         if captureEach { out["captures"] = .array(run.captures) }
@@ -181,6 +188,10 @@ extension Session {
         if demand.takesForeground {
             armContention(run: foregroundRun, because: "the batch takes the foreground")
         }
+        // The block reaches this run's latch rather than a stale one, and the
+        // statement starts down however the last run ended.
+        takeoverShown = false
+        takeoverBind()
         var ending: RunHUDEnding = .completed
 
         for (index, step) in steps.enumerated() {
@@ -216,6 +227,9 @@ extension Session {
             // to be refused would show an action that never happened.
             if refusal == nil {
                 await hud(.stepApproaching(step: step, node: node, synthetic: synthetic))
+                // The statement goes up before the first event is posted, on
+                // every display, and stays up for the rest of the batch.
+                if synthetic { takeoverShow(app: app?.name) }
                 await showCursor(for: step, window: window)
             }
 
@@ -245,7 +259,16 @@ extension Session {
                 // the window only afterwards would leave exactly that arrival
                 // looking like a person's. Marked again after the step, from the
                 // measured plane, to cover a late delivery.
-                if synthetic { noteSyntheticPost() }
+                if synthetic {
+                    noteSyntheticPost()
+                    // Armed before the post and released after it, whatever the
+                    // step did — the same window `syntheticInFlight` covers. The
+                    // deadline that goes with it is enforced by the block's own
+                    // thread, so a throw between here and the release cannot
+                    // leave input held.
+                    takeoverArm(for: step)
+                }
+                defer { if synthetic { takeoverRelease(.stepEnded) } }
                 outcome = try ax.perform(step: step, window: window.id, foreground: foreground)
             } catch let error as AgentError {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
@@ -314,6 +337,10 @@ extension Session {
             // batch that turned out to contend and could not have been known to
             // in advance.
             if plane == .syntheticEvent {
+                // A `type` or `scroll` that fell back could not be known to need
+                // the front until now. The statement goes up late rather than
+                // not at all: the batch has more steps in it.
+                takeoverShow(app: app?.name)
                 noteTookForeground(pid: app?.pid)
                 armContention(run: foregroundRun, because: "a step travelled the event stream")
             }
@@ -331,6 +358,9 @@ extension Session {
         // pointer has nothing left to point at and may fade on the short timer,
         // and the panel says how it ended and starts its own linger.
         await restCursor()
+        // Both halves come down with the run, whatever the step-level accounting
+        // says and whether the run completed, broke or was stopped.
+        run.takeover = takeoverEnd(stopped: ending == .stoppedByPerson)
         await hud(.runEnded(ending))
         disarmContention(run: foregroundRun)
         run.yields = takeYieldRecords(run: foregroundRun)

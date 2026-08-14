@@ -134,6 +134,13 @@ actor Session {
     var contentionMonitor: any ContentionSampling = ContentionMonitor.shared
     func setContentionMonitor(_ monitor: any ContentionSampling) { contentionMonitor = monitor }
 
+    /// The full-screen statement, and the block behind it. Substitutable for the
+    /// same reason: neither a panel nor an event tap exists in a test process.
+    var takeover: any TakeoverDriving = LiveTakeover()
+    func setTakeover(_ driver: any TakeoverDriving) { takeover = driver }
+    /// Whether this run has raised the statement. Per batch, not per step.
+    var takeoverShown = false
+
     /// Both switches, read once. `PROCTOR_YIELD` is on unless turned off;
     /// `PROCTOR_YIELD_INPUT` is off unless turned on, and the asymmetry is the
     /// point — the input monitor is an opt-in, not a default with an escape.
