@@ -74,6 +74,22 @@ public enum StepDescription {
         return "\(noun) \(render(object)) \(outcome.rawValue)"
     }
 
+    /// The trail line, for a step that ran and settled: "Focused Amount",
+    /// "Picked \"Net 30\" from Terms". Past tense because the trail is a record
+    /// of what happened, where the live line is a statement of what is happening.
+    public static func completedLine(for step: ActionStep, node: AXNode?) -> String {
+        let verbs = wording(for: step.kind)
+        guard let object = object(for: step, node: node) else { return verbs.pastAlone }
+        return "\(verbs.past) \(render(object))"
+    }
+
+    /// The object alone, rendered the way a line would render it — quoted when
+    /// the caller supplied it, bare when Proctor derived it. For a surface that
+    /// needs its own verb in front of the same object, so the two never drift.
+    public static func objectText(for step: ActionStep, node: AXNode?) -> String? {
+        object(for: step, node: node).map(render)
+    }
+
     // MARK: - Objects
 
     /// Where an object came from. A name the client supplied is display text it
@@ -263,87 +279,113 @@ public enum StepDescription {
         var prospectiveAlone: String
         /// The action named as a thing, for the outcome line: "Hover refused".
         var noun: String
+        /// With an object, after the fact: "Pressed" + " Send invoice".
+        var past: String
+        var pastAlone: String
 
-        init(present: String, prospective: String, noun: String,
-             presentAlone: String? = nil, prospectiveAlone: String? = nil) {
+        init(present: String, prospective: String, noun: String, past: String,
+             presentAlone: String? = nil, prospectiveAlone: String? = nil,
+             pastAlone: String? = nil) {
             self.present = present
             self.prospective = prospective
             self.noun = noun
+            self.past = past
             self.presentAlone = presentAlone ?? present
             self.prospectiveAlone = prospectiveAlone ?? prospective
+            self.pastAlone = pastAlone ?? past
         }
     }
 
     static func wording(for kind: ActionStep.Kind) -> Wording {
         switch kind {
         case .press:
-            return Wording(present: "Pressing", prospective: "About to press", noun: "Press")
+            return Wording(present: "Pressing", prospective: "About to press",
+                           noun: "Press", past: "Pressed")
         case .setValue:
-            return Wording(present: "Setting", prospective: "About to set", noun: "Set value")
+            return Wording(present: "Setting", prospective: "About to set",
+                           noun: "Set value", past: "Set", pastAlone: "Set a value")
         case .focus:
-            return Wording(present: "Focusing", prospective: "About to focus", noun: "Focus")
+            return Wording(present: "Focusing", prospective: "About to focus",
+                           noun: "Focus", past: "Focused")
         case .menu:
             return Wording(present: "Choosing", prospective: "About to choose",
-                           noun: "Menu choice",
+                           noun: "Menu choice", past: "Chose",
                            presentAlone: "Choosing a menu item",
-                           prospectiveAlone: "About to choose a menu item")
+                           prospectiveAlone: "About to choose a menu item",
+                           pastAlone: "Chose a menu item")
         case .type:
             return Wording(present: "Typing into", prospective: "About to type into",
-                           noun: "Typing",
-                           presentAlone: "Typing", prospectiveAlone: "About to type")
+                           noun: "Typing", past: "Typed into",
+                           presentAlone: "Typing", prospectiveAlone: "About to type",
+                           pastAlone: "Typed")
         case .key:
             return Wording(present: "Sending the keystroke",
                            prospective: "About to send the keystroke",
-                           noun: "Keystroke",
+                           noun: "Keystroke", past: "Sent the keystroke",
                            presentAlone: "Sending a keystroke",
-                           prospectiveAlone: "About to send a keystroke")
+                           prospectiveAlone: "About to send a keystroke",
+                           pastAlone: "Sent a keystroke")
         case .scroll:
-            return Wording(present: "Scrolling", prospective: "About to scroll", noun: "Scroll")
+            return Wording(present: "Scrolling", prospective: "About to scroll",
+                           noun: "Scroll", past: "Scrolled")
         case .increment:
             return Wording(present: "Incrementing", prospective: "About to increment",
-                           noun: "Increment")
+                           noun: "Increment", past: "Incremented")
         case .decrement:
             return Wording(present: "Decrementing", prospective: "About to decrement",
-                           noun: "Decrement")
+                           noun: "Decrement", past: "Decremented")
         case .pick:
-            return Wording(present: "Picking", prospective: "About to pick", noun: "Pick")
+            return Wording(present: "Picking", prospective: "About to pick",
+                           noun: "Pick", past: "Picked")
         case .confirm:
-            return Wording(present: "Confirming", prospective: "About to confirm", noun: "Confirm")
+            return Wording(present: "Confirming", prospective: "About to confirm",
+                           noun: "Confirm", past: "Confirmed")
         case .cancel:
-            return Wording(present: "Cancelling", prospective: "About to cancel", noun: "Cancel")
+            return Wording(present: "Cancelling", prospective: "About to cancel",
+                           noun: "Cancel", past: "Cancelled")
         case .raise:
-            return Wording(present: "Raising", prospective: "About to raise", noun: "Raise")
+            return Wording(present: "Raising", prospective: "About to raise",
+                           noun: "Raise", past: "Raised")
         case .close:
-            return Wording(present: "Closing", prospective: "About to close", noun: "Close")
+            return Wording(present: "Closing", prospective: "About to close",
+                           noun: "Close", past: "Closed")
         case .resize:
-            return Wording(present: "Resizing", prospective: "About to resize", noun: "Resize")
+            return Wording(present: "Resizing", prospective: "About to resize",
+                           noun: "Resize", past: "Resized")
         case .move:
-            return Wording(present: "Moving", prospective: "About to move", noun: "Move")
+            return Wording(present: "Moving", prospective: "About to move",
+                           noun: "Move", past: "Moved")
         case .dragPath:
-            return Wording(present: "Dragging", prospective: "About to drag", noun: "Drag")
+            return Wording(present: "Dragging", prospective: "About to drag",
+                           noun: "Drag", past: "Dragged")
         case .hover:
             return Wording(present: "Hovering over", prospective: "About to hover over",
-                           noun: "Hover",
-                           presentAlone: "Hovering", prospectiveAlone: "About to hover")
+                           noun: "Hover", past: "Hovered over",
+                           presentAlone: "Hovering", prospectiveAlone: "About to hover",
+                           pastAlone: "Hovered")
         case .click:
-            return Wording(present: "Clicking", prospective: "About to click", noun: "Click")
+            return Wording(present: "Clicking", prospective: "About to click",
+                           noun: "Click", past: "Clicked")
         case .shortcut:
             return Wording(present: "Running the shortcut",
                            prospective: "About to run the shortcut",
-                           noun: "Shortcut",
+                           noun: "Shortcut", past: "Ran the shortcut",
                            presentAlone: "Running a shortcut",
-                           prospectiveAlone: "About to run a shortcut")
+                           prospectiveAlone: "About to run a shortcut",
+                           pastAlone: "Ran a shortcut")
         case .appleScript:
             return Wording(present: "Running the script",
                            prospective: "About to run the script",
-                           noun: "Script",
+                           noun: "Script", past: "Ran the script",
                            presentAlone: "Running a script",
-                           prospectiveAlone: "About to run a script")
+                           prospectiveAlone: "About to run a script",
+                           pastAlone: "Ran a script")
         case .waitFor:
             // Waiting reads as waiting *for* the thing, never as acting on it.
             return Wording(present: "Waiting for", prospective: "About to wait for",
-                           noun: "Wait",
-                           presentAlone: "Waiting", prospectiveAlone: "About to wait")
+                           noun: "Wait", past: "Waited for",
+                           presentAlone: "Waiting", prospectiveAlone: "About to wait",
+                           pastAlone: "Waited")
         }
     }
 }

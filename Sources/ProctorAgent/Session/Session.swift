@@ -98,6 +98,19 @@ actor Session {
     var fsJail: FSJail?
     var fsJailLoadedFlag = false
 
+    /// Whether this session puts the run HUD on screen. Defaults from
+    /// `PROCTOR_HUD`; settable so the halt wiring can be exercised without a
+    /// window server, which is also where a panel would be meaningless.
+    var drawsHUD = Session.hudEnabledByDefault
+    func setDrawsHUD(_ on: Bool) { drawsHUD = on }
+
+    /// The pause/stop latch the panel's buttons write to. The shared one in
+    /// production, so the panel and the run are talking about the same run;
+    /// substitutable so a test can drive a halt without reaching into a
+    /// singleton that another test is also using.
+    var runControl = RunControl.shared
+    func setRunControl(_ control: RunControl) { runControl = control }
+
     /// The most recent capture's encoded metadata, served cache-only by the
     /// screenshot/latest resource. Holding the metadata (not the bytes) keeps the
     /// resource readable without a Screen Recording grant and without triggering a

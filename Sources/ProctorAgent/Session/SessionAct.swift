@@ -38,6 +38,8 @@ extension Session {
         let audit = try enforcePolicy(tool: "proctor_act", window: window)
         loadFlowsIfNeeded()
 
+        hudRunControlBegin()
+
         let target = record ?? recording
         let run = await runSteps(steps, window: window, settle: settle, foreground: foreground,
                                  captureEach: captureEach, diffEach: diffEach, audit: audit,
@@ -66,14 +68,46 @@ extension Session {
                   audit: AuditContext? = nil, pointerMarks: Bool = false) async -> StepRun {
         var run = StepRun()
         let app = appHandle(forWindow: window)
+        // The panel goes up for the batch about to run, and the same is true
+        // however the batch was reached — act, a replayed flow, one pass of a
+        // stability sweep, the CUA façade. A stop control that is present for
+        // some kinds of run and absent for others is worse than none.
+        await hudRunBegan(total: steps.count, window: window)
+        var ending: RunHUDEnding = .completed
 
         for (index, step) in steps.enumerated() {
+            // A person's own decision, read before each step and never during
+            // one. Killing a step mid-flight would leave the application in a
+            // state nobody can describe; the step in flight finishes settling
+            // and the run stops before the next one. The refusal lands on the
+            // first step that never ran, so everything already done is still
+            // reported alongside it.
+            if let halt = await haltCheckpoint() {
+                let refusal = halt.refusal
+                run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
+                                              error: refusal, settle: nil, stateHash: nil,
+                                              diff: nil, elapsedMs: 0))
+                if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
+                                         reason: refusal.message) }
+                run.failedAt = index
+                ending = .stoppedByPerson
+                break
+            }
+
+            // Resolved once and handed to every line about this step, so the
+            // live line, the trail row and any refusal all name the same thing.
+            let node = drawsHUD ? hudNode(for: step) : nil
+            let synthetic = Self.isSynthetic(step)
+
             let refusal = Self.refusal(for: step, foreground: foreground)
             // The pointer travels before the clock starts, so the drawing does
             // not land inside the step's own elapsed time, and only for a step
             // that is actually going to run — animating toward something about
             // to be refused would show an action that never happened.
-            if refusal == nil { await showCursor(for: step) }
+            if refusal == nil {
+                await hud(.stepApproaching(step: step, node: node, synthetic: synthetic))
+                await showCursor(for: step)
+            }
 
             let started = DispatchTime.now().uptimeNanoseconds
             func elapsed() -> Int {
@@ -87,11 +121,14 @@ extension Session {
                 if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
                                          reason: refusal.message) }
                 run.failedAt = index
+                await hud(.stepRefused(step: step, node: node))
+                ending = .blocked
                 break
             }
 
             let plane: ActuationPlane
             do {
+                await hud(.stepActing(step: step, node: node, synthetic: synthetic))
                 plane = try ax.perform(step: step, window: window.id, foreground: foreground)
             } catch let error as AgentError {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
@@ -100,6 +137,8 @@ extension Session {
                 if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
                                          reason: error.message) }
                 run.failedAt = index
+                await hud(.stepFailed(step: step, node: node))
+                ending = .failed
                 break
             } catch {
                 let wrapped = AgentError(code: .actionFailed,
@@ -111,6 +150,8 @@ extension Session {
                 if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
                                          reason: wrapped.message) }
                 run.failedAt = index
+                await hud(.stepFailed(step: step, node: node))
+                ending = .failed
                 break
             }
 
@@ -145,6 +186,7 @@ extension Session {
             if let audit { auditStep(step, context: audit, ok: true, postStateHash: stateHash,
                                      reason: postStateError?.message) }
             run.completed += 1
+            await hud(.stepSettled(step: step, node: node, settleMs: report.elapsedMs))
             if let stateHash {
                 run.finalHash = stateHash
                 run.hashes.append(stateHash)
@@ -156,8 +198,10 @@ extension Session {
             }
         }
         // The batch is over, whether it completed or broke early, so the
-        // pointer has nothing left to point at and may fade on the short timer.
+        // pointer has nothing left to point at and may fade on the short timer,
+        // and the panel says how it ended and starts its own linger.
         await restCursor()
+        await hud(.runEnded(ending))
         return run
     }
 

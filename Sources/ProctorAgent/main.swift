@@ -92,4 +92,28 @@ _ = unlockBroker
 
 FileHandle.standardError.write(Data("proctor-agent \(AgentBuild.version) listening on \(server.path)\n".utf8))
 
-CFRunLoopRun()
+// The event loop, and why it is AppKit's rather than a bare CFRunLoopRun().
+//
+// The run HUD carries Pause and Stop. A kill switch nobody can press is not a
+// kill switch, and a click can only reach a button if something dequeues the
+// NSEvent the window server delivered — which a bare `CFRunLoopRun()` never
+// does. `NSApplication.run()` is the same main run loop, spun by AppKit, which
+// additionally drains that queue.
+//
+// The regression to watch is settling, because the agent's whole notion of an
+// application being done comes from AXObserver notifications delivered to this
+// run loop. They are safe: `AXObservers` adds every source to
+// `CFRunLoopMode.commonModes` (see Observers.swift), precisely so a modal or
+// menu-tracking loop cannot starve them, and the default and tracking modes are
+// both in that set. The panel's own drag is handled with mouseDragged and
+// setFrameOrigin rather than performDrag, so this process never enters a nested
+// tracking loop of its own making either.
+//
+// Everything else is unchanged: the socket accept loop runs on its own threads
+// and was started above; the activation policy is still `.accessory`, so the
+// agent stays out of the Dock and the app switcher; the HUD is a
+// non-activating panel, so a click on it never activates this process and never
+// takes focus from the application under test. Termination still goes through
+// the signal sources, which call exit(0) directly rather than stopping a loop.
+RunHUDPanel.markEventLoopRunning()
+NSApplication.shared.run()

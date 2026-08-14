@@ -145,6 +145,7 @@ extension Session {
         // one way when recorded cannot behave another way when replayed. Handing
         // it the audit context is what puts each replayed step in the trail
         // individually, redacted the same way a live step is.
+        hudRunControlBegin()
         let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
         let run = await runSteps(steps, window: handle, settle: settle, foreground: foreground,
                                  captureEach: captureEach, diffEach: false, audit: audit,
@@ -218,6 +219,7 @@ extension Session {
                              remedy: "Record some with proctor_flow action \"start\" and proctor_act.")
         }
 
+        hudRunControlBegin()
         let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
         var perRun: [[String]] = []
         var captures: [StabilityCapture] = []
@@ -345,6 +347,19 @@ extension Session {
                            + "steps; the post-state of the remainder could not be read.")
             }
             perRun.append(hashes)
+
+            // A person stopped the sweep, not just this pass. Reported through
+            // the same truncated shape a withdrawn permission uses, so the
+            // repeats that did finish survive and the run is never scored
+            // deterministic on fewer samples than were commissioned.
+            if let failed = run.failedAt, run.results[failed].error?.code == .haltedByPerson {
+                notes.append("A person stopped the sweep during run \(runIndex), so it was measured "
+                           + "on \(perRun.count) of \(requested) repeats.")
+                return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
+                                            notes: &notes, includeTiles: includeTiles,
+                                            truncated: true,
+                                            captures: artifacts.captureEach ? captures : nil)
+            }
         }
 
         return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,

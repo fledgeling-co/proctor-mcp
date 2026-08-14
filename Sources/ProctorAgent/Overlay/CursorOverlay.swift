@@ -1,5 +1,6 @@
 import AppKit
 import QuartzCore
+import ProctorCore
 
 // The pointer Proctor draws while it drives an application.
 //
@@ -46,10 +47,8 @@ final class CursorOverlay {
     /// suite, or a machine where somebody is working. `nonisolated` because the
     /// call sites check it before hopping to the main actor, so a disabled
     /// overlay costs nothing at all.
-    nonisolated static let isEnabled: Bool = {
-        let raw = ProcessInfo.processInfo.environment["PROCTOR_CURSOR"]?.lowercased()
-        return !["0", "off", "false", "no"].contains(raw ?? "")
-    }()
+    nonisolated static let isEnabled: Bool =
+        OverlaySwitch.isOn("PROCTOR_CURSOR", in: ProcessInfo.processInfo.environment)
 
     private static let pointerSize = CGSize(width: 19, height: 32)
     private static let ringDiameter: CGFloat = 46

@@ -18,6 +18,10 @@ final class FakeAX: AXEngine, @unchecked Sendable {
     private(set) var performed: [ActionStep] = []
     /// Fail the nth perform call (0-based), to exercise the failure paths.
     var failPerformAt: Int?
+    /// Called with the 0-based index of each perform, before it returns. A test
+    /// that needs something to happen *during* a run — a person pressing Stop
+    /// between two steps — hangs it here.
+    var onPerform: (@Sendable (Int) -> Void)?
 
     init(bundleId: String, appID: String = "app-1", windowID: String = "win-1") {
         app = AppHandle(id: appID, pid: 4242, bundleId: bundleId, name: "Fake")
@@ -48,6 +52,7 @@ final class FakeAX: AXEngine, @unchecked Sendable {
     func perform(step: ActionStep, window: String, foreground: Bool) throws -> ActuationPlane {
         let index = performed.count
         performed.append(step)
+        onPerform?(index)
         if failPerformAt == index {
             throw AgentError(code: .actionFailed, message: "fake failure at step \(index)")
         }

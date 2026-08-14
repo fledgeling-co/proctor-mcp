@@ -44,6 +44,7 @@ extension Session {
 
             switch cua.operation {
             case .act(let step):
+                hudRunControlBegin()
                 let run = await runSteps([step], window: window, settle: .default,
                                          foreground: foreground, captureEach: false, diffEach: true,
                                          audit: audit)

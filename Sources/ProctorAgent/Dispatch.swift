@@ -335,6 +335,12 @@ struct Dispatcher: Sendable {
         var report = try JSONValue.encode(await session.doctor(verbose: args.bool("verbose", false)))
             .objectValue ?? [:]
         report["policy"] = await session.policyStatus()
+        // The run HUD carries the only stop control a person has, so its absence
+        // is reported rather than left silent: a run still proceeds without the
+        // panel, and refusing to drive because an annotation failed would be
+        // worse, but somebody who believes they have a stop button and does not
+        // is the state this block exists to prevent.
+        report["hud"] = await session.hudStatus()
         return .object(report)
     }
 
