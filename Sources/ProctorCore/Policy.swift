@@ -178,6 +178,17 @@ public struct AuditRecord: Codable, Sendable, Equatable {
         public static let failed = "failed"
         public static let refused = "refused"
         public static let recommended = "recommended"
+        /// Proctor asked, and cannot say whether it happened.
+        ///
+        /// Only reachable once actuation is delegated, and it exists because
+        /// `failed` is a claim rather than an absence of one: it asserts the
+        /// action did not happen. When Proctor performs a step itself and the call
+        /// throws, that assertion is true — nothing was posted. When a subprocess
+        /// stops answering, the request may have been written, delivered and
+        /// performed before it went, and there is no way from here to tell. A row
+        /// saying `failed` there would be exactly the thing this trail is supposed
+        /// to prevent: a weaker claim wearing the same word.
+        public static let indeterminate = "indeterminate"
     }
 
     public var timestamp: Double
@@ -247,19 +258,78 @@ public struct AuditRecord: Codable, Sendable, Equatable {
         }
     }
 
+    // MARK: - What a record needs to be *believed* when Proctor did not act (PRO-0045)
+    //
+    // Five more optional fields, appended after PRO-0047's for the same reason and
+    // with the same guarantee: a row sealed before they existed decodes with them
+    // nil, and neither the signed material nor the chain link moves, because both
+    // are computed over the sealed ciphertext rather than over these fields.
+    //
+    // They exist because PRO-0044 moved actuation into another process. Until then
+    // the process writing the row was the process performing the action, so intent
+    // and act were one event and one field could carry both. They are now two facts
+    // of different strength, and Proctor's own reading of the window is a third.
+    // Merging them would leave the row's words unchanged while what stands behind
+    // them got weaker, which is the failure this feature exists to prevent.
+
+    /// Which backend performed it — `native`, `cua`. Proctor's own knowledge.
+    public var by: String?
+    /// The backend's own word for how it delivered the step, sanitised and
+    /// length-capped. The driver's claim, kept verbatim in vocabulary so the
+    /// mapping in `ActuationPlane` can be audited rather than trusted. Nil for the
+    /// native backend, which reports no delivery mode.
+    public var mode: String?
+    /// The backend's confidence that the action landed — `confirmed`,
+    /// `unverifiable`, `suspectedNoOp`. An external claim, never Proctor's.
+    ///
+    /// Nil for the native backend, and the nil is meaningful: it says this backend
+    /// makes no claims about itself, which is different from a backend that
+    /// claimed nothing. Native judges a write by reading it back.
+    public var eff: String?
+    /// Proctor's OWN reading of the window's accessibility state before and after
+    /// the step — `changed`, `unchanged`, `unread`.
+    ///
+    /// This is the only part of a delegated row Proctor witnessed, and it is what
+    /// stops the trail becoming a record of intent. Read it narrowly: it is the
+    /// accessibility tree as Proctor walked it, never "the machine". A canvas
+    /// repaint can leave the tree identical, an animation can move it for no
+    /// reason, and another process can move it without this step touching it. So
+    /// `changed` is evidence the step landed rather than proof, and `unchanged` is
+    /// evidence it did not rather than proof.
+    ///
+    /// Nil on the native path, deliberately: native takes no before-hash, and
+    /// filling this from the *previous* step's post-state would measure a
+    /// different interval while wearing the same name.
+    public var obs: String?
+    /// Which lane instance acted, tying this row to a `lane.opened` record.
+    public var lane: String?
+
+    /// Proctor's own reading of the window across a step.
+    public enum Observation: String, Codable, Sendable, Equatable {
+        case changed
+        case unchanged
+        /// There was no reading to compare — a `close` step ends with no window to
+        /// walk. A real answer, not a failure: claiming `unchanged` here would be
+        /// a fabrication.
+        case unread
+    }
+
     public init(timestamp: Double, tool: String, app: String? = nil, bundleId: String? = nil,
                 window: String? = nil, node: String? = nil, kind: String? = nil,
                 outcome: String, postStateHash: String? = nil,
                 value: Redaction? = nil, script: Redaction? = nil, reason: String? = nil,
                 recommendation: LaneRecommendation? = nil,
                 run: String? = nil, seq: Int? = nil, ms: Int? = nil, plane: String? = nil,
-                act: String? = nil, obj: Object? = nil) {
+                act: String? = nil, obj: Object? = nil,
+                by: String? = nil, mode: String? = nil, eff: String? = nil,
+                obs: String? = nil, lane: String? = nil) {
         self.timestamp = timestamp; self.tool = tool; self.app = app; self.bundleId = bundleId
         self.window = window; self.node = node; self.kind = kind; self.outcome = outcome
         self.postStateHash = postStateHash; self.value = value; self.script = script
         self.reason = reason; self.recommendation = recommendation
         self.run = run; self.seq = seq; self.ms = ms; self.plane = plane
         self.act = act; self.obj = obj
+        self.by = by; self.mode = mode; self.eff = eff; self.obs = obs; self.lane = lane
     }
 
     /// Build a record for one executed step, redacting anything that could carry a
@@ -274,7 +344,9 @@ public struct AuditRecord: Codable, Sendable, Equatable {
                                outcome: String, postStateHash: String?,
                                reason: String? = nil,
                                run: String? = nil, seq: Int? = nil, ms: Int? = nil,
-                               plane: String? = nil, node: AXNode? = nil) -> AuditRecord {
+                               plane: String? = nil, node: AXNode? = nil,
+                               by: String? = nil, mode: String? = nil, eff: String? = nil,
+                               obs: String? = nil, lane: String? = nil) -> AuditRecord {
         var value: Redaction?
         var script: Redaction?
         switch step.kind {
@@ -287,8 +359,14 @@ public struct AuditRecord: Codable, Sendable, Equatable {
         default:
             break
         }
+        // An indeterminate row is written with the NOUN form — "Press" — rather
+        // than the past form — "Pressed". `act` is Proctor's own voice, and on the
+        // one row whose whole purpose is to say Proctor cannot tell whether the
+        // step happened, the past tense would assert that it did. The five fields
+        // above would have been correct and the sentence beside them a lie.
         let described = StepDescription.past(for: step, node: node,
-                                             limit: StepDescription.historyObjectLimit)
+                                             limit: StepDescription.historyObjectLimit,
+                                             asserting: outcome != Outcome.indeterminate)
         return AuditRecord(timestamp: timestamp, tool: tool, app: app, bundleId: bundleId,
                            window: window, node: step.node, kind: step.kind.rawValue,
                            outcome: outcome, postStateHash: postStateHash,
@@ -297,7 +375,16 @@ public struct AuditRecord: Codable, Sendable, Equatable {
                            act: described.verb,
                            obj: described.object.map {
                                Object(text: $0.text, supplied: $0.supplied)
-                           })
+                           },
+                           by: by,
+                           // Sanitised for the same reason `obj` is. It is the
+                           // driver's own token rather than an application's text,
+                           // so it is not browsing history — but it is still
+                           // foreign text entering a file Proctor keeps, and a
+                           // driver returning a megabyte in this field should put a
+                           // bounded token in the trail, not the megabyte.
+                           mode: StepDescription.sanitised(mode),
+                           eff: eff, obs: obs, lane: lane)
     }
 
     /// One line of JSONL: a single compact object with sorted keys, no newlines,

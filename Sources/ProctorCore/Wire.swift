@@ -95,6 +95,28 @@ public struct AgentError: Codable, Sendable, Error {
     public var remedy: String?
     public var detail: JSONValue?
 
+    // MARK: - What a delegated failure has to carry (PRO-0045)
+
+    /// Whether the action may already have happened.
+    ///
+    /// **Set by the backend that failed, and never inferred from `code`.** The
+    /// step loop needs to know whether to record `failed` — which asserts the
+    /// action did not happen — or `indeterminate`, and only the backend knows
+    /// whether the request may have been delivered before things went wrong.
+    /// Reading it off a code would be reading an identity into a number: the same
+    /// raw value can arrive from another domain, and the native backend can emit
+    /// the one that would trigger it, which would silently flip a run between
+    /// stopping and claiming a failure it cannot support.
+    public var indeterminate: Bool = false
+    /// The lane event this failure produced, when it produced one.
+    ///
+    /// It travels **on the error** rather than being accumulated for a later
+    /// drain. `Session` is a reentrant actor, so an `await perform` followed by an
+    /// `await drain` is two suspension points and a second batch finishing between
+    /// them would have its events attributed to the first. Carrying the event with
+    /// the thing that caused it leaves no gap between producing and taking.
+    public var lane: LaneEvent?
+
     public enum Code: String, Codable, Sendable {
         case agentUnavailable          // socket not answering; agent not installed or not running
         case permissionAccessibility   // AX grant missing
@@ -124,13 +146,20 @@ public struct AgentError: Codable, Sendable, Error {
         case backendUnavailable        // the actuation backend could not be reached, or died mid-step
         case backendUnsupported        // version, signature or vocabulary outside what this build supports
         case actionNoOp                // the backend suspected a no-op and the post-state agrees nothing changed
+        /// The backend stopped answering mid-step, so whether the action landed
+        /// cannot be established from here. Distinct from `actionFailed`, which
+        /// asserts the action did not happen — a claim only a caller that
+        /// performed the action itself is entitled to make.
+        case actionIndeterminate
         case invalidArguments
         case notImplemented
         case internalError
     }
 
-    public init(code: Code, message: String, remedy: String? = nil, detail: JSONValue? = nil) {
+    public init(code: Code, message: String, remedy: String? = nil, detail: JSONValue? = nil,
+                indeterminate: Bool = false, lane: LaneEvent? = nil) {
         self.code = code; self.message = message; self.remedy = remedy; self.detail = detail
+        self.indeterminate = indeterminate; self.lane = lane
     }
 }
 
@@ -588,6 +617,56 @@ public enum ActuationRoute: String, Codable, Sendable {
     case declared
 }
 
+/// Something that happened to the actuation lane itself, rather than to a step.
+///
+/// A delegated lane is a live thing with its own failure modes — it opens, it can
+/// be refused, its build can move under it, it can die or stop answering — and
+/// none of those are properties of the action that was in flight when they
+/// happened. They are recorded as their own audit rows for that reason.
+///
+/// **These travel on the value returned by the call that produced them**, never
+/// through a shared accumulator drained afterwards. `Session` is a reentrant
+/// actor: `await perform` and a later `await drain` are two suspension points, so
+/// a second batch completing between them would have its events attributed to the
+/// first. Carrying them back with the result leaves no gap between producing and
+/// taking.
+public struct LaneEvent: Codable, Sendable, Equatable {
+    public enum Kind: String, Codable, Sendable, Equatable {
+        /// The lane was established and this is what it is.
+        case opened
+        /// Preflight refused it, naming the stage.
+        case refused
+        /// An unpinned lane's build moved between batches.
+        case identityChanged
+        /// The backend stopped answering mid-call.
+        case died
+        /// A call passed its deadline and the lane was closed.
+        case timedOut
+    }
+
+    public var kind: Kind
+    public var backend: ActuationBackendID
+    public var laneId: String
+    /// Proctor's own sentence. Never the driver's message: an application's text
+    /// reaches that, and the trail does not widen for a lane event any more than
+    /// it does for a step.
+    public var reason: String
+
+    public init(kind: Kind, backend: ActuationBackendID, laneId: String, reason: String) {
+        self.kind = kind; self.backend = backend; self.laneId = laneId; self.reason = reason
+    }
+
+    /// How the row reads. A lane that died or timed out leaves whatever was in
+    /// flight unknowable, so those two carry the same word the step does.
+    public var outcome: String {
+        switch kind {
+        case .opened:                       return AuditRecord.Outcome.ok
+        case .refused, .identityChanged:    return AuditRecord.Outcome.refused
+        case .died, .timedOut:              return AuditRecord.Outcome.indeterminate
+        }
+    }
+}
+
 /// What one actuation did: the plane it travelled and the route it took there.
 public struct Actuation: Sendable, Equatable {
     public var plane: ActuationPlane
@@ -615,11 +694,17 @@ public struct Actuation: Sendable, Equatable {
     /// Round trip to the backend, in milliseconds. Its own field rather than
     /// folded into the step's elapsed time, which already includes settle.
     public var transportMs: Int?
+    /// Which lane instance performed it, tying the step's row to the lane's own.
+    public var laneId: String?
+    /// Lane events this call produced, carried back rather than accumulated. See
+    /// `LaneEvent` for why the drain-later shape is wrong on a reentrant actor.
+    public var laneEvents: [LaneEvent]
 
     public init(_ plane: ActuationPlane, _ route: ActuationRoute? = nil,
                 backend: ActuationBackendID = .native, reportedMode: String? = nil,
                 effect: ActuationEffect? = nil, retriedOnStale: Bool = false,
-                unrequestedForeground: Bool = false, transportMs: Int? = nil) {
+                unrequestedForeground: Bool = false, transportMs: Int? = nil,
+                laneId: String? = nil, laneEvents: [LaneEvent] = []) {
         self.plane = plane
         self.route = route
         self.backend = backend
@@ -628,6 +713,8 @@ public struct Actuation: Sendable, Equatable {
         self.retriedOnStale = retriedOnStale
         self.unrequestedForeground = unrequestedForeground
         self.transportMs = transportMs
+        self.laneId = laneId
+        self.laneEvents = laneEvents
     }
 }
 

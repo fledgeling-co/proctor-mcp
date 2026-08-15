@@ -28,12 +28,16 @@ final class CuaActuationBackend: ActuationBackend {
     /// Preflight runs once per lane, not once per step. Guarded because a
     /// reentrant actor can reach this from two awaits.
     private let state = LaneState()
+    /// Names this lane on every record it produces, so a step's row can be tied
+    /// to the lane record that says what was running.
+    let laneId = RunIdentity.mint()
 
     init(transport: any CuaTransport, path: String?,
          environment: [String: String] = ProcessInfo.processInfo.environment) {
         self.transport = transport
         self.path = path
         self.environment = environment
+        transport.adopt(laneId: laneId)
     }
 
     /// What the driver can do without the foreground.
@@ -55,7 +59,24 @@ final class CuaActuationBackend: ActuationBackend {
     }
 
     func preflight() async throws {
-        if let done = await state.report() { _ = done; return }
+        _ = try await preflightEvents()
+    }
+
+    /// Preflight, returning the lane events it produced.
+    ///
+    /// The events come back rather than being stashed for a later drain. `Session`
+    /// is a reentrant actor, so a drain after an `await` can collect a different
+    /// call's events; returning them leaves no gap between producing and taking.
+    private func preflightEvents() async throws -> [LaneEvent] {
+        // An unpinned transport re-establishes what it can at each batch, because
+        // nothing it verified earlier describes the process that will answer the
+        // next call. A pinned one keeps PRO-0044's once-per-lane behaviour and
+        // pays nothing for a property it does not need.
+        if let done = await state.report(), transport.identityPinned {
+            _ = done
+            return []
+        }
+        let previous = await state.report()
         // A refusal is remembered as well as a success. Without that, a lane that
         // failed at its signature check reports the same "nothing established
         // yet" as one nobody has used — and a health report that cannot tell a
@@ -64,12 +85,32 @@ final class CuaActuationBackend: ActuationBackend {
         // parsing a message.
         let recorder = RefusalRecorder()
         do {
-            let report = try await CuaPreflight.run(path: path, transport: transport,
+            var report = try await CuaPreflight.run(path: path, transport: transport,
                                                     environment: environment,
                                                     onRefusal: { stage, _ in
                                                         recorder.record(stage)
                                                     })
+            report.identityPinned = transport.identityPinned
+            report.transport = transport.kind
+            report.identity = transport.processIdentity
             await state.store(report)
+
+            if let previous, previous.version != report.version {
+                return [LaneEvent(
+                    kind: .identityChanged, backend: .cua, laneId: laneId,
+                    reason: "the cua-driver build changed between batches: this lane re-execs the "
+                          + "driver on every call, so nothing it verified earlier describes the "
+                          + "process that answers the next one. The batch was refused before any "
+                          + "step ran.")]
+            }
+            return previous == nil ? [opened(report)] : []
+        } catch let error as AgentError {
+            await state.storeRefusal(stage: recorder.stage)
+            var refused = error
+            refused.lane = LaneEvent(kind: .refused, backend: .cua, laneId: laneId,
+                                     reason: "the cua-driver lane was refused before it opened: "
+                                           + error.message)
+            throw refused
         } catch {
             await state.storeRefusal(stage: recorder.stage)
             throw error
@@ -89,6 +130,33 @@ final class CuaActuationBackend: ActuationBackend {
             lock.lock(); defer { lock.unlock() }
             return value
         }
+    }
+
+    /// What the lane record says. Proctor's own sentence, built from what was
+    /// established — never the driver's message, which carries text Proctor does
+    /// not put in the trail.
+    private func opened(_ report: CuaLaneReport) -> LaneEvent {
+        var parts: [String] = ["cua-driver \(report.version.map(String.init(describing:)) ?? "?")"]
+        parts.append("at \(report.path ?? "?")")
+        parts.append("over the \(report.transport) transport")
+        if report.identityPinned, let identity = report.identity, identity.attested {
+            parts.append("verified as the running process"
+                         + (identity.cdhash.map { ", cdhash \($0)" } ?? ""))
+        } else if report.identityPinned {
+            parts.append("identity NOT attested ("
+                         + (report.identity?.reason ?? "the running process was not checked") + ")")
+        } else {
+            // Said plainly rather than left as a missing field. This transport
+            // cannot support a lane-wide identity claim at all, and a reader must
+            // not take the absence of a complaint for a clean check.
+            parts.append("identity not attestable on this transport, because every call re-execs "
+                         + "the driver")
+        }
+        if !report.overrides.isEmpty {
+            parts.append("overrides in force: " + report.overrides.sorted().joined(separator: ", "))
+        }
+        return LaneEvent(kind: .opened, backend: .cua, laneId: laneId,
+                         reason: parts.joined(separator: "; "))
     }
 
     var laneReport: CuaLaneReport? {
@@ -124,7 +192,19 @@ final class CuaActuationBackend: ActuationBackend {
 
     func perform(step: ActionStep, target: StepTarget,
                  foreground: Bool) async throws -> Actuation {
-        try await preflight()
+        let laneEvents = try await preflightEvents()
+        // A build that moved under an unpinned lane refuses here, before any step
+        // runs, carrying the event that says why.
+        if let changed = laneEvents.first(where: { $0.kind == .identityChanged }) {
+            throw AgentError(
+                code: .backendUnsupported,
+                message: "the cua-driver build changed between batches, so the batch was "
+                       + "refused before any step ran",
+                remedy: "Re-check the driver with proctor_doctor. This lane re-execs the "
+                      + "driver per call, so Proctor can detect a build that moved but cannot "
+                      + "prevent one from moving.",
+                indeterminate: false, lane: changed)
+        }
 
         guard let action = CuaVocabulary.action(for: step.kind) else {
             // Refused, never quietly run on the native planes. A run that changes
@@ -202,7 +282,8 @@ final class CuaActuationBackend: ActuationBackend {
                          effect: CuaVocabulary.effect(for: reply.effect),
                          retriedOnStale: retried,
                          unrequestedForeground: escalated,
-                         transportMs: elapsedMs())
+                         transportMs: elapsedMs(),
+                         laneId: laneId, laneEvents: laneEvents)
     }
 
     // MARK: - Addressing

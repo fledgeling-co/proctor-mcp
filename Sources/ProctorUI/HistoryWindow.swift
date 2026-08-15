@@ -346,6 +346,9 @@ private struct RunRow: View {
         case .halted:      return "\(count), stopped by a person"
         case .recommended: return "named another lane"
         case .mixed:       return "\(count), some failed"
+        // Never "failed". The whole reason this outcome exists is that Proctor
+        // has no basis for saying the step did not happen.
+        case .indeterminate: return "\(count), outcome unknown"
         }
     }
 
@@ -444,6 +447,7 @@ private struct OutcomeMark: View {
         case .halted:      return "stop.circle.fill"
         case .recommended: return "arrow.turn.down.right"
         case .mixed:       return "exclamationmark.circle.fill"
+        case .indeterminate: return "questionmark.circle.fill"
         }
     }
 
@@ -455,6 +459,7 @@ private struct OutcomeMark: View {
         case .halted:      return .secondary
         case .recommended: return .secondary
         case .mixed:       return .orange
+        case .indeterminate: return .orange
         }
     }
 }

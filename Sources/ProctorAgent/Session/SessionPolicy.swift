@@ -123,22 +123,76 @@ extension Session {
 
     /// Record one executed step, redacting anything it carried.
     ///
+    /// **What a row of this trail attests to.** Every row is a claim Proctor makes
+    /// about a request it made. For a step Proctor performed itself, that claim
+    /// covers the action too: one process asked and acted, so intent and act are
+    /// the same event, and the post-state hash is Proctor reading back its own
+    /// work.
+    ///
+    /// For a delegated step the row carries three facts, of three different
+    /// strengths, and never merges them. *Proctor's own knowledge:* the gate
+    /// allowed this application, and Proctor sent this request to this backend at
+    /// this time. *An external claim:* the driver reported it delivered the action
+    /// by this path (`mode`), with this confidence that it landed (`eff`) —
+    /// Proctor did not witness it and does not vouch for it. *Proctor's own
+    /// observation:* Proctor walked the window's accessibility tree before and
+    /// after, on its own tree, and the state either changed or did not (`obs`).
+    ///
+    /// The third is what stops the trail becoming a record of intent. It is weaker
+    /// than having performed the action and stronger than taking the driver's
+    /// word: a delegated row is corroborated, where a native row is merely
+    /// self-reported. Where the two disagree — the driver claims success and
+    /// nothing moved, or suspects a no-op and the window changed — the row records
+    /// the disagreement rather than resolving it.
+    ///
+    /// Where Proctor cannot say, the row says it cannot say. A driver that dies
+    /// mid-step or answers after the deadline may have delivered the action before
+    /// it went. That row is `indeterminate`, not `failed`, and it carries Proctor's
+    /// own before/after reading as the only evidence left.
+    ///
+    /// **The gate is not a sandbox.** It stands in front of every call Proctor
+    /// makes and in front of nothing else. `cua-driver` is an ordinary binary on
+    /// the machine, and any model holding a shell can drive it directly, unlogged
+    /// and ungated, without Proctor being aware. Proctor cannot prevent that, does
+    /// not try to, and the trail's completeness is a claim about Proctor's own
+    /// actions, never about the machine.
+    ///
     /// `node` is the element the step resolved to. It is handed in and not
     /// stored: the wording is derived from it here, while it still exists, and
     /// only the wording is kept. A history read has no element to derive from —
     /// the record holds a kind and a node selector, and neither carries the
     /// readable name the wording needs.
-    func auditStep(_ step: ActionStep, context: AuditContext, ok: Bool,
+    func auditStep(_ step: ActionStep, context: AuditContext, outcome: String,
                    postStateHash: String?, reason: String?,
                    seq: Int? = nil, ms: Int? = nil, plane: ActuationPlane? = nil,
-                   node: AXNode? = nil) {
+                   node: AXNode? = nil, actuation: Actuation? = nil,
+                   observation: AuditRecord.Observation? = nil) {
         auditSink(AuditRecord.forStep(step, tool: context.tool, timestamp: clock(),
                                       app: context.app, bundleId: context.bundleId,
                                       window: context.window,
-                                      outcome: ok ? "ok" : "failed",
+                                      outcome: outcome,
                                       postStateHash: postStateHash, reason: reason,
                                       run: RunIdentity.current, seq: seq, ms: ms,
-                                      plane: plane?.rawValue, node: node))
+                                      plane: plane?.rawValue, node: node,
+                                      by: actuation?.backend.rawValue,
+                                      mode: actuation?.reportedMode,
+                                      eff: actuation?.effect?.rawValue,
+                                      obs: observation?.rawValue,
+                                      lane: actuation?.laneId))
+    }
+
+    /// One lane event: the actuation lane being opened, refused, or lost.
+    ///
+    /// Its own record rather than a field on a step, because these are facts about
+    /// the lane and not about any one action — and because a lane can die between
+    /// steps, before the first one, or during a call that has no row of its own
+    /// yet. Written with no step kind, which is how `RunHistory` already tells a
+    /// run's own event from one of its steps.
+    func auditLane(_ event: LaneEvent) {
+        auditSink(AuditRecord(timestamp: clock(), tool: "proctor_actuation",
+                              outcome: event.outcome, reason: event.reason,
+                              run: RunIdentity.current,
+                              by: event.backend.rawValue, lane: event.laneId))
     }
 
     // MARK: - proctor_policy

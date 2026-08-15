@@ -53,6 +53,14 @@ struct CuaLaneReport: Sendable {
     var driverReportedGrants: [String: Bool] = [:]
     /// Delivery paths the installed build says it can report.
     var vocabulary: [String] = []
+    /// Whether what was verified stays verified for the lane's life. See
+    /// `CuaTransport.identityPinned`.
+    var identityPinned: Bool = false
+    /// Which client answered, for the lane record.
+    var transport: String = "unknown"
+    /// What was established about the running process, when the transport can
+    /// support such a claim at all.
+    var identity: CuaProcessIdentity?
 }
 
 enum CuaPreflight {
@@ -61,6 +69,13 @@ enum CuaPreflight {
     /// One constant, so the anchor is changed in one place rather than found in
     /// five.
     static let expectedIdentifier = "com.trycua.driver"
+
+    /// The requirement both checks are made against — the file before it is
+    /// executed, and the running process afterwards. One string so the two cannot
+    /// drift into checking different things under the same name.
+    static var requirementText: String {
+        "identifier \"\(expectedIdentifier)\" and anchor apple generic"
+    }
 
     static let allowUnsignedEnv = "PROCTOR_CUA_ALLOW_UNSIGNED"
     static let allowUnsupportedEnv = "PROCTOR_CUA_ALLOW_UNSUPPORTED"

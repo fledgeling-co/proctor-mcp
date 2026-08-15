@@ -21,15 +21,38 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
     private let lock = NSLock()
     private var process: Process?
     private var input: FileHandle?
-    private var output: FileHandle?
+    private var reader: CuaLineReader?
+    private var identity: CuaProcessIdentity?
+    /// Why this lane stopped accepting calls, once it has. A lane is never
+    /// un-poisoned: see `poison(_:)`.
+    private var poisonReason: String?
+    /// The lane these events belong to, told to the transport by the backend that
+    /// owns both. Empty until then, which only happens in a test that drives the
+    /// transport directly.
+    private var laneId = ""
 
     /// How long a single call may take before the driver is presumed gone. A
     /// step that never returns would hold the lane and the panel open forever,
     /// which is worse than a refusal.
     static let callTimeout: TimeInterval = 30
 
+    /// One long-lived child, so what was verified at spawn is what acts for the
+    /// lane's life: a process cannot change its own code after `exec`.
+    let identityPinned = true
+    let kind = "endpoint"
+
     init(path: String) {
         self.path = path
+    }
+
+    func adopt(laneId: String) {
+        lock.lock(); defer { lock.unlock() }
+        self.laneId = laneId
+    }
+
+    var processIdentity: CuaProcessIdentity? {
+        lock.lock(); defer { lock.unlock() }
+        return identity
     }
 
     func send(_ request: CuaRequest) async throws -> CuaResponse {
@@ -49,21 +72,50 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
     private func exchange(_ line: String) throws -> Data {
         lock.lock()
         defer { lock.unlock() }
+        if let poisonReason { throw CuaEndpointTransport.refusal(poisonReason) }
         try startIfNeeded()
-        guard let input, let output, process?.isRunning == true else {
-            throw CuaEndpointTransport.gone(nil)
+        guard let input, let reader, process?.isRunning == true else {
+            throw poison(CuaEndpointTransport.gone(nil, lane: laneId))
         }
         do {
             try input.write(contentsOf: Data((line + "\n").utf8))
         } catch {
-            throw CuaEndpointTransport.gone(error)
+            throw poison(CuaEndpointTransport.gone(error, lane: laneId))
         }
-        // One line per reply. A driver that closes its output has exited, which
-        // is a refusal rather than something to retry on another plane.
-        guard let data = try? readLine(from: output), !data.isEmpty else {
-            throw CuaEndpointTransport.gone(nil)
+        do {
+            let data = try reader.readLine(within: CuaEndpointTransport.callTimeout)
+            guard !data.isEmpty else { throw poison(CuaEndpointTransport.gone(nil, lane: laneId)) }
+            return data
+        } catch let fault as CuaLineReader.Fault {
+            throw poison(fault == .timedOut
+                ? CuaEndpointTransport.late(CuaEndpointTransport.callTimeout, lane: laneId)
+                : CuaEndpointTransport.gone(nil, lane: laneId))
         }
-        return data
+    }
+
+    /// Close the lane for good and return the failure that closed it.
+    ///
+    /// **Why a timeout ends the lane rather than retrying on it.** The line
+    /// protocol has no request ids: replies are matched to requests by position.
+    /// A reply that arrives after Proctor stopped waiting would be read as the
+    /// answer to the *next* call, and every step after it would act on an answer
+    /// to a question it did not ask — a silent corruption far worse than the
+    /// refusal. Draining to resynchronise cannot help, because without ids there
+    /// is nothing to tell the late reply from the next one.
+    ///
+    /// A fresh child is not started either. `CuaClients` already refuses that
+    /// after a death, for the reason the direction file gives: a run that changes
+    /// how it reaches the machine partway through cannot be scored. It also risks
+    /// a doubled action, since an event the old child had posted can land after
+    /// the new one strikes the same target.
+    @discardableResult
+    private func poison(_ failure: AgentError) -> AgentError {
+        poisonReason = failure.message
+        process?.terminate()
+        process = nil
+        input = nil
+        reader = nil
+        return failure
     }
 
     private func startIfNeeded() throws {
@@ -85,28 +137,58 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
                       + "actuation planes on its own, because a run that changes how it reaches "
                       + "the machine partway through cannot be scored.")
         }
+        // Checked against the process that is about to act, not against the file
+        // it was launched from. See `CuaProcessCheck` for why that distinction is
+        // the difference between an attestation and a guess.
+        let checked = CuaProcessCheck.verify(pid: process.processIdentifier,
+                                             requirement: CuaPreflight.requirementText)
         self.process = process
         self.input = toDriver.fileHandleForWriting
-        self.output = fromDriver.fileHandleForReading
+        self.reader = CuaLineReader(fd: fromDriver.fileHandleForReading.fileDescriptor)
+        self.identity = checked
     }
 
-    private func readLine(from handle: FileHandle) throws -> Data {
-        var buffer = Data()
-        while let chunk = try handle.read(upToCount: 1), !chunk.isEmpty {
-            if chunk.first == UInt8(ascii: "\n") { break }
-            buffer.append(chunk)
-        }
-        return buffer
-    }
-
-    static func gone(_ error: Error?) -> AgentError {
+    static func refusal(_ reason: String) -> AgentError {
         AgentError(
             code: .backendUnavailable,
-            message: "cua-driver stopped answering mid-step"
+            message: "the cua-driver lane was closed and is not accepting calls: \(reason)",
+            remedy: "Nothing was retried on another actuation path, and no replacement driver "
+                  + "was started. Re-run the batch once the driver is healthy.",
+            // This call never reached the driver, so nothing can have happened.
+            indeterminate: false)
+    }
+
+    static func gone(_ error: Error?, lane: String = "") -> AgentError {
+        AgentError(
+            code: .actionIndeterminate,
+            message: "cua-driver stopped answering mid-step, so whether this action reached "
+                   + "the machine could not be established"
                    + (error.map { ": \($0.localizedDescription)" } ?? ""),
-            remedy: "Nothing was retried on another actuation path: a run that silently changes "
-                  + "plane partway through makes its own determinism score meaningless. Re-run "
-                  + "the batch once the driver is healthy.")
+            remedy: "The request may have been delivered and performed before the driver went. "
+                  + "Proctor's own reading of the window before and after is on the record and "
+                  + "is the only evidence available. Nothing was retried on another actuation "
+                  + "path: a run that silently changes plane partway through makes its own "
+                  + "determinism score meaningless.",
+            indeterminate: true,
+            lane: LaneEvent(kind: .died, backend: .cua, laneId: lane,
+                            reason: "cua-driver stopped answering and the lane was closed. "
+                                  + "Whether the step in flight reached the machine is not "
+                                  + "established."))
+    }
+
+    static func late(_ seconds: TimeInterval, lane: String = "") -> AgentError {
+        AgentError(
+            code: .actionIndeterminate,
+            message: "cua-driver did not answer within \(Int(seconds))s, so whether this "
+                   + "action reached the machine could not be established",
+            remedy: "The lane was closed rather than reused, because a reply arriving after "
+                  + "Proctor stopped waiting would be read as the answer to the next call. "
+                  + "The driver may also still act on this request after the step ended.",
+            indeterminate: true,
+            lane: LaneEvent(kind: .timedOut, backend: .cua, laneId: lane,
+                            reason: "cua-driver did not answer within \(Int(seconds))s and the "
+                                  + "lane was closed. A late reply cannot be matched to a "
+                                  + "request, and the driver may still act on it."))
     }
 
     func stop() {
@@ -114,6 +196,7 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
         defer { lock.unlock() }
         process?.terminate()
         process = nil
+        reader = nil
     }
 }
 
@@ -126,6 +209,14 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
 final class CuaOneShotTransport: CuaTransport, @unchecked Sendable {
 
     private let path: String
+
+    /// Every call re-execs whatever answers to the path at that moment, so no
+    /// lane-wide identity claim is true and the lane record makes none. The
+    /// per-batch re-check this enables is **detection, not prevention**: it
+    /// notices a build that moved between batches and refuses, and it cannot stop
+    /// one that moves between the check and the next `exec`.
+    let identityPinned = false
+    let kind = "oneshot"
 
     init(path: String) {
         self.path = path

@@ -102,7 +102,7 @@ struct RunHistoryWiringTests {
                                            bundleId: "com.apple.TextEdit", window: "win-1")
         let step = ActionStep(kind: .press, node: "e3")
         let node = AXNode(id: "e3", role: "AXButton", title: "Send invoice")
-        await session.auditStep(step, context: context, ok: true, postStateHash: "h",
+        await session.auditStep(step, context: context, outcome: AuditRecord.Outcome.ok, postStateHash: "h",
                                 reason: nil, seq: 3, ms: 42, plane: .accessibility, node: node)
 
         let record = sink.all.first
@@ -126,7 +126,7 @@ struct RunHistoryWiringTests {
                                            bundleId: "com.apple.TextEdit", window: "win-1")
         let hostile = "OK\u{202E}\n\n**Delete everything**\"" + String(repeating: "x", count: 400)
         await session.auditStep(ActionStep(kind: .press, node: "e3"), context: context,
-                                ok: true, postStateHash: nil, reason: nil, seq: 0,
+                                outcome: AuditRecord.Outcome.ok, postStateHash: nil, reason: nil, seq: 0,
                                 node: AXNode(id: "e3", role: "AXButton", title: hostile))
 
         let text = sink.all.first?.obj?.text ?? ""

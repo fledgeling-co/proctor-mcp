@@ -77,6 +77,37 @@ struct CuaResponse: Sendable {
 /// How a request reaches the driver.
 protocol CuaTransport: Sendable {
     func send(_ request: CuaRequest) async throws -> CuaResponse
+
+    /// Whether what was verified stays verified for the lane's life.
+    ///
+    /// True for a transport holding one child: a process cannot change its own
+    /// code after `exec`, so the check made at spawn describes every step. False
+    /// for one that re-execs per call, where each call is a different process and
+    /// no lane-wide claim about identity is true.
+    ///
+    /// It is a property of the transport rather than a setting because the honest
+    /// content of the lane record depends on it, and a record that claimed a
+    /// pinned identity on an unpinned transport would be the false attestation
+    /// this whole item exists to avoid.
+    var identityPinned: Bool { get }
+
+    /// What was established about the running process, when anything was.
+    var processIdentity: CuaProcessIdentity? { get }
+
+    /// A name for the transport, for the lane record.
+    var kind: String { get }
+
+    /// Tell the transport which lane it serves, so the events it raises carry the
+    /// same name as the steps that travelled it. Called once, by the backend that
+    /// owns both.
+    func adopt(laneId: String)
+}
+
+extension CuaTransport {
+    var identityPinned: Bool { false }
+    var processIdentity: CuaProcessIdentity? { nil }
+    var kind: String { "unknown" }
+    func adopt(laneId: String) {}
 }
 
 /// The driver's error identifiers this build reacts to by name.

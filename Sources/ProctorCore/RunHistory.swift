@@ -53,6 +53,13 @@ public enum RunHistory {
         case recommended
         /// Some steps worked and some did not.
         case mixed
+        /// Proctor asked and cannot say whether it happened — a delegated step
+        /// whose backend stopped answering mid-call.
+        ///
+        /// Not a shade of `failed`. `failed` says the action did not happen, and
+        /// on this path Proctor has no basis for saying so: the request may have
+        /// been delivered and performed before the driver went.
+        case indeterminate
     }
 
     /// One step inside a run.
@@ -239,8 +246,13 @@ public enum RunHistory {
         case AuditRecord.Outcome.ok: return .ok
         case AuditRecord.Outcome.failed: return .failed
         case AuditRecord.Outcome.recommended: return .recommended
+        case AuditRecord.Outcome.indeterminate: return .indeterminate
         case AuditRecord.Outcome.refused:
             return isHalt(record) ? .halted : .refused
+        // An outcome this build has never heard of degrades to a fault rather
+        // than to a success. It is also how an older build reads a newer trail's
+        // `indeterminate`, which is a safe direction: it over-reports a problem
+        // instead of hiding one, and needs no migration.
         default: return .failed
         }
     }
@@ -266,6 +278,12 @@ public enum RunHistory {
     static func reduce(_ outcomes: [Outcome]) -> Outcome {
         guard !outcomes.isEmpty else { return .ok }
         if outcomes.contains(.halted) { return .halted }
+        // Ranked directly below a person's Stop, and above every other mixture.
+        // A run holding one of these is a run whose end state Proctor cannot
+        // describe, and folding it into `mixed` — or worse, letting three good
+        // steps and one unknown one reduce to `ok` — would lose exactly the fact
+        // the outcome was added to carry.
+        if outcomes.contains(.indeterminate) { return .indeterminate }
         if outcomes.allSatisfy({ $0 == .refused }) { return .refused }
         if outcomes.allSatisfy({ $0 == .recommended }) { return .recommended }
         if outcomes.allSatisfy({ $0 == .ok }) { return .ok }

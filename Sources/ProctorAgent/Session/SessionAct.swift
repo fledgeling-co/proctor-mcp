@@ -289,7 +289,9 @@ extension Session {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: refusal, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: 0))
-                if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
+                if let audit { auditStep(step, context: audit,
+                                         outcome: AuditRecord.Outcome.failed,
+                                         postStateHash: nil,
                                          reason: refusal.message, seq: index, ms: 0) }
                 run.failedAt = index
                 ending = .stoppedByPerson
@@ -338,7 +340,9 @@ extension Session {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: refusal, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: elapsed()))
-                if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
+                if let audit { auditStep(step, context: audit,
+                                         outcome: AuditRecord.Outcome.failed,
+                                         postStateHash: nil,
                                          reason: refusal.message, seq: index, ms: elapsed(),
                                          node: node) }
                 run.failedAt = index
@@ -391,12 +395,33 @@ extension Session {
                     target: stepTarget(step, window: window, app: app),
                     foreground: foreground)
             } catch let error as AgentError {
+                // The backend's own judgment, carried on the error. Never a code
+                // match: only the thing that failed knows whether its request may
+                // already have been delivered, and a code can arrive from another
+                // domain — including from the native backend, whose throws always
+                // do mean nothing was posted.
+                if let event = error.lane, audit != nil { auditLane(event) }
+                // With the backend gone, Proctor's own reading of the window is
+                // the only evidence left about what the machine did — so it is
+                // taken here, on a path that has already failed, rather than
+                // skipped. It is evidence and not proof: an event the driver had
+                // already posted can land after this walk, which is part of why
+                // the row stays indeterminate rather than being resolved by it.
+                let after = error.indeterminate ? stateHashNow(window: window.id) : nil
+                let observed = error.indeterminate
+                    ? Self.observation(before: hashBefore, after: after) : nil
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
-                                              error: error, settle: nil, stateHash: nil,
+                                              error: error, settle: nil, stateHash: after,
                                               diff: nil, elapsedMs: elapsed()))
-                if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
-                                         reason: error.message, seq: index, ms: elapsed(),
-                                         node: node) }
+                if let audit {
+                    auditStep(step, context: audit,
+                              outcome: error.indeterminate
+                                  ? AuditRecord.Outcome.indeterminate
+                                  : AuditRecord.Outcome.failed,
+                              postStateHash: after, reason: error.message,
+                              seq: index, ms: elapsed(), node: node,
+                              observation: observed)
+                }
                 run.failedAt = index
                 await hud(.stepFailed(step: step, node: node))
                 ending = .failed
@@ -408,7 +433,9 @@ extension Session {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: wrapped, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: elapsed()))
-                if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
+                if let audit { auditStep(step, context: audit,
+                                         outcome: AuditRecord.Outcome.failed,
+                                         postStateHash: nil,
                                          reason: wrapped.message, seq: index, ms: elapsed(),
                                          node: node) }
                 run.failedAt = index
@@ -416,6 +443,9 @@ extension Session {
                 ending = .failed
                 break
             }
+            // Written before the step's own row so the trail reads in causal
+            // order: the lane opened, then the step it opened for.
+            if audit != nil { for event in outcome.laneEvents { auditLane(event) } }
 
             let plane = outcome.plane
             let policy = step.settle ?? settle
@@ -455,10 +485,28 @@ extension Session {
                                     elapsedMs: elapsed(), route: outcome.route)
             result.carry(outcome)
             run.results.append(result)
-            if let audit { auditStep(step, context: audit, ok: noOp == nil,
-                                     postStateHash: stateHash,
-                                     reason: (noOp ?? postStateError)?.message, seq: index,
-                                     ms: elapsed(), plane: plane, node: node) }
+            if let audit {
+                let observed = Self.observation(before: hashBefore, after: stateHash)
+                auditStep(step, context: audit,
+                          outcome: noOp == nil ? AuditRecord.Outcome.ok
+                                               : AuditRecord.Outcome.failed,
+                          postStateHash: stateHash,
+                          reason: (noOp ?? postStateError)?.message
+                              // A passing row still says so when the two observers
+                              // point different ways. Without this the outcome
+                              // people filter on is silent about an over-claiming
+                              // driver, and the disagreement is only reachable by
+                              // crossing two fields nobody queries.
+                              ?? Self.disagreement(outcome, observed),
+                          seq: index,
+                          ms: elapsed(), plane: plane, node: node,
+                          actuation: outcome,
+                          // The verdict above is the crossing of these two; they
+                          // are persisted beside it so a reader can audit the
+                          // crossing rather than trust it. There is deliberately
+                          // no third field restating it.
+                          observation: observed)
+            }
 
             // A step nothing can show happened stops the batch, exactly as any
             // other failed step does. Continuing would run the rest of a plan on
@@ -629,6 +677,51 @@ extension Session {
     /// would turn a working run red. A driver that suspects a no-op and is right
     /// must not report `ok: true`, because every existing reader checks `ok` and
     /// would see a success — the same defect as adding a field nobody reads.
+    /// Proctor's own reading of the window across a step, from two hashes it took
+    /// itself.
+    ///
+    /// Nil in, nil out — which is what keeps the native path free of this. Native
+    /// takes no before-hash (`hashBefore` is read only for a non-native backend),
+    /// so a native row carries no observation rather than one manufactured from
+    /// the previous step's post-state, which would measure a different interval
+    /// under the same name.
+    ///
+    /// Read the result narrowly wherever it is used: this is the accessibility
+    /// tree as Proctor walked it, not the machine. A canvas repaint can leave the
+    /// tree identical and an animation can move it for no reason, so `changed` is
+    /// evidence rather than proof in both directions.
+    static func observation(before: String?, after: String?) -> AuditRecord.Observation? {
+        guard let before else { return nil }
+        guard let after else { return .unread }
+        return before == after ? .unchanged : .changed
+    }
+
+    /// The sentence a row gets when the driver's claim and Proctor's own reading
+    /// point different ways, but not far enough apart to fail the step.
+    ///
+    /// The step stays `ok`, and it should: a `hover` moves nothing, a `focus` onto
+    /// an already-focused element moves nothing, so failing every step whose tree
+    /// did not change would be a false negative across most of the vocabulary.
+    /// But "the driver said it worked and Proctor saw nothing move" is exactly the
+    /// row somebody investigating a flaky run wants, and leaving it reconstructable
+    /// only by crossing two fields means the outcome people actually filter on
+    /// stays silent about it. So the disagreement is written down in words.
+    static func disagreement(_ outcome: Actuation,
+                             _ observation: AuditRecord.Observation?) -> String? {
+        guard outcome.backend != .native, observation == .unchanged else { return nil }
+        switch outcome.effect {
+        case .confirmed:
+            return "the backend reported this step confirmed, and Proctor's own reading of the "
+                 + "window is unchanged. The step is not failed on that alone, because a step "
+                 + "can legitimately move nothing, but the two observers do not agree."
+        case .unverifiable:
+            return "the backend could not verify this step landed, and Proctor's own reading of "
+                 + "the window is unchanged. Nothing here establishes that anything happened."
+        default:
+            return nil
+        }
+    }
+
     static func noOpVerdict(_ outcome: Actuation, before: String?,
                             after: String?) -> AgentError? {
         guard outcome.effect == .suspectedNoOp else { return nil }

@@ -44,6 +44,23 @@ public enum StepDescription {
     public enum Outcome: String, Sendable, Equatable {
         case refused
         case failed
+        /// Proctor could not establish whether the step happened.
+        ///
+        /// Its own case rather than a shade of `failed`, because the line this
+        /// renders is the one a person actually reads. A trail that records
+        /// `indeterminate` behind a sentence reading "Press … failed" has told
+        /// nobody anything: the honesty has to survive to the surface.
+        case indeterminate
+    }
+
+    /// How an outcome is said. `refused` and `failed` are adjectives that follow
+    /// the phrase; `indeterminate` is not, because there is no one-word English
+    /// adjective for it that does not read as a fault.
+    private static func phrase(for outcome: Outcome) -> String {
+        switch outcome {
+        case .refused, .failed:  return outcome.rawValue
+        case .indeterminate:     return "— could not tell whether it happened"
+        }
     }
 
     /// The hard cut applied to every object, supplied or derived. The HUD's live
@@ -68,10 +85,11 @@ public enum StepDescription {
     /// confirmation being denied.
     public static func line(for step: ActionStep, node: AXNode?, outcome: Outcome) -> String {
         let noun = wording(for: step.kind).noun
+        let said = phrase(for: outcome)
         guard let object = object(for: step, node: node) else {
-            return "\(noun) \(outcome.rawValue)"
+            return "\(noun) \(said)"
         }
-        return "\(noun) \(render(object)) \(outcome.rawValue)"
+        return "\(noun) \(render(object)) \(said)"
     }
 
     /// The trail line, for a step that ran and settled: "Focused Amount",
@@ -125,14 +143,22 @@ public enum StepDescription {
     /// The verb is always Proctor's. Nothing a caller or an application supplies
     /// can change it, which is the guarantee PRO-0014 exists for.
     public static func past(for step: ActionStep, node: AXNode?,
-                            limit: Int = objectLimit) -> (verb: String, object: Fenced?) {
+                            limit: Int = objectLimit,
+                            asserting: Bool = true) -> (verb: String, object: Fenced?) {
         let words = wording(for: step.kind)
+        // `asserting: false` returns the noun form — "Press" rather than "Pressed"
+        // — for a row whose outcome is that Proctor could not tell whether the step
+        // happened. The verb here is Proctor's own voice, so a past tense on such a
+        // row would have Proctor assert the very thing the row says it cannot
+        // establish. The noun form already exists for every kind; this selects it
+        // rather than authoring a second vocabulary.
         guard let object = object(for: step, node: node, limit: limit) else {
-            return (words.pastAlone, nil)
+            return (asserting ? words.pastAlone : words.noun, nil)
         }
+        let verb = asserting ? words.past : words.noun
         switch object {
-        case .supplied(let text): return (words.past, Fenced(text: text, supplied: true))
-        case .derived(let text):  return (words.past, Fenced(text: text, supplied: false))
+        case .supplied(let text): return (verb, Fenced(text: text, supplied: true))
+        case .derived(let text):  return (verb, Fenced(text: text, supplied: false))
         }
     }
 

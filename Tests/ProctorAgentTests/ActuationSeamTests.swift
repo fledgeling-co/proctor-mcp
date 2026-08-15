@@ -23,6 +23,9 @@ final class FakeActuationBackend: ActuationBackend, @unchecked Sendable {
     var onPerform: (@Sendable () -> Void)?
     var defaultOutcome = Actuation(.accessibility, .action, backend: .cua,
                                    reportedMode: "ax", effect: .confirmed)
+    /// Thrown instead of returning, so a test can drive the failure paths a
+    /// subprocess has and an in-process call does not (PRO-0045).
+    var failure: AgentError?
     private let lock = NSLock()
     private var _performed: [ActionStep] = []
     var performed: [ActionStep] { lock.withLock { _performed } }
@@ -53,6 +56,7 @@ final class FakeActuationBackend: ActuationBackend, @unchecked Sendable {
             return _performed.count - 1
         }
         onPerform?()
+        if let failure { throw failure }
         return outcomes[index] ?? defaultOutcome
     }
 }
