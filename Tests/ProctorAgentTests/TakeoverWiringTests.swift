@@ -312,7 +312,12 @@ struct TakeoverWiringTests {
         post.declare()
         #expect(post.inFlight)
 
+        let t0 = Date().timeIntervalSince1970
         try await runNonPosting(try await sharing(post))
+        let elapsed = Date().timeIntervalSince1970 - t0
+        FileHandle.standardError.write(
+            "PRO0054 elapsed=\(elapsed) declared=\(post.declaredThisStep) inFlight=\(post.inFlight)\n"
+                .data(using: .utf8)!)
 
         #expect(post.inFlight, "a background run closed a poster's in-flight window")
     }

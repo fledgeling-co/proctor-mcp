@@ -98,12 +98,19 @@ struct ForegroundWiringTests {
         // when the batch ends, so reading it afterwards would only ever show the
         // resting value. The run suspends on every settle, so a poll gets in.
         var sample: JSONValue?
+        var polls = 0
+        let t0 = Date().timeIntervalSince1970
         for _ in 0..<400 {
+            polls += 1
             let block = await h.session.recentActivity()["foreground"]
             if block?["active"]?.boolValue == true { sample = block; break }
             try await Task.sleep(nanoseconds: 2_000_000)
         }
+        let pollElapsed = Date().timeIntervalSince1970 - t0
         _ = try await running.value
+        FileHandle.standardError.write(
+            "PRO0054C2 polls=\(polls) pollElapsed=\(pollElapsed) caught=\(sample != nil)\n"
+                .data(using: .utf8)!)
 
         let block = try #require(sample, "the run never reported taking the foreground")
         #expect(block["running"]?.boolValue == true)
