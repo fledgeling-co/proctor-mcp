@@ -301,11 +301,39 @@ refusal, whose question changed shape underneath it).
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **MERGED** `0f76c56` · reading 3 chosen |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **MERGED** `153951b` (carried, revised) |
 | PRO-0054 | Three tests still redden the gate at random | `55-…` | 3 | **RUNNING** `wf_b1b506b3-e9c` · found mid-fleet |
-| PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **RUNNING** `wf_0bbfba85-c52` (carried, revised) |
+| PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **MERGED** `30324a6` (carried, revised) |
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **MERGED** `c9e42c9` · fixed a live PRO-0050 defect |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-16 **PRO-0038 merged `30324a6`.** 1391 -> **1416 tests in 157 suites**. A determinism
+  score now says what it was a score of, **and stops folding a hash it cannot vouch for.**
+  - **Two defects, and the second was worse than the brief's.** The brief reads as a disclosure
+    item. Underneath it, a PRO-0045 `indeterminate` step stores a post-state walk taken after
+    an action Proctor cannot vouch happened, and **that hash was entering the fold**. Removing
+    the fix showed a two-repeat sweep whose second repeat died that way reporting
+    **`deterministic: true`**. The runner's own first spec draft claimed the short-column guard
+    already withheld that verdict; it does not, because an indeterminate step is the last step
+    of its repeat, so its hash leaves the column full. The spec was corrected against the
+    measurement rather than the other way round.
+  - **The design gate killed a draft that would have appeared to work.** The first version
+    scanned before the sweep, but a step's target usually does not exist until earlier steps
+    have run — so a flow that opens a page and then drives it would have shipped no disclosure
+    while still publishing the page's number. Classification moved into the shared step loop.
+  - **A step measured on one sample was still scoring `0.0`**, because `Canonical.instability`
+    returns 0 for a one-hash column. The number is now omitted below two samples.
+  - **The brief's fourth hard part was a premise this build contradicts**, and the runner said
+    so rather than inventing a step state: no step here is handed off and not executed, because
+    the browser handoff is advisory and there is no browser/CDP lane in `Actuation/`.
+  - **The sharpest limit, from the completeness critic:** a state hash walks the whole window,
+    so the page's tree is inside every step's hash in a browser window. **The label marks where
+    a step acted; it does not partition the score.** Written into the spec and into
+    `HashSubject`'s documentation, and logged as child work.
+  - **Orchestrator note on the gate:** the branch died with no verdict line in 2 of its first 6
+    runs while `main` was 4/4 clean in the same window, then went 6/6 green. Both failures were
+    the whole process dying with ~1523 tests already reported, not an assertion failing, which
+    is the saturation shape rather than a defect shape, and both landed while PRO-0054's runner
+    was building. Merged on 10/12 with the observation recorded rather than explained away.
 - 2026-08-15 **PRO-0029 merged `153951b`.** 1349 -> **1391 tests in 155 suites**. The switches
   have a home.
   - **The enumeration moved the design, which is why the brief told it to enumerate.** 32

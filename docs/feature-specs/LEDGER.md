@@ -44,7 +44,7 @@
 | PRO-0035 | The browser catalogue stops guessing | 2026-08-15 | Merged |
 | PRO-0036 | The status window's checks say what they can check | 2026-08-15 | Merged `c9e42c9` |
 | PRO-0037 | A hold names whose run it is | 2026-08-15 | Merged |
-| PRO-0038 | Stability knows when it is scoring a page | 2026-08-15 | Triaged |
+| PRO-0038 | Stability knows when it is scoring a page | 2026-08-15 | Merged `30324a6` |
 | PRO-0039 | Page-scoped refusal | 2026-08-15 | Triaged |
 | PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | 2026-08-15 | Merged `091d6c3` |
 | PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | 2026-08-15 | Merged `0545219` |
