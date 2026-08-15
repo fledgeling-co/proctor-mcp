@@ -577,8 +577,13 @@ final class RunHUDContentView: NSView {
         let waitFont = NSFont.monospacedSystemFont(ofSize: 10, weight: .regular)
 
         for row in queue.rows {
-            let mark = row.position.map { "\($0)" } ?? "▸"
-            draw(text: mark, font: posFont, colour: p.ink4,
+            // The position slot carries the mark. A waiting run shows its place,
+            // a running one an arrow, and a held one a pause — one glyph in a
+            // slot that already exists, rather than a second line or a colour
+            // this palette does not have. A person using their own Mac is not a
+            // fault, so the mark stays in the quiet ink the row is already in.
+            let mark = row.held ? "‖" : (row.position.map { "\($0)" } ?? "▸")
+            draw(text: mark, font: posFont, colour: row.held ? p.ink3 : p.ink4,
                  in: NSRect(x: RunHUDLayout.pad, y: y + 8, width: 12, height: 13))
 
             let whoWidth = ceil(NSAttributedString(string: row.session,

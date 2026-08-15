@@ -250,14 +250,21 @@ actor Session {
     /// already known from its steps. The token is the run's own; hand it back to
     /// `foregroundStep` and `foregroundEnded` so a run only ever edits its own
     /// entry.
-    func foregroundBegan(demand: ForegroundDemand, app: String?) -> Int {
+    func foregroundBegan(demand: ForegroundDemand, app: String?, window: Rect? = nil) -> Int {
         nextForegroundRun += 1
         let token = nextForegroundRun
         foregroundRuns[token] = ForegroundState(demand: demand, app: app)
         // The yield watch is keyed by the same token for the same reason: two
         // runs on different applications overlap, and a harmless one ending must
         // not throw away what a contending one is holding.
-        yieldRuns[token] = YieldRun()
+        var yield = YieldRun()
+        // Carried now rather than looked up later: a hold has to be able to name
+        // the application and the display it belongs to at the instant it
+        // latches, and re-resolving a window handle mid-hold is a read against
+        // an application somebody has just walked away from.
+        yield.app = app
+        yield.window = window
+        yieldRuns[token] = yield
         return token
     }
 
@@ -284,6 +291,12 @@ actor Session {
         var openedAt: Double?
         var openReason: YieldReason?
         var openStep: Int?
+        /// The app and the window this run is driving, kept so a hold can be
+        /// attributed without re-resolving a handle at the moment it is read.
+        var app: String?
+        var window: Rect?
+        /// Whose the open hold is, for every surface that can carry a name.
+        var openHold: HoldAttribution?
     }
 
     private var yieldRuns: [Int: YieldRun] = [:]
@@ -303,7 +316,7 @@ actor Session {
         _ = reason
     }
 
-    func disarmContention(run token: Int) {
+    func disarmContention(run token: Int) async {
         guard let run = yieldRuns[token] else { return }
         if run.armed { contentionMonitor.disarm() }
         // A hold still open when the run ends is closed against the run rather
@@ -314,6 +327,12 @@ actor Session {
             closeOpenHold(&run, endedBy: runControl.isStopped ? .stopped : .runEnded)
             yieldRuns[token] = run
         }
+        // The three endings the probe never sees — a person's Stop, the
+        // backstop giving up, and the run simply finishing — all unwind through
+        // here, so this is where the published copy is cleared for them. Without
+        // it a ticket would carry a hold that the latch had already dropped, and
+        // the panel would show a machine held by nothing.
+        await runScheduler.unhold(run: RunScheduler.currentRun)
     }
 
     /// What the run reports afterwards. Removes the run's entry, so this is
@@ -343,6 +362,9 @@ actor Session {
         if runControl.takePersonResume() {
             run.watch.resumedByPerson()
             closeOpenHold(&run, endedBy: .person)
+            // A person's Resume ends the hold, so the copy the panel reads has
+            // to end with it. One of the five paths A2 pins.
+            await runScheduler.unhold(run: RunScheduler.currentRun)
         }
         let change = run.watch.sample(contentionMonitor.sample())
         switch change {
@@ -353,11 +375,19 @@ actor Session {
             // one opened, so the record says what actually held it and for how
             // long rather than blaming the last reason for the whole wait.
             closeOpenHold(&run, endedBy: .released)
+            let hold = attribution(reason, run: token)
             run.openReason = reason
             run.openedAt = monotonicNow()
             run.openStep = step
+            run.openHold = hold
             yieldRuns[token] = run
-            runControl.yield(reason)
+            // The latch first, because it is the decision and the buttons write
+            // it synchronously; the scheduler second, because it is the copy
+            // every surface reads. `RunScheduler.currentRun` is this call's own
+            // ticket, carried by task-local through the actor's reentrancy.
+            let ticket = RunScheduler.currentRun
+            runControl.yield(reason, run: ticket, hold: hold)
+            await runScheduler.hold(run: ticket, hold)
             await hud(.yielded(reason: reason))
             RunHUDPanel.audit("run.yielded", detail: reason.detail)
             // Gated exactly as `hud()` is. A hop to the main actor to redraw a
@@ -367,11 +397,13 @@ actor Session {
         case .released(let reason):
             closeOpenHold(&run, endedBy: .released)
             yieldRuns[token] = run
+            let ticket = RunScheduler.currentRun
             runControl.release()
+            await runScheduler.unhold(run: ticket)
             // A person's own Pause is not lifted by a contention clearing. The
             // latch keeps both causes apart; this only says so on the panel when
             // the run is actually carrying on again.
-            if !runControl.isPaused {
+            if !runControl.isParked(run: ticket) {
                 await hud(.unyielded)
                 RunHUDPanel.audit("run.resumed",
                                   detail: "the run carried on: \(reason.rawValue) cleared")
@@ -388,6 +420,57 @@ actor Session {
         run.openReason = nil
         run.openedAt = nil
         run.openStep = nil
+        run.openHold = nil
+    }
+
+    /// Whose a hold is: the reason, the session, the application under test and
+    /// the display that application is on.
+    ///
+    /// Every part is derived. The session label comes from the peer process the
+    /// connection belongs to and never from anything a client said about itself,
+    /// because a connection that could name itself could impersonate another one
+    /// in the very UI a person uses to decide whether to stop it. The display
+    /// comes from the driven window's own frame.
+    func attribution(_ reason: YieldReason, run token: Int) -> HoldAttribution {
+        let run = yieldRuns[token]
+        return HoldAttribution(reason: reason,
+                               session: SessionIdentity.current.label,
+                               app: run?.app,
+                               display: HoldAttribution.display(for: run?.window,
+                                                                in: Self.screenBounds(),
+                                                                mainIndex: Self.mainScreenIndex()))
+    }
+
+    /// The screens, from CoreGraphics rather than NSScreen — which is main-actor
+    /// bound while this actor is not, the same reason the display resource and
+    /// `StreamCapture` read CoreGraphics directly.
+    ///
+    /// `CGDisplayBounds` and an accessibility window frame are both Quartz global
+    /// space (y down from the top of the primary display), so the overlap
+    /// arithmetic compares like with like. `RunHUDPlacement` is documented in
+    /// AppKit space because that is what the panel needs; the containment
+    /// question it answers is space-agnostic as long as both sides agree, and
+    /// here they do.
+    nonisolated static func screenBounds() -> [Rect] {
+        var count: UInt32 = 0
+        CGGetActiveDisplayList(0, nil, &count)
+        guard count > 0 else { return [] }
+        var ids = [CGDirectDisplayID](repeating: 0, count: Int(count))
+        CGGetActiveDisplayList(count, &ids, &count)
+        return ids.prefix(Int(count)).map { id in
+            let bounds = CGDisplayBounds(id)
+            return Rect(x: bounds.origin.x, y: bounds.origin.y,
+                        w: bounds.size.width, h: bounds.size.height)
+        }
+    }
+
+    nonisolated static func mainScreenIndex() -> Int? {
+        var count: UInt32 = 0
+        CGGetActiveDisplayList(0, nil, &count)
+        guard count > 0 else { return nil }
+        var ids = [CGDirectDisplayID](repeating: 0, count: Int(count))
+        CGGetActiveDisplayList(count, &ids, &count)
+        return ids.prefix(Int(count)).firstIndex(of: CGMainDisplayID())
     }
 
     /// Substitutable so a held-for-N-milliseconds assertion does not need to
@@ -395,15 +478,31 @@ actor Session {
     var monotonicNow: @Sendable () -> Double = { Date().timeIntervalSince1970 }
     func setMonotonicNow(_ clock: @escaping @Sendable () -> Double) { monotonicNow = clock }
 
-    /// What the menu bar reads: whether anything is held right now and why.
+    /// What the menu bar reads: whether anything is held right now, why, and
+    /// whose it is.
+    ///
+    /// The menu bar's ICON is one glyph and cannot carry a name, so it is not
+    /// asked to — its ladder is untouched and still shows precedence alone. This
+    /// is the menu bar's *words*, which can, and the status window reads the
+    /// same block. A person seeing a hold indicator and not knowing whose run it
+    /// is has the wrong half of the information on a machine running three
+    /// sessions.
     private var yieldJSON: JSONValue {
-        let held = yieldRuns.values.compactMap(\.openReason)
-        guard let reason = YieldReason.allCases.first(where: { held.contains($0) }) else {
-            return .object(["active": .bool(false), "reason": .null, "line": .null])
+        let holds = yieldRuns.values.compactMap(\.openHold)
+        // Highest precedence first, the same order the reasons are declared in,
+        // so the one shown is the one that most explains why injected input is
+        // least welcome right now.
+        guard let hold = YieldReason.allCases.lazy
+            .compactMap({ reason in holds.first { $0.reason == reason } }).first else {
+            return .object(["active": .bool(false), "reason": .null, "line": .null,
+                            "session": .null, "app": .null, "display": .null])
         }
         return .object(["active": .bool(true),
-                        "reason": .string(reason.rawValue),
-                        "line": .string(reason.line)])
+                        "reason": .string(hold.reason.rawValue),
+                        "line": .string(hold.line),
+                        "session": .string(hold.session),
+                        "app": hold.app.map(JSONValue.string) ?? .null,
+                        "display": hold.display.map { .string($0.name) } ?? .null])
     }
 
     /// The whole machine's answer, folded over every run in flight. Any run

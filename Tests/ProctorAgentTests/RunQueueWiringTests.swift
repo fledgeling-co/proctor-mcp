@@ -477,6 +477,69 @@ private actor Sampler {
     func record(_ value: Int) { samples.append(value) }
 }
 
+// MARK: - PRO-0037: activate joins the line
+
+@Suite("Activate queueing")
+struct ActivateQueueWiringTests {
+
+    private static let target = "com.example.target"
+
+    @Test("a queued activate is refused as busy, before it activates anything")
+    func aQueuedActivateIsRefusedWithoutActivating() async throws {
+        let ax = FakeAX(bundleId: Self.target)
+        // A ceiling short enough that the test is a test rather than a wait.
+        let scheduler = RunScheduler(waitLimit: 0.2, now: { Date().timeIntervalSince1970 })
+        let session = Session(ax: ax, capture: FakeCapture(), scheduler: scheduler)
+        await session.setAuditSink(AuditCollector().sink)
+        await session.setDrawsHUD(false)
+        await session.setRunControl(RunControl(pauseLimit: 900, now: { 0 }))
+
+        // Somebody else holds the whole machine.
+        let holder = try await scheduler.acquire(
+            lanes: LaneDemand(lanes: [.global]),
+            identity: RunSessionIdentity(project: "armada", connection: "b915", key: "armada"),
+            summary: "Act x4")
+
+        do {
+            _ = try await session.activate(bundleId: Self.target, pid: nil, name: nil,
+                                           app: nil, timeoutMs: 100)
+            Issue.record("activate should have been refused while the global lane was held")
+        } catch let error as AgentError {
+            // `queueBusy` rather than `appNotFound` is the whole assertion: this
+            // bundle id resolves to nothing on disk, so reaching the activation
+            // at all would have produced the other error. Getting the queue's
+            // refusal proves the lane was taken first and nothing was brought to
+            // the front.
+            #expect(error.code == .queueBusy)
+            #expect(error.message.contains("still waiting"))
+        }
+        await scheduler.release(holder)
+    }
+
+    @Test("an activate on a free machine is not held up by the queue")
+    func anUncontendedActivateDoesNotWait() async throws {
+        let ax = FakeAX(bundleId: Self.target)
+        let scheduler = RunScheduler(waitLimit: 45, now: { Date().timeIntervalSince1970 })
+        let session = Session(ax: ax, capture: FakeCapture(), scheduler: scheduler)
+        await session.setAuditSink(AuditCollector().sink)
+        await session.setDrawsHUD(false)
+        await session.setRunControl(RunControl(pauseLimit: 900, now: { 0 }))
+
+        // Most calls take the immediate path, which is what stops the queue
+        // making Proctor feel broken for the common case. This one fails for the
+        // reason it always did — nothing on disk matches — rather than waiting
+        // out a ceiling.
+        do {
+            _ = try await session.activate(bundleId: Self.target, pid: nil, name: nil,
+                                           app: nil, timeoutMs: 100)
+            Issue.record("expected the unresolvable bundle id to fail")
+        } catch let error as AgentError {
+            #expect(error.code == .appNotFound)
+        }
+        // And the lane came back, however that ended.
+        #expect(await scheduler.snapshot().active.isEmpty)
+    }
+}
 
 // MARK: - The interlock that keeps a test off the operator's trail
 

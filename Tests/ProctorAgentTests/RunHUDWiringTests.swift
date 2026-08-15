@@ -28,7 +28,7 @@ struct RunControlTests {
     @Test("a run nobody has touched is never held up")
     func idlePassesThrough() async {
         let control = control()
-        #expect(await control.checkpoint() == nil)
+        #expect(await control.checkpoint(run: 0) == nil)
         #expect(!control.isPaused)
         #expect(!control.isStopped)
     }
@@ -37,10 +37,10 @@ struct RunControlTests {
     func stopIsSticky() async {
         let control = control()
         control.stop()
-        #expect(await control.checkpoint() == .stopped)
+        #expect(await control.checkpoint(run: 0) == .stopped)
         // Sticky on purpose: a run stopped once must not resume itself at the
         // next step because nobody pressed the button a second time.
-        #expect(await control.checkpoint() == .stopped)
+        #expect(await control.checkpoint(run: 0) == .stopped)
     }
 
     @Test("Pause holds the checkpoint until somebody resumes it")
@@ -48,7 +48,7 @@ struct RunControlTests {
         let control = control()
         control.pause()
 
-        let held = Task { await control.checkpoint() }
+        let held = Task { await control.checkpoint(run: 0) }
         // The checkpoint is parked, not spinning on a lock: the resume below
         // arrives from a different task and is seen.
         try await Task.sleep(nanoseconds: 20_000_000)
@@ -62,7 +62,7 @@ struct RunControlTests {
     func stopEndsAPause() async {
         let control = control()
         control.pause()
-        let held = Task { await control.checkpoint() }
+        let held = Task { await control.checkpoint(run: 0) }
         control.stop()
         #expect(await held.value == .stopped)
     }
@@ -77,7 +77,7 @@ struct RunControlTests {
         control.pause()
         clock.value = 901
 
-        let halt = await control.checkpoint()
+        let halt = await control.checkpoint(run: 0)
         #expect(halt == .pauseExpired(seconds: 900))
         // And it gives up the way a stop does, so the run does not carry on
         // after the pause it was told to hold at.
@@ -92,7 +92,7 @@ struct RunControlTests {
         control.pause()
         clock.value = 899
 
-        let held = Task { await control.checkpoint() }
+        let held = Task { await control.checkpoint(run: 0) }
         try await Task.sleep(nanoseconds: 20_000_000)
         #expect(control.isPaused)
         control.resume()
@@ -103,8 +103,8 @@ struct RunControlTests {
     func beginClearsTheLatch() async {
         let control = control()
         control.stop()
-        control.begin()
-        #expect(await control.checkpoint() == nil)
+        control.begin(run: 0)
+        #expect(await control.checkpoint(run: 0) == nil)
     }
 
     @Test("the backstop is adjustable by the same kind of setting as the off-switch")

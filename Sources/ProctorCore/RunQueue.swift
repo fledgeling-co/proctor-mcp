@@ -90,6 +90,27 @@ public struct LaneDemand: Hashable, Sendable {
         if demand.takesForeground { lanes.insert(.global) }
         return LaneDemand(lanes: lanes)
     }
+
+    /// The lane set for `proctor_apps.activate`, which brings an application to
+    /// the front and, when it is not running, launches it.
+    ///
+    /// That is `raise` in every way the scheduler cares about, and `raise` takes
+    /// the global lane because raising changes where everybody else's clicks
+    /// land. So: **the global lane, always**.
+    ///
+    /// The app lane is taken only when the target already resolves to an
+    /// ATTACHED handle, and the reason is a key space rather than caution. An
+    /// unattached process is not keyless — a listing hands out `app:<pid>:0`
+    /// where an attach mints `app:<pid>:<epoch>` — so a key taken from the wrong
+    /// place would look exactly like contention accounting while never once
+    /// contending with the batch it was supposed to serialise against. A batch
+    /// can only drive an attached app, so the case that can contend is the case
+    /// that gets the key, and the case that cannot is left honestly uncovered.
+    public static func forActivate(app: String?) -> LaneDemand {
+        var lanes: Set<RunLane> = [.global]
+        if let app { lanes.insert(.app(app)) }
+        return LaneDemand(lanes: lanes)
+    }
 }
 
 /// Who is asking. Derived from the process on the other end of the socket and
@@ -136,11 +157,26 @@ public struct RunTicketInfo: Sendable, Equatable, Identifiable {
     /// When it joined, so the panel can say how long it has waited without the
     /// scheduler having to tick.
     public var since: Double
+    /// Whose the hold is, when this run is being held.
+    ///
+    /// THE JOIN LIVES HERE, and that is deliberate. A hold is decided inside
+    /// `Session`, which is a REENTRANT actor whose isolation drops at every
+    /// settle and every capture await — so a surface that read a hold out of the
+    /// session at draw time would put a redraw behind the actor's turn-taking.
+    /// The scheduler is the keeper that already lives outside it and is already
+    /// what the panel, the menu bar mirror and the health report read, so the
+    /// hold is *published* into it at the two moments the latch moves.
+    ///
+    /// It is a copy, not the decision: the latch stays the truth, because Pause
+    /// and Stop are synchronous main-thread writes and a hop through an actor
+    /// from a button is late by at least one poll. What keeps the copy honest is
+    /// that every path clearing the latch's yield also publishes an unhold.
+    public var held: HoldAttribution?
 
     public init(id: Int, identity: RunSessionIdentity, summary: String,
-                lanes: Set<RunLane>, since: Double) {
+                lanes: Set<RunLane>, since: Double, held: HoldAttribution? = nil) {
         self.id = id; self.identity = identity; self.summary = summary
-        self.lanes = lanes; self.since = since
+        self.lanes = lanes; self.since = since; self.held = held
     }
 }
 

@@ -143,3 +143,12 @@ final class AuditCollector: @unchecked Sendable {
 
     func records(tool: String) -> [AuditRecord] { records.filter { $0.tool == tool } }
 }
+
+/// A hold to hand the latch in a test that cares about the parking rule rather
+/// than about the attribution. Production never builds one this way — it derives
+/// every part from the peer process and the driven window — so the session name
+/// here is deliberately one nothing could mistake for a real one.
+func aHold(_ reason: YieldReason, session: String = "test-session 0000",
+           app: String? = nil) -> HoldAttribution {
+    HoldAttribution(reason: reason, session: session, app: app)
+}

@@ -72,6 +72,20 @@ actor RunScheduler {
     /// one owns it.
     @TaskLocal static var holdingLanes = false
 
+    /// This task's ticket id, so anything running inside a run can name the run
+    /// it is in without being handed the id through every frame.
+    ///
+    /// A task-local rather than a field because it has to survive the `Session`
+    /// actor's reentrancy: isolation drops at every settle and every capture
+    /// await, and a value stored on the actor would be whatever the last
+    /// interleaved run wrote. Task-locals travel with the task, which is exactly
+    /// why `SessionIdentity.current` already works this way through the same
+    /// awaits.
+    ///
+    /// Zero means "no ticket", which is the short-circuited nested path and the
+    /// tests that drive a run without a scheduler.
+    @TaskLocal static var currentRun: Int = 0
+
     /// Substitutable so the ceiling is provable in milliseconds rather than in
     /// forty-five seconds, and so a test's clock is its own.
     var waitLimit: TimeInterval
@@ -269,6 +283,28 @@ actor RunScheduler {
     }
 
     // MARK: - Reading it
+
+    /// A run is being held because somebody is using the machine. Published here
+    /// rather than read out of the session at draw time — the session is a
+    /// reentrant actor and the panel must not queue behind its settles.
+    ///
+    /// A no-op for an id that is not active, which is what stops a Stop racing a
+    /// release from resurrecting a hold on a ticket that has already gone.
+    func hold(run id: Int, _ attribution: HoldAttribution) {
+        guard active[id] != nil else { return }
+        active[id]?.held = attribution
+        publish()
+    }
+
+    /// The hold is over, however it ended — the contention cleared, a person
+    /// resumed, a person stopped it, the backstop gave up, or the run simply
+    /// finished. Every one of those paths calls this, which is the invariant
+    /// that keeps this copy from outliving the latch it copies.
+    func unhold(run id: Int) {
+        guard active[id]?.held != nil else { return }
+        active[id]?.held = nil
+        publish()
+    }
 
     func snapshot() -> RunQueueSnapshot {
         RunQueueSnapshot(active: active.values.sorted { $0.id < $1.id },

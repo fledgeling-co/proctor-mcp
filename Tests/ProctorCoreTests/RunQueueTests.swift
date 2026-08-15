@@ -355,3 +355,152 @@ struct RunQueueSnapshotTests {
         #expect(global.waiting == 0)
     }
 }
+
+// PRO-0037 — the queue bar is the surface that can carry a name.
+//
+// A menu bar item is one glyph and its ladder is untouched; the panel's live
+// line is one line at one size and already says why. What was missing is whose,
+// and the bar directly beneath the live line is where it fits.
+
+@Suite("Queue bar attribution")
+struct RunQueueHoldTests {
+
+    private func run(_ id: Int, project: String, held: HoldAttribution? = nil) -> RunTicketInfo {
+        RunTicketInfo(id: id,
+                      identity: RunSessionIdentity(project: project, connection: "0000",
+                                                   key: "\(id)"),
+                      summary: "Act ×3", lanes: [.app("a")], since: 0, held: held)
+    }
+
+    private let hold = HoldAttribution(
+        reason: .frontmostChanged, session: "diolog-web 7c02", app: "Acme Console",
+        display: HoldDisplay(index: 0, isMain: true, name: "the main display"))
+
+    @Test("the bar says whose the hold is, not only that there is one")
+    func theBarSaysWhoIsHeld() {
+        let snapshot = RunQueueSnapshot(active: [run(1, project: "diolog-web", held: hold)])
+        let model = RunQueueModel.from(snapshot, live: 1, now: 0, expanded: false)
+        #expect(model.hold == hold)
+        #expect(model.label == hold.line)
+        #expect(model.label.contains("diolog-web 7c02"))
+        #expect(model.label.contains("Acme Console"))
+    }
+
+    @Test("a hold keeps the bar on screen, on a machine that otherwise looks idle")
+    func aHoldKeepsTheBarOnScreen() {
+        // Nothing waiting and the queue not held, so at HEAD this bar would be
+        // absent — and a run stopped for a reason nobody can see is the same
+        // shape of problem as an unreleasable Hold, read the other way round.
+        let snapshot = RunQueueSnapshot(active: [run(1, project: "diolog-web", held: hold)])
+        let model = RunQueueModel.from(snapshot, live: 1, now: 0, expanded: false)
+        #expect(model.waitingCount == 0)
+        #expect(!model.held)
+        #expect(model.visible)
+    }
+
+    @Test("the held run's row is marked and the others are not")
+    func theHeldRowIsMarkedAndTheOthersAreNot() {
+        let snapshot = RunQueueSnapshot(
+            active: [run(1, project: "live"), run(2, project: "other", held: hold)],
+            waiting: [run(3, project: "queued")])
+        let model = RunQueueModel.from(snapshot, live: 1, now: 0, expanded: true)
+        #expect(model.rows.count == 2)
+        #expect(model.rows[0].session == "other")
+        #expect(model.rows[0].held)
+        #expect(!model.rows[1].held)
+    }
+
+    @Test("a held queue and a held run read as the two different things they are")
+    func aHeldQueueAndAHeldRunReadDifferently() {
+        // Hold is a person deciding what starts next, and it is released by
+        // pressing Hold again. A contention hold is Proctor getting out of
+        // somebody's way, and it releases itself. Sharing a word is how somebody
+        // reaches for the wrong control.
+        let queueHeld = RunQueueModel.from(RunQueueSnapshot(held: true), live: nil,
+                                           now: 0, expanded: false)
+        let runHeld = RunQueueModel.from(
+            RunQueueSnapshot(active: [run(1, project: "diolog-web", held: hold)]),
+            live: nil, now: 0, expanded: false)
+        #expect(queueHeld.label != runHeld.label)
+        #expect(queueHeld.hold == nil)
+        #expect(!runHeld.held)
+        // And whose outranks how many, because it is the one that explains why
+        // nothing is moving.
+        var both = RunQueueModel.from(
+            RunQueueSnapshot(active: [run(1, project: "diolog-web", held: hold)],
+                             waiting: [run(2, project: "queued")], held: true),
+            live: 1, now: 0, expanded: false)
+        #expect(both.label == hold.line)
+        both.hold = nil
+        #expect(both.label == "1 session waiting")
+    }
+
+    @Test("a run with no hold carries none, so the field is not decoration")
+    func nothingHeldMeansNothingSaid() {
+        let model = RunQueueModel.from(
+            RunQueueSnapshot(active: [run(1, project: "a"), run(2, project: "b")]),
+            live: 1, now: 0, expanded: true)
+        #expect(model.hold == nil)
+        #expect(model.rows.allSatisfy { !$0.held })
+        #expect(!model.visible)
+    }
+}
+
+// PRO-0037 — activate takes the lanes it changes.
+
+@Suite("Activate lanes")
+struct ActivateLaneTests {
+
+    @Test("activate always takes the global lane, because it changes what is in front")
+    func activateTakesTheGlobalLane() {
+        // Raising is why the global lane exists: it moves the ground under every
+        // synthetic event anybody else is posting.
+        #expect(LaneDemand.forActivate(app: nil).lanes == [.global])
+        #expect(LaneDemand.forActivate(app: nil).needsGlobal)
+    }
+
+    @Test("it also takes the app lane when the target is already attached")
+    func activateTakesTheAppLaneWhenAttached() {
+        // The same key a batch uses, from the handle the policy gate already
+        // resolved, so the two genuinely contend.
+        let lanes = LaneDemand.forActivate(app: "app:4242:7").lanes
+        #expect(lanes == [.global, .app("app:4242:7")])
+    }
+
+    @Test("an unattached target takes no app lane rather than a key from another space")
+    func activateTakesNoAppLaneWhenUnattached() {
+        // A listing hands out `app:<pid>:0` where an attach mints
+        // `app:<pid>:<epoch>`. A key taken from the wrong place would look like
+        // contention accounting and never once contend, which is worse than an
+        // honestly uncovered case — and a batch can only drive an attached app,
+        // so the case that can contend is the case that gets the key.
+        let lanes = LaneDemand.forActivate(app: nil).lanes
+        #expect(!lanes.contains(where: { if case .app = $0 { return true }; return false }))
+    }
+
+    @Test("it contends with a batch driving the same app, which is the point")
+    func activateContendsWithABatchOnTheSameApp() {
+        let batch = LaneDemand.forBatch(kinds: [.press], synthetic: [.click],
+                                        app: "app:4242:7", foreground: false)
+        let activate = LaneDemand.forActivate(app: "app:4242:7")
+        #expect(!batch.lanes.isDisjoint(with: activate.lanes))
+        // And not with one on a different app, beyond the global lane it must
+        // take anyway.
+        let elsewhere = LaneDemand.forBatch(kinds: [.press], synthetic: [.click],
+                                            app: "app:9:1", foreground: false)
+        #expect(elsewhere.lanes.isDisjoint(with: [RunLane.app("app:4242:7")]))
+    }
+
+    @Test("the catalogue tells a caller that activate can now wait")
+    func theCatalogueSaysActivateCanWait() throws {
+        // activate never waited before this and now can. A call whose timing
+        // changed silently is how an existing driver starts looking for a fault
+        // in an app, so the description says it, and says that nothing is
+        // activated on either refusal — which is what makes the retry advice
+        // true rather than hopeful.
+        let apps = try #require(ToolCatalogue.spec(named: "proctor_apps"))
+        #expect(apps.description.contains("takes its turn"))
+        #expect(apps.description.contains("it waits"))
+        #expect(apps.description.contains("Nothing is brought to the front"))
+    }
+}

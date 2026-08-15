@@ -62,6 +62,13 @@ public enum ToolCatalogue {
         does, waits for a window to appear, attaches, and returns the handles. It goes through \
         the same policy gate and audit trail as driving the app.
 
+        activate also takes its turn now, because bringing an app to the front changes where \
+        every other session's clicks land. If another run holds the machine it waits, and if it \
+        is still waiting when the queue's ceiling fires, or a person drops it from the run HUD, \
+        it comes back saying so rather than activating. Nothing is brought to the front on \
+        either of those paths, so a busy-machine refusal is safe to send again while a \
+        person's is a reason to ask first.
+
         Applying AXManualAccessibility is detectable by the target app and changes its \
         performance. The response reports whether it was applied so any methodology written on \
         this data can disclose it.

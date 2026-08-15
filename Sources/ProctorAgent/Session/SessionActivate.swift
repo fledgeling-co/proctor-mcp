@@ -56,6 +56,29 @@ extension Session {
         let known = running.flatMap { attachedApp(pid: $0.processIdentifier) }
         try enforcePolicy(tool: "proctor_apps.activate", app: known, bundleId: targetBundleId)
 
+        // Activation is a raise, so it takes a raise's lanes. PRO-0016 scoped
+        // queueing to a batch, a replay and a sweep, which left the one call
+        // that most obviously changes what is in front invisible to the thing
+        // that accounts for who has the front.
+        //
+        // The app lane comes from the ATTACHED handle the policy gate just
+        // resolved, and from nowhere else: a listing's `app:<pid>:0` and an
+        // attach's `app:<pid>:<epoch>` are different strings, so a key taken
+        // from the wrong place would look like contention accounting and never
+        // contend. After the gate, before anything moves — a refused activation
+        // never takes a place in the line.
+        let lanes = LaneDemand.forActivate(app: known?.id)
+        let summary = "Activate · " + (known?.name ?? name ?? bundleId ?? "an app")
+        return try await scheduled(lanes: lanes, summary: summary) {
+            try await activateResolved(running: running, bundleId: bundleId, name: name,
+                                       wantedPid: wantedPid, timeoutMs: timeoutMs)
+        }
+    }
+
+    /// The activation itself, once this call owns the lanes it needs.
+    private func activateResolved(running: NSRunningApplication?, bundleId: String?,
+                                  name: String?, wantedPid: Int32?,
+                                  timeoutMs: Int) async throws -> JSONValue {
         guard let url = Session.applicationURL(for: running, bundleId: bundleId, name: name) else {
             throw AgentError(
                 code: .appNotFound,

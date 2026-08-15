@@ -118,11 +118,15 @@ public struct RunQueueModel: Sendable, Equatable {
         /// The scheduler's own id, so a drop removes the run a person pointed at
         /// rather than whatever is at that index a moment later.
         public var run: Int
+        /// Whether this run is being held because somebody is using the machine.
+        /// A mark rather than a sentence: the bar above already carries the
+        /// reason once, and a row is one line at one size.
+        public var held: Bool
 
         public init(position: Int?, session: String, connection: String,
-                    summary: String, waited: String, run: Int) {
+                    summary: String, waited: String, run: Int, held: Bool = false) {
             self.position = position; self.session = session; self.connection = connection
-            self.summary = summary; self.waited = waited; self.run = run
+            self.summary = summary; self.waited = waited; self.run = run; self.held = held
         }
 
         public var isWaiting: Bool { position != nil }
@@ -133,6 +137,15 @@ public struct RunQueueModel: Sendable, Equatable {
     /// blocked the machine is.
     public var waitingCount: Int = 0
     public var held: Bool = false
+    /// Whose the automatic hold is, when a run is being held because somebody is
+    /// using the machine.
+    ///
+    /// Deliberately not the same thing as `held` above, which is a person having
+    /// pressed Hold on the queue. One is a decision somebody made about what
+    /// starts next; the other is Proctor getting out of somebody's way. They
+    /// read differently because they are answered differently — Hold is released
+    /// by pressing Hold again, a contention hold releases itself.
+    public var hold: HoldAttribution?
     /// Whether the list is open. A person's choice, so it lives with the panel
     /// and is passed in rather than derived from the scheduler.
     public var expanded: Bool = false
@@ -140,14 +153,19 @@ public struct RunQueueModel: Sendable, Equatable {
     public init() {}
 
     /// Absent entirely when nothing is waiting — the queue costs nothing until
-    /// there is contention — with one exception that is not decoration. A held
-    /// queue starts nothing, and Hold lives inside this bar, so a bar that
+    /// there is contention — with two exceptions, and neither is decoration. A
+    /// held queue starts nothing, and Hold lives inside this bar, so a bar that
     /// vanished when the last waiter left would hold the machine with no way on
     /// screen to release it: every later run would wait out its ceiling and
-    /// nothing would say why.
-    public var visible: Bool { waitingCount > 0 || held }
+    /// nothing would say why. A contention hold is the same shape of problem
+    /// read the other way — a run stopped for a reason nobody can see, on a
+    /// machine that looks idle.
+    public var visible: Bool { waitingCount > 0 || held || hold != nil }
 
     public var label: String {
+        // Whose the hold is outranks how many are waiting, because it is the one
+        // that explains why nothing is moving. The count is still a row away.
+        if let hold { return hold.line }
         guard waitingCount > 0 else { return "Queue held — nothing will start" }
         return "\(waitingCount) session\(waitingCount == 1 ? "" : "s") waiting"
     }
@@ -169,14 +187,20 @@ public struct RunQueueModel: Sendable, Equatable {
         out.held = snapshot.held
         out.expanded = expanded
         out.waitingCount = snapshot.waitingCount
+        // At most one run can be held at a time — arming implies the batch takes
+        // the foreground, which takes the exclusive global lane — so the first
+        // one found is the one, and there is never a second reading to lose.
+        out.hold = snapshot.active.compactMap(\.held).first
         let running = snapshot.active.filter { $0.id != live }.map { run in
             Row(position: nil, session: run.identity.project, connection: run.identity.connection,
-                summary: run.summary, waited: waited(seconds: now - run.since), run: run.id)
+                summary: run.summary, waited: waited(seconds: now - run.since), run: run.id,
+                held: run.held != nil)
         }
         let queued = snapshot.waiting.enumerated().map { index, run in
             Row(position: index + 1, session: run.identity.project,
                 connection: run.identity.connection, summary: run.summary,
-                waited: waited(seconds: now - run.since), run: run.id)
+                waited: waited(seconds: now - run.since), run: run.id,
+                held: run.held != nil)
         }
         out.rows = running + queued
         return out

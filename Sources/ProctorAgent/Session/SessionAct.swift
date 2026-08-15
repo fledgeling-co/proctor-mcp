@@ -179,7 +179,8 @@ extension Session {
         await hudRunBegan(total: steps.count, window: window, demand: demand)
         // The same fact, reachable without the panel: the menu bar mirrors this
         // and is on every display, where the panel is on one.
-        let foregroundRun = foregroundBegan(demand: demand, app: app?.name)
+        let foregroundRun = foregroundBegan(demand: demand, app: app?.name,
+                                            window: window.frame)
         // A run that is going to take the machine watches for the person whose
         // machine it is. One that is not never arms anything: an accessibility
         // run takes nothing, so holding it would be noise about a contention
@@ -407,7 +408,7 @@ extension Session {
         // says and whether the run completed, broke or was stopped.
         run.takeover = takeoverEnd(stopped: ending == .stoppedByPerson)
         await hud(.runEnded(ending))
-        disarmContention(run: foregroundRun)
+        await disarmContention(run: foregroundRun)
         run.yields = takeYieldRecords(run: foregroundRun)
         foregroundEnded(run: foregroundRun)
         return run

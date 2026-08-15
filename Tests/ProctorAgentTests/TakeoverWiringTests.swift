@@ -74,7 +74,7 @@ struct TakeoverWiringTests {
         // Never the process-wide latch: a test that yielded the singleton leaves
         // the next one's checkpoint waiting out a 900-second backstop.
         let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
-        control.begin()
+        control.begin(run: 0)
         await session.setRunControl(control)
         _ = try await session.attachResolved(bundleId: Self.target, pid: nil, name: nil)
         return (session, ax, takeover, contention, control)

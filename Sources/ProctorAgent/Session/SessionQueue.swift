@@ -54,7 +54,13 @@ extension Session {
                                                  identity: SessionIdentity.current,
                                                  summary: summary)
         do {
-            let out = try await RunScheduler.$holdingLanes.withValue(true) { try await body() }
+            // Both task-locals in one chain: the guard that stops a nested
+            // acquisition, and the ticket id anything inside the run needs to
+            // name the run it is in. A hold decided six awaits deep still knows
+            // which queue row it belongs to.
+            let out = try await RunScheduler.$holdingLanes.withValue(true) {
+                try await RunScheduler.$currentRun.withValue(ticket.id) { try await body() }
+            }
             await scheduler.release(ticket)
             return out
         } catch {
@@ -80,14 +86,26 @@ extension Session {
         // one — so this is the number that separates "somebody is running a big
         // sweep" from "something is stuck", which nothing else would show.
         let active = snapshot.active.map { run in
-            JSONValue.object([
+            var entry: [String: JSONValue] = [
                 "session": .string(run.identity.label),
                 "run": .string(run.summary),
                 "lanes": .array(run.lanes.map { .string($0.description) }.sorted { a, b in
                     (a.stringValue ?? "") < (b.stringValue ?? "")
                 }),
                 "heldForSeconds": .number((now - run.since).rounded())
-            ])
+            ]
+            // Whether this run is held because somebody is using the machine,
+            // and whose hold it is. Without it a machine where a person walked
+            // away mid-run reads exactly like a wedged lane, and the two want
+            // opposite responses: one waits, the other needs somebody to look.
+            entry["held"] = run.held.map { hold in
+                .object(["reason": .string(hold.reason.rawValue),
+                         "line": .string(hold.line),
+                         "session": .string(hold.session),
+                         "app": hold.app.map(JSONValue.string) ?? .null,
+                         "display": hold.display.map { .string($0.name) } ?? .null])
+            } ?? .null
+            return JSONValue.object(entry)
         }
         return .object([
             "active": .number(Double(snapshot.active.count)),

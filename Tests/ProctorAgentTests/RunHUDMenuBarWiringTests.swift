@@ -155,7 +155,7 @@ struct MenuBarSwitchWiringTests {
         #expect(!h.control.isStopped)
         _ = try await h.session.hudControl(.stop)
         #expect(h.control.isStopped)
-        #expect(await h.control.checkpoint() == .stopped)
+        #expect(await h.control.checkpoint(run: 0) == .stopped)
         // And it ends grey, as a person's decision, never red.
         #expect(h.feed.snapshot.phase == .paused)
     }

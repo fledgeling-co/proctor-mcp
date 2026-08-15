@@ -61,7 +61,12 @@ extension Session {
         // Not gated on the panel. The panel is one way to set the latch, not the
         // latch itself, and a stale decision from a finished run must not carry
         // into the next one whether or not anything is on screen.
-        runControl.begin()
+        //
+        // Keyed by this call's own ticket, so it clears this run's automatic
+        // hold and nobody else's. `RunScheduler.acquire` does not consult the
+        // latch, so a run on a free app lane starts while another is yielded —
+        // and an unconditional reset here lifted that run's hold from under it.
+        runControl.begin(run: RunScheduler.currentRun)
     }
 
     /// What `proctor_doctor` says about the panel.
@@ -193,8 +198,11 @@ extension Session {
 
     /// Ask whether a person has halted the run. Nil means carry on. The probe is
     /// where contention is read — see `Session.contentionProbe`.
+    ///
+    /// Keyed by this call's ticket: a person's Pause holds every run, an
+    /// automatic yield holds only the run that read it.
     func haltCheckpoint(probe: (@Sendable () async -> Void)? = nil) async -> RunControl.Halt? {
-        await runControl.checkpoint(probe: probe)
+        await runControl.checkpoint(run: RunScheduler.currentRun, probe: probe)
     }
 
     /// Proctor is about to post, or has just posted, a synthetic event. Opens
