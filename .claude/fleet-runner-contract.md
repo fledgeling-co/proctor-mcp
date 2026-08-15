@@ -67,8 +67,17 @@ perl -e 'alarm shift @ARGV; exec @ARGV' 300 \
 
 ## This repo is a Swift Package, not a Diolog web app
 
-- The acceptance gate is **`swift build` + `swift test`**, with new tests per acceptance
-  clause. There is no Playwright suite; skip ship-feature's Playwright acceptance-e2e stage.
+- The acceptance gate is **`swift build` + `./scripts/test.sh`**, with new tests per
+  acceptance clause. There is no Playwright suite; skip ship-feature's Playwright
+  acceptance-e2e stage.
+- **Use `scripts/test.sh`, not a bare `swift test`, and never pipe `swift test` into
+  anything.** Three ways a red suite reads as green here, all measured on this repo:
+  `swift test | tail` returns *tail's* exit status unless `pipefail` is set, so `$?` is
+  `tail`'s success; the XCTest summary prints `Executed 0 tests, with 0 failures` even on
+  failing runs, because these are swift-testing tests and that line counts the XCTest ones;
+  and a `--filter` matching nothing prints a genuine verdict line reading
+  `Test run with 0 tests ... passed`. The script refuses all three and exits non-zero.
+  `swift test` itself exits 1 on failure and always did — the zero was ours.
 - Engineering authority, in place of `docs/CODING_PRACTICES.md`: `README.md`,
   `docs/architecture.md`, and the existing `Sources/ProctorCore` / `Sources/ProctorAgent`
   patterns.

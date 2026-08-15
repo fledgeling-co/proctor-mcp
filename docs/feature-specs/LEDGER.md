@@ -59,4 +59,4 @@
 | PRO-0050 | Doctor knows the whole toolchain | 2026-08-15 | Triaged |
 | PRO-0051 | Decide what happens to the native planes | 2026-08-15 | Triaged |
 | PRO-0052 | The proctor skill tracks what actually shipped | 2026-08-15 | Triaged |
-| PRO-0053 | `TakeoverWiringTests` reddens the gate at random | 2026-08-15 | Triaged |
+| PRO-0053 | `TakeoverWiringTests` reddens the gate at random | 2026-08-15 | Merged `477941f` |

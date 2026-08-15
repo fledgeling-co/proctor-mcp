@@ -1,3 +1,13 @@
+> **RESOLVED as PRO-0053, merged `477941f`. Both diagnoses in this brief were wrong, and
+> the corrections are the interesting part.** It was not a flake: `TakeoverWiringTests` was
+> exposing a live production concurrency defect in which a run that could not post cleared
+> the *posting* run's declaration state, silently breaking PRO-0026's overlay and closing
+> PRO-0033's in-flight window early so the event tap read the Stop rectangle while Proctor's
+> own click was still travelling. And `swift test` does **not** exit 0 on failure; it exits 1,
+> plainly and under `--parallel`. The zero came from `swift test | tail` without `pipefail`,
+> which returns `tail`'s status — a defect in how this orchestrator and two runners invoked
+> it, not in the toolchain. `scripts/test.sh` now owns the verdict.
+
 # `TakeoverWiringTests` reddens the gate at random, and `swift test` exits 0 when it does
 
 **Read `00-WAVE-7-DIRECTION.md` first.** This is a gate-reliability item, not a feature.

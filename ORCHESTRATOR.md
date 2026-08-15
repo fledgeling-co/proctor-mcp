@@ -293,7 +293,7 @@ refusal, whose question changed shape underneath it).
 | PRO-0041 | doctor can hang on the Screen Recording probe | `42-…` | 1 | **MERGED** `0545219` |
 | PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **MERGED** `091d6c3` (carried) |
 | PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **MERGED** `8d2fde6` |
-| PRO-0053 | `TakeoverWiringTests` reddens the gate at random | `54-…` | 2 | **RUNNING** `wf_f2c15073-ba7` · found mid-fleet |
+| PRO-0053 | `TakeoverWiringTests` reddens the gate at random | `54-…` | 2 | **MERGED** `477941f` · found mid-fleet, was a production defect |
 | PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **RUNNING** `wf_e1399c64-3e2` |
 | PRO-0046 | Supervision survives delegation | `47-…` | 2 | **QUEUED** · after PRO-0044 |
 | PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **RUNNING** `wf_4005fecb-626` · absorbs PRO-0031 |
@@ -305,6 +305,45 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0053 merged `477941f`. It was not a flake, and the gate rule this project
+  had been using was wrong.** 1101 -> **1105 tests in 118 suites**.
+  - **The test was reporting a live production defect.** Only `shows.count` failed while
+    `arms.count` four lines below passed, and that asymmetry is only possible if
+    `takeoverShown` was already true when the batch reached its first synthetic step.
+    `SessionAct` set it from `SyntheticPost.shared.declaredThisStep`, a process-wide flag
+    another suite had set. Reproduced on `main` at 7 in 8 paired, 1 in 3 whole-suite.
+  - **What it broke in production.** `RunQueue` documents two sessions driving different apps
+    in parallel, and every run called `beginStep()` at each step boundary, clearing state
+    belonging to whichever run was actually posting: `declared`, so the poster stopped raising
+    the statement that says the machine has been taken (**PRO-0026 failing silently**), and
+    `declaredAt`, so the event tap's in-flight window closed early and it read the Stop
+    rectangle while Proctor's own click was still travelling (**PRO-0033, the worse half**).
+  - **The fix adds no lock and weakens no assertion.** A run joins the declaration protocol
+    only when it can actually post, and such a run holds the exclusive global lane, so it has
+    the shared instance to itself: `demand.mightPost && foreground`, reusing the scheduler's
+    own value. `shows.count == 1` is byte-identical. The completeness critic supplied the
+    `&& foreground` half: the stability sweep buys lanes from the flow's steps then runs
+    `resetBetween` through the same loop, so `mightPost` alone did not imply holding the lane.
+  - **`swift test` exits 1 on failure. The zero exit was ours.** Plain and under `--parallel`.
+    The zero came from `swift test | tail` without `pipefail`, which returns `tail`'s status —
+    a defect in how this orchestrator and two runners invoked it, not in the toolchain. The
+    earlier event-log note claiming otherwise is superseded by this one.
+  - **`scripts/test.sh` is the gate from here.** It refuses three ways a red suite reads as
+    green, all measured on this repo: the lost exit code above; the XCTest summary printing
+    `Executed 0 tests, with 0 failures` on failing runs, because these are swift-testing tests
+    and that line counts the XCTest ones; and a filter matching nothing producing a real
+    verdict line reading `Test run with 0 tests ... passed`.
+  - **Evidence, because a race passing once proves nothing:** zero takeover failures in 80
+    post-fix runs (45 paired, 35 whole-suite) at load averages 18 to 97, with another runner
+    active. All four new tests checked red first by reverting the gate.
+  - **Orchestrator observation at merge:** one of seven gate runs died mid-run at load average
+    **146** with no verdict line, and `scripts/test.sh` correctly refused to score it. Not a
+    test failure; the same machine-saturation family as PRO-0041's wedge, and a reason the
+    concurrency cap stays at 3.
+  - **Child work found, unspecced:** `ForegroundWiringTests.swift:108` fails 2 in 30 **in
+    isolation**, so it is a polling race inside that test's own 800ms budget rather than
+    cross-suite state. Needs its own item and a design call about observing mid-run state
+    deterministically.
 - 2026-08-15 **PRO-0044 merged `d65dc1e`. The pivot's centre is in.** 1043 -> **1101 tests in
   118 suites**. Actuation now sits behind an injected `ActuationBackend`, with
   `CuaActuationBackend` beside `NativeActuationBackend`; observation stays in Proctor.
@@ -416,10 +455,10 @@ refusal, whose question changed shape underneath it).
   - **Changed from plan during work:** the linker flags are release-only. Applied
     unconditionally they propagated into `proctor-mcpPackageTests.xctest`, so every test
     process ran holding the agent's identity.
-  - **Child work, and it sharpens PRO-0041's finding.** `TakeoverWiringTests.swift:122`
-    measured **3 failures in 6 runs** on a clean worktree at `0545219` with none of the change
-    present. Worse: **`swift test` exits 0 on that failure**, so any exit-code-only check
-    reads a red suite as green. Read the `with N tests ... passed` line instead.
+  - **Child work, superseded.** This entry claimed `swift test` exits 0 on a failure. It does
+    not; see PRO-0053's entry above. The zero came from piping without `pipefail`. The
+    measurement of `TakeoverWiringTests.swift:122` at 3 failures in 6 stands and became
+    PRO-0053, which found it was a production defect rather than a flake.
   - **Not covered:** notarisation. `PROCTOR_SKIP_NOTARIZE=1` per instruction, so `spctl`
     reports the local install unnotarised. Expected, and not a property of this change.
 - 2026-08-15 **PRO-0041 merged `0545219`. The full suite runs unskipped again.**
