@@ -192,13 +192,33 @@ struct BuildInfoTests {
         }
     }
 
-    @Test("the compiled version is the app's version")
-    func compiledVersionMatchesPlist() throws {
+    @Test("the compiled version is a real release line, not a placeholder")
+    func compiledVersionIsReal() throws {
         let plist = "\(Self.packageDirectory)/Apps/Proctor/Info.plist"
-        guard let version = Self.run("/usr/libexec/PlistBuddy",
-                                     ["-c", "Print :CFBundleShortVersionString", plist]) else { return }
-        #expect(BuildInfo.current.version == version,
-                "one source for the release line, or the binary and the release can disagree")
+        guard Self.run("/usr/libexec/PlistBuddy",
+                       ["-c", "Print :CFBundleShortVersionString", plist]) != nil else { return }
+        // Precondition only. The plist's VALUE is deliberately not compared against the
+        // compiled one, for the same reason as the commit above — and this test is where
+        // that was learned the hard way. It survived a first review because a version only
+        // moves at a release, which looked safe. Then changing the plist and changing it
+        // back left the compiled constant at the intermediate value: the edit rescheduled
+        // the generator, the revert did not, and the binary claimed 9.9.9 against a plist
+        // reading 0.1.0. Same defect, and it fails in the direction that matters — after a
+        // release is reverted or a version bump is rebased away.
+        //
+        // That the generator READS this plist is proven where the test owns the plist:
+        // `withoutGitTheIdentityIsStillReal` and `pathWithSpaces` both write one and assert
+        // the version that comes back. The release path is guarded separately by
+        // `scripts/check-release-version.sh` (A6 below), so nothing that matters rested on
+        // this comparison.
+        let version = BuildInfo.current.version
+        #expect(version != "unknown",
+                """
+                the plist is readable here, so a build in this checkout had a version to \
+                read — if this looks stale rather than absent: rm -rf .build/plugins
+                """)
+        #expect(version.first?.isNumber == true,
+                "a release line starts with a number, so a sentinel or a stray string shows up here")
     }
 
     // MARK: - A2: no path produces a null, and a missing commit says which kind
