@@ -189,12 +189,22 @@ final class AgentModel {
         report?.grants.contains { $0.required && $0.resolvedState == .denied } ?? false
     }
 
+    /// The permissions, and only the permissions.
+    ///
+    /// The report files the Shortcuts CLI under `grants` — and only when it is
+    /// missing — so a filter is what keeps a program on a disk out of a list of
+    /// decisions macOS holds about Proctor. `StatusChecks` owns which is which,
+    /// because that rule has to be testable and there is no test target here.
+    private var permissionGrants: [DoctorReport.Grant] {
+        StatusChecks.permissions(in: report?.grants ?? [])
+    }
+
     var requiredGrants: [DoctorReport.Grant] {
-        report?.grants.filter(\.required) ?? []
+        permissionGrants.filter(\.required)
     }
 
     var optionalGrants: [DoctorReport.Grant] {
-        report?.grants.filter { !$0.required } ?? []
+        permissionGrants.filter { !$0.required }
     }
 
     func startPolling() {

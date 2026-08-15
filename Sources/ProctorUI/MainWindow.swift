@@ -10,6 +10,7 @@ struct MainWindow: View {
             VStack(alignment: .leading, spacing: 26) {
                 Header()
                 ReadinessSection(model: model)
+                ToolsSection(model: model)
                 ActivitySection(model: model)
                 ConnectSection(model: model)
                 AgentSection(model: model)
@@ -62,6 +63,14 @@ private struct ReadinessSection: View {
                 Spacer()
                 StatusPill(model: model)
             }
+            // What a permission *is*, said once, so this section and the Tools
+            // section below it read as two kinds of claim rather than one list
+            // with a mixed subtitle. That mixture is what put a command-line tool
+            // under "Optional — asked for per app".
+            Text("Decisions macOS holds about Proctor. You change these in System Settings, "
+                 + "and Proctor can only read them.")
+                .font(.system(size: 12)).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
 
             switch model.reachability {
             case .unknown:
@@ -106,6 +115,28 @@ private struct ReadinessSection: View {
                         .font(.system(size: 12))
                         .foregroundStyle(.green)
                         .padding(.top, 4)
+                }
+                // The remedy for the one answer no re-read can move, beside the
+                // permission it is about.
+                //
+                // `AgentRecovery.decide` already ran — the model recomputes it on
+                // every doctor tick and every HUD tick — and this renders what it
+                // returned rather than deciding again. Its gate is load-bearing and
+                // stays where it is: the restart is offered only when THIS process
+                // can see the grant for itself, so a Mac that has never granted
+                // Screen Recording gets no permanent row with a button that could
+                // not create a permission. Reason and button together, because a
+                // person who has to finish a paragraph before finding the action
+                // has been given a reading assignment instead of a remedy.
+                //
+                // Only `.restartAgent` can appear here: `.startAgent` belongs to the
+                // unreachable branch above, which has its own button.
+                if let offer = model.recovery, offer.kind == .restartAgent {
+                    Callout(icon: "arrow.clockwise.circle.fill", tint: .orange,
+                            title: "The agent is holding an out-of-date answer",
+                            message: offer.reason)
+                    Button(offer.action) { model.take(offer) }
+                        .buttonStyle(.borderedProminent)
                 }
                 if model.signature.isAdHoc {
                     Callout(
@@ -155,11 +186,14 @@ private struct GrantRow: View {
     // button stays, because its text now says what actually happened.
     private var unconfirmed: Bool { grant.resolvedState == .unconfirmed }
 
-    private var statusText: String {
-        if grant.granted { return "Granted" }
-        if unconfirmed { return "Not established — macOS did not answer" }
-        return grant.required ? "Required — not granted yet" : "Optional — asked for per app"
-    }
+    // Both decided in Core, where they can be tested. `statusText` moved there
+    // unchanged so that "Optional — asked for per app" became a rule about
+    // Automation rather than an accident of who was left in the list; `mobility`
+    // is the sentence saying what would move this answer, and it is keyed on the
+    // kind AND the state, because a denied Screen Recording grant needs a restart
+    // and an unconfirmed one needs nothing at all.
+    private var statusText: String { StatusChecks.statusText(for: grant) }
+    private var mobility: String? { StatusChecks.mobility(of: grant) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -184,12 +218,156 @@ private struct GrantRow: View {
                         .controlSize(.small).buttonStyle(.borderless)
                 }
             }
+            if let mobility {
+                Text(mobility)
+                    .font(.system(size: 11))
+                    .foregroundStyle(.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.leading, 26)
+            }
             if showHow {
                 Text(grant.howToFix)
                     .font(.system(size: 11))
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.leading, 26)
+            }
+        }
+        .padding(.vertical, 7)
+    }
+}
+
+// MARK: - Tools
+
+/// Programs on this Mac, which are not permissions and no longer pretend to be.
+///
+/// A grant is a decision macOS holds about Proctor; a tool is a file on a disk.
+/// They shared a card and a subtitle until this item, which is how the Shortcuts
+/// CLI came to be described as "asked for per app" — Automation's sentence.
+///
+/// Every row here is a verdict the report already reached. `Toolchain.row`
+/// (PRO-0050) decides usability and evidence; this draws them. The window used to
+/// write its own summary of Obscura beside that verdict, and two opinions about
+/// one fact eventually disagree.
+private struct ToolsSection: View {
+    let model: AgentModel
+
+    private var rows: [StatusChecks.ToolRow] {
+        guard let r = model.report else { return [] }
+        return StatusChecks.toolRows(tools: r.tools,
+                                     shortcutsCLIAvailable: r.shortcutsCLIAvailable)
+    }
+
+    /// Whether the second browser lane's row is on screen at all. It is present
+    /// only when an operator named the lane — the agent omits it from the report
+    /// otherwise — so this reads the rows rather than re-deriving the switch.
+    private var showsSecondLane: Bool {
+        rows.contains { $0.tool == BrowserUseTool.binary }
+    }
+
+    var body: some View {
+        // No report means nothing to say. A heading over an empty card would be
+        // its own small falsehood.
+        if model.report != nil {
+            Card {
+                SectionTitle("Tools")
+                Text("Programs on this Mac that Proctor uses but does not ship. None of them is "
+                     + "a permission, and Proctor drives Mac apps without any of them.")
+                    .font(.system(size: 12)).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(Array(rows.enumerated()), id: \.element.tool) { index, row in
+                        if index > 0 { Divider().padding(.vertical, 2) }
+                        ToolRowView(row: row)
+                    }
+                }
+
+                if showsSecondLane {
+                    // Moved here with its row rather than left behind in the agent
+                    // card. It is a safety disclosure about what that tool is, and
+                    // it belongs beside the tool it is about.
+                    Text("Proctor names browser-use for pages Obscura cannot open. It is an "
+                         + "autonomous agent driving a real browser with real credentials, and "
+                         + "nothing it does reaches Proctor's audit trail. Set by "
+                         + "PROCTOR_SECOND_LANE in the agent's launchd environment.")
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                if let absence = model.report?.obscuraUnavailable {
+                    ObscuraOffer(absence: absence, model: model)
+                }
+            }
+        }
+    }
+}
+
+private struct ToolRowView: View {
+    let row: StatusChecks.ToolRow
+    @State private var showDetail = false
+
+    private var tint: Color {
+        switch row.tone {
+        case .good:    return .green
+        case .bad:     return .orange
+        case .unknown: return .secondary
+        }
+    }
+
+    private var symbol: String {
+        switch row.tone {
+        case .good:    return "checkmark.circle.fill"
+        case .bad:     return "circle"
+        case .unknown: return "questionmark.circle"
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 10) {
+                Image(systemName: symbol).foregroundStyle(tint)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(row.tool).font(.system(size: 13, weight: .medium, design: .monospaced))
+                    Text(row.status).font(.system(size: 11)).foregroundStyle(.secondary)
+                }
+                Spacer()
+                if let version = row.version {
+                    Text(version)
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundStyle(.tertiary)
+                }
+                if row.detail != nil || !row.searched.isEmpty {
+                    Button(showDetail ? "Hide" : "Details") { showDetail.toggle() }
+                        .controlSize(.small).buttonStyle(.borderless)
+                }
+            }
+            if showDetail {
+                VStack(alignment: .leading, spacing: 4) {
+                    if let detail = row.detail {
+                        Text(detail)
+                            .font(.system(size: 11)).foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    if let path = row.path {
+                        Text("Found at \(path)")
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundStyle(.tertiary)
+                            .textSelection(.enabled)
+                    }
+                    // The paths earn their place: the agent is started by the
+                    // system and inherits none of a terminal's lookup settings, so
+                    // "but it IS installed" is only ever settled by comparing where
+                    // each side looked.
+                    if !row.searched.isEmpty {
+                        Text("Looked in:\n" + row.searched.joined(separator: "\n"))
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundStyle(.tertiary)
+                            .textSelection(.enabled)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .padding(.leading, 26)
             }
         }
         .padding(.vertical, 7)
@@ -331,6 +509,10 @@ private struct AgentSection: View {
     var body: some View {
         Card {
             SectionTitle("Background agent")
+            // Facts about the running process. Tools moved to their own section:
+            // "which programs are on this Mac" and "what is this process" are
+            // different questions, and answering both in one grid is what let a
+            // CLI be reported twice, in two registers, in two places.
             if let r = model.report {
                 Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 6) {
                     Row("Version", "\(r.agentVersion)  ·  protocol \(r.protocolVersion)")
@@ -345,23 +527,7 @@ private struct AgentSection: View {
                     Row("Attached apps", r.attachedApps.isEmpty
                         ? "none" : r.attachedApps.map(\.name).joined(separator: ", "))
                     Row("Live observers", "\(r.observersLive)")
-                    Row("Shortcuts CLI", r.shortcutsCLIAvailable ? "available" : "not available")
-                    Row("Obscura", obscuraSummary(r))
-                    if let second = secondLaneSummary(r) {
-                        Row("browser-use", second)
-                    }
                     Row("Signature", model.signature.summary)
-                }
-                if let second = secondLaneSummary(r), second.hasPrefix("second lane on") {
-                    Text("Proctor names browser-use for pages Obscura cannot open. It is an "
-                         + "autonomous agent driving a real browser with real credentials, and "
-                         + "nothing it does reaches Proctor's audit trail. Set by "
-                         + "PROCTOR_SECOND_LANE in the agent's launchd environment.")
-                        .font(.system(size: 11)).foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                if let absence = r.obscuraUnavailable {
-                    ObscuraOffer(absence: absence, model: model)
                 }
                 if r.secureEventInputActive {
                     Callout(
@@ -389,24 +555,6 @@ private struct AgentSection: View {
                     .lineLimit(2).truncationMode(.middle)
             }
         }
-    }
-
-    /// A half install is its own state: `obscura` without `obscura-worker` beside
-    /// it runs `fetch` and `serve` and fails `scrape`, which is worth naming here
-    /// rather than leaving somebody to meet it mid-run.
-    private func obscuraSummary(_ r: DoctorReport) -> String {
-        guard r.obscuraAvailable else { return "not installed" }
-        let missing = r.obscura?.missingCompanions ?? []
-        guard !missing.isEmpty else { return "available" }
-        return "available, without \(missing.joined(separator: ", "))"
-    }
-
-    /// The second lane's row, or nothing. The decision is `BrowserUseTool`'s so it
-    /// can be tested without a window server; this only reads the report.
-    private func secondLaneSummary(_ r: DoctorReport) -> String? {
-        BrowserUseTool.statusSummary(
-            secondLane: SecondLaneState(rawValue: r.secondLane) ?? .off,
-            found: r.tools.first { $0.tool == BrowserUseTool.binary }?.available ?? false)
     }
 }
 
@@ -459,16 +607,33 @@ private struct ObscuraOffer: View {
 private struct FooterSection: View {
     let model: AgentModel
 
+    // The footer's `Re-check` is deliberately gone. PRO-0028 deleted a menu row on
+    // two grounds and both applied here unchanged: the 2-second poll already did
+    // everything it did, and the press a person is motivated to make — the frozen
+    // Screen Recording row — is the one it could not serve. Measured before
+    // deciding: `stopPolling()` is called by nothing, so the poll runs for the
+    // app's whole life; and `lastChecked` is re-stamped by every landing report,
+    // so the clock below already advances without a button. It refreshed rows that
+    // refresh themselves, beside a clock that ticks itself.
+    //
+    // The two surviving `Re-check` buttons are not this one. Each sits inside a
+    // remediation block — "the agent is not answering", "Obscura is not installed"
+    // — reads something uncached, and changes its answer when pressed after the
+    // instruction above it has been followed. `Restart agent` stays here as the
+    // one action that can move what the poll cannot.
     var body: some View {
         HStack(spacing: 10) {
             Button("Open log") { Actions.openLog() }
             Button("Restart agent") { Actions.restartAgent(); model.refresh() }
             Spacer()
             if let t = model.lastChecked {
-                Text("Checked \(t.formatted(date: .omitted, time: .standard))")
+                // "Checked …" was one freshness claim over every answer above it,
+                // and false for the one that is settled at the agent's launch.
+                // What happened at this time is that Proctor asked.
+                Text(StatusChecks.reportFreshness(
+                        at: t.formatted(date: .omitted, time: .standard)))
                     .font(.system(size: 10)).foregroundStyle(.tertiary)
             }
-            Button("Re-check") { model.refresh() }.controlSize(.small)
         }
     }
 }
