@@ -188,7 +188,7 @@ extension Session {
         // A replay drives an application exactly as `act` does, so it queues
         // exactly as `act` does: one lane set, taken after the gate and held from
         // the first replayed step to the last.
-        let demand = lanes(for: steps, window: handle, foreground: foreground)
+        let demand = await lanes(for: steps, window: handle, foreground: foreground)
         let summary = StepDescription.runLine(.replay(flow: flow.name),
                                               app: appHandle(forWindow: handle)?.name)
         return try await scheduled(lanes: demand, summary: summary) {
@@ -320,7 +320,7 @@ extension Session {
         // divergence. A long sweep may therefore hold its lanes for its whole
         // length; only a person's Stop shortens it, and the give-up ceiling caps
         // how long anybody *waits*, never how long a run may take.
-        let demand = lanes(for: steps, window: handle, foreground: foreground)
+        let demand = await lanes(for: steps, window: handle, foreground: foreground)
         let summary = StepDescription.runLine(.stability(flow: flow.name, runs: requested),
                                               app: appHandle(forWindow: handle)?.name)
         return try await scheduled(lanes: demand, summary: summary) {

@@ -61,7 +61,11 @@ public enum RunHUDEvent: Sendable {
     /// what lets the counter and the rail mean anything — and so is how much of
     /// it will need the foreground, which is what lets the panel say so before
     /// the machine is taken rather than as it goes.
-    case runBegan(total: Int, app: String?, foreground: ForegroundDemand = ForegroundDemand())
+    /// `delegated` says another program performs this run's steps. It reaches
+    /// the one exception row as a wording, never as a second row, and it
+    /// defaults to today's answer so no existing caller changes.
+    case runBegan(total: Int, app: String?, foreground: ForegroundDemand = ForegroundDemand(),
+                  delegated: Bool = false)
     /// Travelling to a step's target, before it actuates.
     case stepApproaching(step: ActionStep, node: AXNode?, synthetic: Bool,
                          stepsAside: Bool = false)
@@ -308,12 +312,14 @@ public struct RunHUDState: Sendable {
     private var resolvedConditional = 0
     /// The step being held, so a pause can name what it is holding before.
     private var pending: (step: ActionStep, node: AXNode?)?
+    /// Whether another program is performing this run's steps.
+    private var delegated = false
 
     public init() {}
 
     public mutating func apply(_ event: RunHUDEvent) {
         switch event {
-        case .runBegan(let total, let app, let foreground):
+        case .runBegan(let total, let app, let foreground, let delegated):
             var fresh = RunHUDModel()
             fresh.total = max(0, total)
             fresh.visible = true
@@ -325,6 +331,7 @@ public struct RunHUDState: Sendable {
             fresh.queue = model.queue
             self.app = app
             self.demand = foreground
+            self.delegated = delegated
             self.knownForeground = foreground.certainSteps
             self.resolvedConditional = 0
             self.pending = nil
@@ -332,7 +339,8 @@ public struct RunHUDState: Sendable {
             // than as a prediction about what will happen. A batch can end before
             // it reaches its first synthetic step; it cannot stop containing one.
             fresh.exception = foreground.notice(app: app, known: knownForeground,
-                                                resolvedConditional: resolvedConditional)
+                                                resolvedConditional: resolvedConditional,
+                                                delegated: delegated)
             model = fresh
 
         case .stepApproaching(let step, let node, let synthetic, let stepsAside):
@@ -505,7 +513,8 @@ public struct RunHUDState: Sendable {
         model.exception = synthetic
             ? Self.exceptionLine(app: app)
             : demand.notice(app: app, known: knownForeground,
-                            resolvedConditional: resolvedConditional)
+                            resolvedConditional: resolvedConditional,
+                            delegated: delegated)
     }
 
     /// The one sentence the panel ever says about a plane, and it is only ever

@@ -124,12 +124,50 @@ extension Session {
     /// deciding whether to trust an unattended run needs, and they are not the
     /// same fact: whether the statement is drawn, whether the block was asked
     /// for, and whether it is actually available.
-    func takeoverStatus() -> JSONValue {
+    ///
+    /// On a delegated lane there is a fourth, and it is the one an operator is
+    /// most likely to be surprised by: a hold Proctor cannot make safe is one it
+    /// does not take at all, and that is said here rather than left to be
+    /// inferred from a run that quietly held nothing.
+    func takeoverStatus() async -> JSONValue {
         var out: [String: JSONValue] = [
             "overlay": .bool(TakeoverOverlay.isEnabled),
             "inputBlockRequested": .bool(InputBlocker.isEnabled),
             "inputMonitoring": .string(Grants.inputMonitoringState())
         ]
+        // The drawn pointer, and the limit of what its switch reaches. Stated
+        // because an operator who set PROCTOR_CURSOR=0 and still sees a cursor
+        // moving would otherwise conclude the switch is broken: it turns off
+        // Proctor's pointer, and Proctor has no way to turn off another
+        // program's.
+        out["cursorOverlay"] = .bool(CursorOverlay.isEnabled)
+        if actuator.id != .native {
+            let suppressible = await actuator.cursorSuppressible
+            out["driverCursorSuppressible"] = .bool(suppressible)
+            out["cursorNote"] = .string(
+                "PROCTOR_CURSOR governs Proctor's own drawn pointer and nothing else — no "
+              + "setting here reaches the driver's cursor. "
+              + (suppressible
+                 ? "This driver can be asked not to draw one, so Proctor draws and asks it to "
+                 + "stand down on every action."
+                 : "This driver cannot be asked not to draw one, so Proctor stands its own "
+                 + "pointer down instead. Two pointers on one screen is worse than either, and "
+                 + "Proctor's is the only one it can end with certainty."))
+
+            if await actuator.actuatingPid == nil {
+                out["inputBlockAvailable"] = .bool(false)
+                out["laneSerialises"] = .bool(true)
+                out["note"] = .string(
+                    "Steps are performed by cua-driver, which has not reported a process "
+                  + "identity Proctor could corroborate. Proctor therefore cannot tell the "
+                  + "driver's own clicks and keystrokes from a person's, so it holds neither: "
+                  + "the input block does not operate on this lane. These runs also wait for "
+                  + "the whole machine rather than sharing it, because a hold another run put "
+                  + "in place would swallow this driver's actions — and lifting that hold "
+                  + "would drop a guard that run is keeping over a person.")
+                return .object(out)
+            }
+        }
         if let reason = takeover.unavailableReason {
             out["inputBlockAvailable"] = .bool(false)
             out["note"] = .string(reason)

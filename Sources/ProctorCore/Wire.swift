@@ -880,16 +880,26 @@ public struct ActResult: Codable, Sendable {
     /// asserting the wrong lane. Absent reads as "this build did not say" and is
     /// detectable; wrong is neither.
     public var backend: ActuationBackendID?
+    /// Which pointer annotated this run, when it was not Proctor's own.
+    ///
+    /// Nil means Proctor drew, which is every native run and every delegated one
+    /// whose driver could be asked to stand down — so a result from before this
+    /// existed encodes identically. `deferredToDriver` says Proctor stood its own
+    /// pointer down because the driver could not be asked to; whether the driver
+    /// then drew anything is the driver's, and not something Proctor observed, so
+    /// this names what Proctor decided rather than what appeared on screen.
+    public var pointerDrawnBy: String?
     public init(window: String, steps: [StepResult], completed: Int,
                 failedAt: Int?, finalHash: String?, foreground: ForegroundReport? = nil,
                 yields: [YieldRecord]? = nil, takeover: TakeoverReport? = nil,
-                backend: ActuationBackendID?) {
+                backend: ActuationBackendID?, pointerDrawnBy: String? = nil) {
         self.window = window; self.steps = steps; self.completed = completed
         self.failedAt = failedAt; self.finalHash = finalHash
         self.foreground = foreground
         self.yields = yields
         self.takeover = takeover
         self.backend = backend
+        self.pointerDrawnBy = pointerDrawnBy
     }
 }
 

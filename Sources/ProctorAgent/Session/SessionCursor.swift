@@ -30,7 +30,13 @@ extension Session {
     /// the window being driven, not about the step: it is drawn in that window's
     /// own plane, so a window stacked above the target covers it, and it is not
     /// drawn at all when the target is not on screen.
-    func showCursor(for step: ActionStep, window: WindowHandle) async {
+    ///
+    /// `owner` is this run's answer to which of two pointers draws (PRO-0046).
+    /// Standing down returns before the window-list read, so a delegated run that
+    /// deferred costs exactly what `PROCTOR_CURSOR=0` costs: nothing.
+    func showCursor(for step: ActionStep, window: WindowHandle,
+                    owner: PointerOwner = .proctor) async {
+        guard owner == .proctor else { return }
         guard CursorOverlay.isEnabled else { return }
         let plane = cursorPlane(for: window)
 

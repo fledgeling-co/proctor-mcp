@@ -34,7 +34,7 @@ extension Session {
         // action would let another session act between a click and the type that
         // follows it, which is the same split this queue exists to prevent — the
         // façade's callers just express it in somebody else's schema.
-        let demand = lanes(for: plan.compactMap(\.actionStep), window: window,
+        let demand = await lanes(for: plan.compactMap(\.actionStep), window: window,
                            foreground: foreground)
         let summary = StepDescription.runLine(.computerUse,
                                               app: appHandle(forWindow: window)?.name)

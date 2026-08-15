@@ -22,17 +22,52 @@ extension Session {
     /// from whether it asked for the app in front. Both are known without
     /// touching anything, which is what makes this schedulable rather than
     /// guesswork.
-    func lanes(for steps: [ActionStep], window: WindowHandle, foreground: Bool) -> LaneDemand {
+    func lanes(for steps: [ActionStep], window: WindowHandle,
+               foreground: Bool) async -> LaneDemand {
         // `LaneDemand` answers this through `ForegroundDemand.takesForeground`,
         // which is the same question the panel and the menu bar ask. The
         // conditional kinds go with it so the predicate can tell a `foreground`
         // batch that could post from one that asked out of habit: see the note
         // there.
-        LaneDemand.forBatch(kinds: steps.map(\.kind),
-                            synthetic: backendSyntheticKinds,
-                            conditional: backendConditionalKinds,
-                            app: window.app,
-                            foreground: foreground)
+        var demand = LaneDemand.forBatch(kinds: steps.map(\.kind),
+                                         synthetic: backendSyntheticKinds,
+                                         conditional: backendConditionalKinds,
+                                         app: window.app,
+                                         foreground: foreground)
+        if await delegatedLaneMustSerialise() { demand.lanes.insert(.global) }
+        return demand
+    }
+
+    /// Whether the selected backend is one whose actuation Proctor cannot
+    /// recognise, in which case this batch waits for the whole machine.
+    ///
+    /// **This is the alternative to arbitrating a hold two runs share, and the
+    /// plan's out-of-family gate is why it is a lane rather than a suspension.**
+    /// The input block is one tap and one arm count for the whole process. A
+    /// delegated run that could not identify its own driver would have its
+    /// events swallowed by a tap a CONCURRENT native run armed — `.global` and an
+    /// app lane are disjoint, so the two genuinely overlap. Releasing that hold
+    /// on the delegated run's behalf would lift a guard the native run is keeping
+    /// over a person, which is PRO-0053's cross-run clear in a different costume.
+    ///
+    /// So the overlap is made impossible instead. Only a posting native batch
+    /// arms the block, and such a batch holds `.global`, which is exclusive
+    /// against itself — so a batch holding `.global` here cannot coexist with an
+    /// armed tap, and it arms none of its own.
+    ///
+    /// The cost is a lane that serialises against everything needing the front,
+    /// which `proctor_doctor` states with its reason. It disappears the moment
+    /// the driver reports a pid that corroborates.
+    ///
+    /// Preflight is awaited first because the answer does not exist until the
+    /// lane has spoken to the driver, and lane selection is where PRO-0044 says
+    /// that conversation belongs. `try?` rather than a throw: a driver that
+    /// cannot preflight refuses at the step with its own full message, and
+    /// turning that into a scheduling error here would report the wrong thing.
+    func delegatedLaneMustSerialise() async -> Bool {
+        guard actuator.id != .native else { return false }
+        try? await actuator.preflight()
+        return await actuator.actuatingPid == nil
     }
 
     /// Take the lanes, run, and give them back however it ends.

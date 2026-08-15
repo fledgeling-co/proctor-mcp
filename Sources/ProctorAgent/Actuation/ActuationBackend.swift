@@ -60,6 +60,28 @@ protocol ActuationBackend: AnyObject, Sendable {
     /// as `unconfirmed` rather than as a fault.
     var laneHealth: ToolLaneFacts? { get async }
 
+    /// The pid whose events the supervision guards should treat as this run's own
+    /// doing, or nil when there is none to recognise.
+    ///
+    /// Read, never established — the same rule `laneHealth` carries, and for the
+    /// same reason: this is consulted on the run's own path, and a property that
+    /// started a process when somebody asked about it would be a side-effect
+    /// channel wearing a getter.
+    ///
+    /// Nil for the native backend, which needs no recognising: its events carry
+    /// Proctor's own tag and Proctor's own pid, which is what `InputBlock.isOurs`
+    /// has always matched. Nil for a delegated backend whose driver reported no
+    /// pid, or one that did not corroborate — and that nil is what makes such a
+    /// batch take the exclusive queue lane instead of arming a hold it could not
+    /// tell its own driver apart from a person.
+    var actuatingPid: Int64? { get async }
+
+    /// Whether this backend's driver can be asked not to draw a cursor of its
+    /// own. True for the native backend, which has no second cursor to worry
+    /// about; false is what stands Proctor's own pointer down, so a build that
+    /// cannot say counts as unable.
+    var cursorSuppressible: Bool { get async }
+
     /// Perform one step. The target is resolved by the caller, from Proctor's own
     /// observation, so a backend is told what to hit and is never asked what is
     /// there.
@@ -72,6 +94,11 @@ extension ActuationBackend {
     /// itself: its permissions are Proctor's own, and `proctor_doctor` reports
     /// those as grants. Only a delegated backend overrides this.
     var laneHealth: ToolLaneFacts? { get async { nil } }
+
+    /// Likewise: a backend that is this process needs no recognising, and draws
+    /// no cursor of its own for Proctor's to collide with.
+    var actuatingPid: Int64? { get async { nil } }
+    var cursorSuppressible: Bool { get async { true } }
 }
 
 /// What to hit, described so that any backend can act on it.

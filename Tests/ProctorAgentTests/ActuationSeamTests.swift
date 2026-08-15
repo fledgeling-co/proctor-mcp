@@ -49,6 +49,17 @@ final class FakeActuationBackend: ActuationBackend, @unchecked Sendable {
     var laneHealthValue: ToolLaneFacts?
     var laneHealth: ToolLaneFacts? { get async { laneHealthValue } }
 
+    /// The pid this backend's driver reported and Proctor corroborated, or nil
+    /// for a driver Proctor cannot recognise — which is what makes a batch take
+    /// the exclusive lane (PRO-0046). Nil by default, the conservative answer.
+    var actuatingPidValue: Int64?
+    var actuatingPid: Int64? { get async { actuatingPidValue } }
+
+    /// Whether the driver can be asked not to draw its own cursor. True by
+    /// default so an existing test's pointer behaviour is unchanged.
+    var cursorSuppressibleValue = true
+    var cursorSuppressible: Bool { get async { cursorSuppressibleValue } }
+
     func perform(step: ActionStep, target: StepTarget,
                  foreground: Bool) async throws -> Actuation {
         let index = lock.withLock { () -> Int in

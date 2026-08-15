@@ -61,6 +61,21 @@ struct CuaLaneReport: Sendable {
     /// What was established about the running process, when the transport can
     /// support such a claim at all.
     var identity: CuaProcessIdentity?
+    /// The pid the driver says does its posting, and whether the process bearing
+    /// it is the program the lane verified. PRO-0046: the supervision guards
+    /// recognise a delegated actuation by this, and a lane that has neither takes
+    /// the exclusive queue lane rather than arming a hold it could not tell its
+    /// own driver apart from a person.
+    var actuatingPid: Int64?
+    var pidCorroborated: Bool = false
+    /// Whether the driver can be asked not to draw its own agent cursor.
+    /// Defaults to false and fails closed: a build that says nothing counts as
+    /// unable, so Proctor stands its own pointer down rather than risking two.
+    var cursorSuppressible: Bool = false
+
+    /// The pid the guards may recognise: claimed AND corroborated. Nil is what
+    /// makes a lane serialise.
+    var recognisedPid: Int64? { pidCorroborated ? actuatingPid : nil }
 }
 
 enum CuaPreflight {
@@ -92,6 +107,7 @@ enum CuaPreflight {
     static func run(path: String?, transport: any CuaTransport,
                     environment: [String: String] = ProcessInfo.processInfo.environment,
                     verifySignature: (String) -> SignatureVerdict = verifySignature,
+                    corroborate: (Int64, String) -> Bool = liveCorroborate,
                     onRefusal: (CuaPreflightStage, AgentError) -> Void = { _, _ in })
     async throws -> CuaLaneReport {
         var report = CuaLaneReport()
@@ -167,6 +183,7 @@ enum CuaPreflight {
         //    path outside it refuses HERE, where the message can say so, rather
         //    than arriving mid-run as an unmappable plane.
         let capabilities = try await transport.send(CuaRequest(verb: .capabilities))
+        report.cursorSuppressible = capabilities.cursorSuppressible ?? false
         if let vocabulary = capabilities.vocabulary {
             report.vocabulary = vocabulary
             let unknown = vocabulary.filter { CuaVocabulary.planes[$0] == nil }
@@ -196,7 +213,60 @@ enum CuaPreflight {
                       + "Proctor's, so Proctor's own permissions being in order says nothing "
                       + "about this. Run the driver's own doctor."))
         }
+
+        // 6. Which process actually posts, so the supervision guards can tell the
+        //    driver's own actions from a person's (PRO-0046).
+        //
+        //    NEVER A REFUSAL. A driver that reports no pid, or one that does not
+        //    corroborate, is perfectly able to actuate — what it cannot do is
+        //    share a machine with an armed input block, because Proctor would
+        //    have no way to tell its clicks from somebody's. So the lane runs and
+        //    takes the exclusive queue lane instead, which is a scheduling cost
+        //    rather than a refusal.
+        if let claimed = health.actuatingPid.map(Int64.init) {
+            report.actuatingPid = claimed
+            report.pidCorroborated = corroborate(claimed, expectedIdentifier)
+        }
         return report
+    }
+
+    /// Is the process bearing this pid the program the lane already verified?
+    ///
+    /// **A recognition rule, not an attestation, and the difference is stated
+    /// rather than glossed.** The source pid on an event is set by the system on
+    /// the ordinary posting path — measured twice in this repo, where Proctor's
+    /// own posts carried Proctor's pid and hardware carried 0 — but a process
+    /// that builds its own event can write that field, and a pid reused between
+    /// this check and the event would also pass. Neither reaches the threat this
+    /// guards: a program able to forge it is already a program able to post into
+    /// the application directly, and PRO-0026 records that the block is partial
+    /// and cannot lock anybody out of their Mac. This protects a run from a
+    /// person; it was never a boundary against a program.
+    ///
+    /// It asks about the RUNNING code rather than a file on disk.
+    /// `SecCodeCopyGuestWithAttributes` with a pid attribute is the API for
+    /// exactly that question, and it answers for a plain helper as well as for a
+    /// bundled app — where reading an executable path and checking the file would
+    /// answer a subtly different question about a different artefact.
+    /// Injected as a parameter rather than held as a mutable static, following
+    /// `verifySignature` above. A process-wide `var` that tests reassign is the
+    /// defect PRO-0053 spent a session on: swift-testing parallelises across
+    /// suites, so two tests setting one static stomp each other and the failure
+    /// reads as a logic error in whichever lost.
+    static let liveCorroborate: @Sendable (Int64, String) -> Bool = {
+        pid, identifier in
+        guard pid > 0, pid <= Int64(Int32.max) else { return false }
+        let attributes = [kSecGuestAttributePid: NSNumber(value: Int32(pid))] as CFDictionary
+        var code: SecCode?
+        guard SecCodeCopyGuestWithAttributes(nil, attributes, [], &code) == errSecSuccess,
+              let code else { return false }
+
+        var requirement: SecRequirement?
+        let text = "identifier \"\(identifier)\" and anchor apple generic" as CFString
+        guard SecRequirementCreateWithString(text, [], &requirement) == errSecSuccess,
+              let requirement else { return false }
+
+        return SecCodeCheckValidity(code, [], requirement) == errSecSuccess
     }
 
     // MARK: - Signature

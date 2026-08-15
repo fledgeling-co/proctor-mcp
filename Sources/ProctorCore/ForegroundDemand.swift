@@ -130,8 +130,20 @@ public struct ForegroundDemand: Hashable, Sendable {
     /// `certainSteps` and rises if a conditional step turns out to need the
     /// front, so the number a person is reading is never behind what has
     /// actually happened.
+    /// `delegated` says another program is performing the steps. It changes the
+    /// wording rather than adding a row: PRO-0019 settled that the exception is
+    /// said once, in words, on one row with one wording function, and a second
+    /// row for a second fact would be two things competing for the same glance.
+    ///
+    /// It matters on this row in particular because a delegated batch predicts
+    /// nothing — every kind on that lane decides at the element — so the count is
+    /// always a "may", and the reason it is always a "may" is worth a reader
+    /// knowing. It is also the only place the up-front surface can say what IS
+    /// knowable before such a run starts, since the full-screen statement cannot
+    /// go up until an escalation has actually happened.
     public func notice(app: String?, known: Int? = nil,
-                       resolvedConditional: Int = 0) -> String? {
+                       resolvedConditional: Int = 0,
+                       delegated: Bool = false) -> String? {
         // Sanitised, and unfenced — deliberately the same treatment
         // `RunHUDState.exceptionLine` already gives the app name on this very
         // row. Two quoting conventions on one line would be worse than either.
@@ -150,7 +162,9 @@ public struct ForegroundDemand: Hashable, Sendable {
         }
         if pending > 0 {
             let upTo = "\(pending) of \(totalSteps) step\(totalSteps == 1 ? "" : "s")"
-            return "Up to \(upTo) may need \(who) in front"
+            return delegated
+                ? "Driven by cua-driver — up to \(upTo) may take \(who) to the front"
+                : "Up to \(upTo) may need \(who) in front"
         }
         // `raise` and a bare `foreground: true` change what is in front without
         // any step needing the event stream. Worth saying, and there is no count
@@ -159,6 +173,13 @@ public struct ForegroundDemand: Hashable, Sendable {
         // A `foreground: true` no step can use is not an exception to announce.
         // Accessibility is the rule and is never announced, and this batch is
         // going to travel it whatever the flag says.
+        //
+        // Except on the delegated lane, where there IS something to announce and
+        // it is not a count: the steps are being performed by another program,
+        // which decides at each element whether to take the front and can do so
+        // without warning Proctor first. Said up front because it is the part
+        // that IS knowable before such a run starts.
+        if delegated { return "Driven by cua-driver — a step may take \(who) to the front" }
         return nil
     }
 }

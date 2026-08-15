@@ -26,6 +26,12 @@ final class FakeCuaTransport: CuaTransport, @unchecked Sendable {
                                  "key_events_fg", "pixel"]
     var healthy = true
     var healthMessage: String?
+    /// The pid the driver claims does its posting. Nil is a driver that reports
+    /// none, which is what makes a lane serialise (PRO-0046).
+    var actuatingPid: Int32?
+    /// Whether the driver says it can be asked not to draw its own cursor. Nil
+    /// is a build that does not say, which fails closed.
+    var cursorSuppressible: Bool?
 
     /// What the driver says is in the window.
     var elements: [ElementCandidate] = []
@@ -62,9 +68,9 @@ final class FakeCuaTransport: CuaTransport, @unchecked Sendable {
         case .version:
             return CuaResponse(version: version)
         case .capabilities:
-            return CuaResponse(vocabulary: vocabulary)
+            return CuaResponse(vocabulary: vocabulary, cursorSuppressible: cursorSuppressible)
         case .health:
-            return CuaResponse(ok: healthy, message: healthMessage)
+            return CuaResponse(ok: healthy, message: healthMessage, actuatingPid: actuatingPid)
         case .windowState:
             let moved = lock.withLock { () -> Bool in
                 snapshots += 1

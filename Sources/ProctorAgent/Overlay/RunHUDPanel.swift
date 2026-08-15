@@ -113,8 +113,10 @@ final class RunHUDPanel {
     /// A batch is starting: place the panel on the screen holding the driven
     /// window and show it.
     func begin(total: Int, app: String?, window: Rect,
-               foreground: ForegroundDemand = ForegroundDemand()) {
-        feed.apply(.runBegan(total: total, app: app, foreground: foreground))
+               foreground: ForegroundDemand = ForegroundDemand(),
+               delegated: Bool = false) {
+        feed.apply(.runBegan(total: total, app: app, foreground: foreground,
+                             delegated: delegated))
         feed.rememberWindow(window)
         runStarted = Date()
         linger?.cancel(); linger = nil

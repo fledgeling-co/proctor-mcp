@@ -595,8 +595,13 @@ actor Session {
             "total": .number(Double(subject?.demand.totalSteps ?? 0)),
             "runs": .number(Double(runs.count)),
             "app": subject?.app.map(JSONValue.string) ?? .null,
-            "notice": subject.flatMap { $0.demand.notice(app: $0.app) }
-                .map(JSONValue.string) ?? .null,
+            // Which lane is performing the steps, so the fact does not depend on
+            // which display the run panel landed on. Proctor's own enum, never a
+            // string the driver supplied.
+            "backend": .string(actuator.id.rawValue),
+            "notice": subject.flatMap {
+                $0.demand.notice(app: $0.app, delegated: actuator.id != .native)
+            }.map(JSONValue.string) ?? .null,
             // Held, and why. Read ahead of `active` by the menu bar: a run that
             // has got out of somebody's way is not taking the machine, and
             // saying both at once would be two claims about one instant.

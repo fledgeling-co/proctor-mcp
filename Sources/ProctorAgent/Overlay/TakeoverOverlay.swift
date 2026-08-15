@@ -397,6 +397,13 @@ final class InputBlocker: @unchecked Sendable {
         // release chord that live on this same run loop.
         let stopRect = RunHUDGeometry.shared.stopRect
         let postInFlight = SyntheticPost.shared.inFlight
+        // The drivers Proctor is delegating to right now. Without this a native
+        // run's armed tap swallows a CONCURRENT delegated run's events — the two
+        // overlap, because `.global` and an app lane are disjoint and this tap
+        // is one for the whole process — and the delegated step silently does
+        // nothing while its own actuation is reported as somebody using the
+        // machine. Read here, without waiting, like the two above it.
+        let delegated = DelegatedPost.shared.recognisedPids
         let location = event.location
 
         lock.lock()
@@ -408,7 +415,8 @@ final class InputBlocker: @unchecked Sendable {
                                    location: RunHUDPlacement.Point(x: Double(location.x),
                                                                    y: Double(location.y)),
                                    stopRect: stopRect,
-                                   postInFlight: postInFlight)
+                                   postInFlight: postInFlight,
+                                   delegated: delegated)
         if !decision.delivers { swallowed += 1 }
         if decision.stops { release = .stopped }
         lock.unlock()

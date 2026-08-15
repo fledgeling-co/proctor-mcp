@@ -304,9 +304,31 @@ public enum InputBlock {
     /// would open the gate to real hardware for a quarter of a second after
     /// every post, which on steps shorter than that is most of the time the
     /// block claims to be closed.
-    public static func isOurs(sourcePid: Int64?, userData: Int64?, ourPid: Int64) -> Bool {
+    ///
+    /// `delegated` is PRO-0046's one widening, and it is one identity rather
+    /// than a class: the pid of the driver Proctor is *currently* delegating to,
+    /// corroborated against the signed program the lane already verified, and
+    /// supplied only while a delegated actuation is in flight. It defaults to
+    /// empty, which is this rule exactly as it was — so the native lane is
+    /// byte-identical and every existing caller keeps its behaviour.
+    ///
+    /// Without it, a native run's armed tap swallows a *concurrent* delegated
+    /// run's events, because `.global` and an app lane are disjoint and the tap
+    /// is one for the whole process. With anything broader it would fail the way
+    /// the first draft of this rule did: `sourcePid != 0` passes a Mac running
+    /// Karabiner, whose remapper delivers the person's own keystrokes carrying
+    /// the remapper's pid.
+    ///
+    /// A `sourcePid` of `0` can never match, whatever the set contains. Zero is
+    /// what hardware carries, so admitting it would pass every keystroke a
+    /// person makes while the label claimed input was held — the exact inversion
+    /// of what this rule is for. The set is filtered at its source too; this is
+    /// the belt, and it is here because this is the layer with the tests.
+    public static func isOurs(sourcePid: Int64?, userData: Int64?, ourPid: Int64,
+                              delegated: Set<Int64> = []) -> Bool {
         if userData == ProctorEventTag.value { return true }
         if let sourcePid, sourcePid == ourPid { return true }
+        if let sourcePid, sourcePid != 0, delegated.contains(sourcePid) { return true }
         return false
     }
 
@@ -348,11 +370,14 @@ public enum InputBlock {
                                     modifiers: InputModifiers = [],
                                     location: RunHUDPlacement.Point? = nil,
                                     stopRect: Rect? = nil,
-                                    postInFlight: Bool = false) -> InputBlockDecision {
+                                    postInFlight: Bool = false,
+                                    delegated: Set<Int64> = []) -> InputBlockDecision {
             // Ours passes before anything else is considered, which is also what
             // stops a `key` step that types Escape from stopping the run that
-            // typed it.
-            if isOurs(sourcePid: sourcePid, userData: userData, ourPid: ourPid) { return .pass }
+            // typed it — and, since PRO-0046, what stops a delegated driver's
+            // own click reaching the Stop rectangle below.
+            if isOurs(sourcePid: sourcePid, userData: userData, ourPid: ourPid,
+                      delegated: delegated) { return .pass }
 
             switch kind {
             case .keyDown:

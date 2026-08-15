@@ -241,9 +241,15 @@ final class RunHUDContentView: NSView {
     /// this whole surface exists to prevent.
     private func isOurs(_ event: NSEvent) -> Bool {
         guard let cg = event.cgEvent else { return false }
+        // The delegated set is read here as well as at the tap, and that is the
+        // whole of PRO-0046's second reader. Widen only the tap and a driver's
+        // click that the tap correctly PASSES goes on to reach this view, which
+        // hit-tests it and presses Stop in AppKit — the same defect by a
+        // different road. One predicate, both readers.
         return InputBlock.isOurs(sourcePid: cg.getIntegerValueField(.eventSourceUnixProcessID),
                                  userData: cg.getIntegerValueField(.eventSourceUserData),
-                                 ourPid: Int64(ProcessInfo.processInfo.processIdentifier))
+                                 ourPid: Int64(ProcessInfo.processInfo.processIdentifier),
+                                 delegated: DelegatedPost.shared.recognisedPids)
     }
 
     override func mouseDown(with event: NSEvent) {

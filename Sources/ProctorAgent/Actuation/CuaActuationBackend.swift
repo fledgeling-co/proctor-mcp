@@ -25,6 +25,10 @@ final class CuaActuationBackend: ActuationBackend {
     private let transport: any CuaTransport
     private let path: String?
     private let environment: [String: String]
+    /// Whether a pid the driver claims is really the program the lane verified.
+    /// A parameter rather than a shared static, so a test can answer it without
+    /// two concurrent suites deciding it for each other.
+    private let corroborate: @Sendable (Int64, String) -> Bool
     /// Preflight runs once per lane, not once per step. Guarded because a
     /// reentrant actor can reach this from two awaits.
     private let state = LaneState()
@@ -33,10 +37,13 @@ final class CuaActuationBackend: ActuationBackend {
     let laneId = RunIdentity.mint()
 
     init(transport: any CuaTransport, path: String?,
-         environment: [String: String] = ProcessInfo.processInfo.environment) {
+         environment: [String: String] = ProcessInfo.processInfo.environment,
+         corroborate: @escaping @Sendable (Int64, String) -> Bool
+            = CuaPreflight.liveCorroborate) {
         self.transport = transport
         self.path = path
         self.environment = environment
+        self.corroborate = corroborate
         transport.adopt(laneId: laneId)
     }
 
@@ -87,6 +94,7 @@ final class CuaActuationBackend: ActuationBackend {
         do {
             var report = try await CuaPreflight.run(path: path, transport: transport,
                                                     environment: environment,
+                                                    corroborate: corroborate,
                                                     onRefusal: { stage, _ in
                                                         recorder.record(stage)
                                                     })
@@ -161,6 +169,19 @@ final class CuaActuationBackend: ActuationBackend {
 
     var laneReport: CuaLaneReport? {
         get async { await state.report() }
+    }
+
+    /// The pid the guards may recognise: the driver's claim, and only when the
+    /// process bearing it corroborated as the program the lane verified.
+    var actuatingPid: Int64? {
+        get async { await state.report()?.recognisedPid }
+    }
+
+    /// Whether this build can be asked to stop drawing its own agent cursor.
+    /// Fails closed before preflight has run, which is the direction that never
+    /// puts two cursors on one screen.
+    var cursorSuppressible: Bool {
+        get async { await state.report()?.cursorSuppressible ?? false }
     }
 
     /// What `proctor_doctor` reports about this lane, mapped out of whatever
@@ -259,13 +280,22 @@ final class CuaActuationBackend: ActuationBackend {
         let reply = try await transport.send(CuaRequest(
             verb: .act, windowID: target.window.cgWindowID, pid: target.app?.pid,
             action: action, arguments: arguments(for: step),
-            elementToken: token, deliveryMode: requested))
+            elementToken: token, deliveryMode: requested,
+            suppressCursor: true))
 
         guard reply.ok else {
             throw AgentError(
                 code: reply.errorCode == CuaErrorCode.staleElementToken
                     ? .targetMoved : .actionFailed,
-                message: reply.message ?? "cua-driver refused the \(step.kind.rawValue) step",
+                // Fenced, not passed through. This is the driver's own writing
+                // arriving in a message a person reads, and PRO-0044 already
+                // dropped every driver string from the health report for exactly
+                // this reason — it just did not apply the same rule one function
+                // away. It is attributed rather than presented as Proctor's own
+                // words, and capped at a diagnostic length rather than at the
+                // 48-character cut meant for a line designed never to ellipse.
+                message: StepDescription.fenced(reply.message, from: "cua-driver")
+                    ?? "cua-driver refused the \(step.kind.rawValue) step",
                 detail: .object(["driverError": .string(reply.errorCode ?? "")]))
         }
 

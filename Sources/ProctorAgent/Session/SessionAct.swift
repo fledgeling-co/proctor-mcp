@@ -68,6 +68,10 @@ extension Session {
         /// What the run said on the screen, and whether it held the machine.
         /// Nil when it drew nothing.
         var takeover: TakeoverReport?
+        /// Which of two pointers drew for this run. Decided once, from this
+        /// run's own backend, so a concurrent run on the other lane cannot flip
+        /// it mid-batch.
+        var pointerOwner: PointerOwner = .proctor
 
         var captures: [JSONValue] { stepArtifacts.map(\.json) }
     }
@@ -88,7 +92,7 @@ extension Session {
         // The lanes for this batch, taken once and held to the last step. Which
         // ones it needs is knowable from the steps and from `foreground` before
         // anything runs, and it never asks for another after it starts.
-        let demand = lanes(for: steps, window: window, foreground: foreground)
+        let demand = await lanes(for: steps, window: window, foreground: foreground)
         let summary = StepDescription.runLine(.act(steps: steps.count),
                                               app: appHandle(forWindow: window)?.name)
         return try await scheduled(lanes: demand, summary: summary) {
@@ -133,7 +137,13 @@ extension Session {
                                // actuated: those steps carry no backend of their own,
                                // so this is the only thing that says which lane
                                // refused them.
-                               backend: actuator.id)
+                               backend: actuator.id,
+                               // Nil when Proctor drew, which is every native run
+                               // and every delegated one whose driver could be
+                               // asked to stand down — so an existing result
+                               // encodes exactly as it did before this existed.
+                               pointerDrawnBy: run.pointerOwner == .proctor
+                                   ? nil : run.pointerOwner.rawValue)
         var out = try JSONValue.encode(result).objectValue ?? [:]
         // One sentence beside the records, so a caller reading prose knows why
         // the run took longer than its work did. Alongside rather than inside,
@@ -208,7 +218,8 @@ extension Session {
         // stability sweep, the CUA façade. A stop control that is present for
         // some kinds of run and absent for others is worse than none.
         let demand = foregroundDemand(for: steps, foreground: foreground)
-        await hudRunBegan(total: steps.count, window: window, demand: demand)
+        await hudRunBegan(total: steps.count, window: window, demand: demand,
+                          delegated: actuator.id != .native)
         // The same fact, reachable without the panel: the menu bar mirrors this
         // and is on every display, where the panel is on one.
         let foregroundRun = foregroundBegan(demand: demand, app: app?.name,
@@ -270,7 +281,16 @@ extension Session {
         // flow takes no global lane, so a reset containing a `click` would have
         // joined the protocol holding nothing exclusive and cleared a genuine
         // poster's state — the very defect this gate exists to close.
-        let participates = demand.mightPost && foreground
+        //
+        // AND THE BACKEND, which PRO-0046 adds and which is that rule stated at
+        // its actual width. The predicate above was "the runs that can post";
+        // a delegated run cannot, because `SyntheticPost.declare()` is reached
+        // only from `Actuator.requireEventPlaneAvailable()` and another process
+        // does the posting. Left in, such a run would install a handler nothing
+        // can fire and clear `declaredAt`/`declared` at every step boundary while
+        // having nothing of its own to record there. What recognises a delegated
+        // actuation instead is `DelegatedPost`, which touches none of this.
+        let participates = demand.mightPost && foreground && actuator.id == .native
         if participates {
             syntheticPost.onDeclare {
                 monitor.noteSyntheticPost()
@@ -278,6 +298,20 @@ extension Session {
             }
         }
         defer { if participates { syntheticPost.onDeclare(nil) } }
+        // Which of two pointers draws, decided ONCE for this run rather than
+        // consulted per step. Two runs on different applications genuinely
+        // overlap, so a machine-wide decision would flip between a native run's
+        // step and a delegated one's — which is how a pointer ends up annotating
+        // the wrong action, or two end up on one screen.
+        let delegatedLane = actuator.id != .native
+        let pointerOwner = PointerOwnership.decide(
+            delegated: delegatedLane,
+            driverSuppressible: await actuator.cursorSuppressible)
+        run.pointerOwner = pointerOwner
+        // The pid whose events the guards should treat as this run's own doing,
+        // read once for the batch. Nil is not a failure — it is what made this
+        // batch take the exclusive lane, so nothing else is holding the block.
+        let delegatedPid = delegatedLane ? await actuator.actuatingPid : nil
         var ending: RunHUDEnding = .completed
 
         for (index, step) in steps.enumerated() {
@@ -333,7 +367,7 @@ extension Session {
                 // The statement goes up before the first event is posted, on
                 // every display, and stays up for the rest of the batch.
                 if synthetic || stepsAside { takeoverShow(app: app?.name) }
-                await showCursor(for: step, window: window)
+                await showCursor(for: step, window: window, owner: pointerOwner)
             }
 
             let started = DispatchTime.now().uptimeNanoseconds
@@ -379,18 +413,46 @@ extension Session {
                 // the window only afterwards would leave exactly that arrival
                 // looking like a person's. Marked again after the step, from the
                 // measured plane, to cover a late delivery.
+                //
+                // NOT WIDENED TO THE DELEGATED LANE, and that is a decision
+                // rather than an omission. A time window is not an identity: if
+                // the driver's events ever arrived looking like hardware, the
+                // window would stop the run YIELDING while the pass rule still
+                // swallowed them, so the step would fail with the one signal
+                // that explains it switched off. And `ContentionMonitor` is a
+                // singleton, so a delegated batch of fast steps would hold the
+                // window open continuously and blind a CONCURRENT native run's
+                // input signal — the cross-run clobber PRO-0053 fixed. What
+                // covers the delegated lane is `DelegatedPost`, below.
                 if synthetic || stepsAside {
                     noteSyntheticPost()
-                    // Armed before the post and released after it, whatever the
-                    // step did. Arming follows the GATE rather than the step's
-                    // kind, so the armed window is never narrower than the window
-                    // the panel is transparent for — a gate open wider than the
-                    // block is this feature's own hole in miniature, with the
-                    // panel letting a click through and nothing holding it.
-                    takeoverArm(for: step)
                 }
+                // Armed before the post and released after it, whatever the
+                // step did. Arming follows the GATE rather than the step's
+                // kind, so the armed window is never narrower than the window
+                // the panel is transparent for — a gate open wider than the
+                // block is this feature's own hole in miniature, with the
+                // panel letting a click through and nothing holding it.
+                //
+                // On the delegated lane it follows the STATEMENT instead, once
+                // one has been raised. Nothing on that lane is knowable in
+                // advance — every kind decides at the element — so there is no
+                // gate to follow, and the safe direction once the machine has
+                // demonstrably been taken is to hold. The pairing is unchanged:
+                // one arm here, one release in the `defer`.
+                let armsThisStep = synthetic || stepsAside || (delegatedLane && takeoverShown)
+                if armsThisStep { takeoverArm(for: step) }
+                // A delegated actuation is about to happen, so the guards can
+                // tell the driver's own events from a person's for as long as it
+                // lasts. Opened BEFORE the request goes out: an event posted
+                // between the request leaving and this opening would be read as
+                // foreign, swallowed by an armed block, and reported to the
+                // contention monitor as somebody using the machine.
+                let delegation = delegatedLane
+                    ? DelegatedPost.shared.begin(pid: delegatedPid) : nil
                 defer {
-                    if synthetic || stepsAside { takeoverRelease(.stepEnded) }
+                    if let delegation { DelegatedPost.shared.end(delegation) }
+                    if armsThisStep { takeoverRelease(.stepEnded) }
                     // Closed however the step ended, including a throw between
                     // the declaration and here.
                     if participates { syntheticPost.endStep() }

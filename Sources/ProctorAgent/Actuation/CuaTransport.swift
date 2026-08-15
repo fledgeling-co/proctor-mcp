@@ -49,6 +49,13 @@ struct CuaRequest: Sendable {
     /// "background" would otherwise let a version mismatch decide, silently,
     /// whether somebody's machine gets taken.
     var deliveryMode: String?
+    /// Ask the driver not to draw its own agent cursor for this action.
+    ///
+    /// Sent on EVERY act rather than assumed from the capability probe, because
+    /// "can be asked" is not "has stood down" — a probe answered once does not
+    /// bind the tenth step, and the failure it would hide is two cursors on one
+    /// screen, which is the thing PRO-0046 exists to prevent.
+    var suppressCursor: Bool = true
 }
 
 /// What came back.
@@ -72,6 +79,14 @@ struct CuaResponse: Sendable {
     var version: String?
     /// The delivery paths this build of the driver can report.
     var vocabulary: [String]?
+    /// The pid the driver says actually posts its events, from a health reply.
+    /// PRO-0046 recognises a delegated actuation by it; unverified against the
+    /// shipped binary, like everything else on this wire, and absent simply means
+    /// the lane serialises.
+    var actuatingPid: Int32?
+    /// Whether this build can be asked not to draw its own agent cursor, from a
+    /// capabilities reply. Absent counts as no.
+    var cursorSuppressible: Bool?
 }
 
 /// How a request reaches the driver.

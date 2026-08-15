@@ -258,6 +258,44 @@ public enum StepDescription {
 
     // MARK: - Sanitising
 
+    /// Another program's writing, made safe to show a person, and attributed.
+    ///
+    /// PRO-0046. Once actuation is delegated, a driver's own prose arrives in a
+    /// step's error message — the tool result a model reads and the reason on the
+    /// audit row. PRO-0044 already dropped every driver string from the health
+    /// report on the grounds that a health report is not a place to pipe another
+    /// process's writing into; the same argument applies wherever that writing
+    /// reaches a person, and this is the one treatment for all of it.
+    ///
+    /// Three properties, and the third is why this is not `sanitised` with a
+    /// different number:
+    ///
+    ///   * It is cleaned by exactly the rules above — one line, no control
+    ///     characters, no markup, double quotes folded so the text cannot close
+    ///     the quotation around it and append a clause of its own.
+    ///   * It is quoted and ATTRIBUTED, so a reader can tell whose sentence it
+    ///     is. Unattributed, another program's text reads as Proctor's own
+    ///     finding, which is the misreading that matters on a surface somebody
+    ///     uses to decide whether to stop a run.
+    ///   * It is cut at a DIAGNOSTIC length rather than at `objectLimit`. That
+    ///     cap exists for the HUD's live line, which is designed never to
+    ///     ellipse; applying it to an error message would destroy the diagnostic
+    ///     the message exists to carry.
+    ///
+    /// Nil when nothing survives the cleaning, so a caller falls through to its
+    /// own wording rather than printing an empty attribution.
+    public static func fenced(_ raw: String?, from source: String,
+                              limit: Int = externalLimit) -> String? {
+        guard let text = sanitised(raw, limit: limit) else { return nil }
+        guard let who = sanitised(source, limit: objectLimit) else { return nil }
+        return "\(who) said: \"\(text)\""
+    }
+
+    /// How much of another program's writing is shown. Long enough to carry a
+    /// diagnostic, short enough that a hostile or runaway message cannot flood
+    /// the surface it lands on.
+    public static let externalLimit = 200
+
     /// One line, no control characters, no markup, trimmed, hard-cut at `limit`
     /// graphemes with no ellipsis. Nil when nothing survives, so the caller falls
     /// through to the next candidate rather than printing a blank.
