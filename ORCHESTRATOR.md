@@ -295,16 +295,51 @@ refusal, whose question changed shape underneath it).
 | PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **MERGED** `8d2fde6` |
 | PRO-0053 | `TakeoverWiringTests` reddens the gate at random | `54-…` | 2 | **MERGED** `477941f` · found mid-fleet, was a production defect |
 | PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **RUNNING** `wf_e1399c64-3e2` |
-| PRO-0046 | Supervision survives delegation | `47-…` | 2 | **QUEUED** · after PRO-0044 |
-| PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **RUNNING** `wf_4005fecb-626` · absorbs PRO-0031 |
+| PRO-0046 | Supervision survives delegation | `47-…` | 2 | **RUNNING** `wf_c9845e3c-c4d` |
+| PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **MERGED** `0ea6f88` · absorbed PRO-0031 |
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **QUEUED** · after PRO-0048 |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **QUEUED** · after PRO-0044 |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **QUEUED** (carried, revised) |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **QUEUED** (carried, revised) |
-| PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **QUEUED** · after PRO-0050 |
+| PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **RUNNING** `wf_5040b522-5a1` |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0050 merged `0ea6f88`.** 1105 -> **1162 tests in 128 suites**. `doctor`
+  reports the whole toolchain, per-lane, **and creates no subprocess at all**.
+  - **The design changed twice and a gate forced it both times.** The first draft had
+    `doctor` spawning `cua-driver doctor` behind an opt-in switch with a 1.5s bound and a
+    backoff. Gone: every answer is now a read (stat, readlink, one plist, and a
+    `SecStaticCode` signature check that reads the file and executes nothing). The spec gate
+    killed the env-var spawn gate as a parameter boundary rather than an execution one, and
+    killed the exit-code classifier on the ground that a driver can exit 0 while printing
+    that it is unhealthy.
+  - **Measurement drove the shape.** `maestro --version` costs 3.9-5.3s of JVM start against
+    a 2.0s doctor poll, while the same version sits free in Homebrew's symlink target and
+    Xcode's sits free in a root-owned plist.
+  - **PRO-0044 merging mid-run made the item smaller, not larger.** `CuaPreflight` already
+    reverses the never-execute rule narrowly behind a signature check pinning
+    `com.trycua.driver`, and `CuaLaneReport`'s own doc comment already said it existed "for
+    the run record and for `proctor_doctor`".
+  - **Installed is not usable**, as a new axis beside `available`, carrying PRO-0041's three
+    states over an evidence ladder `absent → presence → signature → installPath → laneReport`
+    that never reports "nothing known" about a file it just located.
+  - **The policy block reports mode, counts and audit posture and no bundle id, path, key or
+    token** — and says plainly that this is a convention rather than a boundary, because
+    `proctor_policy status` is ungated and answers in full. `doctor` is the first call a model
+    makes, so no driver-supplied text reaches it, the keys of its permission map included.
+  - **The shell doctor reports where a login shell honestly disagrees with the agent**,
+    verified live by planting a binary outside the search list, under bash 3.2 as well as 5.
+    The search order is generated from one Swift definition with a drift test that also
+    asserts `doctor.sh` sources that exact path.
+  - **Child work found:** `proctor_policy status` is ungated and returns the full lists, roots
+    and audit path, so doctor's posture-only rule is a convention while that stands;
+    **PRO-0044's delegated child inherits the agent's descriptors and runs in its process
+    group, so `terminate()` does not reach grandchildren** (this one matters for PRO-0046);
+    PRO-0049 should consume the `maestro` row rather than probing again.
+  - **Not measured against a real `cua-driver`**, which is not installed. Its rows are proved
+    against constructed facts and the absent path, stated in the spec rather than implied by
+    a green suite.
 - 2026-08-15 **PRO-0053 merged `477941f`. It was not a flake, and the gate rule this project
   had been using was wrong.** 1101 -> **1105 tests in 118 suites**.
   - **The test was reporting a live production defect.** Only `shows.count` failed while
