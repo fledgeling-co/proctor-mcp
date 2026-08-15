@@ -189,6 +189,10 @@ extension Session {
             return alignment(spec: spec, subject: subject(), expected: expected,
                              tolerance: tolerance ?? 1.0, index: index, window: window)
 
+        case "horizontalAlignment":
+            return horizontalAlignment(spec: spec, subject: subject(), expected: expected,
+                                       tolerance: tolerance ?? 8.0, index: index, window: window)
+
         case "minHitSize":
             return await hitSize(subject: subject(), expected: expected, window: window)
 
@@ -294,6 +298,43 @@ extension Session {
                                        + (wanted.map { " on \($0)" } ?? "")
                                        + " within \(tolerance)pt"),
                        node: node.id)
+    }
+
+    private func horizontalAlignment(spec: JSONValue, subject: AXNode?, expected: JSONValue,
+                                    tolerance: Double, index: [String: AXNode],
+                                    window: WindowHandle) -> Outcome {
+        guard let node = subject else {
+            return Outcome(status: .fail, observed: .object(["found": .bool(false)]),
+                           expected: expected, reason: "no node matched")
+        }
+        guard let frame = node.frame else {
+            return Outcome(status: .skipped, observed: .null, expected: expected,
+                           reason: "\(node.role) exposes no frame", node: node.id)
+        }
+        let (container, _) = referenceRect(spec["container"] ?? .null, index: index, window: window)
+        let refRect = container ?? (try? ax.node(id: window.id))?.frame
+        guard let refRect else {
+            return Outcome(status: .skipped, observed: frame.json, expected: expected,
+                           reason: "could not resolve container or window frame", node: node.id)
+        }
+        let wanted = expected.stringValue?.lowercased() ?? "leading"
+        let isCentered = abs(frame.centerX - refRect.centerX) <= tolerance
+        let isLeading = abs(frame.x - refRect.x) <= (tolerance * 3.0) && !isCentered
+        let isTrailing = abs(frame.maxX - refRect.maxX) <= (tolerance * 3.0) && !isCentered
+
+        let observedAlignment = isCentered ? "center" : (isLeading ? "leading" : (isTrailing ? "trailing" : "custom"))
+        let ok = (wanted == observedAlignment) || (wanted == "left" && isLeading)
+
+        return Outcome(status: ok ? .pass : .fail,
+                       observed: .string(observedAlignment),
+                       expected: .string(wanted),
+                       reason: ok ? nil : "Element observed as '\(observedAlignment)' but expected '\(wanted)'",
+                       node: node.id,
+                       detail: .object([
+                        "elementFrame": frame.json,
+                        "containerFrame": refRect.json,
+                        "isCentered": .bool(isCentered)
+                       ]))
     }
 
     /// Focus order against reading order, computed from the tree alone. AX

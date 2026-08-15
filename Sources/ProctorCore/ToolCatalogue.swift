@@ -405,7 +405,7 @@ public enum ToolCatalogue {
                                 .string("exists"), .string("absent"), .string("valueEquals"),
                                 .string("valueContains"), .string("enabled"), .string("disabled"),
                                 .string("focused"), .string("hasLabel"), .string("frameEquals"),
-                                .string("containedIn"), .string("alignedWith"), .string("minHitSize"),
+                                .string("containedIn"), .string("alignedWith"), .string("horizontalAlignment"), .string("minHitSize"),
                                 .string("contrast"), .string("focusOrder"), .string("regionMatches"),
                                 .string("agree")
                             ])]),
