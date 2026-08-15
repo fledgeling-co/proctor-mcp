@@ -1,6 +1,6 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 6 running.** 28 merged; 11 deferred children promoted to PRO-0029 … PRO-0039 and staged 5/4/2.
+**Status:** **Wave 7 running.** 42 merged. The project pivots: Cua Driver takes actuation, Proctor keeps observation, the verdict layer and supervision, and gains an iOS lane.
 **Updated:** 2026-08-14 — wave 1+2 MERGED (10 features), wave 3 MERGED (7 features). **382 tests / 46 suites green on `main` @ 484e54e**, up from 173/24 at the start of the wave. No worktrees, no `ai/*` branches, clean tree, nothing pushed.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
@@ -253,6 +253,38 @@ a model's own reach by withholding a command (PRO-0023). And the takeover overla
 signals mechanism rather than consequence, so an all-accessibility run can delete a
 file through `AXPress` in silence (PRO-0026 finding 10). Both are recorded here and
 carried to the reader rather than specced.
+
+## Wave 7 (2026-08-15) — Cua underneath, Proctor on top
+
+**The pivot.** `docs/research/2026-08-15-dossier-proctor-vs-cua.md` is the evidence and
+`docs/features-to-triage/00-WAVE-7-DIRECTION.md` is the architecture every item inherits.
+Actuation goes to Cua Driver. Proctor keeps observation (its own capture path, because
+Cua's screenshots carry no frame status), the verdict layer (assertions, audit, fidelity,
+determinism) and the whole supervised-run surface the reader asked to keep working. iOS
+arrives as a second driver lane: deep links plus Maestro, following the lane
+`acceptance-e2e` already documents.
+
+**Retired rather than built**, with the reasoning kept in each brief: PRO-0031 (folded
+into PRO-0050), PRO-0034 (scroll units, in code Cua replaces), PRO-0039 (page-scoped
+refusal, whose question changed shape underneath it).
+
+| Id | Item | Brief | Stage | Status |
+|---|---|---|---|---|
+| PRO-0043 | The build-identity tests fail on a moving HEAD | `44-…` | 1 | **QUEUED** |
+| PRO-0044 | **Cua becomes the actuation backend** | `45-…` | 1 | **QUEUED** |
+| PRO-0047 | The run has a history you can read | `48-…` | 1 | **QUEUED** |
+| PRO-0041 | doctor can hang on the Screen Recording probe | `42-…` | 1 | **QUEUED** (carried) |
+| PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **QUEUED** (carried) |
+| PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **QUEUED** · after PRO-0044 |
+| PRO-0046 | Supervision survives delegation | `47-…` | 2 | **QUEUED** · after PRO-0044 |
+| PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **QUEUED** |
+| PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **QUEUED** · absorbs PRO-0031 |
+| PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **QUEUED** · after PRO-0048 |
+| PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **QUEUED** · after PRO-0044 |
+| PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **QUEUED** (carried, revised) |
+| PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **QUEUED** (carried, revised) |
+| PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **QUEUED** · after PRO-0050 |
+| PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
 - 2026-08-15 **Stage 1 CLOSED. PRO-0037 merged `f2221f6`, PRO-0032 merged `06259b6`.**

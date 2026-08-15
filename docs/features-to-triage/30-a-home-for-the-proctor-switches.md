@@ -1,3 +1,5 @@
+> **REVISED for wave 7, 2026-08-15.** Still wanted, and the switch list changes. The UI switches (`PROCTOR_CURSOR`, `PROCTOR_HUD`, `PROCTOR_YIELD`, `PROCTOR_YIELD_INPUT`, `PROCTOR_TAKEOVER_INPUT`) survive because the supervision surface survives. `PROCTOR_SECOND_LANE` may not, since brief 45 hands browser work to Cua. Read `00-WAVE-7-DIRECTION.md` and enumerate the switches that actually exist when this is built rather than trusting the list below.
+
 # A home for the PROCTOR_* switches
 
 ## The problem

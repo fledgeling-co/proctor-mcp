@@ -49,3 +49,13 @@
 | PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | 2026-08-15 | Triaged |
 | PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | 2026-08-15 | Triaged |
 | PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | 2026-08-15 | Merged |
+| PRO-0043 | The build-identity tests fail on a moving HEAD | 2026-08-15 | Triaged |
+| PRO-0044 | Cua becomes the actuation backend | 2026-08-15 | Triaged |
+| PRO-0045 | A delegated call is still gated and recorded | 2026-08-15 | Triaged |
+| PRO-0046 | Supervision survives delegation | 2026-08-15 | Triaged |
+| PRO-0047 | The run has a history you can read | 2026-08-15 | Triaged |
+| PRO-0048 | Drive iOS through deep links | 2026-08-15 | Triaged |
+| PRO-0049 | Run Maestro flows as Proctor flows | 2026-08-15 | Triaged |
+| PRO-0050 | Doctor knows the whole toolchain | 2026-08-15 | Triaged |
+| PRO-0051 | Decide what happens to the native planes | 2026-08-15 | Triaged |
+| PRO-0052 | The proctor skill tracks what actually shipped | 2026-08-15 | Triaged |

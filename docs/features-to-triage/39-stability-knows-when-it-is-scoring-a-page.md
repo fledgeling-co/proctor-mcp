@@ -1,3 +1,5 @@
+> **REVISED for wave 7, 2026-08-15.** Still wanted and more central than when it was written: determinism scoring is the capability this repo is pivoting towards, and nothing else on this platform packages it. Its browser half changes, because a page driven by Cua over CDP is executed rather than handed off. Brief 50 raises the same question for a Maestro flow, and the two should share an answer about what a score means when Proctor did not run the steps itself.
+
 # Stability knows when it is scoring a page
 
 ## The problem

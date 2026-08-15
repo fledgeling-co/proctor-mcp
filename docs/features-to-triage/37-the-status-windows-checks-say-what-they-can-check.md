@@ -1,3 +1,5 @@
+> **REVISED for wave 7, 2026-08-15.** Still wanted, and now larger. The window will also be reporting on `cua-driver`, `xcrun simctl` and `maestro`, so the rule this brief is about (a check must say what it can actually establish) applies to more rows than it did. Sequence after brief 51, which decides what the health report knows.
+
 # The status window's checks say what they can check
 
 ## The problem

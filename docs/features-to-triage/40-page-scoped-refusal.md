@@ -1,3 +1,7 @@
+> **RETIRED 2026-08-15 (PRO-0039), not built.** This is a policy rule refusing actuation into browser page content, written when Proctor performed that actuation and only recommended a browser tool. Cua binds a native window to its tab and drives it over CDP, so the shape of the question changed underneath the brief. A refusal rule may still be wanted over delegated calls; it should be re-derived from the new architecture in a later wave rather than ported.
+>
+> Kept for the reasoning, not as a plan. See `00-WAVE-7-DIRECTION.md`.
+
 # Page-scoped refusal
 
 ## The problem
