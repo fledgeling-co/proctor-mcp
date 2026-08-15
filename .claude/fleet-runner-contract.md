@@ -112,6 +112,13 @@ specs — read them before proposing a look. Two that recur:
 
 - **STOP BEFORE MERGE.** Run every stage through green, commit on the branch, but do not
   rebase-merge-push-clean. The orchestrator serializes finalization.
+- **Do not rebase your branch at all. The orchestrator does that.** Measured on 2026-08-16: a
+  runner ran a rebase that replayed **55 of `main`'s commits onto its own stale base** instead
+  of moving its branch onto `main`, rewriting the whole wave's history on its branch and
+  destroying its own uncommitted work in the process. Nothing was recoverable and the item was
+  re-run from scratch. Your branch being behind `main` is expected and is not your problem to
+  solve; say so in your report and stop. If you believe you need something that only exists on
+  a newer `main`, name the commit in your report rather than reaching for it.
 - **NEVER pass `-c user.email` or `-c user.name` to git.** The repo's identity is configured;
   overriding it rewrites the commit AUTHOR. Attribution belongs in the `Co-Authored-By`
   trailer, which is a message field and gates nothing.
