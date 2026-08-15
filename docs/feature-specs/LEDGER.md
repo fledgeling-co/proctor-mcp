@@ -50,7 +50,7 @@
 | PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | 2026-08-15 | Merged `0545219` |
 | PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | 2026-08-15 | Merged |
 | PRO-0043 | The build-identity tests fail on a moving HEAD | 2026-08-15 | Merged `d4a1565` |
-| PRO-0044 | Cua becomes the actuation backend | 2026-08-15 | Triaged |
+| PRO-0044 | Cua becomes the actuation backend | 2026-08-15 | Merged `d65dc1e` |
 | PRO-0045 | A delegated call is still gated and recorded | 2026-08-15 | Triaged |
 | PRO-0046 | Supervision survives delegation | 2026-08-15 | Triaged |
 | PRO-0047 | The run has a history you can read | 2026-08-15 | Merged `9756282` |

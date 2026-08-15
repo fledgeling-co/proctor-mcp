@@ -288,13 +288,13 @@ refusal, whose question changed shape underneath it).
 | Id | Item | Brief | Stage | Status |
 |---|---|---|---|---|
 | PRO-0043 | The build-identity tests fail on a moving HEAD | `44-…` | 1 | **MERGED** `d4a1565` |
-| PRO-0044 | **Cua becomes the actuation backend** | `45-…` | 1 | **RUNNING** `wf_91f604bd-42f` |
+| PRO-0044 | **Cua becomes the actuation backend** | `45-…` | 1 | **MERGED** `d65dc1e` |
 | PRO-0047 | The run has a history you can read | `48-…` | 1 | **MERGED** `9756282` |
 | PRO-0041 | doctor can hang on the Screen Recording probe | `42-…` | 1 | **MERGED** `0545219` |
 | PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **MERGED** `091d6c3` (carried) |
 | PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **MERGED** `8d2fde6` |
 | PRO-0053 | `TakeoverWiringTests` reddens the gate at random | `54-…` | 2 | **RUNNING** `wf_f2c15073-ba7` · found mid-fleet |
-| PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **QUEUED** · after PRO-0044 |
+| PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **RUNNING** `wf_e1399c64-3e2` |
 | PRO-0046 | Supervision survives delegation | `47-…` | 2 | **QUEUED** · after PRO-0044 |
 | PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **RUNNING** `wf_4005fecb-626` · absorbs PRO-0031 |
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **QUEUED** · after PRO-0048 |
@@ -305,6 +305,40 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0044 merged `d65dc1e`. The pivot's centre is in.** 1043 -> **1101 tests in
+  118 suites**. Actuation now sits behind an injected `ActuationBackend`, with
+  `CuaActuationBackend` beside `NativeActuationBackend`; observation stays in Proctor.
+  - **It is a seam, not a rewrite, and that is checkable rather than asserted.**
+    `Sources/ProctorAgent/AX/Actuator.swift` has **no diff** on the branch, and every
+    existing test passed with no edit to any `Session(...)` construction.
+  - **The gates caught four contract-level errors, one of which would have gutted the
+    feature.** `Session.refusal` refuses `click`/`key`/`hover`/`dragPath` whenever
+    `foreground: false` — a fact about *Proctor's* actuator, not about clicking. Left
+    untouched it would have shipped a Cua lane whose **background clicks were unreachable**,
+    which is most of the reason to adopt Cua. The kind→plane prediction is now a question
+    asked of the backend.
+  - **A withdrawn argument, recorded as withdrawn.** The transport choice rested on spawn
+    variance entering the determinism score; `StabilityScore.fold` folds state hashes and
+    never time. Restated as a cost claim with the reversal threshold written down.
+  - **`AXIdentifier` does not exist on Cua's side**, so the "most durable key" cascade
+    collapsed to matching on a rectangle, which is coordinate addressing wearing a hat.
+    Rebuilt on the `(role, label)` ancestor chain, with a two-observer agreement check
+    before the strike, because a stale-token retry protects the second attempt only and a
+    tree mutating under a still-current snapshot raises no error at all.
+  - **Two defects its own tests caught:** the version gate admitted `0.14.0-nightly`, since
+    semver sorts a pre-release below its release so `< 0.14.0` matched a build of 0.14; and
+    a no-op step counted itself completed while letting the batch continue.
+  - **`cua-driver` is not installed and was not installed.** The lane is proved behind
+    `FakeCuaTransport`, and the spec carries an ordered first-contact checklist of what could
+    not be measured live.
+  - **Orchestrator note — the rebase was a real semantic merge**, not a textual one.
+    `Session.swift` was additive (both sides added an init parameter). `SessionAct.swift` was
+    not: PRO-0044's no-op verdict had to be combined with PRO-0047's enriched `auditStep`
+    call, keeping the verdict's `ok:`/`reason:` and gaining `seq`/`ms`/`plane`/`node`.
+  - **Child work found:** Cua's CDP browser lane may reverse PRO-0020's conclusion; a Maestro
+    flow binds at flow level and does not fit this step-level seam, which **PRO-0049 should
+    know before assuming otherwise**; two concurrent sessions would share one driver's
+    snapshot map.
 - 2026-08-15 **PRO-0048 merged `8d2fde6`.** 1015 -> **1043 tests in 113 suites**. The iOS
   lane exists.
   - **An iOS target is a new handle kind on a new tool** (`proctor_ios`, actions
