@@ -9,6 +9,7 @@
     --bg: #fbfbfa; --panel: #ffffff; --line: #e4e2dd; --ink: #17181b;
     --ink2: #5c5f66; --ink3: #8a8d94;
     --merged: #16a34a; --running: #e24a18; --queued: #b45309; --blocked: #8a8d94;
+    --retired: #8a8d94;
     --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.05);
   }
   @media (prefers-color-scheme: dark) {
@@ -16,6 +17,7 @@
       --bg: #131417; --panel: #191a1e; --line: #2a2c31; --ink: #f2f2f3;
       --ink2: #a3a6ad; --ink3: #70737a;
       --merged: #4ade80; --running: #ff6a3d; --queued: #fbbf24; --blocked: #70737a;
+      --retired: #70737a;
       --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.35);
     }
   }
@@ -23,6 +25,7 @@
     --bg: #131417; --panel: #191a1e; --line: #2a2c31; --ink: #f2f2f3;
     --ink2: #a3a6ad; --ink3: #70737a;
     --merged: #4ade80; --running: #ff6a3d; --queued: #fbbf24; --blocked: #70737a;
+    --retired: #70737a;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.35);
   }
   * { box-sizing: border-box; }
@@ -61,6 +64,8 @@
   .card.merged::before { background: var(--merged); }
   .card.running::before { background: var(--running); }
   .card.queued::before { background: var(--queued); }
+  .card.retired { opacity: .62; }
+  .card.retired::before { background: var(--retired); }
 
   .id { font: 600 11px/1 ui-monospace, "SF Mono", Menlo, monospace;
         letter-spacing: .04em; color: var(--ink3); }
@@ -83,132 +88,213 @@
 <body>
 <div class="wrap">
 
-  <h1>Proctor — the fleet, closed</h1>
+  <h1>Proctor — wave 7, Cua underneath</h1>
   <p class="sub">Companion to <code>ORCHESTRATOR.md</code>, which is the authority. This is the shape; that file is the state.</p>
-  <p class="gate"><b>692</b> tests in <b>84</b> suites green on local <code>main</code> @ <b>6dc6928</b> · 19 tools · <b>28</b> items, all merged · backlog empty</p>
+  <p class="gate"><b>937</b> tests in <b>105</b> suites green on local <code>main</code> @ <b>ca42b3e</b> · gate runs <b>unskipped</b> for the first time since wave 5 · <b>44</b> merged · 3 running · 10 queued</p>
 
   <div class="key">
     <span><i class="dot" style="background:var(--merged)"></i> Merged</span>
     <span><i class="dot" style="background:var(--running)"></i> Running</span>
     <span><i class="dot" style="background:var(--queued)"></i> Queued</span>
-    <span><i class="dot" style="background:var(--blocked)"></i> Blocked on a dependency</span>
+    <span><i class="dot" style="background:var(--retired)"></i> Retired, with the reasoning kept</span>
   </div>
 
   <section class="wave">
-    <h2>Waves 1–3 <em>17 features — 173 → 387 tests</em></h2>
+    <h2>Waves 1–5 <em>28 items, closed — 173 → 692 tests</em></h2>
     <div class="row">
       <div class="card merged">
-        <div class="id">PRO-0001 … PRO-0010</div>
-        <div class="title">The tool surface</div>
-        <div class="meta">CUA façade, set-of-marks, menu key-equivalents, scripting dictionary, audit + policy gate, capture normalisation, zoom, MCP surface, kill + fs jail, pointer overlay.</div>
+        <div class="id">PRO-0001 … PRO-0013</div>
+        <div class="title">The tool surface, and the security follow-ups</div>
+        <div class="meta">CUA façade, set-of-marks, menu key-equivalents, scripting dictionary, capture normalisation, zoom, kill and fs jail, pointer overlay; then determinism behind the same policy gate as a live drive, and the audit trail sealed at rest with no recovery copy, by explicit choice.</div>
       </div>
       <div class="card merged">
-        <div class="id">PRO-0011 · PRO-0012 · PRO-0013</div>
-        <div class="title">Determinism and the security follow-ups</div>
-        <div class="meta">Per-step frames on the sweep; replay and stability behind the same policy gate as a live drive; the audit trail sealed at rest with no recovery copy, by explicit choice.</div>
+        <div class="id">PRO-0014 … PRO-0022</div>
+        <div class="title">The run becomes legible while it happens</div>
+        <div class="meta">Derived step descriptions, the HUD panel with Pause and Stop, the three-lane scheduler, the character sprite, foreground disclosure, the Obscura recommendation, the menu bar switch, and yielding when a person takes the machine back.</div>
       </div>
       <div class="card merged">
-        <div class="id">PRO-0014 … PRO-0017</div>
-        <div class="title">The run HUD line</div>
-        <div class="meta">Derived step descriptions, the panel with Pause and Stop, the three-lane multi-session scheduler, the character sprite.</div>
-      </div>
-      <div class="card merged">
-        <div class="id">PRO-0022</div>
-        <div class="title">A drawing fault must not kill the agent</div>
-        <div class="meta">Built ahead of the fleet: a HUD drawing exception was aborting the agent mid-session, taking the run and the MCP server with it.</div>
-        <div class="dep"><b>Merged</b> <code>b4a29e5</code></div>
+        <div class="id">PRO-0023 … PRO-0028</div>
+        <div class="title">Two lanes, one takeover, one deletion</div>
+        <div class="meta">Proctor detects and asks but never installs; browser-use ships off behind an explicit switch; the takeover overlay swallows only what Proctor itself posted; and Re-check now was deleted rather than relabelled, because macOS caches that answer for the process's life.</div>
       </div>
     </div>
   </section>
 
   <section class="wave">
-    <h2>Wave 4 <em>four items — the run becomes legible while it happens · 387 → 495 tests</em></h2>
+    <h2>Wave 6 <em>the deferred children, promoted — 692 → 881 tests</em></h2>
     <div class="row">
       <div class="card merged">
-        <div class="id">PRO-0019</div>
-        <div class="title">A foreground-only run is obvious before it takes the machine</div>
-        <div class="meta">Disclosure, not a change to the planes. Said before the run takes the foreground, and somewhere that does not depend on which display the panel landed on.</div>
-        <div class="dep"><b>Merged</b> <code>619bb30</code></div>
+        <div class="id">PRO-0030</div>
+        <div class="title">The build says which build it is</div>
+        <div class="meta">Five fields chosen so a reader can tell two builds apart, generated by a SwiftPM build-tool plugin.</div>
+        <div class="dep"><b>Merged</b> <code>65f61c3</code></div>
       </div>
       <div class="card merged">
-        <div class="id">PRO-0020</div>
-        <div class="title">Route browser work to Obscura</div>
-        <div class="meta">A page driven through AX gives up the DOM, the console and a durable selector for a flattened tree and coordinates. Recommendation only: Proctor never proxies steps through a tool driving its own engine.</div>
-        <div class="dep"><b>Merged</b> <code>3a3bb5f</code></div>
+        <div class="id">PRO-0032</div>
+        <div class="title">The audit trail is signed, and records what Proctor recommended</div>
+        <div class="meta">Sealing proved the trail was unread; signing proves it was unaltered. The recommendation is recorded because a lane Proctor suggested and a lane it drove are different claims.</div>
+        <div class="dep"><b>Merged</b> <code>06259b6</code></div>
       </div>
       <div class="card merged">
-        <div class="id">PRO-0021</div>
-        <div class="title">Menu bar switch, and the icon as the character</div>
-        <div class="meta">Reach, for when the panel lands on a display nobody is looking at. Template rendering would have discarded the character's colour, so the icon carries it.</div>
-        <div class="dep"><b>Merged</b> <code>58b3ce4</code></div>
+        <div class="id">PRO-0033</div>
+        <div class="title">A person's click reaches Stop</div>
+        <div class="meta">On the first press, through Proctor's own event tap. The discrimination rule is "only what Proctor posted", never <code>pid != 0</code>, which passes a person's own keystrokes on any Mac running Karabiner.</div>
+        <div class="dep"><b>Merged</b> <code>dc48889</code></div>
       </div>
       <div class="card merged">
-        <div class="id">PRO-0018</div>
-        <div class="title">Yield when a person takes the machine back</div>
-        <div class="meta">Hold the run when a person's own input arrives against it, and ask rather than only pausing. The whole feature is signal quality: Proctor's own synthetic events must never read as the person's.</div>
-        <div class="dep"><b>Merged</b> <code>435e1da</code> · after PRO-0019</div>
+        <div class="id">PRO-0035</div>
+        <div class="title">The browser catalogue stops guessing</div>
+        <div class="meta">Probing the engine from the app bundle was rejected on evidence: Vivaldi, Opera and Arc name their frameworks after themselves, and measuring would demote three browsers the table gets right.</div>
+        <div class="dep"><b>Merged</b> <code>c30b3c9</code></div>
+      </div>
+      <div class="card merged">
+        <div class="id">PRO-0037</div>
+        <div class="title">A hold names whose run it is</div>
+        <div class="meta">Shipped more than the brief: a single <code>yieldOwner</code> is retargeted by a second yield, so the first run's park evaporates and it carries on posting into the person it had just got out of the way of.</div>
+        <div class="dep"><b>Merged</b> <code>f2221f6</code></div>
+      </div>
+      <div class="card merged">
+        <div class="id">PRO-0042</div>
+        <div class="title">Backfill: <code>horizontalAlignment</code></div>
+        <div class="meta">Ratifies a stray commit that reached main with no spec, plan or tests, and reverses five of its six silent decisions. Tolerance unified at 1.0, because 8.0 was too loose to be strict and too tight to rescue a window fallback.</div>
+        <div class="dep"><b>Merged</b> <code>8fdddbc</code></div>
+      </div>
+      <div class="card retired">
+        <div class="id">PRO-0031 · PRO-0034 · PRO-0039</div>
+        <div class="title">Retired by the pivot, reasoning kept in each brief</div>
+        <div class="meta">The health report is absorbed by PRO-0050; scroll units live in the code Cua replaces; page-scoped refusal had its question change shape underneath it.</div>
       </div>
     </div>
   </section>
 
   <section class="wave">
-    <h2>Wave 5 · stage 1 <em>three concurrent · 495 → 610 tests</em></h2>
+    <h2>Wave 7 · stage 1 <em>Cua underneath, Proctor on top — 881 → 937 tests</em></h2>
     <div class="row">
       <div class="card merged">
-        <div class="id">PRO-0025</div>
-        <div class="title">Prefer the background, pointer in the target's plane</div>
-        <div class="meta">Take the background route wherever one exists, and draw the pointer in the target window's own z-order so a window above it covers the pointer rather than the pointer lying about being on top.</div>
-        <div class="dep"><b>Merged</b> <code>84062fa</code></div>
+        <div class="id">PRO-0043</div>
+        <div class="title">The build-identity tests fail on a moving HEAD</div>
+        <div class="meta">They tested the plugin's cache rather than the feature. The brief's diagnosis was wrong in a way that changed the fix: the prebuild command does not run at all when llbuild deems the plan up to date, so there were no inputs to declare.</div>
+        <div class="dep"><b>Merged</b> <code>d4a1565</code></div>
       </div>
       <div class="card merged">
-        <div class="id">PRO-0023</div>
-        <div class="title">Offer to install Obscura when it is missing</div>
-        <div class="meta">Proctor detects, explains and asks; it never installs. Tool results carry no command text at all, because a command in a tool result is an action surface for a model holding a shell.</div>
-        <div class="dep"><b>Merged</b> <code>f77df6c</code></div>
+        <div class="id">PRO-0041</div>
+        <div class="title">doctor can hang forever on the Screen Recording probe</div>
+        <div class="meta">Bounded at 1.5s, reporting <code>unconfirmed</code> rather than the safe lie of <code>denied</code>. A structured <code>withTaskGroup</code> race does not bound it: the group awaits its children and cannot cancel a task parked in a non-cancellable continuation.</div>
+        <div class="dep"><b>Merged</b> <code>0545219</code> · retires the two gate skips</div>
       </div>
-      <div class="card merged">
-        <div class="id">PRO-0027</div>
-        <div class="title">The menu bar shows the character when idle</div>
-        <div class="meta">One ladder for the icon: unreachable, not ready, taking the foreground, then the character's own phase. 22pt, because at 18pt the screen glyph collapses and blocked and acting become the same solid block.</div>
-        <div class="dep"><b>Merged</b> <code>c94799b</code></div>
+      <div class="card running">
+        <div class="id">PRO-0044</div>
+        <div class="title">Cua becomes the actuation backend</div>
+        <div class="meta">The largest item in the wave, and the seam four others build against. Transport, version pinning, how a Proctor selector becomes a Cua target when the snapshot moved underneath, and honest plane reporting.</div>
+        <div class="dep"><b>Running</b> <code>wf_91f604bd-42f</code></div>
+      </div>
+      <div class="card running">
+        <div class="id">PRO-0047</div>
+        <div class="title">The run has a history you can read</div>
+        <div class="meta">A second reader of a sealed trail, rendering attacker-controlled accessibility labels at list size rather than one line. Retention is a decision: an unbounded history is a surveillance artifact in someone's home directory.</div>
+        <div class="dep"><b>Running</b> <code>wf_69311365-f5a</code></div>
+      </div>
+      <div class="card running">
+        <div class="id">PRO-0040</div>
+        <div class="title"><code>open -a</code> cannot launch Proctor</div>
+        <div class="meta">The agent lives in <code>Contents/MacOS/</code> and inherits the bundle's identity, so LaunchServices activates a process with no UI and <code>open</code> exits 0. The fix changes the installed layout, and TCC grants key on the signature.</div>
+        <div class="dep"><b>Running</b> <code>wf_36f20bfb-1db</code></div>
       </div>
     </div>
   </section>
 
   <section class="wave">
-    <h2>Wave 5 · stage 2 <em>three dependents — the last of the backlog · 610 → 692 tests</em></h2>
+    <h2>Wave 7 · stage 2 <em>four items — what delegation costs</em></h2>
     <div class="row">
-      <div class="card merged">
-        <div class="id">PRO-0024</div>
-        <div class="title">A second browser lane for Obscura's limits</div>
-        <div class="meta">Detection <em>and</em> an explicit <code>PROCTOR_SECOND_LANE=browser-use</code>, defaulting to Obscura-only. Routing is on the URL's scheme alone, with a deny list, and it names which limit drove the choice.</div>
-        <div class="dep"><b>Merged</b> <code>4afc99c</code> · after PRO-0023</div>
+      <div class="card queued">
+        <div class="id">PRO-0045</div>
+        <div class="title">A delegated call is still gated and recorded</div>
+        <div class="meta">If actuation moves to a subprocess and the gate stays where it was, Proctor records intent rather than action: a weaker claim wearing the same words.</div>
+        <div class="dep"><b>Queued</b> · after PRO-0044</div>
       </div>
-      <div class="card merged">
-        <div class="id">PRO-0026</div>
-        <div class="title">Foreground takeover overlay</div>
-        <div class="meta">One tinted panel per display while a foreground step runs, proven not to reach a window-scoped capture. Input swallowing ships off by default behind <code>PROCTOR_TAKEOVER_INPUT</code>, passing only what Proctor itself posted.</div>
-        <div class="dep"><b>Merged</b> <code>f198936</code> · after PRO-0025</div>
+      <div class="card queued">
+        <div class="id">PRO-0046</div>
+        <div class="title">Supervision survives delegation</div>
+        <div class="meta">Stop must still stop. A delegated step is posted by another process, so "only what Proctor posted" no longer identifies the same set of events. This needs an answer, not an inheritance.</div>
+        <div class="dep"><b>Queued</b> · after PRO-0044</div>
       </div>
-      <div class="card merged">
-        <div class="id">PRO-0028</div>
-        <div class="title">Re-check now says what it checks</div>
-        <div class="meta">It could not: macOS caches the Screen Recording answer per process for that process's life, so the button asked a question it could never re-read. Deleted, and the slot now offers Start / Restart Agent.</div>
-        <div class="dep"><b>Merged</b> <code>6f696c6</code> · after PRO-0027</div>
+      <div class="card queued">
+        <div class="id">PRO-0048</div>
+        <div class="title">Drive iOS through deep links</div>
+        <div class="meta">A second driver lane, not a port. An iOS target is not a window and the Mac's accessibility API does not reach into the simulator.</div>
+        <div class="dep"><b>Queued</b></div>
+      </div>
+      <div class="card queued">
+        <div class="id">PRO-0050</div>
+        <div class="title">Doctor knows the whole toolchain</div>
+        <div class="meta">Two grants become a toolchain, and the report says which missing piece disables which lane. Absorbs PRO-0031.</div>
+        <div class="dep"><b>Queued</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wave">
+    <h2>Wave 7 · stage 3 <em>four items — the flows, and the planes' fate</em></h2>
+    <div class="row">
+      <div class="card queued">
+        <div class="id">PRO-0049</div>
+        <div class="title">Run Maestro flows as Proctor flows</div>
+        <div class="meta">A Maestro flow is a file executed by a separate binary rather than a step list Proctor drives call by call, so the honest reporting of what was proven differs too.</div>
+        <div class="dep"><b>Queued</b> · after PRO-0048</div>
+      </div>
+      <div class="card queued">
+        <div class="id">PRO-0051</div>
+        <div class="title">Decide what happens to the native planes</div>
+        <div class="meta">Deliberately deferred out of PRO-0044 so that item could land and be measured against the thing it replaces. A run that silently changes plane mid-flight makes a determinism score meaningless.</div>
+        <div class="dep"><b>Queued</b> · after PRO-0044</div>
+      </div>
+      <div class="card queued">
+        <div class="id">PRO-0029</div>
+        <div class="title">A home for the PROCTOR_* switches</div>
+        <div class="meta">Carried from wave 6 with the brief revised for the pivot.</div>
+        <div class="dep"><b>Queued</b></div>
+      </div>
+      <div class="card queued">
+        <div class="id">PRO-0038</div>
+        <div class="title">Stability knows when it is scoring a page</div>
+        <div class="meta">Carried from wave 6 with the brief revised for the pivot.</div>
+        <div class="dep"><b>Queued</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wave">
+    <h2>Wave 7 · stage 4 <em>two items — what the wave leaves behind</em></h2>
+    <div class="row">
+      <div class="card queued">
+        <div class="id">PRO-0036</div>
+        <div class="title">The status window's checks say what they can check</div>
+        <div class="meta">Follows the toolchain report into the window.</div>
+        <div class="dep"><b>Queued</b> · after PRO-0050</div>
+      </div>
+      <div class="card queued">
+        <div class="id">PRO-0052</div>
+        <div class="title">The proctor skill tracks what actually shipped</div>
+        <div class="meta">Sequenced last on purpose: a skill that promises tools a model then cannot call is worse than one that is a fortnight stale.</div>
+        <div class="dep"><b>Queued</b> · documents the whole wave</div>
       </div>
     </div>
   </section>
 
   <div class="note">
-    <h3>Four things the next fleet must not re-litigate</h3>
-    <p>An overlay panel sized to the union of the displays is a ~26-megapixel backing store that the window server accepts and reports <code>onscreen=1, alpha=1</code> while never presenting. One panel per screen, every time.</p>
-    <p><code>hud.onScreen</code> reports whether the panel was <em>built</em>, not whether it is presented. It is a belief. The window list is the instrument that works.</p>
-    <p>Place a panel from <code>visibleFrame</code>, never <code>frame</code>: an inset measured from the physical corner puts the panel's lower third behind the Dock.</p>
-    <p><code>swift test --filter</code> matches the Swift function name, not the <code>@Test</code> display string. A filter on the display string runs zero tests and reports green — read the <code>with N tests</code> count back before believing it.</p>
+    <h3>The split this wave assumes, and it is not negotiable in either direction</h3>
+    <p><b>Cua owns actuation.</b> Clicks, typing, keys, scrolling, drags, menus, window targeting. Proctor calls it rather than reimplementing it.</p>
+    <p><b>Proctor owns observation</b>, and this is the half a counter-review forced. Cua returns screenshots with no frame-status metadata, while Apple defines six <code>SCFrameStatus</code> values and makes checking them a precondition of trusting a frame. A verification layer needs at least one channel it can trust, so Proctor keeps its own capture path.</p>
+    <p><b>Proctor owns the verdict and the supervision:</b> assertions, the accessibility audit, fidelity, determinism, the tri-observer check; and the HUD, the character, the queue, Stop, the policy gate and the signed trail.</p>
 
-    <h3>Two decisions that were the reader's, and were made</h3>
-    <p>The sealed audit trail has no recovery copy: a lost keychain key means a permanently unreadable history, chosen deliberately over an export path that would weaken the guarantee sealing was for.</p>
-    <p>browser-use is off unless the operator turns it on, because installing a CLI is consent to have a file, not consent for an Accessibility-holding process to name that file to a model with a shell.</p>
+    <h3>Measurements the next fleet must not re-derive</h3>
+    <p>An overlay panel sized to the union of the displays is a ~26-megapixel backing store that the window server accepts and reports <code>onscreen=1, alpha=1</code> while never presenting. One panel per screen, every time.</p>
+    <p>A structured <code>withTaskGroup</code> race cannot bound a call parked in a non-cancellable continuation: the timer fires, the race resolves, and the group never returns because it awaits its children.</p>
+    <p><code>swift test --filter</code> matches the Swift function name, not the <code>@Test</code> display string. A filter on the display string runs zero tests and reports green.</p>
+    <p><code>hud.onScreen</code> reports whether the panel was <em>built</em>, not whether it is presented. It is a belief; the window list is the instrument.</p>
+
+    <h3>Known red that is nobody's regression</h3>
+    <p><code>TakeoverWiringTests.raisedAtTheRightStep</code> fails 8 runs out of 8 on a clean detached checkout of <code>da4f48f</code> when run beside <code>StopReachabilityWiringTests</code>, and surfaces in roughly 2 of 10 whole-suite runs. A pre-existing cross-suite interaction, awaiting its own item.</p>
   </div>
 
 </div>

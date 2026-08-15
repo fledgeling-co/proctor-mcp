@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 7 running.** 42 merged. The project pivots: Cua Driver takes actuation, Proctor keeps observation, the verdict layer and supervision, and gains an iOS lane.
-**Updated:** 2026-08-14 — wave 1+2 MERGED (10 features), wave 3 MERGED (7 features). **382 tests / 46 suites green on `main` @ 484e54e**, up from 173/24 at the start of the wave. No worktrees, no `ai/*` branches, clean tree, nothing pushed.
+**Status:** **Wave 7 running.** 44 merged. The project pivots: Cua Driver takes actuation, Proctor keeps observation, the verdict layer and supervision, and gains an iOS lane.
+**Updated:** 2026-08-15 — wave 7 stage 1 half landed. **937 tests / 105 suites green on local `main` @ `ca42b3e`**, and the gate runs **unskipped** for the first time since wave 5: PRO-0041 bounded the Screen Recording probe, so `--skip ObscuraPresenceWiringTests --skip BrowserLaneWiringTests` is retired. Three runners live, nothing pushed.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
 - **This repo DOES now have a git remote** (`origin` → github.com/fledgeling-co/proctor-mcp). The earlier "no git remote, main is LOCAL-ONLY" note is stale. Local `main` is **4 commits AHEAD** of `origin/main` and those commits carry unreviewed WIP: **merge to local `main` only, never push.**
@@ -237,14 +237,14 @@ logically, but several would collide in the same file if run together.
 | PRO-0033 | A person's click reaches Stop | `34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **MERGED** `dc48889` |
 | PRO-0035 | The browser catalogue stops guessing | `36-the-browser-catalogue-stops-guessing.md` | PRO-0024 PWA prefix · `chromiumFamily` drift · prose-only `why` | 1 | **MERGED** `c30b3c9` |
 | PRO-0037 | A hold names whose run it is | `38-a-hold-names-whose-run-it-is.md` | PRO-0018 unattributed hold · PRO-0016 `activate` takes no lane | 1 | **MERGED** `f2221f6` |
-| PRO-0029 | A home for the PROCTOR_* switches | `30-a-home-for-the-proctor-switches.md` | PRO-0026 env-var knob · PRO-0024 `PROCTOR_SECOND_LANE` control | 2 | **QUEUED** |
-| PRO-0031 | The health report is complete | `32-the-health-report-is-complete.md` | PRO-0005/0013 no `policy` block · PRO-0023/0024 `doctor.sh` | 2 | **QUEUED** |
-| PRO-0034 | Scroll moves by what was asked | `35-scroll-moves-by-what-was-asked.md` | PRO-0025 delta units · page action ordering | 2 | **QUEUED** |
-| PRO-0038 | Stability knows when it is scoring a page | `39-stability-knows-when-it-is-scoring-a-page.md` | PRO-0020 page churn · PRO-0024 unexecuted lane | 2 | **QUEUED** |
-| PRO-0036 | The status window's checks say what they can check | `37-the-status-windows-checks-say-what-they-can-check.md` | PRO-0028 three Re-check buttons · PRO-0023 Shortcuts row heading | 3 | **QUEUED** |
-| PRO-0039 | Page-scoped refusal | `40-page-scoped-refusal.md` | PRO-0020 refusal rule | 3 | **QUEUED** |
-| PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | `41-open-cannot-launch-proctor.md` | found 2026-08-15 during a reinstall, not a child | 3 | **QUEUED** |
-| PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | `42-doctor-can-hang-on-the-screen-recording-probe.md` | found 2026-08-15 gating PRO-0033, not a child | 3 | **QUEUED** |
+| PRO-0029 | A home for the PROCTOR_* switches | `30-a-home-for-the-proctor-switches.md` | PRO-0026 env-var knob · PRO-0024 `PROCTOR_SECOND_LANE` control | 2 | **CARRIED** → wave 7 stage 3, brief revised |
+| PRO-0031 | The health report is complete | `32-the-health-report-is-complete.md` | PRO-0005/0013 no `policy` block · PRO-0023/0024 `doctor.sh` | 2 | **RETIRED** → absorbed by PRO-0050 |
+| PRO-0034 | Scroll moves by what was asked | `35-scroll-moves-by-what-was-asked.md` | PRO-0025 delta units · page action ordering | 2 | **RETIRED** → the code it fixes is what Cua replaces |
+| PRO-0038 | Stability knows when it is scoring a page | `39-stability-knows-when-it-is-scoring-a-page.md` | PRO-0020 page churn · PRO-0024 unexecuted lane | 2 | **CARRIED** → wave 7 stage 3, brief revised |
+| PRO-0036 | The status window's checks say what they can check | `37-the-status-windows-checks-say-what-they-can-check.md` | PRO-0028 three Re-check buttons · PRO-0023 Shortcuts row heading | 3 | **CARRIED** → wave 7 stage 4, after PRO-0050 |
+| PRO-0039 | Page-scoped refusal | `40-page-scoped-refusal.md` | PRO-0020 refusal rule | 3 | **RETIRED** → its question changed shape underneath it |
+| PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | `41-open-cannot-launch-proctor.md` | found 2026-08-15 during a reinstall, not a child | 3 | **CARRIED** → wave 7 stage 1, RUNNING |
+| PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | `42-doctor-can-hang-on-the-screen-recording-probe.md` | found 2026-08-15 gating PRO-0033, not a child | 3 | **CARRIED** → wave 7 stage 1, **MERGED** `0545219` |
 | PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | `43-backfill-horizontal-alignment-assertion.md` | ratifies the stray commit `2b917ed` | 1 | **MERGED** `8fdddbc` |
 
 **Two children are not fleet items, because they are questions rather than work.**
