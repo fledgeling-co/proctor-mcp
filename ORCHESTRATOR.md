@@ -256,6 +256,23 @@ carried to the reader rather than specced.
 
 ## Wave 7 (2026-08-15) — Cua underneath, Proctor on top
 
+**Refill order as slots free** (the stages below are the DAG, not a barrier — an item starts
+when its own dependencies have merged, not when its stage-mates finish):
+
+1. **PRO-0048** (iOS deep links) — no dependency on PRO-0044, and mostly new files, so the
+   lowest contention of anything queued. Takes the first free slot.
+2. **PRO-0050** (doctor knows the toolchain) — also independent of PRO-0044. Second, not
+   first, because it reshapes `SessionDoctor.swift`, which PRO-0041 has just rewritten.
+3. **PRO-0045** and **PRO-0046** — held until PRO-0044 **merges**, since both are about what
+   delegation costs and neither can be specified against an unmerged seam.
+4. Then PRO-0049 (after PRO-0048), PRO-0051 (after PRO-0044), PRO-0029, PRO-0038.
+5. PRO-0036 (after PRO-0050) and PRO-0052 last, which documents the whole wave.
+
+**The cap stays at 3, and the reason is now measured rather than preference.** Two capacity
+failures on 2026-08-15: the gateway returned 503 `over_reserve` and killed all four stage-1
+runners at once, and `replayd` saturating machine-wide under fleet load is the wedge behind
+PRO-0041. Raising the cap trades a few hours of elapsed time for both of those getting worse.
+
 **The pivot.** `docs/research/2026-08-15-dossier-proctor-vs-cua.md` is the evidence and
 `docs/features-to-triage/00-WAVE-7-DIRECTION.md` is the architecture every item inherits.
 Actuation goes to Cua Driver. Proctor keeps observation (its own capture path, because
