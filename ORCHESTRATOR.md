@@ -235,7 +235,7 @@ logically, but several would collide in the same file if run together.
 | PRO-0030 | The build says which build it is | `31-the-build-says-which-build-it-is.md` | PRO-0027 staleness · PRO-0028 `agentVersion` | 1 | **MERGED** `65f61c3` |
 | PRO-0032 | The audit trail is signed, and records what Proctor recommended | `33-the-audit-trail-is-signed.md` | PRO-0013 unsigned · PRO-0024 lane recommendation | 1 | **QUEUED** |
 | PRO-0033 | A person's click reaches Stop | `34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **MERGED** `dc48889` |
-| PRO-0035 | The browser catalogue stops guessing | `36-the-browser-catalogue-stops-guessing.md` | PRO-0024 PWA prefix · `chromiumFamily` drift · prose-only `why` | 1 | **QUEUED** |
+| PRO-0035 | The browser catalogue stops guessing | `36-the-browser-catalogue-stops-guessing.md` | PRO-0024 PWA prefix · `chromiumFamily` drift · prose-only `why` | 1 | **MERGED** `c30b3c9` |
 | PRO-0037 | A hold names whose run it is | `38-a-hold-names-whose-run-it-is.md` | PRO-0018 unattributed hold · PRO-0016 `activate` takes no lane | 1 | **QUEUED** |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-a-home-for-the-proctor-switches.md` | PRO-0026 env-var knob · PRO-0024 `PROCTOR_SECOND_LANE` control | 2 | **QUEUED** |
 | PRO-0031 | The health report is complete | `32-the-health-report-is-complete.md` | PRO-0005/0013 no `policy` block · PRO-0023/0024 `doctor.sh` | 2 | **QUEUED** |
@@ -255,6 +255,37 @@ file through `AXPress` in silence (PRO-0026 finding 10). Both are recorded here 
 carried to the reader rather than specced.
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0035 merged `c30b3c9`.** 768/89 -> **787 tests in 92 suites**.
+  - **The PWA decision went to "an installed web app is an application Proctor drives", no browser
+    lane ever**, and the argument is a boundary this repo had already drawn: PRO-0020 declines to
+    route the web view inside an Electron app, and a Chrome-installed Slack is the same shape as the
+    Electron one. What made it decisive is that the recommendation being replaced was *confidently
+    useless* — handing the address to Obscura opens that site in a different engine with an empty
+    cookie jar, and a site is installed as an app precisely because somebody uses it signed in, so
+    the advice failed at a login wall. It still discloses, because the bundle id is Chrome-shaped
+    and silence would leave a model acting on that.
+  - **The runner refused to guess where it could not measure, twice.** It considered probing the
+    engine from the app bundle and rejected it with evidence: Chrome ships `Google Chrome
+    Framework.framework` and Safari ships no `Frameworks` directory (both verified on this machine),
+    but Vivaldi, Opera and Arc name theirs after themselves and none is installed to check, so
+    measuring would demote three browsers the table currently gets right. The spec says plainly that
+    deriving `chromiumFamily` removes the second fact and does **not** stop drift. It also states
+    that no web app is installed here, so all three bundle-id forms come from documentation.
+  - **The load-bearing evidence is a fence, not a claim:** 396 handoff outcomes from unchanged code
+    were recorded into a committed fixture *before any source edit* and kept green throughout. Because
+    the new tests were written after the source and passed first time, the runner mutated the
+    marker-scan floor to prove 3 of them fail.
+  - **Three grok gates, all three changed the design.** The spec review found that flags on named
+    lanes only left the one path acting in the user's live session carrying nothing, and that "a PWA
+    has no toolbar" is simply false (Safari web apps ship one). The plan review killed a table merge
+    that would have made `com.apple.Safari.SafeBrowsing.Service` identify as Safari. The completeness
+    critic caught that keying the accessibility warm-up on "is a web app" runs the *Chromium* AX dance
+    against a **WebKit** Safari web app. Two attempts returned nothing and hit the deadline, fixed by
+    inlining evidence and forbidding file reading, which is the failure mode the contract documents.
+  - **It independently reproduced PRO-0041 on unmodified `main`** (zero tests started after 20
+    minutes) and adds detail worth keeping: the `SCShareableContent` bridge is a checked continuation
+    with no timeout, and it leaks when the SCK daemon is saturated.
+
 - 2026-08-15 **PRO-0042 merged `8fdddbc`. The backfill did not ratify the code — it reversed five of
   the six decisions the stray commit took silently**, which is the whole reason a backfill gets a
   brief that says write the spec you would have written. 735/87 -> **768 tests in 89 suites**.
