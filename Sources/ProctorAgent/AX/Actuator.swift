@@ -687,6 +687,22 @@ enum Actuator {
         return CGPoint(x: frame.x + frame.w / 2, y: frame.y + frame.h / 2)
     }
 
+    /// The last thing between a step and the event stream, and therefore the one
+    /// place a step declares that it is about to enter it.
+    ///
+    /// Every synthetic route reaches its post through this guard: `type`'s
+    /// fallback, `scroll`'s fallback, `key`, `click`, `hover` and `dragPath`. It
+    /// is called after `activate(pid)` and after every accessibility route has
+    /// been tried and refused, so a declaration made here is the point of no
+    /// return — it cannot precede an accessibility success, and a step refused
+    /// for secure input throws above it and declares nothing.
+    ///
+    /// KEEP THE DECLARATION IN THIS GUARD rather than at the six post sites. A
+    /// new synthetic route that forgot to declare would also have forgotten the
+    /// secure-input check, which is the one nobody gets to forget; the two travel
+    /// together or neither does. What reads the declaration — the grace window,
+    /// the takeover statement, the input block and the panel's mouse gate — is in
+    /// `SyntheticPost`.
     private static func requireEventPlaneAvailable() throws {
         guard !Grants.secureEventInputActive() else {
             throw AgentError(code: .secureInputActive,
@@ -694,6 +710,7 @@ enum Actuator {
                              remedy: "Dismiss the password field that enabled it, or use an AX action, "
                                    + "which is not affected.")
         }
+        SyntheticPost.shared.declare()
     }
 
     private static func activate(_ pid: pid_t) throws {

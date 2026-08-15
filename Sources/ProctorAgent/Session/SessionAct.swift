@@ -192,6 +192,25 @@ extension Session {
         // statement starts down however the last run ended.
         takeoverShown = false
         takeoverBind()
+        // What the actuator says the moment it is about to enter the event
+        // stream, rather than what it reports when `perform` returns. Two
+        // consumers could not have known before this existed, and both were
+        // wrong about a `type` or `scroll` that fell back: the grace window,
+        // which without this never opened for a fallback post at all — so the
+        // application's echo of Proctor's own wheel event could read as a person
+        // and yield the run — and the statement on the screen, which went up
+        // only once the step had settled, claiming the machine after it was
+        // taken. It is called on the actuation thread with a post about to
+        // happen, so it touches only lock-guarded state and hands the drawing
+        // over without waiting for it.
+        let monitor = contentionMonitor
+        let driver = takeover
+        let declaredApp = app?.name
+        SyntheticPost.shared.onDeclare {
+            monitor.noteSyntheticPost()
+            driver.show(app: declaredApp)
+        }
+        defer { SyntheticPost.shared.onDeclare(nil) }
         var ending: RunHUDEnding = .completed
 
         for (index, step) in steps.enumerated() {
@@ -219,6 +238,18 @@ extension Session {
             // live line, the trail row and any refusal all name the same thing.
             let node = drawsHUD ? hudNode(for: step) : nil
             let synthetic = Self.isSynthetic(step)
+            // Whether this panel is standing where this step is about to post.
+            // The plane and the geometry together, which is the whole of
+            // PRO-0033: the gate exists because the window at a posted point
+            // wins, so a step posting anywhere else leaves Stop clickable
+            // throughout. A `type` or `scroll` picks its plane at the element,
+            // so it is taken as possible here and the pessimism is confined to
+            // the case where being wrong costs anything — the target lying under
+            // the panel.
+            let mayPost = synthetic || Self.conditionalKinds.contains(step.kind)
+            let stepsAside = mayPost && RunHUDGate.stepsAside(
+                points: gatePoints(for: step), panel: RunHUDGeometry.shared.panelFrame)
+            SyntheticPost.shared.beginStep()
 
             let refusal = Self.refusal(for: step, foreground: foreground)
             // The pointer travels before the clock starts, so the drawing does
@@ -226,10 +257,11 @@ extension Session {
             // that is actually going to run — animating toward something about
             // to be refused would show an action that never happened.
             if refusal == nil {
-                await hud(.stepApproaching(step: step, node: node, synthetic: synthetic))
+                await hud(.stepApproaching(step: step, node: node, synthetic: synthetic,
+                                           stepsAside: stepsAside))
                 // The statement goes up before the first event is posted, on
                 // every display, and stays up for the rest of the batch.
-                if synthetic { takeoverShow(app: app?.name) }
+                if synthetic || stepsAside { takeoverShow(app: app?.name) }
                 await showCursor(for: step, window: window)
             }
 
@@ -252,23 +284,35 @@ extension Session {
 
             let outcome: Actuation
             do {
-                await hud(.stepActing(step: step, node: node, synthetic: synthetic))
+                // Awaited, and that await is load-bearing rather than
+                // stylistic: it is the hop to the main actor that applies the
+                // panel's mouse gate, and it has to complete before the post
+                // below or the panel is still opaque when Proctor's own click
+                // arrives at it.
+                await hud(.stepActing(step: step, node: node, synthetic: synthetic,
+                                      stepsAside: stepsAside))
                 // The grace window has to be open BEFORE the post, not after it.
                 // An input monitor delivers asynchronously, so an event Proctor
                 // posts at T can be considered before `perform` returns; opening
                 // the window only afterwards would leave exactly that arrival
                 // looking like a person's. Marked again after the step, from the
                 // measured plane, to cover a late delivery.
-                if synthetic {
+                if synthetic || stepsAside {
                     noteSyntheticPost()
                     // Armed before the post and released after it, whatever the
-                    // step did — the same window `syntheticInFlight` covers. The
-                    // deadline that goes with it is enforced by the block's own
-                    // thread, so a throw between here and the release cannot
-                    // leave input held.
+                    // step did. Arming follows the GATE rather than the step's
+                    // kind, so the armed window is never narrower than the window
+                    // the panel is transparent for — a gate open wider than the
+                    // block is this feature's own hole in miniature, with the
+                    // panel letting a click through and nothing holding it.
                     takeoverArm(for: step)
                 }
-                defer { if synthetic { takeoverRelease(.stepEnded) } }
+                defer {
+                    if synthetic || stepsAside { takeoverRelease(.stepEnded) }
+                    // Closed however the step ended, including a throw between
+                    // the declaration and here.
+                    SyntheticPost.shared.endStep()
+                }
                 outcome = try ax.perform(step: step, window: window.id, foreground: foreground)
             } catch let error as AgentError {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
@@ -336,6 +380,7 @@ extension Session {
             // event stream arms the watch exactly as a click does, which is a
             // batch that turned out to contend and could not have been known to
             // in advance.
+            if SyntheticPost.shared.declaredThisStep { takeoverShown = true }
             if plane == .syntheticEvent {
                 // A `type` or `scroll` that fell back could not be known to need
                 // the front until now. The statement goes up late rather than

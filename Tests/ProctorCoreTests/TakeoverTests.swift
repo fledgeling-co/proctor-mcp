@@ -434,3 +434,169 @@ struct InputBlockTests {
         #expect(!InputBlock.isOurs(sourcePid: 0, userData: 0, ourPid: Self.ourPid))
     }
 }
+
+// MARK: - PRO-0033: the tap's route to Stop
+
+@Suite("The block's Stop route")
+struct InputBlockStopRouteTests {
+
+    private static let ourPid: Int64 = 4242
+    /// The run panel's Stop button, in the Quartz screen space the tap reports
+    /// `CGEvent.location` in.
+    private static let stop = Rect(x: 1600, y: 1040, w: 64, h: 28)
+
+    private func at(_ x: Double, _ y: Double) -> RunHUDPlacement.Point {
+        RunHUDPlacement.Point(x: x, y: y)
+    }
+
+    private func person(_ gate: inout InputBlock.Gate, _ kind: InputEventKind,
+                        _ point: RunHUDPlacement.Point, postInFlight: Bool = false,
+                        stopRect: Rect? = InputBlockStopRouteTests.stop) -> InputBlockDecision {
+        gate.decide(kind: kind, sourcePid: 0, userData: 0, ourPid: Self.ourPid,
+                    button: 0, location: point, stopRect: stopRect,
+                    postInFlight: postInFlight)
+    }
+
+    // MARK: A8 — decided on the up, and no half of a gesture left behind
+
+    @Test("a person's press on Stop ends the run, and it is decided on the up")
+    func stopIsDecidedOnTheUp() {
+        // The down is swallowed rather than acted on, because stopping on the
+        // down tears the panel, the rectangle and the tap down while the button
+        // is still held — and the person's mouse-up then lands live in the
+        // application the run was driving. That is a forwarded click, which is
+        // the one thing this feature is not allowed to produce.
+        var gate = InputBlock.Gate()
+        #expect(person(&gate, .mouseDown, at(1620, 1050)) == .swallow)
+        #expect(person(&gate, .mouseUp, at(1620, 1050)) == .stopRun)
+    }
+
+    @Test("the up that stops the run is swallowed rather than delivered")
+    func theStoppingUpIsAlsoSwallowed() {
+        var gate = InputBlock.Gate()
+        _ = person(&gate, .mouseDown, at(1620, 1050))
+        #expect(!person(&gate, .mouseUp, at(1620, 1050)).delivers)
+    }
+
+    @Test("an up away from the button is a cancel, and is still swallowed")
+    func anUpOutsideTheRectDoesNotStop() {
+        // Moving off a button before releasing cancels it everywhere else on
+        // macOS. It must not reach the application either: the down was
+        // swallowed, so delivering the up alone leaves an application holding an
+        // up for something it never saw pressed.
+        var gate = InputBlock.Gate()
+        _ = person(&gate, .mouseDown, at(1620, 1050))
+        #expect(person(&gate, .mouseUp, at(400, 400)) == .swallow)
+    }
+
+    @Test("a click that never touched the button is swallowed, exactly as before")
+    func aClickElsewhereIsUnchanged() {
+        var gate = InputBlock.Gate()
+        #expect(person(&gate, .mouseDown, at(400, 400)) == .swallow)
+        #expect(person(&gate, .mouseUp, at(400, 400)) == .swallow)
+    }
+
+    // MARK: A8b — the up follows its own down
+
+    @Test("a post beginning mid-click does not lose the press")
+    func aPostBeginningMidClickDoesNotLoseThePress() {
+        // Somebody presses Stop; Proctor begins a post between their down and
+        // their up. Re-testing the rectangle at the up would find it suppressed
+        // by the in-flight rule, and the press would be swallowed and silently
+        // lost — they pressed Stop, watched the button go down, and the run
+        // carried on. The record made at the down is what decides it.
+        var gate = InputBlock.Gate()
+        #expect(person(&gate, .mouseDown, at(1620, 1050)) == .swallow)
+        #expect(person(&gate, .mouseUp, at(1620, 1050), postInFlight: true) == .stopRun)
+    }
+
+    @Test("a rectangle that arrives between the down and the up cannot invent a press")
+    func aLateRectangleInventsNothing() {
+        var gate = InputBlock.Gate()
+        #expect(person(&gate, .mouseDown, at(1620, 1050), stopRect: nil) == .swallow)
+        #expect(person(&gate, .mouseUp, at(1620, 1050)) == .swallow)
+    }
+
+    // MARK: A9 — Proctor's own click can never press Stop
+
+    @Test("the rectangle is not consulted at all while one of our posts is in flight")
+    func aPostInFlightIgnoresTheStopRect() {
+        // The structural half of the invariant. Proctor's own click happens
+        // inside its own declared post, so this holds even if both source fields
+        // were lost in transit — which is the right footing for a kill switch,
+        // where an identity check alone is not.
+        var gate = InputBlock.Gate()
+        #expect(person(&gate, .mouseDown, at(1620, 1050), postInFlight: true) == .swallow)
+        #expect(person(&gate, .mouseUp, at(1620, 1050), postInFlight: true) == .swallow)
+    }
+
+    @Test("our own click passes and is never read as a press")
+    func oursIsTestedBeforeTheRect() {
+        // The identity half. Ours passes before anything else is considered, so
+        // a synthetic click posted at the panel's Stop button goes through to
+        // whatever is under it rather than halting the run that posted it —
+        // PRO-0015's invariant, unchanged.
+        var gate = InputBlock.Gate()
+        let down = gate.decide(kind: .mouseDown, sourcePid: Self.ourPid,
+                               userData: ProctorEventTag.value, ourPid: Self.ourPid,
+                               button: 0, location: at(1620, 1050), stopRect: Self.stop,
+                               postInFlight: false)
+        let up = gate.decide(kind: .mouseUp, sourcePid: Self.ourPid,
+                             userData: ProctorEventTag.value, ourPid: Self.ourPid,
+                             button: 0, location: at(1620, 1050), stopRect: Self.stop,
+                             postInFlight: false)
+        #expect(down == .pass)
+        #expect(up == .pass)
+    }
+
+    @Test("either source field alone is enough for our own click to pass")
+    func eitherFieldIsEnoughAtTheRect() {
+        var gate = InputBlock.Gate()
+        #expect(gate.decide(kind: .mouseDown, sourcePid: 0, userData: ProctorEventTag.value,
+                            ourPid: Self.ourPid, button: 0, location: at(1620, 1050),
+                            stopRect: Self.stop) == .pass)
+        #expect(gate.decide(kind: .mouseDown, sourcePid: Self.ourPid, userData: 0,
+                            ourPid: Self.ourPid, button: 0, location: at(1620, 1050),
+                            stopRect: Self.stop) == .pass)
+    }
+
+    // MARK: The pair rule still holds
+
+    @Test("a reset forgets a pending press, so nothing carries into the next run")
+    func resetForgetsThePendingPress() {
+        var gate = InputBlock.Gate()
+        _ = person(&gate, .mouseDown, at(1620, 1050))
+        gate.reset()
+        // The down is gone with the reset, so the up was never paired and passes
+        // — the same answer the pair rule already gives for an up whose down was
+        // never swallowed.
+        #expect(person(&gate, .mouseUp, at(1620, 1050)) == .pass)
+    }
+
+    @Test("a second button's press is tracked separately")
+    func trackingIsPerButtonAtTheRect() {
+        var gate = InputBlock.Gate()
+        #expect(gate.decide(kind: .mouseDown, sourcePid: 0, userData: 0, ourPid: Self.ourPid,
+                            button: 0, location: at(1620, 1050),
+                            stopRect: Self.stop) == .swallow)
+        #expect(gate.decide(kind: .mouseDown, sourcePid: 0, userData: 0, ourPid: Self.ourPid,
+                            button: 1, location: at(400, 400),
+                            stopRect: Self.stop) == .swallow)
+        #expect(gate.decide(kind: .mouseUp, sourcePid: 0, userData: 0, ourPid: Self.ourPid,
+                            button: 1, location: at(400, 400),
+                            stopRect: Self.stop) == .swallow)
+        #expect(gate.decide(kind: .mouseUp, sourcePid: 0, userData: 0, ourPid: Self.ourPid,
+                            button: 0, location: at(1620, 1050),
+                            stopRect: Self.stop) == .stopRun)
+    }
+
+    @Test("with no rectangle published nothing can stop the run by mouse")
+    func noRectangleNoStop() {
+        // The panel is hidden, was taken down after a drawing fault, or the run
+        // ended. A rectangle that outlived the panel would let a click on empty
+        // screen stop a run.
+        var gate = InputBlock.Gate()
+        #expect(person(&gate, .mouseDown, at(1620, 1050), stopRect: nil) == .swallow)
+        #expect(person(&gate, .mouseUp, at(1620, 1050), stopRect: nil) == .swallow)
+    }
+}

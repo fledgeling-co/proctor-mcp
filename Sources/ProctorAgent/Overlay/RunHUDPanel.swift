@@ -248,6 +248,7 @@ final class RunHUDPanel {
             clockTimer?.invalidate(); clockTimer = nil
             linger?.cancel(); linger = nil
             panel?.orderOut(nil)
+            RunHUDGeometry.shared.clear()
             RunHUDAvailability.shared.record(
                 built: false,
                 reason: "a person hid the run panel from Proctor's menu bar. Pause and Stop are "
@@ -446,7 +447,13 @@ final class RunHUDPanel {
         // only ever appeared during such a step; the row now also states what a
         // batch contains before it starts, so reading the text here would leave
         // Pause and Stop dead for the whole of any run holding a click.
-        panel.ignoresMouseEvents = feed.model.syntheticInFlight
+        // `stepsAside` is the plane AND the geometry: the step in flight is
+        // about to post an event, and it is about to post it where this panel is
+        // standing. It used to be `syntheticInFlight`, which is only the plane —
+        // so the panel went transparent for every synthetic step whether or not
+        // that step went anywhere near it, and a person's click on Stop passed
+        // through into the application under test for the whole of every one.
+        panel.ignoresMouseEvents = feed.model.stepsAside
 
         // The exception line adds a row, so the panel grows upward from its
         // bottom-docked corner: the footer stays where it is and Pause and Stop
@@ -457,6 +464,37 @@ final class RunHUDPanel {
                                   width: Self.width, height: wanted), display: true)
         }
         if !model.visible { hide() }
+        publishGeometry()
+    }
+
+    /// Push the panel's frame and its Stop control to the two readers that
+    /// cannot ask AppKit: the session, which decides before each step whether
+    /// this panel is standing where the step is about to post, and the event
+    /// tap's callback, which decides whether a click landed on Stop.
+    ///
+    /// Converted to Quartz screen space here, by the only party holding an
+    /// `NSScreen`, and against the PRIMARY screen's `maxY` for the whole
+    /// arrangement rather than the screen this panel happens to be on — a
+    /// per-screen flip puts the rectangle on a display above the menu bar at a
+    /// place nothing is drawn.
+    private func publishGeometry() {
+        guard let panel, panel.isVisible, feed.drawing,
+              let primaryMaxY = NSScreen.screens.first?.frame.maxY else {
+            RunHUDGeometry.shared.clear()
+            return
+        }
+        let frame = panel.frame
+        let appKit = Rect(x: Double(frame.minX), y: Double(frame.minY),
+                          w: Double(frame.width), h: Double(frame.height))
+        let stopAppKit = content?.stopRectInWindow.map {
+            Rect(x: Double(frame.minX + $0.minX), y: Double(frame.minY + $0.minY),
+                 w: Double($0.width), h: Double($0.height))
+        }
+        RunHUDGeometry.shared.publish(
+            panel: RunHUDPlacement.quartz(from: appKit, primaryMaxY: Double(primaryMaxY)),
+            stop: stopAppKit.map {
+                RunHUDPlacement.quartz(from: $0, primaryMaxY: Double(primaryMaxY))
+            })
     }
 
     private func height() -> CGFloat {
@@ -500,6 +538,7 @@ final class RunHUDPanel {
     /// drawn: a run with no stop button beats no run and no agent.
     func takeDownAfterDrawingFault() {
         drawingFaulted = true
+        RunHUDGeometry.shared.clear()
         clockTimer?.invalidate(); clockTimer = nil
         linger?.cancel(); linger = nil
         panel?.orderOut(nil)
@@ -512,6 +551,16 @@ final class RunHUDPanel {
     /// that moves, which is why it is also the only thing that setting gates.
     private func hide() {
         clockTimer?.invalidate(); clockTimer = nil
+        // The panel is going, so nothing may still be told where its Stop button
+        // is. A rectangle that outlived the panel would let a click on empty
+        // screen stop a run.
+        RunHUDGeometry.shared.clear()
+        // And it never goes away click-through. Every path through a run closes
+        // the gate, but a run killed between its last step and its end event
+        // reaches none of them — and a panel left transparent would pass every
+        // later click into whatever is underneath it. This is the belt at the
+        // one place AppKit knows the run is over.
+        panel?.ignoresMouseEvents = false
 
         RunHUDAvailability.shared.record(built: false, reason: nil)
         guard let panel else { return }
@@ -561,6 +610,7 @@ final class RunHUDPanel {
                              y: panel.frame.minY + delta.height)
         panel.setFrameOrigin(origin)
         draggedOrigin = origin
+        publishGeometry()
     }
 }
 
