@@ -226,10 +226,15 @@ final class ContentionMonitor: ContentionSampling, @unchecked Sendable {
         guard stamp - ownPidsAt >= 1 else { return ownPids }
         ownPidsAt = stamp
         var out: Set<Int32> = [ProcessInfo.processInfo.processIdentifier]
-        if let id = Bundle.main.bundleIdentifier {
-            for app in NSWorkspace.shared.runningApplications where app.bundleIdentifier == id {
-                out.insert(app.processIdentifier)
-            }
+        // Proctor's identity is named, not inferred. `Bundle.main.bundleIdentifier`
+        // used to work here only because the agent inherited the app's Info.plist;
+        // since PRO-0040 it carries its own, so reading it back would return the
+        // agent's identity, match no running application, and quietly drop the
+        // menu-bar app out of this set. The run would then hold itself again the
+        // moment somebody opened Proctor's menu to release it.
+        for app in NSWorkspace.shared.runningApplications
+        where Wire.isProctor(bundleIdentifier: app.bundleIdentifier) {
+            out.insert(app.processIdentifier)
         }
         ownPids = out
         return out

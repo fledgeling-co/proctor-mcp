@@ -26,6 +26,43 @@ public enum Wire {
     public static let agentLabel = "app.fledgeling.procter.agent"
     public static let protocolVersion = 1
 
+    /// The agent's own LaunchServices identity, since PRO-0040.
+    ///
+    /// The agent is a second Mach-O inside Proctor.app, so it used to inherit the
+    /// bundle's Info.plist and LaunchServices recorded it as a running instance of
+    /// the application. `open -a Proctor` then activated a process with no window,
+    /// exited 0, and showed nothing — which meant Proctor could not be opened at
+    /// all while its own agent was up, which is nearly always. The agent binary now
+    /// carries this identifier in a `__TEXT,__info_plist` section of its own, so
+    /// LaunchServices no longer confuses the two.
+    ///
+    /// THIS IS NOT THE SIGNING IDENTIFIER, and the difference is the whole design.
+    /// Every nested binary is still signed `-i app.fledgeling.procter`, because TCC
+    /// matches a process against the recorded designated requirement — which names
+    /// the signing identifier and the team, and contains no path and nothing drawn
+    /// from this plist. Keeping the signature identical is what lets the agent keep
+    /// Accessibility and Screen Recording across the upgrade instead of asking a
+    /// person for them again. `scripts/build-app.sh` fails the build if either half
+    /// of that ever stops being true.
+    ///
+    /// Deliberately the same string as `agentLabel`: launchd and LaunchServices
+    /// should not know the agent by two different names. `WireIdentityTests` pins
+    /// them together so an edit to one is caught rather than discovered.
+    public static let agentBundleIdentifier = bundleIdentifier + ".agent"
+
+    /// Whether a running application is one of Proctor's own.
+    ///
+    /// Read from these constants rather than from `Bundle.main.bundleIdentifier`:
+    /// inside the agent that now resolves to the agent's own identity, which matches
+    /// no running application, so inferring it would quietly stop recognising the
+    /// menu-bar app. That matters because somebody opening Proctor's own menu to
+    /// release a held run must not be read as a person taking the machine back — the
+    /// run would hold itself again on the way out.
+    public static func isProctor(bundleIdentifier id: String?) -> Bool {
+        guard let id else { return false }
+        return id == bundleIdentifier || id == agentBundleIdentifier
+    }
+
     /// Length-prefixed JSON framing: 4-byte big-endian byte count, then payload.
     /// Newline framing loses to embedded newlines in captured text; this does not.
     public static let maxFrameBytes = 64 * 1024 * 1024

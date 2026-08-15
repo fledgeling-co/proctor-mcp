@@ -115,6 +115,52 @@ done
 codesign --force --sign "$IDENTITY" --options runtime $TIMESTAMP_FLAG "$APP"
 codesign --verify --strict --deep "$APP"
 
+# PRO-0040. Two properties of the agent binary that nothing else would catch, and
+# whose failures are both silent — one costs a person the ability to open the app,
+# the other costs them their grants. Checked here because this is the one step the
+# local installer and .github/workflows/release.yml both go through.
+say "==> checking the agent's identity"
+
+AGENT_PLIST_ID="$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" \
+  "$REPO_ROOT/Apps/Proctor/AgentInfo.plist" 2>/dev/null || true)"
+AGENT_SIGINFO="$(codesign -dv "$MACOS_DIR/proctor-agent" 2>&1 || true)"
+
+# 1. The agent presents an identity of its own. Without it, LaunchServices records
+#    the agent as a running instance of Proctor.app, `open -a Proctor` activates a
+#    process that has no window and exits 0, and the app cannot be opened at all
+#    while its own agent is running.
+if [ -z "$AGENT_PLIST_ID" ] || [ "$AGENT_PLIST_ID" = "$BUNDLE_ID" ]; then
+  say "error: Apps/Proctor/AgentInfo.plist must declare a CFBundleIdentifier of its" >&2
+  say "       own, distinct from $BUNDLE_ID. Sharing the app's identifier is what" >&2
+  say "       stops 'open -a Proctor' from ever launching Proctor." >&2
+  exit 1
+fi
+
+if ! printf '%s' "$AGENT_SIGINFO" | grep -q 'Info.plist entries='; then
+  say "error: proctor-agent has no embedded __TEXT,__info_plist section." >&2
+  say "       The linker flags on the ProctorAgent target in Package.swift are what" >&2
+  say "       put it there. Without it the agent registers as an instance of the app" >&2
+  say "       and 'open -a Proctor' silently opens nothing." >&2
+  exit 1
+fi
+
+# 2. The agent is still signed under the APP's identifier. This is the expensive one.
+#    TCC matches a process against the recorded designated requirement, which names
+#    the signing identifier and the team. A codesign run that dropped `-i` would take
+#    the embedded CFBundleIdentifier above as the signing identifier, rewrite the
+#    requirement, and throw away Accessibility and Screen Recording — one release
+#    later, with nothing failing in between. Screen Recording cannot be granted
+#    silently on any macOS version, so that lands on a person as a manual re-grant.
+if ! printf '%s' "$AGENT_SIGINFO" | grep -qx "Identifier=$BUNDLE_ID"; then
+  say "error: proctor-agent's signing identifier is not $BUNDLE_ID." >&2
+  say "       Found: $(printf '%s' "$AGENT_SIGINFO" | grep '^Identifier=' || echo '(none)')" >&2
+  say "       The TCC grants key on this. Re-sign with -i \"$BUNDLE_ID\" — the agent's" >&2
+  say "       own identity belongs in AgentInfo.plist, never in the signature." >&2
+  exit 1
+fi
+
+say "    agent: LaunchServices identity $AGENT_PLIST_ID, signed as $BUNDLE_ID"
+
 if [ "$IDENTITY" != "-" ]; then
   say ""
   say "    designated requirement:"

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  proctor-agent's own Info.plist — PRO-0040.
+
+  This is NOT a bundle's Info.plist. It is linked into the proctor-agent binary as
+  a __TEXT,__info_plist section (see the ProctorAgent target in Package.swift), so
+  the agent presents its own identity instead of inheriting the enclosing app's.
+
+  Why it exists. The agent is a second Mach-O in Proctor.app/Contents/MacOS, started
+  by launchd, and it touches NSApplication on its first line to claim the accessory
+  activation policy. That registers it with LaunchServices, and without this section
+  it registered under the *app's* bundle identifier. `open -a Proctor` then found a
+  live instance, activated the agent, and exited 0 having shown nothing — so Proctor
+  could not be opened by any normal means while its own agent was running, which is
+  nearly always. Double-clicking it in /Applications did nothing, with no error.
+
+  What must not change. The signing identifier is NOT this. build-app.sh signs every
+  nested binary with `-i app.fledgeling.procter`, and the TCC grants for Accessibility
+  and Screen Recording match on the designated requirement, which names that signing
+  identifier and the team and contains no path. Keeping the signature identical is
+  what carries the grants across an upgrade instead of asking a person for them
+  again — and Screen Recording cannot be granted silently on any macOS version, so
+  re-prompting is a real cost to a person. A codesign run that omitted `-i` would
+  take the identifier below as the signing identifier and lose the grants a release
+  later, silently, so build-app.sh fails the build if the agent's signing identifier
+  is ever anything but the app's.
+
+  LSUIElement, not LSBackgroundOnly. LSBackgroundOnly is the plist form of the
+  prohibited activation policy, which is documented as not permitting windows, and
+  the agent draws the run HUD and the cursor overlay. LSUIElement is the accessory
+  policy the agent already claims in code, declared early enough that LaunchServices
+  reads it before the process starts rather than one statement later.
+
+  No version keys, deliberately. The agent reports its build through BuildInfo
+  (PRO-0030); a second version string here would be a second thing that can disagree
+  with the tag scripts/check-release-version.sh gates on.
+-->
+<plist version="1.0">
+<dict>
+	<key>CFBundleIdentifier</key>
+	<string>app.fledgeling.procter.agent</string>
+	<key>CFBundleName</key>
+	<string>Proctor Agent</string>
+	<key>LSUIElement</key>
+	<true/>
+</dict>
+</plist>

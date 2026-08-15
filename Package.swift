@@ -42,7 +42,37 @@ let package = Package(
         // to draw itself, and a picture fetched mid-run is a picture that can
         // fail mid-run.
         .executableTarget(name: "ProctorAgent", dependencies: ["ProctorCore", "ProctorCatch"],
-                          resources: [.copy("Resources/character")]),
+                          resources: [.copy("Resources/character")],
+                          // The agent's own Info.plist, linked in as a __TEXT section
+                          // so it presents its own LaunchServices identity instead of
+                          // inheriting the enclosing app's. Without it LaunchServices
+                          // records the agent as a running instance of Proctor.app and
+                          // `open -a Proctor` activates a process with no window, which
+                          // means the app cannot be opened while its agent is up — see
+                          // Apps/Proctor/AgentInfo.plist and PRO-0040.
+                          //
+                          // unsafeFlags because SwiftPM has no first-class -sectcreate.
+                          // The restriction it carries is product-scoped, and this is an
+                          // executable target that no product exposes, so a package
+                          // depending on this one by version for ProctorReflector still
+                          // resolves — measured, not assumed.
+                          //
+                          // Release only, and deliberately. Linker settings propagate to
+                          // whatever links the target, and the test bundle links this one:
+                          // measured, an unconditional flag put the agent's Info.plist
+                          // into proctor-mcpPackageTests.xctest, so every test process ran
+                          // holding the agent's identity and LSUIElement. The section only
+                          // ever matters in a shipped bundle, and scripts/build-app.sh —
+                          // the one step both the local installer and release.yml go
+                          // through — always builds `-c release` and then fails the build
+                          // if the section is missing. So the artifact that ships is gated
+                          // and the test bundle is left alone.
+                          linkerSettings: [.unsafeFlags([
+                              "-Xlinker", "-sectcreate",
+                              "-Xlinker", "__TEXT",
+                              "-Xlinker", "__info_plist",
+                              "-Xlinker", "Apps/Proctor/AgentInfo.plist",
+                          ], .when(configuration: .release))]),
         .executableTarget(name: "ProctorShim", dependencies: ["ProctorCore"]),
         .executableTarget(name: "ProctorUI", dependencies: ["ProctorCore"]),
         .target(name: "ProctorReflector", exclude: ["README.md"]),
