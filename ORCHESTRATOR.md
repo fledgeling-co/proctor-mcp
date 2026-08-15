@@ -306,6 +306,57 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **RUNNING** `wf_8feb698e-d59` · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-16 **Two PRO-0054 runners collided in one worktree, and the orchestrator caused it.**
+  `claude-lifeline`'s daemon auto-resumed the dead run `wf_b1b506b3-e9c` (pid 49407) at the
+  same time as the orchestrator dispatched a clean re-run (`wf_7c3cc18e-9ec`). Both landed in
+  `.worktrees/PRO-0054` on `ai/pro-0054`. The second runner detected the first, **touched
+  nothing further, and handed back** rather than racing it — which is the correct behaviour and
+  is why nothing was lost.
+  - **The orchestrator's error, plainly:** `workflow-resume`'s first rule is to establish
+    liveness before relaunching, and a lifeline auto-retry is exactly the case it names. That
+    check was run for stage 1's four failures and skipped here.
+  - **Resolution:** the live resumed runner keeps the item. Killing it would discard context it
+    had already built (`.worktrees/pro-0054-partial.patch` showed working fixes for all three).
+    No further PRO-0054 dispatch until it reports.
+  - **Contract violation to note:** the resumed runner committed `03bf3f6` **directly to
+    `main`**, which STOP BEFORE MERGE forbids. Content is documentation only — 20 lines
+    annotating the brief with a fourth case — and `main` is green at 1416/157, so it stands
+    rather than being reverted. This is the second time a runner has reached `main` unbidden
+    (PRO-0042 ratified the first).
+  - **A fourth case, and it is not intermittent.** `ToolchainDoctorTests.swift:203` injects
+    `screenRecordingProbe: .fake()` but **nothing for Accessibility**, so `doctor()` reads the
+    live `AXIsProcessTrusted()` of the test host. The suite therefore passes or fails on whether
+    the terminal that launched `swift test` happens to hold the grant. Not a product
+    regression: `ready` correctly reports a real ungranted Accessibility, which is PRO-0041's
+    deliberate fail-closed behaviour. PRO-0041 already built the injectable seam that fixes it.
+  - **The stopped runner's independent diagnosis, preserved here because it was derived before
+    it knew the other existed, and the two agreeing matters:**
+    - **`TakeoverWiringTests.swift:317` is a test defect, not PRO-0053's bug again.** `inFlight`
+      is **time-bounded, not step-bounded**: `now() - declaredAt < PersonInput.graceSeconds`,
+      and that grace is **0.25s** (`Sources/ProctorCore/Contention.swift:260`). The test
+      declares, runs a whole batch on the wall clock, then asserts the window is still open, so
+      a batch slower than 0.25s expires it naturally and the test reports a clearing nobody did.
+      Batch measured at 0.108-0.136s across 12 isolated runs at load 103-180 — a 2x margin that
+      whole-suite load closes. The fingerprint that confirms rather than merely fits:
+      `aNonPostingRunLeavesTheDeclarationAlone` (line 300) has identical shape but asserts
+      `declaredThisStep`, which is **not** time-bounded, and does not flake.
+      `aRefusedSyntheticBatchLeavesTheKeeperAlone` asserts `inFlight` too and is vulnerable to
+      the same expiry, unmeasured.
+    - **`ForegroundWiringTests.swift:108` is a polling race with no defect behind it.**
+      `Session.swift:347` sets `foregroundRuns[token]?.active = plane == .syntheticEvent` per
+      step, so the state is true only between step 0's settle and step 1's, and the test polls
+      from outside the actor on an 800ms budget. `actuator.perform` is `async` on a
+      non-isolated backend, so `FakeAX.perform` runs off the `Session` actor and can be parked
+      without deadlocking `recentActivity()` — that is the seam a rendezvous should use.
+    - **`ScreenRecordingProbeWiringTests.swift:116` already drives the probe's clock**
+      (`now: { 0 }`). The 300ms `Task.sleep` is not a clock but a bet that a detached straggler,
+      resumed through `Gate`'s `DispatchQueue.global()` blocking wait on a queue the suite
+      saturates, lands inside a fixed wall duration. PRO-0041's own design says that arrival is
+      unbounded.
+    - **On the process dying with no verdict: it could not say, and said so.** Six whole-suite
+      runs at load 61-103 all produced a verdict. One observation rather than a conclusion: its
+      base ran **1416 tests in 157 suites** while the deaths were reported at ~1523 tests
+      already run, so those runs were on a different and larger tree.
 - 2026-08-16 **PRO-0054's first attempt lost, and it cost a contract rule.** The runner died on
   the gateway 503 `over_reserve` that also killed all of stage 1, but the interesting part is
   what it did before dying: it ran a rebase that replayed **55 of `main`'s commits onto its own
