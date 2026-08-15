@@ -726,12 +726,48 @@ public struct DoctorReport: Codable, Sendable {
 
     public struct Grant: Codable, Sendable {
         public var name: String              // Accessibility, Screen Recording, Automation
+        /// Whether this grant is **confirmed granted**.
+        ///
+        /// Derived from `state` and deliberately fail-closed: a grant Proctor could
+        /// not confirm reads `false` here, exactly as a denied one does. That keeps
+        /// every consumer that only reads the boolean as conservative as it always
+        /// was. It also means the boolean cannot tell a denial from a non-answer —
+        /// which is what `state` is for, and why the surfaces that put a *remedy* in
+        /// front of somebody read that instead. Sending a person to System Settings
+        /// for a permission they already granted is the defect PRO-0041 fixed.
         public var granted: Bool
         public var required: Bool
         public var howToFix: String
+        /// What was actually established: `granted`, `denied`, or `unconfirmed`.
+        ///
+        /// A string on the wire in the shape `secondLane` already uses, and optional
+        /// so a report from an older agent still decodes against a newer shim — it
+        /// then resolves to the old two-state reading of `granted`.
+        ///
+        /// `unconfirmed` means the probe was bounded and the platform did not answer
+        /// inside it. It is a fact about what Proctor knows, not about the
+        /// permission: the grant may be perfectly in place.
+        public var state: String?
+
+        /// The state, with an older agent's two-state report read the old way.
+        public var resolvedState: GrantState {
+            state.flatMap(GrantState.init(rawValue:)) ?? (granted ? .granted : .denied)
+        }
+
         public init(name: String, granted: Bool, required: Bool, howToFix: String) {
             self.name = name; self.granted = granted; self.required = required
             self.howToFix = howToFix
+            self.state = (granted ? GrantState.granted : .denied).rawValue
+        }
+
+        /// The tri-state initialiser. `granted` is derived here so the boolean and
+        /// the state cannot be set to disagree with each other.
+        public init(name: String, state: GrantState, required: Bool, howToFix: String) {
+            self.name = name
+            self.granted = state.isConfirmedGranted
+            self.required = required
+            self.howToFix = howToFix
+            self.state = state.rawValue
         }
     }
 

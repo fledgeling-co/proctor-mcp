@@ -85,7 +85,13 @@ public enum AgentRecovery {
     ///     process mid-launch.
     ///   - reachable: whether the agent answered at all.
     ///   - agentSeesScreenRecording: what the agent's own doctor report says. This
-    ///     is the cached answer; that is the whole point.
+    ///     is the cached answer; that is the whole point. Tri-state since PRO-0041:
+    ///     `denied` is macOS having said no, `unconfirmed` is macOS not having
+    ///     answered the bounded probe at all. Both offer the restart when this
+    ///     window can see the grant — a fresh process is the cure for either — but
+    ///     they must not share a sentence, because one of them claims the agent is
+    ///     reading an earlier answer and in the other case there was no answer to
+    ///     read.
     ///   - windowSeesScreenRecording: this process's own live, non-prompting read
     ///     of the same TCC record, or nil when it could not be taken. Required to
     ///     be `true` before any restart is offered — see the note above.
@@ -99,7 +105,7 @@ public enum AgentRecovery {
     ///     staler one.
     public static func decide(applying: Bool,
                               reachable: Bool,
-                              agentSeesScreenRecording: Bool,
+                              agentSeesScreenRecording: GrantState,
                               windowSeesScreenRecording: Bool?,
                               runInFlight: Bool) -> Offer? {
         if applying { return nil }
@@ -116,11 +122,12 @@ public enum AgentRecovery {
                 action: startAction)
         }
 
-        guard !agentSeesScreenRecording,
+        guard !agentSeesScreenRecording.isConfirmedGranted,
               windowSeesScreenRecording == true else { return nil }
 
-        var reason = "Screen Recording is granted, but the agent is still reading "
-                   + "macOS's earlier answer."
+        var reason = agentSeesScreenRecording == .unconfirmed
+            ? "Screen Recording is granted, but the agent's check for it did not come back."
+            : "Screen Recording is granted, but the agent is still reading macOS's earlier answer."
         if runInFlight { reason += " Restarting stops the run in flight." }
         return Offer(kind: .restartAgent, reason: reason, action: restartAction)
     }

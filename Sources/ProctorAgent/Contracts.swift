@@ -218,6 +218,22 @@ enum Grants {
         + "This grant can never be applied silently or by profile on any macOS version — a person has to click it."
     }
 
+    /// What to say when the probe did not answer at all.
+    ///
+    /// Deliberately **not** the Settings text. The permission may well be granted;
+    /// what happened is that macOS did not answer inside the bound, and sending
+    /// somebody to System Settings to grant something they already granted is the
+    /// defect PRO-0041 exists to fix. The remedies that actually apply are asking
+    /// again and restarting the agent, so those are the ones named.
+    static func screenRecordingUnconfirmedText(bound: Double) -> String {
+        "Not established. macOS did not answer the Screen Recording probe within "
+        + "\(String(format: "%.1f", bound))s, so this is not a denial and System Settings is "
+        + "probably not where the answer is. Call proctor_doctor again — the answer is cached "
+        + "as soon as it arrives. If it stays unconfirmed, restart the agent to probe from a "
+        + "fresh process. Capture may still work; what is missing is the confirmation, not "
+        + "necessarily the permission."
+    }
+
     static func accessibilityFixText(osMajor: Int) -> String {
         if osMajor >= 27 {
             return "System Settings ▸ Privacy & Security ▸ Accessibility, enable Proctor. "

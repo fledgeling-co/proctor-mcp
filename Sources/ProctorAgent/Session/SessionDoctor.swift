@@ -1,10 +1,19 @@
 import Foundation
-import ScreenCaptureKit
 import ProctorCore
 
 // Readiness. Getting a grant wrong presents as elements not being found, which
-// a model retries indefinitely, so every probe here reports a definite state
-// and every missing grant carries the fix text for the running OS.
+// a model retries indefinitely, so every probe here carries the fix text for the
+// running OS and every missing grant is named.
+//
+// One probe cannot promise a definite state, and pretending otherwise is what
+// PRO-0041 fixed. Screen Recording has no query API; the way to read it is to ask
+// ScreenCaptureKit for shareable content and read the failure, and the comment
+// that used to sit here said that "either answers or throws, and the throw is the
+// denial". Measured on 2026-08-15 it did neither — the call parked and never came
+// back, while the same call from a plain script answered in 0.037s. So the probe
+// is bounded, and a grant it could not establish reports `unconfirmed` rather
+// than borrowing the word for a denial. See `ScreenRecordingProbe` for the bound
+// and `GrantProbe` for what is cached.
 
 extension Session {
 
@@ -14,7 +23,7 @@ extension Session {
         let osVersion = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
 
         let accessibilityGranted = Grants.accessibility()
-        let screenRecordingGranted = await Self.probeScreenRecording()
+        let screenRecording = await screenRecordingProbe.state()
         let shortcutsAvailable = FileManager.default.isExecutableFile(atPath: "/usr/bin/shortcuts")
         let secureInput = Grants.secureEventInputActive()
         let (attached, observers) = healthSnapshot()
@@ -28,8 +37,10 @@ extension Session {
         var grants: [DoctorReport.Grant] = [
             .init(name: "Accessibility", granted: accessibilityGranted, required: true,
                   howToFix: Grants.accessibilityFixText(osMajor: osMajor)),
-            .init(name: "Screen Recording", granted: screenRecordingGranted, required: true,
-                  howToFix: Grants.screenRecordingFixText(osMajor: osMajor)),
+            .init(name: "Screen Recording", state: screenRecording, required: true,
+                  howToFix: screenRecording == .unconfirmed
+                      ? Grants.screenRecordingUnconfirmedText(bound: screenRecordingProbe.bound)
+                      : Grants.screenRecordingFixText(osMajor: osMajor)),
             // Automation is granted per target application at first use and
             // there is no way to ask about it in advance without triggering the
             // prompt, so it is reported as not yet established rather than as
@@ -43,7 +54,14 @@ extension Session {
 
         var blockers: [String] = []
         for grant in grants where grant.required && !grant.granted {
-            blockers.append("\(grant.name) is not granted. \(grant.howToFix)")
+            // A denial and a non-answer are two different facts about a Mac and
+            // must not wear one word. One is a permission somebody has to go and
+            // grant; the other is a probe that did not come back, where the
+            // permission may be sitting there granted the whole time.
+            let lead = grant.resolvedState == .unconfirmed
+                ? "\(grant.name) could not be confirmed."
+                : "\(grant.name) is not granted."
+            blockers.append("\(lead) \(grant.howToFix)")
         }
         if !shortcutsAvailable {
             grants.append(.init(name: "Shortcuts CLI", granted: false, required: false,
@@ -96,16 +114,5 @@ extension Session {
             agentBuild: BuildInfo.current,
             ready: blockers.isEmpty,
             blockers: blockers)
-    }
-
-    /// Screen Recording has no query API. Asking ScreenCaptureKit for shareable
-    /// content either answers or throws, and the throw is the denial.
-    private static func probeScreenRecording() async -> Bool {
-        do {
-            _ = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
-            return true
-        } catch {
-            return false
-        }
     }
 }

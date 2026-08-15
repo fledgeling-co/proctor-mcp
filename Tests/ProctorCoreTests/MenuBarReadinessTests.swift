@@ -158,7 +158,9 @@ struct MenuBarReadinessFromReportTests {
             block: MenuBarIcon.block(
                 requiredGrantsGranted: !required.isEmpty && required.allSatisfy(\.granted),
                 secureEventInputActive: report.secureEventInputActive,
-                ready: report.ready),
+                ready: report.ready,
+                requiredGrantsDenied: required.contains { $0.resolvedState == .denied },
+                requiredGrantsUnconfirmed: required.contains { $0.resolvedState == .unconfirmed }),
             phase: phase)
     }
 
@@ -353,5 +355,63 @@ struct RelaunchCommandTests {
         let script = RelaunchCommand.arguments(pid: 1, bundlePath: "/Users/luke's/Proctor.app").last!
         #expect(script.hasSuffix("open '/Users/luke'\\''s/Proctor.app'"))
         #expect(RelaunchCommand.quoted("plain") == "'plain'")
+    }
+}
+
+// PRO-0041 — the third grant state, at the menu bar.
+//
+// The rung already refused to show one picture for two facts once: a missing
+// grant and Secure Event Input were split because the permission triangle over a
+// briefly-locked keyboard is "a machine reporting a fault it does not have". A
+// probe that did not answer is a third such fact and gets the same treatment.
+@Suite("Menu bar readiness — unconfirmed grants")
+struct MenuBarUnconfirmedGrantTests {
+
+    private func block(denied: Bool = false, unconfirmed: Bool = false,
+                       secureInput: Bool = false, ready: Bool = false) -> MenuBarBlock? {
+        MenuBarIcon.block(requiredGrantsGranted: !denied && !unconfirmed,
+                          secureEventInputActive: secureInput,
+                          ready: ready,
+                          requiredGrantsDenied: denied,
+                          requiredGrantsUnconfirmed: unconfirmed)
+    }
+
+    @Test("an unconfirmed grant does not wear the missing-permission triangle")
+    func unconfirmedIsNotADenial() {
+        #expect(block(unconfirmed: true) == .unconfirmedGrant)
+        #expect(block(unconfirmed: true)?.symbol != MenuBarBlock.missingGrant.symbol)
+        #expect(block(unconfirmed: true)?.symbol == "questionmark.circle")
+    }
+
+    @Test("an unconfirmed grant still takes the character off the menu bar")
+    func unconfirmedIsNotHealthyRest() {
+        // Fail-closed: not a fault, but not a Proctor anyone should be told is
+        // fine either.
+        #expect(block(unconfirmed: true) != nil)
+        #expect(MenuBarIcon.decide(reachable: true, block: block(unconfirmed: true), phase: .idle)
+                == .symbol("questionmark.circle"))
+    }
+
+    @Test("a denial outranks a non-answer")
+    func aDenialOutranksANonAnswer() {
+        // A Mac with Accessibility denied and Screen Recording unconfirmed has a
+        // permission somebody has to go and grant. That is the more urgent thing
+        // to say, and `requiredGrantsGranted` is false for both, so it cannot be
+        // the input that decides.
+        #expect(block(denied: true, unconfirmed: true) == .missingGrant)
+        #expect(block(denied: true) == .missingGrant)
+    }
+
+    @Test("an unconfirmed grant outranks a locked keyboard")
+    func unconfirmedOutranksSecureInput() {
+        // Same ordering argument the rung already made: a Mac that might not work
+        // outranks a Mac that is momentarily busy.
+        #expect(block(unconfirmed: true, secureInput: true) == .unconfirmedGrant)
+    }
+
+    @Test("nothing about the third state disturbs a healthy Mac")
+    func healthyIsUnchanged() {
+        #expect(block(ready: true) == nil)
+        #expect(block(secureInput: true, ready: false) == .secureInput)
     }
 }

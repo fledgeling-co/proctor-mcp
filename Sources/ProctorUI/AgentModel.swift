@@ -175,6 +175,20 @@ final class AgentModel {
         return !required.isEmpty && required.allSatisfy(\.granted)
     }
 
+    /// A required grant macOS did not answer for. Its own question, because the
+    /// remedy differs: a denial is fixed in System Settings and an unconfirmed
+    /// grant is not.
+    var requiredGrantsUnconfirmed: Bool {
+        report?.grants.contains { $0.required && $0.resolvedState == .unconfirmed } ?? false
+    }
+
+    /// A required grant macOS said no to. Separate from the above so the menu bar
+    /// can rank a denial above a non-answer; `requiredGrantsGranted` is false for
+    /// both and cannot tell them apart.
+    var requiredGrantsDenied: Bool {
+        report?.grants.contains { $0.required && $0.resolvedState == .denied } ?? false
+    }
+
     var requiredGrants: [DoctorReport.Grant] {
         report?.grants.filter(\.required) ?? []
     }
@@ -357,7 +371,7 @@ final class AgentModel {
         let reachable: Bool
         if case .reachable = reachability { reachable = true } else { reachable = false }
         let agentSees = report?.grants
-            .first { $0.name == "Screen Recording" }?.granted ?? false
+            .first { $0.name == "Screen Recording" }?.resolvedState ?? .denied
         recovery = AgentRecovery.decide(
             applying: isApplying,
             reachable: reachable,
@@ -427,7 +441,9 @@ final class AgentModel {
             let block = MenuBarIcon.block(
                 requiredGrantsGranted: requiredGrantsGranted,
                 secureEventInputActive: report?.secureEventInputActive == true,
-                ready: ready)
+                ready: ready,
+                requiredGrantsDenied: requiredGrantsDenied,
+                requiredGrantsUnconfirmed: requiredGrantsUnconfirmed)
             return MenuBarIcon.decide(reachable: true, block: block, phase: hudPhase,
                                       takingForeground: foreground.active)
         }

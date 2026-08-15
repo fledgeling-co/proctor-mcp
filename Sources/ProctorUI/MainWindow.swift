@@ -148,20 +148,34 @@ private struct GrantRow: View {
     let grant: DoctorReport.Grant
     @State private var showHow = false
 
+    // An unconfirmed grant is not a denial and must not be dressed as one. The
+    // Open Settings button is the specific thing that has to go: macOS did not
+    // answer the probe, the permission may well be granted, and sending somebody
+    // to a switch they already flipped is the defect PRO-0041 fixed. The How
+    // button stays, because its text now says what actually happened.
+    private var unconfirmed: Bool { grant.resolvedState == .unconfirmed }
+
+    private var statusText: String {
+        if grant.granted { return "Granted" }
+        if unconfirmed { return "Not established — macOS did not answer" }
+        return grant.required ? "Required — not granted yet" : "Optional — asked for per app"
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 10) {
-                Image(systemName: grant.granted ? "checkmark.circle.fill" : "circle")
+                Image(systemName: grant.granted ? "checkmark.circle.fill"
+                      : (unconfirmed ? "questionmark.circle" : "circle"))
                     .foregroundStyle(grant.granted ? Color.green
-                                     : (grant.required ? Color.orange : Color.secondary))
+                                     : (unconfirmed ? Color.secondary
+                                        : (grant.required ? Color.orange : Color.secondary)))
                 VStack(alignment: .leading, spacing: 1) {
                     Text(grant.name).font(.system(size: 13, weight: .medium))
-                    Text(grant.granted ? "Granted"
-                         : (grant.required ? "Required — not granted yet" : "Optional — asked for per app"))
+                    Text(statusText)
                         .font(.system(size: 11)).foregroundStyle(.secondary)
                 }
                 Spacer()
-                if !grant.granted, let pane = Actions.pane(for: grant.name) {
+                if !grant.granted, !unconfirmed, let pane = Actions.pane(for: grant.name) {
                     Button("Open Settings") { Actions.openPane(pane) }
                         .controlSize(.small)
                 }

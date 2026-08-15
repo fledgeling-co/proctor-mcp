@@ -160,6 +160,14 @@ public enum MenuBarIcon: Sendable, Equatable {
 public enum MenuBarBlock: Sendable, Equatable {
     /// A required grant is not in place. Nothing works until it is.
     case missingGrant
+    /// A required grant could not be established — the probe was bounded and the
+    /// platform did not answer. Its own case, for the reason `secureInput` is:
+    /// the missing-permission triangle over an unconfirmed grant is a machine
+    /// reporting a fault it has not been shown to have, and it points at System
+    /// Settings, which is where the answer is least likely to be. It still takes
+    /// the menu bar off the character, because an unconfirmed grant is not
+    /// healthy rest either.
+    case unconfirmedGrant
     /// Secure Event Input is active, so the synthetic plane cannot be reached.
     /// The accessibility plane is unaffected, which is why this is its own state
     /// and not the permission one.
@@ -168,6 +176,7 @@ public enum MenuBarBlock: Sendable, Equatable {
     public var symbol: String {
         switch self {
         case .missingGrant: return "exclamationmark.triangle"
+        case .unconfirmedGrant: return "questionmark.circle"
         case .secureInput: return "lock.laptopcomputer"
         }
     }
@@ -178,18 +187,29 @@ public extension MenuBarIcon {
     /// The rung, from the doctor's own report rather than from a boolean somebody
     /// upstream already reduced.
     ///
-    /// Ordered: a missing permission outranks a locked keyboard, because one is a
-    /// Mac that will never work and the other is a Mac that is momentarily busy.
+    /// Ordered: a **denied** permission outranks an **unestablished** one, which
+    /// outranks a locked keyboard. The first is a Mac that will never work, the
+    /// second is a Mac that might not, the third is a Mac that is momentarily busy.
     ///
-    /// And total, deliberately. `ready` is passed in as well as the two facts this
-    /// knows how to name, so a `ready` that is false for a *third* reason — a
+    /// The denied and unconfirmed facts arrive as their own inputs rather than
+    /// being inferred from `requiredGrantsGranted`, because that boolean is false
+    /// for both and cannot separate them — a Mac with Accessibility denied *and*
+    /// Screen Recording unconfirmed has to show the denial, and no amount of
+    /// reading one boolean gets there.
+    ///
+    /// And total, deliberately. `ready` is passed in as well as the facts this
+    /// knows how to name, so a `ready` that is false for some *other* reason — a
     /// blocker added to the doctor later, in a change nobody remembers to trace
     /// here — still blocks, as the permission symbol. A rung whose whole job is
     /// keeping a calm face off a Proctor that cannot work has to fail in that
     /// direction; the alternative is a future blocker silently putting the
     /// character back up.
     static func block(requiredGrantsGranted: Bool, secureEventInputActive: Bool,
-                      ready: Bool) -> MenuBarBlock? {
+                      ready: Bool,
+                      requiredGrantsDenied: Bool = false,
+                      requiredGrantsUnconfirmed: Bool = false) -> MenuBarBlock? {
+        if requiredGrantsDenied { return .missingGrant }
+        if requiredGrantsUnconfirmed { return .unconfirmedGrant }
         if !requiredGrantsGranted { return .missingGrant }
         if secureEventInputActive { return .secureInput }
         if !ready { return .missingGrant }

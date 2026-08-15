@@ -12,7 +12,7 @@ struct AgentRecoveryTests {
     /// Everything healthy: reachable, the grant in place, nothing applying.
     private func healthy(applying: Bool = false,
                          reachable: Bool = true,
-                         agentSees: Bool = true,
+                         agentSees: GrantState = .granted,
                          windowSees: Bool? = true,
                          running: Bool = false) -> AgentRecovery.Offer? {
         AgentRecovery.decide(applying: applying,
@@ -33,7 +33,7 @@ struct AgentRecoveryTests {
 
     @Test("the agent denying a grant this window can see offers the restart")
     func staleGrantOffersTheRestart() {
-        let offer = healthy(agentSees: false, windowSees: true)
+        let offer = healthy(agentSees: .denied, windowSees: true)
         #expect(offer?.kind == .restartAgent)
         #expect(offer?.action == "Restart Agent")
     }
@@ -58,15 +58,48 @@ struct AgentRecoveryTests {
     @Test("an absent permission is never offered a restart")
     func absentPermissionIsNotOfferedARestart() {
         for windowSees in [false, nil] as [Bool?] {
-            #expect(healthy(agentSees: false, windowSees: windowSees) == nil)
+            #expect(healthy(agentSees: .denied, windowSees: windowSees) == nil)
         }
     }
 
     @Test("the sentence claims staleness only where it is confirmed")
     func theSentenceClaimsWhatItKnows() {
-        let reason = try! #require(healthy(agentSees: false, windowSees: true)?.reason)
+        let reason = try! #require(healthy(agentSees: .denied, windowSees: true)?.reason)
         #expect(reason.contains("Screen Recording is granted"))
         #expect(reason.contains("earlier answer"))
+    }
+
+    // MARK: PRO-0041 A5 — the offer says what is actually wrong
+
+    // A restart is the right move for both, so the offer is the same offer. What
+    // must not be the same is the sentence: "the agent is still reading macOS's
+    // earlier answer" is a claim about an answer, and in the unconfirmed case
+    // there was no answer to read.
+    @Test("an unconfirmed grant is still offered the restart")
+    func unconfirmedIsStillOfferedTheRestart() {
+        let offer = healthy(agentSees: .unconfirmed, windowSees: true)
+        #expect(offer?.kind == .restartAgent)
+        #expect(offer?.action == "Restart Agent")
+    }
+
+    @Test("an unconfirmed grant does not claim the agent is holding an earlier answer")
+    func unconfirmedDoesNotClaimStaleness() {
+        let unconfirmed = try! #require(healthy(agentSees: .unconfirmed, windowSees: true)?.reason)
+        let denied = try! #require(healthy(agentSees: .denied, windowSees: true)?.reason)
+        #expect(unconfirmed != denied)
+        #expect(!unconfirmed.contains("earlier answer"))
+        #expect(unconfirmed.contains("did not come back"))
+        #expect(unconfirmed.count <= 120)
+    }
+
+    @Test("an unconfirmed grant this window cannot see is offered nothing")
+    func unconfirmedWithoutIndependentEvidenceOffersNothing() {
+        // The PRO-0028 gate is unchanged by the third state: a restart cures a
+        // wedged or stale process, never an absent permission, so it is still
+        // offered only where this window can see the grant for itself.
+        for windowSees in [false, nil] as [Bool?] {
+            #expect(healthy(agentSees: .unconfirmed, windowSees: windowSees) == nil)
+        }
     }
 
     // MARK: A4 — a run in flight is named as the cost
@@ -74,17 +107,17 @@ struct AgentRecoveryTests {
     @Test("a run in flight is named as the cost")
     func runInFlightIsNamed() {
         let running = try! #require(
-            healthy(agentSees: false, windowSees: true, running: true)?.reason)
+            healthy(agentSees: .denied, windowSees: true, running: true)?.reason)
         let idle = try! #require(
-            healthy(agentSees: false, windowSees: true)?.reason)
+            healthy(agentSees: .denied, windowSees: true)?.reason)
         #expect(running.hasSuffix("Restarting stops the run in flight."))
         #expect(!idle.contains("stops the run"))
     }
 
     @Test("naming the cost changes nothing but the sentence")
     func costDoesNotChangeTheAction() {
-        let running = healthy(agentSees: false, windowSees: true, running: true)
-        let idle = healthy(agentSees: false, windowSees: true)
+        let running = healthy(agentSees: .denied, windowSees: true, running: true)
+        let idle = healthy(agentSees: .denied, windowSees: true)
         #expect(running?.kind == idle?.kind)
         #expect(running?.action == idle?.action)
     }
@@ -98,9 +131,9 @@ struct AgentRecoveryTests {
     @Test("nothing is offered while a restart is in flight")
     func applyingOffersNothing() {
         #expect(healthy(applying: true, reachable: false) == nil)
-        #expect(healthy(applying: true, agentSees: false, windowSees: true) == nil)
+        #expect(healthy(applying: true, agentSees: .denied, windowSees: true) == nil)
         #expect(healthy(applying: true, reachable: false,
-                        agentSees: false, windowSees: true, running: true) == nil)
+                        agentSees: .denied, windowSees: true, running: true) == nil)
     }
 
     // MARK: A8 — an unreachable agent is offered a start
@@ -110,7 +143,7 @@ struct AgentRecoveryTests {
     // either; a start is.
     @Test("an unreachable agent is offered a start, whatever it last said")
     func unreachableIsOfferedAStart() {
-        for agentSees in [true, false] {
+        for agentSees in GrantState.allCases {
             for windowSees in [true, false, nil] as [Bool?] {
                 let offer = healthy(reachable: false,
                                     agentSees: agentSees, windowSees: windowSees)
@@ -122,7 +155,7 @@ struct AgentRecoveryTests {
 
     @Test("an unreachable agent is never offered a restart")
     func unreachableIsNeverOfferedARestart() {
-        #expect(healthy(reachable: false, agentSees: false, windowSees: true)?.kind
+        #expect(healthy(reachable: false, agentSees: .denied, windowSees: true)?.kind
                 != .restartAgent)
     }
 
@@ -147,8 +180,8 @@ struct AgentRecoveryTests {
     func sentencesStayShort() {
         let reasons = [
             try! #require(healthy(reachable: false)?.reason),
-            try! #require(healthy(agentSees: false, windowSees: true)?.reason),
-            try! #require(healthy(agentSees: false, windowSees: true, running: true)?.reason)
+            try! #require(healthy(agentSees: .denied, windowSees: true)?.reason),
+            try! #require(healthy(agentSees: .denied, windowSees: true, running: true)?.reason)
         ]
         for reason in reasons { #expect(reason.count <= 120) }
     }

@@ -28,6 +28,11 @@ actor Session {
     /// here rather than reached for as a shared singleton, so a test drives its
     /// own and leaves nothing behind.
     let tools: ToolProbes
+    /// The bounded Screen Recording probe. Injected for the same reason
+    /// `ToolProbes` is: the real one asks the platform, and a suite that let it
+    /// would answer differently on a granted machine than on a denied one — and,
+    /// measured, would hang outright inside a test host.
+    let screenRecordingProbe: ScreenRecordingProbe
 
     /// How many past trees are retained per window to serve a sinceRevision
     /// diff. A caller more than this far behind is diffed from the oldest tree
@@ -560,13 +565,15 @@ actor Session {
          reflector: any ReflectorBridge = NullReflectorBridge(),
          tri: (any TriObserving)? = nil,
          scheduler: RunScheduler = RunScheduler(),
-         tools: ToolProbes = ToolProbes()) {
+         tools: ToolProbes = ToolProbes(),
+         screenRecordingProbe: ScreenRecordingProbe = .live) {
         self.runScheduler = scheduler
         self.ax = ax
         self.capture = capture
         self.reflector = reflector
         self.tri = tri
         self.tools = tools
+        self.screenRecordingProbe = screenRecordingProbe
         self.settler = Settler(capture: capture)
     }
 

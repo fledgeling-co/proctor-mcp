@@ -152,3 +152,25 @@ func aHold(_ reason: YieldReason, session: String = "test-session 0000",
            app: String? = nil) -> HoldAttribution {
     HoldAttribution(reason: reason, session: session, app: app)
 }
+
+// MARK: - Screen Recording
+
+extension ScreenRecordingProbe {
+    /// A probe that answers instantly, for any suite that calls `doctor`.
+    ///
+    /// PRO-0041: the real probe asks ScreenCaptureKit for shareable content, and
+    /// measured on 2026-08-15 that call parks forever inside a swiftpm test host
+    /// — it neither answers nor throws, while the same call from a plain script
+    /// answered in 0.037s. Six tests across two suites hung on it, which is why
+    /// the merge gate ran `--skip ObscuraPresenceWiringTests
+    /// --skip BrowserLaneWiringTests` for two waves.
+    ///
+    /// The bound in `ScreenRecordingProbe` means those suites would now finish
+    /// either way; injecting is what keeps them instant, and keeps a suite's
+    /// answer from depending on whether the machine running it granted Screen
+    /// Recording. The bound has its own tests in
+    /// `ScreenRecordingProbeWiringTests`, so injecting here does not hide it.
+    static func fake(_ state: GrantState = .granted) -> ScreenRecordingProbe {
+        ScreenRecordingProbe(platform: { state })
+    }
+}

@@ -74,7 +74,8 @@ struct BrowserLaneWiringTests {
                 browserUse: ToolProbe(probe: { b.read() }, now: { clock.now },
                                       presentTTL: ToolProbe.presentTTL,
                                       absentTTL: ToolProbe.presentTTL),
-                environment: laneSet ? [BrowserUseTool.laneVariable: BrowserUseTool.binary] : [:]))
+                environment: laneSet ? [BrowserUseTool.laneVariable: BrowserUseTool.binary] : [:]),
+            screenRecordingProbe: .fake())
         await session.setAuditSink(AuditCollector().sink)
         _ = try await session.attachResolved(bundleId: bundleId, pid: nil, name: nil)
         return (session, o, b, clock)

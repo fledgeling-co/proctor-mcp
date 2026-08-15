@@ -80,7 +80,8 @@ struct ObscuraPresenceWiringTests {
                                 }, now: { clock.now },
                                    presentTTL: ToolProbe.presentTTL,
                                    absentTTL: ToolProbe.presentTTL),
-                                environment: [:]))
+                                environment: [:]),
+                              screenRecordingProbe: .fake())
         await session.setAuditSink(AuditCollector().sink)
         _ = try await session.attachResolved(bundleId: bundleId, pid: nil, name: nil)
         // One handoff up front, so the cache is primed and every call count below
