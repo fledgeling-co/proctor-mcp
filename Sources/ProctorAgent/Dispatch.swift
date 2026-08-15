@@ -369,13 +369,23 @@ struct Dispatcher: Sendable {
         if args.bool("requestScreenRecording", false) {
             Grants.promptScreenRecording()
         }
-        // The policy gate is part of readiness: an operator checking health should
-        // see the lists in force and whether an approval token is live, alongside
-        // the grants. The doctor output schema is an open object, so this extra
-        // block validates without a schema change.
+        // `session.doctor()` already carries a `policy` block: PRO-0050's posture,
+        // which reports mode, counts, token liveness, jail shape and audit posture
+        // and deliberately names no bundle id, path, key id or token.
+        //
+        // This line used to overwrite it with `policyStatus()`, the full ungated
+        // status, and that overwrite did two things neither item wanted. It put
+        // every allow, block and sensitive entry, the filesystem roots, the trail's
+        // path and the key id back into the first call a model makes, so PRO-0050's
+        // clause 12 was true of the type and false on the wire. And because the
+        // replacement has none of the posture's keys, `DoctorReport` could no longer
+        // decode its own agent's reply, so the status window reported a perfectly
+        // healthy agent as "not answering" — found by building this feature and
+        // looking at it, which no test in either item could have caught.
+        //
+        // `proctor_policy` action `status` is unchanged and still answers in full.
         var report = try JSONValue.encode(await session.doctor(verbose: args.bool("verbose", false)))
             .objectValue ?? [:]
-        report["policy"] = await session.policyStatus()
         // The run HUD carries the only stop control a person has, so its absence
         // is reported rather than left silent: a run still proceeds without the
         // panel, and refusing to drive because an annotation failed would be
