@@ -11,6 +11,7 @@ struct MainWindow: View {
                 Header()
                 ReadinessSection(model: model)
                 ToolsSection(model: model)
+                SwitchesSection(model: model)
                 ActivitySection(model: model)
                 ConnectSection(model: model)
                 AgentSection(model: model)
@@ -371,6 +372,182 @@ private struct ToolRowView: View {
             }
         }
         .padding(.vertical, 7)
+    }
+}
+
+// MARK: - Switches
+
+/// PRO-0029. The eight runtime switches, with where each value came from.
+///
+/// **A toggle that silently loses to an environment variable is worse than no
+/// toggle**, which is the whole reason this card shows a source beside every
+/// value rather than a switch on its own. Every rule it renders — precedence, the
+/// lock, the pending state, the pairing warnings — is decided in `SwitchResolver`
+/// and `SwitchCatalogue`, because `Package.swift` declares no `ProctorUI` test
+/// target and there is no window server under `swift test`. This view draws
+/// answers; it reaches none.
+///
+/// The running value comes from the agent's report and from nowhere else. This
+/// process is started by LaunchServices and the agent by launchd, so reading
+/// `ProcessInfo` here would describe a different process's environment — and would
+/// describe it plausibly, which is worse than reading "not yet known".
+private struct SwitchesSection: View {
+    let model: AgentModel
+
+    private var rows: [AgentModel.SwitchRow] { model.switchRows }
+
+    var body: some View {
+        Card {
+            HStack(alignment: .firstTextBaseline) {
+                SectionTitle("Switches")
+                Spacer()
+                if model.switchesNeedRestart {
+                    Button("Restart agent to apply") { model.restartAgentForSwitches() }
+                        .controlSize(.small)
+                        .buttonStyle(.borderedProminent)
+                }
+            }
+            Text("How Proctor behaves while it runs. These are read by the background agent, "
+                 + "so all but the run panel take effect when it next starts.")
+                .font(.system(size: 12)).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
+                    if index > 0 { Divider().padding(.vertical, 2) }
+                    SwitchRowView(row: row, model: model)
+                }
+            }
+
+            if let error = model.switchWriteError {
+                Callout(icon: "exclamationmark.triangle.fill", tint: .orange,
+                        title: "That setting was not saved",
+                        message: error)
+            }
+
+            // Said once, at the bottom, rather than on eight rows. It is a fact
+            // about the file rather than about any one switch, and a caveat
+            // repeated eight times is one nobody reads.
+            Text("Saved in Proctor's own support folder, not in the launchd job, so "
+                 + "reinstalling does not lose them. Any program running as you can change "
+                 + "that file — it is a convenience, not a lock.")
+                .font(.system(size: 10)).foregroundStyle(.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private struct SwitchRowView: View {
+    let row: AgentModel.SwitchRow
+    let model: AgentModel
+    @State private var confirming = false
+
+    /// The two switches that hand something away — a person's own keyboard, or a
+    /// browser with their real logins to an autonomous agent. Decided in the
+    /// catalogue, where it is testable, rather than re-derived from a shape here.
+    private var isConsentGate: Bool { row.aSwitch.requiresConsent }
+
+    private var sourceLine: String {
+        guard let running = row.running else {
+            return "Not yet known — waiting for the agent"
+        }
+        switch SwitchSource(rawValue: running.source) {
+        case .environment:
+            return "\(running.on ? "On" : "Off") — set by \(row.aSwitch.variable), which the "
+                 + "agent inherited when it started"
+        case .saved:
+            return "\(running.on ? "On" : "Off") — your saved setting"
+        case .builtInDefault, .none:
+            return "\(running.on ? "On" : "Off") — Proctor's default"
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .top, spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Text(row.aSwitch.title).font(.system(size: 13, weight: .medium))
+                        Text(row.aSwitch.variable)
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundStyle(.tertiary)
+                    }
+                    Text(row.aSwitch.summary)
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(sourceLine)
+                        .font(.system(size: 11))
+                        .foregroundStyle(row.locked ? AnyShapeStyle(Color.orange)
+                                                   : AnyShapeStyle(.tertiary))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 12)
+                Toggle("", isOn: Binding(
+                    get: { row.controlOn },
+                    set: { wanted in
+                        // Turning a consent gate ON asks twice. Turning anything
+                        // off never does: a person withdrawing a capability must
+                        // not be argued with.
+                        if wanted, isConsentGate, !confirming { confirming = true; return }
+                        confirming = false
+                        model.setSwitch(row.aSwitch, on: wanted)
+                    }))
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+                    .disabled(row.locked)
+                    .help(row.locked
+                          ? "\(row.aSwitch.variable) is set in the agent's environment, so it "
+                          + "wins over anything saved here."
+                          : "")
+            }
+
+            if row.pending {
+                Text("Saved. The running agent still has the old value — restart it to apply.")
+                    .font(.system(size: 11)).foregroundStyle(.orange)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            // The disclosure sits ABOVE the confirmation, so the thing being
+            // consented to is on screen before the second press is offered.
+            if confirming {
+                VStack(alignment: .leading, spacing: 8) {
+                    Callout(icon: "exclamationmark.shield.fill", tint: .orange,
+                            title: "Before you turn this on",
+                            message: consentText)
+                    HStack {
+                        Button("Turn it on") {
+                            confirming = false
+                            model.setSwitch(row.aSwitch, on: true)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        Button("Cancel") { confirming = false }
+                    }
+                }
+            }
+
+            if let warning = row.running?.pairingWarning {
+                Callout(icon: "eye.slash.fill", tint: .orange,
+                        title: "Nothing on screen will say this is happening",
+                        message: warning)
+            }
+        }
+        .padding(.vertical, 8)
+    }
+
+    /// Proctor's own words, and deliberately concrete about what is handed over.
+    /// `BrowserUseTool`'s existing disclosure is the model.
+    private var consentText: String {
+        if row.aSwitch == SwitchCatalogue.secondLane {
+            return "browser-use is an autonomous agent that drives a real browser with your "
+                 + "real cookies and logins, and nothing it does reaches Proctor's audit "
+                 + "trail. Turning this on names it to the model Proctor is serving. "
+                 + "Proctor does not install it and has no opinion about whether it "
+                 + "should be here."
+        }
+        return "Proctor will create an event tap that swallows your keyboard and mouse while "
+             + "it posts a step, so your typing cannot land in the app it is driving. While "
+             + "it is held, Escape stops the run, and Cmd-Tab, Force Quit, lock screen and "
+             + "the screenshot keys still reach the system."
     }
 }
 

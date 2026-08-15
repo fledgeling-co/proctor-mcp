@@ -289,6 +289,101 @@ final class AgentModel {
     func togglePause() { control(hudPhase == .paused ? .resume : .pause) }
     func stopRun() { control(.stop) }
 
+    // MARK: - The switches (PRO-0029)
+
+    /// What is saved on disk. The window's half of the two sources of truth; the
+    /// other half is the agent's own environment, which only the agent can report.
+    private(set) var savedSwitches = SwitchStore.load(from: SwitchStore.defaultURL)
+
+    /// The last write's failure, if it failed. Shown rather than swallowed: a
+    /// preference that silently did not save is the class of defect this whole
+    /// item exists to remove.
+    private(set) var switchWriteError: String?
+
+    /// One row, ready to draw.
+    ///
+    /// `running` comes from the agent and is nil until its first report lands.
+    /// It is never guessed from this process's environment: the window is started
+    /// by LaunchServices and the agent by launchd, so this process's `ProcessInfo`
+    /// describes a different environment and would describe it plausibly.
+    struct SwitchRow: Identifiable, Equatable {
+        var id: String { aSwitch.variable }
+        let aSwitch: ProctorSwitch
+        /// What the agent is running with, or nil when nothing has said yet.
+        let running: SwitchState?
+        /// What is saved here, or nil when nothing is saved.
+        let saved: Bool?
+
+        /// What the control should show. The saved value when there is one,
+        /// otherwise what the agent reports, otherwise the built-in default.
+        var controlOn: Bool { saved ?? running?.on ?? aSwitch.defaultOn }
+        var locked: Bool { running?.locked ?? false }
+        var source: SwitchSource? {
+            running.flatMap { SwitchSource(rawValue: $0.source) }
+        }
+        /// A saved change that the running agent has not picked up yet.
+        var pending: Bool {
+            guard let running, aSwitch.timing == .nextStart else { return false }
+            guard let saved else { return false }
+            // A locked switch is not pending: the environment is winning and a
+            // restart would not change that.
+            return !running.locked && saved != running.on
+        }
+    }
+
+    var switchRows: [SwitchRow] {
+        let states = report?.switches ?? []
+        let byName = Dictionary(uniqueKeysWithValues: states.map { ($0.variable, $0) })
+        return SwitchCatalogue.all.map { aSwitch in
+            let raw = savedSwitches[aSwitch.variable]
+            return SwitchRow(aSwitch: aSwitch,
+                             running: byName[aSwitch.variable],
+                             saved: raw.map { SwitchResolver.isOn($0, for: aSwitch) })
+        }
+    }
+
+    /// Whether any saved change is waiting on a restart.
+    var switchesNeedRestart: Bool { switchRows.contains { $0.pending } }
+
+    /// Save a switch. Never claims the agent picked it up — that is `pending`'s
+    /// job, and it clears when the agent's next report says the new value is what
+    /// it is running with.
+    func setSwitch(_ aSwitch: ProctorSwitch, on: Bool) {
+        var saved = savedSwitches
+        saved.set(aSwitch, on: on)
+        persist(saved)
+
+        // The run panel is the one switch with a live channel, so honour it now
+        // as well as at the next start. The saved value is the start-up default;
+        // this is the current run.
+        if aSwitch == SwitchCatalogue.hud { setPanel(visible: on) }
+    }
+
+    /// Forget a saved preference, so the switch falls back to the environment or
+    /// its built-in default.
+    func clearSwitch(_ aSwitch: ProctorSwitch) {
+        var saved = savedSwitches
+        saved.clear(aSwitch)
+        persist(saved)
+    }
+
+    private func persist(_ saved: SavedSwitches) {
+        do {
+            try SwitchStore.save(saved, to: SwitchStore.defaultURL)
+            savedSwitches = saved
+            switchWriteError = nil
+        } catch {
+            switchWriteError = error.localizedDescription
+        }
+    }
+
+    /// Restart the agent so the relaunch-scoped switches take effect, then
+    /// re-read. The window learns it worked from the agent's next report.
+    func restartAgentForSwitches() {
+        Actions.restartAgent()
+        refresh()
+    }
+
     private func control(_ action: RunHUDControl) {
         Task.detached(priority: .userInitiated) {
             let result = Self.callHUD(action)

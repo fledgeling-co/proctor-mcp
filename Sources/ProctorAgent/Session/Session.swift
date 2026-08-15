@@ -212,8 +212,8 @@ actor Session {
     /// Both switches, read once. `PROCTOR_YIELD` is on unless turned off;
     /// `PROCTOR_YIELD_INPUT` is off unless turned on, and the asymmetry is the
     /// point — the input monitor is an opt-in, not a default with an escape.
-    var yieldEnabled = ContentionMonitor.enabled(in: ProcessInfo.processInfo.environment)
-    var yieldInputObserved = ContentionMonitor.inputObserved(in: ProcessInfo.processInfo.environment)
+    var yieldEnabled = ContentionMonitor.enabled(in: ProctorEnvironment.current)
+    var yieldInputObserved = ContentionMonitor.inputObserved(in: ProctorEnvironment.current)
     func setYieldSwitches(enabled: Bool, observesInput: Bool) {
         yieldEnabled = enabled
         yieldInputObserved = observesInput

@@ -142,6 +142,21 @@ extension Session {
                                    cuaLaneSelected: CuaDriverTool.laneSelected(tools.environment)),
             // Posture and shape, never rules. See `DoctorReport.PolicyPosture`.
             policy: policyPosture(),
+            // PRO-0029. What the eight runtime switches are set to in THIS agent,
+            // and where each value came from. On the wire because the status
+            // window cannot work it out: the window is launched by LaunchServices
+            // and this process by launchd, so the window's own `ProcessInfo`
+            // describes a different environment — plausibly, which is worse than
+            // not knowing.
+            //
+            // Resolved against the INHERITED environment, never the effective one.
+            // The effective dictionary already has the saved values folded in, so
+            // resolving against it would report every preference as having come
+            // from the environment, and therefore as locked — the exact misreport
+            // this feature exists to prevent.
+            switches: SwitchResolver.reportStates(
+                environment: ProctorEnvironment.inherited,
+                saved: SwitchStore.load(from: SwitchStore.defaultURL).values),
             ready: blockers.isEmpty,
             blockers: blockers)
     }

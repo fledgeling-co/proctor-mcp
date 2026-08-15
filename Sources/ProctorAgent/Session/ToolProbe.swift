@@ -222,7 +222,7 @@ final class ToolProbes: Sendable {
                                         presentTTL: ToolProbe.presentTTL,
                                         absentTTL: ToolProbe.presentTTL),
          cuaSignature: SignatureVerdictCache = SignatureVerdictCache(),
-         environment: [String: String] = ProcessInfo.processInfo.environment) {
+         environment: [String: String] = ProctorEnvironment.current) {
         self.obscura = obscura
         self.browserUse = browserUse
         self.simctl = simctl

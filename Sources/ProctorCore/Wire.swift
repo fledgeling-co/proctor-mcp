@@ -1040,6 +1040,18 @@ public struct DoctorReport: Codable, Sendable {
     /// the trail that will record it. **Shape and posture, never rules** — no
     /// bundle id, no path, no key id, no token. See `PolicyPosture`.
     public var policy: PolicyPosture?
+    /// What the eight runtime switches are actually set to in THIS agent, and
+    /// where each value came from.
+    ///
+    /// On the wire because the status window cannot work it out. The window is
+    /// launched by Finder or LaunchServices and the agent by launchd, so the
+    /// window's `ProcessInfo` describes a different process's environment — and
+    /// would describe it plausibly, which is worse than not knowing. The agent is
+    /// the only party that can answer, so it answers.
+    ///
+    /// Optional so an older agent's report still decodes against a newer window,
+    /// following `lanes` and `policy`.
+    public var switches: [SwitchState]?
     /// Untouched by Obscura either way: `ready` means Proctor can do its own job,
     /// and Proctor drives native applications without it. A health report that
     /// failed on an advisory tool would be lying about what is broken.
@@ -1210,6 +1222,7 @@ public struct DoctorReport: Codable, Sendable {
                 tools: [ToolPresence] = [], secondLane: String = SecondLaneState.off.rawValue,
                 agentBuild: BuildIdentity? = nil,
                 lanes: [Lane]? = nil, policy: PolicyPosture? = nil,
+                switches: [SwitchState]? = nil,
                 ready: Bool, blockers: [String]) {
         self.agentVersion = agentVersion; self.protocolVersion = protocolVersion
         self.osVersion = osVersion; self.agentRunning = agentRunning
@@ -1222,8 +1235,43 @@ public struct DoctorReport: Codable, Sendable {
         self.agentBuild = agentBuild
         self.lanes = lanes
         self.policy = policy
+        self.switches = switches
         self.ready = ready
         self.blockers = blockers
+    }
+}
+
+/// One runtime switch as the agent actually has it.
+///
+/// Deliberately carries the source and the lock separately from the value. A
+/// window that only knew the value would have to guess where it came from, and
+/// PRO-0029's whole point is that a toggle which silently loses to an environment
+/// variable is worse than no toggle.
+public struct SwitchState: Codable, Sendable, Equatable {
+    /// The variable's name, which is also its identity.
+    public var variable: String
+    /// Whether it is on in this agent.
+    public var on: Bool
+    /// `environment`, `saved` or `builtInDefault`.
+    public var source: String
+    /// Whether the window's control should be disabled. Never true for a
+    /// capability switch, so a person can always decline one.
+    public var locked: Bool
+    /// Whether a change lands now (`live`) or at the next agent start
+    /// (`nextStart`).
+    public var timing: String
+    /// Present only when the pairing is one that needs saying — a capability
+    /// armed with the thing that would announce it switched off.
+    public var pairingWarning: String?
+
+    public init(variable: String, on: Bool, source: String, locked: Bool,
+                timing: String, pairingWarning: String? = nil) {
+        self.variable = variable
+        self.on = on
+        self.source = source
+        self.locked = locked
+        self.timing = timing
+        self.pairingWarning = pairingWarning
     }
 }
 

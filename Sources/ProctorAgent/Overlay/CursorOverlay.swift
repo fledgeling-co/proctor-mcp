@@ -79,7 +79,7 @@ final class CursorOverlay {
     /// call sites check it before hopping to the main actor, so a disabled
     /// overlay costs nothing at all.
     nonisolated static let isEnabled: Bool =
-        OverlaySwitch.isOn("PROCTOR_CURSOR", in: ProcessInfo.processInfo.environment)
+        OverlaySwitch.isOn("PROCTOR_CURSOR", in: ProctorEnvironment.current)
 
     private static let pointerSize = CGSize(width: 19, height: 32)
     private static let ringDiameter: CGFloat = 46

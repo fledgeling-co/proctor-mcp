@@ -53,7 +53,7 @@ final class RunHUDFeed: @unchecked Sendable {
     private var lastWindow: Rect?
 
     init(drawing: Bool = OverlaySwitch.isOn("PROCTOR_HUD",
-                                            in: ProcessInfo.processInfo.environment)) {
+                                            in: ProctorEnvironment.current)) {
         self.drawingFlag = drawing
     }
 

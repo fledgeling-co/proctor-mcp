@@ -26,6 +26,23 @@ import ProctorCore
 // ordered in, which is exactly the shape of a background agent that draws.
 NSApplication.shared.setActivationPolicy(.accessory)
 
+// PRO-0029. Fold the saved switch preferences into the environment every switch
+// is read from, BEFORE anything reads one.
+//
+// The ordering is the one real hazard in that feature. `CursorOverlay.isEnabled`,
+// `InputBlocker.isEnabled` and `TakeoverOverlay.isEnabled` are `static let`s that
+// resolve on first touch, so a read before this line would capture the raw process
+// environment. That fails safely — preference-blind, never wrong — but it fails,
+// so this sits at the top with nothing above it but the activation policy, which
+// reads no environment at all.
+//
+// Precedence lives in `SwitchResolver` and is not one rule: the environment wins
+// for the drawing switches and the two lanes, and OFF wins from either source for
+// the two capability switches, so a person can always decline an event tap over
+// their own keyboard. A corrupt or missing file resolves every switch to its
+// built-in default, which reads OFF for both capabilities and both lanes.
+ProctorEnvironment.install(saved: SwitchStore.load(from: SwitchStore.defaultURL))
+
 /// The concrete engines are constructed here so the rest of the agent depends
 /// only on the protocols in Contracts.swift.
 func makeAXEngine() -> any AXEngine { AXEngineImpl() }
@@ -56,7 +73,7 @@ func makeAXEngine() -> any AXEngine { AXEngineImpl() }
 /// it does for every other tool Proctor knows about; the version, signature,
 /// vocabulary and grant checks all run in preflight, on the first delegated step.
 func makeActuationBackend(ax: any AXEngine) -> any ActuationBackend {
-    let environment = ProcessInfo.processInfo.environment
+    let environment = ProctorEnvironment.current
     guard CuaDriverTool.laneSelected(environment) else {
         return NativeActuationBackend(ax: ax)
     }

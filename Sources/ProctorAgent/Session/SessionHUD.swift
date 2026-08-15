@@ -20,7 +20,7 @@ extension Session {
     /// Off switch, the drawn pointer's shape exactly and separate from it, so
     /// either can be left on alone.
     nonisolated static var hudEnabledByDefault: Bool {
-        OverlaySwitch.isOn("PROCTOR_HUD", in: ProcessInfo.processInfo.environment)
+        OverlaySwitch.isOn("PROCTOR_HUD", in: ProctorEnvironment.current)
     }
 
     /// Whether this step travels through the event stream, which is the one

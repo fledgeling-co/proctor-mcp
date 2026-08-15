@@ -58,7 +58,7 @@ final class InputBlocker: @unchecked Sendable {
     /// Whether an operator asked for this at all. Read once: a tap that could
     /// switch itself on mid-process would be a tap nobody agreed to.
     nonisolated static let isEnabled: Bool =
-        Takeover.blockEnabled(in: ProcessInfo.processInfo.environment)
+        Takeover.blockEnabled(in: ProctorEnvironment.current)
 
     /// Somebody pressed the release chord. Set by the session at run start.
     var onStop: (@Sendable () -> Void)?
@@ -467,7 +467,7 @@ final class TakeoverOverlay {
     static let shared = TakeoverOverlay()
 
     nonisolated static let isEnabled: Bool =
-        Takeover.overlayEnabled(in: ProcessInfo.processInfo.environment)
+        Takeover.overlayEnabled(in: ProctorEnvironment.current)
 
     private struct Surface {
         let panel: NSPanel
