@@ -4,6 +4,19 @@ You are a feature runner in an orchestrated fleet. Deliver ONE feature by invoki
 ship-feature skill (Skill tool: `ship-feature:ship-feature`) on it, from the repo root
 `/Users/lukerhodes/Dev/proctor-mcp`. Your own prompt names which feature.
 
+## Wave 7: read the direction first
+
+Before your own brief, read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` in full. It
+is the architecture this whole wave assumes and it reverses decisions made in waves 1 to
+6: actuation moves to Cua Driver, Proctor keeps its own capture path and its
+trustworthiness reporting, keeps the verdict layer, keeps the supervised-run surface, and
+gains an iOS lane. Where an earlier spec contradicts it, the direction file wins and your
+spec should say so rather than quietly diverging.
+
+The evidence behind the pivot is `docs/research/2026-08-15-dossier-proctor-vs-cua.md`.
+Read it before designing. It carries a counter-review that reversed one of its own
+conclusions, and the reversal is the part that matters.
+
 ## FIRST ACTION — model self-check
 
 Your system prompt states the model powering you. If it is NOT an Opus-class Claude model,
