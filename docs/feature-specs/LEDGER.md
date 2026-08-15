@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 42
+**Last allocated:** 53
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -53,9 +53,10 @@
 | PRO-0044 | Cua becomes the actuation backend | 2026-08-15 | Triaged |
 | PRO-0045 | A delegated call is still gated and recorded | 2026-08-15 | Triaged |
 | PRO-0046 | Supervision survives delegation | 2026-08-15 | Triaged |
-| PRO-0047 | The run has a history you can read | 2026-08-15 | Triaged |
-| PRO-0048 | Drive iOS through deep links | 2026-08-15 | Triaged |
+| PRO-0047 | The run has a history you can read | 2026-08-15 | Merged `9756282` |
+| PRO-0048 | Drive iOS through deep links | 2026-08-15 | Merged `8d2fde6` |
 | PRO-0049 | Run Maestro flows as Proctor flows | 2026-08-15 | Triaged |
 | PRO-0050 | Doctor knows the whole toolchain | 2026-08-15 | Triaged |
 | PRO-0051 | Decide what happens to the native planes | 2026-08-15 | Triaged |
 | PRO-0052 | The proctor skill tracks what actually shipped | 2026-08-15 | Triaged |
+| PRO-0053 | `TakeoverWiringTests` reddens the gate at random | 2026-08-15 | Triaged |

@@ -289,13 +289,14 @@ refusal, whose question changed shape underneath it).
 |---|---|---|---|---|
 | PRO-0043 | The build-identity tests fail on a moving HEAD | `44-…` | 1 | **MERGED** `d4a1565` |
 | PRO-0044 | **Cua becomes the actuation backend** | `45-…` | 1 | **RUNNING** `wf_91f604bd-42f` |
-| PRO-0047 | The run has a history you can read | `48-…` | 1 | **RUNNING** `wf_69311365-f5a` |
+| PRO-0047 | The run has a history you can read | `48-…` | 1 | **MERGED** `9756282` |
 | PRO-0041 | doctor can hang on the Screen Recording probe | `42-…` | 1 | **MERGED** `0545219` |
 | PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **MERGED** `091d6c3` (carried) |
-| PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **RUNNING** `wf_5eee3ea9-866` · no dep on PRO-0044 |
+| PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **MERGED** `8d2fde6` |
+| PRO-0053 | `TakeoverWiringTests` reddens the gate at random | `54-…` | 2 | **RUNNING** `wf_f2c15073-ba7` · found mid-fleet |
 | PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **QUEUED** · after PRO-0044 |
 | PRO-0046 | Supervision survives delegation | `47-…` | 2 | **QUEUED** · after PRO-0044 |
-| PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **QUEUED** · absorbs PRO-0031 |
+| PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **RUNNING** `wf_4005fecb-626` · absorbs PRO-0031 |
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **QUEUED** · after PRO-0048 |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **QUEUED** · after PRO-0044 |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **QUEUED** (carried, revised) |
@@ -304,6 +305,63 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0048 merged `8d2fde6`.** 1015 -> **1043 tests in 113 suites**. The iOS
+  lane exists.
+  - **An iOS target is a new handle kind on a new tool** (`proctor_ios`, actions
+    `list`/`boot`/`open`/`screenshot`), never a simulator dressed as an app.
+    `Session.windowHandle` refuses a `dev-` handle **by name**, before it can fall through
+    to "unknown window", with a message naming the ceiling and the route that works.
+    PRO-0049 builds on `Sources/ProctorCore/IOSDevice.swift`, which holds the decision layer
+    as pure code.
+  - **simctl catches more than the brief feared, and the residue is named.** Measured before
+    designing: `openurl` exits 194 for an unclaimed scheme and 149 for a shut-down device.
+    The remaining silent success is a claimed scheme the app ignores, so `open` reports
+    three channels separately and picks a verdict that never claims more than they support:
+    `targetChanged`, `screenChanged`, `deliveredOnly` (inconclusive, **not** failed),
+    `deliveredUnobserved`, `targetGone`, `refused`. It never claims which screen the app
+    reached, because frontmost is not observable in this lane.
+  - **The gates changed the design three times.** The spec gate killed the word "navigated"
+    (a device-global pixel fraction cannot tell the target app from a banner), added the
+    `screenshot` action (the lane was refusing every observation tool while taking device
+    screenshots itself), and caught that gating on a caller-supplied bundle id reopened the
+    hole `SessionPolicy` closed. The plan gate, on its retry with reading forbidden, found
+    **two real defects in code already written**: the after-sample was taken before the app
+    had painted, so every real navigation would have read `deliveredOnly`, and the output
+    cap stopped reading and wedged the child.
+  - **For callers:** a non-zero simctl exit is a `refused` **verdict in the result**, not a
+    thrown error. Deliberate, but a caller checking for an exception sees success.
+- 2026-08-15 **PRO-0047 merged `9756282`.** 943 -> **1015 tests in 111 suites**. History,
+  and the reader gets the action log they asked to keep.
+  - **What crosses the sealed boundary is a projection, asserted by a test that walks the
+    emitted JSON.** Excluded: the `value`/`script` redaction fingerprints, `postStateHash`,
+    seal and signing key ids, and the `app`/`window` session handles. That last exclusion
+    came from the review and was also a bug — the record stores `app-3`, not "Mail", so the
+    row as first specified could not have been drawn. Applications are named by bundle id.
+    Decryption happens only when a person opens the window, never on a poll.
+  - **The fence needed the record to change shape.** Proctor's verb and the object are now
+    separate fields, because `Pressed "Send invoice"` cannot be fenced without fencing
+    Proctor's own words. One `Fence` view is the only place foreign text is drawn, via
+    `Text(verbatim:)` in a bordered run, and the window sets `sharingType = .none`.
+  - **Retention: 14 days or 10,000 entries**, clamped 1-90 and 100-100,000, with no setting
+    meaning "keep everything". Passing either cap rotates the trail whole, because the chain
+    makes a front truncation unrepresentable; the new trail opens with a record committing to
+    the discarded trail's identity, length and final hash. Clear is the same operation.
+  - **The completeness critic found five real defects in shipped code.** A planted rotation
+    marker could have had Proctor sign a discard that never happened; a corrupt marker drove
+    a wipe; a rotation that finished but never cleaned up would have run twice and destroyed
+    its own genesis; the cap decision sat outside the cross-process lock so two agents could
+    both rotate; and the count came from an end-mark that freezes if the key store stops
+    accepting writes, leaving the trail growing while reporting itself bounded.
+  - **A pre-existing defect fixed on the way:** two suites each redirecting the process-wide
+    trail seam ran in parallel and stamped on each other, since `.serialized` only orders
+    tests within one suite. `Tests/ProctorAgentTests/TrailIsolation.swift` now holds the lock
+    every trail-touching suite takes.
+  - **Needs a human glance, not machine-witnessable:** the window's rendering, the fence as
+    drawn, the Clear confirmation, light and dark, and the capture exclusion. `swift test`
+    has no window server.
+- 2026-08-15 **PRO-0053 allocated mid-fleet** for the `TakeoverWiringTests` defect, after a
+  fourth independent measurement on `main`. Brief `54-…`, `Last allocated` corrected 42 -> 53
+  (the wave 7 ids had been allocated without moving the pointer).
 - 2026-08-15 **PRO-0040 merged `091d6c3`.** 937 -> **943 tests in 106 suites**.
   - **The layout decision was measured, not argued.** The runner built a probe binary and
     compared all three options before writing the spec. `Contents/Helpers/` works but nils
