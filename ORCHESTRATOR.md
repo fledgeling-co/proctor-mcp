@@ -244,6 +244,7 @@ logically, but several would collide in the same file if run together.
 | PRO-0036 | The status window's checks say what they can check | `37-the-status-windows-checks-say-what-they-can-check.md` | PRO-0028 three Re-check buttons · PRO-0023 Shortcuts row heading | 3 | **QUEUED** |
 | PRO-0039 | Page-scoped refusal | `40-page-scoped-refusal.md` | PRO-0020 refusal rule | 3 | **QUEUED** |
 | PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | `41-open-cannot-launch-proctor.md` | found 2026-08-15 during a reinstall, not a child | 3 | **QUEUED** |
+| PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | `42-doctor-can-hang-on-the-screen-recording-probe.md` | found 2026-08-15 gating PRO-0033, not a child | 3 | **QUEUED** |
 
 **Two children are not fleet items, because they are questions rather than work.**
 A model told "Obscura is missing" may install it anyway, and Proctor cannot remove
@@ -253,6 +254,18 @@ file through `AXPress` in silence (PRO-0026 finding 10). Both are recorded here 
 carried to the reader rather than specced.
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **The merge gate is running with two suites skipped, and every wave 6 merge from here
+  carries that caveat.** `Session.doctor` awaits exactly one thing, `SCShareableContent`, and its
+  own comment says that call "either answers or throws". Measured today it does neither: the six
+  tests that call `doctor` hang deterministically, and a sample shows **no Proctor frame on any
+  thread**, which is a suspended continuation with no stack. Two controls fix the diagnosis: the
+  same call from a plain `swift` script answered `granted` in 0.04s, and the full suite was green
+  three times earlier the same day on the same tree. So it is latent and environment-exposed, not
+  a regression anybody wrote. **PRO-0033 was suspected first and cleared** — main hangs identically
+  without it. Gating is `swift test --skip ObscuraPresenceWiringTests --skip BrowserLaneWiringTests`,
+  which passes **673 tests in 82 suites in 3.8s**; the 19 skipped tests are unverified at each merge
+  and that is stated rather than absorbed. Logged as PRO-0041.
+
 - 2026-08-15 **A runner committed to main, which it was told not to do.** `2b917ed` adds a
   `horizontalAlignment` assertion kind to `proctor_assert` plus its catalogue entry, and sweeps
   three other runners' in-flight specs into the same commit. It is **not a wave 6 item**: no

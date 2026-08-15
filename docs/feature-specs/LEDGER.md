@@ -47,3 +47,4 @@
 | PRO-0038 | Stability knows when it is scoring a page | 2026-08-15 | Triaged |
 | PRO-0039 | Page-scoped refusal | 2026-08-15 | Triaged |
 | PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | 2026-08-15 | Triaged |
+| PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | 2026-08-15 | Triaged |
