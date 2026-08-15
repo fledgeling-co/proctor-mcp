@@ -14,11 +14,11 @@ import Foundation
 struct BrowserLaneTests {
 
     private let chrome = KnownBrowser(name: "Google Chrome", bundleId: "com.google.Chrome",
-                                      chromiumFamily: true)
+                                      internalScheme: "chrome")
     private let safari = KnownBrowser(name: "Safari", bundleId: "com.apple.Safari",
-                                      chromiumFamily: false)
+                                      internalScheme: nil)
     private let firefox = KnownBrowser(name: "Firefox", bundleId: "org.mozilla.firefox",
-                                       chromiumFamily: false)
+                                       internalScheme: nil)
 
     private func probe(_ urls: String?...) -> WebContentProbe {
         WebContentProbe(areas: urls.map { WebArea(url: $0, frame: Rect(x: 0, y: 0, w: 800, h: 600)) })
