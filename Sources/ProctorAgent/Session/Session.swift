@@ -386,7 +386,7 @@ actor Session {
             // every surface reads. `RunScheduler.currentRun` is this call's own
             // ticket, carried by task-local through the actor's reentrancy.
             let ticket = RunScheduler.currentRun
-            runControl.yield(reason, run: ticket, hold: hold)
+            runControl.yield(run: ticket, hold: hold)
             await runScheduler.hold(run: ticket, hold)
             await hud(.yielded(reason: reason))
             RunHUDPanel.audit("run.yielded", detail: reason.detail)
@@ -398,7 +398,7 @@ actor Session {
             closeOpenHold(&run, endedBy: .released)
             yieldRuns[token] = run
             let ticket = RunScheduler.currentRun
-            runControl.release()
+            runControl.release(run: ticket)
             await runScheduler.unhold(run: ticket)
             // A person's own Pause is not lifted by a contention clearing. The
             // latch keeps both causes apart; this only says so on the panel when

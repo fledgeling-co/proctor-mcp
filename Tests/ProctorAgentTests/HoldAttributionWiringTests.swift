@@ -37,7 +37,7 @@ struct HoldAttributionWiringTests {
     @Test("a yield parks its owner and leaves every other run alone")
     func aYieldParksOnlyItsOwner() async {
         let control = latch()
-        control.yield(.frontmostChanged, run: 7, hold: aHold(.frontmostChanged))
+        control.yield(run: 7, hold: aHold(.frontmostChanged))
 
         // The run that read it is held.
         #expect(control.isParked(run: 7))
@@ -61,12 +61,12 @@ struct HoldAttributionWiringTests {
     func theYieldedRunIsHeldAndCarriesOn() async throws {
         let control = latch()
         control.pollNanoseconds = 1_000_000
-        control.yield(.secureInput, run: 3, hold: aHold(.secureInput))
+        control.yield(run: 3, hold: aHold(.secureInput))
 
         let held = Task { await control.checkpoint(run: 3) }
         try await Task.sleep(nanoseconds: 20_000_000)
         #expect(!held.isCancelled)
-        control.release()
+        control.release(run: 3)
         #expect(await held.value == nil)
     }
 
@@ -77,10 +77,49 @@ struct HoldAttributionWiringTests {
         // which is what a run needs. Keeping both is what lets the two questions
         // stop being confused for each other.
         let control = latch()
-        control.yield(.userInput, run: 4, hold: aHold(.userInput))
+        control.yield(run: 4, hold: aHold(.userInput))
         #expect(control.isPaused)
         #expect(control.isYielded)
         #expect(!control.isParked(run: 5))
+    }
+
+    @Test("a second hold never unparks the first")
+    func aSecondHoldNeverUnparksTheFirst() {
+        // The lane model means two runs should not be yielded at once: arming
+        // implies the batch takes the foreground, which takes the exclusive
+        // global lane. This asserts what happens if that ever stops holding,
+        // because the failure would be silent and severe — a single owner would
+        // be retargeted by the second yield, and the first run would resume
+        // posting into the very person it had just got out of the way of.
+        let control = latch()
+        control.yield(run: 7, hold: aHold(.frontmostChanged))
+        control.yield(run: 9, hold: aHold(.secureInput))
+
+        #expect(control.isParked(run: 7))
+        #expect(control.isParked(run: 9))
+        // Each keeps its own reason rather than the last writer's.
+        #expect(control.heldBy(run: 7)?.reason == .frontmostChanged)
+        #expect(control.heldBy(run: 9)?.reason == .secureInput)
+        // And the machine-wide read takes the highest-precedence one, which is
+        // the one that most explains why injected input is least welcome.
+        #expect(control.heldBy?.reason == .secureInput)
+
+        // Releasing one leaves the other exactly where it was.
+        control.release(run: 9)
+        #expect(control.isParked(run: 7))
+        #expect(!control.isParked(run: 9))
+        #expect(control.isYielded)
+        control.release(run: 7)
+        #expect(!control.isYielded)
+    }
+
+    @Test("releasing a run that is not held changes nothing")
+    func releasingAnUnheldRunIsANoOp() {
+        let control = latch()
+        control.yield(run: 7, hold: aHold(.frontmostChanged))
+        control.release(run: 9)
+        #expect(control.isParked(run: 7))
+        #expect(control.heldBy?.reason == .frontmostChanged)
     }
 
     // MARK: - A4: a run beginning does not erase another run's hold
@@ -88,7 +127,7 @@ struct HoldAttributionWiringTests {
     @Test("a run beginning does not lift a hold it does not own")
     func beginDoesNotEraseAnotherRunsHold() {
         let control = latch()
-        control.yield(.frontmostChanged, run: 7, hold: aHold(.frontmostChanged))
+        control.yield(run: 7, hold: aHold(.frontmostChanged))
 
         // Run 9 starts on a free app lane while run 7 is yielded. The scheduler
         // does not consult this latch, so this happens; at HEAD it cleared run
@@ -106,7 +145,7 @@ struct HoldAttributionWiringTests {
     @Test("a run beginning does clear its own hold, so nothing carries over")
     func beginClearsItsOwnHold() {
         let control = latch()
-        control.yield(.frontmostChanged, run: 7, hold: aHold(.frontmostChanged))
+        control.yield(run: 7, hold: aHold(.frontmostChanged))
         control.begin(run: 7)
         #expect(!control.isYielded)
         #expect(!control.isParked(run: 7))
@@ -132,7 +171,7 @@ struct HoldAttributionWiringTests {
         let control = RunControl(pauseLimit: 10, now: { clock.value })
         control.begin(run: 0)
         control.pollNanoseconds = 1_000_000
-        control.yield(.frontmostChanged, run: 7, hold: aHold(.frontmostChanged))
+        control.yield(run: 7, hold: aHold(.frontmostChanged))
         clock.value += 11
 
         #expect(await control.checkpoint(run: 7) == .pauseExpired(seconds: 10))
@@ -170,11 +209,11 @@ struct HoldAttributionWiringTests {
         // against the run; keying the ledger by run is what keeps that true when
         // another run begins in between, which used to reset the single total
         // and hand the condition a fresh bound it had already spent.
-        control.yield(.frontmostChanged, run: 7, hold: aHold(.frontmostChanged))
+        control.yield(run: 7, hold: aHold(.frontmostChanged))
         clock.value += 6
-        control.release()
+        control.release(run: 7)
         control.begin(run: 9)          // an unrelated run, which used to wipe the ledger
-        control.yield(.frontmostChanged, run: 7, hold: aHold(.frontmostChanged))
+        control.yield(run: 7, hold: aHold(.frontmostChanged))
         clock.value += 5
 
         #expect(await control.checkpoint(run: 7) == .pauseExpired(seconds: 10))
@@ -188,18 +227,18 @@ struct HoldAttributionWiringTests {
         control.pollNanoseconds = 1_000_000
 
         // Run 7 spends nine of the ten seconds and lets go.
-        control.yield(.frontmostChanged, run: 7, hold: aHold(.frontmostChanged))
+        control.yield(run: 7, hold: aHold(.frontmostChanged))
         clock.value += 9
-        control.release()
+        control.release(run: 7)
 
         // Run 9 has spent none of its own, so two seconds is two seconds. Under
         // a single shared ledger this run would read eleven and be given up for
         // time somebody else's hold had cost.
-        control.yield(.frontmostChanged, run: 9, hold: aHold(.frontmostChanged))
+        control.yield(run: 9, hold: aHold(.frontmostChanged))
         clock.value += 2
         let probe = Task { await control.checkpoint(run: 9) }
         try await Task.sleep(nanoseconds: 30_000_000)
-        control.release()
+        control.release(run: 9)
         // Nil rather than `.pauseExpired`: it was parked and then let out, which
         // is what a hold that has not reached its bound does.
         #expect(await probe.value == nil)

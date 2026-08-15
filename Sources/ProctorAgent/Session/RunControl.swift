@@ -60,16 +60,23 @@ final class RunControl: @unchecked Sendable {
     ///   cmd-tabbed away from Safari, and parking it told its caller nothing
     ///   while stopping it for up to the whole backstop.
     ///
-    /// At most one run can be yielded at any instant — arming implies the batch
-    /// takes the foreground, which takes the exclusive global lane — so the key
-    /// costs one optional and no second mechanism.
+    /// The key costs a dictionary and no second mechanism: there is still one
+    /// flag set, one clock and one bound.
     private var pausedByPerson = false
-    private var yieldReason: YieldReason?
-    /// Which run read the yield. Nil when nothing automatic is holding.
-    private var yieldOwner: Int?
-    /// Who that hold belongs to, for every surface that can carry a name.
-    private var yieldHold: HoldAttribution?
-    private var paused: Bool { pausedByPerson || yieldReason != nil }
+    /// The automatic holds, keyed by the run that read each one, carrying who
+    /// each belongs to for every surface that can carry a name.
+    ///
+    /// A DICTIONARY RATHER THAN ONE OWNER, and the reason is worth stating
+    /// because a scalar looked sufficient. At most one run can be yielded at a
+    /// time today: arming implies the batch takes the foreground, which takes
+    /// the exclusive global lane. But that invariant is enforced two files away,
+    /// and if it ever stopped holding, a single owner would be silently
+    /// retargeted by the second yield — the first run's park would evaporate and
+    /// it would carry on posting into the very person it had just got out of the
+    /// way of, with nothing anywhere saying so. Keying by run costs one
+    /// dictionary and removes the dependency instead of documenting it.
+    private var yields: [Int: HoldAttribution] = [:]
+    private var paused: Bool { pausedByPerson || !yields.isEmpty }
     private var stopped = false
     /// When the hold started, whichever cause started it. Set when the first
     /// cause latches and cleared when the last one lets go, so the backstop
@@ -131,12 +138,10 @@ final class RunControl: @unchecked Sendable {
         pausedAt = nil
     }
 
-    /// The automatic cause, gone. Held under the lock by every caller.
-    private func clearYield() {
-        yieldReason = nil
-        yieldOwner = nil
-        yieldHold = nil
-    }
+    /// Every automatic cause, gone. Held under the lock by every caller, and
+    /// used only where the decision really is about the whole machine: a
+    /// person's Resume, a person's Stop, and a person's pause running out.
+    private func clearYield() { yields.removeAll() }
 
     // MARK: - The automatic half
 
@@ -146,20 +151,21 @@ final class RunControl: @unchecked Sendable {
     ///
     /// `run` is the scheduler's ticket id — the same value the queue bar keys a
     /// row on, so the hold a person reads and the run it belongs to are the same
-    /// identity rather than two things that have to be correlated.
-    func yield(_ reason: YieldReason, run: Int, hold: HoldAttribution) {
+    /// identity rather than two things that have to be correlated. The reason is
+    /// not a second parameter: it lives on the attribution, and two places to
+    /// say it is two places to disagree.
+    func yield(run: Int, hold: HoldAttribution) {
         lock.lock(); defer { lock.unlock() }
-        yieldReason = reason
-        yieldOwner = run
-        yieldHold = hold
+        yields[run] = hold
         if pausedAt == nil { pausedAt = now() }
     }
 
     /// The contention cleared. Lifts ONLY the yield — a pause a person pressed
     /// while the run happened to be yielded stays exactly where they put it.
-    func release() {
+    func release(run: Int) {
         lock.lock(); defer { lock.unlock() }
-        guard let owner = yieldOwner else { return }
+        guard yields[run] != nil else { return }
+        let owner = run
         // Bank what this hold cost before letting go. Without this a condition
         // that flaps — an application taking and losing the front, secure input
         // going on and off — would start a fresh backstop every time it
@@ -167,22 +173,34 @@ final class RunControl: @unchecked Sendable {
         // of which is individually within the bound. The bound is on the run,
         // not on the episode, which is why the ledger is keyed by run.
         if let since = pausedAt { yieldBanked[owner, default: 0] += max(0, now() - since) }
-        clearYield()
-        if !pausedByPerson { pausedAt = nil }
+        yields[run] = nil
+        if !paused { pausedAt = nil }
     }
 
     var isPaused: Bool { lock.lock(); defer { lock.unlock() }; return paused }
     var isStopped: Bool { lock.lock(); defer { lock.unlock() }; return stopped }
-    var isYielded: Bool { lock.lock(); defer { lock.unlock() }; return yieldReason != nil }
+    var isYielded: Bool { lock.lock(); defer { lock.unlock() }; return !yields.isEmpty }
     var pausedByAPerson: Bool { lock.lock(); defer { lock.unlock() }; return pausedByPerson }
     /// Whose the automatic hold is, readable without entering the session.
-    var heldBy: HoldAttribution? { lock.lock(); defer { lock.unlock() }; return yieldHold }
+    /// The hold worth reading when more than one is somehow open: highest
+    /// precedence first, the order the reasons are declared in.
+    var heldBy: HoldAttribution? {
+        lock.lock(); defer { lock.unlock() }
+        let open = yields.values
+        return YieldReason.allCases.lazy
+            .compactMap { reason in open.first { $0.reason == reason } }.first
+    }
+    /// Whose hold this particular run is under, when it is under one.
+    func heldBy(run: Int) -> HoldAttribution? {
+        lock.lock(); defer { lock.unlock() }
+        return yields[run]
+    }
 
     /// Whether THIS run is being held. A person's pause parks every run; a yield
     /// parks the run that read it and nobody else.
     func isParked(run: Int) -> Bool {
         lock.lock(); defer { lock.unlock() }
-        return pausedByPerson || yieldOwner == run
+        return pausedByPerson || yields[run] != nil
     }
 
     /// Whether a person has resumed since this was last asked, consumed in the
@@ -213,7 +231,7 @@ final class RunControl: @unchecked Sendable {
         personResumePending = false
         yieldBanked[run] = nil
         // Somebody else's automatic hold is not this run's to lift.
-        if yieldOwner == nil || yieldOwner == run { clearYield() }
+        yields[run] = nil
         if !paused { pausedAt = nil }
     }
 
@@ -253,7 +271,7 @@ final class RunControl: @unchecked Sendable {
     private func look(run: Int) -> Halt? {
         lock.lock(); defer { lock.unlock() }
         if stopped { return .stopped }
-        let byYield = yieldOwner == run
+        let byYield = yields[run] != nil
         guard pausedByPerson || byYield, let since = pausedAt else { return nil }
         // What this hold has cost, plus what earlier automatic holds already
         // cost THIS run. A person's own pause is judged on this episode alone,
@@ -281,9 +299,9 @@ final class RunControl: @unchecked Sendable {
             yieldBanked.removeAll()
             return .pauseExpired(seconds: pauseLimit)
         }
-        clearYield()
+        yields[run] = nil
         yieldBanked[run] = nil
-        pausedAt = nil
+        if !paused { pausedAt = nil }
         return .pauseExpired(seconds: pauseLimit)
     }
 }

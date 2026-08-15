@@ -216,14 +216,14 @@ struct YieldWiringTests {
     func oneClockForBothCauses() {
         let clock = TestClock()
         let control = RunControl(pauseLimit: 10, now: { clock.value })
-        control.yield(.userInput, run: 0, hold: aHold(.userInput))
+        control.yield(run: 0, hold: aHold(.userInput))
         #expect(control.isPaused)
         #expect(control.isYielded)
         #expect(control.pausedByAPerson == false)
         // A person pausing on top of a yield does not restart the clock, and
         // releasing the yield does not clear their pause.
         control.pause()
-        control.release()
+        control.release(run: 0)
         #expect(control.isPaused, "their pause survives the contention clearing")
         #expect(control.isYielded == false)
         clock.value = 20
@@ -236,8 +236,8 @@ struct YieldWiringTests {
     func releaseAndResumeDifferent() {
         let control = RunControl(pauseLimit: 900, now: { 0 })
         control.pause()
-        control.yield(.secureInput, run: 0, hold: aHold(.secureInput))
-        control.release()
+        control.yield(run: 0, hold: aHold(.secureInput))
+        control.release(run: 0)
         #expect(control.isPaused, "a person's pause is not lifted by a condition clearing")
         control.resume()
         #expect(control.isPaused == false)
@@ -248,7 +248,7 @@ struct YieldWiringTests {
     @Test("Resume is recorded on the latch, so the panel's own button counts too")
     func resumeIsRecordedOnTheLatch() {
         let control = RunControl(pauseLimit: 900, now: { 0 })
-        control.yield(.frontmostChanged, run: 0, hold: aHold(.frontmostChanged))
+        control.yield(run: 0, hold: aHold(.frontmostChanged))
         // The panel reaches for the shared latch directly and never goes through
         // the agent's verb, so an override recorded at the verb alone would work
         // from the menu bar and be undone 60ms later from the panel.
@@ -260,7 +260,7 @@ struct YieldWiringTests {
     @Test("a fresh run starts with nobody's hand on it")
     func beginClearsEverything() {
         let control = RunControl(pauseLimit: 900, now: { 0 })
-        control.yield(.userInput, run: 0, hold: aHold(.userInput))
+        control.yield(run: 0, hold: aHold(.userInput))
         control.resume()
         control.begin(run: 0)
         #expect(control.isPaused == false)
@@ -277,11 +277,11 @@ struct YieldWiringTests {
         // start another full ten seconds and the run would be held indefinitely
         // by something that never stays true long enough to expire.
         for _ in 0..<3 {
-            control.yield(.frontmostChanged, run: 0, hold: aHold(.frontmostChanged))
+            control.yield(run: 0, hold: aHold(.frontmostChanged))
             clock.value += 4
-            control.release()
+            control.release(run: 0)
         }
-        control.yield(.frontmostChanged, run: 0, hold: aHold(.frontmostChanged))
+        control.yield(run: 0, hold: aHold(.frontmostChanged))
         clock.value += 1
         // 12 seconds banked plus 1 held is past the bound, so it gives up and
         // says so rather than holding on.
@@ -320,16 +320,16 @@ struct YieldWiringTests {
     func nothingCarriesIntoTheNextRun() {
         let clock = TestClock()
         let control = RunControl(pauseLimit: 10, now: { clock.value })
-        control.yield(.userInput, run: 0, hold: aHold(.userInput))
+        control.yield(run: 0, hold: aHold(.userInput))
         clock.value += 5
-        control.release()
+        control.release(run: 0)
         control.resume()
         control.begin(run: 0)
         #expect(control.isPaused == false)
         #expect(control.isYielded == false)
         #expect(control.takePersonResume() == false)
         // And the banked time went with it: the next run gets the whole bound.
-        control.yield(.userInput, run: 0, hold: aHold(.userInput))
+        control.yield(run: 0, hold: aHold(.userInput))
         clock.value += 9
         #expect(control.isPaused == true)
     }

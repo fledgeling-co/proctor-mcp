@@ -41,7 +41,7 @@ struct StopReachabilityWiringTests {
         await session.setContentionMonitor(contention)
         await session.setYieldSwitches(enabled: true, observesInput: false)
         let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
-        control.begin()
+        control.begin(run: 0)
         await session.setRunControl(control)
         _ = try await session.attachResolved(bundleId: Self.target, pid: nil, name: nil)
         return (session, ax, takeover, contention)
