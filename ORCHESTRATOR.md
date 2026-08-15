@@ -294,17 +294,54 @@ refusal, whose question changed shape underneath it).
 | PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **MERGED** `091d6c3` (carried) |
 | PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **MERGED** `8d2fde6` |
 | PRO-0053 | `TakeoverWiringTests` reddens the gate at random | `54-…` | 2 | **MERGED** `477941f` · found mid-fleet, was a production defect |
-| PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **RUNNING** `wf_e1399c64-3e2` |
+| PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **MERGED** `1bff5c2` |
 | PRO-0046 | Supervision survives delegation | `47-…` | 2 | **RUNNING** `wf_c9845e3c-c4d` |
 | PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **MERGED** `0ea6f88` · absorbed PRO-0031 |
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **QUEUED** · after PRO-0048 |
-| PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **QUEUED** · after PRO-0044 |
+| PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **RUNNING** `wf_c8fe9a13-789` |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **QUEUED** (carried, revised) |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **QUEUED** (carried, revised) |
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **RUNNING** `wf_5040b522-5a1` |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0045 merged `1bff5c2`.** 1162 -> **1193 tests in 131 suites**.
+  - **What the trail attests to, which was the deliverable as much as the code.** Every row
+    is a claim Proctor makes about a request *it* made. For a native step, intent and act are
+    one event. For a delegated step the row carries three facts of three strengths and never
+    merges them: Proctor's own knowledge (the gate allowed this app, Proctor sent this
+    request); an external claim (`mode`, `eff`, which Proctor did not witness and does not
+    vouch for); and Proctor's own before/after reading of the accessibility tree (`obs`),
+    the only part it witnessed. Where the two disagree the row records the disagreement
+    instead of resolving it. **And the gate governs what Proctor does, not the machine** —
+    stated in code, not only in the spec.
+  - **Intent and outcome turned out to be three facts, not two**, and `obs` is the one that
+    stops the trail becoming a record of intent.
+  - **A new `indeterminate` outcome, deliberately not `failed`.** `failed` asserts the action
+    did not happen, and a driver that dies mid-step may have delivered it first. Those rows
+    keep Proctor's reading, stop the batch, are never auto-retried, and drop to the noun form
+    so Proctor never says "Pressed" about something it could not establish.
+  - **The gates found real defects at every stage.** The design review found a
+    time-of-check/time-of-use gap between the path check and the spawn, which would have made
+    the lane record attest the wrong build — an audit feature manufacturing evidence rather
+    than losing it. The plan review found five bugs in the line reader (polling ahead of a
+    buffered line, discarding the residual on expiry, EOF read as timeout, millisecond
+    truncation to `poll(…,0)`, a wall clock) and an event drain that interleaves on a
+    reentrant actor.
+  - **Two deviations recorded rather than absorbed:** `PROC_PIDAUDITTOKEN` is absent from the
+    public SDK, so identity uses `kSecGuestAttributePid` with the residual pid-recycling
+    window named in code; and the typed failure became two fields on `AgentError` rather than
+    a wrapper type.
+  - **Foundation defect fixed:** `CuaEndpointTransport.callTimeout` was declared in PRO-0044
+    and never read.
+  - **Child work:** the driver wire has no request ids, which is why a timeout must poison the
+    lane; two concurrent sessions share one driver, so one session's timeout closes another's
+    lane; `proctor_doctor` does not report lane identity though the trail now does.
+  - **Second load-sensitive flake found at merge**, unrelated to this item:
+    `ScreenRecordingProbeWiringTests.swift:116` ("a late answer is picked up by the next
+    call") failed 1 in 7 under fleet load. Not in PRO-0045's diff; it belongs to PRO-0041's
+    own suite. Together with `ForegroundWiringTests.swift:108` (2 in 30 in isolation) there
+    are now two timing tests wanting the PRO-0053 treatment.
 - 2026-08-15 **PRO-0050 merged `0ea6f88`.** 1105 -> **1162 tests in 128 suites**. `doctor`
   reports the whole toolchain, per-lane, **and creates no subprocess at all**.
   - **The design changed twice and a gate forced it both times.** The first draft had
