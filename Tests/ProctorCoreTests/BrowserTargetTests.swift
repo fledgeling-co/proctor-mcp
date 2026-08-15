@@ -289,7 +289,7 @@ struct WebContentProbeTests {
 struct BrowserHandoffToolAvailabilityTests {
 
     private let chrome = KnownBrowser(name: "Google Chrome", bundleId: "com.google.Chrome",
-                                      chromiumFamily: true)
+                                      internalScheme: "chrome")
     private let page = WebContentProbe(areas: [
         WebArea(url: "https://example.com/dashboard", frame: Rect(x: 0, y: 0, w: 800, h: 600))
     ])

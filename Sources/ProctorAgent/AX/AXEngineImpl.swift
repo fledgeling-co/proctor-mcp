@@ -73,7 +73,17 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
         // Chromium and Electron expose nothing until a client sets
         // AXManualAccessibility on the application element, and the first walk
         // after setting it usually still comes back empty.
+        // An installed web app's shim is a loader that dlopens the framework out
+        // of the host browser's bundle, so its own Contents/Frameworks is empty by
+        // construction and `isChromiumBased` answers false for every one of them.
+        //
+        // The predicate is **Chromium-family web app**, not "web app": a Safari
+        // web app's framework directory is empty for the same reason and its false
+        // is the correct answer, so keying on the surface alone would run the
+        // Chromium accessibility dance against a WebKit process.
+        let webApp = BrowserCatalogue.identify(bundleId: app.bundleIdentifier)
         let chromium = isChromiumBased(app)
+            || (webApp?.surface == .installedWebApp && webApp?.chromiumFamily == true)
         let needsFlag = chromium
             || treeLooksEmpty(windows, log: log)
             || treeLooksLikeAnUnexposedShell(windows, log: log)
