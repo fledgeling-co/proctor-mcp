@@ -363,7 +363,19 @@ extraction yields a one-byte file that `test -s` calls non-empty.
 
 ## Child work found
 
-*(none yet)*
+- **`CFBundleVersion` in `Apps/Proctor/Info.plist` is `1` and has never been bumped**,
+  which is the same defect this feature fixes wearing a different hat. It is not
+  cosmetic: macOS uses the build number to order two copies of one app, so Launch
+  Services, "the newer copy", and anything comparing installed bundles are all reading a
+  constant. `CFBundleShortVersionString` is now load-bearing and checked at release;
+  its sibling is neither. Left alone deliberately — changing what a bundle reports to
+  macOS is a packaging decision, not a reporting one, and it needs its own thinking about
+  what the number should be (a monotonic counter, a commit distance, a date).
+- **Nothing verifies that the bundle in `/Applications` is the bundle that was just
+  built.** `scripts/install.sh` copies and restarts, and now that a build can say which
+  build it is, the installer could read the descriptor back out of the installed binary
+  and print it. That would turn "did the install take" from a thing PRO-0027 detects
+  later into a thing the install itself confirms.
 
 ## Progress — 2026-08-15
 
