@@ -232,9 +232,9 @@ logically, but several would collide in the same file if run together.
 
 | Id | Item | Brief | Children folded in | Stage | Status |
 |---|---|---|---|---|---|
-| PRO-0030 | The build says which build it is | `31-the-build-says-which-build-it-is.md` | PRO-0027 staleness · PRO-0028 `agentVersion` | 1 | **READY TO MERGE** `ai/pro-0030` · 717/85 |
+| PRO-0030 | The build says which build it is | `31-the-build-says-which-build-it-is.md` | PRO-0027 staleness · PRO-0028 `agentVersion` | 1 | **MERGED** `65f61c3` |
 | PRO-0032 | The audit trail is signed, and records what Proctor recommended | `33-the-audit-trail-is-signed.md` | PRO-0013 unsigned · PRO-0024 lane recommendation | 1 | **QUEUED** |
-| PRO-0033 | A person's click reaches Stop | `34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **READY TO MERGE** `ai/pro-0033` · 729/88 |
+| PRO-0033 | A person's click reaches Stop | `34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **MERGED** `dc48889` |
 | PRO-0035 | The browser catalogue stops guessing | `36-the-browser-catalogue-stops-guessing.md` | PRO-0024 PWA prefix · `chromiumFamily` drift · prose-only `why` | 1 | **QUEUED** |
 | PRO-0037 | A hold names whose run it is | `38-a-hold-names-whose-run-it-is.md` | PRO-0018 unattributed hold · PRO-0016 `activate` takes no lane | 1 | **QUEUED** |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-a-home-for-the-proctor-switches.md` | PRO-0026 env-var knob · PRO-0024 `PROCTOR_SECOND_LANE` control | 2 | **QUEUED** |
@@ -254,6 +254,31 @@ file through `AXPress` in silence (PRO-0026 finding 10). Both are recorded here 
 carried to the reader rather than specced.
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0033 and PRO-0030 merged**, gated with the two suites skipped (PRO-0041).
+  Main is **735 tests in 87 suites**, green three consecutive runs, from 692/84 at wave start.
+  - **PRO-0033's three grok gates changed the work substantially and caught four defects that
+    would have shipped.** Triage: stopping on the mouse-*down* tore the tap down mid-gesture and
+    sent the person's mouse-*up* into the driven app, which is the forwarded click this feature
+    exists to prevent; and closing the gate on `perform`'s return restored hit-testing while
+    Proctor's own events were still queued. Completeness: the in-flight window was held for a
+    whole step, so a `dragPath` clamped at 30s would have left Stop unreadable by mouse for half
+    a minute, precisely the step PRO-0026 says must stay stoppable throughout. Two grok lane
+    failures were logged and retried compacted rather than passed.
+  - **PRO-0030 chose five fields over one**, each answering one question: `version` read from the
+    same `Info.plist` `release.yml` trusts (so they cannot drift), `commit`+`dirty`, `configuration`,
+    and `builtAt`. `agentVersion` **became** the descriptor rather than keeping `0.1.0` and hiding
+    the truth in a sibling, because a reader who only reads that field was the reader being misled.
+    Generation hangs off a SwiftPM build-tool plugin, spiked under the plugin sandbox before being
+    specced. **PRO-0027's inode+size staleness check is kept unchanged** and the runner argued why:
+    a version compare structurally cannot do that job, since it compares a file on disk against a
+    running process and misses the resource bundle, which is where the reported failure actually was.
+    It also found and fixed **two live defects in the release pipeline**: an empty CHANGELOG section
+    extracts to a one-byte newline that `test -s` calls non-empty, so a release could ship blank
+    notes; and matching `## [1.2.3]` as a regex lets the dots match any character.
+  - A transient SIGTRAP hit the first post-merge gate on one of PRO-0030's git tests and did not
+    reproduce across three subsequent runs; the two `.worktrees/` checkouts existed at that moment
+    and were removed before the reruns, which is the likely cause and is worth pinning if it recurs.
+
 - 2026-08-15 **The merge gate is running with two suites skipped, and every wave 6 merge from here
   carries that caveat.** `Session.doctor` awaits exactly one thing, `SCShareableContent`, and its
   own comment says that call "either answers or throws". Measured today it does neither: the six
