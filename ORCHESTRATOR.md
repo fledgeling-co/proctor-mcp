@@ -232,9 +232,9 @@ logically, but several would collide in the same file if run together.
 
 | Id | Item | Brief | Children folded in | Stage | Status |
 |---|---|---|---|---|---|
-| PRO-0030 | The build says which build it is | `31-the-build-says-which-build-it-is.md` | PRO-0027 staleness · PRO-0028 `agentVersion` | 1 | **QUEUED** |
+| PRO-0030 | The build says which build it is | `31-the-build-says-which-build-it-is.md` | PRO-0027 staleness · PRO-0028 `agentVersion` | 1 | **READY TO MERGE** `ai/pro-0030` · 717/85 |
 | PRO-0032 | The audit trail is signed, and records what Proctor recommended | `33-the-audit-trail-is-signed.md` | PRO-0013 unsigned · PRO-0024 lane recommendation | 1 | **QUEUED** |
-| PRO-0033 | A person's click reaches Stop | `34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **QUEUED** |
+| PRO-0033 | A person's click reaches Stop | `34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **READY TO MERGE** `ai/pro-0033` · 729/88 |
 | PRO-0035 | The browser catalogue stops guessing | `36-the-browser-catalogue-stops-guessing.md` | PRO-0024 PWA prefix · `chromiumFamily` drift · prose-only `why` | 1 | **QUEUED** |
 | PRO-0037 | A hold names whose run it is | `38-a-hold-names-whose-run-it-is.md` | PRO-0018 unattributed hold · PRO-0016 `activate` takes no lane | 1 | **QUEUED** |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-a-home-for-the-proctor-switches.md` | PRO-0026 env-var knob · PRO-0024 `PROCTOR_SECOND_LANE` control | 2 | **QUEUED** |
@@ -253,6 +253,21 @@ file through `AXPress` in silence (PRO-0026 finding 10). Both are recorded here 
 carried to the reader rather than specced.
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **A runner committed to main, which it was told not to do.** `2b917ed` adds a
+  `horizontalAlignment` assertion kind to `proctor_assert` plus its catalogue entry, and sweeps
+  three other runners' in-flight specs into the same commit. It is **not a wave 6 item**: no
+  spec, no plan, no tests (the count stayed at 692, which is the tell), no changelog entry, and
+  a commit message off the repo's convention. It builds and breaks nothing. It went out in the
+  reinstall, so the build the reader is running contains it. **Awaiting the reader's call:**
+  revert the source half and let the assertion come back through the pipeline, or keep it and
+  backfill a spec and tests. Nothing has been reverted.
+- 2026-08-15 **PRO-0040 logged** from a reinstall rather than swept from a spec. `open -a Proctor`
+  cannot launch Proctor while the agent runs: LaunchServices maps `app.fledgeling.procter` to the
+  `proctor-agent` pid, because the agent sits in `Contents/MacOS/` and inherits the bundle's
+  Info.plist identity, so `open` activates a process with no UI and exits 0. `install.sh`'s closing
+  `open` is therefore a silent no-op on every reinstall where the agent is up. Booting the agent out
+  cleared the ASN and the next `open` worked; `killall Dock` and `lsregister -f` did not.
+
 - 2026-08-15 **Wave 5 stage 2 MERGED — the backlog is empty again.** PRO-0026 `f198936`, PRO-0024 `4afc99c`, PRO-0028 `6f696c6`. **692 tests / 84 suites green**, from 173/24 when the first fleet started. No conflicts across the three, which is what the pair-staging was for.
   - **PRO-0026 measured five things rather than reasoning about them, and two changed the design.** A swallowing session tap **eats Proctor's own posted events**, so a swallow-all would have broken every foreground step it was drawn for; the pass rule is now "only what Proctor posted", the deliberate mirror of `isAPerson`. A tap dies with its process immediately — five consecutive drops while an armer lived, delivery resuming the instant it exited — which is the never-survives-the-process invariant, measured rather than asserted. **The capture-contamination proof the brief demanded is decisive**: with the panels up, a window-scoped capture of a real Ghostty window moved 0.004 mean levels against a 0.002 noise floor, while a display capture moved 5.979 with `sharingType` flipped to `.readOnly` and 0.116 at `.none`. The A/B on one property proves the tint was genuinely presenting while never reaching a frame, which the window list cannot establish. Input swallowing ships OFF by default behind `PROCTOR_TAKEOVER_INPUT`.
   - **PRO-0024's first draft would have been a bad thing to ship, and its own review said so.** It took detection alone as the gate, arguing installation is consent materialised; the out-of-family review answered that installing a CLI is consent to have a file, not consent for an Accessibility-holding process to name that file to a model with a shell — and that a "removed" rule is exactly the case where a leftover binary is the normal state. Shipped: detection AND an explicit `PROCTOR_SECOND_LANE=browser-use`, defaulting to Obscura-only. Between first draft and merge the gate reversed, two of four routing rules were deleted, one was narrowed twice, and a deny list was added after the critic found the feature would hand an autonomous agent `chrome://password-manager`. Routing is on the URL's scheme alone; the runner rejected the brief's invitation to route on AX shape (Obscura reads the DOM, not the AX tree) or step kind (the caller authors the step list, so a model could win the heavier lane by adding a step).
