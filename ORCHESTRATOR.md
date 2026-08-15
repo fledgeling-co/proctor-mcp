@@ -303,9 +303,35 @@ refusal, whose question changed shape underneath it).
 | PRO-0054 | Three tests still redden the gate at random | `55-…` | 3 | **RUNNING** `wf_7c3cc18e-9ec` · re-run after a lost first attempt |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **MERGED** `30324a6` (carried, revised) |
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **MERGED** `c9e42c9` · fixed a live PRO-0050 defect |
-| PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **RUNNING** `wf_8feb698e-d59` · documents the whole wave |
+| PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **MERGED** `d6cf947` · skill edits UNCOMMITTED in fledgeling-plugins |
 
 ## Event log (append-only, newest first)
+- 2026-08-16 **PRO-0052 merged `d6cf947`. The skill matches what shipped.** No source change,
+  and that is the correct outcome: the code was right and its description was not.
+  **772 insertions, 105 deletions across `SKILL.md` and `references/tools.md`, edited in place
+  in `~/Dev/fledgeling-plugins` and left UNCOMMITTED for the reader.**
+  - **Six drifts beyond the brief's list**, found by checking every claim against
+    `ToolCatalogue.swift` rather than against the brief: the tool count was 19 (now 20);
+    `scripting` was documented as including `policy`, which is `full`-only; the `ax` profile was
+    undocumented; "sixteen assertion kinds" is seventeen and `horizontalAlignment` was missing
+    from the enum; `snapshot`'s `maxNodes` default is 600, not 2000; and the honesty section
+    described a synthetic-plane step as the server falling back, **which is true only for
+    `type` and `scroll`** — an outright refusal fails the step, the opposite guarantee.
+  - **A correction the runner made against the direction file.** Its first draft said
+    supervision holds intact under delegation, which is what `00-WAVE-7-DIRECTION.md` implies.
+    Reading `spec-PRO-0046.md` instead showed three real regressions, now in the text: an
+    off-Space window is refused on the Cua lane and reachable on the native one; the takeover
+    statement goes up *after* an unrequested foreground escalation; and a batch whose driver
+    Proctor cannot identify arms no input block, so click-to-Stop is never consulted and the
+    person keeps Escape, the menu bar and the gaps between steps.
+  - **The honesty caveat is in the text:** `which cua-driver` returns nothing on this machine,
+    so the skill tells anyone selecting that lane to treat the first delegated step as a probe.
+    `maestro` and `simctl` both resolve, so the Maestro lane carries no such caveat.
+  - **Child work:** `Sources/ProctorShim/Install.swift:217` still prints "advertises all
+    nineteen (~11.3k)" in its post-install help.
+  - **Not touched:** the seven campaign stages, `references/methodology.md` and
+    `references/evidence.md` (both flagged in Depth as macOS-lane and pre-seam), and the plugin
+    version bump, which is the reader's call.
 - 2026-08-16 **Two PRO-0054 runners collided in one worktree, and the orchestrator caused it.**
   `claude-lifeline`'s daemon auto-resumed the dead run `wf_b1b506b3-e9c` (pid 49407) at the
   same time as the orchestrator dispatched a clean re-run (`wf_7c3cc18e-9ec`). Both landed in

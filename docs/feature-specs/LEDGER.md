@@ -58,6 +58,6 @@
 | PRO-0049 | Run Maestro flows as Proctor flows | 2026-08-15 | Merged `7ca9358` |
 | PRO-0050 | Doctor knows the whole toolchain | 2026-08-15 | Merged `0ea6f88` |
 | PRO-0051 | Decide what happens to the native planes | 2026-08-15 | Merged `0f76c56` |
-| PRO-0052 | The proctor skill tracks what actually shipped | 2026-08-15 | Triaged |
+| PRO-0052 | The proctor skill tracks what actually shipped | 2026-08-15 | Merged `d6cf947` |
 | PRO-0053 | `TakeoverWiringTests` reddens the gate at random | 2026-08-15 | Merged `477941f` |
 | PRO-0054 | Three tests still redden the gate at random | 2026-08-15 | Triaged |
