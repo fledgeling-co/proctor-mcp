@@ -391,12 +391,24 @@ final class InputBlocker: @unchecked Sendable {
         let button = (kind == .mouseDown || kind == .mouseUp || kind == .mouseDragged)
             ? event.getIntegerValueField(.mouseEventButtonNumber) : nil
 
+        // The run panel's Stop button, and whether Proctor has a post open. Both
+        // are read before the gate's own lock is taken and neither waits: this
+        // callback may not block, or it freezes the deadline timer and the
+        // release chord that live on this same run loop.
+        let stopRect = RunHUDGeometry.shared.stopRect
+        let postInFlight = SyntheticPost.shared.inFlight
+        let location = event.location
+
         lock.lock()
         let decision = gate.decide(kind: kind,
                                    sourcePid: event.getIntegerValueField(.eventSourceUnixProcessID),
                                    userData: event.getIntegerValueField(.eventSourceUserData),
                                    ourPid: ourPid, keyCode: keyCode, button: button,
-                                   modifiers: modifiers)
+                                   modifiers: modifiers,
+                                   location: RunHUDPlacement.Point(x: Double(location.x),
+                                                                   y: Double(location.y)),
+                                   stopRect: stopRect,
+                                   postInFlight: postInFlight)
         if !decision.delivers { swallowed += 1 }
         if decision.stops { release = .stopped }
         lock.unlock()

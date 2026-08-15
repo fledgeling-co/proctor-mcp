@@ -63,9 +63,11 @@ public enum RunHUDEvent: Sendable {
     /// the machine is taken rather than as it goes.
     case runBegan(total: Int, app: String?, foreground: ForegroundDemand = ForegroundDemand())
     /// Travelling to a step's target, before it actuates.
-    case stepApproaching(step: ActionStep, node: AXNode?, synthetic: Bool)
+    case stepApproaching(step: ActionStep, node: AXNode?, synthetic: Bool,
+                         stepsAside: Bool = false)
     /// Actuating it.
-    case stepActing(step: ActionStep, node: AXNode?, synthetic: Bool)
+    case stepActing(step: ActionStep, node: AXNode?, synthetic: Bool,
+                    stepsAside: Bool = false)
     /// It finished, with how long it took to settle and which plane it actually
     /// travelled — a `type` or `scroll` that fell back to the event stream is
     /// only knowable here, and the notice revises upward when one does.
@@ -219,6 +221,17 @@ public struct RunHUDModel: Sendable, Equatable {
     /// that ignored mouse events for as long as that text was on screen would
     /// leave Pause and Stop dead for the entire run.
     public var syntheticInFlight: Bool = false
+    /// Whether the panel must let mouse events through to whatever is under it,
+    /// which is the ONLY thing that may drive `ignoresMouseEvents`.
+    ///
+    /// Not the same question as `syntheticInFlight`, and PRO-0033 separated
+    /// them because conflating the two cost the kill switch. That one is about
+    /// the plane and drives the words on screen. This one is about the plane AND
+    /// the geometry: the panel only has to move out of the way when the step is
+    /// going to post at a point the panel occupies, because the reason the gate
+    /// exists is that the window at the posted point wins. Everywhere else the
+    /// panel stays live and Stop stays clickable through the step.
+    public var stepsAside: Bool = false
     public var visible: Bool = false
     /// The queue bar's state. It belongs to the machine rather than to this run,
     /// so it survives a run beginning and ending.
@@ -298,21 +311,30 @@ public struct RunHUDState: Sendable {
                                                 resolvedConditional: resolvedConditional)
             model = fresh
 
-        case .stepApproaching(let step, let node, let synthetic):
+        case .stepApproaching(let step, let node, let synthetic, let stepsAside):
             pending = (step, node)
             model.phase = .travelling
             model.line = StepDescription.line(for: step, node: node, timing: .prospective)
-            setPlaneStatement(synthetic: synthetic)
+            setPlaneStatement(synthetic: synthetic, stepsAside: stepsAside)
 
-        case .stepActing(let step, let node, let synthetic):
+        case .stepActing(let step, let node, let synthetic, let stepsAside):
             pending = (step, node)
             model.phase = .acting
             model.line = StepDescription.line(for: step, node: node, timing: .present)
-            setPlaneStatement(synthetic: synthetic)
+            setPlaneStatement(synthetic: synthetic, stepsAside: stepsAside)
 
         case .stepSettled(let step, let node, let settleMs, let plane):
             pending = nil
             model.completed += 1
+            // The gate closes here and not at the next step. The settle is the
+            // signal that the events this step posted have landed and the
+            // application has stopped moving, so the panel can take clicks again
+            // — where holding the gate to the next step, which is what
+            // `syntheticInFlight` does, leaves Stop dead across the settle and
+            // the gap between steps, which is exactly when somebody reaches for
+            // it. The statement is left alone: the words are about the plane and
+            // the batch is not over.
+            model.stepsAside = false
             // A `type` or `scroll` that could not be written through the
             // accessibility plane has just taken the machine, and nothing before
             // this moment could have known it would. Count it, so the notice
@@ -333,6 +355,7 @@ public struct RunHUDState: Sendable {
         case .stepRefused(let step, let node):
             pending = nil
             model.syntheticInFlight = false
+            model.stepsAside = false
             model.phase = .blocked
             model.line = StepDescription.line(for: step, node: node, outcome: .refused)
             push(RunHUDModel.Row(text: model.line, settleMs: nil, outcome: .refused))
@@ -340,6 +363,7 @@ public struct RunHUDState: Sendable {
         case .stepFailed(let step, let node):
             pending = nil
             model.syntheticInFlight = false
+            model.stepsAside = false
             model.phase = .error
             model.line = StepDescription.line(for: step, node: node, outcome: .failed)
             push(RunHUDModel.Row(text: model.line, settleMs: nil, outcome: .failed))
@@ -372,6 +396,7 @@ public struct RunHUDState: Sendable {
             // mouse gate reads this: leaving it set would make Resume itself
             // unclickable, which is the one thing a held run must never be.
             model.syntheticInFlight = false
+            model.stepsAside = false
 
         case .unyielded:
             model.phase = pending == nil ? .travelling : .acting
@@ -386,6 +411,7 @@ public struct RunHUDState: Sendable {
             pending = nil
             model.exception = nil
             model.syntheticInFlight = false
+            model.stepsAside = false
             switch ending {
             case .completed:
                 model.phase = .finished
@@ -443,10 +469,15 @@ public struct RunHUDState: Sendable {
     ///
     /// `syntheticInFlight` tracks exactly the window the present-tense line used
     /// to occupy on its own: open from the moment a synthetic step is approached,
-    /// through its whole gesture, until the next step that is not one. It is what
-    /// the panel gates its mouse handling on, and nothing else may.
-    private mutating func setPlaneStatement(synthetic: Bool) {
+    /// through its whole gesture, until the next step that is not one.
+    ///
+    /// `stepsAside` is the panel's mouse gate and is a DIFFERENT window — the
+    /// step must also be about to post where the panel is standing, and it closes
+    /// on the settle rather than at the next step. It is what the panel gates its
+    /// mouse handling on, and nothing else may.
+    private mutating func setPlaneStatement(synthetic: Bool, stepsAside: Bool = false) {
         model.syntheticInFlight = synthetic
+        model.stepsAside = stepsAside
         model.exception = synthetic
             ? Self.exceptionLine(app: app)
             : demand.notice(app: app, known: knownForeground,

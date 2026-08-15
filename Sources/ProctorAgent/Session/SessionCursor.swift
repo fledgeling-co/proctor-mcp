@@ -78,6 +78,27 @@ extension Session {
         return CGPoint(x: target.x, y: target.y)
     }
 
+    /// The screen points this step is about to post at, for the panel's mouse
+    /// gate. The same points the drawn pointer travels to, and — because the
+    /// actuator posts `step.point` raw and aims at an element's centre otherwise
+    /// — the same points the actuator will post at. Reusing the pointer's own
+    /// resolution rather than writing a second one is what keeps the gate's
+    /// arithmetic and the actuation aimed at the same place; two resolutions
+    /// that drifted apart would leave the panel stepping aside for somewhere the
+    /// step was not going.
+    ///
+    /// A step whose target cannot be resolved contributes nothing, and the gate
+    /// reads that as "do not step aside" — the safe direction, because the cost
+    /// is a swallowed synthetic event rather than a dead Stop.
+    func gatePoints(for step: ActionStep) -> [RunHUDPlacement.Point] {
+        let route = cursorRoute(for: step)
+        if route.count >= 2 {
+            return route.map { RunHUDPlacement.Point(x: Double($0.x), y: Double($0.y)) }
+        }
+        guard let target = cursorTarget(for: step) else { return [] }
+        return [RunHUDPlacement.Point(x: Double(target.x), y: Double(target.y))]
+    }
+
     /// The route a drag will follow, resolved the way the actuator resolves it:
     /// an explicit path, otherwise the start point plus its delta.
     func cursorRoute(for step: ActionStep) -> [CGPoint] {

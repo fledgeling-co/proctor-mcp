@@ -98,6 +98,22 @@ public enum RunHUDPlacement {
              w: screenSpace.w, h: screenSpace.h)
     }
 
+    /// The way back: an AppKit frame — `NSWindow.frame`, `NSScreen.frame` — in
+    /// the y-down screen space the actuator posts in and `CGEvent.location`
+    /// reports. The transform is its own inverse, which is why the body is
+    /// identical, and it is written out rather than aliased so a reader at
+    /// either call site sees which direction they are going.
+    ///
+    /// `primaryMaxY` is the PRIMARY screen's `frame.maxY` for the whole
+    /// arrangement, never the screen the panel happens to be on. Flipping
+    /// per-screen puts a panel on a display above the menu bar, or left of the
+    /// origin, at a rectangle nothing is drawn at — and a Stop rectangle in the
+    /// wrong place is a click on empty screen stopping a run.
+    public static func quartz(from appKitSpace: Rect, primaryMaxY: Double) -> Rect {
+        Rect(x: appKitSpace.x, y: primaryMaxY - appKitSpace.y - appKitSpace.h,
+             w: appKitSpace.w, h: appKitSpace.h)
+    }
+
     // MARK: - Geometry
 
     private static func intersectionArea(_ a: Rect, _ b: Rect) -> Double {

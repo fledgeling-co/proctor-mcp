@@ -216,7 +216,38 @@ final class RunHUDContentView: NSView {
         if hovered != nil { hovered = nil; needsDisplay = true }
     }
 
+    /// The Stop control in window coordinates, for the panel to publish. Nil
+    /// before the first draw has placed it, because a rectangle at the origin is
+    /// not where Stop is.
+    var stopRectInWindow: NSRect? {
+        guard stopRect.width > 0, stopRect.height > 0 else { return nil }
+        return convert(stopRect, to: nil)
+    }
+
+    /// Whether Proctor posted this event, so a control can decline to actuate on
+    /// one of the agent's own clicks.
+    ///
+    /// The belt behind the panel's mouse gate. If the gate is right, one of
+    /// Proctor's clicks never reaches this view at all — the panel is
+    /// click-through for exactly the steps that post where it is standing. This
+    /// is what holds if the geometry is wrong: a panel dragged onto the target
+    /// mid-step, a target that moved. PRO-0015 established that Proctor's own
+    /// synthetic click must never press Stop, and it is the invariant that
+    /// survives every change to how the gate is computed.
+    ///
+    /// An event carrying no `CGEvent`, or unreadable fields, counts as a
+    /// person's. Failing the other way would leave the kill switch dead whenever
+    /// AppKit synthesised an event without one, and a dead Stop is the failure
+    /// this whole surface exists to prevent.
+    private func isOurs(_ event: NSEvent) -> Bool {
+        guard let cg = event.cgEvent else { return false }
+        return InputBlock.isOurs(sourcePid: cg.getIntegerValueField(.eventSourceUnixProcessID),
+                                 userData: cg.getIntegerValueField(.eventSourceUserData),
+                                 ourPid: Int64(ProcessInfo.processInfo.processIdentifier))
+    }
+
     override func mouseDown(with event: NSEvent) {
+        guard !isOurs(event) else { return }
         let point = convert(event.locationInWindow, from: nil)
         pressed = control(at: point)
         if pressed == .grip { dragAnchor = NSEvent.mouseLocation }
@@ -224,6 +255,7 @@ final class RunHUDContentView: NSView {
     }
 
     override func mouseDragged(with event: NSEvent) {
+        guard !isOurs(event) else { return }
         // Moved by hand rather than by `performDrag(with:)`, which runs a nested
         // event loop. This process must not enter one of its own making: a
         // tracking loop is time the agent is not answering, and the settle
@@ -235,6 +267,7 @@ final class RunHUDContentView: NSView {
     }
 
     override func mouseUp(with event: NSEvent) {
+        guard !isOurs(event) else { return }
         let point = convert(event.locationInWindow, from: nil)
         let release = control(at: point)
         if let pressed, pressed == release {

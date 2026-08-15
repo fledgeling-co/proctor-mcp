@@ -321,6 +321,17 @@ public enum InputBlock {
     public struct Gate: Sendable {
         private var swallowedKeys: Set<Int64> = []
         private var swallowedButtons: Set<Int64> = []
+        /// Buttons whose down landed on the run panel's Stop control. The up is
+        /// decided from this and re-tests nothing.
+        ///
+        /// It has to be a record made at the down, because everything the up
+        /// could be re-tested against may have changed underneath it. A post
+        /// beginning between somebody's down and their up would make
+        /// `postInFlight` suppress the rectangle at the up, and the press would
+        /// be swallowed and silently lost — somebody pressed Stop, watched the
+        /// button go down, and the run carried on. This is PRO-0026's pair rule
+        /// applied to the one gesture that ends a run.
+        private var pendingStop: Set<Int64> = []
 
         public init() {}
 
@@ -329,11 +340,15 @@ public enum InputBlock {
         public mutating func reset() {
             swallowedKeys.removeAll()
             swallowedButtons.removeAll()
+            pendingStop.removeAll()
         }
 
         public mutating func decide(kind: InputEventKind, sourcePid: Int64?, userData: Int64?,
                                     ourPid: Int64, keyCode: Int64? = nil, button: Int64? = nil,
-                                    modifiers: InputModifiers = []) -> InputBlockDecision {
+                                    modifiers: InputModifiers = [],
+                                    location: RunHUDPlacement.Point? = nil,
+                                    stopRect: Rect? = nil,
+                                    postInFlight: Bool = false) -> InputBlockDecision {
             // Ours passes before anything else is considered, which is also what
             // stops a `key` step that types Escape from stopping the run that
             // typed it.
@@ -360,11 +375,31 @@ public enum InputBlock {
 
             case .mouseDown:
                 if let button { swallowedButtons.insert(button) }
+                // A person's press on Stop, remembered rather than acted on. The
+                // rectangle is not consulted at all while Proctor has a post in
+                // flight: Proctor's own click happens inside its own declared
+                // post, so this makes "our own click can never press Stop"
+                // structural rather than an identity check — it holds even if
+                // both source fields were lost in transit, which is the right
+                // footing for a kill switch.
+                if !postInFlight, let button, let stopRect, let location,
+                   RunHUDGate.contains(stopRect, location) {
+                    pendingStop.insert(button)
+                }
                 return .swallow
 
             case .mouseUp:
                 guard let button, swallowedButtons.remove(button) != nil else { return .pass }
-                return .swallow
+                guard pendingStop.remove(button) != nil else { return .swallow }
+                // Decided on the up, the way the panel's own control actuates,
+                // so nothing tears the panel and the tap down while the button
+                // is still held and leaves an orphaned up to land in the
+                // application. An up away from the rectangle is a cancel, as it
+                // is everywhere else on macOS, and is swallowed rather than
+                // delivered.
+                guard let stopRect, let location,
+                      RunHUDGate.contains(stopRect, location) else { return .swallow }
+                return .stopRun
 
             case .mouseDragged:
                 guard let button, swallowedButtons.contains(button) else { return .pass }
