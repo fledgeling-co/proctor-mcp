@@ -195,24 +195,86 @@ public struct AuditRecord: Codable, Sendable, Equatable {
     /// Present only on a `recommended` record.
     public var recommendation: LaneRecommendation?
 
+    // MARK: - What a record needs to be *read* as history (PRO-0047)
+    //
+    // Six optional fields, added after the originals so a record sealed before
+    // this existed still decodes with them nil. They change neither the signed
+    // material nor the chain link, both of which are computed over the sealed
+    // ciphertext rather than over these fields.
+    //
+    // They exist because a trail of events is not a history. A person thinks in
+    // runs — "that thing it just did" — and the record carried nothing that said
+    // which call a line belonged to, where in it, what it cost or how it
+    // travelled. Without those, a history surface can only guess by adjacency.
+
+    /// The tool call this record belonged to. Minted once at the dispatcher's
+    /// choke point and carried on the task, so a gate refusal, every step of a
+    /// batch and a recommendation all share it. Nil for a record written outside
+    /// a call — a person's Stop, a hold — which is its own event and is read as a
+    /// run of one.
+    public var run: String?
+    /// Position within the run, 0-based.
+    public var seq: Int?
+    /// What the step cost, milliseconds.
+    public var ms: Int?
+    /// Which plane the step travelled. A string rather than an enum on purpose:
+    /// a later actuation lane naming a plane this build has never heard of must
+    /// render as an opaque label, not fail to decode a whole record.
+    public var plane: String?
+    /// Proctor's own past-tense wording for the step — "Pressed", "Chose". Never
+    /// caller text and never an application's, so a surface can draw it plainly.
+    ///
+    /// Persisted rather than derived on read because it cannot be derived on
+    /// read: the derivation needs the live `ActionStep` and the resolved
+    /// `AXNode`, and this record keeps only a kind and a node selector.
+    public var act: String?
+    /// The object that wording acted on, sanitised at write. This half *is*
+    /// foreign text — an application's accessibility title or a caller's label —
+    /// and is kept apart from `act` so a surface can fence it without fencing
+    /// Proctor's own words.
+    public var obj: Object?
+
+    /// A step's object and where it came from.
+    public struct Object: Codable, Sendable, Equatable {
+        public var text: String
+        /// True when the caller supplied it. Both kinds are fenced; this only
+        /// records which, since PRO-0014 settled that an application's own title
+        /// carries the same payload as a caller's label.
+        public var supplied: Bool
+
+        public init(text: String, supplied: Bool) {
+            self.text = text; self.supplied = supplied
+        }
+    }
+
     public init(timestamp: Double, tool: String, app: String? = nil, bundleId: String? = nil,
                 window: String? = nil, node: String? = nil, kind: String? = nil,
                 outcome: String, postStateHash: String? = nil,
                 value: Redaction? = nil, script: Redaction? = nil, reason: String? = nil,
-                recommendation: LaneRecommendation? = nil) {
+                recommendation: LaneRecommendation? = nil,
+                run: String? = nil, seq: Int? = nil, ms: Int? = nil, plane: String? = nil,
+                act: String? = nil, obj: Object? = nil) {
         self.timestamp = timestamp; self.tool = tool; self.app = app; self.bundleId = bundleId
         self.window = window; self.node = node; self.kind = kind; self.outcome = outcome
         self.postStateHash = postStateHash; self.value = value; self.script = script
         self.reason = reason; self.recommendation = recommendation
+        self.run = run; self.seq = seq; self.ms = ms; self.plane = plane
+        self.act = act; self.obj = obj
     }
 
     /// Build a record for one executed step, redacting anything that could carry a
     /// secret. `type` text, an `appleScript` body and a string `setValue` all pass
     /// user data, so each is reduced to length-plus-hash before it is stored.
+    ///
+    /// `node` is the element the step actually resolved to. It is taken here and
+    /// not stored: the wording is derived from it now, while it exists, and only
+    /// the wording is kept.
     public static func forStep(_ step: ActionStep, tool: String, timestamp: Double,
                                app: String?, bundleId: String?, window: String?,
                                outcome: String, postStateHash: String?,
-                               reason: String? = nil) -> AuditRecord {
+                               reason: String? = nil,
+                               run: String? = nil, seq: Int? = nil, ms: Int? = nil,
+                               plane: String? = nil, node: AXNode? = nil) -> AuditRecord {
         var value: Redaction?
         var script: Redaction?
         switch step.kind {
@@ -225,10 +287,17 @@ public struct AuditRecord: Codable, Sendable, Equatable {
         default:
             break
         }
+        let described = StepDescription.past(for: step, node: node,
+                                             limit: StepDescription.historyObjectLimit)
         return AuditRecord(timestamp: timestamp, tool: tool, app: app, bundleId: bundleId,
                            window: window, node: step.node, kind: step.kind.rawValue,
                            outcome: outcome, postStateHash: postStateHash,
-                           value: value, script: script, reason: reason)
+                           value: value, script: script, reason: reason,
+                           run: run, seq: seq, ms: ms, plane: plane,
+                           act: described.verb,
+                           obj: described.object.map {
+                               Object(text: $0.text, supplied: $0.supplied)
+                           })
     }
 
     /// One line of JSONL: a single compact object with sorted keys, no newlines,

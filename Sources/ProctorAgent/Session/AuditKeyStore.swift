@@ -14,7 +14,26 @@ import ProctorCore
 // it — a new Mac, a Keychain reset, a rebuilt account — permanently ends access to
 // the history. Adding a way out would be the guarantee this design was chosen for,
 // weakened, so do not add one.
-final class AuditKeyStore: @unchecked Sendable {
+
+/// The two halves, behind a seam.
+///
+/// The seam exists because PRO-0047 made *reading* the trail a path worth testing.
+/// Before it, only writing was exercised — a test wrote `audit.pub` beside its own
+/// trail and asserted on the raw lines — and the unsealing half was reachable only
+/// through the login Keychain, which a test process must never touch. A history
+/// projection cannot be checked that way: the whole question is what comes back
+/// out, so the pair has to be substitutable.
+///
+/// The live implementation is unchanged and remains the default, so nothing about
+/// the shipped key handling moves.
+protocol AuditSealKeys: Sendable {
+    func publicKey() -> Curve25519.KeyAgreement.PublicKey?
+    func privateKey() -> Curve25519.KeyAgreement.PrivateKey?
+    func hasCachedPublicKey() -> Bool
+    func cachedPublicKeyMatches(_ privateKey: Curve25519.KeyAgreement.PrivateKey) -> Bool?
+}
+
+final class AuditKeyStore: AuditSealKeys, @unchecked Sendable {
 
     static let shared = AuditKeyStore()
 

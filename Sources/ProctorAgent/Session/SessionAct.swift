@@ -230,7 +230,7 @@ extension Session {
                                               error: refusal, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: 0))
                 if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
-                                         reason: refusal.message) }
+                                         reason: refusal.message, seq: index, ms: 0) }
                 run.failedAt = index
                 ending = .stoppedByPerson
                 break
@@ -277,7 +277,8 @@ extension Session {
                                               error: refusal, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: elapsed()))
                 if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
-                                         reason: refusal.message) }
+                                         reason: refusal.message, seq: index, ms: elapsed(),
+                                         node: node) }
                 run.failedAt = index
                 await hud(.stepRefused(step: step, node: node))
                 ending = .blocked
@@ -321,7 +322,8 @@ extension Session {
                                               error: error, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: elapsed()))
                 if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
-                                         reason: error.message) }
+                                         reason: error.message, seq: index, ms: elapsed(),
+                                         node: node) }
                 run.failedAt = index
                 await hud(.stepFailed(step: step, node: node))
                 ending = .failed
@@ -334,7 +336,8 @@ extension Session {
                                               error: wrapped, settle: nil, stateHash: nil,
                                               diff: nil, elapsedMs: elapsed()))
                 if let audit { auditStep(step, context: audit, ok: false, postStateHash: nil,
-                                         reason: wrapped.message) }
+                                         reason: wrapped.message, seq: index, ms: elapsed(),
+                                         node: node) }
                 run.failedAt = index
                 await hud(.stepFailed(step: step, node: node))
                 ending = .failed
@@ -371,7 +374,8 @@ extension Session {
                                           stateHash: stateHash, diff: diff,
                                           elapsedMs: elapsed(), route: outcome.route))
             if let audit { auditStep(step, context: audit, ok: true, postStateHash: stateHash,
-                                     reason: postStateError?.message) }
+                                     reason: postStateError?.message, seq: index,
+                                     ms: elapsed(), plane: plane, node: node) }
             run.completed += 1
             await hud(.stepSettled(step: step, node: node, settleMs: report.elapsedMs,
                                    plane: plane))

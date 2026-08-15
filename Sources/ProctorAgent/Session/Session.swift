@@ -654,7 +654,8 @@ actor Session {
             outcome: AuditRecord.Outcome.recommended,
             recommendation: LaneRecommendation(lane: advice.lane.rawValue,
                                                rule: advice.rule.rawValue,
-                                               scheme: advice.scheme)))
+                                               scheme: advice.scheme),
+            run: RunIdentity.current))
     }
 
     /// An attached app by its handle id, or nil if nothing is attached under it.

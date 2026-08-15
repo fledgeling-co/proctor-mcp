@@ -102,7 +102,8 @@ extension Session {
         guard let refusal = decision.refusal else { return (context, nil) }
         auditSink(AuditRecord(timestamp: clock(), tool: tool,
                               app: app?.id, bundleId: resolved, window: window,
-                              outcome: "refused", reason: refusal.reason))
+                              outcome: "refused", reason: refusal.reason,
+                              run: RunIdentity.current))
         return (context, refusal)
     }
 
@@ -121,13 +122,23 @@ extension Session {
     }
 
     /// Record one executed step, redacting anything it carried.
+    ///
+    /// `node` is the element the step resolved to. It is handed in and not
+    /// stored: the wording is derived from it here, while it still exists, and
+    /// only the wording is kept. A history read has no element to derive from —
+    /// the record holds a kind and a node selector, and neither carries the
+    /// readable name the wording needs.
     func auditStep(_ step: ActionStep, context: AuditContext, ok: Bool,
-                   postStateHash: String?, reason: String?) {
+                   postStateHash: String?, reason: String?,
+                   seq: Int? = nil, ms: Int? = nil, plane: ActuationPlane? = nil,
+                   node: AXNode? = nil) {
         auditSink(AuditRecord.forStep(step, tool: context.tool, timestamp: clock(),
                                       app: context.app, bundleId: context.bundleId,
                                       window: context.window,
                                       outcome: ok ? "ok" : "failed",
-                                      postStateHash: postStateHash, reason: reason))
+                                      postStateHash: postStateHash, reason: reason,
+                                      run: RunIdentity.current, seq: seq, ms: ms,
+                                      plane: plane?.rawValue, node: node))
     }
 
     // MARK: - proctor_policy
@@ -259,7 +270,8 @@ extension Session {
         ]
         if let scope = token.bundleId { out["bundleId"] = .string(scope) }
         auditSink(AuditRecord(timestamp: now, tool: "proctor_policy", bundleId: bundleId,
-                              outcome: "ok", reason: "approval token issued"))
+                              outcome: "ok", reason: "approval token issued",
+                              run: RunIdentity.current))
         return .object(out)
     }
 
@@ -268,7 +280,8 @@ extension Session {
         approvalToken = nil
         if had {
             auditSink(AuditRecord(timestamp: clock(), tool: "proctor_policy", outcome: "ok",
-                                  reason: "approval token revoked"))
+                                  reason: "approval token revoked",
+                                  run: RunIdentity.current))
         }
         return .object(["revoked": .bool(had)])
     }

@@ -134,9 +134,20 @@ struct ProctorUIApp: App {
             }
         }
 
+        // What Proctor did, as opposed to what it is doing. Its own window
+        // rather than a section of the status window: the status window answers
+        // "is this working", and a scrolling record of past runs inside it would
+        // fight that question rather than join it.
+        Window("History", id: "history") {
+            HistoryWindow()
+        }
+        .windowResizability(.contentMinSize)
+        .defaultPosition(.center)
+
         MenuBarExtra {
             MenuBarContent(model: model,
                            openMain: { openWindow(id: "main") },
+                           openHistory: { openWindow(id: "history") },
                            rerunSetup: {
                                walkthroughCompleted = false
                                AppDelegate.applyPolicy()
@@ -156,6 +167,7 @@ struct ProctorUIApp: App {
 struct MenuBarContent: View {
     let model: AgentModel
     let openMain: () -> Void
+    let openHistory: () -> Void
     let rerunSetup: () -> Void
 
     var body: some View {
@@ -222,6 +234,7 @@ struct MenuBarContent: View {
         }
         Divider()
         Button("Proctor Status…") { NSApp.activate(ignoringOtherApps: true); openMain() }
+        Button("History…") { NSApp.activate(ignoringOtherApps: true); openHistory() }
         Button("Run Setup Again…") { NSApp.activate(ignoringOtherApps: true); rerunSetup() }
         Divider()
         Button("Quit Proctor", role: .destructive) { NSApp.terminate(nil) }

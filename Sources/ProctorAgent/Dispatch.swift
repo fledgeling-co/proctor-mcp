@@ -15,6 +15,24 @@ struct Dispatcher: Sendable {
         let track = Self.tracksActivity(request.tool)
         let short = Self.shortName(request.tool)
         if track { await session.activityBegin(tool: short) }
+        // The same choke point mints the run identity every audit record written
+        // during this call will carry, and the same exclusion applies: a poll is
+        // not a run. It is set here rather than in each audited call site because
+        // the records of one call are written from several places that do not
+        // know about each other — the gate before the run, each step inside it,
+        // a lane recommendation beside it — and a task local reaches all of them
+        // without any of them having to remember.
+        //
+        // The retention cap is checked here too, at a run boundary and never
+        // between the steps of a batch: a rotation in the middle of a run would
+        // discard that run's own first half while the panel was still showing it.
+        if track { AuditLog.rotateIfNeeded() }
+        return await RunIdentity.$current.withValue(track ? RunIdentity.mint() : nil) {
+            await complete(request, track: track, short: short)
+        }
+    }
+
+    private func complete(_ request: AgentRequest, track: Bool, short: String) async -> AgentResponse {
         do {
             let result = try await route(request)
             if track { await session.activityEnd(tool: short, ok: true) }
@@ -82,6 +100,21 @@ struct Dispatcher: Sendable {
         // tool count is unchanged and no host can reach it as a tool.
         case "proctor_recent_activity":
             return await session.recentActivity(limit: args.int("limit") ?? 12)
+        // Internal verbs behind Proctor's own History window: the projection a
+        // person reads, and the clear that rotates the trail. Never in
+        // ToolCatalogue, so the shim — which gates tools/call on the catalogue —
+        // cannot reach either, and no MCP host can read a person's history
+        // through this path or shred it.
+        //
+        // Worth stating plainly, because "not in the catalogue" is easy to
+        // over-read: it keeps a model out of *this surface*, not out of the
+        // trail. `proctor_policy` action `audit` is a catalogue tool that already
+        // opens the trail and returns whole records. This projection is strictly
+        // narrower than that one.
+        case "proctor_history":
+            return await session.history(limit: args.int("limit") ?? 20)
+        case "proctor_history_clear":
+            return await session.clearHistory()
         // Internal verb behind Proctor's menu bar: the show/hide switch for the
         // run panel and the run's own Pause, Resume and Stop, so hiding the panel
         // never hides the kill switch. Never in ToolCatalogue either, so the shim

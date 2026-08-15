@@ -173,10 +173,26 @@ public enum AuditChain {
         public var head: String            // hash of the record at `count`
         public var keyId: String
         public var preChainCount: Int
+        /// When this trail was started, seconds since the epoch.
+        ///
+        /// It lives here rather than being read out of the file because the
+        /// file's own timestamps are inside the sealed ciphertext: reading them
+        /// to decide whether the trail has aged out would make an ordinary append
+        /// depend on the key that opens the trail. It also belongs here for the
+        /// same reason the count does — a start time in a file beside the trail
+        /// is restored together with the trail from any snapshot, and a retention
+        /// cap that can be reset by restoring a backup is not a cap.
+        ///
+        /// Optional because an anchor written before retention existed does not
+        /// have one. That leaves the age cap dormant on such a trail and the
+        /// entry cap carrying the decision until the next rotation writes one.
+        public var startedAt: Double?
 
-        public init(trailId: String, count: Int, head: String, keyId: String, preChainCount: Int) {
+        public init(trailId: String, count: Int, head: String, keyId: String, preChainCount: Int,
+                    startedAt: Double? = nil) {
             self.trailId = trailId; self.count = count; self.head = head
             self.keyId = keyId; self.preChainCount = preChainCount
+            self.startedAt = startedAt
         }
     }
 

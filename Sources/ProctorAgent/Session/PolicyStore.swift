@@ -64,6 +64,9 @@ enum AuditLog {
         private var dropped = 0
         private var converted: Int?
         private var keyMismatch = false
+        private var rotatedCount: Int?
+        private var rotatedReason: HistoryRetention.Reason?
+        private var seenCount: Int?
 
         func withLock<T>(_ body: () -> T) -> T {
             lock.lock(); defer { lock.unlock() }
@@ -77,9 +80,26 @@ enum AuditLog {
         var convertedCount: Int? { converted }
         var hasMigrated: Bool { migrationDone }
         var hasKeyMismatch: Bool { keyMismatch }
+        /// How many records the last append actually saw in the file. The append
+        /// reads the whole trail anyway, to take the chain link from disk rather
+        /// than from memory, so this number is free and is the one thing that does
+        /// not drift when a key store refuses to record a new end-mark.
+        var lastSeenCount: Int? { seenCount }
+        /// How many entries the last rotation this run discarded, and why. Kept
+        /// so the trail's status can say a rotation happened rather than leaving
+        /// a suddenly short trail to be discovered.
+        var rotated: (count: Int, reason: HistoryRetention.Reason)? {
+            guard let rotatedCount, let rotatedReason else { return nil }
+            return (rotatedCount, rotatedReason)
+        }
 
+        func noteCount(_ n: Int) { seenCount = n }
         func markMigrated() { migrationDone = true }
         func markConverted(_ n: Int) { converted = n }
+        func markRotated(discarded: Int, reason: HistoryRetention.Reason) {
+            rotatedCount = (rotatedCount ?? 0) + discarded
+            rotatedReason = reason
+        }
         func markKeyMismatch() { keyMismatch = true }
         func fail(_ reason: String, unavailable: Bool = false, dropped: Bool = true) {
             lastError = reason
@@ -109,6 +129,7 @@ enum AuditLog {
         private let lock = NSLock()
         private var _signer: AuditSigning = isTestProcess ? InertSigner() : AuditSigningKeyStore.shared
         private var _anchors: AuditAnchoring = isTestProcess ? InertSigner() : AuditSigningKeyStore.shared
+        private var _keys: AuditSealKeys = AuditKeyStore.shared
         private var _directory: URL?
 
         var signer: AuditSigning {
@@ -118,6 +139,15 @@ enum AuditLog {
         var anchors: AuditAnchoring {
             get { lock.lock(); defer { lock.unlock() }; return _anchors }
             set { lock.lock(); defer { lock.unlock() }; _anchors = newValue }
+        }
+        /// The sealing pair. Unlike the signer this defaults to the live key store
+        /// even in a test process, because the write path reads `audit.pub` from
+        /// whatever directory is injected and creating a Keychain item needs that
+        /// file to be *absent* — which every trail-touching suite already avoids by
+        /// writing one. A suite that needs to read what it wrote injects a pair.
+        var keys: AuditSealKeys {
+            get { lock.lock(); defer { lock.unlock() }; return _keys }
+            set { lock.lock(); defer { lock.unlock() }; _keys = newValue }
         }
         var directory: URL? {
             get { lock.lock(); defer { lock.unlock() }; return _directory }
@@ -201,24 +231,10 @@ enum AuditLog {
             // it for a second reason — the link is taken from the file under this
             // lock, never from memory, so two agents cannot fork it.
             let result: Bool? = withAuditFileLock {
+                completeInterruptedRotationLocked()
                 migrateIfNeededLocked()
                 if state.isUnavailable { return false }
-                guard let pub = AuditKeyStore.shared.publicKey() else {
-                    state.fail("The audit key could not be reached, so nothing is being written to the trail.")
-                    return false
-                }
-                guard let sealed = AuditSeal.sealLine(line: record.jsonLine(), to: pub) else {
-                    state.fail("An audit entry could not be sealed, so it was dropped rather than written readable.")
-                    return false
-                }
-                guard let line = signLocked(sealed) else { return false }
-                guard appendRawLocked(line.record, terminatePrevious: line.terminatePrevious) else {
-                    state.fail("The audit trail could not be written to.")
-                    return false
-                }
-                seams.anchors.saveAnchor(line.anchor)
-                state.clearError()
-                return true
+                return writeRecordLocked(record)
             }
             guard let result else {
                 state.fail("The audit trail could not be locked for writing, so the entry was dropped.")
@@ -226,6 +242,32 @@ enum AuditLog {
             }
             return result
         }
+    }
+
+    /// Seal, sign and append one record. Both locks are already held.
+    ///
+    /// Split out of `append` because rotation has to write its own attestation
+    /// entry while it still holds the lock, and calling back into `append` from
+    /// there would deadlock: `flock` is per open file description, so a second
+    /// `open` of the lock file in this same process blocks against the first.
+    private static func writeRecordLocked(_ record: AuditRecord) -> Bool {
+        guard let pub = seams.keys.publicKey() else {
+            state.fail("The audit key could not be reached, so nothing is being written to the trail.")
+            return false
+        }
+        guard let sealed = AuditSeal.sealLine(line: record.jsonLine(), to: pub) else {
+            state.fail("An audit entry could not be sealed, so it was dropped rather than written readable.")
+            return false
+        }
+        guard let line = signLocked(sealed) else { return false }
+        guard appendRawLocked(line.record, terminatePrevious: line.terminatePrevious) else {
+            state.fail("The audit trail could not be written to.")
+            return false
+        }
+        state.noteCount(line.anchor.count)
+        seams.anchors.saveAnchor(line.anchor)
+        state.clearError()
+        return true
     }
 
     /// Chain and sign one sealed record against the trail as it stands on disk.
@@ -267,8 +309,22 @@ enum AuditLog {
         return (record,
                 AuditChain.Anchor(trailId: trailId, count: trail.records.count + 1,
                                   head: AuditChain.hash(record: record), keyId: keyId,
-                                  preChainCount: preChainCount),
+                                  preChainCount: preChainCount,
+                                  // Carried forward once it exists, and stamped on
+                                  // the first entry of a trail that has none, so a
+                                  // trail started before retention existed acquires
+                                  // an age the first time it is appended to rather
+                                  // than never.
+                                  startedAt: anchor?.startedAt ?? clockNow()),
                 !trail.endsWithNewline)
+    }
+
+    /// The wall clock, substitutable so a retention test can cross a fourteen-day
+    /// boundary without waiting fourteen days. `nonisolated(unsafe)` for the same
+    /// reason `RunHUDPanel.auditSink` is: it is set once, before anything runs,
+    /// and read from wherever the trail is written.
+    nonisolated(unsafe) static var clockNow: @Sendable () -> Double = {
+        Date().timeIntervalSince1970
     }
 
     /// The trail as it sits on disk. Reads the whole file, which is what the
@@ -350,6 +406,245 @@ enum AuditLog {
         return Darwin.fsync(fd) == 0
     }
 
+    // MARK: - Retention: rotation, which is also Clear
+
+    /// What a rotation is going to do, written down before it starts.
+    ///
+    /// This is the whole of the crash story. Rotation replaces the trail and
+    /// re-anchors it, and whichever of those two happens first there is an
+    /// instant where the file and the end-mark disagree — which the verifier
+    /// reads, correctly, as entries missing or a trail replaced. That is an
+    /// accusation, and the event was a crash. A marker on disk turns the window
+    /// into a resumable state: whatever is found next, the rotation is finished
+    /// rather than reported.
+    struct RotationIntent: Codable, Sendable {
+        var trailId: String
+        var reason: HistoryRetention.Reason
+        /// What was in the trail when the rotation was decided.
+        ///
+        /// **Never used for the attestation.** The summary that gets signed is
+        /// recomputed from the file at the moment of truncation, because this
+        /// file is an ordinary file in a directory the user can write: a planted
+        /// marker would otherwise have Proctor sign a discard summary that never
+        /// happened, which is a forgery wearing Proctor's own signature and is
+        /// strictly worse than the deletion the same attacker could already do.
+        /// These fields are kept only so an interrupted rotation can say what it
+        /// had been told, clearly marked as unverified.
+        var discarded: Int
+        var from: Double?
+        var to: Double
+        var oldTrailId: String?
+        var head: String?
+    }
+
+    private static var rotatingMarkerURL: URL {
+        directory.appendingPathComponent("audit.rotating", isDirectory: false)
+    }
+
+    /// Rotate if the trail has outgrown what is kept.
+    ///
+    /// Called at a run boundary — as a tool call begins — and never between the
+    /// steps of one. A rotation in the middle of a batch would discard that
+    /// batch's own first half while the run panel was still showing it.
+    static func rotateIfNeeded(caps: HistoryRetention.Caps
+                                = .read(from: ProcessInfo.processInfo.environment)) {
+        guard !isTestProcess || seams.directory != nil else { return }
+        let now = clockNow()
+        let anchor = seams.anchors.loadAnchor()
+        // Not a line count of the file. This runs at the start of every tool call,
+        // and reading a ten-thousand-line trail off disk to answer "is it ten
+        // thousand lines yet" would put an O(trail) read in front of every
+        // snapshot a model takes.
+        let entries = state.withLock { countLocked(anchor: anchor) }
+        guard case .rotate(let reason) = HistoryRetention.decide(
+                entries: entries, oldest: anchor?.startedAt, now: now, caps: caps) else { return }
+        // The caps travel with it so the decision can be made again under the
+        // lock: this one was taken outside it, and two agents can both reach it.
+        rotate(reason: reason, caps: caps)
+    }
+
+    /// A person's Clear. The same operation, asked for rather than reached.
+    @discardableResult
+    static func clear() -> Bool {
+        guard !isTestProcess || seams.directory != nil else { return false }
+        // Nothing to clear is not a failure, and it must not write a rotation
+        // record attesting that nothing was discarded — that would grow the trail
+        // every time somebody pressed a button on an empty one.
+        guard lineCount() > 0 else { return true }
+        return rotate(reason: .person)
+    }
+
+    /// Replace the trail in whole and open a new one that attests what went.
+    ///
+    /// Rotation rather than pruning, because pruning is not representable: the
+    /// trail is chained from a genesis over its own prefix, so the first survivor
+    /// of a front-truncation still links to a record that is gone and the
+    /// verifier is right to call that broken. What stops "the history is gone"
+    /// and "the history was never there" being the same claim is the record this
+    /// writes, which commits to the discarded trail's identity, its length and
+    /// the hash of its final entry.
+    @discardableResult
+    static func rotate(reason: HistoryRetention.Reason,
+                       caps: HistoryRetention.Caps? = nil) -> Bool {
+        state.withLock {
+            let result: Bool? = withAuditFileLock {
+                completeInterruptedRotationLocked()
+                // The cap is re-tested **inside** the lock, because the check that
+                // led here was made outside it. Two agents can both decide to
+                // rotate at once; without this the second one wipes the first
+                // one's genesis entry, which is the only signed record of what the
+                // first one discarded. A person's Clear carries no caps and is not
+                // re-tested: they asked.
+                if let caps {
+                    let anchor = seams.anchors.loadAnchor()
+                    guard case .rotate = HistoryRetention.decide(
+                            entries: countLocked(anchor: anchor), oldest: anchor?.startedAt,
+                            now: clockNow(), caps: caps) else { return false }
+                }
+                // Checked before anything is destroyed. A rotation that cannot
+                // write its own attestation would leave history deleted and
+                // nothing saying so, which is the one outcome worse than keeping
+                // it — so a trail that cannot be sealed or signed is left alone.
+                guard seams.keys.publicKey() != nil,
+                      seams.signer.signingKeyId != nil else {
+                    state.fail("Proctor's history could not be cleared, because the trail could not "
+                               + "be sealed or signed. Nothing was removed.", dropped: false)
+                    return false
+                }
+                let trail = readTrailLocked()
+                let anchor = seams.anchors.loadAnchor()
+                let intent = RotationIntent(
+                    trailId: UUID().uuidString,
+                    reason: reason,
+                    discarded: trail.records.count,
+                    from: anchor?.startedAt,
+                    to: clockNow(),
+                    oldTrailId: anchor?.trailId ?? trail.lastTrailId,
+                    head: trail.records.last.map(AuditChain.hash(record:)))
+                guard let data = try? JSONEncoder().encode(intent),
+                      (try? data.write(to: rotatingMarkerURL, options: .atomic)) != nil else {
+                    state.fail("Proctor's history could not be cleared, because the change could not "
+                               + "be recorded first. Nothing was removed.", dropped: false)
+                    return false
+                }
+                return applyRotationLocked(intent)
+            }
+            return result ?? false
+        }
+    }
+
+    /// How many entries the trail holds, without reading it when that can be
+    /// avoided.
+    ///
+    /// The end-mark's count is the cheap answer and is right almost always. It can
+    /// lag, though: an append writes the line and then records the new mark, and a
+    /// key store that refuses the write leaves the count frozen while the file
+    /// grows. A retention cap driven by a frozen count would never fire, and the
+    /// trail would grow without limit while reporting that it was bounded — which
+    /// is the exact failure this feature exists to prevent, arrived at quietly.
+    /// So the larger of the mark and what the last append actually saw wins, and a
+    /// process that has not appended yet counts the file once.
+    private static func countLocked(anchor: AuditChain.Anchor?) -> Int {
+        let seen = state.lastSeenCount
+        if let anchor { return max(anchor.count, seen ?? 0) }
+        return seen ?? lineCount()
+    }
+
+    /// Finish a rotation that was written down. Both locks held.
+    ///
+    /// Idempotent by construction: it re-anchors, truncates and writes the
+    /// attestation from the marker, so running it twice on the same marker leaves
+    /// the same state as running it once.
+    private static func applyRotationLocked(_ intent: RotationIntent) -> Bool {
+        let fm = FileManager.default
+        guard let keyId = seams.signer.signingKeyId else { return false }
+
+        // The summary that gets signed is taken from the trail as it stands right
+        // now, never from the marker. The marker is an ordinary file in a
+        // directory the user can write, so trusting its numbers would let anyone
+        // who can drop a file there have Proctor sign a discard that never
+        // happened — a forgery carrying Proctor's own signature, which is worse
+        // than the deletion that same person could already perform. When the trail
+        // is already empty the summary is genuinely unrecoverable, and the record
+        // says so rather than repeating a claim it cannot check.
+        let trail = readTrailLocked()
+        let anchor = seams.anchors.loadAnchor()
+        let observed: (count: Int, head: String?, oldTrailId: String?)? =
+            trail.records.isEmpty
+                ? nil
+                : (trail.records.count, trail.records.last.map(AuditChain.hash(record:)),
+                   anchor?.trailId ?? trail.lastTrailId)
+
+        // The new end-mark first, then the empty file. Either order leaves one
+        // inconsistent instant; the marker above is what makes it resumable, and
+        // this order means a crash between the two leaves an empty trail with an
+        // empty anchor, which verifies as an empty trail rather than as a
+        // truncated one.
+        seams.anchors.saveAnchor(AuditChain.Anchor(
+            trailId: intent.trailId, count: 0, head: "", keyId: keyId,
+            preChainCount: 0, startedAt: intent.to))
+        state.noteCount(0)
+
+        let temp = directory.appendingPathComponent("audit.jsonl.rotating", isDirectory: false)
+        try? fm.removeItem(at: temp)
+        do {
+            try Data().write(to: temp, options: .atomic)
+            try fm.setAttributes([.posixPermissions: 0o600], ofItemAtPath: temp.path)
+            // No backup item is requested, so no readable or sealed copy of the
+            // discarded trail survives the swap. That is the same rule PRO-0013's
+            // conversion follows and this is where somebody would be tempted to
+            // break it.
+            _ = try fm.replaceItemAt(url, withItemAt: temp)
+        } catch {
+            try? fm.removeItem(at: temp)
+            state.fail("Proctor's history could not be cleared (\(error.localizedDescription)). "
+                       + "Nothing was removed.", dropped: false)
+            return false
+        }
+
+        // The trail is now empty and anchored empty, so this goes through the
+        // ordinary write path and becomes a genuine genesis entry rather than a
+        // special case the verifier has to know about.
+        let sentence = HistoryRetention.rotationNote(
+            reason: intent.reason, discarded: observed?.count, from: intent.from,
+            to: intent.to, trailId: observed?.oldTrailId, head: observed?.head)
+        let wrote = writeRecordLocked(AuditRecord(
+            timestamp: intent.to, tool: "proctor_history", outcome: AuditRecord.Outcome.ok,
+            reason: sentence))
+
+        try? fm.removeItem(at: rotatingMarkerURL)
+        state.markRotated(discarded: observed?.count ?? 0, reason: intent.reason)
+        note(sentence)
+        return wrote
+    }
+
+    /// A rotation that was written down but never finished is finished now,
+    /// rather than left for the verifier to report as tampering.
+    ///
+    /// Three cases, and the last two are why this is not simply "re-run it":
+    ///
+    /// - the marker does not decode, so it is removed and ignored. A truncated or
+    ///   planted file must not be able to drive a wipe;
+    /// - the marker's trail is already the live one and the trail is not empty, so
+    ///   the rotation finished and only the marker's deletion was lost. Re-running
+    ///   it here would destroy the genesis entry it had just written, and on a
+    ///   loop, everything appended since;
+    /// - otherwise it was genuinely interrupted, and it completes.
+    private static func completeInterruptedRotationLocked() {
+        guard FileManager.default.fileExists(atPath: rotatingMarkerURL.path) else { return }
+        guard let data = try? Data(contentsOf: rotatingMarkerURL),
+              let intent = try? JSONDecoder().decode(RotationIntent.self, from: data) else {
+            try? FileManager.default.removeItem(at: rotatingMarkerURL)
+            return
+        }
+        if seams.anchors.loadAnchor()?.trailId == intent.trailId,
+           !readTrailLocked().records.isEmpty {
+            try? FileManager.default.removeItem(at: rotatingMarkerURL)
+            return
+        }
+        _ = applyRotationLocked(intent)
+    }
+
     // MARK: - One-time in-place conversion
 
     /// Convert a readable trail in place, once per run, before the first new entry.
@@ -380,7 +675,7 @@ enum AuditLog {
         let plaintext = lines.filter { !AuditSeal.isSealed($0) }
         guard !plaintext.isEmpty else { return }
 
-        guard let pub = AuditKeyStore.shared.publicKey() else {
+        guard let pub = seams.keys.publicKey() else {
             fail(conversion: "the audit key could not be reached")
             return
         }
@@ -458,7 +753,7 @@ enum AuditLog {
         guard lines.contains(where: { AuditSeal.isSealed($0) }) else {
             return lines.map { .opened($0) }
         }
-        guard let priv = AuditKeyStore.shared.privateKey() else {
+        guard let priv = seams.keys.privateKey() else {
             return lines.map { line in
                 AuditSeal.isSealed(line)
                     ? .unreadable(kid: keyId(of: line),
@@ -466,7 +761,7 @@ enum AuditLog {
                     : .opened(line)
             }
         }
-        if AuditKeyStore.shared.cachedPublicKeyMatches(priv) == false {
+        if seams.keys.cachedPublicKeyMatches(priv) == false {
             state.withLock { state.markKeyMismatch() }
         }
         return lines.map { line in
@@ -496,14 +791,18 @@ enum AuditLog {
     /// still matches the one this Mac holds, and whether this run performed the
     /// one-time conversion.
     static func status() -> (writable: Bool, error: String?, dropped: Int,
-                             keyId: String?, keyMismatch: Bool, converted: Int?) {
-        state.withLock {
-            let kid: String? = AuditKeyStore.shared.hasCachedPublicKey()
-                ? AuditKeyStore.shared.publicKey().map(AuditSeal.keyId(for:))
+                             keyId: String?, keyMismatch: Bool, converted: Int?,
+                             rotated: (count: Int, reason: HistoryRetention.Reason)?,
+                             startedAt: Double?) {
+        let started = seams.anchors.loadAnchor()?.startedAt
+        return state.withLock {
+            let kid: String? = seams.keys.hasCachedPublicKey()
+                ? seams.keys.publicKey().map(AuditSeal.keyId(for:))
                 : nil
             return (writable: !state.isUnavailable && state.error == nil,
                     error: state.error, dropped: state.droppedCount, keyId: kid,
-                    keyMismatch: state.hasKeyMismatch, converted: state.convertedCount)
+                    keyMismatch: state.hasKeyMismatch, converted: state.convertedCount,
+                    rotated: state.rotated, startedAt: started)
         }
     }
 

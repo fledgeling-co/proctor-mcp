@@ -65,6 +65,7 @@ struct AuditChainWiringTests {
         let dir = FileManager.default.temporaryDirectory
             .appendingPathComponent("audit-wiring-\(UUID().uuidString)", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        TrailIsolation.acquire()
         let previousSigner = AuditLog.seams.signer
         let previousAnchors = AuditLog.seams.anchors
         AuditLog.seams.directory = dir
@@ -86,6 +87,7 @@ struct AuditChainWiringTests {
             AuditLog.seams.signer = previousSigner
             AuditLog.seams.anchors = previousAnchors
             try? FileManager.default.removeItem(at: dir)
+            TrailIsolation.release()
         }
         try body(dir, signer)
     }
@@ -96,6 +98,7 @@ struct AuditChainWiringTests {
         let dir = FileManager.default.temporaryDirectory
             .appendingPathComponent("audit-wiring-\(UUID().uuidString)", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        TrailIsolation.acquire()
         let previousSigner = AuditLog.seams.signer
         let previousAnchors = AuditLog.seams.anchors
         AuditLog.seams.directory = dir
@@ -108,6 +111,7 @@ struct AuditChainWiringTests {
             AuditLog.seams.signer = previousSigner
             AuditLog.seams.anchors = previousAnchors
             try? FileManager.default.removeItem(at: dir)
+            TrailIsolation.release()
         }
         try await body(dir, signer)
     }
@@ -291,6 +295,7 @@ struct AuditChainWiringTests {
             .appendingPathComponent("audit-rec-\(UUID().uuidString)", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         let signer = TestSigner()
+        TrailIsolation.acquire()
         let previousSigner = AuditLog.seams.signer
         let previousAnchors = AuditLog.seams.anchors
         AuditLog.seams.directory = dir
@@ -303,6 +308,7 @@ struct AuditChainWiringTests {
             AuditLog.seams.signer = previousSigner
             AuditLog.seams.anchors = previousAnchors
             try? FileManager.default.removeItem(at: dir)
+            TrailIsolation.release()
         }
         #expect(AuditLog.append(record))
         let verdict = AuditLog.verify()

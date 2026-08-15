@@ -201,10 +201,22 @@ private struct GrantRow: View {
 private struct ActivitySection: View {
     let model: AgentModel
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         Card {
-            SectionTitle("Activity")
+            HStack(alignment: .firstTextBaseline) {
+                SectionTitle("Activity")
+                Spacer()
+                // This card answers "what is it doing"; the History window
+                // answers "what did it do". Reaching one from the other is the
+                // shortest path between the two questions a person actually asks.
+                Button("Show history") {
+                    NSApp.activate(ignoringOtherApps: true)
+                    openWindow(id: "history")
+                }
+                .controlSize(.small)
+            }
             if let current = model.currentActivity {
                 HStack(spacing: 8) {
                     LiveDot(reduceMotion: reduceMotion)

@@ -77,10 +77,63 @@ public enum StepDescription {
     /// The trail line, for a step that ran and settled: "Focused Amount",
     /// "Picked \"Net 30\" from Terms". Past tense because the trail is a record
     /// of what happened, where the live line is a statement of what is happening.
+    ///
+    /// Composed from `pastVerb` and `unfencedObject` below rather than deriving
+    /// the same two things a second time, so the one-string form a HUD shows and
+    /// the two-field form a list stores can never disagree about the same step.
     public static func completedLine(for step: ActionStep, node: AXNode?) -> String {
-        let verbs = wording(for: step.kind)
-        guard let object = object(for: step, node: node) else { return verbs.pastAlone }
-        return "\(verbs.past) \(render(object))"
+        let parts = past(for: step, node: node)
+        guard let object = parts.object else { return parts.verb }
+        return "\(parts.verb) \"\(object.text)\""
+    }
+
+    /// The cap history persists an object at.
+    ///
+    /// Larger than `objectLimit` for one reason: the HUD's line must never
+    /// ellipse, so 48 is where its object has to stop, while a list row has room
+    /// and a *forensic* list must not make two long window titles that differ
+    /// late look like the same title. The cleaning is identical — one routine,
+    /// two caps — and the list truncates what still does not fit visibly rather
+    /// than silently.
+    public static let historyObjectLimit = 120
+
+    /// Where an object came from, for a surface that fences with structure
+    /// rather than with punctuation. A `String` return can only fence with
+    /// quotation marks; a view can put foreign text in a run of its own that no
+    /// character inside it can escape, and this is what it needs to do that.
+    public struct Fenced: Sendable, Equatable {
+        public let text: String
+        /// True when the caller named it, false when Proctor read it off the
+        /// screen. Both are fenced — PRO-0014 settled that an application's own
+        /// accessibility title carries the same payload as a caller's label —
+        /// and this only says which, for a surface that wants to mark it.
+        public let supplied: Bool
+
+        public init(text: String, supplied: Bool) {
+            self.text = text; self.supplied = supplied
+        }
+    }
+
+    /// Proctor's own past-tense wording and, separately, the object it acted on.
+    ///
+    /// The two halves are returned apart because that is the only way a list can
+    /// fence one and not the other. `completedLine` blends them, which is right
+    /// for a single line and wrong for a page of rows: fencing the blended string
+    /// fences Proctor's own verb along with the application's text, and not
+    /// fencing it lets the application's text sit where a verb goes.
+    ///
+    /// The verb is always Proctor's. Nothing a caller or an application supplies
+    /// can change it, which is the guarantee PRO-0014 exists for.
+    public static func past(for step: ActionStep, node: AXNode?,
+                            limit: Int = objectLimit) -> (verb: String, object: Fenced?) {
+        let words = wording(for: step.kind)
+        guard let object = object(for: step, node: node, limit: limit) else {
+            return (words.pastAlone, nil)
+        }
+        switch object {
+        case .supplied(let text): return (words.past, Fenced(text: text, supplied: true))
+        case .derived(let text):  return (words.past, Fenced(text: text, supplied: false))
+        }
     }
 
     /// The object alone, fenced the way a line would fence it, for a surface that
@@ -117,9 +170,10 @@ public enum StepDescription {
     /// candidate goes through `sanitised` — an app's own accessibility title can
     /// be as long, as multi-line and as markup-laden as anything a caller sends,
     /// so the cap and the strip apply wherever the name comes from.
-    static func object(for step: ActionStep, node: AXNode?) -> Object? {
+    static func object(for step: ActionStep, node: AXNode?,
+                       limit: Int = objectLimit) -> Object? {
         // 1. The caller's override. Replaces the object and nothing else.
-        if let supplied = sanitised(step.label) { return .supplied(supplied) }
+        if let supplied = sanitised(step.label, limit: limit) { return .supplied(supplied) }
 
         // A script has no nameable target and its body is redacted, so only an
         // explicit caller-supplied name can ever name one.
@@ -129,13 +183,13 @@ public enum StepDescription {
         //    they act through: the field a keystroke lands in is not what the
         //    keystroke *is*. This text comes from the client's own tool call rather
         //    than from the accessibility tree, so it is recorded as `supplied`.
-        if let carried = carriedText(for: step) { return .supplied(carried) }
+        if let carried = carriedText(for: step, limit: limit) { return .supplied(carried) }
 
         // 3. The element's own readable name, in the order the agent already
         //    uses elsewhere.
         if let node {
             for candidate in [node.title, node.label, node.identifier] {
-                if let name = sanitised(candidate) { return .derived(name) }
+                if let name = sanitised(candidate, limit: limit) { return .derived(name) }
             }
         }
 
@@ -148,7 +202,7 @@ public enum StepDescription {
         // 4. The element's kind, in descending readability, then 5. its id. The
         //    line is never empty and always points at something.
         for candidate in [node.roleDescription, node.subrole, node.role, node.id] {
-            if let name = sanitised(candidate) { return .derived(name) }
+            if let name = sanitised(candidate, limit: limit) { return .derived(name) }
         }
         return nil
     }
@@ -156,20 +210,21 @@ public enum StepDescription {
     /// Text the step itself carries that names what is being acted on. Never the
     /// typed text of a `type` step, never a script body, never a `setValue`
     /// value — those are the fields the audit record reduces to a hash.
-    private static func carriedText(for step: ActionStep) -> String? {
+    private static func carriedText(for step: ActionStep, limit: Int = objectLimit) -> String? {
         switch step.kind {
         case .menu:
-            return sanitised(step.menuPath?.last)
+            return sanitised(step.menuPath?.last, limit: limit)
         case .key:
             guard let key = step.key, !key.isEmpty else { return nil }
             return sanitised(MenuKeyEquivalent.shortcutString(modifiers: step.modifiers ?? [],
-                                                              key: key))
+                                                              key: key), limit: limit)
         case .shortcut:
             // Mirrors Actuator.shortcut's own resolution, minus `label` which the
             // override already covered, so the line names the shortcut that runs.
             // Each candidate is sanitised separately: an empty `text` must fall
             // through to `value` rather than block it, as it does in the actuator.
-            return sanitised(step.text) ?? sanitised(step.value?.stringValue)
+            return sanitised(step.text, limit: limit)
+                ?? sanitised(step.value?.stringValue, limit: limit)
         default:
             return nil
         }
@@ -177,15 +232,22 @@ public enum StepDescription {
 
     // MARK: - Sanitising
 
-    /// One line, no control characters, no markup, trimmed, hard-cut at
-    /// `objectLimit` graphemes with no ellipsis. Nil when nothing survives, so
-    /// the caller falls through to the next candidate rather than printing a
-    /// blank.
-    public static func sanitised(_ raw: String?) -> String? {
+    /// One line, no control characters, no markup, trimmed, hard-cut at `limit`
+    /// graphemes with no ellipsis. Nil when nothing survives, so the caller falls
+    /// through to the next candidate rather than printing a blank.
+    ///
+    /// The cap is a parameter rather than a constant because two surfaces want
+    /// two caps and neither wants a second implementation: the HUD's line is
+    /// designed never to ellipse and cuts at 48, while the history list has room
+    /// and cuts at `historyObjectLimit` so two long window titles that differ
+    /// late do not collide. Everything else about the cleaning is identical, and
+    /// a second routine would drift from this one.
+    public static func sanitised(_ raw: String?, limit: Int = objectLimit) -> String? {
         guard let raw, !raw.isEmpty else { return nil }
+        let limit = max(1, limit)
 
         var out = String()
-        out.reserveCapacity(min(raw.count, objectLimit * 2))
+        out.reserveCapacity(min(raw.count, limit * 2))
         var pendingSpace = false
 
         for scalar in raw.unicodeScalars {
@@ -228,13 +290,13 @@ public enum StepDescription {
             // cut. A grapheme cluster is at most a handful of scalars, so this
             // bound is generous; without it a multi-megabyte accessibility title
             // is copied in full to produce 48 characters.
-            if out.unicodeScalars.count > objectLimit * 16 { break }
+            if out.unicodeScalars.count > limit * 16 { break }
         }
 
         // Cut by grapheme cluster, so a truncation can never split an emoji or a
         // combining sequence. No ellipsis: the HUD never ellipses.
-        if out.count > objectLimit {
-            out = String(out.prefix(objectLimit))
+        if out.count > limit {
+            out = String(out.prefix(limit))
         }
         while out.last == " " { out.removeLast() }
         return out.isEmpty ? nil : out
