@@ -182,7 +182,7 @@ enum Installer {
         let reachable = probeSocket()
 
         print("Proctor agent")
-        print("  shim:      \(shimPath) (\(ShimVersion.value))")
+        print("  shim:      \(shimPath) (\(BuildInfo.current.descriptor))")
         print("  app:       \(locateApp() ?? "not found")")
         print("  plist:     \(installed ? plistPath : "not installed")")
         print("  launchd:   \(loaded ? "loaded" : "not loaded")")

@@ -5,7 +5,7 @@ import ProctorCore
 // thing the shim is allowed to write (install).
 
 let usage = """
-proctor-shim \(ShimVersion.value) — the permissionless MCP front end for Proctor.
+proctor-shim \(BuildInfo.current.descriptor) — the permissionless MCP front end for Proctor.
 
 Usage:
   proctor-shim [serve]     Speak MCP over stdio and forward tool calls to the agent.
@@ -93,7 +93,7 @@ case "status":
     exit(Installer.status() ? 0 : 1)
 
 case "--version", "-v", "version":
-    print(ShimVersion.value)
+    print(BuildInfo.current.descriptor)
 
 case "--help", "-h", "help":
     print(usage)

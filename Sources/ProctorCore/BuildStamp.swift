@@ -17,14 +17,24 @@ import Foundation
 //
 // TWO THINGS THIS IS NOT, both deliberate:
 //
-//   NOT A VERSION COMPARISON. `AgentBuild.version` is a hardcoded 0.1.0 and would
-//   not have differed across the eight hours above. File identity would have.
+//   NOT A VERSION COMPARISON — and it stays that way now that `BuildInfo` gives a
+//   real one. A version is compiled into a running process; this compares a FILE ON
+//   DISK against what is running, which no compiled constant can do without being
+//   executed. It also stamps the art, so a resource-only reinstall — the shape of
+//   failure actually reported — is visible where no version scheme could see it. And
+//   on a dirty tree two builds share a descriptor, which is a developer's normal
+//   state. The version makes the diagnosis readable; the detection stays file
+//   identity. See docs/specs/spec-PRO-0030.md.
 //
 //   NOT A MODIFICATION TIME. `touch` moves a modification time and replaces
 //   nothing, and a copy can preserve one. Inode and size are what actually move
 //   when a file is replaced: an upgrade writes a new file and unlinks the old
 //   one, which the running process is still holding open, so the inode differs
 //   even when everything else was preserved.
+//
+//   (`BuildInfo.builtAt` does read a modification time, which is not a reversal of
+//   that rule: there it is a report nothing keys on, here it would trigger a banner
+//   nobody could clear.)
 public struct BuildStamp: Sendable, Equatable {
     public let inode: UInt64
     public let size: UInt64

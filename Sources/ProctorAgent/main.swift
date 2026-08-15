@@ -90,7 +90,11 @@ let unlockBroker = UnlockBroker()
 unlockBroker.start()
 _ = unlockBroker
 
-FileHandle.standardError.write(Data("proctor-agent \(AgentBuild.version) listening on \(server.path)\n".utf8))
+// Touching the identity here is what captures it at startup: `builtAt` is a stored
+// property of `BuildInfo.current`, so resolving it now describes the image that is
+// running rather than whatever file is at this path by the time somebody asks.
+let build = BuildInfo.captureAtLaunch()
+FileHandle.standardError.write(Data("proctor-agent \(build.descriptor) listening on \(server.path)\n".utf8))
 
 // The scheduler runs whether or not anything is drawn — taking turns is
 // correctness, not decoration — so this only wires up who is *told* about it.

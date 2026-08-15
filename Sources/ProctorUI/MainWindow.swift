@@ -308,6 +308,12 @@ private struct AgentSection: View {
             if let r = model.report {
                 Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 6) {
                     Row("Version", "\(r.agentVersion)  ·  protocol \(r.protocolVersion)")
+                    // The window is its own process from its own copy of the bundle,
+                    // and an upgrade can leave the two halves on different builds for
+                    // hours. Normally these two strings match; when they do not, the
+                    // difference is the diagnosis, in words rather than in timestamps
+                    // somebody has to go and read.
+                    Row("This window", BuildInfo.current.descriptor)
                     Row("macOS", r.osVersion)
                     Row("Socket", r.socketPath)
                     Row("Attached apps", r.attachedApps.isEmpty

@@ -57,7 +57,7 @@ extension Session {
         }
 
         return DoctorReport(
-            agentVersion: AgentBuild.version,
+            agentVersion: BuildInfo.current.descriptor,
             protocolVersion: Wire.protocolVersion,
             osVersion: osVersion,
             agentRunning: true,
@@ -91,6 +91,9 @@ extension Session {
             // Three states, not two: "enabled and not installed" is a real
             // situation an operator who set the variable has to be able to see.
             secondLane: lanes.secondLane.rawValue,
+            // The parts behind `agentVersion`, for a reader that wants a field rather
+            // than a string to parse.
+            agentBuild: BuildInfo.current,
             ready: blockers.isEmpty,
             blockers: blockers)
     }

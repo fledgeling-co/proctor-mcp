@@ -47,6 +47,12 @@ jobs:
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
 
+      - name: Check the tag, the app version and the CHANGELOG agree
+        # First, before the build: the plist version is compiled into the binaries,
+        # so a tag that disagrees with it ships an app that misreports its release.
+        # Failing here costs seconds; failing after notarisation costs a round trip.
+        run: scripts/check-release-version.sh "$TAG"
+
       - name: Select the newest installed Xcode
         run: sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | sort -V | tail -1)"
 
@@ -102,12 +108,20 @@ jobs:
           set -euo pipefail
           VER="${VERSION}"
           # Pull the section for this version: from "## [VER]" to the next "## [".
-          awk -v ver="$VER" '
-            $0 ~ "^## \\[" ver "\\]" {grab=1; next}
+          # An exact prefix compare, matching scripts/check-release-version.sh: in a
+          # regex the dots in a version match any character, so the wrong heading
+          # could win the slice.
+          awk -v target="## [$VER]" '
+            substr($0, 1, length(target)) == target {grab=1; next}
             grab && /^## \[/ {exit}
             grab {print}
           ' CHANGELOG.md > notes.md
-          if [ ! -s notes.md ]; then
+          # `test -s` is not the check here: an empty section extracts to a single
+          # newline, which is a non-empty file, so the fallback below would never
+          # fire for the case it was written for and the release would ship blank
+          # notes. The pre-build check already refuses that, and this keeps the two
+          # rules the same rule.
+          if ! grep -q '[^[:space:]]' notes.md; then
             printf 'Proctor %s. See CHANGELOG.md for details.\n' "$VER" > notes.md
           fi
 

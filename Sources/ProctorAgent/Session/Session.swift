@@ -2,10 +2,6 @@ import Foundation
 import AppKit
 import ProctorCore
 
-enum AgentBuild {
-    static let version = "0.1.0"
-}
-
 /// Everything stateful in the agent lives here, behind one actor.
 ///
 /// The state is the point rather than an optimisation. A retained

@@ -711,6 +711,13 @@ public struct DoctorReport: Codable, Sendable {
     /// decides whether the lane is usable. An operator who enabled a lane that is
     /// not installed sees `unavailable` rather than a silence they cannot explain.
     public var secondLane: String
+    /// Which build the agent is, in parts. `agentVersion` above is this object's
+    /// `descriptor` and is the grandfathered spelling — it changed what it carries
+    /// rather than keeping a hardcoded `0.1.0` and hiding the truth in here, because a
+    /// reader who only reads that field is the reader who was being misled.
+    ///
+    /// Optional so a report from an older agent still decodes against a newer shim.
+    public var agentBuild: BuildIdentity?
     /// Untouched by Obscura either way: `ready` means Proctor can do its own job,
     /// and Proctor drives native applications without it. A health report that
     /// failed on an advisory tool would be lying about what is broken.
@@ -751,6 +758,7 @@ public struct DoctorReport: Codable, Sendable {
                 obscuraAvailable: Bool = false, obscura: ToolPresence? = nil,
                 obscuraUnavailable: ToolAbsence? = nil,
                 tools: [ToolPresence] = [], secondLane: String = SecondLaneState.off.rawValue,
+                agentBuild: BuildIdentity? = nil,
                 ready: Bool, blockers: [String]) {
         self.agentVersion = agentVersion; self.protocolVersion = protocolVersion
         self.osVersion = osVersion; self.agentRunning = agentRunning
@@ -760,6 +768,7 @@ public struct DoctorReport: Codable, Sendable {
         self.obscuraAvailable = obscuraAvailable; self.obscura = obscura
         self.obscuraUnavailable = obscuraUnavailable
         self.tools = tools; self.secondLane = secondLane
+        self.agentBuild = agentBuild
         self.ready = ready
         self.blockers = blockers
     }
