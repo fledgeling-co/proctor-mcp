@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 28
+**Last allocated:** 42
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -36,16 +36,16 @@
 | PRO-0027 | The menu bar shows the character when idle | 2026-08-15 | Merged |
 | PRO-0028 | Re-check now says what it checks | 2026-08-15 | Merged |
 | PRO-0029 | A home for the PROCTOR_* switches | 2026-08-15 | Triaged |
-| PRO-0030 | The build says which build it is | 2026-08-15 | Triaged |
+| PRO-0030 | The build says which build it is | 2026-08-15 | Merged |
 | PRO-0031 | The health report is complete | 2026-08-15 | Triaged |
-| PRO-0032 | The audit trail is signed, and records what Proctor recommended | 2026-08-15 | Triaged |
-| PRO-0033 | A person's click reaches Stop | 2026-08-15 | Triaged |
+| PRO-0032 | The audit trail is signed, and records what Proctor recommended | 2026-08-15 | Merged |
+| PRO-0033 | A person's click reaches Stop | 2026-08-15 | Merged |
 | PRO-0034 | Scroll moves by what was asked | 2026-08-15 | Triaged |
-| PRO-0035 | The browser catalogue stops guessing | 2026-08-15 | Triaged |
+| PRO-0035 | The browser catalogue stops guessing | 2026-08-15 | Merged |
 | PRO-0036 | The status window's checks say what they can check | 2026-08-15 | Triaged |
-| PRO-0037 | A hold names whose run it is | 2026-08-15 | Triaged |
+| PRO-0037 | A hold names whose run it is | 2026-08-15 | Merged |
 | PRO-0038 | Stability knows when it is scoring a page | 2026-08-15 | Triaged |
 | PRO-0039 | Page-scoped refusal | 2026-08-15 | Triaged |
 | PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | 2026-08-15 | Triaged |
 | PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | 2026-08-15 | Triaged |
-| PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | 2026-08-15 | Triaged |
+| PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | 2026-08-15 | Merged |

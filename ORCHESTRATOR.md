@@ -233,10 +233,10 @@ logically, but several would collide in the same file if run together.
 | Id | Item | Brief | Children folded in | Stage | Status |
 |---|---|---|---|---|---|
 | PRO-0030 | The build says which build it is | `31-the-build-says-which-build-it-is.md` | PRO-0027 staleness · PRO-0028 `agentVersion` | 1 | **MERGED** `65f61c3` |
-| PRO-0032 | The audit trail is signed, and records what Proctor recommended | `33-the-audit-trail-is-signed.md` | PRO-0013 unsigned · PRO-0024 lane recommendation | 1 | **QUEUED** |
+| PRO-0032 | The audit trail is signed, and records what Proctor recommended | `33-the-audit-trail-is-signed.md` | PRO-0013 unsigned · PRO-0024 lane recommendation | 1 | **MERGED** `06259b6` |
 | PRO-0033 | A person's click reaches Stop | `34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **MERGED** `dc48889` |
 | PRO-0035 | The browser catalogue stops guessing | `36-the-browser-catalogue-stops-guessing.md` | PRO-0024 PWA prefix · `chromiumFamily` drift · prose-only `why` | 1 | **MERGED** `c30b3c9` |
-| PRO-0037 | A hold names whose run it is | `38-a-hold-names-whose-run-it-is.md` | PRO-0018 unattributed hold · PRO-0016 `activate` takes no lane | 1 | **QUEUED** |
+| PRO-0037 | A hold names whose run it is | `38-a-hold-names-whose-run-it-is.md` | PRO-0018 unattributed hold · PRO-0016 `activate` takes no lane | 1 | **MERGED** `f2221f6` |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-a-home-for-the-proctor-switches.md` | PRO-0026 env-var knob · PRO-0024 `PROCTOR_SECOND_LANE` control | 2 | **QUEUED** |
 | PRO-0031 | The health report is complete | `32-the-health-report-is-complete.md` | PRO-0005/0013 no `policy` block · PRO-0023/0024 `doctor.sh` | 2 | **QUEUED** |
 | PRO-0034 | Scroll moves by what was asked | `35-scroll-moves-by-what-was-asked.md` | PRO-0025 delta units · page action ordering | 2 | **QUEUED** |
@@ -255,6 +255,37 @@ file through `AXPress` in silence (PRO-0026 finding 10). Both are recorded here 
 carried to the reader rather than specced.
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **Stage 1 CLOSED. PRO-0037 merged `f2221f6`, PRO-0032 merged `06259b6`.**
+  787/92 -> **879 tests in 100 suites**, gated with the PRO-0041 skips throughout.
+  - **Both runners died to `ConnectionRefused`, not to a defect.** PRO-0037's workflow
+    (`wf_dc08d4b1-0d5`) returned null after ~15,165s; PRO-0032's left no completion record.
+    Both had finished the thinking and left it on disk. The journal held no cached agent
+    result for either, so a `resumeFromRunId` relaunch would have been a cold re-run of a
+    finished feature, with a live risk of resetting the uncommitted diff in the worktree.
+    Finished in-session instead: commit, rebase, re-gate, merge.
+  - **PRO-0037 shipped more than the brief.** Its completeness gate found that a single
+    `yieldOwner: Int?` is retargeted by a second yield, so the first run's park evaporates
+    and it carries on posting into the person it had just got out of the way of. Unreachable
+    today (arming implies the exclusive global lane) but enforced two files away. Holds are
+    now a dictionary keyed by run. Three further defects the brief did not name are fixed:
+    a yield parked every run in flight, `RunScheduler.acquire` never consulted the latch so
+    any run beginning cleared a live hold, and an expired yield set the global stop flag so
+    a sibling's caller was told a person had stopped it.
+  - **PRO-0032 left one thing needing a human hand.** Before its test guards existed, a test
+    process created a real Secure Enclave signing key in the operator's login keychain
+    (service `app.fledgeling.procter.audit.signing`). Nothing is signed with it. Removing it
+    needs `security delete-generic-password -s app.fledgeling.procter.audit.signing` and
+    approving the keychain dialog, because the access list belongs to the test binary.
+    Left in place it costs one keychain prompt on the agent's first signed write, or under
+    launchd a trail that reports itself as not being written.
+  - **Two rebase traps worth not re-deriving.** Main gained a `control.begin()` call site in
+    `StopReachabilityWiringTests` after PRO-0037 forked, which the signature change broke;
+    fixed in the rebase, nothing outstanding. And PRO-0031's `BuildInfo` tests fail on any
+    worktree with uncommitted changes and again after any `git commit --amend` that moves
+    HEAD without touching a source file: the build plugin's output is cached, so
+    `rm -rf .build/plugins` is needed before the gate. **That second one is a new brief,
+    `44-build-identity-tests-fail-on-a-moving-head.md`, not yet allocated an id.**
+
 - 2026-08-15 **PRO-0035 merged `c30b3c9`.** 768/89 -> **787 tests in 92 suites**.
   - **The PWA decision went to "an installed web app is an application Proctor drives", no browser
     lane ever**, and the argument is a boundary this repo had already drawn: PRO-0020 declines to
