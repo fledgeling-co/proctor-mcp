@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 53
+**Last allocated:** 54
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -35,7 +35,7 @@
 | PRO-0026 | Foreground takeover overlay that holds the machine visibly | 2026-08-15 | Merged |
 | PRO-0027 | The menu bar shows the character when idle | 2026-08-15 | Merged |
 | PRO-0028 | Re-check now says what it checks | 2026-08-15 | Merged |
-| PRO-0029 | A home for the PROCTOR_* switches | 2026-08-15 | Triaged |
+| PRO-0029 | A home for the PROCTOR_* switches | 2026-08-15 | Merged `153951b` |
 | PRO-0030 | The build says which build it is | 2026-08-15 | Merged |
 | PRO-0031 | The health report is complete | 2026-08-15 | Triaged |
 | PRO-0032 | The audit trail is signed, and records what Proctor recommended | 2026-08-15 | Merged |
@@ -60,3 +60,4 @@
 | PRO-0051 | Decide what happens to the native planes | 2026-08-15 | Merged `0f76c56` |
 | PRO-0052 | The proctor skill tracks what actually shipped | 2026-08-15 | Triaged |
 | PRO-0053 | `TakeoverWiringTests` reddens the gate at random | 2026-08-15 | Merged `477941f` |
+| PRO-0054 | Three tests still redden the gate at random | 2026-08-15 | Triaged |

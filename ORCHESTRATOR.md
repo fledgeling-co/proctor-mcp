@@ -299,12 +299,42 @@ refusal, whose question changed shape underneath it).
 | PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **MERGED** `0ea6f88` · absorbed PRO-0031 |
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **MERGED** `7ca9358` · verified live |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **MERGED** `0f76c56` · reading 3 chosen |
-| PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **RUNNING** `wf_21e45777-8c1` (carried, revised) |
+| PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **MERGED** `153951b` (carried, revised) |
+| PRO-0054 | Three tests still redden the gate at random | `55-…` | 3 | **RUNNING** `wf_b1b506b3-e9c` · found mid-fleet |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **RUNNING** `wf_0bbfba85-c52` (carried, revised) |
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **MERGED** `c9e42c9` · fixed a live PRO-0050 defect |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0029 merged `153951b`.** 1349 -> **1391 tests in 155 suites**. The switches
+  have a home.
+  - **The enumeration moved the design, which is why the brief told it to enumerate.** 32
+    `PROCTOR_*` names exist; 8 are runtime agent switches. The brief's list of six was wrong
+    three ways: `PROCTOR_TAKEOVER` exists and was never listed, so a card built from the brief
+    would have silently omitted one of the two switches governing what appears over a person's
+    screen; `PROCTOR_ACTUATION` is now first-class; and **`PROCTOR_SECOND_LANE` is no longer a
+    boolean** — it takes the literal `browser-use`, so a checkbox writing `1` would have read
+    enabled in the window and been off in the agent.
+  - **Precedence is two rules, not one, and the gate found the first draft failing.**
+    Environment wins and locks for the six ordinary switches. But **off wins from either
+    source and the control never locks for the two capability switches**, because an env var
+    could arm the keyboard-swallowing tap and the lock rule then disabled the only control
+    that could turn it off.
+  - **Nothing writes the launchd plist.** `install.sh` rewrites it wholesale with no
+    environment block, so a preference stored there would be destroyed by the next upgrade —
+    which is the disappearance the brief exists to fix.
+  - **Seven of eight apply at next start**, said per row with a pending marker that clears
+    only when the agent's own next report says the new value is what it is running with.
+    Proctor never claims a change landed on the strength of having written it.
+  - **The runner introduced a flake and removed it:** its first test suite mutated a
+    process-wide global while 1286 tests ran concurrently.
+  - **Deliberate refusal:** the two `PROCTOR_CUA_ALLOW_*` signature bypasses are not surfaced.
+- 2026-08-15 **PRO-0054 allocated mid-fleet.** PRO-0029 measured `TakeoverWiringTests.swift:317`
+  still failing 2 in 30 on unmodified main **after** PRO-0053 fixed line 122 of the same file.
+  With `ForegroundWiringTests:108` and `ScreenRecordingProbeWiringTests:116` that is three
+  load-sensitive tests reddening a full run about one time in ten. Given PRO-0053 proved this
+  class was a live production defect rather than a test problem, they get an item rather than
+  another note. Brief `55-…`, `Last allocated` 53 -> 54.
 - 2026-08-15 **PRO-0049 merged `7ca9358`. The iOS lane can run and score Maestro flows.**
   1293 -> **1349 tests in 144 suites**, and this is the first wave 7 item **verified live
   against the real binary** rather than a fake: maestro 2.4.0 against a real simulator.
