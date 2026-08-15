@@ -245,7 +245,7 @@ logically, but several would collide in the same file if run together.
 | PRO-0039 | Page-scoped refusal | `40-page-scoped-refusal.md` | PRO-0020 refusal rule | 3 | **QUEUED** |
 | PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | `41-open-cannot-launch-proctor.md` | found 2026-08-15 during a reinstall, not a child | 3 | **QUEUED** |
 | PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | `42-doctor-can-hang-on-the-screen-recording-probe.md` | found 2026-08-15 gating PRO-0033, not a child | 3 | **QUEUED** |
-| PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | `43-backfill-horizontal-alignment-assertion.md` | ratifies the stray commit `2b917ed` | 1 | **RUNNING** |
+| PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | `43-backfill-horizontal-alignment-assertion.md` | ratifies the stray commit `2b917ed` | 1 | **MERGED** `8fdddbc` |
 
 **Two children are not fleet items, because they are questions rather than work.**
 A model told "Obscura is missing" may install it anyway, and Proctor cannot remove
@@ -255,6 +255,34 @@ file through `AXPress` in silence (PRO-0026 finding 10). Both are recorded here 
 carried to the reader rather than specced.
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0042 merged `8fdddbc`. The backfill did not ratify the code — it reversed five of
+  the six decisions the stray commit took silently**, which is the whole reason a backfill gets a
+  brief that says write the spec you would have written. 735/87 -> **768 tests in 89 suites**.
+  The `* 3.0` edge tolerance is gone (one tolerance everywhere); the vocabulary is physical
+  `left`/`center`/`right` with `leading`/`trailing` as input aliases, because the code compares
+  screen x and reads no layout direction, which also closes the `"left"`-with-no-`"right"` gap;
+  centre no longer wins by precedence, the nearest placement does, and only a genuine tie skips;
+  the 8.0 default became 1.0, unified with `alignedWith` and `frameEquals`; and two further faults
+  found while reading now skip instead of answering confidently — a `container` that was asked for
+  and did not resolve was being answered against the window, and an absent `expected` quietly
+  asserted `leading`. The classifier moved to `Sources/ProctorCore/HorizontalPlacement.swift` as
+  pure two-rectangle arithmetic, testable without a window server.
+  - **Both grok gates changed the work.** The first rejected two of the runner's own drafted
+    answers, with a counter-example rather than an opinion: a 28pt control in a 36pt cell has
+    offsets 0/4/8, all inside a tolerance of 8, so "skip whenever more than one placement fits"
+    made an ordinary compact layout unassertable — hence nearest-fit. It also took apart keeping
+    8.0 as too loose to be strict and too tight to rescue a window fallback whose margins run
+    16-28pt. The completeness critic then found four defects, all fixed, of which two are the
+    interesting kind: the tie window equalled the default tolerance, so nearest-fit never ran at
+    the default and a 16pt element in an 18pt cell was skipped despite being plainly left-aligned
+    (now 0.5pt, one device pixel at 2x, decoupled from tolerance); and a non-finite frame produced
+    a **confident** verdict, because every comparison against NaN is false, so a NaN width read as
+    `custom` and a finite origin beside a NaN width read as a confident `left`.
+  - **Child work found:** `verticalAlignment` is the same classifier on the y axis and the Core
+    type is already shaped for it; and `alignedWith` with no `edge` passes if any one of six deltas
+    is within tolerance, which is a very weak check wearing a confident name. Left alone because
+    changing it is a behaviour change to a kind that has its own callers.
+
 - 2026-08-15 **PRO-0033 and PRO-0030 merged**, gated with the two suites skipped (PRO-0041).
   Main is **735 tests in 87 suites**, green three consecutive runs, from 692/84 at wave start.
   - **PRO-0033's three grok gates changed the work substantially and caught four defects that
