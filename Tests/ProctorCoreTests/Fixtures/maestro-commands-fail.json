@@ -1,0 +1,412 @@
+[
+  {
+    "command": {
+      "assertConditionCommand": {
+        "condition": {
+          "visible": {
+            "textRegex": "ThisTextDoesNotExistAnywhere",
+            "optional": false
+          }
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "FAILED",
+      "timestamp": 1786798497085,
+      "duration": 17446,
+      "error": {
+        "message": "Assertion is false: \"ThisTextDoesNotExistAnywhere\" is visible",
+        "hierarchyRoot": {
+          "attributes": {
+            "bounds": "[0,0][0,0]",
+            "enabled": "false",
+            "focused": "false",
+            "selected": "false",
+            "checked": "false"
+          },
+          "children": [
+            {
+              "attributes": {
+                "accessibilityText": "Settings",
+                "bounds": "[0,0][402,874]",
+                "enabled": "true",
+                "focused": "false",
+                "selected": "false",
+                "checked": "false"
+              },
+              "children": [
+                {
+                  "attributes": {
+                    "bounds": "[0,0][402,874]",
+                    "enabled": "true",
+                    "focused": "false",
+                    "selected": "false",
+                    "checked": "false"
+                  },
+                  "children": [],
+                  "enabled": true,
+                  "focused": false,
+                  "checked": false,
+                  "selected": false
+                }
+              ],
+              "enabled": true,
+              "focused": false,
+              "checked": false,
+              "selected": false
+            }
+          ],
+          "enabled": false,
+          "focused": false,
+          "checked": false,
+          "selected": false
+        },
+        "debugMessage": "Assertion '\"ThisTextDoesNotExistAnywhere\" is visible' failed. Check the UI hierarchy in debug artifacts to verify the element state and properties.\n\nPossible causes:\n- Element selector may be incorrect - check if there are similar elements with slightly different names/properties.\n- Element may be temporarily unavailable due to loading state\n- This could be a real regression that needs to be addressed",
+        "stackTrace": [
+          {
+            "classLoaderName": "app",
+            "methodName": "assertConditionCommand",
+            "fileName": "Orchestra.kt",
+            "lineNumber": 433,
+            "nativeMethod": false,
+            "className": "maestro.orchestra.Orchestra"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "executeCommand",
+            "fileName": "Orchestra.kt",
+            "lineNumber": 353,
+            "nativeMethod": false,
+            "className": "maestro.orchestra.Orchestra"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "executeCommands",
+            "fileName": "Orchestra.kt",
+            "lineNumber": 274,
+            "nativeMethod": false,
+            "className": "maestro.orchestra.Orchestra"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runFlow",
+            "fileName": "Orchestra.kt",
+            "lineNumber": 190,
+            "nativeMethod": false,
+            "className": "maestro.orchestra.Orchestra"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runCommands",
+            "fileName": "MaestroCommandRunner.kt",
+            "lineNumber": 201,
+            "nativeMethod": false,
+            "className": "maestro.cli.runner.MaestroCommandRunner"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "invokeSuspend",
+            "fileName": "TestRunner.kt",
+            "lineNumber": 76,
+            "nativeMethod": false,
+            "className": "maestro.cli.runner.TestRunner$runSingle$result$1$1"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "resumeWith",
+            "fileName": "ContinuationImpl.kt",
+            "lineNumber": 34,
+            "nativeMethod": false,
+            "className": "kotlin.coroutines.jvm.internal.BaseContinuationImpl"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "run",
+            "fileName": "DispatchedTask.kt",
+            "lineNumber": 104,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.DispatchedTask"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "processNextEvent",
+            "fileName": "EventLoop.common.kt",
+            "lineNumber": 277,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.EventLoopImplBase"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "joinBlocking",
+            "fileName": "Builders.kt",
+            "lineNumber": 95,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.BlockingCoroutine"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runBlocking",
+            "fileName": "Builders.kt",
+            "lineNumber": 69,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.BuildersKt__BuildersKt"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runBlocking",
+            "lineNumber": 1,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.BuildersKt"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runBlocking$default",
+            "fileName": "Builders.kt",
+            "lineNumber": 48,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.BuildersKt__BuildersKt"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runBlocking$default",
+            "lineNumber": 1,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.BuildersKt"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runSingle$lambda$0",
+            "fileName": "TestRunner.kt",
+            "lineNumber": 75,
+            "nativeMethod": false,
+            "className": "maestro.cli.runner.TestRunner"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runCatching-ta8aW1Q",
+            "fileName": "TestRunner.kt",
+            "lineNumber": 204,
+            "nativeMethod": false,
+            "className": "maestro.cli.runner.TestRunner"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runSingle",
+            "fileName": "TestRunner.kt",
+            "lineNumber": 66,
+            "nativeMethod": false,
+            "className": "maestro.cli.runner.TestRunner"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runSingleFlow",
+            "fileName": "TestCommand.kt",
+            "lineNumber": 561,
+            "nativeMethod": false,
+            "className": "maestro.cli.command.TestCommand"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runShardSuite$lambda$10",
+            "fileName": "TestCommand.kt",
+            "lineNumber": 529,
+            "nativeMethod": false,
+            "className": "maestro.cli.command.TestCommand"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "newSession",
+            "fileName": "MaestroSessionManager.kt",
+            "lineNumber": 132,
+            "nativeMethod": false,
+            "className": "maestro.cli.session.MaestroSessionManager"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "newSession$default",
+            "fileName": "MaestroSessionManager.kt",
+            "lineNumber": 66,
+            "nativeMethod": false,
+            "className": "maestro.cli.session.MaestroSessionManager"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runShardSuite",
+            "fileName": "TestCommand.kt",
+            "lineNumber": 476,
+            "nativeMethod": false,
+            "className": "maestro.cli.command.TestCommand"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "access$runShardSuite",
+            "fileName": "TestCommand.kt",
+            "lineNumber": 80,
+            "nativeMethod": false,
+            "className": "maestro.cli.command.TestCommand"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "invokeSuspend",
+            "fileName": "TestCommand.kt",
+            "lineNumber": 435,
+            "nativeMethod": false,
+            "className": "maestro.cli.command.TestCommand$handleSessions$1$results$1$1"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "resumeWith",
+            "fileName": "ContinuationImpl.kt",
+            "lineNumber": 34,
+            "nativeMethod": false,
+            "className": "kotlin.coroutines.jvm.internal.BaseContinuationImpl"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "run",
+            "fileName": "DispatchedTask.kt",
+            "lineNumber": 104,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.DispatchedTask"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "run",
+            "fileName": "LimitedDispatcher.kt",
+            "lineNumber": 111,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.internal.LimitedDispatcher$Worker"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "run",
+            "fileName": "Tasks.kt",
+            "lineNumber": 99,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.scheduling.TaskImpl"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runSafely",
+            "fileName": "CoroutineScheduler.kt",
+            "lineNumber": 585,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.scheduling.CoroutineScheduler"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "executeTask",
+            "fileName": "CoroutineScheduler.kt",
+            "lineNumber": 802,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.scheduling.CoroutineScheduler$Worker"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "runWorker",
+            "fileName": "CoroutineScheduler.kt",
+            "lineNumber": 706,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.scheduling.CoroutineScheduler$Worker"
+          },
+          {
+            "classLoaderName": "app",
+            "methodName": "run",
+            "fileName": "CoroutineScheduler.kt",
+            "lineNumber": 693,
+            "nativeMethod": false,
+            "className": "kotlinx.coroutines.scheduling.CoroutineScheduler$Worker"
+          }
+        ],
+        "localizedMessage": "Assertion is false: \"ThisTextDoesNotExistAnywhere\" is visible"
+      },
+      "sequenceNumber": 3,
+      "evaluatedCommand": {
+        "assertConditionCommand": {
+          "condition": {
+            "visible": {
+              "textRegex": "ThisTextDoesNotExistAnywhere",
+              "optional": false
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "defineVariablesCommand": {
+        "env": {
+          "MAESTRO_FILENAME": "fail",
+          "MAESTRO_DEVICE_UDID": "29FEA02E-8677-4996-AC2D-904A97FB3643",
+          "MAESTRO_SHARD_ID": "1",
+          "MAESTRO_SHARD_INDEX": "0"
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1786798495517,
+      "duration": 5,
+      "sequenceNumber": 0,
+      "evaluatedCommand": {
+        "defineVariablesCommand": {
+          "env": {
+            "MAESTRO_FILENAME": "fail",
+            "MAESTRO_DEVICE_UDID": "29FEA02E-8677-4996-AC2D-904A97FB3643",
+            "MAESTRO_SHARD_ID": "1",
+            "MAESTRO_SHARD_INDEX": "0"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "applyConfigurationCommand": {
+        "config": {
+          "appId": "com.apple.Preferences"
+        },
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1786798495523,
+      "duration": 1,
+      "sequenceNumber": 1,
+      "evaluatedCommand": {
+        "applyConfigurationCommand": {
+          "config": {
+            "appId": "com.apple.Preferences"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "command": {
+      "launchAppCommand": {
+        "appId": "com.apple.Preferences",
+        "optional": false
+      }
+    },
+    "metadata": {
+      "status": "COMPLETED",
+      "timestamp": 1786798495524,
+      "duration": 1561,
+      "sequenceNumber": 2,
+      "evaluatedCommand": {
+        "launchAppCommand": {
+          "appId": "com.apple.Preferences",
+          "optional": false
+        }
+      }
+    }
+  }
+]

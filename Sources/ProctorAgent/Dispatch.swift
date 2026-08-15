@@ -580,10 +580,27 @@ struct Dispatcher: Sendable {
     ///   screenshot — write the device surface to disk
     private func ios(_ args: Args) async throws -> JSONValue {
         let action = args.string("action") ?? "list"
-        guard ["list", "boot", "open", "screenshot"].contains(action) else {
+        guard ["list", "boot", "open", "screenshot", "flow"].contains(action) else {
             throw AgentError(code: .invalidArguments,
                              message: "unknown ios action \(action.debugDescription)",
-                             remedy: "Use list, boot, open or screenshot.")
+                             remedy: "Use list, boot, open, screenshot or flow.")
+        }
+        // A Maestro flow binds at the file level rather than the step level, so it
+        // takes its own route rather than being threaded through the deep-link
+        // signature. PRO-0044's warning: ActuationBackend performs a step, and
+        // this executes a file.
+        if action == "flow" {
+            guard let path = args.string("path"), !path.isEmpty else {
+                throw AgentError(code: .invalidArguments,
+                                 message: "proctor_ios action \"flow\" requires path",
+                                 remedy: "Pass the absolute path of the Maestro flow file to run.")
+            }
+            return try await session.maestroFlow(
+                path: path,
+                device: args.string("device"),
+                runs: args.int("runs") ?? 1,
+                pixelEvidence: args.bool("pixelEvidence", true),
+                timeoutMs: args.int("timeoutMs") ?? 300_000)
         }
         return try await session.ios(action: action,
                                      device: args.string("device"),

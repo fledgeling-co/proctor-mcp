@@ -61,7 +61,7 @@ extension Session {
     /// Reported as an absence with the searched paths rather than as a mysterious
     /// failure, because "Xcode is not installed" is a fact about the machine that
     /// a caller can act on and a failed subprocess is not.
-    private func simctlPath() throws -> String {
+    func simctlPath() throws -> String {
         let presence = tools.simctl.presence()
         guard presence.available, let path = presence.path else {
             let absence = SimctlLocator.absence
@@ -116,7 +116,7 @@ extension Session {
             + "that reason. The pixels are real; the guarantee is not.")
     ])
 
-    private func readDevices(simctl: String) throws -> [IOSDevice] {
+    func readDevices(simctl: String) throws -> [IOSDevice] {
         let run = Session.runSimctl(simctl, ["list", "-j", "devices"], timeoutMs: 20_000)
         guard run.exitCode == 0 else {
             throw AgentError(
@@ -143,7 +143,7 @@ extension Session {
     /// booted. Ambiguity is an error naming the candidates rather than a guess,
     /// because guessing which simulator to drive is how a campaign silently
     /// measures the wrong device.
-    private func resolveDevice(_ reference: String?, in devices: [IOSDevice]) throws -> IOSDevice {
+    func resolveDevice(_ reference: String?, in devices: [IOSDevice]) throws -> IOSDevice {
         guard let reference, !reference.isEmpty else {
             let booted = devices.filter(\.isBooted)
             if booted.count == 1 { return booted[0] }
@@ -491,7 +491,7 @@ extension Session {
         return (running, pid, framePath)
     }
 
-    private func approvalTokenIsValid(for handler: String?) -> Bool {
+    func approvalTokenIsValid(for handler: String?) -> Bool {
         guard let token = approvalToken else { return false }
         return token.isValid(at: clock(), for: handler.map(IOSPolicy.key(for:)))
     }
@@ -504,7 +504,7 @@ extension Session {
     /// `Info.plist`; `simctl listapps` gives the bundle paths but not the schemes.
     /// Cached per device because it costs one plist read per installed app, and
     /// invalidated when the set of installed apps changes.
-    private func schemeMap(simctl: String, udid: String) throws -> [String: String] {
+    func schemeMap(simctl: String, udid: String) throws -> [String: String] {
         let apps = Session.installedApps(simctl: simctl, udid: udid)
         let fingerprint = apps.map(\.bundleId).sorted().joined(separator: ",")
         if let cached = iosSchemeMaps[udid], cached.fingerprint == fingerprint {

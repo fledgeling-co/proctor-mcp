@@ -32,10 +32,21 @@ public enum AuditTool {
     /// one — and named apart so the trail shows which steps were the measurement
     /// and which were putting the app back.
     public static let stabilityReset = "proctor_stability.reset"
+    /// A Maestro flow sweep, and each repeat within it.
+    ///
+    /// Named apart from every drive path above because the claim differs: those
+    /// record a step Proctor performed, and these record that Proctor asked a
+    /// separate binary to execute a file. The record carries the apps the flow
+    /// DECLARES rather than the app a device resolved, which is a weaker claim
+    /// than `proctor_ios.open` makes, and the trail says `declared` so the two
+    /// are never read as the same thing.
+    public static let maestroFlow = "proctor_ios.flow"
+    public static let maestroRepeat = "proctor_ios.flow.repeat"
 
     /// Every drive path, for the "these are distinct" property.
     public static let all: [String] = [act, appsActivate, flowReplay,
-                                       stabilityReplay, stabilityReset]
+                                       stabilityReplay, stabilityReset,
+                                       maestroFlow, maestroRepeat]
 }
 
 // MARK: - Refusal text

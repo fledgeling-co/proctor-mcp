@@ -956,8 +956,37 @@ public enum ToolCatalogue {
         scheme and host of the URL in the clear and reduces its path and query to a length and a \
         hash, because a deep link routinely carries a token.
 
+        Action `flow` runs a **Maestro** flow file against the device and scores repeats of it. \
+        Maestro is a separate binary that executes a whole file and reports at the end, so what \
+        this proves is coarser than a Mac replay and the result says so rather than borrowing the \
+        stronger words: `flowPassed` means the driver executed the sequence and reported success, \
+        not that Proctor observed the app reach any state. Proctor did not run these commands and \
+        has no independent observation of any of them; the only observer of the steps is Maestro. \
+        Individual Maestro commands are never routed through proctor_act — a tool driving its own \
+        engine is not driving what Proctor is attached to — so the unit here is the file.
+
+        With `runs` above 1 the repeats are scored against **each other**: `firstDivergence` is \
+        where two repeats stopped agreeing, indexed by Maestro's own sequence number, and it is \
+        never a comparison against a recording because there is none. Maestro prepends two \
+        commands that are in no flow file, and they are marked `injected` so an index is not \
+        mistaken for a line of your YAML. The comparison is over each command's identity and \
+        whether it completed; durations are reported beside the score and never folded into it, \
+        because one unchanged command measured 634, 91, 88, 96 and 91 ms across five repeats. A \
+        repeat that failed in the driver rather than the app — no per-command record, a failed \
+        launch, a device that went away — is excluded from the score and makes the sweep \
+        truncated, so driver flake is never published as the app's non-determinism. A five-run \
+        sweep takes roughly 70 to 90 seconds, most of it driver start-up.
+
+        The gate for a flow judges the apps the flow **declares**, which is weaker than the \
+        device-resolved judgement `open` makes, and the result says `declared` for that reason. \
+        Any construct Proctor cannot resolve — a script, an interpolated app id, an unreadable \
+        include — is refused whenever an application policy is in force, and reported when none \
+        is. An `openLink` inside a flow is gated on what the device resolves it to, not on the \
+        file. The trail records the flow's path and a hash of its contents, so an entry attests to \
+        the bytes that ran.
+
         Requires Xcode, which is where simctl lives. proctor_doctor carries a `simctl` row saying \
-        whether this machine has a lane at all.
+        whether this machine has a lane at all, and a `maestro` row for the flow action.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -965,11 +994,13 @@ public enum ToolCatalogue {
                 "action": .object([
                     "type": .string("string"),
                     "enum": .array([.string("list"), .string("boot"), .string("open"),
-                                    .string("screenshot")]),
+                                    .string("screenshot"), .string("flow")]),
                     "description": .string(
                         "list enumerates simulators and touches nothing; boot starts a named one and "
                         + "waits for it; open delivers a URL to a booted one and reports the evidence; "
-                        + "screenshot writes the device surface to disk. Defaults to list.")
+                        + "screenshot writes the device surface to disk; flow runs a Maestro flow file "
+                        + "and, with runs above 1, scores the repeats against each other. Defaults to "
+                        + "list.")
                 ]),
                 "device": .object([
                     "type": .string("string"),
@@ -1008,7 +1039,20 @@ public enum ToolCatalogue {
                 ]),
                 "path": .object([
                     "type": .string("string"),
-                    "description": .string("Where to write a screenshot. Defaults to a session temp directory.")
+                    "description": .string(
+                        "For screenshot, where to write it; defaults to a session temp directory. For "
+                        + "flow, the absolute path of the Maestro flow file to run. A flow file is "
+                        + "content Proctor executes, so it passes the filesystem jail and is scanned "
+                        + "for the apps it declares before anything runs.")
+                ]),
+                "runs": .object([
+                    "type": .string("integer"),
+                    "description": .string(
+                        "How many times to run the flow, for action flow. Defaults to 1, which "
+                        + "executes and reports without a determinism claim — a single run cannot "
+                        + "measure divergence. Above 1 the repeats are scored against each other. "
+                        + "Each repeat costs roughly 8 seconds of driver start-up on top of the "
+                        + "flow's own time.")
                 ]),
                 "timeoutMs": .object([
                     "type": .string("integer"),

@@ -38,6 +38,16 @@ extension Session {
     /// stopped at the cap would leave the child blocked on write until the
     /// watchdog killed it, turning a large output into a timeout.
     static func runSimctl(_ path: String, _ arguments: [String], timeoutMs: Int) -> SimctlRun {
+        runBounded(path, arguments, timeoutMs: timeoutMs)
+    }
+
+    /// The same hardened runner, for any bounded child process.
+    ///
+    /// Shared rather than copied because every hazard in the comment above is
+    /// generic: a JVM that writes more than a pipe buffer deadlocks exactly the
+    /// way `simctl listapps` on a full device does, and a wedged Maestro left
+    /// unterminated outlives the agent just as a wedged simulator would.
+    static func runBounded(_ path: String, _ arguments: [String], timeoutMs: Int) -> SimctlRun {
         let maximumBytes = 8 * 1024 * 1024
 
         let process = Process()

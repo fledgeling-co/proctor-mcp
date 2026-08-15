@@ -436,9 +436,10 @@ struct IOSLaneTests {
             #expect(spec.description.contains(verdict))
         }
         #expect(spec.description.contains("frontmost app on the device is not observable"))
-        // The four actions are declared, so a host can discover them.
+        // Every action is declared, so a host can discover them. PRO-0049 added
+        // `flow`, which runs a Maestro flow file against the same device handle.
         let actions = spec.inputSchema["properties"]?["action"]?["enum"]?
             .arrayValue?.compactMap(\.stringValue) ?? []
-        #expect(Set(actions) == ["list", "boot", "open", "screenshot"])
+        #expect(Set(actions) == ["list", "boot", "open", "screenshot", "flow"])
     }
 }
