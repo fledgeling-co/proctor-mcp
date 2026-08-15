@@ -273,8 +273,8 @@ refusal, whose question changed shape underneath it).
 | PRO-0043 | The build-identity tests fail on a moving HEAD | `44-…` | 1 | **MERGED** `d4a1565` |
 | PRO-0044 | **Cua becomes the actuation backend** | `45-…` | 1 | **RUNNING** `wf_91f604bd-42f` |
 | PRO-0047 | The run has a history you can read | `48-…` | 1 | **RUNNING** `wf_69311365-f5a` |
-| PRO-0041 | doctor can hang on the Screen Recording probe | `42-…` | 1 | **RUNNING** `wf_12ed3406-41c` (carried) |
-| PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **QUEUED** (carried) |
+| PRO-0041 | doctor can hang on the Screen Recording probe | `42-…` | 1 | **MERGED** `0545219` |
+| PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **RUNNING** `wf_36f20bfb-1db` (carried) |
 | PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **QUEUED** · after PRO-0044 |
 | PRO-0046 | Supervision survives delegation | `47-…` | 2 | **QUEUED** · after PRO-0044 |
 | PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **QUEUED** |
@@ -287,6 +287,33 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0041 merged `0545219`. The full suite runs unskipped again.**
+  881 (with two suites skipped) -> **937 tests in 105 suites, no skips**, green three times
+  running at merge. `--skip ObscuraPresenceWiringTests --skip BrowserLaneWiringTests` is
+  retired after two waves; the gate from here is a plain `swift test`.
+  - **`unconfirmed`, not `denied`.** `Grant.state` is now granted / denied / unconfirmed,
+    `granted: Bool` survives as the derived fail-closed bit meaning *confirmed granted*, and
+    `ready` is false while a required grant is unconfirmed. The argument that settled it was
+    already in the repo: `MenuBarBlock` was split because the doctor's blockers were two
+    facts wearing one word, and a probe that did not answer is a third.
+  - **Caching:** definite answers for process life, which is what macOS does anyway; a
+    non-answer never cached, because it is a property of the moment; a late answer fills the
+    cache for the next call and never rewrites a report already sent.
+  - **Three measurements changed the design.** A structured `withTaskGroup` race does not
+    bound this call, because the group awaits its children and `cancelAll()` cannot cancel a
+    task parked in a non-cancellable continuation. The unstructured shape works and the
+    process still exits with the probe parked. And `replayd` saturation aggravates rather
+    than explains: a plain script answered in 0.037s while the test host got nothing in 120s.
+  - **The grok gate ran three times and changed the work each time.** It rejected the first
+    design as the safe lie wearing a new field, because `GrantRow` renders Open Settings off
+    `granted == false` and never reads `blockers`; it killed strict single-flight, since a
+    permanently parked probe would hold the slot and report unconfirmed for the agent's life;
+    and the completeness critic found an unreaped slot, a straggler clearing a newer
+    attempt's marker, and joiners sleeping the full bound after the answer landed.
+  - **Child work, and it affects the gate.** `TakeoverWiringTests.raisedAtTheRightStep`
+    fails 8 runs out of 8 on a clean detached checkout of `da4f48f` when run beside
+    `StopReachabilityWiringTests`. A pre-existing cross-suite interaction, not a flake and
+    nothing to do with grants; about 2 in 10 whole-suite runs. Wants its own item.
 - 2026-08-15 **PRO-0043 merged `d4a1565`.** 879 -> **881 tests in 100 suites**, still with
   the PRO-0041 skips. Sent alone first as a capacity canary after the whole of stage 1 died
   on gateway 503 `over_reserve`; it survived, and PRO-0044 and PRO-0041 went out behind it.
