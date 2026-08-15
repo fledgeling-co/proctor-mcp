@@ -52,7 +52,7 @@
 | PRO-0043 | The build-identity tests fail on a moving HEAD | 2026-08-15 | Merged `d4a1565` |
 | PRO-0044 | Cua becomes the actuation backend | 2026-08-15 | Merged `d65dc1e` |
 | PRO-0045 | A delegated call is still gated and recorded | 2026-08-15 | Merged `1bff5c2` |
-| PRO-0046 | Supervision survives delegation | 2026-08-15 | Triaged |
+| PRO-0046 | Supervision survives delegation | 2026-08-15 | Merged `2f240bf` |
 | PRO-0047 | The run has a history you can read | 2026-08-15 | Merged `9756282` |
 | PRO-0048 | Drive iOS through deep links | 2026-08-15 | Merged `8d2fde6` |
 | PRO-0049 | Run Maestro flows as Proctor flows | 2026-08-15 | Triaged |

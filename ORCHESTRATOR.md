@@ -295,16 +295,63 @@ refusal, whose question changed shape underneath it).
 | PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **MERGED** `8d2fde6` |
 | PRO-0053 | `TakeoverWiringTests` reddens the gate at random | `54-…` | 2 | **MERGED** `477941f` · found mid-fleet, was a production defect |
 | PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **MERGED** `1bff5c2` |
-| PRO-0046 | Supervision survives delegation | `47-…` | 2 | **RUNNING** `wf_c9845e3c-c4d` |
+| PRO-0046 | Supervision survives delegation | `47-…` | 2 | **MERGED** `2f240bf` · closed 4 live defects |
 | PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **MERGED** `0ea6f88` · absorbed PRO-0031 |
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **RUNNING** `wf_aa9980d5-076` |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **MERGED** `0f76c56` · reading 3 chosen |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **RUNNING** `wf_21e45777-8c1` (carried, revised) |
-| PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **QUEUED** (carried, revised) |
+| PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **RUNNING** `wf_0bbfba85-c52` (carried, revised) |
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **MERGED** `c9e42c9` · fixed a live PRO-0050 defect |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0046 merged `2f240bf`. Supervision survives delegation, and it closed four
+  defects reachable on merged `main`.** 1242 -> **1293 tests in 140 suites**.
+  - **The four, all found by reading the code before designing.** A delegated click could
+    press Stop, because the tap tests the Stop rectangle for anything failing `isOurs` and is
+    suppressed only while Proctor has a post in flight, which a delegated step never declares.
+    An armed block ate the driver's events, because `RunQueuePlan.grantable` makes `.global`
+    and an app lane disjoint, so a native posting run and a delegated run genuinely overlap
+    while `InputBlocker.shared` is one tap. Both pointers drew. And a delegated
+    `foreground: true` batch drove the declaration keeper with nothing to declare.
+  - **Event discrimination:** `InputBlock.isOurs` admits one further identity — the driver's
+    pid, corroborated against the signed program the lane verified, honoured only inside a
+    call plus a trailing grace, and read by *both* the tap and the panel's own view.
+    `isAPerson` is unchanged and pinned; that rule was already written the safe way round.
+  - **Two cursors:** exactly one draws, decided per run. Proctor's is preferred and the driver
+    is asked off on every action; where it cannot be asked, **Proctor stands down**, because
+    that is the half it can enforce.
+  - **The plan gate killed a mechanism before it was built.** A suspend/resume on the hold
+    would have lifted a process-wide guard on one run's behalf that a concurrent run was
+    keeping — PRO-0053's cross-run clear again. Replaced by having an unrecognised lane take
+    `.global`, so the overlap is impossible rather than managed.
+  - **The completeness critic found an acceptance clause of the runner's own spec that was
+    not implemented:** a swallow during a delegated call was still reported as person input,
+    so a driver whose events looked like hardware would make the run hold itself to the
+    backstop. Fixed in the second commit.
+  - **A1 proved mechanically:** `git diff -U0 -- Tests/ | grep -c "@Test"` is 0, so no
+    existing test body changed, and four production gates were reverted one at a time to turn
+    their named tests red.
+  - **Two defects in its own work, recorded:** a test asserting the clock rather than the
+    clobber, and a process-wide `static var` test seam two parallel suites stomped — now a
+    constructor parameter, which is the exact class PRO-0053 spent a session on.
+  - **Deliberately not built:** the grace window is not widened to the delegated lane. It does
+    not insure against the threat it names, and `ContentionMonitor` is a singleton so it would
+    blind a concurrent native run's signal.
+  - **Stated limits:** `actuatingPid` and `cursorSuppressible` are documentary readings, since
+    the driver is not installed; both fail closed, so being wrong costs a serialised lane or
+    an undrawn pointer rather than an absent guard. And on this lane the full-screen takeover
+    statement can only go up *after* the first unrequested escalation, because nothing outside
+    the driver's process knows before it does.
+  - **Child work:** the driver's prose still reaches the audit row's `reason` unfenced, so
+    PRO-0045's rule should apply there; **PRO-0018's Known-limits prose contradicts its own
+    code** about whether a remapper's events hold the run; `stepsAside` raises the full-screen
+    statement pessimistically on this lane.
+  - **Orchestrator note:** the rebase was a four-file semantic merge. `Wire.swift` and
+    `SessionAct.swift` each had PRO-0051's `backend` against PRO-0046's `pointerDrawnBy` on
+    the same initialiser, `CuaPreflight` had two disjoint field groups, and
+    `CuaActuationBackend`'s init had `transport.adopt` against `self.corroborate`. All
+    additive once separated.
 - 2026-08-15 **PRO-0036 merged `c9e42c9`, and it found a defect PRO-0050 had shipped to
   `main`.** 1216 -> **1242 tests in 136 suites**.
   - **The shipped defect, found by building the app and looking at it.** `Dispatch.swift`
