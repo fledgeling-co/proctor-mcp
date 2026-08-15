@@ -270,10 +270,10 @@ refusal, whose question changed shape underneath it).
 
 | Id | Item | Brief | Stage | Status |
 |---|---|---|---|---|
-| PRO-0043 | The build-identity tests fail on a moving HEAD | `44-…` | 1 | **QUEUED** |
-| PRO-0044 | **Cua becomes the actuation backend** | `45-…` | 1 | **QUEUED** |
-| PRO-0047 | The run has a history you can read | `48-…` | 1 | **QUEUED** |
-| PRO-0041 | doctor can hang on the Screen Recording probe | `42-…` | 1 | **QUEUED** (carried) |
+| PRO-0043 | The build-identity tests fail on a moving HEAD | `44-…` | 1 | **MERGED** `d4a1565` |
+| PRO-0044 | **Cua becomes the actuation backend** | `45-…` | 1 | **RUNNING** `wf_91f604bd-42f` |
+| PRO-0047 | The run has a history you can read | `48-…` | 1 | **RUNNING** `wf_69311365-f5a` |
+| PRO-0041 | doctor can hang on the Screen Recording probe | `42-…` | 1 | **RUNNING** `wf_12ed3406-41c` (carried) |
 | PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **QUEUED** (carried) |
 | PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **QUEUED** · after PRO-0044 |
 | PRO-0046 | Supervision survives delegation | `47-…` | 2 | **QUEUED** · after PRO-0044 |
@@ -287,6 +287,26 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0043 merged `d4a1565`.** 879 -> **881 tests in 100 suites**, still with
+  the PRO-0041 skips. Sent alone first as a capacity canary after the whole of stage 1 died
+  on gateway 503 `over_reserve`; it survived, and PRO-0044 and PRO-0041 went out behind it.
+  - **The brief's diagnosis was wrong in a way that changed the answer.** The runner
+    measured the mechanism: the plugin's output is not cached against missing inputs, the
+    prebuild command does not run at all when llbuild deems the plan up to date, and
+    `swift build` / `swift test` keep separate plans. So there were no declared inputs to
+    add and the brief's second reading had nothing to attach to.
+  - **A third instance of the defect surfaced in gap-fix**, in `compiledVersionMatchesPlist`,
+    which the brief never named. Editing the plist forward reschedules the generator;
+    editing it back does not, so the binary can claim a version the plist has reverted.
+  - **The grok gate changed the work.** It caught that the hermetic test wrote the
+    generator's output inside the repo it was measuring, so the clean case observed its own
+    artefact. Proven by mutation. First call died on the 300s deadline while opening files;
+    the retry inlined the evidence, which is the documented remedy.
+  - **Child work found, unscheduled:** the compiled identity can be stale in a freshly built
+    binary, which qualifies PRO-0030's promise; nothing on the release path runs `swift test`,
+    so a placeholder identity could ship green; and `TakeoverWiringTests.swift:122` is
+    intermittently red in full-suite runs, proven pre-existing at `da4f48f` by five reverted
+    runs.
 - 2026-08-15 **Stage 1 CLOSED. PRO-0037 merged `f2221f6`, PRO-0032 merged `06259b6`.**
   787/92 -> **879 tests in 100 suites**, gated with the PRO-0041 skips throughout.
   - **Both runners died to `ConnectionRefused`, not to a defect.** PRO-0037's workflow
