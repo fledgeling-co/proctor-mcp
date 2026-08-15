@@ -94,6 +94,39 @@ enum AuditLog {
 
     static let state = State()
 
+    /// Where the signing key and the end-mark come from, and where the trail
+    /// lives. Substituted only by a test: `swift test` runs with no live key
+    /// store and must never create one, and two suites sharing one trail file
+    /// would fight over the chain.
+    ///
+    /// **In a test process the defaults are inert.** They were the real key store
+    /// once, and one run of the suite created a Secure Enclave key in the
+    /// operator's login keychain before this was here — harmless in itself, and
+    /// exactly the shape of the incident that put the trail interlock in this file
+    /// in the first place. A test that means to exercise signing injects a signer;
+    /// nothing else can reach the Mac's own.
+    final class Seams: @unchecked Sendable {
+        private let lock = NSLock()
+        private var _signer: AuditSigning = isTestProcess ? InertSigner() : AuditSigningKeyStore.shared
+        private var _anchors: AuditAnchoring = isTestProcess ? InertSigner() : AuditSigningKeyStore.shared
+        private var _directory: URL?
+
+        var signer: AuditSigning {
+            get { lock.lock(); defer { lock.unlock() }; return _signer }
+            set { lock.lock(); defer { lock.unlock() }; _signer = newValue }
+        }
+        var anchors: AuditAnchoring {
+            get { lock.lock(); defer { lock.unlock() }; return _anchors }
+            set { lock.lock(); defer { lock.unlock() }; _anchors = newValue }
+        }
+        var directory: URL? {
+            get { lock.lock(); defer { lock.unlock() }; return _directory }
+            set { lock.lock(); defer { lock.unlock() }; _directory = newValue }
+        }
+    }
+
+    static let seams = Seams()
+
     /// A test process never writes the operator's trail, whatever it forgets to
     /// inject. This is a safety interlock rather than a test hook, and it earns
     /// its place: a test that drove a real `Session` without redirecting its sink
@@ -122,6 +155,7 @@ enum AuditLog {
     }
 
     static var directory: URL {
+        if let injected = seams.directory { return injected }
         guard !isTestProcess else {
             return URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
                 .appendingPathComponent("proctor-test-audit", isDirectory: true)
@@ -137,21 +171,35 @@ enum AuditLog {
         directory.appendingPathComponent("audit.jsonl.converting", isDirectory: false)
     }
 
-    /// Append one record, sealed. Creates the file and directory on first use, and
-    /// converts any plaintext trail it finds before writing anything new. The write
-    /// is a single `write(2)` of the sealed line plus a newline, so concurrent
-    /// appends serialise into whole lines rather than interleaving.
+    /// Append one record, sealed and signed. Creates the file and directory on
+    /// first use, and converts any plaintext trail it finds before writing
+    /// anything new. The write is a single `write(2)` of the record plus a
+    /// newline, so concurrent appends serialise into whole lines rather than
+    /// interleaving.
     ///
-    /// Returns false — and writes nothing at all — when the trail cannot be sealed.
-    /// There is deliberately no plaintext path out of here: a readable fallback
-    /// would silently undo the feature.
+    /// Returns false — and writes nothing at all — when the record cannot be
+    /// sealed **or cannot be signed**. There is deliberately no plaintext path
+    /// out of here and, since PRO-0032, no unsigned one either: a readable
+    /// fallback would silently undo the sealing, and an unsigned entry could not
+    /// be told apart from a forged one, which would spend the guarantee signing
+    /// exists to buy.
     @discardableResult
     static func append(_ record: AuditRecord) -> Bool {
-        state.withLock {
+        // In a test process, an append lands only where a test deliberately put
+        // the trail. The directory interlock below is the floor — it keeps a test
+        // off the operator's trail whatever anybody forgets — and this is the rest
+        // of it: without it, every direct caller in the agent (a kill refusal, a
+        // HUD decision) writes into whichever suite happens to have a trail
+        // injected, and a count-based assertion silently depends on what else is
+        // running. Measured: one such run put 59 entries in a file expecting 5.
+        guard !isTestProcess || seams.directory != nil else { return false }
+        return state.withLock {
             // The whole append, migration included, runs under a cross-process
             // advisory lock: the migration reads the file and then replaces it, so
             // a second agent appending in between would have its line dropped by
-            // the swap. The in-process lock alone cannot see that.
+            // the swap. The in-process lock alone cannot see that. The chain needs
+            // it for a second reason — the link is taken from the file under this
+            // lock, never from memory, so two agents cannot fork it.
             let result: Bool? = withAuditFileLock {
                 migrateIfNeededLocked()
                 if state.isUnavailable { return false }
@@ -159,14 +207,16 @@ enum AuditLog {
                     state.fail("The audit key could not be reached, so nothing is being written to the trail.")
                     return false
                 }
-                guard let sealed = AuditSeal.seal(line: record.jsonLine(), to: pub) else {
+                guard let sealed = AuditSeal.sealLine(line: record.jsonLine(), to: pub) else {
                     state.fail("An audit entry could not be sealed, so it was dropped rather than written readable.")
                     return false
                 }
-                guard appendRawLocked(sealed) else {
+                guard let line = signLocked(sealed) else { return false }
+                guard appendRawLocked(line.record, terminatePrevious: line.terminatePrevious) else {
                     state.fail("The audit trail could not be written to.")
                     return false
                 }
+                seams.anchors.saveAnchor(line.anchor)
                 state.clearError()
                 return true
             }
@@ -176,6 +226,74 @@ enum AuditLog {
             }
             return result
         }
+    }
+
+    /// Chain and sign one sealed record against the trail as it stands on disk.
+    /// Nil means the entry is dropped; the reason is already recorded.
+    private static func signLocked(_ sealed: AuditSeal.SealedLine)
+    -> (record: String, anchor: AuditChain.Anchor, terminatePrevious: Bool)? {
+        guard let keyId = seams.signer.signingKeyId,
+              let keyClass = seams.signer.signingKeyClass else {
+            state.fail("The audit signing key could not be reached, so nothing is being written to "
+                       + "the trail. An unsigned entry is not written, because it could not be told "
+                       + "apart from a forged one.")
+            return nil
+        }
+        let trail = readTrailLocked()
+        let anchor = seams.anchors.loadAnchor()
+
+        // Where the chain starts is answered from the *file*, not from the
+        // anchor: an anchor that has been deleted must not silently reclassify
+        // signed history as history that predates signing.
+        let isGenesis = trail.firstChainedIndex == nil
+        let previous = isGenesis
+            ? AuditChain.genesisLink(preChainRecords: trail.records)
+            : (trail.records.last.map(AuditChain.hash(record:)) ?? "")
+        let trailId = anchor?.trailId ?? trail.lastTrailId ?? UUID().uuidString
+        let preChainCount = trail.firstChainedIndex ?? trail.records.count
+
+        let material = AuditChain.signedMaterial(
+            version: sealed.v, trailId: trailId, previous: previous, keyId: keyId,
+            keyClass: keyClass, sealKeyId: sealed.kid, ephemeralKey: sealed.epk,
+            ciphertext: sealed.ct)
+        guard let signature = seams.signer.sign(material),
+              let record = AuditSeal.encode(sealed.signed(
+                  prev: previous, tid: trailId, skid: keyId, cls: keyClass.rawValue,
+                  sig: signature.base64EncodedString())) else {
+            state.fail("An audit entry could not be signed, so it was dropped rather than written "
+                       + "unsigned.")
+            return nil
+        }
+        return (record,
+                AuditChain.Anchor(trailId: trailId, count: trail.records.count + 1,
+                                  head: AuditChain.hash(record: record), keyId: keyId,
+                                  preChainCount: preChainCount),
+                !trail.endsWithNewline)
+    }
+
+    /// The trail as it sits on disk. Reads the whole file, which is what the
+    /// existing `tail` and `lineCount` already do and is what the anchor's count
+    /// needs anyway — and it is the honest version of "find the last record",
+    /// since a fixed-size tail read is wrong for a record longer than the window
+    /// and would break the chain permanently the first time one appeared.
+    private static func readTrailLocked()
+    -> (records: [String], endsWithNewline: Bool, firstChainedIndex: Int?, lastTrailId: String?) {
+        guard let data = try? Data(contentsOf: url), !data.isEmpty,
+              let text = String(data: data, encoding: .utf8) else {
+            return ([], true, nil, nil)
+        }
+        let endsWithNewline = text.hasSuffix("\n")
+        let records = text.split(separator: "\n", omittingEmptySubsequences: true).map(String.init)
+        var firstChained: Int?
+        var lastTrailId: String?
+        for (index, record) in records.enumerated() {
+            guard let line = AuditSeal.decode(record), line.prev != nil, line.sig != nil else {
+                continue
+            }
+            if firstChained == nil { firstChained = index }
+            lastTrailId = line.tid
+        }
+        return (records, endsWithNewline, firstChained, lastTrailId)
     }
 
     /// Serialise every writer, in this process and any other, around the trail.
@@ -199,14 +317,26 @@ enum AuditLog {
     /// One append, opened `O_APPEND` so the kernel places the write at the end of
     /// the file atomically. Seeking to the end and writing is not the same thing:
     /// two writers can seek to the same offset and overwrite each other's line.
-    private static func appendRawLocked(_ line: String) -> Bool {
-        guard let data = (line + "\n").data(using: .utf8) else { return false }
+    ///
+    /// `terminatePrevious` closes a torn final write by putting the missing
+    /// newline in front of this record, in the same single write. The damage then
+    /// stays a permanent, reported scar in the chain instead of being fused with
+    /// this record's bytes and hidden.
+    ///
+    /// The descriptor is flushed before the caller records the new end-mark. The
+    /// mark lives in the key store, which the system flushes on its own schedule,
+    /// so without this an ordinary crash could leave a mark that is ahead of the
+    /// bytes on disk — and a mark ahead of the trail reads as entries missing
+    /// from the end, which is an accusation rather than a crash.
+    private static func appendRawLocked(_ line: String, terminatePrevious: Bool = false) -> Bool {
+        let text = (terminatePrevious ? "\n" : "") + line + "\n"
+        guard let data = text.data(using: .utf8) else { return false }
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true,
                                                  attributes: [.posixPermissions: 0o700])
         let fd = Darwin.open(url.path, O_WRONLY | O_APPEND | O_CREAT, 0o600)
         guard fd >= 0 else { return false }
         defer { Darwin.close(fd) }
-        return data.withUnsafeBytes { buffer -> Bool in
+        let written = data.withUnsafeBytes { buffer -> Bool in
             guard let base = buffer.baseAddress else { return false }
             var written = 0
             while written < buffer.count {
@@ -216,6 +346,8 @@ enum AuditLog {
             }
             return true
         }
+        guard written else { return false }
+        return Darwin.fsync(fd) == 0
     }
 
     // MARK: - One-time in-place conversion
@@ -373,5 +505,40 @@ enum AuditLog {
                     error: state.error, dropped: state.droppedCount, keyId: kid,
                     keyMismatch: state.hasKeyMismatch, converted: state.convertedCount)
         }
+    }
+
+    /// Whether the trail is what Proctor wrote: every entry signed by this Mac,
+    /// every entry following the one before it, and as many of them as there
+    /// should be.
+    ///
+    /// This needs the **signing** key, not the key that reads the trail, so a
+    /// trail whose contents can no longer be opened can still be proved intact —
+    /// checking and reading are different privileges and stay that way. Costs a
+    /// signature check per entry, measured at 0.088 ms, so a trail of five
+    /// thousand entries verifies in under half a second.
+    ///
+    /// The expectation comes from the key store rather than from the file. A
+    /// forger who supplies both the trail and the key that checks it would
+    /// otherwise pass: `keyConfirmed` is false when the key store could not be
+    /// reached at all, and a verdict that is merely self-consistent is never
+    /// reported as clean.
+    static func verify() -> AuditChain.Verdict {
+        let signer = seams.signer
+        let anchor = seams.anchors.loadAnchor()
+        var endsWithNewline = true
+        var records: [String] = []
+        if let data = try? Data(contentsOf: url), !data.isEmpty,
+           let text = String(data: data, encoding: .utf8) {
+            endsWithNewline = text.hasSuffix("\n")
+            records = text.split(separator: "\n", omittingEmptySubsequences: true).map(String.init)
+        }
+        return AuditChain.verify(
+            records: records, endsWithNewline: endsWithNewline,
+            expected: AuditChain.Expectation(
+                trailId: anchor?.trailId, keyId: signer.signingKeyId,
+                keyClass: signer.signingKeyClass, anchor: anchor,
+                verify: { signature, material in
+                    signer.verifySignature(signature, over: material)
+                }))
     }
 }

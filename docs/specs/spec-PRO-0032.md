@@ -349,3 +349,108 @@ Implementation plan: `docs/plans/plan-PRO-0032.md` (Plan size: Standard). Its ou
 review found ten implementation defects in the construction this spec settled — the exact
 bytes that get hashed and signed were the bulk of them — and eight changed the plan before
 any code was written. Clause 5 was widened and clause 5a added as a result.
+
+---
+
+## Progress — 2026-08-15
+
+Built on `ai/pro-0032` in `.worktrees/PRO-0032`. `swift build` clean, no new warnings.
+**741 tests in 87 suites** (692/84 with this feature's three suites skipped, so +49 tests
+and +3 suites), run green four times consecutively before the last two changes and again
+after.
+
+**What shipped.** `Sources/ProctorCore/AuditChain.swift` (pure: the byte definitions, the
+signed material, the anchor, the verdict and the walk). Five optional fields on
+`AuditSeal.SealedLine`, with the seal version, the sealed box and its additional-data
+binding untouched, so every entry already on the reader's machine still opens and reads as
+predating the chain. `Sources/ProctorAgent/Session/AuditSigningKeyStore.swift` (the
+secure-element key with a software fallback, the anchor, and no export path). `AuditLog`
+gains the chain on the write path, an `fsync` before the anchor write, `verify()`, and
+injection seams. `LaneRecommendation` and a `recommended` outcome on `AuditRecord`; a
+`BrowserLaneRule` token on `BrowserTarget.Decision` and a `recommendation(for:probe:lanes:)`
+accessor that is the only code that ever touches the URL. `Session.recordRecommendation`
+with a per-run dedup key. `auditVerdict` on `proctor_policy` status and the audit tail,
+plus the schema, the README row and the changelog.
+
+| Clause | Proof |
+|---|---|
+| 1 clean trail verifies | `cleanTrailVerifies`, `theWritePathProducesAVerifiableTrail` |
+| 2 forged append detected | `forgedAppendIsDetected`, `foreignKeyIsDetected`, `aForgedAppendThroughTheFileIsDetected` |
+| 3 deletion, reorder, fork | `deletionIsDetected`, `reorderIsDetected`, `forkIsDetected` |
+| 4 an edited byte is forgery, not unreadability | `editIsDetectedAsForged` |
+| 5 truncation, rollback, both crash states, no anchor | `truncationIsDetected`, `rollbackIsDetected`, `unanchoredTailIsNotAFault`, `lostFinalEntryIsNotAnAccusation`, `missingAnchorIsNotProvable`, `strippedTrailIsAFault`, `truncationThroughTheFileIsDetected` |
+| 5a key class and signature shape | `keyClassCannotBeClaimed`, `malformedSignatureIsAFault` |
+| 6 pre-chain history pinned, not accused | `preChainEntriesArePreChain`, `genesisPinsPreChainHistory`, `deletingPreChainHistoryIsDetected`, `anExistingSealedTrailIsPreChain`, `theGenesisLinkPinsHistoryThroughTheWritePath` |
+| 7 verification without the reading key | `verificationDoesNotNeedTheReadingKey` |
+| 8 a forger's own key is never clean | `aForgersOwnKeyDoesNotYieldClean` |
+| 9 no splicing between trails | `entriesCannotBeSplicedBetweenTrails` |
+| 10 no unsigned entry, ever | `thereIsNoUnsignedEntry`, `aDroppedEntryDoesNotThrow` |
+| 11 a key change is not an accusation | `keyChangeIsNotAnAccusation` |
+| 12 two writers, one chain | `concurrentAppendsProduceOneChain` |
+| 13 the verdict on the operator's surfaces | `theVerdictReachesPolicyStatus`, `theVerdictNamesTheFirstFault`, `theVerdictCarriesEntriesThatWereNeverWritten` |
+| 14 the recommendation is recorded | `aRecommendationIsRecorded` |
+| 15 no browsing history, asserted whole-record | `noBrowsingHistoryIsRecorded`, `noAddressMeansNoScheme` |
+| 16 no lane, no record | `noLaneMeansNoRecord` |
+| 17 a repeat is the same act | `repeatsAreNotNewActs`, `aChangedRecommendationRecordsAgain` |
+| 18 advisory, not actuation | `aRecommendationIsNotAnActuation` |
+| 19 a failed record never fails the call | `aFailedRecordDoesNotFailTheCall` |
+| 20 recorded through the same path | `recommendationsAreChainedLikeEverythingElse` |
+| 21 schema documents it, no new verb | schema updated; the tool surface is unchanged |
+
+**Two tests were checked by breaking the code they cover**, because thirty green
+assertions on the first run is a claim worth distrusting. Disabling the link check and the
+signature check turned six assertions red across four tests; making the recommendation
+carry the whole URL instead of its scheme turned the privacy test red on every fragment of
+every address. Both were restored.
+
+**Two defects were found by running the suite rather than by reading it.**
+
+1. **Cross-suite contamination.** Two of this feature's suites raced on the process-wide
+   trail seam, and other suites' sessions wrote into whichever trail happened to be
+   injected: one run put 59 entries in a file expecting 5. The seam-touching tests are now
+   one serialized suite, `Session.auditSink` and `RunHUDPanel.auditSink` write nothing in a
+   test process, and `AuditLog.append` refuses in a test process unless a trail was
+   deliberately injected. The operator's own trail was never touched: its checksum was
+   taken before the first suite ran and was identical after every run.
+2. **A test process created a real key.** Before the guard above existed, a run reached
+   `AuditSigningKeyStore` through the new verdict on `policyStatus()` and created a Secure
+   Enclave signing key in the operator's login keychain (2026-08-15 00:48:34Z, service
+   `app.fledgeling.procter.audit.signing`, account `audit-p256-se-v1`). Nothing is signed
+   with it and no trail depends on it. **It is still there, and removing it needs one human
+   action**, because its access list belongs to the test binary and `security
+   delete-generic-password` blocks on a keychain prompt:
+   `security delete-generic-password -s app.fledgeling.procter.audit.signing`, approving the
+   dialog. Left in place it costs the agent one keychain prompt on its first signed write,
+   or, in a launchd context where no prompt can be answered, a trail that reports itself as
+   not being written. The code now fails loudly in that case rather than silently, and the
+   default seams are inert in a test process, so it cannot recur.
+
+**Gates.** Spec design review, plan review and the completeness critic all ran out of
+family on **grok-4.6** (`--effort xhigh --sandbox read-only`), no downgrade on any of the
+three, and every prompt carried the design rather than the key-handling code. The spec
+review reversed the central choice, from a copyable symmetric stamp to a secure-element
+signature, and moved the end-mark off disk. The plan review found ten defects in the byte
+definitions before a line was written; eight changed the plan. The completeness critic
+raised eight; two were adopted (a dropped entry leaves no hole in the chain, so the verdict
+now carries the count of entries never written; and the audit tail's schema now says a
+`recommended` line carries a recommendation object), four were checked against the code and
+found already covered — the elisions were in the brief, not the build — and two were
+answered: there is no model identity available to record, and an off-machine verification
+export is exactly the escape hatch PRO-0013 refused.
+
+**Measured rather than assumed.** A secure-element signature costs 4.6 ms and a keychain
+item update 12.9 ms, so a signed, anchored entry adds roughly 17 ms to an action whose
+settle already costs hundreds. Verification costs 0.088 ms per entry, so the reader's
+current 467-entry trail verifies in about 41 ms and a five-thousand-entry one in under half
+a second. Canonical low-s signatures were rejected on a measurement rather than on taste:
+99 of 200 secure-element signatures and 97 of 200 software signatures are high-s, and
+CryptoKit verifies an s-flipped signature, so enforcing low-s would have rejected about half
+of every honest trail.
+
+**Not machine-witnessable here, and reported as code-complete rather than proven.** That the
+signing key is created in and retrieved from the secure element under the stated terms by
+the real agent, and that it is reachable during a locked unattended run. Those need the key
+store, which this suite is now structurally prevented from reaching. The secure element's
+behaviour was measured directly with a throwaway key outside the suite: a 284-byte wrapped
+blob, re-created in a later process without a prompt, signing at 4.6 ms, verifying with the
+public half alone and rejecting a tampered message.

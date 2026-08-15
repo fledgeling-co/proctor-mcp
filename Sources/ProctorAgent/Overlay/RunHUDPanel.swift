@@ -206,6 +206,10 @@ final class RunHUDPanel {
     /// and the panel's own are different surfaces and an audit trail that filed
     /// "hide the panel" under the queue would be one to argue with later.
     nonisolated(unsafe) static var auditSink: @Sendable (String, String) -> Void = { tool, detail in
+        // Writes nothing in a test process, for the reason on `Session.auditSink`:
+        // an un-injected sink appending to whatever trail is current is how one
+        // suite's entries end up in another suite's file.
+        guard !AuditLog.isTestProcess else { return }
         _ = AuditLog.append(AuditRecord(timestamp: Date().timeIntervalSince1970,
                                         tool: tool,
                                         outcome: "refused", reason: detail))

@@ -25,13 +25,16 @@ import CryptoKit
 // The number of lines, their timing and their rough size stay visible to anyone
 // with file access, and nothing here detects a deleted or reordered line.
 //
-// Authenticity is not claimed either, and that follows directly from the first
-// constraint above: sealing needs only the public key, which sits in a file
-// beside the log, so anyone who can write that directory can append a
-// well-formed entry that opens cleanly and is indistinguishable from a genuine
-// one. The trail is evidence of what the agent recorded, not proof that
-// everything in it came from the agent. Signing each entry would close that, and
-// is a different change from this one.
+// Authenticity is not claimed *by this file*, and that follows directly from the
+// first constraint above: sealing needs only the public key, which sits in a file
+// beside the log, so anyone who can write that directory can append a well-formed
+// entry that opens cleanly. `AuditChain` (PRO-0032) is what closes that — it
+// chains each record to the one before it and signs the link with a key held in
+// the Mac's secure element, so an entry appended by anything else is detected.
+// The two are deliberately separate: sealing hides content and needs no secret to
+// write, signing proves authorship and does. A line that carries no chain fields
+// is one written before signing existed, and is reported as such rather than as
+// forged.
 
 public enum AuditSeal {
 
@@ -44,14 +47,48 @@ public enum AuditSeal {
     /// One sealed line. Compact, sorted-key JSON with no newline in it, so the
     /// file it lands in is still one-record-per-line and `tail`/`wc -l` still work
     /// for an operator who cannot read the contents.
+    ///
+    /// The five chain fields (PRO-0032) are **optional and outside the sealed
+    /// box**, which is what lets this format be extended without invalidating a
+    /// single line already on disk: an entry written before signing existed
+    /// decodes with them nil and is reported as predating the chain, and the
+    /// sealed box, its version and its additional-data binding are untouched. It
+    /// also means the trail can be *checked* without being *opened* — the two are
+    /// different privileges and stay so.
     public struct SealedLine: Codable, Sendable, Equatable {
         public let v: Int
         public let kid: String     // which key sealed this, so a later key change stays possible
         public let epk: String     // base64 raw ephemeral X25519 public key
         public let ct: String      // base64 AES-GCM combined box (nonce ‖ ciphertext ‖ tag)
 
-        public init(v: Int, kid: String, epk: String, ct: String) {
+        /// Lowercase hex SHA-256 of the previous record's bytes; for the first
+        /// chained record, of the whole file prefix before it. See `AuditChain`.
+        public let prev: String?
+        /// Which trail this entry belongs to, so a genuinely signed entry cannot
+        /// be lifted into another trail and land there intact.
+        public let tid: String?
+        /// Which key signed it.
+        public let skid: String?
+        /// Which kind of key signed it — never trusted from here, always checked
+        /// against how the key is actually stored.
+        public let cls: String?
+        /// Base64 of the 64-byte P1363 signature over `AuditChain.signedMaterial`.
+        public let sig: String?
+
+        public init(v: Int, kid: String, epk: String, ct: String,
+                    prev: String? = nil, tid: String? = nil, skid: String? = nil,
+                    cls: String? = nil, sig: String? = nil) {
             self.v = v; self.kid = kid; self.epk = epk; self.ct = ct
+            self.prev = prev; self.tid = tid; self.skid = skid; self.cls = cls; self.sig = sig
+        }
+
+        /// The same line with the chain fields attached. Sealing and signing are
+        /// two steps against one record: the seal is made first and the signature
+        /// covers it, so this is how the second step lands on the first.
+        public func signed(prev: String, tid: String, skid: String,
+                           cls: String, sig: String) -> SealedLine {
+            SealedLine(v: v, kid: kid, epk: epk, ct: ct,
+                       prev: prev, tid: tid, skid: skid, cls: cls, sig: sig)
         }
     }
 
@@ -87,6 +124,16 @@ public enum AuditSeal {
     /// Returns nil rather than throwing, and the caller's contract on nil is to
     /// write *nothing*: a plaintext fallback would silently undo the feature.
     public static func seal(line: String, to publicKey: Curve25519.KeyAgreement.PublicKey) -> String? {
+        guard let sealed = sealLine(line: line, to: publicKey) else { return nil }
+        return encode(sealed)
+    }
+
+    /// The same seal, stopping one step short of the wire so the caller can
+    /// attach the chain fields before the record's bytes are fixed. The
+    /// signature covers values rather than the encoded document, but the *link*
+    /// is a hash of the bytes, so the bytes must not change after signing.
+    public static func sealLine(line: String,
+                                to publicKey: Curve25519.KeyAgreement.PublicKey) -> SealedLine? {
         let kid = keyId(for: publicKey)
         let ephemeral = Curve25519.KeyAgreement.PrivateKey()
         let epk = ephemeral.publicKey.rawRepresentation
@@ -97,14 +144,25 @@ public enum AuditSeal {
         guard let box = try? AES.GCM.seal(Data(line.utf8), using: key,
                                           authenticating: header(kid: kid, epk: epk)),
               let combined = box.combined else { return nil }
-        let sealed = SealedLine(v: version, kid: kid,
-                                epk: epk.base64EncodedString(),
-                                ct: combined.base64EncodedString())
+        return SealedLine(v: version, kid: kid,
+                          epk: epk.base64EncodedString(),
+                          ct: combined.base64EncodedString())
+    }
+
+    /// One record's JSON, compact with sorted keys. The only place a sealed line
+    /// is turned into bytes, so the bytes a link hashes are produced one way.
+    public static func encode(_ sealed: SealedLine) -> String? {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
         guard let data = try? encoder.encode(sealed),
               let text = String(data: data, encoding: .utf8) else { return nil }
         return text
+    }
+
+    /// One record, back. Nil for anything that is not a sealed record at all.
+    public static func decode(_ line: String) -> SealedLine? {
+        guard let data = line.data(using: .utf8) else { return nil }
+        return try? JSONDecoder().decode(SealedLine.self, from: data)
     }
 
     /// Open one sealed line. Nil on anything that is not a line this key sealed —
@@ -113,8 +171,7 @@ public enum AuditSeal {
     /// not blind the whole trail, so the reader marks it and carries on.
     public static func open(_ line: String,
                             with privateKey: Curve25519.KeyAgreement.PrivateKey) -> String? {
-        guard let data = line.data(using: .utf8),
-              let sealed = try? JSONDecoder().decode(SealedLine.self, from: data),
+        guard let sealed = decode(line),
               sealed.v == version,
               keyId(for: privateKey.publicKey) == sealed.kid,
               let epk = Data(base64Encoded: sealed.epk),
@@ -133,8 +190,5 @@ public enum AuditSeal {
     /// Whether a stored line is sealed. This is the migration's discriminator: a
     /// plaintext `AuditRecord` line carries none of these four keys, so a trail
     /// can be told apart from a converted one without the key.
-    public static func isSealed(_ line: String) -> Bool {
-        guard let data = line.data(using: .utf8) else { return false }
-        return (try? JSONDecoder().decode(SealedLine.self, from: data)) != nil
-    }
+    public static func isSealed(_ line: String) -> Bool { decode(line) != nil }
 }

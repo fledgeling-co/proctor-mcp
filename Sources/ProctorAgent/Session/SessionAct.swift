@@ -126,7 +126,8 @@ extension Session {
         // step's plane changes: the batch ran, and it arrives carrying a note that
         // the page belongs to Obscura.
         if let handoff = browserHandoff(window: window,
-                                        targets: browserTargets(for: steps, window: window)) {
+                                        targets: browserTargets(for: steps, window: window),
+                                        tool: "proctor_act") {
             out["browser"] = try JSONValue.encode(handoff)
         }
         return .object(out)

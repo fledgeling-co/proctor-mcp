@@ -702,6 +702,38 @@ public enum BrowserTarget {
         var url: String?
         var urlUnavailable: String?
         var toolUnavailable: ToolAbsence?
+        /// Which rule fired, as a token. `why` is the sentence a reader sees;
+        /// this is the same fact in a form the audit trail can carry, since a
+        /// trail full of prose is a trail nothing can answer questions about.
+        /// Deliberately not on `BrowserHandoff`: putting it on the wire is
+        /// PRO-0024's open child item, and this change does not pre-empt it.
+        var rule: BrowserLaneRule?
+    }
+
+    /// Which rule in PRO-0024's routing table named the lane. Only the two rules
+    /// that *name* one appear here — a handoff that recommends nothing is not a
+    /// recommendation, and is not recorded.
+    public enum BrowserLaneRule: String, Codable, Sendable, Equatable {
+        /// Rule 1: the page has no equivalent in Obscura's engine.
+        case internalScheme
+        /// Rule 4: the default, with no measured Obscura limit against this page.
+        case defaultLane = "default"
+    }
+
+    /// The lane, the rule that chose it and the address's scheme — the three
+    /// facts the audit trail records about a recommendation, and deliberately
+    /// nothing else. Nil when no lane was named.
+    ///
+    /// The scheme is taken here rather than by the caller so that the one place
+    /// that knows about the URL is the only place that ever touches it: no host,
+    /// path, query or fragment leaves this function, which is what keeps the
+    /// trail from becoming a browsing history.
+    public static func recommendation(for browser: KnownBrowser, probe: WebContentProbe?,
+                                      lanes: BrowserLanes)
+    -> (lane: BrowserLane, rule: BrowserLaneRule, scheme: String?)? {
+        let d = decide(for: browser, probe: probe, lanes: lanes)
+        guard let lane = d.lane, let rule = d.rule else { return nil }
+        return (lane, rule, d.url.flatMap { URL(string: $0)?.scheme?.lowercased() })
     }
 
     /// Build the advisory.
@@ -853,7 +885,7 @@ public enum BrowserTarget {
                                     urlUnavailable: sensitiveInternal)
                 }
                 return Decision(lane: .browserUse, why: whyInternalScheme, url: url,
-                                urlUnavailable: nil)
+                                urlUnavailable: nil, rule: .internalScheme)
             case .unavailable:
                 return Decision(lane: nil, why: nil, url: nil, urlUnavailable: unavailable,
                                 toolUnavailable: BrowserUseTool.absence)
@@ -874,7 +906,7 @@ public enum BrowserTarget {
         // fact about the page, and it is not a reason to change instrument.
         if lanes.obscuraAvailable {
             return Decision(lane: .obscura, why: whyDefault, url: url,
-                            urlUnavailable: unavailable)
+                            urlUnavailable: unavailable, rule: .defaultLane)
         }
         return Decision(lane: nil, why: nil, url: url, urlUnavailable: unavailable,
                         toolUnavailable: ObscuraTool.absence)

@@ -132,6 +132,63 @@ extension Session {
 
     // MARK: - proctor_policy
 
+    /// The trail's verdict, small enough to ride on every status call. Leads with
+    /// whether it is clean, because that is the question; carries the counts and
+    /// the *first* fault, because a trail with forty broken links needs one
+    /// position to start from rather than forty.
+    ///
+    /// `clean` deliberately requires the signing key to have been reachable. A
+    /// verdict that is only self-consistent — a trail and a key that agree with
+    /// each other, both of which a forger could supply — is reported as
+    /// unconfirmed instead.
+    private func auditVerdict() -> JSONValue {
+        let verdict = AuditLog.verify()
+        let status = AuditLog.status()
+        var out: [String: JSONValue] = [
+            "clean": .bool(verdict.isClean),
+            "entries": .number(Double(verdict.total)),
+            "verified": .number(Double(verdict.verified)),
+            "completeness": .string(verdict.completeness.state.rawValue),
+            "keyConfirmed": .bool(verdict.keyConfirmed)
+        ]
+        // Entries dropped this run leave no hole in the chain to find: an entry
+        // that was never written cannot break a link. The verdict would otherwise
+        // read clean while the run knew perfectly well that events went
+        // unrecorded, so the count travels with it rather than only beside it.
+        if status.dropped > 0 {
+            out["droppedThisRun"] = .number(Double(status.dropped))
+            out["droppedNote"] = .string(
+                "\(status.dropped) \(status.dropped == 1 ? "entry" : "entries") could not be written "
+                + "this run, so \(status.dropped == 1 ? "that action is" : "those actions are") "
+                + "missing from the trail. A trail with nothing wrong in it is not the same as a "
+                + "complete one.")
+        }
+        if verdict.preChain > 0 {
+            out["preChain"] = .number(Double(verdict.preChain))
+            out["preChainNote"] = .string(
+                "\(verdict.preChain) \(verdict.preChain == 1 ? "entry predates" : "entries predate") "
+                + "signing, so nothing could have proved \(verdict.preChain == 1 ? "it" : "them") at "
+                + "the time. The first signed entry pins \(verdict.preChain == 1 ? "it" : "them") as "
+                + "\(verdict.preChain == 1 ? "it" : "they") stood, so a later edit is detected.")
+        }
+        if let count = verdict.completeness.count { out["completenessCount"] = .number(Double(count)) }
+        if let reason = verdict.completeness.reason { out["completenessNote"] = .string(reason) }
+        if let first = verdict.faults.first {
+            out["faultCount"] = .number(Double(verdict.faults.count))
+            out["firstFault"] = .object([
+                "kind": .string(first.kind.rawValue),
+                "entry": .number(Double(first.position)),
+                "detail": .string(first.detail)
+            ])
+        }
+        if !verdict.keyConfirmed {
+            out["keyConfirmedNote"] = .string(
+                "The signing key could not be reached, so the trail is internally consistent but "
+                + "unconfirmed: nothing here proves it was written on this Mac.")
+        }
+        return .object(out)
+    }
+
     func policyStatus() -> JSONValue {
         loadPolicyIfNeeded()
         let audit = AuditLog.status()
@@ -146,6 +203,11 @@ extension Session {
             // being written at all, which used to fail silently.
             "auditEncrypted": .bool(true),
             "auditWritable": .bool(audit.writable),
+            // Sealing hides the contents; signing says who wrote them. The verdict
+            // is the answer to the question sealing could never answer, which is
+            // whether the trail is the one Proctor wrote.
+            "auditSigned": .bool(true),
+            "auditVerdict": auditVerdict(),
             // The declared filesystem roots sit alongside the app lists: both are
             // the operator-facing containment surface, and stating the roots here is
             // what makes the jail's guarantee auditable rather than implicit.
@@ -242,6 +304,8 @@ extension Session {
             "auditCount": .number(Double(AuditLog.lineCount())),
             "auditEncrypted": .bool(true),
             "auditWritable": .bool(audit.writable),
+            "auditSigned": .bool(true),
+            "auditVerdict": auditVerdict(),
             "unreadableCount": .number(Double(unreadable)),
             "lines": .array(lines)
         ]

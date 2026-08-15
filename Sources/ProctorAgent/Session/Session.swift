@@ -88,8 +88,28 @@ actor Session {
     /// token's TTL is judged. Both are the real thing by default; they are
     /// substitutable so the gate's wiring can be exercised without writing to the
     /// operator's trail or sleeping across a token expiry. See SessionPolicy.
-    var auditSink: @Sendable (AuditRecord) -> Void = { _ = AuditLog.append($0) }
+    ///
+    /// **The default writes nothing in a test process.** `AuditLog` already
+    /// redirects a test's trail away from the operator's, and that interlock is
+    /// the floor; this is the second half of it. A session built without an
+    /// injected sink used to append to whatever trail was current, which let one
+    /// suite's entries land in another suite's file and made a count-based
+    /// assertion depend on what else happened to be running. A test that wants to
+    /// exercise the append path calls `AuditLog.append` directly, which is
+    /// deliberate rather than incidental.
+    var auditSink: @Sendable (AuditRecord) -> Void = { record in
+        guard !AuditLog.isTestProcess else { return }
+        _ = AuditLog.append(record)
+    }
     var clock: @Sendable () -> Double = { Date().timeIntervalSince1970 }
+
+    /// The recommendations already recorded this run, keyed by application, lane,
+    /// rule and scheme. A repeat of the same advice is the same act: the advisory
+    /// rides every listing, attach, snapshot, find and step batch, so recording
+    /// each one would make the trail mostly recommendations and would time-stamp
+    /// somebody's browsing minute by minute. PRO-0024 set the precedent when it
+    /// emitted the full advisory once at attach, for the same reason.
+    var recordedRecommendations: Set<String> = []
 
     /// The filesystem jail: the declared roots any caller-supplied path must stay
     /// within, resolved on first use from PROCTOR_FS_ROOTS. Nil-then-empty until
@@ -571,8 +591,10 @@ actor Session {
     /// The advisory for an application that is a browser, without a window in hand.
     /// Emitted where the instrument is chosen — listing and attaching — and it says
     /// so: no window was named, so no page URL was read.
-    func browserHandoff(bundleId: String?, detail: BrowserTarget.Detail) -> BrowserHandoff? {
+    func browserHandoff(bundleId: String?, detail: BrowserTarget.Detail,
+                        tool: String) -> BrowserHandoff? {
         guard let browser = BrowserCatalogue.identify(bundleId: bundleId) else { return nil }
+        recordRecommendation(for: browser, probe: nil, tool: tool, window: nil)
         return BrowserTarget.handoff(for: browser, probe: nil, detail: detail,
                                      lanes: tools.lanes)
     }
@@ -588,14 +610,44 @@ actor Session {
     /// advisory is emitted only when one of them lies inside a web area, which is
     /// what keeps a click on the reload button from being told to use Obscura.
     func browserHandoff(window: WindowHandle, targets: [Rect] = [],
-                        detail: BrowserTarget.Detail = .brief) -> BrowserHandoff? {
+                        detail: BrowserTarget.Detail = .brief,
+                        tool: String) -> BrowserHandoff? {
         guard let browser = BrowserCatalogue.identify(bundleId: appHandle(forWindow: window)?.bundleId)
         else { return nil }
         guard let probe = try? ax.webContent(window: window.id), !probe.areas.isEmpty
         else { return nil }
         if !targets.isEmpty, !targets.contains(where: { probe.contains($0) }) { return nil }
+        recordRecommendation(for: browser, probe: probe, tool: tool, window: window.id)
         return BrowserTarget.handoff(for: browser, probe: probe, detail: detail,
                                      lanes: tools.lanes)
+    }
+
+    /// Record that Proctor named a lane, once per distinct application, lane,
+    /// rule and scheme per run.
+    ///
+    /// What goes in is the set of facts the decision was made on and nothing
+    /// more: PRO-0024 routes on the address's scheme alone, so the scheme is
+    /// recorded and the address itself never is. `BrowserTarget.recommendation`
+    /// is what derives it, so the only code that touches a URL here is the code
+    /// that already decided on one.
+    ///
+    /// A handoff that names no lane writes nothing. No lane is no recommendation,
+    /// so there is no act to record — and the case where Proctor most visibly
+    /// decided, declining to point any lane at the browser's own password
+    /// surface, is exactly the entry that would say where the person was.
+    private func recordRecommendation(for browser: KnownBrowser, probe: WebContentProbe?,
+                                      tool: String, window: String?) {
+        guard let advice = BrowserTarget.recommendation(for: browser, probe: probe,
+                                                        lanes: tools.lanes) else { return }
+        let key = [browser.bundleId, advice.lane.rawValue, advice.rule.rawValue,
+                   advice.scheme ?? "-"].joined(separator: "|")
+        guard recordedRecommendations.insert(key).inserted else { return }
+        auditSink(AuditRecord(
+            timestamp: clock(), tool: tool, bundleId: browser.bundleId, window: window,
+            outcome: AuditRecord.Outcome.recommended,
+            recommendation: LaneRecommendation(lane: advice.lane.rawValue,
+                                               rule: advice.rule.rawValue,
+                                               scheme: advice.scheme)))
     }
 
     /// An attached app by its handle id, or nil if nothing is attached under it.
@@ -623,7 +675,7 @@ actor Session {
                 "attached": .bool(apps[app.id] != nil)
             ]
             if let bundleId = app.bundleId { obj["bundleId"] = .string(bundleId) }
-            if let handoff = browserHandoff(bundleId: app.bundleId, detail: .brief) {
+            if let handoff = browserHandoff(bundleId: app.bundleId, detail: .brief, tool: "proctor_apps") {
                 obj["browser"] = try JSONValue.encode(handoff)
             }
             if apps[app.id] != nil {
@@ -664,7 +716,7 @@ actor Session {
         // place the full advisory is emitted — the measured Obscura edges and the
         // command templates. Everywhere else carries the brief form, because
         // repeating seven caveats on every step of a batch is noise that is skimmed.
-        if let handoff = browserHandoff(bundleId: app.bundleId, detail: .full) {
+        if let handoff = browserHandoff(bundleId: app.bundleId, detail: .full, tool: "proctor_apps") {
             out["browser"] = try JSONValue.encode(handoff)
         }
         return .object(out)
@@ -750,7 +802,7 @@ actor Session {
     func snapshot(window id: String, options: SnapshotOptions, sinceRevision: Int?) throws -> Snapshot {
         let handle = try windowHandle(id)
         let outcome = try walk(window: id, options: options)
-        let browser = browserHandoff(window: handle)
+        let browser = browserHandoff(window: handle, tool: "proctor_snapshot")
 
         guard let since = sinceRevision else {
             return Snapshot(window: id, revision: outcome.revision, root: outcome.root,
@@ -784,7 +836,7 @@ actor Session {
         // match is considered, not a prefix of them. A predicate that ranks the
         // toolbar first and the page fifth still reaches the page.
         let targets = nodes.compactMap(\.frame)
-        if let handoff = browserHandoff(window: handle, targets: targets) {
+        if let handoff = browserHandoff(window: handle, targets: targets, tool: "proctor_find") {
             out["browser"] = try JSONValue.encode(handoff)
         }
         return .object(out)

@@ -127,6 +127,42 @@ public struct ApprovalToken: Codable, Sendable, Equatable {
     }
 }
 
+// MARK: - The lane recommendation
+
+/// What Proctor recommended, when it handed a browser page to another tool.
+///
+/// PRO-0020 and PRO-0024 name a lane for a page Proctor cannot drive itself, and
+/// disclose on the wire that nothing the lane then does reaches this trail. That
+/// stays true — but the *recommendation* is Proctor's own act, the moment it told
+/// a model to go and drive something outside its own accounting, and until now
+/// there was no record it happened.
+///
+/// **What is recorded is exactly the set of facts the decision was made on, and
+/// nothing about where the person was.** PRO-0024 routes on the address's scheme
+/// alone, so the scheme is recorded and no address, host, path, query or fragment
+/// ever is. An auditor can reconstruct why Proctor said what it said; nobody can
+/// reconstruct a browsing session from it.
+///
+/// A redacted address — the length-plus-hash form `Redaction` uses above — was
+/// considered and rejected here, and the reason generalises: that form is safe
+/// for a password because a password cannot be guessed, and an address can.
+/// Anyone holding a list of candidate addresses can match the hash, so it would
+/// store browsing history in a form that only looks redacted.
+public struct LaneRecommendation: Codable, Sendable, Equatable {
+    /// The tool's own name for the lane — `obscura`, `browser-use`.
+    public let lane: String
+    /// Which rule in the routing table chose it, as a token rather than the
+    /// sentence the handoff carries, so the trail is answerable by machine.
+    public let rule: String
+    /// The address's scheme, lowercased, and never any other part of it. Absent
+    /// where no address was read at all, which is the app-level handoff.
+    public let scheme: String?
+
+    public init(lane: String, rule: String, scheme: String?) {
+        self.lane = lane; self.rule = rule; self.scheme = scheme
+    }
+}
+
 // MARK: - Audit record
 
 /// One append-only line of the redacting audit trail. It records what was done —
@@ -134,6 +170,16 @@ public struct ApprovalToken: Codable, Sendable, Equatable {
 /// state hash — while any free text that passed through it (a typed value, a
 /// script body) is present only as a `Redaction`.
 public struct AuditRecord: Codable, Sendable, Equatable {
+    /// The vocabulary of `outcome`. `recommended` is not an actuation: it says
+    /// Proctor gave advice, and it deliberately does not claim the lane ran —
+    /// Proctor does not execute either browser lane and cannot know.
+    public enum Outcome {
+        public static let ok = "ok"
+        public static let failed = "failed"
+        public static let refused = "refused"
+        public static let recommended = "recommended"
+    }
+
     public var timestamp: Double
     public var tool: String
     public var app: String?
@@ -141,20 +187,23 @@ public struct AuditRecord: Codable, Sendable, Equatable {
     public var window: String?
     public var node: String?
     public var kind: String?           // the step kind, when this records a step
-    public var outcome: String         // ok | failed | refused
+    public var outcome: String         // ok | failed | refused | recommended
     public var postStateHash: String?
     public var value: Redaction?       // a redacted typed value or setValue string
     public var script: Redaction?      // a redacted script body
     public var reason: String?         // why, for a refusal or a failure
+    /// Present only on a `recommended` record.
+    public var recommendation: LaneRecommendation?
 
     public init(timestamp: Double, tool: String, app: String? = nil, bundleId: String? = nil,
                 window: String? = nil, node: String? = nil, kind: String? = nil,
                 outcome: String, postStateHash: String? = nil,
-                value: Redaction? = nil, script: Redaction? = nil, reason: String? = nil) {
+                value: Redaction? = nil, script: Redaction? = nil, reason: String? = nil,
+                recommendation: LaneRecommendation? = nil) {
         self.timestamp = timestamp; self.tool = tool; self.app = app; self.bundleId = bundleId
         self.window = window; self.node = node; self.kind = kind; self.outcome = outcome
         self.postStateHash = postStateHash; self.value = value; self.script = script
-        self.reason = reason
+        self.reason = reason; self.recommendation = recommendation
     }
 
     /// Build a record for one executed step, redacting anything that could carry a
