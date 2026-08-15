@@ -300,12 +300,26 @@ refusal, whose question changed shape underneath it).
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **MERGED** `7ca9358` · verified live |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **MERGED** `0f76c56` · reading 3 chosen |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **MERGED** `153951b` (carried, revised) |
-| PRO-0054 | Three tests still redden the gate at random | `55-…` | 3 | **RUNNING** `wf_b1b506b3-e9c` · found mid-fleet |
+| PRO-0054 | Three tests still redden the gate at random | `55-…` | 3 | **RUNNING** `wf_7c3cc18e-9ec` · re-run after a lost first attempt |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **MERGED** `30324a6` (carried, revised) |
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **MERGED** `c9e42c9` · fixed a live PRO-0050 defect |
-| PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
+| PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **RUNNING** `wf_8feb698e-d59` · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-16 **PRO-0054's first attempt lost, and it cost a contract rule.** The runner died on
+  the gateway 503 `over_reserve` that also killed all of stage 1, but the interesting part is
+  what it did before dying: it ran a rebase that replayed **55 of `main`'s commits onto its own
+  stale base** (`dc48889`, from wave 6) rather than moving its branch onto `main`. The branch
+  ended up a rewritten copy of the whole wave's history containing **no PRO-0054 commit at
+  all**, and its own edits — `ForegroundWiringTests.swift` had been touched — were destroyed.
+  A content diff against `main` was pure deletion, so nothing was recoverable and there was
+  nothing to resume. Branch and worktree removed, item re-run from scratch.
+  - **`main` was never at risk**, because every merge in this wave was `--ff-only` and the
+    branch was never merged.
+  - **The contract now says runners never rebase, the orchestrator does.** It previously said
+    only "stop before merge", which several runners read as licence to rebase first; two did so
+    harmlessly and this one did not. A runner's branch being behind `main` is expected and is
+    the orchestrator's problem.
 - 2026-08-16 **PRO-0038 merged `30324a6`.** 1391 -> **1416 tests in 157 suites**. A determinism
   score now says what it was a score of, **and stops folding a hash it cannot vouch for.**
   - **Two defects, and the second was worse than the brief's.** The brief reads as a disclosure
