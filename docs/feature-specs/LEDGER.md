@@ -46,7 +46,7 @@
 | PRO-0037 | A hold names whose run it is | 2026-08-15 | Merged |
 | PRO-0038 | Stability knows when it is scoring a page | 2026-08-15 | Triaged |
 | PRO-0039 | Page-scoped refusal | 2026-08-15 | Triaged |
-| PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | 2026-08-15 | Triaged |
+| PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | 2026-08-15 | Merged `091d6c3` |
 | PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | 2026-08-15 | Merged `0545219` |
 | PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | 2026-08-15 | Merged |
 | PRO-0043 | The build-identity tests fail on a moving HEAD | 2026-08-15 | Merged `d4a1565` |

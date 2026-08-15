@@ -291,10 +291,10 @@ refusal, whose question changed shape underneath it).
 | PRO-0044 | **Cua becomes the actuation backend** | `45-…` | 1 | **RUNNING** `wf_91f604bd-42f` |
 | PRO-0047 | The run has a history you can read | `48-…` | 1 | **RUNNING** `wf_69311365-f5a` |
 | PRO-0041 | doctor can hang on the Screen Recording probe | `42-…` | 1 | **MERGED** `0545219` |
-| PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **RUNNING** `wf_36f20bfb-1db` (carried) |
+| PRO-0040 | `open -a` cannot launch Proctor | `41-…` | 1 | **MERGED** `091d6c3` (carried) |
+| PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **RUNNING** `wf_5eee3ea9-866` · no dep on PRO-0044 |
 | PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **QUEUED** · after PRO-0044 |
 | PRO-0046 | Supervision survives delegation | `47-…` | 2 | **QUEUED** · after PRO-0044 |
-| PRO-0048 | Drive iOS through deep links | `49-…` | 2 | **QUEUED** |
 | PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **QUEUED** · absorbs PRO-0031 |
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **QUEUED** · after PRO-0048 |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **QUEUED** · after PRO-0044 |
@@ -304,6 +304,32 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0040 merged `091d6c3`.** 937 -> **943 tests in 106 suites**.
+  - **The layout decision was measured, not argued.** The runner built a probe binary and
+    compared all three options before writing the spec. `Contents/Helpers/` works but nils
+    `Bundle.main`: `resourceURL` becomes the Helpers directory, which is what `Bundle.module`
+    resolves the HUD's character art through, and it moves paths in `install.sh`,
+    `doctor.sh:76`, `Install.swift:51` and `AgentModel.swift:128`. An embedded
+    `__TEXT,__info_plist` clears the LaunchServices record while leaving `bundlePath` and
+    `resourceURL` pointing at the `.app`, so **the installed layout does not change at all**
+    and none of those release paths needs a path edit. `build-app.sh`, the one step
+    `install.sh` and `release.yml` share, carries the new gate.
+  - **TCC preserved, and proven rather than assumed.** The designated requirement carries no
+    path component, so keeping `codesign -i app.fledgeling.procter` preserves it. Measured
+    before and after the upgrade: byte-identical, both grants `granted`, no consent dialog.
+  - **The grok gate earned its place.** It raised that a later `codesign` omitting `-i` would
+    adopt the embedded identifier and lose the grants a release later, silently. Tested
+    rather than trusted: with `-i` dropped, `codesign -dv` really does report
+    `Identifier=app.fledgeling.procter.agent`. The build gate now exits 1 on it.
+  - **Changed from plan during work:** the linker flags are release-only. Applied
+    unconditionally they propagated into `proctor-mcpPackageTests.xctest`, so every test
+    process ran holding the agent's identity.
+  - **Child work, and it sharpens PRO-0041's finding.** `TakeoverWiringTests.swift:122`
+    measured **3 failures in 6 runs** on a clean worktree at `0545219` with none of the change
+    present. Worse: **`swift test` exits 0 on that failure**, so any exit-code-only check
+    reads a red suite as green. Read the `with N tests ... passed` line instead.
+  - **Not covered:** notarisation. `PROCTOR_SKIP_NOTARIZE=1` per instruction, so `spctl`
+    reports the local install unnotarised. Expected, and not a property of this change.
 - 2026-08-15 **PRO-0041 merged `0545219`. The full suite runs unskipped again.**
   881 (with two suites skipped) -> **937 tests in 105 suites, no skips**, green three times
   running at merge. `--skip ObscuraPresenceWiringTests --skip BrowserLaneWiringTests` is
