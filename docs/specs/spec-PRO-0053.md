@@ -300,7 +300,7 @@ runner was active on this machine throughout, which is the load the defect needs
 |---|---|---|---|
 | paired suites | 7 failures in 8 | **0 in 25** | 53 |
 | paired suites (first pass) | as above | **0 in 20** | 18 |
-| whole suite, 1046 tests | 1 in 3 | **0 in 15** | 97 |
+| whole suite, 1047 tests | 1 in 3 | **0 in 15** | 97 |
 | whole suite (first pass) | as above | 1 in 20, unrelated suite | 18 |
 
 **Zero takeover failures in 80 post-fix runs.** The single failure across all of them was
@@ -323,4 +323,4 @@ as an absent verdict rather than a pass). The zero-test case was found by testin
 script rather than by reasoning about it: the first draft read `Test run with 0 tests in 0
 suites passed` as green.
 
-`swift test` counts: 1043 before, 1046 after.
+`swift test` counts: 1043 before, 1047 after (four new tests).
