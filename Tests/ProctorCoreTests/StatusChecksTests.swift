@@ -74,6 +74,27 @@ struct StatusChecksTests {
         #expect(rows.contains { $0.tool == StatusChecks.shortcutsCLI })
     }
 
+    @Test("the partition follows the kind, and never the required flag")
+    func partitionIgnoresRequired() {
+        // Clause 3's test caught the shipped `statusText` keying Automation's
+        // sentence on `required == false` rather than on what the check is. The
+        // partition has the same defect shape available to it — "a tool is the
+        // one that isn't required" would pass a single-name test and be wrong the
+        // moment an optional permission or a required tool appeared. So this
+        // walks every name against BOTH values of the flag.
+        for (name, kind) in StatusChecks.known {
+            for required in [true, false] {
+                for state in GrantState.allCases {
+                    let grant = Self.grant(name, state: state, required: required)
+                    let inPermissions = StatusChecks.permissions(in: [grant]).count == 1
+                    #expect(inPermissions == (kind != .tool),
+                            "\(name) (required: \(required), \(state)) landed on the wrong side")
+                    #expect(StatusChecks.misfiledTools(in: [grant]).count == (kind == .tool ? 1 : 0))
+                }
+            }
+        }
+    }
+
     // MARK: - Clause 3: "Optional — asked for per app" is Automation's sentence
 
     @Test("only Automation is ever described as asked for per app")
@@ -148,6 +169,48 @@ struct StatusChecksTests {
     func automationIsSilent() {
         #expect(StatusChecks.mobility(
             of: Self.grant(StatusChecks.automation, required: false)) == nil)
+    }
+
+    @Test("the whole kind-by-state matrix, not three cells of it")
+    func mobilityMatrixIsComplete() {
+        // Three sampled fixtures would all carry each kind's usual `required`
+        // value, so a rule keyed on that flag rather than on the kind would not
+        // be forced into the open — which is exactly the defect clause 3 found in
+        // the shipped status text. This walks every cell.
+        for (name, kind) in StatusChecks.known {
+            for state in GrantState.allCases {
+                for required in [true, false] {
+                    let text = StatusChecks.mobility(
+                        of: Self.grant(name, state: state, required: required))
+                    let where_ = "\(name)/\(state)/required:\(required)"
+
+                    if state == .granted || kind == .permissionPerApplication || kind == .tool {
+                        #expect(text == nil, "\(where_) should say nothing")
+                        continue
+                    }
+                    let said = try? #require(text)
+                    #expect(said != nil, "\(where_) should say something")
+                    guard let said else { continue }
+
+                    switch kind {
+                    case .permissionReadLive:
+                        // Never demands an action: Proctor sees it on its own.
+                        #expect(said.contains("on its own"), "\(where_)")
+                        #expect(!said.lowercased().contains("restart"), "\(where_)")
+                    case .permissionSettledAtLaunch:
+                        if state == .unconfirmed {
+                            #expect(!said.lowercased().contains("restart"), "\(where_)")
+                            #expect(!said.contains("Settings"), "\(where_)")
+                        } else {
+                            #expect(said.contains("restarts"), "\(where_)")
+                            #expect(said.contains("Settings"), "\(where_)")
+                        }
+                    case .permissionPerApplication, .tool:
+                        break
+                    }
+                }
+            }
+        }
     }
 
     // MARK: - Clause 5: an unconfirmed grant is never dressed as a denial
@@ -270,6 +333,14 @@ struct StatusChecksTests {
 /// Source scans, in the idiom `ToolchainDoctorTests.doctorPathSpawnsNothing`
 /// already uses here. A tripwire rather than a proof — a determined indirection
 /// defeats either — but each catches the thing that actually happens.
+///
+/// The limits, named rather than implied, because a tripwire read as a proof is
+/// worse than no tripwire. The grant-name scan reads *literals*: an agent that
+/// kept these strings as dead constants while emitting names built by
+/// concatenation or from an enum would stay green here. And the Re-check scan
+/// reads *this file*: a button that reappeared in another view would not be seen,
+/// though the region assertions below mean it cannot simply be moved out of the
+/// footer and counted as still present.
 @Suite("Status window tripwires")
 struct StatusWindowSourceTests {
 
@@ -282,6 +353,18 @@ struct StatusWindowSourceTests {
 
     private static func source(_ path: String) throws -> String {
         try String(contentsOf: repositoryRoot.appendingPathComponent(path), encoding: .utf8)
+    }
+
+    /// The same source with whole-line comments dropped.
+    ///
+    /// Needed because the checks below forbid certain strings *in the code*, and
+    /// the code's own comments quote those strings while explaining why they moved
+    /// out of the view. Only full-line comments are removed, so a `//` inside a
+    /// string literal is never touched.
+    private static func codeOnly(_ source: String) -> String {
+        source.split(separator: "\n", omittingEmptySubsequences: false)
+            .filter { !$0.trimmingCharacters(in: .whitespaces).hasPrefix("//") }
+            .joined(separator: "\n")
     }
 
     @Test("the agent's grant names and Core's map cannot drift apart")
@@ -338,8 +421,56 @@ struct StatusWindowSourceTests {
                 the one under Obscura's install commands. See the verdict table.
                 """)
 
+        // And they are the *right* two. Counting alone would pass a change that
+        // moved the footer's button into another view while deleting one of the
+        // survivors, since the total would still read two.
+        let unreachable = try #require(source.range(of: "Button(\"Start the agent\")"))
+        let obscuraOffer = try #require(source.range(of: "private struct ObscuraOffer"))
+        for (label, region) in [("the agent-not-answering block", unreachable),
+                                ("the Obscura install block", obscuraOffer)] {
+            let after = String(source[region.lowerBound...]).prefix(1600)
+            #expect(after.contains("Button(\"Re-check\")"),
+                    "\(label) lost its Re-check; it is one of the two the verdict table keeps")
+        }
+
         // The window's second opinion about a tool the report already judged.
         #expect(!source.contains("obscuraSummary"),
                 "the report decides a tool's verdict; the window renders it")
+    }
+
+    @Test("the window renders the library's decisions rather than its own")
+    func theViewActuallyCallsTheLibrary() throws {
+        // The hole extraction creates, and the reason this test exists: every
+        // behavioural test above hits the pure functions, and the UI target has
+        // no tests and no window server. So the window could keep the old inline
+        // strings, or bind a row to the wrong field, or never call the new API at
+        // all, and every one of those tests would stay green. This does not prove
+        // the window draws correctly — nothing here can — but it does catch the
+        // view quietly going its own way.
+        let source = try Self.source("Sources/ProctorUI/MainWindow.swift")
+        let code = Self.codeOnly(source)
+        for call in ["StatusChecks.statusText", "StatusChecks.mobility",
+                     "StatusChecks.toolRows", "StatusChecks.reportFreshness"] {
+            #expect(code.contains(call), "the window no longer calls \(call)")
+        }
+
+        // The copy these replaced must not reappear inline. A regression here is
+        // a second source of truth for a sentence, which is how the two drift.
+        for stale in ["Optional — asked for per app", "\"Checked \\("] {
+            #expect(!code.contains(stale),
+                    "\(stale) is decided in StatusChecks now, not written in the view")
+        }
+
+        // Clause 6: the restart offer is the decision PRO-0041 already made.
+        // The window may read it and may not re-derive it, because the gate on it
+        // — that this process can independently see the grant — is what stops a
+        // Mac that never granted Screen Recording carrying a permanent row whose
+        // button cannot create a permission.
+        #expect(code.contains("model.recovery"),
+                "the window should render the offer AgentRecovery already computed")
+        #expect(!code.contains("AgentRecovery.decide"),
+                "the offer is decided once, in the model, not a second time in the view")
+        #expect(!code.contains("CGPreflightScreenCaptureAccess"),
+                "the window must not re-derive the offer's independent-evidence gate")
     }
 }
