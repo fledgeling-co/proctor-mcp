@@ -1,3 +1,23 @@
+> **A FOURTH CASE, added 2026-08-16 after this brief was written, and it is the worst of the
+> set because it is not intermittent.** `ToolchainDoctorTests.swift:203` — *"a machine with
+> none of these tools is still ready"* — fails **4 runs out of 4** on unmodified `main` at
+> `330338d`, asserting `report.ready == true` and getting `false` with the blocker
+> *"Accessibility is not granted"*.
+>
+> The cause is visible in the test's own helper and does not need measuring: `session(...)`
+> in that file injects `screenRecordingProbe: .fake()` but injects **nothing for
+> Accessibility**, so `doctor()` reads the live `AXIsProcessTrusted()` of the test host. The
+> suite therefore passes or fails on whether the terminal that launched `swift test` happens
+> to hold the Accessibility grant, which is ambient machine state the test does not control
+> and does not declare. It passed throughout the wave and fails now with no change to the
+> tree between.
+>
+> This is the same defect class as the other three — a test measuring something it does not
+> own — and PRO-0041 already built the seam that fixes it, since the grant model has an
+> injectable probe. Fix it the way `screenRecordingProbe` is already handled here. It is
+> **not** a product regression: `ready` correctly reports a real ungranted Accessibility, and
+> that is the fail-closed behaviour PRO-0041 chose deliberately.
+
 # Three tests still redden the gate at random, and PRO-0053 only fixed one of them
 
 **Read `00-WAVE-7-DIRECTION.md` first.** This is a gate-reliability item, the second of its
