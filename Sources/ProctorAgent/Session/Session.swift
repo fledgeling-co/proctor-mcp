@@ -80,6 +80,33 @@ actor Session {
     /// is never served — per-PID caching that invalidates on relaunch for free.
     var dictionaryCache = ScriptingDictionaryCache()
 
+    /// The simulators **this session** booted, by udid.
+    ///
+    /// Session-scoped on purpose and named that way on the wire: it lives in
+    /// memory and does not survive the agent restarting, so a device booted by an
+    /// earlier session is indistinguishable from one a person booted. Proctor
+    /// never shuts a device down, so this is not a cleanup list — it is what makes
+    /// "Proctor left this running" answerable by the person who has to decide
+    /// about it.
+    var bootedDevices: Set<String> = []
+
+    /// Scheme → bundle id per device, with the fingerprint of the installed-app
+    /// set it was built from. Rebuilt when that set changes; a map costs one
+    /// Info.plist read per installed app, which is worth caching and not worth
+    /// serving stale after an install.
+    var iosSchemeMaps: [String: (fingerprint: String, map: [String: String])] = [:]
+
+    /// Devices with an iOS operation in flight, by udid.
+    ///
+    /// A deep link's before/after samples are only evidence if nothing else drove
+    /// the device between them, and this actor is reentrant — isolation drops at
+    /// every `await`, so a boot's poll loop or a second `open` would otherwise
+    /// interleave and the pixels would belong to whichever call happened to be
+    /// running. This bounds what Proctor itself did; a person tapping the
+    /// simulator is outside anybody's control, which is why the verdict states
+    /// what it cannot attribute rather than pretending to a closed world.
+    var iosBusyDevices: Set<String> = []
+
     /// The app policy gate and the live approval token. The policy is loaded from
     /// disk on first use; an absent file is an empty policy, which allows every
     /// app, so the gate is inert until an operator configures it. The token is
@@ -581,6 +608,17 @@ actor Session {
 
     func windowHandle(_ id: String) throws -> WindowHandle {
         if let cached = windowsByID[id] { return cached }
+        // A device handle is refused by name rather than falling through to
+        // "unknown window". Proctor's model is windows and a simulator is a device
+        // holding apps, so a caller holding a `dev-` handle has not mistyped a
+        // window id — it has a category error, and telling it the window was not
+        // found would send it round a retry loop looking for one that will never
+        // exist. The refusal names the ceiling and the route that does work.
+        if IOSHandle.isDeviceHandle(id) {
+            let rejection = IOSHandle.rejection(handle: id, tool: "this tool")
+            throw AgentError(code: .windowNotFound, message: rejection.message,
+                             remedy: rejection.remedy)
+        }
         refreshWindows()
         if let cached = windowsByID[id] { return cached }
         throw AgentError(

@@ -31,6 +31,9 @@ extension Session {
         // this is the "now" answer, and after it the health report and the browser
         // handoffs cannot disagree. The status window's Re-check drives this path.
         let (obscura, browserUse) = tools.refreshBoth()
+        // Refreshed on the same call, so the health report and the iOS lane
+        // cannot disagree about whether this machine has Xcode.
+        let simctl = tools.simctl.refreshed()
         let lanes = BrowserLanes.make(obscura: obscura, browserUse: browserUse,
                                       environment: tools.environment)
 
@@ -105,7 +108,13 @@ extension Session {
             // browser-use is listed **only when the operator named it**. With the
             // lane off the string does not appear in a tool result at all, which
             // makes the gate a total invariant rather than one about handoffs.
-            tools: lanes.secondLane == .off ? [obscura] : [obscura, browserUse],
+            // simctl joins the same array rather than becoming another boolean:
+            // the field's own documentation names it as the growth surface, and
+            // "is there an iOS lane on this machine" is the same shape of question
+            // as "is there a browser lane". Not a grant and not a blocker —
+            // Proctor drives Mac apps perfectly well without Xcode, so `ready` is
+            // untouched by its absence, exactly as it is by Obscura's.
+            tools: (lanes.secondLane == .off ? [obscura] : [obscura, browserUse]) + [simctl],
             // Three states, not two: "enabled and not installed" is a real
             // situation an operator who set the variable has to be able to see.
             secondLane: lanes.secondLane.rawValue,

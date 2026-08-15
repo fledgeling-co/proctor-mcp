@@ -33,7 +33,7 @@ public struct ToolSpec: Sendable {
 public enum ToolCatalogue {
     public static let all: [ToolSpec] = [
         apps, snapshot, find, act, capture, zoom, wait, assert_, flow, stability, inspect, doctor, unlock,
-        computer, openaiComputer, menu, dictionary, policy, kill
+        computer, openaiComputer, menu, dictionary, policy, kill, ios
     ]
 
     public static func spec(named name: String) -> ToolSpec? {
@@ -896,5 +896,116 @@ public enum ToolCatalogue {
         ]),
         readOnly: false,
         destructive: true, idempotent: false
+    )
+
+    // MARK: ios (Simulator device lane)
+
+    static let ios = ToolSpec(
+        name: "proctor_ios",
+        title: "Target an iOS Simulator and drive an app by deep link",
+        description: """
+        Put an iOS app into a named state by opening a URL on a booted Simulator, and read back \
+        what actually happened.
+
+        **This is a device lane, not a window lane, and the difference is not cosmetic.** A device \
+        handle looks like `dev-29fea02e` and is not a window handle: proctor_snapshot, \
+        proctor_find, proctor_assert, proctor_act and proctor_capture do not work against one and \
+        refuse it by name. The Mac's accessibility API does not cross into a simulated device, so \
+        for an iOS app there is no tree, no elements, no geometry and no actuation steps. What \
+        exists instead is three channels — whether the app's process is running, what the device \
+        screen looks like, and what simctl said — and this tool reports each separately rather \
+        than blending them into a single claim.
+
+        **A zero exit means the URL was delivered, not that the app went anywhere.** Measured: the \
+        same open, run twice, exits zero both times, and only the first one changes anything. So \
+        `open` returns an evidence block and a verdict that says exactly what is supported: \
+        `targetChanged` (delivered, the resolved app is running, and the screen changed — the \
+        strongest claim available), `screenChanged` (the screen moved but the change cannot be \
+        attributed to the app the URL named, which is where a universal link Safari swallowed or a \
+        system sheet lands), `deliveredOnly` (nothing observable changed — inconclusive rather \
+        than failed, because a deep link to the screen the app is already on looks exactly like \
+        one the app ignored), and `refused`. None of them claims the app reached a particular \
+        screen: the frontmost app on the device is not observable through this lane.
+
+        A device screenshot carries no ScreenCaptureKit frame status, so unlike a window capture \
+        its freshness cannot be established and it comes back marked untrustworthy with that \
+        reason. The pixels are real; the guarantee that comes with a window capture is not.
+
+        `open` never boots anything — it refuses a device that is not booted, because folding a \
+        stateful minute-long side effect into a call whose result is "did this navigate" would \
+        make both meaningless. `boot` is explicit, gated and audited. Nothing here ever shuts a \
+        device down or reboots one; a device this session booted is marked in `list` so a person \
+        can decide about it.
+
+        Driving an app goes through the proctor_policy gate on the app the URL actually resolves \
+        to on the device, never on a bundle id the caller supplied — that name is used only as a \
+        consistency check. iOS targets are named `ios:<bundleId>` in an allow list or the \
+        sensitive set, so a Mac app on the allow list does not silently authorise the iOS app of \
+        the same identifier; a block on either spelling blocks both. The audit trail records the \
+        scheme and host of the URL in the clear and reduces its path and query to a length and a \
+        hash, because a deep link routinely carries a token.
+
+        Requires Xcode, which is where simctl lives. proctor_doctor carries a `simctl` row saying \
+        whether this machine has a lane at all.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "action": .object([
+                    "type": .string("string"),
+                    "enum": .array([.string("list"), .string("boot"), .string("open"),
+                                    .string("screenshot")]),
+                    "description": .string(
+                        "list enumerates simulators and touches nothing; boot starts a named one and "
+                        + "waits for it; open delivers a URL to a booted one and reports the evidence; "
+                        + "screenshot writes the device surface to disk. Defaults to list.")
+                ]),
+                "device": .object([
+                    "type": .string("string"),
+                    "description": .string(
+                        "Which simulator: a device handle from action \"list\", a udid, or a name "
+                        + "like \"iPhone 16 Pro\". Omit for the single booted device when there is "
+                        + "exactly one; ambiguity is an error naming the candidates rather than a guess.")
+                ]),
+                "url": .object([
+                    "type": .string("string"),
+                    "description": .string(
+                        "The deep link to open. A custom scheme resolves to its handler on the device "
+                        + "and is gated on that app. An https universal link cannot be resolved to a "
+                        + "handler from a scheme claim, so it is refused whenever an allow list is in force.")
+                ]),
+                "bundleId": .object([
+                    "type": .string("string"),
+                    "description": .string(
+                        "The app you expect to receive the URL. A consistency check, not the gate key: "
+                        + "a disagreement with what the device resolved is reported. It also enables the "
+                        + "process-liveness channel for an https URL, which has no resolvable handler.")
+                ]),
+                "pixelEvidence": .object([
+                    "type": .string("boolean"),
+                    "description": .string(
+                        "Capture the device screen before and after the open and compare them. Defaults "
+                        + "to true; this is the only channel that separates a deep link that moved the "
+                        + "app from one that did nothing.")
+                ]),
+                "changeThreshold": .object([
+                    "type": .string("number"),
+                    "description": .string(
+                        "Fraction of changed pixels before the screen counts as changed. Defaults to "
+                        + "0.0005, calibrated against an idle floor measured at exactly 0 and a smallest "
+                        + "real navigation at 0.002.")
+                ]),
+                "path": .object([
+                    "type": .string("string"),
+                    "description": .string("Where to write a screenshot. Defaults to a session temp directory.")
+                ]),
+                "timeoutMs": .object([
+                    "type": .string("integer"),
+                    "description": .string("Bound on the simctl call, and on boot's wait for the device to come up. Defaults to 15000, and 120000 for boot.")
+                ])
+            ])
+        ]),
+        readOnly: false,
+        destructive: false, idempotent: false
     )
 }

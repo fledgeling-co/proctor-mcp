@@ -90,6 +90,7 @@ struct Dispatcher: Sendable {
         case "proctor_dictionary":       return try await dictionary(args)
         case "proctor_policy":           return try await policy(args)
         case "proctor_kill":             return try await kill(args)
+        case "proctor_ios":              return try await ios(args)
         // Internal verb behind the MCP resources surface. Never in ToolCatalogue,
         // so a host cannot reach it as a tool; the shim forwards resources/read to
         // it. It only re-projects state the agent already holds or reads without a
@@ -558,6 +559,31 @@ struct Dispatcher: Sendable {
         return try await session.killProcesses(query: query,
                                                perform: action == "kill",
                                                force: args.bool("force", false))
+    }
+
+    // MARK: - proctor_ios (Simulator device lane)
+
+    /// The iOS Simulator lane. Actions:
+    ///   list       — enumerate simulators, touching nothing
+    ///   boot       — start a named one and wait for it, gated and audited
+    ///   open       — deliver a deep link to a booted one and report the evidence
+    ///   screenshot — write the device surface to disk
+    private func ios(_ args: Args) async throws -> JSONValue {
+        let action = args.string("action") ?? "list"
+        guard ["list", "boot", "open", "screenshot"].contains(action) else {
+            throw AgentError(code: .invalidArguments,
+                             message: "unknown ios action \(action.debugDescription)",
+                             remedy: "Use list, boot, open or screenshot.")
+        }
+        return try await session.ios(action: action,
+                                     device: args.string("device"),
+                                     url: args.string("url"),
+                                     bundleId: args.string("bundleId"),
+                                     pixelEvidence: args.bool("pixelEvidence", true),
+                                     changeThreshold: args.double("changeThreshold"),
+                                     path: args.string("path"),
+                                     timeoutMs: args.int("timeoutMs"),
+                                     settleMs: args.int("settleMs"))
     }
 
     // MARK: - proctor_resource (MCP resources backing)

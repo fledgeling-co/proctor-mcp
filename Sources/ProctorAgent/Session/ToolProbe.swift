@@ -106,6 +106,16 @@ final class ToolProbe: @unchecked Sendable {
                            extraDirectories: BrowserUseTool.extraDirectories,
                            isExecutable: executableRegularFile)
     }
+
+    /// simctl, which lives inside Xcode rather than on the PATH. Detection is
+    /// still a filesystem read and still runs nothing; what differs is where it
+    /// looks — the active developer directory rather than a list of bin
+    /// directories. See `SimctlLocator` for why following the root-owned
+    /// `xcode_select` symlink is safe where following a user-writable path would
+    /// not be.
+    static func simctlOnDisk() -> ToolPresence {
+        SimctlLocator.onDisk()
+    }
 }
 
 /// Both browser tools, and the operator's switch, as one object.
@@ -124,15 +134,23 @@ final class ToolProbes: Sendable {
 
     let obscura: ToolProbe
     let browserUse: ToolProbe
+    /// Whether this machine has an iOS lane at all. Both TTLs are long: Xcode
+    /// does not appear or vanish mid-session, and unlike Obscura, Proctor asks
+    /// nobody to install it in the middle of a run.
+    let simctl: ToolProbe
     let environment: [String: String]
 
     init(obscura: ToolProbe = ToolProbe(),
          browserUse: ToolProbe = ToolProbe(probe: ToolProbe.browserUseOnDisk,
                                            presentTTL: ToolProbe.presentTTL,
                                            absentTTL: ToolProbe.presentTTL),
+         simctl: ToolProbe = ToolProbe(probe: ToolProbe.simctlOnDisk,
+                                       presentTTL: ToolProbe.presentTTL,
+                                       absentTTL: ToolProbe.presentTTL),
          environment: [String: String] = ProcessInfo.processInfo.environment) {
         self.obscura = obscura
         self.browserUse = browserUse
+        self.simctl = simctl
         self.environment = environment
     }
 

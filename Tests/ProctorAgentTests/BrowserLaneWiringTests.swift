@@ -179,9 +179,15 @@ struct BrowserLaneWiringTests {
                     // The second tool is listed only when the operator named it,
                     // so with the lane off its name is absent from the whole
                     // result rather than only from a handoff.
+                    //
+                    // simctl (PRO-0048) is the growth surface working as intended:
+                    // an unconditional third row rather than a fourth top-level
+                    // boolean. It is unconditional because "does this machine have
+                    // an iOS lane" is not behind an operator switch the way the
+                    // second browser lane is.
                     #expect(report.tools.map(\.tool)
-                            == (laneSet ? [ObscuraTool.binary, BrowserUseTool.binary]
-                                        : [ObscuraTool.binary]))
+                            == (laneSet ? [ObscuraTool.binary, BrowserUseTool.binary, "simctl"]
+                                        : [ObscuraTool.binary, "simctl"]))
                     // The grandfathered spelling has to agree with the array's
                     // first entry, or an old client and a new one see different
                     // machines.
