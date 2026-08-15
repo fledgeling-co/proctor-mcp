@@ -297,7 +297,7 @@ refusal, whose question changed shape underneath it).
 | PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **MERGED** `1bff5c2` |
 | PRO-0046 | Supervision survives delegation | `47-…` | 2 | **MERGED** `2f240bf` · closed 4 live defects |
 | PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **MERGED** `0ea6f88` · absorbed PRO-0031 |
-| PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **RUNNING** `wf_aa9980d5-076` |
+| PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **MERGED** `7ca9358` · verified live |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **MERGED** `0f76c56` · reading 3 chosen |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **RUNNING** `wf_21e45777-8c1` (carried, revised) |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **RUNNING** `wf_0bbfba85-c52` (carried, revised) |
@@ -305,6 +305,42 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0049 merged `7ca9358`. The iOS lane can run and score Maestro flows.**
+  1293 -> **1349 tests in 144 suites**, and this is the first wave 7 item **verified live
+  against the real binary** rather than a fake: maestro 2.4.0 against a real simulator.
+  - **It took PRO-0044's warning and did not fight it.** Not an `ActuationBackend`. The seam
+    is `MaestroRun.swift` (pure) plus `SessionMaestro.swift` (impure), reusing PRO-0048's
+    split.
+  - **`firstDivergence` needed no new meaning, and reading the code was cheaper than
+    designing one.** `proctor_stability` already folds repeats against *each other* rather
+    than against a recording; only `proctor_flow`'s replay needs a recording. So the meaning
+    carries over intact, `StabilityScore.fold` is reused unchanged, and the wire says
+    `divergenceBasis: "repeats"` and `divergenceIndexIs: "maestro sequenceNumber"` so nobody
+    infers it.
+  - **The score's cell was measured, not reasoned.** Five identical passing runs gave an
+    identical 7-command status vector while one unchanged command's duration spread
+    **634/91/88/96/91 ms**. So the cell is `hash(command identity + status)`, and duration,
+    timestamp, exit code, the JUnit report and the hierarchy dump are all excluded with their
+    reasons recorded in place. Honestly thinner than the macOS lane and the result says so:
+    three observers per step there, **one observer per command here**.
+  - **Driver flake versus app flake is separated by the record, not the exit code.** An
+    assertion failure, an absent device and a malformed YAML **all exit 1**; only the first
+    writes a per-command record. Three signals give `driverFailed` and are excluded from the
+    fold, marking the sweep truncated. What stays inseparable is stated rather than claimed
+    away.
+  - **The gate found a real bypass:** unresolvable constructs were refused only under an
+    *allow* list, so a **block** list with no allow list was a hole. Now keyed on any policy
+    in force. It also caught that enumerating app-id-bearing keys is a losing game (naming
+    five immediately), replaced by collecting every reverse-DNS token, which over-detects and
+    cannot under-gate.
+  - **A surface the brief never named:** a Maestro YAML is caller content Proctor executes
+    from a process holding Accessibility. The gate judges what the flow **declares**, weaker
+    than `open`'s device-resolved judgement, and every field says `declared`. A `config.yaml`
+    beside the flow is scanned too, since Maestro reads one implicitly, and the trail carries
+    a content hash so an entry attests to the bytes that ran.
+  - **Child work:** `maestro hierarchy` is measured working and is the natural route to an
+    iOS `proctor_assert`; a shared flake-attribution vocabulary with PRO-0044's
+    `suspected_noop`; a reset between repeats.
 - 2026-08-15 **PRO-0046 merged `2f240bf`. Supervision survives delegation, and it closed four
   defects reachable on merged `main`.** 1242 -> **1293 tests in 140 suites**.
   - **The four, all found by reading the code before designing.** A delegated click could
