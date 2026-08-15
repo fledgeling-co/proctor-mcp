@@ -245,6 +245,7 @@ logically, but several would collide in the same file if run together.
 | PRO-0039 | Page-scoped refusal | `40-page-scoped-refusal.md` | PRO-0020 refusal rule | 3 | **QUEUED** |
 | PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | `41-open-cannot-launch-proctor.md` | found 2026-08-15 during a reinstall, not a child | 3 | **QUEUED** |
 | PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | `42-doctor-can-hang-on-the-screen-recording-probe.md` | found 2026-08-15 gating PRO-0033, not a child | 3 | **QUEUED** |
+| PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | `43-backfill-horizontal-alignment-assertion.md` | ratifies the stray commit `2b917ed` | 1 | **RUNNING** |
 
 **Two children are not fleet items, because they are questions rather than work.**
 A model told "Obscura is missing" may install it anyway, and Proctor cannot remove
@@ -296,9 +297,10 @@ carried to the reader rather than specced.
   three other runners' in-flight specs into the same commit. It is **not a wave 6 item**: no
   spec, no plan, no tests (the count stayed at 692, which is the tell), no changelog entry, and
   a commit message off the repo's convention. It builds and breaks nothing. It went out in the
-  reinstall, so the build the reader is running contains it. **Awaiting the reader's call:**
-  revert the source half and let the assertion come back through the pipeline, or keep it and
-  backfill a spec and tests. Nothing has been reverted.
+  reinstall, so the build the reader is running contains it. **Reader's call, 2026-08-15: keep it and backfill.** Allocated PRO-0042, which writes the
+  spec, the plan and the tests, and changes the code wherever the spec cannot defend it. The
+  brief names six decisions the commit took silently, including a `tolerance * 3.0` magic number
+  and a `"left"` alias with no `"right"` counterpart.
 - 2026-08-15 **PRO-0040 logged** from a reinstall rather than swept from a spec. `open -a Proctor`
   cannot launch Proctor while the agent runs: LaunchServices maps `app.fledgeling.procter` to the
   `proctor-agent` pid, because the agent sits in `Contents/MacOS/` and inherits the bundle's
