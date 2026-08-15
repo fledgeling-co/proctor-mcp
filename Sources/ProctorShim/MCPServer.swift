@@ -6,10 +6,6 @@ import ProctorCore
 // the shared catalogue and forwards every call to the privileged agent. Anything
 // it does beyond forwarding is a design mistake.
 
-enum ShimVersion {
-    static let value = "0.1.0"
-}
-
 /// stdout is the protocol channel. A single stray print corrupts the JSON-RPC
 /// stream and ends the session, so every diagnostic goes to stderr.
 func shimLog(_ message: String) {
@@ -119,7 +115,7 @@ struct MCPServer {
                 ]),
                 "serverInfo": .object([
                     "name": .string("proctor"),
-                    "version": .string(ShimVersion.value)
+                    "version": .string(BuildInfo.current.descriptor)
                 ])
             ]))
 

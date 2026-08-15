@@ -23,7 +23,14 @@ let package = Package(
         // every picture is present at every density without a test target for a
         // SwiftUI app. The panel's own 38pt set stays in the agent's bundle,
         // beside the view that draws it.
-        .target(name: "ProctorCore", resources: [.copy("Resources/character-menubar")]),
+        .target(name: "ProctorCore", resources: [.copy("Resources/character-menubar")],
+                plugins: ["BuildIdentity"]),
+        // Which build this is, written before every build. It hangs off `swift build`
+        // because that is the only step the three build paths — a plain build, the
+        // install script, and the release workflow — already have in common, so none
+        // of them has to be taught anything. The generator never fails and writes only
+        // when its content changes, so an unchanged tree does not recompile Core.
+        .plugin(name: "BuildIdentity", capability: .buildTool()),
         // One Objective-C function, and it needs its own target because SwiftPM
         // has no mixed-language ones. Swift cannot catch an NSException, AppKit
         // still raises them, and an uncaught one aborts the process — which for a

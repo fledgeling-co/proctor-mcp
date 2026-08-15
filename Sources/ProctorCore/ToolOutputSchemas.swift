@@ -122,8 +122,9 @@ public extension ToolCatalogue {
                  "renderRevision": p("number")]),
 
             "proctor_doctor": openObject(
-                "Agent liveness, grants, attachments and observer health. `tools` lists every command-line tool Proctor looks for, with where it was found and everywhere it looked; `obscuraAvailable` and `obscura` are the grandfathered spelling of its first entry. `secondLane` is `off`, `enabled` or `unavailable` — the second browser lane is named only when PROCTOR_SECOND_LANE names it, and usable only when that tool is also installed. None of this affects `ready`, because Proctor drives native applications without any browser tool.",
-                ["agentVersion": p("string"), "protocolVersion": p("number"),
+                "Agent liveness, grants, attachments and observer health. `agentVersion` identifies the build the agent actually is — `version+commit`, plus `.dirty` for uncommitted changes and `.debug` for a debug build — and `agentBuild` carries the same thing in parts, with `builtAt` for when that executable was written. `tools` lists every command-line tool Proctor looks for, with where it was found and everywhere it looked; `obscuraAvailable` and `obscura` are the grandfathered spelling of its first entry. `secondLane` is `off`, `enabled` or `unavailable` — the second browser lane is named only when PROCTOR_SECOND_LANE names it, and usable only when that tool is also installed. None of this affects `ready`, because Proctor drives native applications without any browser tool.",
+                ["agentVersion": p("string"), "agentBuild": p("object"),
+                 "protocolVersion": p("number"),
                  "osVersion": p("string"), "agentRunning": p("boolean"),
                  "socketPath": p("string"), "grants": p("array"),
                  "attachedApps": p("array"), "observersLive": p("number"),

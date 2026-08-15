@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 import ServiceManagement
+import ProctorCore
 
 /// Owns the activation policy and the login-item registration.
 ///
@@ -10,6 +11,11 @@ import ServiceManagement
 /// it starts as a normal app and demotes itself once setup is done.
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Capture which build this window is before anything else runs. `builtAt`
+        // is stored on the snapshot, so resolving it now describes the image that
+        // is running — an upgrade replacing the file underneath a window that has
+        // been up for hours is the whole reason PRO-0027 exists.
+        BuildInfo.captureAtLaunch()
         Self.applyPolicy()
         Self.registerLoginItem()
 

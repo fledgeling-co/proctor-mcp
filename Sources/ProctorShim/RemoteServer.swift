@@ -129,7 +129,7 @@ final class RemoteServer: @unchecked Sendable {
         if request.method == "GET" && request.path == "/health" {
             writeResponse(client, status: 200, reason: "OK",
                           contentType: "application/json",
-                          body: Data("{\"ok\":true,\"server\":\"proctor\",\"version\":\"\(ShimVersion.value)\"}\n".utf8))
+                          body: Data("{\"ok\":true,\"server\":\"proctor\",\"version\":\"\(BuildInfo.current.descriptor)\"}\n".utf8))
             return
         }
 
