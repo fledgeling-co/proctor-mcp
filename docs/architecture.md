@@ -42,6 +42,24 @@ requirement and re-prompts on every version bump. launchd starts the agent with
 no such ancestry, so the grant attaches to `app.fledgeling.procter` at a fixed
 path and survives host changes and upgrades.
 
+The agent has two identities, and they are not the same identity. To TCC it is
+the application: every nested binary is signed `-i app.fledgeling.procter`, so
+the designated requirement names that identifier and the team and carries no
+path, which is what carries Accessibility and Screen Recording across an
+upgrade. To LaunchServices it is `app.fledgeling.procter.agent`, declared in a
+`__TEXT,__info_plist` section linked into the binary from
+`Apps/Proctor/AgentInfo.plist`.
+
+The second one exists because the first one is not enough. The agent claims the
+accessory activation policy on its first line, which registers it with
+LaunchServices; while it registered under the app's identifier, `open -a Proctor`
+found a live instance, activated a process with no window, and exited 0. Proctor
+could not be opened at all while its own agent was running. Separating the two
+identities fixes that without touching the signature, which is the half a person
+would have paid for — `scripts/build-app.sh` fails the build if the agent ever
+ships without its own section, or with a signing identifier that is not the
+app's.
+
 Both sides derive the socket path from `Wire.socketPath`, so neither can drift
 from the other. `PROCTOR_SOCKET` overrides it for both at once, which is how a
 test binds a throwaway socket instead of the real one. Framing is a 4-byte
