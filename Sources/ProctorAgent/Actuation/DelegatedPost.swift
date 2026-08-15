@@ -126,6 +126,16 @@ final class DelegatedPost: @unchecked Sendable {
         return calls.count
     }
 
+    /// Whether any delegated actuation is in flight.
+    ///
+    /// Read by the event tap to decide whether a swallowed event may be reported
+    /// as a person using the machine. It may not, while this is true: everything
+    /// about the driver's wire is a documentary reading, and a driver whose
+    /// events arrive looking like hardware would otherwise be swallowed AND
+    /// reported as a person, holding the run on its own actuation until the
+    /// backstop gave up.
+    var outstandingCall: Bool { outstanding > 0 }
+
     /// Forget everything. For a test harness, so one suite's keeper state cannot
     /// decide another's.
     func reset() {

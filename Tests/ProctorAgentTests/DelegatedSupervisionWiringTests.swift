@@ -122,6 +122,37 @@ struct DelegatedSupervisionWiringTests {
         #expect(ours.hasUnrecognised)
     }
 
+    @Test("a swallow during a delegated call is never reported as a person")
+    func aSwallowDuringADelegatedCallIsNotPersonInput() {
+        // The completeness gate's sharpest finding, and it was one of this
+        // feature's own acceptance clauses left unimplemented. Everything about
+        // the driver's wire is a documentary reading: if its events arrive
+        // looking like hardware, an armed tap swallows them AND hands each one to
+        // the contention monitor, so the run yields on its own actuation and
+        // holds to the backstop — PRO-0018's measured 902-second failure by a new
+        // road. `outstandingCall` is what the tap consults to refuse that.
+        let clock = Clock()
+        let post = keeper(now: clock.read)
+        #expect(!post.outstandingCall)
+        let token = post.begin(pid: nil)
+        #expect(post.outstandingCall)
+        post.end(token)
+        #expect(!post.outstandingCall)
+    }
+
+    @Test("the suppression covers a recognised driver too, not only an unrecognised one")
+    func theSuppressionIsNotConditionalOnRecognition() {
+        // A driver whose pid corroborated at preflight can still put an event on
+        // the wire that does not carry it. Recognition is what makes its events
+        // PASS; this is what stops a swallow that happened anyway from holding
+        // the run. The two are independent and both are needed.
+        let clock = Clock()
+        let post = keeper(now: clock.read)
+        let token = post.begin(pid: 9001)
+        #expect(post.outstandingCall)
+        post.end(token)
+    }
+
     @Test("a driver that reported no pid is outstanding but never recognised")
     func anUnrecognisedCallIsTracked() {
         let clock = Clock()

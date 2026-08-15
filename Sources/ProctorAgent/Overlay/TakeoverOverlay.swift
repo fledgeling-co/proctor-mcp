@@ -422,7 +422,25 @@ final class InputBlocker: @unchecked Sendable {
         lock.unlock()
 
         if decision.stops { onStop?() }
-        if !decision.delivers { onPersonInput?() }
+        // A swallowed event feeds the yield — PRO-0026's A8 — but NEVER while a
+        // delegated actuation is outstanding.
+        //
+        // This is the deadlock the completeness gate found, and it is a real one.
+        // Everything about the driver's wire is a documentary reading: if its
+        // events arrive looking like hardware rather than carrying its own pid,
+        // `isOurs` is false, the armed tap swallows them, and each swallow is
+        // handed to the contention monitor as somebody using the machine. The run
+        // then yields on its OWN actuation and holds until the backstop — which
+        // is exactly the 902-second failure PRO-0018 measured, reached by a new
+        // road.
+        //
+        // Suppressing it costs the person nothing they had: their own input is
+        // still swallowed, and the two default yield signals — the frontmost
+        // reading and secure input — are untouched, so a person taking the
+        // machine back is still noticed. What it removes is the one reading that
+        // cannot tell a delegated actuation from a hand, at the only moments one
+        // is in flight.
+        if !decision.delivers, !DelegatedPost.shared.outstandingCall { onPersonInput?() }
         return decision.delivers ? Unmanaged.passUnretained(event) : nil
     }
 
