@@ -383,9 +383,31 @@ public enum ToolCatalogue {
 
         Assertion kinds cover the accessibility tree (a node exists, has a value, is enabled, is \
         focused, has a label), geometry (a node's frame, its containment in another, its \
-        alignment), pixels (a region matches a reference within tolerance), and accessibility \
-        auditing (every interactive node has a label, contrast meets a threshold, hit targets \
-        meet a minimum size, focus order follows visual order).
+        alignment against another, its placement inside its container), pixels (a region matches \
+        a reference within tolerance), and accessibility auditing (every interactive node has a \
+        label, contrast meets a threshold, hit targets meet a minimum size, focus order follows \
+        visual order).
+
+        The two alignment kinds answer different questions. kind=alignedWith measures between two \
+        things you name: it returns the deltas on left, right, top, bottom, centerX and centerY, \
+        and given expected={node, edge} it tests one of them. kind=horizontalAlignment classifies \
+        one element inside its container — expected is left, center or right (leading, trailing \
+        and centre are accepted) — and it rejects the other two placements rather than passing on \
+        any single small delta. Give it `container` as a node id or [x,y,w,h]; with none it uses \
+        the window frame, which usually carries content margins, so a left-aligned element inside \
+        an inset area reads as custom until you name the content view. Its terms are physical \
+        rather than layout-direction-aware: it compares screen x, so in a right-to-left app the \
+        element you would call leading is reported right.
+
+        Every geometry kind takes `tolerance` in points and defaults it to 1.0 — the distance at \
+        which two coordinates count as the same. It means the same thing on all of them, so a \
+        value you set on one assertion carries the same strictness to the next.
+
+        An assertion that could not be evaluated comes back skipped with a reason, never as a \
+        pass, and ok is false while anything is skipped. horizontalAlignment skips rather than \
+        guesses when the container is too close in width to the element to tell its placements \
+        apart, when a container you asked for has no readable frame, and when no expected is given \
+        — the last still reports the placement it observed, so it doubles as a probe.
 
         The tri-observer check is available here as kind=agree: where the accessibility tree, \
         the geometry source and the captured pixels disagree about the same instant, the delta \
@@ -412,6 +434,7 @@ public enum ToolCatalogue {
                             "node": .object(["type": .string("string")]),
                             "find": .object(["type": .string("object")]),
                             "expected": .object([:]),
+                            "container": .object(["description": .string("The rectangle horizontalAlignment classifies against: a node id, or [x,y,w,h]. Defaults to the window frame.")]),
                             "tolerance": .object(["type": .string("number")]),
                             "reference": .object(["type": .string("string"), "description": .string("Path to a reference PNG, for regionMatches.")]),
                             "label": .object(["type": .string("string")])
