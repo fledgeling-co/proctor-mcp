@@ -26,15 +26,22 @@ struct BuildInfoTests {
 
     /// Run a command and return its trimmed stdout, or nil if it could not run or
     /// exited non-zero.
+    ///
+    /// `unsetting` REMOVES keys from the child's environment, which merging cannot do and
+    /// which the sealed-git tests need — see `sealedGitRemovals`.
     @discardableResult
     private static func run(_ launchPath: String, _ arguments: [String],
                             environment: [String: String]? = nil,
+                            unsetting: [String] = [],
                             status: UnsafeMutablePointer<Int32>? = nil) -> String? {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: launchPath)
         process.arguments = arguments
-        if let environment {
-            process.environment = ProcessInfo.processInfo.environment.merging(environment) { _, new in new }
+        if environment != nil || !unsetting.isEmpty {
+            var child = ProcessInfo.processInfo.environment
+            for key in unsetting { child.removeValue(forKey: key) }
+            if let environment { child.merge(environment) { _, new in new } }
+            process.environment = child
         }
         let out = Pipe()
         process.standardOutput = out
@@ -47,11 +54,48 @@ struct BuildInfoTests {
         return String(decoding: data, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    private static func generator(outputDirectory: String, packageDirectory: String) -> String? {
+    /// The three variables that redirect a git call away from the directory it was given.
+    /// They override `-C`, so a test process that inherited one would have both the test
+    /// and the generator script reading a repository other than the path they were handed.
+    ///
+    /// Removed rather than blanked, because measured: `GIT_DIR= git -C <repo> rev-parse HEAD`
+    /// fails with `fatal: not a git repository: ''`. An empty string reads as set-and-empty,
+    /// so blanking these would break every call instead of sealing it.
+    private static let sealedGitRemovals = ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE"]
+
+    /// Inherited global and system config, out of reach: identity, hooks, signing and
+    /// commit templates. Measured: with these set, `git config --get user.email` exits
+    /// non-zero even on a machine whose global config sets one. Overrides work here where
+    /// they do not for the three above, because git reads these as paths and `/dev/null`
+    /// is a real, empty file.
+    private static let sealedGitOverrides = ["GIT_CONFIG_GLOBAL": "/dev/null",
+                                             "GIT_CONFIG_SYSTEM": "/dev/null"]
+
+    /// Run a git command against a repository the test built, with nothing inherited from
+    /// the machine able to reach it.
+    @discardableResult
+    private static func sealedGit(_ arguments: [String],
+                                  status: UnsafeMutablePointer<Int32>? = nil) -> String? {
+        run("/usr/bin/git", ["--no-optional-locks"] + arguments,
+            environment: sealedGitOverrides, unsetting: sealedGitRemovals, status: status)
+    }
+
+    private static func generator(outputDirectory: String, packageDirectory: String,
+                                  environment: [String: String]? = nil,
+                                  unsetting: [String] = []) -> String? {
         run("/bin/sh", ["\(Self.packageDirectory)/scripts/gen-build-identity.sh",
-                        outputDirectory, packageDirectory])
+                        outputDirectory, packageDirectory],
+            environment: environment, unsetting: unsetting)
         let generated = "\(outputDirectory)/BuildIdentityGenerated.swift"
         return try? String(contentsOfFile: generated, encoding: .utf8)
+    }
+
+    /// The generator, run against a repository the test owns, with the same seal applied.
+    /// The script shells out to git itself and inherits this process's environment, so
+    /// sealing only the test's own calls would seal nothing.
+    private static func sealedGenerator(outputDirectory: String, packageDirectory: String) -> String? {
+        generator(outputDirectory: outputDirectory, packageDirectory: packageDirectory,
+                  environment: sealedGitOverrides, unsetting: sealedGitRemovals)
     }
 
     private static func temporaryDirectory() throws -> URL {
@@ -79,34 +123,73 @@ struct BuildInfoTests {
     }
 
     // MARK: - A1: a plain build carries a real identity
+    //
+    // What these deliberately do NOT assert, and why, because the obvious version was
+    // tried and shipped and had to be removed (PRO-0043):
+    //
+    // The compiled constant is written by a SwiftPM prebuild command. A prebuild command
+    // is scheduled every build, but a build llbuild considers fully up to date runs no
+    // commands at all — measured: `swift build` prints "Build complete! (0.11s)" and the
+    // generator does not execute, over repeated builds. `swift build` and `swift test`
+    // also keep separate build plans, so whichever ran last decides freshness.
+    //
+    // So `BuildInfo.current` describes the checkout as it was at some earlier build, not
+    // as it is now. Comparing it against live `git rev-parse HEAD` or live `git status`
+    // asserts that SwiftPM rescheduled a command, which is not a property of this feature
+    // and is false by construction after any amend or rebase that moves HEAD without
+    // touching a source file. That assertion turned the merge gate red during ordinary
+    // rebases, which is how a person learns to ignore a red gate.
+    //
+    // What survives here is what a stale cache cannot break. What needs both sides of the
+    // comparison is tested against a repository the test builds itself, below.
 
-    @Test("the compiled commit is this checkout's actual commit")
-    func compiledCommitMatchesGit() throws {
-        guard let head = Self.run("/usr/bin/git",
-                                  ["--no-optional-locks", "-C", Self.packageDirectory,
-                                   "rev-parse", "--short=12", "HEAD"]) else {
-            // A source tarball has no commit to compare against, and a suite that
-            // went red there would be reporting on the checkout rather than the code.
-            withKnownIssue("not a git checkout, so there is no commit to compare against",
+    @Test("the compiled commit is a real commit, not a sentinel or a stub")
+    func compiledCommitIsARealCommit() throws {
+        guard Self.run("/usr/bin/git",
+                       ["--no-optional-locks", "-C", Self.packageDirectory,
+                        "rev-parse", "--short=12", "HEAD"]) != nil else {
+            // A source tarball has no commit at all, and a suite that went red there
+            // would be reporting on the checkout rather than the code. The same skip
+            // covers a checkout git declines to answer for — dubious ownership, an
+            // unreadable .git — where "unavailable" is the generator working correctly.
+            withKnownIssue("""
+                           git does not answer for this directory, so the generator had \
+                           nothing to resolve and a sentinel is the right answer
+                           """,
                            isIntermittent: true) {
                 Issue.record("skipped")
             }
             return
         }
-        #expect(BuildInfo.current.commit == head,
-                "the build identity should be generated from this checkout, not baked in")
-        #expect(BuildInfo.current.commit != "unknown")
-        #expect(BuildInfo.current.commit != "unavailable")
+        // The live call above is a PRECONDITION — proof that git answers here — and its
+        // value is deliberately never compared against the compiled one.
+        let commit = BuildInfo.current.commit
+        #expect(commit != "unknown")
+        #expect(commit != "unavailable",
+                "git answers for this directory, so a build here should have resolved a commit")
+        // Twelve OR MORE: `--short=12` is a minimum width and git lengthens the
+        // abbreviation when twelve characters would be ambiguous. An exact-width check
+        // passes today and reddens years later in a bigger repository, for no defect.
+        #expect(commit.count >= 12 && commit.allSatisfy { $0.isHexDigit && !$0.isUppercase },
+                """
+                expected a short sha, got \(commit) — if this looks stale rather than \
+                malformed, the generated identity predates this checkout: rm -rf .build/plugins
+                """)
     }
 
-    @Test("the compiled dirty flag matches the tree")
-    func compiledDirtyMatchesGit() throws {
-        var status: Int32 = 0
-        guard let porcelain = Self.run("/usr/bin/git",
-                                       ["--no-optional-locks", "-C", Self.packageDirectory,
-                                        "status", "--porcelain"], status: &status),
-              status == 0 else { return }
-        #expect(BuildInfo.current.dirty == !porcelain.isEmpty)
+    @Test("a sentinel commit is never also dirty")
+    func sentinelCommitIsNeverDirty() {
+        // The generator can only reach dirty = true after resolving a real commit, so a
+        // sentinel paired with a dirty flag is a state it cannot produce and means the
+        // generated file came from something other than that script.
+        //
+        // This replaces a comparison against the live working tree, which could not hold:
+        // the compiled flag records the tree at the last generator run and the test can
+        // only see the tree now, so the two agreed by coincidence and the assertion went
+        // red whenever somebody had a file open.
+        if BuildInfo.current.commit == "unknown" || BuildInfo.current.commit == "unavailable" {
+            #expect(BuildInfo.current.dirty == false)
+        }
     }
 
     @Test("the compiled version is the app's version")
@@ -150,6 +233,77 @@ struct BuildInfoTests {
         let text = try #require(generated)
         #expect(text.contains(#"static let commit = "unavailable""#))
         #expect(text.contains("static let dirty = false"))
+    }
+
+    // MARK: - A1 (hermetic): the generator reads the checkout it is given
+    //
+    // Both sides of the comparison belong to the test here. That is the whole point: the
+    // compiled constant cannot be compared against the live checkout (see the A1 note
+    // above), but the generator's behaviour CAN be pinned exactly, by handing it a
+    // repository this test created and knows the answer for.
+
+    /// A repository the test owns: one commit, a clean tree, and an output directory that
+    /// is a SIBLING of it rather than a child.
+    ///
+    /// The sibling is load-bearing. The generator writes its file into the output
+    /// directory, so pointing that inside the repository leaves an untracked file behind
+    /// and the run meant to observe a clean tree observes the test's own artefact instead,
+    /// reporting dirty. The clean case would never have been measured.
+    private static func makeRepository() throws -> (root: URL, repo: URL, out: URL, head: String) {
+        let root = try temporaryDirectory()
+        let repo = root.appendingPathComponent("repo")
+        let out = root.appendingPathComponent("out")
+        try FileManager.default.createDirectory(at: repo, withIntermediateDirectories: true)
+        try writePlist(version: "9.9.9", into: repo)
+
+        try #require(sealedGit(["init", "-q", repo.path]) != nil, "git init failed")
+        // Local identity, because a commit needs one and the global config is sealed off.
+        sealedGit(["-C", repo.path, "config", "user.email", "pro-0043@example.invalid"])
+        sealedGit(["-C", repo.path, "config", "user.name", "PRO-0043 Test"])
+        sealedGit(["-C", repo.path, "add", "-A"])
+        // The plist is committed rather than left untracked, or the tree starts dirty and
+        // the clean assertion below would be measuring the fixture, not the generator.
+        try #require(sealedGit(["-C", repo.path, "commit", "-q", "-m", "initial"]) != nil,
+                     "commit failed")
+        let head = try #require(sealedGit(["-C", repo.path, "rev-parse", "--short=12", "HEAD"]),
+                                "could not read the temporary repository's HEAD")
+        try #require(!head.isEmpty)
+        return (root, repo, out, head)
+    }
+
+    @Test("the generator writes the commit of the checkout it was handed")
+    func generatorReadsTheCommitOfItsCheckout() throws {
+        let fixture = try Self.makeRepository()
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+
+        let text = try #require(Self.sealedGenerator(outputDirectory: fixture.out.path,
+                                                     packageDirectory: fixture.repo.path))
+        #expect(text.contains(#"static let commit = "\#(fixture.head)""#),
+                "the generator should read this repository's HEAD, and nothing else's")
+        #expect(text.contains(#"static let version = "9.9.9""#))
+    }
+
+    @Test("the generator tells a dirty tree from a clean one")
+    func generatorSeesADirtyTree() throws {
+        let fixture = try Self.makeRepository()
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+
+        // Clean first, in the same test, so what is measured is the FLIP rather than two
+        // unrelated observations that happen to differ.
+        let clean = try #require(Self.sealedGenerator(outputDirectory: fixture.out.path,
+                                                      packageDirectory: fixture.repo.path))
+        #expect(clean.contains("static let dirty = false"),
+                "a committed tree with the generator writing outside it is clean")
+
+        try Data("an edit nobody committed".utf8)
+            .write(to: fixture.repo.appendingPathComponent("scratch.txt"))
+
+        let dirty = try #require(Self.sealedGenerator(outputDirectory: fixture.out.path,
+                                                      packageDirectory: fixture.repo.path))
+        #expect(dirty.contains("static let dirty = true"),
+                "an untracked file changes the build and belongs in the answer")
+        #expect(dirty.contains(#"static let commit = "\#(fixture.head)""#),
+                "dirtying a tree does not move HEAD, and the two fields answer different questions")
     }
 
     @Test("a package path containing spaces is handled")
