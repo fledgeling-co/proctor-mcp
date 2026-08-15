@@ -217,6 +217,10 @@ of the specs' own `Child work found` sections rather than from memory. Twenty-on
 raw children group into eleven items; ids 0029-0039 allocated serially, LEDGER
 `Last allocated: 39`.
 
+PRO-0040 was found during a reinstall on 2026-08-15 rather than swept from a spec, and is
+appended to stage 3 because it changes the installed bundle layout and must not race the
+other items' builds.
+
 Staged on **file contention**, not on dependency: none of these blocks another
 logically, but several would collide in the same file if run together.
 
@@ -239,6 +243,7 @@ logically, but several would collide in the same file if run together.
 | PRO-0038 | Stability knows when it is scoring a page | `39-stability-knows-when-it-is-scoring-a-page.md` | PRO-0020 page churn · PRO-0024 unexecuted lane | 2 | **QUEUED** |
 | PRO-0036 | The status window's checks say what they can check | `37-the-status-windows-checks-say-what-they-can-check.md` | PRO-0028 three Re-check buttons · PRO-0023 Shortcuts row heading | 3 | **QUEUED** |
 | PRO-0039 | Page-scoped refusal | `40-page-scoped-refusal.md` | PRO-0020 refusal rule | 3 | **QUEUED** |
+| PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | `41-open-cannot-launch-proctor.md` | found 2026-08-15 during a reinstall, not a child | 3 | **QUEUED** |
 
 **Two children are not fleet items, because they are questions rather than work.**
 A model told "Obscura is missing" may install it anyway, and Proctor cannot remove
