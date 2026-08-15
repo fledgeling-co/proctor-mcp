@@ -340,6 +340,16 @@ extension Session {
         hudRunControlBegin()
         var perRun: [[String]] = []
         var captures: [StabilityCapture] = []
+        // Accumulated across every repeat, by step index. `subjects` holds each
+        // distinct value in first-seen order, so repeats that disagreed about which
+        // side of the page boundary a step fell on report both rather than the
+        // first; `withheld` counts the repeats whose hash the fold refused.
+        var subjects: [Int: [HashSubject]] = [:]
+        var withheld: [Int: Int] = [:]
+        // Whether a browser renders the window under test at all, read once. Nil
+        // leaves the report exactly as it was before this existed.
+        let renderedByBrowser =
+            BrowserCatalogue.identify(bundleId: appHandle(forWindow: handle)?.bundleId)
 
         for runIndex in 0..<requested {
             // The reset runs first in a repeat and drives the app exactly as a
@@ -377,7 +387,9 @@ extension Session {
                                                 notes: &notes, includeTiles: includeTiles,
                                                 truncated: true,
                                                 captures: artifacts.captureEach ? captures : nil,
-                                                backend: actuator.id)
+                                                backend: actuator.id,
+                                                subjects: subjects, withheld: withheld,
+                                                browser: renderedByBrowser)
                 }
             }
 
@@ -409,7 +421,9 @@ extension Session {
                                             notes: &notes, includeTiles: includeTiles,
                                             truncated: true,
                                             captures: artifacts.captureEach ? captures : nil,
-                                                backend: actuator.id)
+                                                backend: actuator.id,
+                                                subjects: subjects, withheld: withheld,
+                                                browser: renderedByBrowser)
             }
 
             let run = await runSteps(steps, window: handle, settle: .default,
@@ -431,6 +445,45 @@ extension Session {
             for index in 0..<steps.count {
                 guard index < run.results.count, let treeHash = run.results[index].stateHash else {
                     break
+                }
+                // A hash taken after an action Proctor cannot vouch happened is
+                // not a sample of that step's post-state.
+                //
+                // PRO-0045 records such a step `indeterminate` and takes a
+                // post-state walk anyway, correctly: with the backend gone it is
+                // the only evidence left about what the machine did, and its own
+                // comment calls it evidence and not proof. The score is where the
+                // distinction has to bite. Folded in, it either masks a real
+                // divergence or invents one, and a determinism number is exactly
+                // the output somebody trusts without checking.
+                //
+                // So the hash stays on the `StepResult` and in the trail, and only
+                // the fold refuses it — PRO-0049 settles the same question the same
+                // way for a repeat that never reached the app: not a sample of the
+                // application's behaviour, therefore not folded, reported beside
+                // the score instead.
+                //
+                // Judged on the backend's own flag and NEVER on the error code.
+                // That is PRO-0045's rule and it is load-bearing: only the thing
+                // that failed knows whether its request may already have been
+                // delivered, and the same code can arrive from another domain.
+                //
+                // `break` rather than `continue`, because such a step sets
+                // `failedAt` and ends its repeat, so there is nothing after it —
+                // pinned by `anIndeterminateStepIsTheLastResultInItsRepeat`, since
+                // the day that stops being true this line starts dropping data.
+                // `continue` would be worse than either: it would left-shift the
+                // remaining hashes and compare them against the wrong steps.
+                if run.results[index].error?.indeterminate == true {
+                    withheld[index, default: 0] += 1
+                    notes.append("Run \(runIndex) step \(index): the backend could not say "
+                               + "whether this step happened, so its post-state was withheld "
+                               + "from the score and kept as evidence on the step.")
+                    break
+                }
+                if let subject = run.results[index].hashSubject,
+                   !(subjects[index]?.contains(subject) ?? false) {
+                    subjects[index, default: []].append(subject)
                 }
                 if includeTiles {
                     do {
@@ -478,14 +531,18 @@ extension Session {
                                             notes: &notes, includeTiles: includeTiles,
                                             truncated: true,
                                             captures: artifacts.captureEach ? captures : nil,
-                                                backend: actuator.id)
+                                                backend: actuator.id,
+                                                subjects: subjects, withheld: withheld,
+                                                browser: renderedByBrowser)
             }
         }
 
         return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
                                     notes: &notes, includeTiles: includeTiles, truncated: false,
                                     captures: artifacts.captureEach ? captures : nil,
-                                                backend: actuator.id)
+                                                backend: actuator.id,
+                                                subjects: subjects, withheld: withheld,
+                                                browser: renderedByBrowser)
     }
 
     /// Score whatever was measured. Called from two places on purpose: the end of
@@ -499,7 +556,10 @@ extension Session {
                                         notes: inout [String], includeTiles: Bool,
                                         truncated: Bool,
                                         captures: [StabilityCapture]?,
-                                        backend: ActuationBackendID) -> StabilityReport {
+                                        backend: ActuationBackendID,
+                                        subjects: [Int: [HashSubject]],
+                                        withheld: [Int: Int],
+                                        browser: KnownBrowser?) -> StabilityReport {
         let runs = perRun.count
         if runs < 2 {
             notes.append("A single run cannot measure divergence; firstDivergence and every "
@@ -518,6 +578,31 @@ extension Session {
             + "the tree unchanged — a gradient, a cursor, an animation frame — is not covered by "
             + "this run; pass includeTiles to cover it.")
 
+        let basis = stepBasis(stepCount: steps.count, score: score, subjects: subjects,
+                              withheld: withheld, browser: browser)
+        // The steps whose hash was taken over a render tree in AT LEAST ONE repeat.
+        // A step that was page content in one repeat and browser chrome in another
+        // belongs here and also carries both subjects, which is what says its
+        // number is attributable to neither side. Erring toward disclosing is the
+        // direction this boundary already takes for an advisory that never refuses.
+        let pageSteps = (0..<steps.count).filter { subjects[$0]?.contains(.pageContent) == true }
+        let pageContent = browser.flatMap { browser -> PageContentDisclosure? in
+            guard !pageSteps.isEmpty else { return nil }
+            return PageContentDisclosure(browser: browser.name, bundleId: browser.bundleId,
+                                         steps: pageSteps,
+                                         // The sentence proctor_act has always
+                                         // emitted, not a second wording of it.
+                                         evidence: BrowserTarget.evidence)
+        }
+        if !pageSteps.isEmpty {
+            notes.append("Step\(pageSteps.count == 1 ? "" : "s") "
+                       + pageSteps.map(String.init).joined(separator: ", ")
+                       + " ran against page content in \(browser?.name ?? "a browser"), so "
+                       + "\(pageSteps.count == 1 ? "its score is" : "their scores are") a "
+                       + "measurement of the page as much as of the application. The number stands; "
+                       + "what it is a number about is the page.")
+        }
+
         return StabilityReport(
             flow: flow,
             runs: runs,
@@ -534,6 +619,39 @@ extension Session {
             // Every pass folded above ran in one session, and a session's
             // actuator is immutable, so one value is an honest label for the
             // whole report rather than for one of its passes.
-            backend: backend)
+            backend: backend,
+            stepBasis: basis,
+            pageContent: pageContent)
+    }
+
+    /// What each step's number was taken over and what it was computed from.
+    ///
+    /// Nil when there is nothing to disclose — no browser rendered the window and
+    /// no repeat withheld a hash — so an ordinary native sweep encodes exactly as
+    /// it did before this existed. When it is emitted it covers every step, so a
+    /// reader can index it in parallel with `stepInstability`.
+    ///
+    /// `samples` and `instability` both come from the fold that produced
+    /// `stepInstability`, never from arithmetic here: two paths to one number drift
+    /// the first time either definition moves, and this way the disagreement is
+    /// unavailable rather than merely tested for.
+    private static func stepBasis(stepCount: Int, score: StabilityScore.Fold,
+                                  subjects: [Int: [HashSubject]],
+                                  withheld: [Int: Int],
+                                  browser: KnownBrowser?) -> [StabilityStepBasis]? {
+        guard browser != nil || !withheld.isEmpty else { return nil }
+        return (0..<stepCount).map { index in
+            let samples = index < score.samples.count ? score.samples[index] : 0
+            return StabilityStepBasis(
+                step: index,
+                subjects: browser == nil ? nil : (subjects[index] ?? []),
+                samples: samples,
+                withheld: withheld[index],
+                // Below two samples there is no comparison, and
+                // `Canonical.instability` answers 0.0 — which reads as five
+                // agreeing repeats. Absent is the honest value.
+                instability: samples >= 2 && index < score.stepInstability.count
+                    ? score.stepInstability[index] : nil)
+        }
     }
 }

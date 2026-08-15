@@ -198,11 +198,22 @@ public enum StabilityScore {
         /// Steps measured on fewer runs than were performed, as index -> samples.
         /// The caller turns these into the notes it already emits.
         public var undersampled: [Int: Int]
+        /// How many hashes each step's score was folded from, by index.
+        ///
+        /// **The same column count `stepInstability` was computed from, exposed
+        /// rather than recomputed.** A caller publishing "this number came from N
+        /// samples" beside the number has to be reading the same N the number was
+        /// derived from, or the two drift the first time either definition moves —
+        /// samples meaning attempts rather than hashes, say. One computation, and
+        /// the disagreement is unavailable rather than merely tested for.
+        public var samples: [Int]
         public init(firstDivergence: Int?, stepInstability: [Double], deterministic: Bool,
-                    divergenceDetail: [String: [String]], undersampled: [Int: Int]) {
+                    divergenceDetail: [String: [String]], undersampled: [Int: Int],
+                    samples: [Int]) {
             self.firstDivergence = firstDivergence; self.stepInstability = stepInstability
             self.deterministic = deterministic; self.divergenceDetail = divergenceDetail
             self.undersampled = undersampled
+            self.samples = samples
         }
     }
 
@@ -210,9 +221,11 @@ public enum StabilityScore {
         var stepInstability: [Double] = []
         var divergenceDetail: [String: [String]] = [:]
         var undersampled: [Int: Int] = [:]
+        var samples: [Int] = []
 
         for index in 0..<stepCount {
             let column = perRun.compactMap { index < $0.count ? $0[index] : nil }
+            samples.append(column.count)
             stepInstability.append(Canonical.instability(hashes: column))
             let distinct = Set(column)
             if distinct.count > 1 {
@@ -230,6 +243,7 @@ public enum StabilityScore {
                     deterministic: firstDivergence == nil && complete
                         && stepInstability.allSatisfy { $0 == 0 } && runs > 1,
                     divergenceDetail: divergenceDetail,
-                    undersampled: undersampled)
+                    undersampled: undersampled,
+                    samples: samples)
     }
 }

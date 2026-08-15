@@ -809,13 +809,30 @@ public struct StepResult: Codable, Sendable {
     public var retriedOnStale: Bool?
     public var unrequestedForeground: Bool?
     public var transportMs: Int?
+    /// Which side of the browser page boundary this step's target fell on,
+    /// measured at the moment the step ran — and therefore which tree its state
+    /// hash was taken over.
+    ///
+    /// Present exactly when a browser renders the window **and** the step got as
+    /// far as acting. So it is absent on every step of a native application, which
+    /// is what keeps an existing result byte-identical, and absent on a step the
+    /// policy gate refused before it could be classified. Among the steps that
+    /// ran, absence therefore means one thing: no browser renders this window.
+    /// On a browser window a step that ran always carries a value, `unclassified`
+    /// included. See `HashSubject`.
+    ///
+    /// Set through `init`, deliberately not through `carry(_:)`: that folds facts
+    /// off `Actuation`, which is what the backend reported about performing the
+    /// step, and this is what Proctor observed about where the step pointed.
+    public var hashSubject: HashSubject?
 
     public init(index: Int, step: ActionStep, ok: Bool, plane: ActuationPlane?,
                 error: AgentError?, settle: SettleReport?, stateHash: String?,
                 diff: SnapshotDiff?, elapsedMs: Int, route: ActuationRoute? = nil,
                 backend: ActuationBackendID? = nil, reportedMode: String? = nil,
                 effect: ActuationEffect? = nil, retriedOnStale: Bool? = nil,
-                unrequestedForeground: Bool? = nil, transportMs: Int? = nil) {
+                unrequestedForeground: Bool? = nil, transportMs: Int? = nil,
+                hashSubject: HashSubject? = nil) {
         self.index = index; self.step = step; self.ok = ok; self.plane = plane
         self.error = error; self.settle = settle; self.stateHash = stateHash
         self.diff = diff; self.elapsedMs = elapsedMs; self.route = route
@@ -823,6 +840,7 @@ public struct StepResult: Codable, Sendable {
         self.effect = effect; self.retriedOnStale = retriedOnStale
         self.unrequestedForeground = unrequestedForeground
         self.transportMs = transportMs
+        self.hashSubject = hashSubject
     }
 
     /// The delegated facts a finished actuation carries, folded onto the result.
@@ -932,16 +950,92 @@ public struct StabilityReport: Codable, Sendable {
     /// cannot disagree. Same optionality rule as `ActResult.backend`, for the same
     /// two reasons.
     public var backend: ActuationBackendID?
+    /// One entry per step, by index, saying what that step's number was taken
+    /// over and what it was computed from.
+    ///
+    /// Present when there is anything to disclose — a browser rendered the window,
+    /// or some repeat withheld a hash — and nil otherwise, so an ordinary native
+    /// sweep encodes exactly as it did before this existed. When present it holds
+    /// one entry for every step in `0..<stepCount`, so it reads in parallel with
+    /// `stepInstability`.
+    public var stepBasis: [StabilityStepBasis]?
+    /// Present when at least one step, in at least one repeat, was measured over
+    /// a browser's render tree. Says which browser, which steps, and what that
+    /// does to their numbers.
+    public var pageContent: PageContentDisclosure?
     public init(flow: String, runs: Int, stepCount: Int, firstDivergence: Int?,
                 stepInstability: [Double], deterministic: Bool,
                 divergenceDetail: [String: [String]]?, notes: [String],
                 captures: [StabilityCapture]? = nil,
-                backend: ActuationBackendID?) {
+                backend: ActuationBackendID?,
+                stepBasis: [StabilityStepBasis]? = nil,
+                pageContent: PageContentDisclosure? = nil) {
         self.flow = flow; self.runs = runs; self.stepCount = stepCount
         self.firstDivergence = firstDivergence; self.stepInstability = stepInstability
         self.deterministic = deterministic; self.divergenceDetail = divergenceDetail
         self.notes = notes; self.captures = captures
         self.backend = backend
+        self.stepBasis = stepBasis; self.pageContent = pageContent
+    }
+}
+
+/// What one step's determinism number was taken over, and what it was computed
+/// from. Optional throughout for the reason `ActResult.backend` is: a field that
+/// is absent decodes on a record written before it existed.
+public struct StabilityStepBasis: Codable, Sendable, Equatable {
+    public var step: Int
+    /// Every distinct subject the repeats produced for this step, in first-seen
+    /// order. Absent when no browser rendered the window.
+    ///
+    /// **More than one value is a finding, not noise.** It means the repeats
+    /// disagreed about which side of the page boundary this step fell on, so the
+    /// flow took two different paths — and this step's hashes are then over two
+    /// different trees, which will score it unstable. That instability belongs to
+    /// the flow rather than to the application, and this list is what says so.
+    public var subjects: [HashSubject]?
+    /// Repeats that contributed a hash to this step's score. Read from the fold's
+    /// own column count and never recomputed here, so it cannot disagree with the
+    /// number beside it.
+    public var samples: Int
+    /// Repeats whose hash was withheld from the score because Proctor could not
+    /// vouch that the step happened. Omitted when none were.
+    public var withheld: Int?
+    /// This step's instability.
+    ///
+    /// **Absent below two samples rather than reported as zero.**
+    /// `Canonical.instability` returns `0.0` for a column of one hash, so a step
+    /// measured once would otherwise be indistinguishable from five repeats that
+    /// agreed. `StabilityReport.stepInstability` keeps the `0.0` at that index for
+    /// wire compatibility; this is the surface that does not overstate it.
+    public var instability: Double?
+
+    public init(step: Int, subjects: [HashSubject]? = nil, samples: Int,
+                withheld: Int? = nil, instability: Double? = nil) {
+        self.step = step; self.subjects = subjects; self.samples = samples
+        self.withheld = withheld; self.instability = instability
+    }
+}
+
+/// What a sweep that touched a page is entitled to claim, carried once rather
+/// than repeated on every step that touched it.
+public struct PageContentDisclosure: Codable, Sendable, Equatable {
+    public var browser: String
+    public var bundleId: String
+    /// The steps measured over a render tree in **at least one** repeat.
+    ///
+    /// A step that was page content in one repeat and browser chrome in another
+    /// appears here *and* carries two `subjects`, which is what says its number is
+    /// attributable to neither side. Including it errs toward disclosing, which is
+    /// the direction `BrowserTarget` already states as the safe one for an
+    /// advisory that never refuses anything.
+    public var steps: [Int]
+    /// `BrowserTarget.evidence`, verbatim — the same sentence `proctor_act` has
+    /// always emitted, rather than a second wording of one fact.
+    public var evidence: String
+
+    public init(browser: String, bundleId: String, steps: [Int], evidence: String) {
+        self.browser = browser; self.bundleId = bundleId
+        self.steps = steps; self.evidence = evidence
     }
 }
 

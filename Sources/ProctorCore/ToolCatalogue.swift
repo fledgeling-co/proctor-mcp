@@ -521,6 +521,20 @@ public enum ToolCatalogue {
         redacting audit trail, resets included. Permission is re-checked before each repeat: an \
         approval token that expires part-way through stops the run there, and the report says how \
         many repeats it managed — a truncated run is never reported deterministic.
+
+        A state hash is a walk of the window's accessibility tree, and inside a browser's web area \
+        that tree is the page's render tree rather than the application's view hierarchy — so a \
+        score taken there measures the page's own churn as much as the app's. stepBasis says, per \
+        step, which side of that boundary the step fell on, measured while it ran rather than \
+        guessed beforehand, and pageContent names the browser and the steps concerned. The score is \
+        still reported: a page-content flow that agreed across every repeat agreed, and the \
+        disclosure names what the number is about rather than withholding it.
+
+        stepBasis also says how many repeats each step's score was folded from, and omits the score \
+        entirely below two — a step measured once would otherwise read as perfectly stable. A step \
+        whose outcome the backend could not establish contributes no hash at all: its post-state is \
+        kept on the step as evidence and refused by the score, because a reading taken after an \
+        action nobody can vouch happened is not a sample of that step.
         """,
         inputSchema: .object([
             "type": .string("object"),

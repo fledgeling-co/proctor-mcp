@@ -33,6 +33,46 @@ public enum BrowserSurface: String, Codable, Sendable, Equatable {
     case installedWebApp
 }
 
+/// Which side of the page boundary a step's state hash was taken over, for a
+/// window a browser renders.
+///
+/// `Canonical.hash` walks the accessibility tree of a window. Inside a web area
+/// that tree is the page's render tree; outside one it is the application's own
+/// view hierarchy. The two are not the same measurement, and a determinism score
+/// that folds them without saying which is which is the number `BrowserTarget.evidence`
+/// has always warned about — stated, until now, on every surface except the one
+/// that publishes the score.
+///
+/// Measured **at the step, while it ran**, never scanned before a sweep: a step's
+/// target usually does not exist until the steps before it have run, so a flow that
+/// opens a browser and then drives a page — the ordinary case here — would classify
+/// as nothing at all.
+///
+/// **This marks where a step acted. It does not partition the score.** A state hash
+/// is a walk of the whole window, so in a browser window the page's render tree is
+/// inside every step's hash, `browserChrome` steps included. `browserChrome` means
+/// the step's *target* lay outside the web area; it does not mean that step's number
+/// is unaffected by the page. Read as a partition into an application half and a page
+/// half, this would be a quieter version of the over-trust it exists to remove.
+public enum HashSubject: String, Codable, Sendable, Equatable {
+    /// The step's target lay inside a web area, so its hash is over the browser's
+    /// render tree. The score is real; its subject is the page.
+    case pageContent
+    /// The step's target lay outside every web area — toolbar, tab bar, menu,
+    /// sheet, downloads popover. The application's own tree, and Proctor's half
+    /// of the boundary.
+    case browserChrome
+    /// A browser renders this window and the step named no target that resolved to
+    /// a rectangle — a menu path, a keystroke — so which side it fell on was never
+    /// established.
+    ///
+    /// **A value rather than an absence, and that is the point.** Absence has to
+    /// mean exactly one thing, and here it means "no browser renders this window".
+    /// Folding "not a browser" together with "a browser, but never classified"
+    /// would let a page-churn number read as a native one.
+    case unclassified
+}
+
 /// A browser Proctor recognises, identified by bundle identifier.
 public struct KnownBrowser: Sendable, Equatable {
     public let name: String

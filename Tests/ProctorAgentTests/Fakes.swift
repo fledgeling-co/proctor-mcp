@@ -18,6 +18,11 @@ final class FakeAX: AXEngine, @unchecked Sendable {
     private(set) var performed: [ActionStep] = []
     /// Fail the nth perform call (0-based), to exercise the failure paths.
     var failPerformAt: Int?
+    /// Fail the nth perform call with a specific error, for a test that needs a
+    /// particular *kind* of failure rather than any failure — an indeterminate
+    /// one, whose `indeterminate` flag is set by the backend and is what the
+    /// score reads. Takes precedence over `failPerformAt` at the same index.
+    var failPerformWith: [Int: AgentError] = [:]
     /// Called with the 0-based index of each perform, before it returns. A test
     /// that needs something to happen *during* a run — a person pressing Stop
     /// between two steps — hangs it here.
@@ -79,6 +84,7 @@ final class FakeAX: AXEngine, @unchecked Sendable {
         let index = performed.count
         performed.append(step)
         onPerform?(index)
+        if let error = failPerformWith[index] { throw error }
         if failPerformAt == index {
             throw AgentError(code: .actionFailed, message: "fake failure at step \(index)")
         }

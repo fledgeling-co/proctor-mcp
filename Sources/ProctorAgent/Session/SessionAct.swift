@@ -186,22 +186,51 @@ extension Session {
     /// ids are resolved once each, so a twenty-step batch against one field costs
     /// one accessibility round trip rather than twenty.
     private func browserTargets(for steps: [ActionStep], window: WindowHandle) -> [Rect] {
-        var out: [Rect] = []
-        var resolved: [String: Rect?] = [:]
-        for step in steps {
-            if let id = step.node {
-                let frame = resolved[id] ?? { () -> Rect? in
-                    let frame = (try? ax.node(id: id))?.frame
-                    resolved[id] = frame
-                    return frame
-                }()
-                if let frame { out.append(frame) }
-            } else if let point = step.point, point.count >= 2 {
-                out.append(Rect(x: window.frame.x + point[0], y: window.frame.y + point[1],
-                                w: 0, h: 0))
-            }
+        let cache = TargetCache()
+        return steps.compactMap { browserTarget(for: $0, window: window, cache: cache) }
+    }
+
+    /// Frames resolved once per question, for a caller asking about a whole batch
+    /// at one instant.
+    final class TargetCache { var frames: [String: Rect?] = [:] }
+
+    /// One step's target as a screen-space rectangle, or nil when it names none.
+    ///
+    /// **`cache` is for a caller asking about a batch at one instant, and a caller
+    /// asking per step passes none.** A frame resolved before an earlier step ran
+    /// is exactly the staleness a per-step classification exists to avoid: the
+    /// element may not have existed yet, or may since have moved.
+    private func browserTarget(for step: ActionStep, window: WindowHandle,
+                               cache: TargetCache? = nil) -> Rect? {
+        if let id = step.node {
+            if let cached = cache?.frames[id] { return cached }
+            let frame = (try? ax.node(id: id))?.frame
+            cache?.frames[id] = frame
+            return frame
         }
-        return out
+        if let point = step.point, point.count >= 2 {
+            return Rect(x: window.frame.x + point[0], y: window.frame.y + point[1], w: 0, h: 0)
+        }
+        return nil
+    }
+
+    /// Which side of the page boundary this step's target falls on, read now.
+    ///
+    /// Only ever called for a window the browser catalogue matched, so a native
+    /// application pays one dictionary lookup and no accessibility traffic — the
+    /// rule `browserHandoff` already follows. On a browser window it costs one
+    /// element resolution and one bounded web-area walk per step, which is what
+    /// buys an answer about the state the step actually met rather than the state
+    /// the sweep started in.
+    ///
+    /// A browser window with no web areas at all — an About panel, a page that has
+    /// not loaded — is `browserChrome`, which is true: the hash is over the
+    /// application's own tree.
+    private func hashSubject(for step: ActionStep, window: WindowHandle) -> HashSubject {
+        guard let rect = browserTarget(for: step, window: window) else { return .unclassified }
+        guard let probe = try? ax.webContent(window: window.id), !probe.areas.isEmpty
+        else { return .browserChrome }
+        return probe.contains(rect) ? .pageContent : .browserChrome
     }
 
     /// One code path for act, flow replay and stability, so a step behaves
@@ -213,6 +242,13 @@ extension Session {
                   audit: AuditContext? = nil, pointerMarks: Bool = false) async -> StepRun {
         var run = StepRun()
         let app = appHandle(forWindow: window)
+        // Once for the batch: whether a browser renders this window at all. The
+        // catalogue lookup runs first, exactly as `browserHandoff` does it, so a
+        // native application costs one dictionary lookup and no accessibility
+        // traffic — and only a browser window pays for the per-step web-area read
+        // below. Nil here is what makes `hashSubject` absent on every native step,
+        // which is what keeps an existing result byte-identical.
+        let renderedByBrowser = BrowserCatalogue.identify(bundleId: app?.bundleId)
         // The panel goes up for the batch about to run, and the same is true
         // however the batch was reached — act, a replayed flow, one pass of a
         // stability sweep, the CUA façade. A stop control that is present for
@@ -399,6 +435,13 @@ extension Session {
             // reports no effect and judges its writes by reading them back, so it
             // pays nothing for this.
             let hashBefore = actuator.id == .native ? nil : stateHashNow(window: window.id)
+            // Read HERE, before the step acts, because "which side of the page
+            // boundary did this step's target fall on" is a question about the
+            // window the step met. Reading it before the sweep would ask about a
+            // window some earlier step had not yet produced; reading it after would
+            // ask about the one this step just changed.
+            let subject = renderedByBrowser == nil ? nil
+                : hashSubject(for: step, window: window)
             do {
                 // Awaited, and that await is load-bearing rather than
                 // stylistic: it is the hop to the main actor that applies the
@@ -479,7 +522,8 @@ extension Session {
                     ? Self.observation(before: hashBefore, after: after) : nil
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: error, settle: nil, stateHash: after,
-                                              diff: nil, elapsedMs: elapsed()))
+                                              diff: nil, elapsedMs: elapsed(),
+                                              hashSubject: subject))
                 if let audit {
                     auditStep(step, context: audit,
                               outcome: error.indeterminate
@@ -499,7 +543,8 @@ extension Session {
                                          remedy: nil)
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: wrapped, settle: nil, stateHash: nil,
-                                              diff: nil, elapsedMs: elapsed()))
+                                              diff: nil, elapsedMs: elapsed(),
+                                              hashSubject: subject))
                 if let audit { auditStep(step, context: audit,
                                          outcome: AuditRecord.Outcome.failed,
                                          postStateHash: nil,
@@ -549,7 +594,8 @@ extension Session {
             var result = StepResult(index: index, step: step, ok: noOp == nil, plane: plane,
                                     error: noOp ?? postStateError, settle: report,
                                     stateHash: stateHash, diff: diff,
-                                    elapsedMs: elapsed(), route: outcome.route)
+                                    elapsedMs: elapsed(), route: outcome.route,
+                                    hashSubject: subject)
             result.carry(outcome)
             run.results.append(result)
             if let audit {
