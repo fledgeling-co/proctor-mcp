@@ -278,6 +278,35 @@ reader is absent. And it is **never pointed at the browser's own configuration,
 credential, extension or history pages**, or at DevTools: an agent acting as this
 person has no business in the place their saved passwords live.
 
+**An installed web app is an app, not a tab.** A site installed as a Mac
+application (Chrome, Edge and Brave's "install as app", Safari's "add to dock")
+gets its own bundle identifier, and Proctor used to read `com.google.Chrome.app.…`
+as plain Chrome and hand its page to a browser tool. That opens the same site in a
+different engine with an empty cookie jar and fails at a login wall, since a site
+is installed as an app precisely because somebody uses it signed in. Proctor now
+recognises one, names **no** browser tool for it, and drives it as an application,
+the way it already drives Slack or VS Code — a Chromium view hosting one origin is
+the same shape whoever built the wrapper. The boundary inside it is unchanged,
+because these windows do have native chrome: Safari's web apps carry a navigation
+toolbar and Chrome has a tabbed application mode, so the web area is the page and
+the frame around it stays Proctor's. The address is still reported, so a caller who
+disagrees is not left guessing, and the page-specific advice survives: a PDF or a
+local file in one of these windows gets the same answer it would anywhere else.
+
+**Two fields a host can gate on without reading English.** `surface` is
+`browserWindow` or `installedWebApp`, which is what separates "nothing should drive
+this" from "Proctor drives this one itself" when no tool is named. `flags` carries
+five booleans, true meaning the fact is present: `actsOutsideThisWindow`,
+`autonomous`, `canActAsThisPerson`, `outsideTheAuditTrail`, `billed`. They describe
+whichever instrument the handoff points at, Proctor included when it is the one
+driving, so refusing anything able to act in somebody's live browser session is a
+field test rather than a prose one. `canActAsThisPerson` states a **capability**
+rather than an assertion about a particular run, because Proctor cannot see which
+profile an operator will give a tool. And they describe what Proctor *recommends*,
+not everything a caller could do: the handoff is advisory and never a refusal, so a
+policy that nothing may act in a live browser session gates on the `browser` object
+being there at all, not on a flag.
+
 **It does not see inside a window it was not granted.** No Accessibility grant
 means an empty tree; no Screen Recording grant means no pixels. Neither
 degrades gracefully into something that looks like a test result.
