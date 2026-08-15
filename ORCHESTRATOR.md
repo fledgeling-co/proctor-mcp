@@ -297,14 +297,45 @@ refusal, whose question changed shape underneath it).
 | PRO-0045 | A delegated call is still gated and recorded | `46-…` | 2 | **MERGED** `1bff5c2` |
 | PRO-0046 | Supervision survives delegation | `47-…` | 2 | **RUNNING** `wf_c9845e3c-c4d` |
 | PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **MERGED** `0ea6f88` · absorbed PRO-0031 |
-| PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **QUEUED** · after PRO-0048 |
-| PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **RUNNING** `wf_c8fe9a13-789` |
+| PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **RUNNING** `wf_aa9980d5-076` |
+| PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **MERGED** `0f76c56` · reading 3 chosen |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **QUEUED** (carried, revised) |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **QUEUED** (carried, revised) |
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **RUNNING** `wf_5040b522-5a1` |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0051 merged `0f76c56`. Reading 3: the native planes stay.** 1193 ->
+  **1216 tests in 133 suites**. An operator selects the delegated lane deliberately, nothing
+  falls back automatically, and native remains the default — the **maintained** default, not
+  a frozen one.
+  - **Deletion was not actually on the table.** The native code covers 22 step kinds across
+    four planes and Cua replaces two. `appleScript` and `shortcut` have no delegated
+    equivalent and PRO-0044's own spec already refuses them, so deleting removes two
+    published verbs. Cua also returns only a menu bar for a window on another Space where a
+    retained `AXUIElement` keeps resolving, and `cua-driver` has never executed on this
+    machine. Any one of those defeats it.
+  - **Automatic fallback lost because it does not stop.** It hands back a verdict that looks
+    fine and measures the plumbing.
+  - **The gate changed the decision twice.** It killed a written reversal condition as a
+    *scheduled* automatic fallback — a default that flips when a condition becomes true
+    contaminates the score across runs the way a mid-run fallback contaminates one within a
+    run, and nobody chose it. And it killed the "frozen native lane" refinement, because
+    PRO-0034 was retired as "Scroll is Cua's now" while closing a real defect in the path
+    `main.swift` still selects by default. Maintenance continues; only expansion is capped.
+  - **Two of the brief's premises were wrong and the runner corrected them.** "Several
+    hundred tests pin the native planes" is false: 13 references across 3 files. What
+    deletion would really have destroyed is the macOS characterisation in the comments (AX
+    reports success for a write the app discards; lazy submenus; `AXSelectedText` inserts at
+    the caret). And its own suspected gap was refuted by measurement — an actuated native
+    step already encoded `"backend":"native"`.
+  - **One behavioural change, proved red→green:** `requireSameBackend` checked only the
+    tape's first backend and now checks every one.
+  - **A plan gate caught a build-breaker:** an `init` default does not make `Codable`
+    tolerate a missing key, so the new lane field is optional with no default, which also
+    stops a forgetful call site asserting the wrong lane.
+  - **Child work:** PRO-0034 was retired on a premise this item rejects; `appleScript` and
+    `shortcut` are unreachable on the Cua lane; `KeyCodes` has no test.
 - 2026-08-15 **PRO-0045 merged `1bff5c2`.** 1162 -> **1193 tests in 131 suites**.
   - **What the trail attests to, which was the deliverable as much as the code.** Every row
     is a claim Proctor makes about a request *it* made. For a native step, intent and act are
