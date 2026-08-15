@@ -71,6 +71,14 @@ struct TakeoverWiringTests {
         let contention = FakeContention()
         await session.setContentionMonitor(contention)
         await session.setYieldSwitches(enabled: true, observesInput: false)
+        // Never the process-wide declaration keeper, for the same reason as the
+        // latch below. In production one scheduler hands the exclusive global
+        // lane to one run at a time, so a single shared instance is only ever
+        // driven by one run; here several sessions exist at once with a
+        // scheduler each, and a suite that left its declaration on the shared
+        // instance decided whether another suite's batch had already raised the
+        // statement.
+        await session.setSyntheticPost(SyntheticPost())
         // Never the process-wide latch: a test that yielded the singleton leaves
         // the next one's checkpoint waiting out a 900-second backstop.
         let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
@@ -242,4 +250,118 @@ struct TakeoverWiringTests {
         #expect(object["note"]?.stringValue?.contains("could not be created") == true)
         #expect(object["inputMonitoring"] != nil)
     }
+
+    // MARK: - PRO-0053: only a run that might post drives the declaration keeper
+
+    /// A session sharing one declaration keeper with whoever else is running,
+    /// which is the production topology: `SyntheticPost` is process-wide because
+    /// the event tap must decline to read Stop while ANY post is open.
+    private func sharing(_ post: SyntheticPost) async throws -> (session: Session, ax: FakeAX) {
+        let ax = FakeAX(bundleId: Self.target)
+        let session = Session(ax: ax, capture: FakeCapture())
+        await session.setAuditSink(AuditCollector().sink)
+        await session.setDrawsHUD(false)
+        await session.setTakeover(FakeTakeover())
+        await session.setContentionMonitor(FakeContention())
+        await session.setYieldSwitches(enabled: true, observesInput: false)
+        await session.setSyntheticPost(post)
+        let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
+        control.begin(run: 0)
+        await session.setRunControl(control)
+        _ = try await session.attachResolved(bundleId: Self.target, pid: nil, name: nil)
+        return (session, ax)
+    }
+
+    /// A batch that could never reach the event stream: nothing certainly
+    /// synthetic in it, and it did not ask for the front, which is a
+    /// precondition of any fallback post.
+    private func runNonPosting(_ h: (session: Session, ax: FakeAX)) async throws {
+        _ = try await h.session.act(window: h.ax.window.id, steps: [step(.press), step(.setValue)],
+                                    settle: .default, foreground: false, captureEach: false,
+                                    diffEach: false, record: nil)
+    }
+
+    @Test("a run that cannot post does not clear a posting run's declaration")
+    func aNonPostingRunLeavesTheDeclarationAlone() async throws {
+        // Two sessions on different apps genuinely run in parallel — `RunLane`
+        // says so — and only a batch that might post takes the exclusive global
+        // lane. So the background run below is concurrent with a posting one by
+        // design, and before PRO-0053 its `beginStep()` at every step boundary
+        // cleared the poster's `declared` flag. The poster then read
+        // `declaredThisStep` as false, never raised the statement for a `type`
+        // or `scroll` that fell back, and under-reported having taken the
+        // machine. Nobody was told their machine had been taken.
+        let post = SyntheticPost()
+        post.declare()
+        #expect(post.declaredThisStep)
+
+        try await runNonPosting(try await sharing(post))
+
+        #expect(post.declaredThisStep, "a background run cleared a poster's declaration")
+    }
+
+    @Test("a run that cannot post does not close a posting run's in-flight window")
+    func aNonPostingRunLeavesTheWindowOpen() async throws {
+        // The more serious half. While the window is open the tap declines to
+        // read the Stop rectangle at all, which is what makes "Proctor's own
+        // click can never press Stop" structural rather than an identity check.
+        // A background run closing it early puts the tap back to reading Stop
+        // while Proctor's click is still travelling — PRO-0033 failing in the
+        // exact way it exists to prevent.
+        let post = SyntheticPost()
+        post.declare()
+        #expect(post.inFlight)
+
+        try await runNonPosting(try await sharing(post))
+
+        #expect(post.inFlight, "a background run closed a poster's in-flight window")
+    }
+
+    @Test("a run that cannot post does not remove a posting run's declaration handler")
+    func aNonPostingRunLeavesTheHandlerInstalled() async throws {
+        // One handler slot. A background run installing its own took the slot
+        // from the poster, and its `defer` cleared the slot for everybody when
+        // it finished first — so a later declaration reached nothing and the
+        // statement stayed down.
+        let post = SyntheticPost()
+        let fired = Counter()
+        post.onDeclare { fired.bump() }
+
+        try await runNonPosting(try await sharing(post))
+
+        post.declare()
+        #expect(fired.value == 1, "a background run removed a poster's handler")
+    }
+
+    @Test("a synthetic batch refused for being in the background leaves the keeper alone")
+    func aRefusedSyntheticBatchLeavesTheKeeperAlone() async throws {
+        // The out-of-family completeness gate's finding, and it was a real hole.
+        // `mightPost` counts a certain synthetic kind whatever the batch asked
+        // for, but a synthetic step is refused outright when `foreground` is
+        // false, so this batch cannot post and has nothing to declare.
+        //
+        // It matters because of one path: a stability sweep buys its lanes from
+        // the FLOW's steps and then runs `resetBetween` through the same loop as
+        // a batch of its own. An accessibility-only flow takes no global lane, so
+        // a reset containing a `click` would have joined the protocol while
+        // holding nothing exclusive, and cleared a real poster's state.
+        let post = SyntheticPost()
+        post.declare()
+        let h = try await sharing(post)
+
+        _ = try await h.session.act(window: h.ax.window.id, steps: [step(.click)],
+                                    settle: .default, foreground: false, captureEach: false,
+                                    diffEach: false, record: nil)
+
+        #expect(post.declaredThisStep, "a batch that cannot post cleared a poster's declaration")
+        #expect(post.inFlight, "a batch that cannot post closed a poster's in-flight window")
+    }
+}
+
+/// A count a `@Sendable` closure can increment.
+private final class Counter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored = 0
+    func bump() { lock.lock(); stored += 1; lock.unlock() }
+    var value: Int { lock.lock(); defer { lock.unlock() }; return stored }
 }

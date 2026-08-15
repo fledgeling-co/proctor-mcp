@@ -7,9 +7,16 @@ import ProctorCore
 // posts, and the arming that follows the panel's mouse gate rather than the
 // step's kind.
 //
-// `RunHUDGeometry.shared` and `SyntheticPost.shared` are process-wide, so every
-// test here clears both on the way in and on the way out. A test that left a
-// panel frame published would decide the gate for whatever suite ran next.
+// `RunHUDGeometry.shared` is process-wide, so every test here clears it on the
+// way in and on the way out. A test that left a panel frame published would
+// decide the gate for whatever suite ran next.
+//
+// The declaration keeper is no longer taken from the process at all. `.serialized`
+// orders the tests inside this suite and nothing else, so a declaration left on
+// `SyntheticPost.shared` reached whichever other suite happened to be stepping
+// concurrently — which is how `TakeoverWiringTests` came to believe its statement
+// was already raised and stopped raising it (PRO-0053). This suite now drives its
+// own instance, injected into the session.
 //
 // Two properties are code readings rather than tests and are named as such in
 // the spec: that the declaration sits at the end of
@@ -28,9 +35,16 @@ struct StopReachabilityWiringTests {
     private static let stop = Rect(x: 1600, y: 1040, w: 64, h: 28)
 
     private func harness() async throws
-        -> (session: Session, ax: FakeAX, takeover: FakeTakeover, contention: FakeContention) {
+        -> (session: Session, ax: FakeAX, takeover: FakeTakeover, contention: FakeContention,
+            post: SyntheticPost) {
         RunHUDGeometry.shared.clear()
-        SyntheticPost.shared.beginStep()
+        // This suite's own declaration keeper rather than the process-wide one.
+        // `.serialized` orders the tests inside this suite and nothing else, so
+        // before this the declarations below reached whatever other suite
+        // happened to be stepping at the time — which is how a batch elsewhere
+        // came to believe its statement was already raised.
+        let post = SyntheticPost()
+        post.beginStep()
         let ax = FakeAX(bundleId: Self.target)
         let session = Session(ax: ax, capture: FakeCapture())
         await session.setAuditSink(AuditCollector().sink)
@@ -40,15 +54,16 @@ struct StopReachabilityWiringTests {
         let contention = FakeContention()
         await session.setContentionMonitor(contention)
         await session.setYieldSwitches(enabled: true, observesInput: false)
+        await session.setSyntheticPost(post)
         let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
         control.begin(run: 0)
         await session.setRunControl(control)
         _ = try await session.attachResolved(bundleId: Self.target, pid: nil, name: nil)
-        return (session, ax, takeover, contention)
+        return (session, ax, takeover, contention, post)
     }
 
     private func act(_ h: (session: Session, ax: FakeAX, takeover: FakeTakeover,
-                           contention: FakeContention),
+                           contention: FakeContention, post: SyntheticPost),
                      _ steps: [ActionStep]) async throws -> JSONValue {
         try await h.session.act(window: h.ax.window.id, steps: steps, settle: .default,
                                 foreground: true, captureEach: false, diffEach: false,
@@ -131,7 +146,8 @@ struct StopReachabilityWiringTests {
         // after it was taken.
         let h = try await harness()
         h.ax.planeAt[0] = .syntheticEvent
-        h.ax.onPerform = { _ in SyntheticPost.shared.declare() }
+        let post = h.post
+        h.ax.onPerform = { _ in post.declare() }
         let postsBefore = h.contention.syntheticPosts
         _ = try await act(h, [scroll(at: 400, 300)])
         #expect(h.contention.syntheticPosts > postsBefore)
@@ -146,8 +162,8 @@ struct StopReachabilityWiringTests {
         let h = try await harness()
         _ = try await act(h, [ActionStep(kind: .press, node: "node-1")])
         let showsAfterRun = h.takeover.shows.count
-        SyntheticPost.shared.declare()
-        SyntheticPost.shared.beginStep()
+        h.post.declare()
+        h.post.beginStep()
         #expect(h.takeover.shows.count == showsAfterRun)
     }
 
@@ -162,16 +178,18 @@ struct StopReachabilityWiringTests {
         // prevent.
         let h = try await harness()
         h.ax.failPerformAt = 0
-        h.ax.onPerform = { _ in SyntheticPost.shared.declare() }
+        let post = h.post
+        h.ax.onPerform = { _ in post.declare() }
         _ = try await act(h, [scroll(at: 1500, 900)])
-        #expect(!SyntheticPost.shared.inFlight)
+        #expect(!h.post.inFlight)
     }
 
     @Test("a declaring step is recorded as having taken the machine")
     func aDeclaringStepSaysSo() async throws {
         let h = try await harness()
         h.ax.planeAt[0] = .syntheticEvent
-        h.ax.onPerform = { _ in SyntheticPost.shared.declare() }
+        let post = h.post
+        h.ax.onPerform = { _ in post.declare() }
         _ = try await act(h, [scroll(at: 400, 300)])
         #expect(h.takeover.reports == 1)
     }
@@ -197,44 +215,45 @@ struct StopReachabilityWiringTests {
         // gesture is precisely the step PRO-0026 says must stay stoppable
         // throughout.
         let clock = Clock()
-        SyntheticPost.shared.now = { clock.value }
-        defer { SyntheticPost.shared.now = { Date().timeIntervalSince1970 } }
+        let post = SyntheticPost()
+        post.now = { clock.value }
 
-        SyntheticPost.shared.beginStep()
+        post.beginStep()
         clock.value = 1000
-        SyntheticPost.shared.declare()
-        #expect(SyntheticPost.shared.inFlight)
+        post.declare()
+        #expect(post.inFlight)
         // Still inside the quarter second that covers our own event's delivery.
         clock.value = 1000 + PersonInput.graceSeconds / 2
-        #expect(SyntheticPost.shared.inFlight)
+        #expect(post.inFlight)
         // Two seconds into a thirty-second drag: the person's Stop press is
         // readable again, and our own events are covered by `isOurs`, which is
         // tested first anyway.
         clock.value = 1002
-        #expect(!SyntheticPost.shared.inFlight)
-        SyntheticPost.shared.beginStep()
+        #expect(!post.inFlight)
+        post.beginStep()
     }
 
     @Test("the step's end closes the window even inside the quarter second")
     func endStepClosesItEarly() {
         let clock = Clock()
-        SyntheticPost.shared.now = { clock.value }
-        defer { SyntheticPost.shared.now = { Date().timeIntervalSince1970 } }
-        SyntheticPost.shared.beginStep()
+        let post = SyntheticPost()
+        post.now = { clock.value }
+        post.beginStep()
         clock.value = 500
-        SyntheticPost.shared.declare()
-        #expect(SyntheticPost.shared.inFlight)
-        SyntheticPost.shared.endStep()
-        #expect(!SyntheticPost.shared.inFlight)
+        post.declare()
+        #expect(post.inFlight)
+        post.endStep()
+        #expect(!post.inFlight)
     }
 
     @Test("a step begins with no declaration carried over from the last one")
     func eachStepStartsClean() {
-        SyntheticPost.shared.declare()
-        #expect(SyntheticPost.shared.declaredThisStep)
-        SyntheticPost.shared.beginStep()
-        #expect(!SyntheticPost.shared.declaredThisStep)
-        #expect(!SyntheticPost.shared.inFlight)
+        let post = SyntheticPost()
+        post.declare()
+        #expect(post.declaredThisStep)
+        post.beginStep()
+        #expect(!post.declaredThisStep)
+        #expect(!post.inFlight)
     }
 }
 

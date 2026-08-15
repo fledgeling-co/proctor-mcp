@@ -193,6 +193,22 @@ actor Session {
     /// Whether this run has raised the statement. Per batch, not per step.
     var takeoverShown = false
 
+    /// The declaration seam, injected for the same reason as the two above.
+    ///
+    /// The default is the shared instance and production never calls the setter,
+    /// because the two ends of this protocol are reached statically: the real
+    /// actuator declares on `SyntheticPost.shared` from
+    /// `requireEventPlaneAvailable`, and the event tap reads `.shared.inFlight`.
+    /// A session pointed anywhere else would never hear a real post.
+    ///
+    /// What it buys is the test process, where several `Session`s exist at once.
+    /// Each has its own `RunScheduler`, so the exclusive-global-lane invariant
+    /// that makes one shared instance safe in production does not hold there,
+    /// and two suites driving posting batches otherwise clear each other's
+    /// declarations.
+    var syntheticPost = SyntheticPost.shared
+    func setSyntheticPost(_ post: SyntheticPost) { syntheticPost = post }
+
     /// Both switches, read once. `PROCTOR_YIELD` is on unless turned off;
     /// `PROCTOR_YIELD_INPUT` is off unless turned on, and the asymmetry is the
     /// point — the input monitor is an opt-in, not a default with an escape.

@@ -234,11 +234,45 @@ extension Session {
         let monitor = contentionMonitor
         let driver = takeover
         let declaredApp = app?.name
-        SyntheticPost.shared.onDeclare {
-            monitor.noteSyntheticPost()
-            driver.show(app: declaredApp)
+        // ONLY A RUN THAT MIGHT POST TOUCHES THE DECLARATION PROTOCOL, and this
+        // is the invariant that makes the rest of it safe rather than lucky.
+        //
+        // `SyntheticPost` is process-wide, and it must be: the event tap has to
+        // decline to read Stop while ANY post is open, whoever opened it. What
+        // was wrong is that every run drove it, including runs that could never
+        // post. Two sessions on different apps run genuinely in parallel — see
+        // `RunLane` — so a background run's `beginStep()` at its own step
+        // boundary cleared the posting run's state underneath it: `declared`, so
+        // the poster never raised the statement for a `type` or `scroll` that
+        // fell back and under-reported having taken the machine (PRO-0026); and
+        // `declaredAt`, so the in-flight window closed early and the tap went
+        // back to reading the Stop rectangle while Proctor's own click was still
+        // travelling (PRO-0033). The single handler slot had the same shape.
+        //
+        // `mightPost` is the scheduler's own predicate, not a second derivation:
+        // a batch that might post takes the exclusive `.global` lane, and there
+        // is one `Session` in production and therefore one scheduler. So at most
+        // one run at a time is inside this protocol, which is exactly the scope
+        // the shared instance already assumes.
+        //
+        // AND `foreground`, which is not redundant. `mightPost` counts a certain
+        // synthetic kind whatever the batch asked for, but `refusal(for:
+        // foreground:)` above turns away every synthetic step when `foreground`
+        // is false, so such a batch is refused before it can post and has
+        // nothing to declare. Without this half the invariant has a hole on one
+        // real path: a stability sweep buys its lanes from the FLOW's steps, then
+        // runs `resetBetween` through here as its own batch. An accessibility-only
+        // flow takes no global lane, so a reset containing a `click` would have
+        // joined the protocol holding nothing exclusive and cleared a genuine
+        // poster's state — the very defect this gate exists to close.
+        let participates = demand.mightPost && foreground
+        if participates {
+            syntheticPost.onDeclare {
+                monitor.noteSyntheticPost()
+                driver.show(app: declaredApp)
+            }
         }
-        defer { SyntheticPost.shared.onDeclare(nil) }
+        defer { if participates { syntheticPost.onDeclare(nil) } }
         var ending: RunHUDEnding = .completed
 
         for (index, step) in steps.enumerated() {
@@ -278,7 +312,7 @@ extension Session {
             let mayPost = capability != .yes
             let stepsAside = mayPost && RunHUDGate.stepsAside(
                 points: gatePoints(for: step), panel: RunHUDGeometry.shared.panelFrame)
-            SyntheticPost.shared.beginStep()
+            if participates { syntheticPost.beginStep() }
 
             let refusal = Self.refusal(for: step, foreground: foreground,
                                        capability: capability)
@@ -350,7 +384,7 @@ extension Session {
                     if synthetic || stepsAside { takeoverRelease(.stepEnded) }
                     // Closed however the step ended, including a throw between
                     // the declaration and here.
-                    SyntheticPost.shared.endStep()
+                    if participates { syntheticPost.endStep() }
                 }
                 outcome = try await actuator.perform(
                     step: step,
@@ -445,7 +479,7 @@ extension Session {
             // event stream arms the watch exactly as a click does, which is a
             // batch that turned out to contend and could not have been known to
             // in advance.
-            if SyntheticPost.shared.declaredThisStep { takeoverShown = true }
+            if participates, syntheticPost.declaredThisStep { takeoverShown = true }
             if plane == .syntheticEvent {
                 // A `type` or `scroll` that fell back could not be known to need
                 // the front until now. The statement goes up late rather than
