@@ -440,8 +440,15 @@ struct YieldWiringTests {
         // Secure Event Input still refuses a synthetic step exactly as it did:
         // the watch gets there first when it can, and when it does not, the
         // refusal is the one that already existed.
-        #expect(Session.refusal(for: ActionStep(kind: .press), foreground: false) == nil)
-        let refusal = Session.refusal(for: ActionStep(kind: .click), foreground: false)
+        //
+        // The capability is now supplied rather than looked up in a table of
+        // kinds (PRO-0044), and these are the native backend's own answers — a
+        // press has an accessibility route, a click has none. The refusal itself
+        // is untouched, which is what this test has always been about.
+        #expect(Session.refusal(for: ActionStep(kind: .press), foreground: false,
+                                capability: .yes) == nil)
+        let refusal = Session.refusal(for: ActionStep(kind: .click), foreground: false,
+                                      capability: .never)
         #expect(refusal?.code == .invalidArguments)
     }
 }

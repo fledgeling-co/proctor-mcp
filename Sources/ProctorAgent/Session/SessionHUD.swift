@@ -25,8 +25,12 @@ extension Session {
 
     /// Whether this step travels through the event stream, which is the one
     /// thing the panel ever says about a plane.
-    static func isSynthetic(_ step: ActionStep) -> Bool {
-        syntheticKinds.contains(step.kind)
+    ///
+    /// Asked of the selected backend rather than of a table of kinds: since
+    /// PRO-0044 a click is not inherently a foreground event, it is one on a
+    /// backend that can only express it that way.
+    func isSynthetic(_ step: ActionStep) -> Bool {
+        actuator.backgroundCapability(for: step.kind) == .never
     }
 
     /// The element a step names, for the description's object. Resolved once per

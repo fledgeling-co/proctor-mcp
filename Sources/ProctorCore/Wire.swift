@@ -114,6 +114,16 @@ public struct AgentError: Codable, Sendable, Error {
         case policyDenied              // the app policy gate refused this actuation (blocked or needs a token)
         case haltedByPerson            // a person stopped or held the run from the run HUD — not a fault
         case queueBusy                 // another session held the lane and this run never started — nothing actuated
+        // Delegated actuation. Every one of these is a refusal rather than a
+        // guess: a delegated step that cannot be addressed with confidence is
+        // stopped, because acting on whatever moved into place is how a run
+        // corrupts the thing it was meant to verify.
+        case targetMoved               // re-resolved to an element with a different identity
+        case targetUnresolved          // the backend cannot see an element Proctor can
+        case targetAmbiguous           // several candidates matched, or the backend's view was truncated
+        case backendUnavailable        // the actuation backend could not be reached, or died mid-step
+        case backendUnsupported        // version, signature or vocabulary outside what this build supports
+        case actionNoOp                // the backend suspected a no-op and the post-state agrees nothing changed
         case invalidArguments
         case notImplemented
         case internalError
@@ -496,6 +506,65 @@ public enum ActuationPlane: String, Codable, Sendable {
     case accessibility   // AXUIElementPerformAction / SetAttributeValue
     case appleEvents
     case syntheticEvent  // CGEventPost — foreground session only, flagged as a different mode
+    /// An injected event delivered to one process rather than to the shared
+    /// WindowServer stream. Background-safe, and not the accessibility plane.
+    ///
+    /// Proctor's own actuator cannot produce this: it has exactly two ways to
+    /// move a pointer, and one of them is the shared stream. A delegated backend
+    /// can, and neither existing word is true of it — `.accessibility` would lie
+    /// about the mechanism, `.syntheticEvent` would report a run as having taken
+    /// the machine when it never did. `ForegroundReport` does not count it.
+    case routedEvent
+    /// The step was performed and this build does not recognise the delivery
+    /// mode the backend reported.
+    ///
+    /// One value rather than two for "a mode newer than this build" and "a
+    /// response this build could not decode", because the consequence is
+    /// identical: nothing here can say how the machine was driven. The backend's
+    /// own word survives verbatim in `Actuation.reportedMode`, so the two stay
+    /// distinguishable to a reader without splitting the enum. A run holding one
+    /// of these is never described as background-safe.
+    case unknown
+}
+
+/// Which actuation backend performed a step.
+///
+/// On every step result rather than only on the run, because a determinism score
+/// computed across runs that used different actuation paths is measuring the
+/// paths.
+public enum ActuationBackendID: String, Codable, Sendable {
+    case native
+    case cua
+}
+
+/// Whether a backend can perform a kind of step without the application in front.
+///
+/// This exists because the question is a property of the BACKEND, not of the
+/// step. Proctor's native actuator can express a click only as CGEventPost into
+/// the shared stream, so `.click` needs the foreground — but that is a fact
+/// about Proctor, not about clicking. A delegated backend that routes an event
+/// to one process answers differently, and a refusal built on a static list of
+/// kinds would make its background clicks unreachable.
+public enum BackgroundCapability: String, Codable, Sendable {
+    /// Only ever the shared event stream: refuse when the caller asked to stay back.
+    case never
+    /// Decided at the element, so it is not knowable until the step is reached.
+    case maybe
+    /// Always reachable without the foreground.
+    case yes
+}
+
+/// What a backend reports about whether its action landed.
+///
+/// A call that returns without an error is not evidence that anything happened:
+/// a minimized window's keyboard commit reports success without committing, and
+/// a canvas surface silently no-ops. Folding a no-error return straight into
+/// `ok: true` reproduces the defect this repo exists to detect, so the claim is
+/// carried and crossed with Proctor's own post-state hash.
+public enum ActuationEffect: String, Codable, Sendable {
+    case confirmed
+    case unverifiable
+    case suspectedNoOp
 }
 
 /// *How* a step travelled, where the plane says only *which side* it travelled.
@@ -523,9 +592,42 @@ public enum ActuationRoute: String, Codable, Sendable {
 public struct Actuation: Sendable, Equatable {
     public var plane: ActuationPlane
     public var route: ActuationRoute?
-    public init(_ plane: ActuationPlane, _ route: ActuationRoute? = nil) {
+    /// Which backend performed it. Defaulted, so every existing construction —
+    /// all of them native — is unchanged.
+    public var backend: ActuationBackendID
+    /// The delegated backend's own word for how it delivered the step, verbatim.
+    /// Carried so a reader can audit the mapping in `ActuationPlane` rather than
+    /// trust it, and so an `.unknown` plane still says what it saw.
+    public var reportedMode: String?
+    /// What the backend claims about the action landing. Nil for the native
+    /// backend, which has no equivalent concept: it judges a write by reading it
+    /// back rather than by reporting a confidence.
+    public var effect: ActuationEffect?
+    /// The element handle went stale and was re-resolved before the step ran. A
+    /// step whose target was moving is a determinism signal, not an
+    /// implementation detail.
+    public var retriedOnStale: Bool
+    /// The backend escalated to the foreground for a step that asked to stay in
+    /// the background. The machine was taken without warning, which the guards
+    /// could not arm for, because a delegated post cannot be declared in advance
+    /// by the process that did not make it.
+    public var unrequestedForeground: Bool
+    /// Round trip to the backend, in milliseconds. Its own field rather than
+    /// folded into the step's elapsed time, which already includes settle.
+    public var transportMs: Int?
+
+    public init(_ plane: ActuationPlane, _ route: ActuationRoute? = nil,
+                backend: ActuationBackendID = .native, reportedMode: String? = nil,
+                effect: ActuationEffect? = nil, retriedOnStale: Bool = false,
+                unrequestedForeground: Bool = false, transportMs: Int? = nil) {
         self.plane = plane
         self.route = route
+        self.backend = backend
+        self.reportedMode = reportedMode
+        self.effect = effect
+        self.retriedOnStale = retriedOnStale
+        self.unrequestedForeground = unrequestedForeground
+        self.transportMs = transportMs
     }
 }
 
@@ -602,12 +704,44 @@ public struct StepResult: Codable, Sendable {
     public var stateHash: String?
     public var diff: SnapshotDiff?
     public var elapsedMs: Int
+    /// Which backend performed it. Every field below this line is optional and
+    /// omitted when nil, so a step the native backend ran encodes exactly as it
+    /// did before any of this existed.
+    public var backend: ActuationBackendID?
+    public var reportedMode: String?
+    public var effect: ActuationEffect?
+    public var retriedOnStale: Bool?
+    public var unrequestedForeground: Bool?
+    public var transportMs: Int?
+
     public init(index: Int, step: ActionStep, ok: Bool, plane: ActuationPlane?,
                 error: AgentError?, settle: SettleReport?, stateHash: String?,
-                diff: SnapshotDiff?, elapsedMs: Int, route: ActuationRoute? = nil) {
+                diff: SnapshotDiff?, elapsedMs: Int, route: ActuationRoute? = nil,
+                backend: ActuationBackendID? = nil, reportedMode: String? = nil,
+                effect: ActuationEffect? = nil, retriedOnStale: Bool? = nil,
+                unrequestedForeground: Bool? = nil, transportMs: Int? = nil) {
         self.index = index; self.step = step; self.ok = ok; self.plane = plane
         self.error = error; self.settle = settle; self.stateHash = stateHash
         self.diff = diff; self.elapsedMs = elapsedMs; self.route = route
+        self.backend = backend; self.reportedMode = reportedMode
+        self.effect = effect; self.retriedOnStale = retriedOnStale
+        self.unrequestedForeground = unrequestedForeground
+        self.transportMs = transportMs
+    }
+
+    /// The delegated facts a finished actuation carries, folded onto the result.
+    ///
+    /// One place rather than six assignments at the call site, so a new fact on
+    /// `Actuation` cannot reach the wire through one path and not another. The
+    /// booleans are written only when true: a native step encodes no new keys
+    /// at all, which is what keeps the existing golden output byte-identical.
+    public mutating func carry(_ actuation: Actuation) {
+        backend = actuation.backend
+        reportedMode = actuation.reportedMode
+        effect = actuation.effect
+        retriedOnStale = actuation.retriedOnStale ? true : nil
+        unrequestedForeground = actuation.unrequestedForeground ? true : nil
+        transportMs = actuation.transportMs
     }
 }
 

@@ -29,8 +29,8 @@ extension Session {
         // batch that could post from one that asked out of habit: see the note
         // there.
         LaneDemand.forBatch(kinds: steps.map(\.kind),
-                            synthetic: Self.syntheticKinds,
-                            conditional: Self.conditionalKinds,
+                            synthetic: backendSyntheticKinds,
+                            conditional: backendConditionalKinds,
                             app: window.app,
                             foreground: foreground)
     }

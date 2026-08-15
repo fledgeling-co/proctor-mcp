@@ -20,6 +20,10 @@ import ProctorCore
 actor Session {
 
     let ax: any AXEngine
+    /// What performs a step. Separate from `ax` since PRO-0044: observation and
+    /// actuation are two halves with two owners, and this is the one that can be
+    /// somebody else's.
+    let actuator: any ActuationBackend
     let capture: any CaptureEngine
     let reflector: any ReflectorBridge
     let tri: (any TriObserving)?
@@ -593,7 +597,8 @@ actor Session {
          tri: (any TriObserving)? = nil,
          scheduler: RunScheduler = RunScheduler(),
          tools: ToolProbes = ToolProbes(),
-         screenRecordingProbe: ScreenRecordingProbe = .live) {
+         screenRecordingProbe: ScreenRecordingProbe = .live,
+         actuator: (any ActuationBackend)? = nil) {
         self.runScheduler = scheduler
         self.ax = ax
         self.capture = capture
@@ -602,6 +607,10 @@ actor Session {
         self.tools = tools
         self.screenRecordingProbe = screenRecordingProbe
         self.settler = Settler(capture: capture)
+        // Defaulted to the native planes wrapping the same engine, so every
+        // existing construction — and every existing test — builds a session
+        // that actuates exactly as it did before this seam existed.
+        self.actuator = actuator ?? NativeActuationBackend(ax: ax)
     }
 
     // MARK: - Handles

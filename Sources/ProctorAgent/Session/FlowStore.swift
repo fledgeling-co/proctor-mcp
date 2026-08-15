@@ -34,11 +34,22 @@ struct RecordedStep: Codable, Sendable {
     var plane: ActuationPlane?
     var stateHash: String?
     var settleReason: SettleReport.Reason?
+    /// Which backend actuated this step when it was recorded.
+    ///
+    /// Optional, so a flow recorded before PRO-0044 reads back unchanged and
+    /// replays exactly as it did. It exists because a replay's whole claim is
+    /// that it repeats the recorded run: replay a flow through a different
+    /// actuation path and a divergence measures the paths rather than the
+    /// application, which is the one comparison a determinism score must not
+    /// quietly make.
+    var backend: ActuationBackendID?
 
     init(step: ActionStep, selector: JSONValue? = nil, plane: ActuationPlane? = nil,
-         stateHash: String? = nil, settleReason: SettleReport.Reason? = nil) {
+         stateHash: String? = nil, settleReason: SettleReport.Reason? = nil,
+         backend: ActuationBackendID? = nil) {
         self.step = step; self.selector = selector; self.plane = plane
         self.stateHash = stateHash; self.settleReason = settleReason
+        self.backend = backend
     }
 }
 

@@ -5,9 +5,16 @@ import ProctorCore
 
 extension Session {
 
-    /// The step kinds that can only travel through CGEventPost. They enter the
-    /// single WindowServer event stream, so they need the target foreground and
-    /// they are what Secure Event Input blocks.
+    /// The step kinds the NATIVE planes can only travel through CGEventPost. They
+    /// enter the single WindowServer event stream, so they need the target
+    /// foreground and they are what Secure Event Input blocks.
+    ///
+    /// Kept as a constant because it is a true description of Proctor's own
+    /// actuator, which several places still reason about directly. It is no
+    /// longer what the run consults: since PRO-0044 the question is asked of the
+    /// selected backend, because "a click needs the foreground" is a fact about
+    /// this actuator rather than about clicking, and a delegated backend that
+    /// routes an event to one process answers differently.
     static let syntheticKinds: Set<ActionStep.Kind> = [.dragPath, .hover, .click, .key]
 
     /// The kinds that *may* end up there. Both prefer the accessibility plane
@@ -18,12 +25,31 @@ extension Session {
     /// separately and a finished run reports what actually travelled.
     static let conditionalKinds: Set<ActionStep.Kind> = [.type, .scroll]
 
-    /// What this batch will do to the foreground, from its own steps, before any
-    /// of them runs. One value, read by the scheduler, the panel and the menu
-    /// bar alike.
-    static func foregroundDemand(for steps: [ActionStep], foreground: Bool) -> ForegroundDemand {
-        ForegroundDemand.forBatch(kinds: steps.map(\.kind), synthetic: syntheticKinds,
-                                  conditional: conditionalKinds, foreground: foreground)
+    /// The kinds the SELECTED backend can only deliver through the shared event
+    /// stream, and the ones it decides at the element.
+    ///
+    /// One walk of the step kinds, answered by the backend. For the native
+    /// backend these are byte-identical to the two constants above, so nothing
+    /// about a native run changes; for a delegated one they are what stops a
+    /// background-capable click being refused before it is ever attempted.
+    var backendSyntheticKinds: Set<ActionStep.Kind> {
+        Set(ActionStep.Kind.allCases.filter {
+            actuator.backgroundCapability(for: $0) == .never
+        })
+    }
+
+    var backendConditionalKinds: Set<ActionStep.Kind> {
+        Set(ActionStep.Kind.allCases.filter {
+            actuator.backgroundCapability(for: $0) == .maybe
+        })
+    }
+
+    /// What this batch will do to the foreground, from its own steps and from
+    /// what the selected backend can do with them, before any of them runs. One
+    /// value, read by the scheduler, the panel and the menu bar alike.
+    func foregroundDemand(for steps: [ActionStep], foreground: Bool) -> ForegroundDemand {
+        ForegroundDemand.forBatch(kinds: steps.map(\.kind), synthetic: backendSyntheticKinds,
+                                  conditional: backendConditionalKinds, foreground: foreground)
     }
 
     struct StepRun: Sendable {
@@ -96,11 +122,11 @@ extension Session {
             try appendToFlow(named: target, window: window, run: run, steps: steps)
         }
 
-        let demandForReport = Self.foregroundDemand(for: steps, foreground: foreground)
+        let demandForReport = foregroundDemand(for: steps, foreground: foreground)
         let result = ActResult(window: id, steps: run.results, completed: run.completed,
                                failedAt: run.failedAt, finalHash: run.finalHash,
                                foreground: ForegroundReport.from(demandForReport,
-                                                                 planes: run.results.map(\.plane)),
+                                                                 results: run.results),
                                yields: run.yields.isEmpty ? nil : run.yields,
                                takeover: run.takeover)
         var out = try JSONValue.encode(result).objectValue ?? [:]
@@ -176,7 +202,7 @@ extension Session {
         // however the batch was reached — act, a replayed flow, one pass of a
         // stability sweep, the CUA façade. A stop control that is present for
         // some kinds of run and absent for others is worse than none.
-        let demand = Self.foregroundDemand(for: steps, foreground: foreground)
+        let demand = foregroundDemand(for: steps, foreground: foreground)
         await hudRunBegan(total: steps.count, window: window, demand: demand)
         // The same fact, reachable without the panel: the menu bar mirrors this
         // and is on every display, where the panel is on one.
@@ -239,7 +265,8 @@ extension Session {
             // Resolved once and handed to every line about this step, so the
             // live line, the trail row and any refusal all name the same thing.
             let node = drawsHUD ? hudNode(for: step) : nil
-            let synthetic = Self.isSynthetic(step)
+            let capability = actuator.backgroundCapability(for: step.kind)
+            let synthetic = capability == .never
             // Whether this panel is standing where this step is about to post.
             // The plane and the geometry together, which is the whole of
             // PRO-0033: the gate exists because the window at a posted point
@@ -248,12 +275,13 @@ extension Session {
             // so it is taken as possible here and the pessimism is confined to
             // the case where being wrong costs anything — the target lying under
             // the panel.
-            let mayPost = synthetic || Self.conditionalKinds.contains(step.kind)
+            let mayPost = capability != .yes
             let stepsAside = mayPost && RunHUDGate.stepsAside(
                 points: gatePoints(for: step), panel: RunHUDGeometry.shared.panelFrame)
             SyntheticPost.shared.beginStep()
 
-            let refusal = Self.refusal(for: step, foreground: foreground)
+            let refusal = Self.refusal(for: step, foreground: foreground,
+                                       capability: capability)
             // The pointer travels before the clock starts, so the drawing does
             // not land inside the step's own elapsed time, and only for a step
             // that is actually going to run — animating toward something about
@@ -286,6 +314,14 @@ extension Session {
             }
 
             let outcome: Actuation
+            // The state before the step, read only when something else is going
+            // to perform it. A delegated backend can report that it suspects its
+            // action did nothing, and that claim is worth little on its own —
+            // crossed with an independent before-and-after reading from Proctor's
+            // own tree it becomes two observers agreeing. The native backend
+            // reports no effect and judges its writes by reading them back, so it
+            // pays nothing for this.
+            let hashBefore = actuator.id == .native ? nil : stateHashNow(window: window.id)
             do {
                 // Awaited, and that await is load-bearing rather than
                 // stylistic: it is the hop to the main actor that applies the
@@ -316,7 +352,10 @@ extension Session {
                     // the declaration and here.
                     SyntheticPost.shared.endStep()
                 }
-                outcome = try ax.perform(step: step, window: window.id, foreground: foreground)
+                outcome = try await actuator.perform(
+                    step: step,
+                    target: stepTarget(step, window: window, app: app),
+                    foreground: foreground)
             } catch let error as AgentError {
                 run.results.append(StepResult(index: index, step: step, ok: false, plane: nil,
                                               error: error, settle: nil, stateHash: nil,
@@ -369,13 +408,33 @@ extension Session {
             // `close` step ends with no window to walk. Conflating the two would
             // report a working step as a failure, so the step stays ok and the
             // read failure is carried alongside it.
-            run.results.append(StepResult(index: index, step: step, ok: true, plane: plane,
-                                          error: postStateError, settle: report,
-                                          stateHash: stateHash, diff: diff,
-                                          elapsedMs: elapsed(), route: outcome.route))
-            if let audit { auditStep(step, context: audit, ok: true, postStateHash: stateHash,
-                                     reason: postStateError?.message, seq: index,
+            //
+            // A delegated backend adds a second reason a step might not have
+            // worked, and it is the one this whole product exists to catch: the
+            // driver itself suspecting it did nothing. That claim is crossed with
+            // an independent reading of the window taken before and after, and
+            // only when both observers agree does the step stop being a success.
+            let noOp = Self.noOpVerdict(outcome, before: hashBefore, after: stateHash)
+            var result = StepResult(index: index, step: step, ok: noOp == nil, plane: plane,
+                                    error: noOp ?? postStateError, settle: report,
+                                    stateHash: stateHash, diff: diff,
+                                    elapsedMs: elapsed(), route: outcome.route)
+            result.carry(outcome)
+            run.results.append(result)
+            if let audit { auditStep(step, context: audit, ok: noOp == nil,
+                                     postStateHash: stateHash,
+                                     reason: (noOp ?? postStateError)?.message, seq: index,
                                      ms: elapsed(), plane: plane, node: node) }
+
+            // A step nothing can show happened stops the batch, exactly as any
+            // other failed step does. Continuing would run the rest of a plan on
+            // a machine that is not in the state the plan assumes.
+            if noOp != nil {
+                run.failedAt = index
+                await hud(.stepFailed(step: step, node: node))
+                ending = .failed
+                break
+            }
             run.completed += 1
             await hud(.stepSettled(step: step, node: node, settleMs: report.elapsedMs,
                                    plane: plane))
@@ -455,8 +514,15 @@ extension Session {
     /// refusals exist because the silent alternative — activating the app, or
     /// posting an event that Secure Event Input swallows — produces a result
     /// that looks background-safe or successful and is neither.
-    static func refusal(for step: ActionStep, foreground: Bool) -> AgentError? {
-        guard syntheticKinds.contains(step.kind) else { return nil }
+    ///
+    /// `capability` is the selected backend's answer for this kind, not a lookup
+    /// in a table of kinds. The refusal below is only correct when the step
+    /// genuinely cannot be delivered without the front; asserting that of a
+    /// backend that can would refuse the very steps delegation exists to make
+    /// possible.
+    static func refusal(for step: ActionStep, foreground: Bool,
+                        capability: BackgroundCapability) -> AgentError? {
+        guard capability == .never else { return nil }
 
         // The foreground contradiction is checked first: it is a property of
         // the request, fixable by the caller, where Secure Event Input is a
@@ -483,6 +549,86 @@ extension Session {
                       + "keyboard entry mode — and retry.")
         }
         return nil
+    }
+
+    /// What to hit, described so any backend can act on it.
+    ///
+    /// Resolved here, from Proctor's own tree, rather than inside a backend. That
+    /// is the whole architecture of wave 7 in one function: observation did not
+    /// move, so Proctor remains the thing that knows what an element is, and a
+    /// backend is told what to strike rather than asked what is there.
+    func stepTarget(_ step: ActionStep, window: WindowHandle,
+                    app: AppHandle?) -> StepTarget {
+        StepTarget(window: window, app: app, nodeId: step.node,
+                   identity: step.node.flatMap { identity(ofNode: $0, window: window) })
+    }
+
+    /// The element's identity, as far as a second observer could also see it.
+    ///
+    /// Only computed for a delegated backend: the native one holds a retained
+    /// `AXUIElement` that resolves across Spaces and occlusion, which is strictly
+    /// better than any re-resolution, so paying for a tree search to hand it a
+    /// description it will not read would be pure cost.
+    func identity(ofNode id: String, window: WindowHandle) -> ElementIdentity? {
+        guard actuator.id != .native else { return nil }
+        // Read rather than walk, for the same reason `stateHashNow` does: the
+        // session's revision line records what the window looked like after each
+        // step, and resolving a target is not a step.
+        let options = SnapshotOptions()
+        guard let (root, _) = try? ax.snapshot(window: window.id, root: nil,
+                                               maxDepth: options.maxDepth,
+                                               maxNodes: options.maxNodes,
+                                               includeInvisible: options.includeInvisible)
+        else { return nil }
+        return ElementIdentity.of(nodeID: id, in: root)
+    }
+
+    /// Did two independent observers agree that nothing happened?
+    ///
+    /// A backend suspecting its own no-op is a claim, and Proctor's unchanged
+    /// state hash is a measurement; either alone is weak, and together they are
+    /// the strongest thing a delegated step can say about itself. Only their
+    /// agreement fails the step.
+    ///
+    /// The asymmetry is deliberate. A driver that suspects a no-op while the tree
+    /// visibly moved has under-reported its own success, and failing that step
+    /// would turn a working run red. A driver that suspects a no-op and is right
+    /// must not report `ok: true`, because every existing reader checks `ok` and
+    /// would see a success — the same defect as adding a field nobody reads.
+    static func noOpVerdict(_ outcome: Actuation, before: String?,
+                            after: String?) -> AgentError? {
+        guard outcome.effect == .suspectedNoOp else { return nil }
+        guard let before, let after, before == after else { return nil }
+        return AgentError(
+            code: .actionNoOp,
+            message: "the actuation backend reported that this step probably did nothing, and "
+                   + "the window's accessibility state is unchanged, so two independent "
+                   + "observers agree nothing happened",
+            remedy: "This is the silent-failure case a delegated driver documents for itself — "
+                  + "a minimized window swallowing a keyboard commit, or a canvas surface with "
+                  + "no accessibility target under the point. Raise the window, or express the "
+                  + "step against an element rather than a coordinate.",
+            detail: .object(["reportedMode": .string(outcome.reportedMode ?? ""),
+                             "stateHash": .string(after)]))
+    }
+
+    /// The window's state hash right now, without touching the revision line.
+    ///
+    /// Deliberately not `walk(window:)`. That one is the session's record of
+    /// what the window looked like after each step: it advances the revision and
+    /// appends to history when the hash moves, and the diff a caller asks for is
+    /// computed against its previous entry. Reading it a second time per step,
+    /// only on the delegated path, would make `diffEach` mean something subtly
+    /// different depending on which backend was selected. This reads the same
+    /// tree and hashes it, and records nothing.
+    func stateHashNow(window id: String) -> String? {
+        let options = SnapshotOptions()
+        guard let (root, _) = try? ax.snapshot(window: id, root: nil,
+                                               maxDepth: options.maxDepth,
+                                               maxNodes: options.maxNodes,
+                                               includeInvisible: options.includeInvisible)
+        else { return nil }
+        return Canonical.hash(root)
     }
 
     // MARK: - proctor_wait

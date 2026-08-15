@@ -135,12 +135,12 @@ struct ForegroundWiringTests {
         // posting events, which is the menu bar saying the opposite of the truth.
         let h = try await harness()
         let taking = await h.session.foregroundBegan(
-            demand: Session.foregroundDemand(for: [step(.click)], foreground: true),
+            demand: await h.session.foregroundDemand(for: [step(.click)], foreground: true),
             app: "Acme Console")
         await h.session.foregroundStep(run: taking, plane: .syntheticEvent)
 
         let harmless = await h.session.foregroundBegan(
-            demand: Session.foregroundDemand(for: [step(.press)], foreground: false),
+            demand: await h.session.foregroundDemand(for: [step(.press)], foreground: false),
             app: "Other App")
         await h.session.foregroundEnded(run: harmless)
 
@@ -167,7 +167,7 @@ struct ForegroundWiringTests {
                                   ([.press, .click], true),
                                   ([.press, .raise], true),
                                   ([.type, .press], false)] {
-            let demand = Session.foregroundDemand(for: kinds.map(step), foreground: false)
+            let demand = await h.session.foregroundDemand(for: kinds.map(step), foreground: false)
             let lanes = await h.session.lanes(for: kinds.map(step), window: h.ax.window,
                                               foreground: false)
             #expect(demand.takesForeground == expected, "\(kinds)")

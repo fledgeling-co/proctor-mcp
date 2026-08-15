@@ -106,6 +106,45 @@ was found rather than the foreground being taken" visible instead of inferred.
 them before conceding, and every write is judged by reading it back, because AX
 reports success for a set the application then discards.
 
+## The actuation backend seam
+
+Since PRO-0044 the two planes above are one *backend* rather than the only way a
+step can be performed. `ActuationBackend` has a single implementation on each
+side of the seam: `NativeActuationBackend`, which forwards to the planes
+described above, and `CuaActuationBackend`, which delegates to `cua-driver`. The
+native one is the default and the delegated lane is chosen with
+`PROCTOR_ACTUATION=cua`.
+
+**Actuation is delegated; observation is not.** Proctor keeps its own
+ScreenCaptureKit path, its own frame-status reporting and its own accessibility
+walk, because a driver's screenshots carry no frame-status metadata and its own
+documentation records that its tree is unreliable on some surfaces. A layer whose
+product is catching other people's silent failures needs at least one channel it
+can trust. So the backend is told what to strike and asked what it did, and is
+never the authority on what is there or on what changed.
+
+**A kind's plane is a question for the backend, not a property of the step.**
+Proctor's own actuator can express a click only as a post into the shared event
+stream, which is why `.click`, `.key`, `.hover` and `.dragPath` need the
+foreground. That is a fact about this actuator rather than about clicking, so the
+refusal, the foreground disclosure and the queue's lane demand all ask
+`backgroundCapability(for:)` rather than consulting a list of kinds. The native
+backend's answers reproduce the old lists exactly.
+
+**Two more planes exist because a delegated step can be delivered in a way the
+original four cannot describe.** `routedEvent` is an injected event delivered to
+one process rather than to the shared stream: background-safe, and not the
+accessibility plane. `unknown` is a step performed through a delivery mode this
+build does not recognise, and it makes `ForegroundReport.note` non-nil, because
+`note == nil` is the signal callers already read for "nothing to disclose".
+
+**Addressing crosses the boundary by identity, never by position.** A target is
+matched into the backend's view through its `(role, label)` ancestry, both sides
+must agree about the element before anything is struck, and a target that moved,
+is ambiguous, or cannot be seen is refused. No coordinate is substituted for an
+element that failed to resolve, because a match resting on a position replays by
+striking an absolute point.
+
 ## Settling
 
 Settling is a conjunction of independent signals, never a sleep. `SettlePolicy`

@@ -19,7 +19,8 @@ extension Session {
                                            selector: selector(for: result.step),
                                            plane: result.plane,
                                            stateHash: result.stateHash,
-                                           settleReason: result.settle?.reason))
+                                           settleReason: result.settle?.reason,
+                                           backend: result.backend ?? actuator.id))
         }
         flow.updatedAt = Date().timeIntervalSince1970
         putFlow(flow)
@@ -124,6 +125,37 @@ extension Session {
         return .object(["deleted": .bool(existed), "name": .string(key)])
     }
 
+    /// Refuse to replay a flow through an actuation path other than the one that
+    /// recorded it.
+    ///
+    /// A replay's whole claim is that it repeats the recorded run, and a
+    /// determinism score is a comparison of what that repetition produced. Run the
+    /// two halves through different actuation paths and any divergence measures
+    /// the paths rather than the application — the one comparison the instrument
+    /// must not quietly make.
+    ///
+    /// Note where this does NOT bite, because the obvious guard is the wrong one:
+    /// a repeat sweep runs every pass inside one session with one backend, so its
+    /// passes always agree with each other trivially. Recording against replay is
+    /// where the two can genuinely differ.
+    ///
+    /// A flow recorded before backends were tracked carries no backend and is
+    /// replayed without complaint: it was recorded on the native planes, because
+    /// they were the only ones there.
+    func requireSameBackend(as flow: RecordedFlow) throws {
+        let recorded = flow.steps.compactMap(\.backend)
+        guard let was = recorded.first, was != actuator.id else { return }
+        throw AgentError(
+            code: .backendUnsupported,
+            message: "flow \"\(flow.name)\" was recorded with the \(was.rawValue) actuation "
+                   + "backend and this session is using \(actuator.id.rawValue)",
+            remedy: "Replay it on the backend that recorded it, or record it again on this one. "
+                  + "A divergence between a recording and a replay that used different actuation "
+                  + "paths measures the paths, not the application under test.",
+            detail: .object(["recordedWith": .string(was.rawValue),
+                             "running": .string(actuator.id.rawValue)]))
+    }
+
     func flowReplay(name: String, window: String?, captureEach: Bool,
                     settle: SettlePolicy, pointerMarks: Bool = false) async throws -> JSONValue {
         let flow = try flowNamed(name)
@@ -139,8 +171,9 @@ extension Session {
         // closed the same way the live path does: a target whose bundle id cannot
         // be resolved is refused whenever an allow list is in force.
         let audit = try enforcePolicy(tool: AuditTool.flowReplay, window: handle)
+        try requireSameBackend(as: flow)
         let steps = flow.steps.map(\.step)
-        let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
+        let foreground = steps.contains { backendSyntheticKinds.contains($0.kind) }
 
         // A replay drives an application exactly as `act` does, so it queues
         // exactly as `act` does: one lane set, taken after the gate and held from
@@ -206,7 +239,7 @@ extension Session {
         // kind-based note and shows here, which is the difference between
         // "contains synthetic steps" and "cannot be replayed unattended".
         let report = ForegroundReport.from(
-            Self.foregroundDemand(for: steps, foreground: foreground),
+            foregroundDemand(for: steps, foreground: foreground),
             planes: run.results.map(\.plane))
         out["foreground"] = (try? JSONValue.encode(report)) ?? .null
         if let note = report.note { out["foregroundNote"] = .string(note) }
@@ -243,6 +276,10 @@ extension Session {
         let flow = try flowNamed(name)
         let targetID = try replayWindow(flow: flow, override: window)
         let handle = try windowHandle(targetID)
+        // The same rule as a replay, and for a sharper reason: this call's whole
+        // output is a determinism score, and scoring a recording against passes
+        // driven through a different actuation path measures the paths.
+        try requireSameBackend(as: flow)
         let steps = flow.steps.map(\.step)
         let requested = max(requestedRuns, 1)
 
@@ -259,7 +296,7 @@ extension Session {
                              remedy: "Record some with proctor_flow action \"start\" and proctor_act.")
         }
 
-        let foreground = steps.contains { Self.syntheticKinds.contains($0.kind) }
+        let foreground = steps.contains { backendSyntheticKinds.contains($0.kind) }
 
         // A sweep takes its lanes ONCE, for the whole call, and holds them across
         // every repeat. Rejoining the line between passes would let another

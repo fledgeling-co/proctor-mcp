@@ -30,6 +30,37 @@ NSApplication.shared.setActivationPolicy(.accessory)
 /// only on the protocols in Contracts.swift.
 func makeAXEngine() -> any AXEngine { AXEngineImpl() }
 
+/// Which backend performs a step.
+///
+/// Proctor's own planes stay the default. The delegated lane is chosen
+/// deliberately, by an operator, and never entered by falling into it — the item
+/// that decides the native planes' long-term future is a separate one, and until
+/// it lands both paths exist so this one can be measured against the thing it
+/// replaces.
+///
+/// Nothing here executes the driver. Locating it reads the filesystem, exactly as
+/// it does for every other tool Proctor knows about; the version, signature,
+/// vocabulary and grant checks all run in preflight, on the first delegated step.
+func makeActuationBackend(ax: any AXEngine) -> any ActuationBackend {
+    let environment = ProcessInfo.processInfo.environment
+    guard CuaDriverTool.laneSelected(environment) else {
+        return NativeActuationBackend(ax: ax)
+    }
+    let presence = ToolLocator.locate(binary: CuaDriverTool.binary,
+                                      companions: [],
+                                      pathEnvironment: environment["PATH"],
+                                      home: NSHomeDirectory(),
+                                      extraDirectories: CuaDriverTool.extraDirectories,
+                                      isExecutable: ToolProbe.executableRegularFile)
+    let path = presence.path ?? ""
+    let transport: any CuaTransport =
+        environment[CuaDriverTool.transportEnv]?.lowercased() == "oneshot"
+            ? CuaOneShotTransport(path: path)
+            : CuaEndpointTransport(path: path)
+    return CuaActuationBackend(transport: transport, path: presence.path,
+                               environment: environment)
+}
+
 func makeCaptureEngine() -> any CaptureEngine { CaptureEngineImpl() }
 
 /// Assertions that need pixels or layer geometry go through the capture side's
@@ -58,11 +89,13 @@ func installTerminationHandlers(_ server: Server) -> [DispatchSourceSignal] {
 }
 
 let captureEngine = makeCaptureEngine()
+let axEngine = makeAXEngine()
 
-let session = Session(ax: makeAXEngine(),
+let session = Session(ax: axEngine,
                       capture: captureEngine,
                       reflector: NullReflectorBridge(),
-                      tri: makeTriObserver(capture: captureEngine))
+                      tri: makeTriObserver(capture: captureEngine),
+                      actuator: makeActuationBackend(ax: axEngine))
 
 let server = Server(dispatcher: Dispatcher(session: session))
 

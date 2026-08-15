@@ -186,15 +186,33 @@ public struct ForegroundReport: Codable, Sendable, Equatable {
     /// caller passing `foreground: true` by habit is paying nothing for it now,
     /// and would otherwise never learn that it was doing nothing before.
     public var requestIgnored: Bool
+    /// Steps that were performed by a backend which did not say how.
+    ///
+    /// `measured` answers "how much of this took the machine" and can only count
+    /// what it can identify. A delegated step whose delivery mode this build does
+    /// not recognise is not evidence of a background-safe run and is not evidence
+    /// of a foreground one either, so it is counted separately and `note` stops
+    /// being nil. That last part is the load-bearing half: `note == nil` is the
+    /// signal every existing reader already uses for "nothing to disclose", so a
+    /// new field alone would leave those readers believing an unproven run was
+    /// clean.
+    public var unproven: Int
+    /// A step the backend escalated to the foreground without being asked. The
+    /// machine was taken with none of the guards armed for it, because a post
+    /// made by another process cannot be declared in advance by this one.
+    public var unrequestedForeground: Int
 
     public init(declaredCertain: Int, declaredConditional: Int, measured: Int,
-                totalSteps: Int, ranInForeground: Bool, requestIgnored: Bool = false) {
+                totalSteps: Int, ranInForeground: Bool, requestIgnored: Bool = false,
+                unproven: Int = 0, unrequestedForeground: Int = 0) {
         self.declaredCertain = declaredCertain
         self.declaredConditional = declaredConditional
         self.measured = measured
         self.totalSteps = totalSteps
         self.ranInForeground = ranInForeground
         self.requestIgnored = requestIgnored
+        self.unproven = unproven
+        self.unrequestedForeground = unrequestedForeground
     }
 
     public static func from(_ demand: ForegroundDemand, planes: [ActuationPlane?]) -> ForegroundReport {
@@ -203,12 +221,50 @@ public struct ForegroundReport: Codable, Sendable, Equatable {
                          measured: planes.count(where: { $0 == .syntheticEvent }),
                          totalSteps: demand.totalSteps,
                          ranInForeground: demand.takesForeground,
-                         requestIgnored: demand.requestWasInert)
+                         requestIgnored: demand.requestWasInert,
+                         unproven: planes.count(where: { $0 == .unknown }))
+    }
+
+    /// The same, from the finished step results, so the delegated facts that only
+    /// exist per step — an unrequested escalation — reach the report.
+    ///
+    /// `ranInForeground` is taken from what actually travelled as well as from
+    /// the up-front demand: a delegated batch predicts nothing, so a run that
+    /// escalated must report the front even though its demand said otherwise.
+    public static func from(_ demand: ForegroundDemand,
+                            results: [StepResult]) -> ForegroundReport {
+        let planes = results.map(\.plane)
+        let escalations = results.count(where: { $0.unrequestedForeground == true })
+        var report = from(demand, planes: planes)
+        report.unrequestedForeground = escalations
+        if report.measured > 0 { report.ranInForeground = true }
+        return report
     }
 
     /// One sentence for a caller that reads prose rather than fields. Nil when
     /// nothing needed the front, because there is nothing to disclose.
     public var note: String? {
+        // Said first, and it is why this property can no longer return nil on
+        // the strength of the foreground counts alone. An escalation nobody
+        // asked for is the strongest thing this report can say: the machine was
+        // taken, and the guards that exist to make that visible were not armed,
+        // because the post came from another process.
+        if unrequestedForeground > 0 {
+            return "\(unrequestedForeground) of \(totalSteps) step"
+                 + "\(totalSteps == 1 ? "" : "s") was escalated to the foreground by the "
+                 + "actuation backend without being asked, so the application was brought to "
+                 + "the front with no warning shown. This run is not a background-safe one."
+        }
+        // A step nobody can account for is not a clean run. This is checked
+        // before the counts below because a run can be unproven while measuring
+        // zero synthetic steps, which is exactly the case that would otherwise
+        // return nil and read as "nothing to disclose".
+        if unproven > 0 {
+            return "\(unproven) of \(totalSteps) step\(totalSteps == 1 ? "" : "s") "
+                 + "travelled by a route this build could not identify, so whether this run "
+                 + "needed the application in front could not be established. It should not "
+                 + "be treated as background-safe."
+        }
         guard measured > 0 || ranInForeground else {
             // One exception to "nothing to disclose": the caller asked for the
             // front and no step could have used it. Nothing was taken, which is
