@@ -26,9 +26,37 @@ import Foundation
 // Everything here is pure. The caller supplies the environment and one
 // predicate; this file decides.
 
+/// Whether a tool can actually be used, as far as Proctor established.
+///
+/// The three states, and the spelling, PRO-0041 gave the grants. `unconfirmed` is
+/// a fact about Proctor's knowledge rather than about the tool: the lane may be
+/// perfectly healthy, and what is known is that nothing established it.
+public enum ToolUsability: String, Codable, Sendable, CaseIterable {
+    case usable, unusable, unconfirmed
+}
+
+/// What was consulted to reach that verdict, weakest first.
+///
+/// The floor for a tool that was *found* is `presence` — a row saying nothing at
+/// all is known about a file we just located reads as a bug rather than as
+/// caution, which is why there is no `none` case.
+///
+/// `laneReport` is deliberately not called `selfReport`: **nothing here asks a
+/// tool about itself.** `proctor_doctor` creates no process. That rung is
+/// populated only from a preflight that already ran because the lane was *used*,
+/// so it is Proctor's record of a completed act rather than a question a health
+/// check asked.
+public enum ToolEvidence: String, Codable, Sendable, CaseIterable {
+    case absent, presence, signature, installPath, laneReport
+}
+
 /// Where a tool was looked for, and what was found.
 public struct ToolPresence: Codable, Sendable, Equatable {
     public var tool: String
+    /// Whether an executable regular file of that name exists at one of the
+    /// searched paths. **This is unchanged and is not a usability claim** —
+    /// `usability` is the axis beside it, added by PRO-0050, never a
+    /// redefinition of this one.
     public var available: Bool
     /// Where it was found, or nil. On the wire because a reader whose own shell
     /// disagrees with Proctor can only settle it by comparing paths.
@@ -40,11 +68,29 @@ public struct ToolPresence: Codable, Sendable, Equatable {
     /// Siblings the tool needs that are not beside it. A half install fails one
     /// subcommand and no others, which is worth naming rather than discovering.
     public var missingCompanions: [String]
+    /// Whether this tool can be used, as far as anything established it.
+    public var usability: ToolUsability?
+    /// What backs that verdict.
+    public var evidence: ToolEvidence?
+    /// The version, when a route that runs nothing produced one. `evidence` says
+    /// which route: a version read out of an install layout is what the layout
+    /// claims, not what the binary answers.
+    public var version: String?
+    /// One line, in Proctor's own words, saying what was established and what was
+    /// not. Never a string a located tool supplied.
+    public var detail: String?
+    /// When the usability verdict was established.
+    public var checkedAt: Double?
 
     public init(tool: String, available: Bool, path: String? = nil,
-                searched: [String] = [], missingCompanions: [String] = []) {
+                searched: [String] = [], missingCompanions: [String] = [],
+                usability: ToolUsability? = nil, evidence: ToolEvidence? = nil,
+                version: String? = nil, detail: String? = nil,
+                checkedAt: Double? = nil) {
         self.tool = tool; self.available = available; self.path = path
         self.searched = searched; self.missingCompanions = missingCompanions
+        self.usability = usability; self.evidence = evidence
+        self.version = version; self.detail = detail; self.checkedAt = checkedAt
     }
 }
 

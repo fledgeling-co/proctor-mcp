@@ -56,13 +56,70 @@ final class CuaActuationBackend: ActuationBackend {
 
     func preflight() async throws {
         if let done = await state.report() { _ = done; return }
-        let report = try await CuaPreflight.run(path: path, transport: transport,
-                                                environment: environment)
-        await state.store(report)
+        // A refusal is remembered as well as a success. Without that, a lane that
+        // failed at its signature check reports the same "nothing established
+        // yet" as one nobody has used — and a health report that cannot tell a
+        // dead lane from an untried one is the thing PRO-0050 exists to fix. The
+        // stage comes from preflight's own ordered checks rather than from
+        // parsing a message.
+        let recorder = RefusalRecorder()
+        do {
+            let report = try await CuaPreflight.run(path: path, transport: transport,
+                                                    environment: environment,
+                                                    onRefusal: { stage, _ in
+                                                        recorder.record(stage)
+                                                    })
+            await state.store(report)
+        } catch {
+            await state.storeRefusal(stage: recorder.stage)
+            throw error
+        }
+    }
+
+    /// Carries the stage out of preflight's synchronous refusal callback. A class
+    /// rather than a captured `var` because the callback is not `inout`-friendly
+    /// across the async boundary.
+    private final class RefusalRecorder: @unchecked Sendable {
+        private let lock = NSLock()
+        private var value: CuaPreflightStage?
+        func record(_ stage: CuaPreflightStage) {
+            lock.lock(); value = stage; lock.unlock()
+        }
+        var stage: CuaPreflightStage? {
+            lock.lock(); defer { lock.unlock() }
+            return value
+        }
     }
 
     var laneReport: CuaLaneReport? {
         get async { await state.report() }
+    }
+
+    /// What `proctor_doctor` reports about this lane, mapped out of whatever
+    /// preflight left behind.
+    ///
+    /// **Every driver-supplied string is dropped here.** The version is what
+    /// Proctor's own parser accepted, the stage is Proctor's own enum, the
+    /// overrides are Proctor's own words for switches an operator set, and the
+    /// permission map is filtered to names Proctor recognises. The driver's
+    /// prose — its health message, its error text — reaches no part of a tool
+    /// result, because `proctor_doctor` is the first call a model makes and a
+    /// health report is not a place to pipe another process's writing into.
+    var laneHealth: ToolLaneFacts? {
+        get async {
+            if let report = await state.report() {
+                let grants = ToolLaneFacts.filterGrants(report.driverReportedGrants)
+                return ToolLaneFacts(version: report.version?.description,
+                                     healthy: true,
+                                     overrides: report.overrides,
+                                     driverReportedGrants: grants.kept,
+                                     unrecognisedGrantKeys: grants.dropped)
+            }
+            if let stage = await state.refusalStage() {
+                return ToolLaneFacts(healthy: false, failedStage: stage.rawValue)
+            }
+            return nil
+        }
     }
 
     func perform(step: ActionStep, target: StepTarget,
@@ -279,10 +336,14 @@ final class CuaActuationBackend: ActuationBackend {
         "\(candidate.role) \"\(candidate.label ?? "")\""
     }
 
-    /// Preflight's result, held once per lane.
+    /// Preflight's result, held once per lane. A refusal is held too, so a lane
+    /// that was tried and refused reads differently from one nobody has used.
     private actor LaneState {
         private var stored: CuaLaneReport?
+        private var refusal: CuaPreflightStage?
         func report() -> CuaLaneReport? { stored }
-        func store(_ report: CuaLaneReport) { stored = report }
+        func store(_ report: CuaLaneReport) { stored = report; refusal = nil }
+        func refusalStage() -> CuaPreflightStage? { refusal }
+        func storeRefusal(stage: CuaPreflightStage?) { refusal = stage ?? .presence }
     }
 }

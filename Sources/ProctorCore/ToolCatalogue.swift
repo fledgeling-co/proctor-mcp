@@ -582,6 +582,17 @@ public enum ToolCatalogue {
         whether observers are alive, whether Secure Event Input is active, and whether the \
         shortcuts CLI is available.
 
+        Also reports the toolchain Proctor depends on but does not ship — Obscura, simctl and \
+        Xcode, cua-driver, Maestro — with where each was found, whether it is usable, and what \
+        established that; and which lanes this machine actually has, so a caller learns that \
+        there is no iOS lane here before it tries to use one rather than after. **This call runs \
+        none of those tools.** A usability of `unconfirmed` is a fact about what Proctor has \
+        established, not a fault, and calling doctor again will not change it.
+
+        The `policy` block is the gate's posture — its mode, the sizes of its lists, whether an \
+        approval token is live, and whether the audit trail is writable and verifying clean. The \
+        rules themselves are not here; proctor_policy answers those.
+
         Each missing grant comes with the exact fix for the running OS version. Accessibility can \
         be granted by profile on macOS 26 but that path is removed in 27 in favour of declarative \
         App Settings; Screen Recording can never be granted silently on any version. Getting this \

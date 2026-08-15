@@ -200,8 +200,36 @@ extension Session {
         return .object(out)
     }
 
-    func policyStatus() -> JSONValue {
+    /// The gate's posture for `proctor_doctor`: shape and counts, never rules.
+    ///
+    /// A sibling of `policyStatus()` rather than a filter over it, and that is the
+    /// load-bearing part. `Toolchain.posture` takes counts and booleans, so there
+    /// is no parameter here that could carry a bundle identifier, a filesystem
+    /// root, a key id or a token — a later edit cannot leak one through this seam
+    /// without changing a signature, which is a much louder thing to do than
+    /// adding a key to a dictionary.
+    ///
+    /// `policyStatus()` is deliberately unchanged. Narrowing what *that* tool
+    /// answers would change a shipped surface, and it is recorded as child work
+    /// rather than done quietly here.
+    func policyPosture() -> DoctorReport.PolicyPosture {
         loadPolicyIfNeeded()
+        let audit = AuditLog.status()
+        let verdict = AuditLog.verify()
+        return Toolchain.posture(
+            allowCount: policy.allow.count,
+            blockCount: policy.block.count,
+            sensitiveCount: policy.sensitive.count,
+            approvalTokenLive: approvalToken.map { clock() < $0.expiresAt } ?? false,
+            fsRootCount: fsRootsList().count,
+            auditWritable: audit.writable,
+            auditClean: verdict.isClean,
+            auditKeyConfirmed: verdict.keyConfirmed,
+            auditEntries: verdict.total,
+            auditDropped: audit.dropped)
+    }
+
+    func policyStatus() -> JSONValue {        loadPolicyIfNeeded()
         let audit = AuditLog.status()
         var out: [String: JSONValue] = [
             "allow": .array(policy.allow.sorted().map(JSONValue.string)),

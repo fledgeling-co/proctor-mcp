@@ -184,10 +184,14 @@ struct BrowserLaneWiringTests {
                     // an unconditional third row rather than a fourth top-level
                     // boolean. It is unconditional because "does this machine have
                     // an iOS lane" is not behind an operator switch the way the
-                    // second browser lane is.
+                    // second browser lane is. PRO-0050 added cua-driver and
+                    // maestro to the same array for the same reason.
                     #expect(report.tools.map(\.tool)
-                            == (laneSet ? [ObscuraTool.binary, BrowserUseTool.binary, "simctl"]
-                                        : [ObscuraTool.binary, "simctl"]))
+                            == (laneSet
+                                ? [ObscuraTool.binary, BrowserUseTool.binary, "simctl",
+                                   CuaDriverTool.binary, MaestroTool.binary]
+                                : [ObscuraTool.binary, "simctl",
+                                   CuaDriverTool.binary, MaestroTool.binary]))
                     // The grandfathered spelling has to agree with the array's
                     // first entry, or an old client and a new one see different
                     // machines.

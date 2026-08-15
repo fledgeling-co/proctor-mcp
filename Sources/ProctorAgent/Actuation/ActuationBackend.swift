@@ -46,11 +46,32 @@ protocol ActuationBackend: AnyObject, Sendable {
     /// a batch with a schema error.
     func preflight() async throws
 
+    /// What this backend has already established about itself, for
+    /// `proctor_doctor`.
+    ///
+    /// **Asking never establishes anything.** This reads a result preflight left
+    /// behind when the lane was used; it does not run a check, start a process or
+    /// reach a transport. A health check that probed would be a side-effect
+    /// channel on the first call the Proctor skill tells a model to make, and a
+    /// backend whose readiness could be changed by asking about it would report a
+    /// state no caller ever saw.
+    ///
+    /// Nil means nothing has established anything yet, which the report renders
+    /// as `unconfirmed` rather than as a fault.
+    var laneHealth: ToolLaneFacts? { get async }
+
     /// Perform one step. The target is resolved by the caller, from Proctor's own
     /// observation, so a backend is told what to hit and is never asked what is
     /// there.
     func perform(step: ActionStep, target: StepTarget,
                  foreground: Bool) async throws -> Actuation
+}
+
+extension ActuationBackend {
+    /// A backend that is the process it runs in has nothing to establish about
+    /// itself: its permissions are Proctor's own, and `proctor_doctor` reports
+    /// those as grants. Only a delegated backend overrides this.
+    var laneHealth: ToolLaneFacts? { get async { nil } }
 }
 
 /// What to hit, described so that any backend can act on it.

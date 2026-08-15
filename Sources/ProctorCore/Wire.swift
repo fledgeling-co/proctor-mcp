@@ -889,11 +889,114 @@ public struct DoctorReport: Codable, Sendable {
     ///
     /// Optional so a report from an older agent still decodes against a newer shim.
     public var agentBuild: BuildIdentity?
+    /// What this machine can actually do, lane by lane: the Mac's own planes,
+    /// the browser lane, the iOS lane and the delegated Cua lane.
+    ///
+    /// Derived from the grants and the tool rows rather than reported
+    /// independently, so a lane cannot claim to be ready while the thing it needs
+    /// is missing. Optional so an older agent's report still decodes.
+    public var lanes: [Lane]?
+    /// The posture of the gate that will refuse a caller's next action, and of
+    /// the trail that will record it. **Shape and posture, never rules** — no
+    /// bundle id, no path, no key id, no token. See `PolicyPosture`.
+    public var policy: PolicyPosture?
     /// Untouched by Obscura either way: `ready` means Proctor can do its own job,
     /// and Proctor drives native applications without it. A health report that
     /// failed on an advisory tool would be lying about what is broken.
+    ///
+    /// Untouched by every entry in `lanes` for the same reason: Proctor drives
+    /// native macOS applications with no Obscura, no Xcode, no cua-driver and no
+    /// Maestro.
     public var ready: Bool
     public var blockers: [String]
+
+    /// What one lane needs, and whether this machine has it.
+    public struct Lane: Codable, Sendable, Equatable {
+        /// `mac`, `browser`, `ios` or `cua`.
+        public var lane: String
+        /// `ready`, `unavailable` or `unconfirmed`. Three states for the reason
+        /// PRO-0041 gave the grants: a lane nothing has established is not the
+        /// same as a lane known to be broken, and sending somebody to fix the
+        /// second when they have the first is the defect that item closed.
+        public var state: String
+        /// Whether this lane is **confirmed** usable. Derived from `state` and
+        /// fail-closed: `unconfirmed` reads false, exactly as `denied` does.
+        ///
+        /// Spelled `ready` rather than `available` deliberately. A tool row's
+        /// `available` means "a file of that name is there", and one word meaning
+        /// two things across two rows of the same report is how a consumer comes
+        /// to believe a lane works because a file exists.
+        public var ready: Bool
+        /// The tool rows this lane depends on.
+        public var requires: [String]
+        /// One line per reason it is not ready.
+        public var blockers: [String]
+        /// A standing qualification that is not a blocker.
+        public var note: String?
+
+        public init(lane: String, state: String, requires: [String] = [],
+                    blockers: [String] = [], note: String? = nil) {
+            self.lane = lane; self.state = state; self.requires = requires
+            self.blockers = blockers; self.note = note
+            self.ready = state == "ready"
+        }
+    }
+
+    /// The gate's shape and the trail's health, with nothing in it that names an
+    /// application, a path or a secret.
+    ///
+    /// `proctor_doctor` is called before anything is established, so reporting
+    /// the gate's rules here would make a health check a way to read the
+    /// configuration. What a model needs before its first call is whether it is
+    /// likely to be refused and whether it will be recorded, and both are
+    /// answerable from posture.
+    ///
+    /// **This is a convention, not a boundary, and saying otherwise would be a
+    /// lie.** `proctor_policy` action `status` is ungated and returns the lists,
+    /// the roots and the trail's path to any caller, and the gate's own refusals
+    /// name the bundle id they refused. A count is also close to a rule at the
+    /// extremes: an allow list with no entries refuses everything. Withholding
+    /// here is still right — a health check is the wrong place to hand out
+    /// configuration, and the day that tool narrows this will not have to change.
+    public struct PolicyPosture: Codable, Sendable, Equatable {
+        /// `allowList`, `blockOnly` or `open`.
+        public var mode: String
+        public var allowCount: Int
+        public var blockCount: Int
+        public var sensitiveCount: Int
+        /// Whether an approval token is live right now. Never the token, and
+        /// never the application it is scoped to — a scope is a rule.
+        public var approvalTokenLive: Bool
+        public var fsJailDeclared: Bool
+        public var fsRootCount: Int
+        public var auditWritable: Bool
+        public var auditSealed: Bool
+        public var auditSigned: Bool
+        /// Whether the trail verifies clean. Sealing hides the contents; this is
+        /// whether it is the trail Proctor wrote.
+        public var auditClean: Bool
+        public var auditKeyConfirmed: Bool
+        public var auditEntries: Int
+        /// Entries that could not be written this run. An action that was never
+        /// recorded leaves no broken link to find, so a clean verdict beside a
+        /// non-zero count here is not a complete trail.
+        public var auditDroppedThisRun: Int?
+        public var note: String
+
+        public init(mode: String, allowCount: Int, blockCount: Int, sensitiveCount: Int,
+                    approvalTokenLive: Bool, fsJailDeclared: Bool, fsRootCount: Int,
+                    auditWritable: Bool, auditSealed: Bool, auditSigned: Bool,
+                    auditClean: Bool, auditKeyConfirmed: Bool, auditEntries: Int,
+                    auditDroppedThisRun: Int? = nil, note: String) {
+            self.mode = mode; self.allowCount = allowCount; self.blockCount = blockCount
+            self.sensitiveCount = sensitiveCount; self.approvalTokenLive = approvalTokenLive
+            self.fsJailDeclared = fsJailDeclared; self.fsRootCount = fsRootCount
+            self.auditWritable = auditWritable; self.auditSealed = auditSealed
+            self.auditSigned = auditSigned; self.auditClean = auditClean
+            self.auditKeyConfirmed = auditKeyConfirmed; self.auditEntries = auditEntries
+            self.auditDroppedThisRun = auditDroppedThisRun; self.note = note
+        }
+    }
 
     public struct Grant: Codable, Sendable {
         public var name: String              // Accessibility, Screen Recording, Automation
@@ -966,6 +1069,7 @@ public struct DoctorReport: Codable, Sendable {
                 obscuraUnavailable: ToolAbsence? = nil,
                 tools: [ToolPresence] = [], secondLane: String = SecondLaneState.off.rawValue,
                 agentBuild: BuildIdentity? = nil,
+                lanes: [Lane]? = nil, policy: PolicyPosture? = nil,
                 ready: Bool, blockers: [String]) {
         self.agentVersion = agentVersion; self.protocolVersion = protocolVersion
         self.osVersion = osVersion; self.agentRunning = agentRunning
@@ -976,6 +1080,8 @@ public struct DoctorReport: Codable, Sendable {
         self.obscuraUnavailable = obscuraUnavailable
         self.tools = tools; self.secondLane = secondLane
         self.agentBuild = agentBuild
+        self.lanes = lanes
+        self.policy = policy
         self.ready = ready
         self.blockers = blockers
     }

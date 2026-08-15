@@ -116,6 +116,64 @@ final class ToolProbe: @unchecked Sendable {
     static func simctlOnDisk() -> ToolPresence {
         SimctlLocator.onDisk()
     }
+
+    /// Maestro, the iOS flow runner. Located the same way as the browser tools
+    /// and, like them, never executed: `maestro --version` costs 3.9 to 5.3
+    /// seconds because it starts a JVM, which is roughly twice the interval the
+    /// status window polls `proctor_doctor` at. The version comes off the install
+    /// layout instead, for free.
+    static func maestroOnDisk() -> ToolPresence {
+        ToolLocator.locate(binary: MaestroTool.binary,
+                           companions: [],
+                           pathEnvironment: ProcessInfo.processInfo.environment["PATH"],
+                           home: NSHomeDirectory(),
+                           extraDirectories: MaestroTool.extraDirectories,
+                           isExecutable: executableRegularFile)
+    }
+
+    /// `cua-driver`, the delegated actuation lane's binary. Located here and
+    /// never run here — what a stat cannot answer about it is answered by a
+    /// signature read and by whatever preflight already established.
+    static func cuaDriverOnDisk() -> ToolPresence {
+        ToolLocator.locate(binary: CuaDriverTool.binary,
+                           companions: [],
+                           pathEnvironment: ProcessInfo.processInfo.environment["PATH"],
+                           home: NSHomeDirectory(),
+                           extraDirectories: CuaDriverTool.extraDirectories,
+                           isExecutable: executableRegularFile)
+    }
+
+    // MARK: - Versions that cost nothing to read
+
+    /// The target of a symlink, or nil when the path is not one.
+    ///
+    /// Homebrew writes the version into it — `/opt/homebrew/bin/maestro` points at
+    /// `../Cellar/maestro/2.4.0/bin/maestro` — so a `readlink` answers a question
+    /// that otherwise costs a JVM start. `Toolchain.versionFromInstallPath`
+    /// decides what the target means; this only reads it.
+    static func symlinkTarget(_ path: String?) -> String? {
+        guard let path else { return nil }
+        return try? FileManager.default.destinationOfSymbolicLink(atPath: path)
+    }
+
+    /// Xcode's own version, read from the root-owned `version.plist` beside the
+    /// developer directory. Nothing is executed, and the file is not one a user
+    /// can rewrite.
+    ///
+    /// Measured on this machine: `CFBundleShortVersionString` 26.6, build 17F113.
+    static func xcodeVersion(simctlPath: String?) -> String? {
+        // `<developer dir>/usr/bin/simctl` back to `<developer dir>`.
+        guard let simctlPath, simctlPath.hasSuffix("/usr/bin/simctl") else { return nil }
+        let developerDirectory = String(simctlPath.dropLast("/usr/bin/simctl".count))
+        let plist = Toolchain.xcodeVersionPlistPath(developerDirectory: developerDirectory)
+        guard let data = FileManager.default.contents(atPath: plist),
+              let parsed = try? PropertyListSerialization.propertyList(
+                  from: data, options: [], format: nil) as? [String: Any],
+              let short = parsed["CFBundleShortVersionString"] as? String
+        else { return nil }
+        if let build = parsed["ProductBuildVersion"] as? String { return "\(short) (\(build))" }
+        return short
+    }
 }
 
 /// Both browser tools, and the operator's switch, as one object.
@@ -138,6 +196,16 @@ final class ToolProbes: Sendable {
     /// does not appear or vanish mid-session, and unlike Obscura, Proctor asks
     /// nobody to install it in the middle of a run.
     let simctl: ToolProbe
+    /// The delegated actuation lane's binary, and the iOS flow runner. Both TTLs
+    /// long, for the same reason as simctl's: Proctor recommends neither
+    /// mid-run, so there is nothing to poll for.
+    let cuaDriver: ToolProbe
+    let maestro: ToolProbe
+    /// What `cua-driver`'s code signature says, cached on the file's identity.
+    /// Held here beside the presences because it answers the same question they
+    /// do — can this be used — and because it is the one part of that answer a
+    /// stat cannot give.
+    let cuaSignature: SignatureVerdictCache
     let environment: [String: String]
 
     init(obscura: ToolProbe = ToolProbe(),
@@ -147,10 +215,20 @@ final class ToolProbes: Sendable {
          simctl: ToolProbe = ToolProbe(probe: ToolProbe.simctlOnDisk,
                                        presentTTL: ToolProbe.presentTTL,
                                        absentTTL: ToolProbe.presentTTL),
+         cuaDriver: ToolProbe = ToolProbe(probe: ToolProbe.cuaDriverOnDisk,
+                                          presentTTL: ToolProbe.presentTTL,
+                                          absentTTL: ToolProbe.presentTTL),
+         maestro: ToolProbe = ToolProbe(probe: ToolProbe.maestroOnDisk,
+                                        presentTTL: ToolProbe.presentTTL,
+                                        absentTTL: ToolProbe.presentTTL),
+         cuaSignature: SignatureVerdictCache = SignatureVerdictCache(),
          environment: [String: String] = ProcessInfo.processInfo.environment) {
         self.obscura = obscura
         self.browserUse = browserUse
         self.simctl = simctl
+        self.cuaDriver = cuaDriver
+        self.maestro = maestro
+        self.cuaSignature = cuaSignature
         self.environment = environment
     }
 

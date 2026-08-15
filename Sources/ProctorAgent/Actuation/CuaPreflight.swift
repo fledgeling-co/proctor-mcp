@@ -68,21 +68,33 @@ enum CuaPreflight {
     /// Run the ordered checks. Each failure is its own refusal, naming what was
     /// found, what is supported and what to do — never a schema error three steps
     /// into a batch.
+    ///
+    /// `onRefusal` is told which check refused before the error is thrown.
+    /// `CuaPreflightStage` was declared with this file and left unused; this is
+    /// what it was for. `proctor_doctor` records the stage so a dead lane can be
+    /// reported as dead *and say where*, without a health check re-running any of
+    /// this — the refusal is remembered from the attempt that actually happened.
     static func run(path: String?, transport: any CuaTransport,
                     environment: [String: String] = ProcessInfo.processInfo.environment,
-                    verifySignature: (String) -> SignatureVerdict = verifySignature)
+                    verifySignature: (String) -> SignatureVerdict = verifySignature,
+                    onRefusal: (CuaPreflightStage, AgentError) -> Void = { _, _ in })
     async throws -> CuaLaneReport {
         var report = CuaLaneReport()
 
+        func refuse(_ stage: CuaPreflightStage, _ error: AgentError) -> AgentError {
+            onRefusal(stage, error)
+            return error
+        }
+
         // 1. Presence. Executes nothing; this is the filesystem answer.
         guard let path, !path.isEmpty else {
-            throw AgentError(
+            throw refuse(.presence, AgentError(
                 code: .backendUnavailable,
                 message: "the Cua actuation lane is selected but cua-driver was not found on "
                        + "this machine",
                 remedy: "Install it and re-check with proctor_doctor, or unset PROCTOR_ACTUATION "
                       + "to use Proctor's own actuation planes. Proctor never installs anything "
-                      + "on its own.")
+                      + "on its own."))
         }
         report.path = path
 
@@ -93,7 +105,7 @@ enum CuaPreflight {
         } else if environment[allowUnsignedEnv] == "1" {
             report.overrides.append("unsignedBinaryAccepted")
         } else {
-            throw AgentError(
+            throw refuse(.signature, AgentError(
                 code: .backendUnsupported,
                 message: "cua-driver at \(path) \(verdict.describe(expecting: expectedIdentifier)), "
                        + "so it was not executed",
@@ -102,25 +114,25 @@ enum CuaPreflight {
                       + "\(allowUnsignedEnv)=1 to accept this one — which stamps every record "
                       + "the lane produces.",
                 detail: .object(["path": .string(path),
-                                 "expected": .string(expectedIdentifier)]))
+                                 "expected": .string(expectedIdentifier)])))
         }
 
         // 3. Version. The driver's claim about itself.
         let versionReply = try await transport.send(CuaRequest(verb: .version))
         guard let raw = versionReply.version, let version = CuaVersion.parse(raw) else {
-            throw AgentError(
+            throw refuse(.version, AgentError(
                 code: .backendUnsupported,
                 message: "cua-driver did not report a version this build could read",
                 remedy: "A build whose version cannot be read is as unsupported as one outside "
                       + "the range \(CuaVersion.supportedRangeDescription).",
-                detail: .object(["reported": .string(versionReply.version ?? "")]))
+                detail: .object(["reported": .string(versionReply.version ?? "")])))
         }
         report.version = version
         if !version.isSupported {
             if environment[allowUnsupportedEnv] == "1" {
                 report.overrides.append("unsupportedVersionForced")
             } else {
-                throw AgentError(
+                throw refuse(.version, AgentError(
                     code: .backendUnsupported,
                     message: "cua-driver \(version) is outside the supported range "
                            + "\(CuaVersion.supportedRangeDescription)",
@@ -129,7 +141,7 @@ enum CuaPreflight {
                           + "range is one minor version because the driver is pre-1.0 and ships "
                           + "daily.",
                     detail: .object(["found": .string(version.description),
-                                     "supported": .string(CuaVersion.supportedRangeDescription)]))
+                                     "supported": .string(CuaVersion.supportedRangeDescription)])))
             }
         }
 
@@ -144,7 +156,7 @@ enum CuaPreflight {
             report.vocabulary = vocabulary
             let unknown = vocabulary.filter { CuaVocabulary.planes[$0] == nil }
             if !unknown.isEmpty {
-                throw AgentError(
+                throw refuse(.capabilities, AgentError(
                     code: .backendUnsupported,
                     message: "cua-driver reports delivery paths this build cannot map: "
                            + unknown.sorted().joined(separator: ", "),
@@ -154,20 +166,20 @@ enum CuaPreflight {
                           + "\(CuaVersion.supportedRangeDescription).",
                     detail: .object(["unmapped": .array(unknown.sorted().map { .string($0) }),
                                      "known": .array(CuaVocabulary.planes.keys.sorted()
-                                                                          .map { .string($0) })]))
+                                                                          .map { .string($0) })])))
             }
         }
 
         // 5. Grants, asked for rather than read. See the note on the field.
         let health = try await transport.send(CuaRequest(verb: .health))
         if !health.ok {
-            throw AgentError(
+            throw refuse(.grants, AgentError(
                 code: .backendUnavailable,
                 message: "cua-driver reports it is not healthy enough to actuate: "
                        + (health.message ?? "no reason given"),
                 remedy: "The grants that do the work belong to the driver's own identity, not "
                       + "Proctor's, so Proctor's own permissions being in order says nothing "
-                      + "about this. Run the driver's own doctor.")
+                      + "about this. Run the driver's own doctor."))
         }
         return report
     }

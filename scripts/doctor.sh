@@ -154,6 +154,95 @@ else
   warn "agent log" "no log yet at $LOG — the agent has not run"
 fi
 
+# --- toolchain ---------------------------------------------------------------
+#
+# The tools Proctor depends on but does not ship. The search order is NOT written
+# out here: it is generated from ProctorCore.Toolchain into the file sourced
+# below, because two hand-written copies of one list in two languages is two
+# lists that will disagree. A test fails the build when they drift.
+#
+# What this section is actually for is the disagreement. A launchd agent inherits
+# no login shell's PATH, so a tool your terminal finds can be invisible to the
+# agent — which is the failure that produces "but it IS installed". This script
+# runs in your shell and knows both answers, so it can say which.
+
+TOOLCHAIN_LIST="$(cd "$(dirname "$0")" && pwd)/generated/toolchain-search.sh"
+
+if [ -f "$TOOLCHAIN_LIST" ]; then
+  # shellcheck source=/dev/null
+  . "$TOOLCHAIN_LIST"
+
+  # What the agent can reach: the explicit list, plus the minimal PATH launchd
+  # hands it. Anything found only outside this set is found by you and not by it.
+  AGENT_DIRECTORIES=("${PROCTOR_TOOL_DIRECTORIES[@]}" /usr/bin /bin /usr/sbin /sbin)
+
+  index=0
+  while [ "$index" -lt "${#PROCTOR_TOOL_NAMES[@]}" ]; do
+    TOOL="${PROCTOR_TOOL_NAMES[$index]}"
+    COMPANIONS="${PROCTOR_TOOL_COMPANIONS[$index]}"
+    index=$((index + 1))
+
+    AGENT_HIT=""
+    for dir in "${AGENT_DIRECTORIES[@]}"; do
+      expanded="${dir/#\~/$HOME}"
+      if [ -x "$expanded/$TOOL" ] && [ -f "$expanded/$TOOL" ]; then
+        AGENT_HIT="$expanded/$TOOL"
+        break
+      fi
+    done
+
+    SHELL_HIT="$(command -v "$TOOL" 2>/dev/null || true)"
+
+    if [ -n "$AGENT_HIT" ]; then
+      ok "$TOOL" "$AGENT_HIT"
+      MISSING_COMPANIONS=""
+      for companion in $COMPANIONS; do
+        if [ ! -x "$(dirname "$AGENT_HIT")/$companion" ]; then
+          MISSING_COMPANIONS="$MISSING_COMPANIONS $companion"
+        fi
+      done
+      if [ -n "$MISSING_COMPANIONS" ]; then
+        warn "$TOOL" "missing beside it:$MISSING_COMPANIONS"
+        note "A half install fails the subcommands that need it and no others."
+      fi
+    elif [ -n "$SHELL_HIT" ]; then
+      # The row this whole section exists for.
+      warn "$TOOL" "found at $SHELL_HIT, which the agent cannot see"
+      note "That directory is not in Proctor's search list, and a launchd agent"
+      note "inherits no login shell's PATH. Your shell and the agent honestly"
+      note "disagree about whether this tool is installed; proctor_doctor will"
+      note "report it missing. Move or link it into one of:"
+      for dir in "${PROCTOR_TOOL_DIRECTORIES[@]}"; do note "  $dir"; done
+    else
+      warn "$TOOL" "not installed"
+    fi
+  done
+
+  note "This section reports presence only. Whether a tool actually WORKS —"
+  note "a driver's daemon, its version, its own permissions — is answered by"
+  note "proctor_doctor, which can see what the agent established."
+else
+  warn "toolchain" "$TOOLCHAIN_LIST is missing, so the search order is unknown here"
+  note "Regenerate it from the Swift definition; see ProctorCore/Toolchain.swift."
+fi
+
+# simctl is deliberately not in that list: it lives inside the active developer
+# directory rather than in a bin directory. Stated once in each language — the
+# Swift side is SimctlLocator.swift, and the generated fragment says so too.
+if DEVELOPER_DIR_PATH="$(xcode-select -p 2>/dev/null)" && [ -n "$DEVELOPER_DIR_PATH" ]; then
+  if [ -x "$DEVELOPER_DIR_PATH/usr/bin/simctl" ]; then
+    XCODE_VERSION="$(plutil -extract CFBundleShortVersionString raw \
+      "$DEVELOPER_DIR_PATH/../version.plist" 2>/dev/null || echo unknown)"
+    ok "simctl" "$DEVELOPER_DIR_PATH/usr/bin/simctl (Xcode $XCODE_VERSION)"
+  else
+    warn "simctl" "no simctl under $DEVELOPER_DIR_PATH — the iOS lane is unavailable"
+  fi
+else
+  warn "simctl" "no developer directory selected — the iOS lane is unavailable"
+fi
+
+printf '\n'
+
 # --- secure event input -----------------------------------------------------
 
 SEI_PID="$(ioreg -l -d 1 -k IOConsoleUsers 2>/dev/null \

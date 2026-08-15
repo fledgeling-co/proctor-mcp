@@ -40,6 +40,12 @@ final class FakeActuationBackend: ActuationBackend, @unchecked Sendable {
 
     func preflight() async throws {}
 
+    /// What this backend has established about itself, for `proctor_doctor`.
+    /// Set by a test; reading it establishes nothing, which is the property the
+    /// real one has to have.
+    var laneHealthValue: ToolLaneFacts?
+    var laneHealth: ToolLaneFacts? { get async { laneHealthValue } }
+
     func perform(step: ActionStep, target: StepTarget,
                  foreground: Bool) async throws -> Actuation {
         let index = lock.withLock { () -> Int in
