@@ -42,6 +42,13 @@ final class FakeAX: AXEngine, @unchecked Sendable {
     var nodeRole = "AXButton"
     var nodeFrame = Rect(x: 0, y: 0, w: 40, h: 20)
 
+    /// Nodes `node(id:)` should answer with by id, for a test that needs more
+    /// than one — a subject, its container and the window are three different
+    /// rectangles, and a geometry assertion cannot be exercised against a fake
+    /// that answers the same node to every id. Empty is the single-node
+    /// behaviour every other suite is written against.
+    var nodesByID: [String: AXNode] = [:]
+
     init(bundleId: String, appID: String = "app-1", windowID: String = "win-1") {
         app = AppHandle(id: appID, pid: 4242, bundleId: bundleId, name: "Fake")
         window = WindowHandle(id: windowID, app: appID, title: "Fake Window",
@@ -66,7 +73,7 @@ final class FakeAX: AXEngine, @unchecked Sendable {
 
     func find(window: String, predicate: FindPredicate, limit: Int) throws -> [AXNode] { [node] }
 
-    func node(id: String) throws -> AXNode { node }
+    func node(id: String) throws -> AXNode { nodesByID[id] ?? node }
 
     func perform(step: ActionStep, window: String, foreground: Bool) throws -> Actuation {
         let index = performed.count

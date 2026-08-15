@@ -191,7 +191,8 @@ extension Session {
 
         case "horizontalAlignment":
             return horizontalAlignment(spec: spec, subject: subject(), expected: expected,
-                                       tolerance: tolerance ?? 8.0, index: index, window: window)
+                                       tolerance: tolerance ?? HorizontalPlacement.defaultTolerance,
+                                       index: index, window: window)
 
         case "minHitSize":
             return await hitSize(subject: subject(), expected: expected, window: window)
@@ -311,30 +312,120 @@ extension Session {
             return Outcome(status: .skipped, observed: .null, expected: expected,
                            reason: "\(node.role) exposes no frame", node: node.id)
         }
-        let (container, _) = referenceRect(spec["container"] ?? .null, index: index, window: window)
-        let refRect = container ?? (try? ax.node(id: window.id))?.frame
-        guard let refRect else {
+        guard HorizontalPlacement.isMeasurable(frame) else {
+            // A NaN width compares false against everything, so without this the
+            // element would come back a confident `custom`; a finite origin with
+            // a NaN width would come back a confident `left`.
             return Outcome(status: .skipped, observed: frame.json, expected: expected,
-                           reason: "could not resolve container or window frame", node: node.id)
+                           reason: "\(node.role) reports a frame that cannot be measured "
+                                 + "horizontally (x \(frame.x), width \(frame.w))", node: node.id)
         }
-        let wanted = expected.stringValue?.lowercased() ?? "leading"
-        let isCentered = abs(frame.centerX - refRect.centerX) <= tolerance
-        let isLeading = abs(frame.x - refRect.x) <= (tolerance * 3.0) && !isCentered
-        let isTrailing = abs(frame.maxX - refRect.maxX) <= (tolerance * 3.0) && !isCentered
 
-        let observedAlignment = isCentered ? "center" : (isLeading ? "leading" : (isTrailing ? "trailing" : "custom"))
-        let ok = (wanted == observedAlignment) || (wanted == "left" && isLeading)
+        // A container that was asked for must resolve. `referenceRect` returns
+        // nil both for "none given" and for "given but unreadable", and
+        // answering the second against the window would be a confident verdict
+        // about a different rectangle — with nothing in the outcome saying so.
+        let containerSpec = spec["container"] ?? .null
+        var containerID: String?
+        var refRect: Rect
+        var defaultedToWindow = false
+        if containerSpec != .null {
+            let (rect, id) = referenceRect(containerSpec, index: index, window: window)
+            guard let rect else {
+                return Outcome(status: .skipped, observed: frame.json, expected: expected,
+                               reason: "the container has no readable frame; give `container` as a "
+                                     + "node id or as [x,y,w,h], or omit it to use the window",
+                               node: node.id)
+            }
+            refRect = rect
+            containerID = id
+        } else {
+            guard let windowFrame = (try? ax.node(id: window.id))?.frame else {
+                return Outcome(status: .skipped, observed: frame.json, expected: expected,
+                               reason: "no `container` was given and the window exposes no frame, "
+                                     + "so there is nothing to measure the element against",
+                               node: node.id)
+            }
+            refRect = windowFrame
+            defaultedToWindow = true
+        }
+        guard HorizontalPlacement.isMeasurable(refRect) else {
+            return Outcome(status: .skipped, observed: frame.json, expected: expected,
+                           reason: "the \(defaultedToWindow ? "window" : "container") reports a "
+                                 + "frame that cannot be measured horizontally "
+                                 + "(x \(refRect.x), width \(refRect.w))", node: node.id)
+        }
 
-        return Outcome(status: ok ? .pass : .fail,
-                       observed: .string(observedAlignment),
-                       expected: .string(wanted),
-                       reason: ok ? nil : "Element observed as '\(observedAlignment)' but expected '\(wanted)'",
-                       node: node.id,
-                       detail: .object([
-                        "elementFrame": frame.json,
-                        "containerFrame": refRect.json,
-                        "isCentered": .bool(isCentered)
-                       ]))
+        let reading = HorizontalPlacement.read(element: frame, container: refRect,
+                                               tolerance: tolerance)
+        let observedWord: JSONValue = {
+            if reading.isCustom { return .string("custom") }
+            if let single = reading.placement { return .string(single.rawValue) }
+            return .array(reading.nearest.map { .string($0.rawValue) })
+        }()
+        var detail: [String: JSONValue] = [
+            "tolerance": .number(reading.tolerance),
+            "leftOffset": .number(reading.leftOffset),
+            "rightOffset": .number(reading.rightOffset),
+            "centreOffset": .number(reading.centreOffset),
+            "container": refRect.json,
+            "containerDefaultedToWindow": .bool(defaultedToWindow)
+        ]
+        if let containerID { detail["containerNode"] = .string(containerID) }
+
+        // Naming the likely cause only when it is likely. It belongs to the
+        // `custom` failure alone: an inset container is why nothing matched. On a
+        // placement that was measured cleanly and is simply not the one asked
+        // for, it would be advice about a different problem.
+        let containerHint = defaultedToWindow
+            ? " The container defaulted to the window frame — pass `container` with the content "
+            + "view's node id if the element is aligned inside an inset area."
+            : ""
+
+        func outcome(_ status: Verdict, expected want: JSONValue, reason: String?) -> Outcome {
+            Outcome(status: status, observed: observedWord, expected: want,
+                    reason: reason, node: node.id, detail: .object(detail))
+        }
+
+        // An expectation is what makes this an assertion. Without one the
+        // reading is still returned — it answers "what is this?" — but it is
+        // not reported as verified.
+        guard let word = expected.stringValue else {
+            return outcome(.skipped, expected: expected,
+                           reason: "horizontalAlignment needs `expected` to be one of "
+                                 + "\(HorizontalPlacement.acceptedWords); the observed placement is "
+                                 + "reported but nothing was asserted")
+        }
+        guard let wanted = HorizontalPlacement.parse(word) else {
+            return outcome(.skipped, expected: expected,
+                           reason: "unknown alignment \(word.debugDescription); use "
+                                 + HorizontalPlacement.acceptedWords)
+        }
+        // The normalised word, so a spec written as `leading` reports
+        // `expected: "left"` against `observed: "left"` rather than a pass that
+        // reads like a mismatch.
+        let want = JSONValue.string(wanted.rawValue)
+
+        if reading.isCustom {
+            return outcome(.fail, expected: want,
+                           reason: "not left, center or right aligned within "
+                                 + "\(reading.tolerance)pt of the container: "
+                                 + reading.describeOffsets() + "." + containerHint)
+        }
+        if reading.isTied {
+            let words = reading.nearest.map(\.rawValue).joined(separator: ", ")
+            return outcome(.skipped, expected: want,
+                           reason: "the container is too close in width to the element to tell "
+                                 + "\(words) apart within \(reading.tolerance)pt — "
+                                 + reading.describeOffsets() + ". The placement is unknown rather "
+                                 + "than wrong.")
+        }
+        let placement = reading.placement
+        let ok = placement == wanted
+        return outcome(ok ? .pass : .fail, expected: want,
+                       reason: ok ? nil
+                                  : "aligned \(placement?.rawValue ?? "custom") in the container, "
+                                  + "not \(wanted.rawValue): " + reading.describeOffsets() + ".")
     }
 
     /// Focus order against reading order, computed from the tree alone. AX
