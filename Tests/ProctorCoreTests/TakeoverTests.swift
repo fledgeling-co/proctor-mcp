@@ -200,7 +200,8 @@ struct TakeoverPolicyTests {
         // A result from a run that took nothing encodes exactly as it did before
         // this existed, which is what makes the new block free for every caller
         // who never sees it.
-        let bare = ActResult(window: "w", steps: [], completed: 0, failedAt: nil, finalHash: nil)
+        let bare = ActResult(window: "w", steps: [], completed: 0, failedAt: nil,
+                             finalHash: nil, backend: .native)
         let encoded = try JSONValue.encode(bare)
         #expect(encoded["takeover"] == nil || encoded["takeover"] == .null)
     }

@@ -2132,7 +2132,8 @@ struct StabilityCaptureTests {
     private func report(captures: [StabilityCapture]?) -> StabilityReport {
         StabilityReport(flow: "login", runs: 3, stepCount: 2, firstDivergence: 1,
                         stepInstability: [0, 0.5], deterministic: false,
-                        divergenceDetail: ["1": ["a", "b"]], notes: ["n"], captures: captures)
+                        divergenceDetail: ["1": ["a", "b"]], notes: ["n"], captures: captures,
+                        backend: .native)
     }
 
     // MARK: AC1 — both switches off is exactly today's run

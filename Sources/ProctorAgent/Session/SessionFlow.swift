@@ -142,9 +142,19 @@ extension Session {
     /// A flow recorded before backends were tracked carries no backend and is
     /// replayed without complaint: it was recorded on the native planes, because
     /// they were the only ones there.
+    ///
+    /// The rule is that EVERY backend the tape carries must match, not just the
+    /// first one. Reading only the first would clear a tape whose opening step
+    /// happens to agree and whose later steps do not. That cannot happen today —
+    /// `appendToFlow` stamps every recorded step from one immutable session
+    /// actuator, so a tape this build writes is uniform — which is exactly why
+    /// the check costs one word now and would cost a debugging session later.
+    /// Deliberately NOT a uniqueness check: "the tape holds more than one value"
+    /// invites counting backend-bearing steps, and every real multi-step flow has
+    /// several. Matching is the property; cardinality is not.
     func requireSameBackend(as flow: RecordedFlow) throws {
         let recorded = flow.steps.compactMap(\.backend)
-        guard let was = recorded.first, was != actuator.id else { return }
+        guard let was = recorded.first(where: { $0 != actuator.id }) else { return }
         throw AgentError(
             code: .backendUnsupported,
             message: "flow \"\(flow.name)\" was recorded with the \(was.rawValue) actuation "
@@ -226,6 +236,11 @@ extension Session {
         var out: [String: JSONValue] = [
             "flow": .string(flow.name),
             "window": .string(targetID),
+            // Which lane replayed it. A replay's whole claim is that it repeats
+            // the recording, so the path it repeated it on belongs beside the
+            // comparison rather than being inferred from the steps — and a
+            // replay in which nothing actuated has no step to infer it from.
+            "backend": .string(actuator.id.rawValue),
             "completed": .number(Double(run.completed)),
             "failedAt": run.failedAt.map { JSONValue.number(Double($0)) } ?? .null,
             "firstDivergence": firstDivergence.map { JSONValue.number(Double($0)) } ?? .null,
@@ -361,7 +376,8 @@ extension Session {
                     return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
                                                 notes: &notes, includeTiles: includeTiles,
                                                 truncated: true,
-                                                captures: artifacts.captureEach ? captures : nil)
+                                                captures: artifacts.captureEach ? captures : nil,
+                                                backend: actuator.id)
                 }
             }
 
@@ -392,7 +408,8 @@ extension Session {
                 return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
                                             notes: &notes, includeTiles: includeTiles,
                                             truncated: true,
-                                            captures: artifacts.captureEach ? captures : nil)
+                                            captures: artifacts.captureEach ? captures : nil,
+                                                backend: actuator.id)
             }
 
             let run = await runSteps(steps, window: handle, settle: .default,
@@ -460,13 +477,15 @@ extension Session {
                 return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
                                             notes: &notes, includeTiles: includeTiles,
                                             truncated: true,
-                                            captures: artifacts.captureEach ? captures : nil)
+                                            captures: artifacts.captureEach ? captures : nil,
+                                                backend: actuator.id)
             }
         }
 
         return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
                                     notes: &notes, includeTiles: includeTiles, truncated: false,
-                                    captures: artifacts.captureEach ? captures : nil)
+                                    captures: artifacts.captureEach ? captures : nil,
+                                                backend: actuator.id)
     }
 
     /// Score whatever was measured. Called from two places on purpose: the end of
@@ -479,7 +498,8 @@ extension Session {
     private static func stabilityReport(flow: String, steps: [ActionStep], perRun: [[String]],
                                         notes: inout [String], includeTiles: Bool,
                                         truncated: Bool,
-                                        captures: [StabilityCapture]?) -> StabilityReport {
+                                        captures: [StabilityCapture]?,
+                                        backend: ActuationBackendID) -> StabilityReport {
         let runs = perRun.count
         if runs < 2 {
             notes.append("A single run cannot measure divergence; firstDivergence and every "
@@ -510,6 +530,10 @@ extension Session {
             deterministic: score.deterministic && !truncated,
             divergenceDetail: score.divergenceDetail.isEmpty ? nil : score.divergenceDetail,
             notes: notes,
-            captures: captures)
+            captures: captures,
+            // Every pass folded above ran in one session, and a session's
+            // actuator is immutable, so one value is an honest label for the
+            // whole report rather than for one of its passes.
+            backend: backend)
     }
 }

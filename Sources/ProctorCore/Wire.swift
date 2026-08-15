@@ -791,10 +791,19 @@ public struct StepResult: Codable, Sendable {
     public var stateHash: String?
     public var diff: SnapshotDiff?
     public var elapsedMs: Int
-    /// Which backend performed it. Every field below this line is optional and
-    /// omitted when nil, so a step the native backend ran encodes exactly as it
-    /// did before any of this existed.
+    /// Which backend performed it — present when the step actuated, absent when
+    /// it never got that far.
+    ///
+    /// Note what this field does NOT do, because the comment here used to imply
+    /// it: a native step is **not** silent. `Actuation.backend` is `.native` by
+    /// default and `carry(_:)` copies it unconditionally, so an actuated native
+    /// step encodes `"backend":"native"` and always has. Absence means the step
+    /// refused before anything was actuated, which is a different fact and worth
+    /// keeping distinguishable.
     public var backend: ActuationBackendID?
+    /// Every field below this line is optional and omitted when nil, so a step
+    /// the native backend ran encodes exactly as it did before any of this
+    /// existed.
     public var reportedMode: String?
     public var effect: ActuationEffect?
     public var retriedOnStale: Bool?
@@ -854,14 +863,33 @@ public struct ActResult: Codable, Sendable {
     /// from a run that took nothing encodes exactly as it did before this
     /// existed.
     public var takeover: TakeoverReport?
+    /// Which actuation lane drove this run.
+    ///
+    /// Run-level rather than only per-step, because a run whose every step
+    /// refused before actuation carries no backend on any step — and that is
+    /// exactly the run a reader most needs to place. PRO-0051 keeps the native
+    /// planes as a deliberately selected lane, so a record that does not name
+    /// its lane is a record whose determinism claim cannot be read.
+    ///
+    /// Optional in the TYPE and always set on the wire, and the two are separate
+    /// facts. Optional so a record written before this field existed still
+    /// decodes — a guarantee `absentBlockDecodes` has always pinned. Always set
+    /// because `SessionAct` passes the session's backend unconditionally. There
+    /// is deliberately no default: a default would let a construction site that
+    /// forgot to say encode `native` under a delegated run, which is a record
+    /// asserting the wrong lane. Absent reads as "this build did not say" and is
+    /// detectable; wrong is neither.
+    public var backend: ActuationBackendID?
     public init(window: String, steps: [StepResult], completed: Int,
                 failedAt: Int?, finalHash: String?, foreground: ForegroundReport? = nil,
-                yields: [YieldRecord]? = nil, takeover: TakeoverReport? = nil) {
+                yields: [YieldRecord]? = nil, takeover: TakeoverReport? = nil,
+                backend: ActuationBackendID?) {
         self.window = window; self.steps = steps; self.completed = completed
         self.failedAt = failedAt; self.finalHash = finalHash
         self.foreground = foreground
         self.yields = yields
         self.takeover = takeover
+        self.backend = backend
     }
 }
 
@@ -881,14 +909,29 @@ public struct StabilityReport: Codable, Sendable {
     /// entry names its replay and its step, so one step can be compared across
     /// replays — which is what a determinism artifact is for.
     public var captures: [StabilityCapture]?
+    /// Which actuation lane every pass in this report was measured on.
+    ///
+    /// A determinism verdict without its actuation path is the measurement the
+    /// whole instrument is supposed to prevent, stated as a conclusion: run two
+    /// halves of a comparison through different actuation paths and any
+    /// divergence measures the paths rather than the application. `deterministic`
+    /// and `firstDivergence` are unreadable without this beside them.
+    ///
+    /// One value for the whole report is honest because every pass folded into it
+    /// runs inside one session and `Session.actuator` is immutable, so the passes
+    /// cannot disagree. Same optionality rule as `ActResult.backend`, for the same
+    /// two reasons.
+    public var backend: ActuationBackendID?
     public init(flow: String, runs: Int, stepCount: Int, firstDivergence: Int?,
                 stepInstability: [Double], deterministic: Bool,
                 divergenceDetail: [String: [String]]?, notes: [String],
-                captures: [StabilityCapture]? = nil) {
+                captures: [StabilityCapture]? = nil,
+                backend: ActuationBackendID?) {
         self.flow = flow; self.runs = runs; self.stepCount = stepCount
         self.firstDivergence = firstDivergence; self.stepInstability = stepInstability
         self.deterministic = deterministic; self.divergenceDetail = divergenceDetail
         self.notes = notes; self.captures = captures
+        self.backend = backend
     }
 }
 

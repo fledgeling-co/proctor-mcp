@@ -294,7 +294,7 @@ struct ContentionTests {
     @Test("a result with no yields encodes exactly as it did before this existed")
     func noYieldsIsByteIdentical() throws {
         let result = ActResult(window: "w1", steps: [], completed: 0, failedAt: nil,
-                               finalHash: nil)
+                               finalHash: nil, backend: .native)
         let encoded = try JSONValue.encode(result)
         #expect(encoded["yields"] == nil || encoded["yields"] == .null)
     }

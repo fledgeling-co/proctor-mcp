@@ -32,11 +32,25 @@ func makeAXEngine() -> any AXEngine { AXEngineImpl() }
 
 /// Which backend performs a step.
 ///
-/// Proctor's own planes stay the default. The delegated lane is chosen
-/// deliberately, by an operator, and never entered by falling into it — the item
-/// that decides the native planes' long-term future is a separate one, and until
-/// it lands both paths exist so this one can be measured against the thing it
-/// replaces.
+/// **Proctor's own planes are the default, and PRO-0051 settled that rather than
+/// deferring it.** Three facts decided it, and each would have been enough on its
+/// own: `appleScript` and `shortcut` have no Cua equivalent and are refused on the
+/// delegated lane, so deleting the native planes would delete two published verbs;
+/// Cua returns only a menu bar for a window on another Space, where a retained
+/// `AXUIElement` keeps resolving, so the delegated lane cannot drive windows this
+/// one can; and `cua-driver` has never executed on this machine, so delegation is
+/// a path argued rather than exercised.
+///
+/// The delegated lane is chosen deliberately, by an operator, and is never entered
+/// by falling into it — no failure here selects the other backend. The choice is
+/// read once, here, and `Session.actuator` is immutable, so a lane is fixed for the
+/// life of a session and every record it produces can name it honestly.
+///
+/// There is deliberately no condition that flips this default on its own. A default
+/// that changes when some condition becomes true contaminates a determinism score
+/// across runs exactly as a mid-flight fallback contaminates one within a run, and
+/// worse, because nobody chose it. Moving the default is a release with notes
+/// saying so.
 ///
 /// Nothing here executes the driver. Locating it reads the filesystem, exactly as
 /// it does for every other tool Proctor knows about; the version, signature,

@@ -29,8 +29,14 @@ public enum CuaDriverTool {
     public static let appBundlePath = "/Applications/CuaDriver.app"
 
     /// Selects the actuation lane. Absent or anything else means Proctor's own
-    /// planes, which stay the default until the item that decides their future
-    /// says otherwise.
+    /// planes, which PRO-0051 settled as the default rather than leaving open:
+    /// two step kinds have no delegated equivalent, a window on another Space is
+    /// drivable only there, and the driver has never executed on this machine.
+    ///
+    /// Operator-scoped and read once at process start, never per call and never
+    /// per session. Per call would let one run mix lanes, which is what makes a
+    /// determinism score measure the plumbing; per session would point two
+    /// concurrent sessions at one shared driver.
     public static let laneEnv = "PROCTOR_ACTUATION"
     public static let laneValue = "cua"
 

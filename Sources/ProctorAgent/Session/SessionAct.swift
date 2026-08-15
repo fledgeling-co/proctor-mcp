@@ -128,7 +128,12 @@ extension Session {
                                foreground: ForegroundReport.from(demandForReport,
                                                                  results: run.results),
                                yields: run.yields.isEmpty ? nil : run.yields,
-                               takeover: run.takeover)
+                               takeover: run.takeover,
+                               // Unconditionally, including a run in which nothing
+                               // actuated: those steps carry no backend of their own,
+                               // so this is the only thing that says which lane
+                               // refused them.
+                               backend: actuator.id)
         var out = try JSONValue.encode(result).objectValue ?? [:]
         // One sentence beside the records, so a caller reading prose knows why
         // the run took longer than its work did. Alongside rather than inside,
