@@ -299,12 +299,48 @@ refusal, whose question changed shape underneath it).
 | PRO-0050 | Doctor knows the whole toolchain | `51-…` | 2 | **MERGED** `0ea6f88` · absorbed PRO-0031 |
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **RUNNING** `wf_aa9980d5-076` |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **MERGED** `0f76c56` · reading 3 chosen |
-| PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **QUEUED** (carried, revised) |
+| PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **RUNNING** `wf_21e45777-8c1` (carried, revised) |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **QUEUED** (carried, revised) |
-| PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **RUNNING** `wf_5040b522-5a1` |
+| PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **MERGED** `c9e42c9` · fixed a live PRO-0050 defect |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **QUEUED** · documents the whole wave |
 
 ## Event log (append-only, newest first)
+- 2026-08-15 **PRO-0036 merged `c9e42c9`, and it found a defect PRO-0050 had shipped to
+  `main`.** 1216 -> **1242 tests in 136 suites**.
+  - **The shipped defect, found by building the app and looking at it.** `Dispatch.swift`
+    overwrote `doctor`'s `policy` posture with the full ungated status. Two consequences, both
+    live on `main` until this merge: every allow, block and sensitive entry, the filesystem
+    roots, the trail path and the key id went back into the first call a model makes, so
+    PRO-0050's clause 12 was true of the type and **false on the wire**; and it broke the
+    status window outright, because an optional field that is present but wrong-shaped still
+    throws, so `DoctorReport` could not decode its own agent's reply. **The window reported a
+    healthy agent as "not answering", permanently.** Confirmed both ways at the exact error:
+    `DecodingError.keyNotFound`, key `mode`, path `policy`.
+  - **The per-button verdict the brief asked for: two of three were honest.** Buttons A and B
+    each read something uncached, sit inside a remediation block, and change their answer when
+    pressed; both kept. The footer's `Re-check` is deleted on two source measurements:
+    `stopPolling()` is called by nothing, so the poll runs for the app's whole life, and
+    `lastChecked` is re-stamped on every landing report, so the clock beside it already
+    advanced without it. It refreshed rows that refresh themselves, and the one row anybody
+    presses it for cannot move at all.
+  - **The triage gate reversed the runner's own central decision.** Its draft argued for
+    keeping the third button; the gate showed it was counting live rows rather than counting
+    why anyone reaches for it. The plan gate then reversed the fail-safe direction: an
+    unrecognised check name falls to Tools, not Permissions, because defaulting into
+    Permissions re-creates the very defect. The Phase D critic found a clause matched by
+    nothing and named the structural hole extraction creates — every rule is tested in the
+    library, so the *view* could stop calling it and stay green. There is now a scan for that,
+    proved red.
+  - **Verified by eye without installing**, by running the build against a private agent on
+    `PROCTOR_SOCKET` rather than replacing `/Applications/Proctor.app`, since three siblings
+    were in flight. Seen: Permissions holding only the three permissions; "Optional — asked
+    for per app" on Automation alone; the Tools card with `simctl` 26.6, `maestro` 2.4.0,
+    `cua-driver` not found, and the `Shortcuts CLI` row the brief is named for.
+  - **Not seen and not implied:** the denied and unconfirmed sentences and the restart offer,
+    which need a permission revoked on this machine.
+  - **Child work, two found today:** an older agent still breaks a current window with no
+    message saying so; and **driving Proctor's UI through Proctor destabilises the agent** —
+    it knocked the installed agent over twice.
 - 2026-08-15 **PRO-0051 merged `0f76c56`. Reading 3: the native planes stay.** 1193 ->
   **1216 tests in 133 suites**. An operator selects the delegated lane deliberately, nothing
   falls back automatically, and native remains the default — the **maintained** default, not
