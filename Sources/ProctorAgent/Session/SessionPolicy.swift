@@ -178,7 +178,11 @@ extension Session {
                                       mode: actuation?.reportedMode,
                                       eff: actuation?.effect?.rawValue,
                                       obs: observation?.rawValue,
-                                      lane: actuation?.laneId))
+                                      lane: actuation?.laneId,
+                                      // Unconditionally, so a row that does not
+                                      // say came from a build that could not,
+                                      // never from one that forgot.
+                                      mach: machine.auditToken))
     }
 
     /// One lane event: the actuation lane being opened, refused, or lost.
@@ -192,7 +196,8 @@ extension Session {
         auditSink(AuditRecord(timestamp: clock(), tool: "proctor_actuation",
                               outcome: event.outcome, reason: event.reason,
                               run: RunIdentity.current,
-                              by: event.backend.rawValue, lane: event.laneId))
+                              by: event.backend.rawValue, lane: event.laneId,
+                              mach: machine.auditToken))
     }
 
     // MARK: - proctor_policy

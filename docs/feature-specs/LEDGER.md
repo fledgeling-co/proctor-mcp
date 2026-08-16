@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 55
+**Last allocated:** 62
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -62,3 +62,10 @@
 | PRO-0053 | `TakeoverWiringTests` reddens the gate at random | 2026-08-15 | Merged `477941f` |
 | PRO-0054 | Three tests still redden the gate at random | 2026-08-15 | Merged `a4483ec` |
 | PRO-0055 | The suite wedges in `haltCheckpoint` on a shared RunControl | 2026-08-16 | Merged `e53176b` |
+| PRO-0056 | A run says which machine it is on | 2026-08-16 | In Review |
+| PRO-0057 | The witness tier, and what it refuses | 2026-08-16 | Allocated |
+| PRO-0058 | Guest providers: lume and prlctl | 2026-08-16 | Allocated |
+| PRO-0059 | `proctor_guest`, the lifecycle tool | 2026-08-16 | Allocated |
+| PRO-0060 | Reaching a guest's Proctor over SSH | 2026-08-16 | Allocated |
+| PRO-0061 | Auto-routing, and the disclosure that makes it honest | 2026-08-16 | Allocated |
+| PRO-0062 | The overlay says which machine | 2026-08-16 | Allocated |
