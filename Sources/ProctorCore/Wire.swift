@@ -591,7 +591,66 @@ public enum MachinePlatform: String, Codable, Sendable {
     case windows
 }
 
-/// WHICH MACHINE a run happened on.
+/// HOW MUCH OF PROCTOR'S OBSERVATION a machine actually supports.
+///
+/// The one concept that stops a Linux target passing itself off as a macOS one.
+/// Proctor's instruments are macOS APIs: `SCFrameStatus` on a capture, an
+/// `AXUIElement` tree, and the tri-observer check that reports where the tree,
+/// the geometry and the pixels disagree. In a guest running a full Proctor those
+/// all exist. On a delegated lane none of them do, and what arrives instead is a
+/// screenshot with no completeness signal and whatever the driver says it did.
+///
+/// A tier is not a quality rating and does not scale a score. It says which
+/// assertions can be evaluated at all, and the ones that cannot are reported
+/// **skipped with a reason**, never passed. That is the skill's existing rule —
+/// an assertion that could not be evaluated is not an assertion that passed — and
+/// this is the same rule applied to a whole substrate rather than to one call.
+public enum WitnessTier: String, Codable, Sendable {
+    /// A macOS machine running a full Proctor: frame status, the accessibility
+    /// tree, the tri-observer check, fidelity and determinism.
+    case native
+    /// Actuation and screenshots, through another tool. No frame status, no
+    /// accessibility tree, and therefore no third channel to check the other two
+    /// against.
+    case delegated
+}
+
+extension WitnessTier {
+
+    /// The one assertion kind that reads pixels rather than the accessibility
+    /// tree, and therefore the only one a delegated machine can attempt.
+    ///
+    /// A list of what survives rather than a list of what is refused, because the
+    /// two fail in opposite directions: a kind added later and forgotten is
+    /// refused by this shape, and silently permitted by the other. A refusal on a
+    /// kind that would have worked is visible and reported; a permission on one
+    /// that cannot be evaluated is a pass nobody measured.
+    public static let pixelKinds: Set<String> = ["regionMatches"]
+
+    /// Why this machine cannot evaluate an assertion kind, or nil when it can.
+    public func cannotEvaluate(_ kind: String) -> String? {
+        guard self == .delegated else { return nil }
+        guard !Self.pixelKinds.contains(kind) else { return nil }
+        return "\(kind) reads the accessibility tree, and this run is on a delegated "
+             + "machine where there is none. Proctor's tree, geometry and frame-status "
+             + "instruments are macOS APIs and do not cross into this target, so the "
+             + "assertion is skipped rather than answered from weaker evidence. Run it "
+             + "against a macOS machine, or assert on pixels with regionMatches."
+    }
+
+    /// What a pixel assertion on this tier is worth, or nil when there is nothing
+    /// to qualify. Stated on the outcome rather than folded into it: the
+    /// comparison genuinely ran, and what is missing is the guarantee that the
+    /// frame it ran against was complete.
+    public var pixelCaveat: String? {
+        guard self == .delegated else { return nil }
+        return "This comparison ran against a frame carrying no completeness signal. "
+             + "Apple defines six SCFrameStatus values and makes checking them a "
+             + "precondition of trusting a frame; a delegated capture reports none of "
+             + "them, so a pass here does not exclude a partial or stale frame."
+    }
+}
+
 ///
 /// Proctor has always had exactly one answer to this and therefore never said
 /// it: every step landed on the Mac the agent was running on. A guest changes
@@ -632,19 +691,30 @@ public struct Machine: Codable, Sendable, Equatable {
     /// would not identify one.
     public var provider: String?
     public var platform: MachinePlatform?
+    /// How much of Proctor's observation this machine supports.
+    ///
+    /// NO DEFAULT, deliberately, and it is the one parameter here that has none.
+    /// A default of `.native` would let a construction site that forgot to say
+    /// describe a Linux guest as carrying a frame-status channel and an
+    /// accessibility tree it does not have, and every assertion this gate exists
+    /// to skip would then be evaluated against nothing and pass. The same
+    /// argument `ActuationBackendID` makes about lanes: absent is detectable,
+    /// wrong is not.
+    public var tier: WitnessTier
 
     public init(kind: Kind, name: String? = nil, provider: String? = nil,
-                platform: MachinePlatform? = nil) {
+                platform: MachinePlatform? = nil, tier: WitnessTier) {
         self.kind = kind
         self.name = name
         self.provider = provider
         self.platform = platform
+        self.tier = tier
     }
 
     /// The Mac the agent runs on. `platform` is stated rather than left nil: the
     /// host is always macOS, and a reader comparing a host result with a guest
     /// one should not have to know that to compare them.
-    public static let host = Machine(kind: .host, platform: .macos)
+    public static let host = Machine(kind: .host, platform: .macos, tier: .native)
 
     public var isGuest: Bool { kind == .guest }
 
