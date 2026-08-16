@@ -185,6 +185,15 @@ actor Session {
     var hudFeed: RunHUDFeed { hudFeedBox.feed }
     func setHUDFeed(_ feed: RunHUDFeed) { hudFeedBox.feed = feed }
 
+    /// Which machine this session's runs happen on.
+    ///
+    /// `.host` here and for the whole of PRO-0056, because this item builds the
+    /// disclosure and nothing that changes it. A session that will run in a guest
+    /// is set up by the routing item, and it can only be set up honestly once
+    /// every surface already says which machine answered.
+    var machine: Machine = .host
+    func setMachine(_ machine: Machine) { self.machine = machine }
+
     /// The pause/stop latch the panel's buttons write to.
     ///
     /// NOT `RunControl.shared` BY DEFAULT, and the inversion is the whole of

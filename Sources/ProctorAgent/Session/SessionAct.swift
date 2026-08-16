@@ -143,7 +143,12 @@ extension Session {
                                // asked to stand down — so an existing result
                                // encodes exactly as it did before this existed.
                                pointerDrawnBy: run.pointerOwner == .proctor
-                                   ? nil : run.pointerOwner.rawValue)
+                                   ? nil : run.pointerOwner.rawValue,
+                               // Unconditionally, for the same reason `backend` is:
+                               // a run in which every step refused still happened
+                               // somewhere, and that is exactly the run whose
+                               // machine a reader most needs to place.
+                               machine: machine)
         var out = try JSONValue.encode(result).objectValue ?? [:]
         // One sentence beside the records, so a caller reading prose knows why
         // the run took longer than its work did. Alongside rather than inside,

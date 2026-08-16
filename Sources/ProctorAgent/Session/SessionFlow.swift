@@ -387,7 +387,7 @@ extension Session {
                                                 notes: &notes, includeTiles: includeTiles,
                                                 truncated: true,
                                                 captures: artifacts.captureEach ? captures : nil,
-                                                backend: actuator.id,
+                                                backend: actuator.id, machine: machine,
                                                 subjects: subjects, withheld: withheld,
                                                 browser: renderedByBrowser)
                 }
@@ -421,7 +421,7 @@ extension Session {
                                             notes: &notes, includeTiles: includeTiles,
                                             truncated: true,
                                             captures: artifacts.captureEach ? captures : nil,
-                                                backend: actuator.id,
+                                                backend: actuator.id, machine: machine,
                                                 subjects: subjects, withheld: withheld,
                                                 browser: renderedByBrowser)
             }
@@ -531,7 +531,7 @@ extension Session {
                                             notes: &notes, includeTiles: includeTiles,
                                             truncated: true,
                                             captures: artifacts.captureEach ? captures : nil,
-                                                backend: actuator.id,
+                                                backend: actuator.id, machine: machine,
                                                 subjects: subjects, withheld: withheld,
                                                 browser: renderedByBrowser)
             }
@@ -540,7 +540,7 @@ extension Session {
         return Self.stabilityReport(flow: flow.name, steps: steps, perRun: perRun,
                                     notes: &notes, includeTiles: includeTiles, truncated: false,
                                     captures: artifacts.captureEach ? captures : nil,
-                                                backend: actuator.id,
+                                                backend: actuator.id, machine: machine,
                                                 subjects: subjects, withheld: withheld,
                                                 browser: renderedByBrowser)
     }
@@ -557,6 +557,7 @@ extension Session {
                                         truncated: Bool,
                                         captures: [StabilityCapture]?,
                                         backend: ActuationBackendID,
+                                        machine: Machine,
                                         subjects: [Int: [HashSubject]],
                                         withheld: [Int: Int],
                                         browser: KnownBrowser?) -> StabilityReport {
@@ -621,7 +622,10 @@ extension Session {
             // whole report rather than for one of its passes.
             backend: backend,
             stepBasis: basis,
-            pageContent: pageContent)
+            pageContent: pageContent,
+            // Same argument as `backend` above: every pass ran in one session, and
+            // a session's machine does not change under it.
+            machine: machine)
     }
 
     /// What each step's number was taken over and what it was computed from.

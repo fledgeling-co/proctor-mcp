@@ -157,6 +157,8 @@ extension Session {
             switches: SwitchResolver.reportStates(
                 environment: ProctorEnvironment.inherited,
                 saved: SwitchStore.load(from: SwitchStore.defaultURL).values),
+            // Which machine every other answer in this report is about.
+            machine: machine,
             ready: blockers.isEmpty,
             blockers: blockers)
     }

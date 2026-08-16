@@ -303,6 +303,16 @@ public struct AuditRecord: Codable, Sendable, Equatable {
     public var obs: String?
     /// Which lane instance acted, tying this row to a `lane.opened` record.
     public var lane: String?
+    /// WHICH MACHINE the step landed on: `host`, or `guest:<name>`.
+    ///
+    /// Always written, never inferred from absence. Absence would in fact be
+    /// unambiguous today, because every row written before guests existed was a
+    /// host row — but a later build that forgot to set it for a guest run would
+    /// then be indistinguishable from an older honest one, and this trail is what
+    /// attribution is argued from. An absent value therefore reads as "the build
+    /// that wrote this row did not say", which is detectable; it never reads as
+    /// "the host", which would be wrong and silent.
+    public var mach: String?
 
     /// Proctor's own reading of the window across a step.
     public enum Observation: String, Codable, Sendable, Equatable {
@@ -322,7 +332,7 @@ public struct AuditRecord: Codable, Sendable, Equatable {
                 run: String? = nil, seq: Int? = nil, ms: Int? = nil, plane: String? = nil,
                 act: String? = nil, obj: Object? = nil,
                 by: String? = nil, mode: String? = nil, eff: String? = nil,
-                obs: String? = nil, lane: String? = nil) {
+                obs: String? = nil, lane: String? = nil, mach: String? = nil) {
         self.timestamp = timestamp; self.tool = tool; self.app = app; self.bundleId = bundleId
         self.window = window; self.node = node; self.kind = kind; self.outcome = outcome
         self.postStateHash = postStateHash; self.value = value; self.script = script
@@ -330,6 +340,7 @@ public struct AuditRecord: Codable, Sendable, Equatable {
         self.run = run; self.seq = seq; self.ms = ms; self.plane = plane
         self.act = act; self.obj = obj
         self.by = by; self.mode = mode; self.eff = eff; self.obs = obs; self.lane = lane
+        self.mach = mach
     }
 
     /// Build a record for one executed step, redacting anything that could carry a
@@ -346,7 +357,8 @@ public struct AuditRecord: Codable, Sendable, Equatable {
                                run: String? = nil, seq: Int? = nil, ms: Int? = nil,
                                plane: String? = nil, node: AXNode? = nil,
                                by: String? = nil, mode: String? = nil, eff: String? = nil,
-                               obs: String? = nil, lane: String? = nil) -> AuditRecord {
+                               obs: String? = nil, lane: String? = nil,
+                               mach: String? = nil) -> AuditRecord {
         var value: Redaction?
         var script: Redaction?
         switch step.kind {
@@ -384,7 +396,7 @@ public struct AuditRecord: Codable, Sendable, Equatable {
                            // driver returning a megabyte in this field should put a
                            // bounded token in the trail, not the megabyte.
                            mode: StepDescription.sanitised(mode),
-                           eff: eff, obs: obs, lane: lane)
+                           eff: eff, obs: obs, lane: lane, mach: mach)
     }
 
     /// One line of JSONL: a single compact object with sorted keys, no newlines,

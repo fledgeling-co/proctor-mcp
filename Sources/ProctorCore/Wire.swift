@@ -566,6 +566,93 @@ public enum ActuationBackendID: String, Codable, Sendable {
     case cua
 }
 
+/// Which operating system a machine runs. Named rather than inferred from the
+/// provider, because one provider serves several: `prlctl` runs Windows and
+/// Linux guests, and `lume` runs macOS and Linux ones.
+public enum MachinePlatform: String, Codable, Sendable {
+    case macos
+    case linux
+    case windows
+}
+
+/// WHICH MACHINE a run happened on.
+///
+/// Proctor has always had exactly one answer to this and therefore never said
+/// it: every step landed on the Mac the agent was running on. A guest changes
+/// that, and the change is not cosmetic. A result from a guest is about a
+/// different OS build, a different display arrangement, a different set of
+/// installed applications and none of the person's own data — so a reader who
+/// assumes the host is reading a true statement about the wrong computer.
+///
+/// THIS LANDS BEFORE ANY ROUTING DOES, deliberately. PRO-0051 rejected automatic
+/// fallback on the grounds that it "hands back a verdict that looks fine and
+/// measures the plumbing", and routing a batch to a guest is the same move
+/// wearing better clothes. It is safe only once every result, every audit entry
+/// and the panel say which machine answered, so that is built first and the
+/// routing is built on top of it.
+///
+/// Optional in the TYPE and always set on the wire, for the same two separate
+/// reasons `backend` is: optional so a record written before this existed still
+/// decodes, always set because `SessionAct` passes the session's machine
+/// unconditionally. No default, because a default would let a construction site
+/// that forgot to say encode `host` under a run that happened in a guest, and a
+/// record asserting the wrong machine is worse than one that does not say.
+public struct Machine: Codable, Sendable, Equatable {
+
+    public enum Kind: String, Codable, Sendable {
+        /// The Mac this agent is running on. Everything Proctor did before guests
+        /// existed.
+        case host
+        /// A virtual machine, reached through a provider.
+        case guest
+    }
+
+    public var kind: Kind
+    /// The guest's name as its own provider knows it, so the name in a report is
+    /// the name you can type at `lume` or `prlctl`. Nil for the host.
+    public var name: String?
+    /// Which adapter reached it — `lume`, `prlctl`. Nil for the host. Recorded
+    /// because two providers can hold guests of the same name and a bare name
+    /// would not identify one.
+    public var provider: String?
+    public var platform: MachinePlatform?
+
+    public init(kind: Kind, name: String? = nil, provider: String? = nil,
+                platform: MachinePlatform? = nil) {
+        self.kind = kind
+        self.name = name
+        self.provider = provider
+        self.platform = platform
+    }
+
+    /// The Mac the agent runs on. `platform` is stated rather than left nil: the
+    /// host is always macOS, and a reader comparing a host result with a guest
+    /// one should not have to know that to compare them.
+    public static let host = Machine(kind: .host, platform: .macos)
+
+    public var isGuest: Bool { kind == .guest }
+
+    /// The trail's short form: `host`, or `guest:sequoia-seed`. Deliberately not
+    /// `line` — the trail is grepped and diffed, so it wants one stable token per
+    /// machine rather than a sentence whose clauses come and go with what was
+    /// known at the time.
+    public var auditToken: String {
+        guard kind == .guest else { return "host" }
+        return "guest:\(name ?? "unnamed")"
+    }
+
+    /// One phrase, for the panel and for any prose surface. Degrades by dropping
+    /// clauses rather than printing an absence, exactly as `HoldAttribution.line`
+    /// does: a guest whose provider is unknown says less, never "nil".
+    public var line: String {
+        guard kind == .guest else { return "this Mac" }
+        var out = name ?? "a guest"
+        if let platform { out += " · \(platform.rawValue)" }
+        if let provider { out += " · \(provider)" }
+        return out
+    }
+}
+
 /// Whether a backend can perform a kind of step without the application in front.
 ///
 /// This exists because the question is a property of the BACKEND, not of the
@@ -907,10 +994,14 @@ public struct ActResult: Codable, Sendable {
     /// then drew anything is the driver's, and not something Proctor observed, so
     /// this names what Proctor decided rather than what appeared on screen.
     public var pointerDrawnBy: String?
+    /// Which machine this run happened on. See `Machine` for why it is optional
+    /// in the type and always set on the wire.
+    public var machine: Machine?
     public init(window: String, steps: [StepResult], completed: Int,
                 failedAt: Int?, finalHash: String?, foreground: ForegroundReport? = nil,
                 yields: [YieldRecord]? = nil, takeover: TakeoverReport? = nil,
-                backend: ActuationBackendID?, pointerDrawnBy: String? = nil) {
+                backend: ActuationBackendID?, pointerDrawnBy: String? = nil,
+                machine: Machine? = nil) {
         self.window = window; self.steps = steps; self.completed = completed
         self.failedAt = failedAt; self.finalHash = finalHash
         self.foreground = foreground
@@ -918,6 +1009,7 @@ public struct ActResult: Codable, Sendable {
         self.takeover = takeover
         self.backend = backend
         self.pointerDrawnBy = pointerDrawnBy
+        self.machine = machine
     }
 }
 
@@ -963,19 +1055,26 @@ public struct StabilityReport: Codable, Sendable {
     /// a browser's render tree. Says which browser, which steps, and what that
     /// does to their numbers.
     public var pageContent: PageContentDisclosure?
+    /// Which machine the sweep ran on. A determinism score is a claim about a
+    /// machine as much as about a flow: the same flow scored on a quiet guest and
+    /// on a Mac somebody is using are two different measurements, and a reader
+    /// comparing them needs to know which is which.
+    public var machine: Machine?
     public init(flow: String, runs: Int, stepCount: Int, firstDivergence: Int?,
                 stepInstability: [Double], deterministic: Bool,
                 divergenceDetail: [String: [String]]?, notes: [String],
                 captures: [StabilityCapture]? = nil,
                 backend: ActuationBackendID?,
                 stepBasis: [StabilityStepBasis]? = nil,
-                pageContent: PageContentDisclosure? = nil) {
+                pageContent: PageContentDisclosure? = nil,
+                machine: Machine? = nil) {
         self.flow = flow; self.runs = runs; self.stepCount = stepCount
         self.firstDivergence = firstDivergence; self.stepInstability = stepInstability
         self.deterministic = deterministic; self.divergenceDetail = divergenceDetail
         self.notes = notes; self.captures = captures
         self.backend = backend
         self.stepBasis = stepBasis; self.pageContent = pageContent
+        self.machine = machine
     }
 }
 
@@ -1086,6 +1185,14 @@ public struct DoctorReport: Codable, Sendable {
     public var observersLive: Int
     public var secureEventInputActive: Bool
     public var shortcutsCLIAvailable: Bool
+    /// Which machine this agent's runs land on.
+    ///
+    /// On the doctor because it is the first call the Proctor skill tells a model
+    /// to make, and because every other answer in this report is scoped by it: the
+    /// grants, the attached applications, the observers and the secure-input state
+    /// all describe whichever machine answered, and a reader assuming the host
+    /// would be reading true statements about the wrong computer.
+    public var machine: Machine?
     /// Whether Obscura — the tool the browser handoff recommends — is on this
     /// machine. Flat and top-level, in the shape `shortcutsCLIAvailable` already
     /// uses, so it does not have to be dug out of anything.
@@ -1317,12 +1424,14 @@ public struct DoctorReport: Codable, Sendable {
                 agentBuild: BuildIdentity? = nil,
                 lanes: [Lane]? = nil, policy: PolicyPosture? = nil,
                 switches: [SwitchState]? = nil,
+                machine: Machine? = nil,
                 ready: Bool, blockers: [String]) {
         self.agentVersion = agentVersion; self.protocolVersion = protocolVersion
         self.osVersion = osVersion; self.agentRunning = agentRunning
         self.socketPath = socketPath; self.grants = grants; self.attachedApps = attachedApps
         self.observersLive = observersLive; self.secureEventInputActive = secureEventInputActive
         self.shortcutsCLIAvailable = shortcutsCLIAvailable
+        self.machine = machine
         self.obscuraAvailable = obscuraAvailable; self.obscura = obscura
         self.obscuraUnavailable = obscuraUnavailable
         self.tools = tools; self.secondLane = secondLane
