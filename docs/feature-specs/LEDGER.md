@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 62
+**Last allocated:** 63
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -69,3 +69,4 @@
 | PRO-0060 | Reaching a guest's Proctor over SSH | 2026-08-16 | Allocated |
 | PRO-0061 | Auto-routing, and the disclosure that makes it honest | 2026-08-16 | Allocated |
 | PRO-0062 | The overlay says which machine | 2026-08-16 | Allocated |
+| PRO-0063 | Captures are sized by what they are for | 2026-08-16 | In Review |

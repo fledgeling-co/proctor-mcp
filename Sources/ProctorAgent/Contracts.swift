@@ -83,8 +83,12 @@ struct FindPredicate: Sendable {
 /// coordinate round-trip both live in ProctorCore.VisionCapture — this only
 /// carries the request from the tool boundary to the engine.
 struct CaptureNormalizeOptions: Sendable {
-    var maxLongEdge: Int = VisionCapture.defaultMaxLongEdge
-    var maxPixels: Int = VisionCapture.defaultMaxPixels
+    var maxLongEdge: Int = VisionCapture.Purpose.default.maxLongEdge
+    var maxPixels: Int = VisionCapture.Purpose.default.maxPixels
+    /// Which tier the ceilings came from, for the result to report. Nil when the
+    /// caller set an explicit pixel ceiling, because then no tier describes it
+    /// and naming one would be a label rather than a fact.
+    var purpose: VisionCapture.Purpose? = VisionCapture.Purpose.default
 }
 
 /// How the frame is written to disk. Defaults to lossless PNG; a caller trades

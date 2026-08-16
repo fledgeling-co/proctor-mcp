@@ -256,12 +256,32 @@ public enum ToolCatalogue {
         confirmed. Off-screen windows may only emit complete frames when the pointer moves on \
         their display.
 
-        normalize is on by default: the frame is scaled to fit ~1568px on the long edge and \
-        ~1.15MP, and normalization.scale reports the exact factor. Map a model coordinate back \
-        with native = normalised / scale. Pass normalize false for native pixels when asserting \
-        against native geometry. Raise normalizeMaxLongEdge/normalizeMaxPixels for a model with a \
-        larger ceiling, or set them to a provider's tile grid (768 for Gemini) to avoid paying for \
-        a tile holding a sliver of screen.
+        **Before capturing at all, check whether pixels are the cheapest answer, because usually \
+        they are not.** To find something to act on, proctor_find returns the matching nodes as \
+        text for a fraction of an image's tokens, and the node id it gives you is a more durable \
+        target than a coordinate. To check whether a step changed anything, every proctor_act step \
+        already carries a stateHash — two identical hashes mean the tree did not move, which is a \
+        stronger and cheaper answer than looking at two screenshots. Capture when the question is \
+        genuinely visual: what it looks like, whether it rendered, where something is on screen.
+
+        purpose decides how many pixels the frame gets, because the vision API's ceiling is what it \
+        tolerates rather than what a task needs, and a model is billed on dimensions — roughly \
+        width x height / 750 tokens. targeting (768px) is for deciding what to press and where; \
+        nothing is being read, and 768 is also exactly Gemini's tile boundary, where 769 pixels \
+        costs double. verify (1024px, the default) is XGA, what Anthropic's own computer-use \
+        reference implementation targets for reliability. detail (1568px) is the API ceiling, for \
+        reading dense text. Setting annotate implies targeting on its own: a numbered mark survives \
+        a downscale that body text would not.
+
+        **Start small and escalate with proctor_zoom rather than capturing large.** A \
+        low-resolution overview plus an on-demand native crop is measured to lift grounding \
+        accuracy on dense professional interfaces from under 20% to over 70% — it reads better \
+        than one big frame as well as costing less. normalization reports purpose and \
+        estimatedVisionTokens so the cost is visible where the capture is.
+
+        normalization.scale reports the exact factor. Map a model coordinate back with \
+        native = normalised / scale. Pass normalize false for native pixels when asserting against \
+        native geometry; normalizeMaxLongEdge/normalizeMaxPixels override the tier outright.
 
         annotate burns numbered marks over interactable elements and returns a mark→node map, so \
         "click mark 7" resolves to a real element id; annotateAll marks everything with a frame, \
@@ -290,8 +310,9 @@ public enum ToolCatalogue {
                 "gridSpacing": .object(["type": .string("number"), "description": .string("Points between grid lines. Defaults to 100.")]),
                 "maxMarks": .object(["type": .string("integer"), "description": .string("Ceiling on marks drawn; the overflow is dropped in reading order and reported as truncated. Defaults to 150.")]),
                 "normalize": .object(["type": .string("boolean"), "description": .string("Fit the frame to the vision ceiling and report the exact scale. Defaults to true; pass false for native pixels.")]),
-                "normalizeMaxLongEdge": .object(["type": .string("integer"), "description": .string("Long-edge ceiling in pixels. Defaults to 1568.")]),
-                "normalizeMaxPixels": .object(["type": .string("integer"), "description": .string("Total-pixel ceiling. Defaults to 1150000 (~1.15MP).")])
+                "purpose": .object(["type": .string("string"), "enum": .array([.string("targeting"), .string("verify"), .string("detail")]), "description": .string("How many pixels the frame needs. targeting 768px (pressing, not reading; also Gemini's tile boundary), verify 1024px (default, XGA), detail 1568px (reading dense text). annotate implies targeting.")]),
+                "normalizeMaxLongEdge": .object(["type": .string("integer"), "description": .string("Long-edge ceiling in pixels. Overrides purpose. Defaults to the tier's own ceiling.")]),
+                "normalizeMaxPixels": .object(["type": .string("integer"), "description": .string("Total-pixel ceiling. Overrides purpose. Defaults to the tier's own ceiling.")])
             ]),
             "required": .array([.string("window")])
         ]),

@@ -223,9 +223,30 @@ struct Dispatcher: Sendable {
         // evidence, tri-observer — never reach here and stay native regardless.
         var normalize: CaptureNormalizeOptions?
         if args.bool("normalize", true) {
+            // What the frame is for decides how many pixels it needs, and there
+            // are three ways a caller can say so, in descending order of how
+            // specific they were being.
+            //
+            // An explicit pixel ceiling wins outright and clears the tier label,
+            // because once a caller has named the numbers no tier describes them
+            // and reporting one would be a label rather than a fact.
+            //
+            // Otherwise a named purpose wins. Otherwise `annotate` decides it: a
+            // frame carrying numbered marks is being used to pick a target, not
+            // to read anything, so it drops to `targeting` on its own. That rule
+            // is the whole reason marks and a small frame belong together — the
+            // model is matching a numeral, and a numeral survives a downscale
+            // that body text would not.
+            let explicitEdge = args.int("normalizeMaxLongEdge")
+            let explicitPixels = args.int("normalizeMaxPixels")
+            let named = VisionCapture.Purpose.parse(args.string("purpose"))
+            let annotating = args.bool("annotate", false) || args.bool("annotateAll", false)
+            let purpose = named ?? (annotating ? .targeting : .default)
+            let explicit = explicitEdge != nil || explicitPixels != nil
             normalize = CaptureNormalizeOptions(
-                maxLongEdge: args.int("normalizeMaxLongEdge") ?? VisionCapture.defaultMaxLongEdge,
-                maxPixels: args.int("normalizeMaxPixels") ?? VisionCapture.defaultMaxPixels)
+                maxLongEdge: explicitEdge ?? purpose.maxLongEdge,
+                maxPixels: explicitPixels ?? purpose.maxPixels,
+                purpose: explicit ? nil : purpose)
         }
         return try await session.captureWindow(try args.requiredString("window"),
                                         path: args.string("path"),

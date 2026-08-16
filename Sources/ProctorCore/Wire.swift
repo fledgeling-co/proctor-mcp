@@ -405,12 +405,28 @@ public struct CaptureNormalization: Codable, Sendable, Equatable {
     public var height: Int              // normalised pixel height (== CaptureResult.height)
     public var maxLongEdge: Int         // the long-edge ceiling enforced
     public var maxPixels: Int           // the pixel-count ceiling enforced
+    /// Which tier those ceilings came from: `targeting`, `verify` or `detail`.
+    /// Nil when the caller named its own pixel ceiling, because then no tier
+    /// describes what was enforced and printing one would be a label rather than
+    /// a fact.
+    public var purpose: String?
+    /// Roughly what this frame costs a vision model, on Anthropic's published
+    /// approximation of `width × height / 750`.
+    ///
+    /// Reported so the cost of a capture is visible where the capture is, rather
+    /// than being something a reader has to derive from two dimensions. An
+    /// estimate for one model family and never used to decide anything — the
+    /// other two tokenise differently, and Gemini in particular charges by
+    /// 768-pixel tiles, so it steps rather than scales.
+    public var estimatedVisionTokens: Int?
     public init(scale: Double, applied: Bool, originalWidth: Int, originalHeight: Int,
-                width: Int, height: Int, maxLongEdge: Int, maxPixels: Int) {
+                width: Int, height: Int, maxLongEdge: Int, maxPixels: Int,
+                purpose: String? = nil, estimatedVisionTokens: Int? = nil) {
         self.scale = scale; self.applied = applied
         self.originalWidth = originalWidth; self.originalHeight = originalHeight
         self.width = width; self.height = height
         self.maxLongEdge = maxLongEdge; self.maxPixels = maxPixels
+        self.purpose = purpose; self.estimatedVisionTokens = estimatedVisionTokens
     }
 }
 
