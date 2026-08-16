@@ -306,6 +306,23 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **MERGED** `d6cf947` · skill edits UNCOMMITTED in fledgeling-plugins |
 
 ## Event log (append-only, newest first)
+- 2026-08-16 **The wedge is diagnosed and allocated as PRO-0055.** Sampling the hung process
+  gave six threads on one identical stack: `Session.scheduled` (SessionQueue.swift:96) ->
+  `runSteps` (SessionAct.swift:360) -> `haltCheckpoint` (SessionHUD.swift:210) ->
+  `RunControl.checkpoint` (RunControl.swift:252), which is an unbounded poll returning only on
+  a halt or on becoming un-parked. A run parked with neither spins forever holding its lane.
+  - **The cause was already written in the tree.** `YieldWiringTests.swift:121` carries a
+    comment from the fix to its own instance: `Session.runControl` defaults to
+    `RunControl.shared`, so a harness that injects only when asked hands every other test the
+    production singleton, and one test yielding it leaves the next one's checkpoint waiting out
+    a **900-second backstop**. That suite injects its own latch now; **every other suite still
+    gets the singleton**, because the default was never changed.
+  - **Ruled out by measurement, not by argument:** not load (reproduces at load 6), not
+    `replayd` (survives a restart), not `BrowserLaneWiringTests` (skipping it changes nothing),
+    and not any single suite (`DelegatedSupervisionWiringTests` alone passes 28 tests in
+    0.644s).
+  - Brief `56-…`, `Last allocated` 54 -> 55. It blocks PRO-0054's merge and any honest
+    full-suite gate, so it goes first.
 - 2026-08-16 **The whole test suite wedges, and it is not PRO-0054's three flaky tests.**
   Found while trying to gate PRO-0054, and it is now the thing blocking that merge.
   - **Reproduces on unmodified `main`**, at load average 6 with **zero** stuck test helpers,
