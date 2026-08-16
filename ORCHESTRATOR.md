@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 7 running.** 44 merged. The project pivots: Cua Driver takes actuation, Proctor keeps observation, the verdict layer and supervision, and gains an iOS lane.
-**Updated:** 2026-08-15 — wave 7 stage 1 half landed. **937 tests / 105 suites green on local `main` @ `ca42b3e`**, and the gate runs **unskipped** for the first time since wave 5: PRO-0041 bounded the Screen Recording probe, so `--skip ObscuraPresenceWiringTests --skip BrowserLaneWiringTests` is retired. Three runners live, nothing pushed.
+**Status:** **Wave 7 complete.** 46 merged. The gate is green: 1426 tests in 158 suites, seven consecutive runs. The project pivots: Cua Driver takes actuation, Proctor keeps observation, the verdict layer and supervision, and gains an iOS lane.
+**Updated:** 2026-08-16 — wave 7 landed in full. **1426 tests / 158 suites green on local `main` @ `a4483ec`**, seven consecutive runs in under 7 seconds each. The gate is honest for the first time this wave: PRO-0055 stopped the suite wedging with no verdict, and PRO-0054 removed the ambient read that made 37 issues look like flake. Nothing pushed.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
 - **This repo DOES now have a git remote** (`origin` → github.com/fledgeling-co/proctor-mcp). The earlier "no git remote, main is LOCAL-ONLY" note is stale. Local `main` is **4 commits AHEAD** of `origin/main` and those commits carry unreviewed WIP: **merge to local `main` only, never push.**
@@ -300,12 +300,50 @@ refusal, whose question changed shape underneath it).
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **MERGED** `7ca9358` · verified live |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **MERGED** `0f76c56` · reading 3 chosen |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **MERGED** `153951b` (carried, revised) |
-| PRO-0054 | Three tests still redden the gate at random | `55-…` | 3 | **PARKED** `0521416` on `ai/pro-0054` · 3 of 4 fixed, ungated: the suite wedges |
+| PRO-0054 | Three tests still redden the gate at random | `55-…` | 3 | **MERGED** `a4483ec` · all four were one ambient read |
+| PRO-0055 | The suite wedges in `haltCheckpoint` on a shared RunControl | `56-…` | 4 | **MERGED** `e53176b` · the gate runs to a verdict |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **MERGED** `30324a6` (carried, revised) |
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **MERGED** `c9e42c9` · fixed a live PRO-0050 defect |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **MERGED** `d6cf947` · skill edits UNCOMMITTED in fledgeling-plugins |
 
 ## Event log (append-only, newest first)
+- 2026-08-16 **The gate is green, and the whole flaky set was one line.** `./scripts/test.sh`
+  on `main`: **1426 tests in 158 suites pass in under 7 seconds**, seven consecutive runs
+  (6.14 / 5.79 / 5.23 / 6.07 / 6.81 / 3.76s after the first). Two merges got there:
+  - **PRO-0055 `e53176b` — the wedge.** `Session` defaulted `runControl` to `RunControl.shared`
+    and `contentionMonitor` to `ContentionMonitor.shared`. The live monitor reads the actual
+    Mac, and a test process can never satisfy "the application under test is frontmost", so
+    sampled from inside `RunControl.checkpoint`'s poll it yielded the run, then yielded it
+    again on the next poll, until the 900-second backstop. Five suites did this. **It was not
+    one leaker suite leaving state behind, which is what brief `56-…` expected** — a probe on
+    the singleton named the caller on the first run, and it was the poll's own contention
+    probe. Fixed by inverting the defaults: a fresh latch and a `NullContentionMonitor` unless
+    named, with the process-wide pair named once in `main.swift`, which is the construction
+    that wants them. A park that happens anyway now writes one line after 20s naming the run
+    and its cause; the backstop is unchanged, because how long a person's pause may hold a run
+    is a product decision. Referred out of family: **grok died (exit 142)**, the Google lane
+    argued for no-default-anywhere and was taken on direction but not on cost (47 call sites
+    against 1, and its own named failure mode is a shared helper reintroducing the singleton).
+    `ForegroundWiringTests`: killed at 10 minutes on `main`, **1.189s** on the branch.
+  - **PRO-0054 `a4483ec` — the flaky four, which were thirty-seven.** With the suite finally
+    reporting, the verdict was `1426 tests … failed with 37 issues`, and **35 of the 37
+    reproduced byte-identically on unmodified `main`**, so none were caused by PRO-0055.
+    All of them, plus both remaining brief cases, had **one cause**: `SessionAct.refusal`
+    called `Grants.secureEventInputActive()` directly, in the hot path of every step. Secure
+    input is on whenever anything on the Mac holds a password field, and a refused step raises
+    no statement, arms no block, declares no post and yields nothing — so every assertion about
+    synthetic behaviour failed together. The set looked random because it depended on what the
+    person at the keyboard was doing. Secure input becomes a parameter, Accessibility a seam,
+    six harnesses declare their machine. **Production is unchanged**: `main.swift` names
+    neither probe, so both read the live grants, and refusing under secure input is still
+    correct. `HoldAttributionWiringTests` went from **123 seconds to 1.5**, and the suite from
+    126s to ~6, because a refused step still waited out its settle budget — most of the
+    suite's runtime was spent waiting for actions already refused.
+  - Two of the project's own load-bearing beliefs were wrong and are corrected here: brief
+    `55-…` says three tests redden the gate (it was 14 tests / 37 issues, understated because
+    nobody had seen a complete run), and `ScreenRecordingProbeWiringTests`, named in that brief
+    as the hardest of the four to make honest, **needed no change at all**.
+
 - 2026-08-16 **The wedge is diagnosed and allocated as PRO-0055.** Sampling the hung process
   gave six threads on one identical stack: `Session.scheduled` (SessionQueue.swift:96) ->
   `runSteps` (SessionAct.swift:360) -> `haltCheckpoint` (SessionHUD.swift:210) ->
