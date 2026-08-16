@@ -109,18 +109,7 @@ struct ScreenRecordingProbeWiringTests {
         #expect(await probe.state() == .unconfirmed)
         // The abandoned probe finally comes back.
         gate.open()
-        let t0 = Date().timeIntervalSince1970
-        var landedAt: Double? = nil
-        while Date().timeIntervalSince1970 - t0 < 30 {
-            if probe.keeper.cachedDefinite() != nil {
-                landedAt = Date().timeIntervalSince1970 - t0
-                break
-            }
-            try? await Task.sleep(nanoseconds: 2_000_000)
-        }
-        FileHandle.standardError.write(
-            "PRO0054C3 landedAt=\(landedAt.map(String.init) ?? "never") budget=0.3\n"
-                .data(using: .utf8)!)
+        try? await Task.sleep(nanoseconds: 300_000_000)
         // And the answer is there, without another platform call — a definite
         // answer is a per-process constant, so one arriving late is exactly as
         // valid as one arriving on time.

@@ -22,7 +22,7 @@ extension Session {
         let osMajor = version.majorVersion
         let osVersion = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
 
-        let accessibilityGranted = Grants.accessibility()
+        let accessibilityGranted = accessibilityProbe()
         let screenRecording = await screenRecordingProbe.state()
         let shortcutsAvailable = FileManager.default.isExecutableFile(atPath: "/usr/bin/shortcuts")
         let secureInput = Grants.secureEventInputActive()
