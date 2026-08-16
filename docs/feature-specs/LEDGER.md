@@ -61,4 +61,4 @@
 | PRO-0052 | The proctor skill tracks what actually shipped | 2026-08-15 | Merged `d6cf947` |
 | PRO-0053 | `TakeoverWiringTests` reddens the gate at random | 2026-08-15 | Merged `477941f` |
 | PRO-0054 | Three tests still redden the gate at random | 2026-08-15 | Triaged |
-| PRO-0055 | The suite wedges in `haltCheckpoint` on a shared RunControl | 2026-08-16 | Triaged |
+| PRO-0055 | The suite wedges in `haltCheckpoint` on a shared RunControl | 2026-08-16 | In Review |

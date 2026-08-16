@@ -45,6 +45,38 @@ protocol ContentionSampling: Sendable {
     func sample() -> ContentionSample
 }
 
+/// A machine nobody is using, which is what a `Session` watches unless somebody
+/// hands it the real one.
+///
+/// WHY THIS IS THE DEFAULT AND THE LIVE MONITOR IS NOT. `ContentionMonitor.shared`
+/// reads the actual Mac: which application is in front, whether secure input is
+/// on. That is right for the agent and wrong for every other process, and a test
+/// process is the case that proves it — a test can never satisfy "the application
+/// under test is frontmost", because there is no such application and the front
+/// belongs to whatever the developer last clicked. Sampled from inside
+/// `RunControl.checkpoint`'s poll, that reading yields the run, and then yields
+/// it again on the next poll, and again, until the 900-second backstop gives up.
+/// Measured: five suites reached that state and the whole run wedged with no
+/// verdict line, because the poll never returns and the queue is behind it.
+///
+/// So the safe reading is the default and the live machine is opted into, at the
+/// one place that genuinely wants it. Getting that wrong now costs a run that
+/// politely refuses to get out of a person's way, which is visible; getting the
+/// old default wrong cost a silent hang, which is not.
+final class NullContentionMonitor: ContentionSampling {
+    func arm(observeInput: Bool) {}
+    func disarm() {}
+    func setExpectedPid(_ pid: Int32?) {}
+    func noteSyntheticPost() {}
+    func noteUserInput() {}
+    /// Nothing expected in front, nothing in front, no secure input and no
+    /// keystroke. `expectedPid` nil is the load-bearing field: the frontmost
+    /// reading cannot fire while Proctor has not demonstrably put anything in
+    /// front, so this samples as a quiet machine rather than as a contended one
+    /// whose cause happens to be unset.
+    func sample() -> ContentionSample { ContentionSample() }
+}
+
 final class ContentionMonitor: ContentionSampling, @unchecked Sendable {
 
     static let shared = ContentionMonitor()

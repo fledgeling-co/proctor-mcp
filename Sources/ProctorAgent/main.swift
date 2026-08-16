@@ -126,7 +126,17 @@ let session = Session(ax: axEngine,
                       capture: captureEngine,
                       reflector: NullReflectorBridge(),
                       tri: makeTriObserver(capture: captureEngine),
-                      actuator: makeActuationBackend(ax: axEngine))
+                      actuator: makeActuationBackend(ax: axEngine),
+                      // The two process-wide seams, named here because this is
+                      // the process that wants them. The panel's Pause and Stop
+                      // write `RunControl.shared` directly, so the run has to be
+                      // reading that same latch; and the yield watch is only
+                      // worth anything against the actual machine. Every other
+                      // construction of a `Session` gets a latch of its own and
+                      // a quiet machine, which is what stopped a test process
+                      // inheriting one run's park into every later run.
+                      runControl: .shared,
+                      contentionMonitor: ContentionMonitor.shared)
 
 let server = Server(dispatcher: Dispatcher(session: session))
 
