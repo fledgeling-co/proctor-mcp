@@ -129,7 +129,14 @@ final class CaptureEngineImpl: CaptureEngine {
                 width: outWidth,
                 height: outHeight,
                 maxLongEdge: normalize.maxLongEdge,
-                maxPixels: normalize.maxPixels)
+                maxPixels: normalize.maxPixels,
+                purpose: normalize.purpose?.rawValue,
+                // Taken over what was actually written, not over what was asked
+                // for: a frame already under the ceiling is passed through, and
+                // reporting the tier's budget rather than its real size would
+                // overstate what it costs.
+                estimatedVisionTokens: VisionCapture.estimatedVisionTokens(
+                    width: outWidth, height: outHeight))
         } else {
             try writePNG(pixels, to: destination,
                          format: encoding.format, quality: encoding.quality)

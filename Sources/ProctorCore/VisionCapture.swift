@@ -25,6 +25,82 @@ public enum VisionCapture {
     /// near-square frame can be under 1568 on each side and still over budget.
     public static let defaultMaxPixels = 1_150_000
 
+    /// WHAT THE FRAME IS FOR, which is the only thing that decides how many
+    /// pixels it needs.
+    ///
+    /// The ceilings above are the vision API's limit, and Proctor used to send
+    /// every capture at them. That is the wrong default, because the limit is
+    /// what the API *tolerates* rather than what the task *needs*, and a model is
+    /// billed on pixel dimensions — Anthropic prices an image at roughly
+    /// `width × height / 750` tokens, so a frame at the ceiling costs about
+    /// 1,530 tokens whether or not anything in it needed resolving.
+    ///
+    /// The three tiers are the measured design rather than round numbers:
+    ///
+    ///   `targeting` at 768 is where a frame is only being used to decide WHAT to
+    ///   press and WHERE. Nothing is being read, so glyph legibility is not the
+    ///   constraint. 768 is also exactly Gemini's tile boundary — it charges
+    ///   `ceil(w/768) × ceil(h/768) × 258`, so 769 pixels costs double what 768
+    ///   does — and it is the cheapest tier that still resolves a numbered mark.
+    ///
+    ///   `verify` at 1024 is XGA, which is what Anthropic's own computer-use
+    ///   reference implementation targets for reliability rather than the API
+    ///   ceiling it also publishes. This is the default: it reads most UI text
+    ///   and costs a little over half of what the ceiling does.
+    ///
+    ///   `detail` is the old default, the API ceiling itself, for a frame
+    ///   somebody is going to read dense text out of.
+    ///
+    /// The escalation is the point, and it is evidence-backed rather than
+    /// tidy: returning a low-resolution overview and letting a caller ask for a
+    /// native-resolution crop on demand is measured to lift grounding accuracy on
+    /// dense professional interfaces from under 20% to over 70%. Proctor already
+    /// has the second half of that pattern in `proctor_zoom`; this supplies the
+    /// first half instead of sending the ceiling every time.
+    public enum Purpose: String, Sendable, CaseIterable, Codable {
+        case targeting
+        case verify
+        case detail
+
+        public var maxLongEdge: Int {
+            switch self {
+            case .targeting: return 768
+            case .verify:    return 1024
+            case .detail:    return VisionCapture.defaultMaxLongEdge
+            }
+        }
+
+        /// Kept in proportion to the long edge rather than fixed, for the reason
+        /// `defaultMaxPixels` exists: a near-square frame can sit under the long
+        /// edge on both sides and still be over budget.
+        public var maxPixels: Int {
+            switch self {
+            case .targeting: return 400_000
+            case .verify:    return 750_000
+            case .detail:    return VisionCapture.defaultMaxPixels
+            }
+        }
+
+        public static let `default`: Purpose = .verify
+
+        public static func parse(_ raw: String?) -> Purpose? {
+            guard let raw else { return nil }
+            return Purpose(rawValue:
+                raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())
+        }
+    }
+
+    /// Roughly what a frame of this size costs a vision model, so the saving is
+    /// legible in the result rather than something a caller has to work out.
+    ///
+    /// Anthropic's published approximation, and deliberately only that: it is one
+    /// family's pricing and the other two tokenise differently, so this is
+    /// reported as an estimate and never used to decide anything.
+    public static func estimatedVisionTokens(width: Int, height: Int) -> Int {
+        guard width > 0, height > 0 else { return 0 }
+        return Int((Double(width) * Double(height) / 750.0).rounded())
+    }
+
     /// The outcome of fitting a frame under the ceilings: the uniform scale
     /// actually applied (`out/in`, always ≤ 1), the resulting pixel dimensions,
     /// and whether any downscale happened at all.
