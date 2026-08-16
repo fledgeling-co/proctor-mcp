@@ -112,7 +112,7 @@ struct YieldWiringTests {
     private func harness(control: RunControl? = nil)
         async throws -> (session: Session, ax: FakeAX, contention: FakeContention) {
         let ax = FakeAX(bundleId: Self.target)
-        let session = Session(ax: ax, capture: FakeCapture())
+        let session = Session(ax: ax, capture: FakeCapture(), secureInputProbe: { false })
         await session.setAuditSink(AuditCollector().sink)
         await session.setDrawsHUD(false)
         let contention = FakeContention()
@@ -446,9 +446,9 @@ struct YieldWiringTests {
         // press has an accessibility route, a click has none. The refusal itself
         // is untouched, which is what this test has always been about.
         #expect(Session.refusal(for: ActionStep(kind: .press), foreground: false,
-                                capability: .yes) == nil)
+                                capability: .yes, secureInput: false) == nil)
         let refusal = Session.refusal(for: ActionStep(kind: .click), foreground: false,
-                                      capability: .never)
+                                      capability: .never, secureInput: false)
         #expect(refusal?.code == .invalidArguments)
     }
 }

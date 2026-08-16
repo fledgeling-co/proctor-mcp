@@ -392,7 +392,8 @@ extension Session {
             if participates { syntheticPost.beginStep() }
 
             let refusal = Self.refusal(for: step, foreground: foreground,
-                                       capability: capability)
+                                       capability: capability,
+                                       secureInput: secureInputProbe())
             // The pointer travels before the clock starts, so the drawing does
             // not land inside the step's own elapsed time, and only for a step
             // that is actually going to run — animating toward something about
@@ -715,8 +716,16 @@ extension Session {
     /// genuinely cannot be delivered without the front; asserting that of a
     /// backend that can would refuse the very steps delegation exists to make
     /// possible.
+    /// `secureInput` is passed rather than read, and that is the whole of this
+    /// fix. Reading `Grants.secureEventInputActive()` here made every synthetic
+    /// step in every test refuse whenever anything anywhere on the Mac held a
+    /// password field, and a refused step raises no statement, arms no block and
+    /// yields nothing — so four suites asserting on synthetic behaviour failed
+    /// together, 33 issues from one ambient read. It is the same defect class as
+    /// the doctor's, in the hot path rather than in a report.
     static func refusal(for step: ActionStep, foreground: Bool,
-                        capability: BackgroundCapability) -> AgentError? {
+                        capability: BackgroundCapability,
+                        secureInput: Bool) -> AgentError? {
         guard capability == .never else { return nil }
 
         // The foreground contradiction is checked first: it is a property of
@@ -733,7 +742,7 @@ extension Session {
                       + "accessibility plane instead — press, setValue, focus, menu or type all reach "
                       + "background and other-Space windows without stealing focus.")
         }
-        if Grants.secureEventInputActive() {
+        if secureInput {
             return AgentError(
                 code: .secureInputActive,
                 message: "Secure Event Input is active, so a synthetic \(step.kind.rawValue) event "

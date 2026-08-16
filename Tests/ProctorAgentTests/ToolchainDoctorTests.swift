@@ -61,7 +61,8 @@ struct ToolchainDoctorTests {
                                                   modified: 4, changed: 5) },
                     verify: { _ in signature }),
                 environment: environment),
-            screenRecordingProbe: .fake(),
+            screenRecordingProbe: .fake(), accessibilityProbe: { true },
+            secureInputProbe: { false },
             actuator: backend)
         await session.setAuditSink({ _ in })
         return session
@@ -392,7 +393,8 @@ struct ToolchainOnThisMachineTests {
         // native backend. It must not hang, must not spawn, and must come back
         // with every row and every lane.
         let session = Session(ax: FakeAX(bundleId: "com.example.app"), capture: FakeCapture(),
-                              screenRecordingProbe: .fake())
+                              screenRecordingProbe: .fake(), accessibilityProbe: { true },
+                              secureInputProbe: { false })
         await session.setAuditSink({ _ in })
         let report = await session.doctor(verbose: false)
         #expect(report.tools.contains { $0.tool == "maestro" })

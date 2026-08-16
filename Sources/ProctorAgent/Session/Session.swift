@@ -37,6 +37,18 @@ actor Session {
     /// would answer differently on a granted machine than on a denied one — and,
     /// measured, would hang outright inside a test host.
     let screenRecordingProbe: ScreenRecordingProbe
+    /// Reads Accessibility, injectable for the same reason `screenRecordingProbe`
+    /// is. `AXIsProcessTrusted()` answers for whatever process asks it, so a
+    /// suite that leaves this at its default is asserting on whether the
+    /// terminal that launched `swift test` happens to hold the grant, which is
+    /// ambient machine state the test neither controls nor declares.
+    let accessibilityProbe: @Sendable () -> Bool
+    /// Reads Secure Event Input, injectable for exactly the reason above, and
+    /// added because fixing only the Accessibility half left the same test
+    /// failing on the other one. Secure input is on whenever anything anywhere
+    /// on the Mac holds a password field, so a suite that leaves this at its
+    /// default passes or fails on what the person at the keyboard is doing.
+    let secureInputProbe: @Sendable () -> Bool
 
     /// How many past trees are retained per window to serve a sinceRevision
     /// diff. A caller more than this far behind is diffed from the oldest tree
@@ -629,6 +641,8 @@ actor Session {
          scheduler: RunScheduler = RunScheduler(),
          tools: ToolProbes = ToolProbes(),
          screenRecordingProbe: ScreenRecordingProbe = .live,
+         accessibilityProbe: @escaping @Sendable () -> Bool = { Grants.accessibility() },
+         secureInputProbe: @escaping @Sendable () -> Bool = { Grants.secureEventInputActive() },
          actuator: (any ActuationBackend)? = nil,
          runControl: RunControl = RunControl(),
          contentionMonitor: any ContentionSampling = NullContentionMonitor()) {
@@ -641,6 +655,8 @@ actor Session {
         self.screenRecordingProbe = screenRecordingProbe
         self.runControl = runControl
         self.contentionMonitor = contentionMonitor
+        self.accessibilityProbe = accessibilityProbe
+        self.secureInputProbe = secureInputProbe
         self.settler = Settler(capture: capture)
         // Defaulted to the native planes wrapping the same engine, so every
         // existing construction — and every existing test — builds a session

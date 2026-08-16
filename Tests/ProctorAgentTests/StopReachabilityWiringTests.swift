@@ -46,7 +46,7 @@ struct StopReachabilityWiringTests {
         let post = SyntheticPost()
         post.beginStep()
         let ax = FakeAX(bundleId: Self.target)
-        let session = Session(ax: ax, capture: FakeCapture())
+        let session = Session(ax: ax, capture: FakeCapture(), secureInputProbe: { false })
         await session.setAuditSink(AuditCollector().sink)
         await session.setDrawsHUD(false)
         let takeover = FakeTakeover()

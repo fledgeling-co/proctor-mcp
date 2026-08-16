@@ -22,10 +22,10 @@ extension Session {
         let osMajor = version.majorVersion
         let osVersion = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
 
-        let accessibilityGranted = Grants.accessibility()
+        let accessibilityGranted = accessibilityProbe()
         let screenRecording = await screenRecordingProbe.state()
         let shortcutsAvailable = FileManager.default.isExecutableFile(atPath: "/usr/bin/shortcuts")
-        let secureInput = Grants.secureEventInputActive()
+        let secureInput = secureInputProbe()
         let (attached, observers) = healthSnapshot()
         // Re-probed rather than read from the cache, and written back through it:
         // this is the "now" answer, and after it the health report and the browser

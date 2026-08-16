@@ -63,7 +63,7 @@ struct TakeoverWiringTests {
         -> (session: Session, ax: FakeAX, takeover: FakeTakeover, contention: FakeContention,
             control: RunControl) {
         let ax = FakeAX(bundleId: Self.target)
-        let session = Session(ax: ax, capture: FakeCapture())
+        let session = Session(ax: ax, capture: FakeCapture(), secureInputProbe: { false })
         await session.setAuditSink(AuditCollector().sink)
         await session.setDrawsHUD(false)
         let takeover = FakeTakeover()
@@ -258,7 +258,7 @@ struct TakeoverWiringTests {
     /// the event tap must decline to read Stop while ANY post is open.
     private func sharing(_ post: SyntheticPost) async throws -> (session: Session, ax: FakeAX) {
         let ax = FakeAX(bundleId: Self.target)
-        let session = Session(ax: ax, capture: FakeCapture())
+        let session = Session(ax: ax, capture: FakeCapture(), secureInputProbe: { false })
         await session.setAuditSink(AuditCollector().sink)
         await session.setDrawsHUD(false)
         await session.setTakeover(FakeTakeover())
@@ -309,6 +309,17 @@ struct TakeoverWiringTests {
         // while Proctor's click is still travelling — PRO-0033 failing in the
         // exact way it exists to prevent.
         let post = SyntheticPost()
+        // The clock is frozen because `inFlight` is bounded in TIME, not to the
+        // step: it is true only while `now() - declaredAt < 0.25`. This test
+        // declares, runs a whole batch on the wall clock, then asserts the
+        // window is still open, so a batch slower than a quarter second expires
+        // it naturally and the test reports a clearing nobody did. Measured at
+        // 0.108-0.136s in isolation, which whole-suite load closes.
+        //
+        // Freezing cannot conceal the defect being guarded. What a background
+        // run does wrong is clear `declaredAt`, and `inFlight` returns false on
+        // a nil `declaredAt` at every instant, frozen clock or not.
+        post.now = { 0 }
         post.declare()
         #expect(post.inFlight)
 
@@ -346,6 +357,10 @@ struct TakeoverWiringTests {
         // a reset containing a `click` would have joined the protocol while
         // holding nothing exclusive, and cleared a real poster's state.
         let post = SyntheticPost()
+        // Frozen for the same reason as the test above: `inFlight` expires on
+        // the wall clock after a quarter second, and this asserts it after a
+        // whole batch has run. A cleared `declaredAt` still reads false.
+        post.now = { 0 }
         post.declare()
         let h = try await sharing(post)
 
