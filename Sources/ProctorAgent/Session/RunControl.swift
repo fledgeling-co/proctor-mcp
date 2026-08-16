@@ -259,12 +259,60 @@ final class RunControl: @unchecked Sendable {
         // than hanging a person's kill switch.
         assert(!Thread.isMainThread,
                "the halt checkpoint must never be waited on from the main thread")
+        // A park that nobody intended is silent, and that silence is half its
+        // cost: the poll below never returns, the queue behind it never moves,
+        // and the process looks slow rather than held. The backstop is not
+        // shortened to fix that — how long a person's pause may hold a run is a
+        // product decision, and cutting it would turn a hang into a wrong answer
+        // — so the wait says what is holding it instead, once, after long enough
+        // that no ordinary pause reaches it.
+        var announced = false
+        let startedAt = now()
         while true {
             await probe?()
             if let halt = look(run: run) { return halt }
             if !isParked(run: run) { return nil }
+            if !announced, now() - startedAt >= RunControl.diagnosticAfter {
+                announced = true
+                announceLongPark(run: run, heldFor: now() - startedAt)
+            }
             try? await Task.sleep(nanoseconds: pollNanoseconds)
         }
+    }
+
+    /// How long a park runs before it says so. Well past a person pausing to
+    /// look at something and well short of the backstop, so the line lands while
+    /// somebody is still watching the run rather than after they gave up on it.
+    static let diagnosticAfter: TimeInterval = 20
+
+    /// One line, to stderr, naming the run and its cause.
+    ///
+    /// Deliberately not the audit trail: this is a note about Proctor's own
+    /// state for whoever is reading a terminal, not a record of what the run did
+    /// to the machine, and putting it in the trail would make an ordinary long
+    /// pause look like an event worth investigating.
+    private func announceLongPark(run: Int, heldFor: TimeInterval) {
+        FileHandle.standardError.write(Data(longParkMessage(run: run, heldFor: heldFor).utf8))
+    }
+
+    /// The sentence, apart from the writing of it, so a test can read what a
+    /// person would read rather than capturing a file descriptor.
+    func longParkMessage(run: Int, heldFor: TimeInterval) -> String {
+        lock.lock()
+        let byPerson = pausedByPerson
+        let hold = yields[run]
+        lock.unlock()
+        let cause: String
+        if byPerson {
+            cause = "a person's Pause"
+        } else if let hold {
+            cause = "an automatic hold: \(hold.reason.rawValue)"
+        } else {
+            cause = "nothing this latch can name, which is itself the fault"
+        }
+        return "proctor: run \(run) has been held \(Int(heldFor))s by \(cause). "
+             + "It carries on when the hold lifts, or gives up at "
+             + "\(Int(pauseLimit))s.\n"
     }
 
     /// One reading of the latch, under the lock and without waiting.

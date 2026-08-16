@@ -173,17 +173,27 @@ actor Session {
     var hudFeed: RunHUDFeed { hudFeedBox.feed }
     func setHUDFeed(_ feed: RunHUDFeed) { hudFeedBox.feed = feed }
 
-    /// The pause/stop latch the panel's buttons write to. The shared one in
-    /// production, so the panel and the run are talking about the same run;
-    /// substitutable so a test can drive a halt without reaching into a
-    /// singleton that another test is also using.
-    var runControl = RunControl.shared
+    /// The pause/stop latch the panel's buttons write to.
+    ///
+    /// NOT `RunControl.shared` BY DEFAULT, and the inversion is the whole of
+    /// PRO-0055. The panel writes the process-wide latch directly, so the agent
+    /// must hand this session that same one or Pause and Stop would reach
+    /// nothing — and it does, at `main.swift`, which is the one construction that
+    /// wants process-wide state and now says so. Every other construction gets a
+    /// latch of its own.
+    ///
+    /// The old default was the singleton, on the reasoning that production is
+    /// the case that matters. It is, and it was still wrong: a default is taken
+    /// by whoever does not think about it, so the dangerous value must be the
+    /// one somebody has to name. Measured before the change, five test suites
+    /// parked the shared latch and every later run inherited the park.
+    var runControl: RunControl
     func setRunControl(_ control: RunControl) { runControl = control }
 
-    /// Where "is a person using this Mac" is read from. The real one in
-    /// production; substitutable so a test can feed samples without AppKit, a
-    /// window server, or a hand.
-    var contentionMonitor: any ContentionSampling = ContentionMonitor.shared
+    /// Where "is a person using this Mac" is read from. Defaulted to a quiet
+    /// machine for the reason on `NullContentionMonitor`, and given the live one
+    /// by the agent.
+    var contentionMonitor: any ContentionSampling
     func setContentionMonitor(_ monitor: any ContentionSampling) { contentionMonitor = monitor }
 
     /// The full-screen statement, and the block behind it. Substitutable for the
@@ -619,7 +629,9 @@ actor Session {
          scheduler: RunScheduler = RunScheduler(),
          tools: ToolProbes = ToolProbes(),
          screenRecordingProbe: ScreenRecordingProbe = .live,
-         actuator: (any ActuationBackend)? = nil) {
+         actuator: (any ActuationBackend)? = nil,
+         runControl: RunControl = RunControl(),
+         contentionMonitor: any ContentionSampling = NullContentionMonitor()) {
         self.runScheduler = scheduler
         self.ax = ax
         self.capture = capture
@@ -627,6 +639,8 @@ actor Session {
         self.tri = tri
         self.tools = tools
         self.screenRecordingProbe = screenRecordingProbe
+        self.runControl = runControl
+        self.contentionMonitor = contentionMonitor
         self.settler = Settler(capture: capture)
         // Defaulted to the native planes wrapping the same engine, so every
         // existing construction — and every existing test — builds a session

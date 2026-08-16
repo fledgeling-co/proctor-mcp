@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **A run that is being held now says so, instead of looking slow.** Pause and Stop hold a run between steps, and a hold that nobody lifts used to be invisible: the run simply stopped producing steps, and from outside there was no way to tell a held run from a wedged one until the fifteen-minute backstop gave up. After twenty seconds a held run now writes one line naming which run it is, what is holding it, and when it will give up. The backstop itself is unchanged; how long your pause may hold a run is your decision, and shortening it would turn a wait into a wrong answer.
+
 - **A determinism score now says what it was a score of.** `proctor_stability` replays a recorded flow several times and reports how deterministic each step was. That score is built from a walk of the window's accessibility tree, and inside a browser's web area that tree is the page's own render tree rather than the application's view hierarchy; a score taken there measures the page's churn as much as the app's. Proctor already knew this, already carried the sentence saying so, and already showed it to you when you drove a step. The stability report was the one surface it never reached.
 
   It reaches it now, **per step**. A flow that clicks a toolbar button and then something on the page has steps of both kinds, so the report says which side of the boundary each step fell on, and names the browser and the steps concerned once. A single flag on the whole report would have marked the reload button suspect along with everything else.
