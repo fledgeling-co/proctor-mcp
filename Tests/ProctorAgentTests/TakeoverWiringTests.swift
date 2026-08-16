@@ -63,7 +63,7 @@ struct TakeoverWiringTests {
         -> (session: Session, ax: FakeAX, takeover: FakeTakeover, contention: FakeContention,
             control: RunControl) {
         let ax = FakeAX(bundleId: Self.target)
-        let session = Session(ax: ax, capture: FakeCapture())
+        let session = Session(ax: ax, capture: FakeCapture(), secureInputProbe: { false })
         await session.setAuditSink(AuditCollector().sink)
         await session.setDrawsHUD(false)
         let takeover = FakeTakeover()
@@ -258,7 +258,7 @@ struct TakeoverWiringTests {
     /// the event tap must decline to read Stop while ANY post is open.
     private func sharing(_ post: SyntheticPost) async throws -> (session: Session, ax: FakeAX) {
         let ax = FakeAX(bundleId: Self.target)
-        let session = Session(ax: ax, capture: FakeCapture())
+        let session = Session(ax: ax, capture: FakeCapture(), secureInputProbe: { false })
         await session.setAuditSink(AuditCollector().sink)
         await session.setDrawsHUD(false)
         await session.setTakeover(FakeTakeover())

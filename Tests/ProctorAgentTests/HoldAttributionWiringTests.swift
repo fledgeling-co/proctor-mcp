@@ -293,7 +293,7 @@ struct HoldAttributionWiringTests {
         let ax = FakeAX(bundleId: Self.target)
         ax.planeAt = [0: .syntheticEvent]
         let scheduler = RunScheduler(waitLimit: 5, now: { 0 })
-        let session = Session(ax: ax, capture: FakeCapture(), scheduler: scheduler)
+        let session = Session(ax: ax, capture: FakeCapture(), scheduler: scheduler, secureInputProbe: { false })
         await session.setAuditSink(AuditCollector().sink)
         await session.setDrawsHUD(false)
         let contention = FakeContention()
@@ -441,7 +441,7 @@ struct HoldAttributionWiringTests {
     @Test("the yield block keeps its shape when nothing is held")
     func theYieldBlockIsUnchangedWhenNothingIsHeld() async throws {
         let ax = FakeAX(bundleId: Self.target)
-        let session = Session(ax: ax, capture: FakeCapture())
+        let session = Session(ax: ax, capture: FakeCapture(), secureInputProbe: { false })
         await session.setDrawsHUD(false)
         let activity = await session.recentActivity()
         let yield = activity["foreground"]?["yield"]?.objectValue
@@ -457,7 +457,7 @@ struct HoldAttributionWiringTests {
     func theHealthReportMarksAHeldRun() async throws {
         let ax = FakeAX(bundleId: Self.target)
         let scheduler = RunScheduler(waitLimit: 5, now: { 0 })
-        let session = Session(ax: ax, capture: FakeCapture(), scheduler: scheduler)
+        let session = Session(ax: ax, capture: FakeCapture(), scheduler: scheduler, secureInputProbe: { false })
         await session.setDrawsHUD(false)
 
         let ticket = try await scheduler.acquire(lanes: LaneDemand(lanes: [.app("a"), .global]),

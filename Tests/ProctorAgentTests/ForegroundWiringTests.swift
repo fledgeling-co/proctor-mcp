@@ -21,7 +21,7 @@ struct ForegroundWiringTests {
 
     private func harness() async throws -> (session: Session, ax: FakeAX) {
         let ax = FakeAX(bundleId: Self.target)
-        let session = Session(ax: ax, capture: FakeCapture())
+        let session = Session(ax: ax, capture: FakeCapture(), secureInputProbe: { false })
         await session.setAuditSink(AuditCollector().sink)
         await session.setDrawsHUD(false)
         _ = try await session.attachResolved(bundleId: Self.target, pid: nil, name: nil)
