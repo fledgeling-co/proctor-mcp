@@ -62,7 +62,7 @@
 | PRO-0053 | `TakeoverWiringTests` reddens the gate at random | 2026-08-15 | Merged `477941f` |
 | PRO-0054 | Three tests still redden the gate at random | 2026-08-15 | Merged `a4483ec` |
 | PRO-0055 | The suite wedges in `haltCheckpoint` on a shared RunControl | 2026-08-16 | Merged `e53176b` |
-| PRO-0056 | A run says which machine it is on | 2026-08-16 | In Review |
+| PRO-0056 | A run says which machine it is on | 2026-08-16 | Merged |
 | PRO-0057 | The witness tier, and what it refuses | 2026-08-16 | Allocated |
 | PRO-0058 | Guest providers: lume and prlctl | 2026-08-16 | Allocated |
 | PRO-0059 | `proctor_guest`, the lifecycle tool | 2026-08-16 | Allocated |
