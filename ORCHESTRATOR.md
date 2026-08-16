@@ -300,12 +300,45 @@ refusal, whose question changed shape underneath it).
 | PRO-0049 | Run Maestro flows as Proctor flows | `50-…` | 3 | **MERGED** `7ca9358` · verified live |
 | PRO-0051 | Decide what happens to the native planes | `52-…` | 3 | **MERGED** `0f76c56` · reading 3 chosen |
 | PRO-0029 | A home for the PROCTOR_* switches | `30-…` | 3 | **MERGED** `153951b` (carried, revised) |
-| PRO-0054 | Three tests still redden the gate at random | `55-…` | 3 | **RUNNING** `wf_7c3cc18e-9ec` · re-run after a lost first attempt |
+| PRO-0054 | Three tests still redden the gate at random | `55-…` | 3 | **PARKED** `0521416` on `ai/pro-0054` · 3 of 4 fixed, ungated: the suite wedges |
 | PRO-0038 | Stability knows when it is scoring a page | `39-…` | 3 | **MERGED** `30324a6` (carried, revised) |
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **MERGED** `c9e42c9` · fixed a live PRO-0050 defect |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **MERGED** `d6cf947` · skill edits UNCOMMITTED in fledgeling-plugins |
 
 ## Event log (append-only, newest first)
+- 2026-08-16 **The whole test suite wedges, and it is not PRO-0054's three flaky tests.**
+  Found while trying to gate PRO-0054, and it is now the thing blocking that merge.
+  - **Reproduces on unmodified `main`**, at load average 6 with **zero** stuck test helpers,
+    and it survives a `replayd` restart. So it is neither the machine saturation that
+    explained the earlier deaths nor PRO-0041's `SCShareableContent` wedge.
+  - **Shape:** 1571 tests start, 1520 finish, **24 to 59 never report**, and the process never
+    prints a verdict line. `scripts/test.sh` correctly refuses to score it, which is the only
+    reason this was visible at all.
+  - **The lead:** every unfinished test goes through `Session.act` — foreground and
+    background reporting, browser page disclosure, delegated batches, the replay trail. That
+    is an actor or settle that never returns rather than a test problem, and it wants its own
+    item.
+  - **Also cleared out:** seven orphaned `swiftpm-testing-helper` processes whose test bundles
+    had been deleted with their worktrees, two of them from `.worktrees/PRO-0044` and stuck on
+    `--filter BrowserLaneWiringTests` since before PRO-0041 merged. They were holding resources
+    for hours. Killing them dropped load from 28 to 22 and did **not** fix the wedge.
+- 2026-08-16 **PRO-0054 partially fixed on `ai/pro-0054`, unmerged and ungated** (`0521416`).
+  - **Two of the three flaky tests fixed, and the diagnosis was the stopped runner's.**
+    `TakeoverWiringTests`' two `inFlight` assertions freeze the clock: `inFlight` is bounded in
+    TIME rather than to the step (`now() - declaredAt < 0.25`), and both tests declare, run a
+    whole batch on the wall clock, then assert the window is still open. Freezing cannot
+    conceal the defect guarded, because a background run's error is to clear `declaredAt`, and
+    `inFlight` reads false on nil at every instant. The sibling four lines up asserts
+    `declaredThisStep`, has identical shape and never flaked, which is what identifies the
+    cause rather than merely fitting it.
+  - **The fourth case fixed, and it was the only non-intermittent one.** `ToolchainDoctorTests`
+    injected a fake Screen Recording probe and nothing for Accessibility, so `doctor()` read
+    the test host's live `AXIsProcessTrusted()`. `Session` now takes an `accessibilityProbe`
+    defaulting to the live read, symmetric with `screenRecordingProbe`.
+  - **`ForegroundWiringTests` deliberately untouched:** its fix needs a rendezvous through
+    `FakeAX.perform` and is not worth landing unverified.
+  - **Not merged, because it cannot be gated** while the wedge above stands. A parked item with
+    a reason beats a green tick nobody checked.
 - 2026-08-16 **PRO-0052 merged `d6cf947`. The skill matches what shipped.** No source change,
   and that is the correct outcome: the code was right and its description was not.
   **772 insertions, 105 deletions across `SKILL.md` and `references/tools.md`, edited in place
