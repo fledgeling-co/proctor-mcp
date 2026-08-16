@@ -69,4 +69,4 @@
 | PRO-0060 | Reaching a guest's Proctor over SSH | 2026-08-16 | Allocated |
 | PRO-0061 | Auto-routing, and the disclosure that makes it honest | 2026-08-16 | Allocated |
 | PRO-0062 | The overlay says which machine | 2026-08-16 | Allocated |
-| PRO-0063 | Captures are sized by what they are for | 2026-08-16 | In Review |
+| PRO-0063 | Captures are sized by what they are for | 2026-08-16 | Merged |
