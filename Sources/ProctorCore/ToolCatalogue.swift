@@ -74,13 +74,20 @@ public enum ToolCatalogue {
         this data can disclose it. For Google Chrome and Chromium, if an attach returns an empty \
         web tree or manualAccessibilityApplied is false, launch or restart Chrome with \
         --force-renderer-accessibility so all web DOM inputs, buttons, and links populate the tree. \
-        For autonomous web automation on existing authenticated profiles, browser-use CLI and \
-        Chrome MCP tools can connect directly to the running instance.
+        For navigation these planes cannot express against a real signed-in browser, browser-use is \
+        the second lane, and it is off unless PROCTOR_SECOND_LANE names it - doctor's secondLane \
+        field says which. Obscura, the default lane, runs its own engine and cookie jar and \
+        therefore sees no session and no password manager.
 
-        When driving login forms, 1Password autofill items appear as native accessibility elements \
-        (such as AXButton nodes in Chrome) and can be triggered via press in the background without \
-        being blocked by Secure Event Input. For email-based 2FA, OTP codes, or magic login links, \
-        use Sift Mail MCP tools to query recent messages and extract verification codes automatically.
+        When driving login forms, 1Password autofill items are native accessibility elements and \
+        their role differs by browser: measured on 2026-08-16, one entry was an AXButton in Chrome \
+        and an AXMenuItem in Safari, and only the Chrome button honoured press. An accepted action \
+        is not an effective one, so compare stateHash across the step rather than trusting ok.
+
+        Proctor ships no mail tool and reads no mail. When a mail MCP server is connected to the \
+        same host, an emailed code or magic link can be read from it and fed back with setValue or \
+        a navigation - discover that server's tool names from its own catalogue, since they are not \
+        Proctor's and doctor does not report them.
 
         Returns app handles, window handles with frames and Space membership, and the tree \
         provenance for each attachment.
