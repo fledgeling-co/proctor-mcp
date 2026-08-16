@@ -29,8 +29,12 @@ struct MachineDisclosureWiringTests {
         return (session, ax, audit)
     }
 
+    // A macOS guest running a full Proctor, so it observes natively. The tier is
+    // named rather than defaulted because `Machine` gives it no default: see
+    // PRO-0057 for why a forgotten tier would be worse than an absent one.
     private static let guestMachine = Machine(kind: .guest, name: "sequoia-seed",
-                                              provider: "lume", platform: .macos)
+                                              provider: "lume", platform: .macos,
+                                              tier: .native)
 
     // MARK: - The default does not move
 
@@ -122,7 +126,7 @@ struct MachineDisclosureWiringTests {
         // with whatever happened to be known when the row was written.
         #expect(Machine.host.auditToken == "host")
         #expect(Self.guestMachine.auditToken == "guest:sequoia-seed")
-        #expect(Machine(kind: .guest).auditToken == "guest:unnamed")
+        #expect(Machine(kind: .guest, tier: .native).auditToken == "guest:unnamed")
     }
 
     @Test("the panel's phrase degrades by dropping clauses, never by printing an absence")
@@ -131,7 +135,7 @@ struct MachineDisclosureWiringTests {
         #expect(Self.guestMachine.line == "sequoia-seed · macos · lume")
         // A guest whose provider was never established says less, and says
         // nothing about nil.
-        let bare = Machine(kind: .guest, name: "win11")
+        let bare = Machine(kind: .guest, name: "win11", tier: .delegated)
         #expect(bare.line == "win11")
         #expect(bare.line.contains("nil") == false)
     }

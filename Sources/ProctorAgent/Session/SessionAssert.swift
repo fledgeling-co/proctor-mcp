@@ -110,6 +110,20 @@ extension Session {
                           + "`find` with a predicate")
         }
 
+        // What this machine can be asked at all, before anything is measured.
+        //
+        // Checked here rather than inside each kind, because the question is
+        // about the substrate rather than about the assertion: on a delegated
+        // machine there is no accessibility tree for any of them to read, and a
+        // per-kind check would be sixteen places to forget it. A kind added later
+        // is refused by this shape until somebody says otherwise, which is the
+        // safe direction — a refusal on a kind that would have worked is visible,
+        // and a permission on one that cannot be evaluated is a pass nobody took.
+        if let why = machine.tier.cannotEvaluate(kind) {
+            return Outcome(status: .skipped, observed: .null,
+                           expected: expected, reason: why)
+        }
+
         switch kind {
         case "exists":
             let node = subject()
@@ -204,8 +218,19 @@ extension Session {
             return focusOrder(tree: tree, tolerance: tolerance ?? 8.0)
 
         case "regionMatches":
-            return await regionMatches(spec: spec, subject: subject(), tolerance: tolerance ?? 0.02,
-                                       window: window)
+            var outcome = await regionMatches(spec: spec, subject: subject(),
+                                              tolerance: tolerance ?? 0.02, window: window)
+            // The one kind a delegated machine can attempt, so it is the one that
+            // needs the qualification. The comparison genuinely ran; what is
+            // missing is any guarantee that the frame it ran against was
+            // complete. Attached rather than folded into the verdict, because
+            // downgrading a real pass to a fail would be inventing a defect, and
+            // reporting it unqualified would be claiming evidence Proctor did not
+            // have.
+            if let caveat = machine.tier.pixelCaveat {
+                outcome.reason = [outcome.reason, caveat].compactMap { $0 }.joined(separator: " ")
+            }
+            return outcome
 
         case "agree":
             return await agree(tree: tree, window: window)
