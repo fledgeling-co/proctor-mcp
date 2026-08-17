@@ -43,6 +43,14 @@ enum Actuator {
     /// round trips rather than a walk to the application element.
     static let scrollAncestorLimit = 12
 
+    /// One line, in points, when the target does not report a better one.
+    /// 16 is macOS 13pt body with typical leading. The wheel fallback uses
+    /// the same number, so a delta of 3 is three lines on both rungs.
+    static let defaultLineHeight: Double = 16
+
+    /// How many of those lines make a page when the viewport is unknown.
+    static let defaultLinesPerPage: Double = 16
+
     static func perform(_ step: ActionStep, target: ActuationTarget,
                         foreground: Bool) throws -> Actuation {
         if let node = target.node { AXUIElementSetMessagingTimeout(node, AXTimeout.action) }
@@ -377,9 +385,22 @@ enum Actuator {
         let delta = step.delta ?? [0, -3]
         let dy = delta.count > 1 ? delta[1] : 0
         let dx = delta.first ?? 0
+        let line = lineHeight(from: AXRead.frame(element))
+        let viewport = enclosingScrollAreaFrame(of: element)
+        let vLines = linesPerPage(viewport: viewport?.h, lineHeight: line)
+        let hLines = linesPerPage(viewport: viewport?.w, lineHeight: line)
+        let primary = dy != 0 ? dy : dx
+        let pageLines = dy != 0 ? vLines : hLines
 
         if AXRead.string(element, kAXRoleAttribute) == kAXScrollBarRole,
-           writeBar(element, by: dy != 0 ? dy : dx) {
+           writeBar(element, by: primary, linesPerPage: pageLines) {
+            return Actuation(.accessibility, .scrollBar)
+        }
+
+        // Precise bar write first. The page action used to outrank it, so a
+        // delta of 3 became a whole page whenever the element offered one.
+        if scrollEnclosingArea(of: element, dx: dx, dy: dy,
+                               vLines: vLines, hLines: hLines) {
             return Actuation(.accessibility, .scrollBar)
         }
 
@@ -389,17 +410,10 @@ enum Actuator {
             else if dx < 0 { AXAttr.scrollRightByPage }
             else if dx > 0 { AXAttr.scrollLeftByPage }
             else { nil }
-        if let wanted, available.contains(wanted) {
+        if prefersPageAction(delta: primary, linesPerPage: pageLines),
+           let wanted, available.contains(wanted) {
             let err = AXUIElementPerformAction(element, wanted as CFString)
             if err.isSuccess { return Actuation(.accessibility, .scrollAction) }
-        }
-
-        // The element is inside something scrollable even when it offers nothing
-        // itself — a cell in a list, a label in a document. The scroll area that
-        // encloses it owns bars that do take a value, and driving those is still
-        // the accessibility plane, so it is tried before conceding the front.
-        if scrollEnclosingArea(of: element, dx: dx, dy: dy) {
-            return Actuation(.accessibility, .scrollBar)
         }
 
         // Falling back to a scroll wheel event activates the app and enters the
@@ -418,6 +432,8 @@ enum Actuator {
                 detail: .object([
                     "available": .array(available.map { .string($0) }),
                     "attempted": .string(wanted ?? "none"),
+                    "deltaMeans": .string("lines"),
+                    "lineHeight": .number(line),
                 ]))
         }
         guard let centre = centre(of: element) else {
@@ -430,7 +446,8 @@ enum Actuator {
         warpCursor(to: centre)
         let source = eventSource()
         let event = CGEvent(scrollWheelEvent2Source: source, units: .pixel, wheelCount: 2,
-                            wheel1: Int32(dy), wheel2: Int32(dx), wheel3: 0)
+                            wheel1: wheelPixels(delta: dy, lineHeight: line),
+                            wheel2: wheelPixels(delta: dx, lineHeight: line), wheel3: 0)
         event?.post(tap: .cghidEventTap)
         return Actuation(.syntheticEvent, .eventStream)
     }
@@ -441,7 +458,8 @@ enum Actuator {
     /// asked for, so a partial result hands on to the next route rather than
     /// reporting a success the caller cannot act on.
     private static func scrollEnclosingArea(of element: AXUIElement,
-                                            dx: Double, dy: Double) -> Bool {
+                                            dx: Double, dy: Double,
+                                            vLines: Double, hLines: Double) -> Bool {
         guard dx != 0 || dy != 0 else { return false }
         var current: AXUIElement? = element
         var depth = 0
@@ -455,11 +473,11 @@ enum Actuator {
             var wanted = 0, moved = 0
             if dy != 0, let bar = AXRead.element(node, kAXVerticalScrollBarAttribute) {
                 wanted += 1
-                if writeBar(bar, by: dy) { moved += 1 }
+                if writeBar(bar, by: dy, linesPerPage: vLines) { moved += 1 }
             }
             if dx != 0, let bar = AXRead.element(node, kAXHorizontalScrollBarAttribute) {
                 wanted += 1
-                if writeBar(bar, by: dx) { moved += 1 }
+                if writeBar(bar, by: dx, linesPerPage: hLines) { moved += 1 }
             }
             // The first scroll area that answers at all is the one this element
             // sits in; a further ancestor is somebody else's scroller.
@@ -468,21 +486,34 @@ enum Actuator {
         return false
     }
 
-    /// Move one scroll bar by a delta and confirm it moved.
+    private static func enclosingScrollAreaFrame(of element: AXUIElement) -> Rect? {
+        var current: AXUIElement? = element
+        var depth = 0
+        while let node = current, depth < scrollAncestorLimit {
+            if AXRead.string(node, kAXRoleAttribute) == kAXScrollAreaRole {
+                return AXRead.frame(node)
+            }
+            current = AXRead.element(node, kAXParentAttribute)
+            depth += 1
+        }
+        return AXRead.frame(element)
+    }
+
+    /// Move one scroll bar by a delta in lines and confirm it moved.
     ///
-    /// A bar's `AXValue` is its position in the document as a fraction, so the
-    /// delta is mapped the way the scroll-bar branch has always mapped it —
-    /// a hundredth of the document per unit. That mapping is crude, and it is
-    /// deliberately unchanged here: correcting it would change what every
-    /// already-working scroll does, which is a different item.
+    /// A bar's `AXValue` is its position in the document as a fraction.
+    /// There is no cross-process line height, so a line is
+    /// `1 / linesPerPage` of the document: the viewport height divided by
+    /// the line height when both are known, otherwise 16 lines to a page.
     ///
     /// A bar already at the end reads back unchanged and reports failure, which
     /// is right: nothing moved, and a caller told otherwise would believe the
     /// document had scrolled.
-    private static func writeBar(_ bar: AXUIElement, by delta: Double) -> Bool {
+    private static func writeBar(_ bar: AXUIElement, by delta: Double,
+                                 linesPerPage: Double) -> Bool {
         guard AXWrite.isSettable(bar, kAXValueAttribute) else { return false }
         let before = AXRead.value(bar)?.doubleValue ?? 0
-        let next = scrollFraction(from: before, by: delta)
+        let next = scrollFraction(from: before, by: delta, linesPerPage: linesPerPage)
         guard AXWrite.set(bar, kAXValueAttribute, NSNumber(value: next)).isSuccess else {
             return false
         }
@@ -490,11 +521,40 @@ enum Actuator {
         return moved(from: before, to: after)
     }
 
-    /// Where a bar ends up after a delta. A hundredth of the document per unit,
-    /// clamped to the ends, which is the mapping the scroll-bar branch has
-    /// always used.
-    static func scrollFraction(from current: Double, by delta: Double) -> Double {
-        max(0, min(1, current + (delta / 100)))
+    /// Where a bar ends up after a delta in lines. Clamped to the ends.
+    static func scrollFraction(from current: Double, by delta: Double,
+                               linesPerPage: Double = defaultLinesPerPage) -> Double {
+        let page = max(1, linesPerPage)
+        return max(0, min(1, current + (delta / page)))
+    }
+
+    /// A line height in points. A frame between 8 and 40 pt is treated as the
+    /// element's own line; anything else is the 16 pt default, because a
+    /// 400 pt list row is not a line.
+    static func lineHeight(from frame: Rect?) -> Double {
+        guard let height = frame?.h, height >= 8, height <= 40 else {
+            return defaultLineHeight
+        }
+        return height
+    }
+
+    /// How many lines fit in the viewport. Unknown viewport is 16, so a
+    /// delta of 1 is still a line rather than a guess at the document.
+    static func linesPerPage(viewport: Double?, lineHeight: Double) -> Double {
+        let line = max(1, lineHeight)
+        guard let viewport, viewport > 0 else { return defaultLinesPerPage }
+        return max(1, viewport / line)
+    }
+
+    /// The page action is the fitter rung only when the ask is at least
+    /// half a page. A delta of 3 is never a page.
+    static func prefersPageAction(delta: Double, linesPerPage: Double) -> Bool {
+        abs(delta) >= max(1, linesPerPage) * 0.5
+    }
+
+    /// The wheel fallback, in pixels, so a line is a line on both rungs.
+    static func wheelPixels(delta: Double, lineHeight: Double) -> Int32 {
+        Int32((delta * lineHeight).rounded())
     }
 
     /// Whether a bar actually moved. A bar already at the end reads back
