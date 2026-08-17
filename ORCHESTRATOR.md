@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 8 complete & Backlog clear.** All 63 items merged or retired. The gate is green: 1513 tests in 174 suites. Proctor supports VM targets (lume & prlctl), witness tiers (native & delegated), SSH streamLocal reach, auto-routing gates, resolution-scaled captures, and precise scroll units.
-**Updated:** 2026-08-17 — wave 8 + PRO-0034 landed in full. **1513 tests / 174 suites green on local `main` @ `b3102b6`**. Nothing pushed.
+**Status:** **Wave 8 complete & Backlog clear.** All 63 items merged or retired. The gate is green: 1516 tests in 175 suites. Proctor supports VM targets (lume & prlctl), witness tiers (native & delegated), SSH streamLocal reach, auto-routing gates, resolution-scaled captures, and precise scroll units.
+**Updated:** 2026-08-17 — wave 8 + PRO-0034 landed in full. **1516 tests / 175 suites green on local `main`**. Nothing pushed.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
 - **This repo DOES now have a git remote** (`origin` → github.com/fledgeling-co/proctor-mcp). The earlier "no git remote, main is LOCAL-ONLY" note is stale. Local `main` is **4 commits AHEAD** of `origin/main` and those commits carry unreviewed WIP: **merge to local `main` only, never push.**
