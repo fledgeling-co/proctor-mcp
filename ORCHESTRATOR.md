@@ -1,12 +1,12 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 8 complete & Backlog clear.** All 63 items merged or retired. The gate is green: 1516 tests in 175 suites. Proctor supports VM targets (lume & prlctl), witness tiers (native & delegated), SSH streamLocal reach, auto-routing gates, resolution-scaled captures, and precise scroll units.
-**Updated:** 2026-08-17 — wave 8 + PRO-0034 landed in full. **1516 tests / 175 suites green on local `main`**. Nothing pushed.
+**Status:** **v0.2.0 released, notarised, and pushed.** All 63 items merged or retired. The gate is green: 1,520 tests in 175 suites. Proctor supports VM targets (lume & prlctl), witness tiers (native & delegated), SSH streamLocal reach, auto-routing gates, resolution-scaled captures, and precise scroll units.
+**Updated:** 2026-08-17 — v0.2.0 tagged, notarised, stapled, and installed. **1,520 tests / 175 suites green on `main`**, fully synchronised with `origin/main`.
 
-### Corrections to earlier rows (reconciled 2026-08-14)
-- **This repo DOES now have a git remote** (`origin` → github.com/fledgeling-co/proctor-mcp). The earlier "no git remote, main is LOCAL-ONLY" note is stale. Local `main` is **4 commits AHEAD** of `origin/main` and those commits carry unreviewed WIP: **merge to local `main` only, never push.**
-- Worktrees branch from **local HEAD**, set via `.claude/settings.local.json` (`worktree.baseRef: head`), because `origin/main` does not contain the design artifacts wave 3 depends on.
-- The agent-panel rendering blocker that gated the run HUD is **FIXED** at `2e478ec` (one panel per screen; the union panel's 26Mpx backing store is accepted by the window server and never presented). Its brief has been deleted from `docs/features-to-triage/`.
+### Repository state (reconciled 2026-08-17)
+- **Git remote:** `origin` → `github.com/fledgeling-co/proctor-mcp`. Local `main` is up to date with `origin/main` at tag `v0.2.0`.
+- **Installed bundle:** `/Applications/Proctor.app` is rebuilt, Developer ID signed, notarised by Apple, and running in launchd `gui/501`.
+- **Verification:** All 63 features verified across 175 test suites (1,520 tests) plus 7 acceptance journeys.
 
 ## How to resume
 You are the fleet orchestrator (ship-fleet skill). Read this file top to bottom, reconcile
