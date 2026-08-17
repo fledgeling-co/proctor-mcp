@@ -1143,6 +1143,15 @@ public enum ToolCatalogue {
         fresh ungranted machine. Each mutating action is audited under proctor_guest.start / \
         .stop / .clone.
 
+        reach describes how a host-side session talks to a Proctor already running on another \
+        Mac: an SSH StreamLocal forward onto that agent's unix socket, then PROCTOR_SOCKET \
+        pointed at the local end. There is no new network transport. The result is a recipe — \
+        localSocket, remoteSocket, host — never a shell command, because a tool result that \
+        carried ssh -L would be an instruction a model with a shell would run. Proctor does \
+        not open the tunnel. Delegated (Linux / Windows) guests have no Proctor socket and \
+        are refused here; they go through Cua. The same recipe reaches a remote Mac over \
+        Tailscale: the host is that Mac's name and there is no guest in between.
+
         A macOS guest is a native witness: a full Proctor inside it has frame status, the \
         accessibility tree and the tri-observer check. A Linux or Windows guest is delegated: \
         actuation and screenshots only, and every tree-reading assertion is skipped with a \
@@ -1158,12 +1167,13 @@ public enum ToolCatalogue {
                 "action": .object([
                     "type": .string("string"),
                     "enum": .array([.string("list"), .string("status"), .string("start"),
-                                    .string("stop"), .string("clone")]),
+                                    .string("stop"), .string("clone"), .string("reach")]),
                     "description": .string(
                         "list enumerates guests and touches nothing; status reads one; start and "
                         + "stop change its power state and re-read it; clone copies a named guest "
-                        + "to newName. Defaults to list. Nothing provisions a guest that does not "
-                        + "already exist.")
+                        + "to newName; reach describes the SSH StreamLocal tunnel onto a native "
+                        + "guest's Proctor socket. Defaults to list. Nothing provisions a guest "
+                        + "that does not already exist, and nothing opens a tunnel.")
                 ]),
                 "guest": .object([
                     "type": .string("string"),
@@ -1184,6 +1194,30 @@ public enum ToolCatalogue {
                     "description": .string(
                         "The name of the copy, for action clone. Required there. The source is "
                         + "untouched.")
+                ]),
+                "host": .object([
+                    "type": .string("string"),
+                    "description": .string(
+                        "Where SSH should land, for action reach. A hostname, a Tailscale "
+                        + "MagicDNS name, or the guest's IP. Required for reach.")
+                ]),
+                "user": .object([
+                    "type": .string("string"),
+                    "description": .string(
+                        "SSH user, for action reach. Omit to use the local account's default.")
+                ]),
+                "remoteSocket": .object([
+                    "type": .string("string"),
+                    "description": .string(
+                        "The guest agent's unix socket, as it appears on that machine. Defaults "
+                        + "to the standard install path under Application Support.")
+                ]),
+                "localSocket": .object([
+                    "type": .string("string"),
+                    "description": .string(
+                        "Where the host-side shim should connect. Defaults to a per-guest path "
+                        + "under Application Support. Set PROCTOR_SOCKET to this after the "
+                        + "tunnel is up.")
                 ])
             ])
         ]),

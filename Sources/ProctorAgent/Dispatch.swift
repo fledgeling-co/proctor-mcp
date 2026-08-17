@@ -647,15 +647,19 @@ struct Dispatcher: Sendable {
     /// Nothing provisions. A guest that does not already exist is refused.
     private func guest(_ args: Args) async throws -> JSONValue {
         let action = args.string("action") ?? "list"
-        guard ["list", "status", "start", "stop", "clone"].contains(action) else {
+        guard ["list", "status", "start", "stop", "clone", "reach"].contains(action) else {
             throw AgentError(code: .invalidArguments,
                              message: "unknown guest action \(action.debugDescription)",
-                             remedy: "Use list, status, start, stop or clone.")
+                             remedy: "Use list, status, start, stop, clone or reach.")
         }
         return try await session.guest(action: action,
                                        guest: args.string("guest"),
                                        provider: args.string("provider"),
-                                       newName: args.string("newName"))
+                                       newName: args.string("newName"),
+                                       host: args.string("host"),
+                                       user: args.string("user"),
+                                       remoteSocket: args.string("remoteSocket"),
+                                       localSocket: args.string("localSocket"))
     }
 
     // MARK: - proctor_resource (MCP resources backing)
