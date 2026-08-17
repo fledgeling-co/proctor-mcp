@@ -271,7 +271,7 @@ extension Session {
         // run takes nothing, so holding it would be noise about a contention
         // that cannot happen. `takesForeground` is PRO-0019's value, not a
         // second derivation of the same question.
-        if demand.takesForeground {
+        if demand.takesForeground && !machine.isGuest {
             armContention(run: foregroundRun, because: "the batch takes the foreground")
         }
         // The block reaches this run's latch rather than a stale one, and the
@@ -409,7 +409,9 @@ extension Session {
                                            stepsAside: stepsAside))
                 // The statement goes up before the first event is posted, on
                 // every display, and stays up for the rest of the batch.
-                if synthetic || stepsAside { takeoverShow(app: app?.name) }
+                if (synthetic || stepsAside) && !machine.isGuest {
+                    takeoverShow(app: app?.name)
+                }
                 await showCursor(for: step, window: window, owner: pointerOwner)
             }
 
@@ -654,7 +656,9 @@ extension Session {
                 // not at all: the batch has more steps in it.
                 takeoverShow(app: app?.name)
                 noteTookForeground(pid: app?.pid)
-                armContention(run: foregroundRun, because: "a step travelled the event stream")
+                if !machine.isGuest {
+                    armContention(run: foregroundRun, because: "a step travelled the event stream")
+                }
             }
             if let stateHash {
                 run.finalHash = stateHash

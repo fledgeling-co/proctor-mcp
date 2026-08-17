@@ -77,6 +77,9 @@ extension Session {
     /// step: a full-screen tint flashing on and off between ten clicks is
     /// strobing, and strobing is worse than the thing it announces.
     func takeoverShow(app: String?) {
+        // A guest run does not take this Mac. The statement, the input
+        // block and the yield are all claims about *this* machine.
+        guard !machine.isGuest else { return }
         guard !takeoverShown else { return }
         takeoverShown = true
         takeover.show(app: app)

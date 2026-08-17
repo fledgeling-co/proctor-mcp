@@ -132,6 +132,18 @@ struct TakeoverWiringTests {
         #expect(h.takeover.arms.count == 1)
     }
 
+    @Test("a guest session raises no statement, arms no block and watches no contention")
+    func aGuestRunLeavesThisMacAlone() async throws {
+        let h = try await harness()
+        await h.session.setMachine(Machine(kind: .guest, name: "sequoia-seed",
+                                           provider: "lume", platform: .macos,
+                                           tier: .native))
+        _ = try await act(h, [step(.click), step(.click)])
+        #expect(h.takeover.shows.isEmpty)
+        #expect(h.takeover.arms.isEmpty)
+        #expect(h.contention.armCount == 0)
+    }
+
     // MARK: - A7: the block cannot outlive the step or the run
 
     @Test("every arming is matched by a release, and the run ends with a stopAll")

@@ -65,7 +65,7 @@ public enum RunHUDEvent: Sendable {
     /// the one exception row as a wording, never as a second row, and it
     /// defaults to today's answer so no existing caller changes.
     case runBegan(total: Int, app: String?, foreground: ForegroundDemand = ForegroundDemand(),
-                  delegated: Bool = false)
+                  delegated: Bool = false, machine: Machine = .host)
     /// Travelling to a step's target, before it actuates.
     case stepApproaching(step: ActionStep, node: AXNode?, synthetic: Bool,
                          stepsAside: Bool = false)
@@ -241,6 +241,12 @@ public struct RunHUDModel: Sendable, Equatable {
     /// run appears, and swaps to the present tense while such a step is
     /// actually in flight.
     public var exception: String?
+    /// Which machine the steps are landing on. Nil on this Mac, so a host run
+    /// encodes exactly as it did before guests existed. On a guest it names
+    /// the guest; the takeover statement, the input block and the yield are
+    /// all assertions about *this* machine and are false when the steps are
+    /// elsewhere, so the exception line says the Mac is free instead.
+    public var target: String?
     /// Whether the step being actuated *right now* travels the event stream.
     ///
     /// Separate from `exception` because the two answer different questions and
@@ -314,12 +320,15 @@ public struct RunHUDState: Sendable {
     private var pending: (step: ActionStep, node: AXNode?)?
     /// Whether another program is performing this run's steps.
     private var delegated = false
+    /// The machine the steps are landing on. Host by default, so every
+    /// existing caller keeps today's wording.
+    private var machine: Machine = .host
 
     public init() {}
 
     public mutating func apply(_ event: RunHUDEvent) {
         switch event {
-        case .runBegan(let total, let app, let foreground, let delegated):
+        case .runBegan(let total, let app, let foreground, let delegated, let machine):
             var fresh = RunHUDModel()
             fresh.total = max(0, total)
             fresh.visible = true
@@ -332,15 +341,22 @@ public struct RunHUDState: Sendable {
             self.app = app
             self.demand = foreground
             self.delegated = delegated
+            self.machine = machine
             self.knownForeground = foreground.certainSteps
             self.resolvedConditional = 0
             self.pending = nil
-            // Before anything runs, and stated as what the batch contains rather
-            // than as a prediction about what will happen. A batch can end before
-            // it reaches its first synthetic step; it cannot stop containing one.
-            fresh.exception = foreground.notice(app: app, known: knownForeground,
-                                                resolvedConditional: resolvedConditional,
-                                                delegated: delegated)
+            // A guest run does not take *this* Mac, so the host-takeover
+            // sentence is a lie. Name the guest and say the machine is free.
+            if machine.isGuest {
+                fresh.target = machine.line
+                fresh.exception = Self.guestFreeLine(machine)
+            } else {
+                // Before anything runs, and stated as what the batch contains
+                // rather than as a prediction about what will happen.
+                fresh.exception = foreground.notice(app: app, known: knownForeground,
+                                                    resolvedConditional: resolvedConditional,
+                                                    delegated: delegated)
+            }
             model = fresh
 
         case .stepApproaching(let step, let node, let synthetic, let stepsAside):
@@ -510,6 +526,10 @@ public struct RunHUDState: Sendable {
     private mutating func setPlaneStatement(synthetic: Bool, stepsAside: Bool = false) {
         model.syntheticInFlight = synthetic
         model.stepsAside = stepsAside
+        if machine.isGuest {
+            model.exception = Self.guestFreeLine(machine)
+            return
+        }
         model.exception = synthetic
             ? Self.exceptionLine(app: app)
             : demand.notice(app: app, known: knownForeground,
@@ -522,5 +542,12 @@ public struct RunHUDState: Sendable {
     public static func exceptionLine(app: String?) -> String {
         let who = StepDescription.sanitised(app) ?? "the app under test"
         return "Synthetic event — \(who) must stay in front"
+    }
+
+    /// The one sentence a guest run may put on the exception line. The
+    /// takeover statement, the input block and the yield are all claims
+    /// about this Mac and are false when the steps land elsewhere.
+    public static func guestFreeLine(_ machine: Machine) -> String {
+        "On \(machine.line). This Mac is free."
     }
 }

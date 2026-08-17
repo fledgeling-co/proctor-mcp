@@ -252,6 +252,32 @@ struct RunHUDStateTests {
         #expect(state.model.exception == nil)
     }
 
+    @Test("a guest run names the guest and says this Mac is free")
+    func guestRunNamesTheGuest() {
+        let guest = Machine(kind: .guest, name: "sequoia-seed",
+                            provider: "lume", platform: .macos, tier: .native)
+        var state = RunHUDState()
+        state.apply(.runBegan(total: 3, app: "Acme Console",
+                              foreground: ForegroundDemand.forBatch(
+                                kinds: [.click, .click, .click],
+                                synthetic: [.click], conditional: [], foreground: true),
+                              machine: guest))
+        #expect(state.model.target == "sequoia-seed · macos · lume")
+        #expect(state.model.exception == "On sequoia-seed · macos · lume. This Mac is free.")
+        // A synthetic step on a guest does not claim this Mac must stay in front.
+        state.apply(.stepActing(step: step(.click), node: el(), synthetic: true))
+        #expect(state.model.exception == "On sequoia-seed · macos · lume. This Mac is free.")
+        #expect(state.model.exception?.contains("must stay in front") != true)
+    }
+
+    @Test("a host run still has no target and still announces a synthetic step")
+    func hostRunIsUnchanged() {
+        var state = running(app: "Acme Console")
+        #expect(state.model.target == nil)
+        state.apply(.stepActing(step: step(.click), node: el(), synthetic: true))
+        #expect(state.model.exception == "Synthetic event — Acme Console must stay in front")
+    }
+
     // MARK: - Endings
 
     @Test("a person's own stop is not drawn as a fault")
