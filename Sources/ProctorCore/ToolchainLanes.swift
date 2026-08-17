@@ -29,7 +29,8 @@ public extension Toolchain {
         [macLaneRow(grants: grants, cuaLaneSelected: cuaLaneSelected),
          browserLaneRow(tools: tools, secondLane: secondLane),
          iosLaneRow(tools: tools),
-         cuaLaneRow(tools: tools, selected: cuaLaneSelected)]
+         cuaLaneRow(tools: tools, selected: cuaLaneSelected),
+         guestLaneRow(tools: tools)]
     }
 
     private static func macLaneRow(grants: [DoctorReport.Grant],
@@ -121,6 +122,40 @@ public extension Toolchain {
         }
         return DoctorReport.Lane(lane: cuaLane, state: state,
                                  requires: [CuaDriverTool.binary], blockers: blockers, note: note)
+    }
+
+    /// Either provider is enough. Both missing is unavailable; one usable is
+    /// ready. The grant-once-then-clone recipe lives on the note rather than
+    /// being automated: an install must never happen as a side effect of a
+    /// tool call, and the same rule binds provisioning.
+    private static func guestLaneRow(tools: [ToolPresence]) -> DoctorReport.Lane {
+        let lume = tools.first { $0.tool == LumeTool.binary }
+        let prlctl = tools.first { $0.tool == PrlctlTool.binary }
+        let present = [lume, prlctl].compactMap { $0 }
+        var blockers: [String] = []
+        let usable = present.contains { $0.usability == .usable }
+        let unconfirmed = present.contains { $0.usability == .unconfirmed }
+        let state: String
+        if usable {
+            state = "ready"
+        } else if unconfirmed {
+            state = "unconfirmed"
+        } else {
+            state = "unavailable"
+            if present.isEmpty || present.allSatisfy({ $0.usability == .unusable || $0.usability == nil }) {
+                blockers.append("Neither lume nor prlctl is usable on this machine, so there is "
+                              + "no guest lane.")
+            }
+        }
+        return DoctorReport.Lane(
+            lane: guestLane, state: state,
+            requires: [LumeTool.binary, PrlctlTool.binary],
+            blockers: blockers,
+            note: "Either provider is enough. A person grants Accessibility and Screen Recording "
+                + "once inside the guest's GUI session, then clone reproduces the grants; nothing "
+                + "here provisions a guest as a side effect of a tool call. Tahoe guests currently "
+                + "render no application windows (trycua/cua #870, Apple FB21748086); verify "
+                + "against Sequoia.")
     }
 
     /// A lane is as established as the least established thing it needs. A tool

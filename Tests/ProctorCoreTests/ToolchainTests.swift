@@ -276,6 +276,7 @@ struct LaneDerivationTests {
         #expect(lanes.first { $0.lane == "browser" }?.state == "unavailable")
         #expect(lanes.first { $0.lane == "ios" }?.state == "unavailable")
         #expect(lanes.first { $0.lane == "cua" }?.state == "unavailable")
+        #expect(lanes.first { $0.lane == "guest" }?.state == "unavailable")
     }
 
     @Test("Maestro's absence is a note on the iOS lane, never a blocker")
@@ -472,6 +473,8 @@ struct ToolchainShellFragmentTests {
         #expect(fragment.contains("\"obscura\""))
         #expect(fragment.contains("\"cua-driver\""))
         #expect(fragment.contains("\"maestro\""))
+        #expect(fragment.contains("\"lume\""))
+        #expect(fragment.contains("\"prlctl\""))
         #expect(fragment.contains("obscura-worker"))
         // simctl searches the developer directory, which is a different shape of
         // search rather than a list of bin directories. It is stated once in each

@@ -1317,7 +1317,8 @@ public struct DoctorReport: Codable, Sendable {
     /// Optional so a report from an older agent still decodes against a newer shim.
     public var agentBuild: BuildIdentity?
     /// What this machine can actually do, lane by lane: the Mac's own planes,
-    /// the browser lane, the iOS lane and the delegated Cua lane.
+    /// the browser lane, the iOS lane, the delegated Cua lane and the guest
+    /// providers.
     ///
     /// Derived from the grants and the tool rows rather than reported
     /// independently, so a lane cannot claim to be ready while the thing it needs
@@ -1351,7 +1352,7 @@ public struct DoctorReport: Codable, Sendable {
 
     /// What one lane needs, and whether this machine has it.
     public struct Lane: Codable, Sendable, Equatable {
-        /// `mac`, `browser`, `ios` or `cua`.
+        /// `mac`, `browser`, `ios`, `cua` or `guest`.
         public var lane: String
         /// `ready`, `unavailable` or `unconfirmed`. Three states for the reason
         /// PRO-0041 gave the grants: a lane nothing has established is not the

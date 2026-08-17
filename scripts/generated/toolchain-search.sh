@@ -23,11 +23,15 @@ PROCTOR_TOOL_NAMES=(
   "browser-use"
   "cua-driver"
   "maestro"
+  "lume"
+  "prlctl"
 )
 
 # Companions, index-matched to PROCTOR_TOOL_NAMES; empty when a tool has none.
 PROCTOR_TOOL_COMPANIONS=(
   "obscura-worker"
+  ""
+  ""
   ""
   ""
   ""
