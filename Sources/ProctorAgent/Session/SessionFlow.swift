@@ -189,6 +189,7 @@ extension Session {
         // exactly as `act` does: one lane set, taken after the gate and held from
         // the first replayed step to the last.
         let demand = await lanes(for: steps, window: handle, foreground: foreground)
+        try refuseHostTakeoverIfRouted(steps: steps, foreground: foreground)
         let summary = StepDescription.runLine(.replay(flow: flow.name),
                                               app: appHandle(forWindow: handle)?.name)
         return try await scheduled(lanes: demand, summary: summary) {
@@ -321,6 +322,7 @@ extension Session {
         // length; only a person's Stop shortens it, and the give-up ceiling caps
         // how long anybody *waits*, never how long a run may take.
         let demand = await lanes(for: steps, window: handle, foreground: foreground)
+        try refuseHostTakeoverIfRouted(steps: steps, foreground: foreground)
         let summary = StepDescription.runLine(.stability(flow: flow.name, runs: requested),
                                               app: appHandle(forWindow: handle)?.name)
         return try await scheduled(lanes: demand, summary: summary) {
