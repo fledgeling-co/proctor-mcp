@@ -311,6 +311,122 @@ public enum GuestParseError: Error, Equatable {
     case unexpectedShape
 }
 
+// MARK: - Reaching a guest's Proctor
+
+/// How a host-side session talks to a Proctor that is already running on
+/// another Mac. No new network transport: StreamLocal forwarding onto that
+/// agent's unix socket, then `PROCTOR_SOCKET` pointed at the local end.
+///
+/// **The recipe is structured, never a shell line.** A tool result that
+/// carried `ssh -L …` would be an instruction a model with a shell would
+/// run, which is the same defect `ToolAbsence` already refuses for install
+/// commands. The person at the keyboard types the tunnel; this only says
+/// what it has to bind.
+///
+/// Delegated guests do not use this path. They have no Proctor inside, so
+/// there is no socket to forward onto; they go through Cua.
+public struct GuestReach: Codable, Sendable, Equatable {
+
+    public enum Kind: String, Codable, Sendable {
+        case streamLocal
+    }
+
+    public var kind: Kind
+    /// Where the host-side shim should connect. Set `PROCTOR_SOCKET` to this.
+    public var localSocket: String
+    /// The guest agent's own socket, as it appears on that machine.
+    public var remoteSocket: String
+    /// SSH target. A hostname, a Tailscale MagicDNS name, or a guest IP.
+    public var host: String
+    public var user: String?
+    /// The one environment override the host-side process needs.
+    public var socketOverride: String
+    public var note: String
+
+    public init(kind: Kind = .streamLocal, localSocket: String, remoteSocket: String,
+                host: String, user: String?, socketOverride: String, note: String) {
+        self.kind = kind
+        self.localSocket = localSocket
+        self.remoteSocket = remoteSocket
+        self.host = host
+        self.user = user
+        self.socketOverride = socketOverride
+        self.note = note
+    }
+
+    /// The guest agent's default socket, written the same way `Wire.socketPath`
+    /// writes the host one, so a standard install is reachable without being
+    /// told a path. A non-standard guest install passes `remoteSocket`.
+    public static let defaultRemoteSocket =
+        "~/Library/Application Support/app.fledgeling.procter/agent.sock"
+
+    public static let socketEnv = "PROCTOR_SOCKET"
+
+    /// Why this machine cannot be reached this way, or nil when it can.
+    ///
+    /// A list of what survives rather than a list of what is refused, for the
+    /// same reason `WitnessTier.cannotEvaluate` is: a forgotten platform is
+    /// refused, not silently tunnelled toward a socket that is not there.
+    public static func cannotReach(_ machine: Machine) -> String? {
+        if machine.kind == .host {
+            return "This session is already on this Mac. There is no guest socket to forward onto."
+        }
+        if machine.platform != .macos {
+            let named = machine.platform?.rawValue ?? "an unnamed platform"
+            return "A \(named) guest has no Proctor inside, so there is no unix socket to "
+                 + "forward onto. Delegated guests go through Cua, not through SSH. "
+                 + "Install Proctor in a macOS guest, or drive this one on the Cua lane."
+        }
+        if machine.tier == .delegated {
+            return "This guest is marked delegated, so it has no Proctor socket. "
+                 + "Delegated guests go through Cua. A macOS guest running a full "
+                 + "Proctor is native and is the one this path reaches."
+        }
+        return nil
+    }
+
+    /// The local socket for one guest, under the same support directory the
+    /// host agent already uses. One file per handle, so two guests do not
+    /// share an end.
+    public static func defaultLocalSocket(handle: String, home: String) -> String {
+        home + "/Library/Application Support/app.fledgeling.procter/guests/" + handle + ".sock"
+    }
+
+    public static func decide(machine: Machine, host: String, user: String?,
+                              remoteSocket: String?, localSocket: String?,
+                              handle: String, home: String) -> GuestReachDecision {
+        if let why = cannotReach(machine) { return .refused(why) }
+        let trimmedHost = host.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedHost.isEmpty else {
+            return .refused("reach needs a host: a hostname, a Tailscale name, or the guest's IP.")
+        }
+        let remote = (remoteSocket?.isEmpty == false)
+            ? remoteSocket!
+            : defaultRemoteSocket
+        let local = (localSocket?.isEmpty == false)
+            ? localSocket!
+            : defaultLocalSocket(handle: handle, home: home)
+        let trimmedUser = user?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let userPart = (trimmedUser?.isEmpty == false) ? trimmedUser : nil
+        return .recipe(GuestReach(
+            localSocket: local,
+            remoteSocket: remote,
+            host: trimmedHost,
+            user: userPart,
+            socketOverride: local,
+            note: "A person opens an SSH StreamLocal tunnel from localSocket onto "
+                + "remoteSocket, then starts the host-side shim with \(socketEnv) set "
+                + "to localSocket. Proctor does not open the tunnel and does not "
+                + "install ssh. The same recipe reaches a remote Mac over Tailscale: "
+                + "the host is that Mac's name, and there is no guest in between."))
+    }
+}
+
+public enum GuestReachDecision: Sendable, Equatable {
+    case recipe(GuestReach)
+    case refused(String)
+}
+
 // MARK: - The two binaries, as ToolLocator knows them
 
 /// `lume`, Cua's Virtualization.framework CLI. macOS and Linux guests.

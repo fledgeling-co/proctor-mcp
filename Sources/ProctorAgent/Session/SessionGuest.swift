@@ -27,7 +27,8 @@ extension Session {
     // MARK: - Entry point
 
     func guest(action: String, guest: String?, provider: String?,
-               newName: String?) async throws -> JSONValue {
+               newName: String?, host: String? = nil, user: String? = nil,
+               remoteSocket: String? = nil, localSocket: String? = nil) async throws -> JSONValue {
         switch action {
         case "list":
             return try await guestList()
@@ -52,10 +53,15 @@ extension Session {
             }
             return try await guestClone(guest: try requireGuest(guest),
                                         provider: provider, newName: newName)
+        case "reach":
+            return try await guestReach(guest: try requireGuest(guest),
+                                        provider: provider, host: host,
+                                        user: user, remoteSocket: remoteSocket,
+                                        localSocket: localSocket)
         default:
             throw AgentError(code: .invalidArguments,
                              message: "unknown guest action \(action.debugDescription)",
-                             remedy: "Use list, status, start, stop or clone.")
+                             remedy: "Use list, status, start, stop, clone or reach.")
         }
     }
 
@@ -107,14 +113,16 @@ extension Session {
     /// already stopped reading descriptions.
     static let guestCapabilities: JSONValue = .object([
         "available": .array([
-            .string("list, status, start, stop and clone (proctor_guest)"),
+            .string("list, status, start, stop, clone and reach (proctor_guest)"),
             .string("a macOS guest running a full Proctor is a native witness"),
-            .string("a Linux or Windows guest is delegated: actuation and screenshots only")
+            .string("a Linux or Windows guest is delegated: actuation and screenshots only"),
+            .string("reach describes an SSH StreamLocal tunnel onto a native guest's socket")
         ]),
         "unavailable": .array([
             .string("window handles, the accessibility tree and geometry on this Mac"),
             .string("provisioning a guest that does not already exist"),
-            .string("granting Accessibility or Screen Recording inside the guest")
+            .string("granting Accessibility or Screen Recording inside the guest"),
+            .string("opening the SSH tunnel — a person types that, Proctor does not")
         ]),
         "note": .string(
             "A person grants Accessibility and Screen Recording once inside the guest's GUI "
@@ -163,6 +171,32 @@ extension Session {
                                   bundleId: context.bundleId, kind: action,
                                   outcome: AuditRecord.Outcome.failed, reason: reason))
             throw mapGuestError(error, action: action, name: record.name)
+        }
+    }
+
+    private func guestReach(guest: String, provider: String?, host: String?,
+                            user: String?, remoteSocket: String?,
+                            localSocket: String?) async throws -> JSONValue {
+        let record = try await resolveGuest(guest, provider: provider)
+        guard let host, !host.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw AgentError(code: .invalidArguments,
+                             message: "proctor_guest action \"reach\" requires host",
+                             remedy: "Pass a hostname, a Tailscale name, or the guest's IP. "
+                                   + "Proctor does not open the tunnel.")
+        }
+        switch GuestReach.decide(machine: record.machine, host: host, user: user,
+                                 remoteSocket: remoteSocket, localSocket: localSocket,
+                                 handle: record.handle, home: NSHomeDirectory()) {
+        case .refused(let why):
+            throw AgentError(code: .notImplemented, message: why,
+                             remedy: "Delegated guests go through Cua. A macOS guest running "
+                                   + "a full Proctor is the one this path reaches.")
+        case .recipe(let recipe):
+            return .object([
+                "guest": try JSONValue.encode(record),
+                "machine": try JSONValue.encode(record.machine),
+                "reach": try JSONValue.encode(recipe)
+            ])
         }
     }
 

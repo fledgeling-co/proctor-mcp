@@ -94,7 +94,9 @@ struct GuestToolSurfaceTests {
         #expect(spec.description.contains("Sequoia"))
         let actions = spec.inputSchema["properties"]?["action"]?["enum"]?
             .arrayValue?.compactMap(\.stringValue) ?? []
-        #expect(Set(actions) == ["list", "status", "start", "stop", "clone"])
+        #expect(Set(actions) == ["list", "status", "start", "stop", "clone", "reach"])
+        #expect(spec.description.contains("StreamLocal"))
+        #expect(spec.description.contains("never a shell command"))
     }
 
     @Test("a guest handle is refused by name wherever a window handle is expected")
@@ -253,6 +255,43 @@ struct GuestLifecycleWiringTests {
                                              provider: nil, newName: nil)
         #expect(result["count"]?.doubleValue == 0)
         #expect(audit.records.isEmpty)
+    }
+
+    @Test("reach on a native macOS guest returns a recipe and no shell command")
+    func reachOnANativeGuest() async throws {
+        let lume = FakeGuestProvider(id: "lume", records: [sequoia])
+        let (session, _) = await session(providers: [lume])
+        let result = try await session.guest(action: "reach", guest: "sequoia-seed",
+                                             provider: nil, newName: nil,
+                                             host: "sequoia-seed.local", user: "luke")
+        let reach = try #require(result["reach"]?.objectValue)
+        #expect(reach["kind"]?.stringValue == "streamLocal")
+        #expect(reach["host"]?.stringValue == "sequoia-seed.local")
+        #expect(reach["user"]?.stringValue == "luke")
+        #expect(reach["socketOverride"]?.stringValue == reach["localSocket"]?.stringValue)
+        let encoded = String(decoding: try JSONEncoder().encode(JSONValue.object(reach)),
+                             as: UTF8.self)
+        #expect(!encoded.contains("ssh -L"))
+        #expect(!encoded.contains("ssh "))
+        #expect(reach["note"]?.stringValue?.contains("does not open the tunnel") == true)
+    }
+
+    @Test("reach on a Windows guest is refused rather than tunnelled")
+    func reachOnADelegatedGuest() async throws {
+        let win = GuestRecord(name: "Windows 11", provider: "prlctl",
+                              state: "running", running: true, platform: .windows)
+        let (session, _) = await session(providers: [
+            FakeGuestProvider(id: "prlctl", records: [win])
+        ])
+        do {
+            _ = try await session.guest(action: "reach", guest: "Windows 11",
+                                        provider: nil, newName: nil, host: "10.211.55.4")
+            Issue.record("a delegated guest must not produce a socket recipe")
+        } catch let error as AgentError {
+            #expect(error.code == .notImplemented)
+            #expect(error.message.contains("Cua"))
+            #expect(!error.message.contains("ssh -L"))
+        }
     }
 }
 

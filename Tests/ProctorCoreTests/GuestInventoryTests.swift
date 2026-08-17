@@ -220,3 +220,88 @@ struct GuestLaneTests {
         }
     }
 }
+
+@Suite("PRO-0060 · reaching a guest")
+struct GuestReachTests {
+
+    private let home = "/Users/tester"
+    private let handle = "gst-abc"
+
+    private func decide(platform: MachinePlatform?, tier: WitnessTier,
+                        host: String = "box.local", user: String? = "luke",
+                        remote: String? = nil, local: String? = nil,
+                        kind: Machine.Kind = .guest) -> GuestReachDecision {
+        let machine = Machine(kind: kind, name: "box", provider: "lume",
+                              platform: platform, tier: tier)
+        return GuestReach.decide(machine: machine, host: host, user: user,
+                                 remoteSocket: remote, localSocket: local,
+                                 handle: handle, home: home)
+    }
+
+    @Test("a native macOS guest produces a StreamLocal recipe")
+    func nativeMacProducesARecipe() throws {
+        guard case .recipe(let reach) = decide(platform: .macos, tier: .native) else {
+            Issue.record("expected a recipe"); return
+        }
+        #expect(reach.kind == .streamLocal)
+        #expect(reach.host == "box.local")
+        #expect(reach.user == "luke")
+        #expect(reach.remoteSocket == GuestReach.defaultRemoteSocket)
+        #expect(reach.localSocket.hasSuffix("/guests/\(handle).sock"))
+        #expect(reach.socketOverride == reach.localSocket)
+        #expect(reach.note.contains("does not open the tunnel"))
+        #expect(reach.note.contains("Tailscale"))
+        #expect(!reach.note.contains("ssh -L"))
+    }
+
+    @Test("a Linux guest is refused, and so is a delegated macOS one")
+    func delegatedIsRefused() {
+        guard case .refused(let why) = decide(platform: .linux, tier: .delegated) else {
+            Issue.record("a Linux guest must not produce a socket recipe"); return
+        }
+        #expect(why.contains("Cua"))
+        #expect(!why.contains("ssh -L"))
+        guard case .refused(let windows) = decide(platform: .windows, tier: .delegated) else {
+            Issue.record("a Windows guest must not produce a socket recipe"); return
+        }
+        #expect(windows.contains("Cua"))
+        guard case .refused(let delegated) = decide(platform: .macos, tier: .delegated) else {
+            Issue.record("a delegated macOS guest has no socket"); return
+        }
+        #expect(delegated.contains("delegated"))
+    }
+
+    @Test("the host itself is refused — there is nothing to forward onto")
+    func theHostIsRefused() {
+        guard case .refused(let why) = decide(platform: .macos, tier: .native, kind: .host) else {
+            Issue.record("the host is already this Mac"); return
+        }
+        #expect(why.contains("already on this Mac"))
+    }
+
+    @Test("an empty host is refused; a supplied socket is honoured")
+    func hostAndOverride() throws {
+        guard case .refused(let why) = decide(platform: .macos, tier: .native, host: "  ") else {
+            Issue.record("an empty host is not a target"); return
+        }
+        #expect(why.contains("host"))
+        guard case .recipe(let reach) = decide(platform: .macos, tier: .native,
+                                               remote: "/tmp/guest.sock",
+                                               local: "/tmp/local.sock") else {
+            Issue.record("expected a recipe"); return
+        }
+        #expect(reach.remoteSocket == "/tmp/guest.sock")
+        #expect(reach.localSocket == "/tmp/local.sock")
+    }
+
+    @Test("the encoded recipe never carries a shell command")
+    func noShellOnTheWire() throws {
+        guard case .recipe(let reach) = decide(platform: .macos, tier: .native) else {
+            Issue.record("expected a recipe"); return
+        }
+        let text = String(decoding: try JSONEncoder().encode(reach), as: UTF8.self)
+        #expect(!text.contains("ssh -L"))
+        #expect(!text.contains("ssh "))
+        #expect(text.contains("PROCTOR_SOCKET") || text.contains("does not open"))
+    }
+}
