@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-17
+
 ### Added
 
 - **A run can target a guest, and it says which machine it is on.** Synthetic steps (click, key, hover, dragPath, and type when accessibility cannot write) enter the single system event stream, so they take this Mac. They can now land in a guest instead. Every act result, stability report, audit row and doctor report names the machine; the default is still this Mac, so nothing that existed before this behaves differently.
