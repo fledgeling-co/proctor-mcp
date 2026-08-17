@@ -1,4 +1,5 @@
 import Foundation
+import CoreGraphics
 import Testing
 import ProctorCore
 @testable import ProctorAgent
@@ -12,8 +13,18 @@ final class SuccessFakeCapture: CaptureEngine, @unchecked Sendable {
                  timeoutMs: Int, scale: Double?, tileHashes: Bool,
                  includeCursor: Bool, normalize: CaptureNormalizeOptions?,
                  encoding: ImageEncodingOptions) async throws -> CaptureResult {
-        CaptureResult(window: window.id,
-                      path: path ?? "/tmp/fake-capture.png",
+        let dest = path ?? "/tmp/fake-capture.png"
+        if !FileManager.default.fileExists(atPath: dest) {
+            let colorSpace = CGColorSpaceCreateDeviceRGB()
+            if let ctx = CGContext(data: nil, width: 800, height: 600, bitsPerComponent: 8,
+                                   bytesPerRow: 800 * 4, space: colorSpace,
+                                   bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+               let img = ctx.makeImage() {
+                try? ImageWriter.write(img, to: dest, format: .png, what: "fake-capture")
+            }
+        }
+        return CaptureResult(window: window.id,
+                      path: dest,
                       width: 800, height: 600, scale: 2.0,
                       status: .complete,
                       contentRect: Rect(x: 0, y: 0, w: 800, h: 600),
@@ -27,17 +38,27 @@ final class SuccessFakeCapture: CaptureEngine, @unchecked Sendable {
     func beginQuietWatch(window: WindowHandle) async throws -> QuietWatch { FakeCapture.IdleWatch() }
 }
 
+final class FakeTriObserver: TriObserving, @unchecked Sendable {
+    func agree(window: WindowHandle, tree: AXNode) async throws -> [Disagreement] { [] }
+    func contrast(window: WindowHandle, node: AXNode) async throws -> Double { 8.2 }
+    func hitSize(window: WindowHandle, node: AXNode) async throws -> Rect {
+        Rect(x: node.frame?.x ?? 0, y: node.frame?.y ?? 0, w: 32, h: 32)
+    }
+}
+
 @Suite("Acceptance E2E: Complete campaign user journeys")
 struct AcceptanceE2ETests {
 
     private static let testBundleID = "com.fledgeling.testapp"
 
-    private func makeHarness(environment: [String: String] = [:]) async throws
+    private func makeHarness(environment: [String: String] = [:],
+                             tri: (any TriObserving)? = nil) async throws
         -> (session: Session, ax: FakeAX, capture: SuccessFakeCapture, collector: AuditCollector) {
         let ax = FakeAX(bundleId: Self.testBundleID)
         let capture = SuccessFakeCapture()
         let session = Session(
             ax: ax, capture: capture,
+            tri: tri,
             tools: ToolProbes(environment: environment),
             secureInputProbe: { false })
         let collector = AuditCollector()
@@ -187,5 +208,185 @@ struct AcceptanceE2ETests {
                                                   settle: .default, foreground: false, captureEach: false,
                                                   diffEach: false, record: nil)
         #expect(backgroundAct["steps"]?.arrayValue?.first?["ok"]?.boolValue == true)
+    }
+
+    @Test("E2E Journey 4: Visual UI, geometry, and accessibility audit (frame, alignment, contrast, hit size, focus order, and tri-observer agree)")
+    func visualUIGeometryAndAccessibilityAuditJourney() async throws {
+        let tri = FakeTriObserver()
+        let (session, ax, _, _) = try await makeHarness(tri: tri)
+        _ = try await session.attachResolved(bundleId: Self.testBundleID, pid: nil, name: nil)
+
+        // Setup a structured accessibility tree with parent container and multiple aligned child elements
+        let containerNode = AXNode(id: "container-1", role: "AXGroup", title: "Form Container",
+                                   frame: Rect(x: 100, y: 100, w: 600, h: 400))
+        let buttonNode = AXNode(id: "btn-submit", role: "AXButton", title: "Submit",
+                                frame: Rect(x: 100, y: 120, w: 100, h: 32),
+                                enabled: true, focused: false)
+        let labelNode = AXNode(id: "lbl-title", role: "AXStaticText", title: "Preferences",
+                               frame: Rect(x: 100, y: 160, w: 200, h: 24),
+                               enabled: true, focused: false)
+        let inputNode = AXNode(id: "txt-input", role: "AXTextField", title: "User Name",
+                               frame: Rect(x: 100, y: 200, w: 200, h: 32),
+                               enabled: true, focused: true)
+
+        ax.nodesByID = [
+            "container-1": containerNode,
+            "btn-submit": buttonNode,
+            "lbl-title": labelNode,
+            "txt-input": inputNode
+        ]
+
+        // 1. Accessibility & geometry assertions: hasLabel, frameEquals, containedIn, alignedWith, horizontalAlignment
+        let assertions: [JSONValue] = [
+            .object([
+                "kind": .string("hasLabel"),
+                "node": .string("btn-submit")
+            ]),
+            .object([
+                "kind": .string("frameEquals"),
+                "node": .string("btn-submit"),
+                "expected": .array([.number(100), .number(120), .number(100), .number(32)]),
+                "tolerance": .number(1.0)
+            ]),
+            .object([
+                "kind": .string("containedIn"),
+                "node": .string("btn-submit"),
+                "expected": .string("container-1")
+            ]),
+            .object([
+                "kind": .string("alignedWith"),
+                "node": .string("lbl-title"),
+                "expected": .object(["node": .string("btn-submit"), "edge": .string("left")]),
+                "tolerance": .number(1.0)
+            ]),
+            .object([
+                "kind": .string("horizontalAlignment"),
+                "node": .string("btn-submit"),
+                "container": .string("container-1"),
+                "expected": .string("left")
+            ]),
+            .object([
+                "kind": .string("minHitSize"),
+                "node": .string("btn-submit"),
+                "expected": .number(24.0)
+            ]),
+            .object([
+                "kind": .string("contrast"),
+                "node": .string("lbl-title"),
+                "expected": .number(4.5)
+            ]),
+            .object([
+                "kind": .string("agree")
+            ])
+        ]
+
+        let assertResult = try await session.assertAll(window: ax.window.id,
+                                                       assertions: assertions,
+                                                       captureEvidence: false)
+        #expect(assertResult["ok"]?.boolValue == true)
+        #expect(assertResult["passed"]?.intValue == 8)
+        #expect(assertResult["failed"]?.intValue == 0)
+        #expect(assertResult["skipped"]?.intValue == 0)
+    }
+
+    @Test("E2E Journey 5: High-resolution zoom & region crop visual fidelity inspection")
+    func highResolutionZoomAndCropJourney() async throws {
+        let (session, ax, _, _) = try await makeHarness()
+        _ = try await session.attachResolved(bundleId: Self.testBundleID, pid: nil, name: nil)
+
+        let targetNode = AXNode(id: "node-target", role: "AXButton", title: "Target Area",
+                                frame: Rect(x: 50, y: 50, w: 200, h: 100))
+        ax.nodesByID = ["node-target": targetNode]
+
+        // 1. Zoom into element node
+        let nodeZoomResult = try await session.zoom(
+            window: ax.window.id,
+            region: nil,
+            node: "node-target",
+            padding: 10.0,
+            path: nil,
+            waitForComplete: true,
+            timeoutMs: 3000,
+            scale: nil,
+            includeCursor: false,
+            encoding: ImageEncodingOptions(format: .png))
+
+        #expect(nodeZoomResult["crop"]?["source"]?.stringValue == "element")
+        #expect(nodeZoomResult["crop"]?["node"]?.stringValue == "node-target")
+        #expect(nodeZoomResult["trustworthy"]?.boolValue == true)
+
+        // 2. Zoom into explicit region [x, y, w, h]
+        let regionZoomResult = try await session.zoom(
+            window: ax.window.id,
+            region: [20, 20, 150, 120],
+            node: nil,
+            padding: 0.0,
+            path: nil,
+            waitForComplete: true,
+            timeoutMs: 3000,
+            scale: nil,
+            includeCursor: false,
+            encoding: ImageEncodingOptions(format: .png))
+
+        #expect(regionZoomResult["crop"]?["source"]?.stringValue == "region")
+        #expect(regionZoomResult["width"]?.intValue ?? 0 > 0)
+        #expect(regionZoomResult["height"]?.intValue ?? 0 > 0)
+    }
+
+    @Test("E2E Journey 6: Menu-bar key equivalents, keyboard shortcuts, and modifier reconstruction")
+    func menuBarKeyEquivalentIntrospectionJourney() async throws {
+        let (session, ax, _, _) = try await makeHarness()
+        _ = try await session.attachResolved(bundleId: Self.testBundleID, pid: nil, name: nil)
+
+        // Inject simulated macOS menu bar structure
+        ax.menuBarItems = [
+            RawMenuItem(title: "File", enabled: true, hasSubmenu: true, submenuPopulated: true,
+                        children: [
+                            RawMenuItem(title: "New Document", enabled: true, cmdChar: "n", cmdModifiers: 0),
+                            RawMenuItem(title: "Save As...", enabled: true, cmdChar: "s",
+                                        cmdModifiers: MenuKeyEquivalent.CarbonMask.shift)
+                        ]),
+            RawMenuItem(title: "Edit", enabled: true, hasSubmenu: true, submenuPopulated: true,
+                        children: [
+                            RawMenuItem(title: "Preferences", enabled: true, cmdChar: ",", cmdModifiers: 0)
+                        ])
+        ]
+
+        let menuResult = try await session.menuBar(app: ax.app.id, window: nil)
+        #expect(menuResult["app"]?.stringValue == ax.app.id)
+        #expect(menuResult["itemCount"]?.intValue == 5)
+
+        let items = try #require(menuResult["items"]?.arrayValue)
+        #expect(items.count == 5)
+        #expect(items[1]["path"]?.arrayValue?.map { $0.stringValue } == ["File", "New Document"])
+        #expect(items[1]["key"]?.stringValue == "n")
+        #expect(items[1]["modifiers"]?.arrayValue?.map { $0.stringValue } == ["cmd"])
+        #expect(items[2]["key"]?.stringValue == "s")
+        #expect(items[2]["modifiers"]?.arrayValue?.contains(where: { $0.stringValue == "shift" }) == true)
+        #expect(items[4]["path"]?.arrayValue?.map { $0.stringValue } == ["Edit", "Preferences"])
+        #expect(items[4]["key"]?.stringValue == ",")
+    }
+
+    @Test("E2E Journey 7: iOS companion device management, deep-link dispatch, and Maestro runner lifecycle")
+    func iosDeviceAndMaestroLifecycleJourney() async throws {
+        let (session, _, _, _) = try await makeHarness()
+
+        // 1. Simctl absence defense: when simctl is absent, ios commands report actionable guidance
+        do {
+            _ = try await session.ios(action: "list", device: nil, url: nil, bundleId: nil,
+                                      pixelEvidence: false, changeThreshold: nil, path: nil,
+                                      timeoutMs: 1000, settleMs: 500)
+        } catch let error as AgentError {
+            #expect(error.code == .notImplemented)
+            #expect(error.message.contains("Xcode") || error.message.contains("simctl"))
+        }
+
+        // 2. Maestro runner absence & flow defense: when Maestro CLI is absent, flow execution reports structured error
+        do {
+            _ = try await session.maestroFlow(path: "/tmp/nonexistent-flow.yaml", device: nil, runs: 1,
+                                              pixelEvidence: false, timeoutMs: 1000)
+        } catch let error as AgentError {
+            #expect(error.code == .notImplemented || error.code == .invalidArguments)
+        }
     }
 }

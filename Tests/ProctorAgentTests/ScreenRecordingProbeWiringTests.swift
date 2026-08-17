@@ -99,9 +99,10 @@ struct ScreenRecordingProbeWiringTests {
     func aLateAnswerIsPickedUp() async {
         let gate = Gate()
         let calls = Counter()
+        let keeper = GrantProbeKeeper(bound: 0.15)
         let probe = ScreenRecordingProbe(
             bound: 0.15,
-            keeper: GrantProbeKeeper(bound: 0.15),
+            keeper: keeper,
             now: { 0 },
             platform: { calls.bump(); await gate.wait(); return .granted })
 
@@ -109,7 +110,10 @@ struct ScreenRecordingProbeWiringTests {
         #expect(await probe.state() == .unconfirmed)
         // The abandoned probe finally comes back.
         gate.open()
-        try? await Task.sleep(nanoseconds: 300_000_000)
+        for _ in 0..<100 {
+            if keeper.cachedDefinite() != nil { break }
+            try? await Task.sleep(nanoseconds: 20_000_000)
+        }
         // And the answer is there, without another platform call — a definite
         // answer is a per-process constant, so one arriving late is exactly as
         // valid as one arriving on time.

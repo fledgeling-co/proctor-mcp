@@ -93,7 +93,9 @@ final class FakeAX: AXEngine, @unchecked Sendable {
                                                                            : .valueWrite))
     }
 
-    func menuBar(app: String) throws -> [RawMenuItem]? { nil }
+    var menuBarItems: [RawMenuItem]?
+
+    func menuBar(app: String) throws -> [RawMenuItem]? { menuBarItems }
     func notificationCount(app: String, since: UInt64) -> Int { 0 }
     func notificationMark(app: String) -> UInt64 { 0 }
     func health() -> [DoctorReport.AttachedAppHealth] { [] }
