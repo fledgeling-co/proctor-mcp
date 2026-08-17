@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 7 complete.** 46 merged. The gate is green: 1426 tests in 158 suites, seven consecutive runs. The project pivots: Cua Driver takes actuation, Proctor keeps observation, the verdict layer and supervision, and gains an iOS lane.
-**Updated:** 2026-08-16 — wave 7 landed in full. **1426 tests / 158 suites green on local `main` @ `a4483ec`**, seven consecutive runs in under 7 seconds each. The gate is honest for the first time this wave: PRO-0055 stopped the suite wedging with no verdict, and PRO-0054 removed the ambient read that made 37 issues look like flake. Nothing pushed.
+**Status:** **Wave 8 complete & Backlog clear.** All 63 items merged or retired. The gate is green: 1513 tests in 174 suites. Proctor supports VM targets (lume & prlctl), witness tiers (native & delegated), SSH streamLocal reach, auto-routing gates, resolution-scaled captures, and precise scroll units.
+**Updated:** 2026-08-17 — wave 8 + PRO-0034 landed in full. **1513 tests / 174 suites green on local `main` @ `b3102b6`**. Nothing pushed.
 
 ### Corrections to earlier rows (reconciled 2026-08-14)
 - **This repo DOES now have a git remote** (`origin` → github.com/fledgeling-co/proctor-mcp). The earlier "no git remote, main is LOCAL-ONLY" note is stale. Local `main` is **4 commits AHEAD** of `origin/main` and those commits carry unreviewed WIP: **merge to local `main` only, never push.**
@@ -307,6 +307,19 @@ refusal, whose question changed shape underneath it).
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **MERGED** `d6cf947` · skill edits UNCOMMITTED in fledgeling-plugins |
 
 ## Event log (append-only, newest first)
+- 2026-08-17 **Backlog complete and verified on local `main`.** 1513 tests in 174 suites passing cleanly.
+  - **Wave 8 (VM Targets & Witness Tiers) landed in full (PRO-0056 .. PRO-0062):**
+    - PRO-0056: Run disclosure carrying machine identity across act, stability, audit, doctor.
+    - PRO-0057: Witness tiers (native vs delegated) and fail-closed assertion gate.
+    - PRO-0058: Guest providers for `lume` and `prlctl` with non-executing filesystem detection.
+    - PRO-0059: `proctor_guest` lifecycle tool (`gst-` handles refused by window tools).
+    - PRO-0060: SSH StreamLocal forwarding recipe generation for reaching native macOS guests.
+    - PRO-0061: Auto-routing gate refusing host takeover batches when `PROCTOR_GUEST` is set.
+    - PRO-0062: Run HUD overlay badge and host-takeover suppression for guest targets.
+  - **PRO-0063:** Vision capture purpose scaling (768 targeting / 1024 verify / 1568 detail).
+  - **PRO-0034:** Native scroll unit mapping to lines per page, preferring precise bar writes.
+  - **PRO-0031 / PRO-0039:** Formally marked Retired in ledger (superseded by PRO-0050 and Cua architecture).
+
 - 2026-08-16 **The gate is green, and the whole flaky set was one line.** `./scripts/test.sh`
   on `main`: **1426 tests in 158 suites pass in under 7 seconds**, seven consecutive runs
   (6.14 / 5.79 / 5.23 / 6.07 / 6.81 / 3.76s after the first). Two merges got there:

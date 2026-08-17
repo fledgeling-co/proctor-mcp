@@ -37,15 +37,15 @@
 | PRO-0028 | Re-check now says what it checks | 2026-08-15 | Merged |
 | PRO-0029 | A home for the PROCTOR_* switches | 2026-08-15 | Merged `153951b` |
 | PRO-0030 | The build says which build it is | 2026-08-15 | Merged |
-| PRO-0031 | The health report is complete | 2026-08-15 | Triaged |
+| PRO-0031 | The health report is complete | 2026-08-15 | Retired |
 | PRO-0032 | The audit trail is signed, and records what Proctor recommended | 2026-08-15 | Merged |
 | PRO-0033 | A person's click reaches Stop | 2026-08-15 | Merged |
-| PRO-0034 | Scroll moves by what was asked | 2026-08-15 | In Review |
+| PRO-0034 | Scroll moves by what was asked | 2026-08-15 | Merged |
 | PRO-0035 | The browser catalogue stops guessing | 2026-08-15 | Merged |
 | PRO-0036 | The status window's checks say what they can check | 2026-08-15 | Merged `c9e42c9` |
 | PRO-0037 | A hold names whose run it is | 2026-08-15 | Merged |
 | PRO-0038 | Stability knows when it is scoring a page | 2026-08-15 | Merged `30324a6` |
-| PRO-0039 | Page-scoped refusal | 2026-08-15 | Triaged |
+| PRO-0039 | Page-scoped refusal | 2026-08-15 | Retired |
 | PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | 2026-08-15 | Merged `091d6c3` |
 | PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | 2026-08-15 | Merged `0545219` |
 | PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | 2026-08-15 | Merged |
@@ -64,9 +64,9 @@
 | PRO-0055 | The suite wedges in `haltCheckpoint` on a shared RunControl | 2026-08-16 | Merged `e53176b` |
 | PRO-0056 | A run says which machine it is on | 2026-08-16 | Merged |
 | PRO-0057 | The witness tier, and what it refuses | 2026-08-16 | Merged |
-| PRO-0058 | Guest providers: lume and prlctl | 2026-08-16 | In Review |
-| PRO-0059 | `proctor_guest`, the lifecycle tool | 2026-08-16 | In Review |
-| PRO-0060 | Reaching a guest's Proctor over SSH | 2026-08-16 | In Review |
-| PRO-0061 | Auto-routing, and the disclosure that makes it honest | 2026-08-16 | In Review |
-| PRO-0062 | The overlay says which machine | 2026-08-16 | In Review |
+| PRO-0058 | Guest providers: lume and prlctl | 2026-08-16 | Merged |
+| PRO-0059 | `proctor_guest`, the lifecycle tool | 2026-08-16 | Merged |
+| PRO-0060 | Reaching a guest's Proctor over SSH | 2026-08-16 | Merged |
+| PRO-0061 | Auto-routing, and the disclosure that makes it honest | 2026-08-16 | Merged |
+| PRO-0062 | The overlay says which machine | 2026-08-16 | Merged |
 | PRO-0063 | Captures are sized by what they are for | 2026-08-16 | Merged |
