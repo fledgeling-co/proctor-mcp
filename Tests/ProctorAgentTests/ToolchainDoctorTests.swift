@@ -38,7 +38,8 @@ struct ToolchainDoctorTests {
     /// A session whose whole toolchain is scripted.
     private func session(obscura: Bool = true, browserUse: Bool = false,
                          simctl: Bool = true, cuaDriver: Bool = false,
-                         maestro: Bool = true,
+                         maestro: Bool = true, lume: Bool = false,
+                         prlctl: Bool = false,
                          signature: ToolSignature = .notChecked,
                          laneHealth: ToolLaneFacts? = nil,
                          environment: [String: String] = [:]) async -> Session {
@@ -56,6 +57,8 @@ struct ToolchainDoctorTests {
                 cuaDriver: Self.probe(CuaDriverTool.binary, available: cuaDriver,
                                       path: "/Users/x/.local/bin/cua-driver"),
                 maestro: Self.probe(MaestroTool.binary, available: maestro),
+                lume: Self.probe(LumeTool.binary, available: lume),
+                prlctl: Self.probe(PrlctlTool.binary, available: prlctl),
                 cuaSignature: SignatureVerdictCache(
                     identify: { _ in FileIdentity(device: 1, inode: 2, size: 3,
                                                   modified: 4, changed: 5) },
@@ -81,7 +84,8 @@ struct ToolchainDoctorTests {
     @Test("every tool Proctor looks for has a row, in one fixed order")
     func everyToolHasARow() async throws {
         let report = await session().doctor(verbose: false)
-        #expect(report.tools.map(\.tool) == ["obscura", "simctl", "cua-driver", "maestro"])
+        #expect(report.tools.map(\.tool)
+                == ["obscura", "simctl", "cua-driver", "maestro", "lume", "prlctl"])
     }
 
     @Test("browser-use is named only when the operator named it")
@@ -94,7 +98,8 @@ struct ToolchainDoctorTests {
         let on = await session(browserUse: true,
                                environment: [BrowserUseTool.laneVariable: BrowserUseTool.binary])
             .doctor(verbose: false)
-        #expect(on.tools.map(\.tool) == ["obscura", "browser-use", "simctl", "cua-driver", "maestro"])
+        #expect(on.tools.map(\.tool)
+                == ["obscura", "browser-use", "simctl", "cua-driver", "maestro", "lume", "prlctl"])
     }
 
     @Test("the grandfathered Obscura fields still agree with the Obscura row")
@@ -168,10 +173,11 @@ struct ToolchainDoctorTests {
     @Test("the report says which lanes this machine has")
     func lanesAreReported() async throws {
         let report = await session().doctor(verbose: false)
-        #expect(report.lanes?.map(\.lane) == ["mac", "browser", "ios", "cua"])
+        #expect(report.lanes?.map(\.lane) == ["mac", "browser", "ios", "cua", "guest"])
         #expect(lane(report, "browser")?.state == "ready")
         #expect(lane(report, "ios")?.state == "ready")
         #expect(lane(report, "cua")?.state == "unavailable")   // no driver on this fixture
+        #expect(lane(report, "guest")?.state == "unavailable") // neither provider on this fixture
     }
 
     @Test("a lane's boolean is fail-closed and agrees with its state")
@@ -200,7 +206,8 @@ struct ToolchainDoctorTests {
         // driver and no Maestro. A health report that failed on an advisory tool
         // would be lying about what is broken.
         let report = await session(obscura: false, simctl: false, cuaDriver: false,
-                                   maestro: false).doctor(verbose: false)
+                                   maestro: false, lume: false, prlctl: false)
+            .doctor(verbose: false)
         #expect(report.ready == true)
         #expect(report.blockers.isEmpty)
     }
@@ -399,7 +406,7 @@ struct ToolchainOnThisMachineTests {
         let report = await session.doctor(verbose: false)
         #expect(report.tools.contains { $0.tool == "maestro" })
         #expect(report.tools.contains { $0.tool == "cua-driver" })
-        #expect(report.lanes?.count == 4)
+        #expect(report.lanes?.count == 5)
         #expect(report.policy != nil)
         // Every located row carries a verdict; no row is left blank.
         for row in report.tools {

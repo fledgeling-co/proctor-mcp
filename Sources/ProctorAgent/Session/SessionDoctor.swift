@@ -36,11 +36,14 @@ extension Session {
         let simctl = tools.simctl.refreshed()
         let cuaDriver = tools.cuaDriver.refreshed()
         let maestro = tools.maestro.refreshed()
+        let lume = tools.lume.refreshed()
+        let prlctl = tools.prlctl.refreshed()
         let lanes = BrowserLanes.make(obscura: obscura, browserUse: browserUse,
                                       environment: tools.environment)
         let toolRows = await toolchainRows(obscura: obscura, browserUse: browserUse,
                                            simctl: simctl, cuaDriver: cuaDriver,
-                                           maestro: maestro, secondLane: lanes.secondLane)
+                                           maestro: maestro, lume: lume, prlctl: prlctl,
+                                           secondLane: lanes.secondLane)
         let obscuraRow = toolRows.first { $0.tool == ObscuraTool.binary }
 
         var grants: [DoctorReport.Grant] = [
@@ -120,13 +123,12 @@ extension Session {
             // browser-use is listed **only when the operator named it**. With the
             // lane off the string does not appear in a tool result at all, which
             // makes the gate a total invariant rather than one about handoffs.
-            // simctl, cua-driver and maestro join the same array rather than
-            // becoming three more booleans: the field's own documentation names it
-            // as the growth surface, and "is there an iOS lane on this machine" is
-            // the same shape of question as "is there a browser lane". None of them
-            // is a grant and none is a blocker — Proctor drives Mac apps perfectly
-            // well without Xcode, without a driver and without Maestro, so `ready`
-            // is untouched by their absence, exactly as it is by Obscura's.
+            // simctl, cua-driver, maestro, lume and prlctl join the same array
+            // rather than becoming more booleans: the field's own documentation
+            // names it as the growth surface. None of them is a grant and none
+            // is a blocker — Proctor drives Mac apps perfectly well without
+            // Xcode, without a driver, without Maestro and without a guest
+            // provider, so `ready` is untouched by their absence.
             tools: toolRows,
             // Three states, not two: "enabled and not installed" is a real
             // situation an operator who set the variable has to be able to see.
@@ -177,7 +179,8 @@ extension Session {
     /// 82 MB binary and the status window calls this every 2.0 seconds.
     private func toolchainRows(obscura: ToolPresence, browserUse: ToolPresence,
                                simctl: ToolPresence, cuaDriver: ToolPresence,
-                               maestro: ToolPresence,
+                               maestro: ToolPresence, lume: ToolPresence,
+                               prlctl: ToolPresence,
                                secondLane: SecondLaneState) async -> [ToolPresence] {
         let now = clock()
         let located: [String: ToolPresence] = [
@@ -185,7 +188,9 @@ extension Session {
             BrowserUseTool.binary: browserUse,
             "simctl": simctl,
             CuaDriverTool.binary: cuaDriver,
-            MaestroTool.binary: maestro
+            MaestroTool.binary: maestro,
+            LumeTool.binary: lume,
+            PrlctlTool.binary: prlctl
         ]
         // Read once, outside the loop: asking a backend for its lane health
         // establishes nothing and starts nothing, but it is still an actor hop.

@@ -189,9 +189,11 @@ struct BrowserLaneWiringTests {
                     #expect(report.tools.map(\.tool)
                             == (laneSet
                                 ? [ObscuraTool.binary, BrowserUseTool.binary, "simctl",
-                                   CuaDriverTool.binary, MaestroTool.binary]
+                                   CuaDriverTool.binary, MaestroTool.binary,
+                                   LumeTool.binary, PrlctlTool.binary]
                                 : [ObscuraTool.binary, "simctl",
-                                   CuaDriverTool.binary, MaestroTool.binary]))
+                                   CuaDriverTool.binary, MaestroTool.binary,
+                                   LumeTool.binary, PrlctlTool.binary]))
                     // The grandfathered spelling has to agree with the array's
                     // first entry, or an old client and a new one see different
                     // machines.

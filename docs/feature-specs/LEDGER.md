@@ -64,7 +64,7 @@
 | PRO-0055 | The suite wedges in `haltCheckpoint` on a shared RunControl | 2026-08-16 | Merged `e53176b` |
 | PRO-0056 | A run says which machine it is on | 2026-08-16 | Merged |
 | PRO-0057 | The witness tier, and what it refuses | 2026-08-16 | Merged |
-| PRO-0058 | Guest providers: lume and prlctl | 2026-08-16 | Allocated |
+| PRO-0058 | Guest providers: lume and prlctl | 2026-08-16 | In Review |
 | PRO-0059 | `proctor_guest`, the lifecycle tool | 2026-08-16 | Allocated |
 | PRO-0060 | Reaching a guest's Proctor over SSH | 2026-08-16 | Allocated |
 | PRO-0061 | Auto-routing, and the disclosure that makes it honest | 2026-08-16 | Allocated |

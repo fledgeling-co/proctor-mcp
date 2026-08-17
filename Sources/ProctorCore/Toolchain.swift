@@ -166,6 +166,7 @@ public enum Toolchain {
     public static let browserLane = "browser"
     public static let iosLane = "ios"
     public static let cuaLane = "cua"
+    public static let guestLane = "guest"
 
     /// Every tool Proctor looks for, in the order the report lists them.
     ///
@@ -179,7 +180,9 @@ public enum Toolchain {
         ToolchainEntry(tool: BrowserUseTool.binary, lane: browserLane, operatorGated: true),
         ToolchainEntry(tool: "simctl", route: .developerDirectory, lane: iosLane),
         ToolchainEntry(tool: CuaDriverTool.binary, lane: cuaLane, presenceIsSufficient: false),
-        ToolchainEntry(tool: MaestroTool.binary, lane: iosLane)
+        ToolchainEntry(tool: MaestroTool.binary, lane: iosLane),
+        ToolchainEntry(tool: LumeTool.binary, lane: guestLane),
+        ToolchainEntry(tool: PrlctlTool.binary, lane: guestLane)
     ]
 
     public static func entry(for tool: String) -> ToolchainEntry? {
