@@ -93,6 +93,7 @@ extension Session {
         // ones it needs is knowable from the steps and from `foreground` before
         // anything runs, and it never asks for another after it starts.
         let demand = await lanes(for: steps, window: window, foreground: foreground)
+        try refuseHostTakeoverIfRouted(steps: steps, foreground: foreground)
         let summary = StepDescription.runLine(.act(steps: steps.count),
                                               app: appHandle(forWindow: window)?.name)
         return try await scheduled(lanes: demand, summary: summary) {
@@ -708,6 +709,21 @@ extension Session {
             return StepArtifact(step: index, error: error)
         } catch {
             return StepArtifact(step: index, errorText: "\(error)")
+        }
+    }
+
+    /// A takeover batch on a host session with `PROCTOR_GUEST` set is refused
+    /// rather than run here. See `GuestRoute`: this process cannot yet perform
+    /// a step inside a guest, so the honest auto-route is a named refusal,
+    /// never a silent host run wearing a guest's name.
+    func refuseHostTakeoverIfRouted(steps: [ActionStep], foreground: Bool) throws {
+        let demand = foregroundDemand(for: steps, foreground: foreground)
+        let route = GuestRouteConfig.decide(machine: machine,
+                                            takesForeground: demand.takesForeground,
+                                            configured: GuestRouteConfig.configured(tools.environment))
+        if let refusal = GuestRouteConfig.refusal(for: route) {
+            throw AgentError(code: .notImplemented, message: refusal.message,
+                             remedy: refusal.remedy)
         }
     }
 
