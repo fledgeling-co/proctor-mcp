@@ -96,14 +96,25 @@ struct BackgroundRouteTests {
 @Suite("Scroll and value rules")
 struct ActuationRuleTests {
 
-    @Test("a scroll bar moves by a hundredth of the document per unit, and stops at the ends")
+    @Test("a scroll bar moves by lines per page fraction, and stops at the ends")
     func scrollFractionClamps() {
-        #expect(Actuator.scrollFraction(from: 0.5, by: 10) == 0.6)
-        #expect(Actuator.scrollFraction(from: 0.5, by: -10) == 0.4)
+        #expect(Actuator.scrollFraction(from: 0.5, by: 4, linesPerPage: 16) == 0.75)
+        #expect(Actuator.scrollFraction(from: 0.5, by: -4, linesPerPage: 16) == 0.25)
         // Past either end is the end, not a negative or an over-scroll — an
         // out-of-range value is rejected by the bar and would lose the write.
-        #expect(Actuator.scrollFraction(from: 0.98, by: 50) == 1)
-        #expect(Actuator.scrollFraction(from: 0.01, by: -50) == 0)
+        #expect(Actuator.scrollFraction(from: 0.98, by: 10, linesPerPage: 16) == 1)
+        #expect(Actuator.scrollFraction(from: 0.01, by: -10, linesPerPage: 16) == 0)
+    }
+
+    @Test("line height and lines per page derivation")
+    func lineAndPageDerivation() {
+        #expect(Actuator.lineHeight(from: Rect(x: 0, y: 0, w: 100, h: 20)) == 20)
+        #expect(Actuator.lineHeight(from: Rect(x: 0, y: 0, w: 100, h: 200)) == 16) // clamped fallback
+        #expect(Actuator.linesPerPage(viewport: 320, lineHeight: 16) == 20)
+        #expect(Actuator.linesPerPage(viewport: Double?.none, lineHeight: 16) == 16)
+        #expect(Actuator.prefersPageAction(delta: 10, linesPerPage: 16) == true)
+        #expect(Actuator.prefersPageAction(delta: 3, linesPerPage: 16) == false)
+        #expect(Actuator.wheelPixels(delta: 3, lineHeight: 16) == 48)
     }
 
     @Test("a bar that did not move did not scroll")

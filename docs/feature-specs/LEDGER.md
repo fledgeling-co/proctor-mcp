@@ -40,7 +40,7 @@
 | PRO-0031 | The health report is complete | 2026-08-15 | Triaged |
 | PRO-0032 | The audit trail is signed, and records what Proctor recommended | 2026-08-15 | Merged |
 | PRO-0033 | A person's click reaches Stop | 2026-08-15 | Merged |
-| PRO-0034 | Scroll moves by what was asked | 2026-08-15 | Triaged |
+| PRO-0034 | Scroll moves by what was asked | 2026-08-15 | In Review |
 | PRO-0035 | The browser catalogue stops guessing | 2026-08-15 | Merged |
 | PRO-0036 | The status window's checks say what they can check | 2026-08-15 | Merged `c9e42c9` |
 | PRO-0037 | A hold names whose run it is | 2026-08-15 | Merged |
