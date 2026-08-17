@@ -42,11 +42,18 @@ public enum AuditTool {
     /// are never read as the same thing.
     public static let maestroFlow = "proctor_ios.flow"
     public static let maestroRepeat = "proctor_ios.flow.repeat"
+    /// Guest lifecycle. Named apart from every drive path because nothing here
+    /// actuates an application: start / stop / clone change the machine a later
+    /// run might land on.
+    public static let guestStart = "proctor_guest.start"
+    public static let guestStop = "proctor_guest.stop"
+    public static let guestClone = "proctor_guest.clone"
 
     /// Every drive path, for the "these are distinct" property.
     public static let all: [String] = [act, appsActivate, flowReplay,
                                        stabilityReplay, stabilityReset,
-                                       maestroFlow, maestroRepeat]
+                                       maestroFlow, maestroRepeat,
+                                       guestStart, guestStop, guestClone]
 }
 
 // MARK: - Refusal text

@@ -220,7 +220,7 @@ struct ObscuraPresenceWiringTests {
 
     @Test("nothing on the tool surface installs anything")
     func theToolSurfaceGainsNoVerb() {
-        #expect(ToolCatalogue.all.count == 20)
+        #expect(ToolCatalogue.all.count == 21)
         for tool in ToolCatalogue.all {
             #expect(!tool.name.contains("install"))
         }

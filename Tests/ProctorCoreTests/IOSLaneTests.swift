@@ -423,7 +423,7 @@ struct IOSLaneTests {
 
     @Test("proctor_ios is in the catalogue and states its ceiling in its own description")
     func toolSurfaceIsCoherent() throws {
-        #expect(ToolCatalogue.all.count == 20)
+        #expect(ToolCatalogue.all.count == 21)
         let spec = try #require(ToolCatalogue.spec(named: "proctor_ios"))
         #expect(!spec.readOnly)
 

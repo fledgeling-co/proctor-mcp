@@ -91,6 +91,7 @@ struct Dispatcher: Sendable {
         case "proctor_policy":           return try await policy(args)
         case "proctor_kill":             return try await kill(args)
         case "proctor_ios":              return try await ios(args)
+        case "proctor_guest":            return try await guest(args)
         // Internal verb behind the MCP resources surface. Never in ToolCatalogue,
         // so a host cannot reach it as a tool; the shim forwards resources/read to
         // it. It only re-projects state the agent already holds or reads without a
@@ -632,6 +633,29 @@ struct Dispatcher: Sendable {
                                      path: args.string("path"),
                                      timeoutMs: args.int("timeoutMs"),
                                      settleMs: args.int("settleMs"))
+    }
+
+    // MARK: - proctor_guest (VM lifecycle)
+
+    /// Guest lifecycle. Actions:
+    ///   list   — enumerate guests, touching nothing
+    ///   status — read one
+    ///   start  — power on, then re-read
+    ///   stop   — power off, then re-read
+    ///   clone  — copy a named guest to a new name
+    ///
+    /// Nothing provisions. A guest that does not already exist is refused.
+    private func guest(_ args: Args) async throws -> JSONValue {
+        let action = args.string("action") ?? "list"
+        guard ["list", "status", "start", "stop", "clone"].contains(action) else {
+            throw AgentError(code: .invalidArguments,
+                             message: "unknown guest action \(action.debugDescription)",
+                             remedy: "Use list, status, start, stop or clone.")
+        }
+        return try await session.guest(action: action,
+                                       guest: args.string("guest"),
+                                       provider: args.string("provider"),
+                                       newName: args.string("newName"))
     }
 
     // MARK: - proctor_resource (MCP resources backing)
