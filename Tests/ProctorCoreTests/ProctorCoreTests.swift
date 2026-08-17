@@ -194,7 +194,7 @@ struct CatalogueTests {
 
     @Test("nineteen tools are advertised")
     func count() {
-        #expect(ToolCatalogue.all.count == 20)
+        #expect(ToolCatalogue.all.count == 21)
     }
 
     @Test("every tool has a unique name, a description and an object schema")
@@ -234,7 +234,8 @@ struct AnnotationTests {
     func destructiveSet() {
         let destructive = Set(ToolCatalogue.all.filter(\.destructive).map(\.name))
         #expect(destructive == ["proctor_act", "proctor_flow",
-                                "proctor_stability", "proctor_unlock", "proctor_kill"])
+                                "proctor_stability", "proctor_unlock", "proctor_kill",
+                                "proctor_guest"])
     }
 
     @Test("a read-only tool is never destructive and is idempotent")
@@ -1033,7 +1034,7 @@ struct PointerOverlayTests {
     @Test("the catalogue still advertises exactly nineteen tools")
     func toolCountUnchanged() {
         // The pointer overlay extends proctor_act and proctor_flow; it adds no tool.
-        #expect(ToolCatalogue.all.count == 20)
+        #expect(ToolCatalogue.all.count == 21)
     }
 }
 
@@ -2334,7 +2335,7 @@ struct StabilityCaptureTests {
         #expect(marks.contains("captureEach"))   // says it turns capture on
 
         // Still an extension of the determinism tool, not a new one.
-        #expect(ToolCatalogue.all.count == 20)
+        #expect(ToolCatalogue.all.count == 21)
     }
 
     @Test("the stability output schema describes a ledger entry, not just an array")

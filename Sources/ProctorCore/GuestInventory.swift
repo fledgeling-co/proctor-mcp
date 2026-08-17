@@ -8,8 +8,8 @@ import Foundation
 // and the machine construction provable on a machine with neither `lume` nor
 // `prlctl` — and, more importantly, what keeps a health check from ever running
 // either binary. Detection is a filesystem read (`LumeTool` / `PrlctlTool` go
-// through `ToolLocator`); listing a guest is a separate act, gated behind the
-// lifecycle tool that has not landed yet.
+// through `ToolLocator`); listing a guest is a separate act, gated behind
+// `proctor_guest`.
 //
 // Proctor owns no VM lifecycle. These types describe what an adapter already
 // found. Creating a guest, granting TCC inside one, and cloning the result are
@@ -44,6 +44,10 @@ public struct GuestRecord: Codable, Sendable, Equatable {
     /// all it has). Optional because lume's listing is name-keyed.
     public var identifier: String?
     public var ip: String?
+    /// The handle a caller holds. Stored so it travels on the wire. Deliberately
+    /// not the shape of a window or device handle: the prefix is what every
+    /// window-taking tool matches on to refuse it by name.
+    public var handle: String
 
     public init(name: String, provider: String, state: String, running: Bool,
                 platform: MachinePlatform? = nil, identifier: String? = nil,
@@ -51,6 +55,7 @@ public struct GuestRecord: Codable, Sendable, Equatable {
         self.name = name; self.provider = provider; self.state = state
         self.running = running; self.platform = platform
         self.identifier = identifier; self.ip = ip
+        self.handle = GuestHandle.id(provider: provider, name: name)
     }
 
     /// The `Machine` this guest is, for every surface PRO-0056 already carries.
@@ -254,6 +259,50 @@ public enum PrlctlInventory {
                            running: GuestPower.isRunning(state),
                            platform: GuestPlatform.infer(os: os, name: name),
                            identifier: identifier, ip: ip)
+    }
+}
+
+/// The guest-handle namespace, and the refusal that goes with it.
+///
+/// Proctor's whole model is windows, and a guest is a different machine.
+/// Rather than dress one up as the other, a guest gets its own handle shape
+/// and every window-taking tool refuses it *by name*. The refusal is the
+/// load-bearing part: a model that believes it can snapshot a guest because
+/// it holds a handle would otherwise waste a campaign discovering otherwise
+/// one call at a time.
+public enum GuestHandle {
+
+    public static let prefix = "gst-"
+
+    /// Stable across listings of the same (provider, name). A hash rather
+    /// than the name itself, because Parallels names carry spaces and two
+    /// providers can hold guests of the same name.
+    public static func id(provider: String, name: String) -> String {
+        prefix + fnv1a(provider + "\u{0}" + name)
+    }
+
+    public static func isGuestHandle(_ id: String) -> Bool {
+        id.hasPrefix(prefix)
+    }
+
+    public static func rejection(handle: String, tool: String) -> (message: String, remedy: String) {
+        (message: "\(handle) is a guest handle and \(tool) needs a macOS window handle",
+         remedy: "A guest is a different machine. Observation and actuation against it "
+               + "go through the Proctor (or Cua) running inside it, not through a window "
+               + "handle on this Mac. What is available: proctor_guest action \"list\" / "
+               + "\"status\" / \"start\" / \"stop\" / \"clone\". Window handles come from "
+               + "proctor_apps, on the machine the session is attached to.")
+    }
+
+    /// FNV-1a 64-bit, lowercase hex. Deterministic, no Foundation crypto, and
+    /// short enough to read in a result.
+    static func fnv1a(_ seed: String) -> String {
+        var hash: UInt64 = 14_695_981_039_346_656_037
+        for byte in seed.utf8 {
+            hash ^= UInt64(byte)
+            hash = hash &* 1_099_511_628_211
+        }
+        return String(hash, radix: 16)
     }
 }
 

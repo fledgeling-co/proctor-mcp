@@ -106,6 +106,11 @@ actor Session {
     /// about it.
     var bootedDevices: Set<String> = []
 
+    /// Injected guest adapters. Nil means "build them from the filesystem
+    /// probes". An empty array is a machine with neither CLI, which the
+    /// session reports as a missing-tool refusal rather than an empty listing.
+    var injectedGuestProviders: [any GuestProvider]?
+
     /// Scheme → bundle id per device, with the fingerprint of the installed-app
     /// set it was built from. Rebuilt when that set changes; a map costs one
     /// Info.plist read per installed app, which is worth caching and not worth
@@ -685,6 +690,11 @@ actor Session {
         // exist. The refusal names the ceiling and the route that does work.
         if IOSHandle.isDeviceHandle(id) {
             let rejection = IOSHandle.rejection(handle: id, tool: "this tool")
+            throw AgentError(code: .windowNotFound, message: rejection.message,
+                             remedy: rejection.remedy)
+        }
+        if GuestHandle.isGuestHandle(id) {
+            let rejection = GuestHandle.rejection(handle: id, tool: "this tool")
             throw AgentError(code: .windowNotFound, message: rejection.message,
                              remedy: rejection.remedy)
         }

@@ -33,7 +33,7 @@ public struct ToolSpec: Sendable {
 public enum ToolCatalogue {
     public static let all: [ToolSpec] = [
         apps, snapshot, find, act, capture, zoom, wait, assert_, flow, stability, inspect, doctor, unlock,
-        computer, openaiComputer, menu, dictionary, policy, kill, ios
+        computer, openaiComputer, menu, dictionary, policy, kill, ios, guest
     ]
 
     public static func spec(named name: String) -> ToolSpec? {
@@ -1113,5 +1113,81 @@ public enum ToolCatalogue {
         ]),
         readOnly: false,
         destructive: false, idempotent: false
+    )
+
+    // MARK: guest (VM lifecycle)
+
+    static let guest = ToolSpec(
+        name: "proctor_guest",
+        title: "List and manage virtual-machine guests",
+        description: """
+        List, start, stop and clone the virtual machines this Mac can reach through lume or prlctl.
+
+        **This is a guest lane, not a window lane, and the difference is not cosmetic.** A guest \
+        handle looks like `gst-` plus a short hash and is not a window handle: proctor_snapshot, \
+        proctor_find, proctor_assert, proctor_act and proctor_capture do not work against one and \
+        refuse it by name. A guest is a different machine. Observation and actuation against it \
+        go through the Proctor (or Cua) running inside it, not through a window handle on this Mac.
+
+        **Nothing here provisions a guest.** list / status / start / stop / clone operate on a \
+        virtual machine that already exists. Creating one, granting Accessibility and Screen \
+        Recording inside its GUI session, and cloning that granted image are things a person does \
+        with the provider's own CLI. An install must never happen as a side effect of a tool \
+        call, and the same rule binds provisioning. The grant-once-then-clone recipe is the whole \
+        of the TCC story: agent and daemon calls cannot raise macOS permission UI, and SSH is \
+        not the foreground Aqua session that owns the visible desktop.
+
+        list enumerates every guest both providers can see and touches nothing. status reads one. \
+        start and stop change its power state and then re-read it. clone copies a named guest to \
+        a new name; that is the reproduction step of the grant-once recipe, not a way to mint a \
+        fresh ungranted machine. Each mutating action is audited under proctor_guest.start / \
+        .stop / .clone.
+
+        A macOS guest is a native witness: a full Proctor inside it has frame status, the \
+        accessibility tree and the tri-observer check. A Linux or Windows guest is delegated: \
+        actuation and screenshots only, and every tree-reading assertion is skipped with a \
+        reason rather than passed. Tahoe guests currently render no application windows \
+        (trycua/cua #870, Apple FB21748086); verify against Sequoia.
+
+        Requires lume, prlctl, or both. proctor_doctor carries a guest lane saying whether this \
+        machine has either.
+        """,
+        inputSchema: .object([
+            "type": .string("object"),
+            "properties": .object([
+                "action": .object([
+                    "type": .string("string"),
+                    "enum": .array([.string("list"), .string("status"), .string("start"),
+                                    .string("stop"), .string("clone")]),
+                    "description": .string(
+                        "list enumerates guests and touches nothing; status reads one; start and "
+                        + "stop change its power state and re-read it; clone copies a named guest "
+                        + "to newName. Defaults to list. Nothing provisions a guest that does not "
+                        + "already exist.")
+                ]),
+                "guest": .object([
+                    "type": .string("string"),
+                    "description": .string(
+                        "Which guest: a gst- handle from action \"list\", or the name you type at "
+                        + "lume or prlctl. Required for status, start, stop and clone. Ambiguity "
+                        + "across two providers is an error naming the candidates rather than a guess.")
+                ]),
+                "provider": .object([
+                    "type": .string("string"),
+                    "enum": .array([.string("lume"), .string("prlctl")]),
+                    "description": .string(
+                        "Which adapter to use when a name is held by both. Omit when the handle "
+                        + "already names one, or when only one provider has that name.")
+                ]),
+                "newName": .object([
+                    "type": .string("string"),
+                    "description": .string(
+                        "The name of the copy, for action clone. Required there. The source is "
+                        + "untouched.")
+                ])
+            ])
+        ]),
+        readOnly: false,
+        destructive: true, idempotent: false
     )
 }
