@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **A run can target a guest, and it says which machine it is on.** Synthetic steps (click, key, hover, dragPath, and type when accessibility cannot write) enter the single system event stream, so they take this Mac. They can now land in a guest instead. Every act result, stability report, audit row and doctor report names the machine; the default is still this Mac, so nothing that existed before this behaves differently.
+
+  Two witness tiers keep a Linux target from passing itself off as a macOS one. A native guest (a macOS VM or a remote Mac running a full Proctor) keeps frame status, the accessibility tree, `agree`, fidelity and determinism. A delegated guest (Linux or Windows through Cua) is actuation and screenshots only; every tree-reading assertion comes back skipped with a reason, never as a weaker pass.
+
+  `lume` and `prlctl` are the two adapters. Detection is a filesystem read and never an execution; either provider is enough, and a health check does not list guests. Presence settles usability. `proctor_guest` lists, starts, stops and clones machines that already exist, and refuses a `gst-` handle from every window tool by name. Nothing provisions. The TCC story is grant once inside the guest's GUI session, then clone; that recipe is documented, not automated.
+
+  `reach` describes an SSH StreamLocal tunnel onto a native guest's unix socket (localSocket, remoteSocket, host) and never returns a shell command. Delegated guests are refused here and named as Cua's. The same recipe reaches a remote Mac over Tailscale.
+
+  Auto-route is a gate, not a silent host run. A takeover batch with `PROCTOR_GUEST` set is refused on this Mac and names the guest, because this process cannot yet perform a step inside one; running it here while naming that guest would be a verdict about the wrong machine. A press, which does not take the Mac, is not refused.
+
+  On a guest the overlay says `On <guest>. This Mac is free.` The takeover statement, the input block and the contention yield are all claims about this machine, so they stay down.
+
+  Note: Tahoe guests currently render no application windows (trycua/cua #870, Apple FB21748086). Verify against Sequoia. The gate after this wave is 1512 tests in 174 suites, from 1426 in 158 when it started.
+
 - **Screenshots now cost what the job needs, not what the vision API tolerates.** Proctor used to send every capture at the ceiling, roughly 1,530 tokens a frame whether or not anything in it needed resolving. Captures now come in three sizes and default to the middle one: 768 pixels for deciding what to press, 1,024 for checking what happened, 1,568 for reading dense text. Asking for numbered marks drops to the smallest on its own, because a numeral survives a downscale that body text does not. Measured on a 16 inch Retina window, the new default costs 816 tokens against 1,532, and a targeting frame costs 459. Start small and reach for `proctor_zoom` when you need detail; a low resolution overview plus an on demand native crop reads better as well as costing less, lifting grounding accuracy on dense interfaces from under 20% to over 70% in published measurements. Every capture reports which tier it used and roughly what it cost, and the tool now says plainly that `proctor_find` and a step's own `stateHash` answer "what can I press" and "did that change anything" for a fraction of an image.
 
 - **A run that is being held now says so, instead of looking slow.** Pause and Stop hold a run between steps, and a hold that nobody lifts used to be invisible: the run simply stopped producing steps, and from outside there was no way to tell a held run from a wedged one until the fifteen-minute backstop gave up. After twenty seconds a held run now writes one line naming which run it is, what is holding it, and when it will give up. The backstop itself is unchanged; how long your pause may hold a run is your decision, and shortening it would turn a wait into a wrong answer.

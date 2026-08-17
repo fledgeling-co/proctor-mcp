@@ -114,9 +114,9 @@ final class RunHUDPanel {
     /// window and show it.
     func begin(total: Int, app: String?, window: Rect,
                foreground: ForegroundDemand = ForegroundDemand(),
-               delegated: Bool = false) {
+               delegated: Bool = false, machine: Machine = .host) {
         feed.apply(.runBegan(total: total, app: app, foreground: foreground,
-                             delegated: delegated))
+                             delegated: delegated, machine: machine))
         feed.rememberWindow(window)
         runStarted = Date()
         linger?.cancel(); linger = nil

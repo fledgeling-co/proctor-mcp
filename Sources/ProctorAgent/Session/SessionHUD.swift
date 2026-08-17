@@ -54,7 +54,8 @@ extension Session {
         guard drawsHUD else { return }
         let app = appHandle(forWindow: window)?.name
         await RunHUDPanel.shared.begin(total: total, app: app, window: window.frame,
-                                       foreground: demand, delegated: delegated)
+                                       foreground: demand, delegated: delegated,
+                                       machine: machine)
     }
 
     /// A whole run is starting, so nobody's hand is on it yet. Deliberately not
