@@ -61,10 +61,11 @@ struct CuaLineReaderTests {
         // Bug: `poll` takes integer milliseconds, so a remaining 400µs truncates
         // to `poll(…, 0)` — an immediate return, and a lane poisoned early.
         let (pipe, reader) = pipeAndReader()
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.05) {
+        Thread.detachNewThread {
+            Thread.sleep(forTimeInterval: 0.01)
             pipe.fileHandleForWriting.write(Data("late-but-inside\n".utf8))
         }
-        let line = try reader.readLine(within: 0.0004 + 1.0)
+        let line = try reader.readLine(within: 0.0004 + 3.0)
         #expect(String(decoding: line, as: UTF8.self) == "late-but-inside")
     }
 

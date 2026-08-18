@@ -298,7 +298,8 @@ enum CuaPreflight {
     /// reading the refusal: the first is usually their own `swift build`, the
     /// second is a file they should look at.
     static func verifySignature(path: String) -> SignatureVerdict {
-        let url = URL(fileURLWithPath: path) as CFURL
+        let resolved = URL(fileURLWithPath: path).resolvingSymlinksInPath()
+        let url = resolved as CFURL
         var staticCode: SecStaticCode?
         guard SecStaticCodeCreateWithPath(url, [], &staticCode) == errSecSuccess,
               let code = staticCode else {

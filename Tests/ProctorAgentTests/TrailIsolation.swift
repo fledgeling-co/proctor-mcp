@@ -17,7 +17,7 @@ import CryptoKit
 // alternative is a test that passes alone and fails in the suite, which is the
 // kind of flake that gets a real finding dismissed later.
 enum TrailIsolation {
-    nonisolated(unsafe) private static let mutex = NSLock()
+    private static let mutex = NSLock()
 
     /// Wrapped in ordinary synchronous functions because `NSLock.lock()` is
     /// unavailable from an async context, and several of these tests are async.

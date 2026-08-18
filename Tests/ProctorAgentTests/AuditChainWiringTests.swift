@@ -262,16 +262,14 @@ struct AuditChainWiringTests {
         // The link is taken from the file under the append's own lock rather than
         // from memory. Taken from memory, two writers would both extend the same
         // record and the chain would fork.
-        withTrail { _, _ in
-            let group = DispatchGroup()
-            for i in 0..<12 {
-                group.enter()
-                DispatchQueue.global().async {
-                    _ = AuditLog.append(self.record(i))
-                    group.leave()
+        await withTrailAsync { _, _ in
+            await withTaskGroup(of: Void.self) { taskGroup in
+                for i in 0..<12 {
+                    taskGroup.addTask {
+                        _ = AuditLog.append(self.record(i))
+                    }
                 }
             }
-            group.wait()
             let verdict = AuditLog.verify()
             #expect(verdict.total == 12)
             #expect(verdict.verified == 12)
