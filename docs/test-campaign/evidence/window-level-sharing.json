@@ -1,0 +1,56 @@
+[
+  {
+    "level" : "screenSaver",
+    "windowNumber" : 2180,
+    "sharingStateReadBack" : 0,
+    "foundOnServer" : true,
+    "askedFor" : "none",
+    "appKitStillSaysNone" : true,
+    "levelValue" : 1000
+  },
+  {
+    "appKitStillSaysNone" : true,
+    "windowNumber" : 2181,
+    "sharingStateReadBack" : 0,
+    "askedFor" : "none",
+    "level" : "statusBar",
+    "foundOnServer" : true,
+    "levelValue" : 25
+  },
+  {
+    "appKitStillSaysNone" : true,
+    "levelValue" : 3,
+    "level" : "floating",
+    "sharingStateReadBack" : 0,
+    "windowNumber" : 2182,
+    "foundOnServer" : true,
+    "askedFor" : "none"
+  },
+  {
+    "askedFor" : "none",
+    "levelValue" : 0,
+    "appKitStillSaysNone" : true,
+    "level" : "normal",
+    "foundOnServer" : true,
+    "sharingStateReadBack" : 0,
+    "windowNumber" : 2183
+  },
+  {
+    "askedFor" : "none",
+    "appKitStillSaysNone" : true,
+    "foundOnServer" : true,
+    "windowNumber" : 2184,
+    "levelValue" : 24,
+    "level" : "mainMenu",
+    "sharingStateReadBack" : 0
+  },
+  {
+    "sharingStateReadBack" : 0,
+    "windowNumber" : 2185,
+    "levelValue" : 101,
+    "foundOnServer" : true,
+    "askedFor" : "none",
+    "level" : "popUpMenu",
+    "appKitStillSaysNone" : true
+  }
+]

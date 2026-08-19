@@ -1,0 +1,248 @@
+<!-- ══════════════════════════════════════════════════════ coverage ══ -->
+<section class="pane" data-platform="cover" data-surface="matrix"
+         data-label="State grid" data-title="State grid"
+         data-note="One row per surface, one column per state. A cell is either a state drawn in this mock or an n/a with the reason it does not exist. An unfilled cell is visible; “all states designed” is not.">
+  <div class="sub" data-state="grid" data-state-label="Every surface">
+    <div class="canvas plain" style="align-items:stretch">
+      <table class="matrix">
+        <caption id="grid-caption">Counting the drawn states&hellip;</caption>
+        <thead><tr>
+          <th style="width:15%">Surface</th><th>first-run / empty</th><th>loading</th><th>ideal</th>
+          <th>partial</th><th>error</th><th>done</th>
+        </tr></thead>
+        <tbody>
+          <tr><th>Walkthrough</th>
+            <td><b>Intro</b> — the whole surface is the first-run state</td>
+            <td class="na">n/a — nothing is fetched; the grant read is synchronous</td>
+            <td><b>Both granted</b>, each played back on its row</td>
+            <td><b>One granted</b>, Continue disabled and visible</td>
+            <td class="na">n/a — a denial is not an error state here; the row keeps the offer and Settings is one click away</td>
+            <td><b>Connect</b> — snippet, copy, and where Proctor lives now</td></tr>
+
+          <tr><th>Status window</th>
+            <td class="na">n/a — the walkthrough owns first run; this window replaces it once setup is done</td>
+            <td><b>Checking</b> — skeletons matching the rows they stand in for</td>
+            <td><b>Ready</b>, seven sections</td>
+            <td><b>Lanes</b> — one unconfirmed, one unavailable, drawn apart</td>
+            <td><b>Agent down</b> — the rest of the window withheld, not dimmed</td>
+            <td class="na">n/a — a status window has no terminal state</td></tr>
+
+          <tr><th>Menu bar</th>
+            <td><b>Idle</b> — Pause and Stop dimmed, not hidden</td>
+            <td class="na">n/a — the extras item is drawn before the agent answers and shows the down state instead</td>
+            <td><b>Running</b> — live line and provenance chip</td>
+            <td><b>Taking the foreground</b> — stated as a floor</td>
+            <td><b>Not answering</b> — glyph changes shape, not only colour</td>
+            <td class="na">n/a — folded into idle, which names the last run</td></tr>
+
+          <tr><th>Run HUD</th>
+            <td><b>Idle</b> — no controls, because there is nothing to control</td>
+            <td><b>Travelling</b> — the run is moving before it acts</td>
+            <td><b>Acting</b> — step, settle reason, plane and route</td>
+            <td><b>Blocked</b> — waiting on a lane, with the ceiling shown</td>
+            <td><b>Error</b> — the write was read back and disagreed</td>
+            <td><b>Finished</b> — steps, foreground count, run id</td></tr>
+
+          <tr><th>Takeover</th>
+            <td class="na">n/a — it exists only while a batch holds the machine</td>
+            <td class="na">n/a — armed or absent, nothing in between</td>
+            <td><b>Armed</b> — veil, label, drawn pointer, Pause and Stop</td>
+            <td class="na">n/a — a partial takeover would be a takeover</td>
+            <td><b>Guest refusal</b> — named guest, named switch</td>
+            <td class="na">n/a — it disappears rather than resolving</td></tr>
+
+          <tr><th>History</th>
+            <td><b>Empty</b> — names the action that fills it</td>
+            <td class="na">n/a — the projection is read from a local file</td>
+            <td><b>Runs</b>, with one expanded and its skipped check shown</td>
+            <td class="na">n/a — a partial trail is a shorter trail</td>
+            <td class="na">n/a — an unreadable trail routes to the Status window's agent-down state</td>
+            <td class="na">n/a — continuous</td></tr>
+
+          <tr><th>Consent</th>
+            <td class="na">n/a — raised by an action, never entered</td>
+            <td class="na">n/a</td>
+            <td><b>Hold the keyboard</b>, <b>second lane</b>, <b>unlock</b> — three decisions</td>
+            <td><b>Pairing warning</b> — capability on, its notice off</td>
+            <td class="na">n/a — declining is an outcome, not an error</td>
+            <td class="na">n/a — the sheet closes</td></tr>
+
+          <tr><th>Menus</th>
+            <td class="na">n/a — the command surface is always complete</td>
+            <td class="na">n/a</td>
+            <td><b>All menus</b> with their shortcuts</td>
+            <td class="na">n/a — unavailable items dim in place</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a</td></tr>
+
+          <tr><th>TUI · run</th>
+            <td><b>Nothing running</b>, with the key that moves on</td>
+            <td><b>Connecting</b> — a gauge that draws and writes its value</td>
+            <td><b>Acting</b> — run panel over the queue</td>
+            <td><b>Paused</b> — yielded, and who holds what</td>
+            <td><b>Unreachable</b> — the stale frame withheld</td>
+            <td><b>Finished</b> — planes travelled, run sealed</td></tr>
+
+          <tr><th>TUI · queue</th>
+            <td class="na">n/a — an empty queue is the run pane's idle state</td>
+            <td class="na">n/a — the scheduler pushes; there is nothing to await</td>
+            <td><b>Three lanes</b>, with the model stated above them</td>
+            <td class="na">n/a — covered by the run pane's paused state</td>
+            <td class="na">n/a — routes to the run pane's error</td>
+            <td class="na">n/a — continuous</td></tr>
+
+          <tr><th>TUI · readiness</th>
+            <td class="na">n/a — grants and lanes always have a value</td>
+            <td class="na">n/a — same push channel</td>
+            <td><b>Grants and five lanes</b>, three-state</td>
+            <td class="na">n/a — a partial answer is <i>unconfirmed</i>, which is a value</td>
+            <td class="na">n/a — routes to the run pane's error</td>
+            <td class="na">n/a</td></tr>
+
+          <tr><th>TUI · history</th>
+            <td><b>Nothing recorded</b>, with what starts the trail</td>
+            <td class="na">n/a — local file</td>
+            <td><b>Six runs</b>, one selected by reverse video</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a — continuous</td></tr>
+
+          <tr><th>TUI · switches</th>
+            <td class="na">n/a — eight switches always have a value</td>
+            <td class="na">n/a</td>
+            <td><b>Eight switches</b> with value, source and timing</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a</td></tr>
+
+          <tr><th>CLI · doctor</th>
+            <td class="na">n/a — a first run prints the same report</td>
+            <td class="na">n/a — one round trip, no progress to show</td>
+            <td><b>Human report</b> and <b>--json</b></td>
+            <td><b>Lane gate</b> — exit 5 on an unavailable lane</td>
+            <td><b>Unreachable</b> — exit 3 with the fix</td>
+            <td class="na">n/a — the report is the outcome</td></tr>
+
+          <tr><th>CLI · act / assert</th>
+            <td class="na">n/a — a batch with no steps is a usage error, exit 2</td>
+            <td class="na">n/a — per-step lines appear as each step settles</td>
+            <td><b>Three steps</b>, plane and route per step</td>
+            <td><b>Assertion fails</b> — exit 1, one check skipped</td>
+            <td><b>Refused</b> — exit 4, gate named, nothing attempted</td>
+            <td><b>Stability sweep</b> — first divergence, exit 1</td></tr>
+
+          <tr><th>CLI · install</th>
+            <td><b>First install</b> — four steps, then what macOS still needs</td>
+            <td class="na">n/a — each step prints as it completes</td>
+            <td class="na">n/a — installing twice is the first-run path again</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a — a failed step stops the sequence and prints the launchctl line</td>
+            <td class="na">n/a — the connect snippet ends it</td></tr>
+        </tbody>
+      </table>
+
+      <div class="legend">
+        <span><i style="background:var(--win);border:1px solid var(--rule)"></i> drawn in this mock</span>
+        <span><i style="background:var(--fill)"></i> n/a, with the reason</span>
+      </div>
+
+      <h3 style="font:590 13px/1 var(--sans);color:var(--ink-2);margin:26px 0 4px">Conditional states</h3>
+      <p class="sec-note" style="margin-bottom:10px">Three more columns apply where the surface can meet them.</p>
+      <table class="matrix">
+        <thead><tr><th style="width:15%">Column</th><th>Where it applies</th><th>State</th></tr></thead>
+        <tbody>
+          <tr><th>offline</th><td>Nowhere. Every surface talks to a local Unix socket, and a machine that cannot reach its own socket has the agent-down state instead.</td><td class="na">n/a across all 16 surfaces — the reason is architectural, not an omission</td></tr>
+          <tr><th>disabled</th><td>Menu bar, walkthrough, history toolbar, status switches</td><td><b>Drawn.</b> Every one dims in place and keeps its shortcut, rather than disappearing</td></tr>
+          <tr><th>overflow</th><td>History table, queue table, TUI tables, step descriptions</td><td><b>Partly drawn.</b> The TUI frames are compiled at 80&times;24 as well as 100&times;30, and a column narrower than its content is a compile error rather than a silent clip. The macOS tables are <b>not</b> stress-tested against a 200-character window title — see what was not checked</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="pane" data-platform="cover" data-surface="destructive"
+         data-label="Destructive actions" data-title="Destructive actions and their gates"
+         data-note="Friction scales with blast radius. A row whose gate is only a toast would be a defect, and so would a gate that exceeds what the action can actually do.">
+  <div class="sub" data-state="table" data-state-label="Every gate">
+    <div class="canvas plain" style="align-items:stretch">
+      <table class="matrix">
+        <thead><tr><th style="width:22%">Action</th><th style="width:30%">Blast radius</th><th>Gate</th></tr></thead>
+        <tbody>
+          <tr><td><b>Stop</b> a run</td><td>The current run only. Nothing already done is undone.</td>
+              <td>None. It is the kill switch — it must never be harder to reach than the thing it stops. Present on the HUD, the menu bar, the overlay and the TUI, all writing one latch.</td></tr>
+          <tr><td><b>Pause</b> a run</td><td>Nothing. Reversible by definition.</td>
+              <td>None, and a 15-minute cap so a forgotten pause cannot park the machine.</td></tr>
+          <tr><td><b>Drop</b> a waiting run</td><td>One queued run, which comes back saying a person dropped it.</td>
+              <td>None, but the refusal it produces is <i>distinguishable from a timeout</i>, because one is safe to retry and the other is a reason to ask first.</td></tr>
+          <tr><td><b>Hold the keyboard and mouse</b></td><td>Every keystroke on the Mac, for as long as a step is in flight.</td>
+              <td>Named-consequence sheet, second press, and the disclosure above the button. Two invariants hold regardless: Stop works, and the block dies with the process.</td></tr>
+          <tr><td><b>Name browser-use</b> to a model</td><td>An autonomous agent, in a real browser, with real logins, outside the audit trail.</td>
+              <td>Named-consequence sheet plus a launchd environment variable. Two independent gates, and no command template is ever shipped.</td></tr>
+          <tr><td><b>Unlock the screen</b></td><td>The lock screen, for a bounded turn.</td>
+              <td>Alert with an explicit duration, a self-expiring turn, and the login window kept available so nobody is locked out.</td></tr>
+          <tr><td><b>proctor kill</b></td><td>A named process, or several by substring match.</td>
+              <td>Prints what matched and waits for confirmation before <span class="mono">--force</span>. The policy gate applies first.</td></tr>
+          <tr><td><b>Quit Proctor</b></td><td>The window and the background agent. Any run in flight ends.</td>
+              <td>Destructive styling, and copy that says both come back at the next login — so it reads as “off now”, not “uninstall”.</td></tr>
+          <tr><td><b>proctor guest stop</b></td><td>A whole virtual machine and everything running in it.</td>
+              <td>Names the guest and its provider, and refuses when the handle is ambiguous across two providers.</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:18px">
+        <b>Stop is deliberately the one destructive action with no gate at all.</b> Everything else here gets friction proportional to its blast radius, but a kill switch that asks a question is a kill switch that fails at the moment it is needed. It is reachable from four surfaces, and all four write the same latch.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pane" data-platform="cover" data-surface="flows"
+         data-label="Flows" data-title="The five flows"
+         data-note="Each flow names its steps, its exits, and the state that carries it. Every step is drawn somewhere in this mock.">
+  <div class="sub" data-state="all" data-state-label="All flows">
+    <div class="canvas plain" style="align-items:stretch">
+      <div class="cols2">
+        <div>
+          <h3 style="font:590 13px/1 var(--sans);margin:0 0 8px">1 · First run (3 steps)</h3>
+          <table class="matrix"><tbody>
+            <tr><td style="width:26px" class="mono">1</td><td>Intro — what Proctor is<br><span style="color:var(--ink-3)">exit: Skip setup → menu bar, no grants</span></td></tr>
+            <tr><td class="mono">2</td><td>Permissions — the real macOS dialogs<br><span style="color:var(--ink-3)">exit: Back; auto-advance once both land</span></td></tr>
+            <tr><td class="mono">3</td><td>Connect — copy the snippet<br><span style="color:var(--ink-3)">exit: Done → window demotes to the menu bar</span></td></tr>
+          </tbody></table>
+
+          <h3 style="font:590 13px/1 var(--sans);margin:22px 0 8px">2 · A supervised run (6 steps)</h3>
+          <table class="matrix"><tbody>
+            <tr><td style="width:26px" class="mono">1</td><td>A model calls a tool; the queue grants a lane</td></tr>
+            <tr><td class="mono">2</td><td>Foreground demand computed and disclosed <i>before</i> anything runs</td></tr>
+            <tr><td class="mono">3</td><td>Takeover notice and drawn pointer, if the batch will post</td></tr>
+            <tr><td class="mono">4</td><td>Steps execute; each result names its plane and route</td></tr>
+            <tr><td class="mono">5</td><td>A person touches the Mac → yield → paused<br><span style="color:var(--ink-3)">exits: Resume, Stop, or the 15-minute cap</span></td></tr>
+            <tr><td class="mono">6</td><td>Finished — sealed, signed, and in the history</td></tr>
+          </tbody></table>
+        </div>
+        <div>
+          <h3 style="font:590 13px/1 var(--sans);margin:0 0 8px">3 · Granting a capability (4 steps)</h3>
+          <table class="matrix"><tbody>
+            <tr><td style="width:26px" class="mono">1</td><td>Switch pressed in the Status window</td></tr>
+            <tr><td class="mono">2</td><td>Sheet naming the consequence, not the mechanism</td></tr>
+            <tr><td class="mono">3</td><td>Pairing check — is the notice that explains this switched off?<br><span style="color:var(--ink-3)">exit: turn the notice back on (prominent)</span></td></tr>
+            <tr><td class="mono">4</td><td>Second press applies it at the next agent start<br><span style="color:var(--ink-3)">turning it off later never asks</span></td></tr>
+          </tbody></table>
+
+          <h3 style="font:590 13px/1 var(--sans);margin:22px 0 8px">4 · Supervising over SSH (3 steps)</h3>
+          <table class="matrix"><tbody>
+            <tr><td style="width:26px" class="mono">1</td><td><span class="mono">ssh mac-mini</span> → <span class="mono">proctor tui</span></td></tr>
+            <tr><td class="mono">2</td><td>Five panes over one socket; updates pushed, never polled</td></tr>
+            <tr><td class="mono">3</td><td>Stop writes the same latch the HUD does<br><span style="color:var(--ink-3)">open: whether the TUI may attach over the HTTP transport, which puts Stop behind a bearer token</span></td></tr>
+          </tbody></table>
+
+          <h3 style="font:590 13px/1 var(--sans);margin:22px 0 8px">5 · Checking a build in CI (3 steps)</h3>
+          <table class="matrix"><tbody>
+            <tr><td style="width:26px" class="mono">1</td><td><span class="mono">proctor doctor --json --lane mac</span> gates the job</td></tr>
+            <tr><td class="mono">2</td><td><span class="mono">proctor flow replay</span> then <span class="mono">proctor assert</span></td></tr>
+            <tr><td class="mono">3</td><td>Exit code is the verdict: 1 is a failed check, 3 is nothing measured<br><span style="color:var(--ink-3)">the two must not be confused, which is why they are separate codes</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

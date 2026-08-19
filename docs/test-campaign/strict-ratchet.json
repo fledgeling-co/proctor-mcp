@@ -1,0 +1,7 @@
+{
+ "checked": 32,
+ "total": 32,
+ "at": "2026-08-19T13:11:28+00:00",
+ "reason": "CASE-0008 and CASE-0010 became real raster passes. No channel can photograph an overlay at the shipping default, so PROCTOR_OVERLAY_CAPTURE was added as an off-by-default capability that lifts the exclusion for a test; both panels were then photographed and the default's refusal is what arms them. Arming that found DEF-005: the drawn pointer was never excluded at all.",
+ "previous": 26
+}

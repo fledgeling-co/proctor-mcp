@@ -1,0 +1,4 @@
+[submodule "vendor/fledgeling-plugins"]
+	path = vendor/fledgeling-plugins
+	url = https://github.com/fledgeling-co/fledgeling-plugins.git
+	branch = main

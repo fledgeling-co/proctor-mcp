@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proctor Surfaces</title>
+
+<!-- mac-craft:metrics
+titlebar            33px    kit
+unified-toolbar     52px    kit
+control-regular     24px    kit
+control-small       20px    kit
+control-xl          36px    kit
+body-type           13px    kit
+sidebar             256px   kit
+sidebar-row-medium  32px    kit
+selection-radius    8px     kit
+popover-radius      20px    kit
+scrollbar           12px    kit
+accent              #8A6224 direction
+accent-ring         #A97C33 direction
+ground              #EFF0F3 direction
+danger              #B3261E direction
+-->
+
+<!--
+  Proctor — every surface, state and flow, in one page.
+
+  Direction: "Invigilator". Proctor's job is witnessing, so the surfaces borrow the
+  register of a certification document: cool ink-on-paper ground, hairline rules,
+  and a bronze seal colour that appears only on the provenance chip, the focus ring
+  and the one primary action per view. Red is held back so that Stop is the loudest
+  thing on any screen it appears on.
+
+  Signature move: the provenance chip. Every result Proctor returns carries plane,
+  route, tier and machine, so the chip carries them too, in the same shape, on every
+  surface — the product's thesis rendered as a component.
+
+  Runner-up direction: "Instrument" — a hairline lab-panel register, denser and
+  cooler, which would have served the History and Queue tables better and the
+  walkthrough worse. Its tabular-numeral discipline is borrowed here for data areas;
+  its whole register is not.
+
+  Deliberate deviation, recorded: mac-craft step 0 asks that a design be grounded in
+  the app's existing assets. The brief for this mock explicitly directed that the
+  project's existing HTML, design markdown and aesthetic be ignored, so nothing here
+  inherits from mocks/, design/ or docs/design/. Those files were not read for visual
+  direction.
+
+  Every terminal frame in the TUI section was compiled from a declarative spec by
+  tui-design's compiler, never hand-drawn — the cell arithmetic is the compiler's.
+  Frames and specs: design/surfaces/tui/.
+-->
+
+<style>
+/* ─────────────────────────────────────────────────────────── tokens ── */
+:root {
+  color-scheme: light;
+
+  /* ground and surfaces */
+  --ground: #EFF0F3;          /* the page the windows sit on */
+  --win: #FFFFFF;             /* window background (kit) */
+  --chrome: #F4F5F7;          /* titlebar and toolbar */
+  --lift: #F7F8FA;            /* inset panels within a window */
+  --sunken: #E9EBEF;          /* wells and tracks */
+
+  /* label tiers — light secondary lifted to 60% per the contrast note:
+     the kit's 50% tier measures 3.98:1 and cannot carry meaning. */
+  --ink:   rgba(0,0,0,0.85);
+  --ink-2: rgba(0,0,0,0.68);  /* 7.6:1 on white */
+  --ink-3: rgba(0,0,0,0.56);  /* 5.0:1 — the floor for 11px */
+  --ink-4: rgba(0,0,0,0.25);  /* dividers and disabled only */
+
+  --rule:  rgba(0,0,0,0.11);
+  --rule-strong: rgba(0,0,0,0.20);
+  --fill:  rgba(0,0,0,0.05);
+  --fill-2: rgba(0,0,0,0.08);
+
+  /* the seal */
+  --accent: #8A6224;
+  --accent-ring: #A97C33;
+  --accent-wash: #F2EBDF;
+  --accent-ink: #6F4D1C;   /* accent text on a wash */
+  --ok-wash: #E2EFE9;
+  --warn-wash: #F4EAD6;
+  --on-accent: #FFFFFF;
+
+  --danger: #B3261E;
+  --on-danger: #FFFFFF;
+  --danger-wash: #F8E5E3;
+  --ok: #1F6B4A;
+  --warn: #8A5A00;
+
+  /* terminal ground, shared by the TUI and CLI sections */
+  --term-bg: #14161B;
+  --term-ink: #E9EAED;
+  --term-dim: #9AA1AF;
+  --term-accent: #D2A059;
+  --term-chrome: #22252C;
+  --term-ok: #74C79B;
+  --term-warn: #E3B76A;
+  --term-bad: #F1897F;
+  --term-hair: rgba(255,255,255,0.08);
+
+  /* Traffic lights are the platform's, not the direction's. */
+  --tl-red: #FF5F57; --tl-yellow: #FEBC2E; --tl-green: #28C840;
+
+  /* The desktop behind the takeover overlay, and the overlay's own palette.
+     Both sit on a dark scene in either appearance, so they do not swap. */
+  --scene-1: #4A5568; --scene-2: #262C38; --scene-3: #1A1F28;
+  --scene-win: rgba(255,255,255,0.90);
+  --veil: rgba(20,14,4,0.52);
+  --veil-danger: rgba(30,8,6,0.55);
+  --on-dark: #F2F3F5;
+  --on-dark-2: #C3C9D3;
+  --seal-bg: #2A2216;
+  --seal-ink: #E4BC81;
+  --seal-key: #C39A5E;
+  --seal-rule: rgba(210,160,89,0.45);
+  --seal-on: #1A1305;
+  --knob: #FFFFFF;
+  --knob-shadow: rgba(0,0,0,0.30);
+  --scene-shadow: rgba(0,0,0,0.40);
+  --scene-edge: rgba(0,0,0,0.35);
+  --seg-shadow: rgba(0,0,0,0.14);
+  --win-shadow-1: rgba(16,20,28,0.16);
+  --win-shadow-2: rgba(16,20,28,0.10);
+  --pop-shadow-1: rgba(16,20,28,0.18);
+  --pop-shadow-2: rgba(16,20,28,0.12);
+
+  --radius-win: 10px;
+  --radius-sel: 8px;         /* kit */
+  --radius-pop: 20px;        /* kit */
+  --radius-ctl: 6px;
+
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+
+  --shadow-win: 0 12px 34px var(--win-shadow-1), 0 2px 6px var(--win-shadow-2);
+  --shadow-pop: 0 8px 24px var(--pop-shadow-1), 0 1px 3px var(--pop-shadow-2);
+}
+
+:root[data-appearance="dark"] {
+  color-scheme: dark;
+  --ground: #17181C;
+  --win: #1E1E1E;             /* kit */
+  --chrome: #2C2C2E;          /* graphite, never pure black */
+  --lift: #262628;
+  --sunken: #202024;
+
+  --ink:   rgba(255,255,255,1.0);
+  --ink-2: rgba(255,255,255,0.74);
+  --ink-3: rgba(255,255,255,0.60);
+  --ink-4: rgba(255,255,255,0.25);
+
+  --rule:  rgba(255,255,255,0.13);
+  --rule-strong: rgba(255,255,255,0.24);
+  --fill:  rgba(255,255,255,0.07);
+  --fill-2: rgba(255,255,255,0.11);
+
+  --accent: #D2A059;
+  --accent-ring: #D2A059;
+  --accent-wash: #2A2216;
+  --accent-ink: #E4BC81;
+  --ok-wash: #17281F;
+  --warn-wash: #2C2416;
+  --on-accent: #1A1305;
+
+  --danger: #F1897F;
+  --on-danger: #2A0B08;
+  --danger-wash: #2E1A18;
+  --ok: #74C79B;
+  --warn: #E3B76A;
+
+  --win-shadow-1: rgba(0,0,0,0.55);
+  --win-shadow-2: rgba(0,0,0,0.40);
+  --pop-shadow-1: rgba(0,0,0,0.55);
+  --pop-shadow-2: rgba(0,0,0,0.40);
+  --shadow-win: 0 16px 40px var(--win-shadow-1), 0 2px 8px var(--win-shadow-2);
+  --shadow-pop: 0 10px 30px var(--pop-shadow-1), 0 1px 4px var(--pop-shadow-2);
+}
+
+/* Increased contrast, authored per appearance. One scheme-agnostic override
+   would paint near-black on graphite in dark mode — a contrast mode that
+   reduces contrast. macOS also forces Reduce Transparency alongside it, so
+   both blocks drop translucency as well. */
+@media (prefers-contrast: more) {
+  :root:not([data-appearance="dark"]) {
+    --ink-2: rgba(0,0,0,0.78);
+    --ink-3: rgba(0,0,0,0.62);
+    --rule: rgba(0,0,0,0.28);
+    --accent: #6E4D18;
+  }
+  :root[data-appearance="dark"] {
+    --ink-2: rgba(255,255,255,0.86);
+    --ink-3: rgba(255,255,255,0.72);
+    --rule: rgba(255,255,255,0.34);
+    --accent: #EEC385;
+  }
+  .glass { backdrop-filter: none !important; }
+}
+
+/* macOS solidifies its own glass under Reduce Transparency, and turning on
+   Increase Contrast forces it as well, so both paths drop translucency. */
+@media (prefers-reduced-transparency: reduce) {
+  .page-bar, .hud, .menu, .menubar { backdrop-filter: none; }
+  .page-bar { background: var(--ground); }
+  .hud, .menubar { background: var(--chrome); }
+  .menu { background: var(--win); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 13px/1.45 var(--sans);   /* 13pt body — kit */
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent-wash); color: var(--ink); }
+:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: 2px; border-radius: 3px; }
+
+/* ───────────────────────────────────────────────────── page chrome ── */
+.page-bar {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; gap: 18px;
+  padding: 0 20px; height: 52px;
+  background: color-mix(in srgb, var(--ground) 86%, var(--win));
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--rule);
+}
+.wordmark { display: flex; align-items: baseline; gap: 9px; }
+.wordmark b { font-size: 15px; font-weight: 590; letter-spacing: -0.006em; }
+.wordmark span { font-size: 11px; color: var(--ink-3); }
+
+.seg { display: flex; background: var(--fill); border-radius: 7px; padding: 2px; gap: 2px; }
+.seg button {
+  flex: none;
+  font: 500 12px/1 var(--sans); color: var(--ink-2); white-space: nowrap;
+  background: none; border: 0; border-radius: 5px;
+  padding: 0 12px; height: 24px; min-height: 24px;  /* control-regular — kit */
+  cursor: default;
+}
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] {
+  background: var(--win); color: var(--ink); font-weight: 590;
+  box-shadow: 0 1px 2px var(--seg-shadow);
+}
+.page-bar .spacer { flex: 1; }
+.ghost-btn {
+  font: 500 12px/1 var(--sans); color: var(--ink-2); white-space: nowrap;
+  height: 24px; padding: 0 11px; cursor: default;
+  background: var(--fill); border: 0; border-radius: 6px;
+}
+.ghost-btn:hover { background: var(--fill-2); color: var(--ink); }
+.ghost-btn:active { background: var(--rule-strong); }
+
+/* ───────────────────────────────────────────────────────── layout ── */
+.shell { display: grid; grid-template-columns: 256px minmax(0,1fr); min-height: calc(100dvh - 52px); }
+@media (max-width: 900px) { .shell { grid-template-columns: 1fr; } }
+
+.rail {
+  width: 256px;
+  border-right: 1px solid var(--rule);
+  padding: 18px 14px 40px;
+  background: color-mix(in srgb, var(--ground) 60%, var(--win));
+}
+.rail h2 {
+  font: 590 11px/1 var(--sans); color: var(--ink-3);
+  margin: 20px 8px 8px; letter-spacing: 0.02em;
+}
+.rail h2:first-child { margin-top: 0; }
+.rail-item {
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 9px; width: 100%;
+  height: 32px;                                     /* sidebar-row-medium — kit */
+  padding: 0 10px; margin: 1px 0;
+  border: 0; background: none; border-radius: var(--radius-sel);
+  font: 400 13px/1 var(--sans); color: var(--ink); text-align: left; cursor: default;
+}
+.rail-item:hover { background: var(--fill); }
+.rail-item[aria-current="true"] { background: var(--accent); color: var(--on-accent); font-weight: 500; }
+.rail-item[aria-current="true"] .rail-dot { background: var(--on-accent); }
+.rail-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-4); flex: none; }
+.rail-item .count { margin-left: auto; font: 400 11px/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.rail-item[aria-current="true"] .count { color: var(--on-accent); }
+
+.stage { padding: 26px 28px 80px; min-width: 0; }
+.stage-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+.stage-head h1 { font: 590 22px/1.2 var(--sans); margin: 0 0 5px; letter-spacing: -0.012em; }
+.stage-head p { margin: 0; color: var(--ink-2); max-width: 62ch; font-size: 12px; }
+.stage-head .spacer { flex: 1; }
+
+.states { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 20px; }
+.state-chip {
+  flex: none;
+  font: 500 11px/1 var(--sans); color: var(--ink-2); white-space: nowrap;
+  background: var(--fill); border: 1px solid transparent; border-radius: 20px;
+  padding: 0 14px; height: 24px; cursor: default;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.state-chip:hover { background: var(--fill-2); color: var(--ink); }
+.state-chip[aria-pressed="true"] {
+  background: var(--accent-wash); color: var(--accent); border-color: var(--accent-ring); font-weight: 590;
+}
+.state-chip .glyph { font-size: 9px; opacity: 0.75; }
+
+/* the canvas the surfaces sit on */
+.canvas {
+  background: var(--sunken);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 34px 28px;
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
+  min-height: 300px;
+  overflow-x: auto;
+}
+.canvas.plain { background: var(--sunken); }
+
+.pane { display: none; }
+.pane.on { display: block; }
+.sub { display: none; }
+.sub.on { display: block; }
+
+.caption {
+  font: 400 11px/1.5 var(--sans); color: var(--ink-3);
+  max-width: 74ch; text-align: center;
+}
+.caption b { color: var(--ink-2); font-weight: 590; }
+
+/* ──────────────────────────────────────────── the macOS window kit ── */
+.win {
+  background: var(--win);
+  border-radius: var(--radius-win);
+  box-shadow: var(--shadow-win);
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  cursor: default;                 /* arrow cursor in chrome */
+}
+.win.inactive { box-shadow: 0 6px 18px var(--scene-shadow); }
+
+.titlebar {
+  height: 33px;                    /* kit */
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 9px;
+  background: var(--chrome);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+.lights { display: flex; gap: 8px; align-items: center; width: 68px; } /* 68×14 cluster — kit */
+.light { width: 12px; height: 12px; border-radius: 50%; }
+.light.r { background: var(--tl-red); } .light.y { background: var(--tl-yellow); } .light.g { background: var(--tl-green); }
+.win.inactive .light { background: var(--rule-strong); }
+.title {
+  position: absolute; left: 0; right: 0; text-align: center;
+  font: 590 13px/1 var(--sans); color: var(--ink-2); pointer-events: none;
+}
+.win.inactive .title { color: var(--ink-4); }
+
+.toolbar {
+  height: 52px;                    /* unified-toolbar — kit */
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 12px;
+  background: var(--chrome);
+  border-bottom: 1px solid var(--rule);
+}
+.tb-btn {
+  white-space: nowrap;
+  height: 36px; min-width: 36px;   /* control-xl — kit */
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 0 10px; border: 0; border-radius: var(--radius-ctl);
+  background: none; color: var(--ink-2); cursor: default;
+  font: 400 12px/1 var(--sans);
+}
+.tb-btn:hover { background: var(--fill); color: var(--ink); }
+.tb-btn:active { background: var(--fill-2); }
+.tb-btn[disabled] { color: var(--ink-4); }        /* disabled dims, never disappears */
+.tb-btn svg { width: 16px; height: 16px; }
+.toolbar .spacer { flex: 1; }
+
+.win-body { padding: 20px 22px; }
+.win-body.scrolls { max-height: 560px; overflow-y: auto; }
+
+/* controls */
+.btn {
+  white-space: nowrap;
+  height: 24px;                    /* control-regular — kit */
+  padding: 0 13px; border-radius: var(--radius-ctl);
+  border: 1px solid var(--rule-strong); background: var(--win); color: var(--ink);
+  font: 400 13px/1 var(--sans); cursor: default;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn:hover { background: var(--fill); }
+.btn:active { background: var(--fill-2); }
+.btn[disabled] { color: var(--ink-4); border-color: var(--rule); background: var(--win); }
+.btn.prominent {
+  background: var(--accent); color: var(--on-accent); border-color: transparent; font-weight: 500;
+}
+.btn.prominent:hover { filter: brightness(1.08); }
+.btn.prominent:active { filter: brightness(0.94); }
+.btn.destructive { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, transparent); }
+.btn.destructive:hover { background: var(--danger-wash); }
+.btn.large { height: 28px; padding: 0 16px; }   /* control-large — kit */
+
+.field {
+  height: 24px; padding: 0 8px; border-radius: 5px;
+  border: 1px solid var(--rule-strong); background: var(--win); color: var(--ink);
+  font: 400 13px/1 var(--sans); min-width: 180px;
+}
+.field:focus-visible { border-color: var(--accent-ring); outline: 2px solid var(--accent-wash); outline-offset: 0; }
+
+.switch {
+  width: 38px; height: 22px; border-radius: 11px; border: 0;
+  background: var(--rule-strong); position: relative; cursor: default; flex: none;
+  transition: background 0.2s ease;
+}
+.switch::after {
+  content: ""; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; border-radius: 50%; background: var(--knob);
+  box-shadow: 0 1px 2px var(--knob-shadow); transition: transform 0.2s ease;
+}
+.switch[aria-checked="true"] { background: var(--accent); }
+.switch[aria-checked="true"]::after { transform: translateX(16px); }
+.switch[disabled] { opacity: 0.4; }
+
+/* section furniture inside a window */
+.sec { border-top: 1px solid var(--rule); padding: 16px 0; }
+.sec:first-child { border-top: 0; padding-top: 4px; }
+.sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 3px; }
+/* section headers: system font, semibold, secondary colour, sentence case,
+   never tracked uppercase at heading size */
+.sec-head h3 { font: 590 13px/1.3 var(--sans); color: var(--ink-2); margin: 0; }
+.sec-head .spacer { flex: 1; }
+.sec-note { color: var(--ink-3); font-size: 11px; margin: 0 0 12px; max-width: 68ch; }
+
+.row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 9px 0; border-top: 1px solid var(--rule);
+}
+.row:first-of-type { border-top: 0; }
+.row .grow { flex: 1; min-width: 0; }
+.row .name { font-weight: 500; }
+.row .why { color: var(--ink-3); font-size: 11px; margin-top: 1px; }
+
+/* form grammar: right-aligned labels on a shared edge */
+.form { display: grid; grid-template-columns: max-content 1fr; gap: 9px 12px; align-items: center; }
+.form > label { text-align: right; color: var(--ink-2); }
+
+/* status pills */
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font: 500 11px/1 var(--sans); border-radius: 20px;
+  padding: 4px 9px; background: var(--fill); color: var(--ink-2);
+  white-space: nowrap;
+}
+.pill.ok { background: var(--ok-wash); color: var(--ok); }
+.pill.bad { background: var(--danger-wash); color: var(--danger); }
+.pill.warn { background: var(--warn-wash); color: var(--warn); }
+.pill .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* ── the signature: the provenance chip ─────────────────────────────
+   Plane, route, tier and machine in one stamped token. It is the same
+   component on every surface, because it is the same claim every time. */
+.prov {
+  display: inline-flex; align-items: stretch;
+  border: 1px solid var(--accent-ring); border-radius: 5px;
+  overflow: hidden; font: 500 10px/1 var(--mono);
+  background: var(--accent-wash); color: var(--accent-ink);
+  letter-spacing: 0.01em;
+}
+.prov span { padding: 5px 7px; display: inline-flex; align-items: center; white-space: nowrap; }
+.prov span + span { border-left: 1px solid color-mix(in srgb, var(--accent-ring) 55%, transparent); }
+.prov .k { color: var(--accent-ink); text-transform: uppercase; letter-spacing: 0.06em; }
+.prov.seal span:first-child { background: var(--accent); color: var(--on-accent); font-weight: 700; }
+.prov.muted { border-color: var(--rule-strong); background: var(--fill); color: var(--ink-2); }
+.prov.muted .k { color: var(--ink-2); }
+.prov.muted span + span { border-left-color: var(--rule); }
+
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* code / snippet block */
+.snippet {
+  background: var(--term-bg); color: var(--term-ink);
+  border-radius: var(--radius-ctl); padding: 11px 13px;
+  font: 400 11.5px/1.6 var(--mono); overflow-x: auto;
+  border: 1px solid var(--term-hair);
+}
+
+/* data table inside a window */
+table.data { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.data th {
+  text-align: left; font: 590 11px/1 var(--sans); color: var(--ink-3);
+  padding: 0 10px 7px 0; border-bottom: 1px solid var(--rule); white-space: nowrap;
+}
+table.data th.num, table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.data td { padding: 7px 10px 7px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.data tr.selected td { background: var(--accent); color: var(--on-accent); }
+table.data tr.selected td:first-child { border-radius: var(--radius-sel) 0 0 var(--radius-sel); }
+table.data tr.selected td:last-child { border-radius: 0 var(--radius-sel) var(--radius-sel) 0; }
+/* an unfocused window's selection is grey with standard text, not a dimmed accent */
+table.data.unfocused tr.selected td { background: var(--fill-2); color: var(--ink); }

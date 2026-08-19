@@ -1,0 +1,254 @@
+<!-- 5 ─ Takeover overlay ──────────────────────────────────────────────── -->
+<section class="pane" data-platform="mac" data-surface="takeover"
+         data-label="Takeover" data-title="Takeover overlay"
+         data-note="A translucent veil and a label on every display, before a batch takes the foreground. It signals mechanism — that Proctor is driving — and deliberately not consequence: an all-accessibility run can still delete a file through AXPress without this ever appearing, which is recorded as an open question rather than solved here.">
+
+  <div class="sub" data-state="armed" data-state-label="Armed">
+    <div class="canvas plain">
+      <div class="overlay-scene">
+        <div class="overlay-desktop">
+          <div class="fake-win" style="left:8%;top:14%;width:46%;height:58%"></div>
+          <div class="fake-win" style="left:38%;top:30%;width:52%;height:58%"></div>
+        </div>
+        <div class="overlay-veil">
+          <div class="overlay-card">
+            <h4>Proctor is driving this Mac</h4>
+            <p>Your keyboard and mouse are your own. Move the pointer or type and the run pauses.</p>
+            <span class="prov seal"><span>host</span><span class="k">plane</span><span>syntheticEvent</span><span class="k">run</span><span>4f2c</span></span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="hud-btn">Pause</button>
+            <button type="button" class="hud-btn stop">Stop</button>
+          </div>
+        </div>
+        <div class="overlay-cursor" style="left:70%;top:74%">
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#fff;stroke:#14161B;stroke-width:1.2"><path d="M5 3l14 8.4-6.1 1.3L9.9 19 5 3Z"/></svg>
+        </div>
+      </div>
+    </div>
+    <p class="caption">The drawn pointer sits in the target&rsquo;s own plane so a step is visible before it lands. The veil and the cursor are excluded from captures — evidence must not change because somebody was watching — which is why neither can be photographed by Proctor&rsquo;s own capture path.</p>
+  </div>
+
+  <div class="sub" data-state="guest" data-state-label="Guest route refusal">
+    <div class="canvas plain">
+      <div class="overlay-scene">
+        <div class="overlay-desktop">
+          <div class="fake-win" style="left:8%;top:14%;width:46%;height:58%"></div>
+          <div class="fake-win" style="left:38%;top:30%;width:52%;height:58%"></div>
+        </div>
+        <div class="overlay-veil" style="background:rgba(30,8,6,0.55)">
+          <div class="overlay-card" style="border-color:rgba(241,137,127,0.55)">
+            <h4>Refused &mdash; this batch would have taken the host</h4>
+            <p>A guest is configured, and Proctor cannot yet perform a step inside one. Running here and naming the guest would hand back a verdict that measured the plumbing.</p>
+            <span class="prov seal" style="border-color:#F1897F;background:rgba(241,137,127,0.16);color:#F1897F">
+              <span style="background:#F1897F;color:#2A0B08">refused</span><span class="k">guest</span><span>gst-sequoia-01</span></span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="hud-btn">Unset PROCTOR_GUEST</button>
+            <button type="button" class="hud-btn">How to reach a guest</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">A refusal, never a silent host run and never a fallback. It names the guest that caused it and the switch that clears it, so it is actionable rather than mysterious.</p>
+  </div>
+</section>
+
+<!-- 6 ─ History window ────────────────────────────────────────────────── -->
+<section class="pane" data-platform="mac" data-surface="history"
+         data-label="History" data-title="History window"
+         data-note="The audit trail folded back into runs, because a person does not think in events — the unit is the thing it just did, one tool call with its steps inside. Redacted values, post-state hashes, key ids and session handles are not in the projection at all, so a surface cannot draw them by accident.">
+
+  <div class="sub" data-state="ideal" data-state-label="Ideal">
+    <div class="canvas">
+      <div class="win" style="width:700px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">History</div></div>
+        <div class="toolbar">
+          <button type="button" class="tb-btn"><svg><use href="#i-clock"></use></svg>Today</button>
+          <button type="button" class="tb-btn"><svg><use href="#i-doc"></use></svg>All tools</button>
+          <div class="spacer"></div>
+          <input type="search" class="field" placeholder="Filter by app or tool" aria-label="Filter runs">
+          <button type="button" class="tb-btn"><svg><use href="#i-refresh"></use></svg></button>
+        </div>
+        <div class="win-body">
+          <table class="data">
+            <thead><tr><th>When</th><th>Tool</th><th>Application</th><th>Outcome</th><th class="num">Steps</th><th>Machine</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">09:14:02</td><td class="mono">proctor_act</td><td>com.apple.mail</td><td><span class="pill ok"><i class="dot"></i>ok</span></td><td class="num">7</td><td>host</td></tr>
+              <tr class="selected"><td class="mono">09:13:41</td><td class="mono">proctor_assert</td><td>com.apple.mail</td><td>ok</td><td class="num">4</td><td>host</td></tr>
+              <tr><td class="mono">09:13:20</td><td class="mono">proctor_act</td><td>com.apple.dt.Xcode</td><td><span class="pill bad"><i class="dot"></i>refused</span></td><td class="num">0</td><td>host</td></tr>
+              <tr><td class="mono">09:12:55</td><td class="mono">proctor_apps</td><td>com.apple.mail</td><td><span class="pill ok"><i class="dot"></i>ok</span></td><td class="num">1</td><td>host</td></tr>
+              <tr><td class="mono">09:08:17</td><td class="mono">proctor_guest</td><td>&mdash;</td><td><span class="pill bad"><i class="dot"></i>refused</span></td><td class="num">0</td><td>gst-sequoia-01</td></tr>
+            </tbody>
+          </table>
+          <div style="border:1px solid var(--rule);border-radius:9px;padding:13px 15px;margin-top:16px;background:var(--lift)">
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
+              <div style="font-weight:590">proctor_assert &middot; 09:13:41</div>
+              <div class="spacer" style="flex:1"></div>
+              <span class="prov"><span class="k">tier</span><span>native</span><span class="k">on</span><span>host</span></span>
+            </div>
+            <table class="data" style="font-size:11.5px">
+              <tbody>
+                <tr><td style="width:34%">contrast on &ldquo;Send&rdquo;</td><td>4.8:1 against its own fill</td><td><span class="pill ok"><i class="dot"></i>pass</span></td></tr>
+                <tr><td>minHitSize on &ldquo;Send&rdquo;</td><td>28&times;28pt</td><td><span class="pill ok"><i class="dot"></i>pass</span></td></tr>
+                <tr><td>agree (tri-observer)</td><td>tree, geometry and pixels agree</td><td><span class="pill ok"><i class="dot"></i>pass</span></td></tr>
+                <tr><td>focusOrder</td><td>no reflector on this app</td><td><span class="pill"><i class="dot"></i>skipped</span></td></tr>
+              </tbody>
+            </table>
+            <p style="margin:10px 0 0;font-size:11px;color:var(--ink-3)">A check that could not run is <b>skipped</b> and says why. It is never counted as a pass.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Retention is 14 days or 10,000 entries. The trail <b>rotates whole rather than pruning from the front</b>, because the chain is anchored over its own prefix and removing entries would leave the first survivor linked to a record that is gone.</p>
+  </div>
+
+  <div class="sub" data-state="empty" data-state-label="Empty">
+    <div class="canvas">
+      <div class="win" style="width:700px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">History</div></div>
+        <div class="toolbar">
+          <button type="button" class="tb-btn" disabled><svg><use href="#i-clock"></use></svg>Today</button>
+          <button type="button" class="tb-btn" disabled><svg><use href="#i-doc"></use></svg>All tools</button>
+          <div class="spacer"></div>
+          <input type="search" class="field" placeholder="Filter by app or tool" aria-label="Filter runs" disabled>
+        </div>
+        <div class="win-body" style="padding:52px 22px;text-align:center">
+          <div class="hud-char" style="width:48px;height:48px;margin:0 auto 14px;color:var(--ink-4)"><svg style="width:30px;height:30px"><use href="#ch-idle"></use></svg></div>
+          <div style="font:590 15px/1.3 var(--sans);margin-bottom:6px">No runs recorded yet</div>
+          <p style="margin:0 auto;max-width:44ch;color:var(--ink-2);font-size:12px">The trail starts at the first tool call. Connect a model, or drive one step from the command line, and it appears here.</p>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:16px">
+            <button type="button" class="btn prominent">Copy the connect snippet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">The empty state names the action that fills it, rather than reporting that there is no data.</p>
+  </div>
+</section>
+
+<!-- 7 ─ Consent sheet ─────────────────────────────────────────────────── -->
+<section class="pane" data-platform="mac" data-surface="consent"
+         data-label="Consent" data-title="Capability consent"
+         data-note="Two switches hand something away — a person's own keyboard, and a browser holding their real logins — so turning either on takes a second press with the disclosure on screen above it. Turning one off never asks: a person withdrawing a capability must not be argued with.">
+
+  <div class="sub" data-state="input" data-state-label="Hold the keyboard">
+    <div class="canvas">
+      <div class="sheet">
+        <h4>Let Proctor hold your keyboard and mouse?</h4>
+        <p>While Proctor posts a step, an event tap swallows your own input so your typing cannot land in the app it is driving.</p>
+        <div class="warn-box">
+          <b>This is the same mechanism a keylogger uses</b>, on the Accessibility grant Proctor already holds. Two things stay true whatever happens: <b>Stop always works</b>, and the block never survives the process — quitting Proctor releases your input immediately.
+        </div>
+        <p style="margin-top:10px">The takeover notice is on, so the Mac will visibly say what is happening while your input is held.</p>
+        <div class="actions">
+          <button type="button" class="btn">Cancel</button>
+          <button type="button" class="btn prominent">Hold my input</button>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Cancel leads, the confirming action trails, and the verb on the button is what will happen — not &ldquo;OK&rdquo;.</p>
+  </div>
+
+  <div class="sub" data-state="pairing" data-state-label="Pairing warning">
+    <div class="canvas">
+      <div class="sheet">
+        <h4>The notice that would explain this is switched off</h4>
+        <p>You are turning on <b>Hold the keyboard and mouse</b> while <b>Takeover notice</b> is off.</p>
+        <div class="warn-box" style="border-color:color-mix(in srgb, var(--danger) 45%, transparent);background:var(--danger-wash)">
+          Your keyboard and mouse will be held while Proctor acts, and nothing on screen will say why. The Mac will simply stop responding.
+        </div>
+        <div class="actions">
+          <button type="button" class="btn">Cancel</button>
+          <button type="button" class="btn">Hold input anyway</button>
+          <button type="button" class="btn prominent">Turn the notice back on</button>
+        </div>
+      </div>
+    </div>
+    <p class="caption">The recovery is the prominent action; the risky path stays available and unfilled. Every capability is paired with the drawing switch that announces it, and a mismatched pair is warned about rather than silently allowed.</p>
+  </div>
+
+  <div class="sub" data-state="lane" data-state-label="Second browser lane">
+    <div class="canvas">
+      <div class="sheet">
+        <h4>Name browser-use to the model?</h4>
+        <p>For pages Obscura cannot open — a browser&rsquo;s own settings, an extension page, DevTools — Proctor can name the browser-use CLI instead.</p>
+        <div class="warn-box">
+          browser-use is an <b>autonomous agent</b>. Its default local mode drives a real browser with your real logins, and nothing it does reaches Proctor&rsquo;s audit trail.
+        </div>
+        <p style="margin-top:10px">Proctor will ship no command for it, only prose about which mode to run it in. It is never used as a fallback, and never pointed at your saved passwords, extensions or history.</p>
+        <div class="actions">
+          <button type="button" class="btn">Cancel</button>
+          <button type="button" class="btn prominent">Let Proctor name it</button>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Installing a CLI is consent to have a file. It is not consent for a process holding Accessibility to name that file to a model with a shell — which is why this is a separate, explicit decision.</p>
+  </div>
+
+  <div class="sub" data-state="unlock" data-state-label="Screen unlock">
+    <div class="canvas">
+      <div class="alert">
+        <div class="hud-char" style="width:44px;height:44px;margin:0 auto;color:var(--accent);border-radius:11px"><svg style="width:28px;height:28px"><use href="#i-key"></use></svg></div>
+        <h4>Proctor wants to unlock this Mac</h4>
+        <p>A short turn opens, macOS evaluates the unlock right, and Proctor relocks when the turn ends or you touch the machine.</p>
+        <p style="margin-top:8px"><b>The login window stays available</b>, so you are never locked out.</p>
+        <div class="actions">
+          <button type="button" class="btn prominent">Allow for 2 minutes</button>
+          <button type="button" class="btn">Deny</button>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Every unlock is its own turn with its own expiry. Nothing holds the door open across a session, so a crashed client cannot leave it open.</p>
+  </div>
+</section>
+
+<!-- 8 ─ Menu bar commands ─────────────────────────────────────────────── -->
+<section class="pane" data-platform="mac" data-surface="menus"
+         data-label="Menus" data-title="The command surface"
+         data-note="Every command reachable from a toolbar or a panel also exists here, because people hide and customise toolbars and a toolbar-only command is one that can disappear. Shortcuts are listed beside the commands that own them.">
+  <div class="sub" data-state="all" data-state-label="All menus">
+    <div class="canvas plain">
+      <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;align-items:flex-start">
+        <div class="menu" style="width:250px">
+          <div class="head">Proctor</div>
+          <div class="mi">About Proctor</div>
+          <div class="sep"></div>
+          <div class="mi">Settings&hellip;<span class="key">&#8984;,</span></div>
+          <div class="mi">Check for Updates&hellip;</div>
+          <div class="sep"></div>
+          <div class="mi">Restart the Agent</div>
+          <div class="mi">Reveal the Socket in Finder</div>
+          <div class="sep"></div>
+          <div class="mi">Quit Proctor<span class="key">&#8984;Q</span></div>
+        </div>
+        <div class="menu" style="width:250px">
+          <div class="head">Run</div>
+          <div class="mi">Pause<span class="key">&#8984;.</span></div>
+          <div class="mi">Resume<span class="key">&#8963;&#8984;.</span></div>
+          <div class="mi">Stop<span class="key">&#8679;&#8984;.</span></div>
+          <div class="sep"></div>
+          <div class="mi">Drop Waiting Run</div>
+          <div class="sep"></div>
+          <div class="mi"><span class="tick">&#10003;</span>Show Run Panel</div>
+          <div class="mi"><span class="tick">&#10003;</span>Takeover Notice</div>
+          <div class="mi"><span class="tick">&#10003;</span>Drawn Pointer</div>
+        </div>
+        <div class="menu" style="width:250px">
+          <div class="head">Window</div>
+          <div class="mi">Status<span class="key">&#8984;0</span></div>
+          <div class="mi">History<span class="key">&#8984;Y</span></div>
+          <div class="sep"></div>
+          <div class="mi">Minimise<span class="key">&#8984;M</span></div>
+          <div class="mi">Bring All to Front</div>
+          <div class="sep"></div>
+          <div class="head">Help</div>
+          <div class="mi">Proctor Help<span class="key">&#8984;?</span></div>
+          <div class="mi">What Proctor Refuses to Do</div>
+          <div class="mi">Copy Diagnostics</div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Menu-bar items take title case; body copy and labels take sentence case. <b>Window &#9656; Status</b> is what restores the window after it is closed — the path that had to exist because reopening through the Dock could leave a process running with nothing on screen.</p>
+  </div>
+</section>

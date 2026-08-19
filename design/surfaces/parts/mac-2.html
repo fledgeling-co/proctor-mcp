@@ -1,0 +1,215 @@
+<!-- 3 ─ Menu bar ──────────────────────────────────────────────────────── -->
+<section class="pane" data-platform="mac" data-surface="menubar"
+         data-label="Menu bar" data-title="Menu bar extra"
+         data-note="The character when idle, the live tool-in-flight line while running, and the foreground disclosure before the machine is taken. Pause and Stop appear only while there is a run for them to act on — a control that does nothing is worse than an absent one on a menu whose job is to say what is going on.">
+
+  <div class="sub" data-state="idle" data-state-label="Idle">
+    <div class="canvas plain">
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0">
+        <div class="menubar">
+          <span class="apple">Proctor</span><span>File</span><span>Window</span><span>Help</span>
+          <div class="spacer"></div>
+          <div class="extras">
+            <span class="item" style="color:var(--accent)"><svg><use href="#ch-idle"></use></svg></span>
+            <span style="font-size:11px">Fri 09:41</span>
+          </div>
+        </div>
+        <div class="menu" style="margin-top:6px">
+          <div class="head">Proctor &middot; idle</div>
+          <div class="status">Nothing running. Last run finished 4 minutes ago.</div>
+          <div class="sep"></div>
+          <div class="mi">Open Status<span class="key">&#8984;0</span></div>
+          <div class="mi">Show History<span class="key">&#8984;Y</span></div>
+          <div class="sep"></div>
+          <div class="mi"><span class="tick">&#10003;</span>Show Run Panel</div>
+          <div class="mi"><span class="tick"></span>Hide Run Panel</div>
+          <div class="sep"></div>
+          <div class="mi off" aria-disabled="true">Pause<span class="key">&#8984;.</span></div>
+          <div class="mi off" aria-disabled="true">Stop</div>
+          <div class="sep"></div>
+          <div class="mi">Quit Proctor<span class="key">&#8984;Q</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Pause and Stop are <b>dimmed, not hidden</b>, so the menu keeps one shape and the keys stay learnable.</p>
+  </div>
+
+  <div class="sub" data-state="running" data-state-label="Running">
+    <div class="canvas plain">
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0">
+        <div class="menubar">
+          <span class="apple">Proctor</span><span>File</span><span>Window</span><span>Help</span>
+          <div class="spacer"></div>
+          <div class="extras">
+            <span class="item on"><svg><use href="#ch-acting"></use></svg></span>
+            <span style="font-size:11px">Fri 09:41</span>
+          </div>
+        </div>
+        <div class="menu wide" style="margin-top:6px">
+          <div class="head">Proctor &middot; running</div>
+          <div class="status">Typing into Search in Mail<br>
+            <span style="color:var(--ink-3)">step 4 of 7 &middot; mcp claude-code</span></div>
+          <div style="padding:2px 9px 8px"><span class="prov"><span class="k">plane</span><span>accessibility</span><span class="k">route</span><span>selectedText</span></span></div>
+          <div class="sep"></div>
+          <div class="mi hl">Pause<span class="key">&#8984;.</span></div>
+          <div class="mi">Stop</div>
+          <div class="sep"></div>
+          <div class="mi">Open Status<span class="key">&#8984;0</span></div>
+          <div class="mi">Show History<span class="key">&#8984;Y</span></div>
+          <div class="sep"></div>
+          <div class="mi">Quit Proctor<span class="key">&#8984;Q</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">The live line names the step in derived English. The provenance chip carries the plane and the route, so &ldquo;it worked&rdquo; is never the whole answer.</p>
+  </div>
+
+  <div class="sub" data-state="foreground" data-state-label="About to take the machine">
+    <div class="canvas plain">
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0">
+        <div class="menubar">
+          <span class="apple">Proctor</span><span>File</span><span>Window</span><span>Help</span>
+          <div class="spacer"></div>
+          <div class="extras"><span class="item on"><svg><use href="#ch-travelling"></use></svg></span>
+            <span style="font-size:11px">Fri 09:41</span></div>
+        </div>
+        <div class="menu wide" style="margin-top:6px">
+          <div class="head">Proctor &middot; about to take the foreground</div>
+          <div class="status">At least 2 of the 7 steps have to go through the system event stream, so Proctor will bring Mail to the front and your typing will land in it.</div>
+          <div style="padding:2px 9px 8px"><span class="prov"><span class="k">floor</span><span>2 of 7 steps</span><span class="k">plane</span><span>syntheticEvent</span></span></div>
+          <div class="sep"></div>
+          <div class="mi hl">Pause before it starts<span class="key">&#8984;.</span></div>
+          <div class="mi">Stop</div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Stated as a <b>floor, not a count</b>: two steps are certain to post, and a <span class="mono">type</span> or <span class="mono">scroll</span> that the accessibility plane refuses can add to it, which is a property of the element rather than of the request.</p>
+  </div>
+
+  <div class="sub" data-state="down" data-state-label="Agent unreachable">
+    <div class="canvas plain">
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0">
+        <div class="menubar">
+          <span class="apple">Proctor</span><span>File</span><span>Window</span><span>Help</span>
+          <div class="spacer"></div>
+          <div class="extras"><span class="item" style="color:var(--danger)"><svg><use href="#ch-error"></use></svg></span>
+            <span style="font-size:11px">Fri 09:41</span></div>
+        </div>
+        <div class="menu" style="margin-top:6px">
+          <div class="head" style="color:var(--danger)">Proctor &middot; not answering</div>
+          <div class="status">The background agent is not running. Nothing can be read or driven until it is.</div>
+          <div class="sep"></div>
+          <div class="mi hl">Start the agent</div>
+          <div class="mi">Open Status<span class="key">&#8984;0</span></div>
+          <div class="sep"></div>
+          <div class="mi off" aria-disabled="true">Pause<span class="key">&#8984;.</span></div>
+          <div class="mi off" aria-disabled="true">Stop</div>
+          <div class="sep"></div>
+          <div class="mi">Quit Proctor<span class="key">&#8984;Q</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">The glyph changes shape as well as colour, so the state survives a greyscale display and a colourblind reader.</p>
+  </div>
+</section>
+
+<!-- 4 ─ Run HUD ───────────────────────────────────────────────────────── -->
+<section class="pane" data-platform="mac" data-surface="hud"
+         data-label="Run HUD" data-title="Run HUD panel"
+         data-note="A borderless floating panel drawn by the agent, one per screen. It is chrome, so it carries the glass material — the windows do not. Its Pause and Stop write the same latch the menu bar and the TUI write, so there is one kill switch rather than three.">
+
+  <div class="sub" data-state="idle" data-state-label="idle">
+    <div class="canvas"><div class="hud">
+      <div class="hud-top">
+        <div class="hud-char" style="color:var(--ink-3)"><svg><use href="#ch-idle"></use></svg></div>
+        <div class="hud-lines"><div class="hud-step">Waiting for a run</div>
+          <div class="hud-sub">The agent is listening. Nothing is queued.</div></div>
+      </div>
+      <div class="hud-queue"><svg style="width:12px;height:12px"><use href="#i-clock"></use></svg> Every lane is free</div>
+    </div></div>
+    <p class="caption">No Pause or Stop, because there is nothing to pause or stop.</p>
+  </div>
+
+  <div class="sub" data-state="travelling" data-state-label="travelling">
+    <div class="canvas"><div class="hud">
+      <div class="hud-top">
+        <div class="hud-char" style="color:var(--accent)"><svg><use href="#ch-travelling"></use></svg></div>
+        <div class="hud-lines"><div class="hud-step">Bringing Mail to the front</div>
+          <div class="hud-sub">Taking a turn on the system event stream</div></div>
+        <div class="hud-controls"><button type="button" class="hud-btn">Pause</button><button type="button" class="hud-btn stop">Stop</button></div>
+      </div>
+      <div class="hud-meter"><i style="width:22%"></i></div>
+      <div class="hud-queue">step 2 of 7 &middot; <span class="prov muted" style="font-size:9px"><span class="k">plane</span><span>syntheticEvent</span></span></div>
+    </div></div>
+    <p class="caption">The panel ignores mouse events while a synthetic step is in flight, or a click Proctor itself posted could land on Stop and halt the run that posted it.</p>
+  </div>
+
+  <div class="sub" data-state="acting" data-state-label="acting">
+    <div class="canvas"><div class="hud">
+      <div class="hud-top">
+        <div class="hud-char" style="color:var(--accent)"><svg><use href="#ch-acting"></use></svg></div>
+        <div class="hud-lines"><div class="hud-step">Typing into &ldquo;Search&rdquo; in Mail</div>
+          <div class="hud-sub">settled: allSignalsQuiet after 412ms</div></div>
+        <div class="hud-controls"><button type="button" class="hud-btn">Pause</button><button type="button" class="hud-btn stop">Stop</button></div>
+      </div>
+      <div class="hud-meter"><i style="width:57%"></i></div>
+      <div class="hud-queue">step 4 of 7 &middot;
+        <span class="prov" style="font-size:9px"><span class="k">plane</span><span>accessibility</span><span class="k">route</span><span>selectedText</span><span class="k">on</span><span>host</span></span></div>
+    </div></div>
+    <p class="caption">The step text is <b>derived, never supplied</b>. Text from outside Proctor — the app&rsquo;s own title, or a name a model handed over — is quoted whichever side it came from, because an app&rsquo;s title carries the same injection payload a model&rsquo;s does.</p>
+  </div>
+
+  <div class="sub" data-state="blocked" data-state-label="blocked">
+    <div class="canvas"><div class="hud">
+      <div class="hud-top">
+        <div class="hud-char" style="color:var(--warn)"><svg><use href="#ch-blocked"></use></svg></div>
+        <div class="hud-lines"><div class="hud-step">Waiting for the event stream</div>
+          <div class="hud-sub">Another run holds it &middot; 31s of the 45s ceiling</div></div>
+        <div class="hud-controls"><button type="button" class="hud-btn">Drop</button><button type="button" class="hud-btn stop">Stop</button></div>
+      </div>
+      <div class="hud-meter"><i style="width:69%;background:var(--warn)"></i></div>
+      <div class="hud-queue">held by <span class="mono">cli &middot; lukerhodes</span> &middot; every hold names whose run it is</div>
+    </div></div>
+    <p class="caption">A wait that hits the ceiling comes back saying so rather than acting. A busy-machine refusal is safe to send again; a person dropping the run is a reason to ask first, so the two are told apart.</p>
+  </div>
+
+  <div class="sub" data-state="paused" data-state-label="paused">
+    <div class="canvas"><div class="hud">
+      <div class="hud-top">
+        <div class="hud-char" style="color:var(--warn)"><svg><use href="#ch-paused"></use></svg></div>
+        <div class="hud-lines"><div class="hud-step">Paused &mdash; you started using this Mac</div>
+          <div class="hud-sub">Yielded at the first keystroke &middot; resumes when you say</div></div>
+        <div class="hud-controls"><button type="button" class="hud-btn" style="border-color:var(--accent-ring);color:var(--accent)">Resume</button><button type="button" class="hud-btn stop">Stop</button></div>
+      </div>
+      <div class="hud-meter"><i style="width:57%;background:var(--warn)"></i></div>
+      <div class="hud-queue">step 4 of 7 &middot; pause ends automatically after 15:00</div>
+    </div></div>
+    <p class="caption">A person is detected by hardware provenance — a real event carries pid 0, a posted one carries Proctor&rsquo;s — never by &ldquo;an event that is not ours&rdquo;, which reads the driven app&rsquo;s own echoes as a person and pauses forever.</p>
+  </div>
+
+  <div class="sub" data-state="finished" data-state-label="finished">
+    <div class="canvas"><div class="hud">
+      <div class="hud-top">
+        <div class="hud-char" style="color:var(--ok)"><svg><use href="#ch-finished"></use></svg></div>
+        <div class="hud-lines"><div class="hud-step">Finished &mdash; 7 steps, no refusals</div>
+          <div class="hud-sub">2 steps took the foreground and said so</div></div>
+        <div class="hud-controls"><button type="button" class="hud-btn">Show in history</button></div>
+      </div>
+      <div class="hud-queue">recorded as <span class="mono">run-4f2c</span> &middot; sealed and signed</div>
+    </div></div>
+    <p class="caption">Done is a state with its own copy, not the absence of a running one.</p>
+  </div>
+
+  <div class="sub" data-state="error" data-state-label="error">
+    <div class="canvas"><div class="hud" style="border-color:color-mix(in srgb, var(--danger) 50%, transparent)">
+      <div class="hud-top">
+        <div class="hud-char" style="color:var(--danger)"><svg><use href="#ch-error"></use></svg></div>
+        <div class="hud-lines"><div class="hud-step">Stopped at step 5 of 7</div>
+          <div class="hud-sub">Mail discarded the value Proctor wrote, twice. Nothing further was tried.</div></div>
+        <div class="hud-controls"><button type="button" class="hud-btn">What happened</button></div>
+      </div>
+      <div class="hud-queue">the write was read back and disagreed &middot; <span class="mono">route=valueWrite</span></div>
+    </div></div>
+    <p class="caption">Every write is read back rather than believed: accessibility reports success for a set the application then throws away, so an accepted action is not an effective one.</p>
+  </div>
+</section>

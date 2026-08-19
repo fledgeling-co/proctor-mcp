@@ -1,0 +1,136 @@
+{
+  "check": "K display scaling, forced through CGConfigureDisplayWithDisplayMode",
+  "restoreModeID": 54,
+  "modes": [
+    {
+      "modeID": 12,
+      "label": "1168x755 @2x",
+      "setRC": 0,
+      "set": "{\"set\": 12, \"rc\": 0, \"points\": [1168, 755]}",
+      "screen": {
+        "w": 1168,
+        "h": 755,
+        "scale": 2
+      },
+      "window": {
+        "Height": 654,
+        "Width": 820,
+        "X": 15,
+        "Y": 26
+      },
+      "windowWithinScreen": true,
+      "minSizeHeld": true,
+      "controlsExamined": 21,
+      "capture": {
+        "status": "complete",
+        "trustworthy": true,
+        "size": [
+          970,
+          773
+        ]
+      },
+      "controlsClippedHorizontally": [],
+      "verticalOnly": 12
+    },
+    {
+      "modeID": 60,
+      "label": "1920x1200 @1x",
+      "setRC": 0,
+      "set": "{\"set\": 60, \"rc\": 0, \"points\": [1920, 1200]}",
+      "screen": {
+        "w": 1920,
+        "h": 1200,
+        "scale": 1
+      },
+      "window": {
+        "Height": 654,
+        "Width": 820,
+        "X": 47,
+        "Y": 30
+      },
+      "windowWithinScreen": true,
+      "minSizeHeld": true,
+      "controlsExamined": 21,
+      "capture": {
+        "status": "complete",
+        "trustworthy": true,
+        "size": [
+          820,
+          654
+        ]
+      },
+      "controlsClippedHorizontally": [],
+      "verticalOnly": 12
+    },
+    {
+      "modeID": 72,
+      "label": "2056x1329 @2x",
+      "setRC": 0,
+      "set": "{\"set\": 72, \"rc\": 0, \"points\": [2056, 1329]}",
+      "screen": {
+        "w": 2056,
+        "h": 1329,
+        "scale": 2
+      },
+      "window": {
+        "Height": 654,
+        "Width": 820,
+        "X": 53,
+        "Y": 39
+      },
+      "windowWithinScreen": true,
+      "minSizeHeld": true,
+      "controlsExamined": 21,
+      "capture": {
+        "status": "complete",
+        "trustworthy": true,
+        "size": [
+          970,
+          773
+        ]
+      },
+      "controlsClippedHorizontally": [],
+      "verticalOnly": 12
+    },
+    {
+      "modeID": 54,
+      "label": "1728x1117 @2x baseline",
+      "setRC": 0,
+      "set": "{\"set\": 54, \"rc\": 0, \"points\": [1728, 1117]}",
+      "screen": {
+        "w": 1728,
+        "h": 1117,
+        "scale": 2
+      },
+      "window": {
+        "Height": 1009,
+        "Width": 820,
+        "X": 40,
+        "Y": 33
+      },
+      "windowWithinScreen": true,
+      "minSizeHeld": true,
+      "controlsExamined": 21,
+      "capture": {
+        "status": "complete",
+        "trustworthy": true,
+        "size": [
+          781,
+          961
+        ]
+      },
+      "controlsClippedHorizontally": [],
+      "verticalOnly": 5
+    }
+  ],
+  "restoredScreen": {
+    "w": 1728,
+    "h": 1117,
+    "scale": 2
+  },
+  "examined": 4,
+  "failures": 0,
+  "verdict": "examined=4 failures=0: at 1168x755@2x, 1920x1200@1x, 2056x1329@2x and the 1728x1117@2x baseline the window stayed on screen, held its 620x560 minimum, kept all 21 controls, clipped none horizontally, and captured complete and trustworthy at every scale. Display restored to mode 54.",
+  "detectorNote": "The first predicate counted any control whose frame fell outside the window rect, and flagged 12 at every scale including the unchanged baseline. The status window is a ScrollView, so a control below the fold is scrolled rather than clipped and its frame is legitimately outside the visible rect. A uniform count across a mode that was not changed is the signature of the instrument rather than the application, so the predicate was narrowed to horizontal overflow, which scrolling cannot explain.",
+  "controlCountStableAcrossScales": true
+}

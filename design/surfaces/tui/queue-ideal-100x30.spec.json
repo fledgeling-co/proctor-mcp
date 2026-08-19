@@ -1,0 +1,194 @@
+{
+ "schema": "tui-design/spec/1",
+ "title": "proctor - queue-ideal",
+ "size": {
+  "cols": 100,
+  "rows": 30
+ },
+ "theme": "dark",
+ "roles": {
+  "surface": {
+   "bg": "#14161B"
+  },
+  "surface-lift": {
+   "bg": "#1B1E25"
+  },
+  "text": {
+   "fg": "#E9EAED"
+  },
+  "text-strong": {
+   "fg": "#FFFFFF",
+   "bold": true
+  },
+  "text-dim": {
+   "fg": "#9AA1AF"
+  },
+  "border": {
+   "fg": "#6E7686"
+  },
+  "border-focus": {
+   "fg": "#D2A059"
+  },
+  "accent": {
+   "fg": "#D2A059"
+  },
+  "ok": {
+   "fg": "#74C79B"
+  },
+  "warn": {
+   "fg": "#E3B76A"
+  },
+  "danger": {
+   "fg": "#F1897F"
+  },
+  "selected": {
+   "reverse": true
+  }
+ },
+ "alt_screen": true,
+ "root": {
+  "dir": "col",
+  "children": [
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "1",
+       "run"
+      ],
+      [
+       "2",
+       "QUEUE"
+      ],
+      [
+       "3",
+       "readiness"
+      ],
+      [
+       "4",
+       "history"
+      ],
+      [
+       "5",
+       "switches"
+      ]
+     ]
+    }
+   },
+   {
+    "flex": 1,
+    "dir": "col",
+    "children": [
+     {
+      "h": 8,
+      "panel": {
+       "title": "LANE MODEL",
+       "border": "round",
+       "shelf_right": "3 lanes",
+       "child": {
+        "text": {
+         "role": "text-dim",
+         "lines": [
+          "Reads never join the line.",
+          "Process-directed actuation contends per app.",
+          "Synthetic events contend globally, one at a time,",
+          "and raising an app holds that app's lane too."
+         ]
+        }
+       }
+      }
+     },
+     {
+      "flex": 1,
+      "panel": {
+       "title": "QUEUE",
+       "border": "round",
+       "shelf_right": "2 waiting, cap 45s",
+       "pad": 2,
+       "child": {
+        "table": {
+         "columns": [
+          {
+           "name": "LANE",
+           "w": 13,
+           "role": "accent"
+          },
+          {
+           "name": "HOLDER",
+           "flex": 1
+          },
+          {
+           "name": "STATE",
+           "w": 8
+          },
+          {
+           "name": "WAIT",
+           "w": 5,
+           "align": "right"
+          }
+         ],
+         "rows": [
+          [
+           "app:Mail",
+           "mcp claude-code",
+           "holding",
+           "12s"
+          ],
+          [
+           "app:Xcode",
+           "cli lukerhodes",
+           "waiting",
+           "31s"
+          ],
+          [
+           "event-stream",
+           "mcp cursor",
+           "waiting",
+           "8s"
+          ],
+          [
+           "app:Safari",
+           "free",
+           "free",
+           "-"
+          ]
+         ]
+        }
+       }
+      }
+     }
+    ]
+   },
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "p",
+       "pause"
+      ],
+      [
+       "s",
+       "stop"
+      ],
+      [
+       "d",
+       "drop waiting"
+      ],
+      [
+       "?",
+       "help"
+      ],
+      [
+       "q",
+       "quit"
+      ]
+     ]
+    }
+   }
+  ]
+ }
+}

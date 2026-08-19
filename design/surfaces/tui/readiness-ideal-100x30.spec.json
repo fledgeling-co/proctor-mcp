@@ -1,0 +1,210 @@
+{
+ "schema": "tui-design/spec/1",
+ "title": "proctor - readiness-ideal",
+ "size": {
+  "cols": 100,
+  "rows": 30
+ },
+ "theme": "dark",
+ "roles": {
+  "surface": {
+   "bg": "#14161B"
+  },
+  "surface-lift": {
+   "bg": "#1B1E25"
+  },
+  "text": {
+   "fg": "#E9EAED"
+  },
+  "text-strong": {
+   "fg": "#FFFFFF",
+   "bold": true
+  },
+  "text-dim": {
+   "fg": "#9AA1AF"
+  },
+  "border": {
+   "fg": "#6E7686"
+  },
+  "border-focus": {
+   "fg": "#D2A059"
+  },
+  "accent": {
+   "fg": "#D2A059"
+  },
+  "ok": {
+   "fg": "#74C79B"
+  },
+  "warn": {
+   "fg": "#E3B76A"
+  },
+  "danger": {
+   "fg": "#F1897F"
+  },
+  "selected": {
+   "reverse": true
+  }
+ },
+ "alt_screen": true,
+ "root": {
+  "dir": "col",
+  "children": [
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "1",
+       "run"
+      ],
+      [
+       "2",
+       "queue"
+      ],
+      [
+       "3",
+       "READINESS"
+      ],
+      [
+       "4",
+       "history"
+      ],
+      [
+       "5",
+       "switches"
+      ]
+     ]
+    }
+   },
+   {
+    "flex": 1,
+    "dir": "col",
+    "children": [
+     {
+      "h": 9,
+      "panel": {
+       "title": "PERMISSIONS",
+       "border": "round",
+       "shelf_right": "read-only",
+       "child": {
+        "table": {
+         "columns": [
+          {
+           "name": "GRANT",
+           "w": 17
+          },
+          {
+           "name": "STATE",
+           "w": 9,
+           "role": "accent"
+          },
+          {
+           "name": "WHAT IT GATES",
+           "flex": 1
+          }
+         ],
+         "rows": [
+          [
+           "Accessibility",
+           "granted",
+           "the tree, and writes to it"
+          ],
+          [
+           "Screen Recording",
+           "granted",
+           "pixels, and frame status"
+          ],
+          [
+           "Input Monitoring",
+           "off",
+           "noticing a person sooner"
+          ]
+         ]
+        }
+       }
+      }
+     },
+     {
+      "flex": 1,
+      "panel": {
+       "title": "LANES",
+       "border": "round",
+       "shelf_right": "derived",
+       "child": {
+        "table": {
+         "columns": [
+          {
+           "name": "LANE",
+           "w": 8,
+           "role": "accent"
+          },
+          {
+           "name": "STATE",
+           "w": 12
+          },
+          {
+           "name": "NEEDS",
+           "flex": 1
+          }
+         ],
+         "rows": [
+          [
+           "mac",
+           "ready",
+           "the two grants above"
+          ],
+          [
+           "browser",
+           "ready",
+           "obscura"
+          ],
+          [
+           "ios",
+           "unconfirmed",
+           "simctl, maestro"
+          ],
+          [
+           "cua",
+           "unavailable",
+           "cua-driver, not on this Mac"
+          ],
+          [
+           "guest",
+           "ready",
+           "lume, prlctl"
+          ]
+         ]
+        }
+       }
+      }
+     }
+    ]
+   },
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "r",
+       "re-check"
+      ],
+      [
+       "tab",
+       "pane"
+      ],
+      [
+       "?",
+       "help"
+      ],
+      [
+       "q",
+       "quit"
+      ]
+     ]
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,175 @@
+
+<script>
+(function () {
+  "use strict";
+
+  var panes = Array.prototype.slice.call(document.querySelectorAll(".pane"));
+  var rail = document.getElementById("rail");
+  var statesEl = document.getElementById("states");
+  var titleEl = document.getElementById("stage-title");
+  var noteEl = document.getElementById("stage-note");
+  var body = document.body;
+
+  var state = { platform: "mac", surface: null };
+
+  // Every pane lives in the document already; the stage just moves them into
+  // view. That keeps one source of truth for what exists, so the rail and the
+  // state chips are derived rather than maintained alongside it.
+  var stageBody = document.getElementById("stage-body");
+  panes.forEach(function (p) { stageBody.appendChild(p); });
+
+  function panesFor(platform) {
+    return panes.filter(function (p) { return p.dataset.platform === platform; });
+  }
+
+  function subsOf(pane) {
+    return Array.prototype.slice.call(pane.querySelectorAll(".sub"));
+  }
+
+  function buildRail() {
+    rail.innerHTML = "";
+    var heading = document.createElement("h2");
+    heading.textContent = ({
+      mac: "macOS app", tui: "Terminal UI", cli: "Command line", cover: "Coverage"
+    })[state.platform];
+    rail.appendChild(heading);
+
+    panesFor(state.platform).forEach(function (pane) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "rail-item";
+      b.setAttribute("aria-current", pane.dataset.surface === state.surface ? "true" : "false");
+      b.innerHTML = '<i class="rail-dot"></i>' +
+        '<span>' + pane.dataset.label + '</span>' +
+        '<span class="count">' + subsOf(pane).length + '</span>';
+      b.addEventListener("click", function () { select(state.platform, pane.dataset.surface); });
+      rail.appendChild(b);
+    });
+
+    var foot = document.createElement("p");
+    foot.style.cssText = "margin:22px 8px 0;font-size:11px;line-height:1.5;color:var(--ink-3)";
+    foot.innerHTML = ({
+      mac: "Built with mac-craft against the kit control ladder. Chrome geometry is asserted, never measured against a running app.",
+      tui: "Every frame compiled by tui-design, never hand-drawn. Both gate suites pass on all 22.",
+      cli: "Proposed surface. Nothing in <code>Sources/</code> implements it yet.",
+      cover: "A cell is drawn here or marked n/a with its reason."
+    })[state.platform];
+    rail.appendChild(foot);
+  }
+
+  function buildStates(pane) {
+    statesEl.innerHTML = "";
+    var subs = subsOf(pane);
+    if (subs.length < 2) { statesEl.style.display = "none"; } else { statesEl.style.display = "flex"; }
+    subs.forEach(function (sub, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "state-chip";
+      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+      b.textContent = sub.dataset.stateLabel || sub.dataset.state;
+      b.addEventListener("click", function () { showState(pane, sub.dataset.state); });
+      statesEl.appendChild(b);
+    });
+    // Left and Right move between states, which is how somebody comparing two
+    // states actually wants to move between them.
+    statesEl.onkeydown = function (e) {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") { return; }
+      var chips = Array.prototype.slice.call(statesEl.querySelectorAll(".state-chip"));
+      var at = chips.indexOf(document.activeElement);
+      if (at < 0) { return; }
+      e.preventDefault();
+      var next = chips[(at + (e.key === "ArrowRight" ? 1 : chips.length - 1)) % chips.length];
+      next.focus(); next.click();
+    };
+  }
+
+  function showState(pane, name) {
+    subsOf(pane).forEach(function (s) { s.classList.toggle("on", s.dataset.state === name); });
+    Array.prototype.slice.call(statesEl.querySelectorAll(".state-chip")).forEach(function (c) {
+      c.setAttribute("aria-pressed", String(c.textContent ===
+        (pane.querySelector('.sub[data-state="' + name + '"]').dataset.stateLabel || name)));
+    });
+  }
+
+  function select(platform, surface) {
+    state.platform = platform;
+    body.dataset.platform = platform;
+    var list = panesFor(platform);
+    if (!list.length) { return; }
+    var pane = list.filter(function (p) { return p.dataset.surface === surface; })[0] || list[0];
+    state.surface = pane.dataset.surface;
+
+    panes.forEach(function (p) { p.classList.toggle("on", p === pane); });
+    titleEl.textContent = pane.dataset.title;
+    noteEl.textContent = pane.dataset.note || "";
+
+    buildRail();
+    buildStates(pane);
+    var first = subsOf(pane)[0];
+    if (first) { showState(pane, first.dataset.state); }
+
+    Array.prototype.slice.call(document.querySelectorAll(".page-bar [data-platform]"))
+      .forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.platform === platform)); });
+  }
+
+  Array.prototype.slice.call(document.querySelectorAll(".page-bar [data-platform]"))
+    .forEach(function (b) {
+      b.addEventListener("click", function () { select(b.dataset.platform, null); });
+    });
+
+  // Appearance. Both schemes are authored; nothing here inverts one to make the
+  // other, because an inverted dark scheme is how graphite becomes pure black.
+  var appearance = document.getElementById("appearance");
+  function setAppearance(mode) {
+    document.documentElement.dataset.appearance = mode;
+    appearance.textContent = mode === "dark" ? "Light appearance" : "Dark appearance";
+    appearance.setAttribute("aria-label",
+      mode === "dark" ? "Switch to the light appearance" : "Switch to the dark appearance");
+  }
+  appearance.addEventListener("click", function () {
+    setAppearance(document.documentElement.dataset.appearance === "dark" ? "light" : "dark");
+  });
+  setAppearance(window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+  // Terminal size.
+  body.dataset.tuiSize = "100x30";
+  Array.prototype.slice.call(document.querySelectorAll("#tui-size button"))
+    .forEach(function (b) {
+      b.addEventListener("click", function () {
+        body.dataset.tuiSize = b.dataset.size;
+        Array.prototype.slice.call(document.querySelectorAll("#tui-size button"))
+          .forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+      });
+    });
+
+  // The coverage caption counts what is actually in the document, so the number
+  // cannot drift from the page the way a hand-written one would.
+  var caption = document.getElementById("grid-caption");
+  if (caption) {
+    var drawn = document.querySelectorAll(".sub").length;
+    var surfaces = panes.length;
+    var na = document.querySelectorAll(".matrix td.na").length;
+    caption.innerHTML = "<b>" + drawn + " states drawn</b> across " + surfaces +
+      " surfaces on three platforms, and " + na +
+      " cells marked n/a with their reason. Every terminal frame was compiled " +
+      "rather than drawn; every macOS metric is asserted against the published " +
+      "kit and verified against this stylesheet, never against a running app.";
+  }
+
+  function fromHash() {
+    var m = (location.hash || "").replace(/^#/, "").split("/");
+    if (!m[0]) { return false; }
+    select(m[0], m[1] || null);
+    if (m[2]) {
+      var pane = panes.filter(function (p) {
+        return p.dataset.platform === state.platform && p.dataset.surface === state.surface;
+      })[0];
+      if (pane && pane.querySelector('.sub[data-state="' + m[2] + '"]')) { showState(pane, m[2]); }
+    }
+    return true;
+  }
+  window.addEventListener("hashchange", fromHash);
+  if (!fromHash()) { select("mac", "walkthrough"); }
+})();
+</script>

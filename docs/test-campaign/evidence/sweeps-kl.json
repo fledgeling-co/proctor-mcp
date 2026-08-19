@@ -1,0 +1,229 @@
+{
+  "writePosture": "own instance: /Applications/Proctor.app pid 38168 and launchd agent app.fledgeling.procter.agent. TextEdit pid 51872 used as disposable AUT for overlay exclusion and guest refusal.",
+  "K": {
+    "attached": true,
+    "displayScaling": {
+      "status": "ran",
+      "examined": 4,
+      "failures": 0,
+      "forcedBy": "CGConfigureDisplayWithDisplayMode over four modes, restored to mode 54",
+      "modes": [
+        "1168x755 @2x",
+        "1920x1200 @1x",
+        "2056x1329 @2x",
+        "1728x1117 @2x baseline"
+      ],
+      "asserted": "window stayed on screen, held its 620x560 minimum, kept all 21 controls, clipped none horizontally, and captured complete and trustworthy at every scale",
+      "detectorDefect": "the first predicate counted vertical overflow too and flagged 12 controls at every scale including the unchanged baseline; the status window scrolls, so that was the instrument, not the layout",
+      "evidence": "evidence/sweepK-scaling.json"
+    },
+    "windowSizeLimits": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "statedMin": {
+        "w": 620,
+        "h": 560
+      },
+      "requested": [
+        300,
+        300
+      ],
+      "observedAfter": {
+        "w": 620,
+        "h": 572
+      },
+      "restoredTo": {
+        "w": 640,
+        "h": 592
+      },
+      "note": "AX resize to 300x300 was accepted (completed=1) but the window refused below minWidth 620. Height stayed 572 (>= 560)."
+    },
+    "menuBarExtra": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "axHasExtrasMenuBar": true,
+      "pid": 38168,
+      "shot": "evidence/shots/surf-010-menubar.png",
+      "size": [
+        1056,
+        76
+      ],
+      "captureMethod": "screencapture -x -R of the extras region, not ScreenCaptureKit (the extra is not a window)",
+      "popoverAnchoring": {
+        "status": "ran",
+        "examined": 1,
+        "failures": 0,
+        "statusItemX": 1105.0,
+        "menuX": 1091,
+        "offsetFromItem": -14.0,
+        "screenCentredWouldBe": 752.5,
+        "asserted": "the menu is anchored to its own status item rather than centred on the screen",
+        "menuItems": "Ready, Idle, Show Run Panel, Proctor Status\u2026, History\u2026, Run Setup Again\u2026, Quit Proctor",
+        "evidence": "evidence/sweepK-popover.json"
+      }
+    },
+    "runtimeTheme": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "forcedBy": "System Events appearance toggle while the app ran, then toggled back",
+      "repaintDeltaRGB": [
+        186.475,
+        186.407,
+        186.471
+      ],
+      "restoreDeltaRGB": [
+        0.001,
+        0.001,
+        0.001
+      ],
+      "asserted": "the window repainted for the new appearance without a relaunch and left no stale palette",
+      "evidence": "evidence/sweepK-theme.json"
+    },
+    "multiMonitorMove": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "displays": [
+        {
+          "scale": 2,
+          "w": 1728,
+          "h": 1117
+        },
+        {
+          "scale": 2,
+          "w": 2560,
+          "h": 1440,
+          "x": -716
+        }
+      ],
+      "moveToExternalCompleted": true,
+      "captureWhileOnExternal": {
+        "status": "complete",
+        "trustworthy": true,
+        "size": [
+          900,
+          833
+        ]
+      },
+      "restoredOrigin": {
+        "x": 946,
+        "y": 99
+      },
+      "note": "Both displays are 2x, so scale-factor re-resolution was not forced. Layout survived the move; SCK complete on both."
+    },
+    "occlusion": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "occluder": "TextEdit activate",
+      "occludedCapture": {
+        "status": "complete",
+        "trustworthy": true
+      },
+      "unoccludedCapture": {
+        "status": "complete",
+        "trustworthy": true
+      },
+      "note": "Window-scoped SCK still delivered complete frames while TextEdit was frontmost. That is the channel working, not a stale-frame detection. Space/lock cells were not forced."
+    },
+    "reopen": {
+      "status": "ran, defect found and fixed",
+      "examined": 3,
+      "failures": 0,
+      "close": "AXPress close button \u2192 cgWindows of Proctor UI = 0, axWindowCount = 0, extras still present",
+      "activate": "proctor_apps activate bundleId app.fledgeling.procter \u2192 activated true, windows [], note menu-bar-only after 8000ms",
+      "openDashA": "open -a /Applications/Proctor.app \u2192 still axWindows=0",
+      "windowMenu": "System Events click Window/Proctor restored cg+ax window 640x592 at 946,99",
+      "defect": "DEF-001",
+      "fix": "WindowPresentation.shouldPresentMain (ProctorCore) + presentMainWindow (ProctorUI). Verified on .build/Proctor.app: cg 0 / ax 0 before, cg 1 820x1009 / ax 1 titled Proctor after open -a. Not installed.",
+      "afterFix": "installed artifact: cg 0 / axWindowCount 0 before, cg 1 640x592 / axWindowCount 1 titled Proctor after open -a"
+    }
+  },
+  "L": {
+    "target": "own launchd agent app.fledgeling.procter.agent",
+    "peerDisappears": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "force": "launchctl bootout + SIGKILL pid 77097",
+      "uiSurvived": true,
+      "uiPid": 38168,
+      "doctor": "agentUnavailable at agent.sock; named, not a hang",
+      "statusWindowHonesty": "Agent down at t+0.71s and t+3.63s after bootout+SIGKILL (monotonic clock, installed artifact). The earlier Ready frame was captured inside one 2s doctor tick. DEF-002 retracted.",
+      "shots": [
+        "evidence/shots/sweepL-status-agent-down.png",
+        "evidence/shots/sweepL-status-t0.6.png",
+        "evidence/shots/sweepL-status-t3.5.png"
+      ]
+    },
+    "peerReturns": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "force": "launchctl bootstrap original plist",
+      "newPid": 43132,
+      "doctorReady": true,
+      "agentRunning": true,
+      "attachRestored": true
+    },
+    "halfOpen": {
+      "status": "ran, defect found and fixed",
+      "examined": 1,
+      "failures": 1,
+      "forcedBy": "SIGSTOP on the agent, so the listener stays bound and the reply never comes",
+      "before": "client blocked past 25s and was killed by the harness; the window showed Ready throughout",
+      "after": "window reads Agent down and \"did not answer within 5s\" at t+7.12s; SIGCONT restores Ready",
+      "defect": "DEF-002",
+      "case": "CASE-0029",
+      "evidence": "evidence/sweepL-halfopen.json"
+    },
+    "privilegeSeparation": {
+      "status": "ran",
+      "examined": 3,
+      "failures": 0,
+      "forcedBy": "a core-profile shim naming proctor_guest and proctor_policy, which core does not advertise",
+      "observed": "both executed. tools/list returns 10 names on core and 21 on full, and tools/call accepts any real tool whatever the profile",
+      "contract": "MCPServer.swift:123 states it: the profile trims discovery so a host is not handed the whole catalogue as noise, and never blocks a host that widens its own surface",
+      "reading": "the profile is a token-cost trim, not a privilege boundary between principals, and the client choosing --profile core is the same principal that could name the tool. Recorded as the documented contract rather than a defect; the campaign record that claimed a refusal was wrong and is DEF-004",
+      "evidence": "evidence/sweepL-privilege-separation.json"
+    },
+    "startupOrder": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "note": "UI remained with Status window while agent was down; MCP tools failed immediately with agentUnavailable rather than spinning. First-run path was not re-executed (walkthroughCompleted=1 after Skip setup)."
+    }
+  },
+  "AXFloorOnStatus": {
+    "examined": 29,
+    "unlabeledCheckboxes": 8,
+    "identicalDetailsButtons": 7,
+    "note": "proctor_find on the walkthrough/status tree: 8 AXCheckBox with empty title/label, 7 AXButton titled Details."
+  },
+  "overlayRasterChannels": {
+    "question": "can any capture channel photograph a window whose sharingType is .none",
+    "channelsTried": [
+      {
+        "channel": "ScreenCaptureKit window-scoped (proctor_capture)",
+        "result": "no frame for the HUD; SCFrameStatus complete of fully transparent frames for the takeover panels"
+      },
+      {
+        "channel": "screencapture -l <windowNumber>",
+        "result": "exit 1, \"could not create image from window\""
+      },
+      {
+        "channel": "screencapture -R over the rect the HUD occupies",
+        "result": "shows whatever is behind the panel; the HUD is absent from the frame"
+      },
+      {
+        "channel": "CGWindowListCreateImage / CGDisplayCreateImage",
+        "result": "obsoleted in macOS 15 and refuse to compile on this toolchain"
+      }
+    ],
+    "conclusion": "no channel on this lane can produce overlay pixels, and the agent capturing its own window does not change it. CASE-0008 and CASE-0010 stay n/a on a structural ground rather than an unattempted one",
+    "evidence": "evidence/hud-capture-channels.json"
+  }
+}

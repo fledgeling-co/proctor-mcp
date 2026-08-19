@@ -1,0 +1,135 @@
+{
+ "schema": "tui-design/spec/1",
+ "title": "proctor - history-empty",
+ "size": {
+  "cols": 80,
+  "rows": 24
+ },
+ "theme": "dark",
+ "roles": {
+  "surface": {
+   "bg": "#14161B"
+  },
+  "surface-lift": {
+   "bg": "#1B1E25"
+  },
+  "text": {
+   "fg": "#E9EAED"
+  },
+  "text-strong": {
+   "fg": "#FFFFFF",
+   "bold": true
+  },
+  "text-dim": {
+   "fg": "#9AA1AF"
+  },
+  "border": {
+   "fg": "#6E7686"
+  },
+  "border-focus": {
+   "fg": "#D2A059"
+  },
+  "accent": {
+   "fg": "#D2A059"
+  },
+  "ok": {
+   "fg": "#74C79B"
+  },
+  "warn": {
+   "fg": "#E3B76A"
+  },
+  "danger": {
+   "fg": "#F1897F"
+  },
+  "selected": {
+   "reverse": true
+  }
+ },
+ "alt_screen": true,
+ "root": {
+  "dir": "col",
+  "children": [
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "1",
+       "run"
+      ],
+      [
+       "2",
+       "queue"
+      ],
+      [
+       "3",
+       "readiness"
+      ],
+      [
+       "4",
+       "HISTORY"
+      ],
+      [
+       "5",
+       "switches"
+      ]
+     ]
+    }
+   },
+   {
+    "flex": 1,
+    "dir": "col",
+    "children": [
+     {
+      "flex": 1,
+      "panel": {
+       "title": "HISTORY",
+       "border": "round",
+       "shelf_centre": "nothing recorded yet",
+       "child": {
+        "text": {
+         "align": "centre",
+         "role": "text-dim",
+         "lines": [
+          "",
+          "No runs recorded on this machine.",
+          "",
+          "The trail starts at the first tool call and keeps",
+          "14 days or 10,000 entries, whichever comes first.",
+          "",
+          "Press <3> to check the agent is ready to record."
+         ]
+        }
+       }
+      }
+     }
+    ]
+   },
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "r",
+       "re-check"
+      ],
+      [
+       "tab",
+       "pane"
+      ],
+      [
+       "?",
+       "help"
+      ],
+      [
+       "q",
+       "quit"
+      ]
+     ]
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,270 @@
+<!-- ═══════════════════════════════════════════════════ CLI surfaces ══ -->
+<section class="pane" data-platform="cli" data-surface="catalogue"
+         data-label="Verb catalogue" data-title="proctor — the verb surface"
+         data-note="Proposed, not built. One verb per tool over the same socket the MCP shim uses, so a CLI call passes the same policy gate, takes the same queue lane, and lands in the same audit trail. The only thing that differs is who called.">
+  <div class="sub" data-state="all" data-state-label="Catalogue">
+    <div class="canvas plain">
+      <div class="cli-grid">
+        <div class="verb-list">
+          <h4>Observation &middot; read-only</h4>
+          <button type="button" class="verb" aria-current="true">proctor snapshot<span class="ro">RO</span></button>
+          <button type="button" class="verb">proctor find<span class="ro">RO</span></button>
+          <button type="button" class="verb">proctor capture<span class="ro">RO</span></button>
+          <button type="button" class="verb">proctor zoom<span class="ro">RO</span></button>
+          <button type="button" class="verb">proctor wait<span class="ro">RO</span></button>
+          <button type="button" class="verb">proctor assert<span class="ro">RO</span></button>
+          <button type="button" class="verb">proctor inspect<span class="ro">RO</span></button>
+          <button type="button" class="verb">proctor menu<span class="ro">RO</span></button>
+          <button type="button" class="verb">proctor dictionary<span class="ro">RO</span></button>
+          <button type="button" class="verb">proctor doctor<span class="ro">RO</span></button>
+          <h4>Actuation &middot; takes a lane</h4>
+          <button type="button" class="verb">proctor apps<span class="ro w">W</span></button>
+          <button type="button" class="verb">proctor act<span class="ro d">DESTR</span></button>
+          <button type="button" class="verb">proctor flow<span class="ro d">DESTR</span></button>
+          <button type="button" class="verb">proctor stability<span class="ro d">DESTR</span></button>
+          <button type="button" class="verb">proctor computer<span class="ro w">W</span></button>
+          <button type="button" class="verb">proctor ios<span class="ro w">W</span></button>
+          <h4>Machine &middot; governance</h4>
+          <button type="button" class="verb">proctor policy<span class="ro w">W</span></button>
+          <button type="button" class="verb">proctor kill<span class="ro d">DESTR</span></button>
+          <button type="button" class="verb">proctor guest<span class="ro d">DESTR</span></button>
+          <button type="button" class="verb">proctor unlock<span class="ro d">DESTR</span></button>
+          <h4>Service</h4>
+          <button type="button" class="verb">proctor install</button>
+          <button type="button" class="verb">proctor status</button>
+          <button type="button" class="verb">proctor serve</button>
+          <button type="button" class="verb">proctor tui</button>
+        </div>
+        <div>
+          <div class="term-wrap" style="display:block">
+            <div class="term-bar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div>
+              <div class="title">proctor snapshot --help</div></div>
+            <div class="term"><span class="ln"><span class="prompt">$</span> proctor snapshot --help</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-str">proctor snapshot</span> — read the accessibility tree of a window</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-acc">USAGE</span></span>
+<span class="ln">  proctor snapshot [--window &lt;handle&gt;|--app &lt;bundle-id&gt;] [flags]</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-acc">FLAGS</span></span>
+<span class="ln">  --window &lt;handle&gt;      a handle from <span class="c-dim">proctor apps attach</span></span>
+<span class="ln">  --app &lt;bundle-id&gt;      resolve the front window of this app instead</span>
+<span class="ln">  --root &lt;node&gt;          walk from a subtree rather than the window</span>
+<span class="ln">  --max-depth &lt;n&gt;        default 24</span>
+<span class="ln">  --max-nodes &lt;n&gt;        default 4000</span>
+<span class="ln">  --since &lt;revision&gt;     return a diff rather than a whole tree</span>
+<span class="ln">  --include-invisible    keep nodes the app marks hidden</span>
+<span class="ln">  --json                 the exact object the MCP tool returns</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-acc">EXIT</span></span>
+<span class="ln">  <span class="c-ok">0</span> read      <span class="c-warn">2</span> usage      <span class="c-bad">3</span> agent unreachable      <span class="c-bad">5</span> grant missing</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-dim">A tree read never takes a queue lane. Reads do not contend.</span></span></div>
+          </div>
+          <p class="caption" style="text-align:left;margin-top:12px">Read-only verbs never queue. The three marked <b>DESTR</b> carry the same destructive annotation the MCP tool carries, so a wrapper script can gate on it without parsing English.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pane" data-platform="cli" data-surface="doctor"
+         data-label="doctor" data-title="proctor doctor"
+         data-note="The run-first verb, and the CI readiness probe. It spawns nothing — a health check that executed the tools it reports on would be a side-effect channel — so every answer here comes from a filesystem read plus what the agent already knows.">
+
+  <div class="sub" data-state="human" data-state-label="Human output">
+    <div class="canvas plain"><div class="term-wrap">
+      <div class="term-bar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">proctor doctor</div></div>
+      <div class="term"><span class="ln"><span class="prompt">$</span> proctor doctor</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-str">Proctor 0.2.0</span> <span class="c-dim">(1c6500c, 17 Aug 2026)</span>   macOS 26.1   <span class="c-acc">host · native</span></span>
+<span class="ln"><span class="c-dim">socket  ~/Library/Application Support/app.fledgeling.procter/agent.sock</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="c-acc">GRANTS</span></span>
+<span class="ln">  <span class="c-ok">✓</span> Accessibility          granted</span>
+<span class="ln">  <span class="c-ok">✓</span> Screen Recording       granted</span>
+<span class="ln">  <span class="c-dim">·</span> Input Monitoring       not asked      <span class="c-dim">optional</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="c-acc">LANES</span>  <span class="c-dim">derived from the grants and the tools found</span></span>
+<span class="ln">  <span class="c-ok">ready</span>        mac        no external tool needed</span>
+<span class="ln">  <span class="c-ok">ready</span>        browser    obscura</span>
+<span class="ln">  <span class="c-warn">unconfirmed</span>  ios        simctl ok; maestro could not be confirmed</span>
+<span class="ln">  <span class="c-bad">unavailable</span>  cua        cua-driver is not on this Mac</span>
+<span class="ln">  <span class="c-ok">ready</span>        guest      lume, prlctl</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-acc">SESSION</span></span>
+<span class="ln">  attached apps 2    live observers 14    secure input <span class="c-ok">off</span></span>
+<span class="ln">  queue         0 waiting                 audit trail  <span class="c-ok">writable, signed</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="c-ok">ready: true</span>  <span class="c-dim">— Proctor drives native Mac apps with none of the optional tools above.</span></span>
+<span class="ln"><span class="c-dim">exit 0</span></span></div>
+    </div></div>
+    <p class="caption"><b>ready</b> is untouched by every optional lane. A health report that failed on an advisory tool would be lying about what is broken.</p>
+  </div>
+
+  <div class="sub" data-state="json" data-state-label="--json">
+    <div class="canvas plain"><div class="term-wrap">
+      <div class="term-bar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">proctor doctor --json</div></div>
+      <div class="term"><span class="ln"><span class="prompt">$</span> proctor doctor --json | jq '{ready, lanes: [.lanes[] | {lane, state}]}'</span>
+<span class="ln">{</span>
+<span class="ln">  <span class="c-acc">"ready"</span>: <span class="c-ok">true</span>,</span>
+<span class="ln">  <span class="c-acc">"lanes"</span>: [</span>
+<span class="ln">    { <span class="c-acc">"lane"</span>: <span class="c-str">"mac"</span>,     <span class="c-acc">"state"</span>: <span class="c-str">"ready"</span> },</span>
+<span class="ln">    { <span class="c-acc">"lane"</span>: <span class="c-str">"browser"</span>, <span class="c-acc">"state"</span>: <span class="c-str">"ready"</span> },</span>
+<span class="ln">    { <span class="c-acc">"lane"</span>: <span class="c-str">"ios"</span>,     <span class="c-acc">"state"</span>: <span class="c-str">"unconfirmed"</span> },</span>
+<span class="ln">    { <span class="c-acc">"lane"</span>: <span class="c-str">"cua"</span>,     <span class="c-acc">"state"</span>: <span class="c-str">"unavailable"</span> },</span>
+<span class="ln">    { <span class="c-acc">"lane"</span>: <span class="c-str">"guest"</span>,   <span class="c-acc">"state"</span>: <span class="c-str">"ready"</span> }</span>
+<span class="ln">  ]</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="prompt">$</span> proctor doctor --json --lane mac <span class="c-dim"># gate CI on one lane</span></span>
+<span class="ln"><span class="c-dim">exit 0</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="prompt">$</span> proctor doctor --json --lane cua</span>
+<span class="ln"><span class="c-bad">cua is unavailable: cua-driver is not on this Mac</span></span>
+<span class="ln"><span class="c-dim">exit 5</span></span></div>
+    </div></div>
+    <p class="caption"><span class="mono">--json</span> emits the <b>exact wire object</b> the MCP tool returns, unaltered, so a script and a model see the same bytes and a bug reproduces identically through either front end.</p>
+  </div>
+
+  <div class="sub" data-state="down" data-state-label="Agent unreachable">
+    <div class="canvas plain"><div class="term-wrap">
+      <div class="term-bar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">proctor doctor</div></div>
+      <div class="term"><span class="ln"><span class="prompt">$</span> proctor doctor</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-bad">The background agent is not answering.</span></span>
+<span class="ln"></span>
+<span class="ln">  socket   <span class="c-dim">~/Library/Application Support/app.fledgeling.procter/agent.sock</span></span>
+<span class="ln">  reason   connection refused</span>
+<span class="ln"></span>
+<span class="ln">Nothing can be read or driven until it is running. The grants belong to the</span>
+<span class="ln">agent, not to this command, so this is the only thing this command can tell you.</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-acc">Try</span></span>
+<span class="ln">  proctor install          <span class="c-dim"># write the launchd plist and start it</span></span>
+<span class="ln">  launchctl kickstart -k gui/$UID/app.fledgeling.procter.agent</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-dim">exit 3</span></span></div>
+    </div></div>
+    <p class="caption">The error says what happened, why it stops everything, and the command that fixes it — adjacent to the problem, and never blaming the caller.</p>
+  </div>
+</section>
+
+<section class="pane" data-platform="cli" data-surface="act"
+         data-label="act &amp; assert" data-title="Driving and checking"
+         data-note="A batch is one call, one round trip, one settle per step. Every result names the plane it travelled and the route within it, so the CLI can never report a weaker proof as a stronger one.">
+
+  <div class="sub" data-state="ok" data-state-label="A batch that works">
+    <div class="canvas plain"><div class="term-wrap">
+      <div class="term-bar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">proctor act</div></div>
+      <div class="term"><span class="ln"><span class="prompt">$</span> proctor act --app com.apple.mail --steps - &lt;&lt;'JSON'</span>
+<span class="ln">[{"kind":"focus","node":"search"},</span>
+<span class="ln"> {"kind":"type","text":"invoice"},</span>
+<span class="ln"> {"kind":"key","key":"return"}]</span>
+<span class="ln">JSON</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-dim">resolved  --app com.apple.mail → win:3:1 "Inbox"</span></span>
+<span class="ln"><span class="c-dim">lane      app:Mail (held 0.2s)</span></span>
+<span class="ln"></span>
+<span class="ln"> <span class="c-ok">✓</span> 1  focus  “Search”          <span class="c-acc">accessibility</span>/<span class="c-dim">action</span>        <span class="c-dim">88ms</span></span>
+<span class="ln"> <span class="c-ok">✓</span> 2  type   6 chars           <span class="c-acc">accessibility</span>/<span class="c-dim">selectedText</span>  <span class="c-dim">412ms</span></span>
+<span class="ln"> <span class="c-ok">✓</span> 3  key    return            <span class="c-warn">syntheticEvent</span>/<span class="c-dim">eventStream</span> <span class="c-dim">240ms</span></span>
+<span class="ln"></span>
+<span class="ln">settled   allSignalsQuiet <span class="c-dim">(ax quiet 300ms + 2 frames under 0.002)</span></span>
+<span class="ln">foreground 1 of 3 steps posted <span class="c-dim">— disclosed before the run, measured after</span></span>
+<span class="ln">recorded  run-4f2c <span class="c-dim">· sealed and signed · host</span></span>
+<span class="ln"><span class="c-dim">exit 0</span></span></div>
+    </div></div>
+    <p class="caption">Step 3 is marked differently because it <b>proves something weaker</b>: it shows Mail responds when it owns the screen, not that the control is reachable at all.</p>
+  </div>
+
+  <div class="sub" data-state="refused" data-state-label="Refused by policy">
+    <div class="canvas plain"><div class="term-wrap">
+      <div class="term-bar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">proctor act</div></div>
+      <div class="term"><span class="ln"><span class="prompt">$</span> proctor act --app com.apple.dt.Xcode --step click --node "Delete"</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-bad">Refused before anything ran.</span></span>
+<span class="ln"></span>
+<span class="ln">  app       com.apple.dt.Xcode</span>
+<span class="ln">  rule      not named by the allow list</span>
+<span class="ln">  gate      fails closed — an app the policy does not name is refused,</span>
+<span class="ln">            never driven, and this decision is in the trail.</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-acc">To allow it</span></span>
+<span class="ln">  proctor policy configure --allow com.apple.dt.Xcode</span>
+<span class="ln">  proctor policy approve   --bundle com.apple.dt.Xcode --ttl 10m  <span class="c-dim"># once</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="c-dim">recorded as outcome=refused · no step was attempted</span></span>
+<span class="ln"><span class="c-dim">exit 4</span></span></div>
+    </div></div>
+    <p class="caption">A refusal is recorded exactly as an action is. The trail holds what Proctor <b>declined</b> to do alongside what it did.</p>
+  </div>
+
+  <div class="sub" data-state="assertfail" data-state-label="An assertion fails">
+    <div class="canvas plain"><div class="term-wrap">
+      <div class="term-bar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">proctor assert</div></div>
+      <div class="term"><span class="ln"><span class="prompt">$</span> proctor assert --app com.apple.mail --contrast "Send" --min-hit-size "Send" --agree</span>
+<span class="ln"></span>
+<span class="ln"> <span class="c-ok">✓</span> minHitSize  “Send”      28×28pt <span class="c-dim">(floor 24)</span></span>
+<span class="ln"> <span class="c-bad">✗</span> contrast    “Send”      <span class="c-bad">3.9:1</span> against its own fill <span class="c-dim">(floor 4.5)</span></span>
+<span class="ln">     <span class="c-dim">white #FFFFFF on #6E9BD8 — measured from the capture, not the token</span></span>
+<span class="ln"> <span class="c-warn">–</span> agree                   <span class="c-warn">skipped</span>: no reflector in this app, so there are</span>
+<span class="ln">     <span class="c-dim">only two observers and no third channel to check them against</span></span>
+<span class="ln"></span>
+<span class="ln">1 passed · 1 failed · 1 skipped</span>
+<span class="ln"><span class="c-dim">A skipped check is never counted as a pass.</span></span>
+<span class="ln"><span class="c-dim">exit 1</span></span></div>
+    </div></div>
+    <p class="caption">Exit 1 means the call succeeded and the <b>verdict</b> failed — separate from exit 3, where nothing could be measured at all. CI needs those apart.</p>
+  </div>
+
+  <div class="sub" data-state="stability" data-state-label="Determinism sweep">
+    <div class="canvas plain"><div class="term-wrap">
+      <div class="term-bar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">proctor stability</div></div>
+      <div class="term"><span class="ln"><span class="prompt">$</span> proctor stability --flow compose-and-send --runs 5</span>
+<span class="ln"></span>
+<span class="ln">run 1  <span class="c-ok">████████████</span>  12 steps</span>
+<span class="ln">run 2  <span class="c-ok">████████████</span>  12 steps</span>
+<span class="ln">run 3  <span class="c-ok">███</span><span class="c-bad">█</span><span class="c-ok">████████</span>  12 steps   <span class="c-bad">← diverged at step 4</span></span>
+<span class="ln">run 4  <span class="c-ok">███</span><span class="c-bad">█</span><span class="c-ok">████████</span>  12 steps</span>
+<span class="ln">run 5  <span class="c-ok">████████████</span>  12 steps</span>
+<span class="ln"></span>
+<span class="ln">firstDivergence  <span class="c-bad">step 4</span>  <span class="c-dim">“Choosing the account pop-up”</span></span>
+<span class="ln">instability      <span class="c-warn">0.40</span>  <span class="c-dim">(2 distinct states over 5 runs)</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="c-dim">Step 12's assertion does not need investigating. The flow stopped being</span></span>
+<span class="ln"><span class="c-dim">the same flow at step 4, and everything after that is downstream of it.</span></span>
+<span class="ln"><span class="c-dim">exit 1</span></span></div>
+    </div></div>
+    <p class="caption">Volatile text and sub-pixel drift are normalised before hashing, so a clock in the window does not report as instability. Child order is <b>kept</b>, because a reordered tab sequence is a real defect.</p>
+  </div>
+</section>
+
+<section class="pane" data-platform="cli" data-surface="install"
+         data-label="install" data-title="Install and service"
+         data-note="The one thing the CLI writes. A launchd user agent is its own responsible process, which is what makes the TCC grants stick to Proctor at a fixed path rather than to whichever host happened to spawn it.">
+  <div class="sub" data-state="flow" data-state-label="First install">
+    <div class="canvas plain"><div class="term-wrap">
+      <div class="term-bar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">proctor install</div></div>
+      <div class="term"><span class="ln"><span class="prompt">$</span> proctor install</span>
+<span class="ln"></span>
+<span class="ln"><span class="c-ok">✓</span> found      /Applications/Proctor.app <span class="c-dim">(Developer ID, notarised, stapled)</span></span>
+<span class="ln"><span class="c-ok">✓</span> wrote      ~/Library/LaunchAgents/app.fledgeling.procter.agent.plist</span>
+<span class="ln"><span class="c-ok">✓</span> loaded     gui/501/app.fledgeling.procter.agent</span>
+<span class="ln"><span class="c-ok">✓</span> answering  agent.sock <span class="c-dim">(0.4s)</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="c-warn">Two permissions are still needed</span>, and macOS will only ask once you use them:</span>
+<span class="ln">  Accessibility        <span class="c-dim">the tree, and every write to it</span></span>
+<span class="ln">  Screen Recording     <span class="c-dim">pixels, and the frame status that says they are fresh</span></span>
+<span class="ln"></span>
+<span class="ln">  proctor doctor --request-accessibility     <span class="c-dim"># asks macOS directly</span></span>
+<span class="ln">  open -a Proctor                            <span class="c-dim"># or grant them in the window</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="c-acc">Connect a model</span></span>
+<span class="ln">  <span class="c-dim">{ "proctor": { "command": "proctor", "args": ["serve"] } }</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="c-dim">exit 0</span></span></div>
+    </div></div>
+    <p class="caption">It never installs anything else. Obscura, maestro and cua-driver are printed as commands for a person to run, never executed — the process holding Accessibility and Screen Recording is the wrong one to be downloading binaries.</p>
+  </div>
+</section>

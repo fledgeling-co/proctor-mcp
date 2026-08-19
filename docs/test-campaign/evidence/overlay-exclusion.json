@@ -1,0 +1,117 @@
+{
+  "window": "win:3:0",
+  "frames": {
+    "baseA": {
+      "path": "/tmp/campaign-run/shots/overlay-exclusion-baseA.png",
+      "size": [
+        1312,
+        844
+      ],
+      "meanRGBA": [
+        31.4028,
+        31.9478,
+        32.2873,
+        254.7675
+      ],
+      "bytes": 41268
+    },
+    "baseB": {
+      "path": "/tmp/campaign-run/shots/overlay-exclusion-baseB.png",
+      "size": [
+        1312,
+        844
+      ],
+      "meanRGBA": [
+        31.4028,
+        31.9478,
+        32.2873,
+        254.7675
+      ],
+      "bytes": 41268
+    },
+    "armed": {
+      "path": "/tmp/campaign-run/shots/overlay-exclusion-armed.png",
+      "size": [
+        1312,
+        844
+      ],
+      "meanRGBA": [
+        31.4028,
+        31.9478,
+        32.2873,
+        254.7675
+      ],
+      "bytes": 41268
+    }
+  },
+  "overlayWindowsWhileArmed": [
+    {
+      "pid": 77097,
+      "windowNumber": 194470,
+      "bounds": {
+        "Height": 230,
+        "Width": 352,
+        "X": 1458,
+        "Y": -264
+      },
+      "layer": 25,
+      "alpha": 1,
+      "sharingState": 0,
+      "onscreen": true
+    },
+    {
+      "pid": 77097,
+      "windowNumber": 194595,
+      "bounds": {
+        "Height": 1440,
+        "Width": 2560,
+        "X": -716,
+        "Y": -1440
+      },
+      "layer": 24,
+      "alpha": 1,
+      "sharingState": 0,
+      "onscreen": true
+    },
+    {
+      "pid": 77097,
+      "windowNumber": 194594,
+      "bounds": {
+        "Height": 1117,
+        "Width": 1728,
+        "X": 0,
+        "Y": 0
+      },
+      "layer": 24,
+      "alpha": 1,
+      "sharingState": 0,
+      "onscreen": true
+    }
+  ],
+  "noiseFloor": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "armedDelta": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "verdict": "excluded",
+  "positiveControl": {
+    "method": "proctor_act kind=key cmd-A (select-all highlight; no text mutation)",
+    "beforeMd5": "b08a0f9f624a3fd6b0e38578a5df2d36",
+    "afterMd5": "769df9bf455d1d13b84a8b8a8e19610b",
+    "framesDiffer": true
+  },
+  "frameMd5": {
+    "baseA": "b08a0f9f624a3fd6b0e38578a5df2d36",
+    "baseB": "b08a0f9f624a3fd6b0e38578a5df2d36",
+    "armed": "b08a0f9f624a3fd6b0e38578a5df2d36"
+  },
+  "capturePathProvenLive": true,
+  "interpretation": "The two baseline frames and the overlay-armed frame are byte-identical, and the same window's frame changes when a real visible change is forced. So the identical frames are a measurement of exclusion rather than a stale read. Overlay windows were witnessed onscreen with alpha=1 and sharingState=0 during the armed capture."
+}

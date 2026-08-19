@@ -1,0 +1,182 @@
+{
+ "schema": "tui-design/spec/1",
+ "title": "proctor - run-done",
+ "size": {
+  "cols": 80,
+  "rows": 24
+ },
+ "theme": "dark",
+ "roles": {
+  "surface": {
+   "bg": "#14161B"
+  },
+  "surface-lift": {
+   "bg": "#1B1E25"
+  },
+  "text": {
+   "fg": "#E9EAED"
+  },
+  "text-strong": {
+   "fg": "#FFFFFF",
+   "bold": true
+  },
+  "text-dim": {
+   "fg": "#9AA1AF"
+  },
+  "border": {
+   "fg": "#6E7686"
+  },
+  "border-focus": {
+   "fg": "#D2A059"
+  },
+  "accent": {
+   "fg": "#D2A059"
+  },
+  "ok": {
+   "fg": "#74C79B"
+  },
+  "warn": {
+   "fg": "#E3B76A"
+  },
+  "danger": {
+   "fg": "#F1897F"
+  },
+  "selected": {
+   "reverse": true
+  }
+ },
+ "alt_screen": true,
+ "root": {
+  "dir": "col",
+  "children": [
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "1",
+       "RUN"
+      ],
+      [
+       "2",
+       "queue"
+      ],
+      [
+       "3",
+       "readiness"
+      ],
+      [
+       "4",
+       "history"
+      ],
+      [
+       "5",
+       "switches"
+      ]
+     ]
+    }
+   },
+   {
+    "flex": 1,
+    "dir": "col",
+    "children": [
+     {
+      "h": 10,
+      "panel": {
+       "title": "RUN",
+       "border": "round",
+       "shelf_centre": "finished",
+       "shelf_right": "host \u00b7 native",
+       "shelf_bottom_right": "7 of 7",
+       "child": {
+        "dir": "col",
+        "children": [
+         {
+          "h": 2,
+          "text": {
+           "role": "ok",
+           "lines": [
+            "Finished. 7 steps, no refusals.",
+            "2 took the foreground and said so."
+           ]
+          }
+         },
+         {
+          "flex": 1,
+          "pairs": {
+           "items": [
+            [
+             "planes",
+             "accessibility x5, syntheticEvent x2"
+            ],
+            [
+             "backend",
+             "native"
+            ],
+            [
+             "recorded",
+             "run-4f2c, sealed and signed"
+            ],
+            [
+             "elapsed",
+             "00:41.8"
+            ]
+           ]
+          }
+         }
+        ]
+       }
+      }
+     },
+     {
+      "flex": 1,
+      "panel": {
+       "title": "QUEUE",
+       "border": "round",
+       "shelf_right": "0 waiting",
+       "child": {
+        "text": {
+         "role": "text-dim",
+         "align": "centre",
+         "lines": [
+          "",
+          "Every lane is free."
+         ]
+        }
+       }
+      }
+     }
+    ]
+   },
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "p",
+       "pause"
+      ],
+      [
+       "s",
+       "stop"
+      ],
+      [
+       "d",
+       "drop waiting"
+      ],
+      [
+       "?",
+       "help"
+      ],
+      [
+       "q",
+       "quit"
+      ]
+     ]
+    }
+   }
+  ]
+ }
+}

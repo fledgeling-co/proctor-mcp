@@ -1,0 +1,194 @@
+{
+ "schema": "tui-design/spec/1",
+ "title": "proctor - switches-ideal",
+ "size": {
+  "cols": 80,
+  "rows": 24
+ },
+ "theme": "dark",
+ "roles": {
+  "surface": {
+   "bg": "#14161B"
+  },
+  "surface-lift": {
+   "bg": "#1B1E25"
+  },
+  "text": {
+   "fg": "#E9EAED"
+  },
+  "text-strong": {
+   "fg": "#FFFFFF",
+   "bold": true
+  },
+  "text-dim": {
+   "fg": "#9AA1AF"
+  },
+  "border": {
+   "fg": "#6E7686"
+  },
+  "border-focus": {
+   "fg": "#D2A059"
+  },
+  "accent": {
+   "fg": "#D2A059"
+  },
+  "ok": {
+   "fg": "#74C79B"
+  },
+  "warn": {
+   "fg": "#E3B76A"
+  },
+  "danger": {
+   "fg": "#F1897F"
+  },
+  "selected": {
+   "reverse": true
+  }
+ },
+ "alt_screen": true,
+ "root": {
+  "dir": "col",
+  "children": [
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "1",
+       "run"
+      ],
+      [
+       "2",
+       "queue"
+      ],
+      [
+       "3",
+       "readiness"
+      ],
+      [
+       "4",
+       "history"
+      ],
+      [
+       "5",
+       "SWITCHES"
+      ]
+     ]
+    }
+   },
+   {
+    "flex": 1,
+    "dir": "col",
+    "children": [
+     {
+      "flex": 1,
+      "panel": {
+       "title": "SWITCHES",
+       "border": "round",
+       "shelf_centre": "read-only here",
+       "shelf_bottom_left": "set in the app or the launchd environment",
+       "child": {
+        "table": {
+         "columns": [
+          {
+           "name": "SWITCH",
+           "w": 22,
+           "role": "accent"
+          },
+          {
+           "name": "VALUE",
+           "w": 5
+          },
+          {
+           "name": "FROM",
+           "w": 11
+          },
+          {
+           "name": "EFFECT",
+           "flex": 1
+          }
+         ],
+         "rows": [
+          [
+           "PROCTOR_HUD",
+           "on",
+           "default",
+           "now"
+          ],
+          [
+           "PROCTOR_CURSOR",
+           "on",
+           "default",
+           "next start"
+          ],
+          [
+           "PROCTOR_TAKEOVER",
+           "on",
+           "default",
+           "next start"
+          ],
+          [
+           "PROCTOR_YIELD",
+           "on",
+           "saved",
+           "next start"
+          ],
+          [
+           "PROCTOR_YIELD_INPUT",
+           "on",
+           "saved",
+           "next start"
+          ],
+          [
+           "PROCTOR_TAKEOVER_INPUT",
+           "off",
+           "default",
+           "next start"
+          ],
+          [
+           "PROCTOR_SECOND_LANE",
+           "off",
+           "default",
+           "next start"
+          ],
+          [
+           "PROCTOR_ACTUATION",
+           "off",
+           "environment",
+           "next start"
+          ]
+         ]
+        }
+       }
+      }
+     }
+    ]
+   },
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "r",
+       "re-check"
+      ],
+      [
+       "tab",
+       "pane"
+      ],
+      [
+       "?",
+       "help"
+      ],
+      [
+       "q",
+       "quit"
+      ]
+     ]
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,341 @@
+{
+  "agentBuild": {
+    "builtAt": "2026-08-19T11:59:14Z",
+    "commit": "ab53c5e5a47b",
+    "configuration": "release",
+    "dirty": true,
+    "version": "0.1.0"
+  },
+  "agentRunning": true,
+  "agentVersion": "0.1.0+ab53c5e5a47b.dirty",
+  "attachedApps": [],
+  "blockers": [],
+  "grants": [
+    {
+      "granted": true,
+      "howToFix": "System Settings \u25b8 Privacy & Security \u25b8 Accessibility, enable Proctor. On macOS 26 a managed fleet can also grant this by PPPC profile.",
+      "name": "Accessibility",
+      "required": true,
+      "state": "granted"
+    },
+    {
+      "granted": true,
+      "howToFix": "System Settings \u25b8 Privacy & Security \u25b8 Screen & System Audio Recording, enable Proctor. This grant can never be applied silently or by profile on any macOS version \u2014 a person has to click it.",
+      "name": "Screen Recording",
+      "required": true,
+      "state": "granted"
+    },
+    {
+      "granted": false,
+      "howToFix": "Granted per target application the first time an Apple Event is sent, and not probeable in advance. If a declared-contract step fails with permissionAutomation, approve the prompt or enable the app under System Settings \u25b8 Privacy & Security \u25b8 Automation \u25b8 Proctor.",
+      "name": "Automation",
+      "required": false,
+      "state": "denied"
+    }
+  ],
+  "hud": {
+    "available": true,
+    "canShow": true,
+    "enabled": true,
+    "onScreen": false,
+    "pauseLimitSeconds": 900
+  },
+  "lanes": [
+    {
+      "blockers": [],
+      "lane": "mac",
+      "ready": true,
+      "requires": [],
+      "state": "ready"
+    },
+    {
+      "blockers": [],
+      "lane": "browser",
+      "ready": true,
+      "requires": [
+        "obscura"
+      ],
+      "state": "ready"
+    },
+    {
+      "blockers": [],
+      "lane": "ios",
+      "note": "Maestro is installed, so flow files can run beside the deep-link actions.",
+      "ready": true,
+      "requires": [
+        "simctl"
+      ],
+      "state": "ready"
+    },
+    {
+      "blockers": [],
+      "lane": "cua",
+      "note": "Not the actuation lane in force: Proctor's own planes are performing steps. This row reports whether the machine is ready for the delegated lane, not that anything is using it.",
+      "ready": false,
+      "requires": [
+        "cua-driver"
+      ],
+      "state": "unconfirmed"
+    },
+    {
+      "blockers": [],
+      "lane": "guest",
+      "note": "Either provider is enough. A person grants Accessibility and Screen Recording once inside the guest's GUI session, then clone reproduces the grants; nothing here provisions a guest as a side effect of a tool call. Tahoe guests currently render no application windows (trycua/cua #870, Apple FB21748086); verify against Sequoia.",
+      "ready": true,
+      "requires": [
+        "lume",
+        "prlctl"
+      ],
+      "state": "ready"
+    }
+  ],
+  "machine": {
+    "kind": "host",
+    "platform": "macos",
+    "tier": "native"
+  },
+  "obscura": {
+    "available": true,
+    "checkedAt": 1787140890.216999,
+    "detail": "Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.",
+    "evidence": "presence",
+    "missingCompanions": [],
+    "path": "/Users/lukerhodes/.local/bin/obscura",
+    "searched": [
+      "/usr/bin/obscura",
+      "/bin/obscura",
+      "/usr/sbin/obscura",
+      "/sbin/obscura",
+      "/opt/homebrew/bin/obscura",
+      "/usr/local/bin/obscura",
+      "/Users/lukerhodes/.local/bin/obscura",
+      "/Users/lukerhodes/.cargo/bin/obscura",
+      "/opt/local/bin/obscura"
+    ],
+    "tool": "obscura",
+    "usability": "usable"
+  },
+  "obscuraAvailable": true,
+  "observersLive": 0,
+  "osVersion": "26.6.0",
+  "policy": {
+    "allowCount": 0,
+    "approvalTokenLive": false,
+    "auditClean": true,
+    "auditEntries": 770,
+    "auditKeyConfirmed": true,
+    "auditSealed": true,
+    "auditSigned": true,
+    "auditWritable": true,
+    "blockCount": 0,
+    "fsJailDeclared": false,
+    "fsRootCount": 0,
+    "mode": "open",
+    "note": "Shape and posture only. The lists themselves, the filesystem roots, the trail's path and any key or token are deliberately not reported here: proctor_doctor is called before anything is established, and a health check is the wrong place to hand out configuration. This is a convention rather than a boundary \u2014 proctor_policy action \"status\" answers in full.",
+    "sensitiveCount": 0
+  },
+  "protocolVersion": 1,
+  "queue": {
+    "active": 0,
+    "activeRuns": [],
+    "held": false,
+    "lanes": [],
+    "perSessionWaitingCap": 3,
+    "waitLimitSeconds": 45,
+    "waiting": 0
+  },
+  "ready": true,
+  "secondLane": "off",
+  "secureEventInputActive": false,
+  "shortcutsCLIAvailable": true,
+  "socketPath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/agent.sock",
+  "switches": [
+    {
+      "locked": false,
+      "on": true,
+      "source": "builtInDefault",
+      "timing": "live",
+      "variable": "PROCTOR_HUD"
+    },
+    {
+      "locked": false,
+      "on": true,
+      "source": "builtInDefault",
+      "timing": "nextStart",
+      "variable": "PROCTOR_CURSOR"
+    },
+    {
+      "locked": false,
+      "on": true,
+      "source": "builtInDefault",
+      "timing": "nextStart",
+      "variable": "PROCTOR_TAKEOVER"
+    },
+    {
+      "locked": false,
+      "on": true,
+      "source": "builtInDefault",
+      "timing": "nextStart",
+      "variable": "PROCTOR_YIELD"
+    },
+    {
+      "locked": false,
+      "on": false,
+      "source": "builtInDefault",
+      "timing": "nextStart",
+      "variable": "PROCTOR_YIELD_INPUT"
+    },
+    {
+      "locked": false,
+      "on": false,
+      "source": "builtInDefault",
+      "timing": "nextStart",
+      "variable": "PROCTOR_TAKEOVER_INPUT"
+    },
+    {
+      "locked": false,
+      "on": false,
+      "source": "builtInDefault",
+      "timing": "nextStart",
+      "variable": "PROCTOR_SECOND_LANE"
+    },
+    {
+      "locked": false,
+      "on": false,
+      "source": "builtInDefault",
+      "timing": "nextStart",
+      "variable": "PROCTOR_ACTUATION"
+    }
+  ],
+  "takeover": {
+    "cursorOverlay": true,
+    "inputBlockAvailable": false,
+    "inputBlockRequested": false,
+    "inputMonitoring": "granted",
+    "note": "A foreground step says so on every display and leaves input alone. Set PROCTOR_TAKEOVER_INPUT=1 to have Proctor also hold the keyboard and mouse for the moments it is posting events; Esc stops a run while it does.",
+    "overlay": true
+  },
+  "tools": [
+    {
+      "available": true,
+      "checkedAt": 1787140890.216999,
+      "detail": "Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.",
+      "evidence": "presence",
+      "missingCompanions": [],
+      "path": "/Users/lukerhodes/.local/bin/obscura",
+      "searched": [
+        "/usr/bin/obscura",
+        "/bin/obscura",
+        "/usr/sbin/obscura",
+        "/sbin/obscura",
+        "/opt/homebrew/bin/obscura",
+        "/usr/local/bin/obscura",
+        "/Users/lukerhodes/.local/bin/obscura",
+        "/Users/lukerhodes/.cargo/bin/obscura",
+        "/opt/local/bin/obscura"
+      ],
+      "tool": "obscura",
+      "usability": "usable"
+    },
+    {
+      "available": true,
+      "checkedAt": 1787140890.216999,
+      "detail": "Found, and the install layout names this version. Proctor did not run it: reading is free and running one of these costs seconds.",
+      "evidence": "installPath",
+      "missingCompanions": [],
+      "path": "/Applications/Xcode.app/Contents/Developer/usr/bin/simctl",
+      "searched": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/simctl"
+      ],
+      "tool": "simctl",
+      "usability": "usable",
+      "version": "26.6 (17F113)"
+    },
+    {
+      "available": true,
+      "checkedAt": 1787140890.216999,
+      "detail": "Found, and signed by the identity its own documentation names. Its version, its daemon and its own permissions are not established \u2014 a health check does not run it, so those are settled the first time the lane is used.",
+      "evidence": "signature",
+      "missingCompanions": [],
+      "path": "/Users/lukerhodes/.local/bin/cua-driver",
+      "searched": [
+        "/usr/bin/cua-driver",
+        "/bin/cua-driver",
+        "/usr/sbin/cua-driver",
+        "/sbin/cua-driver",
+        "/opt/homebrew/bin/cua-driver",
+        "/usr/local/bin/cua-driver",
+        "/Users/lukerhodes/.local/bin/cua-driver",
+        "/Users/lukerhodes/.cargo/bin/cua-driver",
+        "/opt/local/bin/cua-driver"
+      ],
+      "tool": "cua-driver",
+      "usability": "unconfirmed"
+    },
+    {
+      "available": true,
+      "checkedAt": 1787140890.216999,
+      "detail": "Found, and the install layout names this version. Proctor did not run it: reading is free and running one of these costs seconds.",
+      "evidence": "installPath",
+      "missingCompanions": [],
+      "path": "/opt/homebrew/bin/maestro",
+      "searched": [
+        "/usr/bin/maestro",
+        "/bin/maestro",
+        "/usr/sbin/maestro",
+        "/sbin/maestro",
+        "/opt/homebrew/bin/maestro",
+        "/usr/local/bin/maestro",
+        "/Users/lukerhodes/.local/bin/maestro",
+        "/Users/lukerhodes/.cargo/bin/maestro",
+        "/opt/local/bin/maestro"
+      ],
+      "tool": "maestro",
+      "usability": "usable",
+      "version": "2.4.0"
+    },
+    {
+      "available": true,
+      "checkedAt": 1787140890.216999,
+      "detail": "Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.",
+      "evidence": "presence",
+      "missingCompanions": [],
+      "path": "/opt/homebrew/bin/lume",
+      "searched": [
+        "/usr/bin/lume",
+        "/bin/lume",
+        "/usr/sbin/lume",
+        "/sbin/lume",
+        "/opt/homebrew/bin/lume",
+        "/usr/local/bin/lume",
+        "/Users/lukerhodes/.local/bin/lume",
+        "/Users/lukerhodes/.cargo/bin/lume",
+        "/opt/local/bin/lume",
+        "/Users/lukerhodes/.lume/bin/lume"
+      ],
+      "tool": "lume",
+      "usability": "usable"
+    },
+    {
+      "available": true,
+      "checkedAt": 1787140890.216999,
+      "detail": "Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.",
+      "evidence": "presence",
+      "missingCompanions": [],
+      "path": "/usr/local/bin/prlctl",
+      "searched": [
+        "/usr/bin/prlctl",
+        "/bin/prlctl",
+        "/usr/sbin/prlctl",
+        "/sbin/prlctl",
+        "/opt/homebrew/bin/prlctl",
+        "/usr/local/bin/prlctl",
+        "/Users/lukerhodes/.local/bin/prlctl",
+        "/Users/lukerhodes/.cargo/bin/prlctl",
+        "/opt/local/bin/prlctl"
+      ],
+      "tool": "prlctl",
+      "usability": "usable"
+    }
+  ]
+}

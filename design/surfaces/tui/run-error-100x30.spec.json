@@ -1,0 +1,172 @@
+{
+ "schema": "tui-design/spec/1",
+ "title": "proctor - run-error",
+ "size": {
+  "cols": 100,
+  "rows": 30
+ },
+ "theme": "dark",
+ "roles": {
+  "surface": {
+   "bg": "#14161B"
+  },
+  "surface-lift": {
+   "bg": "#1B1E25"
+  },
+  "text": {
+   "fg": "#E9EAED"
+  },
+  "text-strong": {
+   "fg": "#FFFFFF",
+   "bold": true
+  },
+  "text-dim": {
+   "fg": "#9AA1AF"
+  },
+  "border": {
+   "fg": "#6E7686"
+  },
+  "border-focus": {
+   "fg": "#D2A059"
+  },
+  "accent": {
+   "fg": "#D2A059"
+  },
+  "ok": {
+   "fg": "#74C79B"
+  },
+  "warn": {
+   "fg": "#E3B76A"
+  },
+  "danger": {
+   "fg": "#F1897F"
+  },
+  "selected": {
+   "reverse": true
+  }
+ },
+ "alt_screen": true,
+ "root": {
+  "dir": "col",
+  "children": [
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "1",
+       "RUN"
+      ],
+      [
+       "2",
+       "queue"
+      ],
+      [
+       "3",
+       "readiness"
+      ],
+      [
+       "4",
+       "history"
+      ],
+      [
+       "5",
+       "switches"
+      ]
+     ]
+    }
+   },
+   {
+    "flex": 1,
+    "dir": "col",
+    "children": [
+     {
+      "flex": 1,
+      "panel": {
+       "title": "RUN",
+       "border": "round",
+       "border_role": "danger",
+       "shelf_centre": "agent unreachable",
+       "child": {
+        "dir": "col",
+        "children": [
+         {
+          "h": 3,
+          "text": {
+           "role": "danger",
+           "lines": [
+            "The background agent is not answering.",
+            "Connection refused on the agent socket.",
+            "Until it runs, nothing on this screen is live."
+           ]
+          }
+         },
+         {
+          "h": 3,
+          "text": {
+           "role": "text-dim",
+           "lines": [
+            "",
+            "The last good frame was 4s ago and is not shown,",
+            "because a stale frame reads as a running one."
+           ]
+          }
+         },
+         {
+          "flex": 1,
+          "blank": {}
+         },
+         {
+          "h": 1,
+          "keybar": {
+           "style": "bracket",
+           "items": [
+            [
+             "r",
+             "retry now"
+            ],
+            [
+             "a",
+             "start the agent"
+            ]
+           ]
+          }
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "p",
+       "pause"
+      ],
+      [
+       "s",
+       "stop"
+      ],
+      [
+       "d",
+       "drop waiting"
+      ],
+      [
+       "?",
+       "help"
+      ],
+      [
+       "q",
+       "quit"
+      ]
+     ]
+    }
+   }
+  ]
+ }
+}

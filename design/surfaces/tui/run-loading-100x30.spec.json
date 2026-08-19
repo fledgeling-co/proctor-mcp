@@ -1,0 +1,154 @@
+{
+ "schema": "tui-design/spec/1",
+ "title": "proctor - run-loading",
+ "size": {
+  "cols": 100,
+  "rows": 30
+ },
+ "theme": "dark",
+ "roles": {
+  "surface": {
+   "bg": "#14161B"
+  },
+  "surface-lift": {
+   "bg": "#1B1E25"
+  },
+  "text": {
+   "fg": "#E9EAED"
+  },
+  "text-strong": {
+   "fg": "#FFFFFF",
+   "bold": true
+  },
+  "text-dim": {
+   "fg": "#9AA1AF"
+  },
+  "border": {
+   "fg": "#6E7686"
+  },
+  "border-focus": {
+   "fg": "#D2A059"
+  },
+  "accent": {
+   "fg": "#D2A059"
+  },
+  "ok": {
+   "fg": "#74C79B"
+  },
+  "warn": {
+   "fg": "#E3B76A"
+  },
+  "danger": {
+   "fg": "#F1897F"
+  },
+  "selected": {
+   "reverse": true
+  }
+ },
+ "alt_screen": true,
+ "root": {
+  "dir": "col",
+  "children": [
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "1",
+       "RUN"
+      ],
+      [
+       "2",
+       "queue"
+      ],
+      [
+       "3",
+       "readiness"
+      ],
+      [
+       "4",
+       "history"
+      ],
+      [
+       "5",
+       "switches"
+      ]
+     ]
+    }
+   },
+   {
+    "flex": 1,
+    "dir": "col",
+    "children": [
+     {
+      "flex": 1,
+      "panel": {
+       "title": "RUN",
+       "border": "round",
+       "shelf_centre": "connecting",
+       "shelf_right": "-",
+       "child": {
+        "dir": "col",
+        "children": [
+         {
+          "h": 3,
+          "text": {
+           "role": "text-dim",
+           "lines": [
+            "Reaching the agent.",
+            "~/Library/Application Support/",
+            "  app.fledgeling.procter/agent.sock"
+           ]
+          }
+         },
+         {
+          "h": 1,
+          "gauge": {
+           "label": "handshake",
+           "value": 60,
+           "readout": "waiting",
+           "role": "accent"
+          }
+         },
+         {
+          "flex": 1,
+          "blank": {}
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "p",
+       "pause"
+      ],
+      [
+       "s",
+       "stop"
+      ],
+      [
+       "d",
+       "drop waiting"
+      ],
+      [
+       "?",
+       "help"
+      ],
+      [
+       "q",
+       "quit"
+      ]
+     ]
+    }
+   }
+  ]
+ }
+}

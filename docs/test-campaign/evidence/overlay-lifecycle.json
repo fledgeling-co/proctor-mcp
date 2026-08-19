@@ -1,0 +1,67 @@
+{
+  "question": "what the overlays do on the window server, since their pixels are unreachable",
+  "displays": [
+    {
+      "backingScaleFactor": 2,
+      "height": 1117,
+      "width": 1728,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "before": {
+    "hudOnScreen": false,
+    "shieldCount": 0,
+    "doctorHudOnScreen": false
+  },
+  "samplesWhileRunning": 2,
+  "during": {
+    "hud": {
+      "bounds": {
+        "Height": 230,
+        "Width": 352,
+        "X": 1342,
+        "Y": 778
+      },
+      "layer": 25,
+      "alpha": 1,
+      "sharingState": 0,
+      "onscreen": true
+    },
+    "shields": [
+      {
+        "bounds": {
+          "Height": 1117,
+          "Width": 1728,
+          "X": 0,
+          "Y": 0
+        },
+        "layer": 24,
+        "alpha": 1,
+        "sharingState": 0,
+        "onscreen": true
+      }
+    ]
+  },
+  "after": {
+    "hudOnScreen": false,
+    "shieldCount": 0,
+    "doctorHudOnScreen": false
+  },
+  "shieldPerDisplay": [
+    {
+      "display": [
+        1728,
+        1117
+      ],
+      "shieldFound": true
+    }
+  ],
+  "hudAppearedThenLeft": true,
+  "everyDisplayShielded": true,
+  "shieldsCleared": true,
+  "verdict": {
+    "REQ-006": "the Run HUD is drawn on the window server while a run is in flight and gone after it, with alpha 1 and sharingState 0",
+    "REQ-008": "one takeover panel per display, each matching its display frame, cleared afterwards (displays=1, shields=1)"
+  }
+}

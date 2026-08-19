@@ -1,0 +1,31 @@
+{
+  "capturedAt": 1787127314.076971,
+  "contentRect": {
+    "h": 592,
+    "w": 640,
+    "x": 0,
+    "y": 0
+  },
+  "dirtyArea": 0,
+  "dirtyRectCount": 1,
+  "framesWaited": 1,
+  "height": 833,
+  "normalization": {
+    "applied": true,
+    "estimatedVisionTokens": 1000,
+    "height": 833,
+    "maxLongEdge": 1024,
+    "maxPixels": 750000,
+    "originalHeight": 1184,
+    "originalWidth": 1280,
+    "purpose": "verify",
+    "scale": 0.703476826391794,
+    "width": 900
+  },
+  "path": "/tmp/campaign-run/shots/surf-008-status-final.png",
+  "scale": 1.406953652783588,
+  "status": "complete",
+  "trustworthy": true,
+  "width": 900,
+  "window": "win:1:0"
+}

@@ -1,0 +1,219 @@
+{
+ "schema": "tui-design/spec/1",
+ "title": "proctor - run-partial",
+ "size": {
+  "cols": 100,
+  "rows": 30
+ },
+ "theme": "dark",
+ "roles": {
+  "surface": {
+   "bg": "#14161B"
+  },
+  "surface-lift": {
+   "bg": "#1B1E25"
+  },
+  "text": {
+   "fg": "#E9EAED"
+  },
+  "text-strong": {
+   "fg": "#FFFFFF",
+   "bold": true
+  },
+  "text-dim": {
+   "fg": "#9AA1AF"
+  },
+  "border": {
+   "fg": "#6E7686"
+  },
+  "border-focus": {
+   "fg": "#D2A059"
+  },
+  "accent": {
+   "fg": "#D2A059"
+  },
+  "ok": {
+   "fg": "#74C79B"
+  },
+  "warn": {
+   "fg": "#E3B76A"
+  },
+  "danger": {
+   "fg": "#F1897F"
+  },
+  "selected": {
+   "reverse": true
+  }
+ },
+ "alt_screen": true,
+ "root": {
+  "dir": "col",
+  "children": [
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "1",
+       "RUN"
+      ],
+      [
+       "2",
+       "queue"
+      ],
+      [
+       "3",
+       "readiness"
+      ],
+      [
+       "4",
+       "history"
+      ],
+      [
+       "5",
+       "switches"
+      ]
+     ]
+    }
+   },
+   {
+    "flex": 1,
+    "dir": "col",
+    "children": [
+     {
+      "h": 10,
+      "panel": {
+       "title": "RUN",
+       "border": "round",
+       "focus": true,
+       "focus_marker": "\u25b8",
+       "shelf_centre": "paused",
+       "shelf_right": "host \u00b7 native",
+       "shelf_bottom_right": "step 4 of 7",
+       "child": {
+        "dir": "col",
+        "children": [
+         {
+          "h": 2,
+          "text": {
+           "role": "warn",
+           "lines": [
+            "Paused. Somebody started using this Mac and",
+            "the run yielded at the first keystroke."
+           ]
+          }
+         },
+         {
+          "flex": 1,
+          "pairs": {
+           "items": [
+            [
+             "held by",
+             "contention yield"
+            ],
+            [
+             "resumes",
+             "on <p>"
+            ],
+            [
+             "pause cap",
+             "15:00"
+            ],
+            [
+             "elapsed",
+             "00:12.4"
+            ]
+           ]
+          }
+         }
+        ]
+       }
+      }
+     },
+     {
+      "flex": 1,
+      "panel": {
+       "title": "QUEUE",
+       "border": "round",
+       "shelf_right": "2 waiting",
+       "pad": 2,
+       "child": {
+        "table": {
+         "columns": [
+          {
+           "name": "LANE",
+           "w": 13,
+           "role": "accent"
+          },
+          {
+           "name": "HOLDER",
+           "flex": 1
+          },
+          {
+           "name": "STATE",
+           "w": 8
+          },
+          {
+           "name": "WAIT",
+           "w": 5,
+           "align": "right"
+          }
+         ],
+         "rows": [
+          [
+           "app:Mail",
+           "mcp claude-code",
+           "paused",
+           "12s"
+          ],
+          [
+           "app:Xcode",
+           "cli lukerhodes",
+           "waiting",
+           "31s"
+          ],
+          [
+           "event-stream",
+           "mcp cursor",
+           "waiting",
+           "8s"
+          ]
+         ]
+        }
+       }
+      }
+     }
+    ]
+   },
+   {
+    "h": 1,
+    "keybar": {
+     "style": "bracket",
+     "items": [
+      [
+       "p",
+       "pause"
+      ],
+      [
+       "s",
+       "stop"
+      ],
+      [
+       "d",
+       "drop waiting"
+      ],
+      [
+       "?",
+       "help"
+      ],
+      [
+       "q",
+       "quit"
+      ]
+     ]
+    }
+   }
+  ]
+ }
+}

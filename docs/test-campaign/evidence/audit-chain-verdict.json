@@ -1,0 +1,22 @@
+{
+  "allow": [],
+  "auditCount": 733,
+  "auditEncrypted": true,
+  "auditKeyId": "d608691602f91a35",
+  "auditPath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/audit/audit.jsonl",
+  "auditSigned": true,
+  "auditVerdict": {
+    "clean": true,
+    "completeness": "proven",
+    "entries": 733,
+    "keyConfirmed": true,
+    "preChain": 575,
+    "preChainNote": "575 entries predate signing, so nothing could have proved them at the time. The first signed entry pins them as they stood, so a later edit is detected.",
+    "verified": 158
+  },
+  "auditWritable": true,
+  "block": [],
+  "fsRoots": [],
+  "sensitive": [],
+  "tokenLive": false
+}

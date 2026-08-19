@@ -1,0 +1,59 @@
+{
+  "pointer": {
+    "sharingState": 1,
+    "layer": 1000,
+    "bounds": {
+      "Height": 1117,
+      "Width": 1728,
+      "X": 0,
+      "Y": 0
+    },
+    "captureRC": 0,
+    "wrote": true,
+    "path": "/tmp/campaign-run/shots/overlay-lifted-pointer.png",
+    "size": [
+      3456,
+      2234
+    ],
+    "distinctColours": 173,
+    "bytes": 143842
+  },
+  "hud": {
+    "sharingState": 1,
+    "layer": 25,
+    "bounds": {
+      "Height": 230,
+      "Width": 352,
+      "X": 1458,
+      "Y": -264
+    },
+    "captureRC": 0,
+    "wrote": true,
+    "path": "/tmp/campaign-run/shots/overlay-lifted-hud.png",
+    "size": [
+      704,
+      460
+    ],
+    "distinctColours": 2517,
+    "bytes": 136289
+  },
+  "takeover": {
+    "sharingState": 1,
+    "layer": 24,
+    "bounds": {
+      "Height": 1440,
+      "Width": 2560,
+      "X": -716,
+      "Y": -1440
+    },
+    "captureRC": 0,
+    "wrote": true,
+    "path": "/tmp/campaign-run/shots/overlay-lifted-takeover.png",
+    "size": [
+      5120,
+      2880
+    ],
+    "distinctColours": 2739,
+    "bytes": 1037920
+  }
+}

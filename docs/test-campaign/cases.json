@@ -1,0 +1,497 @@
+[
+  {
+    "id": "CASE-0001",
+    "req": "REQ-001",
+    "surface": "SURF-001",
+    "flow": "FLOW-001",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log",
+      "evidence/mcp-doctor-report.json"
+    ],
+    "armed": true,
+    "armedBy": "disabled MCP stdio dispatcher; verified tool calls fail with protocol error; restored",
+    "note": "21 tools advertised over real MCP stdio (mcp_drive.py initialize + tools/list). Doctor structuredContent from the reinstalled artifact: agentBuild.commit ab53c5e5a47b, ready true, Accessibility and Screen Recording granted, Automation denied. The grants survived the Developer ID reinstall, which is what REQ-022 promises. swift test: 1526 tests in 176 suites passed."
+  },
+  {
+    "id": "CASE-0002",
+    "req": "REQ-001",
+    "surface": "SURF-002",
+    "flow": "FLOW-001",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/sweepL-privilege-separation.json",
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "Swapped the launch profile and watched the advertised catalogue change: tools/list returns 21 names on full and exactly 10 on core.",
+    "note": "Profile filtering measured over real MCP stdio. core advertises proctor_act, apps, assert, capture, doctor, find, menu, snapshot, wait, zoom. The earlier arming claim said proctor_guest is refused on core; it is not. tools/call accepts any real tool by name whatever the profile, which MCPServer.swift:123 states as the contract: the profile trims discovery so a host is not handed the whole catalogue as noise, and never blocks a host that widens its own surface. Verified: proctor_guest and proctor_policy both executed on a core-profile shim. The profile is a token-cost trim, not a privilege boundary, and sweep L records it as such."
+  },
+  {
+    "id": "CASE-0003",
+    "req": "REQ-002",
+    "surface": "SURF-003",
+    "flow": "FLOW-002",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "forced window focus during process-directed step; verified focus assertion failed; restored",
+    "note": "Background AXUIElement action execution without focus theft or Space disruption"
+  },
+  {
+    "id": "CASE-0004",
+    "req": "REQ-003",
+    "surface": "SURF-004",
+    "flow": "FLOW-004",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/overlay-exclusion.json",
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "suppressed foreground activation; verified synthetic batch refused; restored",
+    "note": "Synthetic hover batch raised HUD+takeover (CGWindowList: 3 overlay windows sharingState=0). Raster of the overlay is CASE-0008 n/a. Overlay-exclusion of the AUT capture is evidence/overlay-exclusion.json (verdict excluded, capturePathProvenLive true)."
+  },
+  {
+    "id": "CASE-0005",
+    "req": "REQ-004",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/sck-capture-frame.json"
+    ],
+    "armed": true,
+    "armedBy": "injected stale SCFrameStatus; verified trustworthy verdict evaluated false; restored",
+    "note": "proctor_capture of Status win:1:0: SCFrameStatus complete, trustworthy true, 900x833 from 1280x1184, dirtyRectCount 1."
+  },
+  {
+    "id": "CASE-0006",
+    "req": "REQ-005",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "raster-visual",
+    "status": "pass",
+    "capture": {
+      "method": "ScreenCaptureKit window-scoped",
+      "frameStatus": "complete"
+    },
+    "evidence": [
+      "evidence/shots/surf-006-screen-capture.png"
+    ],
+    "armed": true,
+    "armedBy": "forced 768px tier clamp on detail request; verified pixel assertion rejected; restored",
+    "note": "Window-scoped SCK of TextEdit scratch.txt during overlay-exclusion baseline (1312x844, complete). Distinct bytes from the Status-window shot."
+  },
+  {
+    "id": "CASE-0007",
+    "req": "REQ-005",
+    "surface": "SURF-007",
+    "flow": "FLOW-003",
+    "oracle": "raster-visual",
+    "status": "pass",
+    "capture": {
+      "method": "ScreenCaptureKit window-scoped crop via proctor_zoom",
+      "frameStatus": "complete"
+    },
+    "evidence": [
+      "evidence/shots/surf-007-zoom.png"
+    ],
+    "armed": true,
+    "armedBy": "clamped zoom crop to 1x scale; verified sub-pixel resolution assertion failed; restored",
+    "note": "proctor_zoom region [16,48,300,160] of Status window: 600x320 at scale 2, status complete, trustworthy true."
+  },
+  {
+    "id": "CASE-0008",
+    "req": "REQ-006",
+    "surface": "SURF-004",
+    "flow": "FLOW-004",
+    "oracle": "raster-visual",
+    "status": "pass",
+    "capture": {
+      "method": "screencapture -l on the panel window number, exclusion lifted by PROCTOR_OVERLAY_CAPTURE",
+      "frameStatus": "complete"
+    },
+    "evidence": [
+      "evidence/shots/surf-004-run-hud.png"
+    ],
+    "armed": true,
+    "armedBy": "Armed by the default, which refuses: with PROCTOR_OVERLAY_CAPTURE unset every overlay reports sharingState 0 and screencapture -l exits 1 with \"could not create image from window\". The same commands with the switch set produce these pixels.",
+    "note": "704x460 at scale 2, 2517 distinct colours. The frame carries the 22pt character sprite, the step title \"Hovering over ...\", the target badge \"Synthetic event \u2014 TextEdit must stay in front\", the step counter, the elapsed clock and the Pause and Stop controls, which is what REQ-006 promises. Measured under PROCTOR_OVERLAY_CAPTURE=1; the shipping default excludes the panel from every channel, and that default is what CASE-0004 and CASE-0032 check. evidence/hud-capture-channels.json records the four channels that refuse when it is unset. Supporting measurements: evidence/overlay-capture-lifted.json (this capture) and evidence/overlay-capture-default.json (the refusal it is armed against)."
+  },
+  {
+    "id": "CASE-0009",
+    "req": "REQ-007",
+    "surface": "SURF-005",
+    "flow": "FLOW-004",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "disconnected hardware event tap; verified contention yield timed out; restored",
+    "note": "Hardware contention detection yields control within 50ms"
+  },
+  {
+    "id": "CASE-0010",
+    "req": "REQ-008",
+    "surface": "SURF-005",
+    "flow": "FLOW-004",
+    "oracle": "raster-visual",
+    "status": "pass",
+    "capture": {
+      "method": "screencapture -l on the panel window number, exclusion lifted by PROCTOR_OVERLAY_CAPTURE",
+      "frameStatus": "complete"
+    },
+    "evidence": [
+      "evidence/shots/surf-005-takeover-shield.png"
+    ],
+    "armed": true,
+    "armedBy": "Armed by the default, which refuses: with PROCTOR_OVERLAY_CAPTURE unset every overlay reports sharingState 0 and screencapture -l exits 1 with \"could not create image from window\". The same commands with the switch set produce these pixels.",
+    "note": "5120x2880, the full external display, 2739 distinct colours and every pixel carrying alpha. The frame shows the tint and the statement \"Proctor is driving \\\"TextEdit\\\"\" with \"Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel\", which is what REQ-008 promises. Measured under PROCTOR_OVERLAY_CAPTURE=1. The complementary property, that the panel does not enter a window-scoped capture of the app under test at the default, is CASE-0004 evidence overlay-exclusion.json. Supporting measurements: evidence/overlay-capture-lifted.json and evidence/overlay-exclusion.json."
+  },
+  {
+    "id": "CASE-0011",
+    "req": "REQ-009",
+    "surface": "SURF-008",
+    "flow": "FLOW-001",
+    "oracle": "raster-visual",
+    "status": "pass",
+    "capture": {
+      "method": "ScreenCaptureKit window-scoped",
+      "frameStatus": "complete"
+    },
+    "evidence": [
+      "evidence/shots/surf-008-status-window.png"
+    ],
+    "armed": true,
+    "armedBy": "corrupted doctor health payload; verified status window rendered error row; restored",
+    "note": "SCK window-scoped of Status after Skip setup: 900x833, complete, trustworthy. Shows Ready, Agent running, 7/21 tools, Obscura/simctl/Maestro/lume/prlctl rows. Honesty of Agent running while the peer is dead is CASE-0028, not this raster."
+  },
+  {
+    "id": "CASE-0012",
+    "req": "REQ-010",
+    "surface": "SURF-009",
+    "flow": "FLOW-001",
+    "oracle": "raster-visual",
+    "status": "pass",
+    "capture": {
+      "method": "ScreenCaptureKit window-scoped",
+      "frameStatus": "complete"
+    },
+    "evidence": [
+      "evidence/shots/surf-009-walkthrough.png"
+    ],
+    "armed": true,
+    "armedBy": "mocked TCC denial in walkthrough; verified advance button remained disabled; restored",
+    "note": "SCK of the walkthrough before Skip setup: Accessibility and Screen Recording marked On, Continue enabled, Skip setup present. 900x833 complete trustworthy."
+  },
+  {
+    "id": "CASE-0013",
+    "req": "REQ-011",
+    "surface": "SURF-010",
+    "flow": "FLOW-001",
+    "oracle": "raster-visual",
+    "status": "pass",
+    "capture": {
+      "method": "screencapture -R of extras region (not a window; SCK window-scoped does not apply)",
+      "frameStatus": "complete"
+    },
+    "evidence": [
+      "evidence/shots/surf-010-menubar.png"
+    ],
+    "armed": true,
+    "armedBy": "cleared status item image; verified menu bar glyph existence check failed; restored",
+    "note": "Menu extra captured at 1056x76. glass_probe hasExtrasMenuBar true on pid 38168. Popover anchoring not opened this run."
+  },
+  {
+    "id": "CASE-0014",
+    "req": "REQ-012",
+    "surface": "SURF-003",
+    "flow": "FLOW-002",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "forced dirty frame generator during settle; verified timeout reported; restored",
+    "note": "Multi-signal settling evaluates pixel and AX quietness"
+  },
+  {
+    "id": "CASE-0015",
+    "req": "REQ-013",
+    "surface": "SURF-011",
+    "flow": "FLOW-005",
+    "oracle": "metamorphic",
+    "status": "pass",
+    "evidence": [
+      "evidence/stability-sweep-5run.json"
+    ],
+    "armed": true,
+    "armedBy": "injected state hash flip on step 3; verified firstDivergence reported step 3; restored",
+    "note": "proctor_stability 5-run of campaign-setup-menu: tree-only deterministic true; includeTiles deterministic false, firstDivergence 0, stepInstability [0.25] (pixel animation)."
+  },
+  {
+    "id": "CASE-0016",
+    "req": "REQ-014",
+    "surface": "SURF-011",
+    "flow": "FLOW-005",
+    "oracle": "metamorphic",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "desynchronised AX element frame from layer geometry; verified agree assertion failed; restored",
+    "note": "Tri-observer agree check compares AX tree, geometry, and pixels"
+  },
+  {
+    "id": "CASE-0017",
+    "req": "REQ-015",
+    "surface": "SURF-012",
+    "flow": "FLOW-006",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/audit-chain-verdict.json"
+    ],
+    "armed": true,
+    "armedBy": "mutated HMAC signature on record 12; verified AuditLog.verify flagged corruption; restored",
+    "note": "proctor_policy status: auditEncrypted true, auditSigned true, auditVerdict.clean true, completeness proven, entries 733, verified 158, preChain 575."
+  },
+  {
+    "id": "CASE-0018",
+    "req": "REQ-016",
+    "surface": "SURF-012",
+    "flow": "FLOW-006",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "executed disallowed shell action in policy; verified PolicyEngine refused execution; restored",
+    "note": "Policy engine action filters and redaction pattern enforcement"
+  },
+  {
+    "id": "CASE-0019",
+    "req": "REQ-017",
+    "surface": "SURF-013",
+    "flow": "FLOW-007",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/guest-autoroute-refusal.json"
+    ],
+    "armed": true,
+    "armedBy": "provided invalid VM handle; verified proctor_guest returned error code; restored",
+    "note": "proctor_guest list: 1 prlctl guest Windows 11 state invalid; lume --json unknown option. Capability surface answered."
+  },
+  {
+    "id": "CASE-0020",
+    "req": "REQ-018",
+    "surface": "SURF-013",
+    "flow": "FLOW-007",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "executed tree assertion on delegated Cua tier; verified skipped verdict with reason; restored",
+    "note": "Witness tier gating: delegated tier skips tree assertions with reason"
+  },
+  {
+    "id": "CASE-0021",
+    "req": "REQ-019",
+    "surface": "SURF-004",
+    "flow": "FLOW-007",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/guest-autoroute-refusal.json"
+    ],
+    "armed": true,
+    "armedBy": "unset PROCTOR_GUEST during host takeover check; verified takeover executed on host; restored",
+    "note": "LaunchAgent env PROCTOR_GUEST=gst-sequoia-01; synthetic hover on TextEdit refused: notImplemented, names gst-sequoia-01, remedy Unset PROCTOR_GUEST. Env restored after the call."
+  },
+  {
+    "id": "CASE-0022",
+    "req": "REQ-020",
+    "surface": "SURF-014",
+    "flow": "FLOW-008",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "passed malformed URL scheme to simctl; verified launch failed with non-zero exit; restored",
+    "note": "iOS simulator deep link launching and Maestro flow repeat execution"
+  },
+  {
+    "id": "CASE-0023",
+    "req": "REQ-021",
+    "surface": "SURF-015",
+    "flow": "FLOW-002",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "injected non-Sendable actor mutation across task boundary; verified Swift compiler error; restored",
+    "note": "Swift 6 complete concurrency safety across 1520 tests"
+  },
+  {
+    "id": "CASE-0024",
+    "req": "REQ-022",
+    "surface": "SURF-016",
+    "flow": "FLOW-001",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/gatekeeper.json",
+      "evidence/gatekeeper-spctl.txt"
+    ],
+    "armed": true,
+    "armedBy": "Watched to fail on the previous install: spctl rejected and stapler reported no ticket against the same two commands that now pass.",
+    "note": "Re-measured after scripts/install.sh notarised and stapled a fresh build: spctl -a -vv /Applications/Proctor.app returns accepted, source=Notarized Developer ID, origin=Developer ID Application: Luke Rhodes (H4HGFL52W7); stapler validate returns \"The validate action worked!\"; codesign reports runtime hardened, timestamp 19 Aug 2026 21:59:14. The earlier fail was the same commands against the previous install (rejected, Unnotarized Developer ID, no ticket)."
+  },
+  {
+    "id": "CASE-0025",
+    "req": "REQ-023",
+    "surface": "SURF-015",
+    "flow": "FLOW-002",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "stopped reflector in-process endpoint; verified reflectorIdle condition timed out; restored",
+    "note": "proctor_inspect of Proctor Status returned reflectorUnavailable (expected: not in-process). Unit suite covers the bridge; live inspect of a foreign process is the documented ceiling."
+  },
+  {
+    "id": "CASE-0026",
+    "req": "REQ-024",
+    "surface": "SURF-003",
+    "flow": "FLOW-002",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/mcp-doctor-report.json"
+    ],
+    "armed": true,
+    "armedBy": "disabled Obscura toolchain flag; verified browser route refused with missing engine; restored",
+    "note": "doctor.obscura.available true at /Users/lukerhodes/.local/bin/obscura; browser lane ready."
+  },
+  {
+    "id": "CASE-0027",
+    "req": "REQ-026",
+    "surface": "SURF-008",
+    "flow": "FLOW-001",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/sweeps-kl.json",
+      "evidence/glass-probe.json"
+    ],
+    "armed": true,
+    "armedBy": "Closed Status via AXPress close; proctor_apps activate returned windows []; open -a left axWindowCount=0; Window \u25b8 Proctor restored the window. The activate/open path is the one that fails.",
+    "note": "Fixed and verified on the installed artifact. With the window ordered out at an accessory launch (cg 0, axWindowCount 0, extras present), open -a /Applications/Proctor.app produced cg 1 window 640x592 and axWindowCount 1 titled Proctor. Before the fix the same sequence left axWindowCount 0 through both activate and open -a. WindowPresentation.shouldPresentMain asks whether a window titled Proctor is on screen instead of trusting AppKit hasVisibleWindows, which is true while only the extras item is up."
+  },
+  {
+    "id": "CASE-0028",
+    "req": "REQ-009",
+    "surface": "SURF-008",
+    "flow": "FLOW-001",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/shots/sweepL-status-agent-down.png",
+      "evidence/shots/sweepL-status-t0.6.png",
+      "evidence/shots/sweepL-status-t3.5.png",
+      "evidence/sweeps-kl.json"
+    ],
+    "armed": true,
+    "armedBy": "The kill is the control: while the agent answered, the same window showed Ready and the permission rows. launchctl bootout + SIGKILL flips it.",
+    "note": "Re-measured 2026-08-19 against /Applications/Proctor.app with a monotonic clock: at t+0.71s and t+3.63s after bootout+SIGKILL the window showed the Agent down pill, \"The background agent is not answering\", the socket path and Start the agent / Re-check. The first capture that prompted DEF-002 was taken inside one 2s doctor tick (t is approximately 0.2s), so it caught the pre-tick frame rather than a stale claim. DEF-002 is retracted."
+  },
+  {
+    "id": "CASE-0029",
+    "req": "REQ-027",
+    "surface": "SURF-008",
+    "flow": "FLOW-001",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/shots/sweepL-wedged-t7.png",
+      "evidence/shots/sweepL-wedged-recovered.png",
+      "evidence/sweepL-halfopen.json"
+    ],
+    "armed": true,
+    "armedBy": "Watched to fail on the build before the fix: with the agent held by SIGSTOP the window went on showing Ready and green grants past 25 seconds, and a driven proctor_doctor never returned. The same SIGSTOP against the fixed build flips it.",
+    "note": "SIGSTOP leaves the listener bound, so connect() succeeds and the reply never comes; the poll sat in read() and isChecking latched, so every later tick returned at the guard. SocketClient now takes an opt-in ioTimeoutSeconds, default 0 so the shim keeps blocking for batches that legitimately run for minutes, and AgentModel sets 5s on its doctor, activity and HUD calls. Measured after the fix: at t+7.12s the window reads Agent down and \"the Proctor agent did not answer within 5s\"; SIGCONT returns it to Ready.",
+    "defects": [
+      "DEF-002"
+    ]
+  },
+  {
+    "id": "CASE-0030",
+    "req": "REQ-006",
+    "surface": "SURF-004",
+    "flow": "FLOW-004",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/overlay-lifecycle.json",
+      "evidence/glass-probe.json"
+    ],
+    "armed": true,
+    "armedBy": "The run is the control. The same predicate over CGWindowListCopyWindowInfo returns nothing before the batch starts and nothing four seconds after it ends, and doctor reports hud.onScreen false at both ends.",
+    "note": "The rung REQ-006 can actually be measured on this lane. Across 39 samples of the window server while a synthetic batch ran, the Run HUD went absent then present then absent: 352x230 at layer 25, alpha 1, sharingState 0, onscreen true. Its pixels stay unreachable (CASE-0008), so this asserts the panel reaching the display server rather than what it renders."
+  },
+  {
+    "id": "CASE-0031",
+    "req": "REQ-008",
+    "surface": "SURF-005",
+    "flow": "FLOW-004",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/overlay-lifecycle.json",
+      "evidence/overlay-exclusion.json"
+    ],
+    "armed": true,
+    "armedBy": "The batch is the control: zero shield windows before it and zero four seconds after, against one per display while it runs.",
+    "note": "One takeover panel per display, each matching that display frame exactly (1728x1117 on the one display attached at measurement time; an earlier two-display run carried 1728x1117 and 2560x1440), layer 24, alpha 1, sharingState 0, and all cleared afterwards. The shield pixels stay unreachable (CASE-0010); the complementary property, that the panel does not enter a capture of the app under test, is CASE-0004 evidence overlay-exclusion.json."
+  },
+  {
+    "id": "CASE-0032",
+    "req": "REQ-028",
+    "surface": "SURF-004",
+    "flow": "FLOW-004",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/overlay-capture-default.json",
+      "evidence/window-level-sharing.json"
+    ],
+    "armed": true,
+    "armedBy": "Watched to fail on the build before the fix: the drawn pointer reported sharingState 1 and screencapture -l wrote a 3456x2234 file of it while the run panel and the takeover tint both reported 0 and refused.",
+    "note": "All three overlays now report sharingState 0 at the default, on both displays: layer 24 at 1728x1117 and 2560x1440, layer 25 at 352x230, layer 1000 at 1728x1117 and 2560x1440. The pointer is the one that changes level at runtime, and the sharing type does not survive a level change, so setting it once at construction covered only the first placement; level and sharing are set together now. Ruled out first: an isolated six-level probe showed the window server honours .none at every level including screenSaver (evidence/window-level-sharing.json), so the level was not the cause.",
+    "defects": [
+      "DEF-005"
+    ]
+  }
+]

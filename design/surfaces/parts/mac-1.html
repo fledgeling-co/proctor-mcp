@@ -1,0 +1,282 @@
+<!-- ══════════════════════════════════════════════════ macOS surfaces ══ -->
+
+<!-- 1 ─ First-run walkthrough ─────────────────────────────────────────── -->
+<section class="pane" data-platform="mac" data-surface="walkthrough"
+         data-label="Walkthrough" data-title="First-run walkthrough"
+         data-note="Three steps: what Proctor is, the two grants as one sheet, and the connect snippet. The permission step asks macOS for the real consent dialog rather than linking to Settings, and advances on its own once both land — but only after the intro, so it cannot skip the step that says what Proctor is.">
+
+  <div class="sub" data-state="intro" data-state-label="1 · Intro">
+    <div class="canvas">
+      <div class="win" style="width:560px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div>
+          <div class="title">Proctor</div></div>
+        <div class="wt-body">
+          <div class="hud-char" style="width:56px;height:56px;margin:0 auto 16px;border-radius:14px;color:var(--accent)">
+            <svg style="width:36px;height:36px"><use href="#ch-idle"></use></svg>
+          </div>
+          <h2>A model can test this Mac</h2>
+          <p class="lede">Proctor reads what is actually on screen, drives the controls, and checks what the app rendered — then records how it knew.</p>
+          <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">
+            <span class="prov muted"><span class="k">reads</span><span>accessibility tree</span></span>
+            <span class="prov muted"><span class="k">reads</span><span>window pixels</span></span>
+            <span class="prov muted"><span class="k">drives</span><span>two planes</span></span>
+          </div>
+        </div>
+        <div class="wt-foot">
+          <div class="dots"><i class="on"></i><i></i><i></i></div>
+          <div class="spacer"></div>
+          <button type="button" class="btn">Skip setup</button>
+          <button type="button" class="btn prominent large">Set up permissions</button>
+        </div>
+      </div>
+    </div>
+    <p class="caption">The default button is <b>Set up permissions</b> (Return). <b>Skip setup</b> is leading and unfilled — one prominent action per view.</p>
+  </div>
+
+  <div class="sub" data-state="permissions" data-state-label="2 · Permissions, none granted">
+    <div class="canvas">
+      <div class="win" style="width:560px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div>
+          <div class="title">Proctor</div></div>
+        <div class="wt-body">
+          <h2>Two permissions, asked once</h2>
+          <p class="lede">macOS holds these, not Proctor. Granting them here asks the system directly.</p>
+          <div class="wt-grant">
+            <div class="ic"><svg style="width:18px;height:18px"><use href="#i-ax"></use></svg></div>
+            <div class="grow"><div class="t">Accessibility</div><div class="d">Read the tree, and write to it. Without it, every tree comes back empty.</div></div>
+            <button type="button" class="btn prominent">Grant</button>
+          </div>
+          <div class="wt-grant">
+            <div class="ic"><svg style="width:18px;height:18px"><use href="#i-eye"></use></svg></div>
+            <div class="grow"><div class="t">Screen Recording</div><div class="d">Window pixels, and the frame status that says whether they are fresh.</div></div>
+            <button type="button" class="btn">Grant</button>
+          </div>
+          <p style="margin:14px 0 0;font-size:11px;color:var(--ink-3)">Screen Recording needs Proctor to restart before it takes effect. Proctor will say so when it lands.</p>
+        </div>
+        <div class="wt-foot">
+          <div class="dots"><i></i><i class="on"></i><i></i></div>
+          <div class="spacer"></div>
+          <button type="button" class="btn">Back</button>
+          <button type="button" class="btn" disabled>Connect a model</button>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Continue is <b>disabled and visible</b> rather than absent — a control that disappears makes the layout jump and teaches the user the step does not exist. Only one Grant is prominent at a time: the one to press next.</p>
+  </div>
+
+  <div class="sub" data-state="granted" data-state-label="3 · Both granted">
+    <div class="canvas">
+      <div class="win" style="width:560px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div>
+          <div class="title">Proctor</div></div>
+        <div class="wt-body">
+          <h2>Two permissions, asked once</h2>
+          <p class="lede">macOS holds these, not Proctor. Granting them here asks the system directly.</p>
+          <div class="wt-grant done">
+            <div class="ic"><svg style="width:18px;height:18px"><use href="#i-check"></use></svg></div>
+            <div class="grow"><div class="t">Accessibility</div><div class="d">Granted. The tree is readable and writable.</div></div>
+            <span class="pill ok"><i class="dot"></i>granted</span>
+          </div>
+          <div class="wt-grant done">
+            <div class="ic"><svg style="width:18px;height:18px"><use href="#i-check"></use></svg></div>
+            <div class="grow"><div class="t">Screen Recording</div><div class="d">Granted. Captures carry frame status from the next launch.</div></div>
+            <span class="pill ok"><i class="dot"></i>granted</span>
+          </div>
+        </div>
+        <div class="wt-foot">
+          <div class="dots"><i></i><i class="on"></i><i></i></div>
+          <div class="spacer"></div>
+          <span style="font-size:11px;color:var(--ink-3);margin-right:4px">Moving on…</span>
+          <button type="button" class="btn prominent large">Connect a model</button>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Each grant plays back on its own row the moment it lands, then the step advances itself. Nobody has to work out whether it took.</p>
+  </div>
+
+  <div class="sub" data-state="connect" data-state-label="4 · Connect">
+    <div class="canvas">
+      <div class="win" style="width:560px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div>
+          <div class="title">Proctor</div></div>
+        <div class="wt-body">
+          <h2>You&rsquo;re all set</h2>
+          <p class="lede">Point a model at Proctor with this. It speaks MCP over stdio and holds no permissions of its own.</p>
+          <div class="snippet" style="text-align:left">{
+  <span class="a">"proctor"</span>: { <span class="a">"command"</span>: <span class="c">"proctor-shim"</span> }
+}</div>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:14px">
+            <button type="button" class="btn">Copy</button>
+            <button type="button" class="btn">Open the guide</button>
+          </div>
+          <p style="margin:16px 0 0;font-size:11px;color:var(--ink-3)">Proctor lives in the menu bar from here. The window is always one click away from the icon.</p>
+        </div>
+        <div class="wt-foot">
+          <div class="dots"><i></i><i></i><i class="on"></i></div>
+          <div class="spacer"></div>
+          <button type="button" class="btn prominent large">Done</button>
+        </div>
+      </div>
+    </div>
+    <p class="caption">The snippet is the real one. A copy button, not an instruction to type it — recognition over recall.</p>
+  </div>
+</section>
+
+<!-- 2 ─ Status window ─────────────────────────────────────────────────── -->
+<section class="pane" data-platform="mac" data-surface="status"
+         data-label="Status window" data-title="Status window"
+         data-note="Seven sections. Permissions are what macOS holds and Proctor can only read; Tools are what is on this Mac; Switches come over the wire from the agent, because this window is a different process with a different environment and would otherwise describe the wrong one plausibly.">
+
+  <div class="sub" data-state="ready" data-state-label="Ideal · ready">
+    <div class="canvas">
+      <div class="win" style="width:640px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div>
+          <div class="title">Proctor</div></div>
+        <div class="win-body scrolls">
+
+          <div class="sec">
+            <div class="sec-head"><h3>Permissions</h3><div class="spacer"></div>
+              <span class="pill ok"><i class="dot"></i>Ready</span></div>
+            <p class="sec-note">Decisions macOS holds about Proctor. You change these in System Settings; Proctor can only read them.</p>
+            <div class="row"><div class="ic" style="color:var(--ink-2)"><svg style="width:16px;height:16px"><use href="#i-ax"></use></svg></div>
+              <div class="grow"><div class="name">Accessibility</div><div class="why">The tree, and every write to it</div></div>
+              <span class="pill ok"><i class="dot"></i>granted</span></div>
+            <div class="row"><div class="ic" style="color:var(--ink-2)"><svg style="width:16px;height:16px"><use href="#i-eye"></use></svg></div>
+              <div class="grow"><div class="name">Screen Recording</div><div class="why">Pixels, and the frame status that says they are fresh</div></div>
+              <span class="pill ok"><i class="dot"></i>granted</span></div>
+            <div class="row"><div class="ic" style="color:var(--ink-2)"><svg style="width:16px;height:16px"><use href="#i-key"></use></svg></div>
+              <div class="grow"><div class="name">Input Monitoring</div><div class="why">Optional. Notices a person at the first keystroke rather than the next window change</div></div>
+              <span class="pill"><i class="dot"></i>not asked</span></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-head"><h3>Tools</h3><div class="spacer"></div>
+              <span style="font-size:11px;color:var(--ink-3)">Checked 2s ago</span></div>
+            <p class="sec-note">What is on this Mac. Proctor finds these by reading the filesystem and never runs them to check. It installs nothing — the commands are here for you to run.</p>
+            <div class="row"><div class="grow"><div class="name">obscura</div><div class="why mono">/opt/homebrew/bin/obscura</div></div>
+              <span class="pill ok"><i class="dot"></i>found</span></div>
+            <div class="row"><div class="grow"><div class="name">cua-driver</div><div class="why">Not on this Mac. The delegated actuation lane needs it.</div></div>
+              <button type="button" class="btn">Copy install command</button></div>
+            <div class="row"><div class="grow"><div class="name">lume, prlctl</div><div class="why">Guest providers. Located, never executed by a health check.</div></div>
+              <span class="pill ok"><i class="dot"></i>found</span></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-head"><h3>Switches</h3><div class="spacer"></div>
+              <span style="font-size:11px;color:var(--ink-3)">Read from the agent</span></div>
+            <p class="sec-note">What you see, then what Proctor may take, then which path a run takes. Drawing switches start on; a capability starts off and stays off if either side says so.</p>
+            <div class="row"><div class="grow"><div class="name">Run panel</div><div class="why">The panel that says a run is happening and carries Pause and Stop &middot; takes effect now</div></div>
+              <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Run panel"></button></div>
+            <div class="row"><div class="grow"><div class="name">Drawn pointer</div><div class="why">A pointer drawn where Proctor is about to act &middot; next start</div></div>
+              <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Drawn pointer"></button></div>
+            <div class="row"><div class="grow"><div class="name">Hold the keyboard and mouse</div><div class="why">Swallows your own input while Proctor posts a step &middot; asks before turning on</div></div>
+              <button type="button" class="switch" role="switch" aria-checked="false" aria-label="Hold the keyboard and mouse"></button></div>
+            <div class="row"><div class="grow"><div class="name">Delegated actuation</div><div class="why">Send steps through cua-driver instead of Proctor&rsquo;s own planes</div></div>
+              <button type="button" class="switch" role="switch" aria-checked="false" aria-label="Delegated actuation" disabled></button></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-head"><h3>Activity</h3></div>
+            <div class="row"><div class="grow"><div class="name">Idle</div><div class="why">Last run finished 4 minutes ago &middot; 7 steps, no refusals</div></div>
+              <button type="button" class="btn">Show history</button></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-head"><h3>Connect a model</h3></div>
+            <div class="snippet">{ <span class="a">"proctor"</span>: { <span class="a">"command"</span>: <span class="c">"proctor-shim"</span> } }</div>
+            <div style="display:flex;gap:8px;margin-top:10px"><button type="button" class="btn">Copy</button></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-head"><h3>Agent</h3></div>
+            <div class="form" style="margin-top:8px">
+              <label>Build:</label><div class="mono">0.2.0 (1c6500c) &middot; 17 Aug 2026</div>
+              <label>Socket:</label><div class="mono" style="font-size:11px;color:var(--ink-2)">~/Library/Application Support/app.fledgeling.procter/agent.sock</div>
+              <label>Machine:</label><div><span class="prov seal"><span>host</span><span class="k">tier</span><span>native</span></span></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:14px">
+              <button type="button" class="btn">Restart the agent</button>
+              <button type="button" class="btn destructive">Quit Proctor</button>
+            </div>
+            <p class="sec-note" style="margin-top:9px">Quit stops the background agent too. Both come back at the next login.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <p class="caption">Window title is <b>Proctor</b> and the sections are sentence case, semibold, in the secondary tier — a header that recedes under what it labels.</p>
+  </div>
+
+  <div class="sub" data-state="checking" data-state-label="Loading · checking">
+    <div class="canvas">
+      <div class="win" style="width:640px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">Proctor</div></div>
+        <div class="win-body">
+          <div class="sec">
+            <div class="sec-head"><h3>Permissions</h3><div class="spacer"></div><span class="pill"><i class="dot"></i>Checking</span></div>
+            <p class="sec-note">Decisions macOS holds about Proctor.</p>
+            <div class="row"><div class="grow">
+              <div style="height:11px;width:120px;border-radius:4px;background:var(--fill-2)"></div>
+              <div style="height:9px;width:230px;border-radius:4px;background:var(--fill);margin-top:6px"></div></div>
+              <div style="height:20px;width:64px;border-radius:20px;background:var(--fill-2)"></div></div>
+            <div class="row"><div class="grow">
+              <div style="height:11px;width:146px;border-radius:4px;background:var(--fill-2)"></div>
+              <div style="height:9px;width:196px;border-radius:4px;background:var(--fill);margin-top:6px"></div></div>
+              <div style="height:20px;width:64px;border-radius:20px;background:var(--fill-2)"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">The skeleton matches the row it stands in for — same height, same rhythm, on the surface the content will sit on — so nothing jumps when the real answer arrives.</p>
+  </div>
+
+  <div class="sub" data-state="partial" data-state-label="Partial · a lane is out">
+    <div class="canvas">
+      <div class="win" style="width:640px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">Proctor</div></div>
+        <div class="win-body">
+          <div class="sec">
+            <div class="sec-head"><h3>Permissions</h3><div class="spacer"></div><span class="pill ok"><i class="dot"></i>Ready</span></div>
+            <p class="sec-note">Every permission Proctor needs is granted. The lanes below are about optional tools, and none of them changes that.</p>
+          </div>
+          <div class="sec">
+            <div class="sec-head"><h3>Lanes</h3></div>
+            <p class="sec-note">Derived from the grants and the tools found, never reported separately — a lane cannot claim to be ready while the thing it needs is missing.</p>
+            <div class="row"><div class="grow"><div class="name">mac</div><div class="why">Needs no external tool</div></div><span class="pill ok"><i class="dot"></i>ready</span></div>
+            <div class="row"><div class="grow"><div class="name">browser</div><div class="why">obscura</div></div><span class="pill ok"><i class="dot"></i>ready</span></div>
+            <div class="row"><div class="grow"><div class="name">ios</div><div class="why">simctl found; maestro could not be confirmed</div></div><span class="pill warn"><i class="dot"></i>unconfirmed</span></div>
+            <div class="row"><div class="grow"><div class="name">cua</div><div class="why">cua-driver is not on this Mac</div></div><span class="pill bad"><i class="dot"></i>unavailable</span></div>
+            <div class="row"><div class="grow"><div class="name">guest</div><div class="why">lume, prlctl</div></div><span class="pill ok"><i class="dot"></i>ready</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption"><b>Unconfirmed</b> and <b>unavailable</b> are different answers and are drawn differently: one is a fact about what Proctor established, the other is something to go and fix. Sending somebody to fix the first is the defect this separation closed.</p>
+  </div>
+
+  <div class="sub" data-state="down" data-state-label="Error · agent down">
+    <div class="canvas">
+      <div class="win" style="width:640px">
+        <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">Proctor</div></div>
+        <div class="win-body">
+          <div class="sec">
+            <div class="sec-head"><h3>Permissions</h3><div class="spacer"></div><span class="pill bad"><i class="dot"></i>Agent down</span></div>
+            <div style="display:flex;gap:11px;align-items:flex-start;border:1px solid color-mix(in srgb, var(--danger) 40%, transparent);background:var(--danger-wash);border-radius:9px;padding:13px 15px;margin-top:6px">
+              <div style="color:var(--danger);flex:none"><svg style="width:18px;height:18px"><use href="#i-warn"></use></svg></div>
+              <div class="grow">
+                <div style="font-weight:500">The background agent is not answering.</div>
+                <div style="font-size:11px;color:var(--ink-2);margin-top:3px">Connection refused on <span class="mono">~/Library/Application Support/app.fledgeling.procter/agent.sock</span></div>
+                <div style="font-size:11px;color:var(--ink-2);margin-top:6px">Until it is running, permissions cannot be read and no test can run. Nothing below is live, so nothing below is shown.</div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <button type="button" class="btn prominent">Start the agent</button>
+                  <button type="button" class="btn">Re-check</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">The rest of the window is <b>withheld rather than dimmed</b>. A stale Ready pill over a dead agent is the one failure this surface cannot be allowed to have.</p>
+  </div>
+</section>

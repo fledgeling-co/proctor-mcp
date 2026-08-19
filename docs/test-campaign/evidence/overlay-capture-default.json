@@ -1,0 +1,47 @@
+{
+  "agentEnvironment": "default LaunchAgent, PROCTOR_OVERLAY_CAPTURE unset",
+  "cursorOverlay": {
+    "windowNumber": 1464,
+    "bounds": {
+      "Height": 1117,
+      "Width": 1728,
+      "X": 0,
+      "Y": 0
+    },
+    "layer": 1000,
+    "sharingState": 1,
+    "captureRC": 0,
+    "captureStderr": "",
+    "wrote": true
+  },
+  "hud": {
+    "windowNumber": 1462,
+    "bounds": {
+      "Height": 230,
+      "Width": 352,
+      "X": 1342,
+      "Y": 778
+    },
+    "layer": 25,
+    "sharingState": 0,
+    "captureRC": 1,
+    "captureStderr": "could not create image from window",
+    "wrote": false
+  },
+  "takeover": {
+    "windowNumber": 1463,
+    "bounds": {
+      "Height": 1117,
+      "Width": 1728,
+      "X": 0,
+      "Y": 0
+    },
+    "layer": 24,
+    "sharingState": 0,
+    "captureRC": 1,
+    "captureStderr": "could not create image from window",
+    "wrote": false
+  },
+  "exclusionRestored": true,
+  "cursorOverlayExcluded": false
+}
