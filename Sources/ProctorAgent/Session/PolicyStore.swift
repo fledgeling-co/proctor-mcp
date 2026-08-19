@@ -223,6 +223,13 @@ enum AuditLog {
         // injected, and a count-based assertion silently depends on what else is
         // running. Measured: one such run put 59 entries in a file expecting 5.
         guard !isTestProcess || seams.directory != nil else { return false }
+        // PRO-0073. Stamp the front end here rather than at each of the ~30 places
+        // a record is built: this is the one point every row passes through, and
+        // the value comes from the peer process rather than from the record's
+        // author, so a caller cannot write itself into the trail as the other one.
+        // A record that already names one keeps it — rotation's own attestation
+        // is written by the agent, not by a caller.
+        let record = stamping(record, frontEnd: SessionIdentity.current.frontEnd)
         return state.withLock {
             // The whole append, migration included, runs under a cross-process
             // advisory lock: the migration reads the file and then replaces it, so
@@ -242,6 +249,19 @@ enum AuditLog {
             }
             return result
         }
+    }
+
+    /// Name the front end on a record that does not already name one.
+    ///
+    /// A record that arrived carrying a value keeps it: rotation writes its own
+    /// attestation, which the agent authored rather than a caller, and
+    /// overwriting it would attribute Proctor's own bookkeeping to whoever
+    /// happened to be connected.
+    static func stamping(_ record: AuditRecord, frontEnd: String?) -> AuditRecord {
+        guard record.via == nil else { return record }
+        var stamped = record
+        stamped.via = frontEnd
+        return stamped
     }
 
     /// Seal, sign and append one record. Both locks are already held.

@@ -314,6 +314,24 @@ public struct AuditRecord: Codable, Sendable, Equatable {
     /// "the host", which would be wrong and silent.
     public var mach: String?
 
+    // MARK: - Which front end called (PRO-0073)
+    //
+    // One optional field, appended for the same reason and with the same
+    // guarantee as the two groups above: a row sealed before it existed decodes
+    // with it nil, and neither the signed material nor the chain link moves.
+
+    /// WHICH FRONT END the call arrived through — `cli`, `mcp`, or nil.
+    ///
+    /// The operator CLI reaches the same socket, the same policy gate, the same
+    /// queue lane and this same trail, so nothing else in a row distinguishes a
+    /// person's `proctor act` from a model's `proctor_act`. That distinction is
+    /// the whole reason a refusal can be argued about afterwards.
+    ///
+    /// Stamped at the single append point from the peer process the kernel
+    /// reports, so it cannot be set by the caller. Nil reads as "this build did
+    /// not say", never as "MCP".
+    public var via: String?
+
     /// Proctor's own reading of the window across a step.
     public enum Observation: String, Codable, Sendable, Equatable {
         case changed
@@ -332,7 +350,8 @@ public struct AuditRecord: Codable, Sendable, Equatable {
                 run: String? = nil, seq: Int? = nil, ms: Int? = nil, plane: String? = nil,
                 act: String? = nil, obj: Object? = nil,
                 by: String? = nil, mode: String? = nil, eff: String? = nil,
-                obs: String? = nil, lane: String? = nil, mach: String? = nil) {
+                obs: String? = nil, lane: String? = nil, mach: String? = nil,
+                via: String? = nil) {
         self.timestamp = timestamp; self.tool = tool; self.app = app; self.bundleId = bundleId
         self.window = window; self.node = node; self.kind = kind; self.outcome = outcome
         self.postStateHash = postStateHash; self.value = value; self.script = script
@@ -340,7 +359,7 @@ public struct AuditRecord: Codable, Sendable, Equatable {
         self.run = run; self.seq = seq; self.ms = ms; self.plane = plane
         self.act = act; self.obj = obj
         self.by = by; self.mode = mode; self.eff = eff; self.obs = obs; self.lane = lane
-        self.mach = mach
+        self.mach = mach; self.via = via
     }
 
     /// Build a record for one executed step, redacting anything that could carry a

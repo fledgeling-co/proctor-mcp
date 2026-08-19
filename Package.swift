@@ -15,6 +15,9 @@ let package = Package(
         .executable(name: "Proctor", targets: ["ProctorUI"]),
         // Embeddable in apps you own, to get a real computed-style source.
         .library(name: "ProctorReflector", targets: ["ProctorReflector"]),
+        // PRO-0073. The operator CLI: one verb per tool, over the same socket
+        // the MCP shim uses, so a CLI call passes the same gates.
+        .executable(name: "proctor-cli", targets: ["ProctorCLI"]),
     ],
     targets: [
         // The menu bar's rendition of the run-HUD character lives here rather
@@ -78,6 +81,7 @@ let package = Package(
                               "-Xlinker", "Apps/Proctor/AgentInfo.plist",
                           ], .when(configuration: .release))]),
         .executableTarget(name: "ProctorShim", dependencies: ["ProctorCore"]),
+        .executableTarget(name: "ProctorCLI", dependencies: ["ProctorCore"]),
         // PRO-0065. The Reflector is embedded here and nowhere else, so
         // `proctor_inspect` can measure Proctor's own view tree and settling on
         // Proctor's own surfaces can report `reflectorIdle`. It compiles to

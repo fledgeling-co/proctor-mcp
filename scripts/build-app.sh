@@ -31,8 +31,16 @@ BIN_DIR="$(swift build -c release --show-bin-path)"
 AGENT_BIN="$BIN_DIR/proctor-agent"
 SHIM_BIN="$BIN_DIR/proctor-shim"
 UI_BIN="$BIN_DIR/Proctor"
+# PRO-0073. The operator CLI. Its SwiftPM product is "proctor-cli" rather than
+# "proctor" for a filesystem reason rather than a naming preference: APFS is
+# case-insensitive by default, so a product named "proctor" and the UI product
+# "Proctor" are the same file in the build directory, and the second link
+# silently overwrites the first. Measured: `swift build` reported success and
+# `.build/…/proctor` was the SwiftUI app. It ships under the same name and is
+# reached as `proctor` through a symlink on the caller's PATH.
+CLI_BIN="$BIN_DIR/proctor-cli"
 
-for binary in "$AGENT_BIN" "$SHIM_BIN" "$UI_BIN"; do
+for binary in "$AGENT_BIN" "$SHIM_BIN" "$UI_BIN" "$CLI_BIN"; do
   if [ ! -x "$binary" ]; then
     say "error: expected a built binary at $binary" >&2
     exit 1
@@ -53,6 +61,9 @@ cp "$SHIM_BIN" "$MACOS_DIR/proctor-shim"
 # lives in this bundle so that opening Proctor shows something rather than
 # silently doing nothing.
 cp "$UI_BIN" "$MACOS_DIR/Proctor"
+# The operator CLI. Same socket, same policy gate, same queue lane, same audit
+# trail as the shim — it is a second front end, never a second set of powers.
+cp "$CLI_BIN" "$MACOS_DIR/proctor-cli"
 cp "$PLIST_SRC" "$CONTENTS/Info.plist"
 
 if [ -f "$ICNS_SRC" ]; then
@@ -109,7 +120,7 @@ fi
 # signed under its own filename, so the agent's identity is "proctor-agent"
 # rather than the bundle's — and TCC then has three identities to reason about
 # where the user granted permission to one app.
-for binary in "$MACOS_DIR/proctor-agent" "$MACOS_DIR/proctor-shim" "$MACOS_DIR/Proctor"; do
+for binary in "$MACOS_DIR/proctor-agent" "$MACOS_DIR/proctor-shim" "$MACOS_DIR/Proctor" "$MACOS_DIR/proctor-cli"; do
   codesign --force --sign "$IDENTITY" -i "$BUNDLE_ID" --options runtime $TIMESTAMP_FLAG "$binary"
 done
 codesign --force --sign "$IDENTITY" --options runtime $TIMESTAMP_FLAG "$APP"

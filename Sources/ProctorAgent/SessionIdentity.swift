@@ -56,7 +56,8 @@ enum SessionIdentity {
         let key = "\(pid):\(UInt64(started))"
         return RunSessionIdentity(project: project,
                                   connection: shortID(key),
-                                  key: key)
+                                  key: key,
+                                  frontEnd: frontEnd(for: pid))
     }
 
     /// The process on the other end of a Unix domain socket, as the kernel
@@ -68,6 +69,42 @@ enum SessionIdentity {
             return nil
         }
         return pid
+    }
+
+    /// WHICH FRONT END is on the other end, from the peer's executable name.
+    ///
+    /// PRO-0073 put a second front end on the same socket, and a row in the trail
+    /// otherwise cannot say whether a person or a model made the call. The name
+    /// comes from `proc_pidpath` for the same reason the project name comes from
+    /// the working directory: the kernel reports it, so the caller cannot claim
+    /// to be the other one in the record used to argue about what it did.
+    ///
+    /// Only the two names Proctor ships are recognised. Anything else — a test
+    /// harness, a third-party client, a renamed copy — returns nil rather than a
+    /// guess, because a wrong front end in the trail is worse than none.
+    static func frontEnd(for pid: pid_t) -> String? {
+        guard let name = executableName(for: pid) else { return nil }
+        return frontEnd(named: name)
+    }
+
+    /// The name→front-end mapping, kept pure so it can be asserted without a
+    /// second process.
+    static func frontEnd(named executable: String) -> String? {
+        switch executable {
+        case "proctor-cli": return "cli"
+        case "proctor-shim": return "mcp"
+        default: return nil
+        }
+    }
+
+    /// The peer's executable path, reduced to its last component.
+    static func executableName(for pid: pid_t) -> String? {
+        var buffer = [CChar](repeating: 0, count: Int(MAXPATHLEN))
+        let read = proc_pidpath(pid, &buffer, UInt32(buffer.count))
+        guard read > 0 else { return nil }
+        let path = String(cString: buffer)
+        let component = (path as NSString).lastPathComponent
+        return component.isEmpty ? nil : component
     }
 
     /// The peer's working directory, reduced to its last component. A path is

@@ -132,11 +132,25 @@ public struct RunSessionIdentity: Hashable, Sendable {
     /// waiting cap counts against would silently merge two clients' allowances,
     /// so the two are kept apart and only this one is compared.
     public var key: String
+    /// WHICH FRONT END called — `cli`, `mcp`, or nil.
+    ///
+    /// Read from the peer process's executable name, never from the request, for
+    /// the same reason `project` is read from its working directory: a caller
+    /// that could name itself could name itself as the other one, in the very
+    /// trail used to argue about what happened.
+    ///
+    /// Nil reads as "the build that wrote this row did not say" and never as
+    /// "MCP". Absence is in fact unambiguous today, because every row written
+    /// before the CLI existed was an MCP row — but a later front end that forgot
+    /// to identify itself would then be indistinguishable from an older honest
+    /// row, which is the failure this field exists to prevent.
+    public var frontEnd: String?
 
-    public init(project: String, connection: String, key: String) {
+    public init(project: String, connection: String, key: String, frontEnd: String? = nil) {
         self.project = project
         self.connection = connection
         self.key = key
+        self.frontEnd = frontEnd
     }
 
     public static func == (a: RunSessionIdentity, b: RunSessionIdentity) -> Bool { a.key == b.key }
