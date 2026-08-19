@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import ProctorCore
 
 /// First-run walkthrough.
 ///
@@ -24,8 +25,21 @@ struct Walkthrough: View {
     @AppStorage("walkthroughCompleted") private var completed = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    /// PRO-0067. The view keeps an `Int`-backed enum because the slide
+    /// direction is computed from the ordering, and maps to
+    /// `WalkthroughFlow.Step` for every decision and every string. One source
+    /// for the flow, one for the animation, and no second answer to "which step
+    /// is this".
     enum Step: Int, CaseIterable {
         case intro, permissions, connect
+
+        var flow: WalkthroughFlow.Step {
+            switch self {
+            case .intro: return .intro
+            case .permissions: return .permissions
+            case .connect: return .connect
+            }
+        }
         var title: String {
             switch self {
             case .intro:       return "What Proctor does"
@@ -59,14 +73,17 @@ struct Walkthrough: View {
             Divider()
             HStack {
                 if step != .intro {
-                    Button("Back") { back() }
+                    Button(WalkthroughFlow.Copy.back) { back() }
+                        .accessibilityIdentifier(WalkthroughFlow.ID.back)
                 }
                 Spacer()
                 if step != .connect {
-                    Button("Skip setup") { complete() }
+                    Button(WalkthroughFlow.Copy.skip) { complete() }
+                        .accessibilityIdentifier(WalkthroughFlow.ID.skip)
                         .buttonStyle(.borderless)
                 }
-                Button(step == .connect ? "Finish" : "Continue") { advance() }
+                Button(WalkthroughFlow.primaryAction(for: step.flow)) { advance() }
+                    .accessibilityIdentifier(WalkthroughFlow.ID.primary)
                     .buttonStyle(.borderedProminent)
             }
             .padding(.horizontal, 30).padding(.vertical, 16)

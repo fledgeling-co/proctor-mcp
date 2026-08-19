@@ -1,6 +1,6 @@
 # PRO-0067: The walkthrough becomes the mock
 
-**ID:** PRO-0067 · **Status:** Ready for Plan · **Created:** 2026-08-20
+**ID:** PRO-0067 · **Status:** Merged · **Created:** 2026-08-20
 **Brief:** `docs/features-to-triage/61-walkthrough-to-the-mock.md`
 **Branch:** `ai/pro-0067` off `ai/wave-9` · **Depends on:** PRO-0064, PRO-0065
 **Mock:** `#mac/walkthrough/intro`, `…/permissions`, `…/granted`, `…/connect`
@@ -46,3 +46,33 @@ is what a screen reader lists out of context.
 The "Already allowed? Open System Settings" line is still-open child work from PRO-0041. It
 asks a different question — what to do when macOS says denied and the person disagrees — and
 folding it in would make this a grant-diagnosis item.
+
+## Verification
+
+`WalkthroughFlowTests` is 8 tests; suite 1,555 in 180 suites.
+
+- **A1** — the step is a pure function of `(introSeen, accessibility, screenRecording)` and all
+  eight combinations are written out rather than looped, so a wrong answer names its case. The
+  one that matters: a machine already holding both grants still opens on `intro`, so nobody is
+  dropped into `connect` without learning what they installed. Auto-advance is asserted to fire
+  from `granted` only, and never on a partial grant.
+- **A2** — a vague-label set (`continue`, `next`, `ok`, `go`, `submit`, `proceed`) is asserted
+  absent from every step's primary action. The flow said "Continue" three times; it now says
+  "Set up permissions", "Connect a model" and "Done".
+- **A4** — both exits complete. Skipping *is* completing, deliberately: the alternative is a
+  window that reappears at every launch for somebody who has decided against it.
+- **A5** — `screenRecording.needsRestart` is true and `accessibility` false, and the note says
+  so, because macOS caches the answer per process for that process's life.
+
+**A3 is not verified.** The disabled-next-button clause needs the rendered view, and this repo
+has no `ProctorUI` test target. The identifier is defined and set; whether the control is
+present-and-disabled rather than absent is a fidelity-harness question and is carried to the
+campaign lane rather than claimed here.
+
+### The view keeps its own enum, on purpose
+
+`Walkthrough.Step` stays `Int`-backed because the slide direction is computed from the
+ordering, and maps to `WalkthroughFlow.Step` for every decision and every string. Aliasing the
+two was tried first and broke the animation, which is the honest reason rather than a
+preference: one source for the flow, one for the animation, and no second answer to which step
+is showing.
