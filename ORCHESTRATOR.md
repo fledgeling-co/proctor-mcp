@@ -380,6 +380,7 @@ in `docs/goals/goal-wave9-swiftui-conversion.md`.
 None of these blocks its item; each has a defensible default recorded in the spec.
 
 ## Event log (append-only, newest first)
+- 2026-08-20 **Second flake fixed.** `RunScheduler` took an injected clock and ignored it for its own ceiling, sleeping on the wall clock instead — so a wiring test that said time does not pass still raced a real 5s timer and refused a run that was about to succeed, ~1 run in 5 under load. `sleep:` is now injected too. Six consecutive clean full runs.
 - 2026-08-20 **PRO-0068 merged.** The menu bar went from one command to 21 across four menus, and the kill switch now has a menu path — Pause/Stop were reachable only from the panel and the extras item. A test fails on any command offered elsewhere and missing from the menu bar. 1,563 tests / 181 suites.
 - 2026-08-20 **PRO-0067 merged.** Walkthrough step is a pure function tested at all eight combinations; primary actions name their outcome instead of saying Continue three times. A3 (disabled button present) needs the rendered view and is carried to the campaign lane. 1,555 tests / 180 suites.
 - 2026-08-20 **PRO-0066 merged.** Status window draws only the sections its state allows, so a dead agent no longer renders Tools/Switches/Agent over unread data; Lanes rendered for the first time. Found and fixed a production defect on the way: `IOSDeviceList.parse` threw a raw DecodingError on truncated simctl output, which was reddening and once wedging the suite. 1,547 tests / 179 suites, green ×4.

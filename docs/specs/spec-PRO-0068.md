@@ -73,3 +73,35 @@ the reason is now in `CommandSurface` where the next person to shorten it will r
 **A3 is carried, not claimed.** The menu reads the same `ForegroundDemand` value the panel and
 the extras menu read, so there is one answer rather than three — but asserting the *rendered*
 menu shows it needs the harness.
+
+## A second flake found and fixed, 2026-08-20
+
+The `tests` gate went red one turn after this item merged, on
+`two sessions driving the same app take turns, and both finish` — roughly one run
+in five under a loaded machine.
+
+**The scheduler's injected clock did not govern its ceiling.** `RunScheduler` takes
+`now:` and its own comment promises "a test's clock is its own", but `deadlineTask`
+slept on `Task.sleep` and never consulted `now`. So a wiring test injecting
+`now: { 0 }` — saying, explicitly, that time does not pass — still had a real
+five-second timer racing the work it was measuring. On an idle machine eight steps
+finish inside five seconds; under a parallel suite they do not, and the queue
+refused a run that was about to succeed.
+
+An injected clock that is not honoured is worse than no injection, because the test
+reads as deterministic and is not.
+
+`sleep:` is now injected alongside `now:`, defaulting to the real `Task.sleep`.
+`RunScheduler.stoppedClock` pairs a stopped clock with a sleeper that suspends until
+cancellation, which is safe because the deadline task is cancelled on all three paths
+out of the queue. The wiring harness uses it.
+
+**A correction to my own reasoning while fixing it.** I claimed no test asserted the
+ceiling firing and started to add one; the compiler rejected it as a duplicate,
+because `a call still waiting when the ceiling fires is told the machine was busy`
+already existed. It builds its own scheduler at `waitLimit: 0.05` with the default
+sleeper, so it still fires in 50ms and the ceiling stays proven. My addition was
+removed. The grep that missed it was too narrow, and the compiler caught what the
+grep did not.
+
+Six consecutive full runs clean afterwards.

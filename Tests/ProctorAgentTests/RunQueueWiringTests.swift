@@ -26,7 +26,7 @@ struct RunQueueWiringTests {
     private func harness(waitLimit: TimeInterval = 5)
     async throws -> (session: Session, ax: FakeAX, scheduler: RunScheduler) {
         let ax = FakeAX(bundleId: Self.target)
-        let scheduler = RunScheduler(waitLimit: waitLimit, now: { 0 })
+        let scheduler = RunScheduler.stoppedClock(waitLimit: waitLimit)
         let session = Session(ax: ax, capture: FakeCapture(), scheduler: scheduler)
         // Every step these tests drive is audited, and without a sink of its own
         // that lands in the operator's live trail. Its siblings already do this.

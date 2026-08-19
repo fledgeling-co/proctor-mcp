@@ -90,13 +90,36 @@ actor RunScheduler {
     /// forty-five seconds, and so a test's clock is its own.
     var waitLimit: TimeInterval
     var now: @Sendable () -> Double
+    /// How the ceiling waits.
+    ///
+    /// Injected alongside `now`, because the comment above used to promise "a
+    /// test's clock is its own" while `deadlineTask` slept on the wall clock and
+    /// ignored `now` entirely. A test injecting `now: { 0 }` is saying time does
+    /// not pass; with a real `Task.sleep` underneath, the ceiling fired anyway
+    /// whenever the machine was loaded enough for the work to outlast it.
+    /// Measured 2026-08-20: `two sessions driving the same app take turns` failed
+    /// roughly one run in five under a parallel suite, with the queue refusing a
+    /// run that was about to succeed.
+    var sleep: @Sendable (TimeInterval) async -> Void
     /// How many runs one session may keep waiting.
     var perSessionCap: Int = RunQueuePlan.perSessionWaitingCap
 
     init(waitLimit: TimeInterval = RunQueuePlan.waitLimit(from: ProcessInfo.processInfo.environment),
-         now: @escaping @Sendable () -> Double = { Date().timeIntervalSince1970 }) {
+         now: @escaping @Sendable () -> Double = { Date().timeIntervalSince1970 },
+         sleep: @escaping @Sendable (TimeInterval) async -> Void = { seconds in
+             try? await Task.sleep(nanoseconds: UInt64(max(seconds, 0) * 1_000_000_000))
+         }) {
         self.waitLimit = waitLimit
         self.now = now
+        self.sleep = sleep
+    }
+
+    /// A scheduler whose ceiling never fires, for a test that injects a stopped
+    /// clock. The deadline task is cancelled on every path out of the queue, so
+    /// this suspends until cancellation rather than leaking.
+    static func stoppedClock(waitLimit: TimeInterval = 5) -> RunScheduler {
+        RunScheduler(waitLimit: waitLimit, now: { 0 },
+                     sleep: { _ in try? await Task.sleep(nanoseconds: .max) })
     }
 
     // A waiting run leaves this list exactly once, and only ever from inside this
@@ -179,8 +202,10 @@ actor RunScheduler {
     /// nothing and retries.
     private func deadlineTask(for id: Int) -> Task<Void, Never> {
         let limit = waitLimit
+        let sleeper = sleep
         return Task { [weak self] in
-            try? await Task.sleep(nanoseconds: UInt64(max(limit, 0) * 1_000_000_000))
+            await sleeper(limit)
+            guard !Task.isCancelled else { return }
             await self?.expire(id: id)
         }
     }
