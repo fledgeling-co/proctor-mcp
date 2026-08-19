@@ -349,7 +349,7 @@ identifier from a Core constant.
 | PRO-0065 | The fidelity harness: Proctor measures Proctor | `67-…` | PRO-0064 | 2 | **MERGED** |
 | PRO-0066 | The status window becomes the mock | `60-…` | PRO-0064, PRO-0065 | 3 | **MERGED** (A2 partial) |
 | PRO-0067 | The walkthrough becomes the mock | `61-…` | PRO-0064, PRO-0065 | 3 | **MERGED** (A3 needs the harness) |
-| PRO-0068 | The menu bar, and the complete command surface | `62-…` | PRO-0067 | 4 | **TRIAGED** |
+| PRO-0068 | The menu bar, and the complete command surface | `62-…` | PRO-0067 | 4 | **MERGED** |
 | PRO-0069 | The run HUD, and the seven character states | `63-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
 | PRO-0070 | The takeover overlay, and what it does not claim | `64-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
 | PRO-0071 | The history window, and the skipped verdict | `65-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
@@ -380,6 +380,7 @@ in `docs/goals/goal-wave9-swiftui-conversion.md`.
 None of these blocks its item; each has a defensible default recorded in the spec.
 
 ## Event log (append-only, newest first)
+- 2026-08-20 **PRO-0068 merged.** The menu bar went from one command to 21 across four menus, and the kill switch now has a menu path — Pause/Stop were reachable only from the panel and the extras item. A test fails on any command offered elsewhere and missing from the menu bar. 1,563 tests / 181 suites.
 - 2026-08-20 **PRO-0067 merged.** Walkthrough step is a pure function tested at all eight combinations; primary actions name their outcome instead of saying Continue three times. A3 (disabled button present) needs the rendered view and is carried to the campaign lane. 1,555 tests / 180 suites.
 - 2026-08-20 **PRO-0066 merged.** Status window draws only the sections its state allows, so a dead agent no longer renders Tools/Switches/Agent over unread data; Lanes rendered for the first time. Found and fixed a production defect on the way: `IOSDeviceList.parse` threw a raw DecodingError on truncated simctl output, which was reddening and once wedging the suite. 1,547 tests / 179 suites, green ×4.
 - 2026-08-20 **PRO-0065 merged.** Reflector embedded in ProctorUI (debug-only, release guard verified both ways); SurfaceFidelity with 28 anchors and a channel table that makes an unsettleable property unreachable from `.matches`. **Corrected the wave's premise**: the Reflector cannot read resolved SwiftUI modifier values — its own README says so — so the harness settles identifiers, geometry and pixels fully and reports layer style inconclusive where SwiftUI did not materialise it. 1,535 tests / 177 suites.

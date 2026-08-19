@@ -144,14 +144,45 @@ struct ProctorUIApp: App {
         }
         .windowResizability(.contentMinSize)
         .defaultPosition(.center)
+        // PRO-0068. The menu bar is the complete command surface.
+        //
+        // It carried one item. Pause and Stop were reachable from the floating
+        // panel and the menu-bar extra and from no menu at all, so somebody who
+        // had hidden the panel and did not know about the extras item had no
+        // path to the kill switch. Titles, shortcuts and menus come from
+        // `CommandSurface`, and `CommandSurfaceTests` fails on a command offered
+        // anywhere else and missing from here.
         .commands {
             CommandGroup(replacing: .newItem) {}
             CommandGroup(after: .appInfo) {
-                Button("Run Setup Again…") {
+                commandButton("setup-again") {
                     walkthroughCompleted = false
                     AppDelegate.applyPolicy()
                     openWindow(id: "main")
                 }
+                commandButton("restart-agent") { Actions.restartAgent() }
+                commandButton("reveal-socket") { Actions.open("file://" + Wire.socketPath) }
+            }
+            // Its own menu, because the kill switch should not be filed under
+            // something else.
+            CommandMenu("Run") {
+                commandButton("pause") { model.togglePause() }
+                    .disabled(model.hudPhase == .paused)
+                commandButton("resume") { model.togglePause() }
+                    .disabled(model.hudPhase != .paused)
+                commandButton("stop") { model.stopRun() }
+                Divider()
+                commandButton("show-panel") { model.setPanel(visible: true) }
+                commandButton("hide-panel") { model.setPanel(visible: false) }
+            }
+            CommandGroup(after: .windowList) {
+                commandButton("status") { openWindow(id: "main") }
+                commandButton("history") { openWindow(id: "history") }
+            }
+            CommandGroup(replacing: .help) {
+                commandButton("help") { Actions.open("https://github.com/fledgeling-co/proctor-mcp#readme") }
+                commandButton("refusals") { Actions.open("https://github.com/fledgeling-co/proctor-mcp#what-it-can-and-cannot-do") }
+                commandButton("diagnostics") { Actions.copy(BuildInfo.current.descriptor + "\n" + Wire.socketPath) }
             }
         }
 
@@ -338,5 +369,36 @@ struct MenuBarContent: View {
             let missing = r.grants.filter { $0.required && !$0.granted }.count
             return "\(missing) permission\(missing == 1 ? "" : "s") needed"
         }
+    }
+}
+
+/// Builds a menu item from `CommandSurface`, so a title and a key equivalent
+/// have one definition rather than one per menu.
+@ViewBuilder
+func commandButton(_ id: String, action: @escaping () -> Void) -> some View {
+    if let command = CommandSurface.command(id) {
+        let button = Button(command.title, action: action)
+            .accessibilityIdentifier(CommandSurface.ID.command(id))
+        if let shortcut = command.shortcut, let equivalent = KeyEquivalentParser.parse(shortcut) {
+            button.keyboardShortcut(equivalent.key, modifiers: equivalent.modifiers)
+        } else {
+            button
+        }
+    }
+}
+
+/// Turns the menu-bar spelling of a key equivalent into SwiftUI's.
+enum KeyEquivalentParser {
+    static func parse(_ shortcut: String) -> (key: KeyEquivalent, modifiers: EventModifiers)? {
+        var modifiers: EventModifiers = []
+        var remaining = shortcut
+        let map: [(Character, EventModifiers)] = [("⌘", .command), ("⇧", .shift),
+                                                  ("⌃", .control), ("⌥", .option)]
+        for (glyph, modifier) in map where remaining.contains(glyph) {
+            modifiers.insert(modifier)
+            remaining.removeAll { $0 == glyph }
+        }
+        guard let character = remaining.first else { return nil }
+        return (KeyEquivalent(character), modifiers)
     }
 }

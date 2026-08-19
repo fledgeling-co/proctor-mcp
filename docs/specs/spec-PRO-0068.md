@@ -1,6 +1,6 @@
 # PRO-0068: The menu bar, and the complete command surface
 
-**ID:** PRO-0068 · **Status:** Ready for Plan · **Created:** 2026-08-20
+**ID:** PRO-0068 · **Status:** Merged · **Created:** 2026-08-20
 **Brief:** `docs/features-to-triage/62-menu-bar-and-the-command-surface.md`
 **Branch:** `ai/pro-0068` off `ai/wave-9` · **Depends on:** PRO-0067
 **Mock:** `#mac/menubar/idle|running|foreground|down`, `#mac/menus/all`
@@ -45,3 +45,31 @@ switch**.
 ## Out of scope
 
 Which character state shows when is this item's; the asset set is PRO-0069's.
+
+## Verification
+
+`CommandSurfaceTests` is 8 tests; suite 1,563 in 181 suites.
+
+- **A1** — `commandsMissingFromMenuBar` is asserted empty, and the failure message names the
+  titles. Pause, Resume and Stop are additionally asserted present on all three surfaces
+  individually, because the aggregate clause would still pass if the kill switch were the one
+  command nobody had put anywhere.
+- **A2** — enablement and presence are separate questions. Commands disabled with nothing
+  running keep their surfaces, and Pause/Stop flip on `hasLiveRun`.
+- **A4** — key equivalents are unique across the whole surface, with the clashing set printed.
+- **A5** — Show Run Panel requires `panelEnabled`; Hide stays available, because hiding is
+  always reversible within a launch.
+
+The menu bar now carries 21 commands across four menus. It carried one.
+
+### The wording was not mine to change
+
+`CommandSurface` says **Pause Run**, **Resume Run** and **Stop Run** rather than the shorter
+labels the mock drew. `ProctorUIApp` records why, and it is a real rule rather than a style
+preference: the queue has its own pause/resume pair, the two pairs never sit together, and
+calling both "pause" is how somebody stops the wrong thing. The shipped wording is kept and
+the reason is now in `CommandSurface` where the next person to shorten it will read it.
+
+**A3 is carried, not claimed.** The menu reads the same `ForegroundDemand` value the panel and
+the extras menu read, so there is one answer rather than three — but asserting the *rendered*
+menu shows it needs the harness.
