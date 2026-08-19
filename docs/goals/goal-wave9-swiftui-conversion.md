@@ -119,4 +119,25 @@ that moved, and the run cannot tell the difference afterwards.
 
 ## Open questions
 
-_Appended during the run by the blocked-item policy. Empty at arm time._
+_Appended during the run by the blocked-item policy._
+
+### Parked 2026-08-20 during triage — assumptions taken, run continues
+
+**PRO-0073 · how `proctor act` takes a step batch.** Repeated flags are pleasant for one step
+and unusable for six, which is the shape batching exists for; stdin JSON is honest for a batch
+and awkward interactively. *Assumption taken:* support both, with stdin JSON as the documented
+path. Costs a parser. Reverse by deleting one input form.
+
+**PRO-0073 · whether the CLI holds a session identity across invocations.** It decides queue
+attribution and the hold attribution the HUD shows. *Assumption taken:* per-invocation session,
+because it needs no new state. Revisit if the HUD's attribution reads wrong in practice.
+
+**PRO-0074 · whether the TUI may attach over the remote HTTP transport.** It would make
+supervision available wherever the tools are, and it would put **Stop behind a bearer token on
+a network front door** — a stronger gate than the local socket has. *Assumption taken:* local
+socket only. The HTTP path carries a security surface and is a separate decision, not one to
+inherit.
+
+**PRO-0074 · a screen-reader mode** that drops stylised chrome for linear text and never
+encodes state in colour alone. *Assumption taken:* not in this item; recorded as child work.
+

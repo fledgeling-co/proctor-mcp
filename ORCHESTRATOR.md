@@ -368,9 +368,16 @@ a measured claim rather than an asserted one.
 ### Questions parked rather than asked
 
 Per the goal brief's blocked-item policy, a fork that needs a human parks its item and is
-appended here rather than stopping the fleet.
+appended here rather than stopping the fleet. Full text with the assumption taken for each is
+in `docs/goals/goal-wave9-swiftui-conversion.md`.
 
-_None yet._
+- **PRO-0073** — how `act` takes a step batch (assumed: both, stdin JSON documented).
+- **PRO-0073** — CLI session identity across invocations (assumed: per-invocation).
+- **PRO-0074** — TUI over the remote HTTP transport, which puts Stop behind a bearer token
+  (assumed: local socket only; the HTTP path is a security decision, not an inheritance).
+- **PRO-0074** — a screen-reader mode (assumed: child work, not this item).
+
+None of these blocks its item; each has a defensible default recorded in the spec.
 
 ## Event log (append-only, newest first)
 - 2026-08-20 **Wave 9 opened on `ai/wave-9`.** 11 ids allocated serially (PRO-0064..0074) from the surface-set briefs 59-69; direction at brief 58. Integration branch is NOT main — a peer session holds 21 uncommitted files there. Armed with better-goal `wave9-swiftui-conversion`, six gates, 60 turns.
