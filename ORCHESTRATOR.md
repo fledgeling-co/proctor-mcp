@@ -352,7 +352,7 @@ identifier from a Core constant.
 | PRO-0068 | The menu bar, and the complete command surface | `62-…` | PRO-0067 | 4 | **MERGED** |
 | PRO-0069 | The run HUD, and the seven character states | `63-…` | PRO-0064, PRO-0065 | 3 | **MERGED** |
 | PRO-0070 | The takeover overlay, and what it does not claim | `64-…` | PRO-0064, PRO-0065 | 3 | **MERGED** |
-| PRO-0071 | The history window, and the skipped verdict | `65-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
+| PRO-0071 | The history window, and the skipped verdict | `65-…` | PRO-0064, PRO-0065 | 3 | **MERGED** |
 | PRO-0072 | The consent sheets, and the asymmetry | `66-…` | PRO-0066 | 4 | **TRIAGED** |
 | PRO-0073 | `proctor`, the operator CLI | `68-…` | PRO-0064 | 3 | **TRIAGED** |
 | PRO-0074 | `proctor tui`, the supervision surface | `69-…` | PRO-0073 | 4 | **TRIAGED** |
@@ -380,6 +380,7 @@ in `docs/goals/goal-wave9-swiftui-conversion.md`.
 None of these blocks its item; each has a defensible default recorded in the spec.
 
 ## Event log (append-only, newest first)
+- 2026-08-20 **PRO-0071 merged.** A skipped assertion can never be counted as a pass, the tally keeps three counts rather than two, and a skipped check with no reason is refused rather than drawn. A3 is asserted over the encoded projection, so widening RunHistory fails there rather than leaking. 1,582 tests / 184 suites.
 - 2026-08-20 **PRO-0070 merged, and corrected the mock.** The guest-route refusal is not an overlay state: the refusal throws before any step runs, so a veil saying Proctor is driving this Mac over a refused batch would make the overlay mean two things. It is a notice; the veil keeps the one state it describes. Mock caption records the error rather than deleting it. 1,574 tests / 183 suites.
 - 2026-08-20 **PRO-0069 merged.** Seven phases get distinct symbols and a per-phase control table; the panel drew Pause and Stop in every phase, including finished, where they acted on nothing. Rect and drawing are gated together so hit-testing and drawing cannot disagree. Stop-reachability and HUD wiring suites re-run green. 1,569 tests / 182 suites.
 - 2026-08-20 **Second flake fixed.** `RunScheduler` took an injected clock and ignored it for its own ceiling, sleeping on the wall clock instead — so a wiring test that said time does not pass still raced a real 5s timer and refused a run that was about to succeed, ~1 run in 5 under load. `sleep:` is now injected too. Six consecutive clean full runs.
