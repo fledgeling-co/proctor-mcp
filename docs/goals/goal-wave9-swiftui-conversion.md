@@ -53,7 +53,7 @@ Ordered cheapest first.
 | Name | Command | Passes when |
 |---|---|---|
 | build | `swift build` | compiles |
-| tests | `swift test` | every test passes |
+| tests | `./scripts/test.sh` | every test passes |
 | campaign | `campaign.py check docs/test-campaign` | every case produced a measurement; none unattempted |
 | ratchet | `strict-check.py docs/test-campaign` | checked-case count has not regressed |
 | wave9 | `bash docs/goals/gate-wave9.sh` | all 11 items terminal in `LEDGER.md` |
@@ -63,8 +63,15 @@ Ordered cheapest first.
 they are separate on purpose: one asks whether every case was measured, the other whether
 coverage went backwards. Combined they would name the failure imprecisely.
 
-`runners` passes vacuously when no worktree exists and says so in its own output rather than
-reporting a clean population as a healthy one.
+`runners` passes vacuously when no runner worktree exists and says so in its own output
+rather than reporting a clean population as a healthy one. It skips the main checkout and the
+integration worktree by path identity.
+
+**`tests` is `./scripts/test.sh` and not `swift test`, and the difference is load-bearing.**
+Measured on this branch: bare `swift test` exits 1 while reporting all 1,520 tests passing —
+the run leaks a continuation at teardown. The repo's script writes the run to a file and
+reads the verdict back, so it is not fooled by that or by a pipe eating the status. Arming
+the bare command would have held this gate permanently red.
 
 ## Blocked-item policy
 
