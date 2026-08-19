@@ -78,7 +78,14 @@ let package = Package(
                               "-Xlinker", "Apps/Proctor/AgentInfo.plist",
                           ], .when(configuration: .release))]),
         .executableTarget(name: "ProctorShim", dependencies: ["ProctorCore"]),
-        .executableTarget(name: "ProctorUI", dependencies: ["ProctorCore"]),
+        // PRO-0065. The Reflector is embedded here and nowhere else, so
+        // `proctor_inspect` can measure Proctor's own view tree and settling on
+        // Proctor's own surfaces can report `reflectorIdle`. It compiles to
+        // nothing without DEBUG or PROCTOR_REFLECTOR, and scripts/build-app.sh
+        // fails a release artifact that carries it: a reflector socket inside a
+        // process holding Accessibility and Screen Recording is readable by
+        // anything that can reach it.
+        .executableTarget(name: "ProctorUI", dependencies: ["ProctorCore", "ProctorReflector"]),
         .target(name: "ProctorReflector", exclude: ["README.md"]),
         .testTarget(name: "ProctorCoreTests", dependencies: ["ProctorCore"]),
         // The agent's own wiring — the policy gate and the audit trail around the

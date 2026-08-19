@@ -940,10 +940,16 @@ block rather than transcribed, so the two cannot drift.
 **Fidelity is measured through ProctorReflector, not through a DOM.** The usual instrument
 diffs computed styles on a rendered page; SwiftUI has none, and macOS has no cross-process
 computed-style API at all (section 7.6). `ProctorReflector` is the answer the product
-already ships: embedded in `ProctorUI` behind `#if DEBUG`, it returns resolved colours,
-fonts, radii and layer geometry, so `proctor_inspect` measures Proctor's own view tree.
-The conversion is verified by **Proctor driving Proctor**, which is also the shortest
-demonstration of the product that exists.
+already ships: embedded in `ProctorUI` behind `#if DEBUG`, `proctor_inspect` measures
+Proctor's own view tree. The conversion is verified by **Proctor driving Proctor**, which is
+also the shortest demonstration of the product that exists.
+
+The instrument is narrower than it first appears, and the narrowing is recorded rather than
+discovered later. The Reflector walks AppKit views; a SwiftUI subtree appears as its
+`NSHostingView` and whatever backing views SwiftUI created, and no resolved SwiftUI modifier
+value is readable from outside the framework. So identifiers, roles, geometry and pixels are
+settled fully; layer-level style is settled only where SwiftUI materialises it; and everything
+else is reported inconclusive with its reason rather than as agreement.
 
 **Every converted control sets a durable accessibility identifier** from a `ProctorCore`
 constant. The Cua research found that an opaque per-snapshot element handle survives replay

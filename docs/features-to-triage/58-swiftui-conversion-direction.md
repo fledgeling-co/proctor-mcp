@@ -59,10 +59,18 @@ fonts, corner radii, opacity, constraints and both CALayer model and presentatio
 Proctor.app is an app this team owns. Nothing embeds the Reflector in it today.
 
 So the fidelity channel for this wave is **Proctor driving Proctor**: embed
-`ProctorReflector` in `ProctorUI`, and `proctor_inspect` returns the SwiftUI equivalent of
-the computed styles the mock was measured with. That is the missing instrument, it costs a
-dependency and a `#if DEBUG` block, and it converts "does the app match the mock" from a
-judgement into a measurement.
+`ProctorReflector` in `ProctorUI` and measure through it, the accessibility tree, and pixels
+carrying frame status.
+
+**Corrected 2026-08-20, during PRO-0065.** An earlier version of this paragraph claimed the
+Reflector returns the SwiftUI equivalent of computed styles. It does not, and its own README
+says so: `NSHostingView` subtrees walk as ordinary `NSView`s, and there is no supported way to
+read a resolved SwiftUI modifier value from outside the framework. What the harness settles
+fully is identifiers, roles, geometry and pixels; layer-level style is settled only where
+SwiftUI materialises it into a `CALayer`, and anything else is reported
+`inconclusive(.notMaterialisedInLayer)` rather than as agreement. `spec-PRO-0065.md` carries
+the full channel table. `reflectorIdle` is unaffected and is still worth the embedding on its
+own.
 
 It also settles a second thing worth naming: `reflectorIdle` becomes available on the app's
 own surfaces, which is the strongest settle signal Proctor has and is currently reachable on

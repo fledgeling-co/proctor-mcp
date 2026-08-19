@@ -115,6 +115,19 @@ done
 codesign --force --sign "$IDENTITY" --options runtime $TIMESTAMP_FLAG "$APP"
 codesign --verify --strict --deep "$APP"
 
+# PRO-0065. The Reflector is embedded in ProctorUI for the fidelity harness and
+# compiles to nothing without DEBUG or PROCTOR_REFLECTOR. This proves the shipped
+# artifact carries neither, because the failure is silent: a release build that
+# accidentally defined the flag would bind a socket inside a process holding
+# Accessibility and Screen Recording, and nothing else would notice.
+if strings -a "$MACOS_DIR/Proctor" 2>/dev/null | grep -q 'reflector-.*\.sock'; then
+  say "error: the release binary carries the ProctorReflector socket path." >&2
+  say "       ProctorReflector must compile out of a shipped build — check that" >&2
+  say "       neither DEBUG nor PROCTOR_REFLECTOR is defined for -c release." >&2
+  exit 1
+fi
+say "  reflector: absent from the release binary"
+
 # PRO-0040. Two properties of the agent binary that nothing else would catch, and
 # whose failures are both silent — one costs a person the ability to open the app,
 # the other costs them their grants. Checked here because this is the one step the

@@ -2,6 +2,9 @@ import SwiftUI
 import AppKit
 import ServiceManagement
 import ProctorCore
+#if DEBUG || PROCTOR_REFLECTOR
+import ProctorReflector
+#endif
 
 /// Owns the activation policy and the login-item registration.
 ///
@@ -16,6 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // is running — an upgrade replacing the file underneath a window that has
         // been up for hours is the whole reason PRO-0027 exists.
         BuildInfo.captureAtLaunch()
+        Self.startReflectorIfDebug()
         Self.applyPolicy()
         Self.registerLoginItem()
 
@@ -73,6 +77,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     static func applyPolicy() {
         let configured = UserDefaults.standard.bool(forKey: "walkthroughCompleted")
         NSApp.setActivationPolicy(configured ? .accessory : .regular)
+    }
+
+    /// Start the in-process reflector, debug builds only.
+    ///
+    /// PRO-0065. This is what lets `proctor_inspect` read this app's own view
+    /// tree, and what makes `reflectorIdle` — the strongest settle signal the
+    /// product has — reachable on any surface at all.
+    ///
+    /// The threat is worth stating rather than leaving to the `#if`: this binds
+    /// a socket inside a process holding Accessibility and Screen Recording, and
+    /// anything able to reach that socket can read this process's view tree. It
+    /// is therefore debug-only, and `scripts/build-app.sh` fails a release
+    /// artifact that carries it.
+    static func startReflectorIfDebug() {
+        #if DEBUG || PROCTOR_REFLECTOR
+        ProctorReflector.start()
+        #endif
     }
 
     /// Register the app to start at login, so the menu-bar icon is present after
