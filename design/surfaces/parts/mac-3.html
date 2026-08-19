@@ -29,7 +29,7 @@
     <p class="caption">The drawn pointer sits in the target&rsquo;s own plane so a step is visible before it lands. The veil and the cursor are excluded from captures — evidence must not change because somebody was watching — which is why neither can be photographed by Proctor&rsquo;s own capture path.</p>
   </div>
 
-  <div class="sub" data-state="guest" data-state-label="Guest route refusal">
+  <div class="sub" data-state="guest" data-state-label="Guest route refusal (corrected)">
     <div class="canvas plain">
       <div class="overlay-scene">
         <div class="overlay-desktop">
@@ -50,7 +50,12 @@
         </div>
       </div>
     </div>
-    <p class="caption">A refusal, never a silent host run and never a fallback. It names the guest that caused it and the switch that clears it, so it is actionable rather than mysterious.</p>
+    <p class="caption"><b>Corrected during implementation (PRO-0070), and this state is wrong as drawn.</b>
+      The refusal is thrown <i>before</i> any step runs, so a refused batch never takes the machine — and a veil
+      saying &ldquo;Proctor is driving this Mac&rdquo; over a batch that was refused would make the overlay mean two
+      incompatible things. A refusal is a <b>notice</b>, not a takeover: the copy belongs on the menu bar and in the
+      run line, and the veil stays for the one state it describes. Kept here as the record of a design error the
+      build caught, rather than deleted.</p>
   </div>
 </section>
 

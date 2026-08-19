@@ -58,126 +58,126 @@ danger              #B3261E direction
   color-scheme: light;
 
   /* ground and surfaces */
-  --ground: #EFF0F3;          /* the page the windows sit on */
-  --win: #FFFFFF;             /* window background (kit) */
-  --chrome: #F4F5F7;          /* titlebar and toolbar */
-  --lift: #F7F8FA;            /* inset panels within a window */
-  --sunken: #E9EBEF;          /* wells and tracks */
+  --ground: #EFF0F3; /* tier:direction */  /* the page the windows sit on */
+  --win: #FFFFFF; /* tier:kit */  /* window background (kit) */
+  --chrome: #F4F5F7; /* tier:kit */  /* titlebar and toolbar */
+  --lift: #F7F8FA; /* tier:direction */  /* inset panels within a window */
+  --sunken: #E9EBEF; /* tier:direction */  /* wells and tracks */
 
   /* label tiers — light secondary lifted to 60% per the contrast note:
      the kit's 50% tier measures 3.98:1 and cannot carry meaning. */
-  --ink:   rgba(0,0,0,0.85);
-  --ink-2: rgba(0,0,0,0.68);  /* 7.6:1 on white */
-  --ink-3: rgba(0,0,0,0.56);  /* 5.0:1 — the floor for 11px */
-  --ink-4: rgba(0,0,0,0.25);  /* dividers and disabled only */
+  --ink: rgba(0,0,0,0.85); /* tier:kit */
+  --ink-2: rgba(0,0,0,0.68); /* tier:direction */  /* 7.6:1 on white */
+  --ink-3: rgba(0,0,0,0.56); /* tier:direction */  /* 5.0:1 — the floor for 11px */
+  --ink-4: rgba(0,0,0,0.25); /* tier:kit */  /* dividers and disabled only */
 
-  --rule:  rgba(0,0,0,0.11);
-  --rule-strong: rgba(0,0,0,0.20);
-  --fill:  rgba(0,0,0,0.05);
-  --fill-2: rgba(0,0,0,0.08);
+  --rule: rgba(0,0,0,0.11); /* tier:direction */
+  --rule-strong: rgba(0,0,0,0.20); /* tier:direction */
+  --fill: rgba(0,0,0,0.05); /* tier:direction */
+  --fill-2: rgba(0,0,0,0.08); /* tier:direction */
 
   /* the seal */
-  --accent: #8A6224;
-  --accent-ring: #A97C33;
-  --accent-wash: #F2EBDF;
-  --accent-ink: #6F4D1C;   /* accent text on a wash */
-  --ok-wash: #E2EFE9;
-  --warn-wash: #F4EAD6;
-  --on-accent: #FFFFFF;
+  --accent: #8A6224; /* tier:direction */
+  --accent-ring: #A97C33; /* tier:direction */
+  --accent-wash: #F2EBDF; /* tier:direction */
+  --accent-ink: #6F4D1C; /* tier:direction */  /* accent text on a wash */
+  --ok-wash: #E2EFE9; /* tier:direction */
+  --warn-wash: #F4EAD6; /* tier:direction */
+  --on-accent: #FFFFFF; /* tier:direction */
 
-  --danger: #B3261E;
-  --on-danger: #FFFFFF;
-  --danger-wash: #F8E5E3;
-  --ok: #1F6B4A;
-  --warn: #8A5A00;
+  --danger: #B3261E; /* tier:direction */
+  --on-danger: #FFFFFF; /* tier:direction */
+  --danger-wash: #F8E5E3; /* tier:direction */
+  --ok: #1F6B4A; /* tier:direction */
+  --warn: #8A5A00; /* tier:direction */
 
   /* terminal ground, shared by the TUI and CLI sections */
-  --term-bg: #14161B;
-  --term-ink: #E9EAED;
-  --term-dim: #9AA1AF;
-  --term-accent: #D2A059;
-  --term-chrome: #22252C;
-  --term-ok: #74C79B;
-  --term-warn: #E3B76A;
-  --term-bad: #F1897F;
-  --term-hair: rgba(255,255,255,0.08);
+  --term-bg: #14161B; /* tier:direction */
+  --term-ink: #E9EAED; /* tier:direction */
+  --term-dim: #9AA1AF; /* tier:direction */
+  --term-accent: #D2A059; /* tier:direction */
+  --term-chrome: #22252C; /* tier:direction */
+  --term-ok: #74C79B; /* tier:direction */
+  --term-warn: #E3B76A; /* tier:direction */
+  --term-bad: #F1897F; /* tier:direction */
+  --term-hair: rgba(255,255,255,0.08); /* tier:direction */
 
   /* Traffic lights are the platform's, not the direction's. */
-  --tl-red: #FF5F57; --tl-yellow: #FEBC2E; --tl-green: #28C840;
+  --tl-red: #FF5F57; /* tier:direction */  --tl-yellow: #FEBC2E; --tl-green: #28C840;
 
   /* The desktop behind the takeover overlay, and the overlay's own palette.
      Both sit on a dark scene in either appearance, so they do not swap. */
-  --scene-1: #4A5568; --scene-2: #262C38; --scene-3: #1A1F28;
-  --scene-win: rgba(255,255,255,0.90);
-  --veil: rgba(20,14,4,0.52);
-  --veil-danger: rgba(30,8,6,0.55);
-  --on-dark: #F2F3F5;
-  --on-dark-2: #C3C9D3;
-  --seal-bg: #2A2216;
-  --seal-ink: #E4BC81;
-  --seal-key: #C39A5E;
-  --seal-rule: rgba(210,160,89,0.45);
-  --seal-on: #1A1305;
-  --knob: #FFFFFF;
-  --knob-shadow: rgba(0,0,0,0.30);
-  --scene-shadow: rgba(0,0,0,0.40);
-  --scene-edge: rgba(0,0,0,0.35);
-  --seg-shadow: rgba(0,0,0,0.14);
-  --win-shadow-1: rgba(16,20,28,0.16);
-  --win-shadow-2: rgba(16,20,28,0.10);
-  --pop-shadow-1: rgba(16,20,28,0.18);
-  --pop-shadow-2: rgba(16,20,28,0.12);
+  --scene-1: #4A5568; /* tier:direction */  --scene-2: #262C38; --scene-3: #1A1F28;
+  --scene-win: rgba(255,255,255,0.90); /* tier:direction */
+  --veil: rgba(20,14,4,0.52); /* tier:direction */
+  --veil-danger: rgba(30,8,6,0.55); /* tier:direction */
+  --on-dark: #F2F3F5; /* tier:direction */
+  --on-dark-2: #C3C9D3; /* tier:direction */
+  --seal-bg: #2A2216; /* tier:direction */
+  --seal-ink: #E4BC81; /* tier:direction */
+  --seal-key: #C39A5E; /* tier:direction */
+  --seal-rule: rgba(210,160,89,0.45); /* tier:direction */
+  --seal-on: #1A1305; /* tier:direction */
+  --knob: #FFFFFF; /* tier:direction */
+  --knob-shadow: rgba(0,0,0,0.30); /* tier:direction */
+  --scene-shadow: rgba(0,0,0,0.40); /* tier:direction */
+  --scene-edge: rgba(0,0,0,0.35); /* tier:direction */
+  --seg-shadow: rgba(0,0,0,0.14); /* tier:direction */
+  --win-shadow-1: rgba(16,20,28,0.16); /* tier:direction */
+  --win-shadow-2: rgba(16,20,28,0.10); /* tier:direction */
+  --pop-shadow-1: rgba(16,20,28,0.18); /* tier:direction */
+  --pop-shadow-2: rgba(16,20,28,0.12); /* tier:direction */
 
-  --radius-win: 10px;
-  --radius-sel: 8px;         /* kit */
-  --radius-pop: 20px;        /* kit */
-  --radius-ctl: 6px;
+  --radius-win: 10px; /* tier:direction */
+  --radius-sel: 8px; /* tier:kit */  /* kit */
+  --radius-pop: 20px; /* tier:kit */  /* kit */
+  --radius-ctl: 6px; /* tier:direction */
 
-  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
-  --mono: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; /* tier:direction */
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, monospace; /* tier:direction */
 
-  --shadow-win: 0 12px 34px var(--win-shadow-1), 0 2px 6px var(--win-shadow-2);
-  --shadow-pop: 0 8px 24px var(--pop-shadow-1), 0 1px 3px var(--pop-shadow-2);
+  --shadow-win: 0 12px 34px var(--win-shadow-1), 0 2px 6px var(--win-shadow-2); /* tier:direction */
+  --shadow-pop: 0 8px 24px var(--pop-shadow-1), 0 1px 3px var(--pop-shadow-2); /* tier:direction */
 }
 
 :root[data-appearance="dark"] {
   color-scheme: dark;
-  --ground: #17181C;
-  --win: #1E1E1E;             /* kit */
-  --chrome: #2C2C2E;          /* graphite, never pure black */
-  --lift: #262628;
-  --sunken: #202024;
+  --ground: #17181C; /* tier:direction */
+  --win: #1E1E1E; /* tier:kit */  /* kit */
+  --chrome: #2C2C2E; /* tier:kit */  /* graphite, never pure black */
+  --lift: #262628; /* tier:direction */
+  --sunken: #202024; /* tier:direction */
 
-  --ink:   rgba(255,255,255,1.0);
-  --ink-2: rgba(255,255,255,0.74);
-  --ink-3: rgba(255,255,255,0.60);
-  --ink-4: rgba(255,255,255,0.25);
+  --ink: rgba(255,255,255,1.0); /* tier:kit */
+  --ink-2: rgba(255,255,255,0.74); /* tier:direction */
+  --ink-3: rgba(255,255,255,0.60); /* tier:direction */
+  --ink-4: rgba(255,255,255,0.25); /* tier:kit */
 
-  --rule:  rgba(255,255,255,0.13);
-  --rule-strong: rgba(255,255,255,0.24);
-  --fill:  rgba(255,255,255,0.07);
-  --fill-2: rgba(255,255,255,0.11);
+  --rule: rgba(255,255,255,0.13); /* tier:direction */
+  --rule-strong: rgba(255,255,255,0.24); /* tier:direction */
+  --fill: rgba(255,255,255,0.07); /* tier:direction */
+  --fill-2: rgba(255,255,255,0.11); /* tier:direction */
 
-  --accent: #D2A059;
-  --accent-ring: #D2A059;
-  --accent-wash: #2A2216;
-  --accent-ink: #E4BC81;
-  --ok-wash: #17281F;
-  --warn-wash: #2C2416;
-  --on-accent: #1A1305;
+  --accent: #D2A059; /* tier:direction */
+  --accent-ring: #D2A059; /* tier:direction */
+  --accent-wash: #2A2216; /* tier:direction */
+  --accent-ink: #E4BC81; /* tier:direction */
+  --ok-wash: #17281F; /* tier:direction */
+  --warn-wash: #2C2416; /* tier:direction */
+  --on-accent: #1A1305; /* tier:direction */
 
-  --danger: #F1897F;
-  --on-danger: #2A0B08;
-  --danger-wash: #2E1A18;
-  --ok: #74C79B;
-  --warn: #E3B76A;
+  --danger: #F1897F; /* tier:direction */
+  --on-danger: #2A0B08; /* tier:direction */
+  --danger-wash: #2E1A18; /* tier:direction */
+  --ok: #74C79B; /* tier:direction */
+  --warn: #E3B76A; /* tier:direction */
 
-  --win-shadow-1: rgba(0,0,0,0.55);
-  --win-shadow-2: rgba(0,0,0,0.40);
-  --pop-shadow-1: rgba(0,0,0,0.55);
-  --pop-shadow-2: rgba(0,0,0,0.40);
-  --shadow-win: 0 16px 40px var(--win-shadow-1), 0 2px 8px var(--win-shadow-2);
-  --shadow-pop: 0 10px 30px var(--pop-shadow-1), 0 1px 4px var(--pop-shadow-2);
+  --win-shadow-1: rgba(0,0,0,0.55); /* tier:direction */
+  --win-shadow-2: rgba(0,0,0,0.40); /* tier:direction */
+  --pop-shadow-1: rgba(0,0,0,0.55); /* tier:direction */
+  --pop-shadow-2: rgba(0,0,0,0.40); /* tier:direction */
+  --shadow-win: 0 16px 40px var(--win-shadow-1), 0 2px 8px var(--win-shadow-2); /* tier:direction */
+  --shadow-pop: 0 10px 30px var(--pop-shadow-1), 0 1px 4px var(--pop-shadow-2); /* tier:direction */
 }
 
 /* Increased contrast, authored per appearance. One scheme-agnostic override
@@ -186,16 +186,16 @@ danger              #B3261E direction
    both blocks drop translucency as well. */
 @media (prefers-contrast: more) {
   :root:not([data-appearance="dark"]) {
-    --ink-2: rgba(0,0,0,0.78);
-    --ink-3: rgba(0,0,0,0.62);
-    --rule: rgba(0,0,0,0.28);
-    --accent: #6E4D18;
+    --ink-2: rgba(0,0,0,0.78); /* tier:direction */
+    --ink-3: rgba(0,0,0,0.62); /* tier:direction */
+    --rule: rgba(0,0,0,0.28); /* tier:direction */
+    --accent: #6E4D18; /* tier:direction */
   }
   :root[data-appearance="dark"] {
-    --ink-2: rgba(255,255,255,0.86);
-    --ink-3: rgba(255,255,255,0.72);
-    --rule: rgba(255,255,255,0.34);
-    --accent: #EEC385;
+    --ink-2: rgba(255,255,255,0.86); /* tier:direction */
+    --ink-3: rgba(255,255,255,0.72); /* tier:direction */
+    --rule: rgba(255,255,255,0.34); /* tier:direction */
+    --accent: #EEC385; /* tier:direction */
   }
   .glass { backdrop-filter: none !important; }
 }
@@ -1425,7 +1425,7 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
     <p class="caption">The drawn pointer sits in the target&rsquo;s own plane so a step is visible before it lands. The veil and the cursor are excluded from captures — evidence must not change because somebody was watching — which is why neither can be photographed by Proctor&rsquo;s own capture path.</p>
   </div>
 
-  <div class="sub" data-state="guest" data-state-label="Guest route refusal">
+  <div class="sub" data-state="guest" data-state-label="Guest route refusal (corrected)">
     <div class="canvas plain">
       <div class="overlay-scene">
         <div class="overlay-desktop">
@@ -1446,7 +1446,12 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
         </div>
       </div>
     </div>
-    <p class="caption">A refusal, never a silent host run and never a fallback. It names the guest that caused it and the switch that clears it, so it is actionable rather than mysterious.</p>
+    <p class="caption"><b>Corrected during implementation (PRO-0070), and this state is wrong as drawn.</b>
+      The refusal is thrown <i>before</i> any step runs, so a refused batch never takes the machine — and a veil
+      saying &ldquo;Proctor is driving this Mac&rdquo; over a batch that was refused would make the overlay mean two
+      incompatible things. A refusal is a <b>notice</b>, not a takeover: the copy belongs on the menu bar and in the
+      run line, and the veil stays for the one state it describes. Kept here as the record of a design error the
+      build caught, rather than deleted.</p>
   </div>
 </section>
 

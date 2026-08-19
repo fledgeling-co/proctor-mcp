@@ -1,6 +1,6 @@
 # PRO-0070: The takeover overlay, and what it does not claim
 
-**ID:** PRO-0070 · **Status:** Ready for Plan · **Created:** 2026-08-20
+**ID:** PRO-0070 · **Status:** Merged · **Created:** 2026-08-20
 **Brief:** `docs/features-to-triage/64-takeover-overlay-and-the-drawn-pointer.md`
 **Branch:** `ai/pro-0070` off `ai/wave-9` · **Depends on:** PRO-0064, PRO-0065
 **Mock:** `#mac/takeover/armed`, `#mac/takeover/guest`
@@ -39,3 +39,36 @@ cannot tell why.
 `PROCTOR_TAKEOVER_INPUT` — the event tap that swallows a person's input — is gated by
 PRO-0072's consent sheet and the switch catalogue. This item draws the notice; it does not
 acquire the capability.
+
+## Verification
+
+`TakeoverSurfaceTests` is 5 tests; suite 1,574 in 183 suites.
+
+- **A1** — the refusal names the guest *and* the switch that clears it, both asserted. A
+  refusal a person cannot act on is a bare denial. Three non-refusal cases are covered too: no
+  guest, no foreground demand, and a session already on a guest.
+- **A3** — Stop is offered whenever the veil is up, stated as a value. The veil covers the
+  screen, so a person whose Stop is underneath it cannot halt a run holding their keyboard.
+- **The copy claims mechanism and not consequence**, asserted against a list of forbidden
+  phrases rather than left for a reviewer to notice.
+
+**A2 and A4 are pre-existing.** Both overlays already set `sharingType = .none`
+(`TakeoverOverlay.swift:602`, `RunHUDPanel.swift:368`) and neither survives its process. Re-run
+rather than re-implemented, and recorded as such.
+
+## The mock was wrong, and the build caught it
+
+The surface set draws a second overlay state: a veil carrying the guest-route refusal. **That
+state should not exist**, and the product's own logic says so — `refuseHostTakeoverIfRouted`
+throws *before* any step runs, so a refused batch never takes the machine. A veil announcing
+"Proctor is driving this Mac" over a batch that was refused would make the overlay mean two
+incompatible things at once, which is exactly the ambiguity this item's brief warns against.
+
+A refusal is a **notice**, not a takeover. `TakeoverSurface.Refusal` carries the copy for the
+menu bar and the run line; the veil keeps the single state it honestly describes.
+
+Per the wave direction, the mock was changed rather than left to disagree with the build: the
+state is kept and its caption now records the correction, so the design error is visible rather
+than deleted. The set's gates were re-run — ux-lint 0/0, and `mock_check.py`'s 52 contrast
+failures are the same single ground-resolution artifact documented in the surface spec,
+unchanged by this edit.
