@@ -72,7 +72,7 @@
 | PRO-0063 | Captures are sized by what they are for | 2026-08-16 | Merged |
 | PRO-0064 | Design tokens as a generated Swift value | 2026-08-20 | Merged |
 | PRO-0065 | The fidelity harness: Proctor measures Proctor | 2026-08-20 | Merged |
-| PRO-0066 | The status window becomes the mock | 2026-08-20 | Triaged |
+| PRO-0066 | The status window becomes the mock | 2026-08-20 | Merged |
 | PRO-0067 | The walkthrough becomes the mock | 2026-08-20 | Triaged |
 | PRO-0068 | The menu bar, and the complete command surface | 2026-08-20 | Triaged |
 | PRO-0069 | The run HUD, and the seven character states | 2026-08-20 | Triaged |

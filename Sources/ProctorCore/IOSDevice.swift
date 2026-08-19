@@ -71,7 +71,28 @@ public enum IOSDeviceList {
             }
             var devices: [String: [Entry]]
         }
-        let payload = try JSONDecoder().decode(Payload.self, from: data)
+        // A truncated or malformed listing is reported, never thrown raw.
+        //
+        // `simctl` is a subprocess and its output can arrive incomplete — under
+        // machine load, or when a bound kills it mid-write. Measured on
+        // 2026-08-20: a loaded parallel test run produced `Unexpected end of
+        // file` from this decoder, and the raw `DecodingError` travelled all the
+        // way out to the caller, which is neither of the two answers the comment
+        // above promises. A caller cannot act on a decoder's error type; it can
+        // act on being told the tool's output was unreadable and how much of it
+        // arrived.
+        let payload: Payload
+        do {
+            payload = try JSONDecoder().decode(Payload.self, from: data)
+        } catch {
+            throw AgentError(
+                code: .actionFailed,
+                message: "simctl returned \(data.count) bytes that are not a device listing this "
+                       + "build can read.",
+                remedy: "Re-run the call. If it repeats, check `xcrun simctl list -j devices` by "
+                      + "hand: a truncated reply usually means the process was killed mid-write, "
+                      + "and a well-formed one that still fails here means the format has moved.")
+        }
         var out: [IOSDevice] = []
         for (runtimeIdentifier, entries) in payload.devices {
             for entry in entries {

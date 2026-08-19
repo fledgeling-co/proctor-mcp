@@ -347,7 +347,7 @@ identifier from a Core constant.
 |---|---|---|---|---|---|
 | PRO-0064 | Design tokens as a generated Swift value | `59-…` | — | 1 | **MERGED** |
 | PRO-0065 | The fidelity harness: Proctor measures Proctor | `67-…` | PRO-0064 | 2 | **MERGED** |
-| PRO-0066 | The status window becomes the mock | `60-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
+| PRO-0066 | The status window becomes the mock | `60-…` | PRO-0064, PRO-0065 | 3 | **MERGED** (A2 partial) |
 | PRO-0067 | The walkthrough becomes the mock | `61-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
 | PRO-0068 | The menu bar, and the complete command surface | `62-…` | PRO-0067 | 4 | **TRIAGED** |
 | PRO-0069 | The run HUD, and the seven character states | `63-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
@@ -380,6 +380,7 @@ in `docs/goals/goal-wave9-swiftui-conversion.md`.
 None of these blocks its item; each has a defensible default recorded in the spec.
 
 ## Event log (append-only, newest first)
+- 2026-08-20 **PRO-0066 merged.** Status window draws only the sections its state allows, so a dead agent no longer renders Tools/Switches/Agent over unread data; Lanes rendered for the first time. Found and fixed a production defect on the way: `IOSDeviceList.parse` threw a raw DecodingError on truncated simctl output, which was reddening and once wedging the suite. 1,547 tests / 179 suites, green ×4.
 - 2026-08-20 **PRO-0065 merged.** Reflector embedded in ProctorUI (debug-only, release guard verified both ways); SurfaceFidelity with 28 anchors and a channel table that makes an unsettleable property unreachable from `.matches`. **Corrected the wave's premise**: the Reflector cannot read resolved SwiftUI modifier values — its own README says so — so the harness settles identifiers, geometry and pixels fully and reports layer style inconclusive where SwiftUI did not materialise it. 1,535 tests / 177 suites.
 - 2026-08-20 **PRO-0064 merged.** Token generator + build plugin; 63 tokens (6 kit, 57 direction) generated from the mock. Caught its own first draft reading the increased-contrast overrides as the palettes. 1,526 tests / 176 suites.
 - 2026-08-20 **Wave 9 opened on `ai/wave-9`.** 11 ids allocated serially (PRO-0064..0074) from the surface-set briefs 59-69; direction at brief 58. Integration branch is NOT main — a peer session holds 21 uncommitted files there. Armed with better-goal `wave9-swiftui-conversion`, six gates, 60 turns.

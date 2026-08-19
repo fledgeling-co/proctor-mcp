@@ -5,22 +5,56 @@ import ProctorCore
 struct MainWindow: View {
     let model: AgentModel
 
+    /// PRO-0066. The window draws the sections its state says it may, and no
+    /// others.
+    ///
+    /// It used to draw all eight unconditionally, so an unreachable agent still
+    /// rendered Tools, Switches, Activity, Connect and Agent over data nothing
+    /// had read. A stale "Ready" pill above a dead agent is a false statement
+    /// about a security-relevant grant, and it is the one failure this surface
+    /// must not have. `StatusSurface.sections(for:)` decides, and it is tested.
+    private var state: StatusSurface.State {
+        let lanesAllUsable = (model.report?.lanes ?? []).allSatisfy { $0.state == "ready" }
+        switch model.reachability {
+        case .unknown:
+            return StatusSurface.state(reachable: false, answered: false, lanesAllUsable: true)
+        case .unreachable:
+            return StatusSurface.state(reachable: false, answered: true, lanesAllUsable: true)
+        case .reachable:
+            return StatusSurface.state(reachable: true, answered: true,
+                                       lanesAllUsable: lanesAllUsable)
+        }
+    }
+
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 26) {
+            VStack(alignment: .leading, spacing: StatusSurface.Geometry.sectionSpacing) {
                 Header()
-                ReadinessSection(model: model)
-                ToolsSection(model: model)
-                SwitchesSection(model: model)
-                ActivitySection(model: model)
-                ConnectSection(model: model)
-                AgentSection(model: model)
-                FooterSection(model: model)
+                ForEach(StatusSurface.sections(for: state), id: \.self) { section in
+                    sectionView(section)
+                        .accessibilityIdentifier(StatusSurface.ID.section(section))
+                }
             }
             .padding(28)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .background(Color(nsColor: .textBackgroundColor))
+        .accessibilityIdentifier(StatusSurface.ID.state(state))
+    }
+
+    @ViewBuilder
+    private func sectionView(_ section: StatusSurface.Section) -> some View {
+        switch section {
+        case .agentDown: AgentDownSection(model: model)
+        case .permissions: ReadinessSection(model: model)
+        case .tools: ToolsSection(model: model)
+        case .lanes: LanesSection(model: model)
+        case .switches: SwitchesSection(model: model)
+        case .activity: ActivitySection(model: model)
+        case .connect: ConnectSection(model: model)
+        case .agent: AgentSection(model: model)
+        case .footer: FooterSection(model: model)
+        }
     }
 }
 
@@ -1026,5 +1060,119 @@ enum Actions {
         do { try p.run() } catch { return -1 }
         p.waitUntilExit()
         return p.terminationStatus
+    }
+}
+
+
+// MARK: - Agent down
+
+/// PRO-0066. What replaces the window when the agent is not answering.
+///
+/// It says what is wrong, what that stops, and the two things to do about it.
+/// Every string comes from `StatusSurface.Copy`, so the wording is testable and
+/// a translator can find it.
+private struct AgentDownSection: View {
+    let model: AgentModel
+
+    var body: some View {
+        Card {
+            HStack(alignment: .top, spacing: 11) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(.red)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(StatusSurface.Copy.downTitle)
+                        .font(.system(size: 13, weight: .medium))
+                    if case .unreachable(let why) = model.reachability {
+                        Text(why)
+                            .font(.system(size: 11))
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Text(StatusSurface.Copy.downConsequence)
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    HStack(spacing: 8) {
+                        Button(StatusSurface.Copy.downStart) {
+                            Actions.ensureAgent(); model.refresh()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .accessibilityIdentifier(StatusSurface.ID.startAgent)
+
+                        Button(StatusSurface.Copy.downRecheck) { model.refresh() }
+                            .accessibilityIdentifier(StatusSurface.ID.recheck)
+                    }
+                    .padding(.top, 4)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Lanes
+
+/// PRO-0066. What this machine can actually do, lane by lane.
+///
+/// On the wire as `DoctorReport.lanes` since PRO-0050 and unrendered until now —
+/// PRO-0036 deliberately left it. `unconfirmed` and `unavailable` draw
+/// differently because they are different answers: one is a fact about what
+/// Proctor established, the other is something to go and fix, and sending
+/// somebody to fix the first is the defect PRO-0041 closed.
+private struct LanesSection: View {
+    let model: AgentModel
+
+    var body: some View {
+        Card {
+            SectionTitle(StatusSurface.Copy.lanesHeading)
+            Text(StatusSurface.Copy.lanesNote)
+                .font(.system(size: 12)).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            ForEach(model.report?.lanes ?? [], id: \.lane) { lane in
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(lane.lane).font(.system(size: 13, weight: .medium))
+                        if !lane.requires.isEmpty {
+                            Text(lane.requires.joined(separator: ", "))
+                                .font(.system(size: 11)).foregroundStyle(.tertiary)
+                        }
+                        ForEach(lane.blockers, id: \.self) { blocker in
+                            Text(blocker)
+                                .font(.system(size: 11)).foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    Spacer()
+                    LanePill(state: lane.state)
+                }
+                .padding(.vertical, 7)
+                .accessibilityIdentifier(StatusSurface.ID.laneRow(lane.lane))
+                Divider()
+            }
+        }
+    }
+}
+
+/// Three states, three treatments. Colour is never the only carrier — each
+/// carries its own word — because 8% of men are colourblind and a greyscale
+/// display is not an edge case on a Mac.
+private struct LanePill: View {
+    let state: String
+
+    var body: some View {
+        let resolved = StatusSurface.LaneState(rawValue: state)
+        Text(state)
+            .font(.system(size: 11, weight: .medium))
+            .foregroundStyle(tint(resolved))
+            .padding(.horizontal, 9).padding(.vertical, 4)
+            .background(tint(resolved).opacity(0.14), in: Capsule())
+    }
+
+    private func tint(_ s: StatusSurface.LaneState?) -> Color {
+        switch s {
+        case .ready: return .green
+        case .unconfirmed: return .orange
+        case .unavailable: return .red
+        case nil: return .secondary
+        }
     }
 }
