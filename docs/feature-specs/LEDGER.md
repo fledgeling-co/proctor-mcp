@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 63
+**Last allocated:** 74
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -70,3 +70,14 @@
 | PRO-0061 | Auto-routing, and the disclosure that makes it honest | 2026-08-16 | Merged |
 | PRO-0062 | The overlay says which machine | 2026-08-16 | Merged |
 | PRO-0063 | Captures are sized by what they are for | 2026-08-16 | Merged |
+| PRO-0064 | Design tokens as a generated Swift value | 2026-08-20 | Triaged |
+| PRO-0065 | The fidelity harness: Proctor measures Proctor | 2026-08-20 | Triaged |
+| PRO-0066 | The status window becomes the mock | 2026-08-20 | Triaged |
+| PRO-0067 | The walkthrough becomes the mock | 2026-08-20 | Triaged |
+| PRO-0068 | The menu bar, and the complete command surface | 2026-08-20 | Triaged |
+| PRO-0069 | The run HUD, and the seven character states | 2026-08-20 | Triaged |
+| PRO-0070 | The takeover overlay, and what it does not claim | 2026-08-20 | Triaged |
+| PRO-0071 | The history window, and the skipped verdict | 2026-08-20 | Triaged |
+| PRO-0072 | The consent sheets, and the asymmetry | 2026-08-20 | Triaged |
+| PRO-0073 | proctor, the operator CLI | 2026-08-20 | Triaged |
+| PRO-0074 | proctor tui, the supervision surface | 2026-08-20 | Triaged |

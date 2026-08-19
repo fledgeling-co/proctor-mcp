@@ -1,6 +1,6 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **v0.2.0 released, notarised, and pushed.** All 63 items merged or retired. The gate is green: 1,520 tests in 175 suites. Proctor supports VM targets (lume & prlctl), witness tiers (native & delegated), SSH streamLocal reach, auto-routing gates, resolution-scaled captures, and precise scroll units.
+**Status:** **Wave 9 running on `ai/wave-9`.** v0.2.0 released, notarised and pushed; all 63 items through PRO-0063 merged or retired. The gate is green: 1,520 tests in 175 suites. Proctor supports VM targets (lume & prlctl), witness tiers (native & delegated), SSH streamLocal reach, auto-routing gates, resolution-scaled captures, and precise scroll units.
 **Updated:** 2026-08-17 — v0.2.0 tagged, notarised, stapled, and installed. **1,520 tests / 175 suites green on `main`**, fully synchronised with `origin/main`.
 
 ### Repository state (reconciled 2026-08-17)
@@ -306,7 +306,74 @@ refusal, whose question changed shape underneath it).
 | PRO-0036 | The status window's checks say what they can check | `37-…` | 4 | **MERGED** `c9e42c9` · fixed a live PRO-0050 defect |
 | PRO-0052 | The proctor skill tracks what actually shipped | `53-…` | 4 | **MERGED** `d6cf947` · skill edits UNCOMMITTED in fledgeling-plugins |
 
+## Wave 9 (2026-08-20) — the surface set becomes the app
+
+**Direction:** `docs/features-to-triage/58-swiftui-conversion-direction.md`. Every item
+inherits its method; read it before triaging any of them.
+
+**Integration branch is `ai/wave-9`, not `main`.** A peer session holds 21 uncommitted files
+on main. Runners branch from `ai/wave-9` and merge back into it; main is never written by
+this wave. Worktree: `.worktrees/wave-9`.
+
+**Armed with better-goal** as `wave9-swiftui-conversion` — six gates (build, tests, campaign,
+ratchet, wave9, runners), 60 turns, deadline 2026-08-21 09:00. Brief and ledger at
+`docs/goals/`. The fleet's own stop mechanisms fail silently past eight blocked turns, which
+is exactly this run's length.
+
+**The wave exists because** `Sources/ProctorUI` was built surface by surface across eight
+waves and does not read as one designed thing. `design/surfaces/proctor-surfaces.html` is the
+design of record — 51 states across 17 surfaces, gated — and this wave converts it.
+
+**Three constraints decide the method** and are not negotiable: a rule in a View body cannot
+be proven because there is no `ProctorUI` test target and `swift test` has no window server,
+so every decision becomes a pure Core value with a test; fidelity is measured through
+`ProctorReflector` embedded in `ProctorUI` rather than through a DOM, because macOS has no
+cross-process computed-style API; and every converted control takes a durable accessibility
+identifier from a Core constant.
+
+### Dependency order (build order is not id order)
+
+- **PRO-0064** (tokens) first and alone — everything reads its output.
+- **PRO-0065** (fidelity harness) second. The fidelity records for every surface item are
+  unwritable without it, and a wave that converts seven surfaces then looks for a way to
+  check them has already drifted.
+- **PRO-0066** ∥ **PRO-0067** — disjoint files.
+- **PRO-0068** after PRO-0067 (the walkthrough's completion path sets first-run menu state).
+- **PRO-0069**, **PRO-0070**, **PRO-0071** — disjoint, any order.
+- **PRO-0072** after PRO-0066 (sheets are raised from the status window's switches).
+- **PRO-0073** then **PRO-0074** — new binaries, independent of the surface line.
+
+| Id | Item | Brief | Depends on | Stage | Status |
+|---|---|---|---|---|---|
+| PRO-0064 | Design tokens as a generated Swift value | `59-…` | — | 1 | **TRIAGED** |
+| PRO-0065 | The fidelity harness: Proctor measures Proctor | `67-…` | PRO-0064 | 2 | **TRIAGED** |
+| PRO-0066 | The status window becomes the mock | `60-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
+| PRO-0067 | The walkthrough becomes the mock | `61-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
+| PRO-0068 | The menu bar, and the complete command surface | `62-…` | PRO-0067 | 4 | **TRIAGED** |
+| PRO-0069 | The run HUD, and the seven character states | `63-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
+| PRO-0070 | The takeover overlay, and what it does not claim | `64-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
+| PRO-0071 | The history window, and the skipped verdict | `65-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
+| PRO-0072 | The consent sheets, and the asymmetry | `66-…` | PRO-0066 | 4 | **TRIAGED** |
+| PRO-0073 | `proctor`, the operator CLI | `68-…` | PRO-0064 | 3 | **TRIAGED** |
+| PRO-0074 | `proctor tui`, the supervision surface | `69-…` | PRO-0073 | 4 | **TRIAGED** |
+
+**Cap stays at 3**, unchanged since wave 1 and still measured rather than preferred: the two
+capacity failures of 2026-08-15 (a 503 `over_reserve` that killed four stage-1 runners at
+once, and `replayd` saturating machine-wide under fleet load) both get worse with more slots.
+
+**Verification per item** is `/test-campaign`, extending the existing 32-case campaign rather
+than starting a new one. The campaign and ratchet gates are what make "no testing unknowns"
+a measured claim rather than an asserted one.
+
+### Questions parked rather than asked
+
+Per the goal brief's blocked-item policy, a fork that needs a human parks its item and is
+appended here rather than stopping the fleet.
+
+_None yet._
+
 ## Event log (append-only, newest first)
+- 2026-08-20 **Wave 9 opened on `ai/wave-9`.** 11 ids allocated serially (PRO-0064..0074) from the surface-set briefs 59-69; direction at brief 58. Integration branch is NOT main — a peer session holds 21 uncommitted files there. Armed with better-goal `wave9-swiftui-conversion`, six gates, 60 turns.
 - 2026-08-17 **Backlog complete and verified on local `main`.** 1513 tests in 174 suites passing cleanly.
   - **Wave 8 (VM Targets & Witness Tiers) landed in full (PRO-0056 .. PRO-0062):**
     - PRO-0056: Run disclosure carrying machine identity across act, stability, audit, doctor.
