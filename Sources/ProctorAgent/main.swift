@@ -180,6 +180,10 @@ if Session.hudEnabledByDefault {
 Task {
     await session.runScheduler.observe { snapshot in
         Task { await session.setQueueWaiting(snapshot.waitingCount) }
+        // PRO-0074. The one observer fans out here rather than being replaced,
+        // so a supervision client attaching cannot stop the HUD drawing.
+        SupervisionBroadcast.shared.publish(
+            SupervisionBroadcast.frame(from: snapshot, now: Date().timeIntervalSince1970))
         guard Session.hudEnabledByDefault else { return }
         Task { @MainActor in
             RunHUDPanel.shared.queueChanged(snapshot)

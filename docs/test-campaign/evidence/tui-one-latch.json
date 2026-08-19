@@ -1,0 +1,21 @@
+{
+  "case": "CASE-0035",
+  "claim": "Pause, Resume and Stop from a supervision client reach the one latch the run loop reads.",
+  "latch": "RunControl.shared \u2014 the same object RunHUDPanel.togglePause() and RunHUDPanel.stop() write.",
+  "wiring": "SupervisionControl.apply(_:to:) defaults to RunControl.shared; Server.serve intercepts proctor.control before dispatch, so it never reaches the tool catalogue and cannot be called as a tool.",
+  "actions": [
+    "pause",
+    "resume",
+    "stop"
+  ],
+  "refusal": "An action outside that set is AgentError.invalidArguments naming the three, never ok. A Stop that silently did nothing is the worst failure this surface has.",
+  "tests": [
+    "Stop from a supervision client sets the latch the run loop reads",
+    "Pause and Resume from a supervision client move the same hold",
+    "A4 \u00b7 the control a supervision client reaches is the one the panel writes",
+    "an action the surface does not have is a usage error, never a silent no-op",
+    "a control with no action at all is refused the same way",
+    "the surface may pause, resume and stop, and nothing else"
+  ],
+  "suite": "PASS: \udbc4\udc5b  Test run with 1647 tests in 193 suites passed after 6.739 seconds."
+}

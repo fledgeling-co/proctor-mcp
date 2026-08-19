@@ -89,6 +89,56 @@ public final class SocketClient {
         fd = s
     }
 
+    /// PRO-0074. Open a watch and read pushed frames until the agent closes or
+    /// `stop` returns true.
+    ///
+    /// The connection is held rather than reopened per frame: `send` opens a
+    /// socket, asks, reads and closes, which is right for a tool call and wrong
+    /// for supervision. A surface that reopened per frame would be polling with
+    /// extra steps.
+    public func watch(_ onFrame: (SupervisionFrame) throws -> Bool) throws {
+        if !isConnected { try connect() }
+        let request = AgentRequest(id: UUID().uuidString,
+                                   tool: SupervisionFrame.watchTool,
+                                   arguments: .object([:]))
+        try writeAll(try FrameCodec.encode(request))
+        var chunk = [UInt8](repeating: 0, count: 65536)
+        while true {
+            while let body = try reader.next() {
+                let response = try JSONDecoder().decode(AgentResponse.self, from: body)
+                if let error = response.error { throw error }
+                guard let result = response.result,
+                      let payload = try? JSONEncoder().encode(result),
+                      let frame = try? JSONDecoder().decode(SupervisionFrame.self, from: payload)
+                else { continue }
+                if try onFrame(frame) { return }
+            }
+            let n = read(fd, &chunk, chunk.count)
+            if n <= 0 {
+                throw AgentError(
+                    code: .agentUnavailable,
+                    message: "the agent closed the supervision stream",
+                    remedy: "Check the agent with `proctor doctor`.")
+            }
+            reader.feed(Data(chunk[0..<n]))
+        }
+    }
+
+    private func writeAll(_ frame: Data) throws {
+        try frame.withUnsafeBytes { raw in
+            var sent = 0
+            while sent < raw.count {
+                let n = write(fd, raw.baseAddress!.advanced(by: sent), raw.count - sent)
+                if n <= 0 {
+                    throw AgentError(code: .agentUnavailable,
+                                     message: "the connection to the agent closed while sending",
+                                     remedy: "Check the agent with `proctor doctor`.")
+                }
+                sent += n
+            }
+        }
+    }
+
     public func send(_ request: AgentRequest) throws -> AgentResponse {
         if !isConnected { try connect() }
         let frame = try FrameCodec.encode(request)

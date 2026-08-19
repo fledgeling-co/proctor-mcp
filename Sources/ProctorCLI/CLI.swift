@@ -72,6 +72,10 @@ enum CLI {
     }
 
     private static func dispatch(_ invocation: Invocation) -> CLISurface.Exit {
+        if invocation.verb == "tui" {
+            return TUIApp.run()
+        }
+
         if invocation.verb == "completion" {
             let shell = invocation.arguments["shell"]?.stringValue ?? "zsh"
             guard let script = CLISurface.completionScript(shell: shell) else {

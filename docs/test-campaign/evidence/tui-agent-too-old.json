@@ -1,0 +1,17 @@
+{
+  "case": "CASE-0036",
+  "claim": "The surface names which absence it is, and never draws a stale frame as current.",
+  "found": "Capturing the running binary against the installed agent, which predates this feature.",
+  "observed": "Row 4 of the capture reads: unknown tool \"proctor.watch\" \u2014 the agent answered.",
+  "wasWrong": "The surface said 'The background agent is not answering' and offered '[a] start the agent', about a process that was already running.",
+  "nowSays": {
+    "headline": "The agent is answering but cannot be watched.",
+    "detail": "It is an older build than this supervision surface.",
+    "remedy": "[a] upgrade the agent"
+  },
+  "staleness": "SupervisionFrame.staleAfter is 12s. Past it the pane reports itself stale and drops the lanes rather than drawing a queue nobody has confirmed \u2014 a stale queue drawn as live is the screen somebody decides against.",
+  "evidence": [
+    "evidence/tui-capture-100x30.json (row 4)",
+    "evidence/tui-capture-80x24.json (row 4)"
+  ]
+}

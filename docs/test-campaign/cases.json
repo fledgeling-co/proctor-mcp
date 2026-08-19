@@ -493,5 +493,63 @@
     "defects": [
       "DEF-005"
     ]
+  },
+  {
+    "id": "CASE-0033",
+    "req": "REQ-030",
+    "surface": "SURF-017",
+    "flow": "FLOW-009",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/tui-capture-100x30.json",
+      "evidence/tui-capture-80x24.json"
+    ],
+    "armed": true,
+    "armedBy": "Watched to fail on the build before the fix: the first render of the queue pane put '2 lanes' on the shelf where the design compiled '3 lanes', and the error pane placed its remedy keybar one row above the design's. Both were caught by the row-and-column comparison rather than by looking.",
+    "note": "The running binary was captured through a pty at both sizes by tui-craft's tui_capture.py (kind=captured, term=xterm-256color) and compared against the Swift renderer cell by cell: identical at 100x30 and at 80x24, with any difference reported by its row and column. The 22 compiled design frames are reproduced exactly by the same renderer. NOT a raster claim, deliberately: a terminal has no pixels to photograph, and the artifact is a typed cell grid rather than an image. For this class of defect the grid is the stronger instrument \u2014 a one-column offset from a double-width glyph is invisible in a screenshot and exact against a ruler, which is why both sides measure with the same width function. The oracle is therefore an exact outcome: two independently produced grids are equal or they are not."
+  },
+  {
+    "id": "CASE-0034",
+    "req": "REQ-030",
+    "surface": "SURF-017",
+    "flow": "FLOW-009",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/tui-gates-100x30.txt",
+      "evidence/tui-gates-80x24.txt"
+    ],
+    "armed": true,
+    "armedBy": "Watched to fail on the build before the fix: tui_gates.py --strict reported 'no bold and no dim anywhere in the frame - every glyph carries the same weight, so the screen has no hierarchy that survives a monochrome terminal', because weight was applied only on the NO_COLOR path.",
+    "note": "tui_gates.py --strict on both captures: 0 high findings, exit 0. Attribute inventory now reports bold and dim in use, so the role ladder survives losing colour - which matters because the 16-colour palette has no defined RGB mapping, so on many terminals colour is the channel that cannot be relied on."
+  },
+  {
+    "id": "CASE-0035",
+    "req": "REQ-029",
+    "surface": "SURF-017",
+    "flow": "FLOW-009",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/tui-one-latch.json"
+    ],
+    "armed": true,
+    "armedBy": "Watched to fail on the build before the fix: an action string the surface does not have returned ok and did nothing, so a misspelled Stop was indistinguishable from a Stop that worked.",
+    "note": "Pause, Resume and Stop from a supervision client reach RunControl.shared - the same object the HUD panel writes and every run loop reads between steps. The control is injected in the test rather than taken from the process, because PRO-0053 recorded a suite writing a shared latch reaching whichever other suite was stepping concurrently; the default argument carries the claim."
+  },
+  {
+    "id": "CASE-0036",
+    "req": "REQ-029",
+    "surface": "SURF-017",
+    "flow": "FLOW-009",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/tui-agent-too-old.json"
+    ],
+    "armed": true,
+    "armedBy": "Found by capturing the running program against the installed agent, which predates this feature: the surface said 'The background agent is not answering' about an agent that had just answered, and offered to start a process that was already running.",
+    "note": "An agent that answers and does not know proctor.watch is now its own state with its own remedy - upgrade rather than start. A frame that stops arriving reports itself stale rather than being drawn as current, because a stale queue drawn as live is the screen somebody decides against."
   }
 ]

@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Proctor now has a command line, and it isn't a second way in.** `proctor` gives you 21 verbs, one per tool, so you can drive and check this Mac from a shell without a model in the loop. The verbs come from the tool catalogue rather than a list somebody maintains, so a new tool can't ship without one. Shell completion is generated the same way, for zsh and bash.
+
+  A CLI call takes the same socket as the MCP shim, passes the same policy gate, joins the same queue lane, lands in the same audit trail and shows on the same run HUD. The only thing that differs is who called, and the trail now says which: every row records whether it came from the CLI or from a model. That's read from the process on the other end of the socket, not from the request, because a caller that could name itself could name itself as the other one in the very record you'd argue from.
+
+  Six exit codes, and two of them are the point. 1 means the call worked and your check failed. 3 means the agent isn't answering and nothing was measured. CI reads an exit code rather than prose, and collapsing those two turns "the app is broken" and "the agent isn't running" into the same signal.
+
+  Note: reads never queue. `proctor snapshot` won't wait behind a model's run, because a read-only tool never reaches the step loop.
+
+- **`proctor tui` gives you a Stop button over SSH.** Supervision used to be a floating panel and a window, and both need a graphical session on the machine being driven. Working over SSH you saw no run line, no queue, no history, and had no way to halt anything. The kill switch existed and you couldn't reach it.
+
+  Five panes now: **run**, **queue**, **readiness**, **history** and **switches**, each one keystroke away. Frames are pushed from the agent rather than polled, because a supervision screen that polls shows you stale state exactly when a run is moving fastest, which is the moment you're deciding whether to press Stop. Press `s` and it writes the same latch the on-screen panel writes; there's one, not two.
+
+  It works at 80x24, which is the size that still exists everywhere. It holds no permissions and needs no window server.
+
+  Note: it watches and it halts, and that's all. It issues no tool calls, authors no flows and edits no policy. The surface that reaches furthest is deliberately the one that can do least.
+
+- **A fidelity harness that says what settled a comparison.** `SurfaceFidelity` names the channel behind every check: the accessibility tree, the layer, the pixels, or nothing at all. When nothing could measure a property it returns inconclusive with the reason, rather than a pass.
+
+  That last part matters more than it sounds. The Reflector walks AppKit views, so a SwiftUI subtree shows up as its hosting view and whatever backing views SwiftUI happened to create. There's no supported way to read a resolved SwiftUI modifier value from outside the framework. Identifiers, roles, geometry and pixels are settled properly; a style that SwiftUI never puts in a layer comes back as inconclusive and says so.
+
+### Changed
+
+- **The app's colours are generated from the design, so they can't drift from it.** A build plugin reads the tokens out of the mock's own stylesheet and emits them as Swift. A colour in the app can no longer disagree with the colour in the design, because there's only one place either of them comes from.
+
+- **Seven surfaces rebuilt on tested values.** The status window, the setup walkthrough, the menu bar, the run HUD, the takeover notice, the history window and the consent sheets are each drawn from a pure surface value with its own tests, rather than from literals spread through a view.
+
+  The menu bar went from 1 command to 21, and a test asserts no command is missing from it. The history window counts a skipped check as skipped: never as a pass, always with a reason. A check that couldn't run isn't a check that passed, and a product built to catch that failure shouldn't commit it in its own UI.
+
+The gate after this wave is 1,647 tests in 193 suites, from 1,516 in 175 when it started.
+
 ## [0.2.0] - 2026-08-17
 
 ### Added

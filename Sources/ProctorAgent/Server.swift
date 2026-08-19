@@ -155,10 +155,79 @@ final class Server: @unchecked Sendable {
                     return
                 }
                 guard let body else { break }
+                // PRO-0074. A watch is the one request that does not answer and
+                // stop. The connection is held and frames are pushed until the
+                // client goes away, because a supervision surface that polls
+                // shows stale state exactly when a run is moving fastest — the
+                // moment somebody is deciding whether to press Stop.
+                if let request = try? JSONDecoder().decode(AgentRequest.self, from: body),
+                   request.tool == SupervisionFrame.watchTool {
+                    watch(fd, id: request.id)
+                    return
+                }
+                // PRO-0074. Pause, Resume and Stop from a supervision client
+                // reach the same `RunControl.shared` the HUD panel writes and
+                // the run loop reads. One latch, not two: a Stop that halted
+                // only the runs a remote client knew about would be a kill
+                // switch with a blind spot, which is worse than none.
+                if let request = try? JSONDecoder().decode(AgentRequest.self, from: body),
+                   request.tool == SupervisionControl.tool {
+                    let response = SupervisionControl.perform(request)
+                    guard write(frame: response, to: fd) else { return }
+                    continue
+                }
                 let response = respond(to: body, as: identity)
                 guard write(frame: response, to: fd) else { return }
             }
         }
+    }
+
+    /// Hold this connection open and push supervision frames down it.
+    ///
+    /// Runs on the connection's own dedicated thread, so blocking here costs
+    /// nothing but this client. A watcher that has gone away is noticed on its
+    /// next failed write rather than by being asked, because a client over SSH
+    /// disappears without saying so.
+    private func watch(_ fd: Int32, id: String) {
+        let queue = DispatchQueue(label: "proctor.watch.\(fd)")
+        let closed = WatchLatch()
+        let gate = DispatchSemaphore(value: 0)
+        let registration = SupervisionBroadcast.shared.add { [weak self] frame in
+            queue.async {
+                guard let self, !closed.isClosed else { return }
+                guard let payload = try? JSONEncoder().encode(frame),
+                      let value = try? JSONDecoder().decode(JSONValue.self, from: payload) else {
+                    return
+                }
+                if !self.write(frame: AgentResponse(id: id, ok: true, result: value), to: fd) {
+                    closed.close()
+                    gate.signal()
+                }
+            }
+        }
+        defer { SupervisionBroadcast.shared.remove(registration.id) }
+        if let current = registration.current,
+           let payload = try? JSONEncoder().encode(current),
+           let value = try? JSONDecoder().decode(JSONValue.self, from: payload) {
+            guard write(frame: AgentResponse(id: id, ok: true, result: value), to: fd) else {
+                return
+            }
+        }
+        // The client never sends again on a watch connection, so a read of 0 is
+        // it closing. Whichever happens first — a failed write or a closed
+        // read — ends the watch.
+        let reader = DispatchQueue(label: "proctor.watch.read.\(fd)")
+        reader.async {
+            var byte = [UInt8](repeating: 0, count: 1)
+            while true {
+                let n = read(fd, &byte, 1)
+                if n < 0 && Darwin.errno == EINTR { continue }
+                if n <= 0 { break }
+            }
+            closed.close()
+            gate.signal()
+        }
+        gate.wait()
     }
 
     private func respond(to body: Data, as identity: RunSessionIdentity) -> AgentResponse {
@@ -244,6 +313,16 @@ final class Server: @unchecked Sendable {
 
 /// A one-shot handoff from the dispatch task back to the blocked connection
 /// thread.
+/// A one-way flag saying this watch is over. One-way on purpose: a watch that
+/// could reopen would write to a descriptor the connection loop has closed.
+private final class WatchLatch: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = false
+
+    var isClosed: Bool { lock.lock(); defer { lock.unlock() }; return value }
+    func close() { lock.lock(); value = true; lock.unlock() }
+}
+
 private final class ResponseBox: @unchecked Sendable {
     private let lock = NSLock()
     private var value: AgentResponse?

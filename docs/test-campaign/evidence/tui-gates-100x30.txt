@@ -1,0 +1,12 @@
+frame  100x30  kind=captured  parser=builtin  term=xterm-256color
+
+[info  ] colour-inventory            -  4 distinct foreground colours in use
+                                         #f1897f×339, #9aa1af×177, #d2a059×36, #ffffff×3
+[info  ] colour-inventory            -  attribute use: bold×3, dim×177
+[info  ] ink-density                 -  18% of cells carry a glyph
+                                         density is a decision, not a score — both the sparsest and densest apps in the reference corpus are well designed
+
+3 finding(s), 0 high
+
+exit 0 (--strict). Captured from .build/arm64-apple-macosx/debug/proctor-cli tui
+through a pty, settle 1.5s, TERM=xterm-256color.

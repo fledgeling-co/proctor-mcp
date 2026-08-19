@@ -355,7 +355,7 @@ identifier from a Core constant.
 | PRO-0071 | The history window, and the skipped verdict | `65-…` | PRO-0064, PRO-0065 | 3 | **MERGED** |
 | PRO-0072 | The consent sheets, and the asymmetry | `66-…` | PRO-0066 | 4 | **MERGED** |
 | PRO-0073 | `proctor`, the operator CLI | `68-…` | PRO-0064 | 3 | **MERGED** |
-| PRO-0074 | `proctor tui`, the supervision surface | `69-…` | PRO-0073 | 4 | **TRIAGED** |
+| PRO-0074 | `proctor tui`, the supervision surface | `69-…` | PRO-0073 | 4 | **MERGED** |
 
 **Cap stays at 3**, unchanged since wave 1 and still measured rather than preferred: the two
 capacity failures of 2026-08-15 (a 503 `over_reserve` that killed four stage-1 runners at
@@ -380,6 +380,7 @@ in `docs/goals/goal-wave9-swiftui-conversion.md`.
 None of these blocks its item; each has a defensible default recorded in the spec.
 
 ## Event log (append-only, newest first)
+- 2026-08-20 **PRO-0074 merged, and wave 9 closes.** Supervision reaches an operator over SSH for the first time, on a Mac with no window server: five panes, pushed frames, and a Stop that writes the same latch the HUD panel does. The renderer reproduces all 22 compiled design frames cell for cell at 100×30 and at the 80×24 floor, and a capture of the running binary matches it at both — both sides measure cells with the same width function, so a difference is a difference in the build. Two defects found by building: the surface called an answering agent absent, and its role ladder did not survive losing colour. 1,647 tests / 193 suites; campaign 36/36, ratchet 32 → 36.
 - 2026-08-20 **PRO-0073 merged.** Proctor is reachable from a shell for the first time: 21 verbs derived from `ToolCatalogue` rather than listed, six exit codes that never confuse a failed check with an unreachable agent, and completion generated from the catalogue. The trail now names which front end called, read from the peer process rather than from the request. Found while building: a product named `proctor` is the same file as `Proctor` on a case-insensitive volume, so `swift build` succeeded and shipped the SwiftUI app under the CLI's name. 1,618 tests / 189 suites.
 - 2026-08-20 **PRO-0072 merged.** The disclosure SwitchCatalogue has carried since PRO-0029 finally has a surface. Turning a capability on asks and turning it off never does, asserted over the catalogue rather than two names; the shell-command detector is asserted non-vacuous. 1,591 tests / 185 suites.
 - 2026-08-20 **PRO-0071 merged.** A skipped assertion can never be counted as a pass, the tally keeps three counts rather than two, and a skipped check with no reason is refused rather than drawn. A3 is asserted over the encoded projection, so widening RunHistory fails there rather than leaking. 1,582 tests / 184 suites.

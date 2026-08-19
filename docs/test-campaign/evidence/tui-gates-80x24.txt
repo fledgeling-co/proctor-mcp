@@ -1,0 +1,12 @@
+frame  80x24  kind=captured  parser=builtin  term=xterm-256color
+
+[info  ] colour-inventory            -  4 distinct foreground colours in use
+                                         #f1897f×287, #9aa1af×177, #d2a059×36, #ffffff×3
+[info  ] colour-inventory            -  attribute use: bold×3, dim×177
+[info  ] ink-density                 -  26% of cells carry a glyph
+                                         density is a decision, not a score — both the sparsest and densest apps in the reference corpus are well designed
+
+3 finding(s), 0 high
+
+exit 0 (--strict). Same binary at the 80x24 floor, which is the size a wide
+glyph or an off-by-one column would have torn a border at.

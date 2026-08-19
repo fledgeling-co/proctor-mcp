@@ -331,6 +331,18 @@
         "SURF-005"
       ],
       "note": "Three surfaces cover other windows: the run panel, the takeover tint and the drawn pointer. The pointer was measured at sharingState 1 while the other two were 0."
+    },
+    {
+      "id": "REQ-029",
+      "text": "An operator over SSH can watch a run and halt it, on a Mac with no window server",
+      "source": "Sources/ProctorCore/TUISurface.swift; SupervisionBroadcast, SupervisionControl, ProctorCLI/TUI",
+      "class": "capability"
+    },
+    {
+      "id": "REQ-030",
+      "text": "The supervision surface draws what the design compiled, at 100x30 and at the 80x24 floor",
+      "source": "design/surfaces/tui/ (22 compiled frames); Sources/ProctorCore/TUILayout.swift",
+      "class": "fidelity"
     }
   ],
   "surface": [
@@ -570,6 +582,22 @@
       ],
       "description": "Release signing and notarization pipeline preserving system TCC grants",
       "shot": ""
+    },
+    {
+      "id": "SURF-017",
+      "name": "Supervision TUI",
+      "title": "proctor tui \u2014 the supervision surface",
+      "route": "cli://tui",
+      "status": "reachable",
+      "states": [
+        "connecting",
+        "ideal",
+        "partial",
+        "empty",
+        "error",
+        "done"
+      ],
+      "description": "Five panes (run, queue, readiness, history, switches) over SSH. Watches and halts; issues no tool calls, authors no flows, edits no policy. Holds no TCC grants and needs no window server."
     }
   ],
   "flow": [
@@ -780,6 +808,30 @@
             "Maestro flow executed",
             "Command sequence parsed",
             "Repeat score computed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW-009",
+      "title": "Remote supervision and halt over SSH",
+      "critical": true,
+      "steps": [
+        {
+          "surface": "SURF-017",
+          "action": "Open proctor tui and watch the agent push frames",
+          "observableAtoms": [
+            "tab bar draws five panes",
+            "run pane redraws without polling",
+            "a frame older than the stale bound reports itself stale"
+          ]
+        },
+        {
+          "surface": "SURF-017",
+          "action": "Press s to halt a run started from an MCP client",
+          "observableAtoms": [
+            "RunControl.shared.isStopped becomes true",
+            "the run loop stops between steps"
           ]
         }
       ]

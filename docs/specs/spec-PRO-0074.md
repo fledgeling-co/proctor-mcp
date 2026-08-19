@@ -51,3 +51,69 @@ a button.
 ## Out of scope
 
 It does not issue tool calls, author flows, or edit policy. It watches and it halts.
+
+## Verification
+
+Status: **Merged** on `ai/wave-9`. Suite: 1,647 tests in 193 suites, green over five consecutive
+runs. Campaign: 36 of 36, armed 36/36, ratchet raised 32 → 36.
+
+### Settled here
+
+- **A1** — every pane renders at 80×24 as well as 100×30, and both are asserted for all eleven
+  states. A third test asserts nothing is clipped at the floor: `truncated`,
+  `column-too-narrow`, `shelf-too-wide` and `keybar-overflow` are recorded findings rather than
+  silent clips, so the floor is proven rather than hoped for.
+- **A2** — the running program was captured through a pty at both sizes and compared against the
+  renderer row by row: identical. The captures are committed under
+  `design/surfaces/tui/captures/` and the comparison is a standing test rather than a one-off,
+  with the live reason text read back out of the capture rather than pinned, so the test is of
+  the layout and not of a string.
+- **A3** — `tui_gates.py --strict` exits 0 on both captures with 0 high findings. Its output is
+  campaign evidence.
+- **A4** — `SupervisionControl.apply(_:to:)` defaults to `RunControl.shared`, which is the object
+  `RunHUDPanel.togglePause()` and `RunHUDPanel.stop()` write and every run loop reads between
+  steps. Six tests, driving an injected control rather than the process-wide one: PRO-0053
+  recorded a suite writing a shared latch reaching whichever other suite was stepping
+  concurrently, and the default argument carries the claim instead.
+- **A5** — frames are pushed. `Server.serve` holds a `proctor.watch` connection open and writes a
+  frame per change; `SupervisionBroadcast` fans the scheduler's single observer out to many, so a
+  supervision client attaching cannot stop the HUD drawing. A new watcher is handed the current
+  frame at subscribe, because a client that connected during a quiet minute would otherwise draw
+  an empty screen and read as a broken agent.
+- **A6** — three distinct absences, each with its own remedy: not answering, answering but too
+  old, and answering but not lately. A frame past `staleAfter` drops its lanes rather than
+  drawing a queue nobody has confirmed.
+- **A7** — the surface reads the wire and holds nothing. `SupervisionFrame` carries no window
+  handle, no pixels and no accessibility node, asserted over the encoded frame, so nothing on
+  this path is gated by a TCC grant. `ProctorCLI` links only `ProctorCore`.
+
+### Needs a live agent
+
+- **A4, end-to-end** — that pressing `s` in the TUI halts a run started from an MCP client. Every
+  link is tested and the latch is the same object; the chain through a real socket into a real
+  run is not. The agent installed on this machine predates the feature, which is what the
+  captures record.
+- **A5, end-to-end** — that a queue change reaches a watching client without a poll. The
+  broadcaster and the connection are both tested; the round trip is not.
+
+### Two things found by building rather than by reviewing
+
+**The surface called an answering agent absent.** Capturing the running binary against the
+installed agent — which predates this feature — produced `unknown tool "proctor.watch"` under a
+headline reading "The background agent is not answering", with a remedy offering to start a
+process that was already running. That is wrong advice of the kind that costs an hour, so an
+agent that answers and does not know the request is now its own state, with `upgrade the agent`
+in place of `start the agent`.
+
+**The role ladder did not survive losing colour.** `tui_gates.py --strict` reported "no bold and
+no dim anywhere in the frame — every glyph carries the same weight, so the screen has no
+hierarchy that survives a monochrome terminal", because weight was applied only on the
+`NO_COLOR` path. It now rides alongside colour on every role. This matters more here than the
+finding's severity suggests: the 16-colour palette has no defined RGB mapping, so on a great many
+terminals colour is the channel that cannot be relied on.
+
+### The parked questions, unchanged
+
+The HTTP transport stays out — putting Stop behind a bearer token on a network front door is a
+separate decision with its own security surface. A screen-reader mode that drops stylised chrome
+for linear text stays child work.
