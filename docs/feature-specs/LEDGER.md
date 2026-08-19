@@ -78,6 +78,6 @@
 | PRO-0069 | The run HUD, and the seven character states | 2026-08-20 | Merged |
 | PRO-0070 | The takeover overlay, and what it does not claim | 2026-08-20 | Merged |
 | PRO-0071 | The history window, and the skipped verdict | 2026-08-20 | Merged |
-| PRO-0072 | The consent sheets, and the asymmetry | 2026-08-20 | Triaged |
+| PRO-0072 | The consent sheets, and the asymmetry | 2026-08-20 | Merged |
 | PRO-0073 | proctor, the operator CLI | 2026-08-20 | Triaged |
 | PRO-0074 | proctor tui, the supervision surface | 2026-08-20 | Triaged |

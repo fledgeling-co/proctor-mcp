@@ -1,6 +1,6 @@
 # PRO-0072: The consent sheets, and the asymmetry
 
-**ID:** PRO-0072 · **Status:** Ready for Plan · **Created:** 2026-08-20
+**ID:** PRO-0072 · **Status:** Merged · **Created:** 2026-08-20
 **Brief:** `docs/features-to-triage/66-consent-sheets.md`
 **Branch:** `ai/pro-0072` off `ai/wave-9` · **Depends on:** PRO-0066
 **Mock:** `#mac/consent/input`, `…/pairing`, `…/lane`, `…/unlock`
@@ -36,3 +36,29 @@ The disclosure exists with no surface.
   same API a keylogger uses, on a grant Proctor already holds. Saying so plainly is what makes
   the consent meaningful; the mock's copy is the settled wording and softening it would make
   the sheet a formality.
+
+## Verification
+
+`ConsentSurfaceTests` is 9 tests; suite 1,591 in 185 suites.
+
+- **A1** — the asymmetry is asserted over `SwitchCatalogue.capabilities` rather than over two
+  hard-coded names, so a third capability switch inherits it. A separate clause pins the set to
+  exactly `PROCTOR_SECOND_LANE` and `PROCTOR_TAKEOVER_INPUT`, so *adding* a switch that asks is
+  a deliberate change rather than a silent one.
+- **A2** — all four combinations, plus agreement with `SwitchCatalogue.pairingWarning`: the
+  sheet renders the catalogue's value rather than computing its own, because two answers to one
+  question is how they drift.
+- **A3** — the prominent action on the pairing sheet is the recovery. A prominent button on the
+  risky path is a sheet arguing for the thing it is meant to be disclosing.
+- **A4** — every sheet's full text is checked against a shell-command detector, **and the
+  detector is asserted non-vacuous** on a real `curl … | sh`. A check that cannot fail is not a
+  check.
+- **A5** — `PROCTOR_YIELD_INPUT` does not ask, asserted. It intercepts nothing, and a
+  confirmation there would train people to click through the two that matter.
+- **A6** — every sheet states when its decision lands, with `unlock` the deliberate exception
+  because it is a bounded turn taking effect now.
+
+The disclosure wording is asserted rather than left to review: `keylogger` and `Stop always` on
+the input sheet, `autonomous` and `audit trail` on the lane sheet, `never locked out` on the
+unlock. Softening any of them turns the sheet into a formality, and consent obtained by a
+formality is a formality.
