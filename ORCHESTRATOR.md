@@ -345,7 +345,7 @@ identifier from a Core constant.
 
 | Id | Item | Brief | Depends on | Stage | Status |
 |---|---|---|---|---|---|
-| PRO-0064 | Design tokens as a generated Swift value | `59-…` | — | 1 | **TRIAGED** |
+| PRO-0064 | Design tokens as a generated Swift value | `59-…` | — | 1 | **MERGED** |
 | PRO-0065 | The fidelity harness: Proctor measures Proctor | `67-…` | PRO-0064 | 2 | **TRIAGED** |
 | PRO-0066 | The status window becomes the mock | `60-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
 | PRO-0067 | The walkthrough becomes the mock | `61-…` | PRO-0064, PRO-0065 | 3 | **TRIAGED** |
@@ -380,6 +380,7 @@ in `docs/goals/goal-wave9-swiftui-conversion.md`.
 None of these blocks its item; each has a defensible default recorded in the spec.
 
 ## Event log (append-only, newest first)
+- 2026-08-20 **PRO-0064 merged.** Token generator + build plugin; 63 tokens (6 kit, 57 direction) generated from the mock. Caught its own first draft reading the increased-contrast overrides as the palettes. 1,526 tests / 176 suites.
 - 2026-08-20 **Wave 9 opened on `ai/wave-9`.** 11 ids allocated serially (PRO-0064..0074) from the surface-set briefs 59-69; direction at brief 58. Integration branch is NOT main — a peer session holds 21 uncommitted files there. Armed with better-goal `wave9-swiftui-conversion`, six gates, 60 turns.
 - 2026-08-17 **Backlog complete and verified on local `main`.** 1513 tests in 174 suites passing cleanly.
   - **Wave 8 (VM Targets & Witness Tiers) landed in full (PRO-0056 .. PRO-0062):**

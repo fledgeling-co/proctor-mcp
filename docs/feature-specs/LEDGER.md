@@ -70,7 +70,7 @@
 | PRO-0061 | Auto-routing, and the disclosure that makes it honest | 2026-08-16 | Merged |
 | PRO-0062 | The overlay says which machine | 2026-08-16 | Merged |
 | PRO-0063 | Captures are sized by what they are for | 2026-08-16 | Merged |
-| PRO-0064 | Design tokens as a generated Swift value | 2026-08-20 | Triaged |
+| PRO-0064 | Design tokens as a generated Swift value | 2026-08-20 | Merged |
 | PRO-0065 | The fidelity harness: Proctor measures Proctor | 2026-08-20 | Triaged |
 | PRO-0066 | The status window becomes the mock | 2026-08-20 | Triaged |
 | PRO-0067 | The walkthrough becomes the mock | 2026-08-20 | Triaged |
