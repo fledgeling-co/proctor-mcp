@@ -682,11 +682,30 @@ final class RunHUDContentView: NSView {
         let y = top + 9
         let font = NSFont.systemFont(ofSize: 13, weight: .semibold)
 
-        let stopWidth = Self.controlWidth("Stop", font: font)
-        stopRect = NSRect(x: RunHUDLayout.width - 12 - stopWidth, y: y,
-                          width: stopWidth, height: 30)
-        let pauseWidth = Self.controlWidth(model.pauseLabel, font: font)
-        pauseRect = NSRect(x: stopRect.minX - 8 - pauseWidth, y: y, width: pauseWidth, height: 30)
+        // PRO-0069. Which controls this phase offers, from the tested table.
+        //
+        // The foot drew Pause and Stop in every phase, so a finished run showed
+        // two controls that acted on nothing — and a control that does nothing
+        // is worse than an absent one on a panel whose job is to say what is
+        // going on. A rect left at .zero contains no point, so clearing it
+        // withdraws the control from hit-testing as well as from the drawing;
+        // the two cannot disagree.
+        let offered = RunHUDSurface.controls(for: model.phase)
+        let offersStop = offered.contains(.stop)
+        let offersPause = offered.contains(.pause) || offered.contains(.resume)
+
+        stopRect = .zero
+        pauseRect = .zero
+        if offersStop {
+            let stopWidth = Self.controlWidth("Stop", font: font)
+            stopRect = NSRect(x: RunHUDLayout.width - 12 - stopWidth, y: y,
+                              width: stopWidth, height: 30)
+        }
+        if offersPause {
+            let pauseWidth = Self.controlWidth(model.pauseLabel, font: font)
+            let right = offersStop ? stopRect.minX - 8 : RunHUDLayout.width - 12
+            pauseRect = NSRect(x: right - pauseWidth, y: y, width: pauseWidth, height: 30)
+        }
 
         draw(text: Self.clock(elapsed),
              font: NSFont.monospacedSystemFont(ofSize: 12, weight: .regular),
@@ -695,13 +714,17 @@ final class RunHUDContentView: NSView {
         // Pause becomes Resume, and wears the accent while it is the way back —
         // the only moment the run controls are the brightest thing on the panel.
         let resuming = model.pauseLabel == "Resume"
-        drawControl(pauseRect, label: model.pauseLabel, font: font,
-                    fill: resuming ? p.accent : p.fill2,
-                    ink: resuming ? p.onAccent : p.ink,
-                    icon: resuming ? .play : .pause, control: .pause, palette: p)
-        drawControl(stopRect, label: "Stop", font: font,
-                    fill: p.red.withAlphaComponent(0.16), ink: p.red,
-                    icon: .stop, control: .stop, palette: p)
+        if offersPause {
+            drawControl(pauseRect, label: model.pauseLabel, font: font,
+                        fill: resuming ? p.accent : p.fill2,
+                        ink: resuming ? p.onAccent : p.ink,
+                        icon: resuming ? .play : .pause, control: .pause, palette: p)
+        }
+        if offersStop {
+            drawControl(stopRect, label: "Stop", font: font,
+                        fill: p.red.withAlphaComponent(0.16), ink: p.red,
+                        icon: .stop, control: .stop, palette: p)
+        }
     }
 
     private enum Icon { case pause, play, stop }

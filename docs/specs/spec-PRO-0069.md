@@ -1,6 +1,6 @@
 # PRO-0069: The run HUD, and the seven character states
 
-**ID:** PRO-0069 · **Status:** Ready for Plan · **Created:** 2026-08-20
+**ID:** PRO-0069 · **Status:** Merged · **Created:** 2026-08-20
 **Brief:** `docs/features-to-triage/63-run-hud-and-the-character.md`
 **Branch:** `ai/pro-0069` off `ai/wave-9` · **Depends on:** PRO-0064, PRO-0065
 **Mock:** `#mac/hud/idle` … `#mac/hud/error` — seven states
@@ -47,3 +47,36 @@ different things.
 `sharingType = .none` stays. Two campaign cases are permanently `n/a` because the panel cannot
 be photographed by Proctor's own capture path, and that exclusion is deliberate: evidence must
 not change because somebody was watching. Neither case is to be "fixed" into a pass.
+
+## Verification
+
+`RunHUDSurfaceTests` is 6 tests; suite 1,569 in 182 suites. `StopReachabilityWiringTests`
+(13) and `RunHUDWiringTests` (19) re-run green, which is the check that mattered most: this
+change touches the view that owns Stop.
+
+- **A1** — all seven phases resolve to a symbol and each is *distinct*, asserted by insertion
+  into a set. A shared symbol would make one phase read as another, which colour alone does not
+  fix on a greyscale display.
+- **A2** — `idle` offers nothing; `travelling`, `acting`, `blocked` and `paused` all offer Stop.
+  Paused offers Resume and *not* Pause, because a panel showing both is a panel asking which
+  one is live.
+- **A3** — the chip reports what the step said and infers nothing. Nothing to report is no
+  chip rather than a chip asserting provenance for a step that never happened. And
+  `isBackgroundSafe` is tested against `unknown` and against an invented future plane name:
+  both are false, because a plane this build has not seen is not assumed safe.
+
+### What the drawing side was doing
+
+`drawFoot` drew Pause and Stop in **every** phase, so a finished run showed two controls that
+acted on nothing. Both the rects and the drawing are now gated on
+`RunHUDSurface.controls(for:)`, and the mechanism is deliberate: a rect left at `.zero`
+contains no point, so clearing it withdraws the control from hit-testing as well as from the
+drawing and the two cannot disagree. A control that draws and does not respond, or responds
+and does not draw, is the worse of the two failures.
+
+**A4, A5 and A6 are pre-existing and were re-run rather than re-implemented.** The step text
+already renders through `StepDescription`'s fence, the panel already ignores mouse events
+while a synthetic step is in flight, and every drawing path already goes through
+`ProctorCatch`. This change adds drawing paths, so those suites were re-run deliberately —
+the panel is drawn by the *agent* process, and a fault in it takes the run and the MCP server
+with it.
