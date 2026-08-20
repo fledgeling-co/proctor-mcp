@@ -1,29 +1,285 @@
 {
  "summary": {
-  "sites": 5,
-  "run": 1,
-  "killed": 1,
+  "sites": 52,
+  "run": 24,
+  "killed": 24,
   "survived": 0,
   "unbuildable": 0,
-  "scored": 1,
+  "scored": 24,
   "survivalRate": 0.0,
   "treeCleanAfter": true,
   "targets": [
-   "Sources/ProctorCore/StatusChecks.swift"
+   "Sources/ProctorCore/TUISurface.swift",
+   "Sources/ProctorCore/CLISurface.swift",
+   "Sources/ProctorCore/StatusChecks.swift",
+   "Sources/ProctorCore/RunHUDMenuBar.swift"
   ],
   "seed": 20260820
  },
  "mutants": [
   {
-   "file": "Sources/ProctorCore/StatusChecks.swift",
-   "start": 8397,
-   "end": 8399,
-   "before": "==",
-   "after": "!=",
-   "line": 156,
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5553,
+   "end": 5555,
+   "before": "&&",
+   "after": "||",
+   "line": 128,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 12.0
+   "seconds": 15.2
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5781,
+   "end": 5783,
+   "before": "&&",
+   "after": "||",
+   "line": 131,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 12.4
+  },
+  {
+   "file": "Sources/ProctorCore/CLISurface.swift",
+   "start": 6373,
+   "end": 6375,
+   "before": "==",
+   "after": "!=",
+   "line": 145,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 12.2
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5824,
+   "end": 5826,
+   "before": "==",
+   "after": "!=",
+   "line": 131,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 15.1
+  },
+  {
+   "file": "Sources/ProctorCore/StatusChecks.swift",
+   "start": 5652,
+   "end": 5654,
+   "before": "==",
+   "after": "!=",
+   "line": 110,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 8.3
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5431,
+   "end": 5433,
+   "before": "&&",
+   "after": "||",
+   "line": 126,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 11.4
+  },
+  {
+   "file": "Sources/ProctorCore/CLISurface.swift",
+   "start": 5487,
+   "end": 5489,
+   "before": "==",
+   "after": "!=",
+   "line": 127,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 11.6
+  },
+  {
+   "file": "Sources/ProctorCore/CLISurface.swift",
+   "start": 5888,
+   "end": 5890,
+   "before": "==",
+   "after": "!=",
+   "line": 134,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 13.7
+  },
+  {
+   "file": "Sources/ProctorCore/StatusChecks.swift",
+   "start": 6630,
+   "end": 6632,
+   "before": "==",
+   "after": "!=",
+   "line": 128,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 13.9
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5487,
+   "end": 5489,
+   "before": "&&",
+   "after": "||",
+   "line": 127,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 32.8
+  },
+  {
+   "file": "Sources/ProctorCore/CLISurface.swift",
+   "start": 5545,
+   "end": 5547,
+   "before": "==",
+   "after": "!=",
+   "line": 128,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 22.0
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 22676,
+   "end": 22678,
+   "before": "==",
+   "after": "!=",
+   "line": 494,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 31.8
+  },
+  {
+   "file": "Sources/ProctorCore/RunHUDMenuBar.swift",
+   "start": 1661,
+   "end": 1663,
+   "before": "==",
+   "after": "!=",
+   "line": 32,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 35.7
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5625,
+   "end": 5627,
+   "before": "&&",
+   "after": "||",
+   "line": 129,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 28.5
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5415,
+   "end": 5417,
+   "before": "==",
+   "after": "!=",
+   "line": 126,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 25.6
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5399,
+   "end": 5401,
+   "before": "&&",
+   "after": "||",
+   "line": 126,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 13.2
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5704,
+   "end": 5706,
+   "before": "==",
+   "after": "!=",
+   "line": 130,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 12.9
+  },
+  {
+   "file": "Sources/ProctorCore/CLISurface.swift",
+   "start": 5652,
+   "end": 5654,
+   "before": "==",
+   "after": "!=",
+   "line": 131,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 16.6
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 13677,
+   "end": 13679,
+   "before": "==",
+   "after": "!=",
+   "line": 306,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 33.0
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5513,
+   "end": 5515,
+   "before": "&&",
+   "after": "||",
+   "line": 127,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 11.5
+  },
+  {
+   "file": "Sources/ProctorCore/StatusChecks.swift",
+   "start": 6748,
+   "end": 6750,
+   "before": "==",
+   "after": "!=",
+   "line": 129,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 17.4
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 5583,
+   "end": 5585,
+   "before": "&&",
+   "after": "||",
+   "line": 128,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 12.9
+  },
+  {
+   "file": "Sources/ProctorCore/CLISurface.swift",
+   "start": 5732,
+   "end": 5734,
+   "before": "!=",
+   "after": "==",
+   "line": 132,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 13.4
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 13856,
+   "end": 13858,
+   "before": "==",
+   "after": "!=",
+   "line": 309,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 14.6
   }
  ]
 }

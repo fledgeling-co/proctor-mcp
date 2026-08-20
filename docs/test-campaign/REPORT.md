@@ -176,8 +176,23 @@ cannot see which fields a hand-written `==` reads — so a new field fails on th
 anybody has to notice it is also missing from the comparison.
 
 **Re-measured with the same seed and the same targets, so it is the identical 24 mutants: 24
-killed, 0 survived.** Both runs are kept, `mutation-survival-before.txt` and
-`-after.txt`, so the delta is readable rather than asserted.
+killed, 0 survived.** Both runs are kept, `mutation-survival-before.txt` and `-after.txt`, so the
+delta is readable rather than asserted.
+
+Then measured a third time, because the tests that produced the second number were changed after
+it: the cannot-fail scan flagged their reflexivity assertions, `x == x`, which is exactly the
+shape it exists to report. It was right about the shape and the assertion was doing real work, so
+each value is now built twice and the pair compared — the same claim, no longer leaning on
+identity, and no standing exception in a rule that would stop being trusted the moment it had
+one. Changing the tests after measuring invalidates the measurement, so it was taken again on the
+identical 24: 24 killed, 0 survived.
+
+One thing a reader will trip over: `.warrant/suite-health.json` still carries
+`mutation_measured: false`. That is correct and is not stale. The field means *warrant's own
+assay* has not run, and it has not, because it cannot read Swift — which is the whole reason this
+section exists. The number lives in `evidence/mutation-survival.json` and here, and deliberately
+not in a third place: a value copied into a generated file is a second source, and this repo's
+whole thesis is that a second source drifts.
 
 What this is not: a number for the whole suite. 24 of 52 sites in 4 of 103 files, chosen by a
 recorded seed. The armed ratio of 43 of 43 remains the hand-run equivalent over the campaign's
