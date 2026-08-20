@@ -175,6 +175,19 @@ extension Session {
             auditSink(AuditRecord(timestamp: clock(), tool: context.tool,
                                   bundleId: context.bundleId, kind: action,
                                   outcome: AuditRecord.Outcome.failed, reason: reason))
+            // A start that timed out spawned a VM and then stopped watching it.
+            // Leaving it would orphan a macOS guest that is up, uncounted and
+            // unowned, which makes the cap, the start record and the
+            // never-evict rule false at once — so it is stopped, and stopped
+            // HERE rather than inside the adapter, because this is where the
+            // audit sink is and A9 says a stop stays recorded. The cleanup is
+            // reentrant into `guestMutate` on purpose: one gated path, one row.
+            if action == "start",
+               case GuestProviderError.timedOut(_, let failed) = error, failed == "start" {
+                _ = await stopGuestThroughAuditedPath(
+                    name: record.name, provider: record.provider,
+                    because: "\(record.name) never finished booting")
+            }
             throw mapGuestError(error, action: action, name: record.name)
         }
     }
@@ -562,19 +575,33 @@ extension Session {
     /// audited path `proctor_guest action "stop"` takes. Returns whether the
     /// guest actually stopped, which the caller reports rather than assumes.
     private func stopGuestForRelease(_ attachment: GuestAttachment) async -> Bool {
+        await stopGuestThroughAuditedPath(
+            name: attachment.name, provider: attachment.provider,
+            because: "the slot was released")
+    }
+
+    /// Every stop this agent performs on its own initiative goes through here.
+    ///
+    /// `guestMutate` is the gated, audited path A9 keeps, and a stop that reaches
+    /// the adapter around it is a lifecycle change on somebody's machine with no
+    /// row on the trail. That shape has now been found three times in this
+    /// feature — the release path, the failed-attach cleanup, and the boot that
+    /// never came up — so there is one function rather than three fixes.
+    private func stopGuestThroughAuditedPath(name: String, provider: String,
+                                             because: String) async -> Bool {
         do {
             _ = try await guestMutate(action: "stop", tool: AuditTool.guestStop,
-                                      guest: attachment.name, provider: attachment.provider)
+                                      guest: name, provider: provider)
             return true
         } catch {
             // Recorded and reported, never swallowed: a guest that would not
             // stop is still running and is no longer in anybody's count, which
             // is a thing the operator has to be able to find out about.
             auditSink(AuditRecord(timestamp: clock(), tool: AuditTool.guestStop,
-                                  bundleId: "guest:\(attachment.provider):\(attachment.name)",
+                                  bundleId: "guest:\(provider):\(name)",
                                   kind: "stop", outcome: AuditRecord.Outcome.failed,
-                                  reason: "the slot was released but \(attachment.name) did not "
-                                        + "stop: \((error as? AgentError)?.message ?? "\(error)")"))
+                                  reason: "\(because) but \(name) did not stop: "
+                                        + "\((error as? AgentError)?.message ?? "\(error)")"))
             return false
         }
     }
@@ -631,6 +658,10 @@ extension Session {
             summary: "Attach · \(record.name)")
 
         var startedHere = false
+        // The link this call opened, held here rather than inside the `do` so the
+        // failure path can close it. A `GuestLink` owns a socket; dropping the
+        // reference without closing leaks the file descriptor.
+        var openedLink: (any GuestLink)?
         do {
             // 3. Admission may start the named guest (A9), through the gated and
             //    audited path rather than a raw adapter call.
@@ -646,6 +677,7 @@ extension Session {
                 ? localSocket!
                 : GuestReach.defaultLocalSocket(handle: record.handle, home: NSHomeDirectory())
             let link = injectedGuestLink.map { $0(socket) } ?? SocketGuestLink(localSocket: socket)
+            openedLink = link
             do {
                 try await link.probe()
             } catch {
@@ -658,9 +690,30 @@ extension Session {
                 machine: machine, handle: record.handle, provider: record.provider,
                 name: record.name, localSocket: socket,
                 startedByThisAgent: startedHere, attachedAt: clock())
+
+            // The guard at the top of this function is four suspension points
+            // behind us — a reclaim, a resolve, an admission and a boot — and
+            // `Session` is a reentrant actor, so two attaches on ONE identity
+            // both pass it. Whichever wrote second used to overwrite
+            // `guestLinks[key]` and leak the first link's socket, unclosed and
+            // unreachable. Asking again here, with no await between the question
+            // and the write, is what makes the guard binding rather than
+            // advisory. The loser takes the failure path below, which closes its
+            // link, gives its slot back and stops a guest it started.
+            if let existing = guestAttachments[key] {
+                throw AgentError(
+                    code: .invalidArguments,
+                    message: "this session is already attached to \(existing.machine.line)",
+                    remedy: "Two attaches raced on one session and this one lost. Call "
+                          + "proctor_guest action \"detach\" first. One session drives one "
+                          + "machine at a time, so that the machine a result is about is "
+                          + "never in question.")
+            }
             guestAttachments[key] = attachment
             guestLinks[key] = link
             guestTickets[key] = ticket
+            // The session owns it now, so the failure path must not close it.
+            openedLink = nil
 
             auditSink(AuditRecord(timestamp: clock(), tool: AuditTool.guestAttach,
                                   bundleId: "guest:\(record.provider):\(record.name)",
@@ -684,6 +737,10 @@ extension Session {
                     + "this Mac again.")
             ])
         } catch {
+            // Close the socket this call opened. Every path out of the `do`
+            // either handed the link to the session and cleared this, or failed
+            // before doing so — in which case nothing else will ever close it.
+            if let openedLink { await openedLink.close() }
             // Give the slot back on every failure after taking it, and stop the
             // guest only if this call is what started it.
             if startedHere {

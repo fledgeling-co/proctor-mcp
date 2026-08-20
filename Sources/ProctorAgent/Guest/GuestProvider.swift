@@ -365,9 +365,15 @@ final class TartProvider: GuestProvider {
             }
         }
 
-        // It never came up. Stop what was launched rather than leaving a macOS
-        // guest running that nothing is counting and nothing owns.
-        _ = invoke(["stop", name], action: "start")
+        // It never came up. Report the timeout and let the caller stop it.
+        //
+        // The stop used to happen right here, as a bare `tart stop`. It is a
+        // lifecycle change on somebody's machine, and A9 says a stop stays gated
+        // and recorded — but this adapter holds no audit sink, and giving it one
+        // would be a second stop path beside `Session.guestMutate`. So the
+        // cleanup moved to the audited layer, which catches this exact error and
+        // stops the guest through the same gate every other stop takes. Nothing
+        // is orphaned: `guestMutate` is the only production caller of `start`.
         throw GuestProviderError.timedOut(tool: id, action: "start")
     }
 

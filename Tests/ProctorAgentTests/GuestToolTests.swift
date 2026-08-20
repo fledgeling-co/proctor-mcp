@@ -17,6 +17,12 @@ final class FakeGuestProvider: GuestProvider, @unchecked Sendable {
     var records: [GuestRecord]
     var calls: [(String, String)] = []
     var failNext: GuestProviderError?
+    /// One-shot, and consulted by `start` alone.
+    ///
+    /// `failNext` is spent by whichever call comes first, and every mutation
+    /// resolves the guest before it mutates it, so a planted failure never
+    /// reaches `start`. A boot that times out is exactly the case that needs it.
+    var failNextStart: GuestProviderError?
 
     init(id: String, records: [GuestRecord]) {
         self.id = id
@@ -40,6 +46,11 @@ final class FakeGuestProvider: GuestProvider, @unchecked Sendable {
 
     func start(name: String) async throws -> GuestRecord {
         try throwIfPlanted()
+        if let failNextStart {
+            self.failNextStart = nil
+            calls.append(("start", name))
+            throw failNextStart
+        }
         return try mutate(name, action: "start", state: "running", running: true)
     }
 

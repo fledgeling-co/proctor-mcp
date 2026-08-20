@@ -324,4 +324,117 @@ struct GuestAttachWiringTests {
                                           provider: nil, newName: nil)
         }
     }
+
+    // MARK: - A9, and the stop nobody was recording
+
+    @Test("a boot that never finishes is stopped through the audited path, and recorded")
+    func aBootThatTimesOutIsStoppedAndRecorded() async throws {
+        // The adapter used to run a bare `tart stop` here. That is a lifecycle
+        // change on somebody's machine with no row on the trail, and A9 says a
+        // stop stays gated and recorded — the same shape already fixed on the
+        // release path and on the failed-attach cleanup, found a third time.
+        let h = try await harness(records: [Self.macRecord("anvil-mac-node", running: false)])
+        h.provider.failNextStart = GuestProviderError.timedOut(tool: "tart", action: "start")
+
+        await #expect(throws: AgentError.self) {
+            _ = try await h.session.guest(action: "start", guest: "anvil-mac-node",
+                                          provider: nil, newName: nil)
+        }
+
+        #expect(h.provider.calls.contains { $0.0 == "stop" && $0.1 == "anvil-mac-node" },
+                "a guest that never came up is not left running and uncounted")
+        let stops = h.audit.records(tool: AuditTool.guestStop)
+        #expect(stops.count == 1, "the cleanup stop is on the trail exactly once")
+        #expect(stops.first?.outcome == AuditRecord.Outcome.ok)
+        #expect(stops.first?.bundleId == "guest:tart:anvil-mac-node",
+                "the row names the machine that was stopped")
+        // And the failed start is beside it, so the trail reads as one story:
+        // this agent asked for a boot, did not get one, and put it back.
+        let starts = h.audit.records(tool: AuditTool.guestStart)
+        #expect(starts.count == 1)
+        #expect(starts.first?.outcome == AuditRecord.Outcome.failed)
+    }
+
+    // MARK: - The attach guard, under two callers at once
+
+    @Test("two attaches racing on one session leave one link, and close the other")
+    func racingAttachesDoNotLeakASocket() async throws {
+        // The "already attached" guard sits at the top of `guestAttach`, four
+        // suspension points ahead of the write — a reclaim, a resolve, an
+        // admission and a boot. `Session` is a reentrant actor, so two attaches
+        // on ONE identity both passed it, and the second overwrote
+        // `guestLinks[key]`: a `GuestLink` holding a socket, dropped without
+        // being closed and with nothing left holding a reference to close it.
+        //
+        // Two DIFFERENT guests, deliberately. One guest is already serialised by
+        // the per-guest mutex lane (A6), so the same-guest case never raced and
+        // the leak hid behind it.
+        let h = try await harness(records: [Self.macRecord("one"), Self.macRecord("two")])
+        let links = LinkLedger()
+        await h.session.setGuestLinkFactory { socket in links.make(socket) }
+
+        async let first: Bool = attachSucceeds(h.session, "one")
+        async let second: Bool = attachSucceeds(h.session, "two")
+        let outcomes = await [first, second]
+
+        #expect(outcomes.filter { $0 }.count == 1,
+                "one session drives one machine, whichever attach wins the race")
+        #expect(links.made.count == 2, "both calls opened a socket before either wrote")
+        #expect(links.made.filter { !$0.isClosed }.count == 1,
+                "the loser's socket is closed; only the winner's link stays open")
+    }
+
+    private func attachSucceeds(_ session: Session, _ guest: String) async -> Bool {
+        do {
+            _ = try await session.guest(action: "attach", guest: guest,
+                                        provider: nil, newName: nil)
+            return true
+        } catch {
+            return false
+        }
+    }
+}
+
+/// Hands out a distinct link per attach and remembers which ones were closed,
+/// so a leaked socket is countable rather than inferred.
+final class LinkLedger: @unchecked Sendable {
+    private let lock = NSLock()
+    private var storage: [RaceableGuestLink] = []
+
+    var made: [RaceableGuestLink] { lock.lock(); defer { lock.unlock() }; return storage }
+
+    func make(_ socket: String) -> RaceableGuestLink {
+        let link = RaceableGuestLink(localSocket: socket)
+        lock.lock(); storage.append(link); lock.unlock()
+        return link
+    }
+}
+
+/// A link whose `probe()` suspends, the way connecting to a real socket does.
+/// A fake that never suspends makes the interleaving across the guard
+/// unreachable, and the race would go unobserved rather than being absent.
+final class RaceableGuestLink: GuestLink, @unchecked Sendable {
+    let localSocket: String
+    private let lock = NSLock()
+    private var _closed = false
+
+    init(localSocket: String) { self.localSocket = localSocket }
+
+    var isClosed: Bool { lock.lock(); defer { lock.unlock() }; return _closed }
+
+    func probe() async throws {
+        for _ in 0..<8 { await Task.yield() }
+    }
+
+    func send(_ request: AgentRequest) async throws -> AgentResponse {
+        AgentResponse(id: request.id, ok: true, result: .object([:]))
+    }
+
+    func close() async {
+        await Task.yield()
+        markClosed()
+    }
+
+    /// Synchronous: NSLock is unavailable from an async context.
+    private func markClosed() { lock.lock(); _closed = true; lock.unlock() }
 }

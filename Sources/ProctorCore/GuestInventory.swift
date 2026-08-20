@@ -548,6 +548,12 @@ public enum LumeTool {
 /// The binary a person types is a symlink at `/usr/local/bin/prlctl` onto
 /// `parallels_wrapper` inside the app bundle. `ToolLocator` finds the symlink
 /// by name; it does not have to know about the bundle.
+public enum PrlctlTool {
+    public static let binary = "prlctl"
+    public static let docs = "https://www.parallels.com/products/desktop/resources/"
+    public static let extraDirectories = ToolLocator.commonToolDirectories
+}
+
 /// `tart`, Cirrus Labs' Virtualization.framework CLI. macOS and Linux guests.
 ///
 /// The third adapter, and the one with a working macOS guest on this machine,
@@ -557,12 +563,6 @@ public enum LumeTool {
 public enum TartTool {
     public static let binary = "tart"
     public static let docs = "https://tart.run"
-    public static let extraDirectories = ToolLocator.commonToolDirectories
-}
-
-public enum PrlctlTool {
-    public static let binary = "prlctl"
-    public static let docs = "https://www.parallels.com/products/desktop/resources/"
     public static let extraDirectories = ToolLocator.commonToolDirectories
 }
 

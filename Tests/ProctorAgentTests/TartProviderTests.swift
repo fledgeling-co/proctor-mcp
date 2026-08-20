@@ -168,19 +168,24 @@ struct TartProviderTests {
         #expect(script.recorded.filter { $0.first == "get" }.count >= 2)
     }
 
-    @Test("a start that never comes up stops what it launched, then reports the timeout")
-    func startTimeoutStopsTheOrphan() async throws {
-        // Leaving it running would orphan a macOS guest that is up, uncounted
-        // and unowned — which makes the cap, the start record and the
-        // never-evict rule all false at once.
+    @Test("a start that never comes up reports the timeout and leaves the stop to its caller")
+    func startTimeoutReportsRatherThanStopping() async throws {
+        // The orphan still has to be stopped — a macOS guest that is up,
+        // uncounted and unowned makes the cap, the start record and the
+        // never-evict rule false at once. It is stopped one layer up, by
+        // `Session.guestMutate`, because that is where the audit sink is and A9
+        // says a stop stays gated and recorded. This adapter holds no sink, and
+        // a bare `tart stop` here changed somebody's machine with nothing on the
+        // trail to show for it. `aBootThatTimesOutIsStoppedAndRecorded` in
+        // GuestAttachWiringTests is the other half of this pair.
         let script = Script(listReply: ok(Self.listJSON))
         script.runningAfterPolls = 9_999   // never
         await #expect(throws: GuestProviderError.timedOut(tool: "tart", action: "start")) {
             _ = try await self.provider(script).start(name: "anvil-mac-node")
         }
         #expect(script.spawned == [["run", "anvil-mac-node"]])
-        #expect(script.recorded.contains(["stop", "anvil-mac-node"]),
-                "the guest this call launched must be stopped before the timeout is reported")
+        #expect(!script.recorded.contains(["stop", "anvil-mac-node"]),
+                "the adapter no longer stops around the audited path")
     }
 
     @Test("a guest already running is not started again")
