@@ -191,3 +191,84 @@ struct TUIHistoryPaneTests {
         #expect(onDisk.contains("The trail could not be opened."))
     }
 }
+
+// PRO-0075. `TUISurface.Model`'s equality, pinned field by field.
+//
+// Written because the mutation assay measured it: of 24 mutants over this
+// wave's core files, 14 were killed and 10 survived, and every one of the ten
+// was in the hand-written `==` below. Flipping any `&&` to `||` makes two models
+// that differ in a field compare equal, and flipping any field's `==` to `!=`
+// makes two identical models compare unequal — and nothing noticed either.
+//
+// It is written by hand rather than synthesised, so the trap is real: a field
+// added to `Model` and forgotten in `==` compiles, ships, and is invisible. The
+// operator has no caller in the product today, which is exactly why it is worth
+// pinning now: the obvious optimisation for the render loop is to skip a redraw
+// when the model has not changed, and an `==` that cannot tell two models apart
+// turns that into a screen that stops updating while a run is moving — the one
+// failure this surface exists to prevent.
+
+@Suite("TUI model equality")
+struct TUIModelEqualityTests {
+
+    /// One model per field, each differing from the base in exactly that field.
+    ///
+    /// The name is what a failure prints, so it names the field rather than an
+    /// index: "history" is a defect report and "case 8" is a puzzle.
+    static var variants: [(String, TUISurface.Model)] {
+        func changed(_ mutate: (inout TUISurface.Model) -> Void) -> TUISurface.Model {
+            var m = TUISurface.Model()
+            mutate(&m)
+            return m
+        }
+        return [
+            ("pane", changed { $0.pane = .history }),
+            ("connection", changed { $0.connection = .unreachable(reason: "gone", staleSeconds: 4) }),
+            ("run", changed { $0.run = TUISurface.Run(phase: .acting, headline: ["Act"],
+                                                     facts: [], step: 1, steps: 3) }),
+            ("lanes", changed { $0.lanes = [TUISurface.Lane(name: "mac", holder: "-",
+                                                            state: "free", wait: "-")] }),
+            ("laneCap", changed { $0.laneCap = "one at a time" }),
+            ("grants", changed { $0.grants = [TUISurface.Row4(["a", "b", "c"])] }),
+            ("readiness", changed { $0.readiness = [TUISurface.Row4(["a", "b", "c"])] }),
+            ("history", changed { $0.history = [TUISurface.Row4(["a", "b", "c", "d", "e"])] }),
+            ("historyUnreadable", changed { $0.historyUnreadable = 3 }),
+            ("historyPage", changed { $0.historyPage = (2, 5) }),
+            ("historySelection", changed { $0.historySelection = 1 }),
+            ("switches", changed { $0.switches = [TUISurface.Row4(["a", "b", "c", "d"])] }),
+            ("handshake", changed { $0.handshake = 12 }),
+        ]
+    }
+
+    @Test("two models built the same way are equal")
+    func identicalModelsAreEqual() {
+        #expect(TUISurface.Model() == TUISurface.Model())
+        for (name, variant) in Self.variants {
+            #expect(variant == variant, "a model is not equal to itself once \(name) is set")
+        }
+    }
+
+    @Test("a difference in any one field makes two models unequal", arguments: variants.map(\.0))
+    func everyFieldParticipates(_ field: String) {
+        let base = TUISurface.Model()
+        let variant = Self.variants.first { $0.0 == field }!.1
+        #expect(base != variant,
+                "\(field) is not compared by ==, so a model that changed only there reads as unchanged")
+        #expect(variant != base, "and the comparison is symmetric in \(field)")
+    }
+
+    @Test("the field list here is the field list on Model")
+    func noFieldWentUncovered() {
+        // A floor rather than a mirror: reflection over a struct with a
+        // hand-written `==` cannot see which fields that operator reads, so what
+        // is checked is that every stored property has a variant above. A field
+        // added to Model and not added here fails on the count before anybody
+        // has to notice it is missing from the operator too.
+        let mirrored = Mirror(reflecting: TUISurface.Model()).children.compactMap(\.label)
+        let covered = Set(Self.variants.map(\.0))
+        let missing = mirrored.filter { !covered.contains($0) }
+        #expect(missing.isEmpty,
+                "these stored properties have no equality variant: \(missing.joined(separator: ", "))")
+        #expect(covered.count == mirrored.count)
+    }
+}

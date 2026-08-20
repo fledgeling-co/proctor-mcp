@@ -1,0 +1,29 @@
+sites 52 in 4 file(s) · running 24
+[1/24] SURVIVED    TUISurface.swift:128 && -> ||  (11.7s)
+[2/24] SURVIVED    TUISurface.swift:131 && -> ||  (13.4s)
+[3/24] killed      CLISurface.swift:145 == -> !=  (13.1s)
+[4/24] SURVIVED    TUISurface.swift:131 == -> !=  (15.1s)
+[5/24] killed      StatusChecks.swift:110 == -> !=  (19.7s)
+[6/24] SURVIVED    TUISurface.swift:126 && -> ||  (12.3s)
+[7/24] killed      CLISurface.swift:127 == -> !=  (14.7s)
+[8/24] killed      CLISurface.swift:134 == -> !=  (13.1s)
+[9/24] killed      StatusChecks.swift:128 == -> !=  (13.9s)
+[10/24] SURVIVED    TUISurface.swift:127 && -> ||  (13.4s)
+[11/24] killed      CLISurface.swift:128 == -> !=  (13.6s)
+[12/24] killed      TUISurface.swift:494 == -> !=  (12.1s)
+[13/24] killed      RunHUDMenuBar.swift:32 == -> !=  (14.0s)
+[14/24] killed      TUISurface.swift:129 && -> ||  (5.4s)
+[15/24] SURVIVED    TUISurface.swift:126 == -> !=  (11.8s)
+[16/24] SURVIVED    TUISurface.swift:126 && -> ||  (12.2s)
+[17/24] SURVIVED    TUISurface.swift:130 == -> !=  (13.5s)
+[18/24] killed      CLISurface.swift:131 == -> !=  (17.8s)
+[19/24] killed      TUISurface.swift:306 == -> !=  (14.7s)
+[20/24] SURVIVED    TUISurface.swift:127 && -> ||  (12.2s)
+[21/24] killed      StatusChecks.swift:129 == -> !=  (13.4s)
+[22/24] SURVIVED    TUISurface.swift:128 && -> ||  (30.0s)
+[23/24] killed      CLISurface.swift:132 != -> ==  (14.0s)
+[24/24] killed      TUISurface.swift:309 == -> !=  (13.3s)
+
+scored 24 of 24 run (of 52 sites) · killed 14 · SURVIVED 10 · unbuildable 0
+survival rate 10/24 = 41.7% — a survivor is a behaviour nothing is watching
+tree clean after: True
