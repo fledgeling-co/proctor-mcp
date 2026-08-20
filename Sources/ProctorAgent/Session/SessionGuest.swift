@@ -208,6 +208,22 @@ extension Session {
     private func guestClone(guest: String, provider: String?,
                             newName: String) async throws -> JSONValue {
         let (adapter, record) = try await resolveGuestWithProvider(guest, provider: provider)
+        // PRO-0076. Cloning a stopped guest touches no slot; cloning one that a
+        // session is attached to is not something the providers agree about, and
+        // a copy taken from underneath a live attachment is a copy of a machine
+        // mid-run. Refused with the reason rather than attempted.
+        if let holder = guestAttachments.values.first(where: {
+            $0.slotHeld && $0.provider == record.provider && $0.name == record.name
+        }) {
+            throw AgentError(
+                code: .invalidArguments,
+                message: "\(record.name) is attached by a session right now and holds a guest "
+                       + "slot, so it was not cloned.",
+                remedy: "Detach from it first with proctor_guest action \"detach\", or clone a "
+                      + "guest nothing is driving. The providers do not agree about what cloning "
+                      + "a running guest produces, and a copy taken from under a live attachment "
+                      + "is a copy of a machine mid-run. It is still \(holder.machine.line).")
+        }
         let context = AuditContext(tool: AuditTool.guestClone, app: nil,
                                    bundleId: "guest:\(record.provider):\(record.name)",
                                    window: nil)
