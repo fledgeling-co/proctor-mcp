@@ -493,6 +493,13 @@
    "text": "The takeover statement names a control reachable from the screen reading it: the run panel on the panel's own display, Proctor's menu bar on every other and when no panel is standing",
    "source": "Sources/ProctorCore/Takeover.swift label(app:blocking:panelIsOnThisScreen:) and panelScreen(panel:in:)",
    "effect": "none"
+  },
+  {
+   "id": "REQ-045",
+   "class": "honesty guardrail",
+   "text": "A campaign instrument carries a measured false-positive rate with its denominator before anything is gated on its count: the blind-mutation pass over the Swift suite reports a number that is 96% noise, and a count read as a defect count would be the misconfiguration the tool warns about",
+   "source": "test-campaign 0.9.2 scripts/vacuity-check.py pass_blind; docs/test-campaign/campaign.json blindVocabulary; spec-PRO-0079.md A1, A2, A5",
+   "effect": "none"
   }
  ],
  "surface": [
@@ -809,6 +816,19 @@
     "switched-off"
    ],
    "description": "The takeover statement, the drawn pointer and the input block each require both an operator's switch and a process that has claimed to be the agent. main.swift claims it; nothing else can, and no environment variable grants it."
+  },
+  {
+   "id": "SURF-022",
+   "name": "Campaign blind-mutation pass",
+   "title": "The instrument that reads the suite for tests that change state and never look at it",
+   "route": "tool://vacuity-check/blind",
+   "status": "reachable",
+   "states": [
+    "reporting",
+    "armed",
+    "gated"
+   ],
+   "description": "vacuity-check.py's third pass over Tests/, configured by campaign.json blindVocabulary. Not a product surface: it is the campaign's own instrument, given a surface of its own so that a suite-wide measurement is not filed against a product surface it did not examine. Its count is a reading and not a verdict \u2014 PRO-0079 measured a false-positive rate of at least 96.2%, dominated by causes no vocabulary can reach, so the pass is not gate-worthy until its matcher ends a body at the next declaration of any visibility, stops matching the func line that opens the body, and reads any-read-after-any-mutation rather than after the last one."
   }
  ],
  "flow": [

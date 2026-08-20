@@ -1,0 +1,22 @@
+PRO-0079 blind-pass false-positive rate
+
+population        78 findings (vacuity-check.py blind pass, 30 files)
+large strata      46 findings (act 13, unlock 12, release 9, set 6, claim 6); 25 sampled, seed 20260821
+tail              32 findings (13 verbs, 1-4 each); CENSUSED, all read
+sample            57 of 78 = 73.1%
+
+verdict           false positive 57, genuine 0
+sampled FP rate   57/57 = 100.0%  (denominator 57)
+
+upper bound on genuine findings in the unsampled remainder (21 of the large strata):
+  K=0 genuine in the 46  ->  P(all 25 drawn are FP) = 1.0000
+  K=1 genuine in the 46  ->  P(all 25 drawn are FP) = 0.4565
+  K=2 genuine in the 46  ->  P(all 25 drawn are FP) = 0.2029
+  K=3 genuine in the 46  ->  P(all 25 drawn are FP) = 0.0876
+  K=4 genuine in the 46  ->  P(all 25 drawn are FP) = 0.0367  <= 0.05, refuted at 95%
+  K=5 genuine in the 46  ->  P(all 25 drawn are FP) = 0.0148  <= 0.05, refuted at 95%
+
+95% one-sided bound  at most 3 genuine among the 46 large-strata findings,
+                     plus 0 among the 32 censused tail findings
+                     => at most 3 genuine among all 78  (3.8%);
+                     equivalently a false-positive rate of at least 96.2%.
