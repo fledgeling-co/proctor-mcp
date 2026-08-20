@@ -1,0 +1,25 @@
+spctl -a -vv /Applications/Proctor.app
+/Applications/Proctor.app: accepted
+source=Notarized Developer ID
+origin=Developer ID Application: Luke Rhodes (H4HGFL52W7)
+
+stapler validate /Applications/Proctor.app
+Processing: /Applications/Proctor.app
+The validate action worked!
+
+codesign -dv --verbose=2 /Applications/Proctor.app
+Executable=/Applications/Proctor.app/Contents/MacOS/Proctor
+Identifier=app.fledgeling.procter
+Format=app bundle with Mach-O thin (arm64)
+CodeDirectory v=20500 size=11522 flags=0x10000(runtime) hashes=353+3 location=embedded
+Signature size=9043
+Authority=Developer ID Application: Luke Rhodes (H4HGFL52W7)
+Authority=Developer ID Certification Authority
+Authority=Apple Root CA
+Timestamp=19 Aug 2026 at 9:59:14 pm
+Notarization Ticket=stapled
+Info.plist entries=15
+TeamIdentifier=H4HGFL52W7
+Runtime Version=26.5.0
+Sealed Resources version=2 rules=13 files=87
+Internal requirements count=1 size=184

@@ -1,0 +1,57 @@
+{
+  "surface": "SURF-008 status window, installed artifact",
+  "checkBoxes": {
+    "examined": 9,
+    "unnamed": 0,
+    "names": [
+      "Run panel",
+      "Drawn pointer",
+      "Takeover notice",
+      "Yield to a person",
+      "Watch input to notice sooner",
+      "Hold the keyboard and mouse",
+      "Let captures see Proctor's overlays",
+      "Second browser lane",
+      "Delegated actuation"
+    ]
+  },
+  "buttons": {
+    "examined": 21,
+    "unnamed": 7,
+    "duplicateNames": {},
+    "names": [
+      "Open Settings for Automation",
+      "How to grant Automation",
+      "Show details for obscura",
+      "Show details for simctl",
+      "Show details for cua-driver",
+      "Show details for maestro",
+      "Show details for lume",
+      "Show details for prlctl",
+      "Show details for Shortcuts CLI",
+      "Show history",
+      "Copy config",
+      "Copy command path only",
+      "Open log",
+      "Restart agent",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "failures": 0,
+  "verdict": "examined=30 failures=0",
+  "systemChrome": {
+    "count": 7,
+    "note": "Seven AXButton elements carry no title: four scrollbar parts and the three window chrome buttons. Each carries a subrole and a roleDescription that names it (AXCloseButton \"close button\", AXIncrementArrow \"increment arrow button\", and so on), so they are named by AppKit rather than unnamed. They are not the application's controls and are counted separately rather than folded into either number."
+  },
+  "before": {
+    "unnamedCheckBoxes": 8,
+    "identicalDetailsButtons": 7,
+    "note": "measured on the shipped window 2026-08-19, before AccessibilityNames existed"
+  }
+}

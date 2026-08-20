@@ -1,0 +1,38 @@
+{
+  "project": "proctor-mcp",
+  "startedAt": "2026-08-18T05:00:49+00:00",
+  "lanes": [
+    "macos",
+    "mcp-stdio",
+    "cli"
+  ],
+  "axes": [
+    "surface",
+    "state",
+    "oracle",
+    "tier",
+    "plane",
+    "platform"
+  ],
+  "sample": "full multi-witness coverage across all 21 MCP tools, status/walkthrough/overlay UI surfaces, and guest/takeover controls",
+  "designOfRecord": "",
+  "run": {
+    "scope": "full",
+    "basis": "",
+    "lastFullRun": "2026-08-19T08:24:32+00:00",
+    "decidedBy": "user asked for every gate (test-campaign 0.5.0 fullest)",
+    "declaredAt": "2026-08-19T08:24:32+00:00",
+    "maxFullRunAgeDays": 14.0
+  },
+  "laneProof": {
+    "macos-glass": {
+      "attached": true,
+      "artifact": "/Applications/Proctor.app",
+      "artifactBytes": null,
+      "builtBy": "scripts/install.sh (rebuilt on its own staleness check, Developer ID H4HGFL52W7, notarised, stapled)",
+      "attachedBy": "pid 76520 owns CG window 30094 titled 'Proctor'; 9 named AXCheckBox and 21 AXButton read back through proctor_find",
+      "captureChannel": "ScreenCaptureKit window-scoped for app windows; screencapture -l for Proctor's own overlays under PROCTOR_OVERLAY_CAPTURE",
+      "declaredAt": "2026-08-19T23:05:26+00:00"
+    }
+  }
+}

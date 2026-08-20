@@ -1,0 +1,5 @@
+{
+  "code": "notImplemented",
+  "message": "This batch would take this Mac (synthetic events enter the system event stream). PROCTOR_GUEST names gst-sequoia-01 as the guest it should run on, so the host is refused rather than taken. Reach that guest with proctor_guest action \"reach\", then drive it through the Proctor running inside it. Running the steps here while naming that guest would be a verdict about the wrong machine.",
+  "remedy": "Unset PROCTOR_GUEST to allow this batch on this Mac, or reach gst-sequoia-01 with proctor_guest action \"reach\" and drive it there. Auto-route does not silently take the host."
+}

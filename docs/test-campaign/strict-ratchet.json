@@ -1,0 +1,7 @@
+{
+ "checked": 33,
+ "total": 33,
+ "at": "2026-08-19T23:05:26+00:00",
+ "reason": "CASE-0033 added: every control on the status window now carries an accessible name, which sweep G found missing on 2026-08-19 and which had been recorded as a note rather than a defect (DEF-007).",
+ "previous": 32
+}

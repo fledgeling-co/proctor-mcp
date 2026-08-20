@@ -1,0 +1,62 @@
+{
+  "check": "K runtime theme change, while the app runs",
+  "startedAs": "Dark",
+  "relaunched": false,
+  "before": {
+    "path": "/tmp/campaign-run/shots/sweepK-theme-before.png",
+    "size": [
+      1776,
+      2154
+    ],
+    "meanRGBA": [
+      30.484,
+      30.385,
+      29.846,
+      223.116
+    ]
+  },
+  "beforeAppearance": "Dark",
+  "afterAppearance": "Light",
+  "after": {
+    "path": "/tmp/campaign-run/shots/sweepK-theme-after.png",
+    "size": [
+      1776,
+      2154
+    ],
+    "meanRGBA": [
+      216.959,
+      216.792,
+      216.317,
+      221.89
+    ]
+  },
+  "restoredAppearance": "Dark",
+  "restored": {
+    "path": "/tmp/campaign-run/shots/sweepK-theme-restored.png",
+    "size": [
+      1776,
+      2154
+    ],
+    "meanRGBA": [
+      30.483,
+      30.384,
+      29.845,
+      223.116
+    ]
+  },
+  "repaintDelta": [
+    186.475,
+    186.407,
+    186.471,
+    1.226
+  ],
+  "restoreDelta": [
+    0.001,
+    0.001,
+    0.001,
+    0.0
+  ],
+  "repaintedWithoutRelaunch": true,
+  "appearanceRestored": true,
+  "verdict": "the window repaints for the new appearance while it runs, and no stale palette survives the toggle back"
+}

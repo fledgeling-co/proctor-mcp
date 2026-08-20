@@ -1,0 +1,46 @@
+{
+  "treeOnly": {
+    "backend": "native",
+    "deterministic": true,
+    "flow": "campaign-setup-menu",
+    "machine": {
+      "kind": "host",
+      "platform": "macos",
+      "tier": "native"
+    },
+    "notes": [
+      "Comparison was on the accessibility tree only. Rendering nondeterminism that leaves the tree unchanged \u2014 a gradient, a cursor, an animation frame \u2014 is not covered by this run; pass includeTiles to cover it."
+    ],
+    "runs": 5,
+    "stepCount": 1,
+    "stepInstability": [
+      0
+    ]
+  },
+  "includeTiles": {
+    "backend": "native",
+    "deterministic": false,
+    "divergenceDetail": {
+      "0": [
+        "18e304e1f2021a7445121e94f6ad952151aef2030df94a57b5a2d101f887b9b5",
+        "68d3a790fff27d98a58cc9e55a87effaaedbaf59902b7d0c39f3fc4a4080555c"
+      ]
+    },
+    "firstDivergence": 0,
+    "flow": "campaign-setup-menu",
+    "machine": {
+      "kind": "host",
+      "platform": "macos",
+      "tier": "native"
+    },
+    "notes": [
+      "Pixel tile hashes were folded into each step hash alongside the tree."
+    ],
+    "runs": 5,
+    "stepCount": 1,
+    "stepInstability": [
+      0.25
+    ]
+  },
+  "note": "Tree-only 5-run on campaign-setup-menu was deterministic. includeTiles was not (firstDivergence 0, stepInstability 0.25) \u2014 pixel animation, not tree."
+}

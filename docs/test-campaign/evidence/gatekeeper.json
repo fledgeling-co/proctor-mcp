@@ -1,0 +1,11 @@
+{
+  "artifact": "/Applications/Proctor.app",
+  "spctlAccepted": true,
+  "spctlSource": "Notarized Developer ID",
+  "stapled": true,
+  "identity": "Developer ID Application: Luke Rhodes (H4HGFL52W7)",
+  "team": "H4HGFL52W7",
+  "signedAt": "2026-08-19T21:59:14+10:00",
+  "installedBy": "scripts/install.sh (notarytool keychain profile proctor, stapled)",
+  "previous": "spctl rejected, source=Unnotarized Developer ID, no stapled ticket"
+}

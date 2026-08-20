@@ -1,0 +1,871 @@
+[
+  {
+    "case": "CASE-0001",
+    "requirement": "REQ-001",
+    "file": "Sources/ProctorCore/ToolProfiles.swift",
+    "filter": "ProfileTests",
+    "suite": "Tool profiles",
+    "mutation": "renamed proctor_zoom in the core profile, so the advertised catalogue no longer nests",
+    "baseline": {
+      "tests": 5,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 5,
+      "issues": 1,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"membership matches the documented clusters\" recorded an issue at ProctorCoreTests.swift:382:9: Expectation failed: (names(.core) \u2192 [\"proctor_"
+    },
+    "afterRestore": {
+      "tests": 5,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0003",
+    "requirement": "REQ-002",
+    "file": "Sources/ProctorCore/ForegroundDemand.swift",
+    "filter": "ForegroundDemandTests",
+    "suite": "Foreground demand",
+    "mutation": "counted every step as a synthetic one, so a background batch claims it takes the machine",
+    "baseline": {
+      "tests": 10,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 10,
+      "issues": 16,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"the kinds with no accessibility route at all are counted as certain\" recorded an issue at ForegroundDisclosureTests.swift:41:9: Expectation f"
+    },
+    "afterRestore": {
+      "tests": 10,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0004",
+    "requirement": "REQ-003",
+    "file": "Sources/ProctorCore/ForegroundDemand.swift",
+    "filter": "ForegroundReportTests",
+    "suite": "Foreground report",
+    "mutation": "dropped the conditional-step count, so a batch that may take the foreground stops saying so",
+    "baseline": {
+      "tests": 7,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 7,
+      "issues": 1,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"what a run needed is measured from the planes its steps travelled\" recorded an issue at ForegroundDisclosureTests.swift:221:9: Expectation fa"
+    },
+    "afterRestore": {
+      "tests": 7,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0005",
+    "requirement": "REQ-004",
+    "file": "Sources/ProctorCore/CaptureTrust.swift",
+    "filter": "CaptureTrustTests",
+    "suite": "A frame is evidence only if it is both complete and real",
+    "mutation": "called every frame trustworthy regardless of its status and its content rect",
+    "baseline": {
+      "tests": 3,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 3,
+      "issues": 4,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"an incomplete frame is not, whatever its rect says\" recorded an issue at UnguardedPromisesTests.swift:188:9: Expectation failed: !(CaptureTru"
+    },
+    "afterRestore": {
+      "tests": 3,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0006",
+    "requirement": "REQ-005",
+    "file": "Sources/ProctorCore/VisionCapture.swift",
+    "filter": "CapturePurposeTests",
+    "suite": "PRO-0063 \u00b7 a capture is sized by what it is for",
+    "mutation": "collapsed the targeting tier onto the detail ceiling",
+    "baseline": {
+      "tests": 10,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 10,
+      "issues": 3,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"the saving over the old default is worth the change\" recorded an issue at CapturePurposeTests.swift:68:9: Expectation failed: (Double(targeti"
+    },
+    "afterRestore": {
+      "tests": 10,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0007",
+    "requirement": "REQ-005",
+    "file": "Sources/ProctorCore/VisionCapture.swift",
+    "filter": "CaptureFitCeilingTests",
+    "suite": "Capture sizing holds its ceiling",
+    "mutation": "forced the long-edge fit to ignore its ceiling, so a crop is no longer sized by its tier",
+    "baseline": {
+      "tests": 4,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 4,
+      "issues": 8,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"the aspect ratio survives the reduction\" recorded an issue at UnguardedPromisesTests.swift:33:9: Expectation failed: (fit.width \u2192 2000) == 50"
+    },
+    "afterRestore": {
+      "tests": 4,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0009",
+    "requirement": "REQ-007",
+    "file": "Sources/ProctorCore/Contention.swift",
+    "filter": "ContentionTests",
+    "suite": "Contention \u2014 is a person using this Mac",
+    "mutation": "made the tap answer that nobody is ever at the keyboard",
+    "baseline": {
+      "tests": 23,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 23,
+      "issues": 3,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"an event Proctor posted is never read as a person's\" recorded an issue at ContentionTests.swift:201:21: Expectation failed: (verdict \u2192 false)"
+    },
+    "afterRestore": {
+      "tests": 23,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0011",
+    "requirement": "REQ-009",
+    "file": "Sources/ProctorCore/StatusChecks.swift",
+    "filter": "StatusChecksTests",
+    "suite": "Status checks",
+    "mutation": "let a tool back into the permissions list, which is the defect the partition exists to stop",
+    "baseline": {
+      "tests": 23,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 23,
+      "issues": 9,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"the partition follows the kind, and never the required flag\" recorded an issue at StatusChecksTests.swift:90:21: Expectation failed: (inPermi"
+    },
+    "afterRestore": {
+      "tests": 23,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0012",
+    "requirement": "REQ-010",
+    "file": "Sources/ProctorCore/GrantProbe.swift",
+    "filter": "GrantProbeTests",
+    "suite": "Grant probe keeper",
+    "mutation": "widened the probe bound, so a grant macOS never answered for is waited on instead of reported unconfirmed",
+    "baseline": {
+      "tests": 17,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 17,
+      "issues": 1,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"the bound is shorter than the window's doctor poll\" recorded an issue at GrantProbeTests.swift:259:9: Expectation failed: (GrantProbe.bound \u2192"
+    },
+    "afterRestore": {
+      "tests": 17,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0013",
+    "requirement": "REQ-011",
+    "file": "Sources/ProctorCore/RunHUDMenuBar.swift",
+    "filter": "MenuBarIconTests",
+    "suite": "Menu bar icon",
+    "mutation": "gave an unreachable agent the ready seal instead of its own symbol",
+    "baseline": {
+      "tests": 4,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 4,
+      "issues": 15,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"a run taking the foreground outranks the phase, and readiness outranks it\" recorded an issue at RunHUDMenuBarTests.swift:148:9: Expectation f"
+    },
+    "afterRestore": {
+      "tests": 4,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0015",
+    "requirement": "REQ-013",
+    "file": "Sources/ProctorCore/Canonical.swift",
+    "filter": "InstabilityTests",
+    "suite": "Determinism arithmetic",
+    "mutation": "reported every replay as agreeing, whatever the step hashes said",
+    "baseline": {
+      "tests": 7,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 7,
+      "issues": 1,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"divergence is reported at the first disagreeing step\" recorded an issue at ProctorCoreTests.swift:120:9: Expectation failed: (Canonical.first"
+    },
+    "afterRestore": {
+      "tests": 7,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0016",
+    "requirement": "REQ-014",
+    "file": "Sources/ProctorCore/ElementMatch.swift",
+    "filter": "ObserverAgreementTests",
+    "suite": "A disagreement between observers is a disagreement",
+    "mutation": "made the tri-observer agree check accept a different role",
+    "baseline": {
+      "tests": 3,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 3,
+      "issues": 1,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"a different role does not agree\" recorded an issue at UnguardedPromisesTests.swift:76:9: Expectation failed: !(ElementMatch.agrees(identity: "
+    },
+    "afterRestore": {
+      "tests": 3,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0017",
+    "requirement": "REQ-015",
+    "file": "Sources/ProctorCore/AuditChain.swift",
+    "filter": "AuditChainTests",
+    "suite": "Audit chain",
+    "mutation": "swallowed the unsigned-entry fault, so a trail with every signed entry removed verifies clean",
+    "baseline": {
+      "tests": 32,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 32,
+      "issues": 1,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"a trail whose signed entries were all removed reports it as a fault\" recorded an issue at AuditChainTests.swift:120:9: Expectation failed: ve"
+    },
+    "afterRestore": {
+      "tests": 32,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0018",
+    "requirement": "REQ-016",
+    "file": "Sources/ProctorCore/FSJail.swift",
+    "filter": "FSJailTests",
+    "suite": "Filesystem jail",
+    "mutation": "let a parent-directory traversal through the jail",
+    "baseline": {
+      "tests": 6,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 6,
+      "issues": 1,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"a \"..\" traversal is refused before resolution, with a reason naming it\" recorded an issue at ProctorCoreTests.swift:1941:9: Expectation faile"
+    },
+    "afterRestore": {
+      "tests": 6,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0019",
+    "requirement": "REQ-017",
+    "file": "Sources/ProctorCore/GuestInventory.swift",
+    "filter": "GuestRunningStateTests",
+    "suite": "A guest's state word decides whether it is running",
+    "mutation": "reported every guest as running whatever its state string says",
+    "baseline": {
+      "tests": 2,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 2,
+      "issues": 2,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"everything else does not, including the states a real listing returns\" recorded an issue at UnguardedPromisesTests.swift:114:13: Expectation "
+    },
+    "afterRestore": {
+      "tests": 2,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0020",
+    "requirement": "REQ-018",
+    "file": "Sources/ProctorCore/Wire.swift",
+    "filter": "DelegatedWitnessTierTests",
+    "suite": "A delegated machine refuses what it cannot see",
+    "mutation": "let a delegated machine answer a tree assertion instead of skipping it with a reason",
+    "baseline": {
+      "tests": 3,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 3,
+      "issues": 15,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"a delegated machine cannot evaluate a tree assertion, and says why\" recorded an issue at UnguardedPromisesTests.swift:131:13: Expectation fai"
+    },
+    "afterRestore": {
+      "tests": 3,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0021",
+    "requirement": "REQ-019",
+    "file": "Sources/ProctorCore/GuestRoute.swift",
+    "filter": "GuestRouteTests",
+    "suite": "PRO-0061 \u00b7 placing a takeover batch",
+    "mutation": "inverted the guest test, so a configured guest lets the batch take the host",
+    "baseline": {
+      "tests": 4,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 4,
+      "issues": 2,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"a takeover batch with a guest configured refuses the host and names it\" recorded an issue at GuestRouteTests.swift:32:25: Issue recorded"
+    },
+    "afterRestore": {
+      "tests": 4,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0022",
+    "requirement": "REQ-020",
+    "file": "Sources/ProctorCore/SimctlLocator.swift",
+    "filter": "SimctlPathTests",
+    "suite": "The simulator lane names simctl",
+    "mutation": "pointed the simulator lane at a different binary in the same directory",
+    "baseline": {
+      "tests": 2,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 2,
+      "issues": 3,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"a different developer directory keeps the same tail\" recorded an issue at UnguardedPromisesTests.swift:168:9: Expectation failed: (SimctlLoca"
+    },
+    "afterRestore": {
+      "tests": 2,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0023",
+    "requirement": "REQ-021",
+    "file": "Sources/ProctorCore/Canonical.swift",
+    "oracle": "the Swift 6 compiler under -strict-concurrency=complete",
+    "mutation": "added nonisolated global mutable state, which strict concurrency must refuse",
+    "baseline": {
+      "exit": 0,
+      "errors": [],
+      "built": true
+    },
+    "underMutation": {
+      "exit": 1,
+      "errors": [
+        "/Users/lukerhodes/Dev/proctor-mcp/Sources/ProctorCore/Canonical.swift:10:23: error: static property 'mutantSharedCounter' is not concurrency-safe because it is nonisolated global shared mutable state [#MutableGlobalVariable]",
+        "|                       |- error: static property 'mutantSharedCounter' is not concurrency-safe because it is nonisolated global shared mutable state [#MutableGlobalVariable]",
+        "/Users/lukerhodes/Dev/proctor-mcp/Sources/ProctorCore/Canonical.swift:10:23: error: static property 'mutantSharedCounter' is not concurrency-safe because it is nonisolated global shared mutable state [#MutableGlobalVariable]"
+      ],
+      "built": false
+    },
+    "afterRestore": {
+      "exit": 0,
+      "errors": [],
+      "built": true
+    },
+    "armed": true,
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0025",
+    "requirement": "REQ-023",
+    "file": "Sources/ProctorAgent/Session/NullReflectorBridge.swift",
+    "filter": "ReflectorRefusalTests",
+    "suite": "Reflector absence is reported, never approximated",
+    "mutation": "answered a liveness read with false instead of nil, turning an instrument that is absent into a claim about the process",
+    "baseline": {
+      "tests": 2,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 2,
+      "issues": 1,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"the liveness reads answer nil rather than guessing\" recorded an issue at ReflectorRefusalTests.swift:52:9: Expectation failed: (bridge.isIdle"
+    },
+    "afterRestore": {
+      "tests": 2,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0026",
+    "requirement": "REQ-024",
+    "file": "Sources/ProctorCore/BrowserTarget.swift",
+    "filter": "BrowserRoutingTests",
+    "suite": "Browser routing",
+    "mutation": "reported Obscura as unavailable however the machine answered",
+    "baseline": {
+      "tests": 11,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 0,
+      "issues": 2,
+      "green": false,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"attaching to a browser says it once, in full\" recorded an issue at BrowserRoutingTests.swift:93:9: Expectation failed: (handoff[\"commands\"]?."
+    },
+    "afterRestore": {
+      "tests": 11,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "inconclusive: neither clearly red nor clearly green",
+    "verdictFinal": "armed"
+  },
+  {
+    "case": "CASE-0014",
+    "requirement": "REQ-012",
+    "file": "Sources/ProctorCore/CaptureTrust.swift",
+    "filter": "SettleSignalsTests",
+    "suite": "A settle names the signals it actually had",
+    "mutation": "dropped the pixel signal from the settle, so quiet is claimed without watching pixels",
+    "baseline": {
+      "tests": 3,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "underMutation": {
+      "tests": 3,
+      "issues": 4,
+      "green": false,
+      "red": true,
+      "compileError": false,
+      "built": true,
+      "exit": 1,
+      "firstIssue": "\udbc2\udc84  Test \"dropping the pixel signal changes what the verdict is over\" recorded an issue at UnguardedPromisesTests.swift:229:9: Expectation failed: (wit"
+    },
+    "afterRestore": {
+      "tests": 3,
+      "issues": 0,
+      "green": true,
+      "red": false,
+      "compileError": false,
+      "built": true,
+      "exit": 0,
+      "firstIssue": null
+    },
+    "verdict": "armed",
+    "verdictFinal": "armed"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "check": "K menu-bar extra popover anchoring",
+  "statusItem": "1105,4,40,24",
+  "clicked": true,
+  "clickError": "",
+  "newWindows": [
+    {
+      "windowNumber": 924,
+      "bounds": {
+        "Height": 211,
+        "Width": 223,
+        "X": 1091,
+        "Y": 34
+      },
+      "layer": 101,
+      "name": ""
+    }
+  ],
+  "menuItems": "Ready \u00b7 0 app(s) attachedIdle \u2014 no model connectedmissing valueShow Run Panelmissing valueProctor Status\u2026History\u2026Run Setup Again\u2026missing valueQuit Proctor",
+  "shot": "/tmp/campaign-run/shots/sweepK-extras-open.png",
+  "closed": true,
+  "anchor": {
+    "statusItemX": 1105.0,
+    "statusItemWidth": 40.0,
+    "menuX": 1091,
+    "menuWidth": 223,
+    "offsetFromItem": -14.0,
+    "screenCentredWouldBe": 752.5,
+    "anchoredToItem": true,
+    "centredOnScreen": false
+  },
+  "verdict": "anchored to its own status item, not centred on the screen"
+}

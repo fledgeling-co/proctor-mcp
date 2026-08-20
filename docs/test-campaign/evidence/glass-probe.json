@@ -1,0 +1,49 @@
+{
+  "accessibility": [
+    {
+      "axTrusted": true,
+      "axWindowCount": 0,
+      "axWindowTitles": [],
+      "hasExtrasMenuBar": false,
+      "pid": 56942
+    },
+    {
+      "axTrusted": true,
+      "axWindowCount": 1,
+      "axWindowTitles": [
+        "Proctor"
+      ],
+      "hasExtrasMenuBar": true,
+      "pid": 56944
+    }
+  ],
+  "displays": [
+    {
+      "backingScaleFactor": 2,
+      "height": 1117,
+      "width": 1728,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "matchedWindows": [
+    {
+      "alpha": 1,
+      "bounds": {
+        "Height": 592,
+        "Width": 640,
+        "X": 946,
+        "Y": 99
+      },
+      "isOnscreen": true,
+      "layer": 0,
+      "name": "Proctor",
+      "ownerName": "Proctor",
+      "ownerPID": 56944,
+      "sharingState": 1,
+      "windowNumber": 694
+    }
+  ],
+  "needle": "Proctor",
+  "totalOnScreenWindows": 47
+}

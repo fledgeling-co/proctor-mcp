@@ -1,0 +1,1209 @@
+{
+  "requirement": [
+    {
+      "id": "REQ-001",
+      "text": "The 21-tool MCP catalog exposes unified black-box automation tools with schema compliance",
+      "source": "docs/PRD.md:85",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-002"
+      ],
+      "note": "Exposed through ProctorCore.ToolCatalogue across full/core/scripting profiles"
+    },
+    {
+      "id": "REQ-002",
+      "text": "Process-directed actions reach background, occluded, and other-Space windows without stealing focus",
+      "source": "docs/PRD.md:72",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-003"
+      ],
+      "note": "Uses AXUIElement actions, attributes, and Apple Events"
+    },
+    {
+      "id": "REQ-003",
+      "text": "Synthetic event steps require foreground activation, post via CGEventPost, and report plane=syntheticEvent",
+      "source": "docs/PRD.md:76",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-004",
+        "SURF-005"
+      ],
+      "note": "click, hover, dragPath, key inject into WindowServer event stream"
+    },
+    {
+      "id": "REQ-004",
+      "text": "ScreenCaptureKit window captures report SCFrameStatus, dirty rects, and trustworthy verdicts",
+      "source": "docs/PRD.md:93",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-006"
+      ],
+      "note": "Proctor refuses stale frames and flags caveats rather than presenting fake passes"
+    },
+    {
+      "id": "REQ-005",
+      "text": "Captures support 3-tier resolution scaling (targeting 768px, verify 1024px, detail 1568px)",
+      "source": "docs/PRD.md:93",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-006",
+        "SURF-007"
+      ],
+      "note": "Optimizes vision model token budget while preserving 2x crop inspection via proctor_zoom"
+    },
+    {
+      "id": "REQ-006",
+      "text": "Per-screen Run HUD Cocoa overlay displays running 22pt Mac character sprite, step title, and target badge",
+      "source": "docs/PRD.md:129",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-004"
+      ],
+      "note": "Floating NSPanel with 22pt sprite, interactive Pause and Stop controls"
+    },
+    {
+      "id": "REQ-007",
+      "text": "Contention Yield detects human mouse/keyboard interaction and yields automation control immediately",
+      "source": "docs/PRD.md:131",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "note": "Hardware event tap detection with contention back-off"
+    },
+    {
+      "id": "REQ-008",
+      "text": "Takeover Shield displays full-screen input blocker during synthetic batches on the host",
+      "source": "docs/PRD.md:130",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-005"
+      ],
+      "note": "Translucent blocking panel preventing accidental mouse clicks into background windows"
+    },
+    {
+      "id": "REQ-009",
+      "text": "Status Window displays doctor diagnostic health checks (TCC, tools, observers, secure input)",
+      "source": "docs/PRD.md:100",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008"
+      ],
+      "note": "Native AppKit/SwiftUI status window with real-time TCC grant status and tool probing. Peer death is named within one 2s doctor tick: Agent down at t+0.71s and t+3.63s after the agent was killed."
+    },
+    {
+      "id": "REQ-010",
+      "text": "Walkthrough onboarding guides user through initial Accessibility and Screen Recording consent",
+      "source": "docs/PRD.md:68",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "Adaptive walkthrough view responding to system preference changes"
+    },
+    {
+      "id": "REQ-011",
+      "text": "Menu Bar Extra provides status item indicator, quick doctor check, and preferences access",
+      "source": "docs/PRD.md:104",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-010"
+      ],
+      "note": "AppKit NSStatusItem with pixel sprite animations and contextual menu"
+    },
+    {
+      "id": "REQ-012",
+      "text": "Multi-signal settling evaluates pixel quiet, AX notifications, and reflector idle signals",
+      "source": "docs/PRD.md:95",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-003"
+      ],
+      "note": "Bounded settle conjunction reporting allSignalsQuiet, reflectorIdle, or timeout"
+    },
+    {
+      "id": "REQ-013",
+      "text": "Statistical determinism sweeps replay flows N times and report firstDivergence and per-step instability",
+      "source": "docs/PRD.md:98",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-011"
+      ],
+      "note": "Differentiates application non-determinism from harness timing flakiness"
+    },
+    {
+      "id": "REQ-014",
+      "text": "Tri-observer consistency (kind: agree) validates AX tree, layer geometry, and pixels concurrently",
+      "source": "docs/PRD.md:96",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-011"
+      ],
+      "note": "Identifies ghost nodes, unexposed controls, and geometry mismatches"
+    },
+    {
+      "id": "REQ-015",
+      "text": "Audit trail logs are HMAC-SHA256 chained, signed, and encrypted at rest with CryptoKit AES-GCM",
+      "source": "docs/PRD.md:132",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008",
+        "SURF-012"
+      ],
+      "note": "AuditLog.append and AuditLog.verify with macOS Keychain-backed key derivation"
+    },
+    {
+      "id": "REQ-016",
+      "text": "Policy gate enforces action filters, path confinement, and redaction patterns before execution",
+      "source": "docs/PRD.md:106",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-012"
+      ],
+      "note": "Refuses out-of-policy actions and redacts sensitive credentials from logs"
+    },
+    {
+      "id": "REQ-017",
+      "text": "Guest routing manages virtualized macOS/Linux/Windows machines via lume and prlctl adapters",
+      "source": "docs/PRD.md:109",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-013"
+      ],
+      "note": "proctor_guest tool handles list, status, start, stop, clone, reach"
+    },
+    {
+      "id": "REQ-018",
+      "text": "Witness tiers distinguish native macOS guests from delegated Cua Linux/Windows guests",
+      "source": "docs/PRD.md:113",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-013"
+      ],
+      "note": "Delegated tier refuses tree/agree assertions with explicit reasons rather than returning weak passes"
+    },
+    {
+      "id": "REQ-019",
+      "text": "Auto-route refusal gate stops takeover batches on host when PROCTOR_GUEST is configured",
+      "source": "docs/PRD.md:125",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-004",
+        "SURF-013"
+      ],
+      "note": "Refuses host takeover with actionable diagnostic remedy instead of stealing host focus"
+    },
+    {
+      "id": "REQ-020",
+      "text": "iOS simulator driving supports deep-link launches and Maestro flow file execution",
+      "source": "docs/PRD.md:108",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-014"
+      ],
+      "note": "proctor_ios tool with simctl deep link verification and Maestro flow repeat scoring"
+    },
+    {
+      "id": "REQ-021",
+      "text": "Strict Swift 6 concurrency safety with zero data races across actors and asynchronous suites",
+      "source": "docs/PRD.md:139",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-015"
+      ],
+      "note": "Compiled with -strict-concurrency=complete and audited thread isolation"
+    },
+    {
+      "id": "REQ-022",
+      "text": "Developer ID signing, notarization, and stapling ensures TCC grants survive app upgrades",
+      "source": "docs/PRD.md:145",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008",
+        "SURF-016"
+      ],
+      "note": "Team-scoped Developer ID signature retains Accessibility and Screen Recording. Installed build is notarised and stapled: spctl accepted, source=Notarized Developer ID."
+    },
+    {
+      "id": "REQ-023",
+      "text": "ProctorReflector inspection reads resolved layout constraints, colors, and CALayer models",
+      "source": "docs/PRD.md:99",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-015"
+      ],
+      "note": "In-process debug package delivering ground-truth computed styles"
+    },
+    {
+      "id": "REQ-024",
+      "text": "Automatic browser routing dispatches web URLs to Obscura or browser-use engines",
+      "source": "docs/PRD.md:20",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-001",
+        "SURF-003"
+      ],
+      "note": "Dispatches browser automation transparently while maintaining session provenance"
+    },
+    {
+      "id": "REQ-025",
+      "text": "Tahoe guest window rendering workaround",
+      "source": "docs/PRD.md:26",
+      "class": "deferred",
+      "evidence": "reported",
+      "surfaces": [
+        "SURF-013"
+      ],
+      "note": "Upstream Apple FB21748086 / trycua issue #870; verified on Sequoia guest instead"
+    },
+    {
+      "id": "REQ-026",
+      "text": "Reopening from the Dock or the menu bar restores the Status window when none is visible",
+      "source": "Sources/ProctorUI/ProctorUIApp.swift:65-71 applicationShouldHandleReopen",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008",
+        "SURF-010"
+      ],
+      "note": "WindowPresentation asks whether a window titled Proctor is on screen rather than trusting hasVisibleWindows, which the extras item satisfies. Verified on the installed build: cg 0 / ax 0 before, cg 1 640x592 / ax 1 after open -a."
+    },
+    {
+      "id": "REQ-027",
+      "text": "The status window stops claiming the agent is ready when the agent holds the socket and never answers",
+      "source": "references/sweeps.md L (half-open connection); Sources/ProctorUI/AgentModel.swift pollTimeoutSeconds",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008"
+      ],
+      "note": "A killed agent fails connect() at once. A stopped one accepts and never replies, which is the case that used to latch isChecking and freeze the last good report."
+    },
+    {
+      "id": "REQ-028",
+      "text": "Every overlay Proctor draws over other applications is excluded from screen capture unless somebody lifts it",
+      "source": "Sources/ProctorCore/OverlayCapture.swift; RunHUDPanel, TakeoverOverlay and CursorOverlay",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "note": "Three surfaces cover other windows: the run panel, the takeover tint and the drawn pointer. The pointer was measured at sharingState 1 while the other two were 0."
+    },
+    {
+      "id": "REQ-029",
+      "text": "Every control the status window draws carries an accessible name, and no two share one",
+      "source": "references/sweeps.md G (keyboard and the accessibility floor); Sources/ProctorCore/AccessibilityNames.swift",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008"
+      ],
+      "note": "A tool that reads other applications through the accessibility tree owes its own surface the same standard it depends on elsewhere."
+    }
+  ],
+  "surface": [
+    {
+      "id": "SURF-001",
+      "name": "MCP Stdio RPC Engine",
+      "title": "MCP Stdio RPC Engine",
+      "route": "stdio://proctor-shim",
+      "status": "reachable",
+      "states": [
+        "idle",
+        "processing",
+        "streaming",
+        "settling",
+        "error"
+      ],
+      "description": "JSON-RPC 2.0 stdio server communicating with ProctorAgent daemon over domain socket",
+      "shot": ""
+    },
+    {
+      "id": "SURF-002",
+      "name": "MCP Tool Catalogue & Dispatcher",
+      "title": "MCP Tool Catalogue & Dispatcher",
+      "route": "core://tools",
+      "status": "reachable",
+      "states": [
+        "core",
+        "scripting",
+        "full"
+      ],
+      "description": "Profile-gated 21-tool registry managing schema validation and invocation",
+      "shot": ""
+    },
+    {
+      "id": "SURF-003",
+      "name": "Process-Directed Actuation Subsystem",
+      "title": "Process-Directed Actuation Subsystem",
+      "route": "engine://process-directed",
+      "status": "reachable",
+      "states": [
+        "attached",
+        "querying",
+        "mutating",
+        "settled"
+      ],
+      "description": "Background AXUIElement actions, attribute mutations, and AppleScript automation",
+      "shot": ""
+    },
+    {
+      "id": "SURF-004",
+      "name": "Run HUD Floating Cocoa Overlay",
+      "title": "Run HUD Floating Cocoa Overlay",
+      "route": "ui://run-hud",
+      "status": "reachable",
+      "states": [
+        "hidden",
+        "active-host",
+        "active-guest",
+        "paused",
+        "yielding",
+        "error"
+      ],
+      "description": "Per-screen floating panel showing running sprite, step description, and Stop button",
+      "shot": ""
+    },
+    {
+      "id": "SURF-005",
+      "name": "Takeover Shield & Contention Blocker",
+      "title": "Takeover Shield & Contention Blocker",
+      "route": "ui://takeover-shield",
+      "status": "reachable",
+      "states": [
+        "inactive",
+        "armed-blocking",
+        "yielding",
+        "dismissed"
+      ],
+      "description": "Full-screen protective overlay and hardware event tap monitoring",
+      "shot": ""
+    },
+    {
+      "id": "SURF-006",
+      "name": "ScreenCaptureKit Visual Engine",
+      "title": "ScreenCaptureKit Visual Engine",
+      "route": "engine://screen-capture",
+      "status": "reachable",
+      "states": [
+        "window-scoped",
+        "targeting-768",
+        "verify-1024",
+        "detail-1568"
+      ],
+      "description": "Cryptographically trustworthy window frame grabber with SCFrameStatus verification",
+      "shot": "evidence/shots/surf-006-screen-capture.png"
+    },
+    {
+      "id": "SURF-007",
+      "name": "Native Crop & Zoom Inspector",
+      "title": "Native Crop & Zoom Inspector",
+      "route": "engine://zoom",
+      "status": "reachable",
+      "states": [
+        "crop-region",
+        "crop-node",
+        "annotate"
+      ],
+      "description": "Sub-pixel resolution crop extractor lifting small text grounding accuracy",
+      "shot": "evidence/shots/surf-007-zoom.png"
+    },
+    {
+      "id": "SURF-008",
+      "name": "Status & Diagnostics Window",
+      "title": "Status & Diagnostics Window",
+      "route": "ui://status-window",
+      "status": "reachable",
+      "states": [
+        "health-tab",
+        "audit-tab",
+        "settings-tab",
+        "about-tab"
+      ],
+      "description": "Native status window rendering doctor diagnostics, audit logs, and settings",
+      "shot": "evidence/shots/surf-008-status-window.png",
+      "additionalShots": [
+        "evidence/shots/surf-008-about.png"
+      ]
+    },
+    {
+      "id": "SURF-009",
+      "name": "Permissions Walkthrough Onboarding",
+      "title": "Permissions Walkthrough Onboarding",
+      "route": "ui://walkthrough",
+      "status": "reachable",
+      "states": [
+        "step-accessibility",
+        "step-screen-recording",
+        "step-complete"
+      ],
+      "description": "Interactive TCC permissions setup flow with live permission polling",
+      "shot": "evidence/shots/surf-009-walkthrough.png"
+    },
+    {
+      "id": "SURF-010",
+      "name": "Menu Bar Status Item Extra",
+      "title": "Menu Bar Status Item Extra",
+      "route": "ui://menubar",
+      "status": "reachable",
+      "states": [
+        "idle-character",
+        "running-animation",
+        "menu-open"
+      ],
+      "description": "NSStatusItem extra displaying status icon, live feedback, and quick actions",
+      "shot": "evidence/shots/surf-010-menubar.png"
+    },
+    {
+      "id": "SURF-011",
+      "name": "Flow Stability & Determinism Engine",
+      "title": "Flow Stability & Determinism Engine",
+      "route": "engine://stability",
+      "status": "reachable",
+      "states": [
+        "recording",
+        "replaying",
+        "scoring",
+        "diverged"
+      ],
+      "description": "Multi-pass flow recorder, replay hash validator, and determinism scorer",
+      "shot": ""
+    },
+    {
+      "id": "SURF-012",
+      "name": "Policy Engine & Cryptographic Audit Log",
+      "title": "Policy Engine & Cryptographic Audit Log",
+      "route": "engine://audit-policy",
+      "status": "reachable",
+      "states": [
+        "locked",
+        "unlocked",
+        "verifying",
+        "tampered"
+      ],
+      "description": "HMAC-SHA256 chain validator and AES-GCM encrypted persistence store",
+      "shot": ""
+    },
+    {
+      "id": "SURF-013",
+      "name": "Guest VM & Remote Target Controller",
+      "title": "Guest VM & Remote Target Controller",
+      "route": "engine://guest-provider",
+      "status": "reachable",
+      "states": [
+        "lume-active",
+        "prlctl-active",
+        "delegated-cua",
+        "ssh-forwarding"
+      ],
+      "description": "Virtual machine provider orchestrating guest agents and SSH socket reachability",
+      "shot": ""
+    },
+    {
+      "id": "SURF-014",
+      "name": "iOS Simulator & Maestro Flow Driver",
+      "title": "iOS Simulator & Maestro Flow Driver",
+      "route": "engine://ios-maestro",
+      "status": "reachable",
+      "states": [
+        "simctl-booted",
+        "deep-link-open",
+        "maestro-running"
+      ],
+      "description": "iOS deep link launcher and Maestro automated flow execution engine",
+      "shot": ""
+    },
+    {
+      "id": "SURF-015",
+      "name": "In-Process ProctorReflector Bridge",
+      "title": "In-Process ProctorReflector Bridge",
+      "route": "engine://reflector",
+      "status": "reachable",
+      "states": [
+        "connected",
+        "idle-signal",
+        "inspecting",
+        "disconnected"
+      ],
+      "description": "Debug instrumentation bridge exposing live computed styles and layer models",
+      "shot": ""
+    },
+    {
+      "id": "SURF-016",
+      "name": "Installer, Notarization & Packaging Suite",
+      "title": "Installer, Notarization & Packaging Suite",
+      "route": "cli://install-notarize",
+      "status": "reachable",
+      "states": [
+        "developer-id-signed",
+        "stapled",
+        "ad-hoc"
+      ],
+      "description": "Release signing and notarization pipeline preserving system TCC grants",
+      "shot": ""
+    }
+  ],
+  "flow": [
+    {
+      "id": "FLOW-001",
+      "title": "Environment Health Diagnostic Flow",
+      "critical": true,
+      "steps": [
+        {
+          "surface": "SURF-001",
+          "action": "Invoke proctor_doctor tool via stdio",
+          "observableAtoms": [
+            "MCP JSON-RPC response",
+            "TCC grants object",
+            "tools on disk status",
+            "ready boolean"
+          ]
+        },
+        {
+          "surface": "SURF-008",
+          "action": "Inspect doctor diagnostic report in Status Window",
+          "observableAtoms": [
+            "Accessibility checkmark",
+            "Screen Recording checkmark",
+            "Toolchain rows",
+            "Machine name"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW-002",
+      "title": "Background Process-Directed Actuation Journey",
+      "critical": true,
+      "steps": [
+        {
+          "surface": "SURF-001",
+          "action": "Attach to target application window via proctor_apps",
+          "observableAtoms": [
+            "App handle returned",
+            "AX tree warmed",
+            "Provenance metadata attached"
+          ]
+        },
+        {
+          "surface": "SURF-003",
+          "action": "Execute batched process-directed actions via proctor_act",
+          "observableAtoms": [
+            "plane=process-directed",
+            "State hash delta",
+            "Target window remains in background"
+          ]
+        },
+        {
+          "surface": "SURF-001",
+          "action": "Assert element state via proctor_assert",
+          "observableAtoms": [
+            "valueEquals passed",
+            "observed matches expected",
+            "zero focus disruption"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW-003",
+      "title": "Trustworthy Vision Capture & Crop Flow",
+      "critical": true,
+      "steps": [
+        {
+          "surface": "SURF-006",
+          "action": "Capture window frame with normalisation via proctor_capture",
+          "observableAtoms": [
+            "trustworthy=true",
+            "SCFrameStatus complete",
+            "Normalised image file written"
+          ]
+        },
+        {
+          "surface": "SURF-007",
+          "action": "Extract high-resolution region crop via proctor_zoom",
+          "observableAtoms": [
+            "Native 2x crop returned",
+            "Pixel dimensions match rect",
+            "Small text legibility preserved"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW-004",
+      "title": "Synthetic Event Takeover & Contention Yield Flow",
+      "critical": true,
+      "steps": [
+        {
+          "surface": "SURF-004",
+          "action": "Arm synthetic batch with foreground activation",
+          "observableAtoms": [
+            "Run HUD appears on active screen",
+            "Pixel character animates",
+            "Step description updates"
+          ]
+        },
+        {
+          "surface": "SURF-005",
+          "action": "Detect human hardware mouse movement during batch",
+          "observableAtoms": [
+            "Contention tap triggers yield",
+            "HUD displays Human activity detected",
+            "Automation pauses cleanly"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW-005",
+      "title": "Multi-Run Flow Stability & Determinism Sweep",
+      "critical": true,
+      "steps": [
+        {
+          "surface": "SURF-011",
+          "action": "Record multi-step interactive flow via proctor_flow",
+          "observableAtoms": [
+            "Flow recorded",
+            "Per-step hashes stored",
+            "Named flow registered"
+          ]
+        },
+        {
+          "surface": "SURF-011",
+          "action": "Execute 5-run stability measurement via proctor_stability",
+          "observableAtoms": [
+            "5 repeats executed",
+            "firstDivergence evaluated",
+            "Per-step instability matrix returned"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW-006",
+      "title": "Cryptographic Audit Log Signing & Verification Flow",
+      "critical": true,
+      "steps": [
+        {
+          "surface": "SURF-012",
+          "action": "Append batched audit record via AuditLog.append",
+          "observableAtoms": [
+            "HMAC-SHA256 chain linked",
+            "Record encrypted at rest",
+            "Sequence increments"
+          ]
+        },
+        {
+          "surface": "SURF-008",
+          "action": "Verify entire audit chain integrity via AuditLog.verify",
+          "observableAtoms": [
+            "Total records count",
+            "Verified records count",
+            "Chain signature verified clean"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW-007",
+      "title": "Guest Target Lifecycle & Auto-Route Refusal Flow",
+      "critical": true,
+      "steps": [
+        {
+          "surface": "SURF-013",
+          "action": "Query guest provider status via proctor_guest",
+          "observableAtoms": [
+            "Lume / prlctl guests listed",
+            "gst- handles assigned",
+            "Reach recipe available"
+          ]
+        },
+        {
+          "surface": "SURF-001",
+          "action": "Attempt host takeover batch with PROCTOR_GUEST configured",
+          "observableAtoms": [
+            "Refusal returned naming guest",
+            "Remedy diagnostics provided",
+            "Host focus preserved"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW-008",
+      "title": "iOS Deep Link & Maestro Flow Execution Flow",
+      "critical": true,
+      "steps": [
+        {
+          "surface": "SURF-014",
+          "action": "Boot iOS simulator and open URL scheme via proctor_ios",
+          "observableAtoms": [
+            "simctl boots simulator",
+            "URL opened in target app",
+            "Screen delta measured"
+          ]
+        },
+        {
+          "surface": "SURF-014",
+          "action": "Run Maestro flow with repeat scoring",
+          "observableAtoms": [
+            "Maestro flow executed",
+            "Command sequence parsed",
+            "Repeat score computed"
+          ]
+        }
+      ]
+    }
+  ],
+  "component": [
+    {
+      "id": "CMP-001",
+      "name": "MCP JSON-RPC Stdio Transport Server",
+      "role": "server",
+      "variants": {
+        "mode": [
+          "framed",
+          "streaming",
+          "stdio"
+        ],
+        "profile": [
+          "core",
+          "scripting",
+          "full"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorShim/main.swift"
+        }
+      },
+      "cases": [
+        "CASE-0001"
+      ]
+    },
+    {
+      "id": "CMP-002",
+      "name": "AXUIElement Accessibility Walker & Cache",
+      "role": "inspector",
+      "variants": {
+        "depth": [
+          "shallow",
+          "subtree",
+          "full"
+        ],
+        "filtering": [
+          "visible-only",
+          "include-invisible"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorAgent/AX/AXWalker.swift"
+        }
+      },
+      "cases": [
+        "CASE-0003"
+      ]
+    },
+    {
+      "id": "CMP-003",
+      "name": "ScreenCaptureKit Frame Pipeline",
+      "role": "capture",
+      "variants": {
+        "purpose": [
+          "targeting-768",
+          "verify-1024",
+          "detail-1568"
+        ],
+        "format": [
+          "png",
+          "jpeg"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorAgent/Capture/SCKCaptureEngine.swift"
+        }
+      },
+      "cases": [
+        "CASE-0005"
+      ]
+    },
+    {
+      "id": "CMP-004",
+      "name": "Run HUD Floating Cocoa Panel",
+      "role": "panel",
+      "variants": {
+        "state": [
+          "idle",
+          "active",
+          "paused",
+          "yielding",
+          "error"
+        ],
+        "target": [
+          "host",
+          "guest"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorCore/RunHUD.swift"
+        }
+      },
+      "cases": [
+        "CASE-0008",
+        "CASE-0030"
+      ]
+    },
+    {
+      "id": "CMP-005",
+      "name": "22pt Compact Mac Pixel Character Sprite",
+      "role": "sprite",
+      "variants": {
+        "action": [
+          "idle",
+          "travelling",
+          "acting",
+          "paused",
+          "blocked",
+          "error",
+          "finished"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorAgent/Resources/character/"
+        }
+      },
+      "cases": [
+        "CASE-0008",
+        "CASE-0013"
+      ]
+    },
+    {
+      "id": "CMP-006",
+      "name": "Takeover Shield Full-Screen Veil",
+      "role": "modal",
+      "variants": {
+        "visibility": [
+          "hidden",
+          "visible-armed"
+        ],
+        "theme": [
+          "translucent-dark",
+          "translucent-light"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorAgent/Overlay/TakeoverShield.swift"
+        }
+      },
+      "cases": [
+        "CASE-0010",
+        "CASE-0031"
+      ]
+    },
+    {
+      "id": "CMP-007",
+      "name": "Hardware Contention Event Tap Monitor",
+      "role": "service",
+      "variants": {
+        "state": [
+          "listening",
+          "suppressed",
+          "yielding"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorAgent/Actuation/EventTap.swift"
+        }
+      },
+      "cases": [
+        "CASE-0009"
+      ]
+    },
+    {
+      "id": "CMP-008",
+      "name": "Diagnostics Status Window",
+      "role": "window",
+      "variants": {
+        "tab": [
+          "health",
+          "audit",
+          "settings",
+          "about"
+        ],
+        "theme": [
+          "system",
+          "dark",
+          "light"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorUI/StatusWindowController.swift"
+        }
+      },
+      "cases": [
+        "CASE-0011",
+        "CASE-0033"
+      ]
+    },
+    {
+      "id": "CMP-009",
+      "name": "Interactive Permissions Walkthrough",
+      "role": "wizard",
+      "variants": {
+        "step": [
+          "accessibility",
+          "screen-recording",
+          "complete"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorUI/WalkthroughView.swift"
+        }
+      },
+      "cases": [
+        "CASE-0012"
+      ]
+    },
+    {
+      "id": "CMP-010",
+      "name": "Menu Bar Status Item Extra",
+      "role": "status-indicator",
+      "variants": {
+        "agentState": [
+          "idle",
+          "active",
+          "attention-needed"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorUI/StatusBarItem.swift"
+        }
+      },
+      "cases": [
+        "CASE-0013"
+      ]
+    },
+    {
+      "id": "CMP-011",
+      "name": "HMAC Audit Log Verifier",
+      "role": "crypto",
+      "variants": {
+        "status": [
+          "valid",
+          "corrupted",
+          "locked"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorCore/AuditTrail.swift"
+        }
+      },
+      "cases": [
+        "CASE-0017"
+      ]
+    },
+    {
+      "id": "CMP-012",
+      "name": "Guest Provider (Lume / Prlctl) Adapter",
+      "role": "adapter",
+      "variants": {
+        "backend": [
+          "lume",
+          "prlctl",
+          "cua"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorAgent/Guest/GuestProvider.swift"
+        }
+      },
+      "cases": [
+        "CASE-0019"
+      ]
+    },
+    {
+      "id": "CMP-013",
+      "name": "iOS Simulator simctl Bridge",
+      "role": "bridge",
+      "variants": {
+        "state": [
+          "booted",
+          "shutdown",
+          "running-flow"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorAgent/Session/SimctlLocator.swift"
+        }
+      },
+      "cases": [
+        "CASE-0022"
+      ]
+    },
+    {
+      "id": "CMP-014",
+      "name": "In-Process Reflector Debug Endpoint",
+      "role": "reflector",
+      "variants": {
+        "status": [
+          "active",
+          "idle",
+          "disconnected"
+        ]
+      },
+      "platformImplementations": {
+        "macos": {
+          "source": "Sources/ProctorReflector/ProctorReflector.swift"
+        }
+      },
+      "cases": [
+        "CASE-0025"
+      ]
+    }
+  ],
+  "defect": [
+    {
+      "id": "DEF-001",
+      "title": "Reopen from Dock or open -a does not restore the Status window",
+      "surface": "SURF-008",
+      "req": "REQ-026",
+      "severity": "serious",
+      "status": "fixed",
+      "evidence": [
+        "evidence/sweeps-a-to-l.json"
+      ],
+      "note": "applicationShouldHandleReopen calls makeKeyAndOrderFront when hasVisibleWindows is false. After AX close: glass_probe axWindowCount=0, extras still present. proctor_apps activate: activated true, windows [], 8000ms, note says menu-bar-only. open -a /Applications/Proctor.app: still axWindows=0. System Events click Window/Proctor restored 640x592 at 946,99. Likely cause: after walkthroughCompleted=1 the app is .accessory and NSApp.windows.first is not ordered front by activate/open -a; the Window menu item is. Fixed: WindowPresentation.shouldPresentMain asks whether a window titled Proctor is on screen instead of trusting hasVisibleWindows; reopen orders it front or posts for the scene to be created. Verified on .build/Proctor.app: cg 0 / ax 0 before, cg 1 820x1009 / ax 1 after open -a. Six tests in WindowPresentationTests cover the rule. Verified on the installed artifact after reinstall: cg 0 / ax 0 before, cg 1 640x592 / ax 1 titled Proctor after open -a."
+    },
+    {
+      "id": "DEF-002",
+      "title": "Status window kept claiming Ready while the agent was wedged",
+      "surface": "SURF-008",
+      "req": "REQ-027",
+      "severity": "serious",
+      "status": "fixed",
+      "evidence": [
+        "evidence/shots/sweepL-wedged-t7.png",
+        "evidence/sweepL-halfopen.json"
+      ],
+      "note": "First filed against a killed agent and retracted: a kill fails connect() at once and the window recovers within one 2s tick (Agent down at t+0.71s). Sweep L half-open found the real shape. With the agent held by SIGSTOP the socket is accepted and never answered, the poll blocks in read(), isChecking latches, and the window showed Ready with green grants past 25 seconds while a driven proctor_doctor never returned. Fixed by an opt-in SocketClient.ioTimeoutSeconds, default 0 so the shim is unchanged, with AgentModel polling at 5s. Verified: Agent down at t+7.12s, recovered after SIGCONT."
+    },
+    {
+      "id": "DEF-003",
+      "title": "Installed Proctor.app is Developer ID signed but not notarised or stapled",
+      "surface": "SURF-016",
+      "req": "REQ-022",
+      "severity": "serious",
+      "status": "fixed",
+      "evidence": [
+        "evidence/gatekeeper.json",
+        "evidence/gatekeeper-spctl.txt"
+      ],
+      "note": "spctl -a -vv /Applications/Proctor.app \u2192 rejected, source=Unnotarized Developer ID, origin=Developer ID Application: Luke Rhodes (H4HGFL52W7). stapler validate \u2192 does not have a ticket stapled. codesign reports runtime hardened, timestamp 18 Aug 2026. This is the artifact the macos-glass lane attached (commit 1c6500c51b24). CASE-0024 fails on it. Fixed by scripts/install.sh on 2026-08-19: notarised through the proctor keychain profile and stapled. spctl now returns accepted, source=Notarized Developer ID; stapler validate passes."
+    },
+    {
+      "id": "DEF-004",
+      "title": "Campaign recorded a refusal the product does not perform (profile filtering)",
+      "surface": "SURF-002",
+      "req": "REQ-001",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": [
+        "evidence/sweepL-privilege-separation.json"
+      ],
+      "note": "CASE-0002 was armed with \"swapped profile filter from full to core; verified proctor_guest refused\". Measured: a core-profile shim executes proctor_guest and proctor_policy when they are named. That is the documented contract (MCPServer.swift:123) rather than a product defect, so the campaign record was corrected and the arming rewritten around what the profile does change, the advertised catalogue: 21 names on full, 10 on core."
+    },
+    {
+      "id": "DEF-005",
+      "title": "The drawn pointer was not excluded from screen capture",
+      "surface": "SURF-004",
+      "req": "REQ-028",
+      "severity": "serious",
+      "status": "fixed",
+      "evidence": [
+        "evidence/overlay-capture-default.json",
+        "evidence/window-level-sharing.json"
+      ],
+      "note": "Found while arming CASE-0008: with the exclusion at its default the run panel and the takeover tint reported sharingState 0 and refused every capture, while the drawn pointer reported 1 and photographed cleanly at 3456x2234. It covers every display, so Proctor's own pointer entered any display-scoped capture taken during a run, against the principle the other two panels are built on. Cause: it is the only one of the three that changes window level at runtime, and sharingType does not survive the change. Fixed by setting level and sharing together in one place. The obvious suspect, that the window server refuses .none at screenSaver level, was measured and ruled out first."
+    },
+    {
+      "id": "DEF-006",
+      "title": "Twenty-two arming claims were authored rather than measured, and nine guarded nothing",
+      "surface": "SURF-001",
+      "req": "REQ-001",
+      "severity": "serious",
+      "status": "fixed",
+      "evidence": [
+        "evidence/arming-mutations.json"
+      ],
+      "note": "Twenty-two of the campaign's thirty-two cases carried arming text written by scripts/build_test_campaign.py, in a \"did X; verified Y; restored\" formula, and no assertion had ever been watched to fail. Every one was then armed for real by mutation. Nine of them turned out to guard nothing: breaking the behaviour left the whole suite green, so the campaign was carrying a pass for the frame-trustworthiness rule, the capture long-edge ceiling, the settle signal list, the tri-observer agreement, the audit chain's stripped-trail fault, the guest running-state words, the delegated witness tier's refusal, the simctl path, and the reflector's absence refusal. Twenty-four tests in eight new suites now guard them, and each was re-armed against its new guard. The instrument needed correcting first: the initial run passed suite display names to swift test --filter, matched zero tests, and read as a clean sweep, so the harness now proves its filter selects tests and that the mutation compiled before any verdict counts."
+    },
+    {
+      "id": "DEF-007",
+      "title": "Nothing on the status window told a screen reader which control it was on",
+      "surface": "SURF-008",
+      "req": "REQ-029",
+      "severity": "serious",
+      "status": "fixed",
+      "evidence": [
+        "evidence/sweepG-accessibility-floor.json"
+      ],
+      "note": "Found by sweep G on 2026-08-19 and recorded as a note rather than a defect, which is how it survived two rounds of this campaign. Every switch toggle was built as Toggle(\"\", isOn:) with .labelsHidden(), so it reached the accessibility tree as an unnamed AXCheckBox: nine of them in a column, indistinguishable. Seven tool disclosures were all called \"Details\", and the permissions list repeated \"Open Settings\" and \"How\" per grant. Fixed by naming them through ProctorCore/AccessibilityNames.swift and verified on the installed artifact."
+    }
+  ]
+}

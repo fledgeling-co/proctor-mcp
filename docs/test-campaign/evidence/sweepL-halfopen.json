@@ -1,0 +1,16 @@
+{
+  "agentPid": 56942,
+  "signal": "SIGSTOP",
+  "clientBlockedSeconds": 25.0,
+  "clientTimedOutAt25s": true,
+  "clientReturnedOnItsOwn": false,
+  "statusShot": "/tmp/campaign-run/shots/sweepL-halfopen-status.png",
+  "recoveredAfterSIGCONT": true,
+  "verdict": "the client waits on a read that will never return; nothing bounds it",
+  "shots": [
+    "evidence/shots/sweepL-wedged-t1.png",
+    "evidence/shots/sweepL-wedged-t7.png",
+    "evidence/shots/sweepL-wedged-t14.png",
+    "evidence/shots/sweepL-wedged-recovered.png"
+  ]
+}

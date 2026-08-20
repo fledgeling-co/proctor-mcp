@@ -1,0 +1,44 @@
+{
+  "rect": {
+    "Height": 200,
+    "Width": 352,
+    "X": 1342,
+    "Y": 808
+  },
+  "background": "a blank TextEdit document moved to cover the rect",
+  "A": "0c904800db2d7e4245daa322c9fd10d6",
+  "A2": "f992e4bba46cf7b3e923ab663f0a7909",
+  "baselineStill": false,
+  "hudUp": {
+    "windowNumber": 825,
+    "bounds": {
+      "Height": 200,
+      "Width": 352,
+      "X": 1342,
+      "Y": 808
+    },
+    "sharingState": 0,
+    "alpha": 1,
+    "layer": 25,
+    "onscreen": true
+  },
+  "B": "1461ae9d89e7718b6738d0dda832b9a7",
+  "B2": "2efbfad302c89862f0e6bc0a4285db09",
+  "windowScoped": {
+    "rc": 1,
+    "stderr": "could not create image from window",
+    "wrote": false
+  },
+  "C": "528c71568c489d214d47d75cdba2c2b7",
+  "D_control": "1461ae9d89e7718b6738d0dda832b9a7",
+  "hudMovedTheFrame": true,
+  "baselineReturned": false,
+  "controlMovedTheFrame": true,
+  "verdict": "the HUD entered a screencapture frame",
+  "framesThatWereNotEvidence": [
+    "evidence/shots/surf-005-takeover-sck-external.png",
+    "evidence/shots/surf-005-takeover-sck-laptop.png",
+    "evidence/shots/surf-005-takeover-sck-window.png"
+  ],
+  "note": "Kept as the record of the false raster pass this campaign corrected: SCFrameStatus complete frames that are entirely transparent. They are not evidence of the shield, which is what made them dangerous."
+}
