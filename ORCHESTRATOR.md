@@ -385,7 +385,7 @@ None of these blocks its item; each has a defensible default recorded in the spe
 
 | ID | Title | Status | Depends on | Slot |
 |---|---|---|---|---|
-| PRO-0076 | The guest lane, capped at two, with a queue | **Ready to verify** — `ai/pro-0076` @ `8aad3df`, 10 commits, 1,788 tests / 210 suites green (re-run by the orchestrator, not taken from the report). Ten of twelve clauses settled; A1-live and A1b blocked at the in-guest grant. Verifier `wf_9e98d6f7-012` running. | PRO-0058, PRO-0060, PRO-0061 (all merged) | 1 of 1 |
+| PRO-0076 | The guest lane, capped at two, with a queue | **Needs More Work** — verifier `wf_9e98d6f7-012` returned NEEDS MORE WORK. Ten clauses settled at `outcome`; A12 not settled and A1's wiring claim overstated, both `presence` only. Gap-fix re-queued in the same worktree. | PRO-0058, PRO-0060, PRO-0061 (all merged) | 1 of 1 |
 
 **Fleet size: 1.** Nothing else is ready, so concurrency is moot and the 3-slot cap is unused.
 
@@ -403,6 +403,24 @@ None of these blocks its item; each has a defensible default recorded in the spe
 - **A shipped defect found and fixed, latent since PRO-0058.** `GuestPlatform.infer` tested `hay.contains("win")`, which is true of **dar*win***. Every macOS guest whose provider reports `darwin` classified as Windows, took the delegated tier, lost the accessibility tree and the frame-status channel, and was refused by `GuestReach` as a machine with no Proctor inside. Confirmed from the diff, not from the report. It surfaced only because `tart` is the first provider on this machine that says `darwin` rather than `macOS`; lume and prlctl never triggered it. Matching is now on a token with the `win` prefix.
 - **Out-of-family lane ran every time, no downgrade.** Plan review returned ACCEPT WITH CHANGES and caught four things before they were built: the counted lane's occupancy shape (a set makes it cap-1; a stale count admits three), a nil platform failing *open* against Apple's cap, a slice forward-referencing its own dependency, and a slot leak with no holder-release rule. The completeness critic ran three rounds — INCOMPLETE, INCOMPLETE, COMPLETE — finding five defects plus two overstated claims in round one, and three more in round two of which two were introduced by round one's own fixes.
 - **Orchestrator's call on the attachments-versus-VMs gap: accept it, and correct the spec's wording.** The pool counts attachments, so a guest booted by a bare `start` or by a person's `tart run` is outside the count. That does not breach anything: Apple enforces the two-macOS-guest limit itself and a third simply fails to start, which `SessionGuest` already reports with the provider's own error. A5 as *worded* is about the counted lane's capacity and is satisfied; the problem statement's "at most two macOS guests booted per host" is what over-claims. Closing the gap needs either a per-guest lifetime registry the spec never asked for or polling a provider on a schedule, which PRD §9 and A12 both refuse. The cheaper and more honest fix is the sentence, not the registry.
+
+### Verifier verdict, 2026-08-20 — NEEDS MORE WORK
+
+In-family verifier, **logged downgrade**: the out-of-family lane here is grok and its agentic harness cannot carry a repo-reading verify pass, so this was Opus grading Opus. Recorded rather than passed silently. No grok referral was needed; every open question was settled by mutation.
+
+**The finding, and it is the one a fresh verifier exists to catch.** Ten clauses stand at the `outcome` rung. Two do not, and both fail the same way: the seam function is tested directly and **no test reaches it through the dispatcher**. Armed in both cases — `Dispatch.swift:80` (the guest-forwarding funnel) and `Dispatch.swift:443` (`guestPool` on the doctor reply) were each deleted and **all 1,788 tests stayed green**. `DoctorReplyWiringTests` exists in this repo precisely because dispatcher-assembly defects are invisible from inside the seam.
+
+- **A12 — not settled.** The clause names `proctor_doctor`'s reply; the tests assert `session.poolStatus()` and nothing asserts `guestPool` reaches the wire.
+- **A1 — seam claim overstated.** The forwarding function is settled at `outcome`; the wiring that calls it is `presence`.
+- **A7 — half presence.** The position-and-depth assertion stands on a `RunQueueRefusal.timedOut` the test itself constructed, not one a queued attach produced.
+
+**Three defects the builder did not report** (plus one cosmetic): `SessionGuest.swift:604`, the already-attached guard reads its dictionary about four awaits before writing it, so two concurrent attaches on one identity both pass and the second leaks an unclosed `GuestLink` socket (the pool slot self-heals via `LaneTicket.deinit`, so this is a leak rather than an A5 failure); `GuestProvider.swift:370`, the boot-timeout stop calls the adapter directly and bypasses `guestMutate`, so it gets no audit row, which is the same shape as a defect the critic already made them fix elsewhere and sits against A9's "gated and recorded"; `GuestInventory.swift:548`, a doc comment inserted mid-block so `PrlctlTool`'s paragraph now documents `TartTool`.
+
+**Worth knowing about the arming quality:** A5's mutant produced a *hang* rather than a red assertion. `scripts/test.sh` caught it through its absent-verdict rule, which is why that rule exists, but a hang is a weaker oracle than a failing expectation. Characterised, not chased.
+
+**Two independent confirmations.** The `darwin` fix is upheld, and the regression direction was checked: `windows`, `win-11`, `Win11 ARM` and `Windows Server` all still resolve, only unseparated compounds like `mswindows` now return nil, and nil is fail-closed. And the attachments-versus-VMs call recorded above was reached independently by the verifier: A5 constrains the lane and A7 constrains a run that would boot a third, both attach-path facts, and nothing in A5 to A12 asserts a host-wide invariant over running VMs.
+
+**Scope clean.** Nothing redesigns the run queue, the session actor or the audit trail.
 
 ### Ledger drift noted, not swept
 
