@@ -278,9 +278,9 @@ final class CursorOverlay {
             // can land between this panel and its target and fail the read-back
             // below for a placement that was actually correct.
             for other in surfaces where other.panel !== surface.panel {
-                other.panel.level = Self.floatingLevel
+                Self.place(other.panel, at: Self.floatingLevel)
             }
-            surface.panel.level = Self.inPlaneLevel
+            Self.place(surface.panel, at: Self.inPlaneLevel)
             surface.panel.orderFrontRegardless()
             surface.panel.order(.above, relativeTo: Int(target))
             let panelNumber = surface.panel.windowNumber
@@ -299,8 +299,21 @@ final class CursorOverlay {
         }
     }
 
+    /// Move a panel between bands, and re-apply the capture exclusion.
+    ///
+    /// Measured 2026-08-19: this panel reported `sharingState` 1 on the window
+    /// server while the run panel and the takeover tint reported 0, even though
+    /// all three set the same thing at construction. This is the one that changes
+    /// level at runtime, and the sharing type does not survive the change, so
+    /// setting it once at build time was setting it for the first placement only.
+    /// Both go through here now.
+    private static func place(_ panel: NSPanel, at level: NSWindow.Level) {
+        panel.level = level
+        panel.sharingType = OverlayCapture.excludedFromCapture() ? .none : .readOnly
+    }
+
     private func float(_ surface: Surface) {
-        surface.panel.level = Self.floatingLevel
+        Self.place(surface.panel, at: Self.floatingLevel)
         surface.panel.orderFrontRegardless()
         mark(surface, opacity: PointerPlanePolicy.dimmedOpacity, dashed: true)
     }
@@ -501,10 +514,9 @@ final class CursorOverlay {
         // Click-through is the whole safety story: the panels cover every
         // display, so anything less would put a sheet of glass over the machine.
         panel.ignoresMouseEvents = true
-        panel.level = Self.floatingLevel
+        Self.place(panel, at: Self.floatingLevel)
         panel.collectionBehavior = [.canJoinAllSpaces, .stationary,
                                     .ignoresCycle, .fullScreenAuxiliary]
-
         // Layer-hosting rather than layer-backed: assigning the layer before
         // wantsLayer leaves the tree ours, so AppKit does not redraw over it.
         let view = NSView(frame: CGRect(origin: .zero, size: frame.size))

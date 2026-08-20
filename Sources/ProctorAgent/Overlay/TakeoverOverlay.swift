@@ -549,7 +549,8 @@ final class TakeoverOverlay {
         return Takeover.surface(
             reduceTransparency: workspace.accessibilityDisplayShouldReduceTransparency,
             reduceMotion: workspace.accessibilityDisplayShouldReduceMotion,
-            hudLevel: Int(NSWindow.Level.statusBar.rawValue))
+            hudLevel: Int(NSWindow.Level.statusBar.rawValue),
+            excludedFromCapture: OverlayCapture.excludedFromCapture())
     }
 
     /// Displays come and go mid-run — a lid, a dock, a resolution change — and
@@ -599,7 +600,12 @@ final class TakeoverOverlay {
         // Evidence must not change because somebody was watching. Captures are
         // window-scoped to the app under test already; this makes the exclusion
         // a property of the window rather than an argument about filters.
-        panel.sharingType = .none
+        //
+        // PROCTOR_OVERLAY_CAPTURE lifts it, and nothing else does. The exclusion
+        // is also what makes the tint unphotographable by any channel, so a test
+        // that needs to check what this panel draws has no other way in; see
+        // `OverlayCapture`.
+        panel.sharingType = Self.spec().excludedFromCapture ? .none : .readOnly
 
         let view = TakeoverView(frame: CGRect(origin: .zero, size: frame.size))
         view.autoresizingMask = [.width, .height]

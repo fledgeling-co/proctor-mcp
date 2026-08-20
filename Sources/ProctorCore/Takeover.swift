@@ -181,11 +181,13 @@ public extension Takeover {
     /// `hudLevel` is `RunHUDPanel`'s own level, passed in so the two cannot
     /// drift apart into two numbers that happen to be ordered today.
     static func surface(reduceTransparency: Bool, reduceMotion: Bool,
-                        hudLevel: Int) -> TakeoverSurfaceSpec {
+                        hudLevel: Int,
+                        excludedFromCapture: Bool = true) -> TakeoverSurfaceSpec {
         TakeoverSurfaceSpec(alpha: reduceTransparency ? reducedTransparencyAlpha : ordinaryAlpha,
                             labelPlate: reduceTransparency,
                             fades: !reduceMotion,
-                            level: hudLevel - 1)
+                            level: hudLevel - 1,
+                            excludedFromCapture: excludedFromCapture)
     }
 }
 

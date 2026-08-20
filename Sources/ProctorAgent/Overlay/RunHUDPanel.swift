@@ -365,7 +365,12 @@ final class RunHUDPanel {
         // Evidence must not change because somebody was watching. Captures are
         // window-scoped to the app under test already; this makes the exclusion a
         // property of the window rather than an argument about capture filters.
-        created.sharingType = .none
+        //
+        // PROCTOR_OVERLAY_CAPTURE lifts it, and nothing else does. The exclusion
+        // is also what makes this panel unphotographable by any channel, so a
+        // test that needs to check what it draws has no other way in; see
+        // `OverlayCapture`.
+        created.sharingType = OverlayCapture.excludedFromCapture() ? .none : .readOnly
 
         created.acceptsMouseMovedEvents = true
 
