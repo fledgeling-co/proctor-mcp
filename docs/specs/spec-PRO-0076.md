@@ -1,6 +1,6 @@
 # PRO-0076: the guest lane, capped at two, with a queue
 
-**ID:** PRO-0076 · **Status:** Ready for Plan · **Created:** 2026-08-20
+**ID:** PRO-0076 · **Status:** Ready for AI · **Created:** 2026-08-20
 **PRD:** §9 (machines and witness tiers), §10 (lanes) · **Branch:** `ai/pro-0076` off `ai/wave-9`
 **Depends on:** PRO-0058 (the guest seam), PRO-0060 (`reach`), PRO-0061 (the auto-route gate)
 **Research:** `docs/research/2026-08-15-dossier-proctor-vs-cua.md`,
@@ -184,3 +184,8 @@ Status: **Ready for Plan.** Nothing built.
 A1 and A2 are measured against `anvil-mac-node` rather than carried, which is the reader's
 decision of 2026-08-20 and the reason `tart` is in scope. Everything else is settled against the
 injectable seam, as the other two adapters already are.
+
+## Implementation plan
+
+Implementation plan: `docs/plans/plan-PRO-0076.md` (committed: `cdaeea0`, tier: Large).
+Out-of-family plan review: grok `grok-4.6` `xhigh`, verdict ACCEPT WITH CHANGES, folded in.
