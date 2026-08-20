@@ -1,0 +1,7 @@
+Observation (never takes a queue lane):
+  assert  capture  dictionary  doctor  find  inspect  menu  snapshot  wait  zoom
+
+Actuation (takes a lane, and is recorded):
+  act  apps  computer  flow  guest  ios  kill  openai_computer  policy  stability  unlock
+
+Service:

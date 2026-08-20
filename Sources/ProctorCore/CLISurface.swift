@@ -130,8 +130,27 @@ public enum CLISurface {
         }
         if reply["ready"]?.boolValue == false { return .notReady }
         if let failed = reply["failedAt"], failed != .null { return .verdictFailed }
+        // THE SHAPES THE PRODUCT ACTUALLY EMITS, which is the whole of DEF-019.
+        //
+        // This function used to look for `ok` on each element of `assertions`.
+        // No reply has ever carried that: `SessionAssert` writes `status` per
+        // assertion, one of pass/fail/skipped, and puts the summary at the top
+        // level. `nil == false` is false, so the predicate matched nothing and
+        // every failed check exited 0 — measured twice against the live agent,
+        // once for a failed `assert` and once for a `wait` that timed out. A
+        // surface whose reason for existing is that CI reads an exit code
+        // reported success for a check that had just failed.
+        //
+        // Read the top level first, because that is where every verdict-bearing
+        // tool puts its answer: `assert` at SessionAssert.swift:81, `wait` at
+        // SessionAct.swift:969, and the `failed` count that `assert` and `kill`
+        // both carry.
+        if reply["ok"]?.boolValue == false { return .verdictFailed }
+        if let failed = reply["failed"]?.doubleValue, failed > 0 { return .verdictFailed }
         if let assertions = reply["assertions"]?.arrayValue,
-           assertions.contains(where: { $0["ok"]?.boolValue == false }) {
+           assertions.contains(where: {
+               $0["status"]?.stringValue == "fail" || $0["ok"]?.boolValue == false
+           }) {
             return .verdictFailed
         }
         return .ok

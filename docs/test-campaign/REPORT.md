@@ -1,18 +1,119 @@
-# Campaign report — wave 9, run at test-campaign 0.8.0
+# Campaign report — wave 10, run at test-campaign 0.8.0
 
 **Scope: FULL.** Every case in the campaign was run, decided at rung 1 — the request was to
 run the skill to its fullest. Recorded with `campaign.py scope --full`.
 
-**The verdict line, with its denominators.** 43 cases over 17 surfaces: 43 pass, 43 armed,
-0 fail, 0 inconclusive. Oracles: outcome 32 · metamorphic 3 · raster-visual 8. Strict check
-43 of 43 checked, ratchet raised 36 → 43. Capture lineage: 5 published shots, 5 distinct
-images, every one tying to its subject, 3 of 5 judged, ratchet pinned at 3 — the two unjudged
-are the two with no design of record, recorded as such rather than counted as agreement. Suite:
-1,666 tests in 198 suites.
+**The verdict line, with its denominators.** 57 cases over 21 surfaces against 44 requirements:
+56 pass, 1 blocked, 0 fail, 0 inconclusive, 56 of 56 passing cases armed. Oracles: outcome 44 ·
+metamorphic 4 · raster-visual 8 · interactive-glass 1. Strict check 56 of 57 checked (98%),
+ratchet raised 43 → 56. Capture lineage: 5 published shots, 5 distinct images, every one tying
+to its subject, 3 of 3 judgeable pairs judged `pass`, ratchet held at 3 — the other two are
+structurally unjudgeable, being capture engines with no design of record, and are named as such
+rather than counted as agreement. The seeded swap was run and caught. Suite: 1,798 tests in 211
+suites, green.
 
-**All gates green.** One case was inconclusive for part of this run and is described below,
-because how it was closed is the useful part: the instrument was reachable all along through a
-flag nobody had tried.
+**`campaign.py check` exits 1, deliberately.** One case is blocked and holds the gate shut: the
+guest lane's central claim, that a session attached to a macOS guest executes inside it, has been
+measured nowhere. Its resume point is on CASE-0056 and its lane is recorded as `guest-glass —
+NOT attached`. Reporting clear over that would be the campaign's first failure mode.
+
+## What the previous run's clean exit was hiding
+
+The last run reported 43 of 43 cases checked, every requirement covered, every surface covered,
+and exit 0. Every number in it was true. Three things were wrong with the denominator it counted
+over, and all three are the same failure: covering a subset and reporting it as the whole.
+
+**The `cli` lane had no denominator at all.** `campaign.json` has declared `cli` as a lane since
+the campaign was created. There was no requirement naming the CLI, no surface for it, and no case
+mentioning it — `grep -ci "proctor-cli|CLISurface|exit code" cases.json` returned 0. PRO-0073
+shipped 21 verbs, six exit codes and generated completion, and the campaign counted none of it
+while reporting 100%. The 100% was true of a denominator that excluded the whole surface.
+
+**PRO-0076's surface was absent.** Guest attach, in-guest execution, the counted lane, the queue,
+the never-evict rule, the audited lifecycle, the pool on the doctor wire and `tart` as a third
+provider — none of it was in the requirement inventory, so none of it was missing from coverage
+either.
+
+**The stored evidence described a build four features old.** Every evidence note in `cases.json`
+names "1526 tests in 176 suites". The suite is 1,798 in 211. Fourteen commits touching `Sources/`
+landed between the two.
+
+Eleven requirements (REQ-034..REQ-044) and four surfaces (SURF-018..SURF-021) were added, and
+the gate immediately refused with `11 requirement(s) no case traces to` and `4 surface(s) with no
+case at all`. That refusal is the finding.
+
+## DEF-019 — the operator CLI exited 0 when a check failed
+
+Found by writing the first case the `cli` lane has ever had, and running the built binary against
+the live agent rather than reasoning about it.
+
+`CLISurface.exit(forReply:lane:)` decides the process exit code. Its assertion branch read
+`$0["ok"]?.boolValue == false` on each element of `assertions`. No reply has ever carried that
+key: `SessionAssert.swift:45` writes `"status"` per assertion, one of pass/fail/skipped, and puts
+the summary at the top level. `nil == false` is false, so the predicate matched nothing and the
+function returned `.ok`. Neither the top-level `"ok"` at `SessionAssert.swift:81` nor the
+top-level `"failed"` count at `:77` was consulted at all.
+
+Measured twice against the live agent before the fix:
+
+| command | reply | exit | expected |
+|---|---|---|---|
+| `proctor assert` with a failing check | `{"ok":false,"passed":0,"failed":1}` | 0 | 1 |
+| `proctor wait` on a condition that never held | `{"ok":false,"timedOut":true}` | 0 | 1 |
+
+A third instance was present by inspection and is now covered: `proctor_kill` carries its
+failures as a top-level `"failed"` count that nothing read.
+
+This defeated the surface's reason for existing. `spec-PRO-0073.md` says "1 means the call worked
+and your check failed" and "1 and 3 must never be confused: one is a failed check, the other is
+nothing measured". A CI job reading the exit code would have concluded the assertion passed while
+the JSON on its own stdout said it failed.
+
+**Why nothing caught it.** `CLISurfaceTests.swift:175`, "a failed assertion exits 1 — the call
+worked and the check did not", built its own reply: `.object(["assertions": .array([.object(["ok":
+.bool(true)]), .object(["ok": .bool(false)])])])`. That is a shape the product does not emit. The
+test asserted a value the test itself wrote, so it passed against a fiction while the real path
+exited 0. It is the same shape the PRO-0076 verifier caught in A7 a few hours earlier: an
+assertion standing on a value the test constructed rather than one the code produced.
+
+The fix reads the top level first, because that is where every verdict-bearing tool puts its
+answer. The replacement tests are built from the shape the product actually emits, and one of
+them is a control: a passing assertion must still exit 0, which is what stops a fix that answers
+`verdictFailed` to everything from satisfying the same suite. Armed by restoring the original
+predicate: five issues across the failed assertion, the skipped assertion, the timed-out wait and
+the failed kill, with the control correctly staying green.
+
+## The sweep that reported zero over a predicate that could not fail
+
+The first refusal-honesty sweep invoked all 21 verbs with no arguments and printed
+`examined=21 failures=0` on both predicates. The number was worthless. Sixteen verbs returned a
+usage error, which the remedy predicate exempted, and the other five succeeded — so the predicate
+examined 21 rows and could not have failed on any of them. Uniform zeros are the signature of a
+dead predicate, and this one was dead.
+
+Rewritten to point every verb at a socket nothing is listening on, which is a refusal every verb
+must produce and the one CI is most likely to hit:
+
+```
+A · agent-unreachable did not exit 3:  examined=21 failures=0
+B · refusal carried no remedy:         examined=21 failures=0
+C · refusal did not name the socket:   examined=21 failures=0
+```
+
+Armed by removing the refusal condition: all three predicates fail on all 21 rows. Both versions
+are kept in the evidence, because the reason the first was worthless is the more useful half.
+
+## What is still open
+
+**CASE-0056, blocked.** No Proctor is installed inside `anvil-mac-node`, and after that install
+Accessibility and Screen Recording must be granted at the guest's own Aqua console. SSH is not
+the foreground session and macOS exposes no API that grants TCC from outside a guest, so no
+harness can do it unattended. The ordered resume point is on the case. `CASE-0047` settles the
+same requirement at the seam and is recorded as seam level rather than passed off as live.
+
+**Mutation survival is not measured for the new code.** `warrant:assay` still owes that number
+and tier 2 needs it; `scripts/campaign/mutate_swift.py` exists and has not been run over the
+guest lane, the CLI surface or the overlay changes.
 
 ## The stop is resolved
 

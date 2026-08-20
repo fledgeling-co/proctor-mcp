@@ -19,9 +19,9 @@
   "run": {
     "scope": "full",
     "basis": "",
-    "lastFullRun": "2026-08-19T23:40:45+00:00",
-    "decidedBy": "user asked to run the skill to its fullest and resolve every gap",
-    "declaredAt": "2026-08-19T23:40:45+00:00",
+    "lastFullRun": "2026-08-20T08:41:50+00:00",
+    "decidedBy": "user asked to run the skill to its fullest",
+    "declaredAt": "2026-08-20T08:41:50+00:00",
     "maxFullRunAgeDays": 14.0
   },
   "laneProof": {
@@ -33,6 +33,11 @@
       "attachedBy": "pid 88463 owns CG windows 43384 'History' and 43385 'Proctor' (640x572); glass_probe read it from CGWindowListCopyWindowInfo, the window server's own list. Launched with open -n because the installed build holds the same bundle id and LaunchServices activates it instead of starting a second instance \u2014 which is also why every capture names a CG window id rather than a title.",
       "captureChannel": "proctor_capture \u2192 ScreenCaptureKit window-scoped, frameStatus per frame; the menu bar extra through screencapture -R cropped to the AXExtrasMenuBar frame, because a status item is not a window Proctor owns",
       "declaredAt": "2026-08-20T00:37:13+00:00"
+    },
+    "guest-glass": {
+      "attached": false,
+      "reason": "Two things stand in the way and only the second is structural. No Proctor is installed inside anvil-mac-node yet, which is a build-and-install job needing a console login or an SSH key (tart exec is unavailable, the Tart Guest Agent is absent from that node). And after that install, Accessibility and Screen Recording must be granted at the guest's own Aqua console: SSH is not the foreground session and macOS exposes no API that grants TCC from outside a guest, so no harness can do it unattended",
+      "declaredAt": "2026-08-20T08:54:52+00:00"
     }
   }
 }

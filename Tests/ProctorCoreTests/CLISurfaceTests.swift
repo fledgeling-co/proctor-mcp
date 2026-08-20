@@ -172,12 +172,85 @@ struct CLIVerdictTests {
         #expect(CLISurface.laneState(reply, lane: "vision") == "absent")
     }
 
+    // DEF-019. The reply below is the shape `proctor_assert` actually emits,
+    // copied from a run of the built CLI against the live agent rather than
+    // composed here. The version this replaces built `.object(["ok": .bool(false)])`
+    // per assertion, a shape no reply has ever carried, so it passed while the
+    // real path exited 0 for a check that had just failed.
+    private func assertReply(passed: Int, failed: Int, skipped: Int = 0) -> JSONValue {
+        var entries: [JSONValue] = []
+        for i in 0..<passed {
+            entries.append(.object(["index": .number(Double(i)), "kind": .string("exists"),
+                                    "status": .string("pass"),
+                                    "expected": .string("a matching node exists"),
+                                    "observed": .object(["found": .bool(true)])]))
+        }
+        for i in 0..<failed {
+            entries.append(.object(["index": .number(Double(passed + i)),
+                                    "kind": .string("exists"), "status": .string("fail"),
+                                    "expected": .string("a matching node exists"),
+                                    "observed": .object(["found": .bool(false)])]))
+        }
+        return .object([
+            "window": .string("win:4:0"), "assertions": .array(entries),
+            "passed": .number(Double(passed)), "failed": .number(Double(failed)),
+            "skipped": .number(Double(skipped)),
+            "ok": .bool(failed == 0 && skipped == 0),
+        ])
+    }
+
     @Test("a failed assertion exits 1 — the call worked and the check did not")
     func aFailedCheckIsNotAFailedCall() {
-        let reply = JSONValue.object(["assertions": .array([
-            .object(["ok": .bool(true)]), .object(["ok": .bool(false)]),
-        ])])
+        #expect(CLISurface.exit(forReply: assertReply(passed: 0, failed: 1), lane: nil)
+                == .verdictFailed)
+        #expect(CLISurface.exit(forReply: assertReply(passed: 1, failed: 1), lane: nil)
+                == .verdictFailed)
+    }
+
+    @Test("a passing assertion still exits 0, so the verdict is read and not assumed")
+    func aPassingCheckStaysZero() {
+        // The other half of DEF-019: a fix that answered verdictFailed to every
+        // reply would satisfy the test above and be just as useless.
+        #expect(CLISurface.exit(forReply: assertReply(passed: 2, failed: 0), lane: nil) == .ok)
+    }
+
+    @Test("a skipped assertion is an unanswered question, not a satisfied one")
+    func aSkippedAssertionIsNotAPass() {
+        // `ok` is false when anything was skipped, and the exit code follows it.
+        #expect(CLISurface.exit(forReply: assertReply(passed: 1, failed: 0, skipped: 1),
+                                lane: nil) == .verdictFailed)
+    }
+
+    @Test("a wait that timed out exits 1 — measured, it used to exit 0")
+    func aTimedOutWaitIsAVerdict() {
+        // `proctor_wait`'s reply, from SessionAct: the condition never held.
+        let reply = JSONValue.object([
+            "window": .string("win:4:0"), "condition": .string("nodeExists"),
+            "ok": .bool(false), "timedOut": .bool(true),
+            "elapsedMs": .number(1257), "polls": .number(13),
+            "observed": .object(["found": .bool(false)]),
+        ])
         #expect(CLISurface.exit(forReply: reply, lane: nil) == .verdictFailed)
+        let held = JSONValue.object([
+            "window": .string("win:4:0"), "condition": .string("nodeExists"),
+            "ok": .bool(true), "timedOut": .bool(false),
+            "elapsedMs": .number(40), "polls": .number(2),
+        ])
+        #expect(CLISurface.exit(forReply: held, lane: nil) == .ok)
+    }
+
+    @Test("a kill that could not signal a target exits 1")
+    func aFailedKillIsAVerdict() {
+        // `proctor_kill` carries its failures as a top-level count, which is the
+        // third shape DEF-019's predicate could not see.
+        #expect(CLISurface.exit(forReply: .object([
+            "action": .string("kill"), "matched": .number(2),
+            "terminated": .number(1), "refused": .number(0), "failed": .number(1),
+        ]), lane: nil) == .verdictFailed)
+        #expect(CLISurface.exit(forReply: .object([
+            "action": .string("kill"), "matched": .number(2),
+            "terminated": .number(2), "refused": .number(0), "failed": .number(0),
+        ]), lane: nil) == .ok)
     }
 
     @Test("a batch that stopped part way exits 1")

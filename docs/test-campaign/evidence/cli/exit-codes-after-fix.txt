@@ -1,0 +1,13 @@
+=== DEF-019 after the fix, same two commands, live agent ===
+assert (failed check)  exit=1  (expect 1)
+wait (timed out)       exit=1  (expect 1)
+--- and a check that PASSES must still exit 0 ---
+{"failed":1,"assertions":[{"observed":{"found":false},"expected":"a matching node exists","kind":"exists","evidence":"\/Users\/lukerhodes\/Library\/Application Support\/app.fledgeling.procter\/capture
+assert (passing check) exit=1  (expect 0)
+doctor                 exit=0  (expect 0)
+--- control: an assertion that genuinely PASSES must still exit 0 ---
+  reply: ok= False  passed= 0  failed= 1
+  exit=1  (expect 0 — the fix must not turn a passing check red)
+--- control, correctly specified: an assertion that PASSES ---
+  reply: ok= True  passed= 1  failed= 0
+  exit=0  (expect 0 — a passing check must stay 0 after the fix)

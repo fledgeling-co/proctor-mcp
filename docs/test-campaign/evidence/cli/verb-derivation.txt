@@ -1,0 +1,6 @@
+REQ-034 · measured 2026-08-20 against .build/debug/proctor-cli (built from ai/wave-9)
+  ToolCatalogue tools : 21
+  CLI verbs offered   : 26  (21 tool verbs + install, uninstall, status, serve, tui)
+  Tools with no verb  : none
+Derivation is mechanical: CLISurface.verbs is built from ToolCatalogue.all rather than listed,
+so a tool added without a verb is a red test rather than a gap somebody notices.

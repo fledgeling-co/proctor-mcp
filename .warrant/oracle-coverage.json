@@ -1,6 +1,6 @@
 {
  "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/.worktrees/wave-9/docs/test-campaign",
- "generated_at": "2026-08-20T04:55:39.921114+00:00",
+ "generated_at": "2026-08-20T08:57:39.299656+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -8,6 +8,12 @@
    "figures": 1,
    "file": "cli://install-notarize",
    "sourced": 1,
+   "unsourced": 0
+  },
+  {
+   "figures": 4,
+   "file": "cli://proctor",
+   "sourced": 4,
    "unsourced": 0
   },
   {
@@ -71,6 +77,24 @@
    "unsourced": 0
   },
   {
+   "figures": 3,
+   "file": "mcp://proctor_doctor#guestPool",
+   "sourced": 3,
+   "unsourced": 0
+  },
+  {
+   "figures": 3,
+   "file": "mcp://proctor_guest?action=attach",
+   "sourced": 3,
+   "unsourced": 0
+  },
+  {
+   "figures": 1,
+   "file": "process://agent-claim",
+   "sourced": 1,
+   "unsourced": 0
+  },
+  {
    "figures": 2,
    "file": "stdio://proctor-shim",
    "sourced": 2,
@@ -95,9 +119,9 @@
    "unsourced": 0
   },
   {
-   "figures": 3,
+   "figures": 6,
    "file": "ui://takeover-shield",
-   "sourced": 3,
+   "sourced": 6,
    "unsourced": 0
   },
   {

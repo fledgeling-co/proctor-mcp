@@ -1,0 +1,13 @@
+REQ-041 · measured 2026-08-20 on this machine's two displays, via CGWindowListCopyWindowInfo
+polled at 120ms while ./scripts/test.sh ran, filtering windows owned by a process whose name
+contains "test".
+
+  baseline, nothing running          0 test-owned on-screen windows
+  suite, AgentProcess gate REMOVED   2 windows owned by swiftpm-testing-helper:
+                                       level 24,   alpha 0.45  (the takeover tint, mid-fade)
+                                       level 1000, alpha 1.0   (the drawn pointer overlay)
+                                     and 3 tests red
+  suite, AgentProcess gate IN PLACE  0 windows; 1,798 tests in 211 suites green
+
+An orphaned swiftpm-testing-helper from an earlier run (pid 79972, started 14:15) was holding
+two such windows and was killed first, so the baseline is a true zero rather than a leftover.

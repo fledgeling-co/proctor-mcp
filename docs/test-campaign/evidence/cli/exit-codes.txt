@@ -1,0 +1,22 @@
+=== REQ-036 exit codes, measured ===
+--- exit 3: agent not answering (socket points at nothing) ---
+proctor: the Proctor agent is not answering at /tmp/definitely-not-a-socket.sock
+proctor: Run `proctor-shim install` to install and load the agent, then `proctor_doctor` to confirm it is ready.
+exit=3  (expect 3)
+
+--- exit 2: usage error ---
+exit=2  (expect 2)
+
+--- exit 0: a read that succeeds against the live agent ---
+exit=0  (expect 0)
+--- exit 1: a read-only assertion that is FALSE ---
+{"window":"win:4:0","ok":false,"stateHash":"4706ec104afd7dfe9a5da6386783d1076af8fbf6c5db2cb5655d7928e80d18ee","passed":0,"skipped":0,"assertions":[{"index":0,"kind":"exists","status":"fail","evidence":"\/Users\/lukerhodes\/Library\/Application Support\/app.fledgeling.procter\/captures\/win-4-0-1787215428114.png","expected":"a matching node exists","observed":{"found":false}}],"failed":1,"revision"
+exit=0  (expect 1 — the call worked, the verdict failed)
+--- proctor wait on a condition that cannot hold ---
+{"message":"condition must be one of nodeExists, nodeGone, valueEquals, valueContains, enabled, focused, regionQuiet, reflectorIdle, not \"exists:a-control-that-does-not-exist-xyzzy\"","indeterminate":false,"code":"invalidArguments"}
+
+exit=2  (expect 1 — the wait timed out, the verdict failed)
+--- proctor wait: nodeExists on a node that is not there ---
+{"elapsedMs":1257,"polls":13,"observed":{"found":false},"revision":1,"stateHash":"4706ec104afd7dfe9a5da6386783d1076af8fbf6c5db2cb5655d7928e80d18ee","ok":false,"condition":"nodeExists","timedOut":true,"window":"win:4:0"}
+
+exit=0  (expect 1 — the wait timed out, the verdict failed)

@@ -663,5 +663,187 @@
     "armed": true,
     "note": "The supervision TUI's history pane is fed by proctor_history, the same internal socket verb the app's History window calls. TUISurface.history(from:) maps the agent's projection to rows and derives nothing the reply did not name, so a field the agent withholds stays withheld rather than being reconstructed on the client side. The pane separates three states a single empty frame used to collapse: a quiet machine, a trail this Mac could not open, and a history that opened short - the last states its count on the shelf. Rendered at the 80x24 floor as well as at 100x30, and the shelf keeps both facts at 80 columns.",
     "armedBy": "Watched to fail with the behaviour removed, three ways. Forcing the pane's sealed branch to false collapsed a sealed trail and a quiet machine onto one identical frame and both assertions bit; dropping the shelf note lost '2 entries could not be opened'; and making history(from:) return no rows failed the mapping assertion. Restored and green."
+  },
+  {
+    "id": "CASE-0044",
+    "req": "REQ-034",
+    "surface": "SURF-018",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/cli/verb-derivation.txt",
+      "evidence/cli/verbs.txt"
+    ],
+    "armed": true,
+    "armedBy": "CLISurfaceTests derives verbs from ToolCatalogue.all rather than a list; adding a tool without a verb reddens the derivation test. Measured live: 21 catalogue tools, 26 verbs, zero tools with no verb.",
+    "note": "First case the cli lane has ever carried. The lane was declared in campaign.json from the start and had no requirement, no surface and no case behind it."
+  },
+  {
+    "id": "CASE-0045",
+    "req": "REQ-035",
+    "surface": "SURF-018",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/cli/audit-via.txt"
+    ],
+    "armed": true,
+    "armedBy": "FrontEndAttributionTests pins the name->front-end map, and a peer whose executable is neither proctor-cli nor proctor-shim records nil rather than defaulting to one of them.",
+    "note": "Whole trail read: 1159 records, via=cli on 3, via=mcp on 19, None on the 1137 that predate the field. Derived from proc_pidpath of the peer rather than from the request."
+  },
+  {
+    "id": "CASE-0046",
+    "req": "REQ-036",
+    "surface": "SURF-018",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/cli/exit-codes.txt",
+      "evidence/cli/exit-codes-after-fix.txt"
+    ],
+    "armed": true,
+    "armedBy": "Restored DEF-019's original predicate and re-ran the suite: 5 issues across the failed assertion, the skipped assertion, the timed-out wait and the failed kill. The passing-check control did NOT redden, which is what stops an over-broad fix passing the same test.",
+    "note": "DEF-019 found here and fixed. Measured against the live agent before and after: a failed assert and a timed-out wait both exited 0, now both exit 1; a genuinely passing assert still exits 0; usage 2, agent unreachable 3, doctor ready 0."
+  },
+  {
+    "id": "CASE-0047",
+    "req": "REQ-037",
+    "surface": "SURF-019",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "Deleted the guest-forwarding funnel in Dispatch.swift and re-ran: 3 assertions red in GuestDispatchWiringTests, including the host answering the call itself and the guest link never being reached.",
+    "note": "Seam level, and recorded as seam level. A session attached to a guest is driven through Dispatcher.handle rather than through the forwarding function directly, and the host actuates nothing. Executing inside a live guest is CASE-0056 and is blocked."
+  },
+  {
+    "id": "CASE-0048",
+    "req": "REQ-038",
+    "surface": "SURF-020",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "The PRO-0076 verifier set the lane's isCounted to false; the suite hung and produced no verdict, which scripts/test.sh treats as a failure through its absent-verdict rule. Caught, but as a hang rather than a red assertion, and recorded as the weaker oracle it is.",
+    "note": "Capacity 1/2/3 admit 1/2/3; one grant scan cannot admit three into two; one session per named guest serialises even with a slot free; a third attach queues rather than being refused; a linux guest is not counted against the macOS cap."
+  },
+  {
+    "id": "CASE-0049",
+    "req": "REQ-039",
+    "surface": "SURF-020",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "Two mutations after the gap-fix refactor rather than before it, because the refactor routed three stop call sites through one audited path and a green suite says least about code that has just moved. Dropping startedByThisAgent from the release guard: 2 red. Removing the audited boot-timeout stop: 4 red, including the audit row's outcome and bundle id.",
+    "note": "A guest a person started, or one another session holds, is waited for and never stopped to free a slot. Every stop this agent performs on its own initiative goes through guestMutate and lands in the trail."
+  },
+  {
+    "id": "CASE-0050",
+    "req": "REQ-040",
+    "surface": "SURF-019",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "GuestAttachmentTests exercises the derivation both directions and for a nil platform; the PRO-0076 verifier additionally checked the regression direction of the infer fix.",
+    "note": "Carries DEF-020's fix. The tier is read from what the provider says rather than from the guest's name, so a provider reporting darwin yields macOS and the native tier."
+  },
+  {
+    "id": "CASE-0051",
+    "req": "REQ-041",
+    "surface": "SURF-021",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/overlay/entitlement-on-glass.txt"
+    ],
+    "armed": true,
+    "armedBy": "Removed the AgentProcess term and re-ran the suite while polling the window server: 2 windows appeared from swiftpm-testing-helper, one at the tint's level mid-fade and one at the drawn pointer's, and 3 tests went red. With the term in place the same run paints nothing.",
+    "note": "Measured against the window server's own list rather than against a value. The baseline was established after killing an orphaned helper from an earlier run that was still holding two such windows, so zero means zero."
+  },
+  {
+    "id": "CASE-0052",
+    "req": "REQ-042",
+    "surface": "SURF-005",
+    "oracle": "metamorphic",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "TakeoverDwellTests pins the relation rather than a duration: showing again while up returns raising=false and moves the deadline forward, and a stop cancels rather than defers.",
+    "note": "A relation across calls, not a value: N shows inside the floor raise once and lower once. Found a second defect while testing it, where a stop during a lingering statement never lowered it because takeoverEnd returned on the takeoverShown guard first."
+  },
+  {
+    "id": "CASE-0053",
+    "req": "REQ-043",
+    "surface": "SURF-005",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "PointerPlaneCoveredTests: making isCovered ignore the window order reddens the covered case, and making Proctor's own panels count as covering reddens the annotation case.",
+    "note": "The drawn pointer over a covered target. Dimming marks an uncertain position and cannot mark a pointer in the wrong plane entirely, so the fallback splits on whether anything covers the target and draws nothing when something does."
+  },
+  {
+    "id": "CASE-0054",
+    "req": "REQ-044",
+    "surface": "SURF-005",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "Reverted the label to its single wording: the off-panel-screen test reddens on both the menu-bar assertion and the no-run-panel one. Separately, letting the no-panel case fall through to RunHUDPlacement's primary-screen answer reddens the nowhere test.",
+    "note": "The statement is drawn on every display and the run panel stands on one, so the control the line names changes with the screen reading it. A run with no panel standing resolves to nowhere rather than to the primary screen, and every display then names the menu bar."
+  },
+  {
+    "id": "CASE-0055",
+    "req": "REQ-038",
+    "surface": "SURF-020",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/test-suite-pass.log"
+    ],
+    "armed": true,
+    "armedBy": "Deleted the guestPool line from the doctor reply assembly and re-ran: 2 assertions red in DoctorReplyWiringTests, on the reply's own object rather than on session.poolStatus().",
+    "note": "The pool as proctor_doctor reports it: capacity, held, holders and waiting. Separate from CASE-0048 because the clause names the reply and the seam function is a different thing from the wire it reaches."
+  },
+  {
+    "id": "CASE-0056",
+    "req": "REQ-037",
+    "surface": "SURF-019",
+    "oracle": "interactive-glass",
+    "status": "blocked: a person must grant Accessibility and Screen Recording at the guest's own console, and nothing outside a macOS guest can grant them",
+    "evidence": [],
+    "armed": false,
+    "note": "The guest lane's central claim, measured nowhere. anvil-mac-node under tart is the only working macOS guest on this machine; lume holds none and prlctl's single guest is a Windows 11 registration reading invalid. tart exec is unavailable because the Tart Guest Agent is absent from that node, so the way in is the console or an installed SSH key. Resume point, in order: tart run anvil-mac-node with graphics; log in at the console; copy the notarised Proctor.app in and run its installer so launchd owns the agent; System Settings, Privacy and Security, Accessibility then Screen Recording, adding Proctor.app to each; ssh -L the guest agent's socket back to this Mac; proctor guest --action attach --guest anvil-mac-node; then an actuating call, confirming the reply's machine names the guest. CASE-0047 settles the same requirement at the seam and is recorded as seam level, which is why this case exists separately rather than being folded into it.",
+    "lane": "guest-glass"
+  },
+  {
+    "id": "CASE-0057",
+    "req": "REQ-036",
+    "surface": "SURF-018",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/cli/sweep-refusal-honesty.txt"
+    ],
+    "armed": true,
+    "armedBy": "Re-ran the sweep with the refusal condition removed, so every call reached the live agent: all three predicates failed on all 21 rows. The first version of this sweep is kept in the evidence with the reason it was worthless, because its predicate examined 21 rows and could not have failed on any of them.",
+    "note": "Refusal honesty across every verb, denominator 21 (the five service verbs are never invoked: they mutate the machine). Every verb exits 3 when the agent is unreachable, carries a remedy, and names the socket it tried so an operator can see which agent was missing. Write posture: the socket does not exist, so nothing could be actuated."
   }
 ]

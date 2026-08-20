@@ -1,0 +1,9 @@
+REQ-035 · measured 2026-08-20, whole trail read through `proctor policy --action audit --limit 5000`
+  via across 1159 records:
+     1137  via=None   (predate PRO-0073's front-end field)
+       19  via=mcp
+        3  via=cli
+The value is derived from the peer process by SessionIdentity.frontEnd(for:) via proc_pidpath,
+not supplied by the caller: SessionIdentity.frontEnd(named:) maps "proctor-cli" -> "cli" and
+"proctor-shim" -> "mcp", everything else nil. A caller that could name itself could name itself
+as the other one in the very record you would argue from.

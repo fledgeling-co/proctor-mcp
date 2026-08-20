@@ -1,0 +1,41 @@
+verb               exit   is-3  remedy  names-socket
+act                   3      Y       Y             Y
+apps                  3      Y       Y             Y
+assert                3      Y       Y             Y
+capture               3      Y       Y             Y
+computer              3      Y       Y             Y
+dictionary            3      Y       Y             Y
+doctor                3      Y       Y             Y
+find                  3      Y       Y             Y
+flow                  3      Y       Y             Y
+guest                 3      Y       Y             Y
+inspect               3      Y       Y             Y
+ios                   3      Y       Y             Y
+kill                  3      Y       Y             Y
+menu                  3      Y       Y             Y
+openai_computer       3      Y       Y             Y
+policy                3      Y       Y             Y
+snapshot              3      Y       Y             Y
+stability             3      Y       Y             Y
+unlock                3      Y       Y             Y
+wait                  3      Y       Y             Y
+zoom                  3      Y       Y             Y
+
+A · agent-unreachable did not exit 3:  examined=21 failures=0
+B · refusal carried no remedy:         examined=21 failures=0
+C · refusal did not name the socket:   examined=21 failures=0
+
+ARMED, 2026-08-20. The same sweep with the refusal condition removed (PROCTOR_SOCKET unset, so
+every call reaches the live agent and no refusal is owed):
+  A · agent-unreachable did not exit 3:  examined=21 failures=21
+  B · refusal carried no remedy:         examined=21 failures=21
+  C · refusal did not name the socket:   examined=21 failures=21
+All three predicates fail on all 21 rows, so the zeros above are a measurement rather than a
+dead predicate.
+
+SUPERSEDED FIRST ATTEMPT, kept because the reason matters. The first version invoked each verb
+with no arguments and reported examined=21 failures=0 on both its predicates. That number was
+worthless: 16 verbs returned a usage error, which the remedy predicate exempted, and the other 5
+succeeded, so the predicate could not have failed on any row it examined. Pointing every verb at
+a socket nothing is listening on gives a refusal every verb must produce and a remedy every verb
+genuinely owes.
