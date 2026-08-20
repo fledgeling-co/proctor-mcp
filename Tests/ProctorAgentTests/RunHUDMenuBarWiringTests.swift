@@ -257,11 +257,19 @@ struct MenuBarSurfaceTests {
 
     @Test("the health report tells the four absences apart")
     func doctorTellsTheAbsencesApart() async throws {
+        // The drawn-panel probe is substituted for the same reason the feed is:
+        // `RunHUDAvailability.shared` is process-wide and mutable, so without
+        // this the answer is decided by whichever OTHER test last recorded into
+        // it. That made this case fail about one full-suite run in five, always
+        // on the row that expects nothing to be wrong, and always carrying a
+        // reason string this test never set. Here the panel is stipulated to
+        // have come up, so the four notes below are the only variable.
         func note(drawing: Bool, canShow: Bool) async throws -> String {
             let session = Session(ax: FakeAX(bundleId: Self.target), capture: FakeCapture())
             let feed = RunHUDFeed(drawing: drawing)
             feed.setCanShow(canShow)
             await session.setHUDFeed(feed)
+            await session.setHUDAvailability { (true, nil) }
             let status = try #require(await session.hudStatus().objectValue)
             #expect(status["available"]?.boolValue == (drawing && canShow))
             return status["note"]?.stringValue ?? ""
@@ -287,6 +295,22 @@ struct MenuBarSurfaceTests {
         // Drawing, nothing wrong: nothing to explain.
         let fine = try await note(drawing: true, canShow: true)
         #expect(fine.isEmpty)
+
+        // The fourth absence the comment names but nothing asserted: the switch
+        // is on, the process could show a panel, and the drawing itself failed.
+        // It comes from the availability probe rather than the feed, which is
+        // why it needed the probe to be substitutable before it could be stated.
+        let session = Session(ax: FakeAX(bundleId: Self.target), capture: FakeCapture())
+        let feed = RunHUDFeed(drawing: true)
+        feed.setCanShow(true)
+        await session.setHUDFeed(feed)
+        await session.setHUDAvailability { (false, "no display is attached") }
+        let faulted = try #require(await session.hudStatus().objectValue)
+        #expect(faulted["available"]?.boolValue == false,
+                "a panel that could not be drawn has no Pause or Stop on screen")
+        let note = faulted["note"]?.stringValue ?? ""
+        #expect(note.contains("no display is attached"))
+        #expect(note.contains("could not be drawn"))
     }
 }
 

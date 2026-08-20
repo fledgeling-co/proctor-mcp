@@ -83,7 +83,7 @@ extension Session {
     /// this launch at all.
     func hudStatus() -> JSONValue {
         let feed = hudFeed
-        let status = RunHUDAvailability.shared.status
+        let status = hudAvailability()
         var out: [String: JSONValue] = [
             "enabled": .bool(feed.drawing),
             "onScreen": .bool(status.available),

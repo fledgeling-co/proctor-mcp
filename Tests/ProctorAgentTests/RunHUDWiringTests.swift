@@ -363,6 +363,11 @@ struct RunHUDWiringTests {
         let h = try await harness(steps: 1)
         await h.session.setDrawsHUD(true)
         await h.session.setHUDFeed(RunHUDFeed(drawing: true))
+        // Stipulated rather than assumed. `onScreen` is read from
+        // `RunHUDAvailability`, which is process-wide and mutable, so left alone
+        // this asserts "no other test in this process drew a panel" — true today
+        // and not a thing this test is about.
+        await h.session.setHUDAvailability { (false, nil) }
         let status = try #require(await h.session.hudStatus().objectValue)
         #expect(status["enabled"]?.boolValue == true)
         #expect(status["pauseLimitSeconds"]?.doubleValue == 900)

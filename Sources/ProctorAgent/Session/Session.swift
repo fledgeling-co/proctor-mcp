@@ -190,6 +190,21 @@ actor Session {
     var hudFeed: RunHUDFeed { hudFeedBox.feed }
     func setHUDFeed(_ feed: RunHUDFeed) { hudFeedBox.feed = feed }
 
+    /// Whether a panel this process drew actually came up, and why not.
+    ///
+    /// The same reasoning as `hudFeedBox` one line above, applied to the other
+    /// input `hudStatus` reads. `RunHUDAvailability.shared` is process-wide and
+    /// mutable, so a test that substituted its feed still had its answer decided
+    /// by whichever *other* test last called `record`. That made the four-absence
+    /// case fail about one full-suite run in five, always on the row that expects
+    /// nothing to be wrong, and always with another test's reason in it.
+    var hudAvailability: @Sendable () -> (available: Bool, reason: String?) = {
+        RunHUDAvailability.shared.status
+    }
+    func setHUDAvailability(_ probe: @escaping @Sendable () -> (available: Bool, reason: String?)) {
+        hudAvailability = probe
+    }
+
     /// Which machine THIS CALLER's runs happen on.
     ///
     /// PRO-0076 made this a lookup rather than a stored value, and the reason is
