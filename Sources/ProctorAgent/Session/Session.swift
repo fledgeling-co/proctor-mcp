@@ -236,11 +236,6 @@ actor Session {
     /// ending frees it — see `releaseGuestAttachment`.
     var guestTickets: [String: LaneTicket] = [:]
 
-    /// Whether the most recent release actually stopped the guest. Read by
-    /// `detach` so its reply reports the measured outcome rather than the
-    /// intention it started with.
-    var lastReleaseStoppedGuest = false
-
     /// Injected so a test can attach without a socket. Nil means the live link.
     var injectedGuestLink: (@Sendable (String) -> any GuestLink)?
     func setGuestLinkFactory(_ make: @escaping @Sendable (String) -> any GuestLink) {

@@ -276,8 +276,8 @@ struct GuestPoolWiringTests {
 
         let identity = RunSessionIdentity(project: "p", connection: "A", key: "sessA")
         await SessionIdentity.$current.withValue(identity) {
-            let first = await h.session.releaseGuestAttachment(reason: "first")
-            let second = await h.session.releaseGuestAttachment(reason: "second")
+            let first = await h.session.releaseGuestAttachment(reason: "first").released
+            let second = await h.session.releaseGuestAttachment(reason: "second").released
             #expect(first, "the first release does the work")
             #expect(!second, "the second must be a no-op")
         }
@@ -301,10 +301,10 @@ struct GuestPoolWiringTests {
 
         let identity = RunSessionIdentity(project: "p", connection: "A", key: "sessA")
         async let first = SessionIdentity.$current.withValue(identity) {
-            await h.session.releaseGuestAttachment(reason: "racer one")
+            await h.session.releaseGuestAttachment(reason: "racer one").released
         }
         async let second = SessionIdentity.$current.withValue(identity) {
-            await h.session.releaseGuestAttachment(reason: "racer two")
+            await h.session.releaseGuestAttachment(reason: "racer two").released
         }
         let outcomes = await [first, second]
         #expect(outcomes.filter { $0 }.count == 1,
@@ -354,6 +354,72 @@ struct GuestPoolWiringTests {
         let after = await h.session.guestAttachments["sessA"]?.lastUsedAt
         #expect(before != nil && after != nil)
         #expect(after! >= before!, "a host-only call from an attached session is a sign of life")
+    }
+
+    @Test("a provider that is gone is a vanish, not an all-clear")
+    func aMissingProviderIsAVanish() async throws {
+        // A11 names "the provider died" as a way a guest disappears. Returning
+        // nil there reported everything fine and left the slot held by a machine
+        // nothing could see any more.
+        let h = await session()
+        try await attach(h.session, "one", as: "sessA")
+        // The provider is no longer resolvable at all.
+        await h.session.setGuestProviders([])
+
+        let identity = RunSessionIdentity(project: "p", connection: "A", key: "sessA")
+        let error = await SessionIdentity.$current.withValue(identity) {
+            await h.session.guestVanishedError()
+        }
+        let named = try #require(error, "a vanished provider must not read as all-well")
+        #expect(named.message.contains("one"))
+        #expect(await h.session.runScheduler.snapshot().active.isEmpty,
+                "the slot must come back")
+    }
+
+    @Test("a release reports its own outcome, not the last release anywhere in the agent")
+    func releaseOutcomeIsNotShared() async throws {
+        // The outcome used to be stashed on one field of a Session shared by
+        // every identity, so a concurrent release of another attachment could
+        // overwrite it between this stop and the caller reading it -- reporting
+        // a guest this call had just stopped as still running.
+        let h = await session(records: [Self.macRecord("one", running: false),
+                                        Self.macRecord("two", running: false)])
+        try await attach(h.session, "one", as: "sessA")
+        try await attach(h.session, "two", as: "sessB")
+
+        let a = RunSessionIdentity(project: "p", connection: "A", key: "sessA")
+        let b = RunSessionIdentity(project: "p", connection: "B", key: "sessB")
+        async let first = SessionIdentity.$current.withValue(a) {
+            await h.session.releaseGuestAttachment(reason: "a", stopGuest: true)
+        }
+        async let second = SessionIdentity.$current.withValue(b) {
+            await h.session.releaseGuestAttachment(reason: "b", stopGuest: true)
+        }
+        let outcomes = await [first, second]
+        // Both started their own guest, so both stopped it. The point is that
+        // each answer is its own rather than whichever finished last.
+        #expect(outcomes.allSatisfy { $0.released })
+        #expect(outcomes.allSatisfy { $0.stoppedGuest })
+    }
+
+    @Test("an attach that starts a guest and then fails stops it again")
+    func aFailedAttachDoesNotOrphanTheGuestItStarted() async throws {
+        // The one path that has just consumed Apple's cap. A probe that fails
+        // after a successful start used to swallow the stop and write an ok row,
+        // leaving a macOS guest running, uncounted, with its slot given back.
+        let h = await session(records: [Self.macRecord("one", running: false)])
+        await h.session.setGuestLinkFactory { socket in
+            let link = FakeGuestLink(localSocket: socket)
+            link.probeError = AgentError(code: .agentUnavailable, message: "no tunnel")
+            return link
+        }
+        await #expect(throws: AgentError.self) {
+            try await self.attach(h.session, "one", as: "sessA")
+        }
+        #expect(h.provider.calls.contains { $0.0 == "start" }, "it started the guest")
+        #expect(h.provider.calls.contains { $0.0 == "stop" },
+                "and it must stop what it started when the attach fails")
+        #expect(await h.session.runScheduler.snapshot().active.isEmpty)
     }
 
     // MARK: - A12

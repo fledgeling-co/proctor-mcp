@@ -194,7 +194,7 @@ Out-of-family plan review: grok `grok-4.6` `xhigh`, verdict ACCEPT WITH CHANGES,
 
 ## Progress (2026-08-20)
 
-Built on `ai/pro-0076` off `ai/wave-9`. **1,785 tests in 210 suites green**, whole suite, via
+Built on `ai/pro-0076` off `ai/wave-9`. **1,788 tests in 210 suites green**, whole suite, via
 `./scripts/test.sh`.
 
 **Ten of twelve criteria settled. A1 is settled at the seam and BLOCKED live. A1b is BLOCKED.**
@@ -244,6 +244,7 @@ assertion about work nobody can see.
 | the `slotHeld` idempotence latch is removed | `GuestPoolWiringTests` | yes |
 | `poolStatus` asks a provider for a listing | `GuestPoolWiringTests` | yes |
 | the forward stops checking for a vanished guest | `GuestPoolWiringTests` | yes |
+| a failed attach stops leaving the guest it started | `GuestPoolWiringTests` | yes |
 
 Two of those took a second attempt, and both were the test being weaker than it read. The
 idempotence test first covered only sequential releases, where removing the attachment already
@@ -271,6 +272,22 @@ here:
 - an attached session calling only host-only tools never touched its attachment, so a session
   driving through `proctor_doctor` looked idle and could have its slot reclaimed.
 - A1b was claimed settled and is not; A1's live half was under-qualified. Both corrected above.
+
+A second pass over the fixes returned three more, two of them defects the first round of fixes
+introduced or left standing. All three are fixed:
+
+- **`stopGuestAfterFailedAttach` kept the shape that was being removed elsewhere**: a missing
+  adapter returned silently, `try?` swallowed the failure, and the audit row said `ok` regardless.
+  An attach that started a guest and then failed its probe could therefore leave a macOS guest
+  running, uncounted, with its slot already given back — the A11 hole on the single path that had
+  just consumed Apple's cap. It now goes through the same audited stop and records honestly when
+  the guest could not be stopped.
+- **The stop outcome was stored on one field of a `Session` shared by every identity**, which the
+  reporting fix introduced. A concurrent release of another attachment could overwrite it between
+  this stop and `detach` reading it, reporting a guest this call had just stopped as still running:
+  the inverse of the lie it was added to fix. The outcome is returned from the release now.
+- **`grantable`'s `capacities` parameter defaulted to an empty map**, so a caller who omitted it got
+  unbounded pools and Apple's two would not bind. It defaults to `GuestPool.capacities`.
 
 Two findings were **not** acted on, with reasons. The critic could not see `GuestHandleScope` or
 `Session.windowHandle` (they were outside the excerpt sent) and read A4's resolver as missing; it

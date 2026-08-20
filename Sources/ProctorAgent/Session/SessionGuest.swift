@@ -500,9 +500,19 @@ extension Session {
     /// person started, or one another session holds, is never stopped to free a
     /// slot: stopping a running VM discards its state, and a scheduler that may
     /// do that can destroy work nobody asked it to risk (A10).
+    /// What a release did. **Returned rather than stored**, because a field on
+    /// `Session` is one slot shared by every identity: a concurrent release of
+    /// another attachment could overwrite it between this stop and the caller
+    /// reading it, and `detach` would then report a guest it had just stopped as
+    /// still running. The inverse of the lie the outcome was added to fix.
+    struct GuestRelease: Sendable {
+        var released: Bool
+        var stoppedGuest: Bool
+    }
+
     @discardableResult
     func releaseGuestAttachment(reason: String?, stopGuest: Bool = false,
-                                session: String? = nil) async -> Bool {
+                                session: String? = nil) async -> GuestRelease {
         let key = session ?? SessionIdentity.current.key
         guard var attachment = guestAttachments[key], attachment.slotHeld else {
             // Already released, or never attached. Clean up any remnants and say
@@ -510,7 +520,7 @@ extension Session {
             guestAttachments.removeValue(forKey: key)
             if let link = guestLinks.removeValue(forKey: key) { await link.close() }
             guestTickets.removeValue(forKey: key)
-            return false
+            return GuestRelease(released: false, stoppedGuest: false)
         }
 
         attachment.slotHeld = false
@@ -527,7 +537,6 @@ extension Session {
             // the VM kept running uncounted.
             stopped = await stopGuestForRelease(attachment)
         }
-        lastReleaseStoppedGuest = stopped
 
         if let link = guestLinks.removeValue(forKey: key) { await link.close() }
         if let ticket = guestTickets.removeValue(forKey: key) {
@@ -546,7 +555,7 @@ extension Session {
                                   kind: "release", outcome: AuditRecord.Outcome.ok,
                                   reason: reason))
         }
-        return true
+        return GuestRelease(released: true, stoppedGuest: stopped)
     }
 
     /// Stop a guest this agent started, through `guestMutate` — the same gated,
@@ -678,11 +687,26 @@ extension Session {
             // Give the slot back on every failure after taking it, and stop the
             // guest only if this call is what started it.
             if startedHere {
+                // This call started it and this call failed, so it is stopped
+                // again — through the SAME audited path every other stop takes,
+                // and its real outcome is recorded. The old shape swallowed the
+                // failure and wrote an `ok` row regardless, which meant a probe
+                // that failed after a successful start could leave a macOS guest
+                // running, uncounted, with its slot already given back: the A11
+                // hole on the one path that had just consumed Apple's cap.
                 let attachment = GuestAttachment(
                     machine: machine, handle: record.handle, provider: record.provider,
                     name: record.name, localSocket: "", startedByThisAgent: true,
                     attachedAt: clock())
-                _ = try? await stopGuestAfterFailedAttach(attachment)
+                if await stopGuestForRelease(attachment) == false {
+                    auditSink(AuditRecord(
+                        timestamp: clock(), tool: AuditTool.guestAttach,
+                        bundleId: "guest:\(record.provider):\(record.name)",
+                        kind: "attach", outcome: AuditRecord.Outcome.failed,
+                        reason: "the attach that started \(record.name) failed AND the guest "
+                              + "could not be stopped again, so it is still running and is not "
+                              + "counted against the macOS pool"))
+                }
             }
             await runScheduler.release(ticket)
             auditSink(AuditRecord(timestamp: clock(), tool: AuditTool.guestAttach,
@@ -702,11 +726,11 @@ extension Session {
                 remedy: "Nothing to detach. proctor_guest action \"list\" shows the guests this "
                       + "Mac can reach.")
         }
-        await releaseGuestAttachment(reason: "detached by the session that attached it",
-                                     stopGuest: true)
-        // Read AFTER the release, so this is what happened rather than what was
-        // going to be attempted.
-        let stopped = lastReleaseStoppedGuest
+        // The outcome comes back from the release itself, so it describes THIS
+        // release rather than whatever the last one anywhere in the agent did.
+        let stopped = await releaseGuestAttachment(
+            reason: "detached by the session that attached it",
+            stopGuest: true).stoppedGuest
         return .object([
             "attached": .bool(false),
             "machine": try JSONValue.encode(attachment.machine),
@@ -750,16 +774,6 @@ extension Session {
         return platform
     }
 
-    private func stopGuestAfterFailedAttach(_ attachment: GuestAttachment) async throws {
-        let providers = try resolvedGuestProviders()
-        guard let adapter = providers.first(where: { $0.id == attachment.provider }) else { return }
-        _ = try? await adapter.stop(name: attachment.name)
-        auditSink(AuditRecord(timestamp: clock(), tool: AuditTool.guestStop,
-                              bundleId: "guest:\(attachment.provider):\(attachment.name)",
-                              kind: "stop", outcome: AuditRecord.Outcome.ok,
-                              reason: "the attach that started \(attachment.name) failed, so it "
-                                    + "was stopped again"))
-    }
 }
 
 // MARK: - PRO-0076 A12: what the pool looks like from outside

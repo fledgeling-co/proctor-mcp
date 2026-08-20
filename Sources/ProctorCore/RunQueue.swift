@@ -360,7 +360,7 @@ public struct RunQueuePlan: Sendable {
     public static func grantable(waiting: [RunTicketInfo], busy: Set<RunLane>,
                                  held: Bool,
                                  occupancy: [String: Int] = [:],
-                                 capacities: [String: Int] = [:]) -> [Int] {
+                                 capacities: [String: Int] = GuestPool.capacities) -> [Int] {
         guard !held else { return [] }
         var taken = busy
         var counts = occupancy
