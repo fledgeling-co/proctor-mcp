@@ -53,9 +53,10 @@ enum TUIApp {
         watching.stackSize = 512 * 1024
         watching.start()
 
-        // Filled once at start-up so the panes that read a health report are not
-        // empty until somebody presses r.
+        // Filled once at start-up so the panes that read a health report or the
+        // history projection are not empty until somebody presses r.
         refreshReadiness(state: state, client: client)
+        refreshHistory(state: state, client: client)
 
         let theme = TUITheme()
         while !state.isFinished {
@@ -84,6 +85,7 @@ enum TUIApp {
         case "r":
             state.requestRefresh()
             refreshReadiness(state: state, client: client)
+            refreshHistory(state: state, client: client)
         default: break
         }
     }
@@ -101,6 +103,27 @@ enum TUIApp {
                                                           arguments: .object([:]))),
               response.ok, let report = response.result else { return }
         state.received(report: report)
+    }
+
+    /// Ask the agent for the history projection and fill the pane that reads it.
+    ///
+    /// On demand and on its own connection, for the same two reasons the health
+    /// read is: a person pressing `r` knows when they last had a real answer,
+    /// and the watch connection is one-way once open.
+    ///
+    /// `proctor_history` is not in `ToolCatalogue`, so this is the same
+    /// internal verb Proctor's own History window calls and no MCP host can
+    /// route a `tools/call` to it. A trail this Mac cannot open answers with
+    /// its entries counted as unreadable, which the pane says rather than
+    /// drawing an empty history of a machine that was not quiet.
+    static func refreshHistory(state: TUIState, client: SocketClient) {
+        let probe = SocketClient(path: client.path)
+        defer { probe.disconnect() }
+        guard let response = try? probe.send(AgentRequest(id: UUID().uuidString,
+                                                          tool: "proctor_history",
+                                                          arguments: .object([:]))),
+              response.ok, let history = response.result else { return }
+        state.received(history: history)
     }
 
     static func control(_ action: String, state: TUIState, client: SocketClient) {
@@ -136,6 +159,7 @@ final class TUIState: @unchecked Sendable {
     private var failure: String?
     private var outdated: String?
     private var report: JSONValue?
+    private var history: JSONValue?
     private var finished = false
 
     var isFinished: Bool { lock.lock(); defer { lock.unlock() }; return finished }
@@ -178,6 +202,17 @@ final class TUIState: @unchecked Sendable {
         lock.unlock()
     }
 
+    /// The last history reply.
+    ///
+    /// Held whole rather than pre-rendered, so the pane's rows and its
+    /// could-not-be-opened count are read by the same pure function the tests
+    /// drive, and this class keeps deciding nothing.
+    func received(history: JSONValue) {
+        lock.lock()
+        self.history = history
+        lock.unlock()
+    }
+
     func agentTooOld(_ reason: String) {
         lock.lock()
         outdated = reason
@@ -207,6 +242,11 @@ final class TUIState: @unchecked Sendable {
             model.grants = readiness.grants
             model.readiness = readiness.lanes
             model.switches = TUISurface.switches(from: report)
+        }
+        if let history {
+            let read = TUISurface.history(from: history)
+            model.history = read.rows
+            model.historyUnreadable = read.unreadable
         }
         return model
     }

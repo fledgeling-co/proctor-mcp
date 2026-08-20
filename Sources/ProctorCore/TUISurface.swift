@@ -107,6 +107,12 @@ public enum TUISurface {
         public var grants: [Row4] = []
         public var readiness: [Row4] = []
         public var history: [Row4] = []
+        /// Trail entries the agent could open the file for and could not open.
+        ///
+        /// Carried rather than dropped, because an entry that could not be read
+        /// is not an entry that did not happen: a history quietly one row short
+        /// reads as a complete history of a quieter machine.
+        public var historyUnreadable: Int = 0
         public var historyPage: (Int, Int) = (1, 1)
         public var historySelection: Int?
         public var switches: [Row4] = []
@@ -120,6 +126,7 @@ public enum TUISurface {
             a.pane == b.pane && a.connection == b.connection && a.run == b.run
                 && a.lanes == b.lanes && a.laneCap == b.laneCap && a.grants == b.grants
                 && a.readiness == b.readiness && a.history == b.history
+                && a.historyUnreadable == b.historyUnreadable
                 && a.historyPage == b.historyPage && a.historySelection == b.historySelection
                 && a.switches == b.switches && a.handshake == b.handshake
         }
@@ -170,6 +177,18 @@ public enum TUISurface {
             "The trail starts at the first tool call and keeps",
             "14 days or 10,000 entries, whichever comes first.", "",
             "Press <3> to check the agent is ready to record.",
+        ]
+        /// The trail is there and this process could not open it.
+        ///
+        /// A different sentence from `historyEmpty` on purpose. "No runs
+        /// recorded" and "the entries are sealed and this Mac would not open
+        /// them" are opposite facts, and one empty pane drawn for both says the
+        /// machine was quiet when the truth is that nobody can tell.
+        public static let historySealed = [
+            "", "The trail could not be opened.", "",
+            "Entries are sealed to a key in this Mac's login keychain,",
+            "and reading them back needs that keychain unlocked.", "",
+            "Unlock the Mac and press <r>.",
         ]
         public static let laneModel = [
             "Reads never join the line.",
@@ -360,12 +379,16 @@ public enum TUISurface {
 
     static func historyPane(_ model: Model) -> TUINode {
         guard !model.history.isEmpty else {
+            let sealed = model.historyUnreadable > 0
             return .column([TUIChild(.panel(TUIPanel(
-                title: "HISTORY", shelfCentre: "nothing recorded yet",
-                child: .text(TUIText(Copy.historyEmpty, role: "text-dim", align: .centre)))))])
+                title: "HISTORY",
+                shelfCentre: sealed ? "sealed" : "nothing recorded yet",
+                child: .text(TUIText(sealed ? Copy.historySealed : Copy.historyEmpty,
+                                     role: "text-dim", align: .centre)))))])
         }
         return .column([TUIChild(.panel(TUIPanel(
             title: "HISTORY", shelfCentre: Copy.retention,
+            shelfBottomLeft: Self.unreadableNote(model.historyUnreadable),
             shelfBottomRight: "page \(model.historyPage.0) of \(model.historyPage.1)",
             child: .table(TUITable(columns: [
                 TUIColumn("WHEN", width: 8),
@@ -440,10 +463,9 @@ public enum TUISurface {
     ///
     /// PRO-0075. Found by the campaign: three of the five panes had no data
     /// source at all, so they drew their empty state whatever the machine was
-    /// doing. Two of them are answerable from `proctor_doctor`, which this
-    /// client already reaches; the third is history, and the trail is sealed and
-    /// deliberately unreadable by any client, so that pane stays empty and says
-    /// why rather than pretending.
+    /// doing. Readiness and switches are answerable from `proctor_doctor`;
+    /// history is answerable from `proctor_history`, and `history(from:)` below
+    /// reads it.
     public static func readiness(from report: JSONValue) -> (grants: [Row4], lanes: [Row4]) {
         var grants: [Row4] = []
         for grant in report["grants"]?.arrayValue ?? [] {
@@ -461,6 +483,60 @@ public enum TUISurface {
                                needs(of: lane)]))
         }
         return (grants, lanes)
+    }
+
+    /// A note for the history shelf when some entries could not be opened.
+    ///
+    /// `nil` when the count is zero, so the shelf carries the fact only when
+    /// there is one to carry.
+    static func unreadableNote(_ count: Int) -> String? {
+        guard count > 0 else { return nil }
+        return count == 1 ? "1 entry could not be opened"
+                          : "\(count) entries could not be opened"
+    }
+
+    /// Fill the history pane from a `proctor_history` reply.
+    ///
+    /// **This opens no path that was not already open.** `proctor_history` is an
+    /// internal socket verb the app's own History window already calls; it is
+    /// deliberately absent from `ToolCatalogue`, so the shim — which gates
+    /// `tools/call` on the catalogue — cannot route a model to it, and reading
+    /// it here changes neither that gate nor the sealing. Worth stating because
+    /// the campaign first recorded this pane as unfixable on the reasoning that
+    /// the trail is unreadable by any client, and that was wrong twice over: the
+    /// verb exists, and `proctor_policy` action `audit` is a catalogue tool that
+    /// already hands a model whole records. What this pane draws is the same
+    /// projection the window draws, which is strictly narrower than that.
+    ///
+    /// The agent's own projection is trusted for what a row may say. Nothing is
+    /// derived here that the reply did not name, so a field withheld there stays
+    /// withheld here rather than being reconstructed on this side.
+    public static func history(from reply: JSONValue,
+                               timeZone: TimeZone = .current) -> (rows: [Row4], unreadable: Int) {
+        let rows: [Row4] = (reply["runs"]?.arrayValue ?? []).compactMap { run in
+            guard let tool = run["tool"]?.stringValue else { return nil }
+            let steps = run["steps"]?.arrayValue ?? []
+            return Row4([clock(run["startedAt"]?.doubleValue, in: timeZone),
+                         tool,
+                         run["bundleId"]?.stringValue ?? "—",
+                         run["outcome"]?.stringValue ?? "unknown",
+                         "\(steps.count)"])
+        }
+        return (rows, Int(reply["unreadable"]?.doubleValue ?? 0))
+    }
+
+    /// A wall clock in the reader's own zone, from an epoch second.
+    ///
+    /// Arithmetic rather than a `DateFormatter`, because the column is eight
+    /// cells wide and a formatter's output is a locale's decision: a zone or a
+    /// calendar that renders a 12-hour clock with a suffix overflows the column
+    /// and truncates the seconds, which is a different time.
+    static func clock(_ epoch: Double?, in timeZone: TimeZone) -> String {
+        guard let epoch else { return "--:--:--" }
+        let date = Date(timeIntervalSince1970: epoch)
+        let local = Int((epoch + Double(timeZone.secondsFromGMT(for: date))).rounded(.down))
+        let second = ((local % 86_400) + 86_400) % 86_400
+        return String(format: "%02d:%02d:%02d", second / 3_600, (second % 3_600) / 60, second % 60)
     }
 
     /// What a lane still wants, from the report's own words.

@@ -43,11 +43,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Note: a check that could not run is not a check that passed. The status window still draws its permission rows from a build-time list rather than from the design, and that gap is recorded rather than papered over.
 
-- **Supervision over SSH reads the machine, not just the run.** The readiness and switches panes were drawing their empty state whatever the Mac was doing. They now show real grants, real lanes with what each still wants, and every switch with where its value came from and when it takes effect. History stays empty on purpose: the trail is sealed and signed and nothing can read it back, which is a decision about what a remote client should be able to see rather than a pane nobody finished.
+- **Supervision over SSH reads the machine, not just the run.** The readiness, switches and history panes were drawing their empty state whatever the Mac was doing. They now show real grants, real lanes with what each still wants, every switch with where its value came from and when it takes effect, and the recent runs with what each one drove and how it ended.
+
+  History was nearly left out, on the reasoning that the trail is sealed and no client can read it. That was wrong twice over. The verb the History window uses already exists, and keeping it off the tool catalogue was never what kept a model out of the trail, because the policy tool already opens the trail and hands back whole records. The pane reads the same projection the window reads, which is narrower than what a model can ask for anyway, so nothing here opens a path that wasn't open already.
+
+  Three states used to look identical and no longer do: a Mac that has recorded nothing, a trail this Mac couldn't open, and a history that opened short. The last one says how many entries it couldn't read, because a history one row short reads as a complete history of a quieter machine.
 
 - **A halted run no longer tells you where it was stopped from.** Stop is reachable from the run panel, the menu bar and the terminal, and they all write the same latch, so a message naming one of them was wrong two times in three. It names what happened instead.
 
-The gate after this wave is 1,657 tests in 197 suites, from 1,516 in 175 when it started.
+The gate after this wave is 1,666 tests in 198 suites, from 1,516 in 175 when it started.
 
 ## [0.2.0] - 2026-08-17
 

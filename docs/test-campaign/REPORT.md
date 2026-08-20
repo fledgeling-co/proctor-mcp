@@ -3,11 +3,11 @@
 **Scope: FULL.** Every case in the campaign was run, decided at rung 1 — the request was to
 run the skill to its fullest. Recorded with `campaign.py scope --full`.
 
-**The verdict line, with its denominators.** 42 cases over 17 surfaces: 41 pass, 41 armed,
-0 fail, 1 inconclusive. Oracles: outcome 31 · metamorphic 3 · raster-visual 8. Strict check
-41 of 42 checked, ratchet raised 36 → 41. Capture lineage: 5 published shots, 5 distinct
-images, every one tying to its subject, 3 of 5 judged, ratchet pinned at 3. Suite: 1,657
-tests in 197 suites.
+**The verdict line, with its denominators.** 43 cases over 17 surfaces: 43 pass, 43 armed,
+0 fail, 0 inconclusive. Oracles: outcome 32 · metamorphic 3 · raster-visual 8. Strict check
+43 of 43 checked, ratchet raised 36 → 43. Capture lineage: 5 published shots, 5 distinct
+images, every one tying to its subject, 3 of 5 judged, ratchet pinned at 3. Suite: 1,666
+tests in 198 suites.
 
 **All gates green.** One case was inconclusive for part of this run and is described below,
 because how it was closed is the useful part: the instrument was reachable all along through a
@@ -20,8 +20,8 @@ environment where a bare exec from this harness does not, which is what made a U
 bound to the wave-9 agent reachable without replacing the operator's installed app. The status
 window draws four permission rows, Input Monitoring among them, and CASE-0042 is a pass.
 
-All three campaign gates are green: `check` 42 of 42, `strict-check` 42 with the ratchet raised
-36 → 42, `capture-lineage --gate` clean with its ratchet at 3.
+All three campaign gates are green: `check` 43 of 43, `strict-check` 43 with the ratchet raised
+36 → 43, `capture-lineage --gate` clean with its ratchet at 3.
 
 ## What the stop was, before it was resolved
 
@@ -56,17 +56,41 @@ cropped to the `AXExtrasMenuBar` frame the process itself reported.
 The seeded swap was run in both directions and caught both times, so the tie pass reads what
 it claims to.
 
-## Eight defects, six fixed
+## The second stop, and the premise that was wrong
+
+The first pass recorded the TUI's history pane as unfixable, and the reasoning was that the
+trail is sealed, `proctor_history` is absent from `ToolCatalogue`, and therefore no client can
+read it. Both halves of that were wrong, and neither was hard to check.
+
+`proctor_history` exists. It is an internal socket verb behind Proctor's own History window,
+and it is kept off the catalogue so the shim — which gates `tools/call` on the catalogue —
+cannot route a model to it. Being off the catalogue was never what made the trail unreadable
+to a model, and `Dispatch.swift` says so in its own comment: `proctor_policy` action `audit`
+is a catalogue tool that already opens the trail and hands back whole records. The projection
+the History window draws is strictly narrower than that one.
+
+So the pane reads that verb now, and reading it opens no path that was not already open: no
+catalogue entry, no change to the sealing, no keychain access this process did not already
+have. The correction was not reached by re-reading the campaign. It was reached by asking two
+other model families to check the premise, and one of them read `Dispatch.swift` and found the
+verb sitting there.
+
+Three states the empty frame used to collapse are now separate: a machine that has recorded
+nothing, a trail this Mac could not open, and a history that opened short. The last states its
+count on the shelf, because an entry that could not be read is not an entry that did not
+happen, and a history one row short reads as a complete history of a quieter machine.
+
+## Eight defects, six fixed and two left for a decision
 
 | id | what | state |
 |---|---|---|
 | DEF-006 | Three commands declared for the menu bar were never rendered in it | fixed |
 | DEF-007 | The permissions list omitted the one permission whose absence is silent | fixed |
-| DEF-008 | Three of the TUI's five panes had no data source | fixed (two of three) |
+| DEF-008 | Three of the TUI's five panes had no data source | fixed |
 | DEF-009 | A halted caller was told which surface stopped it, and it was the wrong one | fixed |
 | DEF-010 | The permissions pane clipped its fourth row off the bottom | fixed |
 | DEF-011 | The fix reached the CLI and the TUI and was filtered out of the window | fixed |
-| DEF-012 | The status window's chrome diverges from its design of record | open |
+| DEF-012 | The status window's chrome diverges from its design of record | partly fixed |
 | DEF-013 | The walkthrough's first slide diverges from its design of record | open |
 
 DEF-011 is the one worth reading twice. `StatusChecks` classifies every grant name the health
@@ -107,11 +131,10 @@ in flight. Either would have been a vacuous pass.
 
 ## What was not checked
 
-- **The window drawing the fourth permission row** — CASE-0042, declared above.
-- **History in the TUI** — the pane exists and stays empty. The trail is sealed and signed and
-  `proctor_history` is deliberately absent from the tool catalogue, so no client can read it.
-  Giving the TUI a history pane means giving some client a read path into the trail, which is a
-  security-surface decision rather than a defect. Recorded as an open question.
+- **Cross-session and pre-launch history in the TUI** — the pane reads the same bounded window
+  the History window reads, so a person is looking at recent runs rather than the whole trail.
+  A forensic read of the full trail stays where it was, behind `proctor_policy` action `audit`
+  and the keychain.
 - **Mutation survival** — `warrant:assay` still owes that number, and tier 2 needs it.
 - **The walkthrough's later slides, the takeover overlay and the run HUD under the new build** —
   unchanged by this wave's work and carried from the previous full run.

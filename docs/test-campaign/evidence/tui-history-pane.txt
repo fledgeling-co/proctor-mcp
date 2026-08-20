@@ -1,0 +1,100 @@
+CASE-0043 — the supervision TUI's history pane, fed by proctor_history.
+Rendered at 100x30 by TUISurface.render, the same call the running program makes.
+
+Reply read: 3 runs, 2 entries unreadable.
+
+--- populated ---
+[1] run  [2] queue  [3] readiness  [4] HISTORY  [5] switches                                        
+╭ HISTORY ─────────────────────────── 14 days, 10,000 entries ─────────────────────────────────────╮
+│                                                                                                  │
+│   WHEN      TOOL             APP                                                 OUTCOME   STEPS │
+│ ──────────────────────────────────────────────────────────────────────────────────────────────── │
+│   22:13:20  proctor_act      com.apple.Safari                                    ok            3 │
+│   22:14:02  proctor_capture  com.apple.finder                                    refused       1 │
+│   22:15:01  proctor_snapsh…  —                                                   ok            0 │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+╰ 2 entries could not be opened ────────────────────────────────────────────────────── page 1 of 1 ╯
+[r] re-check  [tab] pane  [?] help  [q] quit                                                        
+
+--- quiet trail ---
+[1] run  [2] queue  [3] readiness  [4] HISTORY  [5] switches                                        
+╭ HISTORY ───────────────────────────── nothing recorded yet ──────────────────────────────────────╮
+│                                                                                                  │
+│                                                                                                  │
+│                                No runs recorded on this machine.                                 │
+│                                                                                                  │
+│                        The trail starts at the first tool call and keeps                         │
+│                        14 days or 10,000 entries, whichever comes first.                         │
+│                                                                                                  │
+│                         Press <3> to check the agent is ready to record.                         │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+[r] re-check  [tab] pane  [?] help  [q] quit                                                        
+
+--- sealed trail ---
+[1] run  [2] queue  [3] readiness  [4] HISTORY  [5] switches                                        
+╭ HISTORY ──────────────────────────────────── sealed ─────────────────────────────────────────────╮
+│                                                                                                  │
+│                                                                                                  │
+│                                  The trail could not be opened.                                  │
+│                                                                                                  │
+│                    Entries are sealed to a key in this Mac's login keychain,                     │
+│                       and reading them back needs that keychain unlocked.                        │
+│                                                                                                  │
+│                                  Unlock the Mac and press <r>.                                   │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+│                                                                                                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+[r] re-check  [tab] pane  [?] help  [q] quit                                                        

@@ -4,8 +4,8 @@ Lanes: macos, mcp-stdio, cli
 
 **Sample:** full multi-witness coverage across all 21 MCP tools, status/walkthrough/overlay UI surfaces, and guest/takeover controls
 
-17 surfaces · 9 flows · 14 components · 42 cases
-42 pass · 0 fail · 0 skip · 0 n/a · 0 open · armed 42/42
+17 surfaces · 9 flows · 14 components · 43 cases
+43 pass · 0 fail · 0 skip · 0 n/a · 0 open · armed 43/43
 
 | Case | Surface | State | Lane | Status | Armed | Evidence |
 |---|---|---|---|---|---|---|
@@ -51,3 +51,4 @@ Lanes: macos, mcp-stdio, cli
 | CASE-0036 | SURF-017  |  |  | pass | yes | 1 |
 | CASE-0040 | SURF-017  |  |  | pass | yes | 3 |
 | CASE-0041 | SURF-017  |  |  | pass | yes | 2 |
+| CASE-0043 | SURF-017  |  | macos | pass | yes | 1 |
