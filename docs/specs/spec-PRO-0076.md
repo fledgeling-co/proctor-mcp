@@ -5,7 +5,12 @@
 **Depends on:** PRO-0058 (the guest seam), PRO-0060 (`reach`), PRO-0061 (the auto-route gate)
 **Research:** `docs/research/2026-08-15-dossier-proctor-vs-cua.md`,
 `docs/research/2026-08-15-proctor-vs-cua-driver.md`
-**Live target:** `anvil-mac-node` under `tart` (reader's decision, 2026-08-20)
+**Live target:** `proctor-mac-node` under `tart` — a clone of `anvil-mac-node`, taken 2026-08-20
+after the reader asked for a recommendation. The source belongs to another project and is one of
+three rigs in its own test plan, with `lab-mac.sh` running against it; installing a TCC-granted
+agent into it would have made "is that rig clean?" unanswerable later and could collide with
+their runs. Cloning costs 29 GB of 403 GB free, `tart delete` reverses it completely, and that
+project's own plan names this node as the one that is cloneable.
 
 ## The problem
 

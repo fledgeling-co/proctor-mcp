@@ -36,8 +36,8 @@
     },
     "guest-glass": {
       "attached": false,
-      "reason": "Two things stand in the way and only the second is structural. No Proctor is installed inside anvil-mac-node yet, which is a build-and-install job needing a console login or an SSH key (tart exec is unavailable, the Tart Guest Agent is absent from that node). And after that install, Accessibility and Screen Recording must be granted at the guest's own Aqua console: SSH is not the foreground session and macOS exposes no API that grants TCC from outside a guest, so no harness can do it unattended",
-      "declaredAt": "2026-08-20T08:54:52+00:00"
+      "reason": "Staged to the console step on a dedicated clone, proctor-mac-node. A Developer ID signed, notarised and stapled build is installed at /Applications/Proctor.app inside the guest and the guest's own spctl accepts it; the launchd plist is written with RunAtLoad. What remains is structural: launchctl bootstrap gui/501 over SSH returns 125 Domain does not support specified action, because SSH is not an Aqua session, and no macOS API grants Accessibility or Screen Recording from outside a guest. A person logs in at the guest's console once",
+      "declaredAt": "2026-08-20T10:09:03+00:00"
     }
   }
 }
