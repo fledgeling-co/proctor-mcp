@@ -81,6 +81,13 @@ Status: **Merged** on `ai/wave-9`. Suite: 1,618 tests in 189 suites, green.
 - **A8** — completion is generated from the catalogue for zsh and bash; an unknown shell returns
   nil rather than a script that would be wrong.
 
+### Settled later, by the 0.8.0 campaign
+
+- **A2 is settled.** `proctor doctor --json` and the MCP `tools/call` result for the same tool
+  agree across 23 top-level keys and 51,195 characters, measured against a wave-9 agent on its
+  own socket. The fields that differ are the ones that must: a tool probe re-run seconds later
+  stamps a new `checkedAt`. Evidence: `docs/test-campaign/evidence/cli-json-identical.json`.
+
 ### Needs a live agent
 
 - **A2** — that `--json` is byte-identical to the MCP `tools/call` result. The code encodes the

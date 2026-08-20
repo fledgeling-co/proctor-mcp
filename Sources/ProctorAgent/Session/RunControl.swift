@@ -365,7 +365,12 @@ extension RunControl.Halt {
         case .stopped:
             return AgentError(
                 code: .haltedByPerson,
-                message: "a person stopped this run from Proctor's run HUD, so this step and the "
+                // Names the act, not the surface. Stop is reachable from the run
+                // panel, the menu bar and `proctor tui` over SSH, and the latch
+                // is the same for all three — so a message naming one of them is
+                // wrong two times in three. Measured: a stop pressed in the TUI
+                // came back saying it came from the run HUD.
+                message: "a person stopped this run, so this step and the "
                        + "ones after it never ran",
                 remedy: "Nothing failed. Somebody watching the run decided to end it, and the steps "
                       + "that completed before the halt are reported alongside this. Ask before "

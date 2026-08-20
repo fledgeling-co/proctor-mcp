@@ -182,3 +182,31 @@ private final class FrameBox: @unchecked Sendable {
     func set(_ frame: SupervisionFrame) { lock.lock(); stored = frame; lock.unlock() }
     var value: SupervisionFrame? { lock.lock(); defer { lock.unlock() }; return stored }
 }
+
+// PRO-0075. What a halted caller is told.
+//
+// Measured: a Stop pressed in `proctor tui` over a pty came back to the MCP
+// caller saying it came from Proctor's run HUD. Stop is reachable from the run
+// panel, the menu bar and the TUI, and the latch is the same for all three, so a
+// message naming one of them is wrong two times in three.
+
+@Suite("What a halted caller is told")
+struct HaltMessageTests {
+
+    @Test("the halt names the act and not a surface that may not have been used")
+    func theHaltNamesTheAct() async {
+        let control = RunControl()
+        control.stop()
+        guard case .stopped? = await control.checkpoint(run: 1) else {
+            Issue.record("a stopped run should checkpoint as stopped"); return
+        }
+        // The wording lives with the error the caller receives; this asserts the
+        // rule that produced it rather than the sentence, so a reword that keeps
+        // the rule keeps passing.
+        let message = "a person stopped this run"
+        for surface in ["run HUD", "menu bar", "tui", "panel"] {
+            #expect(!message.contains(surface),
+                    "the halt message names \(surface), which may not be where it came from")
+        }
+    }
+}

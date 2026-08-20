@@ -162,9 +162,15 @@ final class RunHUDPanel {
     /// Hold stops any waiting run starting — including the active session's own
     /// next one, because a hold a session can jump by sending its next batch is
     /// not a control. The run in flight is untouched and finishes.
-    func toggleHold() {
+    func toggleHold() { setQueueHeld(!queue.held) }
+
+    /// The same hold, asked for by name rather than flipped.
+    ///
+    /// PRO-0075: the menu bar names the state it wants, because a toggle sent
+    /// from another process would race the panel's own idea of the current one
+    /// and a person could ask for a hold and get a release.
+    func setQueueHeld(_ wanted: Bool) {
         guard let scheduler else { return }
-        let wanted = !queue.held
         Task {
             let held = await scheduler.setHeld(wanted)
             RunHUDPanel.audit(held ? "proctor_queue.hold" : "proctor_queue.release",

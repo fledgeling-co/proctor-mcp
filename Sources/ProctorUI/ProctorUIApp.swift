@@ -174,6 +174,15 @@ struct ProctorUIApp: App {
                 Divider()
                 commandButton("show-panel") { model.setPanel(visible: true) }
                 commandButton("hide-panel") { model.setPanel(visible: false) }
+                Divider()
+                commandButton("drop-waiting") { model.dropWaiting() }
+                Divider()
+                // The two drawing switches, as toggles rather than buttons: a
+                // menu item that flips a setting has to say which way it is set,
+                // and a person reading "Takeover Notice" with no state cannot
+                // tell whether choosing it turns the notice on or off.
+                switchToggle(SwitchCatalogue.takeover, id: "takeover-notice", model: model)
+                switchToggle(SwitchCatalogue.cursor, id: "drawn-pointer", model: model)
             }
             CommandGroup(after: .windowList) {
                 commandButton("status") { openWindow(id: "main") }
@@ -384,6 +393,22 @@ func commandButton(_ id: String, action: @escaping () -> Void) -> some View {
         } else {
             button
         }
+    }
+}
+
+/// A menu item for a drawing switch, showing its state and flipping it.
+///
+/// PRO-0075. Bound to the saved value rather than the running one so the tick
+/// follows what the person chose. The switch takes effect at the next agent
+/// start, which the status window already says; a menu item claiming otherwise
+/// by drawing the running value would show a choice being ignored.
+@MainActor @ViewBuilder
+func switchToggle(_ aSwitch: ProctorSwitch, id: String, model: AgentModel) -> some View {
+    if let command = CommandSurface.command(id) {
+        Toggle(command.title, isOn: Binding(
+            get: { model.isSavedOn(aSwitch) },
+            set: { model.setSwitch(aSwitch, on: $0) }))
+            .accessibilityIdentifier(CommandSurface.ID.command(id))
     }
 }
 

@@ -25,11 +25,15 @@ struct StatusChecksTests {
     @Test("every name the agent can emit resolves to exactly one kind")
     func everyKnownNameClassifies() {
         for name in [StatusChecks.accessibility, StatusChecks.screenRecording,
-                     StatusChecks.automation, StatusChecks.shortcutsCLI] {
+                     StatusChecks.automation, StatusChecks.inputMonitoring,
+                     StatusChecks.shortcutsCLI] {
             #expect(StatusChecks.kind(ofCheckNamed: name) != nil,
                     "\(name) has no kind, so nothing can say what would move it")
         }
-        #expect(StatusChecks.known.count == 4)
+        // Five since PRO-0075 added Input Monitoring to the health report. The
+        // count is pinned rather than derived so that adding a name without
+        // classifying it fails here as well as in the drift test.
+        #expect(StatusChecks.known.count == 5)
     }
 
     @Test("every kind is reachable from a real name")
@@ -377,17 +381,28 @@ struct StatusWindowSourceTests {
         // /usr/bin/shortcuts off the real filesystem, is not injected, and the
         // fourth grant is appended only when it is ABSENT — so on a Mac that has
         // it, that name never appears in a built report at all.
+        // Whitespace-tolerant, because the literal pattern was defeated by a line
+        // break. A grant written as `.init(\n    name: "Input Monitoring"` was
+        // never seen, the set-equality below compared two sets that both lacked
+        // it, and the name fell to the `.tool` default — which filtered the new
+        // permission out of the window while the CLI and the TUI both showed it.
+        // The only guard was against finding NOTHING, and the scan found plenty.
         let source = try Self.source("Sources/ProctorAgent/Session/SessionDoctor.swift")
+        let pattern = try NSRegularExpression(
+            pattern: #"\.init\(\s*name:\s*"([^"]+)""#)
+        let range = NSRange(source.startIndex..<source.endIndex, in: source)
         var emitted: Set<String> = []
-        var index = source.startIndex
-        while let found = source.range(of: ".init(name: \"", range: index..<source.endIndex) {
-            guard let close = source.range(of: "\"", range: found.upperBound..<source.endIndex)
-            else { break }
-            emitted.insert(String(source[found.upperBound..<close.lowerBound]))
-            index = close.upperBound
+        for match in pattern.matches(in: source, range: range) {
+            guard let r = Range(match.range(at: 1), in: source) else { continue }
+            emitted.insert(String(source[r]))
         }
 
         #expect(!emitted.isEmpty, "the scan found no grant names; the pattern has moved")
+        // A count floor as well as a non-empty check: the scan missing SOME names
+        // is the failure that actually happened, and an empty-set guard cannot
+        // see it.
+        #expect(emitted.count >= 4,
+                "the scan found only \(emitted.sorted()) — a partial scan passes set equality against a map that is short by the same names")
         #expect(emitted == Set(StatusChecks.known.keys),
                 """
                 the agent emits \(emitted.sorted()) and StatusChecks carries \
@@ -472,5 +487,34 @@ struct StatusWindowSourceTests {
                 "the offer is decided once, in the model, not a second time in the view")
         #expect(!code.contains("CGPreflightScreenCaptureAccess"),
                 "the window must not re-derive the offer's independent-evidence gate")
+    }
+}
+
+// PRO-0075. Found by photographing the status window and comparing it against
+// the design of record: the design draws Input Monitoring in the permissions
+// list and the window did not, because the health report never carried it. The
+// identifier list named it anyway, and omitted Automation, which the window
+// actually draws — so the uniqueness test was checking a set that did not
+// describe the surface.
+
+@Suite("Every grant the window can draw has an identifier")
+struct StatusGrantIdentityTests {
+
+    @Test("the identifier list names every grant the health report carries")
+    func theListDescribesTheSurface() {
+        let rows = StatusSurface.ID.all.filter { $0.contains(".grant.") }
+        for name in ["Accessibility", "Screen Recording", "Automation",
+                     "Input Monitoring", "Shortcuts CLI"] {
+            #expect(rows.contains { $0.contains(name.lowercased().replacingOccurrences(
+                        of: " ", with: "-")) }
+                    || rows.contains { $0.localizedCaseInsensitiveContains(name) },
+                    "no identifier for the \(name) row")
+        }
+    }
+
+    @Test("no identifier is emitted twice, so a row cannot be confused for another")
+    func identifiersAreUnique() {
+        let all = StatusSurface.ID.all
+        #expect(Set(all).count == all.count)
     }
 }

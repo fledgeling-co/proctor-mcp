@@ -82,3 +82,14 @@ report"). It now refuses with an `AgentError` naming how many bytes arrived and 
 and three tests cover truncated, empty and well-formed input. The journey asserts the
 invariant that holds whether or not the machine has Xcode, and a non-`AgentError` is now a
 named failure rather than an uncaught throw.
+
+## Measured later, by the 0.8.0 campaign
+
+The clause this spec carried has a measurement now rather than a carry. `be-my-witness` judged
+a capture of the built surface against its design pane, both dark, both at the pane's own size,
+and refuted it. The divergences are enumerated in `docs/test-campaign/witness-verdicts.json`
+and recorded as defects in the campaign inventory; they are styling rather than content, and
+they are left open as a gap-fix work order rather than changed in passing.
+
+One content divergence found alongside them was fixed: the permissions list named a third
+grant the design did not, and omitted the one the design draws. See PRO-0075.

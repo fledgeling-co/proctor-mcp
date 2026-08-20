@@ -1,0 +1,19 @@
+{
+  "case": "CASE-0038",
+  "claim": "proctor --json is byte-identical to the MCP tools/call result for the same tool.",
+  "tool": "proctor_doctor",
+  "cliCommand": "PROCTOR_SOCKET=/tmp/proctor-wave9.sock proctor-cli doctor --json",
+  "mcpPath": "proctor-shim serve --profile full, tools/call proctor_doctor, over real MCP stdio",
+  "topLevelKeysEqual": true,
+  "payloadChars": 51195,
+  "identicalOnceWallClockRemoved": true,
+  "removed": [
+    "checkedAt",
+    "observersLive",
+    "elapsedMs",
+    "capturedAt",
+    "at",
+    "uptimeSeconds"
+  ],
+  "reading": "23 top-level keys and 51,195 characters agree exactly. The fields that differ are the ones that must: a tool probe re-run seconds later stamps a new checkedAt. A script and a model see the same bytes, so a defect reproduces identically through either front end."
+}

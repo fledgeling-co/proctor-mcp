@@ -1,11 +1,107 @@
-The campaign is at 100%: 32 of 32 cases checked, no n/a, no inconclusive, no unknown left in the sweeps. Getting there found three more product defects, all fixed.
+# Campaign report — wave 9, run at test-campaign 0.8.0
 
-`campaign.py check` exit 0: 32 pass · 0 fail · 0 skip · 0 n/a of 32, armed 32/32, observed 32/32. `strict-check.py` exit 0, ratchet raised 26 → 32. `swift test`: 1534 tests in 177 suites. macos-glass attached to `/Applications/Proctor.app`, notarised and stapled, pid 84403 owning CG window 2213.
+**Scope: FULL.** Every case in the campaign was run, decided at rung 1 — the request was to
+run the skill to its fullest. Recorded with `campaign.py scope --full`.
 
-The two raster cases. No capture channel can photograph a `sharingType = .none` window: ScreenCaptureKit delivers no frame, `screencapture -l` exits 1 with "could not create image from window", a region capture returns what is behind the panel, and the CoreGraphics image APIs are obsoleted in macOS 15. Gemini reached the same verdict independently and named the same two options. You chose the switch, so `PROCTOR_OVERLAY_CAPTURE` is now an off-by-default capability that lifts the exclusion on all three overlays. With it set, the Run HUD photographs at 704×460 carrying the sprite, step title, target badge, counter, clock and the Pause and Stop controls, and the takeover panel photographs at 5120×2880 carrying the tint and its statement. The default's refusal is what arms both.
+**The verdict line, with its denominators.** 42 cases over 17 surfaces: 41 pass, 41 armed,
+0 fail, 1 inconclusive. Oracles: outcome 31 · metamorphic 3 · raster-visual 8. Strict check
+41 of 42 checked, ratchet raised 36 → 41. Capture lineage: 5 published shots, 5 distinct
+images, every one tying to its subject, 3 of 5 judged, ratchet pinned at 3. Suite: 1,657
+tests in 197 suites.
 
-New defects. DEF-005: arming CASE-0008 showed the drawn pointer was never excluded at all, so Proctor's own cursor entered any display-scoped recording made during a run. It is the only overlay that changes window level while it runs, and the sharing type does not survive that change; level and sharing are set together now. I ruled out the obvious suspect first, with a six-level probe showing the window server honours `.none` at every level. DEF-002 came back in its correct form: sweep L's half-open case held the agent with SIGSTOP, the poll blocked in `read` forever and `isChecking` latched, and the window showed Ready with green ticks past 25 seconds. The window's own polls are bounded at five seconds; the shim's client is deliberately left unbounded, because its calls carry runs that legitimately take minutes.
+**`campaign.py check` exits 1, and that is the honest state.** One case is inconclusive and
+the gate refuses to clear over it. It is declared below with its resume point rather than
+resolved to `n/a`, because it could have been reached and only an environment decision that
+belongs to somebody else stands in the way.
 
-Sweeps. Every cell that was inconclusive is now measured. Display scaling forced across four modes including a 1× one, examined=4 failures=0, display restored. Runtime theme toggled live: 186 levels of repaint, 0.001 back on restore. Popover anchored to its own status item at x 1091 against a screen-centred 752. Half-open found DEF-002. Privilege separation measured: a core-profile shim executes `proctor_guest` and `proctor_policy` when named, which `MCPServer.swift:123` states as the contract, so the profile is a token-cost trim rather than a boundary; the campaign's claim that it refuses was wrong and is DEF-004. One detector defect caught and named: the scaling predicate counted vertical overflow and flagged 12 controls at every scale including the unchanged baseline, which is scrolling rather than clipping.
+## The stop, and how to resume it
 
-Open. Nothing blocking, and nothing is committed. Changed: `CHANGELOG.md`, `Transport.swift`, `AgentModel.swift`, `ProctorUIApp.swift`, `CursorOverlay.swift`, `TakeoverOverlay.swift`, `RunHUDPanel.swift`, `SwitchCatalogue.swift`, `Takeover.swift`, plus new `OverlayCapture.swift` and `WindowPresentation.swift`, their tests, `docs/test-campaign/` and `scripts/campaign/`. The agent LaunchAgent is back on its default plist with no environment overrides, and `install.sh` reuses an already-notarised `.build/Proctor.app` rather than rebuilding, which cost one round of confusion here and is worth knowing before the next release.
+**CASE-0042 — the status window drawing its fourth permission row.** The fix is settled at
+the value and at two other surfaces: `proctor doctor --json` against a wave-9 agent reports
+Input Monitoring granted, and the TUI's readiness pane draws it, both captured. The window
+itself was not photographed drawing it, because that needs a UI process bound to the wave-9
+agent's socket, and a GUI process launched from this harness with `PROCTOR_SOCKET` set exits
+immediately: `open -n` does not pass the environment, and backgrounded from a shell AppKit
+terminates it.
+
+**Resume point.** Install the wave-9 build (`scripts/install.sh`), or launch the UI with
+`PROCTOR_SOCKET=/tmp/proctor-wave9.sock` from a login session, then re-run the capture plan
+against `proctor.status.section.switches`. Installing replaces the operator's own
+`/Applications/Proctor.app`, which is why this run did not do it.
+
+## What the new gate found on the first run
+
+`capture-lineage.py` is new in 0.8.0 and it failed immediately: five published captures with
+no manifest at all, so the only thing binding each picture to its surface was its filename.
+That is the exact failure the plane exists to find, sitting in a campaign that had been
+passing every other gate.
+
+All five were re-taken with the manifest written at capture time, recording what the channel
+was actually pointed at. Two facts made that non-trivial and both are in the manifest: three
+Proctor processes were running from one bundle id with identically titled windows at identical
+bounds, so every entry names the CG window the agent resolved rather than a title; and the
+menu bar extra is not a window Proctor owns, so it was taken through `screencapture -R`
+cropped to the `AXExtrasMenuBar` frame the process itself reported.
+
+The seeded swap was run in both directions and caught both times, so the tie pass reads what
+it claims to.
+
+## Eight defects, six fixed
+
+| id | what | state |
+|---|---|---|
+| DEF-006 | Three commands declared for the menu bar were never rendered in it | fixed |
+| DEF-007 | The permissions list omitted the one permission whose absence is silent | fixed |
+| DEF-008 | Three of the TUI's five panes had no data source | fixed (two of three) |
+| DEF-009 | A halted caller was told which surface stopped it, and it was the wrong one | fixed |
+| DEF-010 | The permissions pane clipped its fourth row off the bottom | fixed |
+| DEF-011 | The fix reached the CLI and the TUI and was filtered out of the window | fixed |
+| DEF-012 | The status window's chrome diverges from its design of record | open |
+| DEF-013 | The walkthrough's first slide diverges from its design of record | open |
+
+DEF-011 is the one worth reading twice. `StatusChecks` classifies every grant name the health
+report can carry and an unrecognised name falls to `.tool`, deliberately, because tool names
+are the half that grows. Input Monitoring was unrecognised, so the window's filter removed it
+while the CLI and the TUI, which do not filter, both drew it. The drift test that exists for
+exactly this scans `SessionDoctor.swift` for `.init(name: "` and asserts set equality against
+the map — and the new grant was written as `.init(` then a newline then `name:`, so the scan
+never saw it, both sets lacked it equally, and the assertion passed. Its only guard was
+against finding nothing, and it found plenty. The scan is now a whitespace-tolerant expression
+with a count floor.
+
+DEF-012 and DEF-013 are left open on purpose. Both were already recorded as carried clauses
+when their features merged — PRO-0066's A2 as partial, PRO-0067's A3 as needing a live app.
+The campaign's job was to measure what those carries left open, and it has; rebuilding five
+view sections is a gap-fix work order rather than a styling change to make in passing.
+
+## Carried clauses now settled
+
+Four acceptance clauses that merged carried, because they needed a live agent, were measured
+against one. A wave-9 agent was run on its own socket so the operator's installed agent was
+never replaced.
+
+- **PRO-0073 A2** — `proctor --json` and the MCP `tools/call` result for `proctor_doctor`
+  agree across 23 top-level keys and 51,195 characters. The fields that differ are the ones
+  that must: a tool probe re-run seconds later stamps a new `checkedAt`.
+- **PRO-0074 A4** — a real keystroke into a TUI under a pty halted a run an MCP client had
+  started. The caller received `haltedByPerson` after five of ten steps.
+- **PRO-0074 A5** — the run pane drew `Act ×8 · "TextEdit"` while that batch was in flight,
+  from a pushed frame.
+- **PRO-0074 A6** — the readiness and switches panes drew real grants, lanes and switch
+  sources off a live health report.
+
+Two things had to fail first for A4 to mean anything, and both are recorded on the case: a
+batch of hover steps was refused for want of foreground and ran in 0.239s, so there was no run
+to stop; and the first capture of a "running" TUI showed the empty state because nothing was
+in flight. Either would have been a vacuous pass.
+
+## What was not checked
+
+- **The window drawing the fourth permission row** — CASE-0042, declared above.
+- **History in the TUI** — the pane exists and stays empty. The trail is sealed and signed and
+  `proctor_history` is deliberately absent from the tool catalogue, so no client can read it.
+  Giving the TUI a history pane means giving some client a read path into the trail, which is a
+  security-surface decision rather than a defect. Recorded as an open question.
+- **Mutation survival** — `warrant:assay` still owes that number, and tier 2 needs it.
+- **The walkthrough's later slides, the takeover overlay and the run HUD under the new build** —
+  unchanged by this wave's work and carried from the previous full run.

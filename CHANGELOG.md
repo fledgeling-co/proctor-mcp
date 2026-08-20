@@ -35,9 +35,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Seven surfaces rebuilt on tested values.** The status window, the setup walkthrough, the menu bar, the run HUD, the takeover notice, the history window and the consent sheets are each drawn from a pure surface value with its own tests, rather than from literals spread through a view.
 
-  The menu bar went from 1 command to 21, and a test asserts no command is missing from it. The history window counts a skipped check as skipped: never as a pass, always with a reason. A check that couldn't run isn't a check that passed, and a product built to catch that failure shouldn't commit it in its own UI.
+  The menu bar went from 1 command to 20, and a test asserts every one of them actually renders. The history window counts a skipped check as skipped: never as a pass, always with a reason. A check that couldn't run isn't a check that passed, and a product built to catch that failure shouldn't commit it in its own UI.
 
-The gate after this wave is 1,647 tests in 193 suites, from 1,516 in 175 when it started.
+- **The menu bar is complete, and the permissions list is honest.** Three commands were declared for the menu bar and never appeared in it: clearing the queue, and the two switches that decide whether Proctor announces itself. They are there now. Clearing the queue needed a route of its own, because the queue's controls and the run's are deliberately different words on different rows; Hold, Release and Clear act on the line, Pause and Stop act on the run in flight, and a person who meant one and got the other has no way back.
+
+  The permissions list also gained the one permission whose absence is silent. Input Monitoring gates the keyboard event tap, so an operator who turns the input block on can find it quietly unavailable, and a list that omitted it was the list that most needed it. Proctor already read it; it just never said so.
+
+  Note: a check that could not run is not a check that passed. The status window still draws its permission rows from a build-time list rather than from the design, and that gap is recorded rather than papered over.
+
+- **Supervision over SSH reads the machine, not just the run.** The readiness and switches panes were drawing their empty state whatever the Mac was doing. They now show real grants, real lanes with what each still wants, and every switch with where its value came from and when it takes effect. History stays empty on purpose: the trail is sealed and signed and nothing can read it back, which is a decision about what a remote client should be able to see rather than a pane nobody finished.
+
+- **A halted run no longer tells you where it was stopped from.** Stop is reachable from the run panel, the menu bar and the terminal, and they all write the same latch, so a message naming one of them was wrong two times in three. It names what happened instead.
+
+The gate after this wave is 1,657 tests in 197 suites, from 1,516 in 175 when it started.
 
 ## [0.2.0] - 2026-08-17
 

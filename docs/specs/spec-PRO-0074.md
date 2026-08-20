@@ -87,6 +87,17 @@ runs. Campaign: 36 of 36, armed 36/36, ratchet raised 32 → 36.
   handle, no pixels and no accessibility node, asserted over the encoded frame, so nothing on
   this path is gated by a TCC grant. `ProctorCLI` links only `ProctorCore`.
 
+### Settled later, by the 0.8.0 campaign
+
+- **A4 is settled.** A real keystroke into a TUI running under a pty halted a run an MCP client
+  had started; the caller received `haltedByPerson` after five of ten steps. Two vacuous passes
+  had to be caught on the way and are recorded on the case.
+- **A5 is settled.** The run pane drew `Act ×8 · "TextEdit"` while that batch was in flight,
+  from a pushed frame rather than a poll.
+- **A6 gained a surface.** The readiness and switches panes had no data source at all — DEF-008
+  — and now read a live health report. History stays empty: the trail is sealed and no client
+  can read it, which is a security-surface decision rather than a defect.
+
 ### Needs a live agent
 
 - **A4, end-to-end** — that pressing `s` in the TUI halts a run started from an MCP client. Every

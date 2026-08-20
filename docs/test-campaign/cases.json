@@ -551,5 +551,92 @@
     "armed": true,
     "armedBy": "Found by capturing the running program against the installed agent, which predates this feature: the surface said 'The background agent is not answering' about an agent that had just answered, and offered to start a process that was already running.",
     "note": "An agent that answers and does not know proctor.watch is now its own state with its own remedy - upgrade rather than start. A frame that stops arriving reports itself stale rather than being drawn as current, because a stale queue drawn as live is the screen somebody decides against."
+  },
+  {
+    "id": "CASE-0037",
+    "req": "REQ-031",
+    "surface": "SURF-010",
+    "flow": "FLOW-005",
+    "oracle": "outcome",
+    "status": "pass",
+    "armed": true,
+    "evidence": [
+      "evidence/menu-bar-rendered.json"
+    ],
+    "armedBy": "Watched to fail on the build before the fix: proctor_menu against the running app returned 17 of 20 declared commands, and the three absent ones were exactly those SwiftUI never declared.",
+    "note": "20 of 20 specified commands now render, read from the running app's own menu bar through proctor_menu and diffed against CommandSurface.all. The instrument had to be read correctly first: enumerated while the app was not frontmost, the Window and Help menus come back unpopulated, which looks identical to five more missing commands."
+  },
+  {
+    "id": "CASE-0038",
+    "req": "REQ-018",
+    "surface": "SURF-001",
+    "flow": "FLOW-009",
+    "oracle": "metamorphic",
+    "status": "pass",
+    "armed": true,
+    "evidence": [
+      "evidence/cli-json-identical.json"
+    ],
+    "armedBy": "Watched to fail by comparing without stripping wall-clock fields: the obscura and tools blocks differ on checkedAt between two calls seconds apart, so the relation is only true of the stable payload and the comparison says which fields it removed.",
+    "note": "The same relation from two front ends: proctor --json and the MCP tools/call result for proctor_doctor agree across 23 top-level keys and 51,195 characters. Settles PRO-0073 A2, which was carried as needing a live agent."
+  },
+  {
+    "id": "CASE-0039",
+    "req": "REQ-032",
+    "surface": "SURF-008",
+    "flow": "FLOW-005",
+    "oracle": "outcome",
+    "status": "pass",
+    "armed": true,
+    "evidence": [
+      "evidence/shots/surf-008-status-window.png",
+      "evidence/shots/mock/surf-008-status-window.png"
+    ],
+    "armedBy": "Watched to fail on the build before the fix: the health report carried three grants and the design drew Input Monitoring as one of them, so the row the design specifies had no data behind it.",
+    "note": "Measured through the product: a wave-9 agent on its own socket reports Input Monitoring granted, and the readiness pane draws it. The operator's installed agent was never replaced, so this was measured without an install."
+  },
+  {
+    "id": "CASE-0040",
+    "req": "REQ-029",
+    "surface": "SURF-017",
+    "flow": "FLOW-009",
+    "oracle": "outcome",
+    "status": "pass",
+    "armed": true,
+    "evidence": [
+      "evidence/tui-stop-halts-mcp-run.json",
+      "evidence/tui-live-run.json",
+      "evidence/tui-live-stopped.json"
+    ],
+    "armedBy": "Watched to fail twice on the way: a batch of hover steps was refused for want of foreground and ran in 0.239s, so there was no run to stop, and the first capture of a running TUI showed the empty state because nothing was in flight. Both are the vacuous pass this case exists to avoid.",
+    "note": "A real keystroke into a TUI under a pty halted a run an MCP client had started. The caller received haltedByPerson after five of ten steps, with the remedy 'Nothing failed. Somebody watching the run decided to end it.' One latch, reached from a terminal. Settles PRO-0074 A4 and A5, both carried as needing a live agent. Recorded at the outcome rung rather than interactive-glass: the keystroke was actuated for real into a running program and the effect was read out of the MCP caller's own result, but a pty is not a display server, and interactive-glass owes one."
+  },
+  {
+    "id": "CASE-0041",
+    "req": "REQ-033",
+    "surface": "SURF-017",
+    "flow": "FLOW-009",
+    "oracle": "outcome",
+    "status": "pass",
+    "armed": true,
+    "evidence": [
+      "evidence/tui-live-readiness.json",
+      "evidence/tui-live-switches.json"
+    ],
+    "armedBy": "Watched to fail on the build before the fix: both panes drew their empty state against a live agent, which reads as a quiet machine rather than as a pane nobody wired.",
+    "note": "Captured against a live agent: readiness draws four grants and five lanes with what each still wants, switches draws all eight with their real source and timing. History remains empty by design \u2014 the trail is sealed and no client can read it \u2014 and that is an open question rather than a fixed gap."
+  },
+  {
+    "id": "CASE-0042",
+    "req": "REQ-032",
+    "surface": "SURF-008",
+    "flow": "FLOW-005",
+    "oracle": "raster-visual",
+    "status": "inconclusive: the window drawing the fourth permission row could not be photographed. It needs a UI process bound to the wave-9 agent's socket, and a GUI process launched from this harness with PROCTOR_SOCKET set exits immediately without output \u2014 through open -n the environment is not passed, and backgrounded from the shell AppKit terminates it. The classification fix is settled at the value (StatusChecks.permissions admits it) and at two other surfaces (the CLI's doctor and the TUI's readiness pane, both captured), so this is one surface unmeasured rather than the fix unproved.",
+    "armed": false,
+    "evidence": [
+      "evidence/shots/surf-008-status-window.png"
+    ],
+    "note": "The published capture is the wave-9 window reading the OPERATOR'S INSTALLED agent, which predates the fix and reports three grants. Its manifest says so. Filing it as though it showed four would be the failure this campaign's whole lineage plane exists to prevent."
   }
 ]

@@ -19,20 +19,20 @@
   "run": {
     "scope": "full",
     "basis": "",
-    "lastFullRun": "2026-08-19T08:24:32+00:00",
-    "decidedBy": "user asked for every gate (test-campaign 0.5.0 fullest)",
-    "declaredAt": "2026-08-19T08:24:32+00:00",
+    "lastFullRun": "2026-08-19T23:40:45+00:00",
+    "decidedBy": "user asked to run the skill to its fullest and resolve every gap",
+    "declaredAt": "2026-08-19T23:40:45+00:00",
     "maxFullRunAgeDays": 14.0
   },
   "laneProof": {
     "macos-glass": {
       "attached": true,
-      "artifact": "/Applications/Proctor.app",
+      "artifact": ".build/Proctor.app",
       "artifactBytes": null,
-      "builtBy": "scripts/build-app.sh then scripts/install.sh (Developer ID H4HGFL52W7, notarised, stapled; spctl accepted)",
-      "attachedBy": "pid 84403 owns CG window 2213 (640x592) titled 'Proctor', restored by open -a after an accessory launch; glass_probe axWindowCount=1 hasExtrasMenuBar=true",
-      "captureChannel": "ScreenCaptureKit window-scoped for app windows; screencapture -l for Proctor's own overlays under PROCTOR_OVERLAY_CAPTURE",
-      "declaredAt": "2026-08-19T13:12:28+00:00"
+      "builtBy": "PROCTOR_SIGN_IDENTITY='Developer ID Application: Luke Rhodes (H4HGFL52W7)' bash scripts/build-app.sh",
+      "attachedBy": "pid 88463 owns CG windows 43384 'History' and 43385 'Proctor' (640x572); glass_probe read it from CGWindowListCopyWindowInfo, the window server's own list. Launched with open -n because the installed build holds the same bundle id and LaunchServices activates it instead of starting a second instance \u2014 which is also why every capture names a CG window id rather than a title.",
+      "captureChannel": "proctor_capture \u2192 ScreenCaptureKit window-scoped, frameStatus per frame; the menu bar extra through screencapture -R cropped to the AXExtrasMenuBar frame, because a status item is not a window Proctor owns",
+      "declaredAt": "2026-08-20T00:37:13+00:00"
     }
   }
 }

@@ -65,10 +65,15 @@ public enum StatusChecks {
     /// appended to `grants`, and only when it is *missing*. That is the defect
     /// this item corrects at the window; correcting it on the wire is somebody
     /// else's change, so this map is where the two views are reconciled.
+    public static let inputMonitoring = "Input Monitoring"
+
     public static let known: [String: StatusCheckKind] = [
         accessibility: .permissionReadLive,
         screenRecording: .permissionSettledAtLaunch,
         automation: .permissionPerApplication,
+        // `IOHIDCheckAccess` reports the recorded answer and shows no dialog, so
+        // this is read live like Accessibility rather than settled at launch.
+        inputMonitoring: .permissionReadLive,
         shortcutsCLI: .tool
     ]
 

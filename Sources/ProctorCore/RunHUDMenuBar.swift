@@ -227,6 +227,34 @@ public extension MenuBarIcon {
 /// run; Hold and Clear act on the queue, live on the panel's queue bar, and are
 /// deliberately absent — the two pairs never sit together and never share a word,
 /// because calling both "pause" is how somebody stops the wrong thing.
+/// PRO-0075. What a person may do to the QUEUE, in the queue's own words.
+///
+/// Deliberately a separate enum from `RunHUDControl`, and the separation is
+/// tested from both sides. Pause and Stop act on the run in flight; Hold,
+/// Release, Clear and Drop act on the line behind it. Two controls sharing a
+/// word is how somebody stops the wrong thing, and a person who meant to clear a
+/// queue and stopped a run has no way to undo it.
+///
+/// The panel has carried these since PRO-0033 and nothing else could reach them,
+/// so a person whose run panel was hidden had no way to clear a queue at all.
+public enum RunQueueControl: String, Sendable, CaseIterable {
+    /// Nothing new starts; what is running finishes.
+    case hold
+    /// The line moves again.
+    case release
+    /// Every waiting run goes. The run in flight is untouched.
+    case clear
+
+    public static func parse(_ raw: String?) -> RunQueueControl? {
+        guard let raw else { return nil }
+        return RunQueueControl(rawValue: raw.trimmingCharacters(in: .whitespaces).lowercased())
+    }
+
+    /// None of these needs a run in flight. A queue holds callers while nothing
+    /// is running, which is exactly when clearing it matters most.
+    public var needsRun: Bool { false }
+}
+
 public enum RunHUDControl: String, Sendable, CaseIterable {
     case show, hide, pause, resume, stop
 

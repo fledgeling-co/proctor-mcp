@@ -3,22 +3,36 @@
   "surface": "SURF-008",
   "name": "Status Window Diagnostics",
   "shot": "evidence/shots/surf-008-status-window.png",
-  "reference": "design/icon/audit-renders/master-1024.png",
+  "reference": "evidence/shots/mock/surf-008-status-window.png",
   "viewport": {
    "width": 640,
-   "height": 480
+   "height": 595
   },
-  "settleMs": 200
+  "settleMs": 2000,
+  "note": "The build's capture is 900x833, normalised by the engine from 1280x1184 at 2x; the reference is 640x595 at 1x. Same layout, different resolutions, and a judge is told so."
+ },
+ {
+  "surface": "SURF-009",
+  "name": "Permissions Walkthrough",
+  "shot": "evidence/shots/surf-009-walkthrough.png",
+  "reference": "evidence/shots/mock/surf-009-walkthrough.png",
+  "viewport": {
+   "width": 560,
+   "height": 341
+  },
+  "settleMs": 2000,
+  "note": "The build draws the walkthrough into the same window the status sections use, so its capture is the full 640x592 window while the design pane is the 560x341 sheet inside it."
  },
  {
   "surface": "SURF-010",
-  "name": "Menu Bar Item",
+  "name": "Menu Bar Status Item",
   "shot": "evidence/shots/surf-010-menubar.png",
-  "reference": "Sources/ProctorCore/Resources/character-menubar/idle-0@3x.png",
+  "reference": "evidence/shots/mock/surf-010-menubar.png",
   "viewport": {
    "width": 22,
    "height": 22
   },
-  "settleMs": 50
+  "settleMs": 0,
+  "note": "The reference is the shipped asset the menu bar draws, idle-0@3x, which is the design of record for this surface rather than a mock of it."
  }
 ]

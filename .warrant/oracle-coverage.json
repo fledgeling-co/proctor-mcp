@@ -1,0 +1,110 @@
+{
+ "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/.worktrees/wave-9/docs/test-campaign",
+ "generated_at": "2026-08-20T00:49:55.950332+00:00",
+ "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
+ "source": "test-campaign",
+ "surfaces": [
+  {
+   "figures": 1,
+   "file": "cli://install-notarize",
+   "sourced": 1,
+   "unsourced": 0
+  },
+  {
+   "figures": 6,
+   "file": "cli://tui",
+   "sourced": 6,
+   "unsourced": 0
+  },
+  {
+   "figures": 1,
+   "file": "core://tools",
+   "sourced": 1,
+   "unsourced": 0
+  },
+  {
+   "figures": 2,
+   "file": "engine://audit-policy",
+   "sourced": 2,
+   "unsourced": 0
+  },
+  {
+   "figures": 2,
+   "file": "engine://guest-provider",
+   "sourced": 2,
+   "unsourced": 0
+  },
+  {
+   "figures": 1,
+   "file": "engine://ios-maestro",
+   "sourced": 1,
+   "unsourced": 0
+  },
+  {
+   "figures": 3,
+   "file": "engine://process-directed",
+   "sourced": 3,
+   "unsourced": 0
+  },
+  {
+   "figures": 2,
+   "file": "engine://reflector",
+   "sourced": 2,
+   "unsourced": 0
+  },
+  {
+   "figures": 2,
+   "file": "engine://screen-capture",
+   "sourced": 2,
+   "unsourced": 0
+  },
+  {
+   "figures": 2,
+   "file": "engine://stability",
+   "sourced": 2,
+   "unsourced": 0
+  },
+  {
+   "figures": 1,
+   "file": "engine://zoom",
+   "sourced": 1,
+   "unsourced": 0
+  },
+  {
+   "figures": 2,
+   "file": "stdio://proctor-shim",
+   "sourced": 2,
+   "unsourced": 0
+  },
+  {
+   "figures": 2,
+   "file": "ui://menubar",
+   "sourced": 2,
+   "unsourced": 0
+  },
+  {
+   "figures": 5,
+   "file": "ui://run-hud",
+   "sourced": 5,
+   "unsourced": 0
+  },
+  {
+   "figures": 6,
+   "file": "ui://status-window",
+   "sourced": 6,
+   "unsourced": 0
+  },
+  {
+   "figures": 3,
+   "file": "ui://takeover-shield",
+   "sourced": 3,
+   "unsourced": 0
+  },
+  {
+   "figures": 1,
+   "file": "ui://walkthrough",
+   "sourced": 1,
+   "unsourced": 0
+  }
+ ]
+}

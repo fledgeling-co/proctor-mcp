@@ -107,3 +107,39 @@ struct CommandSurfaceTests {
         #expect(CommandSurface.commands(in: .run).count >= 5)
     }
 }
+
+// PRO-0075. What the value-level check could not see.
+//
+// `commandsMissingFromMenuBar` compares the catalogue against its own `surfaces`
+// field, so it passes whether or not a command is rendered. The campaign drove
+// `proctor_menu` against the running app and found three commands declared for
+// the menu bar that SwiftUI never declared at all — Clear Waiting Runs, Takeover
+// Notice and Drawn Pointer. The count published alongside it was wrong too.
+//
+// The rendered menu can only be settled on glass, and that case lives in the
+// campaign. These are the two facts a unit test can hold: the count, and that
+// every declared command has a home to be rendered into.
+
+@Suite("The command count, pinned")
+struct CommandCountTests {
+
+    @Test("the catalogue carries twenty commands across four menus")
+    func theCountIsWhatWasPublished() {
+        #expect(CommandSurface.all.count == 20)
+        #expect(Set(CommandSurface.all.map(\.menu)).count == 4)
+    }
+
+    @Test("every command names a menu, so none can be declared with nowhere to draw")
+    func everyCommandHasAMenu() {
+        for command in CommandSurface.all {
+            #expect(CommandSurface.Menu.allCases.contains(command.menu),
+                    "\(command.id) names no menu this build draws")
+        }
+    }
+
+    @Test("no two commands share an id, because the menu item is built from it")
+    func idsAreUnique() {
+        let ids = CommandSurface.all.map(\.id)
+        #expect(Set(ids).count == ids.count)
+    }
+}

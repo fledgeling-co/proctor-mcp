@@ -185,7 +185,13 @@ public enum StatusSurface {
             var out = [window, startAgent, recheck, restartAgent, quit, copyConnect, showHistory]
             out += State.allCases.map(state)
             out += Section.allCases.map(section)
-            out += ["Accessibility", "Screen Recording", "Input Monitoring"].map(grantRow)
+            // Every grant the health report can carry. `Automation` was missing
+            // and `Input Monitoring` was named but never emitted, so the
+            // uniqueness test was checking a set that did not describe the
+            // surface — found by the campaign photographing the window and
+            // comparing it against this list.
+            out += ["Accessibility", "Screen Recording", "Automation",
+                    "Input Monitoring", "Shortcuts CLI"].map(grantRow)
             out += ["mac", "browser", "ios", "cua", "guest"].map(laneRow)
             out += SwitchCatalogue.all.map { switchRow($0.variable) }
             return out

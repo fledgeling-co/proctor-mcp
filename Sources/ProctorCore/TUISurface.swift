@@ -337,12 +337,18 @@ public enum TUISurface {
 
     static func readinessPane(_ model: Model) -> TUINode {
         .column([
+            // Sized to the rows it is given rather than to the three the design
+            // was drawn with: the campaign found a fourth grant silently dropped
+            // off the bottom, which is the one failure a permissions list must
+            // not have. The floor keeps the panel's shape when the report is
+            // empty or unreachable.
             TUIChild(.panel(TUIPanel(title: "PERMISSIONS", shelfRight: "read-only",
                 child: .table(TUITable(columns: [
                     TUIColumn("GRANT", width: 17),
                     TUIColumn("STATE", width: 9, role: "accent"),
                     TUIColumn("WHAT IT GATES"),
-                ], rows: model.grants.map(\.cells))))), size: 9),
+                ], rows: model.grants.map(\.cells))))),
+                     size: max(9, model.grants.count + 6)),
             TUIChild(.panel(TUIPanel(title: "LANES", shelfRight: "derived",
                 child: .table(TUITable(columns: [
                     TUIColumn("LANE", width: 8, role: "accent"),
@@ -428,6 +434,78 @@ public enum TUISurface {
         model.lanes = frame.lanesForSurface()
         model.run = frame.runForSurface()
         return model
+    }
+
+    /// Fill the readiness and switches panes from a health report.
+    ///
+    /// PRO-0075. Found by the campaign: three of the five panes had no data
+    /// source at all, so they drew their empty state whatever the machine was
+    /// doing. Two of them are answerable from `proctor_doctor`, which this
+    /// client already reaches; the third is history, and the trail is sealed and
+    /// deliberately unreadable by any client, so that pane stays empty and says
+    /// why rather than pretending.
+    public static func readiness(from report: JSONValue) -> (grants: [Row4], lanes: [Row4]) {
+        var grants: [Row4] = []
+        for grant in report["grants"]?.arrayValue ?? [] {
+            guard let name = grant["name"]?.stringValue else { continue }
+            grants.append(Row4([name,
+                                grant["state"]?.stringValue ?? "unknown",
+                                gates(name)]))
+        }
+        var lanes: [Row4] = []
+        for lane in report["lanes"]?.arrayValue ?? [] {
+            guard let name = lane["lane"]?.stringValue ?? lane["name"]?.stringValue
+            else { continue }
+            lanes.append(Row4([name,
+                               lane["state"]?.stringValue ?? "unknown",
+                               needs(of: lane)]))
+        }
+        return (grants, lanes)
+    }
+
+    /// What a lane still wants, from the report's own words.
+    ///
+    /// `requires` names the tools; `blockers` names what is actually stopping it,
+    /// and a blocker outranks a requirement — a reader wants the thing in the way
+    /// rather than the full bill of materials.
+    static func needs(of lane: JSONValue) -> String {
+        let blockers = (lane["blockers"]?.arrayValue ?? []).compactMap { $0.stringValue }
+        if !blockers.isEmpty { return blockers.joined(separator: "; ") }
+        let requires = (lane["requires"]?.arrayValue ?? []).compactMap { $0.stringValue }
+        return requires.isEmpty ? "nothing further" : requires.joined(separator: ", ")
+    }
+
+    /// What each grant buys, in one line. Proctor's own words rather than the
+    /// operating system's, because the reader wants to know what stops working.
+    static func gates(_ grant: String) -> String {
+        switch grant {
+        case "Accessibility": return "the tree, and writes to it"
+        case "Screen Recording": return "pixels, and frame status"
+        case "Input Monitoring": return "noticing a person sooner"
+        case "Automation": return "declared contracts, per app"
+        default: return "asked for when it is needed"
+        }
+    }
+
+    /// Where a switch's value came from, in the words the status window uses.
+    static func source(_ raw: String?) -> String {
+        switch raw {
+        case "builtInDefault": return "default"
+        case "saved": return "saved"
+        case "environment": return "environment"
+        default: return raw ?? "default"
+        }
+    }
+
+    /// Fill the switches pane from a health report.
+    public static func switches(from report: JSONValue) -> [Row4] {
+        (report["switches"]?.arrayValue ?? []).compactMap { row in
+            guard let variable = row["variable"]?.stringValue else { return nil }
+            return Row4([variable,
+                         (row["on"]?.boolValue ?? false) ? "on" : "off",
+                         source(row["source"]?.stringValue),
+                         row["timing"]?.stringValue == "live" ? "now" : "next start"])
+        }
     }
 
     /// Render a model at a size.

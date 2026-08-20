@@ -81,3 +81,4 @@
 | PRO-0072 | The consent sheets, and the asymmetry | 2026-08-20 | Merged |
 | PRO-0073 | proctor, the operator CLI | 2026-08-20 | Merged |
 | PRO-0074 | proctor tui, the supervision surface | 2026-08-20 | Merged |
+| PRO-0075 | what the 0.8.0 campaign found | 2026-08-20 | Merged |

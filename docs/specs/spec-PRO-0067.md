@@ -76,3 +76,14 @@ ordering, and maps to `WalkthroughFlow.Step` for every decision and every string
 two was tried first and broke the animation, which is the honest reason rather than a
 preference: one source for the flow, one for the animation, and no second answer to which step
 is showing.
+
+## Measured later, by the 0.8.0 campaign
+
+The clause this spec carried has a measurement now rather than a carry. `be-my-witness` judged
+a capture of the built surface against its design pane, both dark, both at the pane's own size,
+and refuted it. The divergences are enumerated in `docs/test-campaign/witness-verdicts.json`
+and recorded as defects in the campaign inventory; they are styling rather than content, and
+they are left open as a gap-fix work order rather than changed in passing.
+
+One content divergence found alongside them was fixed: the permissions list named a third
+grant the design did not, and omitted the one the design draws. See PRO-0075.

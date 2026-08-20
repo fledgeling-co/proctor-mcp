@@ -93,7 +93,7 @@ public enum CommandSurface {
               surfaces: [.menuBar, .extrasMenu, .runPanel], requires: .heldRun),
         .init(id: "stop", title: "Stop Run", shortcut: "⇧⌘.", menu: .run,
               surfaces: [.menuBar, .extrasMenu, .runPanel], requires: .liveRun),
-        .init(id: "drop-waiting", title: "Drop Waiting Run", menu: .run,
+        .init(id: "drop-waiting", title: "Clear Waiting Runs", menu: .run,
               surfaces: [.menuBar, .runPanel], requires: .liveRun),
         .init(id: "show-panel", title: "Show Run Panel", menu: .run,
               surfaces: [.menuBar, .extrasMenu], requires: .panelEnabled),
@@ -107,7 +107,11 @@ public enum CommandSurface {
               surfaces: [.menuBar, .extrasMenu]),
         .init(id: "history", title: "History", shortcut: "⌘Y", menu: .window,
               surfaces: [.menuBar, .extrasMenu]),
-        .init(id: "minimise", title: "Minimise", shortcut: "⌘M", menu: .window, surfaces: [.menuBar]),
+        // AppKit supplies this item and spells it its own way. The repo writes
+        // British English everywhere it chooses the words; this string is not
+        // Proctor's to choose, and a catalogue claiming "Minimise" describes a
+        // menu bar that says "Minimize".
+        .init(id: "minimise", title: "Minimize", shortcut: "⌘M", menu: .window, surfaces: [.menuBar]),
         .init(id: "bring-all", title: "Bring All to Front", menu: .window, surfaces: [.menuBar]),
 
         // Help

@@ -1,0 +1,18 @@
+{
+  "case": "CASE-0040",
+  "claim": "Stop pressed in proctor tui halts a run started from an MCP client.",
+  "setup": "A wave-9 agent on its own socket (PROCTOR_SOCKET=/tmp/proctor-wave9.sock) so the operator's installed agent was never touched. proctor_act with 10 blocking steps against TextEdit's window, driven over real MCP stdio.",
+  "actuation": "tui_capture.py --keys 's' \u2014 a real keystroke into the TUI running under a pty.",
+  "callerResult": {
+    "completed": 5,
+    "failedAt": 5,
+    "haltError": {
+      "code": "haltedByPerson",
+      "indeterminate": false,
+      "message": "a person stopped this run from Proctor's run HUD, so this step and the ones after it never ran",
+      "remedy": "Nothing failed. Somebody watching the run decided to end it, and the steps that completed before the halt are reported alongside this. Ask before starting it again rather than retrying."
+    }
+  },
+  "reading": "Five steps ran and the sixth never did. The caller was told haltedByPerson with the remedy 'Nothing failed. Somebody watching the run decided to end it.' One latch, reached from a terminal over a socket.",
+  "defectFound": "The message named Proctor's run HUD, and the person had used the TUI. Stop is reachable from three surfaces and the latch is shared, so naming one is wrong two times in three. Fixed to name the act."
+}

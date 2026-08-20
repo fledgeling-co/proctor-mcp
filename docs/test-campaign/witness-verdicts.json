@@ -1,0 +1,20 @@
+[
+  {
+    "subject": "SURF-008",
+    "verdict": "fail",
+    "reference": "evidence/shots/mock/surf-008-status-window.png",
+    "reason": "The capture depicts the right window in the right state, and it diverges from the design of record in four ways. Section headers are letter-spaced uppercase (PERMISSIONS, TOOLS) where the design specifies sentence case semibold and says so in its own caption: 'a header that recedes under what it labels'. The build opens with a title block \u2014 icon, 'Proctor', two paragraphs \u2014 that the design does not draw. Grant rows carry a tick glyph and a status word on a second line where the design uses a left icon, a description line and a right-hand pill. The Ready state is a green sentence inside the section where the design puts a pill on the section header. All four are styling rather than content, and all four sit inside PRO-0066's A2, which was recorded partial: five older sections still carry literals. The content divergence that was here \u2014 a third permission row naming Automation where the design names Input Monitoring \u2014 is DEF-007 and is fixed."
+  },
+  {
+    "subject": "SURF-009",
+    "verdict": "fail",
+    "reference": "evidence/shots/mock/surf-009-walkthrough.png",
+    "reason": "Same window, same first slide, different composition. The build leads with a three-segment progress bar and the heading 'What Proctor does'; the design leads with a bordered icon and the heading 'A model can test this Mac'. The design carries three capability chips (READS accessibility tree, READS window pixels, DRIVES two planes) which the build replaces with two paragraphs and a 'Two permissions, asked once' callout. Both offer Skip setup and Set up permissions with the same emphasis, so the decision the slide asks for is unchanged. This is PRO-0067's A3, carried and now measured."
+  },
+  {
+    "subject": "SURF-010",
+    "verdict": "pass",
+    "reference": "evidence/shots/mock/surf-010-menubar.png",
+    "reason": "The capture is Proctor's character in the menu bar, cropped to the AXExtrasMenuBar frame this process reported, and it is that character rather than any other application's status item. Frame-exact comparison is not meaningful here and is not claimed: the character animates, the reference is the idle-0 frame, and a live capture lands on whichever frame was drawn. What is settled is identity and placement, which is what this surface's case rests on."
+  }
+]

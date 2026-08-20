@@ -124,6 +124,11 @@ struct Dispatcher: Sendable {
         // host can put a person's stop button away.
         case "proctor_hud":
             return try await session.hudControl(RunHUDControl.parse(args.string("action")))
+        // PRO-0075. The queue's own controls, in the queue's own words, and
+        // internal for the same reason `proctor_hud` is: a person's Hold and
+        // Clear are not something an MCP host should be able to reach.
+        case "proctor_queue":
+            return try await session.queueControl(RunQueueControl.parse(args.string("action")))
         default:
             throw AgentError(
                 code: .invalidArguments,

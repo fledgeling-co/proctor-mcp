@@ -64,6 +64,31 @@ extension Session {
                           + "System Settings ▸ Privacy & Security ▸ Automation ▸ Proctor.")
         ]
 
+        // PRO-0075. Input Monitoring, found missing by the campaign measuring the
+        // status window against its design of record: the design draws it and the
+        // window did not, because the health report never carried it.
+        //
+        // It is read here rather than only on the takeover path because
+        // `Grants.inputMonitoringState()` already names the consequence — a
+        // keyboard event tap is gated on a grant that is NOT the one Proctor needs
+        // for everything else, so an operator who turned the input block on can
+        // find it silently unavailable. A permissions list that omits the one
+        // permission whose absence is silent is the list that most needed it.
+        //
+        // Never required: nothing Proctor does by default needs it, and marking it
+        // required would put a blocker on every Mac that has not granted a
+        // capability it is not using.
+        let inputMonitoring = Grants.inputMonitoringState()
+        grants.append(.init(
+            name: "Input Monitoring",
+            state: GrantState(rawValue: inputMonitoring) ?? .unconfirmed,
+            required: false,
+            howToFix: inputMonitoring == "granted"
+                ? "Granted. The input block can hold a person's keyboard while a run acts."
+                : "System Settings ▸ Privacy & Security ▸ Input Monitoring, enable Proctor. "
+                + "Only the input block needs it; every other capability works without it, "
+                + "and which service macOS gates a default event tap on is not verified here."))
+
         var blockers: [String] = []
         for grant in grants where grant.required && !grant.granted {
             // A denial and a non-answer are two different facts about a Mac and

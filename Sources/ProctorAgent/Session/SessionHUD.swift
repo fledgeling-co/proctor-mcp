@@ -134,6 +134,28 @@ extension Session {
     ///
     /// Every action answers with the resulting state, so the menu updates on the
     /// reply rather than on the next poll.
+    /// PRO-0075. The queue's controls, reachable from the menu bar.
+    ///
+    /// The panel has carried Hold, Release and Clear since PRO-0033 and nothing
+    /// else could reach them, so a person who had hidden the run panel could not
+    /// clear a queue at all. The run in flight is untouched by every one of
+    /// these: that is what Stop is for, and it is deliberately a different word.
+    func queueControl(_ action: RunQueueControl?) async throws -> JSONValue {
+        guard let action else {
+            throw AgentError(
+                code: .invalidArguments,
+                message: "proctor_queue needs an action",
+                remedy: "Pass action as one of: "
+                      + RunQueueControl.allCases.map(\.rawValue).joined(separator: ", "))
+        }
+        switch action {
+        case .hold: await RunHUDPanel.shared.setQueueHeld(true)
+        case .release: await RunHUDPanel.shared.setQueueHeld(false)
+        case .clear: await RunHUDPanel.shared.clearQueue()
+        }
+        return .object(["hud": hudFeed.wire, "queue": .string(action.rawValue)])
+    }
+
     func hudControl(_ action: RunHUDControl?) async throws -> JSONValue {
         guard let action else {
             throw AgentError(

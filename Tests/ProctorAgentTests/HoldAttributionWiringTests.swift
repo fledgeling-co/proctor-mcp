@@ -177,9 +177,8 @@ struct HoldAttributionWiringTests {
         #expect(await control.checkpoint(run: 7) == .pauseExpired(seconds: 10))
         // And the sibling is untouched — not stopped, not expired, not told a
         // person did anything. At HEAD the expiry set the global stop flag, so
-        // this run's caller was told "a person stopped this run from Proctor's
-        // run HUD": a halt nobody chose, attributed to somebody who was not
-        // there.
+        // this run's caller was told "a person stopped this run": a halt nobody
+        // chose, attributed to somebody who was not there.
         #expect(await control.checkpoint(run: 9) == nil)
         #expect(!control.isStopped)
     }

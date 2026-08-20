@@ -343,6 +343,24 @@
       "text": "The supervision surface draws what the design compiled, at 100x30 and at the 80x24 floor",
       "source": "design/surfaces/tui/ (22 compiled frames); Sources/ProctorCore/TUILayout.swift",
       "class": "fidelity"
+    },
+    {
+      "id": "REQ-031",
+      "text": "Every command the catalogue declares for the menu bar is actually rendered in it",
+      "source": "Sources/ProctorCore/CommandSurface.swift; Sources/ProctorUI/ProctorUIApp.swift",
+      "class": "honesty guardrail"
+    },
+    {
+      "id": "REQ-032",
+      "text": "The status window lists every permission macOS holds about Proctor, including the one whose absence is silent",
+      "source": "Sources/ProctorAgent/Session/SessionDoctor.swift; design/surfaces/ status pane",
+      "class": "affordance"
+    },
+    {
+      "id": "REQ-033",
+      "text": "A supervision client can read the machine's readiness and switches, not only its run and queue",
+      "source": "Sources/ProctorCore/TUISurface.swift readiness(from:) and switches(from:)",
+      "class": "affordance"
     }
   ],
   "surface": [
@@ -1172,6 +1190,70 @@
         "evidence/window-level-sharing.json"
       ],
       "note": "Found while arming CASE-0008: with the exclusion at its default the run panel and the takeover tint reported sharingState 0 and refused every capture, while the drawn pointer reported 1 and photographed cleanly at 3456x2234. It covers every display, so Proctor's own pointer entered any display-scoped capture taken during a run, against the principle the other two panels are built on. Cause: it is the only one of the three that changes window level at runtime, and sharingType does not survive the change. Fixed by setting level and sharing together in one place. The obvious suspect, that the window server refuses .none at screenSaver level, was measured and ruled out first."
+    },
+    {
+      "id": "DEF-006",
+      "status": "fixed",
+      "title": "Three commands declared for the menu bar were never rendered in it",
+      "found": "proctor_menu against the running app, compared with CommandSurface.all",
+      "detail": "Clear Waiting Runs, Takeover Notice and Drawn Pointer were declared with surfaces: [.menuBar] and SwiftUI never declared them. commandsMissingFromMenuBar could not see it: it compares the catalogue against its own surfaces field, so it passes whether or not a command renders. The published count was wrong too \u2014 21 was the number of MCP tools, not commands; the catalogue holds 20.",
+      "fix": "The two drawing switches became toggles bound to the saved value. Clearing the queue needed a route: RunQueueControl is the queue's own vocabulary, kept disjoint from the run's because an existing test refuses a queue word in RunHUDControl, and proctor_queue is internal for the same reason proctor_hud is."
+    },
+    {
+      "id": "DEF-007",
+      "status": "fixed",
+      "title": "The permissions list omitted the one permission whose absence is silent",
+      "found": "Photographing the status window and comparing it against the design of record",
+      "detail": "The design draws Input Monitoring; the window drew Automation and not it, because the health report never carried it. Grants.inputMonitoringState() already read it for the takeover path, and its own comment names the consequence: an operator who turned the input block on can find it silently unavailable. StatusSurface.ID.all named Input Monitoring and omitted Automation, so the uniqueness test was checking a set that did not describe the surface.",
+      "fix": "The health report carries Input Monitoring, never required. The identifier list names all five grants the report can carry."
+    },
+    {
+      "id": "DEF-008",
+      "status": "fixed",
+      "title": "Three of the supervision TUI's five panes had no data source",
+      "found": "Driving proctor tui against a live wave-9 agent",
+      "detail": "Only run and queue were fed by the pushed frame. Readiness, switches and history drew their empty state whatever the machine was doing, and the empty state reads as a quiet machine rather than as a pane nobody wired.",
+      "fix": "Readiness and switches are filled from proctor_doctor, on demand rather than on a timer. History is not fixed: the trail is sealed and signed and proctor_history is deliberately absent from the tool catalogue, so no client can read it. That is a security-surface decision rather than a defect, and it is recorded as an open question rather than settled here."
+    },
+    {
+      "id": "DEF-009",
+      "status": "fixed",
+      "title": "A halted caller was told which surface stopped it, and it was the wrong one",
+      "found": "Pressing s in proctor tui and reading the MCP caller's own result",
+      "detail": "The error said 'a person stopped this run from Proctor's run HUD'. Stop is reachable from the run panel, the menu bar and the TUI, and RunControl.shared is the same latch for all three, so a message naming one of them is wrong two times in three.",
+      "fix": "The message names the act rather than a surface."
+    },
+    {
+      "id": "DEF-010",
+      "status": "fixed",
+      "title": "The permissions pane clipped its fourth row off the bottom",
+      "found": "The readiness pane against a live agent, after DEF-007 added a grant",
+      "detail": "The panel was drawn at a fixed nine rows against the three grants the design carried. A fourth grant was dropped silently, which is the one failure a permissions list must not have.",
+      "fix": "The panel is sized to the rows it is given, with the design's height as a floor."
+    },
+    {
+      "id": "DEF-011",
+      "status": "fixed",
+      "title": "The fix reached the CLI and the TUI and was filtered out of the window",
+      "found": "Re-photographing the status window after DEF-007 and counting three rows where four were expected",
+      "detail": "StatusChecks classifies every grant name the health report can carry, and an unrecognised name falls to .tool \u2014 deliberately, because tool names are the half that grows. Input Monitoring was unrecognised, so the window's permissions filter removed it while the CLI and the TUI, which do not filter, both drew it.\n\nThe net that exists for exactly this did not fire. The drift test scans SessionDoctor.swift for `.init(name: \"` and asserts set equality against the map, and the new grant was written as `.init(` then a newline then `name:` \u2014 so the scan never saw the name, both sets lacked it equally, and the assertion passed. Its only guard was against finding NOTHING, and it found plenty.",
+      "fix": "Input Monitoring is classified as a live-read permission. The scan is a whitespace-tolerant regular expression with a count floor, because a partial scan passes set equality against a map that is short by the same names."
+    },
+    {
+      "id": "DEF-012",
+      "status": "open",
+      "title": "The status window's chrome diverges from its design of record",
+      "found": "be-my-witness judging the capture against the design pane, both dark, both 640 wide",
+      "detail": "Section headers are letter-spaced uppercase where the design specifies sentence case semibold and states the reason in its own caption: a header that recedes under what it labels. The build opens with a title block the design does not draw, grant rows use a tick glyph and a second line where the design uses a left icon and a right-hand pill, and Ready is a sentence inside the section rather than a pill on its header.",
+      "disposition": "Not fixed here. All four sit inside PRO-0066's A2, which was recorded partial when it merged: five older MainWindow sections still carry literals. The campaign's job was to measure what that partial left open, and it has. Rebuilding those sections is the gap-fix work order, not a styling change to make in passing."
+    },
+    {
+      "id": "DEF-013",
+      "status": "open",
+      "title": "The walkthrough's first slide diverges from its design of record",
+      "found": "be-my-witness judging the capture against the design pane",
+      "detail": "The build leads with a three-segment progress bar and 'What Proctor does'; the design leads with a bordered icon and 'A model can test this Mac', and carries three capability chips the build replaces with two paragraphs and a callout.",
+      "disposition": "Not fixed here. This is PRO-0067's A3, carried at merge as needing the fidelity harness against a live app. It now has a measurement instead of a carry."
     }
   ]
 }

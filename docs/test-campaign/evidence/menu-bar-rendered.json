@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0037",
+  "claim": "Every command the catalogue declares for the menu bar is rendered in it.",
+  "instrument": "proctor_menu against the running app, read through real MCP stdio",
+  "app": "app:45808:7 \u2014 the wave-9 .build/Proctor.app, Developer ID signed",
+  "menuItemsEnumerated": 164,
+  "specifiedCommands": 20,
+  "drawn": 20,
+  "absent": [],
+  "instrumentNote": "Enumerated while the app was not frontmost, the Window and Help menus come back unpopulated \u2014 five commands read as absent that are simply not built yet at that moment. The app is activated first, and that difference is the reason detector-defects says to suspect the instrument before the application.",
+  "beforeTheFix": {
+    "drawn": 17,
+    "absent": [
+      "drop-waiting",
+      "takeover-notice",
+      "drawn-pointer"
+    ]
+  },
+  "spellingNote": "The catalogue said 'Minimise' and AppKit supplies that item spelling it 'Minimize'. The repo writes British English where it chooses the words; this string is not Proctor's to choose, so the catalogue now records what the menu bar says."
+}

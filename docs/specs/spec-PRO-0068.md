@@ -60,7 +60,7 @@ Which character state shows when is this item's; the asset set is PRO-0069's.
 - **A5** — Show Run Panel requires `panelEnabled`; Hide stays available, because hiding is
   always reversible within a launch.
 
-The menu bar now carries 21 commands across four menus. It carried one.
+The menu bar now carries 20 commands across four menus. It carried one.
 
 ### The wording was not mine to change
 

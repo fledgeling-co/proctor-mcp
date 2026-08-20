@@ -348,6 +348,22 @@ final class AgentModel {
     /// Save a switch. Never claims the agent picked it up — that is `pending`'s
     /// job, and it clears when the agent's next report says the new value is what
     /// it is running with.
+    /// The saved value of a drawing switch, or its default where nothing is
+    /// saved. Read by the Run menu's toggles, which show what a person chose
+    /// rather than what the agent is currently running with.
+    func isSavedOn(_ aSwitch: ProctorSwitch) -> Bool {
+        if let raw = savedSwitches[aSwitch.variable] {
+            return SwitchResolver.isOn(raw, for: aSwitch)
+        }
+        return aSwitch.defaultOn
+    }
+
+    /// Clear every waiting run. The run in flight is untouched, which is why
+    /// this is a different word from Stop on a different row of the menu.
+    func dropWaiting() {
+        Task.detached { _ = Self.callQueue(.clear) }
+    }
+
     func setSwitch(_ aSwitch: ProctorSwitch, on: Bool) {
         var saved = savedSwitches
         saved.set(aSwitch, on: on)
@@ -644,6 +660,19 @@ final class AgentModel {
     /// The run panel's switch and the run's controls, over the same socket. An
     /// internal verb: it is not in the tool catalogue, so no MCP host can reach
     /// it and put a person's stop button away.
+    /// The queue's own internal verb. Kept apart from `callHUD` because the two
+    /// vocabularies are kept apart everywhere else, and a shared call site is
+    /// where they would quietly merge again.
+    private nonisolated static func callQueue(_ action: RunQueueControl) -> Bool {
+        let client = SocketClient()
+        defer { client.disconnect() }
+        guard let response = try? client.send(
+                AgentRequest(id: UUID().uuidString, tool: "proctor_queue",
+                             arguments: .object(["action": .string(action.rawValue)])))
+        else { return false }
+        return response.ok
+    }
+
     private nonisolated static func callHUD(_ action: RunHUDControl) -> HUDState? {
         let client = SocketClient()
         defer { client.disconnect() }

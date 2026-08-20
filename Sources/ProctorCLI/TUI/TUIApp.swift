@@ -53,6 +53,10 @@ enum TUIApp {
         watching.stackSize = 512 * 1024
         watching.start()
 
+        // Filled once at start-up so the panes that read a health report are not
+        // empty until somebody presses r.
+        refreshReadiness(state: state, client: client)
+
         let theme = TUITheme()
         while !state.isFinished {
             let size = Terminal.size()
@@ -77,9 +81,26 @@ enum TUIApp {
         // machine that is not the one being driven.
         case "p": control(state.isPaused ? "resume" : "pause", state: state, client: client)
         case "s": control("stop", state: state, client: client)
-        case "r": state.requestRefresh()
+        case "r":
+            state.requestRefresh()
+            refreshReadiness(state: state, client: client)
         default: break
         }
+    }
+
+    /// Ask the agent for a health report and fill the panes that read one.
+    ///
+    /// On its own connection, and on demand rather than on a timer: a person
+    /// pressing `r` knows when they last had a real answer, and a pane that
+    /// refreshed itself would leave them unable to say.
+    static func refreshReadiness(state: TUIState, client: SocketClient) {
+        let probe = SocketClient(path: client.path)
+        defer { probe.disconnect() }
+        guard let response = try? probe.send(AgentRequest(id: UUID().uuidString,
+                                                          tool: "proctor_doctor",
+                                                          arguments: .object([:]))),
+              response.ok, let report = response.result else { return }
+        state.received(report: report)
     }
 
     static func control(_ action: String, state: TUIState, client: SocketClient) {
@@ -114,6 +135,7 @@ final class TUIState: @unchecked Sendable {
     private var lastFrameAt: Date?
     private var failure: String?
     private var outdated: String?
+    private var report: JSONValue?
     private var finished = false
 
     var isFinished: Bool { lock.lock(); defer { lock.unlock() }; return finished }
@@ -149,6 +171,13 @@ final class TUIState: @unchecked Sendable {
         lock.unlock()
     }
 
+    /// The last health report, for the panes that read one.
+    func received(report: JSONValue) {
+        lock.lock()
+        self.report = report
+        lock.unlock()
+    }
+
     func agentTooOld(_ reason: String) {
         lock.lock()
         outdated = reason
@@ -171,7 +200,14 @@ final class TUIState: @unchecked Sendable {
     func model(now: Date = Date()) -> TUISurface.Model {
         lock.lock()
         defer { lock.unlock() }
-        return TUISurface.model(pane: pane, frame: frame, receivedAt: lastFrameAt,
-                                now: now, failure: failure, outdated: outdated)
+        var model = TUISurface.model(pane: pane, frame: frame, receivedAt: lastFrameAt,
+                                     now: now, failure: failure, outdated: outdated)
+        if let report {
+            let readiness = TUISurface.readiness(from: report)
+            model.grants = readiness.grants
+            model.readiness = readiness.lanes
+            model.switches = TUISurface.switches(from: report)
+        }
+        return model
     }
 }

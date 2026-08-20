@@ -291,3 +291,49 @@ enum PNGHeader {
         return (word(0), word(4))
     }
 }
+
+// PRO-0075. The queue's controls, and the separation from the run's.
+//
+// Found by the campaign: three commands the catalogue declared for the menu bar
+// were never rendered there, and `commandsMissingFromMenuBar` could not see it
+// because it compares the catalogue against itself. `Clear Waiting Runs` was one
+// of them, and nothing but the run panel could reach the queue at all — so a
+// person who had hidden the panel could not clear a queue.
+
+@Suite("Run queue control vocabulary")
+struct RunQueueControlTests {
+
+    @Test("the words are the queue's, never the run's")
+    func neverTheRunsWords() {
+        // The mirror of the run's own test, and it has to exist on both sides:
+        // a word added to either enum has to be refused by the other, or the
+        // separation only holds in the direction somebody happened to test.
+        let queue = Set(RunQueueControl.allCases.map(\.rawValue))
+        #expect(queue == ["hold", "release", "clear"])
+        #expect(queue.isDisjoint(with: Set(RunHUDControl.allCases.map(\.rawValue))))
+    }
+
+    @Test("no queue control needs a run in flight")
+    func aQueueHoldsWhileNothingRuns() {
+        // A queue holds callers while nothing is running, which is exactly when
+        // clearing it matters most. Refusing for want of a live run would leave
+        // those callers waiting on a control that said there was nothing to do.
+        #expect(RunQueueControl.allCases.allSatisfy { !$0.needsRun })
+    }
+
+    @Test("parsing is forgiving about case and space and strict about the rest")
+    func parsing() {
+        #expect(RunQueueControl.parse("  Clear ") == .clear)
+        #expect(RunQueueControl.parse("HOLD") == .hold)
+        #expect(RunQueueControl.parse("stop") == nil)
+        #expect(RunQueueControl.parse("pause") == nil)
+        #expect(RunQueueControl.parse(nil) == nil)
+    }
+
+    @Test("a queue control that names no action is refused with the list")
+    func anUnnamedActionIsRefused() {
+        // A control that silently did nothing is the failure this whole surface
+        // exists to prevent, one level up.
+        #expect(RunQueueControl.parse("") == nil)
+    }
+}
