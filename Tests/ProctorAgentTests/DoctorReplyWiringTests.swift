@@ -87,4 +87,51 @@ struct DoctorReplyWiringTests {
         let status = try #require(await session.policyStatus().objectValue)
         #expect(status["allow"] != nil)
     }
+
+    // MARK: - PRO-0076 A12
+
+    /// A12 names `proctor_doctor`'s reply, and that reply is assembled by the
+    /// dispatcher rather than by `DoctorReport`. `GuestPoolWiringTests` proves
+    /// `session.poolStatus()` in full; nothing proved the assembly, and deleting
+    /// the line that adds it left the whole suite green — the same defect shape
+    /// this file was written for.
+    @Test("the doctor reply carries the guest pool: capacity, held and waiting")
+    func theReplyCarriesTheGuestPool() async throws {
+        let reply = try await doctorReply(session())
+        let pool = try #require(reply["guestPool"]?.objectValue,
+                                "A12 is a claim about the reply, not about poolStatus()")
+        let pools = try #require(pool["pools"]?.arrayValue)
+        let macos = try #require(pools.compactMap(\.objectValue)
+            .first { $0["platform"]?.stringValue == "macos" },
+            "the macOS pool is always reported, because its cap is Apple's rule")
+        #expect(macos["capacity"]?.intValue == 2)
+        #expect(macos["held"]?.intValue == 0)
+        #expect(macos["waiting"]?.intValue == 0)
+        #expect(pool["held"]?.arrayValue?.isEmpty == true)
+        #expect(pool["waiting"]?.arrayValue?.isEmpty == true)
+    }
+
+    @Test("a held slot shows up in the reply, named by guest and by session")
+    func theReplyCountsARealAttachment() async throws {
+        let session = Session(ax: FakeAX(bundleId: "com.example.app"), capture: FakeCapture(),
+                              scheduler: RunScheduler.stoppedClock(), secureInputProbe: { false })
+        let record = GuestRecord(name: "anvil-mac-node", provider: "tart", state: "running",
+                                 running: true, platform: .macos, identifier: "anvil-mac-node")
+        await session.setAuditSink(AuditCollector().sink)
+        await session.setDrawsHUD(false)
+        await session.setGuestProviders([FakeGuestProvider(id: "tart", records: [record])])
+        await session.setGuestLinkFactory { socket in FakeGuestLink(localSocket: socket) }
+        _ = try await session.guest(action: "attach", guest: "anvil-mac-node",
+                                    provider: nil, newName: nil)
+
+        let reply = try await doctorReply(session)
+        let pool = try #require(reply["guestPool"]?.objectValue)
+        let macos = try #require((pool["pools"]?.arrayValue ?? []).compactMap(\.objectValue)
+            .first { $0["platform"]?.stringValue == "macos" })
+        #expect(macos["held"]?.intValue == 1, "one of Apple's two is now spoken for")
+        let holders = try #require(pool["held"]?.arrayValue)
+        #expect(holders.compactMap(\.objectValue)
+            .contains { $0["guest"]?.stringValue == "tart:anvil-mac-node" },
+            "the report names which guest, so a person can find who holds the machine")
+    }
 }

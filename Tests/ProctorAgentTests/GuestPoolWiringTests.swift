@@ -80,15 +80,75 @@ struct GuestPoolWiringTests {
 
     @Test("a queued attach carries position and depth when it gives up")
     func theWaitSaysWhereItStood() async throws {
-        // A7's second half: the wait reports position and depth the way
-        // RunQueueRefusal.timedOut already does. Proved on the refusal itself,
-        // because that is the value the caller receives.
-        let refusal = RunQueueRefusal.timedOut(seconds: 45, position: 1, waiting: 3)
-        let error = refusal.error
-        #expect(error.code == .queueBusy)
-        #expect(error.message.contains("first"), "position")
-        #expect(error.message.contains("of 3"), "depth")
-        #expect(error.message.contains("without running any step"))
+        // A7's second half, on a refusal a real queued attach produced.
+        //
+        // The earlier version of this test constructed the `RunQueueRefusal`
+        // itself and asserted on its rendering, so it would have passed just as
+        // happily if a queued attach never produced one — presence, not outcome.
+        // What makes the real thing reachable is the sleeper: the give-up timer
+        // waits on `RunScheduler.sleep`, which is injectable, so the ceiling is
+        // opened on command rather than after forty-five seconds of wall clock.
+        let gate = WaitGate()
+        let scheduler = RunScheduler(waitLimit: 45, now: { 0 },
+                                     sleep: { _ in await gate.wait() })
+        let session = Session(ax: FakeAX(bundleId: "com.example.target"),
+                              capture: FakeCapture(), scheduler: scheduler,
+                              secureInputProbe: { false })
+        let records = ["one", "two", "three", "four", "five"].map { Self.macRecord($0) }
+        await session.setAuditSink(AuditCollector().sink)
+        await session.setDrawsHUD(false)
+        await session.setGuestProviders([FakeGuestProvider(id: "tart", records: records)])
+        await session.setGuestLinkFactory { socket in FakeGuestLink(localSocket: socket) }
+
+        // Apple's two, spoken for.
+        try await attach(session, "one", as: "sessA")
+        try await attach(session, "two", as: "sessB")
+
+        // Three more, each a different caller so no per-session cap fires. They
+        // queue rather than being refused — that is `theThirdGuestWaits` — and
+        // this is what they are told when the ceiling runs out.
+        let queued = ["three", "four", "five"].enumerated().map { index, name in
+            Task { () -> Error? in
+                do {
+                    try await self.attach(session, name, as: "waiting\(index)")
+                    return nil
+                } catch {
+                    return error
+                }
+            }
+        }
+        var joined = 0
+        for _ in 0..<400 {
+            joined = await scheduler.snapshot().waiting.count
+            if joined == 3 { break }
+            try? await Task.sleep(nanoseconds: 5_000_000)
+        }
+        #expect(joined == 3, "all three are in the line before the ceiling is opened")
+
+        gate.release()
+
+        var messages: [String] = []
+        for task in queued {
+            let error = try #require(await task.value, "a queued attach must give up, not hang")
+            let refusal = try #require(error as? AgentError)
+            #expect(refusal.code == .queueBusy)
+            messages.append(refusal.message)
+        }
+        #expect(messages.count == 3)
+        #expect(messages.allSatisfy { $0.contains("without running any step") },
+                "the caller is told nothing ran, so a retry is safe")
+        // Depth, read back out of what the queue actually said. Three waiters
+        // give up one after another, so the depths are 3, 2 and 1 whichever
+        // order the give-up timers happen to fire in — a literal could not have
+        // produced that, and a queue that never queued could not either.
+        let depths = messages.compactMap { message -> Int? in
+            guard let range = message.range(of: #"of (\d+) after"#, options: .regularExpression)
+            else { return nil }
+            return Int(message[range].dropFirst(3).dropLast(6))
+        }
+        #expect(depths.sorted() == [1, 2, 3], "the depth is the line as it stood, counted")
+        #expect(messages.contains { $0.contains("first") },
+                "the one at the head of the line is told it was first")
     }
 
     // MARK: - A8
@@ -480,5 +540,24 @@ struct GuestPoolWiringTests {
         _ = try await h.session.guest(action: "clone", guest: "one",
                                       provider: nil, newName: "copy")
         #expect(h.provider.calls.contains { $0.0 == "clone" })
+    }
+}
+
+/// Holds the scheduler's give-up timer until a test lets it go.
+///
+/// The ceiling sleeps on `RunScheduler.sleep`, which exists so a wait limit is
+/// provable in milliseconds rather than in forty-five seconds. A sleeper that
+/// returned immediately would expire each waiter as it joined, and the depth
+/// this test is about would always read one.
+final class WaitGate: @unchecked Sendable {
+    private let lock = NSLock()
+    private var open = false
+
+    func release() { lock.lock(); open = true; lock.unlock() }
+
+    private var isOpen: Bool { lock.lock(); defer { lock.unlock() }; return open }
+
+    func wait() async {
+        while !isOpen { try? await Task.sleep(nanoseconds: 2_000_000) }
     }
 }
