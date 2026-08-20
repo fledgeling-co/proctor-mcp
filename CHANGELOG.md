@@ -31,6 +31,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **The statement said Fake because the test suite was drawing it.** Reported from real use: the full-screen tint read `Proctor is driving "Fake"`, always that word. No app on this Mac is called Fake and no shipped string contains it. It's `FakeAX`'s app handle, out of the test fixtures, and it was reaching the screen because `Session` defaults to the live takeover driver and most of the wiring suites build a session without replacing it.
+
+  Measured while one suite ran, with the gate removed to prove the check bites: two windows from `swiftpm-testing-helper`, one at the tint's own level part way through its fade, one at the drawn pointer's. With the gate in place the same run paints nothing.
+
+  The switches couldn't have caught this. `PROCTOR_TAKEOVER` and `PROCTOR_CURSOR` are on when unset, which is right for the agent and wrong as a default for anything else linking the same code. A switch says what an operator asked for; it can't say who's asking. So entitlement is claimed now, by the one entry point that can honestly claim it, and a surface whose switch is on still draws nothing until the agent has said so. The input block was already opt-in, so it was never armed this way, and it goes through the same gate anyway rather than staying safe by luck.
+
 - **No drawn pointer over an app you cannot see.** The pointer belongs in its target window's own plane, so a window covering the app covers the pointer too. When that placement could not be confirmed it used to fall back to floating above everything, dimmed, to say it could not vouch for the position. Over a covered window that is the one picture the pointer exists to avoid: it reads as Proctor clicking the app you are looking at while it is driving a different one, and dimming it does not stop it being that picture.
 
   The fallback now splits. Nothing covering the target: float and mark it, as before, because the pointer is where it would be anyway and only the exact ordering is unconfirmed. Something covering it: draw nothing. Proctor's own panels do not count as covering, or the pointer would vanish from every window it ever annotates.

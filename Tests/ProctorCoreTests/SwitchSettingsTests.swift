@@ -591,3 +591,35 @@ struct SwitchWireTests {
         #expect(back.switches?.first { $0.variable == "PROCTOR_CURSOR" }?.locked == true)
     }
 }
+
+// MARK: - PRO-0075: a switch says what, not who
+
+@Suite("Entitlement to draw on this Mac")
+struct OverlayEntitlementTests {
+
+    // Every switch above is on when its variable is absent. That is right for
+    // the agent and wrong for anything else that links the same code, and the
+    // gap was not theoretical: the full-screen statement was measured painting
+    // over both displays from `swiftpm-testing-helper`, reading the name of a
+    // test fixture.
+
+    @Test("both terms are required, so a switched-on surface still needs an entitled process")
+    func bothTermsRequired() {
+        #expect(OverlaySwitch.mayRaise(isAgent: true, switchedOn: true))
+        #expect(!OverlaySwitch.mayRaise(isAgent: false, switchedOn: true))
+    }
+
+    @Test("an entitled process still honours the switch")
+    func theSwitchStillDecides() {
+        // The new term adds a condition and removes none. An operator who
+        // switched a surface off gets the same answer they got before.
+        #expect(!OverlaySwitch.mayRaise(isAgent: true, switchedOn: false))
+        #expect(!OverlaySwitch.mayRaise(isAgent: false, switchedOn: false))
+    }
+
+    @Test("the switch reading is unchanged, so this is a second term and not a new default")
+    func theSwitchReadingIsUnchanged() {
+        #expect(OverlaySwitch.isOn("PROCTOR_CURSOR", in: [:]))
+        #expect(!OverlaySwitch.isOn("PROCTOR_CURSOR", in: ["PROCTOR_CURSOR": "0"]))
+    }
+}

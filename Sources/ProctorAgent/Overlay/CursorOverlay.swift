@@ -78,8 +78,15 @@ final class CursorOverlay {
     /// suite, or a machine where somebody is working. `nonisolated` because the
     /// call sites check it before hopping to the main actor, so a disabled
     /// overlay costs nothing at all.
-    nonisolated static let isEnabled: Bool =
+    nonisolated private static let switchedOn: Bool =
         OverlaySwitch.isOn("PROCTOR_CURSOR", in: ProctorEnvironment.current)
+
+    /// On when the variable is absent, which is right for the agent and wrong
+    /// for every other process that links this target. `AgentProcess` is the
+    /// term that tells them apart.
+    nonisolated static var isEnabled: Bool {
+        OverlaySwitch.mayRaise(isAgent: AgentProcess.isAgent, switchedOn: switchedOn)
+    }
 
     private static let pointerSize = CGSize(width: 19, height: 32)
     private static let ringDiameter: CGFloat = 46

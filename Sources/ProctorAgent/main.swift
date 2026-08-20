@@ -217,6 +217,11 @@ Task {
 // And with the HUD switched off there are no buttons to receive a click, so the
 // process keeps exactly the shape it shipped with. An unattended run that opted
 // out of the drawing opts out of the event loop too.
+// This process is the agent, so its surfaces may be drawn. Before the branch
+// below rather than inside it: an agent that opted out of the run panel still
+// tells somebody their Mac is being driven, and Esc still stops it.
+AgentProcess.claimIsAgent()
+
 if Session.hudEnabledByDefault {
     RunHUDPanel.markEventLoopRunning()
     NSApplication.shared.run()

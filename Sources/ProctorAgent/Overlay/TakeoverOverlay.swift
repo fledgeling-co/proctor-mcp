@@ -57,8 +57,16 @@ final class InputBlocker: @unchecked Sendable {
 
     /// Whether an operator asked for this at all. Read once: a tap that could
     /// switch itself on mid-process would be a tap nobody agreed to.
-    nonisolated static let isEnabled: Bool =
+    nonisolated private static let switchedOn: Bool =
         Takeover.blockEnabled(in: ProctorEnvironment.current)
+
+    /// Opt-in already, so this term changes nothing for anyone who left
+    /// `PROCTOR_TAKEOVER_INPUT` alone. It is here so the three live surfaces
+    /// answer the entitlement question the same way rather than two of them
+    /// answering it and the third being safe by luck.
+    nonisolated static var isEnabled: Bool {
+        OverlaySwitch.mayRaise(isAgent: AgentProcess.isAgent, switchedOn: switchedOn)
+    }
 
     /// Somebody pressed the release chord. Set by the session at run start.
     var onStop: (@Sendable () -> Void)?
@@ -466,8 +474,16 @@ final class TakeoverOverlay {
 
     static let shared = TakeoverOverlay()
 
-    nonisolated static let isEnabled: Bool =
+    /// Read once: a switch that could move mid-process would be a surface
+    /// nobody agreed to.
+    nonisolated private static let switchedOn: Bool =
         Takeover.overlayEnabled(in: ProctorEnvironment.current)
+
+    /// The switch says an operator wanted this; `AgentProcess` says this process
+    /// is the one entitled to draw it. Both, or nothing is painted.
+    nonisolated static var isEnabled: Bool {
+        OverlaySwitch.mayRaise(isAgent: AgentProcess.isAgent, switchedOn: switchedOn)
+    }
 
     private struct Surface {
         let panel: NSPanel
