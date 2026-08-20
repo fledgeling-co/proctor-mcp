@@ -69,6 +69,19 @@ the function returned. These four items are that finding, split by what each nee
 | PRO-0078 | `71-effect-witnesses-on-glass.md` | — | `macos-glass`, needs this machine's display + TCC grants | 11a |
 | PRO-0079 | `72-tests-that-mutate-and-never-read-back.md` | — | headless | 11a |
 | PRO-0080 | `73-gates-nobody-has-watched-fail.md` | PRO-0077, PRO-0079 | headless + long mutation run | 11b |
+| PRO-0081 | `74-the-carried-acceptance-clauses.md` | — (reads PRO-0067's harness, already merged) | headless + `macos-glass` for A3 | 11b |
+| PRO-0082 | `75-what-the-status-window-still-owes.md` | PRO-0081 for its two new sections | this machine, live permission revocation | 11b |
+
+**Wave 11b was widened 2026-08-21 after a carried-clause sweep.** The census items (`70`-`73`)
+were not the whole open set. Two acceptance clauses merged carried rather than green and were
+recorded as such in their own specs — PRO-0066's A2 (measured today: 188 non-identifier string
+literals in `MainWindow.swift`, so its grep clause cannot pass) and PRO-0067's A3 (the disabled
+next button, unverified because there was no `ProctorUI` test target when it merged). Both
+carries were made for reasons that have since expired: `SurfaceFidelity` and the attached
+`macos-glass` lane are the instruments they were waiting for. PRO-0036 also closed with six
+child-work items, none picked up since, one of which is a possible product defect rather than a
+surface gap — a revoked Screen Recording permission may stay reported as granted until the agent
+restarts. That one is unreproduced and PRO-0082 measures it before it is called a defect.
 
 **Dispatched 2026-08-21.** Wave 11a is running: PRO-0077, PRO-0078 and PRO-0079 as three
 concurrent Opus runners (workflow `wf_4c134ec0-f97`), each in its own worktree on its own

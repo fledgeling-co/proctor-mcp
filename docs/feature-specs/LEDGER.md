@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 80
+**Last allocated:** 82
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -87,3 +87,5 @@
 | PRO-0078 | Effect witnesses on glass: device and AX | 2026-08-21 | In Progress |
 | PRO-0079 | Tests that mutate and never read back | 2026-08-21 | In Progress |
 | PRO-0080 | Gates nobody has watched fail | 2026-08-21 | Ready for AI |
+| PRO-0081 | The carried acceptance clauses: A2's literals, A3's control | 2026-08-21 | Ready for AI |
+| PRO-0082 | What the status window still owes | 2026-08-21 | Ready for AI |
