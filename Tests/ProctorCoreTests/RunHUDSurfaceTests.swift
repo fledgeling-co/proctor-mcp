@@ -77,3 +77,56 @@ struct RunHUDSurfaceTests {
         #expect(!RunHUDSurface.hasStoppableRun(.finished))
     }
 }
+
+// PRO-0075. `RunHUDSurface.Chip`'s equality, pinned field by field.
+//
+// Found by the mutation assay over ProctorCore: `a.fields.count == b.fields.count`
+// mutated to `!=` and survived, which means nothing had ever compared two chips
+// with different field counts. It is a hand-written `==` over an array of tuples
+// — Swift cannot synthesise one, because a tuple is not Equatable — so it is
+// exactly the shape that goes wrong quietly, and the second one this wave found
+// after `TUISurface.Model`.
+//
+// A chip carries the provenance the run panel shows: which plane performed the
+// step and on what. Two chips that say different things comparing equal is a
+// panel that keeps drawing the previous step's provenance for the current one.
+
+@Suite("Run HUD chip equality")
+struct RunHUDChipEqualityTests {
+
+    @Test("two chips built the same way are equal")
+    func sameFieldsAreEqual() {
+        let a = RunHUDSurface.Chip([("plane", "synthetic"), ("on", "host")])
+        let b = RunHUDSurface.Chip([("plane", "synthetic"), ("on", "host")])
+        #expect(a == b)
+    }
+
+    @Test("a different number of fields makes two chips unequal")
+    func fieldCountParticipates() {
+        // The mutant that survived: with `count !=` the two below compare equal
+        // and a chip that lost a field reads as the chip that has it.
+        let full = RunHUDSurface.Chip([("plane", "synthetic"), ("on", "host")])
+        let short = RunHUDSurface.Chip([("plane", "synthetic")])
+        #expect(full != short)
+        #expect(short != full, "and the comparison is symmetric")
+    }
+
+    @Test("a different field name, and a different field value, each make two chips unequal")
+    func namesAndValuesBothParticipate() {
+        let base = RunHUDSurface.Chip([("plane", "synthetic"), ("on", "host")])
+        #expect(base != RunHUDSurface.Chip([("plane", "synthetic"), ("via", "host")]),
+                "the field's name is compared")
+        #expect(base != RunHUDSurface.Chip([("plane", "delegated"), ("on", "host")]),
+                "the field's value is compared")
+        #expect(base != RunHUDSurface.Chip([("on", "host"), ("plane", "synthetic")]),
+                "and order is part of what a chip says, because it is what a person reads")
+    }
+
+    @Test("an empty chip equals an empty chip and nothing else")
+    func emptyIsItsOwnValue() {
+        let empty = RunHUDSurface.Chip([])
+        let alsoEmpty = RunHUDSurface.Chip([])
+        #expect(empty == alsoEmpty)
+        #expect(empty != RunHUDSurface.Chip([("plane", "synthetic")]))
+    }
+}

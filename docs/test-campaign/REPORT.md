@@ -194,8 +194,35 @@ section exists. The number lives in `evidence/mutation-survival.json` and here, 
 not in a third place: a value copied into a generated file is a second source, and this repo's
 whole thesis is that a second source drifts.
 
-What this is not: a number for the whole suite. 24 of 52 sites in 4 of 103 files, chosen by a
-recorded seed. The armed ratio of 43 of 43 remains the hand-run equivalent over the campaign's
+### Widened: 50% across ProctorCore
+
+The four-file number said nothing about the other 99, so the assay was widened to all 77 files of
+`ProctorCore` — 1,991 sites — with the operator table filled out to eleven along the way, because
+the docstring had been claiming an integer-literal increment the table did not have.
+
+60 were selected by a recorded seed and 49 ran before the run was killed. **48 scored: 24 killed,
+24 survived, 1 unbuildable. 50% survival**, which is in the range the literature would predict and
+is the first honest number this suite has had for anything wider than four files.
+
+Thirteen of the twenty-four survivors are integer literals, many of them geometry and layout
+constants in pure values. Eleven are logic, and three were read closely:
+
+- **`RunHUDSurface.Chip.==`** compared field counts, and nothing had ever compared two chips with
+  different counts. That is the *second* hand-written `Equatable` this wave has found unwatched,
+  and the same shape both times, because Swift cannot synthesise `==` over an array of tuples.
+  Pinned, and armed against the exact mutant that survived.
+- **`RunHUDGate.onSegment`'s `<=` boundary** is an equivalent mutant. `onSegment` is reached only
+  from `crosses`, `crosses` only when no point is `contains`, and `contains` uses `>=`/`<=` on both
+  axes — so every point that could exercise the boundary was caught one step earlier. No test can
+  kill it.
+- **`RunHistory`'s `a.offset < b.offset`** sort tiebreak differs from `<=` only for equal offsets,
+  and offsets are unique enumeration indices. Equivalent as well.
+
+Both equivalents are recorded rather than chased. A survivor no test could kill is not a gap, and
+a suite contorted to kill one is worse than the survivor.
+
+What this is not: a number for the whole suite. 24 of 52 sites in 4 of 103 files for the first
+run, 48 of 1,991 in 77 for the second, both by a recorded seed. The armed ratio of 43 of 43 remains the hand-run equivalent over the campaign's
 own assertions, and neither number says anything about the other 5,017 assertion calls.
 
 ### The runner put a live mutation in the tree, once
@@ -233,7 +260,7 @@ A resource shared by two tests is a test-order dependency wearing a green tick.
 Measured 20 August 2026 against maestro 2.4.0 and a booted iPhone 16 Pro on iOS 18.2: both tests
 pass, 55.6 seconds for the suite, green twice.
 
-## Eleven defects, all eleven fixed
+## Thirteen defects, all thirteen fixed
 
 | id | what | state |
 |---|---|---|
@@ -248,6 +275,8 @@ pass, 55.6 seconds for the suite, green twice.
 | DEF-014 | An assertion that could not fail, and five tests nothing was counting | fixed |
 | DEF-015 | The live Maestro lane could not run here, and its two tests fought over one simulator | fixed |
 | DEF-016 | Model equality could not tell two models apart, and nothing noticed | fixed |
+| DEF-017 | Eight of the CLI's twenty-one verbs could not be given their main argument | fixed |
+| DEF-018 | Half of ProctorCore's sampled mutants survived, chip equality among them | fixed |
 
 DEF-011 is the one worth reading twice. `StatusChecks` classifies every grant name the health
 report can carry and an unrecognised name falls to `.tool`, deliberately, because tool names
@@ -290,9 +319,10 @@ in flight. Either would have been a vacuous pass.
   the History window reads, so a person is looking at recent runs rather than the whole trail.
   A forensic read of the full trail stays where it was, behind `proctor_policy` action `audit`
   and the keychain.
-- **Mutation survival beyond the four files sampled** — 24 of 52 sites in 4 of 103 files were
-  scored, by a recorded seed. The other 99 files have no number, and the honest reading of 0 of 24
-  is "these four files' comparison and boolean logic is watched", not "the suite is sensitive".
+- **The 21 survivors not yet read** — the widened run scored 48 sites across ProctorCore and 24
+  survived. Three were read and settled (one fixed, two equivalent); the other 21 are a named
+  backlog with a number against them rather than an absence: 13 integer literals and 8 logic sites.
+  Nothing outside ProctorCore has been sampled at all — the agent and UI targets have no number.
 - **The walkthrough's later slides, the takeover overlay and the run HUD under the new build** —
   carried from the previous full run, and the carry is now checked rather than assumed. Every
   published capture's manifest row names the source that draws it and when that source last

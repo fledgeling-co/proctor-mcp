@@ -63,6 +63,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Running them also turned up a second thing: both tests drive one simulator, and run together they interleave on it. The determinism check scored its own two repeats as divergent because the other test was tapping the device mid-repeat. They run one at a time now.
 
+- **The run panel's provenance chip had the same problem, found the same way.** Widening the mutation run from four files to all of the core came back at 50% survival, and among the survivors was a chip comparing how many fields two chips have. Nothing had ever compared two chips with different counts, so a chip that lost a field read as the chip that has it: the panel would keep showing the previous step's provenance for the current one. Both of these are hand-written comparisons over lists of pairs, which Swift cannot write for you, so they are the shape that goes wrong quietly.
+
+  Two other survivors were left alone on purpose. Neither can be killed by any test: one sits behind a check that already catches every value that would reach it, and the other distinguishes two cases that cannot both occur. A test contorted to kill an unkillable mutant is worse than the mutant.
+
 - **The supervision model's equality could not tell two models apart.** Nothing in 1,666 tests noticed, because nothing was looking: a mutation run over four core files came back with 10 of 24 mutants surviving, and every one of the ten was in that one hand-written comparison. Flip an `&&` to an `||` in it and two models that differ read as identical.
 
   Nothing in the app calls it yet, which is why it survived and why it was worth fixing rather than leaving. The obvious speed-up for the terminal surface is to skip a redraw when nothing has changed, and a comparison that cannot spot a change turns that into a screen that quietly stops updating while a run is moving. Every one of its thirteen fields is now pinned, and a field added and forgotten fails on a count before it can go out.
