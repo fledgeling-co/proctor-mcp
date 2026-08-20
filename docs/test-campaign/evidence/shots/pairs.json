@@ -34,5 +34,19 @@
     },
     "settleMs": 0,
     "note": "The reference is the shipped asset the menu bar draws, idle-0@3x, which is the design of record for this surface rather than a mock of it."
+  },
+  {
+    "surface": "SURF-006",
+    "name": "ScreenCaptureKit Visual Engine",
+    "shot": "evidence/shots/surf-006-screen-capture.png",
+    "reference": null,
+    "reason": "no design of record \u2014 this surface is a capture engine, and its evidence is a photograph the engine took of another application's window. There is nothing drawn to compare it against, so the pair is structurally unjudgeable rather than unjudged. What settles it is the frame's own status and trustworthiness, which the manifest carries."
+  },
+  {
+    "surface": "SURF-007",
+    "name": "Native Crop & Zoom Inspector",
+    "shot": "evidence/shots/surf-007-zoom.png",
+    "reference": null,
+    "reason": "no design of record, for the same reason as SURF-006. The claim is that the crop is taken at device resolution from the region asked for, which the manifest's region and normalisation block record."
   }
 ]

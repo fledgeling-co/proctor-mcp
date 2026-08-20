@@ -5,7 +5,7 @@ Lanes: macos, mcp-stdio, cli
 **Sample:** full multi-witness coverage across all 21 MCP tools, status/walkthrough/overlay UI surfaces, and guest/takeover controls
 
 17 surfaces · 9 flows · 14 components · 42 cases
-41 pass · 0 fail · 0 skip · 0 n/a · 0 open · armed 41/41
+42 pass · 0 fail · 0 skip · 0 n/a · 0 open · armed 42/42
 
 | Case | Surface | State | Lane | Status | Armed | Evidence |
 |---|---|---|---|---|---|---|
@@ -31,7 +31,7 @@ Lanes: macos, mcp-stdio, cli
 | CASE-0028 | SURF-008  |  |  | pass | yes | 4 |
 | CASE-0029 | SURF-008  |  |  | pass | yes | 3 |
 | CASE-0039 | SURF-008  |  |  | pass | yes | 2 |
-| CASE-0042 | SURF-008  |  |  | inconclusive: the window drawing the fourth permission row could not be photographed. It needs a UI process bound to the wave-9 agent's socket, and a GUI process launched from this harness with PROCTOR_SOCKET set exits immediately without output — through open -n the environment is not passed, and backgrounded from the shell AppKit terminates it. The classification fix is settled at the value (StatusChecks.permissions admits it) and at two other surfaces (the CLI's doctor and the TUI's readiness pane, both captured), so this is one surface unmeasured rather than the fix unproved. |  | 1 |
+| CASE-0042 | SURF-008  |  |  | pass | yes | 1 |
 | CASE-0012 | SURF-009  |  |  | pass | yes | 1 |
 | CASE-0013 | SURF-010  |  |  | pass | yes | 1 |
 | CASE-0037 | SURF-010  |  |  | pass | yes | 1 |

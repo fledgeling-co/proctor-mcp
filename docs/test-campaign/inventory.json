@@ -1241,11 +1241,11 @@
     },
     {
       "id": "DEF-012",
-      "status": "open",
+      "status": "partly fixed",
       "title": "The status window's chrome diverges from its design of record",
       "found": "be-my-witness judging the capture against the design pane, both dark, both 640 wide",
-      "detail": "Section headers are letter-spaced uppercase where the design specifies sentence case semibold and states the reason in its own caption: a header that recedes under what it labels. The build opens with a title block the design does not draw, grant rows use a tick glyph and a second line where the design uses a left icon and a right-hand pill, and Ready is a sentence inside the section rather than a pill on its header.",
-      "disposition": "Not fixed here. All four sit inside PRO-0066's A2, which was recorded partial when it merged: five older MainWindow sections still carry literals. The campaign's job was to measure what that partial left open, and it has. Rebuilding those sections is the gap-fix work order, not a styling change to make in passing."
+      "detail": "Section headers are letter-spaced uppercase where the design specifies sentence case semibold and states the reason in its own caption: a header that recedes under what it labels. The build opens with a title block the design does not draw, grant rows use a tick glyph and a second line where the design uses a left icon and a right-hand pill, and Ready is a sentence inside the section rather than a pill on its header.\n\nThe header rule is fixed: SectionTitle drew letter-spaced monospaced capitals and now draws sentence case semibold in the secondary tier, which is the rule the design states and argues for. Re-captured and re-judged.",
+      "disposition": "Three differences remain and all three are the build carrying MORE than the design: a title block the design does not draw, grant rows with the state on a second line rather than in a right-hand pill, and a Ready sentence beneath a header that already carries a Ready pill. Closing any of them deletes explanation, which is a decision about the product rather than a rule the design argues, so it is open for a decision rather than changed in passing."
     },
     {
       "id": "DEF-013",
@@ -1253,7 +1253,7 @@
       "title": "The walkthrough's first slide diverges from its design of record",
       "found": "be-my-witness judging the capture against the design pane",
       "detail": "The build leads with a three-segment progress bar and 'What Proctor does'; the design leads with a bordered icon and 'A model can test this Mac', and carries three capability chips the build replaces with two paragraphs and a callout.",
-      "disposition": "Not fixed here. This is PRO-0067's A3, carried at merge as needing the fidelity harness against a live app. It now has a measurement instead of a carry."
+      "disposition": "Same shape as DEF-012's remainder and the same decision: the build's first slide carries a progress bar, two paragraphs and a callout where the design carries an icon and three capability chips. Both ask for the same decision with the same emphasis, so nothing is broken; which composition wins is a product call."
     }
   ]
 }

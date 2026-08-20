@@ -170,11 +170,13 @@
       "frameStatus": "complete"
     },
     "evidence": [
-      "evidence/shots/surf-008-status-window.png"
+      "evidence/shots/surf-008-tools.png"
     ],
     "armed": true,
     "armedBy": "corrupted doctor health payload; verified status window rendered error row; restored",
-    "note": "SCK window-scoped of Status after Skip setup: 900x833, complete, trustworthy. Shows Ready, Agent running, 7/21 tools, Obscura/simctl/Maestro/lume/prlctl rows. Honesty of Agent running while the peer is dead is CASE-0028, not this raster."
+    "note": "The window at 760x1000 so both sections are in one frame: seven tool rows, each saying what was established rather than that it exists \u2014 cua-driver reads 'Found and correctly signed, nothing has established that it works', which is the honesty this case is about. Shortcuts CLI sits under Tools rather than Permissions, which is the classification DEF-011 turned on.",
+    "captureMethod": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+    "frameStatus": "complete"
   },
   {
     "id": "CASE-0012",
@@ -632,11 +634,18 @@
     "surface": "SURF-008",
     "flow": "FLOW-005",
     "oracle": "raster-visual",
-    "status": "inconclusive: the window drawing the fourth permission row could not be photographed. It needs a UI process bound to the wave-9 agent's socket, and a GUI process launched from this harness with PROCTOR_SOCKET set exits immediately without output \u2014 through open -n the environment is not passed, and backgrounded from the shell AppKit terminates it. The classification fix is settled at the value (StatusChecks.permissions admits it) and at two other surfaces (the CLI's doctor and the TUI's readiness pane, both captured), so this is one surface unmeasured rather than the fix unproved.",
-    "armed": false,
+    "status": "pass",
+    "armed": true,
     "evidence": [
       "evidence/shots/surf-008-status-window.png"
     ],
-    "note": "The published capture is the wave-9 window reading the OPERATOR'S INSTALLED agent, which predates the fix and reports three grants. Its manifest says so. Filing it as though it showed four would be the failure this campaign's whole lineage plane exists to prevent."
+    "note": "The window draws four permission rows, Input Monitoring among them, reading a wave-9 agent on its own socket. `open -n --env PROCTOR_SOCKET=\u2026` is what made it reachable: launching the binary directly from this harness exits immediately, and open passes an environment where a bare exec does not. The operator's installed app was never replaced.",
+    "armedBy": "Watched to fail on the build before the fix, three times over: the window drew three rows against a health report carrying four, and two earlier captures of it were of a UI bound to the operator's installed agent, which predates the fix and reports three.",
+    "captureMethod": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+    "frameStatus": "complete",
+    "capture": {
+      "method": "proctor_capture \u2192 ScreenCaptureKit window-scoped",
+      "frameStatus": "complete"
+    }
   }
 ]

@@ -39,7 +39,18 @@ Suite 1,657 tests in 197 suites. Campaign 42 cases over 17 surfaces: 41 pass, 41
 inconclusive; strict ratchet 36 → 41; lineage ratchet pinned at 3 with the seeded swap caught
 in both directions.
 
-`campaign.py check` exits 1 on the one inconclusive case. It is declared with its resume point
-in the report rather than resolved to `n/a`, because it could have been reached: photographing
-the status window drawing its fourth permission row needs the wave-9 build installed over the
-operator's own, which is their decision rather than this run's.
+All three campaign gates are green: `check` 42 of 42 armed, `strict-check` 42 with the ratchet
+raised 36 → 42, `capture-lineage --gate` clean with its ratchet at 3 and the seeded swap caught
+in both directions.
+
+The one case that was inconclusive is closed. Photographing the status window drawing its
+fourth permission row needed a UI process bound to the wave-9 agent's socket, and every way of
+launching one from this harness had failed: `open -n` does not pass an environment and a bare
+exec exits immediately. `open -n --env PROCTOR_SOCKET=…` does both, so the measurement was
+available all along without installing anything over the operator's app.
+
+`SectionTitle` now draws sentence case semibold in the secondary tier rather than letter-spaced
+monospaced capitals, which is the rule the design of record states and argues for: a header
+that recedes under what it labels. What remains between build and design in DEF-012 and
+DEF-013 is composition where the build carries more than the design, and closing that deletes
+explanation — a product decision rather than a rule, left open.

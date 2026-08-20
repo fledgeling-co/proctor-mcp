@@ -854,10 +854,18 @@ private struct FooterSection: View {
 private struct SectionTitle: View {
     let text: String
     init(_ text: String) { self.text = text }
+
+    /// Sentence case, semibold, secondary.
+    ///
+    /// PRO-0075. The design of record states the rule and its reason: "the
+    /// sections are sentence case, semibold, in the secondary tier — a header
+    /// that recedes under what it labels." The shipped treatment was
+    /// letter-spaced monospaced capitals, which is the louder of the two and
+    /// competes with the row titles beneath it. Measured against the design pane
+    /// by be-my-witness, both dark and at the same width.
     var body: some View {
-        Text(text.uppercased())
-            .font(.system(size: 10, weight: .semibold, design: .monospaced))
-            .tracking(0.8)
+        Text(text)
+            .font(.system(size: 13, weight: .semibold))
             .foregroundStyle(.secondary)
     }
 }

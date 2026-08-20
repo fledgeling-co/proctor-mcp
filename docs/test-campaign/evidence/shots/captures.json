@@ -1,194 +1,237 @@
 [
- {
-  "path": "evidence/shots/surf-007-zoom.png",
-  "subject": "SURF-007",
-  "target": "proctor://win:7:1/zoom",
-  "channel": "proctor_zoom \u2192 ScreenCaptureKit window-scoped, then a native crop at device resolution",
-  "sha256": "f5686195906ee1ec2542e878be315c63e5a3b1f84e530102de6ef40b977788e8",
-  "bytes": 48627,
-  "frameStatus": "complete",
-  "trustworthy": true,
-  "framesWaited": 2,
-  "resolvedTarget": {
-   "window": "win:7:1",
-   "app": "app:45808:7",
-   "contentRect": {
-    "h": 592,
-    "w": 640,
-    "x": 0,
-    "y": 0
-   },
-   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-7-1-zoom-1787184845451.png"
+  {
+    "path": "evidence/shots/surf-007-zoom.png",
+    "subject": "SURF-007",
+    "target": "proctor://win:7:1/zoom",
+    "channel": "proctor_zoom \u2192 ScreenCaptureKit window-scoped, then a native crop at device resolution",
+    "sha256": "f5686195906ee1ec2542e878be315c63e5a3b1f84e530102de6ef40b977788e8",
+    "bytes": 48627,
+    "frameStatus": "complete",
+    "trustworthy": true,
+    "framesWaited": 2,
+    "resolvedTarget": {
+      "window": "win:7:1",
+      "app": "app:45808:7",
+      "contentRect": {
+        "h": 592,
+        "w": 640,
+        "x": 0,
+        "y": 0
+      },
+      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-7-1-zoom-1787184845451.png"
+    },
+    "normalization": null,
+    "conditions": {
+      "build": "wave-9 .build/Proctor.app, Developer ID signed",
+      "crop": "[0,0,320,200] points from the window's top-left, 8pt padding",
+      "why": "the crop is taken from the same window SURF-008 photographs, so the two pictures differ by the engine's own cropping rather than by their subject",
+      "elapsedSeconds": 0.39
+    },
+    "capturedAt": "2026-08-20T10:14:05+1000"
   },
-  "normalization": null,
-  "conditions": {
-   "build": "wave-9 .build/Proctor.app, Developer ID signed",
-   "crop": "[0,0,320,200] points from the window's top-left, 8pt padding",
-   "why": "the crop is taken from the same window SURF-008 photographs, so the two pictures differ by the engine's own cropping rather than by their subject",
-   "elapsedSeconds": 0.39
+  {
+    "path": "evidence/shots/surf-006-screen-capture.png",
+    "subject": "SURF-006",
+    "target": "proctor://win:8:0/screen-capture",
+    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on another application's window",
+    "sha256": "ab31d8bf945d09bd5900ec037d1ba93c8eb17b13bd17e7d88ce335e92f00d311",
+    "bytes": 58873,
+    "frameStatus": "complete",
+    "trustworthy": true,
+    "framesWaited": 3,
+    "resolvedTarget": {
+      "window": "win:8:0",
+      "app": "app:922:8",
+      "contentRect": {
+        "h": 488,
+        "w": 586,
+        "x": 0,
+        "y": 0
+      },
+      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-8-0-1787184869047.png"
+    },
+    "normalization": {
+      "applied": true,
+      "estimatedVisionTokens": 1000,
+      "height": 790,
+      "maxLongEdge": 1024,
+      "maxPixels": 750000,
+      "originalHeight": 976,
+      "originalWidth": 1172,
+      "purpose": "verify",
+      "scale": 0.8097331455627117,
+      "width": 949
+    },
+    "conditions": {
+      "app": "TextEdit (pid 922), window 'Untitled 32', CG window 92",
+      "why": "the capture engine is the subject here, so it is pointed at an application other than Proctor. A picture of Proctor's own window would not distinguish the engine working from the app drawing.",
+      "note": "tier verify, the default, so the frame carries the engine's own normalisation block",
+      "elapsedSeconds": 0.51
+    },
+    "capturedAt": "2026-08-20T10:14:29+1000"
   },
-  "capturedAt": "2026-08-20T10:14:05+1000"
- },
- {
-  "path": "evidence/shots/surf-006-screen-capture.png",
-  "subject": "SURF-006",
-  "target": "proctor://win:8:0/screen-capture",
-  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on another application's window",
-  "sha256": "ab31d8bf945d09bd5900ec037d1ba93c8eb17b13bd17e7d88ce335e92f00d311",
-  "bytes": 58873,
-  "frameStatus": "complete",
-  "trustworthy": true,
-  "framesWaited": 3,
-  "resolvedTarget": {
-   "window": "win:8:0",
-   "app": "app:922:8",
-   "contentRect": {
-    "h": 488,
-    "w": 586,
-    "x": 0,
-    "y": 0
-   },
-   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-8-0-1787184869047.png"
+  {
+    "path": "evidence/shots/surf-010-menubar.png",
+    "subject": "SURF-010",
+    "target": "proctor://app:45808:7/menubar",
+    "channel": "screencapture -x -R, cropped to the AXExtrasMenuBar item frame this process reported",
+    "sha256": "61bb6f68d7ded1e118cf6dc263f597cb7874877f0616b7c133ce3ffdbbb0c6f2",
+    "bytes": 10680,
+    "frameStatus": "complete",
+    "trustworthy": true,
+    "framesWaited": null,
+    "resolvedTarget": {
+      "window": null,
+      "app": "app:45808:7",
+      "axFrame": {
+        "x": 1075,
+        "y": 4.5,
+        "w": 40,
+        "h": 24
+      },
+      "region": [
+        1073,
+        3,
+        44,
+        28
+      ],
+      "resolvedFrom": "AXExtrasMenuBar child of pid 45808, read directly from the accessibility plane"
+    },
+    "normalization": null,
+    "conditions": {
+      "build": "wave-9 .build/Proctor.app, Developer ID signed",
+      "why": "a display capture of the menu bar shows every application's status items, so the strip alone cannot be bound to Proctor. The frame comes from this process's own extras menu bar, which names which cells are its.",
+      "instances": "two Proctor processes were running; the frame was resolved for pid 45808 specifically, and the other instance's item is not inside this region",
+      "bleed": "the region is 2pt wider than the item on each side, so the crop cannot clip the glyph"
+    },
+    "capturedAt": "2026-08-20T10:15:52+1000"
   },
-  "normalization": {
-   "applied": true,
-   "estimatedVisionTokens": 1000,
-   "height": 790,
-   "maxLongEdge": 1024,
-   "maxPixels": 750000,
-   "originalHeight": 976,
-   "originalWidth": 1172,
-   "purpose": "verify",
-   "scale": 0.8097331455627117,
-   "width": 949
+  {
+    "path": "evidence/shots/surf-009-walkthrough.png",
+    "subject": "SURF-009",
+    "target": "proctor://win:9:0/walkthrough",
+    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+    "sha256": "80f045629a3ee664795b1c191906fdfef71e32a790d02797dda48209847768d5",
+    "bytes": 157312,
+    "frameStatus": "complete",
+    "trustworthy": true,
+    "framesWaited": 1,
+    "resolvedTarget": {
+      "window": "win:9:0",
+      "app": "app:88463:9",
+      "contentRect": {
+        "h": 572,
+        "w": 640,
+        "x": 0,
+        "y": 0
+      },
+      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-9-0-1787186318487.png"
+    },
+    "normalization": {
+      "applied": true,
+      "estimatedVisionTokens": 1000,
+      "height": 819,
+      "maxLongEdge": 1024,
+      "maxPixels": 750000,
+      "originalHeight": 1144,
+      "originalWidth": 1280,
+      "purpose": "verify",
+      "scale": 0.7156697068974133,
+      "width": 916
+    },
+    "conditions": {
+      "build": "wave-9 .build/Proctor.app at pid 88463, Developer ID signed",
+      "state": "walkthrough, first slide \u2014 a fresh launch opens here",
+      "instances": "two Proctor processes share this bundle id; the CG window the agent resolved is 43385",
+      "elapsedSeconds": 0.221,
+      "stateConfirmedBy": "proctor_snapshot read 'What Proctor does' in this window before the shutter"
+    },
+    "capturedAt": "2026-08-20T10:38:38+1000"
   },
-  "conditions": {
-   "app": "TextEdit (pid 922), window 'Untitled 32', CG window 92",
-   "why": "the capture engine is the subject here, so it is pointed at an application other than Proctor. A picture of Proctor's own window would not distinguish the engine working from the app drawing.",
-   "note": "tier verify, the default, so the frame carries the engine's own normalisation block",
-   "elapsedSeconds": 0.51
+  {
+    "path": "evidence/shots/surf-008-status-window.png",
+    "subject": "SURF-008",
+    "target": "proctor://win:1:1/status-window",
+    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+    "sha256": "3ecdd6ba12e037bcc6e148beb011c509642f6572ad963addaabea7447625274d",
+    "bytes": 141581,
+    "frameStatus": "complete",
+    "trustworthy": true,
+    "framesWaited": 1,
+    "resolvedTarget": {
+      "window": "win:1:1",
+      "app": "app:76865:1",
+      "contentRect": {
+        "h": 592,
+        "w": 640,
+        "x": 0,
+        "y": 0
+      },
+      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-1-1787187315088.png"
+    },
+    "normalization": {
+      "applied": true,
+      "estimatedVisionTokens": 1000,
+      "height": 833,
+      "maxLongEdge": 1024,
+      "maxPixels": 750000,
+      "originalHeight": 1184,
+      "originalWidth": 1280,
+      "purpose": "verify",
+      "scale": 0.703476826391794,
+      "width": 900
+    },
+    "conditions": {
+      "build": "wave-9 .build/Proctor.app at pid 76865, Developer ID signed",
+      "agent": "launched with open -n --env PROCTOR_SOCKET=/tmp/proctor-wave9.sock, so the window reads the wave-9 agent's health report. The operator's installed agent was never replaced.",
+      "state": "status sections, confirmed by proctor_find before the shutter",
+      "instances": "two Proctor processes were running; the CG window the agent resolved is 45709",
+      "elapsedSeconds": 0.358,
+      "stateConfirmedBy": "proctor_find matched 'proctor.status.section.switches' in this window before the shutter"
+    },
+    "capturedAt": "2026-08-20T10:55:15+1000"
   },
-  "capturedAt": "2026-08-20T10:14:29+1000"
- },
- {
-  "path": "evidence/shots/surf-010-menubar.png",
-  "subject": "SURF-010",
-  "target": "proctor://app:45808:7/menubar",
-  "channel": "screencapture -x -R, cropped to the AXExtrasMenuBar item frame this process reported",
-  "sha256": "61bb6f68d7ded1e118cf6dc263f597cb7874877f0616b7c133ce3ffdbbb0c6f2",
-  "bytes": 10680,
-  "frameStatus": "complete",
-  "trustworthy": true,
-  "framesWaited": null,
-  "resolvedTarget": {
-   "window": null,
-   "app": "app:45808:7",
-   "axFrame": {
-    "x": 1075,
-    "y": 4.5,
-    "w": 40,
-    "h": 24
-   },
-   "region": [
-    1073,
-    3,
-    44,
-    28
-   ],
-   "resolvedFrom": "AXExtrasMenuBar child of pid 45808, read directly from the accessibility plane"
-  },
-  "normalization": null,
-  "conditions": {
-   "build": "wave-9 .build/Proctor.app, Developer ID signed",
-   "why": "a display capture of the menu bar shows every application's status items, so the strip alone cannot be bound to Proctor. The frame comes from this process's own extras menu bar, which names which cells are its.",
-   "instances": "two Proctor processes were running; the frame was resolved for pid 45808 specifically, and the other instance's item is not inside this region",
-   "bleed": "the region is 2pt wider than the item on each side, so the crop cannot clip the glyph"
-  },
-  "capturedAt": "2026-08-20T10:15:52+1000"
- },
- {
-  "path": "evidence/shots/surf-009-walkthrough.png",
-  "subject": "SURF-009",
-  "target": "proctor://win:9:0/walkthrough",
-  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
-  "sha256": "80f045629a3ee664795b1c191906fdfef71e32a790d02797dda48209847768d5",
-  "bytes": 157312,
-  "frameStatus": "complete",
-  "trustworthy": true,
-  "framesWaited": 1,
-  "resolvedTarget": {
-   "window": "win:9:0",
-   "app": "app:88463:9",
-   "contentRect": {
-    "h": 572,
-    "w": 640,
-    "x": 0,
-    "y": 0
-   },
-   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-9-0-1787186318487.png"
-  },
-  "normalization": {
-   "applied": true,
-   "estimatedVisionTokens": 1000,
-   "height": 819,
-   "maxLongEdge": 1024,
-   "maxPixels": 750000,
-   "originalHeight": 1144,
-   "originalWidth": 1280,
-   "purpose": "verify",
-   "scale": 0.7156697068974133,
-   "width": 916
-  },
-  "conditions": {
-   "build": "wave-9 .build/Proctor.app at pid 88463, Developer ID signed",
-   "state": "walkthrough, first slide \u2014 a fresh launch opens here",
-   "instances": "two Proctor processes share this bundle id; the CG window the agent resolved is 43385",
-   "elapsedSeconds": 0.221,
-   "stateConfirmedBy": "proctor_snapshot read 'What Proctor does' in this window before the shutter"
-  },
-  "capturedAt": "2026-08-20T10:38:38+1000"
- },
- {
-  "path": "evidence/shots/surf-008-status-window.png",
-  "subject": "SURF-008",
-  "target": "proctor://win:10:1/status-window",
-  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
-  "sha256": "842a915d0eb2aec6ed10c74e00a87aaf1f501971b7b4268ea0b49ba783ba1189",
-  "bytes": 154595,
-  "frameStatus": "complete",
-  "trustworthy": true,
-  "framesWaited": 2,
-  "resolvedTarget": {
-   "window": "win:10:1",
-   "app": "app:10998:10",
-   "contentRect": {
-    "h": 592,
-    "w": 640,
-    "x": 0,
-    "y": 0
-   },
-   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-10-1-1787186535804.png"
-  },
-  "normalization": {
-   "applied": true,
-   "estimatedVisionTokens": 1000,
-   "height": 833,
-   "maxLongEdge": 1024,
-   "maxPixels": 750000,
-   "originalHeight": 1184,
-   "originalWidth": 1280,
-   "purpose": "verify",
-   "scale": 0.703476826391794,
-   "width": 900
-  },
-  "conditions": {
-   "build": "wave-9 .build/Proctor.app at pid 10998, Developer ID signed",
-   "agent": "PROCTOR_SOCKET=/tmp/proctor-wave9.sock \u2014 the wave-9 agent, so the window reads a health report that carries Input Monitoring. The operator's installed agent was never replaced.",
-   "state": "status sections; the setup walkthrough had already been completed for this launch",
-   "instances": "three Proctor processes were running; the CG window the agent resolved is 44146",
-   "elapsedSeconds": 0.52,
-   "stateConfirmedBy": "proctor_find matched 'proctor.status.section.switches' in this window before the shutter"
-  },
-  "capturedAt": "2026-08-20T10:42:15+1000"
- }
+  {
+    "path": "evidence/shots/surf-008-tools.png",
+    "subject": "SURF-008",
+    "target": "proctor://win:2:1/status-window",
+    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+    "sha256": "e99b456e77575c378c5601dc61060b97c5ce492f2f5a564d6f4161bd2b1f248f",
+    "bytes": 150623,
+    "frameStatus": "complete",
+    "trustworthy": true,
+    "framesWaited": 2,
+    "resolvedTarget": {
+      "window": "win:2:1",
+      "app": "app:26655:2",
+      "contentRect": {
+        "h": 1000,
+        "w": 760,
+        "x": 0,
+        "y": 0
+      },
+      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-2-1-1787187845924.png"
+    },
+    "normalization": {
+      "applied": true,
+      "estimatedVisionTokens": 1000,
+      "height": 993,
+      "maxLongEdge": 1024,
+      "maxPixels": 750000,
+      "originalHeight": 2000,
+      "originalWidth": 1520,
+      "purpose": "verify",
+      "scale": 0.4966996338993914,
+      "width": 755
+    },
+    "conditions": {
+      "build": "wave-9 .build/Proctor.app at pid 26655, Developer ID signed, carrying the sentence-case section headers",
+      "agent": "open -n --env PROCTOR_SOCKET=/tmp/proctor-wave9.sock",
+      "state": "window at 760x1000 so Permissions and Tools are both in the frame",
+      "instances": "the CG window the agent resolved is 46712",
+      "elapsedSeconds": 0.477,
+      "stateConfirmedBy": "proctor_find matched 'proctor.status.section.tools' in this window before the shutter"
+    },
+    "capturedAt": "2026-08-20T11:04:05+1000"
+  }
 ]

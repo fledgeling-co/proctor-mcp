@@ -9,12 +9,22 @@ run the skill to its fullest. Recorded with `campaign.py scope --full`.
 images, every one tying to its subject, 3 of 5 judged, ratchet pinned at 3. Suite: 1,657
 tests in 197 suites.
 
-**`campaign.py check` exits 1, and that is the honest state.** One case is inconclusive and
-the gate refuses to clear over it. It is declared below with its resume point rather than
-resolved to `n/a`, because it could have been reached and only an environment decision that
-belongs to somebody else stands in the way.
+**All gates green.** One case was inconclusive for part of this run and is described below,
+because how it was closed is the useful part: the instrument was reachable all along through a
+flag nobody had tried.
 
-## The stop, and how to resume it
+## The stop is resolved
+
+The run declared one stop and then closed it. `open -n --env PROCTOR_SOCKET=…` passes an
+environment where a bare exec from this harness does not, which is what made a UI process
+bound to the wave-9 agent reachable without replacing the operator's installed app. The status
+window draws four permission rows, Input Monitoring among them, and CASE-0042 is a pass.
+
+All three campaign gates are green: `check` 42 of 42, `strict-check` 42 with the ratchet raised
+36 → 42, `capture-lineage --gate` clean with its ratchet at 3.
+
+## What the stop was, before it was resolved
+
 
 **CASE-0042 — the status window drawing its fourth permission row.** The fix is settled at
 the value and at two other surfaces: `proctor doctor --json` against a wave-9 agent reports
@@ -24,7 +34,7 @@ agent's socket, and a GUI process launched from this harness with `PROCTOR_SOCKE
 immediately: `open -n` does not pass the environment, and backgrounded from a shell AppKit
 terminates it.
 
-**Resume point.** Install the wave-9 build (`scripts/install.sh`), or launch the UI with
+**How it was closed.** Rather than install the wave-9 build (`scripts/install.sh`), or launch the UI with
 `PROCTOR_SOCKET=/tmp/proctor-wave9.sock` from a login session, then re-run the capture plan
 against `proctor.status.section.switches`. Installing replaces the operator's own
 `/Applications/Proctor.app`, which is why this run did not do it.
