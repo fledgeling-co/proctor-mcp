@@ -84,11 +84,21 @@ else
   say "            already points at Proctor.icns, so dropping one in is enough."
 fi
 
-# SwiftPM puts a target's resources in its own bundle beside the binary, and
-# `Bundle.module` looks for that bundle in the main bundle's Resources. Copying
+# SwiftPM puts a target's resources in its own bundle beside the binary. Copying
 # it here — before signing, so the signature seals it — is what puts the run
-# HUD's character in a build that anyone else runs. Without it the bay is empty
-# and the run carries on, which is deliberate but is not what shipped art is for.
+# HUD's character in a build that anyone else runs.
+#
+# Contents/Resources is the layout macOS documents, and it is NOT where SwiftPM's
+# generated `Bundle.module` looks: that accessor checks the bundle ROOT and an
+# absolute path inside the build directory of the machine that compiled it. So on
+# the build machine it resolves via that second path and everything looks fine,
+# and on anybody else's Mac it traps. Measured 2026-08-20 in a macOS guest: the
+# agent crash-looped on the first call that drew the character.
+#
+# `ResourceBundles` in ProctorCore does the search instead, over the places a
+# bundle is genuinely found, and returns nil rather than trapping. Nothing here
+# uses `Bundle.module`; keep it that way, and keep this copy step, because the
+# first place `ResourceBundles` looks is the directory it copies into.
 for resource_bundle in "$BIN_DIR"/*.bundle; do
   [ -e "$resource_bundle" ] || continue
   cp -R "$resource_bundle" "$RESOURCES_DIR/"

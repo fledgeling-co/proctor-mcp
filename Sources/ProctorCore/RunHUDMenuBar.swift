@@ -30,8 +30,9 @@ public extension RunHUDCharacter {
     /// that stopped because a picture was not where it expected.
     static func menuBarAssetURL(asset: String, scale: Int) -> URL? {
         let name = scale == 1 ? asset : "\(asset)@\(scale)x"
-        return Bundle.module.url(forResource: name, withExtension: "png",
-                                 subdirectory: "character-menubar")
+        return ResourceBundles.url(inBundleNamed: ResourceBundles.core,
+                                   resource: name, extension: "png",
+                                   subdirectory: "character-menubar")
     }
 }
 

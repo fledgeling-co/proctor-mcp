@@ -53,8 +53,9 @@ enum RunHUDSprites {
 
     private static func decode(asset: String, scale: Int) -> CGImage? {
         let name = scale == 1 ? asset : "\(asset)@\(scale)x"
-        guard let url = Bundle.module.url(forResource: name, withExtension: "png",
-                                          subdirectory: "character"),
+        guard let url = ResourceBundles.url(inBundleNamed: ResourceBundles.agent,
+                                            resource: name, extension: "png",
+                                            subdirectory: "character"),
               let data = try? Data(contentsOf: url),
               let rep = NSBitmapImageRep(data: data) else { return nil }
         return rep.cgImage
