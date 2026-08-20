@@ -363,3 +363,69 @@ of A1 stops here rather than being reported as verified. In order:
   precisely what A12's discipline refuses. So the doctor states the limit rather than implying the
   count is the whole truth, and widening it is a scope call for the reader rather than an
   implementation detail to settle here.
+
+---
+
+## Gap-fix pass (2026-08-20)
+
+The fresh-context verifier returned NEEDS MORE WORK on six findings. All six are closed.
+**1,794 tests in 211 suites green**, whole suite, twice, via `./scripts/test.sh`.
+
+### Two production lines nobody was testing
+
+The verifier deleted `Dispatch.swift:80` and `Dispatch.swift:443` one at a time and the whole
+suite stayed green both times. The seam functions were tested directly; nothing drove them
+through the dispatcher, which is the layer that decides whether a call reaches the seam at all.
+`DoctorReplyWiringTests` exists in this repo for exactly that reason and both fixes follow it.
+
+`GuestDispatchWiringTests` (new) drives an attached session through `Dispatcher.handle` and
+asserts the call lands on the guest link, the guest's answer comes back verbatim, and
+`FakeAX.performed` is empty. Armed by deleting the funnel: three issues, the first reading
+`(response → AgentResponse(id: "1", ok: false, … message: "proctor_act requires steps as an
+array")).ok → false` — a guest session doing host work, which is A2's failure exactly.
+
+`DoctorReplyWiringTests` gains two cases for A12: the macOS pool's capacity, held and waiting
+in the reply a caller receives, and a real attachment showing up as a held slot named by guest.
+Armed by deleting `report["guestPool"] = await session.poolStatus()`: two issues, both
+`(reply["guestPool"] → nil).objectValue → nil`.
+
+### A7's second half now stands on a refusal the queue produced
+
+`theWaitSaysWhereItStood` used to construct the `RunQueueRefusal` itself, so it would have
+passed if a queued attach never produced one. It now holds Apple's two, queues three more
+attaches, and opens the scheduler's give-up timer through the injected `sleep` — the same seam
+that exists so a wait limit is provable in milliseconds. The depths are read back out of the
+three messages and asserted as 3, 2 and 1, which is what three waiters giving up one after
+another produces and what a literal could not.
+
+### Three defects the builder did not report
+
+**A socket leak on the attach guard.** The "already attached" check sits four suspension points
+ahead of the write, and `Session` is a reentrant actor, so two attaches on one identity both
+passed it; the second overwrote `guestLinks[key]` and left a `GuestLink` holding an unclosed
+socket with nothing left to close it. The per-guest mutex lane hid it, because the same-guest
+case never raced. Asking again immediately before the write, with no await in between, makes
+the guard binding; the loser takes the existing failure path, which now also closes the link it
+opened. Armed: without the re-check both attaches succeed and both links stay open.
+
+**An unaudited stop.** `TartProvider.start` ran a bare `tart stop` when a boot never came up.
+That is a lifecycle change on somebody's machine with no row on the trail, and A9 says a stop
+stays gated and recorded. It is the third time this shape has been found in this feature, so
+there is now one function rather than three fixes: `stopGuestThroughAuditedPath` is what the
+release path, the failed-attach cleanup and the boot timeout all call, and the boot timeout is
+handled in `Session.guestMutate` because that is where the audit sink is. The adapter reports
+the timeout and stops nothing; `guestMutate` is its only production caller, so nothing is
+orphaned.
+
+**A doc comment on the wrong type.** `TartTool` was inserted between `PrlctlTool`'s doc comment
+and `PrlctlTool`, so the symlink paragraph documented tart. Each paragraph is back on the type
+it describes.
+
+### Left as it stands, with the reason
+
+A5's mutant produced a hang rather than a red assertion, and `scripts/test.sh`'s absent-verdict
+rule caught it. Nothing cheap converts the hang into an assertion without contorting tests that
+already prove the arithmetic, so it is left and recorded here rather than worked around.
+
+A1's live half and A1b are unchanged and still BLOCKED at the in-guest TCC grant. Nothing in
+this pass touched `anvil-mac-node`.
