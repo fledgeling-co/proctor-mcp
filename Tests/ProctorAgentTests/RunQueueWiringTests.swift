@@ -23,7 +23,7 @@ struct RunQueueWiringTests {
     /// A session with its own scheduler and its own halt latch, the panel off.
     /// One session is one machine's worth of lanes, which is exactly the
     /// production shape: every connection goes through one `Session`.
-    private func harness(waitLimit: TimeInterval = 5)
+    private func harness(waitLimit: TimeInterval = 30)
     async throws -> (session: Session, ax: FakeAX, scheduler: RunScheduler) {
         let ax = FakeAX(bundleId: Self.target)
         let scheduler = RunScheduler(waitLimit: waitLimit, now: { 0 })

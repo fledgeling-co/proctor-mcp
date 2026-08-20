@@ -142,8 +142,10 @@ final class CaptureEngineImpl: CaptureEngine {
                          format: encoding.format, quality: encoding.quality)
         }
 
-        let contentRectIsReal = (meta.contentRect?.w ?? 0) > 0 && (meta.contentRect?.h ?? 0) > 0
-        let trustworthy = meta.status == .complete && contentRectIsReal
+        let trustworthy = CaptureTrust.trustworthy(
+            frameComplete: meta.status == .complete,
+            contentWidth: meta.contentRect?.w ?? 0,
+            contentHeight: meta.contentRect?.h ?? 0)
 
         var caveat: String?
         if !trustworthy {

@@ -188,9 +188,10 @@ struct StatusChecksTests {
                         #expect(text == nil, "\(where_) should say nothing")
                         continue
                     }
-                    let said = try? #require(text)
-                    #expect(said != nil, "\(where_) should say something")
-                    guard let said else { continue }
+                    guard let said = text else {
+                        #expect(text != nil, "\(where_) should say something")
+                        continue
+                    }
 
                     switch kind {
                     case .permissionReadLive:

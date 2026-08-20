@@ -264,8 +264,8 @@ struct MenuBarAssetTests {
         // exactly the same names — a name here that the frame table does not know
         // would mean somebody drew something new.
         let names = Set(RunHUDCharacter.assets)
-        let directory = try #require(Bundle.module.url(forResource: "character-menubar",
-                                                       withExtension: nil))
+        let sampleURL = try #require(RunHUDCharacter.menuBarAssetURL(asset: "idle-0", scale: 1))
+        let directory = sampleURL.deletingLastPathComponent()
         let files = try FileManager.default.contentsOfDirectory(atPath: directory.path)
         let bases = Set(files.filter { $0.hasSuffix(".png") }.map { file -> String in
             let stem = String(file.dropLast(4))
