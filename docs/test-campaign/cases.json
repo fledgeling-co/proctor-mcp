@@ -867,5 +867,89 @@
     "armed": true,
     "armedBy": "The three surviving mutants were re-applied together after the tests were written and the suite went red with 6 issues across the three new tests, then restored to green at 1,802.",
     "note": "Mutation assay over the seven files wave 10 added or changed. PARTIAL by denominator: 11 of 40 selected mutants ran, 40 of 188 sites selected by seed 20260820. 3 survived and all three are now closed. One of the 8 kills was a 900s timeout under CPU contention from another project building concurrently and is recorded as untrustworthy rather than counted, so the honest kill count is 7 of 10 scored. Survivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor."
+  },
+  {
+    "id": "CASE-0059",
+    "req": "REQ-017",
+    "surface": "SURF-013",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Sabotage run in the same test body: executable pointed at a path that does not exist. The armed variant instead pointed it at the WORKING script, and the sabotage half went red with 3 issues \u2014 providerErrors nil, count 1.0 not 0, and a sentinel [8676] present. The live-count assertion was inverted in the same run and printed (livePIDs.count -> 2) < 0. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/EffectWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0077/witness-run.txt",
+      "docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+      "docs/test-campaign/evidence/PRO-0077/gate.txt"
+    ],
+    "witness": {
+      "recorder": "sentinel files written by each spawned /bin/sh child with its own $$, read back off the filesystem with FileManager and Data(contentsOf:) \u2014 no code under test participates in the reading",
+      "effect": "subprocess",
+      "count": 2
+    },
+    "note": "Driven through Session.guest(action:\"list\") twice, with LumeProvider built by its CONVENIENCE initialiser \u2014 the production path, which binds run to Self.liveRun and reaches a real Process() through Session.runBounded. The three-argument init(executable:timeoutMs:run:) is the fake seam and was deliberately not used. Two drives, two sentinels, two distinct pids, neither this process's. PORTABLE FLOOR, not the kernel bar: no dtrace, no eslogger, no execve census \u2014 this suite has no privilege for one, and that is the lane's ceiling rather than a silence. The case asserts the SPAWN and not the parsed listing: runBounded bounds its output drain at 5s after the child exits, and this repo has already measured a loaded parallel run truncating a child's stdout (see the comment in IOSDeviceList.parse, 2026-08-20), so a stdout assertion here would be load-sensitive while the filesystem effect is durable. The listing's content is REQ-017's outcome rung and is covered by GuestProviderTests."
+  },
+  {
+    "id": "CASE-0060",
+    "req": "REQ-020",
+    "surface": "SURF-014",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Sabotage run in the same test body: simctl pointed at a path that does not exist, and readDevices raises the tool's own refusal. The armed variant pointed it at the WORKING script and the sabotage half went red with 2 issues \u2014 no error thrown, and a sentinel [8941] present. The live-count assertion was inverted in the same run and printed (pids.count -> 2) < 0. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/EffectWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0077/witness-run.txt",
+      "docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+      "docs/test-campaign/evidence/PRO-0077/gate.txt"
+    ],
+    "witness": {
+      "recorder": "sentinel files written by each spawned /bin/sh child with its own $$, read back off the filesystem with FileManager and Data(contentsOf:)",
+      "effect": "subprocess",
+      "count": 2
+    },
+    "note": "Driven through Session.ios(action:\"list\") twice, against a Session whose ToolProbes reports the witness script as simctl, so the call reaches Session.runSimctl -> runBounded -> a real Process() in SessionIOSProcess.swift. Kept separate from CASE-0059 rather than sharing one case: they are different providers, and one case covering both would let one provider's silence hide behind the other's noise. Two drives, two sentinels, two distinct pids, neither this process's. PORTABLE FLOOR, not the kernel bar. Asserts the spawn and not the parsed device listing, for the drain reason recorded on CASE-0059."
+  },
+  {
+    "id": "CASE-0061",
+    "req": "REQ-015",
+    "surface": "SURF-012",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Sabotage run in the same test body: chmod 0500 on the trail directory, so withAuditFileLock cannot create audit.lock and appendRawLocked cannot O_CREAT the trail. The armed variant used 0700 instead and the zero-check went red at (landed -> 2753) == 0. The line-count assertion was inverted in the same run and printed (lines.count -> 3) == -1 against 3 records emitted. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/EffectWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0077/witness-run.txt",
+      "docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+      "docs/test-campaign/evidence/PRO-0077/gate.txt"
+    ],
+    "witness": {
+      "recorder": "the trail file's presence, byte size and mtime before and after, plus its bytes read with a FRESH FileHandle(forReadingFrom:) and each line opened with AuditSeal.open in ProctorCore using the injected private half \u2014 never AuditLog.readTrail or openedTail, which are the code under test confirming itself",
+      "effect": "filesystem-write",
+      "count": 3
+    },
+    "note": "Driven through Session.attachResolved + Session.act with three real steps, with the session's sink set to the production AuditLog.append. The seam is the TEST-PROCESS INTERLOCK in Session.auditSink, not the write path: AuditLog.append still seals with CryptoKit AES-GCM, chains, signs, and lands the bytes with Darwin.open(O_WRONLY|O_APPEND|O_CREAT), Darwin.write and fsync in PolicyStore.swift, unchanged. Three records emitted by the agent, three lines on disk, all three opened with the seal. The line count is checked against what the AGENT emitted rather than against a number the test chose, so no assertion stands on a value the test wrote (DEF-019). PORTABLE FLOOR: no kernel file-open census. The witness runs on a dedicated Thread because AuditLog's seams are process-wide and TrailIsolation must be held across the drive; an async holder of that lock wedged the whole run on 2026-08-21, and the comment above withRedirectedTrail carries the measurement."
+  },
+  {
+    "id": "CASE-0062",
+    "req": "REQ-009",
+    "surface": "SURF-008",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Sabotage run in the same test body: the socket path is unlinked between bind and connect, so Darwin.connect has nothing to reach. The armed variant removed the unlink and the sabotage half went red at 'an error was expected but none was thrown'. Both count assertions were inverted in the same run and printed (answered -> 3) == -1 and (identities.count -> 3) == -1. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/EffectWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0077/witness-run.txt",
+      "docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+      "docs/test-campaign/evidence/PRO-0077/gate.txt"
+    ],
+    "witness": {
+      "recorder": "the server's own side of the socket: three distinct SocketClient connections it answered, plus the RunSessionIdentity it read off each accepted descriptor via getsockopt(SOL_LOCAL, LOCAL_PEERPID) and proc_pidinfo, recorded inside the server process from the task-local the accept path binds",
+      "effect": "ipc",
+      "count": 3
+    },
+    "note": "A real Server on a temporary path \u2014 Darwin.bind, listen, chmod 0600 and the accept loop in Server.swift \u2014 with three SocketClient instances from ProctorCore/Transport.swift each calling connect() (Darwin.connect) and send(). THE COUNT IS ANSWERED CONNECTIONS, NOT RECORDED REQUESTS: Server.serve reads many frames from one accepted descriptor, so a per-request count would report three for one client sending three frames. A reply cannot arrive on a descriptor the accept loop never took, so an answered connection is an accept. The identity half is the completion confirmation: the peer pid and working directory are the kernel's answer about the far end, obtainable only from an accepted fd, and the client never puts either on the wire. Settled by an out-of-family referral to grok-4.6 at xhigh on 2026-08-21, which also ruled out adding an onAccept seam to Server \u2014 a hook the product fires is the product logging its own accept, and no production source needed changing. PORTABLE FLOOR: no kernel socket tracer."
   }
 ]
