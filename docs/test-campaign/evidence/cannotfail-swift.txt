@@ -1,6 +1,6 @@
 examined  103 file(s) · 1653 @Test function(s) · 5020 assertion call(s)
 findings  0
-informational  81 (a conditional enable or a try? is a judgement call, not a defect)
+informational  84 (a conditional enable or a try? is a judgement call, not a defect)
   swallowed     Tests/ProctorAgentTests/AcceptanceE2ETests.swift:23  try? ImageWriter.write(img, to: dest, format: .png, what: "fake-capture")
   swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:41  lock.withLock { try? key?.signature(for: material).rawRepresentation }
   swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:46  guard let key, let parsed = try? P256.Signing.ECDSASignature(
@@ -42,6 +42,8 @@ informational  81 (a conditional enable or a try? is a judgement call, not a def
   swallowed     Tests/ProctorAgentTests/RunHistoryWiringTests.swift:163  try? FileManager.default.removeItem(at: sealDir)
   swallowed     Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift:115  try? await Task.sleep(nanoseconds: 20_000_000)
   swallowed     Tests/ProctorAgentTests/ToolchainDoctorTests.swift:393  let resolved = try? #require(version)
+  early-exit    Tests/ProctorAgentTests/ToolchainDoctorTests.swift:375  maestroVersionWithoutRunningIt: a bare return above the first assertion
+  early-exit    Tests/ProctorAgentTests/ToolchainDoctorTests.swift:388  xcodeVersionWithoutRunningAnything: a bare return above the first assertion
   swallowed     Tests/ProctorCoreTests/AuditChainTests.swift:81  guard let parsed = try? P256.Signing.ECDSASignature(
   swallowed     Tests/ProctorCoreTests/AuditChainTests.swift:343  guard let parsed = try? P256.Signing.ECDSASignature(
   swallowed     Tests/ProctorCoreTests/BrowserRoutingBaselineTests.swift:114  guard let data = try? Data(contentsOf: url) else {
@@ -58,6 +60,7 @@ informational  81 (a conditional enable or a try? is a judgement call, not a def
   swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:576  defer { try? FileManager.default.removeItem(at: root) }
   swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:591  defer { try? FileManager.default.removeItem(at: root) }
   swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:609  defer { try? FileManager.default.removeItem(at: root) }
+  early-exit    Tests/ProctorCoreTests/BuildInfoTests.swift:195  compiledVersionIsReal: a bare return above the first assertion
   swallowed     Tests/ProctorCoreTests/MenuBarReadinessTests.swift:248  defer { try? FileManager.default.removeItem(at: dir) }
   swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:1873  try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
   swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:1938  try? FileManager.default.createDirectory(atPath: root, withIntermediateDirectories: true)

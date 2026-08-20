@@ -138,6 +138,14 @@ nowhere in the file, the other that a rotation leaves no backup or sidecar. Each
 happily when there was no file, and no directory listing, to look in. They now read with `try`
 and each states positively that the thing it is about is there before asserting what is not.
 
+A seventh pattern counts rather than fails: a bare `return` above the first assertion, which
+lets a test report a pass having asserted nothing while the run reports it exactly as it reports
+a test that did. Three in the suite, all documented in place as conditional on a toolchain —
+"IF a tool is here, the free route answers, and never that this particular Mac has it". Whether
+their guards are satisfied *here* is a different question from whether they are written honestly,
+and it was settled the same way everything else was: each assertion was inverted and each went
+red, so all three ran on this machine rather than returning early. Restored and green.
+
 What this still is not: mutation survival. The nearest thing the campaign has is its armed
 ratio, 43 of 43, which is that measurement run by hand over the campaign's own assertions —
 each one watched to fail with the behaviour removed. It says nothing about the other 5,017.

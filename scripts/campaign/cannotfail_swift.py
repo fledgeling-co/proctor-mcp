@@ -52,6 +52,11 @@ SWALLOWED = re.compile(r"(?:^|[^\w.])(?:_\s*=\s*)?try\?\s")
 # negated use is a finding — `?? ""` feeding a positive assertion still fails.
 DEFAULTED_READ = re.compile(r"try\?[^\n]*?\)\s*\?\?\s*(?:\"\"|\[\]|:?\s*\[:\])")
 DEFAULTED_BIND = re.compile(r"\blet\s+([A-Za-z_][\w]*)\s*=\s*\(?\s*try\?")
+# A bare `return` before the first assertion. The test passes without running
+# any of them, and the run reports it exactly as it reports a test that did.
+# `ToolchainDoctorTests` does this on purpose — no Xcode, nothing to assert —
+# which is why this is counted and named rather than failed.
+BARE_RETURN = re.compile(r"^\s*(?:\}?\s*)?return\s*$|else\s*\{\s*return\s*\}")
 NEGATED_USE = re.compile(r"#expect\(\s*!\s*([A-Za-z_][\w]*)\b|"
                          r"#expect\(\s*([A-Za-z_][\w]*)[^\n)]*==\s*false")
 
@@ -187,6 +192,14 @@ def main() -> int:
         for name, first, _, body in test_bodies(lines):
             tests += 1
             joined = "\n".join(body)
+            # An early exit above the first assertion: this test can report a
+            # pass having asserted nothing, and nothing in the run says which
+            # of the two happened.
+            first_assert = next((i for i, bl in enumerate(body) if ASSERTS.search(bl)), None)
+            if first_assert is not None:
+                if any(BARE_RETURN.search(bl) for bl in body[:first_assert]):
+                    informational.append(("early-exit", str(path), first,
+                                          f"{name}: a bare return above the first assertion"))
             if ASSERTS.search(joined):
                 continue
             called = {m.group(1) for m in CALL.finditer(joined)}
