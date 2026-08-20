@@ -69,6 +69,17 @@ struct Dispatcher: Sendable {
     }
 
     private func route(_ request: AgentRequest) async throws -> JSONValue {
+        // PRO-0076 A1. A session attached to a guest executes its steps INSIDE
+        // that guest. The request goes over the forwarded socket verbatim and
+        // the guest's own Proctor — which holds the guest's TCC grants and talks
+        // to the guest's window server — answers it.
+        //
+        // Placed here, ahead of the switch, because this is the one funnel every
+        // tool passes through. Anything downstream of this line is host work, so
+        // a guest session that reached it would be actuating the wrong machine.
+        if let forwarded = try await session.forwardToGuestIfAttached(request) {
+            return forwarded
+        }
         let args = Args(tool: request.tool, raw: request.arguments)
         switch request.tool {
         case "proctor_apps":      return try await apps(args)
