@@ -458,7 +458,27 @@ extension Session {
         // Window ids that came back from inside the guest are recorded against
         // this session, so A4 can refuse them everywhere else.
         recordGuestMintedHandles(in: result, machine: attachment.machine)
-        return result
+        return stampGuestMachine(in: result, machine: attachment.machine)
+    }
+
+    /// Say which machine answered, in the CALLER's frame of reference.
+    ///
+    /// The guest's Proctor is an ordinary Proctor and does not know it is being
+    /// forwarded to, so it describes itself the way any Proctor does: `kind`
+    /// "host", because from inside the guest it is the host. Relayed verbatim,
+    /// that reads as "this ran on your Mac" to the one reader who most needs the
+    /// opposite — and A1's own acceptance check is "confirm the result's
+    /// `machine` names the guest". Measured 2026-08-20: a `proctor_act` that ran
+    /// five steps inside a lume guest came back `{"kind":"host"}`.
+    ///
+    /// Only the top-level field is replaced. Anything nested is the guest
+    /// describing something else, and rewriting that would be this side
+    /// inventing content rather than attributing it.
+    func stampGuestMachine(in value: JSONValue, machine: Machine) -> JSONValue {
+        guard case .object(var fields) = value, fields["machine"] != nil,
+              let encoded = try? JSONValue.encode(machine) else { return value }
+        fields["machine"] = encoded
+        return .object(fields)
     }
 
     /// Note that this attachment was used, for the idle ceiling.

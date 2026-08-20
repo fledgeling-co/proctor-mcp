@@ -41,9 +41,10 @@ struct LumeProviderTests {
                            timedOut: false, truncated: false)
     }
 
-    @Test("list prefers ls --json and falls back to list --json")
+    @Test("list asks lume 0.5.x first, then the older spellings")
     func listArgvAndFallback() async throws {
         let script = Script(replies: [
+            fail(1, "Error: Unknown option '--format'"),
             fail(1, "unknown command ls"),
             ok("[{\"name\":\"sequoia-seed\",\"os\":\"macOS\",\"status\":\"stopped\"}]")
         ])
@@ -51,8 +52,39 @@ struct LumeProviderTests {
                                     run: script.run)
         let records = try await provider.list()
         #expect(records.map(\.name) == ["sequoia-seed"])
-        #expect(script.recorded.map(\.1) == [["ls", "--json"], ["list", "--json"]])
+        #expect(script.recorded.map(\.1) == LumeProvider.listLadder)
         #expect(script.recorded.allSatisfy { $0.0 == "/opt/homebrew/bin/lume" })
+    }
+
+    // The defect this pins: lume 0.5.3 rejects `--json` by name, so a first
+    // rung spelled that way took the whole guest lane down with
+    // "no guest matches" while the guest was listed and running. Measured
+    // against lume 0.5.3 on 2026-08-20.
+    @Test("a lume that only knows --format json is listed, not reported missing")
+    func lume05xIsListed() async throws {
+        let script = Script(replies: [
+            ok("[{\"name\":\"proctor-guest\",\"os\":\"macOS\",\"status\":\"running\"}]")
+        ])
+        let provider = LumeProvider(executable: "/opt/homebrew/bin/lume", run: script.run)
+        let records = try await provider.list()
+        #expect(records.map(\.name) == ["proctor-guest"])
+        #expect(script.recorded.map(\.1) == [["ls", "--format", "json"]])
+    }
+
+    @Test("a lume that rejects every spelling reports lume's own words")
+    func everySpellingRefused() async throws {
+        let script = Script(replies: [
+            fail(64, "Error: Unknown option '--format'"),
+            fail(64, "Error: Unknown option '--json'"),
+            fail(64, "Error: Unknown subcommand 'list'")
+        ])
+        let provider = LumeProvider(executable: "/x/lume", run: script.run)
+        await #expect(throws: GuestProviderError.commandFailed(
+            tool: "lume", action: "list", exit: 64,
+            stderr: "Error: Unknown option '--format'")) {
+            _ = try await provider.list()
+        }
+        #expect(script.recorded.count == LumeProvider.listLadder.count)
     }
 
     @Test("start / stop / clone use the published verbs and then re-read")
@@ -71,12 +103,13 @@ struct LumeProviderTests {
         #expect(argv.contains(["run", "sequoia-seed"]))
         #expect(argv.contains(["stop", "sequoia-seed"]))
         #expect(argv.contains(["clone", "sequoia-seed", "sequoia-copy"]))
-        #expect(argv.contains(["get", "sequoia-copy", "--json"]))
+        #expect(argv.contains(["get", "sequoia-copy", "--format", "json"]))
     }
 
     @Test("a missing guest is refused by name")
     func missingGuest() async throws {
         let script = Script(replies: [
+            fail(1, "no such vm"),
             fail(1, "no such vm"),
             ok("[]"),
             ok("[]")

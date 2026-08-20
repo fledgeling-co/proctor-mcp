@@ -50,11 +50,14 @@ enum GuestProviderError: Error, Equatable {
 
 /// Cua's Virtualization.framework CLI.
 ///
-/// Argument shape, measured against lume's published surface rather than
-/// against a binary on this machine (there is not one): `ls --json` for the
-/// inventory, `get <name> --json` for one guest, `run` / `stop` / `clone`.
-/// A build that uses `list` instead of `ls` is tried once, on the first
-/// listing, and only after `ls` itself refused.
+/// Argument shape, measured against lume 0.5.3 on this machine: `ls` for the
+/// inventory, `get <name>` for one guest, `run` / `stop` / `clone`.
+///
+/// The JSON flag is not stable across lume releases: 0.5.x spells it
+/// `--format json` and rejects `--json` by name, while earlier builds took
+/// `--json`. Both are tried, current spelling first, and a build that uses
+/// `list` instead of `ls` is tried last. The ladder costs one refused
+/// invocation on an old build and none on a current one.
 final class LumeProvider: GuestProvider {
 
     let id = LumeTool.binary
@@ -74,22 +77,37 @@ final class LumeProvider: GuestProvider {
         self.init(executable: executable, timeoutMs: timeoutMs, run: Self.liveRun)
     }
 
+    /// The listing argv this adapter tries, in order.
+    static let listLadder: [[String]] = [
+        ["ls", "--format", "json"],
+        ["ls", "--json"],
+        ["list", "--json"]
+    ]
+
     func list() async throws -> [GuestRecord] {
-        let first = invoke(["ls", "--json"], action: "list")
-        if first.exitCode == 0 {
-            return try decodeList(first)
-        }
-        let second = invoke(["list", "--json"], action: "list")
-        if second.exitCode == 0 {
-            return try decodeList(second)
+        var firstFailure: GuestProcessResult?
+        for arguments in Self.listLadder {
+            let result = invoke(arguments, action: "list")
+            if result.exitCode == 0 {
+                return try decodeList(result)
+            }
+            if firstFailure == nil { firstFailure = result }
         }
         throw GuestProviderError.commandFailed(tool: id, action: "list",
-                                               exit: first.exitCode, stderr: first.stderr)
+                                               exit: firstFailure?.exitCode ?? 1,
+                                               stderr: firstFailure?.stderr ?? "")
+    }
+
+    /// The single-guest argv this adapter tries, in order. Same flag drift as
+    /// `listLadder`.
+    static func statusLadder(name: String) -> [[String]] {
+        [["get", name, "--format", "json"], ["get", name, "--json"]]
     }
 
     func status(name: String) async throws -> GuestRecord {
-        let result = invoke(["get", name, "--json"], action: "status")
-        if result.exitCode == 0 {
+        for arguments in Self.statusLadder(name: name) {
+            let result = invoke(arguments, action: "status")
+            guard result.exitCode == 0 else { continue }
             let records = try decodeList(result)
             if let match = records.first(where: { $0.name == name }) ?? records.first {
                 return match

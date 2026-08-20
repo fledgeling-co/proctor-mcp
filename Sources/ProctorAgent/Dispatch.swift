@@ -665,15 +665,19 @@ struct Dispatcher: Sendable {
     ///   start  — power on, then re-read
     ///   stop   — power off, then re-read
     ///   clone  — copy a named guest to a new name
+    ///   reach  — describe the SSH StreamLocal tunnel onto a guest's socket
+    ///   attach — point this session at a macOS guest
+    ///   detach — point it back at this Mac
     ///
     /// Nothing provisions. A guest that does not already exist is refused.
+    ///
+    /// The action is not filtered here. `Session.guest` already switches on it
+    /// and refuses an unknown one with the same error, and a second copy of the
+    /// list in this file is a second source: it drifted, and the two actions it
+    /// had fallen behind on — attach and detach — were the whole of the guest
+    /// lane, advertised by the catalogue and refused by the dispatcher.
     private func guest(_ args: Args) async throws -> JSONValue {
         let action = args.string("action") ?? "list"
-        guard ["list", "status", "start", "stop", "clone", "reach"].contains(action) else {
-            throw AgentError(code: .invalidArguments,
-                             message: "unknown guest action \(action.debugDescription)",
-                             remedy: "Use list, status, start, stop, clone or reach.")
-        }
         return try await session.guest(action: action,
                                        guest: args.string("guest"),
                                        provider: args.string("provider"),
