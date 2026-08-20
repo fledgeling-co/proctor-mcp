@@ -371,7 +371,7 @@ Per the goal brief's blocked-item policy, a fork that needs a human parks its it
 appended here rather than stopping the fleet. Full text with the assumption taken for each is
 in `docs/goals/goal-wave9-swiftui-conversion.md`.
 
-- **PRO-0073** — how `act` takes a step batch (assumed: both, stdin JSON documented).
+- **PRO-0073** — how `act` takes a step batch (assumed: both, stdin JSON documented). **Settled 20 Aug: the assumption had not been built, and 8 of 21 verbs could not be given their main argument. DEF-017.**
 - **PRO-0073** — CLI session identity across invocations (assumed: per-invocation).
 - **PRO-0074** — TUI over the remote HTTP transport, which puts Stop behind a bearer token
   (assumed: local socket only; the HTTP path is a security decision, not an inheritance).

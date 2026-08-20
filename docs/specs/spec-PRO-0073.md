@@ -47,6 +47,13 @@ the other is nothing measured.
 - **How `act` takes a step batch.** Repeated flags are pleasant for one step and unusable for
   six; stdin JSON is honest for a batch and awkward interactively. Both is defensible and costs
   a parser. **Assumption taken to unblock:** support both, stdin JSON as the documented path.
+  **Settled 20 Aug 2026, and the assumption had not been built.** Every flag value was typed as
+  a scalar, so `--steps '[…]'` reached the agent as a string and came back "requires steps as an
+  array", and nothing read stdin — which left eight of the twenty-one verbs unable to be given
+  their main argument. `CLIArguments` now parses a bracketed flag value as JSON and merges an
+  object from stdin underneath the flags. Stdin is asked for with `-` or `--stdin` rather than
+  inferred: inferring it from `isatty` hung any caller whose stdin was an open pipe nothing
+  wrote to, which is what a CI runner and an agent harness both give you.
 - **Whether the CLI holds a session identity across invocations.** It decides queue attribution
   and the hold attribution the HUD shows. **Assumption taken:** per-invocation session, because
   it needs no new state; revisit if the HUD's attribution reads wrong.

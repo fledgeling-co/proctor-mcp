@@ -55,6 +55,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Arming the scan found a fault in the scan, which is why you arm it. A one-line test body balances its braces on the signature line, so the finder skipped it and then read the next function's body instead. Fixed, and the count of tests it can see went from 1,648 to 1,653.
 
+- **`proctor act` can now actually act.** Eight of the twenty-one verbs take a list or an object as their main argument, and none of them could be given one: every flag value was turned into a string, a number or a boolean, so a step batch arrived at the agent as text and came back "requires steps as an array". Pass JSON to a flag and it stays JSON, or pipe an object of arguments with `proctor act -`. A flag beside the pipe wins, so you can retarget a recorded batch at a different window without editing the file.
+
+  The first version worked out whether to read the pipe by asking if it was talking to a terminal. That is true and not enough: a CI runner and an agent harness both hand you something that is not a terminal and not a pipe anyone writes to, and `proctor doctor` sat there forever. Asking for the pipe with `-` cannot hang.
+
 - **The iOS lane's live tests can run on a Mac with more than one simulator booted.** They passed no device and relied on there being exactly one. Proctor was right to refuse that and name the four it found, so the whole live lane went red for a fact about the machine rather than about the code. They take a device now, and where the machine cannot say which one they do not run, because picking one on your behalf would drive a simulator you might be using.
 
   Running them also turned up a second thing: both tests drive one simulator, and run together they interleave on it. The determinism check scored its own two repeats as divergent because the other test was tapping the device mid-repeat. They run one at a time now.

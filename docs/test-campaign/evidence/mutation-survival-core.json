@@ -1,0 +1,133 @@
+{
+ "summary": {
+  "partial": true,
+  "run": 11,
+  "of": 60,
+  "killed": 8,
+  "survived": 3,
+  "unbuildable": 0
+ },
+ "mutants": [
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 14057,
+   "end": 14058,
+   "before": "2",
+   "after": "3",
+   "line": 312,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 28.7
+  },
+  {
+   "file": "Sources/ProctorCore/VisionCapture.swift",
+   "start": 6890,
+   "end": 6892,
+   "before": "&&",
+   "after": "||",
+   "line": 133,
+   "verdict": "SURVIVED",
+   "why": "passed",
+   "seconds": 13.2
+  },
+  {
+   "file": "Sources/ProctorCore/RunHUDCharacter.swift",
+   "start": 2084,
+   "end": 2085,
+   "before": "3",
+   "after": "4",
+   "line": 45,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 13.2
+  },
+  {
+   "file": "Sources/ProctorCore/ScriptingDictionary.swift",
+   "start": 11752,
+   "end": 11756,
+   "before": "true",
+   "after": "false",
+   "line": 242,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 7.1
+  },
+  {
+   "file": "Sources/ProctorCore/Takeover.swift",
+   "start": 5121,
+   "end": 5122,
+   "before": "0",
+   "after": "1",
+   "line": 91,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 13.1
+  },
+  {
+   "file": "Sources/ProctorCore/Geometry.swift",
+   "start": 4431,
+   "end": 4432,
+   "before": "0",
+   "after": "1",
+   "line": 100,
+   "verdict": "SURVIVED",
+   "why": "passed",
+   "seconds": 15.9
+  },
+  {
+   "file": "Sources/ProctorCore/ToolCatalogue.swift",
+   "start": 36718,
+   "end": 36722,
+   "before": "true",
+   "after": "false",
+   "line": 493,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 25.3
+  },
+  {
+   "file": "Sources/ProctorCore/PointerMarker.swift",
+   "start": 4000,
+   "end": 4001,
+   "before": "0",
+   "after": "1",
+   "line": 80,
+   "verdict": "SURVIVED",
+   "why": "passed",
+   "seconds": 21.0
+  },
+  {
+   "file": "Sources/ProctorCore/TUISurface.swift",
+   "start": 16731,
+   "end": 16732,
+   "before": "9",
+   "after": "10",
+   "line": 367,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 41.2
+  },
+  {
+   "file": "Sources/ProctorCore/StabilityCaptures.swift",
+   "start": 12470,
+   "end": 12471,
+   "before": "<",
+   "after": "<=",
+   "line": 234,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 20.0
+  },
+  {
+   "file": "Sources/ProctorCore/SwitchResolution.swift",
+   "start": 7023,
+   "end": 7025,
+   "before": "&&",
+   "after": "||",
+   "line": 144,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 17.9
+  }
+ ]
+}

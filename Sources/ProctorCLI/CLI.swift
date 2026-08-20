@@ -19,8 +19,10 @@ struct Invocation {
     var json: Bool
     var arguments: [String: JSONValue]
     var lane: String?
+    /// Whether the caller asked for arguments on stdin, with `-` or `--stdin`.
+    var readsStandardInput: Bool = false
 
-    /// Parse `proctor <verb> [--flag value]…`.
+    /// Parse `proctor <verb> [--flag value]… [-]`.
     ///
     /// Deliberately small: flags become arguments by name, so the CLI does not
     /// carry a second description of each tool's schema that could drift from
@@ -31,9 +33,13 @@ struct Invocation {
         var i = 1
         while i < argv.count {
             let token = argv[i]
+            // The conventional "read the arguments from stdin". A bare `-` is
+            // the idiom; `--stdin` is the same thing spelled out.
+            if token == "-" { out.readsStandardInput = true; i += 1; continue }
             guard token.hasPrefix("--") else { return .failure(.usage) }
             let key = String(token.dropFirst(2))
             if key == "json" { out.json = true; i += 1; continue }
+            if key == "stdin" { out.readsStandardInput = true; i += 1; continue }
             guard i + 1 < argv.count else { return .failure(.usage) }
             let value = argv[i + 1]
             if key == "lane" { out.lane = value; i += 2; continue }
@@ -43,15 +49,13 @@ struct Invocation {
         return .success(out)
     }
 
-    /// A flag's value, typed the way the tool schemas expect. A bare `true` is a
-    /// boolean rather than the string "true", because the wire distinguishes
-    /// them and a caller should not have to.
-    private static func typed(_ raw: String) -> JSONValue {
-        if raw == "true" { return .bool(true) }
-        if raw == "false" { return .bool(false) }
-        if let d = Double(raw) { return .number(d) }
-        return .string(raw)
-    }
+    /// A flag's value, typed the way the tool schemas expect.
+    ///
+    /// In `CLIArguments` rather than here, so it can be asserted against values
+    /// written by hand. This used to be four lines of local logic that turned
+    /// every value into a scalar, which is how `--steps '[…]'` reached the agent
+    /// as a string and came back "requires steps as an array".
+    private static func typed(_ raw: String) -> JSONValue { CLIArguments.typed(raw) }
 }
 
 enum CLI {
@@ -93,10 +97,28 @@ enum CLI {
             return .usage
         }
 
+        // Arguments come from two places and the flags win. `spec-PRO-0073.md`
+        // took "support both, stdin JSON as the documented path" as the
+        // assumption that unblocked the step-batch fork, and this is it: a batch
+        // is unreadable as repeated flags and awkward to type inline, so it is
+        // piped, and a flag beside it retargets what was piped.
+        let piped: [String: JSONValue]?
+        do {
+            piped = try CLI.standardInputArguments(requested: invocation.readsStandardInput)
+        } catch let failure as CLIArguments.Failure {
+            FileHandle.standardError.write(Data("proctor: \(CLIArguments.message(for: failure))\n".utf8))
+            FileHandle.standardError.write(Data("proctor: \(CLIArguments.remedy)\n".utf8))
+            return .usage
+        } catch {
+            FileHandle.standardError.write(Data("proctor: \(error)\n".utf8))
+            return .usage
+        }
+        let arguments = CLIArguments.merged(standardInput: piped, flags: invocation.arguments)
+
         // The same socket the MCP shim uses. Nothing here is a second path into
         // the agent, and nothing here can skip a gate the other front end passes.
         do {
-            let reply = try Client.call(tool: verb.tool, arguments: invocation.arguments)
+            let reply = try Client.call(tool: verb.tool, arguments: arguments)
             return report(reply, invocation: invocation, verb: verb)
         } catch let error as AgentError {
             emit(error, json: invocation.json)
@@ -132,6 +154,28 @@ enum CLI {
         return code
     }
 
+    /// Arguments piped in, or nil when the caller did not ask for them.
+    ///
+    /// **Read only on an explicit `-` or `--stdin`, never inferred.** The first
+    /// version inferred it from `isatty`, on the reasoning that a terminal means
+    /// nobody piped anything. That is true and not sufficient: any caller whose
+    /// stdin is an open pipe nothing ever writes to — a CI runner, an agent
+    /// harness, a `Process` with a pipe it keeps — is not a terminal either, and
+    /// `proctor doctor` hung there forever waiting on a read that never
+    /// returned. Found by running it, not by reading it.
+    ///
+    /// `spec-PRO-0073.md` took "support both, stdin JSON as the documented path"
+    /// as its assumption. A conventional `-` still is that path, and it cannot
+    /// hang, which a literal reading demonstrably could.
+    static func standardInputArguments(requested: Bool) throws -> [String: JSONValue]? {
+        guard requested else { return nil }
+        let data = FileHandle.standardInput.readDataToEndOfFile()
+        guard let text = String(data: data, encoding: .utf8) else {
+            throw CLIArguments.Failure.standardInputNotJSON("<not UTF-8>")
+        }
+        return try CLIArguments.fromStandardInput(text)
+    }
+
     private static func emit(_ error: AgentError, json: Bool) {
         if json, let data = try? JSONEncoder().encode(error),
            let text = String(data: data, encoding: .utf8) {
@@ -161,6 +205,10 @@ enum CLI {
         lines.append("")
         lines.append("Service:")
         lines.append("  " + CLISurface.serviceVerbs.joined(separator: "  "))
+        lines.append("")
+        lines.append("A step batch is piped with - or --stdin, and a flag beside it wins:")
+        lines.append(#"  echo '{"window":"win:1:0","steps":[…]}' | proctor act -"#)
+        lines.append(#"  proctor act --window win:1:0 --steps '[{"kind":"key","key":"escape"}]'"#)
         lines.append("")
         lines.append("Exit codes:")
         for code in CLISurface.Exit.allCases {
