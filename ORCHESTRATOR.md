@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 10 complete on `ai/wave-9`, nothing open.** Wave 9 closed: 11 items merged, plus five issues reported from real use, four fixed and one specced. Wave 10 is one item, PRO-0076, the guest lane, merged with its last two carried clauses now settled live. Gate green at 1,814 tests in 214 suites; all three campaign gates green, `check` 58 of 58.
-**Updated:** 2026-08-17 — v0.2.0 tagged, notarised, stapled, and installed. **1,520 tests / 175 suites green on `main`**, fully synchronised with `origin/main`.
+**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements with no `effect-witness` case (12 named by `campaign.py check`), 78 blind-pass findings, two campaign gates never proved able to fail, and one drifted defect record. Gate green at 1,814 tests in 214 suites.
+**Updated:** 2026-08-21 — Wave 11 opened, 4 items (PRO-0077..PRO-0080) from the 0.9.2 effect-boundary census. Branch `ai/wave-9` is 72 commits ahead of local `main`, which is untouched at `c7fbe29` and unpushed. Gate: 1,814 tests / 214 suites.
 
 ### Repository state (reconciled 2026-08-17)
 - **Git remote:** `origin` → `github.com/fledgeling-co/proctor-mcp`. Local `main` is up to date with `origin/main` at tag `v0.2.0`.
@@ -55,6 +55,37 @@ Superseded 2026-08-14 by the reader's explicit choice. The 2026-08-13 line
   artifact and every source file it opens to xAI. PRO-0012 (policy gate + audit) and PRO-0013
   (audit-log encryption-at-rest) are security features. The reader chose this lane knowing that;
   do not widen it beyond the three named gates.
+
+## Wave 11 — what the effect-boundary census opened (2026-08-21)
+
+The 0.9.2 campaign added an effect-boundary plane and Proctor's first run of it reads
+`vacuity: requirements=44 external=22 findings=78` with `0 of 22 witnessed`. Every external
+guarantee in this product currently rests on a test that called a function and read the value
+the function returned. These four items are that finding, split by what each needs to run.
+
+| ID | Brief | Depends on | Lane | Slot |
+|----|-------|-----------|------|------|
+| PRO-0077 | `70-effect-witnesses-off-glass.md` | — | headless, `./scripts/test.sh` | 11a |
+| PRO-0078 | `71-effect-witnesses-on-glass.md` | — | `macos-glass`, needs this machine's display + TCC grants | 11a |
+| PRO-0079 | `72-tests-that-mutate-and-never-read-back.md` | — | headless | 11a |
+| PRO-0080 | `73-gates-nobody-has-watched-fail.md` | PRO-0077, PRO-0079 | headless + long mutation run | 11b |
+
+PRO-0080 waits on both: `--seed-strengthen` needs REQ-017's witness to check against, and the
+blind pass's gating value depends on the false-positive rate PRO-0079 measures.
+
+**Shared registries this wave.** `docs/test-campaign/campaign.json` and `inventory.json` are
+written by three of the four items. They are read-modify-write on a shared file, exactly like
+`LEDGER.md`: a runner appends only its own case and requirement rows and never reformats the
+file, and the orchestrator reconciles at merge, one branch at a time.
+
+**Machine constraints carried into every runner prompt.**
+- `./scripts/test.sh` owns the verdict. A bare `swift test` exits 1 while reporting all tests
+  passing, because the pipe eats the exit code.
+- Nothing edits the tree while `mutate_swift.py` runs; it compiles the whole package per mutant
+  from the working directory.
+- `proctor-guest` and `anvil-mac-node` are both stopped and neither is to be deleted.
+- Foreground `sleep` is killed by the harness; long waits background or use `/bin/sleep`.
+
 
 ## Wave plan
 Wave 1 (no unmerged internal deps — 8 slots): PRO-0001 CUA façade, PRO-0002 set-of-marks, PRO-0003 menu-bar

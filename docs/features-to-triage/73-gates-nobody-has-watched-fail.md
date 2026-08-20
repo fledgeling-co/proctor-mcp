@@ -1,0 +1,81 @@
+# Two gates nobody has watched fail, and one record that drifted
+
+**Wave 11, brief 4 of 4.** Sequence it after `72`, which measures whether the blind pass is
+trustworthy, and after `70`, which gives the seed-strengthen control something real to check.
+
+## Why this is one brief and not three
+
+All three items are the same defect wearing different clothes: a check whose passing state has
+never been proved to mean anything. The campaign's own rule is that an assertion nobody has
+watched fail is not known to bite, and it applies to the campaign's instruments as much as to the
+product's tests.
+
+## Item 1 — the census gate has never been shown to go red
+
+`vacuity-check.py` ships `--seed-strengthen <REQ-ID>` precisely as this control: it strengthens a
+requirement's claim and the gate should refuse it. It has never been run against this campaign.
+
+Until it has, the census's three passes are in the position the campaign spent this wave getting
+tests out of. `unclassed` and `uncensused` both currently report `examined=44 findings=0` and
+`examined=22 findings=0`, and a pass reporting zero is indistinguishable from a predicate that
+cannot fire — which is exactly how the default vocabulary read before it was replaced
+(`examined=1857 mutating=1 blind=1`, a dead predicate that looked like a clean run).
+
+Run it against `REQ-017` once `70` has built that requirement's witness, and against one
+requirement classed `none`, so both directions are covered. Record the output verbatim.
+
+## Item 2 — `ProctorAgent` has never been mutation-sampled
+
+Mutation survival is measured and thin, and the report says so: **11 of 188 sites under one seed**,
+with 29 selected mutants unrun because another build on the machine made their kills unreadable.
+Every one of those sites is in `ProctorCore`. A later run took 24 mutants over `TUISurface`,
+`CLISurface`, `StatusChecks` and `RunHUDMenuBar` from 14 killed / 10 survived to 24 killed / 0
+survived, and both runs are kept as `mutation-survival-before.txt` and `-after.txt`.
+
+`ProctorAgent` is the package that holds the session, the queue, the overlay, the actuation
+backend and every guest adapter, and no mutant has ever been generated in it. That is the largest
+untested claim about the suite's strength, and it is the one the wave's own defect record argues
+for: DEF-018 was *half of ProctorCore's sampled mutants survived*, found only because somebody
+sampled.
+
+Three operating facts, each measured the hard way:
+
+- **Nothing may edit the tree while `mutate_swift.py` runs.** It compiles the whole package per
+  mutant and picks up whatever is in the working directory.
+- **A 900-second timeout under CPU contention produces false kills.** The runner scores a timeout
+  as killed. Survivors are trustworthy in both directions; a kill under contention is not.
+- **Do not copy the resulting number into `.warrant/suite-health.json`.** `mutation_measured: false`
+  there is correct and is not stale — it means warrant's own assay has not run, and a value copied
+  into a generated file is a second source that drifts.
+
+Chasing equivalent mutants is out of scope. `RunHUDGate.onSegment`'s `<=` boundary is already
+recorded as one, and a suite contorted to kill an unkillable mutant is worse than the survivor.
+
+## Item 3 — DEF-019's record says `open` and the code says fixed
+
+`inventory.json` carries `DEF-019` with `"status": "open"`. `REPORT.md`'s defect table carries the
+same id as `fixed`. The code agrees with the table: `Sources/ProctorCore/CLISurface.swift:148-155`
+now reads the top-level `ok`, the top-level `failed` count, and each assertion's `status == "fail"`,
+with a comment recording the two live measurements that found the original defect.
+
+Flip the inventory record and check the other 18 for the same drift in the same pass. This is a
+one-line fix with a five-minute audit attached, and it sits in this brief rather than on its own
+because it is the same failure mode: a ledger nobody re-read against the thing it describes.
+
+## The conversion contract
+
+- `--seed-strengthen` run in both directions with the output pasted into `REPORT.md`, not
+  summarised.
+- A `ProctorAgent` mutation sample with its denominator, its seed, and its unrun count named. A
+  partial sample honestly reported is the deliverable; a full sweep is not required and the machine
+  contention makes one unreliable anyway.
+- Every surviving mutant either gets a test that kills it or a recorded reason it is equivalent.
+- `inventory.json` and `REPORT.md` agreeing on all 19 defect records.
+- The four campaign gates re-run afterwards — `check`, `strict-check`, `capture-lineage --gate`,
+  `vacuity-check --gate` — with `evidence.html` regenerated and `export-warrant` run.
+
+## What this brief does not do
+
+It does not author `.warrant/warrant.toml`. That charter needs a defect-class taxonomy and a risk
+limit, both of which are the reader's call rather than a derivable default, and inventing them
+would put a number on the run's own risk tolerance that nobody chose.

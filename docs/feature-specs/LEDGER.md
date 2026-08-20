@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 76
+**Last allocated:** 80
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -83,3 +83,7 @@
 | PRO-0074 | proctor tui, the supervision surface | 2026-08-20 | Merged |
 | PRO-0075 | what the 0.8.0 campaign found | 2026-08-20 | Merged |
 | PRO-0076 | The guest lane, capped at two, with a queue | 2026-08-20 | Merged `9172bac` (A1-live + A1b settled 2026-08-21) |
+| PRO-0077 | Effect witnesses off glass: subprocess, filesystem, socket | 2026-08-21 | Ready for AI |
+| PRO-0078 | Effect witnesses on glass: device and AX | 2026-08-21 | Ready for AI |
+| PRO-0079 | Tests that mutate and never read back | 2026-08-21 | Ready for AI |
+| PRO-0080 | Gates nobody has watched fail | 2026-08-21 | Ready for AI |
