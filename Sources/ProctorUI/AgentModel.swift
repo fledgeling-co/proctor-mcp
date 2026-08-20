@@ -581,6 +581,17 @@ final class AgentModel {
         let foreground: ForegroundStatus
     }
 
+    /// How long a poll waits before calling the agent unreachable.
+    ///
+    /// The window polls; it never carries a run. So it wants a bound, unlike the
+    /// shim, whose tool calls legitimately take minutes and whose client is left
+    /// unbounded. Five seconds is well past the slowest doctor measured here
+    /// (0.061s, with the grant probe itself capped at 1.5s) and well short of a
+    /// person deciding the window has frozen. Without it a stopped agent left
+    /// `isChecking` true for as long as it stayed stopped, and every later tick
+    /// returned at the guard, so the window kept showing the last good report.
+    nonisolated static let pollTimeoutSeconds = 5
+
     private enum Outcome {
         case success(DoctorReport)
         case failure(String)
@@ -593,6 +604,7 @@ final class AgentModel {
         if requestAccessibility { flags["requestAccessibility"] = .bool(true) }
         if requestScreenRecording { flags["requestScreenRecording"] = .bool(true) }
         let client = SocketClient()
+        client.ioTimeoutSeconds = Self.pollTimeoutSeconds
         defer { client.disconnect() }
         do {
             let response = try client.send(
@@ -615,6 +627,7 @@ final class AgentModel {
     /// slightly stale "last tool" beats it blanking whenever a poll misses.
     private nonisolated static func callActivity() -> ActivitySnapshot? {
         let client = SocketClient()
+        client.ioTimeoutSeconds = Self.pollTimeoutSeconds
         defer { client.disconnect() }
         guard let response = try? client.send(
                 AgentRequest(id: UUID().uuidString, tool: "proctor_recent_activity",
@@ -646,6 +659,7 @@ final class AgentModel {
     /// it and put a person's stop button away.
     private nonisolated static func callHUD(_ action: RunHUDControl) -> HUDState? {
         let client = SocketClient()
+        client.ioTimeoutSeconds = Self.pollTimeoutSeconds
         defer { client.disconnect() }
         guard let response = try? client.send(
                 AgentRequest(id: UUID().uuidString, tool: "proctor_hud",

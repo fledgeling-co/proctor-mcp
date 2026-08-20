@@ -55,6 +55,17 @@ public final class SocketClient {
     private let reader = FrameCodec.Reader()
     public let path: String
 
+    /// Seconds to wait on a send or a reply, or 0 to wait indefinitely.
+    ///
+    /// Zero is the default and is what the shim needs: a tool call carries a
+    /// batch that can legitimately run for minutes, and a bound here would
+    /// abort the run rather than the wait. A caller that is polling sets one,
+    /// because an agent that holds the socket and never answers is the case a
+    /// closed connection does not cover. Measured 2026-08-19: with the agent
+    /// stopped by SIGSTOP a poll sat in `read` past 25 seconds while the status
+    /// window went on showing Ready.
+    public var ioTimeoutSeconds: Int = 0
+
     public init(path: String = Wire.socketPath) { self.path = path }
 
     public var isConnected: Bool { fd >= 0 }
@@ -87,6 +98,26 @@ public final class SocketClient {
                 remedy: "Run `proctor-shim install` to install and load the agent, then `proctor_doctor` to confirm it is ready.")
         }
         fd = s
+        applyIOTimeout()
+    }
+
+    /// A wedged peer is not a closed one. `connect` succeeds against a stopped
+    /// process because the listener is still bound, so only a receive timeout
+    /// distinguishes "answering slowly" from "never answering".
+    private func applyIOTimeout() {
+        guard ioTimeoutSeconds > 0 else { return }
+        var tv = timeval(tv_sec: ioTimeoutSeconds, tv_usec: 0)
+        let len = socklen_t(MemoryLayout<timeval>.size)
+        _ = setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, len)
+        _ = setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, len)
+    }
+
+    /// Whether a short read or write was the timeout expiring rather than the
+    /// peer closing. The two need different messages: one is a wedged agent, the
+    /// other is a gone one.
+    private func expired(_ n: Int) -> Bool {
+        guard ioTimeoutSeconds > 0, n < 0 else { return false }
+        return errno == EAGAIN || errno == EWOULDBLOCK || errno == ETIMEDOUT
     }
 
     public func send(_ request: AgentRequest) throws -> AgentResponse {
@@ -96,6 +127,12 @@ public final class SocketClient {
             var sent = 0
             while sent < raw.count {
                 let n = write(fd, raw.baseAddress!.advanced(by: sent), raw.count - sent)
+                if expired(n) {
+                    throw AgentError(
+                        code: .agentUnavailable,
+                        message: "the Proctor agent did not accept a request within \(ioTimeoutSeconds)s",
+                        remedy: "The agent is running but not answering. Restart it with `launchctl kickstart -k gui/$(id -u)/app.fledgeling.procter.agent`.")
+                }
                 if n <= 0 {
                     throw AgentError(code: .agentUnavailable,
                                      message: "the connection to the agent closed while sending",
@@ -110,6 +147,12 @@ public final class SocketClient {
                 return try JSONDecoder().decode(AgentResponse.self, from: body)
             }
             let n = read(fd, &chunk, chunk.count)
+            if expired(n) {
+                throw AgentError(
+                    code: .agentUnavailable,
+                    message: "the Proctor agent did not answer within \(ioTimeoutSeconds)s",
+                    remedy: "The agent is running but not answering. Restart it with `launchctl kickstart -k gui/$(id -u)/app.fledgeling.procter.agent`.")
+            }
             if n <= 0 {
                 throw AgentError(code: .agentUnavailable,
                                  message: "the connection to the agent closed while waiting for a reply",

@@ -187,6 +187,50 @@ struct FrameCodecTests {
         let back = try JSONDecoder().decode(AgentRequest.self, from: body)
         #expect(back.arguments["text"]?.stringValue == text)
     }
+
+    @Test("the client blocks by default, because a tool call is not a poll")
+    func unboundedByDefault() {
+        // The shim forwards batches that legitimately run for minutes. A bound
+        // here would abort the run rather than the wait, so zero is the default
+        // and only a polling caller opts in.
+        #expect(SocketClient().ioTimeoutSeconds == 0)
+    }
+
+    @Test("a socket that is never going to answer is bounded once a caller asks")
+    func boundedWhenAsked() throws {
+        // A listener nobody accepts on is the wedged-agent shape: connect
+        // succeeds, the reply never comes. Measured on the product with SIGSTOP,
+        // where an unbounded poll sat past 25 seconds and the status window went
+        // on showing Ready.
+        let path = NSTemporaryDirectory() + "proctor-test-\(UUID().uuidString).sock"
+        let listener = socket(AF_UNIX, SOCK_STREAM, 0)
+        try #require(listener >= 0)
+        defer { close(listener); unlink(path) }
+        var addr = sockaddr_un()
+        addr.sun_family = sa_family_t(AF_UNIX)
+        withUnsafeMutableBytes(of: &addr.sun_path) { $0.copyBytes(from: Array(path.utf8)) }
+        let size = socklen_t(MemoryLayout<sockaddr_un>.size)
+        let bound = withUnsafePointer(to: &addr) { ptr in
+            ptr.withMemoryRebound(to: sockaddr.self, capacity: 1) { Darwin.bind(listener, $0, size) }
+        }
+        try #require(bound == 0)
+        try #require(listen(listener, 4) == 0)
+
+        let client = SocketClient(path: path)
+        client.ioTimeoutSeconds = 1
+        defer { client.disconnect() }
+        let started = Date()
+        var thrown: AgentError?
+        do {
+            _ = try client.send(AgentRequest(id: "1", tool: "proctor_doctor", arguments: .object([:])))
+        } catch let error as AgentError {
+            thrown = error
+        }
+        let waited = Date().timeIntervalSince(started)
+        #expect(thrown?.code == .agentUnavailable)
+        #expect(thrown?.message.contains("did not answer within 1s") == true)
+        #expect(waited < 10, "a bounded client waited \(waited)s")
+    }
 }
 
 @Suite("Tool catalogue")
