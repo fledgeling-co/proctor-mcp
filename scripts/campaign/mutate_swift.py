@@ -200,8 +200,13 @@ def main() -> int:
                          "unbuildable": unbuildable},
              "mutants": results}, indent=1) + "\n")
 
-    still_dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True,
-                                 text=True).stdout.strip()
+    # Its own artifact does not count as an unrestored mutation. Without this the
+    # check reports "tree clean after: False" on every run that writes into the
+    # repo, and a safety signal that cries wolf on every run is one nobody reads.
+    still_dirty = "\n".join(
+        line for line in subprocess.run(["git", "status", "--porcelain"],
+                                        capture_output=True, text=True).stdout.splitlines()
+        if line[3:].strip() != args.out).strip()
     scored = killed + survived
     summary = {
         "sites": len(pool), "run": len(chosen), "killed": killed, "survived": survived,

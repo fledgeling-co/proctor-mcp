@@ -1,4 +1,4 @@
-examined  103 file(s) · 1653 @Test function(s) · 5020 assertion call(s)
+examined  103 file(s) · 1656 @Test function(s) · 5026 assertion call(s)
 findings  0
 informational  84 (a conditional enable or a try? is a judgement call, not a defect)
   swallowed     Tests/ProctorAgentTests/AcceptanceE2ETests.swift:23  try? ImageWriter.write(img, to: dest, format: .png, what: "fake-capture")

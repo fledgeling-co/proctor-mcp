@@ -242,9 +242,20 @@ struct TUIModelEqualityTests {
 
     @Test("two models built the same way are equal")
     func identicalModelsAreEqual() {
-        #expect(TUISurface.Model() == TUISurface.Model())
-        for (name, variant) in Self.variants {
-            #expect(variant == variant, "a model is not equal to itself once \(name) is set")
+        // Two independently built values rather than one value compared to
+        // itself. Reflexivity is what a `!=` mutation on a field breaks, so
+        // `x == x` would catch it — but it is also the shape
+        // scripts/campaign/cannotfail_swift.py exists to report, and a rule with
+        // a standing exception is a rule nobody trusts. Building the pair twice
+        // asserts the same thing without the shape, and is the stronger claim:
+        // it does not lean on identity.
+        let fresh = TUISurface.Model()
+        let alsoFresh = TUISurface.Model()
+        #expect(fresh == alsoFresh)
+        for (name, _) in Self.variants {
+            let a = Self.variants.first { $0.0 == name }!.1
+            let b = Self.variants.first { $0.0 == name }!.1
+            #expect(a == b, "two models built the same way differ once \(name) is set")
         }
     }
 

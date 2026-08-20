@@ -146,9 +146,55 @@ their guards are satisfied *here* is a different question from whether they are 
 and it was settled the same way everything else was: each assertion was inverted and each went
 red, so all three ran on this machine rather than returning early. Restored and green.
 
-What this still is not: mutation survival. The nearest thing the campaign has is its armed
-ratio, 43 of 43, which is that measurement run by hand over the campaign's own assertions —
-each one watched to fail with the behaviour removed. It says nothing about the other 5,017.
+## Mutation survival: 41.7%, then 0%
+
+The number the campaign had been recording as unmeasurable is measured. `scripts/campaign/mutate_swift.py`
+applies one mutant at a time to the working tree, runs the project's own `scripts/test.sh`, and
+reverts — six operators that keep the file compiling, comments and string literals masked so
+nothing mutates prose.
+
+**24 mutants over `TUISurface`, `CLISurface`, `StatusChecks` and `RunHUDMenuBar`: 14 killed, 10
+survived, 0 unbuildable.** A 41.7% survival rate, which is in the range the literature would
+predict and is a bad number by design — a first run that returns a bad number is the run working.
+
+The survivors were not scattered, which is the useful part. **Every one of the ten was in
+`TUISurface.Model`'s hand-written `==`.** Flipping any `&&` there to `||` makes two models that
+differ in one field compare equal; flipping a field's `==` to `!=` makes two identical models
+compare unequal. Neither was noticed by 1,666 tests.
+
+That operator has no caller in the product today, which is why it survived and also why it was
+worth pinning rather than deleting. The obvious optimisation for the render loop is to skip a
+redraw when the model has not changed, and an `==` that cannot tell two models apart turns that
+into a screen that stops updating while a run is moving — the one failure this surface exists to
+prevent. It is hand-written, so a field added to `Model` and forgotten in `==` compiles, ships and
+is invisible.
+
+`TUIModelEqualityTests` pins it three ways: two models built the same way are equal, a difference
+in any one of the thirteen fields makes them unequal, and every stored property `Mirror` can see
+has a variant in the list. The last is a floor rather than a mirror of the operator — reflection
+cannot see which fields a hand-written `==` reads — so a new field fails on the count before
+anybody has to notice it is also missing from the comparison.
+
+**Re-measured with the same seed and the same targets, so it is the identical 24 mutants: 24
+killed, 0 survived.** Both runs are kept, `mutation-survival-before.txt` and
+`-after.txt`, so the delta is readable rather than asserted.
+
+What this is not: a number for the whole suite. 24 of 52 sites in 4 of 103 files, chosen by a
+recorded seed. The armed ratio of 43 of 43 remains the hand-run equivalent over the campaign's
+own assertions, and neither number says anything about the other 5,017 assertion calls.
+
+### The runner put a live mutation in the tree, once
+
+Worth recording because the fix is the interesting part. The first re-run was killed by a harness
+timeout between applying a mutant and reverting it, and left two source files carrying live
+mutations with nothing saying so; the suite then went red for a reason nothing on screen
+explained, and an orphaned `swift-test` held the `.build` lock behind it. Reverting after every
+mutant does not cover a process that does not reach the next line.
+
+It now registers `atexit` plus SIGTERM and SIGINT handlers before the first mutation, and writes
+its JSON per mutant rather than at the end, so a killed run leaves both a clean tree and the
+mutants it had already scored. Armed: started a run, killed it mid-mutant, and the tree went from
+one modified file to clean.
 
 ## The live lane, run rather than carried
 
@@ -172,7 +218,7 @@ A resource shared by two tests is a test-order dependency wearing a green tick.
 Measured 20 August 2026 against maestro 2.4.0 and a booted iPhone 16 Pro on iOS 18.2: both tests
 pass, 55.6 seconds for the suite, green twice.
 
-## Ten defects, all ten fixed
+## Eleven defects, all eleven fixed
 
 | id | what | state |
 |---|---|---|
@@ -186,6 +232,7 @@ pass, 55.6 seconds for the suite, green twice.
 | DEF-013 | The walkthrough's first slide diverges from its design of record | fixed |
 | DEF-014 | An assertion that could not fail, and five tests nothing was counting | fixed |
 | DEF-015 | The live Maestro lane could not run here, and its two tests fought over one simulator | fixed |
+| DEF-016 | Model equality could not tell two models apart, and nothing noticed | fixed |
 
 DEF-011 is the one worth reading twice. `StatusChecks` classifies every grant name the health
 report can carry and an unrecognised name falls to `.tool`, deliberately, because tool names
@@ -228,11 +275,9 @@ in flight. Either would have been a vacuous pass.
   the History window reads, so a person is looking at recent runs rather than the whole trail.
   A forensic read of the full trail stays where it was, behind `proctor_policy` action `audit`
   and the keychain.
-- **Mutation survival** — still not measured, and now for a stated reason rather than none:
-  `warrant:assay`'s mutation generator and cannot-fail scanner read TypeScript, JavaScript and
-  Python, and this suite is Swift. The section above implemented the half that could be, and the
-  armed ratio of 43 of 43 is the hand-run equivalent over the campaign's own assertions. Tier 2
-  still needs the real number.
+- **Mutation survival beyond the four files sampled** — 24 of 52 sites in 4 of 103 files were
+  scored, by a recorded seed. The other 99 files have no number, and the honest reading of 0 of 24
+  is "these four files' comparison and boolean logic is watched", not "the suite is sensitive".
 - **The walkthrough's later slides, the takeover overlay and the run HUD under the new build** —
   carried from the previous full run, and the carry is now checked rather than assumed. Every
   published capture's manifest row names the source that draws it and when that source last

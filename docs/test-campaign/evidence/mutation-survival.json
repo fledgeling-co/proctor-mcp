@@ -2,12 +2,12 @@
  "summary": {
   "sites": 52,
   "run": 24,
-  "killed": 14,
-  "survived": 10,
+  "killed": 24,
+  "survived": 0,
   "unbuildable": 0,
   "scored": 24,
-  "survivalRate": 0.4167,
-  "treeCleanAfter": true,
+  "survivalRate": 0.0,
+  "treeCleanAfter": false,
   "targets": [
    "Sources/ProctorCore/TUISurface.swift",
    "Sources/ProctorCore/CLISurface.swift",
@@ -24,9 +24,9 @@
    "before": "&&",
    "after": "||",
    "line": 128,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 11.7
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 10.9
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -35,9 +35,9 @@
    "before": "&&",
    "after": "||",
    "line": 131,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 13.4
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 11.8
   },
   {
    "file": "Sources/ProctorCore/CLISurface.swift",
@@ -48,7 +48,7 @@
    "line": 145,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 13.1
+   "seconds": 11.8
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -57,9 +57,9 @@
    "before": "==",
    "after": "!=",
    "line": 131,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 15.1
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 11.8
   },
   {
    "file": "Sources/ProctorCore/StatusChecks.swift",
@@ -70,7 +70,7 @@
    "line": 110,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 19.7
+   "seconds": 11.2
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -79,9 +79,9 @@
    "before": "&&",
    "after": "||",
    "line": 126,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 12.3
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 10.4
   },
   {
    "file": "Sources/ProctorCore/CLISurface.swift",
@@ -92,7 +92,7 @@
    "line": 127,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 14.7
+   "seconds": 11.6
   },
   {
    "file": "Sources/ProctorCore/CLISurface.swift",
@@ -103,7 +103,7 @@
    "line": 134,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 13.1
+   "seconds": 13.2
   },
   {
    "file": "Sources/ProctorCore/StatusChecks.swift",
@@ -114,7 +114,7 @@
    "line": 128,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 13.9
+   "seconds": 11.8
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -123,9 +123,9 @@
    "before": "&&",
    "after": "||",
    "line": 127,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 13.4
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 12.3
   },
   {
    "file": "Sources/ProctorCore/CLISurface.swift",
@@ -136,7 +136,7 @@
    "line": 128,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 13.6
+   "seconds": 11.4
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -147,7 +147,7 @@
    "line": 494,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 12.1
+   "seconds": 13.6
   },
   {
    "file": "Sources/ProctorCore/RunHUDMenuBar.swift",
@@ -158,7 +158,7 @@
    "line": 32,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 14.0
+   "seconds": 12.7
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -169,7 +169,7 @@
    "line": 129,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 5.4
+   "seconds": 14.0
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -178,9 +178,9 @@
    "before": "==",
    "after": "!=",
    "line": 126,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 11.8
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 13.2
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -189,9 +189,9 @@
    "before": "&&",
    "after": "||",
    "line": 126,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 12.2
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 16.6
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -200,9 +200,9 @@
    "before": "==",
    "after": "!=",
    "line": 130,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 13.5
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 14.2
   },
   {
    "file": "Sources/ProctorCore/CLISurface.swift",
@@ -213,7 +213,7 @@
    "line": 131,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 17.8
+   "seconds": 16.2
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -224,7 +224,7 @@
    "line": 306,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 14.7
+   "seconds": 15.6
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -233,9 +233,9 @@
    "before": "&&",
    "after": "||",
    "line": 127,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 12.2
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 12.3
   },
   {
    "file": "Sources/ProctorCore/StatusChecks.swift",
@@ -246,7 +246,7 @@
    "line": 129,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 13.4
+   "seconds": 12.1
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -255,9 +255,9 @@
    "before": "&&",
    "after": "||",
    "line": 128,
-   "verdict": "SURVIVED",
-   "why": "passed",
-   "seconds": 30.0
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 14.9
   },
   {
    "file": "Sources/ProctorCore/CLISurface.swift",
@@ -268,7 +268,7 @@
    "line": 132,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 14.0
+   "seconds": 15.8
   },
   {
    "file": "Sources/ProctorCore/TUISurface.swift",
@@ -279,7 +279,7 @@
    "line": 309,
    "verdict": "killed",
    "why": "failed",
-   "seconds": 13.3
+   "seconds": 16.4
   }
  ]
 }
