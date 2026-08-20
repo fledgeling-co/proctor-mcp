@@ -1534,3 +1534,49 @@ clean at ratchet 3, `vacuity` 76 findings over 45 requirements.
 exactly 12 unwitnessed requirements; the full set it is drawn from is 18 — REQ-002, 003, 004, 006,
 007, 008, 012, 014, 023, 024, 027, 028, 029, 033, 034, 035, 037, 039. Four are witnessed
 (REQ-009, 015, 017, 020). PRO-0078 covers eight of the eighteen and PRO-0083 the other ten.
+
+### Wave 11a closed: three of three merged (2026-08-21)
+
+PRO-0078 came back **Done** after a gap-fix that closed both failed clauses, judged by a fresh
+re-verifier that had neither built it nor judged it the first time.
+
+**The gap-fix found a defect larger than the clause that exposed it.**
+`capture_with_manifest.py` wrote each row as `file` plus a dict target; `capture-lineage.py` reads
+`path` plus a string. **Every row that tool ever wrote was invisible to the gate checking it.** The
+gate was not lenient, it was reading an empty population and exiting 0 — which is why clause 8
+looked green while examining none of the item's work. Fixed at the writer, two captures retaken
+through it rather than back-filled, because a manifest cannot be reconstructed after the fact.
+Lineage now reads `published 7 · distinct 7 · judged 5 of 7`, ratchet raised 3 → 5, seeded swap
+caught over both new subjects in both directions.
+
+**The sabotages the first verification demanded were built live.** A6/CASE-0069: the control arm
+moved Calculator on the accessibility plane and a separate probe watched the window server's record
+follow it 624,339 → 700,400 with frontmost unchanged; the negative arm quit Calculator, the same
+probe returned `rows 0` from `CGWindowListCopyWindowInfo`, and the identical step on the identical
+handle was refused with `completed 0`, `code actionFailed`, `message "move: cannotComplete"`.
+A4/CASE-0067: ten identical scrolls posted from another process, tagged → all ten reach the tail
+tap with the agent's own event interleaved proving the block was up, probe-marked → two survive and
+the window server's own session counter independently agrees at two.
+
+**Building that sabotage exposed an instrument fault that would have inverted the result.**
+`survivedToTailTap` keys on the probe's mark, which the tagged arm cannot carry by construction, so
+it reads 0 regardless of what happened. Read off that field, the sabotage would have reported the
+opposite of the truth. The probe now counts by source pid as well.
+
+**Three registry collisions reconciled in one merge**, all from one cause — three runners each read
+a registry, each correctly took the next free id, none could see the others.
+
+- Cases: PRO-0078's CASE-0059..0066 renumbered to CASE-0064..0071, spec references moved with them.
+  71 cases, ids unique, nothing dropped.
+- Defects: PRO-0078's DEF-020..024 renumbered to DEF-025..029; wave 10's four backfilled into the
+  inventory as fixed, with a note saying why they were missing; DEF-019 flipped to fixed. The
+  registry now holds 28 and agrees with the report.
+
+**State after the wave.** Gate 1,818 tests in 215 suites, exit 0. `strict-check` 70 of 70 with the
+ratchet raised 63 → 70. `capture-lineage --gate` exit 0 at ratchet 5. `campaign.py check` **exits 1,
+correctly**: 11 of 22 external effects witnessed, and the ten still unwitnessed are exactly
+PRO-0083's set — REQ-023, 024, 027, 028, 029, 033, 034, 035, 037, 039. REQ-007 carries a witness
+case at `inconclusive` on a ceiling checked in source twice.
+
+**Wave 11b is next and is four items:** PRO-0080 (both dependencies now merged), PRO-0081,
+PRO-0082, PRO-0083.
