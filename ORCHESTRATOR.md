@@ -1517,3 +1517,20 @@ inodes, so the comparison is near-tautological — and it sits inside `if let be
 skips silently rather than failing when the attribute is absent. It was not inverted in the arming
 run. CASE-0061's count does not rest on it (`lines.count == emitted` is armed), which is why the
 clause passes and this is recorded as a defect instead.
+
+### Wave 11a merged: two of three (2026-08-21)
+
+PRO-0077 merged clean. PRO-0079 conflicted on `docs/test-campaign/cases.json` — both branches
+allocated `CASE-0059` against a shared base of 58. Resolved by keeping PRO-0077's CASE-0059..0062
+and renumbering PRO-0079's row to CASE-0063; both sides kept, nothing dropped. That is the second
+shared-registry collision this wave after the defect ids, and PRO-0078 will make a third when it
+lands, since it also allocated CASE-0059..0066.
+
+Gate after both merges: **1,818 tests in 215 suites, exit 0.** Campaign gates: `check` exit 0,
+`strict-check` 63 of 63 with the ratchet raised 58 → 63 in the same commit, `capture-lineage --gate`
+clean at ratchet 3, `vacuity` 76 findings over 45 requirements.
+
+**The capped-list finding is now provable rather than inferred.** `campaign.py check` prints
+exactly 12 unwitnessed requirements; the full set it is drawn from is 18 — REQ-002, 003, 004, 006,
+007, 008, 012, 014, 023, 024, 027, 028, 029, 033, 034, 035, 037, 039. Four are witnessed
+(REQ-009, 015, 017, 020). PRO-0078 covers eight of the eighteen and PRO-0083 the other ten.
