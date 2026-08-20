@@ -313,6 +313,49 @@ struct GuestPoolWiringTests {
                 "the other attachment's slot must be untouched")
     }
 
+    @Test("detach reports whether the guest actually stopped, not what it intended")
+    func detachReportsTheMeasuredOutcome() async throws {
+        // `guestStopped` used to be computed from `startedByThisAgent` BEFORE
+        // the stop ran, so a stop that failed still reported success while the
+        // VM kept running and was no longer in anybody's count.
+        let h = await session(records: [Self.macRecord("one", running: false)])
+        try await attach(h.session, "one", as: "sessA")
+
+        // The provider will refuse the stop.
+        h.provider.failNext = GuestProviderError.commandFailed(
+            tool: "tart", action: "stop", exit: 1, stderr: "busy")
+
+        let identity = RunSessionIdentity(project: "p", connection: "A", key: "sessA")
+        let out = try await SessionIdentity.$current.withValue(identity) {
+            try await h.session.guest(action: "detach", guest: nil, provider: nil, newName: nil)
+        }
+        #expect(out["guestStopped"]?.boolValue == false,
+                "a stop that failed must not be reported as a stop")
+        // The slot still comes back: the attachment is over either way, and a
+        // slot held by a guest nobody is driving helps nobody.
+        #expect(await h.session.runScheduler.snapshot().active.isEmpty)
+    }
+
+    @Test("an attached session polling a host-only tool is not treated as idle")
+    func hostOnlyCallsCountAsLife() async throws {
+        // The idle ceiling reclaims a slot whose holder has stopped working. A
+        // session driving the guest through `proctor_doctor` polls only host
+        // tools, and touching the attachment solely on forwarded calls made it
+        // look abandoned while it was plainly alive.
+        let h = await session()
+        try await attach(h.session, "one", as: "sessA")
+        let identity = RunSessionIdentity(project: "p", connection: "A", key: "sessA")
+        let before = await h.session.guestAttachments["sessA"]?.lastUsedAt
+
+        await SessionIdentity.$current.withValue(identity) {
+            let request = AgentRequest(id: "1", tool: "proctor_doctor", arguments: .object([:]))
+            _ = try? await h.session.forwardToGuestIfAttached(request)
+        }
+        let after = await h.session.guestAttachments["sessA"]?.lastUsedAt
+        #expect(before != nil && after != nil)
+        #expect(after! >= before!, "a host-only call from an attached session is a sign of life")
+    }
+
     // MARK: - A12
 
     @Test("the pool report says capacity, who holds what, and how many wait")

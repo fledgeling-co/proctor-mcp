@@ -288,7 +288,10 @@ actor RunScheduler {
         let occupancy = poolOccupancy()
         for lane in lanes {
             guard let key = lane.poolKey else { continue }
-            if (occupancy[key] ?? 0) >= (capacities[key] ?? 1) { return false }
+            // Unbounded when unstated, matching `RunQueuePlan.grantable`. The
+            // two must agree or the fast path and the scan would answer
+            // differently for the same lanes.
+            if (occupancy[key] ?? 0) >= (capacities[key] ?? GuestPool.unbounded) { return false }
         }
         return true
     }

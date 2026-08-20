@@ -367,10 +367,18 @@ public struct RunQueuePlan: Sendable {
         var granted: [Int] = []
 
         /// Whether this entry's counted lanes all have room left right now.
+        ///
+        /// **A pool with no stated capacity is UNBOUNDED, not one.** Defaulting
+        /// to 1 turned any pool the caller forgot to describe into a mutex,
+        /// which is the wrong answer for the linux and windows pools the spec
+        /// says are limited by their provider rather than by Proctor. The macOS
+        /// cap cannot go missing by omission: `GuestPool.capacities` names every
+        /// platform, and a test fails if a new one is ever added without a
+        /// capacity.
         func poolsHaveRoom(_ entry: RunTicketInfo) -> Bool {
             for lane in entry.lanes {
                 guard let key = lane.poolKey else { continue }
-                let capacity = capacities[key] ?? 1
+                let capacity = capacities[key] ?? GuestPool.unbounded
                 if (counts[key] ?? 0) >= capacity { return false }
             }
             return true

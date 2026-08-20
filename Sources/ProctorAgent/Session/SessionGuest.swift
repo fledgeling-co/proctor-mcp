@@ -394,6 +394,11 @@ extension Session {
     /// is what makes the guarantee real rather than asserted.
     func forwardToGuestIfAttached(_ request: AgentRequest) async throws -> JSONValue? {
         guard let attachment = currentAttachment else { return nil }
+        // Any call from an attached session is a sign of life, including one
+        // that stays here. Touching only on the forwarded ones made a session
+        // that polls `proctor_doctor` look idle, and the idle ceiling would then
+        // reclaim a slot whose holder was plainly still working.
+        touchGuestAttachment()
         // The host keeps the tools that answer about THIS Mac: the pool, the
         // trail, the health report, the surfaces a person is looking at. A
         // denylist, so a tool added later forwards by default rather than
@@ -511,11 +516,18 @@ extension Session {
         attachment.slotHeld = false
         guestAttachments[key] = attachment
 
+        var stopped = false
         if stopGuest && attachment.startedByThisAgent {
-            // Through the same audited path a person's stop takes, so A9's
+            // Through the same audited mutation a person's stop takes, so A9's
             // "both stay gated and recorded" holds for the pool's own stop.
-            _ = try? await stopGuestForRelease(attachment)
+            //
+            // The OUTCOME is kept, not discarded. A `try?` that dropped it let
+            // `detach` report `guestStopped: true` off the intent rather than
+            // the result, so a stop that failed still said it had stopped while
+            // the VM kept running uncounted.
+            stopped = await stopGuestForRelease(attachment)
         }
+        lastReleaseStoppedGuest = stopped
 
         if let link = guestLinks.removeValue(forKey: key) { await link.close() }
         if let ticket = guestTickets.removeValue(forKey: key) {
@@ -537,25 +549,24 @@ extension Session {
         return true
     }
 
-    private func stopGuestForRelease(_ attachment: GuestAttachment) async throws -> GuestRecord? {
-        let providers = try resolvedGuestProviders()
-        guard let adapter = providers.first(where: { $0.id == attachment.provider }) else {
-            return nil
-        }
+    /// Stop a guest this agent started, through `guestMutate` — the same gated,
+    /// audited path `proctor_guest action "stop"` takes. Returns whether the
+    /// guest actually stopped, which the caller reports rather than assumes.
+    private func stopGuestForRelease(_ attachment: GuestAttachment) async -> Bool {
         do {
-            let after = try await adapter.stop(name: attachment.name)
-            auditSink(AuditRecord(timestamp: clock(), tool: AuditTool.guestStop,
-                                  bundleId: "guest:\(attachment.provider):\(attachment.name)",
-                                  kind: "stop", outcome: AuditRecord.Outcome.ok,
-                                  reason: "\(attachment.name) is \(after.state); "
-                                        + "this agent started it"))
-            return after
+            _ = try await guestMutate(action: "stop", tool: AuditTool.guestStop,
+                                      guest: attachment.name, provider: attachment.provider)
+            return true
         } catch {
+            // Recorded and reported, never swallowed: a guest that would not
+            // stop is still running and is no longer in anybody's count, which
+            // is a thing the operator has to be able to find out about.
             auditSink(AuditRecord(timestamp: clock(), tool: AuditTool.guestStop,
                                   bundleId: "guest:\(attachment.provider):\(attachment.name)",
                                   kind: "stop", outcome: AuditRecord.Outcome.failed,
-                                  reason: "\(error)"))
-            return nil
+                                  reason: "the slot was released but \(attachment.name) did not "
+                                        + "stop: \((error as? AgentError)?.message ?? "\(error)")"))
+            return false
         }
     }
 }
@@ -691,9 +702,11 @@ extension Session {
                 remedy: "Nothing to detach. proctor_guest action \"list\" shows the guests this "
                       + "Mac can reach.")
         }
-        let stopped = attachment.startedByThisAgent
         await releaseGuestAttachment(reason: "detached by the session that attached it",
                                      stopGuest: true)
+        // Read AFTER the release, so this is what happened rather than what was
+        // going to be attempted.
+        let stopped = lastReleaseStoppedGuest
         return .object([
             "attached": .bool(false),
             "machine": try JSONValue.encode(attachment.machine),
@@ -923,7 +936,17 @@ extension Session {
         guard let attachment = currentAttachment else { return nil }
         let providers = try? resolvedGuestProviders()
         guard let adapter = providers?.first(where: { $0.id == attachment.provider }) else {
-            return nil
+            // **A11 names "the provider died" as a way a guest vanishes**, so a
+            // provider that is no longer resolvable is a disappearance and not
+            // an all-clear. Returning nil here reported everything fine and left
+            // the slot held by a machine nothing could see any more.
+            await releaseGuestAttachment(
+                reason: "the provider that reached this guest is gone; slot released",
+                stopGuest: false)
+            return GuestLinkRefusal.vanished(
+                machine: attachment.machine,
+                reason: "\(attachment.provider) is no longer available on this Mac, so the guest "
+                      + "cannot be reached or confirmed.")
         }
         let stillRunning: Bool
         do {

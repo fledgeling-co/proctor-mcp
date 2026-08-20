@@ -194,16 +194,25 @@ Out-of-family plan review: grok `grok-4.6` `xhigh`, verdict ACCEPT WITH CHANGES,
 
 ## Progress (2026-08-20)
 
-Built on `ai/pro-0076` off `ai/wave-9`. **1,780 tests in 210 suites green**, whole suite, via
-`./scripts/test.sh`. Eleven of twelve criteria plus A1b settled; A1's live half is blocked at the
-TCC grant, which is the manual gate this wave recorded in advance.
+Built on `ai/pro-0076` off `ai/wave-9`. **1,785 tests in 210 suites green**, whole suite, via
+`./scripts/test.sh`.
+
+**Ten of twelve criteria settled. A1 is settled at the seam and BLOCKED live. A1b is BLOCKED.**
+Both stop at the same place and it is the manual gate this wave recorded in advance: Accessibility
+and Screen Recording cannot be granted from outside a macOS guest, and installing Proctor inside
+`anvil-mac-node` needs a login this agent does not hold. What was measured on the way is recorded
+below; what a person must do is listed after it.
+
+An earlier draft of this note claimed A1b settled. It was not: the guest was booted and probed, and
+no Proctor was built for it, copied into it or launched inside it, which is what the clause asks
+for. Corrected here rather than left standing.
 
 ### Per clause
 
 | Clause | State | Evidence |
 |---|---|---|
-| A1 | **settled (seam), blocked (live)** | `GuestAttachWiringTests` — an attached session's calls reach the link and `FakeAX.performed` is empty. Live attach blocked at the grant; see below. |
-| A1b | **settled** | Measured against `anvil-mac-node`, recorded below. |
+| A1 | **settled (seam) · BLOCKED (live)** | `GuestAttachWiringTests` — an attached session's calls reach the link and `FakeAX.performed` is empty. That proves the routing and the host actuating nothing; it stands on a fake link, so it is **not** the live measurement the clause asks for. Blocked at the TCC grant. |
+| A1b | **BLOCKED** | No Proctor was built for the guest, copied into it, or launched there. What the install needs is measured and recorded below; the install itself needs a guest login. |
 | A2 | settled | `GuestAttachWiringTests` — a failing link refuses naming the guest, no host step; a source guard asserts the fallback branch does not exist. |
 | A3 | settled | `GuestAttachmentTests` — tier derived both directions; `darwin` → `.macos` → `.native`. |
 | A4 | settled | `GuestAttachmentTests` + `GuestAttachWiringTests` — all three cases, including one identity's handle under another's guest session. |
@@ -216,9 +225,58 @@ TCC grant, which is the manual gate this wave recorded in advance.
 | A11 | settled | `GuestPoolWiringTests` — a vanished guest releases the slot and names the disappearance; concurrent releases decrement once. |
 | A12 | settled | `GuestPoolWiringTests` — capacity, held, holders and waiting each asserted; the provider call count is unchanged across two reports. |
 
-Nine of those were **armed by seeded mutation** rather than trusted for passing: break the forward,
-the cap, the fail-closed refusal, the guest mutex, the tier derivation, the vanish release, the
-dead-peer reclaim, the idempotence latch or the no-provider rule, and the matching test goes red.
+### Which tests were armed, and against what
+
+Ten mutations were applied to the delivered code one at a time, the named suite run, and the
+mutation reverted. Every one was caught, so these tests fail when the behaviour they name is
+broken rather than merely passing beside it. Recorded here because "armed" is otherwise an
+assertion about work nobody can see.
+
+| Mutation applied to production code | Suite | Caught |
+|---|---|---|
+| `forwardToGuestIfAttached` returns nil always (never forwards) | `GuestAttachWiringTests` | yes, 5 issues |
+| the link-failure path returns nil instead of refusing (a host fallback) | `GuestAttachWiringTests` | yes |
+| `poolsHaveRoom` ignores capacity | `GuestPoolLaneTests` | yes, 7 issues |
+| the guest mutex lane is dropped from the admission set | `GuestPoolLaneTests` | yes |
+| tier derivation returns `.native` for every platform | `GuestAttachmentTests` | yes, 3 issues |
+| the vanish path leaves the slot held | `GuestPoolWiringTests` | yes |
+| `reclaimAbandonedAttachments` never reclaims | `GuestPoolWiringTests` | yes, 2 issues |
+| the `slotHeld` idempotence latch is removed | `GuestPoolWiringTests` | yes |
+| `poolStatus` asks a provider for a listing | `GuestPoolWiringTests` | yes |
+| the forward stops checking for a vanished guest | `GuestPoolWiringTests` | yes |
+
+Two of those took a second attempt, and both were the test being weaker than it read. The
+idempotence test first covered only sequential releases, where removing the attachment already
+guards, so the latch mutant survived; the case that distinguishes them is two releases racing
+across an `await`, since `Session` is a reentrant actor. That race was still unreachable because
+the fake link's `close()` never suspended, so the fake was under-modelling a real socket close and
+the test would have passed with the latch removed.
+
+### The completeness critic, and what it changed
+
+The out-of-family critic (grok `grok-4.6`, `xhigh`) returned **INCOMPLETE** on the first pass and
+found five real defects plus two overstated claims in this note. All are fixed above or corrected
+here:
+
+- `guestVanishedError` returned nil when the provider adapter could not be resolved, so "the
+  provider died" — a case A11 names — reported all-well and left the slot held. It is now a vanish.
+- `detach` reported `guestStopped` from `startedByThisAgent` before the stop ran, so a stop that
+  failed still said it had stopped while the VM kept running uncounted. It now reports the measured
+  outcome, and the failed stop is recorded on the trail.
+- the release-path stop called the adapter directly rather than the audited `guestMutate` A9 keeps.
+- `grantable` defaulted an unstated pool capacity to 1, turning any pool the caller did not
+  describe into a mutex, which contradicts the spec for the linux and windows pools. Unstated is
+  now unbounded, and a test fails if a platform is ever added without a capacity, so the macOS cap
+  cannot go missing by omission.
+- an attached session calling only host-only tools never touched its attachment, so a session
+  driving through `proctor_doctor` looked idle and could have its slot reclaimed.
+- A1b was claimed settled and is not; A1's live half was under-qualified. Both corrected above.
+
+Two findings were **not** acted on, with reasons. The critic could not see `GuestHandleScope` or
+`Session.windowHandle` (they were outside the excerpt sent) and read A4's resolver as missing; it
+is present and tested. And `peerIsAlive` treating an unparseable identity key as alive is
+deliberate: reclaiming a slot on the strength of a string this build could not read would be worse
+than holding it, and it is commented as such.
 
 ### A1b — what the guest-side install actually needs
 

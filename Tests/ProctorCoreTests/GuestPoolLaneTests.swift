@@ -101,6 +101,35 @@ struct GuestPoolLaneTests {
         #expect(GuestPool.key(for: .macos) == "macos")
     }
 
+    @Test("every platform has a stated capacity, so the macOS cap cannot go missing")
+    func everyPlatformIsInTheTable() {
+        // The guard behind the unbounded default. `grantable` treats a pool with
+        // no stated capacity as uncapped, which is right for a pool Proctor has
+        // no rule for and catastrophic for macOS. This is what stops a platform
+        // being added later and quietly escaping Apple's two.
+        for platform in [MachinePlatform.macos, .linux, .windows] {
+            let key = GuestPool.key(for: platform)
+            #expect(GuestPool.capacities[key] != nil,
+                    "\(key) must carry a capacity")
+            #expect(GuestPool.capacities[key] == GuestPool.capacity(for: platform))
+        }
+        #expect(GuestPool.capacities.count == 3,
+                "a platform added to MachinePlatform must be given a capacity here")
+    }
+
+    @Test("a pool with no stated capacity is unbounded, not a mutex")
+    func unstatedCapacityIsUnbounded() {
+        // Defaulting to 1 made any pool the caller forgot to describe into a
+        // mutex, which contradicts the spec for the linux and windows pools:
+        // those are limited by their provider, not by Proctor.
+        let waiting = [ticket(1, [.pool("linux")], session: "s1"),
+                       ticket(2, [.pool("linux")], session: "s2"),
+                       ticket(3, [.pool("linux")], session: "s3")]
+        let granted = RunQueuePlan.grantable(waiting: waiting, busy: [], held: false,
+                                             occupancy: [:], capacities: [:])
+        #expect(granted == [1, 2, 3])
+    }
+
     // MARK: - A6
 
     @Test("two sessions naming the same guest serialise even with a slot free")
