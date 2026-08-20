@@ -1,0 +1,1538 @@
+{
+  "id": 3,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"backend\" : \"native\",\n  \"completed\" : 1,\n  \"finalHash\" : \"dd234acda44b2fd63615ee478bd0d2ab80b95212432602c6aa3aeb006789e3a8\",\n  \"foreground\" : {\n    \"declaredCertain\" : 0,\n    \"declaredConditional\" : 0,\n    \"measured\" : 0,\n    \"ranInForeground\" : false,\n    \"requestIgnored\" : false,\n    \"totalSteps\" : 1,\n    \"unproven\" : 0,\n    \"unrequestedForeground\" : 0\n  },\n  \"machine\" : {\n    \"kind\" : \"host\",\n    \"platform\" : \"macos\",\n    \"tier\" : \"native\"\n  },\n  \"steps\" : [\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1106,\n              \"y\" : 533\n            },\n            \"help\" : \"Delete the last digit or operation entered (long press to delete all)\",\n            \"id\" : \"nd:0091dbd934a28f41\",\n            \"identifier\" : \"Delete\",\n            \"label\" : \"Delete\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 908,\n              \"y\" : 533\n            },\n            \"help\" : \"Add the displayed value to the memory\",\n            \"id\" : \"nd:06aa308eab3f97bb\",\n            \"identifier\" : \"MemoryAdd\",\n            \"label\" : \"Add to Memory\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1238,\n              \"y\" : 533\n            },\n            \"id\" : \"nd:0b7ec16e685422c9\",\n            \"identifier\" : \"Percent\",\n            \"label\" : \"Per cent\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 1,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 14,\n              \"w\" : 14,\n              \"x\" : 765,\n              \"y\" : 419\n            },\n            \"id\" : \"nd:0c70ea584e150158\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 974,\n              \"y\" : 533\n            },\n            \"help\" : \"Subtract the displayed value from the memory\",\n            \"id\" : \"nd:0c8f7084ce09724e\",\n            \"identifier\" : \"MemorySubtract\",\n            \"label\" : \"Subtract from Memory\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1238,\n              \"y\" : 695\n            },\n            \"id\" : \"nd:10ec7edc7ed3b81d\",\n            \"identifier\" : \"Three\",\n            \"label\" : \"3\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1304,\n              \"y\" : 641\n            },\n            \"id\" : \"nd:148607e669589d17\",\n            \"identifier\" : \"Subtract\",\n            \"label\" : \"Subtract\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"frame\" : {\n              \"h\" : 26,\n              \"w\" : 128,\n              \"x\" : 1236,\n              \"y\" : 459\n            },\n            \"id\" : \"nd:17f4929c6cc1d85d\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"\u200e1,861.20\u200e-\u200e690\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1106,\n              \"y\" : 587\n            },\n            \"id\" : \"nd:22103e54da0816ad\",\n            \"identifier\" : \"Seven\",\n            \"label\" : \"7\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 14,\n              \"w\" : 14,\n              \"x\" : 765,\n              \"y\" : 419\n            },\n            \"id\" : \"nd:244ffdcb72ab9244\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 842,\n              \"y\" : 533\n            },\n            \"id\" : \"nd:29fa9ba6620e221f\",\n            \"identifier\" : \"MemoryClear\",\n            \"label\" : \"Clear Memory\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXIncrement\",\n              \"AXDecrement\",\n              \"AXDelete\",\n              \"AXShowMenu\",\n              \"AXCancel\",\n              \"AXPress\",\n              \"Name:Move previous\\nTarget:0x0\\nSelector:(null)\",\n              \"Name:Remove from toolbar\\nTarget:0x0\\nSelector:(null)\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 52,\n              \"w\" : 44,\n              \"x\" : 1326,\n              \"y\" : 400\n            },\n            \"id\" : \"nd:2ae67ac3e01fbd30\",\n            \"identifier\" : \"Mode: scientific; unitConversion: false\",\n            \"label\" : \"Mode\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : false,\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXShowMenu\"\n            ],\n            \"childCount\" : 2,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 52,\n              \"w\" : 674,\n              \"x\" : 700,\n              \"y\" : 400\n            },\n            \"id\" : \"nd:2b3fdc2c2f5795dd\",\n            \"role\" : \"AXToolbar\",\n            \"roleDescription\" : \"toolbar\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1304,\n              \"y\" : 533\n            },\n            \"id\" : \"nd:2f2b0577b667da3a\",\n            \"identifier\" : \"Divide\",\n            \"label\" : \"Divide\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 908,\n              \"y\" : 641\n            },\n            \"help\" : \"Calculate an arbitrary root of a value (y-th root of x)\",\n            \"id\" : \"nd:2fd0188b0b7d8c26\",\n            \"identifier\" : \"Root\",\n            \"label\" : \"Y root of X\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1172,\n              \"y\" : 641\n            },\n            \"id\" : \"nd:3015a9135aceaba7\",\n            \"identifier\" : \"Five\",\n            \"label\" : \"5\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 1,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 408,\n              \"w\" : 674,\n              \"x\" : 700,\n              \"y\" : 400\n            },\n            \"id\" : \"nd:3c2b4f7503529a65\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"subrole\" : \"AXHostingView\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 974,\n              \"y\" : 749\n            },\n            \"help\" : \"Enter pi (3.14159\u2026)\",\n            \"id\" : \"nd:3c3f5963720bfe49\",\n            \"identifier\" : \"Pi\",\n            \"label\" : \"Pi\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 776,\n              \"y\" : 533\n            },\n            \"id\" : \"nd:3c69a53e49aa5b3d\",\n            \"identifier\" : \"CloseParenthesis\",\n            \"label\" : \"Close Bracket\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 842,\n              \"y\" : 695\n            },\n            \"help\" : \"Calculate the cosine of a value\",\n            \"id\" : \"nd:3dd5ff067ffd85b6\",\n            \"identifier\" : \"Cosine\",\n            \"label\" : \"Cosine\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 776,\n              \"y\" : 641\n            },\n            \"help\" : \"Calculate the square root of a value\",\n            \"id\" : \"nd:3e079b3fbbc98058\",\n            \"identifier\" : \"SquareRoot\",\n            \"label\" : \"Square Root\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 974,\n              \"y\" : 641\n            },\n            \"help\" : \"Calculate the natural logarithm of a value\",\n            \"id\" : \"nd:3f249d0214e4f2a3\",\n            \"identifier\" : \"LogarithmNatural\",\n            \"label\" : \"Natural Log\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 842,\n              \"y\" : 749\n            },\n            \"help\" : \"Calculate the hyperbolic cosine of a value\",\n            \"id\" : \"nd:3f4bdcf4fa4147bb\",\n            \"identifier\" : \"HyperbolicCosine\",\n            \"label\" : \"Hyperbolic Cosine\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 16,\n              \"x\" : 718,\n              \"y\" : 418\n            },\n            \"id\" : \"nd:408d7ee4f729e57b\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"close button\",\n            \"subrole\" : \"AXCloseButton\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1238,\n              \"y\" : 587\n            },\n            \"id\" : \"nd:42f9ffca8b73f64b\",\n            \"identifier\" : \"Nine\",\n            \"label\" : \"9\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 908,\n              \"y\" : 749\n            },\n            \"help\" : \"Calculate the hyperbolic tangent of a value\",\n            \"id\" : \"nd:478a6f26df962586\",\n            \"identifier\" : \"HyperbolicTangent\",\n            \"label\" : \"Hyperbolic Tangent\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1172,\n              \"y\" : 533\n            },\n            \"id\" : \"nd:48a3cd649677e8b4\",\n            \"identifier\" : \"AllClear\",\n            \"label\" : \"All Clear\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 710,\n              \"y\" : 695\n            },\n            \"help\" : \"Calculate the factorial of a value\",\n            \"id\" : \"nd:4bd3a69f52d6f9dd\",\n            \"identifier\" : \"Factorial\",\n            \"label\" : \"X Factorial\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 908,\n              \"y\" : 695\n            },\n            \"help\" : \"Calculate the tangent of a value\",\n            \"id\" : \"nd:507a8d9fa8fac8ff\",\n            \"identifier\" : \"Tangent\",\n            \"label\" : \"Tangent\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 710,\n              \"y\" : 533\n            },\n            \"id\" : \"nd:5cca72d8caed800c\",\n            \"identifier\" : \"OpenParenthesis\",\n            \"label\" : \"Open Bracket\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1040,\n              \"y\" : 749\n            },\n            \"help\" : \"Change angular units to radians\",\n            \"id\" : \"nd:6469172216d598d3\",\n            \"identifier\" : \"Radians\",\n            \"label\" : \"Radians\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXScrollLeftByPage\",\n              \"AXScrollRightByPage\",\n              \"AXScrollUpByPage\",\n              \"AXScrollDownByPage\",\n              \"Name:Copy\\nTarget:0x0\\nSelector:(null)\"\n            ],\n            \"childCount\" : 1,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 29.5,\n              \"w\" : 654,\n              \"x\" : 710,\n              \"y\" : 457.5\n            },\n            \"id\" : \"nd:66927662650af611\",\n            \"identifier\" : \"StandardResultView\",\n            \"label\" : \"Last Expression\",\n            \"role\" : \"AXScrollArea\",\n            \"roleDescription\" : \"scroll area\",\n            \"writableAttributes\" : [\n              \"AXMakeScreenRectVisible\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 974,\n              \"y\" : 695\n            },\n            \"help\" : \"Enter e (2.71828\u2026)\",\n            \"id\" : \"nd:6eac88babe59c47b\",\n            \"identifier\" : \"EulerNumber\",\n            \"label\" : \"e\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 52,\n            \"enabled\" : true,\n            \"focused\" : true,\n            \"frame\" : {\n              \"h\" : 354,\n              \"w\" : 674,\n              \"x\" : 700,\n              \"y\" : 453\n            },\n            \"id\" : \"nd:71dc4b41eb8abaa8\",\n            \"identifier\" : \"CalculatorKeypadView\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXRaise\"\n            ],\n            \"childCount\" : 5,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 408,\n              \"w\" : 674,\n              \"x\" : 700,\n              \"y\" : 400\n            },\n            \"id\" : \"nd:73e4c14bae494dce\",\n            \"identifier\" : \"main\",\n            \"role\" : \"AXWindow\",\n            \"roleDescription\" : \"standard window\",\n            \"subrole\" : \"AXStandardWindow\",\n            \"title\" : \"Calculator\",\n            \"writableAttributes\" : [\n              \"AXPosition\",\n              \"AXSections\",\n              \"AXMain\",\n              \"AXMinimized\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1172,\n              \"y\" : 695\n            },\n            \"id\" : \"nd:76870fdce01eb841\",\n            \"identifier\" : \"Two\",\n            \"label\" : \"2\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"frame\" : {\n              \"h\" : 36,\n              \"w\" : 88,\n              \"x\" : 1276,\n              \"y\" : 489\n            },\n            \"id\" : \"nd:7719ef35ef05523e\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"\u200e1,171.2\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1040,\n              \"y\" : 587\n            },\n            \"help\" : \"Calculate 10 to the power of a value\",\n            \"id\" : \"nd:7804da0a3f9df69c\",\n            \"identifier\" : \"ExponentialBase10\",\n            \"label\" : \"10 to the X\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1172,\n              \"y\" : 587\n            },\n            \"id\" : \"nd:80d430f6d9f630bf\",\n            \"identifier\" : \"Eight\",\n            \"label\" : \"8\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1040,\n              \"y\" : 641\n            },\n            \"help\" : \"Calculate the logarithm to base 10 of a value\",\n            \"id\" : \"nd:83e9deb3c525af3b\",\n            \"identifier\" : \"LogarithmBase10\",\n            \"label\" : \"Log Base 10\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 710,\n              \"y\" : 587\n            },\n            \"help\" : \"Show alternative functions for some buttons\",\n            \"id\" : \"nd:87dd585879ad228b\",\n            \"identifier\" : \"Shift\",\n            \"label\" : \"Secondary Functions\",\n            \"role\" : \"AXCheckBox\",\n            \"roleDescription\" : \"toggle button\",\n            \"subrole\" : \"AXToggle\",\n            \"value\" : \"0\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 842,\n              \"y\" : 641\n            },\n            \"help\" : \"Calculate the cube root of a value\",\n            \"id\" : \"nd:882ec0e7cccdab0f\",\n            \"identifier\" : \"CubeRoot\",\n            \"label\" : \"Cube Root\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 710,\n              \"y\" : 749\n            },\n            \"help\" : \"Generate a random number between 0 and 1\",\n            \"id\" : \"nd:897e14eb57898fc4\",\n            \"identifier\" : \"Random\",\n            \"label\" : \"Random Number\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 16,\n              \"x\" : 741,\n              \"y\" : 418\n            },\n            \"id\" : \"nd:8a10a814b13d0169\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"minimise button\",\n            \"subrole\" : \"AXMinimizeButton\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1304,\n              \"y\" : 749\n            },\n            \"id\" : \"nd:8f0cca6a3dac389b\",\n            \"identifier\" : \"Equals\",\n            \"label\" : \"Equals\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 974,\n              \"y\" : 587\n            },\n            \"help\" : \"Calculate e to the power of a value\",\n            \"id\" : \"nd:91fef6408bfb6a21\",\n            \"identifier\" : \"Expontential\",\n            \"label\" : \"e to the X\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1238,\n              \"y\" : 641\n            },\n            \"id\" : \"nd:93e789889c710a5e\",\n            \"identifier\" : \"Six\",\n            \"label\" : \"6\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 1,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 408,\n              \"w\" : 674,\n              \"x\" : 700,\n              \"y\" : 400\n            },\n            \"id\" : \"nd:9533ca169d10966a\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"subrole\" : \"AXHostingView\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\",\n              \"AXShowMenu\"\n            ],\n            \"childCount\" : 1,\n            \"enabled\" : false,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 16,\n              \"x\" : 764,\n              \"y\" : 418\n            },\n            \"id\" : \"nd:977952ba5b289289\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"zoom button\",\n            \"subrole\" : \"AXZoomButton\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1172,\n              \"y\" : 749\n            },\n            \"id\" : \"nd:9aa33fa2d7bfd31e\",\n            \"identifier\" : \"Zero\",\n            \"label\" : \"0\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 776,\n              \"y\" : 695\n            },\n            \"help\" : \"Calculate the sine of a value\",\n            \"id\" : \"nd:9b3eb493a17f77dd\",\n            \"identifier\" : \"Sine\",\n            \"label\" : \"Sine\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 842,\n              \"y\" : 587\n            },\n            \"help\" : \"Calculate the cube of a value\",\n            \"id\" : \"nd:9d28dc377524a1df\",\n            \"identifier\" : \"Cube\",\n            \"label\" : \"X Cubed\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1106,\n              \"y\" : 749\n            },\n            \"help\" : \"Change sign of a value\",\n            \"id\" : \"nd:9e49f8ea436a68fc\",\n            \"identifier\" : \"Negate\",\n            \"label\" : \"Change Sign\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1106,\n              \"y\" : 641\n            },\n            \"id\" : \"nd:a1a41a9738327caa\",\n            \"identifier\" : \"Four\",\n            \"label\" : \"4\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1040,\n              \"y\" : 695\n            },\n            \"help\" : \"Enter exponent for a value (scientific notation)\",\n            \"id\" : \"nd:a363b5938b20d2f1\",\n            \"identifier\" : \"TimesPowerOfTen\",\n            \"label\" : \"Enter Exponent\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1304,\n              \"y\" : 587\n            },\n            \"id\" : \"nd:a44133110209bf1e\",\n            \"identifier\" : \"Multiply\",\n            \"label\" : \"Multiply\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1106,\n              \"y\" : 695\n            },\n            \"id\" : \"nd:a5dcd204538b4515\",\n            \"identifier\" : \"One\",\n            \"label\" : \"1\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1238,\n              \"y\" : 749\n            },\n            \"id\" : \"nd:ac73b545a9b2d4d5\",\n            \"identifier\" : \"Decimal\",\n            \"label\" : \"Point\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1040,\n              \"y\" : 533\n            },\n            \"help\" : \"Recall the value stored in the memory\",\n            \"id\" : \"nd:b875ce1b1eaadbc1\",\n            \"identifier\" : \"MemoryRecall\",\n            \"label\" : \"Recall Memory\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXIncrement\",\n              \"AXDecrement\",\n              \"AXDelete\",\n              \"AXShowMenu\",\n              \"AXCancel\",\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 52,\n              \"w\" : 48,\n              \"x\" : 800,\n              \"y\" : 400\n            },\n            \"id\" : \"nd:b96f9b2cff0648c5\",\n            \"label\" : \"Show Sidebar\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : false,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 710,\n              \"y\" : 641\n            },\n            \"help\" : \"Calculate the reciprocal of a value\",\n            \"id\" : \"nd:bd18cfbb8dd30029\",\n            \"identifier\" : \"Reciprocal\",\n            \"label\" : \"1 over x\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 1,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 408,\n              \"w\" : 674,\n              \"x\" : 700,\n              \"y\" : 400\n            },\n            \"id\" : \"nd:bd6124ab5e296239\",\n            \"identifier\" : \"main, SidebarNavigationSplitView\",\n            \"role\" : \"AXSplitGroup\",\n            \"roleDescription\" : \"split group\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 776,\n              \"y\" : 749\n            },\n            \"help\" : \"Calculate the hyperbolic sine of a value\",\n            \"id\" : \"nd:c5a612c071f85246\",\n            \"identifier\" : \"HyperbolicSine\",\n            \"label\" : \"Hyperbolic Sine\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 776,\n              \"y\" : 587\n            },\n            \"help\" : \"Calculate the square of a value\",\n            \"id\" : \"nd:d72dc5fa53bc1b32\",\n            \"identifier\" : \"Square\",\n            \"label\" : \"X Squared\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 908,\n              \"y\" : 587\n            },\n            \"help\" : \"Calculate a first value to the power of a second value\",\n            \"id\" : \"nd:daf6949083b7320b\",\n            \"identifier\" : \"Power\",\n            \"label\" : \"X to the Y\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 48,\n              \"w\" : 60,\n              \"x\" : 1304,\n              \"y\" : 695\n            },\n            \"id\" : \"nd:db5748bd8b1a52ba\",\n            \"identifier\" : \"Add\",\n            \"label\" : \"Add\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXScrollLeftByPage\",\n              \"AXScrollRightByPage\",\n              \"AXScrollUpByPage\",\n              \"AXScrollDownByPage\",\n              \"Name:Copy\\nTarget:0x0\\nSelector:(null)\"\n            ],\n            \"childCount\" : 1,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 42,\n              \"w\" : 654,\n              \"x\" : 710,\n              \"y\" : 486\n            },\n            \"id\" : \"nd:ea001ff5a0cd5cba\",\n            \"identifier\" : \"StandardInputView\",\n            \"label\" : \"Edit field\",\n            \"role\" : \"AXScrollArea\",\n            \"roleDescription\" : \"scroll area\",\n            \"writableAttributes\" : [\n              \"AXMakeScreenRectVisible\"\n            ]\n          }\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 0,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 0\n      },\n      \"elapsedMs\" : 2109,\n      \"index\" : 0,\n      \"ok\" : true,\n      \"plane\" : \"accessibility\",\n      \"route\" : \"valueWrite\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 1,\n        \"axQuietMs\" : 789,\n        \"elapsedMs\" : 1702,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"dd234acda44b2fd63615ee478bd0d2ab80b95212432602c6aa3aeb006789e3a8\",\n      \"step\" : {\n        \"kind\" : \"move\",\n        \"label\" : \"accessibility move, sabotage control arm\",\n        \"point\" : [\n          700,\n          400\n        ]\n      }\n    }\n  ],\n  \"window\" : \"win:1:0\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "backend": "native",
+      "completed": 1,
+      "finalHash": "dd234acda44b2fd63615ee478bd0d2ab80b95212432602c6aa3aeb006789e3a8",
+      "foreground": {
+        "declaredCertain": 0,
+        "declaredConditional": 0,
+        "measured": 0,
+        "ranInForeground": false,
+        "requestIgnored": false,
+        "totalSteps": 1,
+        "unproven": 0,
+        "unrequestedForeground": 0
+      },
+      "machine": {
+        "kind": "host",
+        "platform": "macos",
+        "tier": "native"
+      },
+      "steps": [
+        {
+          "backend": "native",
+          "diff": {
+            "added": [
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1106,
+                  "y": 533
+                },
+                "help": "Delete the last digit or operation entered (long press to delete all)",
+                "id": "nd:0091dbd934a28f41",
+                "identifier": "Delete",
+                "label": "Delete",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 908,
+                  "y": 533
+                },
+                "help": "Add the displayed value to the memory",
+                "id": "nd:06aa308eab3f97bb",
+                "identifier": "MemoryAdd",
+                "label": "Add to Memory",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1238,
+                  "y": 533
+                },
+                "id": "nd:0b7ec16e685422c9",
+                "identifier": "Percent",
+                "label": "Per cent",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 1,
+                "focused": false,
+                "frame": {
+                  "h": 14,
+                  "w": 14,
+                  "x": 765,
+                  "y": 419
+                },
+                "id": "nd:0c70ea584e150158",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 974,
+                  "y": 533
+                },
+                "help": "Subtract the displayed value from the memory",
+                "id": "nd:0c8f7084ce09724e",
+                "identifier": "MemorySubtract",
+                "label": "Subtract from Memory",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1238,
+                  "y": 695
+                },
+                "id": "nd:10ec7edc7ed3b81d",
+                "identifier": "Three",
+                "label": "3",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1304,
+                  "y": 641
+                },
+                "id": "nd:148607e669589d17",
+                "identifier": "Subtract",
+                "label": "Subtract",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "frame": {
+                  "h": 26,
+                  "w": 128,
+                  "x": 1236,
+                  "y": 459
+                },
+                "id": "nd:17f4929c6cc1d85d",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "\u200e1,861.20\u200e-\u200e690",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1106,
+                  "y": 587
+                },
+                "id": "nd:22103e54da0816ad",
+                "identifier": "Seven",
+                "label": "7",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "focused": false,
+                "frame": {
+                  "h": 14,
+                  "w": 14,
+                  "x": 765,
+                  "y": 419
+                },
+                "id": "nd:244ffdcb72ab9244",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 842,
+                  "y": 533
+                },
+                "id": "nd:29fa9ba6620e221f",
+                "identifier": "MemoryClear",
+                "label": "Clear Memory",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXIncrement",
+                  "AXDecrement",
+                  "AXDelete",
+                  "AXShowMenu",
+                  "AXCancel",
+                  "AXPress",
+                  "Name:Move previous\nTarget:0x0\nSelector:(null)",
+                  "Name:Remove from toolbar\nTarget:0x0\nSelector:(null)"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 52,
+                  "w": 44,
+                  "x": 1326,
+                  "y": 400
+                },
+                "id": "nd:2ae67ac3e01fbd30",
+                "identifier": "Mode: scientific; unitConversion: false",
+                "label": "Mode",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": false,
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXShowMenu"
+                ],
+                "childCount": 2,
+                "focused": false,
+                "frame": {
+                  "h": 52,
+                  "w": 674,
+                  "x": 700,
+                  "y": 400
+                },
+                "id": "nd:2b3fdc2c2f5795dd",
+                "role": "AXToolbar",
+                "roleDescription": "toolbar",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1304,
+                  "y": 533
+                },
+                "id": "nd:2f2b0577b667da3a",
+                "identifier": "Divide",
+                "label": "Divide",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 908,
+                  "y": 641
+                },
+                "help": "Calculate an arbitrary root of a value (y-th root of x)",
+                "id": "nd:2fd0188b0b7d8c26",
+                "identifier": "Root",
+                "label": "Y root of X",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1172,
+                  "y": 641
+                },
+                "id": "nd:3015a9135aceaba7",
+                "identifier": "Five",
+                "label": "5",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 1,
+                "focused": false,
+                "frame": {
+                  "h": 408,
+                  "w": 674,
+                  "x": 700,
+                  "y": 400
+                },
+                "id": "nd:3c2b4f7503529a65",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "subrole": "AXHostingView",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 974,
+                  "y": 749
+                },
+                "help": "Enter pi (3.14159\u2026)",
+                "id": "nd:3c3f5963720bfe49",
+                "identifier": "Pi",
+                "label": "Pi",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 776,
+                  "y": 533
+                },
+                "id": "nd:3c69a53e49aa5b3d",
+                "identifier": "CloseParenthesis",
+                "label": "Close Bracket",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 842,
+                  "y": 695
+                },
+                "help": "Calculate the cosine of a value",
+                "id": "nd:3dd5ff067ffd85b6",
+                "identifier": "Cosine",
+                "label": "Cosine",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 776,
+                  "y": 641
+                },
+                "help": "Calculate the square root of a value",
+                "id": "nd:3e079b3fbbc98058",
+                "identifier": "SquareRoot",
+                "label": "Square Root",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 974,
+                  "y": 641
+                },
+                "help": "Calculate the natural logarithm of a value",
+                "id": "nd:3f249d0214e4f2a3",
+                "identifier": "LogarithmNatural",
+                "label": "Natural Log",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 842,
+                  "y": 749
+                },
+                "help": "Calculate the hyperbolic cosine of a value",
+                "id": "nd:3f4bdcf4fa4147bb",
+                "identifier": "HyperbolicCosine",
+                "label": "Hyperbolic Cosine",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 16,
+                  "x": 718,
+                  "y": 418
+                },
+                "id": "nd:408d7ee4f729e57b",
+                "role": "AXButton",
+                "roleDescription": "close button",
+                "subrole": "AXCloseButton",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1238,
+                  "y": 587
+                },
+                "id": "nd:42f9ffca8b73f64b",
+                "identifier": "Nine",
+                "label": "9",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 908,
+                  "y": 749
+                },
+                "help": "Calculate the hyperbolic tangent of a value",
+                "id": "nd:478a6f26df962586",
+                "identifier": "HyperbolicTangent",
+                "label": "Hyperbolic Tangent",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1172,
+                  "y": 533
+                },
+                "id": "nd:48a3cd649677e8b4",
+                "identifier": "AllClear",
+                "label": "All Clear",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 710,
+                  "y": 695
+                },
+                "help": "Calculate the factorial of a value",
+                "id": "nd:4bd3a69f52d6f9dd",
+                "identifier": "Factorial",
+                "label": "X Factorial",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 908,
+                  "y": 695
+                },
+                "help": "Calculate the tangent of a value",
+                "id": "nd:507a8d9fa8fac8ff",
+                "identifier": "Tangent",
+                "label": "Tangent",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 710,
+                  "y": 533
+                },
+                "id": "nd:5cca72d8caed800c",
+                "identifier": "OpenParenthesis",
+                "label": "Open Bracket",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1040,
+                  "y": 749
+                },
+                "help": "Change angular units to radians",
+                "id": "nd:6469172216d598d3",
+                "identifier": "Radians",
+                "label": "Radians",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXScrollLeftByPage",
+                  "AXScrollRightByPage",
+                  "AXScrollUpByPage",
+                  "AXScrollDownByPage",
+                  "Name:Copy\nTarget:0x0\nSelector:(null)"
+                ],
+                "childCount": 1,
+                "focused": false,
+                "frame": {
+                  "h": 29.5,
+                  "w": 654,
+                  "x": 710,
+                  "y": 457.5
+                },
+                "id": "nd:66927662650af611",
+                "identifier": "StandardResultView",
+                "label": "Last Expression",
+                "role": "AXScrollArea",
+                "roleDescription": "scroll area",
+                "writableAttributes": [
+                  "AXMakeScreenRectVisible"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 974,
+                  "y": 695
+                },
+                "help": "Enter e (2.71828\u2026)",
+                "id": "nd:6eac88babe59c47b",
+                "identifier": "EulerNumber",
+                "label": "e",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 52,
+                "enabled": true,
+                "focused": true,
+                "frame": {
+                  "h": 354,
+                  "w": 674,
+                  "x": 700,
+                  "y": 453
+                },
+                "id": "nd:71dc4b41eb8abaa8",
+                "identifier": "CalculatorKeypadView",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXRaise"
+                ],
+                "childCount": 5,
+                "focused": false,
+                "frame": {
+                  "h": 408,
+                  "w": 674,
+                  "x": 700,
+                  "y": 400
+                },
+                "id": "nd:73e4c14bae494dce",
+                "identifier": "main",
+                "role": "AXWindow",
+                "roleDescription": "standard window",
+                "subrole": "AXStandardWindow",
+                "title": "Calculator",
+                "writableAttributes": [
+                  "AXPosition",
+                  "AXSections",
+                  "AXMain",
+                  "AXMinimized"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1172,
+                  "y": 695
+                },
+                "id": "nd:76870fdce01eb841",
+                "identifier": "Two",
+                "label": "2",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "frame": {
+                  "h": 36,
+                  "w": 88,
+                  "x": 1276,
+                  "y": 489
+                },
+                "id": "nd:7719ef35ef05523e",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "\u200e1,171.2",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1040,
+                  "y": 587
+                },
+                "help": "Calculate 10 to the power of a value",
+                "id": "nd:7804da0a3f9df69c",
+                "identifier": "ExponentialBase10",
+                "label": "10 to the X",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1172,
+                  "y": 587
+                },
+                "id": "nd:80d430f6d9f630bf",
+                "identifier": "Eight",
+                "label": "8",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1040,
+                  "y": 641
+                },
+                "help": "Calculate the logarithm to base 10 of a value",
+                "id": "nd:83e9deb3c525af3b",
+                "identifier": "LogarithmBase10",
+                "label": "Log Base 10",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 710,
+                  "y": 587
+                },
+                "help": "Show alternative functions for some buttons",
+                "id": "nd:87dd585879ad228b",
+                "identifier": "Shift",
+                "label": "Secondary Functions",
+                "role": "AXCheckBox",
+                "roleDescription": "toggle button",
+                "subrole": "AXToggle",
+                "value": "0",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 842,
+                  "y": 641
+                },
+                "help": "Calculate the cube root of a value",
+                "id": "nd:882ec0e7cccdab0f",
+                "identifier": "CubeRoot",
+                "label": "Cube Root",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 710,
+                  "y": 749
+                },
+                "help": "Generate a random number between 0 and 1",
+                "id": "nd:897e14eb57898fc4",
+                "identifier": "Random",
+                "label": "Random Number",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 16,
+                  "x": 741,
+                  "y": 418
+                },
+                "id": "nd:8a10a814b13d0169",
+                "role": "AXButton",
+                "roleDescription": "minimise button",
+                "subrole": "AXMinimizeButton",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1304,
+                  "y": 749
+                },
+                "id": "nd:8f0cca6a3dac389b",
+                "identifier": "Equals",
+                "label": "Equals",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 974,
+                  "y": 587
+                },
+                "help": "Calculate e to the power of a value",
+                "id": "nd:91fef6408bfb6a21",
+                "identifier": "Expontential",
+                "label": "e to the X",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1238,
+                  "y": 641
+                },
+                "id": "nd:93e789889c710a5e",
+                "identifier": "Six",
+                "label": "6",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 1,
+                "focused": false,
+                "frame": {
+                  "h": 408,
+                  "w": 674,
+                  "x": 700,
+                  "y": 400
+                },
+                "id": "nd:9533ca169d10966a",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "subrole": "AXHostingView",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress",
+                  "AXShowMenu"
+                ],
+                "childCount": 1,
+                "enabled": false,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 16,
+                  "x": 764,
+                  "y": 418
+                },
+                "id": "nd:977952ba5b289289",
+                "role": "AXButton",
+                "roleDescription": "zoom button",
+                "subrole": "AXZoomButton",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1172,
+                  "y": 749
+                },
+                "id": "nd:9aa33fa2d7bfd31e",
+                "identifier": "Zero",
+                "label": "0",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 776,
+                  "y": 695
+                },
+                "help": "Calculate the sine of a value",
+                "id": "nd:9b3eb493a17f77dd",
+                "identifier": "Sine",
+                "label": "Sine",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 842,
+                  "y": 587
+                },
+                "help": "Calculate the cube of a value",
+                "id": "nd:9d28dc377524a1df",
+                "identifier": "Cube",
+                "label": "X Cubed",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1106,
+                  "y": 749
+                },
+                "help": "Change sign of a value",
+                "id": "nd:9e49f8ea436a68fc",
+                "identifier": "Negate",
+                "label": "Change Sign",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1106,
+                  "y": 641
+                },
+                "id": "nd:a1a41a9738327caa",
+                "identifier": "Four",
+                "label": "4",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1040,
+                  "y": 695
+                },
+                "help": "Enter exponent for a value (scientific notation)",
+                "id": "nd:a363b5938b20d2f1",
+                "identifier": "TimesPowerOfTen",
+                "label": "Enter Exponent",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1304,
+                  "y": 587
+                },
+                "id": "nd:a44133110209bf1e",
+                "identifier": "Multiply",
+                "label": "Multiply",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1106,
+                  "y": 695
+                },
+                "id": "nd:a5dcd204538b4515",
+                "identifier": "One",
+                "label": "1",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1238,
+                  "y": 749
+                },
+                "id": "nd:ac73b545a9b2d4d5",
+                "identifier": "Decimal",
+                "label": "Point",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1040,
+                  "y": 533
+                },
+                "help": "Recall the value stored in the memory",
+                "id": "nd:b875ce1b1eaadbc1",
+                "identifier": "MemoryRecall",
+                "label": "Recall Memory",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXIncrement",
+                  "AXDecrement",
+                  "AXDelete",
+                  "AXShowMenu",
+                  "AXCancel",
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 52,
+                  "w": 48,
+                  "x": 800,
+                  "y": 400
+                },
+                "id": "nd:b96f9b2cff0648c5",
+                "label": "Show Sidebar",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": false,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 710,
+                  "y": 641
+                },
+                "help": "Calculate the reciprocal of a value",
+                "id": "nd:bd18cfbb8dd30029",
+                "identifier": "Reciprocal",
+                "label": "1 over x",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 1,
+                "focused": false,
+                "frame": {
+                  "h": 408,
+                  "w": 674,
+                  "x": 700,
+                  "y": 400
+                },
+                "id": "nd:bd6124ab5e296239",
+                "identifier": "main, SidebarNavigationSplitView",
+                "role": "AXSplitGroup",
+                "roleDescription": "split group",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 776,
+                  "y": 749
+                },
+                "help": "Calculate the hyperbolic sine of a value",
+                "id": "nd:c5a612c071f85246",
+                "identifier": "HyperbolicSine",
+                "label": "Hyperbolic Sine",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 776,
+                  "y": 587
+                },
+                "help": "Calculate the square of a value",
+                "id": "nd:d72dc5fa53bc1b32",
+                "identifier": "Square",
+                "label": "X Squared",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 908,
+                  "y": 587
+                },
+                "help": "Calculate a first value to the power of a second value",
+                "id": "nd:daf6949083b7320b",
+                "identifier": "Power",
+                "label": "X to the Y",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 48,
+                  "w": 60,
+                  "x": 1304,
+                  "y": 695
+                },
+                "id": "nd:db5748bd8b1a52ba",
+                "identifier": "Add",
+                "label": "Add",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXScrollLeftByPage",
+                  "AXScrollRightByPage",
+                  "AXScrollUpByPage",
+                  "AXScrollDownByPage",
+                  "Name:Copy\nTarget:0x0\nSelector:(null)"
+                ],
+                "childCount": 1,
+                "focused": false,
+                "frame": {
+                  "h": 42,
+                  "w": 654,
+                  "x": 710,
+                  "y": 486
+                },
+                "id": "nd:ea001ff5a0cd5cba",
+                "identifier": "StandardInputView",
+                "label": "Edit field",
+                "role": "AXScrollArea",
+                "roleDescription": "scroll area",
+                "writableAttributes": [
+                  "AXMakeScreenRectVisible"
+                ]
+              }
+            ],
+            "changed": [],
+            "fromRevision": 0,
+            "removed": [],
+            "unchangedCount": 0
+          },
+          "elapsedMs": 2109,
+          "index": 0,
+          "ok": true,
+          "plane": "accessibility",
+          "route": "valueWrite",
+          "settle": {
+            "axNotificationsSeen": 1,
+            "axQuietMs": 789,
+            "elapsedMs": 1702,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "dd234acda44b2fd63615ee478bd0d2ab80b95212432602c6aa3aeb006789e3a8",
+          "step": {
+            "kind": "move",
+            "label": "accessibility move, sabotage control arm",
+            "point": [
+              700,
+              400
+            ]
+          }
+        }
+      ],
+      "window": "win:1:0"
+    }
+  }
+}

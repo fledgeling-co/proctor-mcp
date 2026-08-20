@@ -1,0 +1,213 @@
+{
+  "id": 3,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"backend\" : \"native\",\n  \"completed\" : 3,\n  \"finalHash\" : \"43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7\",\n  \"foreground\" : {\n    \"declaredCertain\" : 3,\n    \"declaredConditional\" : 0,\n    \"measured\" : 3,\n    \"ranInForeground\" : true,\n    \"requestIgnored\" : false,\n    \"totalSteps\" : 3,\n    \"unproven\" : 0,\n    \"unrequestedForeground\" : 0\n  },\n  \"foregroundNote\" : \"3 of 3 steps travelled as synthetic events, which required the application to be frontmost. The result is not a background-safe one, and this run cannot be repeated unattended.\",\n  \"machine\" : {\n    \"kind\" : \"host\",\n    \"platform\" : \"macos\",\n    \"tier\" : \"native\"\n  },\n  \"steps\" : [\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 1,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 54\n      },\n      \"elapsedMs\" : 7172,\n      \"index\" : 0,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 0,\n        \"axQuietMs\" : 769,\n        \"elapsedMs\" : 768,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7\",\n      \"step\" : {\n        \"durationMs\" : 6000,\n        \"kind\" : \"dragPath\",\n        \"label\" : \"drag 1\",\n        \"path\" : [\n          [\n            80,\n            120\n          ],\n          [\n            300,\n            160\n          ],\n          [\n            520,\n            200\n          ]\n        ]\n      }\n    },\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 1,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 54\n      },\n      \"elapsedMs\" : 7113,\n      \"index\" : 1,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 0,\n        \"axQuietMs\" : 792,\n        \"elapsedMs\" : 790,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7\",\n      \"step\" : {\n        \"durationMs\" : 6000,\n        \"kind\" : \"dragPath\",\n        \"label\" : \"drag 2\",\n        \"path\" : [\n          [\n            520,\n            200\n          ],\n          [\n            300,\n            240\n          ],\n          [\n            80,\n            280\n          ]\n        ]\n      }\n    },\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 1,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 54\n      },\n      \"elapsedMs\" : 7288,\n      \"index\" : 2,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 0,\n        \"axQuietMs\" : 934,\n        \"elapsedMs\" : 927,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7\",\n      \"step\" : {\n        \"durationMs\" : 6000,\n        \"kind\" : \"dragPath\",\n        \"label\" : \"drag 3\",\n        \"path\" : [\n          [\n            80,\n            280\n          ],\n          [\n            300,\n            200\n          ],\n          [\n            520,\n            140\n          ]\n        ]\n      }\n    }\n  ],\n  \"takeover\" : {\n    \"blocked\" : true,\n    \"blockedMs\" : 18764,\n    \"releasedBy\" : \"runEnded\",\n    \"shown\" : true,\n    \"swallowed\" : 16\n  },\n  \"takeoverNote\" : \"Proctor held the keyboard and mouse for 18.8s of this run, across the steps it was posting events into the application. Somebody used the machine 16 times while it was held, and those events did not reach the application.\",\n  \"window\" : \"win:1:0\",\n  \"yieldNote\" : \"This run was held 3 times for 22434ms because somebody was using the machine (secureInput, userInput). The steps still ran in order; the run took longer than its work did.\",\n  \"yields\" : [\n    {\n      \"endedBy\" : \"released\",\n      \"heldMs\" : 1973,\n      \"reason\" : \"userInput\",\n      \"step\" : 1\n    },\n    {\n      \"endedBy\" : \"released\",\n      \"heldMs\" : 13789,\n      \"reason\" : \"secureInput\",\n      \"step\" : 1\n    },\n    {\n      \"endedBy\" : \"released\",\n      \"heldMs\" : 6672,\n      \"reason\" : \"userInput\",\n      \"step\" : 2\n    }\n  ]\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "backend": "native",
+      "completed": 3,
+      "finalHash": "43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7",
+      "foreground": {
+        "declaredCertain": 3,
+        "declaredConditional": 0,
+        "measured": 3,
+        "ranInForeground": true,
+        "requestIgnored": false,
+        "totalSteps": 3,
+        "unproven": 0,
+        "unrequestedForeground": 0
+      },
+      "foregroundNote": "3 of 3 steps travelled as synthetic events, which required the application to be frontmost. The result is not a background-safe one, and this run cannot be repeated unattended.",
+      "machine": {
+        "kind": "host",
+        "platform": "macos",
+        "tier": "native"
+      },
+      "steps": [
+        {
+          "backend": "native",
+          "diff": {
+            "added": [],
+            "changed": [],
+            "fromRevision": 1,
+            "removed": [],
+            "unchangedCount": 54
+          },
+          "elapsedMs": 7172,
+          "index": 0,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 0,
+            "axQuietMs": 769,
+            "elapsedMs": 768,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7",
+          "step": {
+            "durationMs": 6000,
+            "kind": "dragPath",
+            "label": "drag 1",
+            "path": [
+              [
+                80,
+                120
+              ],
+              [
+                300,
+                160
+              ],
+              [
+                520,
+                200
+              ]
+            ]
+          }
+        },
+        {
+          "backend": "native",
+          "diff": {
+            "added": [],
+            "changed": [],
+            "fromRevision": 1,
+            "removed": [],
+            "unchangedCount": 54
+          },
+          "elapsedMs": 7113,
+          "index": 1,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 0,
+            "axQuietMs": 792,
+            "elapsedMs": 790,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7",
+          "step": {
+            "durationMs": 6000,
+            "kind": "dragPath",
+            "label": "drag 2",
+            "path": [
+              [
+                520,
+                200
+              ],
+              [
+                300,
+                240
+              ],
+              [
+                80,
+                280
+              ]
+            ]
+          }
+        },
+        {
+          "backend": "native",
+          "diff": {
+            "added": [],
+            "changed": [],
+            "fromRevision": 1,
+            "removed": [],
+            "unchangedCount": 54
+          },
+          "elapsedMs": 7288,
+          "index": 2,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 0,
+            "axQuietMs": 934,
+            "elapsedMs": 927,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7",
+          "step": {
+            "durationMs": 6000,
+            "kind": "dragPath",
+            "label": "drag 3",
+            "path": [
+              [
+                80,
+                280
+              ],
+              [
+                300,
+                200
+              ],
+              [
+                520,
+                140
+              ]
+            ]
+          }
+        }
+      ],
+      "takeover": {
+        "blocked": true,
+        "blockedMs": 18764,
+        "releasedBy": "runEnded",
+        "shown": true,
+        "swallowed": 16
+      },
+      "takeoverNote": "Proctor held the keyboard and mouse for 18.8s of this run, across the steps it was posting events into the application. Somebody used the machine 16 times while it was held, and those events did not reach the application.",
+      "window": "win:1:0",
+      "yieldNote": "This run was held 3 times for 22434ms because somebody was using the machine (secureInput, userInput). The steps still ran in order; the run took longer than its work did.",
+      "yields": [
+        {
+          "endedBy": "released",
+          "heldMs": 1973,
+          "reason": "userInput",
+          "step": 1
+        },
+        {
+          "endedBy": "released",
+          "heldMs": 13789,
+          "reason": "secureInput",
+          "step": 1
+        },
+        {
+          "endedBy": "released",
+          "heldMs": 6672,
+          "reason": "userInput",
+          "step": 2
+        }
+      ]
+    }
+  }
+}

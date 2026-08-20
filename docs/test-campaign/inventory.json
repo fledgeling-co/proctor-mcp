@@ -895,6 +895,31 @@
       "Pixel dimensions match rect",
       "Small text legibility preserved"
      ]
+    },
+    {
+     "id": "STEP-A1B-XPROC",
+     "surface": "SURF-006",
+     "action": "Capture a window belonging to a different process, and publish the frame",
+     "label": "Cross-process capture, another application's window",
+     "shot": "evidence/shots/surf-006-xproc-calculator.png",
+     "observableAtoms": [
+      "SCFrameStatus complete",
+      "trustworthy true",
+      "contentRect from the target's own window",
+      "the target's displayed text"
+     ]
+    },
+    {
+     "id": "STEP-A1-SELF",
+     "surface": "SURF-006",
+     "action": "Capture a Proctor-owned window through Proctor's own channel, the exclusion control",
+     "label": "Self-capture, Proctor's own window excluded from its own stream",
+     "shot": "evidence/shots/surf-006-self-excluded.png",
+     "observableAtoms": [
+      "SCFrameStatus complete",
+      "trustworthy true",
+      "every pixel transparent"
+     ]
     }
    ]
   },

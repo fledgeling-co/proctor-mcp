@@ -402,10 +402,18 @@ case "postobserve":
     run(seconds: seconds)
     let after = counters()
     let mine = observer.events.filter { ($0["userDataIsProbeMark"] as? Bool) == true }
+    // `survivedToTailTap` keys on the probe's own mark, which the TAGGED arm does
+    // not carry — a tagged post stamps the Proctor tag instead, so that field is
+    // pinned at zero there whatever the block does, and a two-way sabotage read
+    // off it would report "swallowed" for an event that sailed through. Count
+    // survivors by source pid as well, which is a field every arm carries, so the
+    // same number can come back non-zero on one arm and zero on the other.
+    let fromThisProbe = observer.events.filter { ($0["sourcePid"] as? Int64) == Int64(me) }
     emit(["mode": "postobserve", "at": stamp, "probePid": me, "tagged": tagged,
           "tapCreated": observer.tapCreated, "tapFailure": observer.tapFailure as Any,
           "posted": posted,
           "survivedToTailTap": mine.count,
+          "survivedFromThisProbe": fromThisProbe.count,
           "observedCount": observer.events.count,
           "observed": observer.events,
           "sessionCounterDeltaScroll": Int(after["scrollWheel"] ?? 0) - Int(before["scrollWheel"] ?? 0)],

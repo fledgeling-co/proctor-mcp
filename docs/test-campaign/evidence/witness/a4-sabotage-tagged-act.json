@@ -1,0 +1,1331 @@
+{
+  "id": 3,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"backend\" : \"native\",\n  \"completed\" : 3,\n  \"finalHash\" : \"43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7\",\n  \"foreground\" : {\n    \"declaredCertain\" : 3,\n    \"declaredConditional\" : 0,\n    \"measured\" : 3,\n    \"ranInForeground\" : true,\n    \"requestIgnored\" : false,\n    \"totalSteps\" : 3,\n    \"unproven\" : 0,\n    \"unrequestedForeground\" : 0\n  },\n  \"foregroundNote\" : \"3 of 3 steps travelled as synthetic events, which required the application to be frontmost. The result is not a background-safe one, and this run cannot be repeated unattended.\",\n  \"machine\" : {\n    \"kind\" : \"host\",\n    \"platform\" : \"macos\",\n    \"tier\" : \"native\"\n  },\n  \"steps\" : [\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"frame\" : {\n              \"h\" : 20,\n              \"w\" : 680,\n              \"x\" : 486,\n              \"y\" : 184\n            },\n            \"id\" : \"nd:0812bd9718fe32e1\",\n            \"role\" : \"AXProgressIndicator\",\n            \"roleDescription\" : \"progress indicator\",\n            \"value\" : 0.3177990954992159,\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"frame\" : {\n              \"h\" : 15,\n              \"w\" : 643.5,\n              \"x\" : 486,\n              \"y\" : 137\n            },\n            \"id\" : \"nd:099a2edc025b9412\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"What Proctor did on this Mac, one row per run. It is kept on this Mac only, encrypted, and it clears itself as it ages.\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 1,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 14,\n              \"w\" : 14,\n              \"x\" : 501,\n              \"y\" : 42\n            },\n            \"id\" : \"nd:0c70ea584e150158\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1228\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:1131a656b78f9fda\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 268\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:1828c122f1353059\",\n            \"label\" : \"proctor_act, com.apple.TextEdit, 1 step, failed, 5 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 14,\n              \"w\" : 14,\n              \"x\" : 501,\n              \"y\" : 42\n            },\n            \"id\" : \"nd:244ffdcb72ab9244\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"frame\" : {\n              \"h\" : 0,\n              \"w\" : 0,\n              \"x\" : 1189,\n              \"y\" : 65\n            },\n            \"id\" : \"nd:251158c2418983df\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"increment arrow button\",\n            \"subrole\" : \"AXIncrementArrow\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 52,\n              \"x\" : 528,\n              \"y\" : 41\n            },\n            \"id\" : \"nd:27299163f4583544\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"History\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 548\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:2ae532409832faaa\",\n            \"label\" : \"proctor_guest.attach, guest:lume:proctor-guest, 1 step, 7 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 348\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:2ce718611562e214\",\n            \"label\" : \"proctor_act, com.apple.TextEdit, 3 steps, 10.2 s, 5 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 20,\n              \"w\" : 60.5,\n              \"x\" : 1041.5,\n              \"y\" : 105\n            },\n            \"id\" : \"nd:2f1937de5d5f33e2\",\n            \"label\" : \"Refresh\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 868\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:31b895d341ca743c\",\n            \"label\" : \"proctor_guest.attach, guest:lume:proctor-guest, 1 step, 8 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 388\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:32369c373b9c0066\",\n            \"label\" : \"proctor_apps, com.apple.Safari, named another lane, 379 ms, 5 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 1,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 968,\n              \"w\" : 760,\n              \"x\" : 446,\n              \"y\" : 33\n            },\n            \"id\" : \"nd:3c2b4f7503529a65\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"subrole\" : \"AXHostingView\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 16,\n              \"x\" : 454,\n              \"y\" : 41\n            },\n            \"id\" : \"nd:408d7ee4f729e57b\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"close button\",\n            \"subrole\" : \"AXCloseButton\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 988\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:41f9a5dd0b6926ff\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 668\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:539c70e2fdd23015\",\n            \"label\" : \"proctor_guest.detach, guest:lume:proctor-guest, 1 step, 8 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"frame\" : {\n              \"h\" : 15,\n              \"w\" : 37.5,\n              \"x\" : 486,\n              \"y\" : 164\n            },\n            \"id\" : \"nd:5736b08503b61e7d\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"1,204\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 908\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:5bc7f60e662ba52f\",\n            \"label\" : \"proctor_guest.detach, guest:lume:proctor-guest, 1 step, 8 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1388\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:69972fc0b4f92588\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXRaise\"\n            ],\n            \"childCount\" : 5,\n            \"focused\" : true,\n            \"frame\" : {\n              \"h\" : 968,\n              \"w\" : 760,\n              \"x\" : 446,\n              \"y\" : 33\n            },\n            \"id\" : \"nd:73e4c14bae494dce\",\n            \"identifier\" : \"history\",\n            \"role\" : \"AXWindow\",\n            \"roleDescription\" : \"standard window\",\n            \"subrole\" : \"AXStandardWindow\",\n            \"title\" : \"History\",\n            \"writableAttributes\" : [\n              \"AXPosition\",\n              \"AXSections\",\n              \"AXMain\",\n              \"AXMinimized\",\n              \"AXSize\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 748\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:7666d047842558d5\",\n            \"label\" : \"proctor_guest.detach, guest:lume:proctor-guest, 1 step, 8 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1188\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:7d0f154c1f1bd526\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1068\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:7d26e3044b45dd1d\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1028\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:82170ae1a4aae693\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 16,\n              \"x\" : 477,\n              \"y\" : 41\n            },\n            \"id\" : \"nd:8a10a814b13d0169\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"minimize button\",\n            \"subrole\" : \"AXMinimizeButton\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"frame\" : {\n              \"h\" : 0,\n              \"w\" : 0,\n              \"x\" : 1189,\n              \"y\" : 65\n            },\n            \"id\" : \"nd:91d71bbbd57df800\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"decrement arrow button\",\n            \"subrole\" : \"AXDecrementArrow\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\",\n              \"AXShowMenu\"\n            ],\n            \"childCount\" : 1,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 16,\n              \"x\" : 500,\n              \"y\" : 41\n            },\n            \"id\" : \"nd:977952ba5b289289\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"zoom button\",\n            \"subrole\" : \"AXZoomButton\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"frame\" : {\n              \"h\" : 13,\n              \"w\" : 49,\n              \"x\" : 486,\n              \"y\" : 109\n            },\n            \"id\" : \"nd:9a14c83169bc12d6\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"HISTORY\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 948\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:9ac2fcbf11f2f657\",\n            \"label\" : \"proctor_guest.attach, guest:lume:proctor-guest, 1 step, 8 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"frame\" : {\n              \"h\" : 0,\n              \"w\" : 6,\n              \"x\" : 1197,\n              \"y\" : 68\n            },\n            \"id\" : \"nd:9c397e868dca9bf3\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"decrement page button\",\n            \"subrole\" : \"AXDecrementPage\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXScrollLeftByPage\",\n              \"AXScrollRightByPage\",\n              \"AXScrollUpByPage\",\n              \"AXScrollDownByPage\"\n            ],\n            \"childCount\" : 40,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 936,\n              \"w\" : 760,\n              \"x\" : 446,\n              \"y\" : 65\n            },\n            \"id\" : \"nd:a24cd13587976d76\",\n            \"role\" : \"AXScrollArea\",\n            \"roleDescription\" : \"scroll area\",\n            \"writableAttributes\" : [\n              \"AXMakeScreenRectVisible\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 708\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:a6a1bd77f7164bf6\",\n            \"label\" : \"proctor_guest.attach, guest:lume:proctor-guest, 1 step, 8 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 308\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:aaf560601c9422d9\",\n            \"label\" : \"proctor_act, com.apple.TextEdit, 3 steps, 10.7 s, 5 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"frame\" : {\n              \"h\" : 618,\n              \"w\" : 6,\n              \"x\" : 1197,\n              \"y\" : 68\n            },\n            \"id\" : \"nd:b0352663945214e3\",\n            \"role\" : \"AXValueIndicator\",\n            \"roleDescription\" : \"value indicator\",\n            \"value\" : 0,\n            \"writableAttributes\" : [\n              \"AXValue\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"frame\" : {\n              \"h\" : 14,\n              \"w\" : 261,\n              \"x\" : 905,\n              \"y\" : 164.5\n            },\n            \"id\" : \"nd:b0686ecef96d9191\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"keeps 14 days or 10,000 entries, then starts again\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1268\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:b41c534b857a964b\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 20,\n              \"w\" : 56,\n              \"x\" : 1110,\n              \"y\" : 105\n            },\n            \"id\" : \"nd:b4abc16f9eba6d0c\",\n            \"label\" : \"Clear\u2026\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 468\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:be4cd79d18cb1333\",\n            \"label\" : \"proctor_guest.attach, guest:lume:proctor-guest, 1 step, 7 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 5,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 930.5,\n              \"w\" : 19,\n              \"x\" : 1188,\n              \"y\" : 64\n            },\n            \"id\" : \"nd:bf0ba661e311148d\",\n            \"role\" : \"AXScrollBar\",\n            \"roleDescription\" : \"scroll bar\",\n            \"value\" : 0,\n            \"writableAttributes\" : [\n              \"AXFocused\",\n              \"AXValue\",\n              \"AXHidden\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"frame\" : {\n              \"h\" : 15,\n              \"w\" : 67,\n              \"x\" : 529.5,\n              \"y\" : 164\n            },\n            \"id\" : \"nd:cc3429082017e88d\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"entries held\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 628\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:cda1f55f9aa0f1d4\",\n            \"label\" : \"proctor_guest.attach, guest:lume:proctor-guest, 1 step, 7 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1108\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:d407803108d7014e\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1308\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:d876913781f9243b\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1428\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:d898829dd428504a\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 2 steps, 2.7 s, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 828\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:d8d39546a3423636\",\n            \"label\" : \"proctor_guest.detach, guest:lume:proctor-guest, 1 step, 8 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 788\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:e8f333aea96f9e60\",\n            \"label\" : \"proctor_guest.attach, guest:lume:proctor-guest, 1 step, 8 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 428\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:e92516cb64bde18d\",\n            \"label\" : \"proctor_guest.detach, guest:lume:proctor-guest, 1 step, 7 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"frame\" : {\n              \"h\" : 13,\n              \"w\" : 28,\n              \"x\" : 470,\n              \"y\" : 240\n            },\n            \"id\" : \"nd:ee13698499433dbe\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"RUNS\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"frame\" : {\n              \"h\" : 304,\n              \"w\" : 6,\n              \"x\" : 1197,\n              \"y\" : 686.5\n            },\n            \"id\" : \"nd:f0b2a3c6835ea77a\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"increment page button\",\n            \"subrole\" : \"AXIncrementPage\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 588\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:f0c51937436f961d\",\n            \"label\" : \"proctor_guest.detach, guest:lume:proctor-guest, 1 step, 7 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1348\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:f824911930670b2a\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 508\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:fb819d6e5ccc5c7c\",\n            \"label\" : \"proctor_guest.detach, guest:lume:proctor-guest, 1 step, 7 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 692,\n              \"x\" : 480,\n              \"y\" : 1148\n            },\n            \"help\" : \"A name Proctor read from the application\",\n            \"id\" : \"nd:feaaa90cc480bb2a\",\n            \"label\" : \"proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"button\",\n            \"selected\" : true,\n            \"writableAttributes\" : [\n              \"AXFocused\"\n            ]\n          }\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 0,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 0\n      },\n      \"elapsedMs\" : 7105,\n      \"index\" : 0,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 0,\n        \"axQuietMs\" : 764,\n        \"elapsedMs\" : 757,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7\",\n      \"step\" : {\n        \"durationMs\" : 6000,\n        \"kind\" : \"dragPath\",\n        \"label\" : \"drag 1\",\n        \"path\" : [\n          [\n            80,\n            120\n          ],\n          [\n            300,\n            160\n          ],\n          [\n            520,\n            200\n          ]\n        ]\n      }\n    },\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 1,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 54\n      },\n      \"elapsedMs\" : 7114,\n      \"index\" : 1,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 0,\n        \"axQuietMs\" : 775,\n        \"elapsedMs\" : 769,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7\",\n      \"step\" : {\n        \"durationMs\" : 6000,\n        \"kind\" : \"dragPath\",\n        \"label\" : \"drag 2\",\n        \"path\" : [\n          [\n            520,\n            200\n          ],\n          [\n            300,\n            240\n          ],\n          [\n            80,\n            280\n          ]\n        ]\n      }\n    },\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 1,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 54\n      },\n      \"elapsedMs\" : 8222,\n      \"index\" : 2,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 0,\n        \"axQuietMs\" : 1852,\n        \"elapsedMs\" : 1852,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7\",\n      \"step\" : {\n        \"durationMs\" : 6000,\n        \"kind\" : \"dragPath\",\n        \"label\" : \"drag 3\",\n        \"path\" : [\n          [\n            80,\n            280\n          ],\n          [\n            300,\n            200\n          ],\n          [\n            520,\n            140\n          ]\n        ]\n      }\n    }\n  ],\n  \"takeover\" : {\n    \"blocked\" : true,\n    \"blockedMs\" : 18779,\n    \"releasedBy\" : \"runEnded\",\n    \"shown\" : true,\n    \"swallowed\" : 6\n  },\n  \"takeoverNote\" : \"Proctor held the keyboard and mouse for 18.8s of this run, across the steps it was posting events into the application. Somebody used the machine 6 times while it was held, and those events did not reach the application.\",\n  \"window\" : \"win:1:0\",\n  \"yieldNote\" : \"This run was held 3 times for 51356ms because somebody was using the machine (secureInput, userInput). The steps still ran in order; the run took longer than its work did.\",\n  \"yields\" : [\n    {\n      \"endedBy\" : \"released\",\n      \"heldMs\" : 8205,\n      \"reason\" : \"userInput\",\n      \"step\" : 1\n    },\n    {\n      \"endedBy\" : \"released\",\n      \"heldMs\" : 8109,\n      \"reason\" : \"userInput\",\n      \"step\" : 2\n    },\n    {\n      \"endedBy\" : \"released\",\n      \"heldMs\" : 35042,\n      \"reason\" : \"secureInput\",\n      \"step\" : 2\n    }\n  ]\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "backend": "native",
+      "completed": 3,
+      "finalHash": "43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7",
+      "foreground": {
+        "declaredCertain": 3,
+        "declaredConditional": 0,
+        "measured": 3,
+        "ranInForeground": true,
+        "requestIgnored": false,
+        "totalSteps": 3,
+        "unproven": 0,
+        "unrequestedForeground": 0
+      },
+      "foregroundNote": "3 of 3 steps travelled as synthetic events, which required the application to be frontmost. The result is not a background-safe one, and this run cannot be repeated unattended.",
+      "machine": {
+        "kind": "host",
+        "platform": "macos",
+        "tier": "native"
+      },
+      "steps": [
+        {
+          "backend": "native",
+          "diff": {
+            "added": [
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "frame": {
+                  "h": 20,
+                  "w": 680,
+                  "x": 486,
+                  "y": 184
+                },
+                "id": "nd:0812bd9718fe32e1",
+                "role": "AXProgressIndicator",
+                "roleDescription": "progress indicator",
+                "value": 0.3177990954992159,
+                "writableAttributes": []
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "frame": {
+                  "h": 15,
+                  "w": 643.5,
+                  "x": 486,
+                  "y": 137
+                },
+                "id": "nd:099a2edc025b9412",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "What Proctor did on this Mac, one row per run. It is kept on this Mac only, encrypted, and it clears itself as it ages.",
+                "writableAttributes": []
+              },
+              {
+                "actions": [],
+                "childCount": 1,
+                "focused": false,
+                "frame": {
+                  "h": 14,
+                  "w": 14,
+                  "x": 501,
+                  "y": 42
+                },
+                "id": "nd:0c70ea584e150158",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1228
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:1131a656b78f9fda",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 268
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:1828c122f1353059",
+                "label": "proctor_act, com.apple.TextEdit, 1 step, failed, 5 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "focused": false,
+                "frame": {
+                  "h": 14,
+                  "w": 14,
+                  "x": 501,
+                  "y": 42
+                },
+                "id": "nd:244ffdcb72ab9244",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "frame": {
+                  "h": 0,
+                  "w": 0,
+                  "x": 1189,
+                  "y": 65
+                },
+                "id": "nd:251158c2418983df",
+                "role": "AXButton",
+                "roleDescription": "increment arrow button",
+                "subrole": "AXIncrementArrow",
+                "writableAttributes": []
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 52,
+                  "x": 528,
+                  "y": 41
+                },
+                "id": "nd:27299163f4583544",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "History",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 548
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:2ae532409832faaa",
+                "label": "proctor_guest.attach, guest:lume:proctor-guest, 1 step, 7 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 348
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:2ce718611562e214",
+                "label": "proctor_act, com.apple.TextEdit, 3 steps, 10.2 s, 5 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 20,
+                  "w": 60.5,
+                  "x": 1041.5,
+                  "y": 105
+                },
+                "id": "nd:2f1937de5d5f33e2",
+                "label": "Refresh",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 868
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:31b895d341ca743c",
+                "label": "proctor_guest.attach, guest:lume:proctor-guest, 1 step, 8 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 388
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:32369c373b9c0066",
+                "label": "proctor_apps, com.apple.Safari, named another lane, 379 ms, 5 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 1,
+                "focused": false,
+                "frame": {
+                  "h": 968,
+                  "w": 760,
+                  "x": 446,
+                  "y": 33
+                },
+                "id": "nd:3c2b4f7503529a65",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "subrole": "AXHostingView",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 16,
+                  "x": 454,
+                  "y": 41
+                },
+                "id": "nd:408d7ee4f729e57b",
+                "role": "AXButton",
+                "roleDescription": "close button",
+                "subrole": "AXCloseButton",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 988
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:41f9a5dd0b6926ff",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 668
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:539c70e2fdd23015",
+                "label": "proctor_guest.detach, guest:lume:proctor-guest, 1 step, 8 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "frame": {
+                  "h": 15,
+                  "w": 37.5,
+                  "x": 486,
+                  "y": 164
+                },
+                "id": "nd:5736b08503b61e7d",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "1,204",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 908
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:5bc7f60e662ba52f",
+                "label": "proctor_guest.detach, guest:lume:proctor-guest, 1 step, 8 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1388
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:69972fc0b4f92588",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXRaise"
+                ],
+                "childCount": 5,
+                "focused": true,
+                "frame": {
+                  "h": 968,
+                  "w": 760,
+                  "x": 446,
+                  "y": 33
+                },
+                "id": "nd:73e4c14bae494dce",
+                "identifier": "history",
+                "role": "AXWindow",
+                "roleDescription": "standard window",
+                "subrole": "AXStandardWindow",
+                "title": "History",
+                "writableAttributes": [
+                  "AXPosition",
+                  "AXSections",
+                  "AXMain",
+                  "AXMinimized",
+                  "AXSize"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 748
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:7666d047842558d5",
+                "label": "proctor_guest.detach, guest:lume:proctor-guest, 1 step, 8 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1188
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:7d0f154c1f1bd526",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1068
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:7d26e3044b45dd1d",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1028
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:82170ae1a4aae693",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 16,
+                  "x": 477,
+                  "y": 41
+                },
+                "id": "nd:8a10a814b13d0169",
+                "role": "AXButton",
+                "roleDescription": "minimize button",
+                "subrole": "AXMinimizeButton",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "frame": {
+                  "h": 0,
+                  "w": 0,
+                  "x": 1189,
+                  "y": 65
+                },
+                "id": "nd:91d71bbbd57df800",
+                "role": "AXButton",
+                "roleDescription": "decrement arrow button",
+                "subrole": "AXDecrementArrow",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress",
+                  "AXShowMenu"
+                ],
+                "childCount": 1,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 16,
+                  "x": 500,
+                  "y": 41
+                },
+                "id": "nd:977952ba5b289289",
+                "role": "AXButton",
+                "roleDescription": "zoom button",
+                "subrole": "AXZoomButton",
+                "writableAttributes": []
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "frame": {
+                  "h": 13,
+                  "w": 49,
+                  "x": 486,
+                  "y": 109
+                },
+                "id": "nd:9a14c83169bc12d6",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "HISTORY",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 948
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:9ac2fcbf11f2f657",
+                "label": "proctor_guest.attach, guest:lume:proctor-guest, 1 step, 8 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "frame": {
+                  "h": 0,
+                  "w": 6,
+                  "x": 1197,
+                  "y": 68
+                },
+                "id": "nd:9c397e868dca9bf3",
+                "role": "AXButton",
+                "roleDescription": "decrement page button",
+                "subrole": "AXDecrementPage",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXScrollLeftByPage",
+                  "AXScrollRightByPage",
+                  "AXScrollUpByPage",
+                  "AXScrollDownByPage"
+                ],
+                "childCount": 40,
+                "focused": false,
+                "frame": {
+                  "h": 936,
+                  "w": 760,
+                  "x": 446,
+                  "y": 65
+                },
+                "id": "nd:a24cd13587976d76",
+                "role": "AXScrollArea",
+                "roleDescription": "scroll area",
+                "writableAttributes": [
+                  "AXMakeScreenRectVisible"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 708
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:a6a1bd77f7164bf6",
+                "label": "proctor_guest.attach, guest:lume:proctor-guest, 1 step, 8 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 308
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:aaf560601c9422d9",
+                "label": "proctor_act, com.apple.TextEdit, 3 steps, 10.7 s, 5 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "frame": {
+                  "h": 618,
+                  "w": 6,
+                  "x": 1197,
+                  "y": 68
+                },
+                "id": "nd:b0352663945214e3",
+                "role": "AXValueIndicator",
+                "roleDescription": "value indicator",
+                "value": 0,
+                "writableAttributes": [
+                  "AXValue"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "frame": {
+                  "h": 14,
+                  "w": 261,
+                  "x": 905,
+                  "y": 164.5
+                },
+                "id": "nd:b0686ecef96d9191",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "keeps 14 days or 10,000 entries, then starts again",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1268
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:b41c534b857a964b",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 20,
+                  "w": 56,
+                  "x": 1110,
+                  "y": 105
+                },
+                "id": "nd:b4abc16f9eba6d0c",
+                "label": "Clear\u2026",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 468
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:be4cd79d18cb1333",
+                "label": "proctor_guest.attach, guest:lume:proctor-guest, 1 step, 7 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 5,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 930.5,
+                  "w": 19,
+                  "x": 1188,
+                  "y": 64
+                },
+                "id": "nd:bf0ba661e311148d",
+                "role": "AXScrollBar",
+                "roleDescription": "scroll bar",
+                "value": 0,
+                "writableAttributes": [
+                  "AXFocused",
+                  "AXValue",
+                  "AXHidden"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "frame": {
+                  "h": 15,
+                  "w": 67,
+                  "x": 529.5,
+                  "y": 164
+                },
+                "id": "nd:cc3429082017e88d",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "entries held",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 628
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:cda1f55f9aa0f1d4",
+                "label": "proctor_guest.attach, guest:lume:proctor-guest, 1 step, 7 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1108
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:d407803108d7014e",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1308
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:d876913781f9243b",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1428
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:d898829dd428504a",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 2 steps, 2.7 s, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 828
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:d8d39546a3423636",
+                "label": "proctor_guest.detach, guest:lume:proctor-guest, 1 step, 8 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 788
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:e8f333aea96f9e60",
+                "label": "proctor_guest.attach, guest:lume:proctor-guest, 1 step, 8 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 428
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:e92516cb64bde18d",
+                "label": "proctor_guest.detach, guest:lume:proctor-guest, 1 step, 7 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "frame": {
+                  "h": 13,
+                  "w": 28,
+                  "x": 470,
+                  "y": 240
+                },
+                "id": "nd:ee13698499433dbe",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "RUNS",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "frame": {
+                  "h": 304,
+                  "w": 6,
+                  "x": 1197,
+                  "y": 686.5
+                },
+                "id": "nd:f0b2a3c6835ea77a",
+                "role": "AXButton",
+                "roleDescription": "increment page button",
+                "subrole": "AXIncrementPage",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 588
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:f0c51937436f961d",
+                "label": "proctor_guest.detach, guest:lume:proctor-guest, 1 step, 7 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1348
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:f824911930670b2a",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 508
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:fb819d6e5ccc5c7c",
+                "label": "proctor_guest.detach, guest:lume:proctor-guest, 1 step, 7 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 692,
+                  "x": 480,
+                  "y": 1148
+                },
+                "help": "A name Proctor read from the application",
+                "id": "nd:feaaa90cc480bb2a",
+                "label": "proctor_act, app.fledgeling.orderly.mac, 1 step, 10 hours ago",
+                "role": "AXButton",
+                "roleDescription": "button",
+                "selected": true,
+                "writableAttributes": [
+                  "AXFocused"
+                ]
+              }
+            ],
+            "changed": [],
+            "fromRevision": 0,
+            "removed": [],
+            "unchangedCount": 0
+          },
+          "elapsedMs": 7105,
+          "index": 0,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 0,
+            "axQuietMs": 764,
+            "elapsedMs": 757,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7",
+          "step": {
+            "durationMs": 6000,
+            "kind": "dragPath",
+            "label": "drag 1",
+            "path": [
+              [
+                80,
+                120
+              ],
+              [
+                300,
+                160
+              ],
+              [
+                520,
+                200
+              ]
+            ]
+          }
+        },
+        {
+          "backend": "native",
+          "diff": {
+            "added": [],
+            "changed": [],
+            "fromRevision": 1,
+            "removed": [],
+            "unchangedCount": 54
+          },
+          "elapsedMs": 7114,
+          "index": 1,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 0,
+            "axQuietMs": 775,
+            "elapsedMs": 769,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7",
+          "step": {
+            "durationMs": 6000,
+            "kind": "dragPath",
+            "label": "drag 2",
+            "path": [
+              [
+                520,
+                200
+              ],
+              [
+                300,
+                240
+              ],
+              [
+                80,
+                280
+              ]
+            ]
+          }
+        },
+        {
+          "backend": "native",
+          "diff": {
+            "added": [],
+            "changed": [],
+            "fromRevision": 1,
+            "removed": [],
+            "unchangedCount": 54
+          },
+          "elapsedMs": 8222,
+          "index": 2,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 0,
+            "axQuietMs": 1852,
+            "elapsedMs": 1852,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "43f37225258c8e50c660e307e5b9ae7c09a2b1ce5d97ead84413ab1cc50a8dc7",
+          "step": {
+            "durationMs": 6000,
+            "kind": "dragPath",
+            "label": "drag 3",
+            "path": [
+              [
+                80,
+                280
+              ],
+              [
+                300,
+                200
+              ],
+              [
+                520,
+                140
+              ]
+            ]
+          }
+        }
+      ],
+      "takeover": {
+        "blocked": true,
+        "blockedMs": 18779,
+        "releasedBy": "runEnded",
+        "shown": true,
+        "swallowed": 6
+      },
+      "takeoverNote": "Proctor held the keyboard and mouse for 18.8s of this run, across the steps it was posting events into the application. Somebody used the machine 6 times while it was held, and those events did not reach the application.",
+      "window": "win:1:0",
+      "yieldNote": "This run was held 3 times for 51356ms because somebody was using the machine (secureInput, userInput). The steps still ran in order; the run took longer than its work did.",
+      "yields": [
+        {
+          "endedBy": "released",
+          "heldMs": 8205,
+          "reason": "userInput",
+          "step": 1
+        },
+        {
+          "endedBy": "released",
+          "heldMs": 8109,
+          "reason": "userInput",
+          "step": 2
+        },
+        {
+          "endedBy": "released",
+          "heldMs": 35042,
+          "reason": "secureInput",
+          "step": 2
+        }
+      ]
+    }
+  }
+}
