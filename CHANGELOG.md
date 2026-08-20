@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Proctor can drive a Mac that isn't yours.** Attach a session to a macOS guest and every tool call from it runs inside that guest. The Proctor in there holds that machine's Accessibility and Screen Recording grants and talks to its own window server, so what you get back is a verdict about the guest, not about your desk.
+
+  Here's how it works. Open the SSH StreamLocal tunnel that `proctor_guest reach` already describes, then call `proctor_guest` with action `attach` and the guest's name. Your calls are forwarded over that socket as they are. `proctor_guest`, `proctor_doctor`, `proctor_policy` and the history and queue verbs keep answering about your Mac, because the pool and the audit trail live here. Action `detach` points the session back at this Mac.
+
+  The host actuates nothing for a guest session, and that's the whole point rather than a side effect. If the tunnel drops, the batch is refused with the guest named and nothing runs here instead. A verdict that looks fine and measures the wrong machine is the one outcome this can't be allowed to produce, so there is no fallback path to disable; the branch simply isn't written.
+
+  Note: Proctor still creates no guest, installs nothing inside one, and grants no permission. Accessibility and Screen Recording are granted by a person inside the guest, once, and cloning that guest reproduces them.
+
+- **Two macOS guests at a time, with a queue for the third.** That's Apple's limit on Apple silicon, not a setting we picked, and it's recorded in the code with that reason next to it. A third macOS guest waits in the queue and is told its position and how deep the line is, the same way a busy Mac lane already does. One session drives one named guest, so a second session naming the same guest waits for it even when a slot is free.
+
+  The queue never evicts. A guest you started yourself, or one another session is holding, is waited for and never stopped to make room. Stopping a running VM throws away its state, and a scheduler allowed to do that to reach a queued run can destroy work nobody asked it to risk. Proctor only stops a guest it started.
+
+  Which pool a guest joins comes from the platform its provider reports, never from its name. A guest whose provider won't say which OS it runs is refused rather than attached, because an unknown platform would sit outside the count and quietly break the limit.
+
+  `proctor_doctor`'s guest lane now reports the pool: capacity, how many slots are held, by which sessions and guests, and how many runs are waiting. It's counted from Proctor's own scheduler, so reading it still runs no provider and starts no VM.
+
+- **`tart` is a third guest provider**, beside `lume` and `prlctl`, on the same seam. Its listing doesn't carry the guest's OS, so Proctor reads that from `tart get` per guest rather than guessing from the name.
+
 - **Proctor now has a command line, and it isn't a second way in.** `proctor` gives you 21 verbs, one per tool, so you can drive and check this Mac from a shell without a model in the loop. The verbs come from the tool catalogue rather than a list somebody maintains, so a new tool can't ship without one. Shell completion is generated the same way, for zsh and bash.
 
   A CLI call takes the same socket as the MCP shim, passes the same policy gate, joins the same queue lane, lands in the same audit trail and shows on the same run HUD. The only thing that differs is who called, and the trail now says which: every row records whether it came from the CLI or from a model. That's read from the process on the other end of the socket, not from the request, because a caller that could name itself could name itself as the other one in the very record you'd argue from.
@@ -97,6 +115,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **A halted run no longer tells you where it was stopped from.** Stop is reachable from the run panel, the menu bar and the terminal, and they all write the same latch, so a message naming one of them was wrong two times in three. It names what happened instead.
 
 The gate after this wave is 1,666 tests in 198 suites, from 1,516 in 175 when it started.
+
+### Fixed
+
+- **A macOS guest calling itself `darwin` was classified as Windows.** The platform check tested whether the provider's word contained "win", and dar-win contains it. Any guest whose provider named its platform honestly came back as a Windows machine: it took the delegated witness tier, lost the accessibility tree and the frame-status channel it actually has, and was refused by `reach` as a machine with no Proctor inside.
+
+  Matching is now on a whole token that starts with "win", so `win`, `win11` and `windows` are still Windows and `darwin` isn't. This has been latent since the guest providers shipped and only surfaced because `tart` is the first provider here that says `darwin` rather than `macOS`.
 
 ## [0.2.0] - 2026-08-17
 

@@ -189,3 +189,95 @@ injectable seam, as the other two adapters already are.
 
 Implementation plan: `docs/plans/plan-PRO-0076.md` (committed: `cdaeea0`, tier: Large).
 Out-of-family plan review: grok `grok-4.6` `xhigh`, verdict ACCEPT WITH CHANGES, folded in.
+
+---
+
+## Progress (2026-08-20)
+
+Built on `ai/pro-0076` off `ai/wave-9`. **1,780 tests in 210 suites green**, whole suite, via
+`./scripts/test.sh`. Eleven of twelve criteria plus A1b settled; A1's live half is blocked at the
+TCC grant, which is the manual gate this wave recorded in advance.
+
+### Per clause
+
+| Clause | State | Evidence |
+|---|---|---|
+| A1 | **settled (seam), blocked (live)** | `GuestAttachWiringTests` — an attached session's calls reach the link and `FakeAX.performed` is empty. Live attach blocked at the grant; see below. |
+| A1b | **settled** | Measured against `anvil-mac-node`, recorded below. |
+| A2 | settled | `GuestAttachWiringTests` — a failing link refuses naming the guest, no host step; a source guard asserts the fallback branch does not exist. |
+| A3 | settled | `GuestAttachmentTests` — tier derived both directions; `darwin` → `.macos` → `.native`. |
+| A4 | settled | `GuestAttachmentTests` + `GuestAttachWiringTests` — all three cases, including one identity's handle under another's guest session. |
+| A5 | settled | `GuestPoolLaneTests` — capacity 1/2/3 admit 1/2/3; one scan cannot admit three into two; a linux guest is not counted against the macOS pool. |
+| A6 | settled | `GuestPoolLaneTests` + `GuestPoolWiringTests` — two sessions on one guest serialise with a slot free. |
+| A7 | settled | `GuestPoolWiringTests` — the third queues rather than being refused; the timeout carries position and depth. |
+| A8 | settled | `GuestPoolWiringTests` — the per-session cap binds the attach path; the holder's idle ceiling is separate from the wait limit. |
+| A9 | settled | `GuestAttachWiringTests` — a stopped guest is started through the audited path, with `guestStart` and `guestAttach` rows; release stops only what this agent started. |
+| A10 | settled | `GuestPoolWiringTests` + `GuestPoolLaneTests` — a full pool queues for a person-started guest and for one another session holds; no `stop` in the provider log. |
+| A11 | settled | `GuestPoolWiringTests` — a vanished guest releases the slot and names the disappearance; concurrent releases decrement once. |
+| A12 | settled | `GuestPoolWiringTests` — capacity, held, holders and waiting each asserted; the provider call count is unchanged across two reports. |
+
+Nine of those were **armed by seeded mutation** rather than trusted for passing: break the forward,
+the cap, the fail-closed refusal, the guest mutex, the tier derivation, the vanish release, the
+dead-peer reclaim, the idempotence latch or the no-provider rule, and the matching test goes red.
+
+### A1b — what the guest-side install actually needs
+
+Measured against `anvil-mac-node` on 2026-08-20. It was started for this and stopped again; it is
+back in the `stopped` state it was found in, and nothing about it was changed.
+
+- **It boots headless.** `tart run anvil-mac-node --no-graphics`, `State: running` within ~20s,
+  `OS: darwin`, 8 CPU, 16384 MB.
+- **The Tart Guest Agent is ABSENT.** `tart exec` fails with *"Failed to connect to the VM using
+  its control socket … is the Tart Guest Agent running?"*. So `tart exec` is not a route into this
+  guest, and the install has to go over SSH.
+- **SSH is reachable and needs a credential this agent does not have.** The guest takes
+  `192.168.65.2` from the dhcp resolver, port 22 is open and `sshd` answers, offering
+  `publickey,password,keyboard-interactive`. No key on this host authenticates as `admin`. No
+  password was attempted: the guest belongs to another project, and guessing a credential against
+  somebody else's machine is not something to do unasked.
+- **Signing, and what it costs the reader.** A guest build signed ad-hoc keys its TCC grants to the
+  exact bytes, so Accessibility and Screen Recording are thrown away on every rebuild and must be
+  re-granted by hand each time. A Developer ID signature keys them to the team-scoped identity
+  instead and survives a rebuild, which is why this repo's `scripts/install.sh` notarises by
+  default. Use the Developer ID path for the guest too; the ad-hoc build is only worth it for a
+  throwaway you will run once.
+
+### A1 — the manual gate, and exactly what a person must do
+
+Accessibility and Screen Recording cannot be granted from outside a macOS guest, so the live half
+of A1 stops here rather than being reported as verified. In order:
+
+1. **Start the guest and open a display.** `tart run anvil-mac-node` (without `--no-graphics`, so
+   there is a screen to click in). It boots to the login window in about 20 seconds.
+2. **Get in.** Log in at the console, or install an SSH key for the guest's admin user. Nothing
+   below can be done over `tart exec`, because the guest has no Tart Guest Agent.
+3. **Put a Proctor inside it.** Build with `scripts/install.sh` and copy the notarised
+   `Proctor.app` into the guest's `~/Applications`, then run its installer inside the guest so
+   launchd owns the agent. Ad-hoc signing works and costs a re-grant on every rebuild.
+4. **Grant the two permissions, inside the guest, in its own GUI session.** System Settings >
+   Privacy & Security > **Accessibility**, add `Proctor.app`, switch it on. Then System Settings >
+   Privacy & Security > **Screen Recording**, same bundle, same switch. An SSH session cannot do
+   this: it is not the foreground Aqua session that owns the desktop, and neither an agent nor a
+   daemon can raise the TCC prompt.
+5. **Forward the socket.** On this Mac, open the tunnel `proctor_guest reach` describes:
+   `ssh -L <localSocket>:<remoteSocket> admin@192.168.65.2`, with `remoteSocket`
+   `~/Library/Application Support/app.fledgeling.procter/agent.sock` for a standard install.
+   Proctor does not open this and does not install `ssh`.
+6. **Then run the proof.** `proctor guest --action attach --guest anvil-mac-node`, followed by any
+   actuating call, and confirm the result's `machine` names the guest. The clause is settled when a
+   step performed through that session changes something inside the guest and nothing on this Mac.
+
+### Discovered, and reported rather than minted
+
+- **A defect in PRO-0058's code, fixed here because it blocks A3 and A5.**
+  `GuestPlatform.infer` tested `hay.contains("win")` for Windows, and dar-**win** contains it. Every
+  macOS guest whose provider named its platform `darwin` was classified Windows: delegated tier, no
+  accessibility tree, no frame-status channel, and refused by `GuestReach` as a machine with no
+  Proctor inside. Latent since PRO-0058; it surfaced now because `tart` is the first provider here
+  that says `darwin` rather than `macOS`. Matching is now on a token that starts with "win".
+- **A question for the reader, not decided here.** Guests started outside Proctor are not in the
+  pool's count. `proctor_guest start` for a macOS guest now takes a slot, which closes the bypass
+  inside Proctor, but a VM a person boots in the provider's own CLI still sits outside Apple's two
+  as Proctor counts them. Counting those means executing a provider on a schedule, which is exactly
+  what A12's discipline refuses, so the doctor states the limit instead. Widening it is a scope
+  call rather than an implementation one.

@@ -185,8 +185,12 @@ struct TartProviderTests {
 
     @Test("a guest already running is not started again")
     func alreadyRunningIsLeftAlone() async throws {
+        // The exact row tart printed for anvil-mac-node while it was up,
+        // measured 2026-08-20 rather than written to match the parser.
         let running = """
-        [{ "Name": "anvil-mac-node", "State": "running", "Running": true, "Disk": 50 }]
+        [{ "Size": 29, "Running": true, "Disk": 50, "State": "running",
+           "Source": "local", "Name": "anvil-mac-node",
+           "Accessed": "2026-08-20T07:22:47Z" }]
         """
         let script = Script(listReply: ok(running))
         let record = try await provider(script).start(name: "anvil-mac-node")
