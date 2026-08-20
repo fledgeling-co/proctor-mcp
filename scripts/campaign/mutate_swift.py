@@ -23,6 +23,14 @@ describes a table it does not read is a second source, which is the defect this
 repo's whole provenance thesis exists to prevent, arriving in the tool built to
 find it.
 
+**A baseline run comes first, and a red baseline stops the run.** Without it a
+suite that was already failing reports every mutant as KILLED and returns a 0%
+survival rate that means nothing — the one number in this file that looks best
+when it is worthless. It also catches the subtler case that produced the rule:
+this compiles the whole package on every mutant, so it picks up whatever else is
+in the working directory, and a run in flight while somebody edits elsewhere is
+measuring a tree nobody chose.
+
 Three safety rules, because this edits the working tree rather than a copy. It
 refuses to start unless `git status` is clean; it reverts the file after every
 mutant and verifies the tree is clean again at the end; and it reverts on the
@@ -196,6 +204,15 @@ def main() -> int:
         print(dirty[:400])
         return 2
 
+    print("baseline: running the suite once before mutating anything…", flush=True)
+    base_passed, base_why = run_suite(args.timeout)
+    if not base_passed:
+        print(f"REFUSING: the suite does not pass before any mutation ({base_why}).")
+        print("Every mutant would report as killed and the survival rate would be 0% "
+              "for the wrong reason.")
+        return 2
+    print("baseline: green", flush=True)
+
     pool: list[dict] = []
     for t in args.targets:
         pool += candidates(Path(t))
@@ -261,6 +278,7 @@ def main() -> int:
         "survivalRate": round(survived / scored, 4) if scored else None,
         "treeCleanAfter": not still_dirty,
         "targets": args.targets, "seed": args.seed, "byOperator": by_op,
+        "baselineGreen": True,
     }
     Path(args.out).write_text(json.dumps({"summary": summary, "mutants": results},
                                          indent=1) + "\n")
