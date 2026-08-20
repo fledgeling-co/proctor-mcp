@@ -385,7 +385,7 @@ None of these blocks its item; each has a defensible default recorded in the spe
 
 | ID | Title | Status | Depends on | Slot |
 |---|---|---|---|---|
-| PRO-0076 | The guest lane, capped at two, with a queue | **Needs More Work** — verifier `wf_9e98d6f7-012` returned NEEDS MORE WORK. Ten clauses settled at `outcome`; A12 not settled and A1's wiring claim overstated, both `presence` only. Gap-fix re-queued in the same worktree. | PRO-0058, PRO-0060, PRO-0061 (all merged) | 1 of 1 |
+| PRO-0076 | The guest lane, capped at two, with a queue | **Merged** `9172bac` into `ai/wave-9`. Ten clauses at `outcome`; A1-live and A1b **carried** at the in-guest grant. | PRO-0058, PRO-0060, PRO-0061 | 1 of 1 |
 
 **Fleet size: 1.** Nothing else is ready, so concurrency is moot and the 3-slot cap is unused.
 
@@ -421,6 +421,27 @@ In-family verifier, **logged downgrade**: the out-of-family lane here is grok an
 **Two independent confirmations.** The `darwin` fix is upheld, and the regression direction was checked: `windows`, `win-11`, `Win11 ARM` and `Windows Server` all still resolve, only unseparated compounds like `mswindows` now return nil, and nil is fail-closed. And the attachments-versus-VMs call recorded above was reached independently by the verifier: A5 constrains the lane and A7 constrains a run that would boot a third, both attach-path facts, and nothing in A5 to A12 asserts a host-wide invariant over running VMs.
 
 **Scope clean.** Nothing redesigns the run queue, the session actor or the audit trail.
+
+### Finalisation, 2026-08-20 — merged
+
+Gap-fix closed all six findings. **The orchestrator re-armed rather than taking the handback at its word**, which is the whole point of the stop-before-merge rule, and all four bit:
+
+| Mutation | Result |
+|---|---|
+| Delete `Dispatch.swift`'s guest-forwarding funnel | 3 assertions red in `GuestDispatchWiringTests` |
+| Delete `Dispatch.swift`'s `guestPool` report | 2 assertions red in `DoctorReplyWiringTests` |
+| Drop `startedByThisAgent` from the release guard (A10) | 2 assertions red — never-evict survives the F5 refactor |
+| Remove the audited boot-timeout stop (A9) | 4 assertions red, including the audit row's outcome and bundle id |
+
+The last two matter because the gap-fix changed **production** behaviour that had already been graded: F5 routed three stop call sites through one `stopGuestThroughAuditedPath`. A refactor under previously-settled clauses is exactly where a green suite is least informative, so both were re-armed rather than assumed.
+
+**Two counting corrections, recorded because the ledger is the record.** `cdaeea0` is the runner's own first commit, not the branch point; the true merge base is `492a8a1` and the branch is **14** commits. The earlier note calling the runner's count wrong was itself wrong.
+
+**Carried, and named on the row rather than hidden in a verdict:** A1's live half and A1b. Executing inside a guest needs Accessibility and Screen Recording granted at the guest's own console, and nothing outside a macOS guest can grant them. The seam evidence is recorded as seam-level, not passed off as live. The reader chose live measurement on 2026-08-20, so this is an open handover rather than a closed decision.
+
+**Oracle mix for this wave's one item:** ten clauses at `outcome`, two carried, zero at `presence` — the two that were `presence` at verdict time are the two the gap-fix raised. Verifier in-family (logged downgrade); out-of-family plan review and completeness critic both ran on grok with no downgrade.
+
+Worktree `.worktrees/PRO-0076` removed and `ai/pro-0076` deleted, both after proving zero unique commits against `ai/wave-9`. `main` untouched at `c7fbe29`. Nothing pushed.
 
 ### Ledger drift noted, not swept
 

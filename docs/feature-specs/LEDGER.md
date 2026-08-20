@@ -82,4 +82,4 @@
 | PRO-0073 | proctor, the operator CLI | 2026-08-20 | Merged |
 | PRO-0074 | proctor tui, the supervision surface | 2026-08-20 | Merged |
 | PRO-0075 | what the 0.8.0 campaign found | 2026-08-20 | Merged |
-| PRO-0076 | The guest lane, capped at two, with a queue | 2026-08-20 | Ready for Plan |
+| PRO-0076 | The guest lane, capped at two, with a queue | 2026-08-20 | Merged `9172bac` (A1-live + A1b carried) |
