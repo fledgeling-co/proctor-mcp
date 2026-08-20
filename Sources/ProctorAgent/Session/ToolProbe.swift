@@ -155,6 +155,17 @@ final class ToolProbe: @unchecked Sendable {
                            isExecutable: executableRegularFile)
     }
 
+    /// `tart`, Cirrus Labs' Virtualization.framework CLI. Same rule as lume:
+    /// a filesystem read, never an execution.
+    static func tartOnDisk() -> ToolPresence {
+        ToolLocator.locate(binary: TartTool.binary,
+                           companions: [],
+                           pathEnvironment: ProcessInfo.processInfo.environment["PATH"],
+                           home: NSHomeDirectory(),
+                           extraDirectories: TartTool.extraDirectories,
+                           isExecutable: executableRegularFile)
+    }
+
     /// `prlctl`, Parallels Desktop's CLI. Same rule as lume: a name at a path,
     /// not a verified tool. The symlink at `/usr/local/bin/prlctl` is what a
     /// launchd agent actually finds.
@@ -229,6 +240,7 @@ final class ToolProbes: Sendable {
     /// install either mid-run, so there is nothing to poll for.
     let lume: ToolProbe
     let prlctl: ToolProbe
+    let tart: ToolProbe
     /// What `cua-driver`'s code signature says, cached on the file's identity.
     /// Held here beside the presences because it answers the same question they
     /// do — can this be used — and because it is the one part of that answer a
@@ -255,6 +267,9 @@ final class ToolProbes: Sendable {
          prlctl: ToolProbe = ToolProbe(probe: ToolProbe.prlctlOnDisk,
                                        presentTTL: ToolProbe.presentTTL,
                                        absentTTL: ToolProbe.presentTTL),
+         tart: ToolProbe = ToolProbe(probe: ToolProbe.tartOnDisk,
+                                     presentTTL: ToolProbe.presentTTL,
+                                     absentTTL: ToolProbe.presentTTL),
          cuaSignature: SignatureVerdictCache = SignatureVerdictCache(),
          environment: [String: String] = ProctorEnvironment.current) {
         self.obscura = obscura
@@ -264,6 +279,7 @@ final class ToolProbes: Sendable {
         self.maestro = maestro
         self.lume = lume
         self.prlctl = prlctl
+        self.tart = tart
         self.cuaSignature = cuaSignature
         self.environment = environment
     }

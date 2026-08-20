@@ -258,3 +258,178 @@ final class PrlctlProvider: GuestProvider {
                                   truncated: run.truncated)
     }
 }
+
+// MARK: - tart
+
+/// Cirrus Labs' Virtualization.framework CLI, and the only provider on this
+/// machine with a working macOS guest — which is what makes PRO-0076's attach
+/// measurable rather than carried.
+///
+/// Argument shape measured against tart 2.32.1 on 2026-08-20 rather than read
+/// from its docs: `list --format json`, `get <name> --format json`, `run`,
+/// `stop`, `clone <src> <dst>`.
+///
+/// **Two things differ from the other two adapters, and each is forced by tart
+/// rather than chosen.**
+///
+/// `list` does not print `OS`, so every row is enriched with a `get` to learn
+/// its platform. That costs one extra process per guest and it buys the one
+/// fact PRO-0076's cap is derived from. A `get` that fails leaves the platform
+/// nil, and a guest whose platform could not be read is refused at attach
+/// rather than admitted uncounted — nil is fail-closed for actuation and
+/// fail-OPEN for the cap, so it cannot be allowed to reach the pool.
+///
+/// `tart run` is a foreground process that lives as long as the VM does, where
+/// `lume run` returns. So `start` launches it detached and polls `get` for
+/// `Running: true`. **A poll that times out stops what it launched** before
+/// reporting the timeout: leaving it up would orphan a macOS guest that is
+/// running, uncounted and unowned, which would make the cap, the start record
+/// and the never-evict rule all false at once. Stopping is permitted there for
+/// the same reason it is at detach — this agent started it.
+final class TartProvider: GuestProvider {
+
+    let id = TartTool.binary
+    private let executable: String
+    private let run: @Sendable (String, [String], Int) -> GuestProcessResult
+    /// Launch and leave. Separate from `run` because a bounded run cannot
+    /// express a process that is meant to outlive the call.
+    private let spawn: @Sendable (String, [String]) -> Void
+    private let sleep: @Sendable (Int) async -> Void
+    private let timeoutMs: Int
+    /// How long `start` waits for the guest to report itself up. A cold macOS
+    /// guest takes tens of seconds; this is generous rather than tight because
+    /// the failure it guards is a boot that never happens, not a slow one.
+    private let startTimeoutMs: Int
+    private let pollIntervalMs: Int
+
+    init(executable: String,
+         timeoutMs: Int = 15_000,
+         startTimeoutMs: Int = 180_000,
+         pollIntervalMs: Int = 2_000,
+         run: @escaping @Sendable (String, [String], Int) -> GuestProcessResult,
+         spawn: @escaping @Sendable (String, [String]) -> Void,
+         sleep: @escaping @Sendable (Int) async -> Void) {
+        self.executable = executable
+        self.timeoutMs = timeoutMs
+        self.startTimeoutMs = startTimeoutMs
+        self.pollIntervalMs = pollIntervalMs
+        self.run = run
+        self.spawn = spawn
+        self.sleep = sleep
+    }
+
+    convenience init(executable: String, timeoutMs: Int = 15_000) {
+        self.init(executable: executable, timeoutMs: timeoutMs,
+                  run: Self.liveRun, spawn: Self.liveSpawn,
+                  sleep: { ms in try? await Task.sleep(nanoseconds: UInt64(max(ms, 0)) * 1_000_000) })
+    }
+
+    func list() async throws -> [GuestRecord] {
+        let result = invoke(["list", "--format", "json"], action: "list")
+        try throwIfFailed(result, action: "list")
+        let rows = try decodeList(result)
+        // The listing does not say which OS, and the cap is derived from that,
+        // so each row is enriched. A get that fails leaves the platform absent
+        // rather than guessing from the name.
+        var out: [GuestRecord] = []
+        out.reserveCapacity(rows.count)
+        for row in rows {
+            var record = row
+            record.platform = platform(of: row.name)
+            out.append(record)
+        }
+        return out
+    }
+
+    func status(name: String) async throws -> GuestRecord {
+        let all = try await list()
+        guard let match = all.first(where: { $0.name == name }) else {
+            throw GuestProviderError.notFound(name: name, provider: id)
+        }
+        return match
+    }
+
+    func start(name: String) async throws -> GuestRecord {
+        let existing = try await status(name: name)
+        if existing.running { return existing }
+
+        spawn(executable, ["run", name])
+
+        var waited = 0
+        while waited < startTimeoutMs {
+            await sleep(pollIntervalMs)
+            waited += pollIntervalMs
+            let probe = invoke(["get", name, "--format", "json"], action: "start")
+            if probe.exitCode == 0, TartInventory.isRunning(fromGet: probe.stdout) {
+                return try await status(name: name)
+            }
+        }
+
+        // It never came up. Stop what was launched rather than leaving a macOS
+        // guest running that nothing is counting and nothing owns.
+        _ = invoke(["stop", name], action: "start")
+        throw GuestProviderError.timedOut(tool: id, action: "start")
+    }
+
+    func stop(name: String) async throws -> GuestRecord {
+        let result = invoke(["stop", name], action: "stop")
+        try throwIfFailed(result, action: "stop")
+        return try await status(name: name)
+    }
+
+    func clone(name: String, as newName: String) async throws -> GuestRecord {
+        let result = invoke(["clone", name, newName], action: "clone")
+        try throwIfFailed(result, action: "clone")
+        return try await status(name: newName)
+    }
+
+    /// One guest's platform, from `get` and from nothing else.
+    private func platform(of name: String) -> MachinePlatform? {
+        let result = invoke(["get", name, "--format", "json"], action: "status")
+        guard result.exitCode == 0, !result.truncated else { return nil }
+        return TartInventory.platform(fromGet: result.stdout)
+    }
+
+    private func invoke(_ arguments: [String], action: String) -> GuestProcessResult {
+        run(executable, arguments, timeoutMs)
+    }
+
+    private func decodeList(_ result: GuestProcessResult) throws -> [GuestRecord] {
+        if result.truncated {
+            throw GuestProviderError.truncated(tool: id, action: "list")
+        }
+        do {
+            return try TartInventory.parse(result.stdout)
+        } catch {
+            throw GuestProviderError.unparseable(tool: id, reason: "tart output was not a listing")
+        }
+    }
+
+    private func throwIfFailed(_ result: GuestProcessResult, action: String) throws {
+        if result.timedOut { throw GuestProviderError.timedOut(tool: id, action: action) }
+        if result.truncated { throw GuestProviderError.truncated(tool: id, action: action) }
+        if result.exitCode != 0 {
+            throw GuestProviderError.commandFailed(tool: id, action: action,
+                                                   exit: result.exitCode, stderr: result.stderr)
+        }
+    }
+
+    private static func liveRun(_ path: String, _ arguments: [String],
+                                _ timeoutMs: Int) -> GuestProcessResult {
+        let run = Session.runBounded(path, arguments, timeoutMs: timeoutMs)
+        return GuestProcessResult(exitCode: run.exitCode, stdout: run.stdout,
+                                  stderr: run.stderr, timedOut: run.timedOut,
+                                  truncated: run.truncated)
+    }
+
+    /// Launch and return. The child outlives this call by design — it is the VM.
+    private static func liveSpawn(_ path: String, _ arguments: [String]) {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: path)
+        process.arguments = arguments
+        process.standardOutput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        process.standardInput = FileHandle.nullDevice
+        try? process.run()
+    }
+}

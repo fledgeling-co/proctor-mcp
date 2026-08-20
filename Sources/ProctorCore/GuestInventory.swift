@@ -104,7 +104,20 @@ public enum GuestPlatform {
         guard !hay.isEmpty else { return nil }
         // Windows first: "Windows 11" would otherwise be unrecognised, and a
         // name like "Windows Server on Linux" is still a Windows guest.
-        if hay.contains("win") { return .windows }
+        //
+        // MATCHED ON A TOKEN, NEVER ON A SUBSTRING, and that is not a tidying.
+        // `hay.contains("win")` was true of **darwin**, which is the word tart
+        // prints for a macOS guest — so every macOS guest whose provider named
+        // its platform honestly came back `.windows`, took the delegated tier,
+        // lost the accessibility tree and the frame-status channel, and was
+        // refused by `GuestReach` as a machine with no Proctor inside. Found by
+        // PRO-0076 against tart 2.32.1; latent since PRO-0058 for any provider
+        // that says `darwin` rather than `macOS`.
+        //
+        // A token that STARTS with "win" is Windows (`win`, `win11`, `windows`);
+        // one that merely contains it is not (`darwin`).
+        let tokens = hay.split(whereSeparator: { !$0.isLetter && !$0.isNumber })
+        if tokens.contains(where: { $0.hasPrefix("win") }) { return .windows }
         if hay.contains("linux") || hay.contains("ubuntu") || hay.contains("debian")
             || hay.contains("fedora") || hay.contains("centos") || hay.contains("rhel")
             || hay.contains("alpine") {
@@ -259,6 +272,92 @@ public enum PrlctlInventory {
                            running: GuestPower.isRunning(state),
                            platform: GuestPlatform.infer(os: os, name: name),
                            identifier: identifier, ip: ip)
+    }
+}
+
+// MARK: - tart
+
+/// Decode `tart list --format json` and `tart get <name> --format json`.
+///
+/// Measured on this machine 2026-08-20 against tart 2.32.1, not read from docs:
+///
+///     list --format json  -> [{Size, State, Source, Name, Running, Accessed, Disk}]
+///     get <n> --format json -> {OS, CPU, Size, State, Display, Memory,
+///                               DiskFormat, Disk, Running}
+///
+/// **The listing carries no `OS`, and that is the whole reason this type has two
+/// halves.** PRO-0076 requires the platform to be read from what the provider
+/// says rather than inferred from a guest's name, because the cap the pool
+/// enforces is Apple's rule about macOS guests. `parse` therefore leaves
+/// `platform` nil and `platform(fromGet:)` reads it from a `get`; the adapter
+/// puts the two together.
+///
+/// Inferring from the name would work on exactly this machine and is refused
+/// anyway: `anvil-mac-node` and `anvil-linux-node` would both come out right,
+/// which is what makes it a trap. A guest called `build-box` would be counted
+/// against Apple's two, or excused from it, by its name.
+public enum TartInventory {
+
+    public static let provider = TartTool.binary
+
+    /// The inventory. `Running` is a real boolean here rather than a word to
+    /// interpret, so it is read directly and `state` keeps the provider's own
+    /// spelling for the report.
+    public static func parse(_ data: Data) throws -> [GuestRecord] {
+        if data.isEmpty { return [] }
+        let decoded = try JSONSerialization.jsonObject(with: data)
+        let rows: [[String: Any]]
+        if let array = decoded as? [[String: Any]] {
+            rows = array
+        } else if let object = decoded as? [String: Any] {
+            rows = [object]
+        } else {
+            throw GuestParseError.unexpectedShape
+        }
+        return rows.compactMap(record(fromJSON:)).sorted {
+            $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+        }
+    }
+
+    private static func record(fromJSON object: [String: Any]) -> GuestRecord? {
+        let name = string(object, "Name") ?? string(object, "name")
+        guard let name, !name.isEmpty else { return nil }
+        let state = string(object, "State") ?? string(object, "state") ?? "unknown"
+        let running: Bool
+        if let flag = object["Running"] as? Bool {
+            running = flag
+        } else {
+            running = GuestPower.isRunning(state)
+        }
+        // Platform deliberately nil: a tart listing does not say. The adapter
+        // fills it from `get`, and a guest whose platform could not be read is
+        // refused at attach rather than admitted uncounted.
+        return GuestRecord(name: name, provider: provider, state: state,
+                           running: running, platform: nil, identifier: name)
+    }
+
+    /// The platform, read from a `tart get` payload and from nothing else.
+    ///
+    /// `name` is passed as nil into the inference on purpose, so the only thing
+    /// consulted is the word the provider printed. tart says `darwin` for a
+    /// macOS guest, which `GuestPlatform.infer` already recognises.
+    public static func platform(fromGet data: Data) -> MachinePlatform? {
+        guard !data.isEmpty,
+              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return nil }
+        let os = string(object, "OS") ?? string(object, "os")
+        return GuestPlatform.infer(os: os, name: nil)
+    }
+
+    /// Whether a `get` payload says the guest is up. Used by `start`, which
+    /// launches tart detached and then polls this rather than waiting on a
+    /// process that lives as long as the VM does.
+    public static func isRunning(fromGet data: Data) -> Bool {
+        guard !data.isEmpty,
+              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return false }
+        if let flag = object["Running"] as? Bool { return flag }
+        return GuestPower.isRunning(string(object, "State") ?? "")
     }
 }
 
@@ -449,6 +548,18 @@ public enum LumeTool {
 /// The binary a person types is a symlink at `/usr/local/bin/prlctl` onto
 /// `parallels_wrapper` inside the app bundle. `ToolLocator` finds the symlink
 /// by name; it does not have to know about the bundle.
+/// `tart`, Cirrus Labs' Virtualization.framework CLI. macOS and Linux guests.
+///
+/// The third adapter, and the one with a working macOS guest on this machine,
+/// which is what makes PRO-0076's attach measurable rather than carried.
+/// Detection is a filesystem read like every other tool; running it is the
+/// adapter's job.
+public enum TartTool {
+    public static let binary = "tart"
+    public static let docs = "https://tart.run"
+    public static let extraDirectories = ToolLocator.commonToolDirectories
+}
+
 public enum PrlctlTool {
     public static let binary = "prlctl"
     public static let docs = "https://www.parallels.com/products/desktop/resources/"

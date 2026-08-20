@@ -288,7 +288,7 @@ extension Session {
             throw AgentError(
                 code: .invalidArguments,
                 message: "unknown guest provider \(provider.debugDescription)",
-                remedy: "Use lume or prlctl, matching a provider proctor_doctor reports as present.")
+                remedy: "Use lume, prlctl or tart, matching a provider proctor_doctor reports as present.")
         }
         return scoped
     }
@@ -310,12 +310,17 @@ extension Session {
         if prlctl.available, let path = prlctl.path {
             out.append(PrlctlProvider(executable: path))
         }
+        let tart = tools.tart.presence()
+        if tart.available, let path = tart.path {
+            out.append(TartProvider(executable: path))
+        }
         guard !out.isEmpty else {
             throw AgentError(
                 code: .notImplemented,
-                message: "Neither lume nor prlctl is anywhere Proctor can see, so there is no guest lane.",
-                remedy: "Install lume (https://github.com/trycua/lume) or Parallels Desktop. "
-                      + "proctor_doctor reports every path it checked. Proctor will never install either.")
+                message: "None of lume, prlctl or tart is anywhere Proctor can see, so there is no guest lane.",
+                remedy: "Install lume (https://github.com/trycua/lume), tart (https://tart.run) or "
+                      + "Parallels Desktop. proctor_doctor reports every path it checked. Proctor "
+                      + "will never install any of them.")
         }
         return out
     }
