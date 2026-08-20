@@ -1,0 +1,58 @@
+Mutation assay over wave 10's new code — 2026-08-20, seed 20260820
+
+TARGETS (7 files, the code PRO-0073/0075/0076 added or changed):
+  CLISurface.swift  GuestAttachment.swift  GuestInventory.swift  RunQueue.swift
+  Takeover.swift  PointerPlane.swift  OverlaySwitch.swift
+
+  188 mutation sites found. 40 selected by the seed. 11 ran before the run was stopped.
+
+RESULT, and it is PARTIAL — the denominator is 11 of 40 selected, 40 of 188 sites:
+  killed       8   (see the caveat below: one of these is not a trustworthy kill)
+  survived     3
+  unbuildable  0
+
+WHY IT STOPPED, and why the number is still worth having. Another project on this machine was
+building concurrently. Mutant timings went 7s, 7s, 6s, 7s, 7s, 6s, 11s, 16s, 47s, 40s, and then
+mutant 11 sat for the full 900s timeout. The runner scores a timeout as `killed`, which is right
+for a mutant that genuinely hangs the suite and wrong for one whose test run was merely starved.
+At up to 900s per mutant the remaining 29 would have taken hours and produced kills nobody could
+distinguish from contention, so the run was stopped rather than continued into an unreliable
+number.
+
+  UNTRUSTWORTHY: mutant 11, Takeover.swift:388 `53 -> 54`, scored killed at exactly 900.0s.
+  Read it as unscored. The honest kill count is 7 of 10 scored, not 8 of 11.
+
+  TRUSTWORTHY IN BOTH DIRECTIONS: the 3 survivors. A survivor means the suite RAN and PASSED,
+  which contention does not cause. Starvation can turn a survivor into a false kill; it cannot
+  turn a kill into a false survivor.
+
+THE THREE SURVIVORS, all in the same untested corner, all now closed:
+
+  Takeover.swift:629  `swallowed > 0` -> `swallowed >= 0`
+    The takeover report gains "Somebody used the machine 0 times while it was held, and those
+    events did not reach the application" on a run nobody touched. The report claims interference
+    that never happened. The existing tests only ever passed a non-zero count, so the clause was
+    never watched for its absence.
+
+  Takeover.swift:626  `Double(blockedMs) / 1000` -> `/ 1001`
+    The held-duration sentence. It survived because the only value under test was 2400ms, and
+    2.400 and 2.397 both format to "2.4" at one decimal. The new test uses 60000ms, where the two
+    read "60.0s" and "59.9s".
+
+  Takeover.swift:356  `InputModifiers(rawValue: 1 << 1)` -> `2 << 1`
+    `option` becomes 4, which is `control`. An OptionSet whose members collide is silently
+    broken: a release chord asking for one would accept the other. Nothing asserted the members
+    were distinct.
+
+ARMED. All three mutants were re-applied together after the tests were written, and the suite
+went red with 6 issues across the three tests:
+  Set(all.map(\.rawValue)).count -> 3 == all.count -> 4        (option collided with control)
+  a.rawValue & b.rawValue -> 4 == 0                            (the overlap named)
+  note contains "Somebody used the machine" -> true             (on swallowed: 0)
+  note contains "0 times" -> true
+  long contains "59.9s" -> true                                 (the /1001 duration)
+Restored, and 1,802 tests in 211 suites green.
+
+WHAT THIS DOES NOT SAY. 11 of 188 sites is 6% of the surface, chosen by one seed. Three survivors
+closed says those three behaviours are now watched; it says nothing about the other 177 sites, and
+nothing at all about ProctorAgent, which was not a target here.

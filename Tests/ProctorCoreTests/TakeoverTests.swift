@@ -275,6 +275,57 @@ struct TakeoverPolicyTests {
         #expect(note.contains("stopped"))
     }
 
+    // The three below close mutation survivors from the wave-10 assay. Each was
+    // a mutant that changed behaviour and left all 1,798 tests green.
+
+    @Test("a hold nobody fought does not claim somebody fought it")
+    func nobodyFoughtItSaysNothing() {
+        // `swallowed > 0` survived becoming `>= 0`, which appends "Somebody used
+        // the machine 0 times while it was held" to a run nobody touched. The
+        // existing tests only ever passed a non-zero count, so the clause was
+        // never watched for its absence.
+        let unfought = TakeoverReport(shown: true, blocked: true, blockedMs: 900, swallowed: 0,
+                                      releasedBy: "runEnded")
+        let note = unfought.note ?? ""
+        #expect(note.contains("held the keyboard"))
+        #expect(!note.contains("Somebody used the machine"))
+        #expect(!note.contains("0 times"))
+    }
+
+    @Test("one interruption reads as once, and two as a count")
+    func theCountReadsAsProse() {
+        let once = TakeoverReport(shown: true, blocked: true, blockedMs: 900, swallowed: 1,
+                                  releasedBy: "runEnded").note ?? ""
+        #expect(once.contains("once"))
+        #expect(!once.contains("1 times"))
+        let twice = TakeoverReport(shown: true, blocked: true, blockedMs: 900, swallowed: 2,
+                                   releasedBy: "runEnded").note ?? ""
+        #expect(twice.contains("2 times"))
+    }
+
+    @Test("the held duration is milliseconds over a thousand, to one decimal")
+    func theDurationIsSeconds() {
+        // `/ 1000` survived becoming `/ 1001` because the only value tested was
+        // 2400ms, and 2.4 and 2.397 both format to "2.4". Sixty seconds is far
+        // enough from a rounding edge to tell the two apart.
+        let long = TakeoverReport(shown: true, blocked: true, blockedMs: 60000, swallowed: 0,
+                                  releasedBy: "runEnded").note ?? ""
+        #expect(long.contains("60.0s"))
+        #expect(!long.contains("59.9s"))
+    }
+
+    @Test("the modifier flags are distinct bits, so no chord can stand in for another")
+    func modifiersDoNotCollide() {
+        // `1 << 1` survived becoming `2 << 1`, which makes option and control the
+        // same value. An OptionSet whose members collide is silently broken: a
+        // release chord asking for one would accept the other.
+        let all: [InputModifiers] = [.command, .option, .control, .shift]
+        #expect(Set(all.map(\.rawValue)).count == all.count)
+        for (i, a) in all.enumerated() {
+            for b in all[(i + 1)...] { #expect(a.rawValue & b.rawValue == 0) }
+        }
+    }
+
     @Test("the report reaches the wire, and is absent from a result that never drew")
     func reportEncodes() throws {
         let report = TakeoverReport(shown: true, blocked: true, blockedMs: 120, swallowed: 1,

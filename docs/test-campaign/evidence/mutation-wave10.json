@@ -1,0 +1,133 @@
+{
+ "summary": {
+  "partial": true,
+  "run": 11,
+  "of": 40,
+  "killed": 8,
+  "survived": 3,
+  "unbuildable": 0
+ },
+ "mutants": [
+  {
+   "file": "Sources/ProctorCore/Takeover.swift",
+   "start": 31960,
+   "end": 31961,
+   "before": ">",
+   "after": ">=",
+   "line": 629,
+   "verdict": "SURVIVED",
+   "why": "passed",
+   "seconds": 7.3
+  },
+  {
+   "file": "Sources/ProctorCore/Takeover.swift",
+   "start": 22888,
+   "end": 22893,
+   "before": "false",
+   "after": "true",
+   "line": 450,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 6.6
+  },
+  {
+   "file": "Sources/ProctorCore/Takeover.swift",
+   "start": 31766,
+   "end": 31770,
+   "before": "1000",
+   "after": "1001",
+   "line": 626,
+   "verdict": "SURVIVED",
+   "why": "passed",
+   "seconds": 6.3
+  },
+  {
+   "file": "Sources/ProctorCore/GuestInventory.swift",
+   "start": 6699,
+   "end": 6701,
+   "before": "||",
+   "after": "&&",
+   "line": 128,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 6.5
+  },
+  {
+   "file": "Sources/ProctorCore/PointerPlane.swift",
+   "start": 5323,
+   "end": 5327,
+   "before": "true",
+   "after": "false",
+   "line": 96,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 6.7
+  },
+  {
+   "file": "Sources/ProctorCore/Takeover.swift",
+   "start": 16328,
+   "end": 16330,
+   "before": "==",
+   "after": "!=",
+   "line": 329,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 6.3
+  },
+  {
+   "file": "Sources/ProctorCore/Takeover.swift",
+   "start": 17381,
+   "end": 17382,
+   "before": "1",
+   "after": "2",
+   "line": 356,
+   "verdict": "SURVIVED",
+   "why": "passed",
+   "seconds": 10.5
+  },
+  {
+   "file": "Sources/ProctorCore/Takeover.swift",
+   "start": 22824,
+   "end": 22825,
+   "before": "0",
+   "after": "1",
+   "line": 449,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 15.7
+  },
+  {
+   "file": "Sources/ProctorCore/PointerPlane.swift",
+   "start": 6116,
+   "end": 6121,
+   "before": "false",
+   "after": "true",
+   "line": 110,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 47.3
+  },
+  {
+   "file": "Sources/ProctorCore/Takeover.swift",
+   "start": 26458,
+   "end": 26460,
+   "before": "==",
+   "after": "!=",
+   "line": 513,
+   "verdict": "killed",
+   "why": "failed",
+   "seconds": 40.4
+  },
+  {
+   "file": "Sources/ProctorCore/Takeover.swift",
+   "start": 18794,
+   "end": 18796,
+   "before": "53",
+   "after": "54",
+   "line": 388,
+   "verdict": "killed",
+   "why": "timeout",
+   "seconds": 900.0
+  }
+ ]
+}

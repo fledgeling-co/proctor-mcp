@@ -122,6 +122,12 @@ The gate after this wave is 1,666 tests in 198 suites, from 1,516 in 175 when it
 
   Matching is now on a whole token that starts with "win", so `win`, `win11` and `windows` are still Windows and `darwin` isn't. This has been latent since the guest providers shipped and only surfaced because `tart` is the first provider here that says `darwin` rather than `macOS`.
 
+- **The takeover report could claim somebody fought a hold nobody touched.** Mutation testing over the new code turned up three live gaps in the sentence Proctor writes after it has held your keyboard, and this was the one that mattered: the clause that reports interruptions was guarded by "more than zero", and flipping it to "zero or more" left every test green. A run nobody touched would have reported that somebody used the machine 0 times and those events did not reach the application.
+
+  The other two: the held duration divided by 1001 instead of 1000 and nothing noticed, because the only value under test rounded to the same string either way. And the option modifier could be given the same bit as control, which would let a release chord accept the wrong key, with nothing asserting the four flags were distinct.
+
+  All three now have tests, and all three were watched to fail before being trusted.
+
 - **`proctor assert` told you your check passed when it had failed.** The CLI decides its exit code from the agent's reply, and the branch that reads a failed assertion was looking for a key the reply has never carried. It checked each assertion for `ok`, and assertions report `status`, one of pass, fail or skipped. Missing key, no match, exit 0.
 
   So a failing check exited 0, and so did a `wait` that timed out. That is the one thing this surface exists not to do: CI reads an exit code rather than prose, and it was reading success off a reply whose own JSON said the check had failed. `kill` had it too, reporting failures in a top-level count nothing looked at.

@@ -845,5 +845,19 @@
     "armed": true,
     "armedBy": "Re-ran the sweep with the refusal condition removed, so every call reached the live agent: all three predicates failed on all 21 rows. The first version of this sweep is kept in the evidence with the reason it was worthless, because its predicate examined 21 rows and could not have failed on any of them.",
     "note": "Refusal honesty across every verb, denominator 21 (the five service verbs are never invoked: they mutate the machine). Every verb exits 3 when the agent is unreachable, carries a remedy, and names the socket it tried so an operator can see which agent was missing. Write posture: the socket does not exist, so nothing could be actuated."
+  },
+  {
+    "id": "CASE-0058",
+    "req": "REQ-042",
+    "surface": "SURF-005",
+    "oracle": "metamorphic",
+    "status": "pass",
+    "evidence": [
+      "evidence/mutation-wave10.txt",
+      "evidence/mutation-wave10.json"
+    ],
+    "armed": true,
+    "armedBy": "The three surviving mutants were re-applied together after the tests were written and the suite went red with 6 issues across the three new tests, then restored to green at 1,802.",
+    "note": "Mutation assay over the seven files wave 10 added or changed. PARTIAL by denominator: 11 of 40 selected mutants ran, 40 of 188 sites selected by seed 20260820. 3 survived and all three are now closed. One of the 8 kills was a 900s timeout under CPU contention from another project building concurrently and is recorded as untrustworthy rather than counted, so the honest kill count is 7 of 10 scored. Survivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor."
   }
 ]
