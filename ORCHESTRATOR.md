@@ -70,6 +70,13 @@ the function returned. These four items are that finding, split by what each nee
 | PRO-0079 | `72-tests-that-mutate-and-never-read-back.md` | — | headless | 11a |
 | PRO-0080 | `73-gates-nobody-has-watched-fail.md` | PRO-0077, PRO-0079 | headless + long mutation run | 11b |
 
+**Dispatched 2026-08-21.** Wave 11a is running: PRO-0077, PRO-0078 and PRO-0079 as three
+concurrent Opus runners (workflow `wf_4c134ec0-f97`), each in its own worktree on its own
+`ai/pro-00NN` branch off `ai/wave-9`. All three stop before verify; the orchestrator spawns a
+fresh-context verifier per item and serializes every merge. PRO-0080 is held until both of its
+dependencies have MERGED, not merely finished.
+
+
 PRO-0080 waits on both: `--seed-strengthen` needs REQ-017's witness to check against, and the
 blind pass's gating value depends on the false-positive rate PRO-0079 measures.
 
