@@ -31,6 +31,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **No drawn pointer over an app you cannot see.** The pointer belongs in its target window's own plane, so a window covering the app covers the pointer too. When that placement could not be confirmed it used to fall back to floating above everything, dimmed, to say it could not vouch for the position. Over a covered window that is the one picture the pointer exists to avoid: it reads as Proctor clicking the app you are looking at while it is driving a different one, and dimming it does not stop it being that picture.
+
+  The fallback now splits. Nothing covering the target: float and mark it, as before, because the pointer is where it would be anyway and only the exact ordering is unconfirmed. Something covering it: draw nothing. Proctor's own panels do not count as covering, or the pointer would vanish from every window it ever annotates.
+
 - **The overlay stops flashing.** It was raised for a batch and lowered when the batch ended, which is fine when a person drives Proctor and wrong when a model does: agents send a handful of steps at a time, several times a second, so the statement went up and down every second or two. It now stays up for at least three seconds once raised, and a request arriving while it is up extends it instead of raising it again. A busy run shows one statement for as long as the work lasts rather than a strobe.
 
   Three seconds is the run panel's own linger, so the two come down together instead of one explaining a statement that has already gone.

@@ -291,12 +291,39 @@ final class CursorOverlay {
                 return true
             }
             // The ordering did not hold — a target on a level this panel cannot
-            // reach, or a macOS that no longer honours the call. `orderFront`
-            // above left it at the head of the normal band, which is not a
-            // position it can justify, so it goes back to floating and says so.
-            float(surface)
-            return true
+            // reach, a macOS that no longer honours the call, or simply a window
+            // sitting over the target. `orderFront` above left the panel at the
+            // head of the normal band, which is not a position it can justify.
+            //
+            // Where it goes instead depends on whether anything covers the
+            // target, and the two are different pictures rather than degrees of
+            // the same one. Uncovered: float and mark it, because the pointer is
+            // where it would be anyway and only the exact ordering is
+            // unconfirmed. Covered: draw nothing. A pointer floating over a
+            // window the person cannot see reads as Proctor clicking the app
+            // they ARE looking at, which is the misstatement this whole file
+            // exists to prevent, and dimming it does not stop it being that.
+            let order = Self.onScreenOrder()
+            switch PointerPlanePolicy.fallback(target: target,
+                                               order: order,
+                                               ours: Set(self.panelNumbers())) {
+            case .hidden:
+                hide()
+                return false
+            default:
+                float(surface)
+                return true
+            }
         }
+    }
+
+    /// The window numbers of this process's own overlay panels.
+    ///
+    /// The pointer's surfaces sit above their target by construction, so
+    /// counting them as "something covering it" would hide the pointer from
+    /// every target it ever annotates.
+    private func panelNumbers() -> [UInt32] {
+        surfaces.compactMap { $0.panel.windowNumber > 0 ? UInt32($0.panel.windowNumber) : nil }
     }
 
     private func float(_ surface: Surface) {
