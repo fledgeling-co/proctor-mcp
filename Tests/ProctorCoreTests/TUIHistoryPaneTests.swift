@@ -179,6 +179,15 @@ struct TUIHistoryPaneTests {
             out.append("")
         }
         let url = root.appending(path: "docs/test-campaign/evidence/tui-history-pane.txt")
-        try out.joined(separator: "\n").write(to: url, atomically: true, encoding: .utf8)
+        let text = out.joined(separator: "\n")
+        try text.write(to: url, atomically: true, encoding: .utf8)
+
+        // An artifact writer with no assertion is a test that reports success
+        // for having run. What has to be true is that the file on disk holds
+        // the frames this renderer produced, so read it back and say so.
+        let onDisk = try String(contentsOf: url, encoding: .utf8)
+        #expect(onDisk == text, "the artifact on disk is what was rendered")
+        #expect(onDisk.contains("2 entries could not be opened"))
+        #expect(onDisk.contains("The trail could not be opened."))
     }
 }

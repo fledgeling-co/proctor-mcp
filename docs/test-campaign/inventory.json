@@ -1254,6 +1254,14 @@
    "found": "be-my-witness judging the capture against the design pane",
    "detail": "The build leads with a three-segment progress bar and 'What Proctor does'; the design leads with a bordered icon and 'A model can test this Mac', and carries three capability chips the build replaces with two paragraphs and a callout.",
    "fix": "Settled by the same decision. The build leads with a three-segment progress bar, 'What Proctor does', two paragraphs and a callout; the design led with an icon, 'A model can test this Mac' and three capability chips. Keep the explanation, so the design of record now carries the build's composition. Nothing was lost with the chips: they compressed what the first paragraph says in prose. SURF-009 re-judged and passes."
+  },
+  {
+   "id": "DEF-014",
+   "status": "fixed",
+   "title": "The suite carried an assertion that could not fail, and five tests it was not counting",
+   "found": "scripts/campaign/cannotfail_swift.py, written because warrant:assay's two scanners read TypeScript, JavaScript and Python and this suite is Swift",
+   "detail": "Across 103 files and 1,653 @Test functions the scan returned seven findings. One was a real hole: BuildInfoTests asserted `captured.builtAt == captured.builtAt`, a stored property compared to itself, in the test whose whole claim is that the captured value does not move when the file underneath it is replaced. It would have passed on a build where builtAt re-read the path on every access, which is the regression it is named after. Three more asserted only by not throwing, so they passed just as happily with the guard they are about deleted. Two were the scan's own false positives on a house style that asserts through a same-file helper.",
+   "fix": "The tautology now pins the value before the replacement and compares against that; armed by standing in what a re-reading implementation would report, and it bites. The three implicit tests say `#expect(throws: Never.self)`. The evidence writer, which asserted nothing at all, now reads its artifact back. The scan follows a same-file helper one level, which removes the false positives. Arming the scan found a defect in the scan: a one-line test body balances its braces on the signature line, so the line-based body finder skipped it and then consumed the next function's body looking for an opening brace. Rewritten to match braces by character, which raised the denominator from 1,648 @Test functions to 1,653 — five tests it had never been counting. Re-armed with four seeded defects across both shapes, all four caught, and clean on the real suite at 0 of 1,653."
   }
  ]
 }

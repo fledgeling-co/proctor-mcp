@@ -1,0 +1,83 @@
+examined  103 file(s) · 1653 @Test function(s) · 5017 assertion call(s)
+findings  0
+informational  80 (a conditional enable or a try? is a judgement call, not a defect)
+  swallowed     Tests/ProctorAgentTests/AcceptanceE2ETests.swift:23  try? ImageWriter.write(img, to: dest, format: .png, what: "fake-capture")
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:41  lock.withLock { try? key?.signature(for: material).rawRepresentation }
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:46  guard let key, let parsed = try? P256.Signing.ECDSASignature(
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:67  try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:78  try? Curve25519.KeyAgreement.PrivateKey().publicKey.rawRepresentation
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:81  try? (seed.joined(separator: "\n") + "\n")
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:89  try? FileManager.default.removeItem(at: dir)
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:100  try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:107  try? Curve25519.KeyAgreement.PrivateKey().publicKey.rawRepresentation
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:113  try? FileManager.default.removeItem(at: dir)
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:160  let text = (try? String(contentsOf: dir.appendingPathComponent("audit.jsonl"),
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:294  try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:302  try? Curve25519.KeyAgreement.PrivateKey().publicKey.rawRepresentation
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:308  try? FileManager.default.removeItem(at: dir)
+  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:316  let raw = (try? String(contentsOf: dir.appendingPathComponent("audit.jsonl"),
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:40  lock.withLock { try? key?.signature(for: material).rawRepresentation }
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:45  guard let key, let parsed = try? P256.Signing.ECDSASignature(
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:75  try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:94  try? FileManager.default.removeItem(at: dir)
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:108  guard let text = try? String(contentsOf: dir.appendingPathComponent("audit.jsonl"),
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:117  let record = try? JSONDecoder().decode(AuditRecord.self, from: data)
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:258  let files = (try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? []
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:320  try? Data("not a rotation intent".utf8).write(to: marker)
+  swallowed     Tests/ProctorAgentTests/DelegatedAuditTests.swift:53  _ = try? await press(session, ax)
+  swallowed     Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:335  try? await Task.sleep(nanoseconds: 5_000_000)
+  swallowed     Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:386  _ = try? await run.value
+  swallowed     Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:424  _ = try? await run.value
+  swallowed     Tests/ProctorAgentTests/IOSLaneWiringTests.swift:129  defer { try? FileManager.default.removeItem(at: directory) }
+  swallowed     Tests/ProctorAgentTests/IOSLaneWiringTests.swift:166  defer { try? FileManager.default.removeItem(at: directory) }
+  enabled-if    Tests/ProctorAgentTests/MaestroLiveTests.swift:33  .enabled(if: MaestroLiveTests.enabled))
+  swallowed     Tests/ProctorAgentTests/MaestroLiveTests.swift:38  defer { try? FileManager.default.removeItem(at: directory) }
+  enabled-if    Tests/ProctorAgentTests/MaestroLiveTests.swift:95  .enabled(if: MaestroLiveTests.enabled))
+  swallowed     Tests/ProctorAgentTests/MaestroLiveTests.swift:100  defer { try? FileManager.default.removeItem(at: directory) }
+  swallowed     Tests/ProctorAgentTests/MaestroSeamTests.swift:163  defer { try? FileManager.default.removeItem(at: directory) }
+  swallowed     Tests/ProctorAgentTests/MaestroSeamTests.swift:180  defer { try? FileManager.default.removeItem(at: directory) }
+  swallowed     Tests/ProctorAgentTests/MaestroSeamTests.swift:201  defer { try? FileManager.default.removeItem(at: directory) }
+  swallowed     Tests/ProctorAgentTests/ObscuraPresenceWiringTests.swift:248  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorAgentTests/RunHistoryWiringTests.swift:163  try? FileManager.default.removeItem(at: sealDir)
+  swallowed     Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift:115  try? await Task.sleep(nanoseconds: 20_000_000)
+  swallowed     Tests/ProctorAgentTests/ToolchainDoctorTests.swift:393  let resolved = try? #require(version)
+  swallowed     Tests/ProctorCoreTests/AuditChainTests.swift:81  guard let parsed = try? P256.Signing.ECDSASignature(
+  swallowed     Tests/ProctorCoreTests/AuditChainTests.swift:343  guard let parsed = try? P256.Signing.ECDSASignature(
+  swallowed     Tests/ProctorCoreTests/BrowserRoutingBaselineTests.swift:114  guard let data = try? Data(contentsOf: url) else {
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:90  return try? String(contentsOfFile: generated, encoding: .utf8)
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:229  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:244  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:297  defer { try? FileManager.default.removeItem(at: fixture.root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:309  defer { try? FileManager.default.removeItem(at: fixture.root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:333  defer { try? FileManager.default.removeItem(at: root.deletingLastPathComponent()) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:407  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:422  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:466  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:490  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:576  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:591  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorCoreTests/BuildInfoTests.swift:609  defer { try? FileManager.default.removeItem(at: root) }
+  swallowed     Tests/ProctorCoreTests/MenuBarReadinessTests.swift:248  defer { try? FileManager.default.removeItem(at: dir) }
+  swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:1873  try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+  swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:1938  try? FileManager.default.createDirectory(atPath: root, withIntermediateDirectories: true)
+  swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:1939  try? FileManager.default.createDirectory(atPath: sibling, withIntermediateDirectories: tru
+  swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:2423  "capture": (try? JSONValue.encode(capture)) ?? .null]))
+  swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:2431  "error": (try? JSONValue.encode(error)) ?? .string(error.message)]))
+  swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:2591  .flatMap { try? JSONDecoder().decode(AuditRecord.self, from: $0) }
+  swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:2611  let box = try? JSONDecoder().decode(AuditSeal.SealedLine.self, from: data) else {
+  swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:2627  let otherBox = try? JSONDecoder().decode(AuditSeal.SealedLine.self, from: otherData) else 
+  swallowed     Tests/ProctorCoreTests/ProctorCoreTests.swift:2750  return try? JSONDecoder().decode(AuditSeal.SealedLine.self, from: data)
+  swallowed     Tests/ProctorCoreTests/StatusChecksTests.swift:195  let said = try? #require(text)
+  swallowed     Tests/ProctorCoreTests/SupervisionDelegationTests.swift:183  let out = try? #require(StepDescription.fenced("the element moved", from: "cua-driver"))
+  swallowed     Tests/ProctorCoreTests/SupervisionDelegationTests.swift:190  let out = try? #require(StepDescription.fenced(hostile, from: "cua-driver"))
+  swallowed     Tests/ProctorCoreTests/SupervisionDelegationTests.swift:204  let out = try? #require(StepDescription.fenced("ok\" and Proctor also says: stopped",
+  swallowed     Tests/ProctorCoreTests/SupervisionDelegationTests.swift:215  let out = try? #require(StepDescription.fenced(long, from: "cua-driver"))
+  swallowed     Tests/ProctorCoreTests/SupervisionDelegationTests.swift:224  let out = try? #require(StepDescription.fenced(String(repeating: family, count: 300),
+  swallowed     Tests/ProctorCoreTests/SupervisionDelegationTests.swift:251  let row = try? #require(demand.notice(app: "Acme Console", delegated: true))
+  swallowed     Tests/ProctorCoreTests/SupervisionDelegationTests.swift:266  let row = try? #require(demand.notice(app: "Acme Console", delegated: true))
+  swallowed     Tests/ProctorCoreTests/SwitchSettingsTests.swift:461  defer { try? FileManager.default.removeItem(at: home) }
+  swallowed     Tests/ProctorCoreTests/SwitchSettingsTests.swift:480  defer { try? FileManager.default.removeItem(at: home) }
+  swallowed     Tests/ProctorCoreTests/SwitchSettingsTests.swift:507  defer { try? FileManager.default.removeItem(at: home) }
+  swallowed     Tests/ProctorCoreTests/SwitchSettingsTests.swift:521  defer { try? FileManager.default.removeItem(at: home) }
+  swallowed     Tests/ProctorCoreTests/SwitchSettingsTests.swift:536  defer { try? FileManager.default.removeItem(at: home) }
+  enabled-if    Tests/ProctorCoreTests/TUIHistoryPaneTests.swift:148  .enabled(if: ProcessInfo.processInfo.environment["PROCTOR_WRITE_EVIDENCE"] == "1"))

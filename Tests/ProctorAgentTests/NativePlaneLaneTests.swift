@@ -137,14 +137,23 @@ struct NativePlaneLaneTests {
         let (session, _) = try await session()
         // It was recorded on the native planes, because they were the only ones
         // there. Refusing it would strand every flow recorded before PRO-0044.
-        try await session.requireSameBackend(as: flow("old", backends: [nil, nil, nil]))
+        //
+        // Stated as `throws: Never` rather than left to a bare call: a test that
+        // asserts by not throwing passes just as happily when the guard it is
+        // about has been deleted, and nothing on the page says which of the two
+        // it proved. Found by scripts/campaign/cannotfail_swift.py.
+        await #expect(throws: Never.self) {
+            try await session.requireSameBackend(as: flow("old", backends: [nil, nil, nil]))
+        }
     }
 
     @Test("a legitimate multi-step tape on the same lane replays")
     func sameLaneTapeReplays() async throws {
         let (session, _) = try await session()
-        try await session.requireSameBackend(
-            as: flow("same", backends: [.native, .native, .native, .native]))
+        await #expect(throws: Never.self) {
+            try await session.requireSameBackend(
+                as: flow("same", backends: [.native, .native, .native, .native]))
+        }
     }
 
     @Test("a tape recorded on the other lane refuses")
@@ -173,8 +182,10 @@ struct NativePlaneLaneTests {
     func unactuatedStepsDoNotTriggerTheGuard() async throws {
         let (session, _) = try await session()
         // Absent is "this step never actuated", not "a different lane".
-        try await session.requireSameBackend(
-            as: flow("gappy", backends: [.native, nil, .native]))
+        await #expect(throws: Never.self) {
+            try await session.requireSameBackend(
+                as: flow("gappy", backends: [.native, nil, .native]))
+        }
     }
 
     // MARK: - A6b — a sweep's passes share one lane, so one label is honest

@@ -423,10 +423,13 @@ struct BuildInfoTests {
         let file = root.appendingPathComponent("binary")
         try Data("one".utf8).write(to: file)
 
-        // What a process does at startup.
+        // What a process does at startup, and what it read at the time. The
+        // second binding is the whole test: the claim is that `captured` still
+        // reports THIS value after the file underneath it changes, and a claim
+        // about a value has to be pinned before the thing that might move it.
+        let atStartup = BuildInfo.builtAt(ofExecutableAt: file.path)
         let captured = BuildIdentity(version: "0.1.0", commit: "aaaaaaaaaaaa", dirty: false,
-                                     configuration: "release",
-                                     builtAt: BuildInfo.builtAt(ofExecutableAt: file.path))
+                                     configuration: "release", builtAt: atStartup)
 
         // What an upgrade does underneath it: the path now holds a different file
         // while this process is still the old image.
@@ -438,7 +441,12 @@ struct BuildInfoTests {
         let nowOnDisk = BuildInfo.builtAt(ofExecutableAt: file.path)
         #expect(captured.builtAt != nowOnDisk,
                 "the replacement must be visible on disk, or this test proves nothing")
-        #expect(captured.builtAt == captured.builtAt,
+        // Found by scripts/campaign/cannotfail_swift.py: this line read
+        // `captured.builtAt == captured.builtAt`, which is a stored property
+        // compared to itself and cannot fail. It passed on a build where
+        // `builtAt` re-read the path on every access, which is exactly the
+        // regression the test is named after.
+        #expect(captured.builtAt == atStartup,
                 "and the captured value is stored, so what the process reports has not moved")
     }
 

@@ -51,6 +51,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Three states used to look identical and no longer do: a Mac that has recorded nothing, a trail this Mac couldn't open, and a history that opened short. The last one says how many entries it couldn't read, because a history one row short reads as a complete history of a quieter machine.
 
+- **An assertion in the test suite that could not fail, and five tests nothing was counting.** A scan for Swift assertions that pass while testing nothing found one real hole: a test whose whole claim is that a captured build identity does not move when the file underneath it is replaced was comparing a stored value to itself. It would have passed on exactly the build it exists to catch. Three more asserted only by not throwing, which passes just as happily with the guard deleted, and they now say so.
+
+  Arming the scan found a fault in the scan, which is why you arm it. A one-line test body balances its braces on the signature line, so the finder skipped it and then read the next function's body instead. Fixed, and the count of tests it can see went from 1,648 to 1,653.
+
 - **A halted run no longer tells you where it was stopped from.** Stop is reachable from the run panel, the menu bar and the terminal, and they all write the same latch, so a message naming one of them was wrong two times in three. It names what happened instead.
 
 The gate after this wave is 1,666 tests in 198 suites, from 1,516 in 175 when it started.

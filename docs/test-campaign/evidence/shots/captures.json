@@ -3,7 +3,7 @@
   "path": "evidence/shots/surf-007-zoom.png",
   "subject": "SURF-007",
   "target": "proctor://win:7:1/zoom",
-  "channel": "proctor_zoom \u2192 ScreenCaptureKit window-scoped, then a native crop at device resolution",
+  "channel": "proctor_zoom → ScreenCaptureKit window-scoped, then a native crop at device resolution",
   "sha256": "f5686195906ee1ec2542e878be315c63e5a3b1f84e530102de6ef40b977788e8",
   "bytes": 48627,
   "frameStatus": "complete",
@@ -25,7 +25,8 @@
    "build": "wave-9 .build/Proctor.app, Developer ID signed",
    "crop": "[0,0,320,200] points from the window's top-left, 8pt padding",
    "why": "the crop is taken from the same window SURF-008 photographs, so the two pictures differ by the engine's own cropping rather than by their subject",
-   "elapsedSeconds": 0.39
+   "elapsedSeconds": 0.39,
+   "drawnBy": "no Proctor source — the subject is a crop the engine took, and the claim is about the region and the resolution rather than about anything drawn"
   },
   "capturedAt": "2026-08-20T10:14:05+1000"
  },
@@ -33,7 +34,7 @@
   "path": "evidence/shots/surf-006-screen-capture.png",
   "subject": "SURF-006",
   "target": "proctor://win:8:0/screen-capture",
-  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on another application's window",
+  "channel": "proctor_capture → ScreenCaptureKit, window-scoped, on another application's window",
   "sha256": "ab31d8bf945d09bd5900ec037d1ba93c8eb17b13bd17e7d88ce335e92f00d311",
   "bytes": 58873,
   "frameStatus": "complete",
@@ -66,7 +67,9 @@
    "app": "TextEdit (pid 922), window 'Untitled 32', CG window 92",
    "why": "the capture engine is the subject here, so it is pointed at an application other than Proctor. A picture of Proctor's own window would not distinguish the engine working from the app drawing.",
    "note": "tier verify, the default, so the frame carries the engine's own normalisation block",
-   "elapsedSeconds": 0.51
+   "elapsedSeconds": 0.51,
+   "build": "wave-9 .build/Proctor.app, Developer ID signed. Recorded late: this entry carried no build at all, which the audit that followed the SURF-008 stale capture went looking for. What the picture depicts is another application's window photographed by the engine, so no Proctor source draws it and the frame status is what settles it, but a manifest row with no build is a row nobody can re-derive.",
+   "drawnBy": "no Proctor source — the subject is another application's window, photographed by the capture engine"
   },
   "capturedAt": "2026-08-20T10:14:29+1000"
  },
@@ -102,7 +105,9 @@
    "build": "wave-9 .build/Proctor.app, Developer ID signed",
    "why": "a display capture of the menu bar shows every application's status items, so the strip alone cannot be bound to Proctor. The frame comes from this process's own extras menu bar, which names which cells are its.",
    "instances": "two Proctor processes were running; the frame was resolved for pid 45808 specifically, and the other instance's item is not inside this region",
-   "bleed": "the region is 2pt wider than the item on each side, so the crop cannot clip the glyph"
+   "bleed": "the region is 2pt wider than the item on each side, so the crop cannot clip the glyph",
+   "drawnBy": "Sources/ProctorUI/MenuBarCharacter.swift, last changed 15 Aug 08:25 (c94799b)",
+   "sourceOlderThanCapture": "MenuBarCharacter.swift last moved on 15 Aug and this was taken on 20 Aug, so the capture is of the current source."
   },
   "capturedAt": "2026-08-20T10:15:52+1000"
  },
@@ -110,7 +115,7 @@
   "path": "evidence/shots/surf-009-walkthrough.png",
   "subject": "SURF-009",
   "target": "proctor://win:9:0/walkthrough",
-  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+  "channel": "proctor_capture → ScreenCaptureKit, window-scoped",
   "sha256": "80f045629a3ee664795b1c191906fdfef71e32a790d02797dda48209847768d5",
   "bytes": 157312,
   "frameStatus": "complete",
@@ -141,10 +146,12 @@
   },
   "conditions": {
    "build": "wave-9 .build/Proctor.app at pid 88463, Developer ID signed",
-   "state": "walkthrough, first slide \u2014 a fresh launch opens here",
+   "state": "walkthrough, first slide — a fresh launch opens here",
    "instances": "two Proctor processes share this bundle id; the CG window the agent resolved is 43385",
    "elapsedSeconds": 0.221,
-   "stateConfirmedBy": "proctor_snapshot read 'What Proctor does' in this window before the shutter"
+   "stateConfirmedBy": "proctor_snapshot read 'What Proctor does' in this window before the shutter",
+   "drawnBy": "Sources/ProctorUI/Walkthrough.swift, last changed 20 Aug 07:17 (640d186)",
+   "sourceOlderThanCapture": "Walkthrough.swift last moved at 07:17 and this was taken at 10:38, so the capture is of the current source. Checked rather than assumed, because the SURF-008 capture that was not checked turned out to show the wrong build."
   },
   "capturedAt": "2026-08-20T10:38:38+1000"
  },
@@ -152,7 +159,7 @@
   "subject": "SURF-008",
   "sha256": "10480d409313135fe5d4888b7c2b133a5dabea58c5d10bda81a5e96fb8014978",
   "bytes": 152688,
-  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+  "channel": "proctor_capture → ScreenCaptureKit, window-scoped",
   "frameStatus": "complete",
   "trustworthy": true,
   "framesWaited": 3,
@@ -174,7 +181,8 @@
    "why": "the previous capture of this surface was taken at 10:55 from an instance launched before the header fix was rebuilt, so it showed letter-spaced capitals while the source drew sentence case. Re-taken from a process started after the rebuild.",
    "state": "status sections, confirmed by proctor_find before the shutter",
    "elapsedSeconds": 0.799,
-   "stateConfirmedBy": "proctor_find matched 'proctor.status.section.permissions' in this window before the shutter"
+   "stateConfirmedBy": "proctor_find matched 'proctor.status.section.permissions' in this window before the shutter",
+   "drawnBy": "Sources/ProctorUI/MainWindow.swift, last changed 20 Aug 11:06 (822e5ff)"
   },
   "capturedAt": "2026-08-20T11:42:10+1000",
   "path": "evidence/shots/surf-008-status-window.png",
@@ -195,7 +203,7 @@
   "path": "evidence/shots/surf-008-tools.png",
   "subject": "SURF-008",
   "target": "proctor://win:2:1/status-window",
-  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+  "channel": "proctor_capture → ScreenCaptureKit, window-scoped",
   "sha256": "e99b456e77575c378c5601dc61060b97c5ce492f2f5a564d6f4161bd2b1f248f",
   "bytes": 150623,
   "frameStatus": "complete",
@@ -230,7 +238,8 @@
    "state": "window at 760x1000 so Permissions and Tools are both in the frame",
    "instances": "the CG window the agent resolved is 46712",
    "elapsedSeconds": 0.477,
-   "stateConfirmedBy": "proctor_find matched 'proctor.status.section.tools' in this window before the shutter"
+   "stateConfirmedBy": "proctor_find matched 'proctor.status.section.tools' in this window before the shutter",
+   "drawnBy": "Sources/ProctorUI/MainWindow.swift, last changed 20 Aug 11:06 (822e5ff)"
   },
   "capturedAt": "2026-08-20T11:04:05+1000"
  }

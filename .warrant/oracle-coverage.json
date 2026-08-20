@@ -1,6 +1,6 @@
 {
  "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/.worktrees/wave-9/docs/test-campaign",
- "generated_at": "2026-08-20T01:05:19.587365+00:00",
+ "generated_at": "2026-08-20T02:13:11.384155+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -11,9 +11,9 @@
    "unsourced": 0
   },
   {
-   "figures": 6,
+   "figures": 7,
    "file": "cli://tui",
-   "sourced": 6,
+   "sourced": 7,
    "unsourced": 0
   },
   {

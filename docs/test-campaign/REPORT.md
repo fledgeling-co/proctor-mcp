@@ -105,7 +105,36 @@ its grant row says what a grant is for and the build's does not. Closing it in t
 direction deletes explanation, which is the opposite of the decision taken; closing it in the
 build's direction adds a field to a shipped surface that nobody asked for.
 
-## Eight defects, all eight fixed
+## The suite's own fault sensitivity, measured as far as it can be
+
+The campaign had recorded mutation survival as "not measured", which read as effort not spent.
+It is not: `warrant:assay`'s two scanners read TypeScript, JavaScript and Python, and its
+mutation generator's default extensions are `.ts .tsx .js .jsx .mjs .cjs .py`. None of them can
+read Swift. So the plane's *cheaper half* was implemented here rather than left as a gap —
+`scripts/campaign/cannotfail_swift.py`, five patterns that pass a Swift suite while testing
+nothing — and mutation survival proper stays unmeasured with its reason named.
+
+Seven findings across 103 files, 1,653 `@Test` functions and 5,017 assertion calls. One was
+real: `BuildInfoTests` asserted `captured.builtAt == captured.builtAt` inside the test whose
+claim is that a captured value does *not* move when the file underneath it is replaced. A
+stored property compared to itself cannot fail, and it would have passed on a build where
+`builtAt` re-read the path on every access — the regression the test is named after. Three more
+asserted only by not throwing, which passes just as happily with the guard deleted; they now say
+`#expect(throws: Never.self)`. Two were the scan's own false positives on a house style that
+asserts through a same-file helper.
+
+Arming the scan found a defect in the scan, which is the point of arming it. A one-line test
+body balances its braces on the signature line, so the line-based body finder skipped it, then
+consumed the next function's body looking for an opening brace. Rewritten to match braces by
+character, the denominator rose from 1,648 to 1,653 — five tests it had never been counting.
+Re-armed with four seeded defects across both shapes: all four caught, and 0 of 1,653 on the
+real suite.
+
+What this still is not: mutation survival. The nearest thing the campaign has is its armed
+ratio, 43 of 43, which is that measurement run by hand over the campaign's own assertions —
+each one watched to fail with the behaviour removed. It says nothing about the other 5,017.
+
+## Nine defects, all nine fixed
 
 | id | what | state |
 |---|---|---|
@@ -117,6 +146,7 @@ build's direction adds a field to a shipped surface that nobody asked for.
 | DEF-011 | The fix reached the CLI and the TUI and was filtered out of the window | fixed |
 | DEF-012 | The status window's chrome diverges from its design of record | fixed |
 | DEF-013 | The walkthrough's first slide diverges from its design of record | fixed |
+| DEF-014 | An assertion that could not fail, and five tests nothing was counting | fixed |
 
 DEF-011 is the one worth reading twice. `StatusChecks` classifies every grant name the health
 report can carry and an unrecognised name falls to `.tool`, deliberately, because tool names
@@ -159,6 +189,10 @@ in flight. Either would have been a vacuous pass.
   the History window reads, so a person is looking at recent runs rather than the whole trail.
   A forensic read of the full trail stays where it was, behind `proctor_policy` action `audit`
   and the keychain.
-- **Mutation survival** — `warrant:assay` still owes that number, and tier 2 needs it.
+- **Mutation survival** — still not measured, and now for a stated reason rather than none:
+  `warrant:assay`'s mutation generator and cannot-fail scanner read TypeScript, JavaScript and
+  Python, and this suite is Swift. The section above implemented the half that could be, and the
+  armed ratio of 43 of 43 is the hand-run equivalent over the campaign's own assertions. Tier 2
+  still needs the real number.
 - **The walkthrough's later slides, the takeover overlay and the run HUD under the new build** —
   unchanged by this wave's work and carried from the previous full run.
