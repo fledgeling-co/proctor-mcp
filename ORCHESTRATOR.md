@@ -385,7 +385,7 @@ None of these blocks its item; each has a defensible default recorded in the spe
 
 | ID | Title | Status | Depends on | Slot |
 |---|---|---|---|---|
-| PRO-0076 | The guest lane, capped at two, with a queue | **In Progress** — runner launched 2026-08-20, run `wf_0b15536a-199`, worktree `.worktrees/PRO-0076` on `ai/pro-0076` | PRO-0058, PRO-0060, PRO-0061 (all merged) | 1 of 1 |
+| PRO-0076 | The guest lane, capped at two, with a queue | **Ready to verify** — `ai/pro-0076` @ `8aad3df`, 10 commits, 1,788 tests / 210 suites green (re-run by the orchestrator, not taken from the report). Ten of twelve clauses settled; A1-live and A1b blocked at the in-guest grant. Verifier `wf_9e98d6f7-012` running. | PRO-0058, PRO-0060, PRO-0061 (all merged) | 1 of 1 |
 
 **Fleet size: 1.** Nothing else is ready, so concurrency is moot and the 3-slot cap is unused.
 
@@ -396,6 +396,13 @@ None of these blocks its item; each has a defensible default recorded in the spe
 - **Reader's decisions, 2026-08-20:** provision rather than carry, and reuse `anvil-mac-node` rather than download a fresh guest. Spec widened accordingly: `tart` becomes a third adapter on the same seam, A1 is measured live, and A1b is added for the guest-side install. `anvil-mac-node` belongs to another project — driving it is authorised, changing it is not.
 - **Egress:** no `ANTHROPIC-ONLY` / `NO EXTERNAL MODEL CLIS` marker is set for this repo; the only hits are inside `vendor/fledgeling-plugins/`, which are the skill docs describing the markers. The grok reviewer lane recorded above stands.
 - **Manual gate in this wave:** Accessibility and Screen Recording inside the guest cannot be granted from outside it. The runner stands the guest up, installs Proctor, then stops and asks. A run that reports the attach verified without that grant has not verified it.
+
+### Runner handback, 2026-08-20 — reconciled against the repo rather than taken on trust
+
+- **Verified by the orchestrator:** branch and worktree exist; `main` untouched at `c7fbe29`; `ai/wave-9` untouched; nothing pushed; both tart guests back to `stopped`; `./scripts/test.sh` re-run in the runner's worktree gives 1,788 tests in 210 suites, green. One discrepancy: the range holds **10** commits, not the 11 claimed. Immaterial, but it was checked rather than assumed.
+- **A shipped defect found and fixed, latent since PRO-0058.** `GuestPlatform.infer` tested `hay.contains("win")`, which is true of **dar*win***. Every macOS guest whose provider reports `darwin` classified as Windows, took the delegated tier, lost the accessibility tree and the frame-status channel, and was refused by `GuestReach` as a machine with no Proctor inside. Confirmed from the diff, not from the report. It surfaced only because `tart` is the first provider on this machine that says `darwin` rather than `macOS`; lume and prlctl never triggered it. Matching is now on a token with the `win` prefix.
+- **Out-of-family lane ran every time, no downgrade.** Plan review returned ACCEPT WITH CHANGES and caught four things before they were built: the counted lane's occupancy shape (a set makes it cap-1; a stale count admits three), a nil platform failing *open* against Apple's cap, a slice forward-referencing its own dependency, and a slot leak with no holder-release rule. The completeness critic ran three rounds — INCOMPLETE, INCOMPLETE, COMPLETE — finding five defects plus two overstated claims in round one, and three more in round two of which two were introduced by round one's own fixes.
+- **Orchestrator's call on the attachments-versus-VMs gap: accept it, and correct the spec's wording.** The pool counts attachments, so a guest booted by a bare `start` or by a person's `tart run` is outside the count. That does not breach anything: Apple enforces the two-macOS-guest limit itself and a third simply fails to start, which `SessionGuest` already reports with the provider's own error. A5 as *worded* is about the counted lane's capacity and is satisfied; the problem statement's "at most two macOS guests booted per host" is what over-claims. Closing the gap needs either a per-guest lifetime registry the spec never asked for or polling a provider on a schedule, which PRD §9 and A12 both refuse. The cheaper and more honest fix is the sentence, not the registry.
 
 ### Ledger drift noted, not swept
 
