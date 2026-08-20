@@ -1469,3 +1469,51 @@ verdict; none is eligible for merge.
 fleet's own contribution to the load, and each runs the gate as a backgrounded command it polls
 rather than a foreground call it blocks on, so the agent keeps emitting tool calls while the suite
 runs.
+
+### Verification attempt 2 — serial, and it returned three verdicts (2026-08-21)
+
+One verifier at a time, each backgrounding slow commands and polling them. All three completed.
+
+| Item | Verdict | Clauses | Gate the verifier ran itself |
+|---|---|---|---|
+| PRO-0077 | **Done** | 10 pass | 1,818 tests / 215 suites, exit 0 |
+| PRO-0078 | **Needs More Work** | 8 pass, 2 fail | 1,814 / 214, exit 0 |
+| PRO-0079 | **Done** | 5 pass | 1,814 / 214, exit 0 |
+
+**PRO-0079's claim was re-derived rather than re-read.** The verifier imported the plugin's own
+`pass_blind`, reproduced `blind=78` on `ai/wave-9` and `blind=76` on HEAD, confirmed its 78-finding
+set is identical to the item's with zero on either side of the diff, then drew its own sample of 12
+at seed 777 across the whole population and read all 12. All 12 false positives; the 7 overlapping
+the item's 57 matched shape-for-shape. That is the claim standing on an independent measurement.
+
+**PRO-0078 failed two clauses, both real and both fixable without redoing a measurement.**
+
+- **Clause 5 — a witness with no sabotage.** CASE-0064 (A6, REQ-002) names three artifacts and no
+  sabotage or control of any kind, where the spec's §A6 required one: *with the target process gone
+  the action is refused, the count is zero, and the refusal carries a reason.* CASE-0062 carries
+  none either. A witness whose count was never shown going to zero has not been armed.
+- **Clause 8 — a gate that passed over nothing.** `capture-lineage.py --gate` exits 0, but it
+  examined none of this item's captures: `evidence/shots/captures.json` is byte-identical to
+  `ai/wave-9` and its 8 rows name none of the new PNGs. The gate's population is unchanged, so the
+  exit code says nothing about this item's work. This is the campaign's own fourth failure mode —
+  the ungated part being the part people look at — and a green exit code standing for a check that
+  could not run.
+
+**What PRO-0078 got right, confirmed first-hand by the verifier.** It opened
+`evidence/witness/a1b-agent-capture.png` rather than reading its filename: a Calculator window
+showing `1,861.20-690` and `1,171.2`, the two strings an independent AX client in probe pid 28892
+read out of pid 14545 over 1,124 attribute reads. The subject is proved by a third process's text
+read rather than by geometry. The superseded capture is real too — all 2,942,720 pixels
+`RGBA(0,0,0,0)` while `a1-capture.json` reads `status complete, trustworthy true`. DEF-020 is a
+measured finding, correctly flagged and correctly not fixed there.
+
+**REQ-007's ceiling was checked in source, not accepted from the note.** `PersonInput.isAPerson`
+(`Contention.swift:265`) demands `sourcePid == 0` and `ContentionMonitor.considerInput:199` guards
+on it, so the NSEvent path is unreachable from any process. The ceiling is real.
+
+**One defect the verifier found in PRO-0077 and did not let stop the item:** `EffectWitnessTests`
+compares the trail file's post-run mtime against the *directory's* pre-run mtime — two different
+inodes, so the comparison is near-tautological — and it sits inside `if let beforeStamp`, so it
+skips silently rather than failing when the attribute is absent. It was not inverted in the arming
+run. CASE-0061's count does not rest on it (`lines.count == emitted` is armed), which is why the
+clause passes and this is recorded as a defect instead.
