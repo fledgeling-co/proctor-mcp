@@ -15,11 +15,20 @@ mutant is applied to the working tree, built and run through the project's own
 fails on is KILLED; one it passes on SURVIVED, and a survivor names a behaviour
 nothing is watching.
 
-Two safety rules, because this edits the working tree rather than a copy: it
-refuses to start unless `git status` is clean, and it reverts the file after
-every mutant and verifies the tree is clean again at the end. A copy per mutant
-would be safer and would also throw away the incremental build, which is the
-difference between a 50-second mutant and a five-minute one.
+Three safety rules, because this edits the working tree rather than a copy. It
+refuses to start unless `git status` is clean; it reverts the file after every
+mutant and verifies the tree is clean again at the end; and it reverts on the
+way out however it leaves, including SIGTERM and SIGINT.
+
+The third exists because the second was not enough. A run killed by a harness
+timeout died between applying a mutant and reverting it, and left the tree
+carrying a live mutation with nothing saying so — a suite that then went red for
+a reason nobody could see. `atexit` plus signal handlers close it, and stdout is
+line-buffered so a killed run still leaves the mutants it had already scored.
+
+A copy per mutant would avoid all of this and would also throw away the
+incremental build, which is the difference between a 15-second mutant and a
+five-minute one.
 
 Usage:
     mutate_swift.py --targets <file> [<file>...] [--count N] [--seed-check]
@@ -28,9 +37,11 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import atexit
 import json
 import random
 import re
+import signal
 import subprocess
 import sys
 import time
@@ -79,15 +90,37 @@ def candidates(path: Path) -> list[dict]:
     return out
 
 
+# What is currently mutated, so the exit hook knows what to put back. One entry
+# at a time by construction, and a list rather than a scalar so a future
+# multi-file mutant does not silently leak.
+_APPLIED: list[str] = []
+
+
+def restore_all() -> None:
+    """Put every applied mutation back. Safe to call twice."""
+    while _APPLIED:
+        path = _APPLIED.pop()
+        subprocess.run(["git", "checkout", "--", path], capture_output=True)
+
+
+def _on_signal(signum, _frame):
+    restore_all()
+    print(f"\ninterrupted by signal {signum} — working tree restored", flush=True)
+    raise SystemExit(130)
+
+
 def apply(mutant: dict) -> None:
     path = Path(mutant["file"])
     text = path.read_text()
+    _APPLIED.append(str(path))
     path.write_text(text[:mutant["start"]] + mutant["after"] + text[mutant["end"]:])
 
 
 def revert(mutant: dict) -> None:
     subprocess.run(["git", "checkout", "--", mutant["file"]], check=True,
                    capture_output=True)
+    if mutant["file"] in _APPLIED:
+        _APPLIED.remove(mutant["file"])
 
 
 def run_suite(timeout: int) -> tuple[bool, str]:
@@ -114,6 +147,12 @@ def main() -> int:
     ap.add_argument("--out", default="docs/test-campaign/evidence/mutation-survival.json")
     args = ap.parse_args()
 
+    # Registered before the first mutation, so there is no window in which one is
+    # applied and nothing is watching for the exit.
+    atexit.register(restore_all)
+    signal.signal(signal.SIGTERM, _on_signal)
+    signal.signal(signal.SIGINT, _on_signal)
+
     dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True,
                            text=True).stdout.strip()
     if dirty:
@@ -130,7 +169,8 @@ def main() -> int:
 
     rng = random.Random(args.seed)
     chosen = rng.sample(pool, min(args.count, len(pool)))
-    print(f"sites {len(pool)} in {len(args.targets)} file(s) · running {len(chosen)}")
+    print(f"sites {len(pool)} in {len(args.targets)} file(s) · running {len(chosen)}",
+          flush=True)
 
     results = []
     killed = survived = unbuildable = 0
@@ -150,7 +190,15 @@ def main() -> int:
         results.append(row)
         short = Path(m["file"]).name
         print(f"[{i}/{len(chosen)}] {verdict:<11} {short}:{m['line']} "
-              f"{m['before']} -> {m['after']}  ({elapsed}s)")
+              f"{m['before']} -> {m['after']}  ({elapsed}s)", flush=True)
+        # Written every mutant rather than at the end, so a run that is killed
+        # still reports what it scored. The first re-run was killed by a harness
+        # timeout and left a zero-byte output file beside a mutated tree.
+        Path(args.out).write_text(json.dumps(
+            {"summary": {"partial": True, "run": i, "of": len(chosen),
+                         "killed": killed, "survived": survived,
+                         "unbuildable": unbuildable},
+             "mutants": results}, indent=1) + "\n")
 
     still_dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True,
                                  text=True).stdout.strip()
