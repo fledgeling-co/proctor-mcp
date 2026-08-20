@@ -204,7 +204,16 @@ public extension Takeover {
     /// somebody who clicks it expecting to dismiss it is clicking into the
     /// application Proctor is driving — so the line tells them that is what will
     /// happen.
-    static func label(app: String?, blocking: Bool) -> TakeoverLabel {
+    ///
+    /// `panelIsOnThisScreen` is what stops the line sending somebody to a control
+    /// that is not in front of them. This statement is drawn on every display and
+    /// the run panel stands on one — the screen holding the driven window — so a
+    /// person watching Proctor work on a second monitor reads "Pause and Stop are
+    /// in Proctor's run panel" while looking at a screen that has no panel on it.
+    /// The named control changes with the reader's screen; the menu bar is the
+    /// one that is reachable from all of them.
+    static func label(app: String?, blocking: Bool,
+                      panelIsOnThisScreen: Bool = true) -> TakeoverLabel {
         let name = StepDescription.sanitised(app)
         let title = name.map { "Proctor is driving \"\($0)\"" } ?? "Proctor is driving this Mac"
         // Worded for the batch rather than for the instant. The block arms and
@@ -212,10 +221,33 @@ public extension Takeover {
         // while genuinely armed would flicker several times a second across a
         // run of fast steps, and a message that flickers is one people learn to
         // ignore. "While it acts" is true either way and never strobes.
-        let line = blocking
-            ? "Your keyboard and mouse are held while it acts — press Esc to stop"
-            : "Your clicks and keys still reach it — Pause and Stop are in Proctor's run panel"
+        //
+        // Esc is not screen-bound, so the held wording is the same everywhere.
+        let line: String
+        if blocking {
+            line = "Your keyboard and mouse are held while it acts — press Esc to stop"
+        } else if panelIsOnThisScreen {
+            line = "Your clicks and keys still reach it — Pause and Stop are in Proctor's run panel"
+        } else {
+            line = "Your clicks and keys still reach it — Pause and Stop are in Proctor's menu bar"
+        }
         return TakeoverLabel(title: title, line: line)
+    }
+
+    /// Which display's statement may name the run panel, as arithmetic so the
+    /// answer is the same one `RunHUDPlacement` gave the panel itself rather than
+    /// a second derivation that can disagree with it.
+    ///
+    /// Nil where no panel is standing at all — switched off, hidden from the menu
+    /// bar, taken down after a drawing fault, or simply between runs. That is a
+    /// deliberate difference from `RunHUDPlacement.screenIndex`, which answers
+    /// "where would a panel go" and so returns the primary screen for a nil
+    /// target. Here the question is "where is one", and the honest answer for a
+    /// panel nobody drew is nowhere: every screen then names the menu bar, which
+    /// is where the controls actually are.
+    static func panelScreen(panel: Rect?, in screens: [Rect]) -> Int? {
+        guard let panel, !screens.isEmpty else { return nil }
+        return RunHUDPlacement.screenIndex(for: panel, in: screens)
     }
 }
 

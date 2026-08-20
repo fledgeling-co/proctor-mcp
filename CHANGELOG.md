@@ -39,6 +39,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Three seconds is the run panel's own linger, so the two come down together instead of one explaining a statement that has already gone.
 
+- **The takeover statement points at a control you can actually reach.** The statement is drawn on every display. The run panel stands on one, the screen holding the window being driven. So if you watch Proctor work on a second monitor, you read "Pause and Stop are in Proctor's run panel" while looking at a screen that has no panel on it. That's the confusing part, and it's why the HUD sometimes seemed to be missing when the overlay was up: the statement is right in front of you and the thing it names isn't.
+
+  The line now changes with the screen reading it. On the panel's own display it names the panel. Everywhere else it names Proctor's menu bar, which is reachable from whichever screen you're on. A run with no panel anywhere gets the same treatment, whether it was switched off, hidden from the menu bar, or taken down after a drawing fault; every display names the menu bar, because that's where the controls are in that case.
+
+  Which display holds the panel is asked of the same placement arithmetic the panel used to pick its screen, so the label and the panel can't disagree about where it is. The held wording doesn't vary: Esc isn't on a screen.
+
   Pressing Stop still takes it down at once, including when the statement was left up by an earlier batch. "Proctor is driving this" stops being true the moment you stop it, and a minimum duration is a courtesy to whoever is reading, not a promise to keep a claim on screen after it is false.
 
 

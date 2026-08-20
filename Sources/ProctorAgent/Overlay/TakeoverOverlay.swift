@@ -505,9 +505,11 @@ final class TakeoverOverlay {
         observeScreens()
         ensureSurfaces()
         let spec = Self.spec()
-        let label = Takeover.label(app: app, blocking: InputBlocker.isEnabled
-                                                      && InputBlocker.shared.isHolding)
-        for surface in surfaces {
+        let panelIndex = panelScreenIndex()
+        var announced: TakeoverLabel?
+        for (index, surface) in surfaces.enumerated() {
+            let label = self.label(app: app, panelIsOnThisScreen: index == panelIndex)
+            announced = announced ?? label
             surface.view.apply(label: label, spec: spec)
             surface.panel.level = NSWindow.Level(rawValue: spec.level)
             surface.panel.orderFrontRegardless()
@@ -528,7 +530,11 @@ final class TakeoverOverlay {
         // Only on a genuine raise. Announcing again for every batch would say
         // the same sentence several times a second, which is the flash in the
         // one channel where it is worse.
-        if raising { announce("\(label.title). \(label.line)") }
+        // VoiceOver is not on a screen, so it gets one sentence rather than one
+        // per display. The first surface's wording is the primary screen's,
+        // which is where somebody without sight of the arrangement would be
+        // told to look.
+        if raising, let announced { announce("\(announced.title). \(announced.line)") }
     }
 
     private func announce(_ message: String) {
@@ -543,9 +549,40 @@ final class TakeoverOverlay {
     func refresh() {
         guard Self.isEnabled, visible else { return }
         let spec = Self.spec()
-        let label = Takeover.label(app: lastApp, blocking: InputBlocker.isEnabled
-                                                          && InputBlocker.shared.isHolding)
-        for surface in surfaces { surface.view.apply(label: label, spec: spec) }
+        let panelIndex = panelScreenIndex()
+        for (index, surface) in surfaces.enumerated() {
+            surface.view.apply(label: label(app: lastApp,
+                                            panelIsOnThisScreen: index == panelIndex),
+                               spec: spec)
+        }
+    }
+
+    private func label(app: String?, panelIsOnThisScreen: Bool) -> TakeoverLabel {
+        Takeover.label(app: app,
+                       blocking: InputBlocker.isEnabled && InputBlocker.shared.isHolding,
+                       panelIsOnThisScreen: panelIsOnThisScreen)
+    }
+
+    /// Which of `surfaces` is standing on the same display as the run panel.
+    ///
+    /// The panel publishes its frame in Quartz space for two readers that cannot
+    /// ask AppKit; this one can, so it flips back and asks the same placement
+    /// arithmetic the panel used to choose its screen. Deriving it any other way
+    /// would be a second opinion about a question already answered.
+    ///
+    /// Nil when no panel is standing — switched off, hidden from the menu bar,
+    /// taken down after a drawing fault. Every screen then names the menu bar,
+    /// which is where the controls are in exactly that case.
+    private func panelScreenIndex() -> Int? {
+        let screens = NSScreen.screens
+        guard let primaryMaxY = screens.first?.frame.maxY else { return nil }
+        let appKit = RunHUDGeometry.shared.panelFrame.map {
+            RunHUDPlacement.appKit(from: $0, primaryMaxY: Double(primaryMaxY))
+        }
+        return Takeover.panelScreen(panel: appKit, in: screens.map {
+            Rect(x: Double($0.frame.minX), y: Double($0.frame.minY),
+                 w: Double($0.frame.width), h: Double($0.frame.height))
+        })
     }
 
     /// The batch that raised the statement has ended.

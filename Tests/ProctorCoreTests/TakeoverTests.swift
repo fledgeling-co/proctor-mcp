@@ -83,6 +83,95 @@ struct TakeoverPolicyTests {
         #expect(!noisy.title.contains("\u{0007}"))
     }
 
+    // MARK: - The control the reader can actually reach
+
+    // The statement is drawn on every display and the run panel stands on one,
+    // so which control the line names has to change with the screen reading it.
+    // Reported from real use: "I don't always see the hud when I see the
+    // overlay", from a person watching Proctor work on a second monitor while
+    // the line told them Pause and Stop were in a panel that was not there.
+
+    @Test("the screen holding the panel is told about the panel")
+    func namesThePanelWhereThePanelIs() {
+        let here = Takeover.label(app: "Acme Console", blocking: false,
+                                  panelIsOnThisScreen: true)
+        #expect(here.line.contains("run panel"))
+        #expect(!here.line.contains("menu bar"))
+    }
+
+    @Test("a screen without the panel is sent to the menu bar instead")
+    func namesTheMenuBarEverywhereElse() {
+        let elsewhere = Takeover.label(app: "Acme Console", blocking: false,
+                                       panelIsOnThisScreen: false)
+        #expect(elsewhere.line.contains("menu bar"))
+        // Naming a panel that is on another display is the defect; the reader
+        // goes looking for it on the screen in front of them and finds nothing.
+        #expect(!elsewhere.line.contains("run panel"))
+        // Everything else about the statement is the same on every display: it
+        // is one claim about the machine, not two.
+        #expect(elsewhere.title
+                == Takeover.label(app: "Acme Console", blocking: false).title)
+        #expect(elsewhere.line.contains("still reach"))
+    }
+
+    @Test("a held keyboard says Esc on every display, because Esc is not on one")
+    func theHeldWordingDoesNotVaryByScreen() {
+        let here = Takeover.label(app: "Acme Console", blocking: true,
+                                  panelIsOnThisScreen: true)
+        let elsewhere = Takeover.label(app: "Acme Console", blocking: true,
+                                       panelIsOnThisScreen: false)
+        #expect(here == elsewhere)
+        #expect(elsewhere.line.contains("Esc"))
+    }
+
+    @Test("the default is the panel's own screen, so an unaware caller overclaims nothing")
+    func defaultMatchesThePanelScreen() {
+        #expect(Takeover.label(app: "Acme Console", blocking: false)
+                == Takeover.label(app: "Acme Console", blocking: false,
+                                  panelIsOnThisScreen: true))
+    }
+
+    // MARK: - Which screen the panel is standing on
+
+    private let left = Rect(x: 0, y: 0, w: 1440, h: 900)
+    private let right = Rect(x: 1440, y: 0, w: 1920, h: 1080)
+
+    @Test("the panel's screen is the one holding most of it")
+    func panelScreenFollowsThePanel() {
+        let screens = [left, right]
+        #expect(Takeover.panelScreen(panel: Rect(x: 34, y: 34, w: 352, h: 120),
+                                     in: screens) == 0)
+        #expect(Takeover.panelScreen(panel: Rect(x: 1500, y: 34, w: 352, h: 120),
+                                     in: screens) == 1)
+    }
+
+    @Test("no panel standing means no screen names one")
+    func noPanelNamesNoScreen() {
+        // Deliberately not `RunHUDPlacement.screenIndex`'s answer, which is the
+        // primary screen: that function answers "where would a panel go" and
+        // this one answers "where is one". A panel nobody drew is on no screen,
+        // so every display names the menu bar, which is where the controls are
+        // in exactly that case.
+        #expect(Takeover.panelScreen(panel: nil, in: [left, right]) == nil)
+        #expect(RunHUDPlacement.screenIndex(for: nil, in: [left, right]) == 0)
+    }
+
+    @Test("no display attached means no screen names one")
+    func noDisplayNamesNoScreen() {
+        #expect(Takeover.panelScreen(panel: Rect(x: 34, y: 34, w: 352, h: 120),
+                                     in: []) == nil)
+    }
+
+    @Test("a panel off every screen is placed on the nearest, as the panel itself is")
+    func panelScreenAgreesWithThePlacement() {
+        // Same arithmetic as the panel used to choose its screen, so the label
+        // and the panel cannot disagree about which display it is on.
+        let screens = [left, right]
+        let stranded = Rect(x: 4000, y: 34, w: 352, h: 120)
+        #expect(Takeover.panelScreen(panel: stranded, in: screens)
+                == RunHUDPlacement.screenIndex(for: stranded, in: screens))
+    }
+
     // MARK: - A9, A10: how it is drawn
 
     @Test("the tint sits below the run panel, so Pause and Stop stay visible")
