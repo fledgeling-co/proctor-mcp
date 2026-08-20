@@ -130,11 +130,15 @@ the tunnel is a step in the manual gate rather than a slice here.
   under a guest session, which is precisely A2's failure; a denylist makes the new tool forward by
   default and the mistake visible instead.
 
-- **D7 — `proctor_guest start` for a macOS guest is admitted through the pool.** Otherwise Apple's
-  two is bypassed by the one action whose entire job is booting a macOS VM, and A5 would cap only
-  attachments rather than guests. A guest a *person* started outside Proctor is still never
-  evicted (A10) and is not in Proctor's count; the doctor says so rather than implying the count
-  is the whole truth.
+- **D7 — the pool gates attachments, not VMs. WITHDRAWN during the build, and recorded rather than
+  quietly dropped.** The first draft had `proctor_guest start` take a pool slot, to stop Apple's
+  two being bypassed by the one action whose job is booting a macOS VM. It does not, and should
+  not: a slot only means anything if it is held while the VM runs, and `start` is a one-shot call
+  that returns, so it would need a per-guest lifetime registry with its own release rules that the
+  spec never asked for. The spec's model is narrower and coherent — the pool gates attachment, A9
+  lets admission start a guest, A10 says a guest a person started is waited for rather than
+  evicted — and counting VMs would mean polling a provider on a schedule, which A12 refuses. The
+  doctor states the limit instead. Reported to the reader as a scope question.
 
 ## Slices
 
@@ -242,7 +246,7 @@ Pure and provable with no guest, which is why it precedes the attach rather than
 
 - The scheduler learns pool capacities and passes them to `grantable`; occupancy is counted from
   `active`, which it already holds.
-- Slice 5's attach is wrapped in `acquire`, and D7's `start` for a macOS guest with it.
+- Slice 5's attach is wrapped in `acquire`. (D7's `start` is withdrawn; see above.)
 - **Release is one idempotent path that always re-scans.** Detach, A11's vanish, peer death, idle
   ceiling and start-timeout all funnel through it, guarded by the attachment's `slotHeld` bit. Two
   of them firing on one attachment must decrement once: a second decrement underflows the count and
@@ -398,5 +402,7 @@ branch — and it now carries a test rather than a reading.
 
 Left open deliberately, one: whether guests started outside Proctor should count against Apple's
 two. Counting them means executing a provider on a schedule, which is exactly what A12's discipline
-refuses. D7 closes the bypass inside Proctor and the doctor states the limit; widening further is a
-question for the reader, not a decision for this plan.
+refuses. The pool therefore counts attachments rather than VMs, and the doctor states that limit
+rather than implying the count is the whole truth; widening it is a question for the reader, not a
+decision for this plan. (D7 proposed closing the bypass by having `start` take a slot, and was
+withdrawn during the build for the reason recorded beside it.)

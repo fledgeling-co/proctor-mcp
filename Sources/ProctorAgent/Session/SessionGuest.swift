@@ -410,9 +410,18 @@ extension Session {
         do {
             response = try await link.send(request)
         } catch {
-            // The tunnel is down or the guest's agent stopped answering. Release
-            // what this attachment holds and refuse, rather than leaving a slot
-            // held by nothing (A11) or running the steps here (A2).
+            // The send failed, and the two reasons want different answers.
+            //
+            // A11 first: ask the provider whether the guest is still there. A
+            // guest stopped from outside, a host that slept, a provider that
+            // died — those are a DISAPPEARANCE, and saying "the tunnel is not
+            // answering" would send the reader to check an SSH forward that is
+            // fine. `guestVanishedError` releases the slot and names it.
+            if let vanished = await guestVanishedError() { throw vanished }
+
+            // Otherwise the guest is up and the link is not: the tunnel dropped.
+            // Release what this attachment holds and refuse, rather than leaving
+            // a slot held by nothing or running the steps here (A2).
             let reason = (error as? AgentError)?.message ?? "\(error)"
             await releaseGuestAttachment(reason: "The link failed: \(reason)")
             throw GuestLinkRefusal.unreachable(machine: attachment.machine,

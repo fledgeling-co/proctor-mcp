@@ -275,9 +275,16 @@ of A1 stops here rather than being reported as verified. In order:
   accessibility tree, no frame-status channel, and refused by `GuestReach` as a machine with no
   Proctor inside. Latent since PRO-0058; it surfaced now because `tart` is the first provider here
   that says `darwin` rather than `macOS`. Matching is now on a token that starts with "win".
-- **A question for the reader, not decided here.** Guests started outside Proctor are not in the
-  pool's count. `proctor_guest start` for a macOS guest now takes a slot, which closes the bypass
-  inside Proctor, but a VM a person boots in the provider's own CLI still sits outside Apple's two
-  as Proctor counts them. Counting those means executing a provider on a schedule, which is exactly
-  what A12's discipline refuses, so the doctor states the limit instead. Widening it is a scope
-  call rather than an implementation one.
+- **A question for the reader, not decided here: the pool counts attachments, not VMs.** A guest
+  booted by a bare `proctor_guest start`, or by a person typing `tart run`, is running and is not
+  in Proctor's count, so three macOS guests can be up while the pool reports two slots.
+
+  This was nearly built out and deliberately was not. Making `start` take a slot only means
+  anything if the slot is held for as long as the VM runs, and `start` is a one-shot call that
+  returns immediately, so it would need a per-guest lifetime registry with its own release rules.
+  The spec's model is narrower and coherent: the pool gates **attachment**, A9 lets admission start
+  a guest, and A10 already says a guest a person started is waited for rather than evicted.
+  Counting VMs instead of attachments would also mean polling a provider on a schedule, which is
+  precisely what A12's discipline refuses. So the doctor states the limit rather than implying the
+  count is the whole truth, and widening it is a scope call for the reader rather than an
+  implementation detail to settle here.

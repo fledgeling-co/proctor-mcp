@@ -232,6 +232,38 @@ struct GuestPoolWiringTests {
                 "a slot held by nothing is what this closes")
     }
 
+    @Test("a link failure over a guest that went away names the disappearance, not the tunnel")
+    func aVanishDuringAForwardIsNamedAsSuch() async throws {
+        // The two failures want different answers and a reader sent to check an
+        // SSH forward that is fine has been sent to the wrong place. This is
+        // also what gives `guestVanishedError` a production caller: without it
+        // the vanish path is only ever reached by a test calling it directly.
+        let h = await session()
+        try await attach(h.session, "one", as: "sessA")
+
+        // The guest is stopped from outside, so the next forward fails.
+        h.provider.records[0].running = false
+        h.provider.records[0].state = "stopped"
+
+        let identity = RunSessionIdentity(project: "p", connection: "A", key: "sessA")
+        await SessionIdentity.$current.withValue(identity) {
+            let link = await h.session.guestLinks["sessA"] as? FakeGuestLink
+            link?.sendError = AgentError(code: .agentUnavailable, message: "broken pipe")
+            let request = AgentRequest(id: "1", tool: "proctor_act", arguments: .object([:]))
+            do {
+                _ = try await h.session.forwardToGuestIfAttached(request)
+                Issue.record("a forward onto a vanished guest must refuse")
+            } catch let error as AgentError {
+                #expect(error.message.contains("no longer running"),
+                        "the disappearance is what happened, not a dead tunnel")
+                #expect(error.message.contains("one"))
+            } catch {
+                Issue.record("unexpected error: \(error)")
+            }
+        }
+        #expect(await h.session.runScheduler.snapshot().active.isEmpty)
+    }
+
     @Test("releasing twice decrements the pool once")
     func releaseIsIdempotent() async throws {
         // Detach, a failed link, a vanish, a dead peer and a start timeout can
