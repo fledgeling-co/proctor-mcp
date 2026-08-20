@@ -122,8 +122,6 @@ The gate after this wave is 1,666 tests in 198 suites, from 1,516 in 175 when it
 
   Matching is now on a whole token that starts with "win", so `win`, `win11` and `windows` are still Windows and `darwin` isn't. This has been latent since the guest providers shipped and only surfaced because `tart` is the first provider here that says `darwin` rather than `macOS`.
 
-### Fixed
-
 - **`proctor assert` told you your check passed when it had failed.** The CLI decides its exit code from the agent's reply, and the branch that reads a failed assertion was looking for a key the reply has never carried. It checked each assertion for `ok`, and assertions report `status`, one of pass, fail or skipped. Missing key, no match, exit 0.
 
   So a failing check exited 0, and so did a `wait` that timed out. That is the one thing this surface exists not to do: CI reads an exit code rather than prose, and it was reading success off a reply whose own JSON said the check had failed. `kill` had it too, reporting failures in a top-level count nothing looked at.
