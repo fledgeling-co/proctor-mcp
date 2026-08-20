@@ -1448,3 +1448,24 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
 - 2026-08-13 batch 1 MERGED to main (670389b): PRO-0001 (14 tools), PRO-0002 (set-of-marks), PRO-0008 (proctor_resource). Shared-file conflicts (ToolCatalogue/Dispatch/Session/Tests) hand-resolved by union; worktrees+branches cleaned; .worktrees/ gitignored and de-polluted. 82 tests / 13 suites green.
 - 2026-08-13 pre-triage complete: 10 specs written, all Ready for Plan; LEDGER Last allocated: 10.
 - 2026-08-13 baseline committed (8430fd9); site self-hosted its JS (48447f4); scaffold created.
+
+### Verification attempt 1 failed as a lane failure, not a verdict (2026-08-21)
+
+Three fresh-context verifiers were dispatched for PRO-0077/0078/0079 and all three stalled: six
+attempts each, no progress for 180s per attempt, `[null, null, null]` returned. The journal holds
+18 `started` lines and no `result` line, so there is nothing for `workflow-resume` to recover and
+a relaunch is a cold start rather than a resume.
+
+**Cause is machine load, not the items.** Load average 161.45 at the time of the failure, from
+iOS simulator runtimes, WebKit GPU services and `coreaudiod` at 362% CPU — none of it this fleet's.
+PRO-0077 had already measured the effect: `./scripts/test.sh` at 17s alone took 14.73s for a single
+suite at load 129.74. A verifier running the full gate under that load emits no tool output for
+minutes, which is exactly what the 180s stall detector reads as a dead agent.
+
+**An absent verdict is a failure, not a pass.** All three items stay `Developer Review` with no
+verdict; none is eligible for merge.
+
+**Attempt 2 changes two things:** verifiers run one at a time rather than three-wide, cutting this
+fleet's own contribution to the load, and each runs the gate as a backgrounded command it polls
+rather than a foreground call it blocks on, so the agent keeps emitting tool calls while the suite
+runs.
