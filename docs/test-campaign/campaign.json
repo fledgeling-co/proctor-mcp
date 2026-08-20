@@ -35,9 +35,13 @@
       "declaredAt": "2026-08-20T00:37:13+00:00"
     },
     "guest-glass": {
-      "attached": false,
-      "reason": "Staged to the console step on a dedicated clone, proctor-mac-node. A Developer ID signed, notarised and stapled build is installed at /Applications/Proctor.app inside the guest and the guest's own spctl accepts it; the launchd plist is written with RunAtLoad. What remains is structural: launchctl bootstrap gui/501 over SSH returns 125 Domain does not support specified action, because SSH is not an Aqua session, and no macOS API grants Accessibility or Screen Recording from outside a guest. A person logs in at the guest's console once",
-      "declaredAt": "2026-08-20T10:09:03+00:00"
+      "attached": true,
+      "artifact": ".build/Proctor.app",
+      "artifactBytes": null,
+      "builtBy": "PROCTOR_SIGN_IDENTITY='Developer ID Application: Luke Rhodes (H4HGFL52W7)' bash scripts/build-app.sh, then scripts/notarize.sh to submit and staple; copied into the guest and installed at /Applications/Proctor.app. The two binaries hash the same: sha256 8b0e0884d25a99d7d44f8d19f64b371257bcebc5cb00ea1056fe1f74bd59d37c on both sides, so the guest is running this build and not the 0.2.0 release.",
+      "attachedBy": "Guest proctor-guest (lume, macOS 26.6.2 Tahoe), provisioned with lume create --unattended so it holds a real Aqua session: stat -f %Su /dev/console reads lume, not root, which is what the earlier proctor-mac-node clone could not offer. launchctl print gui/501/app.fledgeling.procter.agent reads state = running, pid = 1322. That agent's own proctor_doctor answers ready true with Accessibility and Screen Recording both granted, and lists attachedApps app:1085:1 Calculator windows 1 \u2014 the guest's accessibility API reading a window the guest's own window server owns. Reached from this Mac over an SSH StreamLocal forward between the two agents' unix sockets, with the host agent relaying.",
+      "captureChannel": "lume VNC framebuffer read of the guest's virtual display via vncdotool. VNC carries no per-frame status, so frameStatus is recorded as unreported rather than claimed; the pixels are corroborated by the guest's own accessibility tree through proctor_find returning the same two strings the picture shows.",
+      "declaredAt": "2026-08-20T14:26:00+00:00"
     }
   }
 }

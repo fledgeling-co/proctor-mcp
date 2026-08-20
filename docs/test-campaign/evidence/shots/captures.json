@@ -242,5 +242,47 @@
    "drawnBy": "Sources/ProctorUI/MainWindow.swift, last changed 20 Aug 11:06 (822e5ff)"
   },
   "capturedAt": "2026-08-20T11:04:05+1000"
+ },
+ {
+  "path": "evidence/guest/a1-guest-calculator-4x7.png",
+  "subject": "SURF-019",
+  "target": "proctor-guest://win:1:0/calculator",
+  "channel": "lume VNC framebuffer read of the guest's virtual display (vncdotool against the endpoint `lume ls` publishes). Not ScreenCaptureKit: the host cannot window-scope inside a guest, so this is the whole guest screen as the hypervisor presents it.",
+  "sha256": "ecfe3fb1509a9741396fe77d544918ef6fe0b58ec6f661b0c8a8f76c1f07a22d",
+  "bytes": 1040655,
+  "frameStatus": "unreported",
+  "trustworthy": true,
+  "corroboration": "guest accessibility tree via proctor_find on win:1:0 returned AXStaticText values '4\u00d77' and '28', matching the pixels",
+  "resolvedTarget": {
+   "guest": "proctor-guest",
+   "provider": "lume",
+   "handle": "gst-be9a4c36a3c20494",
+   "guestWindow": "win:1:0",
+   "guestApp": "com.apple.calculator pid 1085",
+   "screen": "1920x1440 framebuffer"
+  },
+  "normalization": null,
+  "note": "The guest's whole screen after five key steps were driven through a host session attached to it. Calculator shows 4x7 and 28."
+ },
+ {
+  "path": "evidence/guest/a1-guest-calculator-4x7-crop.png",
+  "subject": "SURF-019",
+  "target": "proctor-guest://win:1:0/calculator#display",
+  "channel": "lume VNC framebuffer read of the guest's virtual display (vncdotool against the endpoint `lume ls` publishes). Not ScreenCaptureKit: the host cannot window-scope inside a guest, so this is the whole guest screen as the hypervisor presents it.",
+  "sha256": "71aae8abe056151f1e3e1df77a5cbd2070a40a0519ff65f971785611aeec50df",
+  "bytes": 18463,
+  "frameStatus": "unreported",
+  "trustworthy": true,
+  "corroboration": "guest accessibility tree via proctor_find on win:1:0 returned AXStaticText values '4\u00d77' and '28', matching the pixels",
+  "resolvedTarget": {
+   "guest": "proctor-guest",
+   "provider": "lume",
+   "handle": "gst-be9a4c36a3c20494",
+   "guestWindow": "win:1:0",
+   "guestApp": "com.apple.calculator pid 1085",
+   "screen": "1920x1440 framebuffer"
+  },
+  "normalization": null,
+  "note": "The same frame, cropped to the Calculator display. Same capture, not a second one."
  }
 ]

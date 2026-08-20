@@ -4,18 +4,19 @@
 run the skill to its fullest. Recorded with `campaign.py scope --full`.
 
 **The verdict line, with its denominators.** 58 cases over 21 surfaces against 44 requirements:
-57 pass, 1 blocked, 0 fail, 0 inconclusive, 56 of 56 passing cases armed. Oracles: outcome 44 ·
-metamorphic 5 · raster-visual 8 · interactive-glass 1. Strict check 57 of 58 checked (98%),
-ratchet raised 43 → 57. Capture lineage: 5 published shots, 5 distinct images, every one tying
-to its subject, 3 of 3 judgeable pairs judged `pass`, ratchet held at 3 — the other two are
+58 pass, 0 blocked, 0 fail, 0 inconclusive, 58 of 58 passing cases armed. Oracles: outcome 44 ·
+metamorphic 5 · raster-visual 8 · interactive-glass 1. Strict check 58 of 58 checked (100%),
+ratchet raised 43 → 57 → 58. Capture lineage: 5 published shots, 5 distinct images, every one
+tying to its subject, 3 of 3 judgeable pairs judged `pass`, ratchet held at 3 — the other two are
 structurally unjudgeable, being capture engines with no design of record, and are named as such
-rather than counted as agreement. The seeded swap was run and caught. Suite: 1,802 tests in 211
+rather than counted as agreement. The seeded swap was run and caught. Suite: 1,814 tests in 214
 suites, green.
 
-**`campaign.py check` exits 1, deliberately.** One case is blocked and holds the gate shut: the
-guest lane's central claim, that a session attached to a macOS guest executes inside it, has been
-measured nowhere. Its resume point is on CASE-0056 and its lane is recorded as `guest-glass —
-NOT attached`. Reporting clear over that would be the campaign's first failure mode.
+**`campaign.py check` exits 0.** It exited 1 for most of this run, deliberately, over one blocked
+case: the guest lane's central claim, that a session attached to a macOS guest executes inside it,
+had been measured nowhere. It has now been measured on a live guest, and the section below carries
+what it took. `guest-glass` is recorded as attached with its artifact, its build command and what
+witnessed the guest agent reaching the guest's own window server.
 
 ## What the previous run's clean exit was hiding
 
@@ -139,12 +140,6 @@ means those three behaviours are watched. It says nothing about the other 177 si
 all about `ProctorAgent`, which was not a target.
 
 ## What is still open
-
-**CASE-0056, blocked.** No Proctor is installed inside `anvil-mac-node`, and after that install
-Accessibility and Screen Recording must be granted at the guest's own Aqua console. SSH is not
-the foreground session and macOS exposes no API that grants TCC from outside a guest, so no
-harness can do it unattended. The ordered resume point is on the case. `CASE-0047` settles the
-same requirement at the seam and is recorded as seam level rather than passed off as live.
 
 **Mutation survival is measured but thin.** 11 of 188 sites under one seed, with 29 selected
 mutants unrun because contention made their kills unreadable. `warrant:assay` still owes its own
@@ -401,7 +396,7 @@ A resource shared by two tests is a test-order dependency wearing a green tick.
 Measured 20 August 2026 against maestro 2.4.0 and a booted iPhone 16 Pro on iOS 18.2: both tests
 pass, 55.6 seconds for the suite, green twice.
 
-## Thirteen defects, all thirteen fixed
+## Eighteen defects, all eighteen fixed
 
 | id | what | state |
 |---|---|---|
@@ -418,6 +413,11 @@ pass, 55.6 seconds for the suite, green twice.
 | DEF-016 | Model equality could not tell two models apart, and nothing noticed | fixed |
 | DEF-017 | Eight of the CLI's twenty-one verbs could not be given their main argument | fixed |
 | DEF-018 | Half of ProctorCore's sampled mutants survived, chip equality among them | fixed |
+| DEF-019 | The operator CLI exited 0 when a check failed, on a branch no reply can satisfy | fixed |
+| DEF-020 | The `lume` adapter asked for `--json`, which lume 0.5.3 rejects by name | fixed |
+| DEF-021 | A second copy of the guest-action list in the dispatcher refused `attach` and `detach` | fixed |
+| DEF-022 | `Bundle.module` traps in a shipped `.app` instead of returning nil, and crash-looped the guest agent | fixed |
+| DEF-023 | A relayed guest reply carried the host's `machine`, so a guest result could read as a host one | fixed |
 
 DEF-011 is the one worth reading twice. `StatusChecks` classifies every grant name the health
 report can carry and an unrecognised name falls to `.tool`, deliberately, because tool names
@@ -453,6 +453,58 @@ Two things had to fail first for A4 to mean anything, and both are recorded on t
 batch of hover steps was refused for want of foreground and ran in 0.239s, so there was no run
 to stop; and the first capture of a "running" TUI showed the empty state because nothing was
 in flight. Either would have been a vacuous pass.
+
+## The guest lane, settled live rather than blocked
+
+CASE-0056 was the campaign's only blocked case and the only thing holding `check` at exit 1. It is
+now a pass, armed, with three evidence files, and `guest-glass` is recorded as attached.
+
+What changed was the guest, not the product's claim. The lane had been staged on
+`proctor-mac-node`, a `tart` clone, and stopped at *"Domain does not support specified action"*
+from `launchctl bootstrap gui/501`. That was read as structural to macOS guests, and it is not:
+`stat -f %Su /dev/console` reads `root` on that clone and `lume` on a guest created with
+`lume create --unattended`, which configures autologin and so boots into a session `gui/501`
+resolves to. A guest built that way took the wave-9 build, bootstrapped its agent, and accepted
+both TCC grants through its own System Settings over VNC.
+
+The proof runs from one persistent MCP session: attach to `proctor-guest`, activate Calculator
+inside it, actuate five steps, read the display back through the guest's accessibility tree, detach,
+and confirm no Calculator ever ran on this Mac. It returned `4×7` and `28`, twice, and the VNC
+capture of the guest's virtual display shows the same two strings. Two witnesses matter here
+because a value read back through the socket that wrote it would prove routing rather than
+execution.
+
+VNC reports no per-frame status, so the manifest row records `frameStatus: "unreported"` and names
+the accessibility corroboration, rather than claiming a completeness the channel does not offer.
+`--frame-status complete` was passed once and withdrawn: it would have been a claim the instrument
+never made.
+
+### The spec's own manual-gate recipe was wrong, and failed quietly
+
+Its final step said to run `proctor guest --action attach` and then a separate actuating call. That
+launched Calculator **on this Mac**. An attachment is keyed by the peer process on the socket,
+`"\(pid):\(startTime)"`, so a one-shot CLI attaches, exits, and the next invocation is a different
+peer with no attachment — and a call with no attachment is a host call, answered as one. The
+product is behaving as designed; the recipe asked one process to hold state across two. The spec
+now names a persistent MCP session as the instrument and says why a CLI is the wrong one.
+
+This is the shape the campaign exists to catch. A green result from the documented procedure would
+have been a guest verdict about the host.
+
+### Four product defects, found only by running it
+
+`lume` 0.5.3 rejects `--json` by name, so every listing failed and the provider looked absent
+(DEF-020). A second copy of the guest-action list in `Dispatch.swift` had drifted and refused
+`attach` and `detach`, which is the whole lane (DEF-021); the fix deletes the list rather than
+extending it, because `Session.guest` already switches on the action. `Bundle.module` traps rather
+than returning nil when its bundle is not at the `.app` root, which crash-looped the guest agent
+with *"could not load resource bundle"* (DEF-022). And a relayed guest reply carried the host's
+`machine` field, so a guest result could be read as a host one (DEF-023).
+
+All four were armed by reverting the fix and watching the suite go red. A fifth finding was a suite
+flake rather than a product defect: `SessionHUD.hudStatus()` read a process-wide singleton another
+test could move under it, which showed up as roughly one failure in five. It is an injectable probe
+now, and nine consecutive full runs have been clean.
 
 ## What was not checked
 

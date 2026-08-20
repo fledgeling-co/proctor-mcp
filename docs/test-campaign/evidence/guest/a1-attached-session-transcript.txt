@@ -1,0 +1,5 @@
+1 ATTACH machine: {"kind": "guest", "name": "proctor-guest", "platform": "macos", "provider": "lume", "tier": "native"}
+2 ACTIVATE guest Calculator pid: 1085 window: win:1:0
+3 ACT completed: 5 of 5 | machine: {"kind": "guest", "name": "proctor-guest", "platform": "macos", "provider": "lume", "tier": "native"}
+4 FIND display: ['\u200e4\u200e×\u200e7', '\u200e28']
+5 DETACH attached: False
