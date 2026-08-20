@@ -1,6 +1,6 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 9 running on `ai/wave-9`.** v0.2.0 released, notarised and pushed; all 63 items through PRO-0063 merged or retired. The gate is green: 1,520 tests in 175 suites. Proctor supports VM targets (lume & prlctl), witness tiers (native & delegated), SSH streamLocal reach, auto-routing gates, resolution-scaled captures, and precise scroll units.
+**Status:** **Wave 10 armed on `ai/wave-9`.** Wave 9 closed: 11 items merged, plus five issues reported from real use, four fixed and one specced. Wave 10 is one item, PRO-0076, the guest lane. Gate green at 1,714 tests in 205 suites.
 **Updated:** 2026-08-17 — v0.2.0 tagged, notarised, stapled, and installed. **1,520 tests / 175 suites green on `main`**, fully synchronised with `origin/main`.
 
 ### Repository state (reconciled 2026-08-17)
@@ -378,6 +378,28 @@ in `docs/goals/goal-wave9-swiftui-conversion.md`.
 - **PRO-0074** — a screen-reader mode (assumed: child work, not this item).
 
 None of these blocks its item; each has a defensible default recorded in the spec.
+
+## Wave 10 (2026-08-20) — the guest lane
+
+**Scope:** one item. The only open ledger row, and the only thing in the pipeline not merged.
+
+| ID | Title | Status | Depends on | Slot |
+|---|---|---|---|---|
+| PRO-0076 | The guest lane, capped at two, with a queue | Ready for Plan | PRO-0058, PRO-0060, PRO-0061 (all merged) | 1 of 1 |
+
+**Fleet size: 1.** Nothing else is ready, so concurrency is moot and the 3-slot cap is unused.
+
+### Preflight, 2026-08-20 — recorded because it changed the plan
+
+- **Providers present:** `lume` (no guests), `prlctl` (one Windows 11 guest, registration `invalid`), `tart` 2.32.1 (two guests: `anvil-mac-node`, darwin, stopped; `anvil-linux-node`, stopped). The `guest` lane reports ready. `GuestProvider.swift`'s header comment claiming no lume binary exists here is **stale**.
+- **Consequence:** the spec's two adapters had no live macOS guest, so A1 and A2 would have carried. Put to the reader as a Phase 0 question rather than proceeded past.
+- **Reader's decisions, 2026-08-20:** provision rather than carry, and reuse `anvil-mac-node` rather than download a fresh guest. Spec widened accordingly: `tart` becomes a third adapter on the same seam, A1 is measured live, and A1b is added for the guest-side install. `anvil-mac-node` belongs to another project — driving it is authorised, changing it is not.
+- **Egress:** no `ANTHROPIC-ONLY` / `NO EXTERNAL MODEL CLIS` marker is set for this repo; the only hits are inside `vendor/fledgeling-plugins/`, which are the skill docs describing the markers. The grok reviewer lane recorded above stands.
+- **Manual gate in this wave:** Accessibility and Screen Recording inside the guest cannot be granted from outside it. The runner stands the guest up, installs Proctor, then stops and asks. A run that reports the attach verified without that grant has not verified it.
+
+### Ledger drift noted, not swept
+
+Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for Plan` for items the LEDGER records as Merged. The ledger is the record and is correct; the spec headers are stale. Out of scope for this wave, which the reader scoped to the new work.
 
 ## Event log (append-only, newest first)
 - 2026-08-20 **Five things reported from real use; three fixed, one specced, one closed by measuring.** The statement strobing, the statement saying `Fake`, the HUD absent while the statement is up, the drawn pointer over a window nobody can see, and macOS guests with a queue.
