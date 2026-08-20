@@ -565,6 +565,12 @@ extension Session {
                       + "question.")
         }
 
+        // Reclaim before admitting, so a slot held by a session that went away
+        // is free for this one rather than making it wait on nothing. Placed at
+        // the moment a slot is actually wanted: there is no timer, and this is
+        // the only point at which the answer changes anything.
+        await reclaimAbandonedAttachments()
+
         let record = try await resolveGuest(guest, provider: provider)
         try requireAttachable(record)
         let platform = try requirePlatform(record)
@@ -798,5 +804,114 @@ extension Session {
                 + "this runs no provider and starts no VM. A guest a person started outside "
                 + "Proctor is not in this count and is never stopped to free a slot.")
         ])
+    }
+}
+
+// MARK: - PRO-0076 A11 / D4: when a slot comes back without anybody asking
+
+extension Session {
+
+    /// How long an attachment may sit unused before its slot is reclaimed.
+    ///
+    /// **Deliberately not the queue's wait limit.** `RunQueuePlan.waitLimit` is
+    /// 45 seconds because a host cuts a tool call off around a minute, and a
+    /// waiting call has to fail inside that. Reusing it here would tear down a
+    /// healthy attachment in the middle of a campaign. This bounds a HOLDER,
+    /// which is a different question with a different right answer.
+    static let attachIdleLimitEnv = "PROCTOR_GUEST_ATTACH_IDLE"
+    static let defaultAttachIdleLimit: TimeInterval = 30 * 60
+
+    static func attachIdleLimit(from environment: [String: String]) -> TimeInterval {
+        guard let raw = environment[attachIdleLimitEnv],
+              let seconds = TimeInterval(raw.trimmingCharacters(in: .whitespaces)),
+              seconds > 0 else { return defaultAttachIdleLimit }
+        return seconds
+    }
+
+    /// Reclaim every slot whose holder is gone, and report what was reclaimed.
+    ///
+    /// **This exists because "session end" is not an event this agent receives.**
+    /// One `Session` serves every client; a peer that attaches and then dies
+    /// calls no detach, and the queue's wait ceiling expires WAITERS rather than
+    /// HOLDERS — so without this, two dead attachments would occupy Apple's two
+    /// forever and the third guest would wait on nothing.
+    ///
+    /// Two rules, and the first is the real one:
+    ///
+    ///   the peer process is gone — read from the identity the attachment was
+    ///   made under, which already carries the pid and its start time, so this
+    ///   needs no timer and no heartbeat;
+    ///
+    ///   the attachment has sat unused past the idle ceiling — the backstop for
+    ///   a peer that is alive but has forgotten it holds a machine.
+    @discardableResult
+    func reclaimAbandonedAttachments(peerIsAlive: (String) -> Bool = Session.peerIsAlive)
+        async -> [String] {
+        let limit = Session.attachIdleLimit(from: tools.environment)
+        let now = clock()
+        var reclaimed: [String] = []
+        for (key, attachment) in guestAttachments where attachment.slotHeld {
+            let dead = !peerIsAlive(key)
+            let idle = (now - attachment.lastUsedAt) > limit
+            guard dead || idle else { continue }
+            let why = dead
+                ? "the session holding it went away"
+                : "it sat unused for longer than \(Int(limit))s"
+            // A guest this agent started is stopped; one a person started is
+            // left running, because stopping a running VM discards its state.
+            await releaseGuestAttachment(
+                reason: "slot reclaimed: \(why)",
+                stopGuest: attachment.startedByThisAgent, session: key)
+            reclaimed.append(attachment.name)
+        }
+        return reclaimed
+    }
+
+    /// Whether the process behind an identity key is still there.
+    ///
+    /// The key is `pid:startTime`, minted by `SessionIdentity.fromPeer`. Both
+    /// halves are checked: a pid alone would be reused by an unrelated process
+    /// and keep a dead session's slot alive forever.
+    static func peerIsAlive(_ key: String) -> Bool {
+        let parts = key.split(separator: ":")
+        guard parts.count == 2, let pid = Int32(parts[0]),
+              let started = UInt64(parts[1]) else {
+            // An identity this build cannot parse — the unattributed one, or a
+            // test's own key. Treated as alive, because reclaiming a slot on the
+            // strength of a string we could not read would be worse than
+            // holding it.
+            return true
+        }
+        guard kill(pid, 0) == 0 else { return false }
+        // The key stores the start time truncated the same way it was minted.
+        return UInt64(SessionIdentity.startTime(of: pid)) == started
+    }
+
+    /// A11. Confirm the guest a session holds is still there, and give the slot
+    /// back naming the disappearance when it is not.
+    ///
+    /// Returns the error to hand the caller, or nil when all is well. Separate
+    /// from the link's own failure path because a guest can vanish while nothing
+    /// is being sent — the host slept, a person ran `tart stop`, the provider
+    /// went away — and a slot held by nothing is exactly what A11 closes.
+    func guestVanishedError() async -> AgentError? {
+        guard let attachment = currentAttachment else { return nil }
+        let providers = try? resolvedGuestProviders()
+        guard let adapter = providers?.first(where: { $0.id == attachment.provider }) else {
+            return nil
+        }
+        let stillRunning: Bool
+        do {
+            stillRunning = try await adapter.status(name: attachment.name).running
+        } catch {
+            stillRunning = false
+        }
+        guard !stillRunning else { return nil }
+        await releaseGuestAttachment(
+            reason: "the guest is no longer running; slot released",
+            stopGuest: false)   // it is already down: nothing to stop
+        return GuestLinkRefusal.vanished(
+            machine: attachment.machine,
+            reason: "It was running when this session attached and is not now.")
     }
 }

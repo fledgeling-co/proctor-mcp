@@ -131,7 +131,8 @@ public extension Toolchain {
     private static func guestLaneRow(tools: [ToolPresence]) -> DoctorReport.Lane {
         let lume = tools.first { $0.tool == LumeTool.binary }
         let prlctl = tools.first { $0.tool == PrlctlTool.binary }
-        let present = [lume, prlctl].compactMap { $0 }
+        let tart = tools.first { $0.tool == TartTool.binary }
+        let present = [lume, prlctl, tart].compactMap { $0 }
         var blockers: [String] = []
         let usable = present.contains { $0.usability == .usable }
         let unconfirmed = present.contains { $0.usability == .unconfirmed }
@@ -143,19 +144,22 @@ public extension Toolchain {
         } else {
             state = "unavailable"
             if present.isEmpty || present.allSatisfy({ $0.usability == .unusable || $0.usability == nil }) {
-                blockers.append("Neither lume nor prlctl is usable on this machine, so there is "
-                              + "no guest lane.")
+                blockers.append("None of lume, prlctl or tart is usable on this machine, so "
+                              + "there is no guest lane.")
             }
         }
         return DoctorReport.Lane(
             lane: guestLane, state: state,
-            requires: [LumeTool.binary, PrlctlTool.binary],
+            requires: [LumeTool.binary, PrlctlTool.binary, TartTool.binary],
             blockers: blockers,
-            note: "Either provider is enough. A person grants Accessibility and Screen Recording "
+            note: "Any one provider is enough. A person grants Accessibility and Screen Recording "
                 + "once inside the guest's GUI session, then clone reproduces the grants; nothing "
-                + "here provisions a guest as a side effect of a tool call. Tahoe guests currently "
-                + "render no application windows (trycua/cua #870, Apple FB21748086); verify "
-                + "against Sequoia.")
+                + "here provisions a guest as a side effect of a tool call, and this row locates "
+                + "the CLIs by reading the filesystem without running any of them. At most two "
+                + "macOS guests may run at once, which is Apple's rule rather than a Proctor "
+                + "setting; the pool and who holds it are reported beside this lane. Tahoe guests "
+                + "currently render no application windows (trycua/cua #870, Apple FB21748086); "
+                + "verify against Sequoia.")
     }
 
     /// A lane is as established as the least established thing it needs. A tool

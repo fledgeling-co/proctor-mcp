@@ -728,10 +728,23 @@ actor Session {
         // session that was attached when it did. Checked BEFORE the cache,
         // because a host id under a guest session would otherwise hit the host's
         // own map and drive the wrong computer while the result said "guest".
-        if let refusal = GuestHandleScope.refusal(
-            handle: id, callerMachine: machine,
-            callerSession: SessionIdentity.current.key,
-            origin: guestMintedHandles[id] ?? .host) {
+        //
+        // **Scoped to handles that actually crossed a machine boundary**, which
+        // is narrower than "any guest session" and is the honest reading of the
+        // rule. A session can be marked as a guest without an attachment — that
+        // is what PRO-0056 and PRO-0057 built, and what four suites still model
+        // — and such a session drives its own engine, so its own window map is
+        // definitionally the machine it says it is on. There is no second
+        // machine's handles to confuse, and refusing there would be a rule about
+        // nothing. What is checked is: a handle minted inside a guest (wherever
+        // it turns up), and any handle used by a session holding an attachment,
+        // whose windows come over a link rather than from this Mac.
+        let origin = guestMintedHandles[id]
+        if origin != nil || currentAttachment != nil,
+           let refusal = GuestHandleScope.refusal(
+               handle: id, callerMachine: machine,
+               callerSession: SessionIdentity.current.key,
+               origin: origin ?? .host) {
             throw AgentError(code: .windowNotFound, message: refusal.message,
                              remedy: refusal.remedy)
         }

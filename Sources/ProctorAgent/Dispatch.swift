@@ -435,6 +435,12 @@ struct Dispatcher: Sendable {
         // has to be answerable from the health report rather than only from a
         // window somebody may have switched off.
         report["queue"] = await session.queueStatus()
+        // PRO-0076 A12. The guest pool beside the lane row that names the
+        // providers: capacity, how many slots are held, by which sessions and
+        // guests, and how many runs are waiting. Counted from this agent's own
+        // scheduler, so a health check still costs no VM and still executes no
+        // provider CLI — the rule the guest lane has had since PRO-0058.
+        report["guestPool"] = await session.poolStatus()
         // Whether a foreground step says so on the screen, and whether it holds
         // input. The second one is an opt-in and can be asked for and still not
         // be there, because a keyboard tap is gated on a grant Proctor does not
