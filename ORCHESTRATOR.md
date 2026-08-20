@@ -89,6 +89,48 @@ concurrent Opus runners (workflow `wf_4c134ec0-f97`), each in its own worktree o
 fresh-context verifier per item and serializes every merge. PRO-0080 is held until both of its
 dependencies have MERGED, not merely finished.
 
+### Wave 11a returned 2026-08-21 — three items ready-to-verify, none merged
+
+| Item | Branch | Commit | Gate | Result |
+|---|---|---|---|---|
+| PRO-0077 | `ai/pro-0077` | `85a31f4` | 1,818 tests / 215 suites | CASE-0059..0062, four witnesses, census 0 → 4 witnessed |
+| PRO-0078 | `ai/pro-0078` | `595179d` | 1,814 / 214 | CASE-0059..0066, 7 of 8 witnessed, REQ-007 `inconclusive` |
+| PRO-0079 | `ai/pro-0079` | `0dc2504` | 1,814 / 214 | 57 of 78 blind findings sampled, **all false positives** |
+
+**Three things came back that change the plan, and two of them are mine to fix before any merge.**
+
+**1 — The defect registry has a collision, and it was already drifting.** `inventory.json` holds
+19 defect records ending at DEF-019; `REPORT.md`'s table holds 23, because wave 10's four
+(`lume --json`, the duplicated guest-action list, `Bundle.module`, the relayed `machine`) were
+written to the report and never to the inventory. PRO-0078 read the inventory, correctly took the
+next free id, and appended five new defects as DEF-020..024 — which collide with four different
+fixed defects in the report. Reconciliation at merge, in this order: backfill the report's
+DEF-020..023 into the inventory, renumber PRO-0078's five to DEF-025..029, and flip DEF-019 to
+`fixed` (its code has been fixed since `CLISurface.swift:148`). This is brief `73`'s item 3, and
+it is larger than the one record that brief describes.
+
+**2 — Wave 11 was under-scoped, and the gate's own output is why.** `campaign.py check` prints at
+most twelve unwitnessed requirements, so the twelve in briefs `70` and `71` were a truncated list
+read as a complete one. There are **22 external requirements**; PRO-0077 and PRO-0078 address 12
+between them, leaving **ten named by no item**: REQ-023, 024, 027, 028, 029, 033, 034, 035, 037,
+039. Brief `76` covers them. Printing a capped list and reading it as the denominator is the first
+failure mode in the campaign's own list, arriving through the gate rather than through a surface
+map.
+
+**3 — Two product defects worth naming here rather than leaving in a runner report.**
+`proctor_capture` reported `status: complete, trustworthy: true` over a PNG whose 2,942,720 pixels
+were all `RGBA(0,0,0,0)` — a Proctor-owned window, which Proctor excludes from its own captures.
+No gate in the campaign would have caught it, and it is the same shape as publishing a picture of
+one thing under the name of another. Separately, `ScreenRecordingProbeWiringTests` asserts
+wall-clock elapsed against a fixed 5.0s bound and fails on a loaded machine (measured at 8.13s,
+10.25s and 14.73s under load; 1.82s alone). Both runners hit it. The bound was correctly not
+edited by either.
+
+**One operational hazard for any future runner:** an async holder of `TrailIsolation` wedged the
+whole suite for 40 minutes with every cooperative thread blocked. PRO-0077's W3 now runs on a
+dedicated `Thread`; any async trail-touching test needs the same shape.
+
+
 
 PRO-0080 waits on both: `--seed-strengthen` needs REQ-017's witness to check against, and the
 blind pass's gating value depends on the false-positive rate PRO-0079 measures.
