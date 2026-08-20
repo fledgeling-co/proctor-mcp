@@ -526,7 +526,10 @@ The corrected recipe replaces steps 5 and 6:
    the guest's `~/Library/Application Support/app.fledgeling.procter/agent.sock`. Key
    authentication needs a key minted for the guest; the operator's own `id_ed25519` was tried and
    its private half does not match its published public half, so a dedicated key is the working
-   route. Proctor opens no tunnel and installs no `ssh`.
+   route. The one used here is `~/.ssh/proctor-guest_ed25519`, with its host keys in
+   `~/.ssh/known_hosts_proctorguest`. Write the flags into a wrapper script rather than a shell
+   variable: zsh does not word-split an unquoted expansion, so `ssh $OPTS host` hands every flag
+   over as one argument and `ssh` rejects it. Proctor opens no tunnel and installs no `ssh`.
 6. **Run the proof from one persistent MCP session.** `proctor-shim` over stdio is such a session:
    it stays alive across calls, so the attach it makes still holds when the next call arrives.
    Attach, activate an application inside the guest, actuate, read the result back through
