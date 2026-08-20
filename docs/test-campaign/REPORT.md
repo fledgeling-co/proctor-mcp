@@ -506,8 +506,73 @@ flake rather than a product defect: `SessionHUD.hudStatus()` read a process-wide
 test could move under it, which showed up as roughly one failure in five. It is an injectable probe
 now, and nine consecutive full runs have been clean.
 
+## The blind pass is 96% noise, and the noise is not the vocabulary
+
+**PRO-0079.** `vacuity-check.py`'s third pass reported `examined=1857 mutating=516
+re-read-after=438 blind=78` — 78 tests that call a mutating verb and never read the state back,
+across 30 files. Nobody had read one. Seventy-eight genuine gaps would be the largest test defect
+this repo has recorded, so the number was worth measuring before it was worth acting on.
+
+**The rate, with its denominator.** 57 of the 78 findings were read and classed: five per bucket
+from `act` (13), `unlock` (12), `release` (9), `set` (6) and `claim` (6), drawn at seed 20260821,
+plus a **census** of the 32-finding tail — every finding under the thirteen verbs with four or
+fewer. That is 73.1% of the population.
+
+**Fifty-seven of fifty-seven were false positives. Zero were genuine.** The tail is exact at 0 of
+32. In the large strata, 0 genuine in 25 drawn from 46 refutes four or more at 95%
+(P(observe 0 | K=4) = 0.037) and does not refute three (P = 0.088). So the honest claim is **at
+most 3 genuine among all 78, a false-positive rate of at least 96.2%** — not "zero", which the
+sample cannot support, and not "78 defects", which is what the raw count invites.
+
+**A zero from a pass that cannot fire is worth nothing, so the pass was armed.** On a copy of the
+tree, one read-back line was deleted from `AuditRotationTests.clearingEmptyIsANoOp`, a test
+currently in the re-read set. The count went 78 → 79 and named that test. The worktree's own
+`Tests/` was never the copy that was cut.
+
+**Six shapes, and only one of them is the reader list.**
+
+| Shape | Count | What in the check produces it |
+|---|---:|---|
+| false-mutator | 17 | The mutator matches `verb\w*\s*(`, a prefix. It fires on the test's own name in the `func` line (`stopEverywhere(`, `actNotIdempotent(`), on a pure query (`pauseLimit(`, `raisesSheet(`, `attachIdleLimit(`), and on an enum case inside the assertion (`.stopRun(`, `.yielded(`, `.rotate(.size)`) |
+| vocabulary | 15 | A genuine read-back follows in an idiom the reader list lacks — `post.begin(pid:)` then `#expect(post.recognisedPids == [9001])` |
+| return-value | 10 | The mutator is the subject under test and the assertion reads what it returned |
+| teardown | 9 | The test reads its observable, then calls `release()`/`cancel()` to clean up. The check looks at the *last* mutator, not at whether any read followed any mutation |
+| not-a-test | 4 | A test double's method counted as a test, because the helper filter only excludes a name called more than once in the same file |
+| body-bleed | 2 | The body regex does not match `private func`, `static func` or a computed property's `set`, so a test's extracted body runs on into the next declaration and picks up its mutator |
+
+**Fifteen of fifty-seven. That is the finding.** Four of the six shapes cannot be reached by any
+reader list at all, and they are 42 of the 57. Every reader candidate was measured two ways —
+files using it, and its effect on the count — and none moved the number: `.contains` reaches 93 of
+the test files and removes 8; nothing else removes more than 3. `.calls` and `.recorded` were
+added, being one idiom in two spellings (the spy double's ledger, 8 files, 45 uses) proved by two
+sampled findings, and the count is now **76**. Everything else was refused with its numbers in
+`campaign.json`'s `why` field, including an out-of-family reviewer's dissent arguing these two
+should have been refused as well.
+
+**Nothing was fixed, because nothing was broken.** The conversion contract says a genuine finding
+gets its read added and never gets deleted. The sample produced no genuine finding, so no test was
+edited and no production source was touched. The remaining 76 stay in the tool's output: a blind
+pass that reports zero because its vocabulary was tuned until it did is worth nothing.
+
+**What this means for a gate.** At a false-positive rate of at least 96.2%, dominated by causes a
+vocabulary cannot reach, the blind pass is a reading instrument and not a gate. It earns a gate
+when its matcher is looking at tests — when a body ends at the next declaration of any visibility,
+a mutator does not match the `func` line that opens the body, and "read after mutation" means any
+read after any mutation rather than after the last one.
+
+Evidence: `evidence/PRO-0079/` — `blind-findings-before.txt` (all 78), `classification.tsv` (57
+verdicts with the read that acquitted each), `rate.txt` (the arithmetic and the bound),
+`arming-control.txt`, `reader-sensitivity.txt`, `out-of-family-review-grok.md`,
+`blind-findings-after.txt` (76). Spec `docs/specs/spec-PRO-0079.md`, plan
+`docs/plans/plan-PRO-0079.md`.
+
 ## What was not checked
 
+- **Twenty-one of the seventy-eight blind findings** — the `act`, `unlock`, `release`, `set` and
+  `claim` buckets were sampled at five each rather than censused, so 21 of their 46 findings were
+  never read. The bound stands in for them: 0 genuine in 25 drawn refutes four or more at 95%, so
+  at most 3 of the 78 are genuine. That is a bound and not a reading, and if the pass is ever
+  gated on, those 21 are the first thing to read.
 - **Cross-session and pre-launch history in the TUI** — the pane reads the same bounded window
   the History window reads, so a person is looking at recent runs rather than the whole trail.
   A forensic read of the full trail stays where it was, behind `proctor_policy` action `audit`

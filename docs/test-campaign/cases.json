@@ -951,5 +951,25 @@
       "count": 3
     },
     "note": "A real Server on a temporary path \u2014 Darwin.bind, listen, chmod 0600 and the accept loop in Server.swift \u2014 with three SocketClient instances from ProctorCore/Transport.swift each calling connect() (Darwin.connect) and send(). THE COUNT IS ANSWERED CONNECTIONS, NOT RECORDED REQUESTS: Server.serve reads many frames from one accepted descriptor, so a per-request count would report three for one client sending three frames. A reply cannot arrive on a descriptor the accept loop never took, so an answered connection is an accept. The identity half is the completion confirmation: the peer pid and working directory are the kernel's answer about the far end, obtainable only from an accepted fd, and the client never puts either on the wire. Settled by an out-of-family referral to grok-4.6 at xhigh on 2026-08-21, which also ruled out adding an onAccept seam to Server \u2014 a hook the product fires is the product logging its own accept, and no production source needed changing. PORTABLE FLOOR: no kernel socket tracer."
+  },
+  {
+    "id": "CASE-0063",
+    "req": "REQ-045",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0079/blind-findings-before.txt",
+      "evidence/PRO-0079/classification.tsv",
+      "evidence/PRO-0079/rate.txt",
+      "evidence/PRO-0079/arming-control.txt",
+      "evidence/PRO-0079/reader-sensitivity.txt",
+      "evidence/PRO-0079/out-of-family-review-grok.md",
+      "evidence/PRO-0079/blind-findings-after.txt",
+      "evidence/PRO-0079/gate-test-sh.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pass was armed rather than trusted: on a /tmp copy of Tests/, one read-back line was deleted from AuditRotationTests.clearingEmptyIsANoOp, a test then in the re-read set. The count went 78 to 79 and the finding named that test. A zero-genuine result from a pass that could not report a genuine finding would have measured nothing.",
+    "note": "Sampled false-positive rate for the blind-mutation pass. 57 of 78 findings read (73.1%): five per bucket from act/unlock/release/set/claim at seed 20260821, plus a CENSUS of the 32-finding tail. 57 of 57 false positive, 0 genuine. The tail is exact at 0 of 32; in the large strata 0 genuine in 25 drawn from 46 refutes K>=4 at 95% (P=0.037) and does not refute K=3 (P=0.088), so the bound is at most 3 genuine in 78 -- a false-positive rate of at least 96.2%. Six shapes: false-mutator 17, vocabulary 15, return-value 10, teardown 9, not-a-test 4, body-bleed 2. Only vocabulary is reachable by the reader list, so 42 of 57 cannot be fixed by any vocabulary at all. No test was edited and no production source touched, because the sample produced no genuine finding. blindVocabulary gained .calls and .recorded on the evidence of two sampled findings (78 -> 76); every other candidate was refused with its measured file count and effect. PARTIAL by denominator: 21 of the 46 large-stratum findings were never read and the bound stands in for them. Suite gate: ./scripts/test.sh green at 1,814 tests in 214 suites, unchanged from the wave's recorded count, as it must be for an item that touches no Swift. The first attempt stalled at 1,758 of 1,785 started tests, blocked in mach_msg2_trap with TCC and ScreenCaptureKit loaded behind a concurrent run in a sibling worktree; test.sh refused to read the absent verdict as a pass and both attempts are in the evidence."
   }
 ]

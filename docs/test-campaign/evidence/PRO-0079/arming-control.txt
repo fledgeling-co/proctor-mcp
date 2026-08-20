@@ -1,0 +1,16 @@
+== ARMING CONTROL: can the blind pass newly fire on a genuinely blind test? ==
+
+-- control A: unmodified copy of Tests/ --
+blind:      examined=1857 mutating=516 re-read-after=438 blind=78
+
+-- arming: remove the read-back line from AuditRotationTests.clearingEmptyIsANoOp:438
+    func clearingEmptyIsANoOp() {
+        withTrail { dir, _ in
+            #expect(AuditLog.clear())
+        }
+    }
+}
+
+-- control B: same copy, one read removed --
+blind:      examined=1857 mutating=516 re-read-after=437 blind=79
+  · clearingEmptyIsANoOp — last mutator 'clear', no read after it (/tmp/pro79-arm/ProctorAgentTests/AuditRotationTests.swift)

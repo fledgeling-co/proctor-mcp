@@ -1,0 +1,58 @@
+verb	test	file	shape	evidence
+act	routeReachesTheCaller	BackgroundRouteTests.swift	return-value	`let result = try await act(...)`; reads `result["steps"]`, `steps[0]["plane"]`, `steps[0]["route"]`
+act	anAccessibilityRunArmsNothing	YieldWiringTests.swift	vocabulary	reads `h.contention.armCount == 0` — the observable the title names
+act	theInFlightWindowClosesOnEveryPath	StopReachabilityWiringTests.swift	vocabulary	reads `!h.post.inFlight`
+act	actNotIdempotent	ProctorCoreTests.swift	false-mutator	`act` prefix-matched the test's own name `actNotIdempotent(`; reads `act.destructive`, `act.idempotent`
+act	theGraceOpensBeforeThePost	YieldWiringTests.swift	vocabulary	reads `h.contention.syntheticPosts >= 2`
+unlock	bind	TakeoverWiringTests.swift	not-a-test	method on a test double (`lock.lock(); defer { lock.unlock() }`), not a test
+unlock	setExpectedPid	YieldWiringTests.swift	not-a-test	setter on a fake contention monitor
+unlock	eachStepStartsClean	StopReachabilityWiringTests.swift	body-bleed	the test reads `!post.inFlight`; the matched `unlock` is in the trailing `private final class Clock`'s computed setter, which `fn_re` cannot start a body at
+unlock	noteSyntheticPost	YieldWiringTests.swift	not-a-test	counter increment on a fake
+unlock	release	TakeoverWiringTests.swift	not-a-test	method on a test double
+release	holdStopsTheNextStart	RunQueueWiringTests.swift	teardown	reads `snapshot().waiting.count == 1` then `release(ticket)` to clean up
+release	aQueuedActivateIsRefusedWithoutActivating	RunQueueWiringTests.swift	teardown	reads `error.code == .queueBusy` then `release(holder)`
+release	aHoldLandsOnItsOwnTicket	HoldAttributionWiringTests.swift	teardown	reads `snapshot().active.allSatisfy { $0.held == nil }` then releases both tickets
+release	ceilingFires	RunQueueWiringTests.swift	teardown	reads `error.code`, `error.message`, `error.remedy` then `release(holder)`
+release	syntheticTakesTheMachine	RunQueueWiringTests.swift	teardown	reads `snapshot().active.count == 1` then releases both tickets
+set	showRefusedWithoutAnEventLoop	RunHUDMenuBarWiringTests.swift	vocabulary	`setCanShow(true)` then reads `feed.showRefusal == nil`
+set	anUnknownActionIsStillRefused	GuestDispatchWiringTests.swift	body-bleed	the test reads `!response.ok` and `response.error?.message`; the matched `setGuestProviders` is inside the swallowed `private func attached()`, which `fn_re` does not match
+set	channelTable	SurfaceFidelityTests.swift	false-mutator	`set` prefix-matched `FidelityChannel.settling(`, a pure query, inside the assertion itself
+set	showRefusedOnALaunchWithNoLoop	RunHUDMenuBarWiringTests.swift	vocabulary	`setHUDFeed(feed)` then reads `result["refused"]` and `feed.drawing == false`
+set	anExecutableDirectoryIsNotTheTool	ObscuraPresenceWiringTests.swift	vocabulary	`setAttributes(0o644)` then reads `!ToolProbe.executableRegularFile(...)`
+claim	definiteAnswersAreCached	GrantProbeTests.swift	return-value	`keeper.claim(now:)` is the subject; the assertion is on what it returned
+claim	aWedgedProbeIsRetried	GrantProbeTests.swift	return-value	`#expect(keeper.claim(...).startToken != nil)`
+claim	callersInsideTheBoundJoin	GrantProbeTests.swift	return-value	`#expect(keeper.claim(now: 11.0) == .join(remaining: 0.5))`
+claim	abandonIsIdempotentPerProbe	GrantProbeTests.swift	return-value	`#expect(keeper.claim(...).startToken != nil)`
+claim	aStraggerAbandonDoesNotCount	GrantProbeTests.swift	return-value	`let decision = keeper.claim(...)`; reads `decision.startToken` and its `.join` payload
+apply	aFallbackOpensItAndAnAccessibilitySuccessDoesNot	RunHUDGateTests.swift	vocabulary	`other.apply(...)` then reads `!other.model.stepsAside`
+attach	theIdleCeilingIsSeparate	GuestPoolWiringTests.swift	false-mutator	`attach` prefix-matched `Session.attachIdleLimit(from:)`, a pure query, inside the assertion
+attach	aDoctorCallWritesThroughToTheHandoffCache	ObscuraPresenceWiringTests.swift	return-value	`let fresh = try await attachHandoff(session)`; reads `fresh["toolUnavailable"]`, `fresh["use"]`
+begin	aCallMakesItsDriverRecognised	DelegatedSupervisionWiringTests.swift	vocabulary	`post.begin(pid: 9001)` then reads `post.recognisedPids == [9001]`, `!post.hasUnrecognised`
+begin	aSwallowDuringADelegatedCallIsNotPersonInput	DelegatedSupervisionWiringTests.swift	vocabulary	`post.begin(pid: nil)` then reads `post.outstandingCall` twice
+begin	twoCallsOnOnePidAreRetained	DelegatedSupervisionWiringTests.swift	vocabulary	`post.begin(pid: 9001)` then reads `post.recognisedPids == [9001]` after the grace
+begin	aLongGestureStaysStoppable	StopReachabilityWiringTests.swift	teardown	four `#expect`s on `post.inFlight` precede the trailing `post.beginStep()` reset
+cancel	anotherSessionsGuestIsNotTaken	GuestPoolWiringTests.swift	vocabulary	`second.cancel()` then reads `!h.provider.calls.contains { $0.0 == "stop" }`
+cancel	theCapBindsTheAttachPath	GuestPoolWiringTests.swift	teardown	reads `snapshot().waiting.count` and the throw, then cancels the queued tasks
+cancel	theThirdGuestWaits	GuestPoolWiringTests.swift	teardown	reads `sawWaiting` then `third.cancel()`
+cancel	perSessionCap	RunQueueWiringTests.swift	teardown	reads `error.code`, `error.message` then cancels the waiters
+clone	stopAndCloneShape	TartProviderTests.swift	vocabulary	`clone(name:as:)` then reads `cloneScript.recorded.contains(["clone", ...])`
+handle	handleIsStable	GuestToolTests.swift	false-mutator	`handle` prefix-matched the test's own name `handleIsStable(`
+pause	aFlappingConditionIsStillBoundedPerRun	HoldAttributionWiringTests.swift	false-mutator	`pause` prefix-matched the enum case `.pauseExpired(seconds: 10)` inside the assertion; the declared reader `checkpoint` sits before it
+pause	backstopIsConfigurable	RunHUDWiringTests.swift	false-mutator	`pause` prefix-matched `RunControl.pauseLimit(from:)`, a pure query
+pause	aLongParkNamesAPersonsPause	SessionIsolationWiringTests.swift	vocabulary	`control.pause()` then reads `control.longParkMessage(...)` and asserts it contains "a person's Pause"
+raise	asymmetry	ConsentSurfaceTests.swift	false-mutator	`raise` prefix-matched `ConsentSurface.raisesSheet(`, a pure predicate, inside the assertion
+raise	pairingCondition	ConsentSurfaceTests.swift	false-mutator	`raise` prefix-matched `ConsentSurface.raisesPairingSheet(`
+raise	yieldInputDoesNotAsk	ConsentSurfaceTests.swift	false-mutator	`raise` prefix-matched `ConsentSurface.raisesSheet(`
+restart	restartStated	WalkthroughFlowTests.swift	false-mutator	`restart` prefix-matched the test's own name `restartStated(`
+rotate	noStartTimeStillCapsBySize	HistoryRetentionTests.swift	false-mutator	`rotate` prefix-matched the enum case `.rotate(.size)` inside the assertion
+seal	generatorSeesADirtyTree	BuildInfoTests.swift	return-value	`Self.sealedGenerator(...)` returns the generated source; reads `dirty.contains(...)` three times
+seal	eachEntryIsSealedIndependently	ProctorCoreTests.swift	return-value	reads `a != b`, `boxA.epk != boxB.epk`, and `AuditSeal.open(a, with: key) == line`
+seal	tamperingFailsToOpen	ProctorCoreTests.swift	return-value	reads `AuditSeal.open(encode(swapped), with: key) == nil` on what the second seal returned
+stop	stopEverywhere	CommandSurfaceTests.swift	false-mutator	`stop` prefix-matched the test's own name `stopEverywhere(`
+stop	verdictDependsOnWhatAlreadyRan	ProctorCoreTests.swift	false-mutator	`stop` prefix-matched the enum case `.stopRun(refusal)` inside the assertion
+stop	stopIsReachable	TUISupervisionTests.swift	false-mutator	`stop` prefix-matched the test's own name `stopIsReachable(`
+stop	stopIsDecidedOnTheUp	TakeoverTests.swift	false-mutator	`stop` prefix-matched the test's own name `stopIsDecidedOnTheUp(`
+yield	aLongParkNamesTheAutomaticCause	SessionIsolationWiringTests.swift	vocabulary	`control.yield(run: 7, hold:)` then reads `longParkMessage` and asserts it names the yield reason
+yield	resumeIsRecordedOnTheLatch	YieldWiringTests.swift	vocabulary	`control.yield(...)` then reads `control.takePersonResume()` twice
+yield	anUnconfirmedFrontCannotFire	ContentionTests.swift	false-mutator	`yield` prefix-matched the enum case `.yielded(.frontmostChanged)` inside the assertion
+yield	overrideIsSpentWhenTheConditionGoes	ContentionTests.swift	false-mutator	`yield` prefix-matched the enum case `.yielded(.frontmostChanged)` inside the assertion

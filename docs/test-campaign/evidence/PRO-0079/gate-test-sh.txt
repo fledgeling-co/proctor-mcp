@@ -1,0 +1,23 @@
+== ./scripts/test.sh — the verdict, PRO-0079 ==
+
+This item changes no Swift. The suite is a regression control, not the subject.
+
+-- attempt 1: STALLED, and the gate refused to call it a pass --
+   1,758 of 1,785 started tests finished, then the runner blocked in mach_msg2_trap
+   with TCC and ScreenCaptureKit loaded — the documented proctor_doctor SCK hang,
+   serialized behind a concurrent swift test in the sibling PRO-0077 worktree.
+   CPU time moved 0.01s in 40s. Killed after 13 minutes of zero log growth.
+
+FAIL: no swift-testing verdict line in the output.
+      Either the run died before reporting, or a --filter matched no
+      tests. --filter matches the Swift function name, not the @Test
+      display string. An absent verdict is not a pass.
+
+   Recorded because a check that could not run is not a check that passed.
+
+-- attempt 2: the verdict --
+􁁛  Test run with 1814 tests in 214 suites passed after 17.944 seconds.
+􁁛  Test run with 1814 tests in 214 suites passed after 17.944 seconds.
+
+PASS: 􁁛  Test run with 1814 tests in 214 suites passed after 17.944 seconds.
+   ./scripts/test.sh exit=0

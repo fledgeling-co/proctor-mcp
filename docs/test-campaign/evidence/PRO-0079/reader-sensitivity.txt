@@ -1,0 +1,22 @@
+Reader sensitivity — one candidate added at a time to the PRE-PRO-0079 vocabulary.
+Read as: what this reader alone does to the blind count, against the tree at ai/pro-0079.
+
+  baseline (no addition)      blind = 78
+  + .contains            blind = 70
+  + .stringValue         blind = 75
+  + .intValue            blind = 74
+  + .calls               blind = 77
+  + .recorded            blind = 77
+  + .inFlight            blind = 77
+  + .armCount            blind = 75
+  + .drawing             blind = 77
+  + .stepsAside          blind = 77
+  + .recognisedPids      blind = 76
+  + .observedInput       blind = 76
+  + .outstandingCall     blind = 77
+
+  + .calls AND .recorded (ADOPTED)  blind = 76
+
+No candidate moves the count materially, because only 15 of the 57 sampled false
+positives are vocabulary at all. `.contains` reaches 93 of the test files and still
+removes only 8 — and would suppress broadly for the same reason #expect was refused.
