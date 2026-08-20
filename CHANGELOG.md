@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Note: a check that could not run is not a check that passed. The status window still draws its permission rows from a build-time list rather than from the design, and that gap is recorded rather than papered over.
 
+- **The design of record now says what the app says.** The status window and the setup walkthrough each explained more than the design drew: a title block, a line saying every permission is granted, and a first slide leading with what Proctor does rather than a row of capability chips. These are the two screens that ask for the most invasive permissions macOS has, so the extra words stay and the design was updated to carry them. The design was also short a permission, and Automation is in it now.
+
 - **Supervision over SSH reads the machine, not just the run.** The readiness, switches and history panes were drawing their empty state whatever the Mac was doing. They now show real grants, real lanes with what each still wants, every switch with where its value came from and when it takes effect, and the recent runs with what each one drove and how it ended.
 
   History was nearly left out, on the reasoning that the trail is sealed and no client can read it. That was wrong twice over. The verb the History window uses already exists, and keeping it off the tool catalogue was never what kept a model out of the trail, because the policy tool already opens the trail and hands back whole records. The pane reads the same projection the window reads, which is narrower than what a model can ask for anyway, so nothing here opens a path that wasn't open already.

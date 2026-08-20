@@ -168,6 +168,49 @@
 .wt-grant .grow { flex: 1; }
 .wt-grant .t { font-weight: 500; }
 .wt-grant .d { color: var(--ink-3); font-size: 11px; margin-top: 1px; }
+/* The intro slide reads left, because it is prose rather than a hero: a
+   centred paragraph of two sentences has a ragged left edge on every line, and
+   the eye loses the start of the next one. */
+/* The status window's own title block. The build draws one and the design did
+   not, and a permissions screen is where an explanation earns its space: the two
+   grants below it are the most invasive macOS has, and the second paragraph is
+   the reason they survive an upgrade. */
+.win-head { padding: 0 0 4px; }
+.win-head .wh-top { display: flex; align-items: center; gap: 10px; }
+.win-head .wh-top .ic { width: 22px; height: 22px; color: var(--accent); flex: none; }
+.win-head h2 { font: 590 26px/1.2 var(--sans); margin: 0; letter-spacing: -0.014em; }
+.win-head .wh-lede { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+.win-head .wh-sub { font-size: 12px; color: var(--ink-3); margin: 10px 0 0; }
+
+/* Said under the rows rather than only in the header pill, because the pill
+   answers "what state is this section in" and the sentence answers "is there
+   anything left for me to do". */
+.sec-ready {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--ok); margin: 10px 0 0;
+}
+.sec-ready .ic { width: 13px; height: 13px; flex: none; }
+
+.wt-body.lead { text-align: left; }
+.wt-body.lead h2 { margin: 0 0 16px; }
+.wt-body .para { color: var(--ink-2); font-size: 13px; margin: 0 0 16px; }
+
+/* Progress at the top rather than in the footer, so the footer carries only
+   what a person can press. Three segments filled up to the current step. */
+.wt-bar { display: flex; gap: 6px; padding: 22px 34px 18px; }
+.wt-bar i { flex: 1; height: 3px; border-radius: 2px; background: var(--ink-4); display: block; }
+.wt-bar i.on { background: var(--accent); }
+
+/* The one thing the slide is about to ask for, said before the button that
+   asks. Icon left, title, then the reason it is worth granting. */
+.wt-callout {
+  display: flex; gap: 9px; align-items: flex-start; padding: 10px;
+  border-radius: 7px; background: var(--accent-wash); text-align: left;
+}
+.wt-callout .ic { width: 14px; height: 14px; flex: none; margin-top: 1px; color: var(--accent); }
+.wt-callout .t { font-size: 12px; font-weight: 500; }
+.wt-callout .d { font-size: 11px; color: var(--ink-2); margin-top: 3px; }
+
 .wt-foot { display: flex; align-items: center; gap: 10px; padding: 14px 34px 20px; border-top: 1px solid var(--rule); }
 .wt-foot .spacer { flex: 1; }
 .dots { display: flex; gap: 6px; }

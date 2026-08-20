@@ -1241,19 +1241,19 @@
   },
   {
    "id": "DEF-012",
-   "status": "partly fixed",
+   "status": "fixed",
    "title": "The status window's chrome diverges from its design of record",
    "found": "be-my-witness judging the capture against the design pane, both dark, both 640 wide",
    "detail": "Section headers are letter-spaced uppercase where the design specifies sentence case semibold and states the reason in its own caption: a header that recedes under what it labels. The build opens with a title block the design does not draw, grant rows use a tick glyph and a second line where the design uses a left icon and a right-hand pill, and Ready is a sentence inside the section rather than a pill on its header.\n\nThe header rule is fixed: SectionTitle drew letter-spaced monospaced capitals and now draws sentence case semibold in the secondary tier, which is the rule the design states and argues for. Re-captured and re-judged.",
-   "disposition": "Three differences remain and all three are the build carrying MORE than the design: a title block the design does not draw, grant rows with the state on a second line rather than in a right-hand pill, and a Ready sentence beneath a header that already carries a Ready pill. Closing any of them deletes explanation, which is a decision about the product rather than a rule the design argues, so it is open for a decision rather than changed in passing."
+   "fix": "Three parts, and they were settled by two different means. The header rule the design argues for in its own caption was applied to the build: SectionTitle drew letter-spaced monospaced capitals and now draws sentence case semibold in the secondary tier. The title block and the Ready sentence were settled by a person choosing between them: keep the explanation, so the design of record was moved to carry both rather than the build stripped to match. Re-capturing to check that found a second fault — the build capture the earlier verdict rested on predated the rebuild of the header fix, so it showed the old treatment while the source drew the new one; re-taken from a process started after the rebuild. The design was also short a grant: it listed three where the build lists four, and Automation is now in it. One difference is left rather than closed and is recorded on the SURF-008 verdict: the design's grant row says what a grant is for and the build's does not, and closing it either way costs something nobody asked to spend."
   },
   {
    "id": "DEF-013",
-   "status": "open",
+   "status": "fixed",
    "title": "The walkthrough's first slide diverges from its design of record",
    "found": "be-my-witness judging the capture against the design pane",
    "detail": "The build leads with a three-segment progress bar and 'What Proctor does'; the design leads with a bordered icon and 'A model can test this Mac', and carries three capability chips the build replaces with two paragraphs and a callout.",
-   "disposition": "Same shape as DEF-012's remainder and the same decision: the build's first slide carries a progress bar, two paragraphs and a callout where the design carries an icon and three capability chips. Both ask for the same decision with the same emphasis, so nothing is broken; which composition wins is a product call."
+   "fix": "Settled by the same decision. The build leads with a three-segment progress bar, 'What Proctor does', two paragraphs and a callout; the design led with an icon, 'A model can test this Mac' and three capability chips. Keep the explanation, so the design of record now carries the build's composition. Nothing was lost with the chips: they compressed what the first paragraph says in prose. SURF-009 re-judged and passes."
   }
  ]
 }

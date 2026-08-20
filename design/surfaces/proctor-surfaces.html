@@ -676,6 +676,49 @@ table.data.unfocused tr.selected td { background: var(--fill-2); color: var(--in
 .wt-grant .grow { flex: 1; }
 .wt-grant .t { font-weight: 500; }
 .wt-grant .d { color: var(--ink-3); font-size: 11px; margin-top: 1px; }
+/* The intro slide reads left, because it is prose rather than a hero: a
+   centred paragraph of two sentences has a ragged left edge on every line, and
+   the eye loses the start of the next one. */
+/* The status window's own title block. The build draws one and the design did
+   not, and a permissions screen is where an explanation earns its space: the two
+   grants below it are the most invasive macOS has, and the second paragraph is
+   the reason they survive an upgrade. */
+.win-head { padding: 0 0 4px; }
+.win-head .wh-top { display: flex; align-items: center; gap: 10px; }
+.win-head .wh-top .ic { width: 22px; height: 22px; color: var(--accent); flex: none; }
+.win-head h2 { font: 590 26px/1.2 var(--sans); margin: 0; letter-spacing: -0.014em; }
+.win-head .wh-lede { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+.win-head .wh-sub { font-size: 12px; color: var(--ink-3); margin: 10px 0 0; }
+
+/* Said under the rows rather than only in the header pill, because the pill
+   answers "what state is this section in" and the sentence answers "is there
+   anything left for me to do". */
+.sec-ready {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--ok); margin: 10px 0 0;
+}
+.sec-ready .ic { width: 13px; height: 13px; flex: none; }
+
+.wt-body.lead { text-align: left; }
+.wt-body.lead h2 { margin: 0 0 16px; }
+.wt-body .para { color: var(--ink-2); font-size: 13px; margin: 0 0 16px; }
+
+/* Progress at the top rather than in the footer, so the footer carries only
+   what a person can press. Three segments filled up to the current step. */
+.wt-bar { display: flex; gap: 6px; padding: 22px 34px 18px; }
+.wt-bar i { flex: 1; height: 3px; border-radius: 2px; background: var(--ink-4); display: block; }
+.wt-bar i.on { background: var(--accent); }
+
+/* The one thing the slide is about to ask for, said before the button that
+   asks. Icon left, title, then the reason it is worth granting. */
+.wt-callout {
+  display: flex; gap: 9px; align-items: flex-start; padding: 10px;
+  border-radius: 7px; background: var(--accent-wash); text-align: left;
+}
+.wt-callout .ic { width: 14px; height: 14px; flex: none; margin-top: 1px; color: var(--accent); }
+.wt-callout .t { font-size: 12px; font-weight: 500; }
+.wt-callout .d { font-size: 11px; color: var(--ink-2); margin-top: 3px; }
+
 .wt-foot { display: flex; align-items: center; gap: 10px; padding: 14px 34px 20px; border-top: 1px solid var(--rule); }
 .wt-foot .spacer { flex: 1; }
 .dots { display: flex; gap: 6px; }
@@ -802,6 +845,10 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
     <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="8" cy="12" r="3.4"/><path d="M11.4 12H21m-3 0v3m-3-3v2"/>
     </symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2.6 4.8 5.2v6.1c0 4.4 3 8.4 7.2 10.1 4.2-1.7 7.2-5.7 7.2-10.1V5.2Z"/>
+      <rect x="9.1" y="10.6" width="5.8" height="4.6" rx="1"/><path d="M10.4 10.6V9.3a1.6 1.6 0 0 1 3.2 0v1.3"/>
+    </symbol>
     <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="m4 12.5 5.2 5L20 6.5"/>
     </symbol>
@@ -907,27 +954,27 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
       <div class="win" style="width:560px">
         <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div>
           <div class="title">Proctor</div></div>
-        <div class="wt-body">
-          <div class="hud-char" style="width:56px;height:56px;margin:0 auto 16px;border-radius:14px;color:var(--accent)">
-            <svg style="width:36px;height:36px"><use href="#ch-idle"></use></svg>
-          </div>
-          <h2>A model can test this Mac</h2>
-          <p class="lede">Proctor reads what is actually on screen, drives the controls, and checks what the app rendered — then records how it knew.</p>
-          <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">
-            <span class="prov muted"><span class="k">reads</span><span>accessibility tree</span></span>
-            <span class="prov muted"><span class="k">reads</span><span>window pixels</span></span>
-            <span class="prov muted"><span class="k">drives</span><span>two planes</span></span>
+        <div class="wt-bar"><i class="on"></i><i></i><i></i></div>
+        <div class="wt-body lead">
+          <h2>What Proctor does</h2>
+          <p class="para">Proctor lets a model test a Mac app the way a person would check it: read what is actually on screen, operate the controls, and look at what the app drew.</p>
+          <p class="para">It works through macOS's accessibility system rather than by faking mouse and keyboard input, so it can drive a window that is behind another one, or on another Space, without stealing your focus or interrupting what you are doing.</p>
+          <div class="wt-callout">
+            <svg class="ic" aria-hidden="true"><use href="#i-lock"></use></svg>
+            <div>
+              <div class="t">Two permissions, asked once</div>
+              <div class="d">macOS gives these to Proctor itself, not to the tool driving it. That is why they survive when you upgrade or switch the model you use.</div>
+            </div>
           </div>
         </div>
         <div class="wt-foot">
-          <div class="dots"><i class="on"></i><i></i><i></i></div>
           <div class="spacer"></div>
           <button type="button" class="btn">Skip setup</button>
           <button type="button" class="btn prominent large">Set up permissions</button>
         </div>
       </div>
     </div>
-    <p class="caption">The default button is <b>Set up permissions</b> (Return). <b>Skip setup</b> is leading and unfilled — one prominent action per view.</p>
+    <p class="caption">Progress rides at the top as three segments, so the footer carries only actions. The slide leads with what Proctor does and closes on the one thing a person is about to be asked for, because the sentence that earns a permission has to arrive before the button that requests it. The default button is <b>Set up permissions</b> (Return). <b>Skip setup</b> is leading and unfilled — one prominent action per view.</p>
   </div>
 
   <div class="sub" data-state="permissions" data-state-label="2 · Permissions, none granted">
@@ -1031,6 +1078,15 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
           <div class="title">Proctor</div></div>
         <div class="win-body scrolls">
 
+          <div class="win-head">
+            <div class="wh-top">
+              <svg class="ic" aria-hidden="true"><use href="#i-window"></use></svg>
+              <h2>Proctor</h2>
+            </div>
+            <p class="wh-lede">Proctor lets a model test a Mac app: read what is actually on screen, drive the controls, and check what the app rendered.</p>
+            <p class="wh-sub">It runs in the background as its own process. That is deliberate — macOS attributes a permission to the process responsible for asking, so the grants below belong to Proctor and keep working when you change or upgrade the tool driving it.</p>
+          </div>
+
           <div class="sec">
             <div class="sec-head"><h3>Permissions</h3><div class="spacer"></div>
               <span class="pill ok"><i class="dot"></i>Ready</span></div>
@@ -1041,9 +1097,13 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
             <div class="row"><div class="ic" style="color:var(--ink-2)"><svg style="width:16px;height:16px"><use href="#i-eye"></use></svg></div>
               <div class="grow"><div class="name">Screen Recording</div><div class="why">Pixels, and the frame status that says they are fresh</div></div>
               <span class="pill ok"><i class="dot"></i>granted</span></div>
+            <div class="row"><div class="ic" style="color:var(--ink-2)"><svg style="width:16px;height:16px"><use href="#i-gear"></use></svg></div>
+              <div class="grow"><div class="name">Automation</div><div class="why">Optional. macOS asks for this per application, the first time Proctor drives one</div></div>
+              <span class="pill"><i class="dot"></i>per app</span></div>
             <div class="row"><div class="ic" style="color:var(--ink-2)"><svg style="width:16px;height:16px"><use href="#i-key"></use></svg></div>
               <div class="grow"><div class="name">Input Monitoring</div><div class="why">Optional. Notices a person at the first keystroke rather than the next window change</div></div>
               <span class="pill"><i class="dot"></i>not asked</span></div>
+            <p class="sec-ready"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg>Ready. Every permission Proctor needs is granted.</p>
           </div>
 
           <div class="sec">
@@ -1109,6 +1169,15 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
       <div class="win" style="width:640px">
         <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">Proctor</div></div>
         <div class="win-body">
+
+          <div class="win-head">
+            <div class="wh-top">
+              <svg class="ic" aria-hidden="true"><use href="#i-window"></use></svg>
+              <h2>Proctor</h2>
+            </div>
+            <p class="wh-lede">Proctor lets a model test a Mac app: read what is actually on screen, drive the controls, and check what the app rendered.</p>
+            <p class="wh-sub">It runs in the background as its own process. That is deliberate — macOS attributes a permission to the process responsible for asking, so the grants below belong to Proctor and keep working when you change or upgrade the tool driving it.</p>
+          </div>
           <div class="sec">
             <div class="sec-head"><h3>Permissions</h3><div class="spacer"></div><span class="pill"><i class="dot"></i>Checking</span></div>
             <p class="sec-note">Decisions macOS holds about Proctor.</p>
@@ -1132,6 +1201,15 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
       <div class="win" style="width:640px">
         <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">Proctor</div></div>
         <div class="win-body">
+
+          <div class="win-head">
+            <div class="wh-top">
+              <svg class="ic" aria-hidden="true"><use href="#i-window"></use></svg>
+              <h2>Proctor</h2>
+            </div>
+            <p class="wh-lede">Proctor lets a model test a Mac app: read what is actually on screen, drive the controls, and check what the app rendered.</p>
+            <p class="wh-sub">It runs in the background as its own process. That is deliberate — macOS attributes a permission to the process responsible for asking, so the grants below belong to Proctor and keep working when you change or upgrade the tool driving it.</p>
+          </div>
           <div class="sec">
             <div class="sec-head"><h3>Permissions</h3><div class="spacer"></div><span class="pill ok"><i class="dot"></i>Ready</span></div>
             <p class="sec-note">Every permission Proctor needs is granted. The lanes below are about optional tools, and none of them changes that.</p>
@@ -1156,6 +1234,15 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
       <div class="win" style="width:640px">
         <div class="titlebar"><div class="lights"><i class="light r"></i><i class="light y"></i><i class="light g"></i></div><div class="title">Proctor</div></div>
         <div class="win-body">
+
+          <div class="win-head">
+            <div class="wh-top">
+              <svg class="ic" aria-hidden="true"><use href="#i-window"></use></svg>
+              <h2>Proctor</h2>
+            </div>
+            <p class="wh-lede">Proctor lets a model test a Mac app: read what is actually on screen, drive the controls, and check what the app rendered.</p>
+            <p class="wh-sub">It runs in the background as its own process. That is deliberate — macOS attributes a permission to the process responsible for asking, so the grants below belong to Proctor and keep working when you change or upgrade the tool driving it.</p>
+          </div>
           <div class="sec">
             <div class="sec-head"><h3>Permissions</h3><div class="spacer"></div><span class="pill bad"><i class="dot"></i>Agent down</span></div>
             <div style="display:flex;gap:11px;align-items:flex-start;border:1px solid color-mix(in srgb, var(--danger) 40%, transparent);background:var(--danger-wash);border-radius:9px;padding:13px 15px;margin-top:6px">

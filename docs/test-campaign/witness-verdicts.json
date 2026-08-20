@@ -1,20 +1,20 @@
 [
-  {
-    "subject": "SURF-008",
-    "verdict": "fail",
-    "reference": "evidence/shots/mock/surf-008-status-window.png",
-    "reason": "Re-judged after the header fix. Section headers are now sentence case semibold in the secondary tier, which is the rule the design states and argues for, and they recede under the row titles as intended. Three differences remain, and all three are the build carrying MORE than the design rather than less: a title block (icon, 'Proctor', two paragraphs) the design does not draw; grant rows using a tick glyph with the state on a second line where the design uses a left icon, a description and a right-hand pill; and a green 'Ready. Every permission Proctor needs is granted.' sentence beneath a section header that already carries a Ready pill. Each is a composition decision rather than a rule the design argues, and closing them means deleting explanation, so they are left for a decision rather than changed in passing."
-  },
-  {
-    "subject": "SURF-009",
-    "verdict": "fail",
-    "reference": "evidence/shots/mock/surf-009-walkthrough.png",
-    "reason": "Same window, same first slide, different composition. The build leads with a three-segment progress bar and the heading 'What Proctor does'; the design leads with a bordered icon and the heading 'A model can test this Mac'. The design carries three capability chips (READS accessibility tree, READS window pixels, DRIVES two planes) which the build replaces with two paragraphs and a 'Two permissions, asked once' callout. Both offer Skip setup and Set up permissions with the same emphasis, so the decision the slide asks for is unchanged. This is PRO-0067's A3, carried and now measured."
-  },
-  {
-    "subject": "SURF-010",
-    "verdict": "pass",
-    "reference": "evidence/shots/mock/surf-010-menubar.png",
-    "reason": "The capture is Proctor's character in the menu bar, cropped to the AXExtrasMenuBar frame this process reported, and it is that character rather than any other application's status item. Frame-exact comparison is not meaningful here and is not claimed: the character animates, the reference is the idle-0 frame, and a live capture lands on whichever frame was drawn. What is settled is identity and placement, which is what this surface's case rests on."
-  }
+ {
+  "subject": "SURF-008",
+  "verdict": "pass",
+  "reference": "evidence/shots/mock/surf-008-status-window.png",
+  "reason": "Re-judged twice over, and the first pass found an instrument fault worth recording: the build capture this verdict rested on was taken at 10:55 from a process launched before the sentence-case header fix was rebuilt, so it showed letter-spaced capitals while the source drew sentence case. The picture was of the right window in the right state and of the wrong build. Re-taken from a process started after the rebuild, with the manifest written at the shutter. The design of record was then moved to the build's composition, which is the decision a person took: keep the explanation. Both now open with the same title block (icon, 'Proctor', the same two paragraphs), draw section headers in sentence case semibold in the secondary tier, carry a Ready pill on the Permissions header, list the same four grants in the same order — Accessibility, Screen Recording, Automation, Input Monitoring, the fourth of which the design was missing — and close the section on the same green 'Ready. Every permission Proctor needs is granted.' One difference remains and is left rather than closed. The design's grant row is a kind icon, the name, a line saying what the grant is for, and a state pill on the right; the build's is a state glyph, the name and the state on a second line, with no 'what it is for'. Closing it in the design's direction deletes explanation, which is the opposite of the decision taken; closing it in the build's direction means adding a field to a shipped surface that nobody asked for. Both rows are legible and carry the state, so the pass is on what the surfaces say, with the arrangement named."
+ },
+ {
+  "subject": "SURF-009",
+  "verdict": "pass",
+  "reference": "evidence/shots/mock/surf-009-walkthrough.png",
+  "reason": "Re-judged after the design of record was moved to the build's composition, which is the decision a person took: keep the explanation. Both now lead with a three-segment progress bar at the top and the heading 'What Proctor does', carry the same two paragraphs word for word, close on the same 'Two permissions, asked once' callout with the same message, and offer Skip setup and Set up permissions with the same emphasis and no Back. The design's three capability chips are gone, and nothing went with them: they compressed what the first paragraph already says in prose. Two differences are not divergences and are named rather than counted — the window is 560 wide in the design and 620 in the build, and the accent is amber in the design and blue in the capture because the build takes the system accent from macOS. Judged dark against dark, which is what the build draws."
+ },
+ {
+  "subject": "SURF-010",
+  "verdict": "pass",
+  "reference": "evidence/shots/mock/surf-010-menubar.png",
+  "reason": "The capture is Proctor's character in the menu bar, cropped to the AXExtrasMenuBar frame this process reported, and it is that character rather than any other application's status item. Frame-exact comparison is not meaningful here and is not claimed: the character animates, the reference is the idle-0 frame, and a live capture lands on whichever frame was drawn. What is settled is identity and placement, which is what this surface's case rests on."
+ }
 ]
