@@ -1,0 +1,1154 @@
+{
+  "id": 5,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"assertions\" : [\n    {\n      \"detail\" : {\n        \"defects\" : 3,\n        \"findings\" : 84\n      },\n      \"evidence\" : \"/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-0-1787245657637.png\",\n      \"expected\" : \"no disagreement of severity defect\",\n      \"index\" : 0,\n      \"kind\" : \"agree\",\n      \"observed\" : [\n        {\n          \"axSays\" : {\n            \"h\" : 13,\n            \"w\" : 49,\n            \"x\" : 478,\n            \"y\" : 106\n          },\n          \"detail\" : \"AXStaticText claims 80,152 98x26 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:9a14c83169bc12d6\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 2548,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 20,\n            \"w\" : 60.5,\n            \"x\" : 1033.5,\n            \"y\" : 102\n          },\n          \"detail\" : \"AXButton claims 1191,144 121x40 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:2f1937de5d5f33e2\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 1220,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 20,\n            \"w\" : 56,\n            \"x\" : 1102,\n            \"y\" : 102\n          },\n          \"detail\" : \"AXButton claims 1328,144 112x40 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:b4abc16f9eba6d0c\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 1120,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 15,\n            \"w\" : 643.5,\n            \"x\" : 478,\n            \"y\" : 134\n          },\n          \"detail\" : \"AXStaticText claims 80,208 1287x30 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:099a2edc025b9412\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 2576,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 15,\n            \"w\" : 37.5,\n            \"x\" : 478,\n            \"y\" : 161\n          },\n          \"detail\" : \"AXStaticText claims 80,262 75x30 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:5736b08503b61e7d\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 2250,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 15,\n            \"w\" : 67,\n            \"x\" : 521.5,\n            \"y\" : 161\n          },\n          \"detail\" : \"AXStaticText claims 167,262 134x30 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:cc3429082017e88d\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 4020,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 14,\n            \"w\" : 261,\n            \"x\" : 897,\n            \"y\" : 161.5\n          },\n          \"detail\" : \"AXStaticText claims 918,263 522x28 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:b0686ecef96d9191\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3654,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 20,\n            \"w\" : 680,\n            \"x\" : 478,\n            \"y\" : 181\n          },\n          \"detail\" : \"AXProgressIndicator claims 80,302 1360x40 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:0812bd9718fe32e1\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3400,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 13,\n            \"w\" : 28,\n            \"x\" : 462,\n            \"y\" : 237\n          },\n          \"detail\" : \"AXStaticText claims 48,414 56x26 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:ee13698499433dbe\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 1456,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 265\n          },\n          \"detail\" : \"AXButton claims 68,470 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:1828c122f1353059\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 305\n          },\n          \"detail\" : \"AXButton claims 68,550 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:aaf560601c9422d9\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 345\n          },\n          \"detail\" : \"AXButton claims 68,630 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:2ce718611562e214\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 385\n          },\n          \"detail\" : \"AXButton claims 68,710 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:32369c373b9c0066\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 425\n          },\n          \"detail\" : \"AXButton claims 68,790 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:e92516cb64bde18d\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 465\n          },\n          \"detail\" : \"AXButton claims 68,870 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:be4cd79d18cb1333\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 505\n          },\n          \"detail\" : \"AXButton claims 68,950 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:fb819d6e5ccc5c7c\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 545\n          },\n          \"detail\" : \"AXButton claims 68,1030 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:2ae532409832faaa\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 585\n          },\n          \"detail\" : \"AXButton claims 68,1110 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:f0c51937436f961d\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 625\n          },\n          \"detail\" : \"AXButton claims 68,1190 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:cda1f55f9aa0f1d4\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 665\n          },\n          \"detail\" : \"AXButton claims 68,1270 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:539c70e2fdd23015\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 705\n          },\n          \"detail\" : \"AXButton claims 68,1350 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:a6a1bd77f7164bf6\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 745\n          },\n          \"detail\" : \"AXButton claims 68,1430 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:7666d047842558d5\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 785\n          },\n          \"detail\" : \"AXButton claims 68,1510 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:e8f333aea96f9e60\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 825\n          },\n          \"detail\" : \"AXButton claims 68,1590 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:d8d39546a3423636\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 865\n          },\n          \"detail\" : \"AXButton claims 68,1670 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:31b895d341ca743c\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 905\n          },\n          \"detail\" : \"AXButton claims 68,1750 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:5bc7f60e662ba52f\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 945\n          },\n          \"detail\" : \"AXButton claims 68,1830 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:9ac2fcbf11f2f657\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3114,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 985\n          },\n          \"detail\" : \"AXButton claims 68,1910 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:41f9a5dd0b6926ff\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 4158,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1025\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:82170ae1a4aae693\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1065\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:7d26e3044b45dd1d\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1105\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:d407803108d7014e\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1145\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:feaaa90cc480bb2a\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1185\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:7d0f154c1f1bd526\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1225\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:1131a656b78f9fda\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1265\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:b41c534b857a964b\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1305\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:d876913781f9243b\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1345\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:f824911930670b2a\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1385\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:69972fc0b4f92588\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692,\n            \"x\" : 472,\n            \"y\" : 1425\n          },\n          \"detail\" : \"AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:d898829dd428504a\",\n          \"pixelsSay\" : \"0,0 1520x1936\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 618,\n            \"w\" : 6,\n            \"x\" : 1189,\n            \"y\" : 65\n          },\n          \"detail\" : \"AXValueIndicator claims 1502,70 12x1236 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:b0352663945214e3\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3708,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 0,\n            \"w\" : 0,\n            \"x\" : 1181,\n            \"y\" : 62\n          },\n          \"detail\" : \"AXButton exposes AXPress with a zero-area frame: it can be actuated through accessibility but a person has nothing to click.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:251158c2418983df\",\n          \"severity\" : \"defect\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 0,\n            \"w\" : 0,\n            \"x\" : 1181,\n            \"y\" : 62\n          },\n          \"detail\" : \"AXButton exposes AXPress with a zero-area frame: it can be actuated through accessibility but a person has nothing to click.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:91d71bbbd57df800\",\n          \"severity\" : \"defect\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 304,\n            \"w\" : 6,\n            \"x\" : 1189,\n            \"y\" : 683.5\n          },\n          \"detail\" : \"AXButton claims 1502,1307 12x608 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:f0b2a3c6835ea77a\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 1824,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 0,\n            \"w\" : 6,\n            \"x\" : 1189,\n            \"y\" : 65\n          },\n          \"detail\" : \"AXButton exposes AXPress with a zero-area frame: it can be actuated through accessibility but a person has nothing to click.\",\n          \"kind\" : \"invisibleButFocusable\",\n          \"node\" : \"nd:9c397e868dca9bf3\",\n          \"severity\" : \"defect\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 16,\n            \"w\" : 16,\n            \"x\" : 446,\n            \"y\" : 38\n          },\n          \"detail\" : \"AXButton claims 16,16 32x32 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:408d7ee4f729e57b\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 1024,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 16,\n            \"w\" : 16,\n            \"x\" : 492,\n            \"y\" : 38\n          },\n          \"detail\" : \"AXButton claims 108,16 32x32 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:977952ba5b289289\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 1024,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 16,\n            \"w\" : 16,\n            \"x\" : 469,\n            \"y\" : 38\n          },\n          \"detail\" : \"AXButton claims 62,16 32x32 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:8a10a814b13d0169\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 1024,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 16,\n            \"w\" : 52,\n            \"x\" : 520,\n            \"y\" : 38\n          },\n          \"detail\" : \"AXStaticText claims 164,16 104x32 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.\",\n          \"kind\" : \"ghostNode\",\n          \"node\" : \"nd:27299163f4583544\",\n          \"pixelsSay\" : {\n            \"dominant\" : \"#040404\",\n            \"samples\" : 3328,\n            \"stddev\" : 0\n          },\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 20,\n            \"w\" : 60.5\n          },\n          \"detail\" : \"AXButton is 60x20pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:2f1937de5d5f33e2\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 20,\n            \"w\" : 56\n          },\n          \"detail\" : \"AXButton is 56x20pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:b4abc16f9eba6d0c\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:1828c122f1353059\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:aaf560601c9422d9\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:2ce718611562e214\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:32369c373b9c0066\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:e92516cb64bde18d\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:be4cd79d18cb1333\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:fb819d6e5ccc5c7c\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:2ae532409832faaa\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:f0c51937436f961d\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:cda1f55f9aa0f1d4\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:539c70e2fdd23015\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:a6a1bd77f7164bf6\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:7666d047842558d5\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:e8f333aea96f9e60\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:d8d39546a3423636\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:31b895d341ca743c\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:5bc7f60e662ba52f\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:9ac2fcbf11f2f657\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:41f9a5dd0b6926ff\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:82170ae1a4aae693\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:7d26e3044b45dd1d\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:d407803108d7014e\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:feaaa90cc480bb2a\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:7d0f154c1f1bd526\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:1131a656b78f9fda\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:b41c534b857a964b\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:d876913781f9243b\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:f824911930670b2a\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:69972fc0b4f92588\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 18,\n            \"w\" : 692\n          },\n          \"detail\" : \"AXButton is 692x18pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:d898829dd428504a\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 304,\n            \"w\" : 6\n          },\n          \"detail\" : \"AXButton is 6x304pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:f0b2a3c6835ea77a\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 16,\n            \"w\" : 16\n          },\n          \"detail\" : \"AXButton is 16x16pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:408d7ee4f729e57b\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 16,\n            \"w\" : 16\n          },\n          \"detail\" : \"AXButton is 16x16pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:977952ba5b289289\",\n          \"severity\" : \"warning\"\n        },\n        {\n          \"axSays\" : {\n            \"h\" : 16,\n            \"w\" : 16\n          },\n          \"detail\" : \"AXButton is 16x16pt, below the 24pt minimum target size.\",\n          \"kind\" : \"hitTargetMismatch\",\n          \"node\" : \"nd:8a10a814b13d0169\",\n          \"severity\" : \"warning\"\n        }\n      ],\n      \"status\" : \"fail\"\n    }\n  ],\n  \"failed\" : 1,\n  \"ok\" : false,\n  \"passed\" : 0,\n  \"revision\" : 1,\n  \"skipped\" : 0,\n  \"stateHash\" : \"a6dfdbe0a133fabd098487200552d9dc1360c9451336129bf6b01e501573e247\",\n  \"window\" : \"win:1:0\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "assertions": [
+        {
+          "detail": {
+            "defects": 3,
+            "findings": 84
+          },
+          "evidence": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-0-1787245657637.png",
+          "expected": "no disagreement of severity defect",
+          "index": 0,
+          "kind": "agree",
+          "observed": [
+            {
+              "axSays": {
+                "h": 13,
+                "w": 49,
+                "x": 478,
+                "y": 106
+              },
+              "detail": "AXStaticText claims 80,152 98x26 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:9a14c83169bc12d6",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 2548,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 20,
+                "w": 60.5,
+                "x": 1033.5,
+                "y": 102
+              },
+              "detail": "AXButton claims 1191,144 121x40 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:2f1937de5d5f33e2",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 1220,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 20,
+                "w": 56,
+                "x": 1102,
+                "y": 102
+              },
+              "detail": "AXButton claims 1328,144 112x40 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:b4abc16f9eba6d0c",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 1120,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 15,
+                "w": 643.5,
+                "x": 478,
+                "y": 134
+              },
+              "detail": "AXStaticText claims 80,208 1287x30 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:099a2edc025b9412",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 2576,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 15,
+                "w": 37.5,
+                "x": 478,
+                "y": 161
+              },
+              "detail": "AXStaticText claims 80,262 75x30 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:5736b08503b61e7d",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 2250,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 15,
+                "w": 67,
+                "x": 521.5,
+                "y": 161
+              },
+              "detail": "AXStaticText claims 167,262 134x30 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:cc3429082017e88d",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 4020,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 14,
+                "w": 261,
+                "x": 897,
+                "y": 161.5
+              },
+              "detail": "AXStaticText claims 918,263 522x28 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:b0686ecef96d9191",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3654,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 20,
+                "w": 680,
+                "x": 478,
+                "y": 181
+              },
+              "detail": "AXProgressIndicator claims 80,302 1360x40 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:0812bd9718fe32e1",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3400,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 13,
+                "w": 28,
+                "x": 462,
+                "y": 237
+              },
+              "detail": "AXStaticText claims 48,414 56x26 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:ee13698499433dbe",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 1456,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 265
+              },
+              "detail": "AXButton claims 68,470 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:1828c122f1353059",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 305
+              },
+              "detail": "AXButton claims 68,550 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:aaf560601c9422d9",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 345
+              },
+              "detail": "AXButton claims 68,630 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:2ce718611562e214",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 385
+              },
+              "detail": "AXButton claims 68,710 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:32369c373b9c0066",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 425
+              },
+              "detail": "AXButton claims 68,790 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:e92516cb64bde18d",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 465
+              },
+              "detail": "AXButton claims 68,870 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:be4cd79d18cb1333",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 505
+              },
+              "detail": "AXButton claims 68,950 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:fb819d6e5ccc5c7c",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 545
+              },
+              "detail": "AXButton claims 68,1030 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:2ae532409832faaa",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 585
+              },
+              "detail": "AXButton claims 68,1110 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:f0c51937436f961d",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 625
+              },
+              "detail": "AXButton claims 68,1190 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:cda1f55f9aa0f1d4",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 665
+              },
+              "detail": "AXButton claims 68,1270 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:539c70e2fdd23015",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 705
+              },
+              "detail": "AXButton claims 68,1350 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:a6a1bd77f7164bf6",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 745
+              },
+              "detail": "AXButton claims 68,1430 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:7666d047842558d5",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 785
+              },
+              "detail": "AXButton claims 68,1510 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:e8f333aea96f9e60",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 825
+              },
+              "detail": "AXButton claims 68,1590 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:d8d39546a3423636",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 865
+              },
+              "detail": "AXButton claims 68,1670 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:31b895d341ca743c",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 905
+              },
+              "detail": "AXButton claims 68,1750 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:5bc7f60e662ba52f",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 945
+              },
+              "detail": "AXButton claims 68,1830 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:9ac2fcbf11f2f657",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3114,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 985
+              },
+              "detail": "AXButton claims 68,1910 1384x36 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:41f9a5dd0b6926ff",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 4158,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1025
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:82170ae1a4aae693",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1065
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:7d26e3044b45dd1d",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1105
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:d407803108d7014e",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1145
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:feaaa90cc480bb2a",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1185
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:7d0f154c1f1bd526",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1225
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:1131a656b78f9fda",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1265
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:b41c534b857a964b",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1305
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:d876913781f9243b",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1345
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:f824911930670b2a",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1385
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:69972fc0b4f92588",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692,
+                "x": 472,
+                "y": 1425
+              },
+              "detail": "AXButton sits entirely outside the frame's content rect, so it is reachable through accessibility but absent from the rendered window. It may be scrolled out of view, or laid out off-window.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:d898829dd428504a",
+              "pixelsSay": "0,0 1520x1936",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 618,
+                "w": 6,
+                "x": 1189,
+                "y": 65
+              },
+              "detail": "AXValueIndicator claims 1502,70 12x1236 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:b0352663945214e3",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3708,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 0,
+                "w": 0,
+                "x": 1181,
+                "y": 62
+              },
+              "detail": "AXButton exposes AXPress with a zero-area frame: it can be actuated through accessibility but a person has nothing to click.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:251158c2418983df",
+              "severity": "defect"
+            },
+            {
+              "axSays": {
+                "h": 0,
+                "w": 0,
+                "x": 1181,
+                "y": 62
+              },
+              "detail": "AXButton exposes AXPress with a zero-area frame: it can be actuated through accessibility but a person has nothing to click.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:91d71bbbd57df800",
+              "severity": "defect"
+            },
+            {
+              "axSays": {
+                "h": 304,
+                "w": 6,
+                "x": 1189,
+                "y": 683.5
+              },
+              "detail": "AXButton claims 1502,1307 12x608 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:f0b2a3c6835ea77a",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 1824,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 0,
+                "w": 6,
+                "x": 1189,
+                "y": 65
+              },
+              "detail": "AXButton exposes AXPress with a zero-area frame: it can be actuated through accessibility but a person has nothing to click.",
+              "kind": "invisibleButFocusable",
+              "node": "nd:9c397e868dca9bf3",
+              "severity": "defect"
+            },
+            {
+              "axSays": {
+                "h": 16,
+                "w": 16,
+                "x": 446,
+                "y": 38
+              },
+              "detail": "AXButton claims 16,16 32x32 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:408d7ee4f729e57b",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 1024,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 16,
+                "w": 16,
+                "x": 492,
+                "y": 38
+              },
+              "detail": "AXButton claims 108,16 32x32 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:977952ba5b289289",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 1024,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 16,
+                "w": 16,
+                "x": 469,
+                "y": 38
+              },
+              "detail": "AXButton claims 62,16 32x32 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:8a10a814b13d0169",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 1024,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 16,
+                "w": 52,
+                "x": 520,
+                "y": 38
+              },
+              "detail": "AXStaticText claims 164,16 104x32 in the frame, but that region is a flat fill of the window background colour #040404. Either nothing is drawn there or the node is stale.",
+              "kind": "ghostNode",
+              "node": "nd:27299163f4583544",
+              "pixelsSay": {
+                "dominant": "#040404",
+                "samples": 3328,
+                "stddev": 0
+              },
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 20,
+                "w": 60.5
+              },
+              "detail": "AXButton is 60x20pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:2f1937de5d5f33e2",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 20,
+                "w": 56
+              },
+              "detail": "AXButton is 56x20pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:b4abc16f9eba6d0c",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:1828c122f1353059",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:aaf560601c9422d9",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:2ce718611562e214",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:32369c373b9c0066",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:e92516cb64bde18d",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:be4cd79d18cb1333",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:fb819d6e5ccc5c7c",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:2ae532409832faaa",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:f0c51937436f961d",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:cda1f55f9aa0f1d4",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:539c70e2fdd23015",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:a6a1bd77f7164bf6",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:7666d047842558d5",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:e8f333aea96f9e60",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:d8d39546a3423636",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:31b895d341ca743c",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:5bc7f60e662ba52f",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:9ac2fcbf11f2f657",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:41f9a5dd0b6926ff",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:82170ae1a4aae693",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:7d26e3044b45dd1d",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:d407803108d7014e",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:feaaa90cc480bb2a",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:7d0f154c1f1bd526",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:1131a656b78f9fda",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:b41c534b857a964b",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:d876913781f9243b",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:f824911930670b2a",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:69972fc0b4f92588",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 18,
+                "w": 692
+              },
+              "detail": "AXButton is 692x18pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:d898829dd428504a",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 304,
+                "w": 6
+              },
+              "detail": "AXButton is 6x304pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:f0b2a3c6835ea77a",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 16,
+                "w": 16
+              },
+              "detail": "AXButton is 16x16pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:408d7ee4f729e57b",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 16,
+                "w": 16
+              },
+              "detail": "AXButton is 16x16pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:977952ba5b289289",
+              "severity": "warning"
+            },
+            {
+              "axSays": {
+                "h": 16,
+                "w": 16
+              },
+              "detail": "AXButton is 16x16pt, below the 24pt minimum target size.",
+              "kind": "hitTargetMismatch",
+              "node": "nd:8a10a814b13d0169",
+              "severity": "warning"
+            }
+          ],
+          "status": "fail"
+        }
+      ],
+      "failed": 1,
+      "ok": false,
+      "passed": 0,
+      "revision": 1,
+      "skipped": 0,
+      "stateHash": "a6dfdbe0a133fabd098487200552d9dc1360c9451336129bf6b01e501573e247",
+      "window": "win:1:0"
+    }
+  }
+}

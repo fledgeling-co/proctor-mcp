@@ -1,0 +1,40 @@
+# Second lane attachment for PRO-0078, the gap-fix session, recorded 2026-08-20T21:15Z
+
+Two clauses were reopened by the verifier and both needed the live glass lane again:
+the A6 and A4 sabotages, and a capture whose manifest row is written at the shutter.
+
+## agent processes used
+
+  68474  .build/Proctor.app/Contents/MacOS/proctor-agent
+         PROCTOR_SOCKET=/tmp/pro0078b-agent.sock
+         Grants: Accessibility granted, Screen Recording granted, Input Monitoring granted,
+         Automation denied. ready true. Used for the two captures and the whole A6 sabotage.
+
+  38933  .build/Proctor.app/Contents/MacOS/proctor-agent
+         PROCTOR_SOCKET=/tmp/pro0078b-agent.sock PROCTOR_TAKEOVER_INPUT=1 PROCTOR_YIELD=1
+         doctor reports inputBlockAvailable true, inputBlockRequested true.
+         The first agent had to be replaced because both switches are read at agent start
+         ("timing": "nextStart"), so an already-running agent cannot be asked for the block.
+         Used for both arms of the A4 two-way sabotage.
+
+## bundle
+
+Same .build/Proctor.app as the first session, built 2026-08-20T15:49:02Z at commit
+26fb7a85a305, Developer ID Application: Luke Rhodes (H4HGFL52W7). No rebuild, no reinstall.
+/Applications/Proctor.app untouched; its own agent 76491 kept running throughout.
+
+## targets
+
+  Calculator, pid 14545, CG window 123357 — attached as app:14545:1 / win:1:0, then quit
+  with `osascript -e 'tell application "Calculator" to quit'` to produce the A6 negative.
+  Proctor UI, pid 21088, CG window 121564 "History" — attached as app:21088:2 / win:2:0
+  for the self-capture control, and as win:1:0 in the second session for the A4 runs.
+
+## instrument change made in this session
+
+`witness_probe postobserve` gained `survivedFromThisProbe`. `survivedToTailTap` counts
+only events carrying the probe's own mark, which the TAGGED arm does not carry — a tagged
+post stamps the Proctor tag instead — so that field is pinned at zero on the tagged arm
+whatever the block does. Read off it, the two-way sabotage would have reported "swallowed"
+for ten events that sailed straight through. The new field counts by source pid, which
+both arms carry, so the same number can come back non-zero on one arm and zero on the other.

@@ -284,5 +284,87 @@
   },
   "normalization": null,
   "note": "The same frame, cropped to the Calculator display. Same capture, not a second one."
+ },
+ {
+  "path": "evidence/shots/surf-006-xproc-calculator.png",
+  "subject": "STEP-A1B-XPROC",
+  "target": "proctor://win:1:0/screen-capture",
+  "sha256": "685fa3235e42bd548b7419d7fccdccc7b60d6cb87235d53baa85f85dd69ec0fc",
+  "bytes": 149520,
+  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on a window owned by another process (Calculator, pid 14545, CG window 123357)",
+  "resolvedTarget": {
+   "window": "win:1:0",
+   "app": "app:14545:1",
+   "contentRect": {
+    "h": 408,
+    "w": 674,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-0-1787259997525.png"
+  },
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 3,
+  "normalization": {
+   "applied": true,
+   "estimatedVisionTokens": 847,
+   "height": 620,
+   "maxLongEdge": 1024,
+   "maxPixels": 750000,
+   "originalHeight": 816,
+   "originalWidth": 1348,
+   "purpose": "verify",
+   "scale": 0.7596439169139466,
+   "width": 1024
+  },
+  "conditions": {
+   "build": ".build/Proctor.app, Developer ID signed, agent pid 68474 on /tmp/pro0078b-agent.sock",
+   "why": "PRO-0078 clause 8 retake. The A1b frame was taken without a manifest row, and a manifest cannot be written after the shutter, so the cross-process capture is taken again through the writer rather than back-filled.",
+   "drawnBy": "no Proctor source \u2014 the subject is another application's window, which is the point",
+   "elapsedSeconds": 2.048
+  },
+  "capturedAt": "2026-08-21T07:06:37+1000"
+ },
+ {
+  "path": "evidence/shots/surf-006-self-excluded.png",
+  "subject": "STEP-A1-SELF",
+  "target": "proctor://win:2:0/screen-capture",
+  "sha256": "e90ce4108a6891fc5a38e020a6499a764a0b8b4f33e2b2eaa959c46eb3022df5",
+  "bytes": 13236,
+  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on a Proctor-owned window (Proctor UI pid 21088, CG window 121564, title History)",
+  "resolvedTarget": {
+   "window": "win:2:0",
+   "app": "app:21088:2",
+   "contentRect": {
+    "h": 968,
+    "w": 760,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-2-0-1787260006482.png"
+  },
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 8,
+  "normalization": {
+   "applied": true,
+   "estimatedVisionTokens": 999,
+   "height": 977,
+   "maxLongEdge": 1024,
+   "maxPixels": 750000,
+   "originalHeight": 1936,
+   "originalWidth": 1520,
+   "purpose": "verify",
+   "scale": 0.504842793544681,
+   "width": 767
+  },
+  "conditions": {
+   "build": ".build/Proctor.app, Developer ID signed, agent pid 68474 on /tmp/pro0078b-agent.sock",
+   "why": "PRO-0078 clause 8 retake, and the negative control for the cross-process frame beside it. Proctor excludes its own windows from its own captures, so this frame is expected to arrive empty while still reporting complete and trustworthy.",
+   "drawnBy": "Proctor's own SwiftUI History window, which the capture engine excludes from its own stream",
+   "elapsedSeconds": 1.087
+  },
+  "capturedAt": "2026-08-21T07:06:46+1000"
  }
 ]

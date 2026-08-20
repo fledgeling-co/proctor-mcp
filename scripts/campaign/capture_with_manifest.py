@@ -134,20 +134,30 @@ def main() -> int:
         path.write_bytes(raw)
         digest = hashlib.sha256(raw).hexdigest()
 
+        # WHAT THE CHANNEL WAS POINTED AT, as the product reported it rather than
+        # as this script assumed. Two Proctor processes share one bundle id on
+        # this machine and their windows carry identical titles at identical
+        # bounds, so the window handle is the only thing that can tell a picture
+        # of one from a picture of the other.
+        #
+        # `target` is a STRING and the key is `path`, because that is what
+        # capture-lineage.py reads. This script previously wrote `file` and a
+        # dict, so every row it produced was invisible to the gate that exists to
+        # check it — a manifest nothing reads is the same as no manifest, and the
+        # campaign's eight published rows had to be assembled by hand to be seen.
+        # The string is built from the handle the product resolved plus the route
+        # tail the plan names, so it is still the product's own answer.
+        resolved = payload.get("window")
         entry = {
+            "path": f"evidence/shots/{item['file']}",
             "subject": item["subject"],
-            "file": f"evidence/shots/{item['file']}",
+            "target": f"proctor://{resolved}/{item['routeTail']}",
             "sha256": digest,
             "bytes": len(raw),
             "channel": item.get("channel",
                                 "proctor_capture → ScreenCaptureKit, window-scoped"),
-            # WHAT THE CHANNEL WAS POINTED AT, as the product reported it rather
-            # than as this script assumed. Two Proctor processes share one bundle
-            # id on this machine and their windows carry identical titles at
-            # identical bounds, so the window handle is the only thing that can
-            # tell a picture of one from a picture of the other.
-            "target": {
-                "window": payload.get("window"),
+            "resolvedTarget": {
+                "window": resolved,
                 "app": handle,
                 "contentRect": payload.get("contentRect"),
                 "sourcePath": src,
@@ -162,7 +172,7 @@ def main() -> int:
                               if confirmed else {})},
             "capturedAt": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         }
-        manifest = [m for m in manifest if m.get("file") != entry["file"]]
+        manifest = [m for m in manifest if m.get("path") != entry["path"]]
         manifest.append(entry)
         written.append({"subject": item["subject"], "status": "ok",
                         "bytes": len(raw), "frame": payload.get("status"),

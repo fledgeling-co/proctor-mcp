@@ -1,6 +1,7 @@
 {
- "judged": 3,
- "judgeable": 5,
- "at": "2026-08-20T01:05:19+00:00",
+ "judged": 5,
+ "judgeable": 7,
+ "at": "2026-08-20T21:16:13+00:00",
+ "reason": "PRO-0078 gap-fix clause 8: two captures taken through capture_with_manifest.py with the row written at the shutter, published as FLOW-003 steps, and judged. Population 5 to 7, judged 3 to 5.",
  "previous": 3
 }

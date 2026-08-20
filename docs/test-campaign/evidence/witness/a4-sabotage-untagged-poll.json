@@ -1,0 +1,55 @@
+{
+  "at" : "2026-08-20T21:11:14Z",
+  "mode" : "postobserve",
+  "observed" : [
+    {
+      "at" : 1787260275.307174,
+      "sourcePid" : 38933,
+      "type" : "leftMouseUp",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260275.3801861,
+      "sourcePid" : 49751,
+      "type" : "scrollWheel",
+      "userData" : 5787775539510458368,
+      "userDataIsProbeMark" : true,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787260275.5455329,
+      "sourcePid" : 49751,
+      "type" : "scrollWheel",
+      "userData" : 5787775539510458368,
+      "userDataIsProbeMark" : true,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787260278.198746,
+      "sourcePid" : 42622,
+      "type" : "leftMouseDown",
+      "userData" : 0,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787260278.292284,
+      "sourcePid" : 42622,
+      "type" : "leftMouseUp",
+      "userData" : 0,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : false
+    }
+  ],
+  "observedCount" : 5,
+  "posted" : 10,
+  "probePid" : 49751,
+  "sessionCounterDeltaScroll" : 2,
+  "survivedFromThisProbe" : 2,
+  "survivedToTailTap" : 2,
+  "tagged" : false,
+  "tapCreated" : true,
+  "tapFailure" : null
+}

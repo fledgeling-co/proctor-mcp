@@ -1,0 +1,44 @@
+{
+  "id": 3,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"capturedAt\" : 1787247544.952797,\n  \"contentRect\" : {\n    \"h\" : 408,\n    \"w\" : 674,\n    \"x\" : 0,\n    \"y\" : 0\n  },\n  \"dirtyArea\" : 0,\n  \"dirtyRectCount\" : 1,\n  \"framesWaited\" : 2,\n  \"height\" : 620,\n  \"normalization\" : {\n    \"applied\" : true,\n    \"estimatedVisionTokens\" : 847,\n    \"height\" : 620,\n    \"maxLongEdge\" : 1024,\n    \"maxPixels\" : 750000,\n    \"originalHeight\" : 816,\n    \"originalWidth\" : 1348,\n    \"purpose\" : \"verify\",\n    \"scale\" : 0.7596439169139466,\n    \"width\" : 1024\n  },\n  \"path\" : \"/tmp/pro0078/ev/a1b-agent-capture.png\",\n  \"scale\" : 1.5192878338278932,\n  \"status\" : \"complete\",\n  \"trustworthy\" : true,\n  \"width\" : 1024,\n  \"window\" : \"win:6:0\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "capturedAt": 1787247544.952797,
+      "contentRect": {
+        "h": 408,
+        "w": 674,
+        "x": 0,
+        "y": 0
+      },
+      "dirtyArea": 0,
+      "dirtyRectCount": 1,
+      "framesWaited": 2,
+      "height": 620,
+      "normalization": {
+        "applied": true,
+        "estimatedVisionTokens": 847,
+        "height": 620,
+        "maxLongEdge": 1024,
+        "maxPixels": 750000,
+        "originalHeight": 816,
+        "originalWidth": 1348,
+        "purpose": "verify",
+        "scale": 0.7596439169139466,
+        "width": 1024
+      },
+      "path": "/tmp/pro0078/ev/a1b-agent-capture.png",
+      "scale": 1.5192878338278932,
+      "status": "complete",
+      "trustworthy": true,
+      "width": 1024,
+      "window": "win:6:0"
+    }
+  }
+}

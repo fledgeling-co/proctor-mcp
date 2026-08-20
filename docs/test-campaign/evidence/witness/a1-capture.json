@@ -1,0 +1,32 @@
+{
+  "id": 4,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"capturedAt\" : 1787245620.2714272,\n  \"contentRect\" : {\n    \"h\" : 968,\n    \"w\" : 760,\n    \"x\" : 0,\n    \"y\" : 0\n  },\n  \"dirtyArea\" : 0,\n  \"dirtyRectCount\" : 1,\n  \"framesWaited\" : 150,\n  \"height\" : 1936,\n  \"path\" : \"/tmp/pro0078/ev/a1-agent-capture.png\",\n  \"scale\" : 2,\n  \"status\" : \"complete\",\n  \"trustworthy\" : true,\n  \"width\" : 1520,\n  \"window\" : \"win:1:0\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "capturedAt": 1787245620.2714272,
+      "contentRect": {
+        "h": 968,
+        "w": 760,
+        "x": 0,
+        "y": 0
+      },
+      "dirtyArea": 0,
+      "dirtyRectCount": 1,
+      "framesWaited": 150,
+      "height": 1936,
+      "path": "/tmp/pro0078/ev/a1-agent-capture.png",
+      "scale": 2,
+      "status": "complete",
+      "trustworthy": true,
+      "width": 1520,
+      "window": "win:1:0"
+    }
+  }
+}

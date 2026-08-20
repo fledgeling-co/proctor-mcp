@@ -1,0 +1,103 @@
+{
+  "at" : "2026-08-20T21:09:22Z",
+  "mode" : "postobserve",
+  "observed" : [
+    {
+      "at" : 1787260162.6221681,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260162.7865682,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260162.946404,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260163.1122689,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260163.271646,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260163.4384041,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260163.596086,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260163.6164222,
+      "sourcePid" : 38933,
+      "type" : "leftMouseUp",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260163.7614431,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260163.921298,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787260164.08793,
+      "sourcePid" : 42675,
+      "type" : "scrollWheel",
+      "userData" : 5787775621720396288,
+      "userDataIsProbeMark" : false,
+      "userDataIsProctorTag" : true
+    }
+  ],
+  "observedCount" : 11,
+  "posted" : 10,
+  "probePid" : 42675,
+  "sessionCounterDeltaScroll" : 10,
+  "survivedFromThisProbe" : 10,
+  "survivedToTailTap" : 0,
+  "tagged" : true,
+  "tapCreated" : true,
+  "tapFailure" : null
+}

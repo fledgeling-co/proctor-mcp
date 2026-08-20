@@ -1,0 +1,26 @@
+{
+  "at" : "2026-08-20T21:07:22Z",
+  "frontmostBundleID" : "gg.rhodes.ledger",
+  "frontmostName" : "Ledger",
+  "frontmostPid" : 26014,
+  "mode" : "windows",
+  "needle" : "Calculator",
+  "probePid" : 26050,
+  "rows" : [
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 408,
+        "Width" : 674,
+        "X" : 624,
+        "Y" : 339
+      },
+      "layer" : 0,
+      "name" : "Calculator",
+      "ownerName" : "Calculator",
+      "ownerPID" : 14545,
+      "sharingState" : 1,
+      "windowNumber" : 123357
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "id": 4,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"backend\" : \"native\",\n  \"completed\" : 3,\n  \"finalHash\" : \"22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc\",\n  \"foreground\" : {\n    \"declaredCertain\" : 3,\n    \"declaredConditional\" : 0,\n    \"measured\" : 3,\n    \"ranInForeground\" : true,\n    \"requestIgnored\" : false,\n    \"totalSteps\" : 3,\n    \"unproven\" : 0,\n    \"unrequestedForeground\" : 0\n  },\n  \"foregroundNote\" : \"3 of 3 steps travelled as synthetic events, which required the application to be frontmost. The result is not a background-safe one, and this run cannot be repeated unattended.\",\n  \"machine\" : {\n    \"kind\" : \"host\",\n    \"platform\" : \"macos\",\n    \"tier\" : \"native\"\n  },\n  \"steps\" : [\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 1,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 13\n      },\n      \"elapsedMs\" : 3456,\n      \"index\" : 0,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 1,\n        \"axQuietMs\" : 791,\n        \"elapsedMs\" : 3105,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc\",\n      \"step\" : {\n        \"kind\" : \"click\",\n        \"label\" : \"synthetic click 1\",\n        \"point\" : [\n          120,\n          140\n        ]\n      }\n    },\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 1,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 13\n      },\n      \"elapsedMs\" : 4859,\n      \"index\" : 1,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 1,\n        \"axQuietMs\" : 787,\n        \"elapsedMs\" : 4456,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc\",\n      \"step\" : {\n        \"kind\" : \"click\",\n        \"label\" : \"synthetic click 2\",\n        \"point\" : [\n          200,\n          180\n        ]\n      }\n    },\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 1,\n        \"removed\" : [\n\n        ],\n        \"unchangedCount\" : 13\n      },\n      \"elapsedMs\" : 4608,\n      \"index\" : 2,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 2,\n        \"axQuietMs\" : 786,\n        \"elapsedMs\" : 4386,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc\",\n      \"step\" : {\n        \"kind\" : \"click\",\n        \"label\" : \"synthetic click 3\",\n        \"point\" : [\n          280,\n          220\n        ]\n      }\n    }\n  ],\n  \"takeover\" : {\n    \"blocked\" : true,\n    \"blockedMs\" : 284,\n    \"releasedBy\" : \"runEnded\",\n    \"shown\" : true,\n    \"swallowed\" : 0\n  },\n  \"takeoverNote\" : \"Proctor held the keyboard and mouse for 0.3s of this run, across the steps it was posting events into the application.\",\n  \"window\" : \"win:1:0\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "backend": "native",
+      "completed": 3,
+      "finalHash": "22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc",
+      "foreground": {
+        "declaredCertain": 3,
+        "declaredConditional": 0,
+        "measured": 3,
+        "ranInForeground": true,
+        "requestIgnored": false,
+        "totalSteps": 3,
+        "unproven": 0,
+        "unrequestedForeground": 0
+      },
+      "foregroundNote": "3 of 3 steps travelled as synthetic events, which required the application to be frontmost. The result is not a background-safe one, and this run cannot be repeated unattended.",
+      "machine": {
+        "kind": "host",
+        "platform": "macos",
+        "tier": "native"
+      },
+      "steps": [
+        {
+          "backend": "native",
+          "diff": {
+            "added": [],
+            "changed": [],
+            "fromRevision": 1,
+            "removed": [],
+            "unchangedCount": 13
+          },
+          "elapsedMs": 3456,
+          "index": 0,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 1,
+            "axQuietMs": 791,
+            "elapsedMs": 3105,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc",
+          "step": {
+            "kind": "click",
+            "label": "synthetic click 1",
+            "point": [
+              120,
+              140
+            ]
+          }
+        },
+        {
+          "backend": "native",
+          "diff": {
+            "added": [],
+            "changed": [],
+            "fromRevision": 1,
+            "removed": [],
+            "unchangedCount": 13
+          },
+          "elapsedMs": 4859,
+          "index": 1,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 1,
+            "axQuietMs": 787,
+            "elapsedMs": 4456,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc",
+          "step": {
+            "kind": "click",
+            "label": "synthetic click 2",
+            "point": [
+              200,
+              180
+            ]
+          }
+        },
+        {
+          "backend": "native",
+          "diff": {
+            "added": [],
+            "changed": [],
+            "fromRevision": 1,
+            "removed": [],
+            "unchangedCount": 13
+          },
+          "elapsedMs": 4608,
+          "index": 2,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 2,
+            "axQuietMs": 786,
+            "elapsedMs": 4386,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc",
+          "step": {
+            "kind": "click",
+            "label": "synthetic click 3",
+            "point": [
+              280,
+              220
+            ]
+          }
+        }
+      ],
+      "takeover": {
+        "blocked": true,
+        "blockedMs": 284,
+        "releasedBy": "runEnded",
+        "shown": true,
+        "swallowed": 0
+      },
+      "takeoverNote": "Proctor held the keyboard and mouse for 0.3s of this run, across the steps it was posting events into the application.",
+      "window": "win:1:0"
+    }
+  }
+}

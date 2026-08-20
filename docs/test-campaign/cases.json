@@ -971,5 +971,190 @@
     "armed": true,
     "armedBy": "The pass was armed rather than trusted: on a /tmp copy of Tests/, one read-back line was deleted from AuditRotationTests.clearingEmptyIsANoOp, a test then in the re-read set. The count went 78 to 79 and the finding named that test. A zero-genuine result from a pass that could not report a genuine finding would have measured nothing.",
     "note": "Sampled false-positive rate for the blind-mutation pass. 57 of 78 findings read (73.1%): five per bucket from act/unlock/release/set/claim at seed 20260821, plus a CENSUS of the 32-finding tail. 57 of 57 false positive, 0 genuine. The tail is exact at 0 of 32; in the large strata 0 genuine in 25 drawn from 46 refutes K>=4 at 95% (P=0.037) and does not refute K=3 (P=0.088), so the bound is at most 3 genuine in 78 -- a false-positive rate of at least 96.2%. Six shapes: false-mutator 17, vocabulary 15, return-value 10, teardown 9, not-a-test 4, body-bleed 2. Only vocabulary is reachable by the reader list, so 42 of 57 cannot be fixed by any vocabulary at all. No test was edited and no production source touched, because the sample produced no genuine finding. blindVocabulary gained .calls and .recorded on the evidence of two sampled findings (78 -> 76); every other candidate was refused with its measured file count and effect. PARTIAL by denominator: 21 of the 46 large-stratum findings were never read and the bound stands in for them. Suite gate: ./scripts/test.sh green at 1,814 tests in 214 suites, unchanged from the wave's recorded count, as it must be for an item that touches no Swift. The first attempt stalled at 1,758 of 1,785 started tests, blocked in mach_msg2_trap with TCC and ScreenCaptureKit loaded behind a concurrent run in a sibling worktree; test.sh refused to read the absent verdict as a pass and both attempts are in the evidence."
+  },
+  {
+    "req": "REQ-004",
+    "surface": "SURF-006",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "PRO-0078 A1. ScreenCaptureKit delivered a frame off the real display server for a window belonging to another process, and what the frame depicts is proved by two readings taken by a probe process that is neither the agent nor the target. The target is Calculator, pid 14545, CG window 123357 (evidence/witness/a1b-attach.json binds handle win:6:0 to that window id). evidence/witness/a1b-capture.json reports status \"complete\", trustworthy true, framesWaited 2, contentRect 674x408 and an unnormalised 1348x816, which is 674x408 at scale 2. First independent reading: evidence/witness/a1b-windows-helper.json is CGWindowListCopyWindowInfo read by probe pid 28892, and it puts window 123357 at 674x408, owner Calculator, ownerPID 14545. Second, and the one that makes the picture's subject a fact rather than an inference: evidence/witness/a1b-axtext-helper.json is an independent AX client in the probe walking pid 14545 and reading 228 strings over 1124 attribute reads, among them \"Last Expression\" carrying 1,861.20-690 and an edit field carrying 1,171.2. Those are exactly the two numbers painted in evidence/witness/a1b-agent-capture.png. A third process read the text; the frame shows the text. The count recorded is the 1 complete frame that arrived. REPLACES AN EARLIER READING, and the earlier one is kept because it is the negative control: evidence/witness/a1-capture.json captured a Proctor-owned window and reported status \"complete\", trustworthy true and dirtyArea 0 for a frame whose 2,942,720 pixels are every one of them RGBA(0,0,0,0). evidence/witness/a1-agent-capture.png is that empty frame. Proctor excludes its own windows from its own captures, so an empty frame there is the exclusion working, but the status and trustworthy fields do not say so. FLAGGED for the orchestrator, not fixed here. Sabotage: evidence/witness/a1-sabotage-capture.json, a bogus handle, returns windowNotFound.",
+    "id": "CASE-0064",
+    "evidence": [
+      "docs/test-campaign/evidence/witness/a1b-capture.json",
+      "docs/test-campaign/evidence/witness/a1b-agent-capture.png",
+      "docs/test-campaign/evidence/witness/a1b-attach.json",
+      "docs/test-campaign/evidence/witness/a1b-windows-helper.json",
+      "docs/test-campaign/evidence/witness/a1b-axtext-helper.json",
+      "docs/test-campaign/evidence/witness/a1b-axtree-helper.json",
+      "negative control docs/test-campaign/evidence/witness/a1-capture.json",
+      "negative control docs/test-campaign/evidence/witness/a1-agent-capture.png",
+      "sabotage docs/test-campaign/evidence/witness/a1-sabotage-capture.json"
+    ],
+    "armed": true,
+    "capture": {
+      "method": "ScreenCaptureKit window-scoped, signed Developer ID agent pid 97657, target Calculator pid 14545 CG window 123357",
+      "frameStatus": "SCFrameStatus=complete, framesWaited 2"
+    },
+    "witness": {
+      "recorder": "CGWindowListCopyWindowInfo and an independent AX client, both in the witness_probe process, reading the target window's owner, geometry and displayed text; ScreenCaptureKit's SCFrameStatus names the frame",
+      "effect": "device",
+      "count": 1
+    }
+  },
+  {
+    "req": "REQ-006",
+    "surface": "SURF-004",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "PRO-0078 A2. The run HUD exists as far as the window server is concerned, and the recorder is the window server's own list read from a separate probe process rather than anything Proctor reports about itself. Agent pid 86732. Before the run, evidence/witness/a2-hud-1.json lists one window for that pid. During a synthetic run, evidence/witness/a2-hud-11.json and a2-hud-12.json list three: window 121489 at layer 25, 352x230, sharingState 0, which is the run HUD panel; window 121490 at layer 24, 1710x1073, sharingState 0, which is the takeover statement; and window 121491 at layer 0. The count is the 2 overlay entries that appear with the run and are absent without it. FLAGGED, not fixed: window 121491 is present at layer 0 with sharingState 1 whether or not a run is in flight, and CASE-0032 records that all three overlays report sharingState 0 at the default. That is an observation for the orchestrator rather than something this item changed.",
+    "id": "CASE-0065",
+    "evidence": [
+      "docs/test-campaign/evidence/witness/a2-hud-11.json",
+      "docs/test-campaign/evidence/witness/a2-hud-12.json",
+      "sabotage docs/test-campaign/evidence/witness/a2-hud-1.json"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "CGWindowListCopyWindowInfo, read by the witness_probe process on the agent's pid",
+      "effect": "ipc",
+      "count": 2
+    }
+  },
+  {
+    "req": "REQ-003",
+    "surface": "SURF-005",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "PRO-0078 A3. CGEventPost from the agent entered the session event stream and was seen by something that is not the poster. The recorder is a listen-only CGEventTap held by a separate probe process (evidence/witness/a3-observe.json, tapCreated true). Over 90 seconds it recorded 576 events, of which 6 carry sourcePid 86732, the agent's pid, and userData 5787775621720396288, which is ProctorEventTag.value (0x50524F43544F5200) as Actuation stamps it. The count is those 6, one down and one up for each of three synthetic clicks; evidence/witness/a3-act.json reports the same three steps at plane syntheticEvent, route eventStream. The other 570 events carry pid 99665, macOS's own ScreensharingAgent, which was posting into this session throughout and is why the tap discriminates by pid and tag rather than counting arrivals.",
+    "id": "CASE-0066",
+    "evidence": [
+      "docs/test-campaign/evidence/witness/a3-observe.json",
+      "docs/test-campaign/evidence/witness/a3-act.json",
+      "sabotage docs/test-campaign/evidence/witness/a3-sabotage-observe.json",
+      "sabotage docs/test-campaign/evidence/witness/a3-sabotage-act.json"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "listen-only CGEventTap (.cgSessionEventTap, .tailAppendEventTap) in the witness_probe process, matching sourcePid and ProctorEventTag",
+      "effect": "device",
+      "count": 6
+    }
+  },
+  {
+    "req": "REQ-007",
+    "surface": "SURF-005",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "inconclusive: PersonInput.isAPerson requires sourcePid == 0, which only hardware carries and no second process can forge, so the human-input path REQ-007 names cannot be driven by any instrument available on this lane. The instrument that would settle it is a physical HID event during a held run, or a signed virtual HID driver posting at pid 0. The reachable half was measured and did not yield: 40 events swallowed by the takeover tap across three runs produced no yield record and no held reason.",
+    "note": "PRO-0078 A4. NOT WITNESSED, and the ceiling is structural rather than an instrument that could be improved. REQ-007 names human mouse and keyboard interaction, and the predicate that decides it is PersonInput.isAPerson in Sources/ProctorCore/Contention.swift, which returns true only for sourcePid == 0. Zero is what hardware carries and no second process can forge it, so the path REQ-007 names cannot be driven from anything but a hand on a real keyboard: any helper's CGEventPost arrives carrying the helper's own pid and is correctly refused as a process rather than a person. That is deliberate product design, not a gap. The second path was measured and did not yield. The input block's tap calls onPersonInput for every event it swallows, and SessionTakeover.swift wires that to ContentionMonitor.noteUserInput, which is the field ContentionWatch reads. Across three runs the tap swallowed 6, 24 and 10 helper-posted events (evidence/witness/a45b-act.json, a4-act.json, a4c-burst.json) and no run recorded a yield: yields is null in every act result, and six consecutive proctor_doctor reads of the live queue during the third run report the active run with held reason null. For contrast, a yield on a different reason does fire and was captured: evidence/witness/a4-stranded-run-queue.json shows a run held with reason frontmostChanged for 552 to 932 seconds. So the userInput path produced no yield under 40 swallowed events, which is an observation for the orchestrator rather than something this item changed.\n\nSABOTAGE, two-way, built in the gap-fix session and previously missing \u2014 \u00a7A4 named one and none was recorded. It turns on one field. Agent pid 38933, started with PROCTOR_TAKEOVER_INPUT=1 and PROCTOR_YIELD=1 (doctor: inputBlockAvailable true), held a three-step drag run over win:1:0 while a separate probe process posted ten identical zero-delta scroll events into the session. TAGGED arm, .eventSourceUserData set to ProctorEventTag.value so InputBlock.isOurs is true: evidence/witness/a4-sabotage-tagged-poll.json, probe pid 42675, posted 10, survivedFromThisProbe 10 \u2014 every one reached the probe's tail-appended tap. The block was armed while they did, and the proof is in the same tail-tap record: a leftMouseUp from pid 38933, the agent itself, at 0.994s in the middle of the probe's scrolls, with evidence/witness/a4-sabotage-tagged-act.json reporting blocked true and blockedMs 18779. UNTAGGED arm, the probe's own mark instead so isOurs is false: evidence/witness/a4-sabotage-untagged-poll.json, probe pid 49751, posted 10, survivedFromThisProbe 2 \u2014 and the two survivors are the first two, at 0.073s and 0.238s, after which nothing of the probe's is seen again; evidence/witness/a4-sabotage-untagged-act.json reports blocked true, blockedMs 18764, swallowed 16. Same event, one field different: ten through, and eight of eight destroyed once the block was up. The block is reading the event rather than a clock.\n\nINSTRUMENT FAULT FOUND AND FIXED while building that, and it is why the number quoted is survivedFromThisProbe rather than survivedToTailTap. survivedToTailTap counts only events carrying the probe's own mark, which the tagged arm by construction does not carry, so it reads 0 there however many events sail through \u2014 read off that field this sabotage would have reported the exact opposite of what happened. witness_probe now also counts survivors by source pid, a field both arms carry. evidence/witness/lane-attach-gapfix.txt records it.\n\nOBSERVED AND NOT CLAIMED. Both arms recorded yields with reason userInput \u2014 tagged arm heldMs 8205 and 8109 at steps 1 and 2, untagged arm heldMs 1973 and 6672 \u2014 where the three runs above recorded none. REQ-007 is NOT thereby witnessed and the ceiling above is unchanged, because the driver is unattributable: userInput fired on the tagged arm too, where not one of the probe's events was swallowed, so nothing this instrument posted can account for it. PersonInput.isAPerson still demands sourcePid == 0, so what tripped it was hardware input this session neither produced nor can bound, on a machine carrying 22 login sessions at a load average above 400. An uncontrolled event is not a measurement. FLAGGED for the orchestrator.",
+    "id": "CASE-0067",
+    "evidence": [
+      "docs/test-campaign/evidence/witness/a4-act.json",
+      "docs/test-campaign/evidence/witness/a4-poll.json",
+      "docs/test-campaign/evidence/witness/a4c-burst.json",
+      "docs/test-campaign/evidence/witness/a45b-act.json",
+      "contrast docs/test-campaign/evidence/witness/a4-stranded-run-queue.json",
+      "sabotage docs/test-campaign/evidence/witness/a4-sabotage-tagged-poll.json",
+      "sabotage docs/test-campaign/evidence/witness/a4-sabotage-tagged-act.json",
+      "sabotage control docs/test-campaign/evidence/witness/a4-sabotage-untagged-poll.json",
+      "sabotage control docs/test-campaign/evidence/witness/a4-sabotage-untagged-act.json"
+    ],
+    "armed": false,
+    "witness": {
+      "recorder": "listen-only CGEventTap in the witness_probe process, plus six proctor_doctor reads of the live run queue",
+      "effect": "device",
+      "count": 0
+    }
+  },
+  {
+    "req": "REQ-008",
+    "surface": "SURF-005",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "PRO-0078 A5. The input blocker's CGEventTap destroyed events posted by a different process, and a third party watched them fail to arrive. Proctor's block head-inserts a .defaultTap; the probe tail-appends a listen-only tap, so an event the block swallows never reaches the probe, and that asymmetry is the measurement. Agent pid 86732: evidence/witness/a45b-act.json reports takeover blocked true, blockedMs 18015, swallowed 6, and evidence/witness/a45-poll2.json records the probe posting 6 marked events while the run held the foreground with survivedToTailTap 0. Two independent counts, both 6. The count recorded here is 24, from the replicate at evidence/witness/a4-act.json (blockedMs 22383, swallowed 24) whose probe half at evidence/witness/a4-poll.json posted 40 while the run held the front and saw 20 survive, the remaining 4 swallows being the ScreensharingAgent's own events. Third replicate: a4c-burst.json, 10 posted, 0 survived.",
+    "id": "CASE-0068",
+    "evidence": [
+      "docs/test-campaign/evidence/witness/a4-act.json",
+      "docs/test-campaign/evidence/witness/a4-poll.json",
+      "replicate docs/test-campaign/evidence/witness/a45b-act.json",
+      "replicate docs/test-campaign/evidence/witness/a45-poll2.json",
+      "replicate docs/test-campaign/evidence/witness/a4c-burst.json",
+      "unarmed control docs/test-campaign/evidence/witness/selftest-post.json"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "listen-only tail-append CGEventTap in the witness_probe process, counting probe-marked posts that survived Proctor's head-inserted block",
+      "effect": "device",
+      "count": 24
+    }
+  },
+  {
+    "req": "REQ-002",
+    "surface": "SURF-003",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "PRO-0078 A6. An accessibility action performed by the agent landed in another process, and the window server recorded the result. Agent pid 36605 acted on window 121564 of pid 21088, a Proctor UI process bound to the same private socket and a different process from the agent. evidence/witness/a6-act.json reports completed 1, plane accessibility, route valueWrite. The recorder is CGWindowListCopyWindowInfo read by a separate probe process either side of the action: evidence/witness/a6-windows-before.json puts window 121564 at x 438 y 30, and a6-windows-after.json puts it at x 500 y 90, which is the point the step asked for. The count is the 1 window the window server reports moved. No focus was stolen: frontmostName reads Ghostty before and EgressMac after, and neither is the target, so the action reached a window that was never brought to the front.\n\nSABOTAGE, built in the gap-fix session and previously missing \u2014 \u00a7A6 named one and none was recorded. The same instrument was pointed at a target that was then taken away. Control arm: agent pid 68474 acted on Calculator, pid 14545, CG window 123357, attached as win:1:0. evidence/witness/a6-sabotage-control-act.json reports completed 1, plane accessibility, route valueWrite, and the separate probe process moved the window server's own record with it, from x 624 y 339 (evidence/witness/a6-sabotage-windows-before.json, probe pid 24573) to x 700 y 400 (evidence/witness/a6-sabotage-windows-control-after.json), which is the point the step asked for; frontmost reads Ledger either side, so the front was not taken. Negative arm: Calculator was quit, and the same probe over the same needle returns rows 0 (evidence/witness/a6-sabotage-windows-after.json). That is the count this case rests on, taken to zero by the reader that produced the 1. The identical step against the identical handle is then refused rather than silently doing nothing: evidence/witness/a6-sabotage-act.json reports completed 0, failedAt 0, the step ok false, and an error carrying code actionFailed, message \"move: cannotComplete\", indeterminate false \u2014 a definite refusal with a reason, not a shrug.",
+    "id": "CASE-0069",
+    "evidence": [
+      "docs/test-campaign/evidence/witness/a6-windows-before.json",
+      "docs/test-campaign/evidence/witness/a6-windows-after.json",
+      "docs/test-campaign/evidence/witness/a6-act.json",
+      "sabotage docs/test-campaign/evidence/witness/a6-sabotage-act.json",
+      "sabotage docs/test-campaign/evidence/witness/a6-sabotage-windows-after.json",
+      "sabotage control docs/test-campaign/evidence/witness/a6-sabotage-control-act.json",
+      "sabotage control docs/test-campaign/evidence/witness/a6-sabotage-windows-before.json",
+      "sabotage control docs/test-campaign/evidence/witness/a6-sabotage-windows-control-after.json"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "CGWindowListCopyWindowInfo, read by the witness_probe process either side of the AX action",
+      "effect": "ipc",
+      "count": 1
+    }
+  },
+  {
+    "req": "REQ-012",
+    "surface": "SURF-003",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "PRO-0078 A7. AX notifications crossed a process boundary, and the recorder is a second, independent AXObserver rather than Proctor's own counter. The probe process created its own AXObserver on pid 21088 and registered 9 notification names, all 9 accepted with no refusals; over 45 seconds it received 2 AXValueChanged notifications from that process (evidence/witness/a7-axnotify-helper.json, ok true, count 2). The count is those 2. This deliberately does not stand on SettleReport.axNotificationsSeen, which is the settler's own field and was the reading the out-of-family review called self-reporting.",
+    "id": "CASE-0070",
+    "evidence": [
+      "docs/test-campaign/evidence/witness/a7-axnotify-helper.json",
+      "sabotage docs/test-campaign/evidence/witness/a7-sabotage-axnotify.json"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "an independent AXObserver created by the witness_probe process on the target pid, 9 notification names registered",
+      "effect": "ipc",
+      "count": 2
+    }
+  },
+  {
+    "req": "REQ-014",
+    "surface": "SURF-011",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "PRO-0078 A8. The tri-observer read crossed a real process boundary, and the count comes from a helper rather than from Proctor's own walk, which is the change the out-of-family review asked for by name. The probe process walked pid 21088's accessibility tree with its own AX client and resolved 825 attribute reads over 275 nodes with no errors, reading back AXApplication:Proctor, AXWindow:History and their descendants (evidence/witness/a8-axtree-helper.json). The count is those 825 reads, every one of them answered by a process that is neither the probe nor the agent. The agent's own tri-observer comparison over the same window is beside it rather than under it: evidence/witness/a8-assert.json reports kind agree with 84 findings and 3 defects, and evidence/witness/a8-snapshot.json is the tree it compared. LANE CEILING: the kernel bar for an ipc witness is a traced mach message, and SIP is on with no root here, so dtrace on the accessibility transport is unavailable. What stands is the portable floor from references/effect-boundary.md, and it is recorded as that rather than as the kernel bar. SCOPE, narrowed after the out-of-family review named this the weakest surviving claim: what is witnessed here is the accessibility plane crossing a real process boundary, at 825 reads over 275 nodes answered by a third process. Agreement between the three observers is not independently witnessed, because the geometry and pixel legs of that comparison are reads the agent performs. The witnessed claim is the boundary crossing; the agreement is recorded beside it at its own rung.",
+    "id": "CASE-0071",
+    "evidence": [
+      "docs/test-campaign/evidence/witness/a8-axtree-helper.json",
+      "docs/test-campaign/evidence/witness/a8-assert.json",
+      "docs/test-campaign/evidence/witness/a8-snapshot.json",
+      "sabotage docs/test-campaign/evidence/witness/a8-sabotage-axtree.json"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "an independent AX client in the witness_probe process walking the target pid's tree with AXUIElementCopyAttributeValue",
+      "effect": "ipc",
+      "count": 825
+    }
   }
 ]

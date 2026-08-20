@@ -1,0 +1,27 @@
+# Lane attachment for PRO-0078, recorded 2026-08-20T16:03:53Z
+
+## codesign -dv --verbose=2 .build/Proctor.app
+Executable=/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0078/.build/Proctor.app/Contents/MacOS/Proctor
+Identifier=app.fledgeling.procter
+Format=app bundle with Mach-O thin (arm64)
+CodeDirectory v=20500 size=13282 flags=0x10000(runtime) hashes=408+3 location=embedded
+Signature size=9043
+Authority=Developer ID Application: Luke Rhodes (H4HGFL52W7)
+Authority=Developer ID Certification Authority
+Authority=Apple Root CA
+Timestamp=21 Aug 2026 at 1:49:03 am
+Info.plist entries=15
+TeamIdentifier=H4HGFL52W7
+Runtime Version=26.5.0
+Sealed Resources version=2 rules=13 files=88
+Internal requirements count=1 size=184
+
+## agent process
+  PID COMMAND
+86732 .build/Proctor.app/Contents/MacOS/proctor-agent
+
+## installed app untouched
+drwxr-xr-x@ 3 lukerhodes  staff  96 20 Aug 08:53 /Applications/Proctor.app
+	state = running
+	pid = 76491
+	pid-local endpoints = {

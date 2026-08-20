@@ -1,0 +1,45 @@
+{
+  "at" : "2026-08-20T17:16:39Z",
+  "mode" : "observe",
+  "observed" : [
+
+  ],
+  "observedCount" : 0,
+  "probePid" : 98399,
+  "seconds" : 60,
+  "sessionCounterDelta" : {
+    "keyDown" : 0,
+    "keyUp" : 0,
+    "leftMouseDown" : 0,
+    "leftMouseUp" : 0,
+    "otherMouseDown" : 0,
+    "otherMouseUp" : 0,
+    "rightMouseDown" : 0,
+    "rightMouseUp" : 0,
+    "scrollWheel" : 0
+  },
+  "sessionCountersAfter" : {
+    "keyDown" : 57362,
+    "keyUp" : 57360,
+    "leftMouseDown" : 8415,
+    "leftMouseUp" : 8414,
+    "otherMouseDown" : 0,
+    "otherMouseUp" : 0,
+    "rightMouseDown" : 66,
+    "rightMouseUp" : 66,
+    "scrollWheel" : 191715
+  },
+  "sessionCountersBefore" : {
+    "keyDown" : 57362,
+    "keyUp" : 57360,
+    "leftMouseDown" : 8415,
+    "leftMouseUp" : 8414,
+    "otherMouseDown" : 0,
+    "otherMouseUp" : 0,
+    "rightMouseDown" : 66,
+    "rightMouseUp" : 66,
+    "scrollWheel" : 191715
+  },
+  "tapCreated" : true,
+  "tapFailure" : null
+}
