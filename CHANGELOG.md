@@ -114,9 +114,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **A halted run no longer tells you where it was stopped from.** Stop is reachable from the run panel, the menu bar and the terminal, and they all write the same latch, so a message naming one of them was wrong two times in three. It names what happened instead.
 
-The gate after this wave is 1,666 tests in 198 suites, from 1,516 in 175 when it started.
+The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release started.
 
 ### Fixed
+
+- **The guest lane's `attach` and `detach` were advertised and refused.** The tool catalogue listed them, and a second copy of the action list inside the dispatcher didn't have them, so the call was turned away before it reached the code that handles it. That second list is gone rather than corrected. The session code already switches on the action and already refuses an unknown one with the same message, so the only thing the copy ever added was somewhere to drift, and the two actions it had fallen behind on happened to be the entire feature.
+
+- **Proctor couldn't see your `lume` guests.** The listing asked for `--json`, which lume 0.5.3 rejects by name, so every guest came back empty and the lane reported that lume wasn't usable on this Mac. It now tries `ls --format json` first and falls back to the older spellings, and reads a single guest's state with `get <name> --format json`.
+
+- **A guest agent crashed on startup instead of running without its resources.** Two places in Proctor look up a bundled resource and are written to carry on when there isn't one. `Bundle.module`, the accessor SwiftPM generates, only looks at the top level of the `.app` and at a build path from whichever machine compiled it, then stops the process dead rather than returning nothing. In a shipped app it never finds the bundle, so a build installed anywhere else crash-looped on launch. Resource lookup now searches the places a bundle actually sits, `Contents/Resources` included, and hands back nothing when there's none to find.
+
+- **A result from a guest could read as a result from your Mac.** When a call is forwarded to a guest, the guest answers with its own description of the machine it ran on. That description was passed straight back, so the reply said "host" while the work had happened inside the VM, which is the one thing this feature can't be allowed to get wrong. The top-level machine on a forwarded reply is now stamped with the guest you attached to. Anything nested is left alone: that's the guest describing something else, and rewriting it would be this Mac inventing content rather than passing it on.
 
 - **A macOS guest calling itself `darwin` was classified as Windows.** The platform check tested whether the provider's word contained "win", and dar-win contains it. Any guest whose provider named its platform honestly came back as a Windows machine: it took the delegated witness tier, lost the accessibility tree and the frame-status channel it actually has, and was refused by `reach` as a machine with no Proctor inside.
 

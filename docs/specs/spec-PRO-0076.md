@@ -1,16 +1,18 @@
 # PRO-0076: the guest lane, capped at two, with a queue
 
-**ID:** PRO-0076 · **Status:** Merged `9172bac` (A1-live + A1b carried) · **Created:** 2026-08-20
+**ID:** PRO-0076 · **Status:** Merged `9172bac` · A1 and A1b settled live 2026-08-21 · **Created:** 2026-08-20
 **PRD:** §9 (machines and witness tiers), §10 (lanes) · **Branch:** `ai/pro-0076` off `ai/wave-9`
 **Depends on:** PRO-0058 (the guest seam), PRO-0060 (`reach`), PRO-0061 (the auto-route gate)
 **Research:** `docs/research/2026-08-15-dossier-proctor-vs-cua.md`,
 `docs/research/2026-08-15-proctor-vs-cua-driver.md`
-**Live target:** `proctor-mac-node` under `tart` — a clone of `anvil-mac-node`, taken 2026-08-20
-after the reader asked for a recommendation. The source belongs to another project and is one of
-three rigs in its own test plan, with `lab-mac.sh` running against it; installing a TCC-granted
-agent into it would have made "is that rig clean?" unanswerable later and could collide with
-their runs. Cloning costs 29 GB of 403 GB free, `tart delete` reverses it completely, and that
-project's own plan names this node as the one that is cloneable.
+**Live target:** `proctor-guest` under `lume` — a fresh guest built 2026-08-21, on which A1 and
+A1b were settled. It replaced `proctor-mac-node`, a `tart` clone of `anvil-mac-node` taken
+2026-08-20 after the reader asked for a recommendation. The clone was the right call at the time
+and could not finish the job: it has no Aqua session, so `launchctl bootstrap gui/501` refuses and
+a guest agent that never bootstraps holds no TCC grants. `lume create --unattended` configures
+autologin and does. The clone's own source belongs to another project and is one of three rigs in
+its test plan, with `lab-mac.sh` running against it, so it was driven and never changed; the
+2026-08-21 progress section carries what was tried on it and why each route closed.
 
 ## The problem
 
@@ -216,8 +218,8 @@ for. Corrected here rather than left standing.
 
 | Clause | State | Evidence |
 |---|---|---|
-| A1 | **settled (seam) · BLOCKED (live)** | `GuestAttachWiringTests` — an attached session's calls reach the link and `FakeAX.performed` is empty. That proves the routing and the host actuating nothing; it stands on a fake link, so it is **not** the live measurement the clause asks for. Blocked at the TCC grant. |
-| A1b | **BLOCKED** | No Proctor was built for the guest, copied into it, or launched there. What the install needs is measured and recorded below; the install itself needs a guest login. |
+| A1 | **settled (seam) · BLOCKED (live) at this date; settled live 2026-08-21, see the progress section below** | `GuestAttachWiringTests` — an attached session's calls reach the link and `FakeAX.performed` is empty. That proves the routing and the host actuating nothing; it stands on a fake link, so it is **not** the live measurement the clause asks for. Blocked at the TCC grant. |
+| A1b | **BLOCKED at this date; settled live 2026-08-21, see the progress section below** | No Proctor was built for the guest, copied into it, or launched there. What the install needs is measured and recorded below; the install itself needs a guest login. |
 | A2 | settled | `GuestAttachWiringTests` — a failing link refuses naming the guest, no host step; a source guard asserts the fallback branch does not exist. |
 | A3 | settled | `GuestAttachmentTests` — tier derived both directions; `darwin` → `.macos` → `.native`. |
 | A4 | settled | `GuestAttachmentTests` + `GuestAttachWiringTests` — all three cases, including one identity's handle under another's guest session. |
@@ -434,3 +436,155 @@ already prove the arithmetic, so it is left and recorded here rather than worked
 
 A1's live half and A1b are unchanged and still BLOCKED at the in-guest TCC grant. Nothing in
 this pass touched `anvil-mac-node`.
+
+---
+
+## Progress — A1 and A1b settled live (2026-08-21)
+
+**Both clauses are measured rather than blocked.** A session attached to a macOS guest ran five
+steps inside it, the guest's screen shows the result, and this Mac was untouched. The evidence is
+`docs/test-campaign/evidence/guest/`, and `campaign.py check` now exits 0 with `guest-glass`
+recorded as attached.
+
+The guest is **`proctor-guest`**, a fresh `lume` guest on macOS 26.6.2, not `proctor-mac-node`.
+That substitution is the whole reason the clause moved, and it is worth stating plainly because
+the earlier note read the block as structural when it was a property of how a guest was prepared.
+
+### Why a fresh guest, and what the tart clone could not offer
+
+`launchctl bootstrap gui/501` returns *"Domain does not support specified action"* over SSH when
+the guest has no Aqua session, and a launchd agent that never bootstraps holds no TCC grants. The
+earlier note called that structural to macOS guests. It is not. `stat -f %Su /dev/console` reads
+`root` on `proctor-mac-node` and `lume` on `proctor-guest`; the difference is that
+`lume create --unattended` configures autologin, so the guest boots into a real desktop session
+that `gui/501` resolves to.
+
+Three routes into the clone were tried and closed before the fresh guest was built:
+
+- **`lume sip off`, to disable SIP and write the TCC rows directly.** It fails on macOS 26 with
+  *"VNC driver timeout: Framebuffer for 'csrutil prompt' did not contain expected text"*. Its own
+  screenshots settle why: the steps labelled `03-terminal-highlighted` and `04-terminal-opened`
+  show **About Recovery**, not Terminal. Recovery's menus moved and the driver's OCR anchors did
+  not. Deterministic, so a retry gets the same result.
+- **Resetting the clone's account password.** The account holds a SecureToken and is a volume
+  owner, so `sudo sysadminctl -resetPasswordFor` refuses with *"Operation is not permitted without
+  secure token unlock"* and `sudo dscl . -passwd` hangs waiting for the old password. An earlier
+  reading of `anvil`'s test plan as "no password, anywhere" was wrong: `ShadowHashData` is present
+  and `;SecureToken;` is in the authentication authority. It has a password nobody here knows.
+- **The prebuilt `ghcr.io/trycua/macos-sequoia-cua` image**, 19.8 GB. Rejected on what it is rather
+  than on its size: it lands at the delegated tier, coordinate actuation plus screenshots, and A1
+  says the guest's own Proctor holds the guest's TCC grants, which is the native tier. Whether it
+  ships pre-granted was never confirmed and is not asserted here.
+
+`anvil-mac-node` and its clone were driven, never changed. Neither was deleted, renamed or
+exported, and neither was stopped by this work.
+
+### What the live proof is
+
+One persistent MCP session against the wave-9 host agent, run twice with the same result:
+
+```
+1 ATTACH   machine: {"kind":"guest","name":"proctor-guest","platform":"macos",
+                     "provider":"lume","tier":"native"}
+2 ACTIVATE guest Calculator pid: 1085 window: win:1:0
+3 ACT      completed: 5 of 5 | machine: {… same guest, tier native …}
+4 FIND     display: ['4×7', '28']
+5 DETACH   attached: False
+=== host untouched? ===
+HOST Calculator absent
+```
+
+Step 4 reads the guest's own accessibility tree through `proctor_find`. The VNC capture of the
+guest's virtual display shows the same `4×7` and `28` on its screen, which is the second witness:
+a value read back through the same socket that wrote it would prove routing and not execution.
+
+The guest's `proctor_doctor` answers `ready: true` at `0.1.0+618fe4450351.dirty`, os `26.6.2`,
+with Accessibility and Screen Recording both `granted` and Input Monitoring granted, on socket
+`/Users/lume/Library/Application Support/app.fledgeling.procter/agent.sock`. Its binary hashes
+identically to the host build at
+`8b0e0884d25a99d7d44f8d19f64b371257bcebc5cb00ea1056fe1f74bd59d37c`, so the guest is running this
+wave's code and not the 0.2.0 release.
+
+VNC carries no per-frame status, so the capture manifest records `frameStatus: "unreported"` with
+the accessibility corroboration named, rather than claiming a completeness the channel never
+reported.
+
+### The manual-gate recipe was wrong at steps 5 and 6
+
+Step 6 as written — `proctor guest --action attach`, then a separate actuating call — cannot work,
+and the failure is silent rather than loud. **It launched Calculator on this Mac.**
+
+An attachment is keyed by `SessionIdentity.current.key`, which is `"\(pid):\(startTime)"` of the
+peer process on the socket. A one-shot CLI invocation attaches, exits, and takes its key with it;
+the next invocation is a different peer with a different key and no attachment, so its call is a
+host call and is answered as one. Nothing is broken: the session model is per-peer by design, and
+the recipe asked one process to hold state across two processes.
+
+The corrected recipe replaces steps 5 and 6:
+
+5. **Forward the socket.** From this Mac, an SSH `StreamLocal` forward from a local socket path to
+   the guest's `~/Library/Application Support/app.fledgeling.procter/agent.sock`. Key
+   authentication needs a key minted for the guest; the operator's own `id_ed25519` was tried and
+   its private half does not match its published public half, so a dedicated key is the working
+   route. Proctor opens no tunnel and installs no `ssh`.
+6. **Run the proof from one persistent MCP session.** `proctor-shim` over stdio is such a session:
+   it stays alive across calls, so the attach it makes still holds when the next call arrives.
+   Attach, activate an application inside the guest, actuate, read the result back through
+   `proctor_find`, detach, and confirm the host never ran the application. A CLI is the wrong
+   instrument here and will report a host result that looks like a guest one.
+
+### Four defects the live run found
+
+Each was armed by reverting the fix and watching the suite go red.
+
+**`lume` 0.5.3 rejects `--json` by name.** `GuestProvider`'s two-rung fallback never reached a
+spelling this version accepts, so every `lume` listing failed and the provider looked absent. It
+now walks an explicit ladder, `ls --format json` first, and the status path takes
+`get <name> --format json`. A doc line claiming the adapter was measured against lume's published
+surface "rather than against a binary on this machine (there is not one)" was true when written and
+is now false; it names the version it was measured against.
+
+**A second copy of the guest-action list in `Dispatch.swift`.** It had drifted, and the two actions
+it had fallen behind on were `attach` and `detach`, which is the whole of the guest lane: the
+catalogue advertised them and the dispatcher refused them. The fix deletes the list rather than
+adding the two strings. `Session.guest` already switches on the action and refuses an unknown one
+with the same error, so a second copy was only ever a second source to drift.
+
+**`Bundle.module` cannot find its resources in a shipped `.app`.** SwiftPM's generated accessor
+checks the `.app` **root** and an absolute build path from the compiling machine, then
+`fatalError`s. Both call sites documented an intent to return nil and get a trap instead. The guest
+agent crash-looped on it with *"could not load resource bundle"*, which is how it surfaced. New
+`ResourceBundles` searches the places a bundle actually sits, including `Contents/Resources`, and
+returns nil when there is none. A test that stubbed `Bundle` took the runner down with SIGTRAP,
+because `NSBundle` is a class cluster, so the search function is pure over URLs and tested that way.
+
+**A relayed guest reply carried the host's `machine`.** The guest answers with its own machine
+field describing itself, and the relay returned it unchanged, so a caller could read a guest result
+as a host one. The top-level field is now stamped with the attachment's machine. Nested fields are
+left alone: rewriting those would be this side inventing content rather than attributing it.
+
+Separately, a suite flake at roughly one run in five: `SessionHUD.hudStatus()` read the
+process-wide `RunHUDAvailability.shared`, which another test could move under it. It is now an
+injectable probe. Nine consecutive clean full runs since.
+
+### Two things worth knowing before the next guest
+
+**Look at every Setup Assistant pane before clicking it.** Button positions are not constant across
+panes: on the FileVault pane "Not Now" sits at x≈1303 and "Turn On" at x≈1590, and a blind click at
+the position that worked on the previous pane switched FileVault on. It was cancelled and
+`fdesetup status` reads *"FileVault is Off."* An Apple Account sign-in was declined through "Other
+Sign-In Options", then "Sign in Later in Settings", then "Skip".
+
+**The Tahoe window-rendering warning did not reproduce.** `proctor_doctor`'s guest lane note says
+Tahoe guests currently render no application windows, citing trycua/cua #870 and Apple FB21748086,
+and advises verifying against Sequoia. In this Tahoe 26.6.2 guest, Calculator, System Settings and
+Setup Assistant all rendered normally. The note is left standing because one guest is not a
+refutation of an upstream issue, but it did not bind here.
+
+### Still open, and recorded rather than closed
+
+`campaign.py check` exits 0 and every case is armed, so nothing in this feature is blocked. What
+remains unmeasured is named in `docs/test-campaign/REPORT.md`: the mutation assay covers 11 of 188
+sites under one seed and has never been pointed at `ProctorAgent`, and there is no `warrant.toml`,
+because writing one means choosing a defect-class taxonomy and a risk limit that are the reader's
+call rather than this feature's.
