@@ -8,12 +8,20 @@ generated mutants survived a rigorous passing suite in the one study that has
 measured it. That was somebody else's codebase, which is why it has to be
 measured here rather than assumed.
 
-Six operators, all of which keep the file compiling: comparison flips, boolean
-literal flips, logical operator swaps, and an integer literal increment. Each
-mutant is applied to the working tree, built and run through the project's own
+Eleven operators, and they are meant to keep the file compiling: comparison
+flips in both directions, boundary shifts, logical operator swaps both ways,
+boolean literal flips both ways, and an integer literal increment. Each mutant
+is applied to the working tree, built and run through the project's own
 `scripts/test.sh`, then reverted with `git checkout --`. A mutant the suite
 fails on is KILLED; one it passes on SURVIVED, and a survivor names a behaviour
-nothing is watching.
+nothing is watching. One that will not build is neither, and is counted apart:
+a mutant the compiler rejected is not a fault the tests failed to catch.
+
+The count is stated here because the first version of this file said six and
+listed an integer literal increment it did not implement. A docstring that
+describes a table it does not read is a second source, which is the defect this
+repo's whole provenance thesis exists to prevent, arriving in the tool built to
+find it.
 
 Three safety rules, because this edits the working tree rather than a copy. It
 refuses to start unless `git status` is clean; it reverts the file after every
@@ -59,9 +67,34 @@ OPERATORS = [
     (re.compile(r"(?<![=!<>+\-*/%&|^])!=(?![=])"), "=="),
     (re.compile(r"(?<![=!<>+\-*/%&|^<])<=(?![=])"), "<"),
     (re.compile(r"(?<![=!<>+\-*/%&|^>])>=(?![=])"), ">"),
+    # The boundary in the other direction. Off-by-one at a bound is the fault
+    # class a `<=`-only table cannot produce.
+    (re.compile(r"(?<=\s)<(?=\s)"), "<="),
+    (re.compile(r"(?<=\s)>(?=\s)"), ">="),
     (re.compile(r"&&"), "||"),
+    (re.compile(r"\|\|"), "&&"),
     (re.compile(r"\btrue\b"), "false"),
+    (re.compile(r"\bfalse\b"), "true"),
+    # An integer literal, one higher. Underscore separators are part of the
+    # token, so `86_400` mutates as a whole rather than the `86` inside it, and
+    # a decimal point on either side excludes a float's halves.
+    (re.compile(r"(?<![\w.])(\d[\d_]*)(?![\w.])"), None),
 ]
+
+def bump(match: re.Match) -> str:
+    """`N` -> `N + 1`, keeping any underscore grouping the source used."""
+    raw = match.group(1)
+    value = int(raw.replace("_", "")) + 1
+    if "_" not in raw:
+        return str(value)
+    # Regroup in threes from the right, which is what this codebase writes.
+    text = str(value)
+    parts = []
+    while len(text) > 3:
+        parts.insert(0, text[-3:])
+        text = text[:-3]
+    parts.insert(0, text)
+    return "_".join(parts)
 
 
 def maskable(text: str) -> list[tuple[int, int]]:
@@ -84,9 +117,12 @@ def candidates(path: Path) -> list[dict]:
         for m in rx.finditer(text):
             if in_span(m.start(), spans):
                 continue
+            after = bump(m) if repl is None else repl
+            if after == m.group(0):
+                continue
             line = text.count("\n", 0, m.start()) + 1
             out.append({"file": str(path), "start": m.start(), "end": m.end(),
-                        "before": m.group(0), "after": repl, "line": line})
+                        "before": m.group(0), "after": after, "line": line})
     return out
 
 
@@ -203,6 +239,17 @@ def main() -> int:
     # Its own artifact does not count as an unrestored mutation. Without this the
     # check reports "tree clean after: False" on every run that writes into the
     # repo, and a safety signal that cries wolf on every run is one nobody reads.
+    # Per operator, because a headline rate over a pool that is 45% integer
+    # literals says more about literal coverage than about the suite. A reader
+    # can see which class the survivors came from.
+    by_op: dict[str, dict[str, int]] = {}
+    for r in results:
+        key = ("int-literal" if r["before"].replace("_", "").isdigit()
+               else f"{r['before']} -> {r['after']}")
+        row = by_op.setdefault(key, {"killed": 0, "survived": 0, "unbuildable": 0})
+        row[{"killed": "killed", "SURVIVED": "survived",
+             "unbuildable": "unbuildable"}[r["verdict"]]] += 1
+
     still_dirty = "\n".join(
         line for line in subprocess.run(["git", "status", "--porcelain"],
                                         capture_output=True, text=True).stdout.splitlines()
@@ -213,7 +260,7 @@ def main() -> int:
         "unbuildable": unbuildable, "scored": scored,
         "survivalRate": round(survived / scored, 4) if scored else None,
         "treeCleanAfter": not still_dirty,
-        "targets": args.targets, "seed": args.seed,
+        "targets": args.targets, "seed": args.seed, "byOperator": by_op,
     }
     Path(args.out).write_text(json.dumps({"summary": summary, "mutants": results},
                                          indent=1) + "\n")
@@ -223,6 +270,13 @@ def main() -> int:
     if scored:
         print(f"survival rate {survived}/{scored} = {survived / scored:.1%} "
               f"— a survivor is a behaviour nothing is watching")
+    print()
+    for key in sorted(by_op, key=lambda k: -sum(by_op[k].values())):
+        row = by_op[key]
+        n = row["killed"] + row["survived"]
+        rate = f"{row['survived'] / n:.0%}" if n else "n/a"
+        print(f"  {key:<18} killed {row['killed']:>3}  survived {row['survived']:>3}  "
+              f"unbuildable {row['unbuildable']:>3}  survival {rate}")
     print(f"tree clean after: {not still_dirty}")
     return 0 if not still_dirty else 3
 
