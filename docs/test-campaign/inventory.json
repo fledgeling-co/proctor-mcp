@@ -1496,6 +1496,51 @@
    "detail": "CLISurface.exit(forReply:lane:) decides the process exit code. Its assertion branch reads `$0[\"ok\"]?.boolValue == false` on each element of `assertions`. The product never puts an `ok` key on an assertion element: SessionAssert.swift:45 writes `\"status\": .string(result.status.rawValue)`, one of pass/fail/skipped. `nil == false` is false, so the predicate matches nothing and the function returns .ok. Neither the top-level `\"ok\": .bool(failed == 0 && skipped == 0)` at SessionAssert.swift:81 nor the top-level `\"failed\"` count at :77 is consulted at all.\n\nMEASURED, twice, against the live agent from .build/debug/proctor-cli:\n  proctor assert --window win:4:0 --assertions '[{\"kind\":\"exists\",\"identifier\":\"a-control-that-does-not-exist-xyzzy\"}]'\n    reply: {\"ok\":false,\"passed\":0,\"failed\":1,\"assertions\":[{\"status\":\"fail\",...}]}   exit=0, expected 1\n  proctor wait --window win:4:0 --condition nodeExists --identifier a-control-that-does-not-exist-xyzzy --timeoutMs 1200\n    reply: {\"ok\":false,\"timedOut\":true,...}                                            exit=0, expected 1\n\nA third instance is present by inspection and not yet measured: proctor_kill emits a top-level `\"failed\"` count at SessionKill.swift:73 which nothing reads.\n\nThis defeats the stated purpose of the surface. spec-PRO-0073.md's exit table says '1 means the call worked and your check failed' and '1 and 3 must never be confused: one is a failed check, the other is nothing measured'. A CI job running `proctor assert` reads 0 and concludes the assertion passed while the JSON on its stdout says it failed.\n\nWHY NOTHING CAUGHT IT: Tests/ProctorCoreTests/CLISurfaceTests.swift:175 'a failed assertion exits 1 \u2014 the call worked and the check did not' builds its own reply, `.object([\"assertions\": .array([.object([\"ok\": .bool(true)]), .object([\"ok\": .bool(false)])])])`, which is a shape the product does not emit. The test asserts a value the test itself wrote, so it passes against a fiction while the real path exits 0. Same shape as the A7 finding the PRO-0076 verifier caught: an assertion standing on a value constructed by the test rather than produced by the code under test.",
    "surface": "SURF-018",
    "req": "REQ-036"
+  },
+  {
+   "id": "DEF-020",
+   "status": "open",
+   "title": "proctor_capture reports a fully transparent frame as status complete and trustworthy true",
+   "found": "PRO-0078 phase 6, building the REQ-004 effect witness: the first capture was taken of a Proctor-owned window, and the picture was read rather than trusted",
+   "detail": "proctor_capture on win:1:0, CG window 121564, a window Proctor's own UI process owns, returned {\"status\":\"complete\",\"trustworthy\":true,\"dirtyRectCount\":1,\"dirtyArea\":0,\"width\":1520,\"height\":1936,\"scale\":2}. Every one of the 2,942,720 pixels in the resulting PNG is RGBA(0,0,0,0). Measured by decompressing the IDAT stream and counting: alpha histogram is {0: 2942720}, and no pixel has a non-zero byte in any channel.\n\nThe emptiness itself is almost certainly correct behaviour. Proctor excludes its own windows from its own captures so the HUD and the takeover statement do not appear in a shot, and an excluded window has nothing to deliver. The problem is that nothing in the reply says so. A caller asking for a picture of an excluded window gets `complete` and `trustworthy`, and dirtyArea 0 is the only hint, next to dirtyRectCount 1 which reads as though something changed.\n\nEvidence: docs/test-campaign/evidence/witness/a1-capture.json and docs/test-campaign/evidence/witness/a1-agent-capture.png. The contrast is docs/test-campaign/evidence/witness/a1b-capture.json against Calculator, a window Proctor does not own, which returns a frame carrying the target's actual content.\n\nNOT FIXED HERE. The fix is a design call about what proctor_capture should say when the target is one it excludes, and PRO-0078 is a witness item rather than a capture-semantics item. Recorded so it is visible.\n\nWHY IT MATTERS TO THE CAMPAIGN: the effect-witness and raster-visual rungs both rest on a frame status, and this is a measured case of a status bit reading complete over a frame with no content in it. A raster case whose subject is an excluded window would pass every gate the campaign has.",
+   "surface": "SURF-006",
+   "req": "REQ-004"
+  },
+  {
+   "id": "DEF-021",
+   "status": "open",
+   "title": "A run whose MCP peer dies keeps the agent queue past the 900-second pause backstop",
+   "found": "PRO-0078 phase 6, driving the glass lane: three separate runs stranded this way and each one had to be cleared by restarting the agent",
+   "detail": "When the shim process driving a run exits while a run is in flight, the run stays in the agent's queue holding the slot. Every subsequent proctor_act returns queueBusy with 'another session was driving this Mac ... gave up without running any step', so the lane is unusable until the agent is restarted.\n\nMEASURED: docs/test-campaign/evidence/witness/a4-stranded-run-queue.json reads heldForSeconds 552 with reason frontmostChanged; docs/test-campaign/evidence/witness/a4-stranded-run-queue-2.json reads the same run at 932 seconds, still held. The documented pause backstop is 900 seconds, so the second reading is past it and the run is still there.\n\nHappened three times in one session, each time after the driving process died rather than after any product action. NOT FIXED HERE: the repair is in run lifecycle and belongs to whoever owns the queue, not to a witness item.",
+   "surface": "SURF-004",
+   "req": "REQ-009"
+  },
+  {
+   "id": "DEF-022",
+   "status": "open",
+   "title": "Forty events swallowed by the takeover block produced no yield and no held reason",
+   "found": "PRO-0078 phase 6, building the REQ-007 effect witness across three runs",
+   "detail": "The takeover block's tap calls onPersonInput for every event it declines to deliver, and SessionTakeover.swift:137 wires that to ContentionMonitor.noteUserInput, which sets the field ContentionWatch reads to decide the userInput condition.\n\nMEASURED across three runs driven with a helper process posting into the session while the run held the foreground: the agent reported swallowing 6, 24 and 10 events (docs/test-campaign/evidence/witness/a45b-act.json, a4-act.json, a4c-burst.json). No run recorded a yield: yields is null in all three act results. Six consecutive proctor_doctor reads of the live queue during the third run report the active run with held reason null (docs/test-campaign/evidence/witness/a4-poll.json).\n\nThe path is not dead in general: a yield on a different reason was captured in the same session, at docs/test-campaign/evidence/witness/a4-stranded-run-queue.json, reason frontmostChanged.\n\nThis may be correct by design. PersonInput.isAPerson requires sourcePid == 0, so a helper's events are correctly not a person, and the swallow count rising without a yield may be exactly the intended asymmetry. What is not established either way is whether the userInput yield fires for a real hand on a real keyboard, because nothing in this session could post at pid 0. Recorded as the open half of CASE-0062.",
+   "surface": "SURF-005",
+   "req": "REQ-007"
+  },
+  {
+   "id": "DEF-023",
+   "status": "open",
+   "title": "An agent window reports sharingState 1 where CASE-0032 records all three overlays at 0",
+   "found": "PRO-0078 phase 6, sampling the window server for the REQ-006 witness",
+   "detail": "CASE-0032 records that all three Proctor overlays report sharingState 0 at the default, which is what keeps them out of other applications' captures. Sampling CGWindowListCopyWindowInfo from a separate probe process on agent pid 86732 found the run HUD panel (window 121489, layer 25) and the takeover statement (window 121490, layer 24) both at sharingState 0 as recorded, and alongside them window 121491 at layer 0, 1710x1073, reporting sharingState 1, present whether or not a run is in flight.\n\nEvidence: docs/test-campaign/evidence/witness/a2-hud-11.json and a2-hud-12.json.\n\nWhether window 121491 is one of the three CASE-0032 means is not established here. It may be an ordinary agent window that the claim was never about. Recorded because a reader comparing the two would otherwise have to work that out from scratch. NOT FIXED HERE.",
+   "surface": "SURF-004",
+   "req": "REQ-006"
+  },
+  {
+   "id": "DEF-024",
+   "status": "open",
+   "title": "A bounded-probe test asserts wall-clock elapsed and fails on a loaded machine",
+   "found": "PRO-0078 phase 6: three consecutive ./scripts/test.sh runs while the glass lane agent was live",
+   "detail": "Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift:42, in 'a platform call that never answers returns unconfirmed within the bound', asserts `elapsed < 5.0` around a probe whose bound is 0.2 seconds. The comment calls the 25x headroom generous so it does not flake on a loaded machine.\n\nMEASURED: with a signed Proctor agent live on the glass lane and captures in flight, the same test recorded elapsed 5.016569018363953 on one run and 10.252003073692322 on the next, failing the whole suite both times: 'FAIL: swift test exited 1 ... 1814 tests in 214 suites failed'. With the agent stopped and nothing else running, the same command passed: 'PASS: Test run with 1814 tests in 214 suites passed after 21.366 seconds'.\n\nThe behaviour under test is correct in all three runs; the probe returned .unconfirmed every time. What moved was the wall clock. A 25x margin on a 0.2 second bound is 4.8 seconds of scheduler slack, and this machine consumed all of it and then twice that.\n\nNOT FIXED HERE, and deliberately not: a gate edited to make it green is a finish line that moved, and the choice between a larger margin, a mocked clock and a relative assertion belongs to whoever owns the probe. Recorded because a suite that fails under load fails in CI, where load is the normal condition.",
+   "surface": "SURF-006",
+   "req": "REQ-004"
   }
  ]
 }

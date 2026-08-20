@@ -1,0 +1,15 @@
+{
+  "at" : "2026-08-20T16:43:11Z",
+  "mode" : "postobserve",
+  "observed" : [
+
+  ],
+  "observedCount" : 0,
+  "posted" : 10,
+  "probePid" : 33417,
+  "sessionCounterDeltaScroll" : 0,
+  "survivedToTailTap" : 0,
+  "tagged" : false,
+  "tapCreated" : true,
+  "tapFailure" : null
+}

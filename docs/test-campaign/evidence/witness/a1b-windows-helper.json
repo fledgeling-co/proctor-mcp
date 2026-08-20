@@ -1,0 +1,26 @@
+{
+  "at" : "2026-08-20T17:39:05Z",
+  "frontmostBundleID" : "gg.rhodes.egress.mac",
+  "frontmostName" : "EgressMac",
+  "frontmostPid" : 26062,
+  "mode" : "windows",
+  "needle" : "Calculator",
+  "probePid" : 28892,
+  "rows" : [
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 408,
+        "Width" : 674,
+        "X" : 624,
+        "Y" : 336
+      },
+      "layer" : 0,
+      "name" : "Calculator",
+      "ownerName" : "Calculator",
+      "ownerPID" : 14545,
+      "sharingState" : 1,
+      "windowNumber" : 123357
+    }
+  ]
+}

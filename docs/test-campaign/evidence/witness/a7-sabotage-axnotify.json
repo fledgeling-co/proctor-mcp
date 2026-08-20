@@ -1,0 +1,26 @@
+{
+  "at" : "2026-08-20T17:14:17Z",
+  "axTrusted" : true,
+  "count" : 0,
+  "events" : [
+
+  ],
+  "mode" : "axnotify",
+  "ok" : true,
+  "probePid" : 87091,
+  "refused" : {
+    "AXCreated" : "AXError(rawValue: -25204)",
+    "AXFocusedUIElementChanged" : "AXError(rawValue: -25204)",
+    "AXMainWindowChanged" : "AXError(rawValue: -25204)",
+    "AXSelectedTextChanged" : "AXError(rawValue: -25204)",
+    "AXTitleChanged" : "AXError(rawValue: -25204)",
+    "AXUIElementDestroyed" : "AXError(rawValue: -25204)",
+    "AXValueChanged" : "AXError(rawValue: -25204)",
+    "AXWindowMoved" : "AXError(rawValue: -25204)",
+    "AXWindowResized" : "AXError(rawValue: -25204)"
+  },
+  "registered" : [
+
+  ],
+  "targetPid" : 999999
+}

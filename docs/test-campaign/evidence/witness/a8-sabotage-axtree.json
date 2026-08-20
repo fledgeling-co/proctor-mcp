@@ -1,0 +1,17 @@
+{
+  "at" : "2026-08-20T17:14:20Z",
+  "attributeReads" : 2,
+  "axTrusted" : true,
+  "elementOwnerErr" : "AXError(rawValue: 0)",
+  "elementOwnerPid" : 999999,
+  "errors" : {
+    "AXError(rawValue: -25204)" : 2
+  },
+  "mode" : "axtree",
+  "nodes" : 1,
+  "probePid" : 87208,
+  "sample" : [
+
+  ],
+  "targetPid" : 999999
+}

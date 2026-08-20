@@ -1,0 +1,47 @@
+{
+  "id": 3,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"app\" : {\n    \"bundleId\" : \"com.apple.calculator\",\n    \"id\" : \"app:14545:6\",\n    \"name\" : \"Calculator\",\n    \"pid\" : 14545\n  },\n  \"provenance\" : {\n    \"elapsedMs\" : 140,\n    \"enhancedUserInterfaceApplied\" : false,\n    \"manualAccessibilityApplied\" : false,\n    \"unsupportedAttributes\" : [\n      \"AXChildren\"\n    ],\n    \"warmupWalks\" : 1\n  },\n  \"windows\" : [\n    {\n      \"app\" : \"app:14545:6\",\n      \"cgWindowID\" : 123357,\n      \"frame\" : {\n        \"h\" : 408,\n        \"w\" : 674,\n        \"x\" : 624,\n        \"y\" : 336\n      },\n      \"id\" : \"win:6:0\",\n      \"isMain\" : true,\n      \"isMinimized\" : false,\n      \"isOnActiveSpace\" : true,\n      \"title\" : \"Calculator\"\n    }\n  ]\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "app": {
+        "bundleId": "com.apple.calculator",
+        "id": "app:14545:6",
+        "name": "Calculator",
+        "pid": 14545
+      },
+      "provenance": {
+        "elapsedMs": 140,
+        "enhancedUserInterfaceApplied": false,
+        "manualAccessibilityApplied": false,
+        "unsupportedAttributes": [
+          "AXChildren"
+        ],
+        "warmupWalks": 1
+      },
+      "windows": [
+        {
+          "app": "app:14545:6",
+          "cgWindowID": 123357,
+          "frame": {
+            "h": 408,
+            "w": 674,
+            "x": 624,
+            "y": 336
+          },
+          "id": "win:6:0",
+          "isMain": true,
+          "isMinimized": false,
+          "isOnActiveSpace": true,
+          "title": "Calculator"
+        }
+      ]
+    }
+  }
+}

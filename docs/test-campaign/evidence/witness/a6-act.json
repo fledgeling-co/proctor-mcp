@@ -1,0 +1,67 @@
+{
+  "id": 7,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"backend\" : \"native\",\n  \"completed\" : 1,\n  \"finalHash\" : \"305c009d5abee5f996feb6b99ed7b404bb5e63977b0f389c6c5c0bb1750e99d8\",\n  \"foreground\" : {\n    \"declaredCertain\" : 0,\n    \"declaredConditional\" : 0,\n    \"measured\" : 0,\n    \"ranInForeground\" : false,\n    \"requestIgnored\" : false,\n    \"totalSteps\" : 1,\n    \"unproven\" : 0,\n    \"unrequestedForeground\" : 0\n  },\n  \"machine\" : {\n    \"kind\" : \"host\",\n    \"platform\" : \"macos\",\n    \"tier\" : \"native\"\n  },\n  \"steps\" : [\n    {\n      \"backend\" : \"native\",\n      \"elapsedMs\" : 16710,\n      \"index\" : 0,\n      \"ok\" : true,\n      \"plane\" : \"accessibility\",\n      \"route\" : \"valueWrite\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 0,\n        \"axQuietMs\" : 16063,\n        \"elapsedMs\" : 16061,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"axQuietOnly\",\n        \"settled\" : true,\n        \"signals\" : [\n          \"capture\",\n          \"ax\",\n          \"captureNeverQuiet\"\n        ]\n      },\n      \"stateHash\" : \"305c009d5abee5f996feb6b99ed7b404bb5e63977b0f389c6c5c0bb1750e99d8\",\n      \"step\" : {\n        \"kind\" : \"move\",\n        \"label\" : \"accessibility move away\",\n        \"point\" : [\n          500,\n          90\n        ]\n      }\n    }\n  ],\n  \"window\" : \"win:1:0\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "backend": "native",
+      "completed": 1,
+      "finalHash": "305c009d5abee5f996feb6b99ed7b404bb5e63977b0f389c6c5c0bb1750e99d8",
+      "foreground": {
+        "declaredCertain": 0,
+        "declaredConditional": 0,
+        "measured": 0,
+        "ranInForeground": false,
+        "requestIgnored": false,
+        "totalSteps": 1,
+        "unproven": 0,
+        "unrequestedForeground": 0
+      },
+      "machine": {
+        "kind": "host",
+        "platform": "macos",
+        "tier": "native"
+      },
+      "steps": [
+        {
+          "backend": "native",
+          "elapsedMs": 16710,
+          "index": 0,
+          "ok": true,
+          "plane": "accessibility",
+          "route": "valueWrite",
+          "settle": {
+            "axNotificationsSeen": 0,
+            "axQuietMs": 16063,
+            "elapsedMs": 16061,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "axQuietOnly",
+            "settled": true,
+            "signals": [
+              "capture",
+              "ax",
+              "captureNeverQuiet"
+            ]
+          },
+          "stateHash": "305c009d5abee5f996feb6b99ed7b404bb5e63977b0f389c6c5c0bb1750e99d8",
+          "step": {
+            "kind": "move",
+            "label": "accessibility move away",
+            "point": [
+              500,
+              90
+            ]
+          }
+        }
+      ],
+      "window": "win:1:0"
+    }
+  }
+}

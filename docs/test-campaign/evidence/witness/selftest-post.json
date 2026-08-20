@@ -1,0 +1,38 @@
+{
+  "at" : "2026-08-20T16:13:22Z",
+  "mode" : "postobserve",
+  "observed" : [
+    {
+      "at" : 1787242402.532799,
+      "sourcePid" : 35211,
+      "type" : "scrollWheel",
+      "userData" : 5787775539510458368,
+      "userDataIsProbeMark" : true,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242402.7037539,
+      "sourcePid" : 35211,
+      "type" : "scrollWheel",
+      "userData" : 5787775539510458368,
+      "userDataIsProbeMark" : true,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242402.8751421,
+      "sourcePid" : 35211,
+      "type" : "scrollWheel",
+      "userData" : 5787775539510458368,
+      "userDataIsProbeMark" : true,
+      "userDataIsProctorTag" : false
+    }
+  ],
+  "observedCount" : 3,
+  "posted" : 3,
+  "probePid" : 35211,
+  "sessionCounterDeltaScroll" : 3,
+  "survivedToTailTap" : 3,
+  "tagged" : false,
+  "tapCreated" : true,
+  "tapFailure" : null
+}

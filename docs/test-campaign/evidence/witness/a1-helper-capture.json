@@ -1,0 +1,9 @@
+{
+  "at" : "2026-08-20T16:52:03Z",
+  "exitCode" : 1,
+  "mode" : "capture",
+  "ok" : false,
+  "probePid" : 68768,
+  "reason" : "screencapture -l wrote nothing: could not create image from window\n",
+  "windowID" : 121564
+}

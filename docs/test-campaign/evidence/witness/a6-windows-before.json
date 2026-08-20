@@ -1,0 +1,911 @@
+{
+  "at" : "2026-08-20T17:05:37Z",
+  "frontmostBundleID" : "com.mitchellh.ghostty",
+  "frontmostName" : "Ghostty",
+  "frontmostPid" : 66089,
+  "mode" : "windows",
+  "needle" : "",
+  "probePid" : 38450,
+  "rows" : [
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 28,
+        "Width" : 29,
+        "X" : 1542,
+        "Y" : 1
+      },
+      "layer" : 2147483630,
+      "name" : "StatusIndicator",
+      "ownerName" : "Window Server",
+      "ownerPID" : 410,
+      "sharingState" : 1,
+      "windowNumber" : 121503
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 28,
+        "Width" : 29,
+        "X" : 1542,
+        "Y" : 1
+      },
+      "layer" : 2147483630,
+      "name" : "StatusIndicator",
+      "ownerName" : "Window Server",
+      "ownerPID" : 410,
+      "sharingState" : 1,
+      "windowNumber" : 121502
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 1117,
+        "Width" : 1728,
+        "X" : 0,
+        "Y" : -44
+      },
+      "layer" : 1000,
+      "name" : "",
+      "ownerName" : "Proctor Agent",
+      "ownerPID" : 76491,
+      "sharingState" : 0,
+      "windowNumber" : 99647
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 30,
+        "X" : 821,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 121704
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 16,
+        "X" : 851,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 121533
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 16,
+        "X" : 953,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 37563
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 28,
+        "X" : 969,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 105231
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 38,
+        "X" : 997,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 121567
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 38,
+        "X" : 1035,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 44809
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 38,
+        "X" : 1073,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 44799
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 34,
+        "X" : 1111,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 99216
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 45,
+        "X" : 1145,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 107458
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 32,
+        "X" : 1190,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "bb3cc23c-6950-4e96-8b40-850e09f46934",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 73231
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 38,
+        "X" : 1222,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 130
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 184,
+        "X" : 1260,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 121135
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 42,
+        "X" : 1444,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Battery",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 18
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 48,
+        "X" : 867,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "AudioVideoModule",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 121501
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 38,
+        "X" : 915,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Item-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 121322
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 42,
+        "X" : 1524,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "BentoBox-0",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 21
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 38,
+        "X" : 1486,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "WiFi",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 20
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 144,
+        "X" : 1566,
+        "Y" : 0
+      },
+      "layer" : 25,
+      "name" : "Clock",
+      "ownerName" : "Control Centre",
+      "ownerPID" : 858,
+      "sharingState" : 1,
+      "windowNumber" : 19
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 30,
+        "Width" : 1710,
+        "X" : 0,
+        "Y" : 0
+      },
+      "layer" : 24,
+      "name" : "Menubar",
+      "ownerName" : "Window Server",
+      "ownerPID" : 410,
+      "sharingState" : 1,
+      "windowNumber" : 120892
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 1073,
+        "Width" : 1710,
+        "X" : 0,
+        "Y" : 0
+      },
+      "layer" : 20,
+      "name" : "Dock",
+      "ownerName" : "Dock",
+      "ownerPID" : 933,
+      "sharingState" : 1,
+      "windowNumber" : 32
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 968,
+        "Width" : 1710,
+        "X" : 0,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "🔔 ◐ Finance",
+      "ownerName" : "Ghostty",
+      "ownerPID" : 66089,
+      "sharingState" : 1,
+      "windowNumber" : 120088
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 914,
+        "Width" : 646,
+        "X" : 779,
+        "Y" : 82
+      },
+      "layer" : 0,
+      "name" : "ANV-0394 iPad",
+      "ownerName" : "Simulator",
+      "ownerPID" : 97797,
+      "sharingState" : 1,
+      "windowNumber" : 121992
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 902,
+        "Width" : 391,
+        "X" : 750,
+        "Y" : 68
+      },
+      "layer" : 0,
+      "name" : "ANV-0394 iPhone",
+      "ownerName" : "Simulator",
+      "ownerPID" : 97797,
+      "sharingState" : 1,
+      "windowNumber" : 121983
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 422,
+        "Width" : 656,
+        "X" : 272,
+        "Y" : 126
+      },
+      "layer" : 0,
+      "name" : "scratch.txt",
+      "ownerName" : "TextEdit",
+      "ownerPID" : 922,
+      "sharingState" : 1,
+      "windowNumber" : 121475
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 552,
+        "Width" : 800,
+        "X" : 463,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "Accounts",
+      "ownerName" : "Relay",
+      "ownerPID" : 26552,
+      "sharingState" : 1,
+      "windowNumber" : 121133
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 968,
+        "Width" : 1710,
+        "X" : 0,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "◐ Open PR worktree review workflows",
+      "ownerName" : "Ghostty",
+      "ownerPID" : 66089,
+      "sharingState" : 1,
+      "windowNumber" : 120080
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 584,
+        "Width" : 960,
+        "X" : 855,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "Egress — Zero-Trust Local CI",
+      "ownerName" : "EgressMac",
+      "ownerPID" : 84971,
+      "sharingState" : 1,
+      "windowNumber" : 121703
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 492,
+        "Width" : 920,
+        "X" : 395,
+        "Y" : 149
+      },
+      "layer" : 0,
+      "name" : "features-to-triage",
+      "ownerName" : "Finder",
+      "ownerPID" : 935,
+      "sharingState" : 1,
+      "windowNumber" : 121681
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 968,
+        "Width" : 760,
+        "X" : 438,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "History",
+      "ownerName" : "Proctor",
+      "ownerPID" : 21088,
+      "sharingState" : 0,
+      "windowNumber" : 121564
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 592,
+        "Width" : 900,
+        "X" : 405,
+        "Y" : 268
+      },
+      "layer" : 0,
+      "name" : "Splice",
+      "ownerName" : "Splice",
+      "ownerPID" : 5520,
+      "sharingState" : 1,
+      "windowNumber" : 121532
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 968,
+        "Width" : 1710,
+        "X" : 0,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "All Inboxes",
+      "ownerName" : "Mail",
+      "ownerPID" : 45223,
+      "sharingState" : 1,
+      "windowNumber" : 121483
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 488,
+        "Width" : 586,
+        "X" : 295,
+        "Y" : 241
+      },
+      "layer" : 0,
+      "name" : "Untitled 32",
+      "ownerName" : "TextEdit",
+      "ownerPID" : 922,
+      "sharingState" : 1,
+      "windowNumber" : 92
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 968,
+        "Width" : 1710,
+        "X" : 0,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "about:blank",
+      "ownerName" : "Google Chrome",
+      "ownerPID" : 53663,
+      "sharingState" : 1,
+      "windowNumber" : 121392
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 600,
+        "Width" : 1200,
+        "X" : 255,
+        "Y" : 237
+      },
+      "layer" : 0,
+      "name" : "Atlas (iPhone 16 Pro)",
+      "ownerName" : "React Native DevTools",
+      "ownerPID" : 15551,
+      "sharingState" : 1,
+      "windowNumber" : 121203
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 600,
+        "Width" : 1200,
+        "X" : 255,
+        "Y" : 237
+      },
+      "layer" : 0,
+      "name" : "Atlas (iPhone 16 Pro)",
+      "ownerName" : "React Native DevTools",
+      "ownerPID" : 15551,
+      "sharingState" : 1,
+      "windowNumber" : 121194
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 600,
+        "Width" : 1200,
+        "X" : 255,
+        "Y" : 237
+      },
+      "layer" : 0,
+      "name" : "Atlas (iPhone 16 Pro)",
+      "ownerName" : "React Native DevTools",
+      "ownerPID" : 15551,
+      "sharingState" : 1,
+      "windowNumber" : 121174
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 600,
+        "Width" : 1200,
+        "X" : 255,
+        "Y" : 237
+      },
+      "layer" : 0,
+      "name" : "Atlas (iPhone 16 Pro)",
+      "ownerName" : "React Native DevTools",
+      "ownerPID" : 15551,
+      "sharingState" : 1,
+      "windowNumber" : 121118
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 600,
+        "Width" : 1200,
+        "X" : 255,
+        "Y" : 237
+      },
+      "layer" : 0,
+      "name" : "Atlas (iPhone 16 Pro)",
+      "ownerName" : "React Native DevTools",
+      "ownerPID" : 15551,
+      "sharingState" : 1,
+      "windowNumber" : 121105
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 288,
+        "X" : 341,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "iPad Pro 13-inch (M4)",
+      "ownerName" : "Simulator",
+      "ownerPID" : 97797,
+      "sharingState" : 1,
+      "windowNumber" : 121058
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 177,
+        "X" : 518,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "iPhone 17 Pro Max",
+      "ownerName" : "Simulator",
+      "ownerPID" : 97797,
+      "sharingState" : 1,
+      "windowNumber" : 121057
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 265,
+        "X" : 313,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "iPad Pro 11-inch (M4)",
+      "ownerName" : "Simulator",
+      "ownerPID" : 97797,
+      "sharingState" : 1,
+      "windowNumber" : 121056
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 177,
+        "X" : 565,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "MCPRouter-Unit",
+      "ownerName" : "Simulator",
+      "ownerPID" : 97797,
+      "sharingState" : 1,
+      "windowNumber" : 121055
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 177,
+        "X" : 999,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "iPhone 16 Pro",
+      "ownerName" : "Simulator",
+      "ownerPID" : 97797,
+      "sharingState" : 1,
+      "windowNumber" : 121054
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 177,
+        "X" : 554,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "MCPRouter-Glass",
+      "ownerName" : "Simulator",
+      "ownerPID" : 97797,
+      "sharingState" : 1,
+      "windowNumber" : 121053
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 177,
+        "X" : 520,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "Anvil Campaign",
+      "ownerName" : "Simulator",
+      "ownerPID" : 97797,
+      "sharingState" : 1,
+      "windowNumber" : 121052
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 800,
+        "X" : 463,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "engineering (Channel) - Bella - 2 new items - Slack",
+      "ownerName" : "Slack",
+      "ownerPID" : 930,
+      "sharingState" : 1,
+      "windowNumber" : 125
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 48,
+        "Width" : 53,
+        "X" : 1371,
+        "Y" : -1602
+      },
+      "layer" : 0,
+      "name" : "",
+      "ownerName" : "Bear",
+      "ownerPID" : 48179,
+      "sharingState" : 1,
+      "windowNumber" : 120652
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 800,
+        "X" : 463,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "Bear",
+      "ownerName" : "Bear",
+      "ownerPID" : 48179,
+      "sharingState" : 1,
+      "windowNumber" : 114892
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 600,
+        "Width" : 940,
+        "X" : 855,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "Containers - Docker Desktop",
+      "ownerName" : "Docker Desktop",
+      "ownerPID" : 17637,
+      "sharingState" : 1,
+      "windowNumber" : 107457
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 482,
+        "Width" : 680,
+        "X" : 515,
+        "Y" : 154
+      },
+      "layer" : 0,
+      "name" : "Access History",
+      "ownerName" : "Warden",
+      "ownerPID" : 42648,
+      "sharingState" : 1,
+      "windowNumber" : 105252
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 607,
+        "Width" : 1107,
+        "X" : 220,
+        "Y" : 289
+      },
+      "layer" : 0,
+      "name" : "Accounts",
+      "ownerName" : "Scrim",
+      "ownerPID" : 74512,
+      "sharingState" : 1,
+      "windowNumber" : 99643
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 800,
+        "X" : 463,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "Problem Report for Scrim",
+      "ownerName" : "Problem Reporter",
+      "ownerPID" : 20512,
+      "sharingState" : 1,
+      "windowNumber" : 99187
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 800,
+        "X" : 463,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "Personal — MCP · Atlas admin",
+      "ownerName" : "Safari",
+      "ownerPID" : 86284,
+      "sharingState" : 1,
+      "windowNumber" : 80419
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 800,
+        "X" : 463,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "Jobs",
+      "ownerName" : "Anvil",
+      "ownerPID" : 23570,
+      "sharingState" : 1,
+      "windowNumber" : 37562
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 488,
+        "Width" : 586,
+        "X" : 176,
+        "Y" : 73
+      },
+      "layer" : 0,
+      "name" : "Untitled 30",
+      "ownerName" : "TextEdit",
+      "ownerPID" : 922,
+      "sharingState" : 1,
+      "windowNumber" : 90
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 488,
+        "Width" : 586,
+        "X" : 192,
+        "Y" : 91
+      },
+      "layer" : 0,
+      "name" : "Untitled 31",
+      "ownerName" : "TextEdit",
+      "ownerPID" : 922,
+      "sharingState" : 1,
+      "windowNumber" : 91
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 460,
+        "Width" : 800,
+        "X" : 463,
+        "Y" : 30
+      },
+      "layer" : 0,
+      "name" : "Amy Benson",
+      "ownerName" : "Messages",
+      "ownerPID" : 929,
+      "sharingState" : 1,
+      "windowNumber" : 26811
+    }
+  ]
+}

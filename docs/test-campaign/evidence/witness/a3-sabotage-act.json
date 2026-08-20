@@ -1,0 +1,96 @@
+{
+  "id": 4,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"backend\" : \"native\",\n  \"completed\" : 2,\n  \"finalHash\" : \"6f86f599e7afbc8508ed08a11b6956271bbff7c649241aa413f38c3028da3988\",\n  \"foreground\" : {\n    \"declaredCertain\" : 0,\n    \"declaredConditional\" : 0,\n    \"measured\" : 0,\n    \"ranInForeground\" : false,\n    \"requestIgnored\" : false,\n    \"totalSteps\" : 2,\n    \"unproven\" : 0,\n    \"unrequestedForeground\" : 0\n  },\n  \"machine\" : {\n    \"kind\" : \"host\",\n    \"platform\" : \"macos\",\n    \"tier\" : \"native\"\n  },\n  \"steps\" : [\n    {\n      \"backend\" : \"native\",\n      \"elapsedMs\" : 147941,\n      \"index\" : 0,\n      \"ok\" : true,\n      \"plane\" : \"accessibility\",\n      \"route\" : \"valueWrite\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 30,\n        \"axQuietMs\" : 0,\n        \"elapsedMs\" : 144754,\n        \"lastDirtyArea\" : 0.12706611570247933,\n        \"quietFrames\" : 0,\n        \"reason\" : \"timeout\",\n        \"settled\" : false,\n        \"signals\" : [\n          \"capture\",\n          \"ax\"\n        ]\n      },\n      \"stateHash\" : \"cb9a9ef54d2b6a9cd3b0e150d4f2922c85543bc0a6671f0ca7053584443037f1\",\n      \"step\" : {\n        \"kind\" : \"move\",\n        \"label\" : \"accessibility move, no synthetic post\",\n        \"point\" : [\n          438,\n          30\n        ]\n      }\n    },\n    {\n      \"backend\" : \"native\",\n      \"elapsedMs\" : 5130,\n      \"index\" : 1,\n      \"ok\" : true,\n      \"plane\" : \"accessibility\",\n      \"route\" : \"valueWrite\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 2,\n        \"axQuietMs\" : 0,\n        \"elapsedMs\" : 1930,\n        \"lastDirtyArea\" : 0.9939393939393939,\n        \"quietFrames\" : 0,\n        \"reason\" : \"timeout\",\n        \"settled\" : false,\n        \"signals\" : [\n          \"capture\",\n          \"ax\"\n        ]\n      },\n      \"stateHash\" : \"6f86f599e7afbc8508ed08a11b6956271bbff7c649241aa413f38c3028da3988\",\n      \"step\" : {\n        \"kind\" : \"move\",\n        \"label\" : \"accessibility move again\",\n        \"point\" : [\n          460,\n          50\n        ]\n      }\n    }\n  ],\n  \"window\" : \"win:1:0\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "backend": "native",
+      "completed": 2,
+      "finalHash": "6f86f599e7afbc8508ed08a11b6956271bbff7c649241aa413f38c3028da3988",
+      "foreground": {
+        "declaredCertain": 0,
+        "declaredConditional": 0,
+        "measured": 0,
+        "ranInForeground": false,
+        "requestIgnored": false,
+        "totalSteps": 2,
+        "unproven": 0,
+        "unrequestedForeground": 0
+      },
+      "machine": {
+        "kind": "host",
+        "platform": "macos",
+        "tier": "native"
+      },
+      "steps": [
+        {
+          "backend": "native",
+          "elapsedMs": 147941,
+          "index": 0,
+          "ok": true,
+          "plane": "accessibility",
+          "route": "valueWrite",
+          "settle": {
+            "axNotificationsSeen": 30,
+            "axQuietMs": 0,
+            "elapsedMs": 144754,
+            "lastDirtyArea": 0.12706611570247933,
+            "quietFrames": 0,
+            "reason": "timeout",
+            "settled": false,
+            "signals": [
+              "capture",
+              "ax"
+            ]
+          },
+          "stateHash": "cb9a9ef54d2b6a9cd3b0e150d4f2922c85543bc0a6671f0ca7053584443037f1",
+          "step": {
+            "kind": "move",
+            "label": "accessibility move, no synthetic post",
+            "point": [
+              438,
+              30
+            ]
+          }
+        },
+        {
+          "backend": "native",
+          "elapsedMs": 5130,
+          "index": 1,
+          "ok": true,
+          "plane": "accessibility",
+          "route": "valueWrite",
+          "settle": {
+            "axNotificationsSeen": 2,
+            "axQuietMs": 0,
+            "elapsedMs": 1930,
+            "lastDirtyArea": 0.9939393939393939,
+            "quietFrames": 0,
+            "reason": "timeout",
+            "settled": false,
+            "signals": [
+              "capture",
+              "ax"
+            ]
+          },
+          "stateHash": "6f86f599e7afbc8508ed08a11b6956271bbff7c649241aa413f38c3028da3988",
+          "step": {
+            "kind": "move",
+            "label": "accessibility move again",
+            "point": [
+              460,
+              50
+            ]
+          }
+        }
+      ],
+      "window": "win:1:0"
+    }
+  }
+}

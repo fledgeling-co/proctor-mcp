@@ -1,0 +1,4076 @@
+{
+  "at" : "2026-08-20T16:06:50Z",
+  "mode" : "observe",
+  "observed" : [
+    {
+      "at" : 1787242010.2817941,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242011.8169179,
+      "sourcePid" : 86732,
+      "type" : "leftMouseDown",
+      "userData" : 5787775621720396288,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787242011.823235,
+      "sourcePid" : 86732,
+      "type" : "leftMouseUp",
+      "userData" : 5787775621720396288,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787242015.862365,
+      "sourcePid" : 86732,
+      "type" : "leftMouseUp",
+      "userData" : 5787775621720396288,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787242015.8624239,
+      "sourcePid" : 86732,
+      "type" : "leftMouseDown",
+      "userData" : 5787775621720396288,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787242021.2555161,
+      "sourcePid" : 86732,
+      "type" : "leftMouseUp",
+      "userData" : 5787775621720396288,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787242021.2619071,
+      "sourcePid" : 86732,
+      "type" : "leftMouseDown",
+      "userData" : 5787775621720396288,
+      "userDataIsProctorTag" : true
+    },
+    {
+      "at" : 1787242025.1148801,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242027.2804379,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242030.296586,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242030.664011,
+      "sourcePid" : 99665,
+      "type" : "leftMouseDown",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242030.6807699,
+      "sourcePid" : 99665,
+      "type" : "leftMouseUp",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242034.9501572,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242035.106513,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242035.2856309,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242035.447701,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.06638,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.177484,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.249588,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.342926,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.473664,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.573488,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.5820529,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.6826749,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.7361021,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.8099899,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.876128,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242037.9324241,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.1249781,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.182081,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.3316932,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.416759,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.4485459,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.51689,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.5827022,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.6493931,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.7855039,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.926801,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242038.949297,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.0833812,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.0991402,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.2015262,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.2151041,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.280952,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.3488679,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.389868,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.4066451,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.4693999,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.499222,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.6305509,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.660006,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.7478399,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.7932758,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.8334022,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.849333,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242039.9426188,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.2945929,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.3832788,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.3931,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.4999928,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.5411601,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.6274199,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.67591,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.744638,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.8235021,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.906409,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242040.9489131,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.0506401,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.180233,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.259618,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.3949471,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.425292,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.526782,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.630372,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.6418209,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.764997,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.800468,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.9154019,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242041.948246,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.050833,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.286109,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.387243,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.394984,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.5217872,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.5384169,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.611165,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.768558,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.797724,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.8446651,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242042.8812089,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242043.0619922,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242043.197552,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242043.443382,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242043.6171241,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242043.6493812,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242043.7821898,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242043.8151898,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242043.9685841,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242044.0155029,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242044.1673222,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242044.3320761,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242044.5175009,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242044.841619,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242044.96646,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.028177,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.1450911,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.1867819,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.3248072,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.509701,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.6428719,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.6835508,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.795769,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.8403101,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242045.915617,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.082927,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.2155008,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.2346129,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.2992101,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.444067,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.5279279,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.6288271,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.7000971,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.813482,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.96697,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242046.9985471,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242047.1021061,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242047.940752,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242048.075011,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242048.216068,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242048.2626939,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242048.2817421,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242048.405957,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.0014729,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.0959759,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.1911011,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.2241421,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.239572,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.3597341,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.466593,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.5524549,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.610132,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.6661291,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.698143,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.80531,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.8197401,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.8792839,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.908602,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242049.9823771,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242050.4272041,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242050.5297999,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242050.569104,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242050.676697,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242050.6915531,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242050.76493,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242050.9161019,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242050.965992,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.1238,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.1330571,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.193392,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.2139659,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.2268701,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.323096,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.3586791,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.4330611,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.5848131,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.666651,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.812788,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.8675261,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.8988619,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242051.9649811,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.0025511,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.0651889,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.0843649,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.1666598,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.2165799,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.3000941,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.3074579,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.4110889,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.4406071,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.506242,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.5175691,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.6043391,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.6516051,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.7299719,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.744576,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.8173552,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242052.8917542,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242053.0008001,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242053.2344499,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242053.3076711,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242053.3409219,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242053.439605,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242053.525815,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242053.633703,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242053.9328132,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.047168,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.1405668,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.228178,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.326159,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.3957019,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.4929628,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.586026,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.7259221,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.8645239,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242054.8965058,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242055.014703,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242055.6849999,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242055.765897,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242055.812464,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242055.8499389,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242055.993144,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.1125011,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.205976,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.2659922,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.2822552,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.3668652,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.4788241,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.5771809,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.652719,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.75981,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242056.8849301,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242057.0542359,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242057.0898681,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242057.2247801,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242057.6003909,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242057.701339,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242057.715555,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242057.7961478,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242057.9650841,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.016871,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.0318589,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.182693,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.216136,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.28212,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.397824,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.473515,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.665719,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.7127481,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.8454671,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242058.976176,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.1338029,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.2125092,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.4509959,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.5000501,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.516299,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.638792,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.6482558,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.758662,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.765981,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.8732538,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.9240708,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242059.996774,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.0238841,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.146044,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.1654239,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.2337961,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.2815409,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.377547,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.3856459,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.49575,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.6672781,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.7356491,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.8827581,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.9824262,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242060.992517,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.100049,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.132689,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.2194681,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.3430738,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.435364,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.443439,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.5297389,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.581696,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.67012,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.777143,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.8332028,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.899946,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242061.9270458,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242062.08091,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242062.132129,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242062.3162541,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242062.439059,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242062.450434,
+      "sourcePid" : 99665,
+      "type" : "keyDown",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242062.5591049,
+      "sourcePid" : 99665,
+      "type" : "keyUp",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242065.188278,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242065.648978,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242067.004101,
+      "sourcePid" : 99665,
+      "type" : "leftMouseDown",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242067.163456,
+      "sourcePid" : 99665,
+      "type" : "leftMouseUp",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242068.5803041,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242069.4968691,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242071.6803789,
+      "sourcePid" : 99665,
+      "type" : "leftMouseDown",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242071.7060599,
+      "sourcePid" : 99665,
+      "type" : "leftMouseUp",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242074.0000029,
+      "sourcePid" : 99665,
+      "type" : "leftMouseDown",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242074.0167189,
+      "sourcePid" : 99665,
+      "type" : "leftMouseUp",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242075.917938,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242076.283211,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.0489368,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.0896659,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.0939021,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.1008868,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.1181412,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.13465,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.159477,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.1705861,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.19048,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.201324,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.218339,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.2411981,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.2545629,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.268868,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.274549,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.280731,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.296525,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.314059,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.331136,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.3461509,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.362855,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.380574,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.39627,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.413152,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.430135,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.446214,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.462394,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.4798059,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.496681,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.5133131,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.5300379,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.54688,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.562923,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.5808411,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.5979052,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.613584,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.6319571,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.6479712,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.663101,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.75089,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.756815,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.768481,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.7847672,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.800662,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.819062,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.8356509,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.8514161,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.85851,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.8637571,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.8806129,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.8971372,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.9144239,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.930377,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.9479508,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.966881,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.9802899,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242077.997122,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.01421,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.030242,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.050272,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.063478,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.0827889,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.0972118,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.114666,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.131556,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.1486111,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.1627769,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.180294,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.1960549,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.213393,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.2328091,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.2468162,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.2667131,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.2832088,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.302316,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.315726,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.332854,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.349215,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.3634019,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.3809471,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.3969049,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.4138789,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.4303789,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.446492,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.501461,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.5181119,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.5344229,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.5510669,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.568099,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.5836492,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.6011639,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.617888,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.6341019,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.657017,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.662698,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.679965,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.6972871,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.7131381,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.7312751,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.7470031,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.7712131,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.7821941,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.796808,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.8152809,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.8331749,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.847209,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.8639541,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.8811989,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.8963211,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.913898,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.930985,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.9467449,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.9642811,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.980968,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242078.9972191,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.0173211,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.0302029,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.0407438,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.101059,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.1081769,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.1307149,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.1469569,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.1640949,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.1805151,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.1981759,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.2096171,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.2096539,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.2151551,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.232264,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.2477469,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.2634549,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.2807379,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.301924,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.3131709,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.3296781,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.3468962,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.3662949,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.3798652,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.3990221,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.414109,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.4310751,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.449403,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.4633698,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.479862,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.496979,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.5160851,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.5304809,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.5479259,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.5651441,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.58044,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.5969381,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.617367,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.6317921,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.6487432,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.664068,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.680959,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.6967621,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.7467399,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.763525,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.782429,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.7966599,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.814503,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.830657,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.849009,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.8632178,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.8825998,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.8858008,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.8977251,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.917933,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.9435701,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.955729,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.9848299,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242079.9849439,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.011229,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.0164361,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.0411019,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.0476022,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.0670619,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.0831981,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.1001091,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.11584,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.1333609,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.149385,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.166332,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.182693,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.1989942,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.2151949,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.23283,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.2508931,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.277873,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.292558,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.31882,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.3406858,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242080.340739,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242084.438427,
+      "sourcePid" : 99665,
+      "type" : "leftMouseDown",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242084.438524,
+      "sourcePid" : 99665,
+      "type" : "leftMouseUp",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.591049,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.5938659,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.6006598,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.6177959,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.6427259,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.6586409,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.672936,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.68853,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.7006888,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.719269,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.734549,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.7633851,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.7738409,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.7738841,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.779834,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.807018,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.814698,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.831027,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.8469601,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.8630691,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.8799119,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.8976409,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.9143591,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.9308739,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.948631,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.9682159,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.980432,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242085.9980888,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242086.0159512,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242086.0306039,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242086.0478129,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242086.063241,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242086.068574,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242088.0051241,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242094.7805049,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242096.5139389,
+      "sourcePid" : 99665,
+      "type" : "leftMouseDown",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242096.5305891,
+      "sourcePid" : 99665,
+      "type" : "leftMouseUp",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.55181,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.603353,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.6180849,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.6397882,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.6504421,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.6732121,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.6839571,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.7160702,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.730408,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.7486041,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.7660689,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.7797351,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.796834,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.814379,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.8313351,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.8395891,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.840239,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.8477859,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.8629041,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.8920078,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.9092641,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.9283829,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.941314,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.9572082,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.9644499,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.979759,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242097.998044,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.0135641,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.0409951,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.057018,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.063159,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.081543,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.0963631,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.1133361,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.1303391,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.1474419,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.1658969,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.183908,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.1964831,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.214987,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.229816,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.249094,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.2633681,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.279654,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242098.2865949,
+      "sourcePid" : 99665,
+      "type" : "scrollWheel",
+      "userData" : 0,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242099.28056,
+      "sourcePid" : 99665,
+      "type" : "leftMouseDown",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    },
+    {
+      "at" : 1787242099.2966061,
+      "sourcePid" : 99665,
+      "type" : "leftMouseUp",
+      "userData" : 1919775845,
+      "userDataIsProctorTag" : false
+    }
+  ],
+  "observedCount" : 576,
+  "probePid" : 99923,
+  "seconds" : 90,
+  "sessionCounterDelta" : {
+    "keyDown" : 136,
+    "keyUp" : 136,
+    "leftMouseDown" : 10,
+    "leftMouseUp" : 10,
+    "otherMouseDown" : 0,
+    "otherMouseUp" : 0,
+    "rightMouseDown" : 0,
+    "rightMouseUp" : 0,
+    "scrollWheel" : 284
+  },
+  "sessionCountersAfter" : {
+    "keyDown" : 57115,
+    "keyUp" : 57114,
+    "leftMouseDown" : 8246,
+    "leftMouseUp" : 8245,
+    "otherMouseDown" : 0,
+    "otherMouseUp" : 0,
+    "rightMouseDown" : 65,
+    "rightMouseUp" : 65,
+    "scrollWheel" : 191052
+  },
+  "sessionCountersBefore" : {
+    "keyDown" : 56979,
+    "keyUp" : 56978,
+    "leftMouseDown" : 8236,
+    "leftMouseUp" : 8235,
+    "otherMouseDown" : 0,
+    "otherMouseUp" : 0,
+    "rightMouseDown" : 65,
+    "rightMouseUp" : 65,
+    "scrollWheel" : 190768
+  },
+  "tapCreated" : true,
+  "tapFailure" : null
+}

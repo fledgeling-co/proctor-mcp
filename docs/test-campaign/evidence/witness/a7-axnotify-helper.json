@@ -1,0 +1,33 @@
+{
+  "at" : "2026-08-20T17:05:38Z",
+  "axTrusted" : true,
+  "count" : 2,
+  "events" : [
+    {
+      "at" : 1787245543.8166962,
+      "name" : "AXValueChanged"
+    },
+    {
+      "at" : 1787245543.8167429,
+      "name" : "AXValueChanged"
+    }
+  ],
+  "mode" : "axnotify",
+  "ok" : true,
+  "probePid" : 38459,
+  "refused" : {
+
+  },
+  "registered" : [
+    "AXValueChanged",
+    "AXFocusedUIElementChanged",
+    "AXWindowMoved",
+    "AXWindowResized",
+    "AXTitleChanged",
+    "AXUIElementDestroyed",
+    "AXCreated",
+    "AXMainWindowChanged",
+    "AXSelectedTextChanged"
+  ],
+  "targetPid" : 21088
+}

@@ -1,0 +1,382 @@
+{
+  "id": 4,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"backend\" : \"native\",\n  \"completed\" : 1,\n  \"finalHash\" : \"22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc\",\n  \"foreground\" : {\n    \"declaredCertain\" : 1,\n    \"declaredConditional\" : 0,\n    \"measured\" : 1,\n    \"ranInForeground\" : true,\n    \"requestIgnored\" : false,\n    \"totalSteps\" : 1,\n    \"unproven\" : 0,\n    \"unrequestedForeground\" : 0\n  },\n  \"foregroundNote\" : \"1 of 1 step travelled as synthetic events, which required the application to be frontmost. The result is not a background-safe one, and this run cannot be repeated unattended.\",\n  \"machine\" : {\n    \"kind\" : \"host\",\n    \"platform\" : \"macos\",\n    \"tier\" : \"native\"\n  },\n  \"steps\" : [\n    {\n      \"backend\" : \"native\",\n      \"diff\" : {\n        \"added\" : [\n          {\n            \"actions\" : [\n              \"AXPress\",\n              \"AXShowMenu\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : false,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 12,\n              \"x\" : 447,\n              \"y\" : 133\n            },\n            \"id\" : \"nd:05893e474d5ca49f\",\n            \"label\" : \"document actions\",\n            \"role\" : \"AXMenuButton\",\n            \"roleDescription\" : \"menu button\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 1,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 14,\n              \"w\" : 14,\n              \"x\" : 327,\n              \"y\" : 135\n            },\n            \"id\" : \"nd:0c70ea584e150158\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 14,\n              \"w\" : 14,\n              \"x\" : 327,\n              \"y\" : 135\n            },\n            \"id\" : \"nd:244ffdcb72ab9244\",\n            \"role\" : \"AXGroup\",\n            \"roleDescription\" : \"group\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 76,\n              \"x\" : 372,\n              \"y\" : 134\n            },\n            \"id\" : \"nd:27299163f4583544\",\n            \"role\" : \"AXStaticText\",\n            \"roleDescription\" : \"text\",\n            \"value\" : \"scratch.txt\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXScrollLeftByPage\",\n              \"AXScrollRightByPage\",\n              \"AXScrollUpByPage\",\n              \"AXScrollDownByPage\"\n            ],\n            \"childCount\" : 3,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 390,\n              \"w\" : 656,\n              \"x\" : 272,\n              \"y\" : 158\n            },\n            \"id\" : \"nd:35a2107295ceeea1\",\n            \"identifier\" : \"_NS:8\",\n            \"role\" : \"AXScrollArea\",\n            \"roleDescription\" : \"scroll area\",\n            \"writableAttributes\" : [\n              \"AXMakeScreenRectVisible\",\n              \"AXFocused\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 16,\n              \"x\" : 280,\n              \"y\" : 134\n            },\n            \"id\" : \"nd:408d7ee4f729e57b\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"close button\",\n            \"subrole\" : \"AXCloseButton\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : false,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 19,\n              \"w\" : 643,\n              \"x\" : 278.5,\n              \"y\" : 530\n            },\n            \"id\" : \"nd:733a556eff61d214\",\n            \"identifier\" : \"_NS:24\",\n            \"role\" : \"AXScrollBar\",\n            \"roleDescription\" : \"scroll bar\",\n            \"value\" : 0.18518517911434174,\n            \"writableAttributes\" : [\n              \"AXValue\",\n              \"AXHidden\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXRaise\"\n            ],\n            \"childCount\" : 7,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 422,\n              \"w\" : 656,\n              \"x\" : 272,\n              \"y\" : 126\n            },\n            \"id\" : \"nd:73e4c14bae494dce\",\n            \"identifier\" : \"_NS:34\",\n            \"role\" : \"AXWindow\",\n            \"roleDescription\" : \"standard window\",\n            \"subrole\" : \"AXStandardWindow\",\n            \"title\" : \"scratch.txt\",\n            \"writableAttributes\" : [\n              \"AXFullScreen\",\n              \"AXPosition\",\n              \"AXSections\",\n              \"AXMain\",\n              \"AXMinimized\",\n              \"AXSize\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\"\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 16,\n              \"x\" : 303,\n              \"y\" : 134\n            },\n            \"id\" : \"nd:8a10a814b13d0169\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"minimise button\",\n            \"subrole\" : \"AXMinimizeButton\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : false,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 384.5,\n              \"w\" : 19,\n              \"x\" : 910,\n              \"y\" : 157\n            },\n            \"id\" : \"nd:948dc3666726e83e\",\n            \"identifier\" : \"_NS:27\",\n            \"role\" : \"AXScrollBar\",\n            \"roleDescription\" : \"scroll bar\",\n            \"value\" : 0.615384578704834,\n            \"writableAttributes\" : [\n              \"AXValue\",\n              \"AXHidden\"\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXPress\",\n              \"AXZoomWindow\",\n              \"AXShowMenu\"\n            ],\n            \"childCount\" : 1,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 16,\n              \"w\" : 16,\n              \"x\" : 326,\n              \"y\" : 134\n            },\n            \"help\" : \"this button also has an action to zoom the window\",\n            \"id\" : \"nd:977952ba5b289289\",\n            \"role\" : \"AXButton\",\n            \"roleDescription\" : \"full screen button\",\n            \"subrole\" : \"AXFullScreenButton\",\n            \"writableAttributes\" : [\n\n            ]\n          },\n          {\n            \"actions\" : [\n              \"AXShowMenu\"\n            ],\n            \"childCount\" : 0,\n            \"focused\" : true,\n            \"frame\" : {\n              \"h\" : 384,\n              \"w\" : 656,\n              \"x\" : 272,\n              \"y\" : 158\n            },\n            \"id\" : \"nd:f09f2a872ea8825d\",\n            \"identifier\" : \"First Text View\",\n            \"role\" : \"AXTextArea\",\n            \"roleDescription\" : \"text entry area\",\n            \"value\" : \"PRO-0078 witness target\\n\",\n            \"writableAttributes\" : [\n              \"AXFocused\",\n              \"AXSelectedText\",\n              \"AXSelectedTextRange\",\n              \"AXSelectedTextRanges\",\n              \"AXVisibleCharacterRange\",\n              \"AXValue\"\n            ]\n          },\n          {\n            \"actions\" : [\n\n            ],\n            \"childCount\" : 0,\n            \"enabled\" : true,\n            \"focused\" : false,\n            \"frame\" : {\n              \"h\" : 18,\n              \"w\" : 18,\n              \"x\" : 353,\n              \"y\" : 132\n            },\n            \"id\" : \"nd:ff69754c7ca7fdfe\",\n            \"role\" : \"AXImage\",\n            \"roleDescription\" : \"image\",\n            \"title\" : \"scratch.txt\",\n            \"writableAttributes\" : [\n\n            ]\n          }\n        ],\n        \"changed\" : [\n\n        ],\n        \"fromRevision\" : 2,\n        \"removed\" : [\n          \"nd:8fb30474284ccffd\"\n        ],\n        \"unchangedCount\" : 0\n      },\n      \"elapsedMs\" : 74673,\n      \"index\" : 0,\n      \"ok\" : true,\n      \"plane\" : \"syntheticEvent\",\n      \"route\" : \"eventStream\",\n      \"settle\" : {\n        \"axNotificationsSeen\" : 0,\n        \"axQuietMs\" : 0,\n        \"elapsedMs\" : 29006,\n        \"lastDirtyArea\" : 1,\n        \"quietFrames\" : 0,\n        \"reason\" : \"timeout\",\n        \"settled\" : false,\n        \"signals\" : [\n          \"capture\"\n        ]\n      },\n      \"stateHash\" : \"22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc\",\n      \"step\" : {\n        \"durationMs\" : 16000,\n        \"kind\" : \"dragPath\",\n        \"label\" : \"long synthetic drag, block armed throughout\",\n        \"path\" : [\n          [\n            80,\n            120\n          ],\n          [\n            200,\n            140\n          ],\n          [\n            320,\n            160\n          ],\n          [\n            440,\n            180\n          ],\n          [\n            560,\n            200\n          ],\n          [\n            440,\n            220\n          ],\n          [\n            320,\n            240\n          ],\n          [\n            200,\n            260\n          ],\n          [\n            80,\n            280\n          ]\n        ]\n      }\n    }\n  ],\n  \"takeover\" : {\n    \"blocked\" : true,\n    \"blockedMs\" : 18015,\n    \"releasedBy\" : \"runEnded\",\n    \"shown\" : true,\n    \"swallowed\" : 6\n  },\n  \"takeoverNote\" : \"Proctor held the keyboard and mouse for 18.0s of this run, across the steps it was posting events into the application. Somebody used the machine 6 times while it was held, and those events did not reach the application.\",\n  \"window\" : \"win:1:0\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "backend": "native",
+      "completed": 1,
+      "finalHash": "22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc",
+      "foreground": {
+        "declaredCertain": 1,
+        "declaredConditional": 0,
+        "measured": 1,
+        "ranInForeground": true,
+        "requestIgnored": false,
+        "totalSteps": 1,
+        "unproven": 0,
+        "unrequestedForeground": 0
+      },
+      "foregroundNote": "1 of 1 step travelled as synthetic events, which required the application to be frontmost. The result is not a background-safe one, and this run cannot be repeated unattended.",
+      "machine": {
+        "kind": "host",
+        "platform": "macos",
+        "tier": "native"
+      },
+      "steps": [
+        {
+          "backend": "native",
+          "diff": {
+            "added": [
+              {
+                "actions": [
+                  "AXPress",
+                  "AXShowMenu"
+                ],
+                "childCount": 0,
+                "enabled": false,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 12,
+                  "x": 447,
+                  "y": 133
+                },
+                "id": "nd:05893e474d5ca49f",
+                "label": "document actions",
+                "role": "AXMenuButton",
+                "roleDescription": "menu button",
+                "writableAttributes": []
+              },
+              {
+                "actions": [],
+                "childCount": 1,
+                "focused": false,
+                "frame": {
+                  "h": 14,
+                  "w": 14,
+                  "x": 327,
+                  "y": 135
+                },
+                "id": "nd:0c70ea584e150158",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "writableAttributes": []
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "focused": false,
+                "frame": {
+                  "h": 14,
+                  "w": 14,
+                  "x": 327,
+                  "y": 135
+                },
+                "id": "nd:244ffdcb72ab9244",
+                "role": "AXGroup",
+                "roleDescription": "group",
+                "writableAttributes": []
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 76,
+                  "x": 372,
+                  "y": 134
+                },
+                "id": "nd:27299163f4583544",
+                "role": "AXStaticText",
+                "roleDescription": "text",
+                "value": "scratch.txt",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXScrollLeftByPage",
+                  "AXScrollRightByPage",
+                  "AXScrollUpByPage",
+                  "AXScrollDownByPage"
+                ],
+                "childCount": 3,
+                "focused": false,
+                "frame": {
+                  "h": 390,
+                  "w": 656,
+                  "x": 272,
+                  "y": 158
+                },
+                "id": "nd:35a2107295ceeea1",
+                "identifier": "_NS:8",
+                "role": "AXScrollArea",
+                "roleDescription": "scroll area",
+                "writableAttributes": [
+                  "AXMakeScreenRectVisible",
+                  "AXFocused"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 16,
+                  "x": 280,
+                  "y": 134
+                },
+                "id": "nd:408d7ee4f729e57b",
+                "role": "AXButton",
+                "roleDescription": "close button",
+                "subrole": "AXCloseButton",
+                "writableAttributes": []
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": false,
+                "focused": false,
+                "frame": {
+                  "h": 19,
+                  "w": 643,
+                  "x": 278.5,
+                  "y": 530
+                },
+                "id": "nd:733a556eff61d214",
+                "identifier": "_NS:24",
+                "role": "AXScrollBar",
+                "roleDescription": "scroll bar",
+                "value": 0.18518517911434174,
+                "writableAttributes": [
+                  "AXValue",
+                  "AXHidden"
+                ]
+              },
+              {
+                "actions": [
+                  "AXRaise"
+                ],
+                "childCount": 7,
+                "focused": false,
+                "frame": {
+                  "h": 422,
+                  "w": 656,
+                  "x": 272,
+                  "y": 126
+                },
+                "id": "nd:73e4c14bae494dce",
+                "identifier": "_NS:34",
+                "role": "AXWindow",
+                "roleDescription": "standard window",
+                "subrole": "AXStandardWindow",
+                "title": "scratch.txt",
+                "writableAttributes": [
+                  "AXFullScreen",
+                  "AXPosition",
+                  "AXSections",
+                  "AXMain",
+                  "AXMinimized",
+                  "AXSize"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress"
+                ],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 16,
+                  "x": 303,
+                  "y": 134
+                },
+                "id": "nd:8a10a814b13d0169",
+                "role": "AXButton",
+                "roleDescription": "minimise button",
+                "subrole": "AXMinimizeButton",
+                "writableAttributes": []
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": false,
+                "focused": false,
+                "frame": {
+                  "h": 384.5,
+                  "w": 19,
+                  "x": 910,
+                  "y": 157
+                },
+                "id": "nd:948dc3666726e83e",
+                "identifier": "_NS:27",
+                "role": "AXScrollBar",
+                "roleDescription": "scroll bar",
+                "value": 0.615384578704834,
+                "writableAttributes": [
+                  "AXValue",
+                  "AXHidden"
+                ]
+              },
+              {
+                "actions": [
+                  "AXPress",
+                  "AXZoomWindow",
+                  "AXShowMenu"
+                ],
+                "childCount": 1,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 16,
+                  "w": 16,
+                  "x": 326,
+                  "y": 134
+                },
+                "help": "this button also has an action to zoom the window",
+                "id": "nd:977952ba5b289289",
+                "role": "AXButton",
+                "roleDescription": "full screen button",
+                "subrole": "AXFullScreenButton",
+                "writableAttributes": []
+              },
+              {
+                "actions": [
+                  "AXShowMenu"
+                ],
+                "childCount": 0,
+                "focused": true,
+                "frame": {
+                  "h": 384,
+                  "w": 656,
+                  "x": 272,
+                  "y": 158
+                },
+                "id": "nd:f09f2a872ea8825d",
+                "identifier": "First Text View",
+                "role": "AXTextArea",
+                "roleDescription": "text entry area",
+                "value": "PRO-0078 witness target\n",
+                "writableAttributes": [
+                  "AXFocused",
+                  "AXSelectedText",
+                  "AXSelectedTextRange",
+                  "AXSelectedTextRanges",
+                  "AXVisibleCharacterRange",
+                  "AXValue"
+                ]
+              },
+              {
+                "actions": [],
+                "childCount": 0,
+                "enabled": true,
+                "focused": false,
+                "frame": {
+                  "h": 18,
+                  "w": 18,
+                  "x": 353,
+                  "y": 132
+                },
+                "id": "nd:ff69754c7ca7fdfe",
+                "role": "AXImage",
+                "roleDescription": "image",
+                "title": "scratch.txt",
+                "writableAttributes": []
+              }
+            ],
+            "changed": [],
+            "fromRevision": 2,
+            "removed": [
+              "nd:8fb30474284ccffd"
+            ],
+            "unchangedCount": 0
+          },
+          "elapsedMs": 74673,
+          "index": 0,
+          "ok": true,
+          "plane": "syntheticEvent",
+          "route": "eventStream",
+          "settle": {
+            "axNotificationsSeen": 0,
+            "axQuietMs": 0,
+            "elapsedMs": 29006,
+            "lastDirtyArea": 1,
+            "quietFrames": 0,
+            "reason": "timeout",
+            "settled": false,
+            "signals": [
+              "capture"
+            ]
+          },
+          "stateHash": "22caf371f7b92e902d92ab963c065db915abf18ffcfaef56705844e3529f5fbc",
+          "step": {
+            "durationMs": 16000,
+            "kind": "dragPath",
+            "label": "long synthetic drag, block armed throughout",
+            "path": [
+              [
+                80,
+                120
+              ],
+              [
+                200,
+                140
+              ],
+              [
+                320,
+                160
+              ],
+              [
+                440,
+                180
+              ],
+              [
+                560,
+                200
+              ],
+              [
+                440,
+                220
+              ],
+              [
+                320,
+                240
+              ],
+              [
+                200,
+                260
+              ],
+              [
+                80,
+                280
+              ]
+            ]
+          }
+        }
+      ],
+      "takeover": {
+        "blocked": true,
+        "blockedMs": 18015,
+        "releasedBy": "runEnded",
+        "shown": true,
+        "swallowed": 6
+      },
+      "takeoverNote": "Proctor held the keyboard and mouse for 18.0s of this run, across the steps it was posting events into the application. Somebody used the machine 6 times while it was held, and those events did not reach the application.",
+      "window": "win:1:0"
+    }
+  }
+}

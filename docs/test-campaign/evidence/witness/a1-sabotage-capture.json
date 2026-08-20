@@ -1,0 +1,18 @@
+{
+  "id": 5,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "proctor: no window with handle win:9:9\n\nCode: windowNotFound\nFix:  Call proctor_apps with action \"list\" to re-read the windows of the attached apps; the window may have closed.",
+        "type": "text"
+      }
+    ],
+    "isError": true,
+    "structuredContent": {
+      "code": "windowNotFound",
+      "message": "no window with handle win:9:9",
+      "remedy": "Call proctor_apps with action \"list\" to re-read the windows of the attached apps; the window may have closed."
+    }
+  }
+}
