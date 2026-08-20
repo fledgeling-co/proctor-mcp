@@ -479,6 +479,15 @@ final class TakeoverOverlay {
     private var visible = false
     private var screenObserver: NSObjectProtocol?
     private var lastApp: String?
+    /// When the statement may come down. The policy is in Core; this owns the
+    /// timer that enforces it.
+    private var dwell = Takeover.Dwell()
+    private var pendingLower: DispatchWorkItem?
+
+    /// `systemUptime` rather than a wall clock: the deadline is a duration on
+    /// screen, and a clock that can be set backwards by NTP would leave the
+    /// statement up until it caught up again.
+    private var now: Double { ProcessInfo.processInfo.systemUptime }
 
     /// Put the statement up for a batch that is taking the machine. Idempotent:
     /// a batch of ten clicks raises it once and leaves it up, because a
@@ -486,6 +495,12 @@ final class TakeoverOverlay {
     /// strobing is worse than the thing it announces.
     func show(app: String?) {
         guard Self.isEnabled else { return }
+        // A request arriving while the statement is up extends it and does not
+        // raise it again. Re-raising is what a person sees as a flash, and an
+        // agent's batches arrive several times a second.
+        let raising = dwell.show(now: now)
+        pendingLower?.cancel()
+        pendingLower = nil
         lastApp = app
         observeScreens()
         ensureSurfaces()
@@ -496,7 +511,7 @@ final class TakeoverOverlay {
             surface.view.apply(label: label, spec: spec)
             surface.panel.level = NSWindow.Level(rawValue: spec.level)
             surface.panel.orderFrontRegardless()
-            if visible { continue }
+            if visible || !raising { continue }
             surface.panel.alphaValue = spec.fades ? 0 : 1
             if spec.fades {
                 NSAnimationContext.runAnimationGroup { context in
@@ -509,7 +524,11 @@ final class TakeoverOverlay {
         // A tint and a line of text reach nobody using VoiceOver, and with the
         // block on that person meets a dead keyboard with no account of why or
         // how to get out of it. The announcement carries both.
-        announce("\(label.title). \(label.line)")
+        //
+        // Only on a genuine raise. Announcing again for every batch would say
+        // the same sentence several times a second, which is the flash in the
+        // one channel where it is worse.
+        if raising { announce("\(label.title). \(label.line)") }
     }
 
     private func announce(_ message: String) {
@@ -529,8 +548,39 @@ final class TakeoverOverlay {
         for surface in surfaces { surface.view.apply(label: label, spec: spec) }
     }
 
-    func hide() {
-        guard Self.isEnabled, visible else { return }
+    /// The batch that raised the statement has ended.
+    ///
+    /// The statement does not come down yet unless it has been up for its floor.
+    /// **Only the tint is deferred** — the input block is released by
+    /// `stopAll` before this is called, and the label re-reads on that release,
+    /// so a statement lingering past the end never claims a hold that has ended.
+    ///
+    /// `immediately` is for a stop: a person who pressed Stop is owed the claim
+    /// going away, and "Proctor is driving X" stops being true at that moment.
+    func hide(immediately: Bool = false) {
+        guard Self.isEnabled else { return }
+        if immediately {
+            dwell.cancel()
+            pendingLower?.cancel()
+            pendingLower = nil
+            lower()
+            return
+        }
+        let due = dwell.end(now: now)
+        let delay = max(0, due - now)
+        pendingLower?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            MainActor.assumeIsolated {
+                guard let self, self.dwell.expire(now: self.now) else { return }
+                self.lower()
+            }
+        }
+        pendingLower = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: work)
+    }
+
+    private func lower() {
+        guard visible else { return }
         visible = false
         let fades = Self.spec().fades
         for surface in surfaces {

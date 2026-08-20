@@ -31,6 +31,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **The overlay stops flashing.** It was raised for a batch and lowered when the batch ended, which is fine when a person drives Proctor and wrong when a model does: agents send a handful of steps at a time, several times a second, so the statement went up and down every second or two. It now stays up for at least three seconds once raised, and a request arriving while it is up extends it instead of raising it again. A busy run shows one statement for as long as the work lasts rather than a strobe.
+
+  Three seconds is the run panel's own linger, so the two come down together instead of one explaining a statement that has already gone.
+
+  Pressing Stop still takes it down at once, including when the statement was left up by an earlier batch. "Proctor is driving this" stops being true the moment you stop it, and a minimum duration is a courtesy to whoever is reading, not a promise to keep a claim on screen after it is false.
+
+
 - **The app's colours are generated from the design, so they can't drift from it.** A build plugin reads the tokens out of the mock's own stylesheet and emits them as Swift. A colour in the app can no longer disagree with the colour in the design, because there's only one place either of them comes from.
 
 - **Seven surfaces rebuilt on tested values.** The status window, the setup walkthrough, the menu bar, the run HUD, the takeover notice, the history window and the consent sheets are each drawn from a pure surface value with its own tests, rather than from literals spread through a view.

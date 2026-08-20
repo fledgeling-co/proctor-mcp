@@ -18,7 +18,10 @@ protocol TakeoverDriving: Sendable {
     func bind(onStop: @escaping @Sendable () -> Void,
               onPersonInput: @escaping @Sendable () -> Void)
     func show(app: String?)
-    func hide()
+    /// `immediately` is for a stop. An ordinary end lets the statement serve out
+    /// its floor, so a run of small batches shows one statement rather than a
+    /// strobe.
+    func hide(immediately: Bool)
     func arm(seconds: Double)
     func release(_ reason: TakeoverRelease)
     func stopAll(_ reason: TakeoverRelease)
@@ -49,8 +52,8 @@ struct LiveTakeover: TakeoverDriving {
         Task { @MainActor in TakeoverOverlay.shared.show(app: app) }
     }
 
-    func hide() {
-        Task { @MainActor in TakeoverOverlay.shared.hide() }
+    func hide(immediately: Bool) {
+        Task { @MainActor in TakeoverOverlay.shared.hide(immediately: immediately) }
     }
 
     func arm(seconds: Double) {
@@ -101,10 +104,24 @@ extension Session {
     /// The run is over. Both halves come down, whatever the step-level
     /// accounting says, and the counters are read once.
     func takeoverEnd(stopped: Bool) -> TakeoverReport? {
+        // A stop lowers the statement whether or not THIS call raised it.
+        //
+        // Found by testing the floor: the statement now lingers past the batch
+        // that raised it, so a person pressing Stop is usually stopping while a
+        // previous batch's statement is still up — and this used to return on
+        // `takeoverShown` before reaching the lowering, leaving "Proctor is
+        // driving X" on screen for the rest of its floor after the person had
+        // stopped it. The floor is a courtesy to a reader, not a promise to keep
+        // a claim up after it stops being true.
+        if stopped { takeover.hide(immediately: true) }
         guard takeoverShown else { return nil }
         takeoverShown = false
         takeover.stopAll(stopped ? .stopped : .runEnded)
-        takeover.hide()
+        // A person who pressed Stop is owed the claim going away: "Proctor is
+        // driving X" stops being true at that moment. An ordinary end lets the
+        // statement serve out its floor instead, because the next batch is
+        // usually milliseconds away and lowering it would only flash.
+        takeover.hide(immediately: stopped)
         let report = takeover.report(shown: true)
         return report.shown ? report : nil
     }

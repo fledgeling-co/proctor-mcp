@@ -16,6 +16,7 @@ final class FakeTakeover: TakeoverDriving, @unchecked Sendable {
     private let lock = NSLock()
     private(set) var shows: [String?] = []
     private(set) var hides = 0
+    private(set) var immediateHides = 0
     private(set) var arms: [Double] = []
     private(set) var releases: [TakeoverRelease] = []
     private(set) var stops: [TakeoverRelease] = []
@@ -38,7 +39,14 @@ final class FakeTakeover: TakeoverDriving, @unchecked Sendable {
     }
 
     func show(app: String?) { lock.lock(); shows.append(app); lock.unlock() }
-    func hide() { lock.lock(); hides += 1; lock.unlock() }
+    /// Counted apart, because the two are different claims. An ordinary end
+    /// lets the statement serve out its floor; a stop takes it down now.
+    func hide(immediately: Bool) {
+        lock.lock()
+        hides += 1
+        if immediately { immediateHides += 1 }
+        lock.unlock()
+    }
     func arm(seconds: Double) { lock.lock(); arms.append(seconds); lock.unlock() }
     func release(_ reason: TakeoverRelease) { lock.lock(); releases.append(reason); lock.unlock() }
     func stopAll(_ reason: TakeoverRelease) { lock.lock(); stops.append(reason); lock.unlock() }
@@ -187,6 +195,51 @@ struct TakeoverWiringTests {
         // Halted before the first step, so nothing was raised and nothing needs
         // taking down — the important half is that no arming is left open.
         #expect(h.takeover.armed == 0)
+    }
+
+    // MARK: - The statement stops strobing
+
+    @Test("an ordinary end lets the statement serve out its floor")
+    func anOrdinaryEndDefersTheLowering() async throws {
+        // Reported from real use: the overlay flashing every second or two. The
+        // statement is raised per batch and was lowered the moment the batch
+        // ended, and a model driving this Mac issues small batches several times
+        // a second. What the session must NOT do is ask for an immediate
+        // lowering on an ordinary end; the floor is enforced in the overlay,
+        // where the timer is.
+        let h = try await harness()
+        _ = try await act(h, [step(.click)])
+        #expect(h.takeover.shows.count == 1, "the batch raised the statement")
+        #expect(h.takeover.hides == 1, "and told it the batch had ended")
+        #expect(h.takeover.immediateHides == 0,
+                "an ordinary end must not demand an immediate lowering, or the floor buys nothing")
+    }
+
+    @Test("a stop takes the statement down even when this call raised nothing")
+    func aStopLowersImmediately() async throws {
+        // The case the floor creates. The statement now outlives the batch that
+        // raised it, so a person pressing Stop is usually stopping while an
+        // EARLIER batch's statement is still up — and the call that notices the
+        // stop has raised nothing of its own, so `takeoverShown` is false for it.
+        //
+        // This used to return on that guard before reaching the lowering, which
+        // left "Proctor is driving X" on screen for the rest of its floor after
+        // the person had stopped it. Driven directly rather than through a run,
+        // because what is being asserted is that the lowering happens on the
+        // path where nothing was raised.
+        let h = try await harness()
+        #expect(h.takeover.hides == 0)
+
+        let report = await h.session.takeoverEnd(stopped: true)
+        #expect(report == nil, "nothing was raised, so there is nothing to report")
+        #expect(h.takeover.immediateHides == 1,
+                "a stop must lower a statement an earlier batch left up")
+
+        // And the ordinary end on the same path stays quiet: there is no claim
+        // on screen to take down and no floor to cut short.
+        let quiet = await h.session.takeoverEnd(stopped: false)
+        #expect(quiet == nil)
+        #expect(h.takeover.immediateHides == 1, "an ordinary end demands no immediate lowering")
     }
 
     // MARK: - A11: what the run says afterwards

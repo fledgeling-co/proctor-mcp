@@ -92,6 +92,92 @@ public extension Takeover {
     }
 }
 
+// MARK: - How long it stays
+
+public extension Takeover {
+
+    /// How long the statement stays up, and what a fresh request does to it.
+    ///
+    /// **The statement is raised per batch, and an agent's batches are small.**
+    /// `takeoverEnd` lowers it when a `proctor_act` call finishes, so a model
+    /// driving this Mac in the way models actually drive it — a handful of steps
+    /// per call, several calls a second — raised and lowered it every second or
+    /// two. `Takeover.label` already refuses to word the line for the instant
+    /// because "a message that flickers is one people learn to ignore"; the
+    /// panel carrying that line was flickering underneath it.
+    ///
+    /// Two rules, and the second is the one that stops the flashing rather than
+    /// merely slowing it:
+    ///
+    ///   A raised statement stays up for at least `minimumSeconds`, however
+    ///   quickly the batch that raised it ends.
+    ///
+    ///   A request arriving while it is up **extends** the deadline and does not
+    ///   raise it again. Re-raising is what a person sees as a flash, so the
+    ///   busy case — batch after batch — converges on one statement that stays
+    ///   up for as long as the work does, rather than on a strobe.
+    ///
+    /// Pure, like everything else here: the agent owns the timer and this owns
+    /// when it should fire.
+    struct Dwell: Sendable, Equatable {
+
+        /// Matched to `RunHUDState.quietLinger` on purpose. The run panel
+        /// already stays three seconds past the end of a run, so an overlay with
+        /// a shorter floor would leave the panel explaining a statement that had
+        /// gone, and one with a longer floor would outlive its own explanation.
+        /// They come down together.
+        public static let minimumSeconds: Double = RunHUDState.quietLinger
+
+        private var downAt: Double?
+        private let minimum: Double
+
+        public init(minimum: Double = Dwell.minimumSeconds) {
+            self.minimum = max(0, minimum)
+        }
+
+        /// Whether the statement is currently up.
+        public var isVisible: Bool { downAt != nil }
+
+        /// When it is currently due to come down, or nil while it is not up.
+        public var dueAt: Double? { downAt }
+
+        /// A batch asks for the statement.
+        ///
+        /// Returns `true` when the panel has to actually be raised, and `false`
+        /// when one is already up and this only moved its deadline. A caller
+        /// that raises on `false` is the flash.
+        public mutating func show(now: Double) -> Bool {
+            let raising = downAt == nil
+            downAt = max(downAt ?? 0, now + minimum)
+            return raising
+        }
+
+        /// The batch that raised it has ended. Returns when it may come down,
+        /// which is never sooner than the floor the raise bought it.
+        @discardableResult
+        public mutating func end(now: Double) -> Double {
+            let due = max(downAt ?? now, now)
+            downAt = due
+            return due
+        }
+
+        /// The deadline fired. Returns whether it may come down now — `false`
+        /// when a request arrived in the meantime and pushed the deadline out,
+        /// which is the case a bare timer would get wrong.
+        public mutating func expire(now: Double) -> Bool {
+            guard let due = downAt else { return false }
+            guard now + 0.001 >= due else { return false }
+            downAt = nil
+            return true
+        }
+
+        /// A person stopped the run, or the process is going down. The floor is
+        /// a courtesy to a reader and not a promise to keep a claim on screen
+        /// after it stops being true.
+        public mutating func cancel() { downAt = nil }
+    }
+}
+
 // MARK: - What it says
 
 /// The overlay's two lines. One statement of what is happening and one of what
