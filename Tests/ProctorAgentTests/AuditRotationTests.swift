@@ -255,13 +255,22 @@ struct AuditRotationTests {
             for n in 0..<4 { AuditLog.append(record(n)) }
             AuditLog.rotate(reason: .person)
 
-            let files = (try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? []
+            // Not `(try?) ?? []`. A directory this test could not read became an
+            // empty listing, and nothing with a .bak suffix is in an empty
+            // listing, so all four claims below passed for the wrong reason on a
+            // machine where the read failed. Found by
+            // scripts/campaign/cannotfail_swift.py's defaulted-read pattern.
+            let files = (try? FileManager.default.contentsOfDirectory(atPath: dir.path))
+            #expect(files != nil, "the trail directory must be readable, or this proves nothing")
+            let listing = files ?? []
+            #expect(listing.contains("audit.jsonl"),
+                    "and it must hold the rotated trail, or an empty listing passes every claim below")
             // PRO-0013 chose no recovery path deliberately, and this is exactly
             // where somebody would be tempted to add one "just in case".
-            #expect(!files.contains { $0.hasSuffix(".bak") })
-            #expect(!files.contains { $0.hasSuffix(".orig") })
-            #expect(!files.contains { $0.contains("audit.jsonl.") })
-            #expect(!files.contains("audit.rotating"))
+            #expect(!listing.contains { $0.hasSuffix(".bak") })
+            #expect(!listing.contains { $0.hasSuffix(".orig") })
+            #expect(!listing.contains { $0.contains("audit.jsonl.") })
+            #expect(!listing.contains("audit.rotating"))
         }
     }
 

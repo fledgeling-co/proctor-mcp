@@ -130,11 +130,41 @@ character, the denominator rose from 1,648 to 1,653 — five tests it had never 
 Re-armed with four seeded defects across both shapes: all four caught, and 0 of 1,653 on the
 real suite.
 
+A sixth pattern followed the first five, and it found the two worst of the lot. `(try? read())
+?? ""` binds an input that could not be read to an empty one, and an assertion about what is
+**absent** from an empty value passes for the wrong reason. Both instances were in the audit
+trail's own tests, making the claims the trail exists to support: one that a redacted address is
+nowhere in the file, the other that a rotation leaves no backup or sidecar. Each passed just as
+happily when there was no file, and no directory listing, to look in. They now read with `try`
+and each states positively that the thing it is about is there before asserting what is not.
+
 What this still is not: mutation survival. The nearest thing the campaign has is its armed
 ratio, 43 of 43, which is that measurement run by hand over the campaign's own assertions —
 each one watched to fail with the behaviour removed. It says nothing about the other 5,017.
 
-## Nine defects, all nine fixed
+## The live lane, run rather than carried
+
+`MaestroLiveTests` is opt-in behind `PROCTOR_LIVE_MAESTRO`, because a machine without Xcode,
+`maestro` or a booted simulator would go red for a fact about the machine. It had not been run
+since 15 August, and this machine has all three, so it was run — and it found two things.
+
+The product was right about the first. The lane passed `device: nil` and relied on exactly one
+simulator being booted; four are booted here, so the product refused, named all four, and asked
+for one. Correct behaviour, and the whole live lane went red for it. The lane now reads
+`PROCTOR_LIVE_MAESTRO_DEVICE`, falls back to the single booted simulator where there is one, and
+otherwise does not run at all — naming a device on the operator's behalf would drive a simulator
+they may be using.
+
+The second only appears when both tests run. They drive one simulator, and concurrently they
+interleave on it: the determinism check scored its own two repeats as divergent at command 4,
+which is a real divergence caused by the sibling test tapping the device mid-repeat. Alone the
+repeat test passes in 27 seconds; as a suite it failed after 317. The suite is `.serialized` now.
+A resource shared by two tests is a test-order dependency wearing a green tick.
+
+Measured 20 August 2026 against maestro 2.4.0 and a booted iPhone 16 Pro on iOS 18.2: both tests
+pass, 55.6 seconds for the suite, green twice.
+
+## Ten defects, all ten fixed
 
 | id | what | state |
 |---|---|---|
@@ -147,6 +177,7 @@ each one watched to fail with the behaviour removed. It says nothing about the o
 | DEF-012 | The status window's chrome diverges from its design of record | fixed |
 | DEF-013 | The walkthrough's first slide diverges from its design of record | fixed |
 | DEF-014 | An assertion that could not fail, and five tests nothing was counting | fixed |
+| DEF-015 | The live Maestro lane could not run here, and its two tests fought over one simulator | fixed |
 
 DEF-011 is the one worth reading twice. `StatusChecks` classifies every grant name the health
 report can carry and an unrecognised name falls to `.tool`, deliberately, because tool names
@@ -195,4 +226,7 @@ in flight. Either would have been a vacuous pass.
   armed ratio of 43 of 43 is the hand-run equivalent over the campaign's own assertions. Tier 2
   still needs the real number.
 - **The walkthrough's later slides, the takeover overlay and the run HUD under the new build** —
-  unchanged by this wave's work and carried from the previous full run.
+  carried from the previous full run, and the carry is now checked rather than assumed. Every
+  published capture's manifest row names the source that draws it and when that source last
+  moved, and in each case the source is older than the capture. That check exists because the
+  one capture nobody ran it on turned out to show the wrong build.

@@ -312,9 +312,16 @@ struct AuditChainWiringTests {
         let verdict = AuditLog.verify()
         #expect(verdict.verified == 1)
         #expect(verdict.isClean)
-        // and the address is still nowhere in the file, sealed or not
-        let raw = (try? String(contentsOf: dir.appendingPathComponent("audit.jsonl"),
-                               encoding: .utf8)) ?? ""
+        // and the address is still nowhere in the file, sealed or not.
+        //
+        // Read with `try` rather than `(try?) ?? ""`. An unreadable file became
+        // the empty string, and "example.com" is absent from the empty string,
+        // so the claim that the address is nowhere in the trail passed just as
+        // happily when there was no trail to look in. Found by
+        // scripts/campaign/cannotfail_swift.py's defaulted-read pattern.
+        let raw = try String(contentsOf: dir.appendingPathComponent("audit.jsonl"),
+                             encoding: .utf8)
+        #expect(!raw.isEmpty, "an unreadable trail is not a trail without the address in it")
         #expect(!raw.contains("example.com"))
     }
 

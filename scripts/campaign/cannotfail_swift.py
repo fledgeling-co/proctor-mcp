@@ -45,6 +45,15 @@ SELF_CMP = re.compile(r"#expect\(\s*([\w.\[\]()]+)\s*==\s*\1\s*[,)]")
 DISABLED = re.compile(r"\.disabled\s*\(|\.enabled\s*\(\s*if:\s*false\s*\)")
 ENABLED_IF = re.compile(r"\.enabled\s*\(\s*if:")
 SWALLOWED = re.compile(r"(?:^|[^\w.])(?:_\s*=\s*)?try\?\s")
+# `(try? read()) ?? ""` binds an unreadable input to an empty one, and an
+# assertion about what is ABSENT from an empty value passes for the wrong
+# reason. Found in the wild: a test claiming an address is nowhere in the audit
+# trail passed just as happily when the trail could not be read at all. Only the
+# negated use is a finding — `?? ""` feeding a positive assertion still fails.
+DEFAULTED_READ = re.compile(r"try\?[^\n]*?\)\s*\?\?\s*(?:\"\"|\[\]|:?\s*\[:\])")
+DEFAULTED_BIND = re.compile(r"\blet\s+([A-Za-z_][\w]*)\s*=\s*\(?\s*try\?")
+NEGATED_USE = re.compile(r"#expect\(\s*!\s*([A-Za-z_][\w]*)\b|"
+                         r"#expect\(\s*([A-Za-z_][\w]*)[^\n)]*==\s*false")
 
 # A comment or a string is not code. Masking them keeps a sentence about
 # `#expect(true)` in a doc comment from being reported as one.
@@ -157,7 +166,24 @@ def main() -> int:
             if SWALLOWED.search(line):
                 informational.append(("swallowed", str(path), lineno, line.strip()[:90]))
 
+        # A defaulted read is a finding only where the value it produces is then
+        # asserted about negatively, inside the same test body.
         helpers = asserting_helpers(lines)
+        for name, first, _, body in test_bodies(lines):
+            joined = "\n".join(body)
+            defaulted = set()
+            for bl in body:
+                if DEFAULTED_READ.search(bl):
+                    m = DEFAULTED_BIND.search(bl)
+                    if m:
+                        defaulted.add(m.group(1))
+            if not defaulted:
+                continue
+            negated = {g for m in NEGATED_USE.finditer(joined) for g in m.groups() if g}
+            for var in sorted(defaulted & negated):
+                findings.append(("defaulted-read", str(path), first,
+                                 f"{name}: `{var}` defaults to empty on a failed read, "
+                                 f"then a negated assertion reads it"))
         for name, first, _, body in test_bodies(lines):
             tests += 1
             joined = "\n".join(body)

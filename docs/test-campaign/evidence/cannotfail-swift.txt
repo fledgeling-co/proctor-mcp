@@ -1,6 +1,6 @@
-examined  103 file(s) · 1653 @Test function(s) · 5017 assertion call(s)
+examined  103 file(s) · 1653 @Test function(s) · 5020 assertion call(s)
 findings  0
-informational  80 (a conditional enable or a try? is a judgement call, not a defect)
+informational  81 (a conditional enable or a try? is a judgement call, not a defect)
   swallowed     Tests/ProctorAgentTests/AcceptanceE2ETests.swift:23  try? ImageWriter.write(img, to: dest, format: .png, what: "fake-capture")
   swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:41  lock.withLock { try? key?.signature(for: material).rawRepresentation }
   swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:46  guard let key, let parsed = try? P256.Signing.ECDSASignature(
@@ -15,25 +15,26 @@ informational  80 (a conditional enable or a try? is a judgement call, not a def
   swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:294  try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
   swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:302  try? Curve25519.KeyAgreement.PrivateKey().publicKey.rawRepresentation
   swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:308  try? FileManager.default.removeItem(at: dir)
-  swallowed     Tests/ProctorAgentTests/AuditChainWiringTests.swift:316  let raw = (try? String(contentsOf: dir.appendingPathComponent("audit.jsonl"),
   swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:40  lock.withLock { try? key?.signature(for: material).rawRepresentation }
   swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:45  guard let key, let parsed = try? P256.Signing.ECDSASignature(
   swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:75  try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
   swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:94  try? FileManager.default.removeItem(at: dir)
   swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:108  guard let text = try? String(contentsOf: dir.appendingPathComponent("audit.jsonl"),
   swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:117  let record = try? JSONDecoder().decode(AuditRecord.self, from: data)
-  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:258  let files = (try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? []
-  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:320  try? Data("not a rotation intent".utf8).write(to: marker)
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:263  let files = (try? FileManager.default.contentsOfDirectory(atPath: dir.path))
+  swallowed     Tests/ProctorAgentTests/AuditRotationTests.swift:329  try? Data("not a rotation intent".utf8).write(to: marker)
   swallowed     Tests/ProctorAgentTests/DelegatedAuditTests.swift:53  _ = try? await press(session, ax)
   swallowed     Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:335  try? await Task.sleep(nanoseconds: 5_000_000)
   swallowed     Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:386  _ = try? await run.value
   swallowed     Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:424  _ = try? await run.value
   swallowed     Tests/ProctorAgentTests/IOSLaneWiringTests.swift:129  defer { try? FileManager.default.removeItem(at: directory) }
   swallowed     Tests/ProctorAgentTests/IOSLaneWiringTests.swift:166  defer { try? FileManager.default.removeItem(at: directory) }
-  enabled-if    Tests/ProctorAgentTests/MaestroLiveTests.swift:33  .enabled(if: MaestroLiveTests.enabled))
-  swallowed     Tests/ProctorAgentTests/MaestroLiveTests.swift:38  defer { try? FileManager.default.removeItem(at: directory) }
-  enabled-if    Tests/ProctorAgentTests/MaestroLiveTests.swift:95  .enabled(if: MaestroLiveTests.enabled))
-  swallowed     Tests/ProctorAgentTests/MaestroLiveTests.swift:100  defer { try? FileManager.default.removeItem(at: directory) }
+  swallowed     Tests/ProctorAgentTests/MaestroLiveTests.swift:68  guard (try? task.run()) != nil else { return [] }
+  swallowed     Tests/ProctorAgentTests/MaestroLiveTests.swift:71  guard let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+  enabled-if    Tests/ProctorAgentTests/MaestroLiveTests.swift:81  .enabled(if: MaestroLiveTests.enabled))
+  swallowed     Tests/ProctorAgentTests/MaestroLiveTests.swift:86  defer { try? FileManager.default.removeItem(at: directory) }
+  enabled-if    Tests/ProctorAgentTests/MaestroLiveTests.swift:143  .enabled(if: MaestroLiveTests.enabled))
+  swallowed     Tests/ProctorAgentTests/MaestroLiveTests.swift:148  defer { try? FileManager.default.removeItem(at: directory) }
   swallowed     Tests/ProctorAgentTests/MaestroSeamTests.swift:163  defer { try? FileManager.default.removeItem(at: directory) }
   swallowed     Tests/ProctorAgentTests/MaestroSeamTests.swift:180  defer { try? FileManager.default.removeItem(at: directory) }
   swallowed     Tests/ProctorAgentTests/MaestroSeamTests.swift:201  defer { try? FileManager.default.removeItem(at: directory) }

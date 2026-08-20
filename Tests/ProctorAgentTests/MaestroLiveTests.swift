@@ -22,11 +22,59 @@ import ProctorCore
 // of a five-command Settings flow scored deterministic, with the per-command
 // status vector identical and `backPressCommand` durations 634 ms apart.
 
-@Suite("PRO-0049 · Maestro live lane")
+// `.serialized` because the two tests below drive ONE simulator. Run
+// concurrently they interleave on the same device, and the determinism check
+// scored its two repeats as divergent at command 4 — a real divergence, caused
+// by the sibling test tapping the device mid-repeat rather than by anything in
+// the lane. Measured 20 Aug 2026: alone the repeat test passes in 27s; as a
+// suite it failed after 317s. A simulator is a resource, and a resource shared
+// by two tests is a test order dependency wearing a green tick.
+@Suite("PRO-0049 · Maestro live lane", .serialized)
 struct MaestroLiveTests {
 
     static var enabled: Bool {
-        ProcessInfo.processInfo.environment["PROCTOR_LIVE_MAESTRO"] == "1"
+        ProcessInfo.processInfo.environment["PROCTOR_LIVE_MAESTRO"] == "1" && device != nil
+    }
+
+    /// Which simulator to drive, or `nil` if this machine cannot say.
+    ///
+    /// The first version passed `device: nil` and relied on there being exactly
+    /// one booted simulator. On a machine with four the product refuses, names
+    /// them, and asks for one — correctly — and the whole live lane went red for
+    /// a fact about the machine rather than about the code, which is the failure
+    /// this suite's opt-in switch exists to prevent. Found by running the lane
+    /// on a machine with four booted.
+    ///
+    /// So the machine has to say which one, and when it will not, the lane does
+    /// not run. Naming one on the operator's behalf would drive a simulator they
+    /// may be using.
+    static var device: String? {
+        let env = ProcessInfo.processInfo.environment
+        if let named = env["PROCTOR_LIVE_MAESTRO_DEVICE"], !named.isEmpty { return named }
+        let booted = Self.bootedSimulators()
+        return booted.count == 1 ? booted[0] : nil
+    }
+
+    /// The udids `simctl` reports as booted. Read here rather than taken from
+    /// the product, because a test that asks the thing under test which device
+    /// to use has agreed with it in advance.
+    static func bootedSimulators() -> [String] {
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
+        task.arguments = ["simctl", "list", "devices", "booted", "-j"]
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = Pipe()
+        guard (try? task.run()) != nil else { return [] }
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        task.waitUntilExit()
+        guard let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let devices = root["devices"] as? [String: Any] else { return [] }
+        return devices.values
+            .compactMap { $0 as? [[String: Any]] }
+            .flatMap { $0 }
+            .compactMap { $0["udid"] as? String }
+            .sorted()
     }
 
     @Test("a real flow runs twice against a real simulator and scores the repeats",
@@ -48,7 +96,7 @@ struct MaestroLiveTests {
         """.write(to: flow, atomically: true, encoding: .utf8)
 
         let session = Session(ax: FakeAX(bundleId: "com.example.fake"), capture: FakeCapture())
-        let result = try await session.maestroFlow(path: flow.path, device: nil, runs: 2,
+        let result = try await session.maestroFlow(path: flow.path, device: Self.device, runs: 2,
                                                    pixelEvidence: true, timeoutMs: 300_000)
         let object = try #require(result.objectValue)
 
@@ -108,7 +156,7 @@ struct MaestroLiveTests {
         """.write(to: flow, atomically: true, encoding: .utf8)
 
         let session = Session(ax: FakeAX(bundleId: "com.example.fake"), capture: FakeCapture())
-        let result = try await session.maestroFlow(path: flow.path, device: nil, runs: 1,
+        let result = try await session.maestroFlow(path: flow.path, device: Self.device, runs: 1,
                                                    pixelEvidence: false, timeoutMs: 300_000)
         let object = try #require(result.objectValue)
 

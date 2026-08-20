@@ -55,6 +55,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Arming the scan found a fault in the scan, which is why you arm it. A one-line test body balances its braces on the signature line, so the finder skipped it and then read the next function's body instead. Fixed, and the count of tests it can see went from 1,648 to 1,653.
 
+- **The iOS lane's live tests can run on a Mac with more than one simulator booted.** They passed no device and relied on there being exactly one. Proctor was right to refuse that and name the four it found, so the whole live lane went red for a fact about the machine rather than about the code. They take a device now, and where the machine cannot say which one they do not run, because picking one on your behalf would drive a simulator you might be using.
+
+  Running them also turned up a second thing: both tests drive one simulator, and run together they interleave on it. The determinism check scored its own two repeats as divergent because the other test was tapping the device mid-repeat. They run one at a time now.
+
 - **A halted run no longer tells you where it was stopped from.** Stop is reachable from the run panel, the menu bar and the terminal, and they all write the same latch, so a message naming one of them was wrong two times in three. It names what happened instead.
 
 The gate after this wave is 1,666 tests in 198 suites, from 1,516 in 175 when it started.
