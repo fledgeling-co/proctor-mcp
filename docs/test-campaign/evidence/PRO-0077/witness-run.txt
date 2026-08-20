@@ -1,0 +1,14 @@
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Effect witnesses: subprocess, filesystem-write, ipc" started.
+􀟈  Test "REQ-017 effect witness: proctor_guest spawns a real child, and a missing binary spawns none" started.
+􁁛  Test "REQ-017 effect witness: proctor_guest spawns a real child, and a missing binary spawns none" passed after 0.461 seconds.
+􀟈  Test "REQ-020 effect witness: proctor_ios spawns a real simctl child, and a missing simctl spawns none" started.
+􁁛  Test "REQ-020 effect witness: proctor_ios spawns a real simctl child, and a missing simctl spawns none" passed after 0.484 seconds.
+􀟈  Test "REQ-015 effect witness: an audited run lands sealed bytes on disk, and a read-only directory lands none" started.
+􁁛  Test "REQ-015 effect witness: an audited run lands sealed bytes on disk, and a read-only directory lands none" passed after 0.358 seconds.
+􀟈  Test "REQ-009 effect witness: a real AF_UNIX server answers real connections, and an unlinked socket answers none" started.
+􁁛  Test "REQ-009 effect witness: a real AF_UNIX server answers real connections, and an unlinked socket answers none" passed after 0.488 seconds.
+􁁛  Suite "Effect witnesses: subprocess, filesystem-write, ipc" passed after 1.793 seconds.
+􁁛  Test run with 4 tests in 1 suite passed after 1.793 seconds.

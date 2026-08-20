@@ -1,0 +1,25 @@
+# ./scripts/test.sh — full package, branch ai/pro-0077, 2026-08-21
+
+## Verdict
+􁁛  Test run with 1818 tests in 215 suites passed after 16.709 seconds.
+
+PASS: 􁁛  Test run with 1818 tests in 215 suites passed after 16.709 seconds.
+
+## The four witnesses in that run
+􀟈  Suite "Effect witnesses: subprocess, filesystem-write, ipc" started.
+􁁛  Suite "Effect witnesses: subprocess, filesystem-write, ipc" passed after 15.163 seconds.
+
+## Issues in that run
+  none — grep 'recorded an issue' returned 0
+
+## Two earlier attempts, and why they are here
+Attempts 1 and 2 of the same command on the same tree each failed with exactly one
+issue, in ScreenRecordingProbeWiringTests, a wall-clock bound unrelated to this item:
+  attempt 1: (elapsed -> 8.126629948616028) < 5.0
+  attempt 2: (elapsed -> 6.715646028518677) < 5.0
+  attempt 3: passed
+An earlier run measured 14.73s at load average 129.74, with eight other projects
+building and testing on this Mac. That suite passes alone in 1.823 seconds at the
+same commit, and the elapsed values fall monotonically as the load drops. The
+failure is machine contention against a fixed 5s bound, not this item's code, and
+the bound was NOT touched to make the gate green.
