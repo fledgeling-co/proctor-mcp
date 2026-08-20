@@ -385,7 +385,7 @@ None of these blocks its item; each has a defensible default recorded in the spe
 
 | ID | Title | Status | Depends on | Slot |
 |---|---|---|---|---|
-| PRO-0076 | The guest lane, capped at two, with a queue | Ready for Plan | PRO-0058, PRO-0060, PRO-0061 (all merged) | 1 of 1 |
+| PRO-0076 | The guest lane, capped at two, with a queue | **In Progress** — runner launched 2026-08-20, run `wf_0b15536a-199`, worktree `.worktrees/PRO-0076` on `ai/pro-0076` | PRO-0058, PRO-0060, PRO-0061 (all merged) | 1 of 1 |
 
 **Fleet size: 1.** Nothing else is ready, so concurrency is moot and the 3-slot cap is unused.
 
