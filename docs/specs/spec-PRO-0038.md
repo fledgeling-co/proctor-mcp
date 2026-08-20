@@ -1,7 +1,7 @@
 # PRO-0038: Stability knows when it is scoring a page
 
 **ID:** PRO-0038
-**Status:** In Review
+**Status:** Merged `30324a6`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/39-stability-knows-when-it-is-scoring-a-page.md`

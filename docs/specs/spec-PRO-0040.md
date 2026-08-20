@@ -1,7 +1,7 @@
 # PRO-0040: `open -a Proctor` cannot launch Proctor while the agent is running
 
 **ID:** PRO-0040
-**Status:** In Review
+**Status:** Merged `091d6c3`
 **Plan:** `docs/plans/plan-PRO-0040.md`
 **Branch:** `ai/pro-0040` in `.worktrees/PRO-0040` (stopped before merge)
 **Created:** 2026-08-15

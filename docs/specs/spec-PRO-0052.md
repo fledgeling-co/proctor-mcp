@@ -1,7 +1,7 @@
 # PRO-0052: The proctor skill tracks what actually shipped
 
 **ID:** PRO-0052
-**Status:** In Review (skill updated in `fledgeling-plugins`, uncommitted there; this branch carries the spec and plan only)
+**Status:** Merged `d6cf947`
 **Created:** 2026-08-16
 **Last updated:** 2026-08-16
 **Brief:** `docs/features-to-triage/53-the-proctor-skill-tracks-what-shipped.md`

@@ -1,7 +1,7 @@
 # PRO-0051: The native planes stay, chosen deliberately, and the record says so
 
 **ID:** PRO-0051
-**Status:** In Review (built, gated, green on `ai/pro-0051`; not merged)
+**Status:** Merged `0f76c56`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/52-decide-what-happens-to-the-native-planes.md`

@@ -1,7 +1,7 @@
 # PRO-0018: Notice when a person is taking the machine back, and yield
 
 **ID:** PRO-0018
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
 **Brief:** `docs/features-to-triage/19-yield-when-a-person-takes-the-machine.md`

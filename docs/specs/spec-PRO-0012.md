@@ -1,7 +1,7 @@
 # PRO-0012: Gate flow-replay + stability through policy + audit
 
 **ID:** PRO-0012
-**Status:** In Review
+**Status:** Merged
 **Plan:** docs/plans/plan-PRO-0012.md
 **Created:** 2026-08-13
 **Last updated:** 2026-08-14

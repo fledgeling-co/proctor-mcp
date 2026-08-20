@@ -1,7 +1,7 @@
 # PRO-0026: When Proctor takes the front, take it visibly and hold it
 
 **ID:** PRO-0026
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/27-foreground-takeover-overlay.md`

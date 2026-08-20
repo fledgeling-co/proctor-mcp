@@ -1,7 +1,7 @@
 # PRO-0008: MCP surface modernization
 
 **ID:** PRO-0008
-**Status:** Ready for Work
+**Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
 **Plan:** docs/plans/plan-PRO-0008.md

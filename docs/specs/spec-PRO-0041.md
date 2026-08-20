@@ -1,7 +1,7 @@
 # PRO-0041: `proctor_doctor` stops waiting forever, and says so
 
 **ID:** PRO-0041
-**Status:** In Review
+**Status:** Merged `0545219`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0041.md`

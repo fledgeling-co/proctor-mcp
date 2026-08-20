@@ -1,7 +1,7 @@
 # PRO-0029: A home for the PROCTOR_* switches
 
 **ID:** PRO-0029
-**Status:** In Review
+**Status:** Merged `153951b`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/30-a-home-for-the-proctor-switches.md`

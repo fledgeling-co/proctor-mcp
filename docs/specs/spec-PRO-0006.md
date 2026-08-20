@@ -1,7 +1,7 @@
 # PRO-0006: Vision-capture normalisation
 
 **ID:** PRO-0006
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
 

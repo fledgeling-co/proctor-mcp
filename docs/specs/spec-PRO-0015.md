@@ -1,7 +1,7 @@
 # PRO-0015: Run HUD panel
 
 **ID:** PRO-0015
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
 **Plan:** `docs/plans/plan-PRO-0015.md`

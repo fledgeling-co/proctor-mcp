@@ -1,6 +1,6 @@
 # PRO-0076: the guest lane, capped at two, with a queue
 
-**ID:** PRO-0076 · **Status:** Ready for AI · **Created:** 2026-08-20
+**ID:** PRO-0076 · **Status:** Merged `9172bac` (A1-live + A1b carried) · **Created:** 2026-08-20
 **PRD:** §9 (machines and witness tiers), §10 (lanes) · **Branch:** `ai/pro-0076` off `ai/wave-9`
 **Depends on:** PRO-0058 (the guest seam), PRO-0060 (`reach`), PRO-0061 (the auto-route gate)
 **Research:** `docs/research/2026-08-15-dossier-proctor-vs-cua.md`,

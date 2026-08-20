@@ -1,7 +1,7 @@
 # PRO-0011: Pointer marker in stability per-step artifacts
 
 **ID:** PRO-0011
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-14
 **Plan:** docs/plans/plan-PRO-0011.md

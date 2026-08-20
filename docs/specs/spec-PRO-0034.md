@@ -1,7 +1,7 @@
 # PRO-0034: Scroll moves by what was asked
 
 **ID:** PRO-0034
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-17
 **Branch:** `ai/pro-0034`

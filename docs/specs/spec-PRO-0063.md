@@ -1,7 +1,7 @@
 # PRO-0063: Captures are sized by what they are for
 
 **ID:** PRO-0063
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-16
 **Last updated:** 2026-08-16
 **Branch:** `ai/pro-0063` (worktree `.worktrees/PRO-0063`)

@@ -1,7 +1,7 @@
 # PRO-0059: `proctor_guest`, the lifecycle tool
 
 **ID:** PRO-0059
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-17
 **Last updated:** 2026-08-17
 **Branch:** `ai/pro-0059`

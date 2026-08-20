@@ -1,7 +1,7 @@
 # PRO-0049: Run Maestro flows as Proctor flows
 
 **ID:** PRO-0049
-**Status:** In Review
+**Status:** Merged `7ca9358`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0049.md`

@@ -1,7 +1,7 @@
 # PRO-0058: Guest providers: lume and prlctl
 
 **ID:** PRO-0058
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-17
 **Last updated:** 2026-08-17
 **Branch:** `ai/pro-0058`

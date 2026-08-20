@@ -1,7 +1,7 @@
 # PRO-0030: The build says which build it is
 
 **ID:** PRO-0030
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0030.md`

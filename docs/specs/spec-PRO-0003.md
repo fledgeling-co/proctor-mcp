@@ -1,7 +1,7 @@
 # PRO-0003: Menu-bar key-equivalents
 
 **ID:** PRO-0003
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
 **Plan:** docs/plans/plan-PRO-0003.md

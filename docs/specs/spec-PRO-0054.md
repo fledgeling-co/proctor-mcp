@@ -1,7 +1,7 @@
 # PRO-0054: Three tests still redden the gate at random
 
 **ID:** PRO-0054
-**Status:** In Review
+**Status:** Merged `a4483ec`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-16
 **Branch:** `ai/pro-0054` (worktree `.worktrees/PRO-0054`)

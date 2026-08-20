@@ -1,7 +1,7 @@
 # PRO-0035: The browser catalogue stops guessing, and the handoff is machine-readable
 
 **ID:** PRO-0035
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** docs/plans/plan-PRO-0035.md

@@ -1,7 +1,7 @@
 # PRO-0046: Supervision survives delegation
 
 **ID:** PRO-0046
-**Status:** In Review
+**Status:** Merged `2f240bf`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/47-supervision-survives-delegation.md`

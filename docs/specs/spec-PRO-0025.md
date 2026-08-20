@@ -1,7 +1,7 @@
 # PRO-0025: Prefer the background, and draw the pointer in the target's plane
 
 **ID:** PRO-0025
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/26-prefer-background-and-pointer-in-plane.md`

@@ -1,7 +1,7 @@
 # PRO-0048: Drive iOS through deep links
 
 **ID:** PRO-0048
-**Status:** In Review
+**Status:** Merged `8d2fde6`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0048.md`

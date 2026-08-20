@@ -1,7 +1,7 @@
 # PRO-0028: Re-check now says what it checks
 
 **ID:** PRO-0028
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0028.md`

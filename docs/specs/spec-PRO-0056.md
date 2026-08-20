@@ -1,7 +1,7 @@
 # PRO-0056: A run says which machine it is on
 
 **ID:** PRO-0056
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-16
 **Last updated:** 2026-08-16
 **Branch:** `ai/pro-0056` (worktree `.worktrees/PRO-0056`)

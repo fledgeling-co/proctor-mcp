@@ -1,7 +1,7 @@
 # PRO-0062: The overlay says which machine
 
 **ID:** PRO-0062
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-17
 **Last updated:** 2026-08-17
 **Branch:** `ai/pro-0062`

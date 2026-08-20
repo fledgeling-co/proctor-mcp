@@ -1,7 +1,7 @@
 # PRO-0036: The status window's checks say what they can check
 
 **ID:** PRO-0036
-**Status:** In Review
+**Status:** Merged `c9e42c9`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/37-the-status-windows-checks-say-what-they-can-check.md`

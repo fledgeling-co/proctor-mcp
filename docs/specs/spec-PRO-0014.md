@@ -1,7 +1,7 @@
 # PRO-0014: Human-readable step descriptions, derived not supplied
 
 **ID:** PRO-0014
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
 **Plan:** `docs/plans/plan-PRO-0014.md`

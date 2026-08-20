@@ -1,7 +1,7 @@
 # PRO-0027: The menu bar shows the character when idle
 
 **ID:** PRO-0027
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0027.md`

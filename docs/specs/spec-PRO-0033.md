@@ -1,7 +1,7 @@
 # PRO-0033: A person's click reaches Stop
 
 **ID:** PRO-0033
-**Status:** Ready for Work
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/34-a-persons-click-reaches-stop.md`

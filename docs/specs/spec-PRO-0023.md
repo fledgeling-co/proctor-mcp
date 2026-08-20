@@ -1,7 +1,7 @@
 # PRO-0023: Offer to install Obscura when it is missing
 
 **ID:** PRO-0023
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** docs/plans/plan-PRO-0023.md

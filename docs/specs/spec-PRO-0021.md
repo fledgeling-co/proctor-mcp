@@ -1,7 +1,7 @@
 # PRO-0021: Menu bar switch for the panel, and the icon as the character
 
 **ID:** PRO-0021
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
 **Plan:** `docs/plans/plan-PRO-0021.md`

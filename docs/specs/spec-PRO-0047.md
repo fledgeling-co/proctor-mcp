@@ -1,7 +1,7 @@
 # PRO-0047: The run has a history you can read
 
 **ID:** PRO-0047
-**Status:** Ready for Implementation Plan
+**Status:** Merged `9756282`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0047.md`

@@ -1,7 +1,7 @@
 # PRO-0016: Multi-session queue
 
 **ID:** PRO-0016
-**Status:** In Review
+**Status:** Merged
 **Plan:** `docs/plans/plan-PRO-0016.md`
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14

@@ -1,7 +1,7 @@
 # PRO-0010: Pointer overlay in captures
 
 **ID:** PRO-0010
-**Status:** In Progress
+**Status:** Merged
 **Plan:** docs/plans/plan-PRO-0010.md
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13

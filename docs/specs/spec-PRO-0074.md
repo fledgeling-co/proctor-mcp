@@ -1,6 +1,6 @@
 # PRO-0074: `proctor tui`, the supervision surface
 
-**ID:** PRO-0074 · **Status:** Ready for Plan · **Created:** 2026-08-20
+**ID:** PRO-0074 · **Status:** Merged · **Created:** 2026-08-20
 **Brief:** `docs/features-to-triage/69-the-supervision-tui.md` · **PRD:** §16
 **Branch:** `ai/pro-0074` off `ai/wave-9` · **Depends on:** PRO-0073
 **Frames:** `design/surfaces/tui/` — 22 compiled, 100×30 and 80×24, both gate suites clean

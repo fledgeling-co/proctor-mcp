@@ -1,7 +1,7 @@
 # PRO-0024: A second browser lane for what Obscura cannot do
 
 **ID:** PRO-0024
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** docs/plans/plan-PRO-0024.md

@@ -1,7 +1,7 @@
 # PRO-0053: The gate can tell the truth about the takeover
 
 **ID:** PRO-0053
-**Status:** In Review
+**Status:** Merged `477941f`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0053.md`

@@ -1,7 +1,7 @@
 # PRO-0042: Backfill — `horizontalAlignment` on `proctor_assert`
 
 **ID:** PRO-0042
-**Status:** Triaged
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/43-backfill-horizontal-alignment-assertion.md`

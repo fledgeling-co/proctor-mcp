@@ -1,7 +1,7 @@
 # PRO-0060: Reaching a guest's Proctor over SSH
 
 **ID:** PRO-0060
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-17
 **Last updated:** 2026-08-17
 **Branch:** `ai/pro-0060`

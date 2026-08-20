@@ -1,7 +1,7 @@
 # PRO-0013: Encryption-at-rest for the audit log
 
 **ID:** PRO-0013
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-14
 **Plan:** [docs/plans/plan-PRO-0013.md](../plans/plan-PRO-0013.md)

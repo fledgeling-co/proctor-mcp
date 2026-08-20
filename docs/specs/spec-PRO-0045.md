@@ -1,7 +1,7 @@
 # PRO-0045: A delegated call is still gated and recorded
 
 **ID:** PRO-0045
-**Status:** In Review (built, gated, green on `ai/pro-0045`; not merged)
+**Status:** Merged `1bff5c2`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0045.md`

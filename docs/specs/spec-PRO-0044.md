@@ -1,7 +1,7 @@
 # PRO-0044: Cua becomes the actuation backend
 
 **ID:** PRO-0044
-**Status:** In Review
+**Status:** Merged `d65dc1e`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/45-cua-becomes-the-actuation-backend.md`

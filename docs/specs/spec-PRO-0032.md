@@ -1,7 +1,7 @@
 # PRO-0032: The audit trail is signed, and it records what Proctor recommended
 
 **ID:** PRO-0032
-**Status:** Ready for Work
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** docs/plans/plan-PRO-0032.md

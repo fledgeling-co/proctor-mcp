@@ -1,6 +1,6 @@
 # PRO-0073: `proctor`, the operator CLI
 
-**ID:** PRO-0073 · **Status:** Ready for Plan · **Created:** 2026-08-20
+**ID:** PRO-0073 · **Status:** Merged · **Created:** 2026-08-20
 **Brief:** `docs/features-to-triage/68-the-operator-cli.md` · **PRD:** §15
 **Branch:** `ai/pro-0073` off `ai/wave-9` · **Depends on:** PRO-0064
 **Mock:** `#cli/catalogue/all`, `#cli/doctor/*`, `#cli/act/*`, `#cli/install/flow`

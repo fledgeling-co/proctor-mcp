@@ -1,7 +1,7 @@
 # PRO-0050: Doctor knows the whole toolchain
 
 **ID:** PRO-0050
-**Status:** In Review
+**Status:** Merged `0ea6f88`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/51-doctor-knows-the-whole-toolchain.md`

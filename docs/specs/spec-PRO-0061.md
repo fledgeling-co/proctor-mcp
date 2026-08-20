@@ -1,7 +1,7 @@
 # PRO-0061: Auto-routing, and the disclosure that makes it honest
 
 **ID:** PRO-0061
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-17
 **Last updated:** 2026-08-17
 **Branch:** `ai/pro-0061`

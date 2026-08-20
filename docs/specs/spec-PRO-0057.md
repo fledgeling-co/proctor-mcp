@@ -1,7 +1,7 @@
 # PRO-0057: The witness tier, and what it refuses
 
 **ID:** PRO-0057
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-16
 **Last updated:** 2026-08-17
 **Branch:** `ai/pro-0057` (worktree `.worktrees/PRO-0057`)

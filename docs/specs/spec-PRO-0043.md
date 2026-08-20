@@ -1,7 +1,7 @@
 # PRO-0043: The build-identity tests fail whenever HEAD moves without a source change
 
 **ID:** PRO-0043
-**Status:** In Review
+**Status:** Merged `d4a1565`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Plan:** `docs/plans/plan-PRO-0043.md`

@@ -1,7 +1,7 @@
 # PRO-0037: A hold names whose run it is
 
 **ID:** PRO-0037
-**Status:** Triaged
+**Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15
 **Brief:** `docs/features-to-triage/38-a-hold-names-whose-run-it-is.md`

@@ -1,7 +1,7 @@
 # PRO-0055: The suite wedges in `haltCheckpoint` on a shared RunControl
 
 **ID:** PRO-0055
-**Status:** In Review
+**Status:** Merged `e53176b`
 **Created:** 2026-08-16
 **Last updated:** 2026-08-16
 **Branch:** `ai/pro-0055` (worktree `.worktrees/PRO-0055`)

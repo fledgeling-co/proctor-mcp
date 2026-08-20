@@ -1,7 +1,7 @@
 # PRO-0017: HUD character sprite assets
 
 **ID:** PRO-0017
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
 **Plan:** `docs/plans/plan-PRO-0017.md`

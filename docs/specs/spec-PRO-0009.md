@@ -1,7 +1,7 @@
 # PRO-0009: Process kill + filesystem jail
 
 **ID:** PRO-0009
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
 **Plan:** docs/plans/plan-PRO-0009.md

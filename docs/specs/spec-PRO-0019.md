@@ -1,7 +1,7 @@
 # PRO-0019: A foreground-only run is obvious before it takes the machine
 
 **ID:** PRO-0019
-**Status:** In Review
+**Status:** Merged
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14
 **Brief:** `docs/features-to-triage/20-foreground-run-is-obvious.md`
