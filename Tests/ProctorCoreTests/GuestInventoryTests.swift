@@ -29,6 +29,23 @@ struct GuestInferenceTests {
         #expect(GuestPlatform.infer(os: "something-custom", name: "box-1") == nil)
     }
 
+    @Test("darwin is macOS, not Windows — the substring trap, pinned")
+    func darwinIsNotWindows() {
+        // PRO-0076. The Windows branch used to test `hay.contains("win")`, and
+        // **dar-win** contains "win". Every macOS guest whose provider named
+        // its platform `darwin` — which is the word tart prints — came back
+        // `.windows`, took the delegated tier, and lost the accessibility tree
+        // and the frame-status channel it actually has.
+        #expect(GuestPlatform.infer(os: "darwin", name: nil) == .macos)
+        #expect(GuestPlatform.infer(os: "Darwin", name: nil) == .macos)
+        #expect(GuestPlatform.infer(os: "darwin", name: "anvil-mac-node") == .macos)
+        // And the word that genuinely is Windows still is, in every spelling
+        // the original cases covered.
+        #expect(GuestPlatform.infer(os: "win-11", name: nil) == .windows)
+        #expect(GuestPlatform.infer(os: "windows", name: nil) == .windows)
+        #expect(GuestPlatform.infer(os: nil, name: "Win11 ARM") == .windows)
+    }
+
     @Test("macOS guests are recognised by family and by release name")
     func macosWords() {
         #expect(GuestPlatform.infer(os: "macOS", name: nil) == .macos)

@@ -104,6 +104,12 @@ actor RunScheduler {
     /// How many runs one session may keep waiting.
     var perSessionCap: Int = RunQueuePlan.perSessionWaitingCap
 
+    /// How many holders each counted lane admits. The guest pools by default;
+    /// a test overrides it to prove capacity is genuinely a parameter rather
+    /// than a constant read at the point of use.
+    var capacities: [String: Int] = GuestPool.capacities
+    func setCapacities(_ capacities: [String: Int]) { self.capacities = capacities }
+
     init(waitLimit: TimeInterval = RunQueuePlan.waitLimit(from: ProcessInfo.processInfo.environment),
          now: @escaping @Sendable () -> Double = { Date().timeIntervalSince1970 },
          sleep: @escaping @Sendable (TimeInterval) async -> Void = { seconds in
@@ -168,7 +174,10 @@ actor RunScheduler {
         // the queue is not held: start immediately. Most calls take this path,
         // which is what stops the queue making Proctor feel broken for the
         // common case.
-        if waiting.isEmpty && !held && lanes.lanes.isDisjoint(with: busyLanes()) {
+        // The fast path has to ask the same question the scan does, or a counted
+        // lane would be a mutex here and a pool there. `admits` is that question
+        // asked once, against what is running right now.
+        if waiting.isEmpty && !held && admits(lanes.lanes) {
             active[id] = info
             publish()
             return LaneTicket(id: id, lanes: lanes.lanes, scheduler: self)
@@ -241,7 +250,9 @@ actor RunScheduler {
     /// wake-up that never comes is indistinguishable from a wedged machine.
     private func promote() {
         let grantable = RunQueuePlan.grantable(waiting: waiting.map(\.info),
-                                               busy: busyLanes(), held: held)
+                                               busy: busyLanes(), held: held,
+                                               occupancy: poolOccupancy(),
+                                               capacities: capacities)
         guard !grantable.isEmpty else { return }
         for id in grantable {
             guard let index = waiting.firstIndex(where: { $0.info.id == id }) else { continue }
@@ -254,8 +265,35 @@ actor RunScheduler {
         publish()
     }
 
+    /// The MUTEX lanes held right now. A counted lane is deliberately excluded:
+    /// membership is the wrong question for it, and including it here would make
+    /// the pool exclusive against itself — a cap of one wearing a cap of two's
+    /// clothes.
     private func busyLanes() -> Set<RunLane> {
-        active.values.reduce(into: Set<RunLane>()) { $0.formUnion($1.lanes) }
+        active.values.reduce(into: Set<RunLane>()) { out, run in
+            out.formUnion(run.lanes.filter { !$0.isCounted })
+        }
+    }
+
+    /// How many holders each counted lane has right now.
+    private func poolOccupancy() -> [String: Int] {
+        RunQueuePlan.occupancy(of: Array(active.values))
+    }
+
+    /// Whether this lane set could start immediately: its mutex lanes free, and
+    /// room left in every pool it needs.
+    private func admits(_ lanes: Set<RunLane>) -> Bool {
+        let mutex = lanes.filter { !$0.isCounted }
+        guard mutex.isDisjoint(with: busyLanes()) else { return false }
+        let occupancy = poolOccupancy()
+        for lane in lanes {
+            guard let key = lane.poolKey else { continue }
+            // Unbounded when unstated, matching `RunQueuePlan.grantable`. The
+            // two must agree or the fast path and the scan would answer
+            // differently for the same lanes.
+            if (occupancy[key] ?? 0) >= (capacities[key] ?? GuestPool.unbounded) { return false }
+        }
+        return true
     }
 
     // MARK: - The queue's own controls

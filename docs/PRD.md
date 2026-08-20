@@ -128,7 +128,7 @@ requirements in the ordinary forward-looking sense.
       +-- Apple Events / shortcuts  declared app contracts
       +-- ProctorReflector client   styles and idle, apps you own only
       +-- Overlays ................ run HUD, takeover shield, cursor marker
-      +-- Providers ............... lume, prlctl, cua-driver, simctl, maestro
+      +-- Providers ............... lume, prlctl, tart, cua-driver, simctl, maestro
 ```
 
 The shim is disposable and holds no permissions, so several hosts can run at once for the cost
@@ -450,7 +450,7 @@ on them without parsing English. `destructive` and `idempotent` are meaningful o
 | `proctor_policy` | `status`, `configure`, `approve`, `revoke`, `audit` | write, non-destructive, idempotent |
 | `proctor_kill` | `list`, `kill`; `match` ∈ `substring`, `exact`; `force` | write, **destructive**, non-idempotent |
 | `proctor_ios` | `list`, `boot`, `open`, `screenshot`, `flow` | write, non-destructive, non-idempotent |
-| `proctor_guest` | `list`, `status`, `start`, `stop`, `clone`, `reach`; `provider` ∈ `lume`, `prlctl` | write, **destructive**, non-idempotent |
+| `proctor_guest` | `list`, `status`, `start`, `stop`, `clone`, `reach`, `attach`, `detach`; `provider` ∈ `lume`, `prlctl`, `tart` | write, **destructive**, non-idempotent |
 
 Granularity is one tool per decision, with actuation batched: a six-step login is one `act` call,
 not six round trips plus five settles. The catalogue is defined once in `ProctorCore` and both the
@@ -504,17 +504,49 @@ Coordinate actuation and screenshots only. Tree-based assertions and `agree` fai
 Guest sessions carry `gst-` handles, distinct from host window ids. `proctor_guest reach` forwards
 the remote agent's Unix socket over SSH `StreamLocal` (`ssh -L local.sock:remote.sock`).
 
-**Proctor owns no VM lifecycle.** Detection is a filesystem read through `ToolLocator`; listing a
-guest is a separate act gated behind `proctor_guest`, so a health check never runs `lume` or
-`prlctl`. Creating a guest, granting TCC inside one, and cloning the result are things a person
-does with the provider's own CLI; the grant-once-then-clone recipe is documented on the guest lane
-rather than automated.
+**Proctor creates nothing, installs nothing inside a guest, and grants nothing.** Detection is a
+filesystem read through `ToolLocator`; listing a guest is a separate act gated behind
+`proctor_guest`, so a health check never runs `lume`, `prlctl` or `tart`. Creating a guest,
+granting TCC inside one, and cloning the result are things a person does with the provider's own
+CLI; the grant-once-then-clone recipe is documented on the guest lane rather than automated.
 
-**The auto-route gate.** This process cannot yet perform a step *inside* a guest — `reach`
-describes the tunnel, it does not attach — so a configured `PROCTOR_GUEST` plus a batch that would
-take the host is a **refusal naming the guest**, never a silent host run and never a fallback.
-Executing on the host while naming a guest would hand back a verdict that looks fine and measures
-the plumbing. A session already marked as a guest is already elsewhere and is not refused.
+*This replaces "Proctor owns no VM lifecycle", which PRO-0076 revised.* The pool may **start** a
+guest it was pointed at and **stop** one it started itself, because admitting a session to a slot
+is exactly the moment that decision has to be made. What the old sentence was actually protecting
+is the paragraph above, and that is unchanged. The pool **never evicts**: a guest a person started,
+or one another session holds, is waited for and never stopped to free a slot, because stopping a
+running VM discards its state and a scheduler that may do that can destroy work nobody asked it to
+risk.
+
+**Attaching.** A session attached to a guest executes its steps *inside* it. The host agent
+forwards its tool calls over the unix socket `reach` describes, and the guest's own Proctor — which
+holds that machine's TCC grants and talks to its window server — performs them. The host actuates
+nothing on a guest session's behalf. Proctor does not open the tunnel: a person does, and a socket
+nothing is listening on is a refusal rather than an attempt to create one.
+
+Attachments are per **session**, not per agent: one `Session` serves every client and callers are
+told apart by the peer process, so an attach that moved a shared field would move every connected
+client onto the guest at once. Window handles belong to the machine that minted them and to the
+session that was attached when they did; a handle used across either boundary is a refusal naming
+both machines, never a lookup that happens to miss.
+
+**Two macOS guests, and it is Apple's number.** macOS on Apple silicon permits at most two
+concurrently running macOS guests per host. `RunLane` carries a counted lane beside its two mutex
+lanes, and the macOS pool is that lane at capacity 2; a Linux or Windows pool is the same lane at
+whatever its provider allows, because the rule being honoured is Apple's about macOS rather than a
+property of virtualisation. Which pool a guest joins comes from the platform its provider
+**reports** — never from its name, and a guest whose platform could not be read is refused rather
+than admitted uncounted, since an unknown platform would sit outside the count. One session drives
+one named guest: a second naming it waits even when a slot is free. A third macOS guest queues with
+its position and depth rather than being refused, bounded by the same per-session cap and ceiling
+every other lane uses.
+
+**The auto-route gate.** A configured `PROCTOR_GUEST` plus a batch that would take the host is a
+**refusal naming the guest**, never a silent host run and never a fallback. Executing on the host
+while naming a guest would hand back a verdict that looks fine and measures the plumbing. A session
+already marked as a guest is already elsewhere and is not refused. The same rule now binds the
+attach: a session whose link is down is refused with the guest named, and there is no code path
+that runs its batch here instead.
 
 ---
 
@@ -532,7 +564,7 @@ somebody to fix the second when they have the first is the defect PRO-0041 close
 | `browser` | `obscura`, plus `browser-use` when the second lane is named | Advisory only; never affects `ready`. |
 | `ios` | `simctl` (Xcode), `maestro` | Deep links plus Maestro flows. |
 | `cua` | `cua-driver` | Off unless `PROCTOR_ACTUATION=cua`. |
-| `guest` | `lume`, `prlctl` | Located, never executed by a health check. |
+| `guest` | `lume`, `prlctl`, `tart` | Located, never executed by a health check. Reports the pool: capacity, slots held, by whom, and how many wait. |
 
 `ready` is untouched by every lane, because Proctor drives native macOS applications with no
 Obscura, no Xcode, no `cua-driver` and no Maestro. A health report that failed on an advisory tool
@@ -1375,6 +1407,8 @@ decisions that later work must not re-litigate.
 | 6 | PRO-0029 … 0042 | The switch catalogue, build identity, the signed audit chain, Stop reachability, browser catalogue determinism, hold attribution, the reopen and doctor-hang fixes, alignment assertions |
 | 7 | PRO-0043 … 0055 | Cua as an actuation backend, delegated gating and supervision, run history, iOS deep links, Maestro flows, whole-toolchain doctor, the native-planes decision, gate stability |
 | 8 | PRO-0056 … 0063 | Machine identity, witness tiers, lume and prlctl providers, `proctor_guest`, SSH reach, the auto-route gate, the machine-aware overlay, purpose-sized captures |
+| 9 | PRO-0064 … 0075 | The design tokens, the fidelity harness, the surface set as SwiftUI, the operator CLI and TUI, the 0.8.0 campaign |
+| 10 | PRO-0076 | The tart provider, attaching a session to a guest, and the two macOS slots with a queue |
 
 ---
 

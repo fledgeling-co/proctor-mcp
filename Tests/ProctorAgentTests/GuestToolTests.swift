@@ -17,6 +17,12 @@ final class FakeGuestProvider: GuestProvider, @unchecked Sendable {
     var records: [GuestRecord]
     var calls: [(String, String)] = []
     var failNext: GuestProviderError?
+    /// One-shot, and consulted by `start` alone.
+    ///
+    /// `failNext` is spent by whichever call comes first, and every mutation
+    /// resolves the guest before it mutates it, so a planted failure never
+    /// reaches `start`. A boot that times out is exactly the case that needs it.
+    var failNextStart: GuestProviderError?
 
     init(id: String, records: [GuestRecord]) {
         self.id = id
@@ -40,6 +46,11 @@ final class FakeGuestProvider: GuestProvider, @unchecked Sendable {
 
     func start(name: String) async throws -> GuestRecord {
         try throwIfPlanted()
+        if let failNextStart {
+            self.failNextStart = nil
+            calls.append(("start", name))
+            throw failNextStart
+        }
         return try mutate(name, action: "start", state: "running", running: true)
     }
 
@@ -94,7 +105,11 @@ struct GuestToolSurfaceTests {
         #expect(spec.description.contains("Sequoia"))
         let actions = spec.inputSchema["properties"]?["action"]?["enum"]?
             .arrayValue?.compactMap(\.stringValue) ?? []
-        #expect(Set(actions) == ["list", "status", "start", "stop", "clone", "reach"])
+        #expect(Set(actions) == ["list", "status", "start", "stop", "clone", "reach",
+                                 "attach", "detach"])
+        // PRO-0076: the two that point a session at a guest and back again.
+        #expect(spec.description.contains("Apple's number"))
+        #expect(spec.description.contains("actuates nothing on a guest session's behalf"))
         #expect(spec.description.contains("StreamLocal"))
         #expect(spec.description.contains("never a shell command"))
     }
@@ -232,17 +247,25 @@ struct GuestLifecycleWiringTests {
                                 }, presentTTL: 300, absentTTL: 300),
                                 prlctl: ToolProbe(probe: {
                                     ToolPresence(tool: "prlctl", available: false)
+                                }, presentTTL: 300, absentTTL: 300),
+                                // PRO-0076. Declared absent explicitly: this
+                                // machine HAS tart, and a test that left the
+                                // third provider to the real filesystem would
+                                // pass or fail on what happens to be installed.
+                                tart: ToolProbe(probe: {
+                                    ToolPresence(tool: "tart", available: false)
                                 }, presentTTL: 300, absentTTL: 300)),
                               secureInputProbe: { false })
         await session.setAuditSink({ _ in })
         do {
             _ = try await session.guest(action: "list", guest: nil,
                                         provider: nil, newName: nil)
-            Issue.record("a machine with neither CLI must not look like an empty fleet")
+            Issue.record("a machine with no provider CLI must not look like an empty fleet")
         } catch let error as AgentError {
             #expect(error.code == .notImplemented)
             #expect(error.message.contains("lume"))
             #expect(error.message.contains("prlctl"))
+            #expect(error.message.contains("tart"))
             #expect(error.remedy?.contains("never install") == true)
         }
     }

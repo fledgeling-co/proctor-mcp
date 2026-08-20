@@ -48,6 +48,11 @@ public enum AuditTool {
     public static let guestStart = "proctor_guest.start"
     public static let guestStop = "proctor_guest.stop"
     public static let guestClone = "proctor_guest.clone"
+    /// PRO-0076. Attaching a session to a guest and letting it go again. Both
+    /// are recorded for the same reason start and stop are: they change which
+    /// machine a session's verdicts are about.
+    public static let guestAttach = "proctor_guest.attach"
+    public static let guestDetach = "proctor_guest.detach"
 
     /// Every drive path, for the "these are distinct" property.
     public static let all: [String] = [act, appsActivate, flowReplay,

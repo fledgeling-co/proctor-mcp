@@ -1152,6 +1152,21 @@ public enum ToolCatalogue {
         are refused here; they go through Cua. The same recipe reaches a remote Mac over \
         Tailscale: the host is that Mac's name and there is no guest in between.
 
+        attach points this session at a macOS guest: every later tool call from it runs INSIDE \
+        that guest, forwarded over the socket reach describes, and the Proctor there holds that \
+        machine's Accessibility and Screen Recording grants and talks to its window server. This \
+        Mac actuates nothing on a guest session's behalf, and a session whose link is down is \
+        refused with the guest named rather than quietly run here -- a verdict about the wrong \
+        machine is the one outcome this must not produce. proctor_guest, proctor_doctor, \
+        proctor_policy and the history and queue verbs keep answering about this Mac. detach \
+        points the session back at this Mac and stops the guest only if Proctor started it.
+
+        **Two macOS guests may run at once, and that is Apple's number rather than a setting.** \
+        Attaching takes a slot in a counted pool; a third waits in the queue with its position \
+        and depth, exactly as a busy Mac lane does, and is never granted by stopping somebody \
+        else's guest. One session drives one named guest: a second naming the same guest waits \
+        for it even when a slot is free. proctor_doctor's guest lane reports the pool.
+
         A macOS guest is a native witness: a full Proctor inside it has frame status, the \
         accessibility tree and the tri-observer check. A Linux or Windows guest is delegated: \
         actuation and screenshots only, and every tree-reading assertion is skipped with a \
@@ -1167,13 +1182,16 @@ public enum ToolCatalogue {
                 "action": .object([
                     "type": .string("string"),
                     "enum": .array([.string("list"), .string("status"), .string("start"),
-                                    .string("stop"), .string("clone"), .string("reach")]),
+                                    .string("stop"), .string("clone"), .string("reach"),
+                                    .string("attach"), .string("detach")]),
                     "description": .string(
                         "list enumerates guests and touches nothing; status reads one; start and "
                         + "stop change its power state and re-read it; clone copies a named guest "
                         + "to newName; reach describes the SSH StreamLocal tunnel onto a native "
-                        + "guest's Proctor socket. Defaults to list. Nothing provisions a guest "
-                        + "that does not already exist, and nothing opens a tunnel.")
+                        + "guest's Proctor socket. attach points this session at a macOS guest "
+                        + "so every later call runs inside it; detach points it back at this Mac. "
+                        + "Defaults to list. Nothing provisions a guest that does not already "
+                        + "exist, and nothing opens a tunnel.")
                 ]),
                 "guest": .object([
                     "type": .string("string"),
@@ -1215,9 +1233,11 @@ public enum ToolCatalogue {
                 "localSocket": .object([
                     "type": .string("string"),
                     "description": .string(
-                        "Where the host-side shim should connect. Defaults to a per-guest path "
-                        + "under Application Support. Set PROCTOR_SOCKET to this after the "
-                        + "tunnel is up.")
+                        "Where the host-side shim should connect, for reach; and for attach, "
+                        + "the already-forwarded socket to attach through. Defaults to a "
+                        + "per-guest path under Application Support. Proctor never opens the "
+                        + "tunnel: a socket nothing is listening on is a refusal, not an "
+                        + "attempt to create one.")
                 ])
             ])
         ]),

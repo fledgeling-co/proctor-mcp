@@ -190,14 +190,57 @@ actor Session {
     var hudFeed: RunHUDFeed { hudFeedBox.feed }
     func setHUDFeed(_ feed: RunHUDFeed) { hudFeedBox.feed = feed }
 
-    /// Which machine this session's runs happen on.
+    /// Which machine THIS CALLER's runs happen on.
     ///
-    /// `.host` here and for the whole of PRO-0056, because this item builds the
-    /// disclosure and nothing that changes it. A session that will run in a guest
-    /// is set up by the routing item, and it can only be set up honestly once
-    /// every surface already says which machine answered.
-    var machine: Machine = .host
-    func setMachine(_ machine: Machine) { self.machine = machine }
+    /// PRO-0076 made this a lookup rather than a stored value, and the reason is
+    /// that there is exactly one `Session` in this agent. `main.swift` builds it
+    /// once; callers are told apart by `SessionIdentity.current`, a task-local
+    /// read from the peer process. So an attach that wrote a shared field would
+    /// move every connected client onto the guest at once.
+    ///
+    /// The stored `fallbackMachine` is kept rather than removed. It is what
+    /// `setMachine` writes, which is how a test declares a whole session's
+    /// machine without standing up an attachment; deleting it would silently
+    /// revert four suites' guest coverage to the host.
+    var machine: Machine {
+        guestAttachments[SessionIdentity.current.key]?.machine ?? fallbackMachine
+    }
+    private var fallbackMachine: Machine = .host
+    func setMachine(_ machine: Machine) { self.fallbackMachine = machine }
+
+    /// Attachments, one per session identity. See `GuestAttachment`.
+    var guestAttachments: [String: GuestAttachment] = [:]
+
+    /// Window ids minted inside a guest, and which session minted them.
+    ///
+    /// Kept beside the attachments rather than inside one because the refusal in
+    /// `GuestHandleScope` has to answer for a handle whose owning session has
+    /// already detached — otherwise the id would fall through to the host's own
+    /// window map and resolve against the wrong computer.
+    var guestMintedHandles: [String: GuestHandleScope.Origin] = [:]
+
+    /// This caller's attachment, or nil.
+    var currentAttachment: GuestAttachment? {
+        guestAttachments[SessionIdentity.current.key]
+    }
+
+    /// The open channel to each attached guest.
+    var guestLinks: [String: any GuestLink] = [:]
+
+    /// The pool slot each attachment holds.
+    ///
+    /// Held for the ATTACHMENT rather than for a batch, which is the spec's
+    /// recorded assumption: booting a macOS guest costs tens of seconds, and
+    /// releasing per batch would re-pay that across a campaign. The consequence
+    /// is that the slot needs its own release rule, since nothing about a run
+    /// ending frees it — see `releaseGuestAttachment`.
+    var guestTickets: [String: LaneTicket] = [:]
+
+    /// Injected so a test can attach without a socket. Nil means the live link.
+    var injectedGuestLink: (@Sendable (String) -> any GuestLink)?
+    func setGuestLinkFactory(_ make: @escaping @Sendable (String) -> any GuestLink) {
+        injectedGuestLink = make
+    }
 
     /// The pause/stop latch the panel's buttons write to.
     ///
@@ -681,6 +724,30 @@ actor Session {
     // MARK: - Handles
 
     func windowHandle(_ id: String) throws -> WindowHandle {
+        // A4. A window handle belongs to the machine that minted it, and to the
+        // session that was attached when it did. Checked BEFORE the cache,
+        // because a host id under a guest session would otherwise hit the host's
+        // own map and drive the wrong computer while the result said "guest".
+        //
+        // **Scoped to handles that actually crossed a machine boundary**, which
+        // is narrower than "any guest session" and is the honest reading of the
+        // rule. A session can be marked as a guest without an attachment — that
+        // is what PRO-0056 and PRO-0057 built, and what four suites still model
+        // — and such a session drives its own engine, so its own window map is
+        // definitionally the machine it says it is on. There is no second
+        // machine's handles to confuse, and refusing there would be a rule about
+        // nothing. What is checked is: a handle minted inside a guest (wherever
+        // it turns up), and any handle used by a session holding an attachment,
+        // whose windows come over a link rather than from this Mac.
+        let origin = guestMintedHandles[id]
+        if origin != nil || currentAttachment != nil,
+           let refusal = GuestHandleScope.refusal(
+               handle: id, callerMachine: machine,
+               callerSession: SessionIdentity.current.key,
+               origin: origin ?? .host) {
+            throw AgentError(code: .windowNotFound, message: refusal.message,
+                             remedy: refusal.remedy)
+        }
         if let cached = windowsByID[id] { return cached }
         // A device handle is refused by name rather than falling through to
         // "unknown window". Proctor's model is windows and a simulator is a device

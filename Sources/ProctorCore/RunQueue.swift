@@ -39,12 +39,83 @@ public enum RunLane: Hashable, Sendable, CustomStringConvertible {
     case app(String)
     /// The single system event stream.
     case global
+    /// One named guest, keyed `provider:name`. A MUTEX lane, like the two
+    /// above: two campaigns cannot drive one VM, so the second waits however
+    /// many slots are free.
+    case guest(String)
+    /// A COUNTED lane, keyed by platform. This is the one lane that admits
+    /// more than one holder, and the number it admits is a parameter rather
+    /// than a property of the case — see `GuestPool`.
+    case pool(String)
 
     public var description: String {
         switch self {
         case .app(let id): return "app:\(id)"
         case .global: return "global"
+        case .guest(let id): return "guest:\(id)"
+        case .pool(let id): return "pool:\(id)"
         }
+    }
+
+    /// Whether this lane counts rather than excludes. The admission rule
+    /// branches on this once; nothing else needs to know.
+    public var isCounted: Bool {
+        if case .pool = self { return true }
+        return false
+    }
+
+    /// The counted lane's key, for the occupancy table.
+    public var poolKey: String? {
+        if case .pool(let id) = self { return id }
+        return nil
+    }
+}
+
+// MARK: - The guest pool
+
+/// How many guests of a platform may be running at once, and why.
+public enum GuestPool {
+
+    /// **Two is Apple's number, not one this project chose.** macOS on Apple
+    /// silicon permits at most two concurrently running macOS guests per host.
+    /// It is a platform constant with its reason beside it rather than a
+    /// tunable, and it constrains macOS guests only: the rule being honoured is
+    /// Apple's about macOS, not a property of virtualisation.
+    public static let macOSCapacity = 2
+
+    /// No platform rule is known for a Linux or Windows guest, and inventing a
+    /// number here would cap something nobody asked to cap. Those pools are
+    /// unbounded **by Proctor** and bounded by whatever their provider allows,
+    /// which is the honest reading of "at whatever its provider allows".
+    public static let unbounded = Int.max
+
+    /// The pool a guest of this platform joins. Keyed by platform, because the
+    /// cap is a platform rule — never by the guest's name, which is what
+    /// `TartInventory` refuses to read a platform out of for the same reason.
+    public static func key(for platform: MachinePlatform) -> String {
+        platform.rawValue
+    }
+
+    public static func capacity(for platform: MachinePlatform) -> Int {
+        switch platform {
+        case .macos: return macOSCapacity
+        case .linux, .windows: return unbounded
+        }
+    }
+
+    /// One named guest's lane, keyed so two providers holding the same name do
+    /// not collide.
+    public static func guestKey(provider: String, name: String) -> String {
+        "\(provider):\(name)"
+    }
+
+    /// Every pool's capacity, for the scheduler to hand to the plan.
+    public static var capacities: [String: Int] {
+        var out: [String: Int] = [:]
+        for platform in [MachinePlatform.macos, .linux, .windows] {
+            out[key(for: platform)] = capacity(for: platform)
+        }
+        return out
     }
 }
 
@@ -106,6 +177,19 @@ public struct LaneDemand: Hashable, Sendable {
     /// contending with the batch it was supposed to serialise against. A batch
     /// can only drive an attached app, so the case that can contend is the case
     /// that gets the key, and the case that cannot is left honestly uncovered.
+    /// The lanes an attachment to one guest needs: its own mutex lane and its
+    /// platform's counted pool, taken together.
+    ///
+    /// Both at once, for the reason the whole type exists: taking them one at a
+    /// time is how two runs wedge each other. A run holding a slot while
+    /// waiting for the guest, or holding the guest while waiting for a slot,
+    /// is the deadlock this shape makes unrepresentable.
+    public static func forGuest(provider: String, name: String,
+                                platform: MachinePlatform) -> LaneDemand {
+        LaneDemand(lanes: [.guest(GuestPool.guestKey(provider: provider, name: name)),
+                           .pool(GuestPool.key(for: platform))])
+    }
+
     public static func forActivate(app: String?) -> LaneDemand {
         var lanes: Set<RunLane> = [.global]
         if let app { lanes.insert(.app(app)) }
@@ -261,23 +345,80 @@ public struct RunQueuePlan: Sendable {
     /// nothing behind it jumps ahead onto the same lane. That mark is a local of
     /// this function and never scheduler state: it holds FIFO within a lane for
     /// the length of one decision and cannot leak a lane to nobody.
+    /// `occupancy` is how many holders each COUNTED lane already has, and it is
+    /// the parameter that makes the guest pool a pool rather than a third mutex.
+    /// `capacities` says how many each admits; a counted lane with no entry
+    /// admits one, which is the conservative direction.
+    ///
+    /// THE COUNT IS INCREMENTED INSIDE THE SCAN, and that is the whole
+    /// correctness of the counted lane. Two other shapes are available and both
+    /// are wrong: putting a `.pool` lane into `taken` makes the pool a mutex of
+    /// capacity one, and counting only what was already active — without
+    /// incrementing as this scan grants — lets a single scan admit three
+    /// holders into two slots, because every waiter reads the same stale count.
+    /// Both are pinned by tests.
     public static func grantable(waiting: [RunTicketInfo], busy: Set<RunLane>,
-                                 held: Bool) -> [Int] {
+                                 held: Bool,
+                                 occupancy: [String: Int] = [:],
+                                 capacities: [String: Int] = GuestPool.capacities) -> [Int] {
         guard !held else { return [] }
         var taken = busy
+        var counts = occupancy
         var granted: [Int] = []
+
+        /// Whether this entry's counted lanes all have room left right now.
+        ///
+        /// **A pool with no stated capacity is UNBOUNDED, not one.** Defaulting
+        /// to 1 turned any pool the caller forgot to describe into a mutex,
+        /// which is the wrong answer for the linux and windows pools the spec
+        /// says are limited by their provider rather than by Proctor. The macOS
+        /// cap cannot go missing by omission: `GuestPool.capacities` names every
+        /// platform, and a test fails if a new one is ever added without a
+        /// capacity.
+        func poolsHaveRoom(_ entry: RunTicketInfo) -> Bool {
+            for lane in entry.lanes {
+                guard let key = lane.poolKey else { continue }
+                let capacity = capacities[key] ?? GuestPool.unbounded
+                if (counts[key] ?? 0) >= capacity { return false }
+            }
+            return true
+        }
+
         for entry in waiting {
-            if entry.lanes.isDisjoint(with: taken) {
+            let mutex = entry.lanes.filter { !$0.isCounted }
+            if mutex.isDisjoint(with: taken) && poolsHaveRoom(entry) {
                 granted.append(entry.id)
-                taken.formUnion(entry.lanes)
+                taken.formUnion(mutex)
+                // The increment that stops one scan over-granting.
+                for lane in entry.lanes {
+                    guard let key = lane.poolKey else { continue }
+                    counts[key, default: 0] += 1
+                }
                 continue
             }
             // It cannot start. A run needing the whole machine becomes a barrier
             // at this point rather than being walked past forever.
             if entry.lanes.contains(.global) { break }
-            taken.formUnion(entry.lanes)
+            // A full pool MARKS and the scan continues, where `.global` breaks
+            // it. A pool that broke the scan would let a busy guest lane starve
+            // every Mac run queued behind it, which is a much larger blast
+            // radius than the FIFO-within-a-pool this preserves.
+            taken.formUnion(mutex)
         }
         return granted
+    }
+
+    /// How many holders each counted lane has, folded over the runs in flight.
+    /// Derived rather than kept, so there is no second number to keep true.
+    public static func occupancy(of active: [RunTicketInfo]) -> [String: Int] {
+        var out: [String: Int] = [:]
+        for run in active {
+            for lane in run.lanes {
+                guard let key = lane.poolKey else { continue }
+                out[key, default: 0] += 1
+            }
+        }
+        return out
     }
 
     /// How many runs one session may keep waiting. A session in a loop cannot
