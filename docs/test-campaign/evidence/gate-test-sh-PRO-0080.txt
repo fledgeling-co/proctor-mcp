@@ -1,0 +1,99 @@
+### ./scripts/test.sh
+
+PASS: 􁁛  Test run with 1823 tests in 216 suites passed after 12.657 seconds.
+exit 0
+
+### campaign.py check docs/test-campaign
+proctor-mcp · lanes: macos, mcp-stdio, cli
+Requirements: 47 inventoried, 0 with no case
+Surfaces:   22 enumerated, 0 with no case
+External effects: examined=22 witnessed=11 vacuous=0 unwitnessed=6 — armed proves the suite bites, and only a witness proves the product acted.
+  Effect claimed, no witness: REQ-029 (None), REQ-033 (None), REQ-034 (None), REQ-035 (None), REQ-037 (None), REQ-039 (None)
+Cases:      78 pass · 0 fail · 0 skip · 0 n/a · 0 carried · 1 inconclusive · 0 unoracled · 0 blocked · 0 open  (of 79)
+Observed:   78/79 cases produced a measurement · 1 could not be measured · 0 not attempted
+On glass:   guest-glass → .build/Proctor.app (Guest proctor-guest (lume, macOS 26.6.2 Tahoe), provisioned with lume create --unattended so it holds a real Aqua session: stat -f %Su /dev/console reads lume, not root, which is what the earlier proctor-mac-node clone could not offer. launchctl print gui/501/app.fledgeling.procter.agent reads state = running, pid = 1322. That agent's own proctor_doctor answers ready true with Accessibility and Screen Recording both granted, and lists attachedApps app:1085:1 Calculator windows 1 — the guest's accessibility API reading a window the guest's own window server owns. Reached from this Mac over an SSH StreamLocal forward between the two agents' unix sockets, with the host agent relaying.)
+On glass:   macos-glass → .build/Proctor.app (pid 88463 owns CG windows 43384 'History' and 43385 'Proctor' (640x572); glass_probe read it from CGWindowListCopyWindowInfo, the window server's own list. Launched with open -n because the installed build holds the same bundle id and LaunchServices activates it instead of starting a second instance — which is also why every capture names a CG window id rather than a title.)
+Oracles:    outcome 52 · metamorphic 6 · effect-witness 12 · raster-visual 8 · interactive-glass 1
+Armed:      78/78 passing cases have been watched to fail
+Scope:      FULL — every case in the campaign was run
+Sample:     full multi-witness coverage across all 21 MCP tools, status/walkthrough/overlay UI surfaces, and guest/takeover controls
+
+Not ready to report:
+  · 1 case(s) inconclusive — attempted, and the instrument could not measure. Not a pass and not an n/a: 'we do not know' is a weaker claim than 'no difference found' and a different one from 'does not apply'
+  · 5 requirement(s) claiming an effect outside the product and recorded `observed` with no effect-witness case behind them — the shape that passed 230 cases over a product that performed no external I/O
+
+  External-effect claims with no witness (11 of 22 witnessed):
+    · REQ-007 claims a device effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-023 claims a ipc effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-024 claims a subprocess effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-027 claims a ipc effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-028 claims a device effect and is recorded `observed`, and no case backing it stands at effect-witness
+  Drive the effect from a production entry point with a recorder attached and
+  record it:
+    campaign.py set <dir> --case CASE-0001 --status pass --oracle effect-witness \
+      --recorder 'strace -f -e trace=network' --effect-class outbound-socket \
+      --effect-count 3
+  Where the product does not perform the effect at all, the requirement is
+  `vacuous`, not `observed` — a guarantee that holds because nothing does the
+  thing is a finding, and recording it clears this blocker honestly.
+Wall:       7 published shot(s) · 7 distinct image(s)
+
+Finish them, resolve each to skip:/n-a: with a reason, or declare the stop with its resume point — in the reply, the verdict line and the report. Never silently.
+exit 1
+
+### strict-check.py docs/test-campaign
+CHECKED   78 of 79 cases (99%)
+UNCHECKED 1  — and unchecked is failed
+
+     1  status is inconclusive
+
+ratchet: 78
+held.
+exit 0
+
+### capture-lineage.py docs/test-campaign --gate
+(eval):1: is a directory: /tmp/g3
+cat: /tmp/g3: Is a directory
+exit 1
+
+### vacuity-check.py docs/test-campaign --gate
+(eval):1: is a directory: /tmp/g4
+cat: /tmp/g4: Is a directory
+exit 1
+### capture-lineage.py docs/test-campaign --gate
+published captures: 7  ·  distinct images: 7  ·  files in shots dir: 42
+
+JUDGED 5 of 7 judgeable capture(s) (71%)
+   An unjudged capture is an uncompared one. It is not a pass.
+
+ratchet: 5 — held
+
+Every published capture names a target that ties to its subject.
+exit 0
+
+### vacuity-check.py docs/test-campaign --gate
+unclassed:  examined=47 findings=0
+uncensused: examined=22 findings=0
+blind:      NOT RUN — pass --tests <root> to scan the test tree. This is the cheapest of the three and needs no privilege.
+
+vacuity: requirements=47 external=22 findings=0
+exit 0
+
+### The denominator, computed with len() over the registry rather than read off the printed list
+
+campaign.py check prints a capped list, and reading that cap as a population is what under-scoped
+wave 11 by ten items. Both of its own numbers here are display artefacts: the summary line says
+`unwitnessed=6` and the detail list prints 5 entries. Computed directly:
+
+    external requirements (effect != none):        22
+    with a PASSING effect-witness case:            11
+    UNWITNESSED:                                   10
+      REQ-023 REQ-024 REQ-027 REQ-028 REQ-029
+      REQ-033 REQ-034 REQ-035 REQ-037 REQ-039
+    plus REQ-007, which carries an effect-witness case at status `inconclusive` — counted as
+    unwitnessed by campaign.py and not in the ten, which is why 11 + 10 = 21 rather than 22.
+
+The ten are exactly PRO-0083's set. campaign.py check EXITING 1 IS THE GATE WORKING: this item
+witnesses no requirement, so that exit is inherited from the close of wave 11a unchanged and is not
+a regression this item caused. It was recorded in spec-PRO-0080.md A8 in advance, before the gate
+was run, so it could not be re-read after the fact as either a pass or a new failure.
