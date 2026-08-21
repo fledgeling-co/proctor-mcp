@@ -564,6 +564,20 @@
       ],
       "note": "the population is enumerated by scripts/campaign/wall_clock_census.py, which arms itself against both pre-PRO-0089 offenders before any zero it prints is believed",
       "effect": "none"
+    },
+    {
+      "id": "REQ-053",
+      "class": "behaviour",
+      "text": "One process verifies a given binary's code signature once per file identity, however many sessions ask about it and however many ask at the same moment: fifteen concurrent callers on a cold entry produce one verification and fourteen waiters, and no caller and no verification holds a thread of the cooperative pool while it waits, so unrelated work runs to completion while a verification is in flight",
+      "source": "Sources/ProctorAgent/Session/SignatureVerdictCache.swift; docs/specs/spec-PRO-0087.md acceptance 1-2",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-054",
+      "class": "affordance",
+      "text": "The shared signature store is a default rather than a singleton: a ToolProbes handed a cache uses that one, so a test gets an isolated store and the identify/verify seam stays injectable",
+      "source": "Sources/ProctorAgent/Session/ToolProbe.swift:280; docs/specs/spec-PRO-0087.md acceptance 3",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1861,6 +1875,30 @@
       "detail": "The old case asserted `state == .unconfirmed` and `elapsed < 5.0`. Neither half distinguishes the bound firing from a path where no bound exists: `ScreenRecordingProbe.state()` returns `.unconfirmed` directly on the keeper's `.unconfirmed` decision, without entering `bounded(token:)` at all, and that return satisfies both assertions. So the test named for the bound could have passed with the bound mechanism never engaged, and the stopwatch \u2014 the half that was flaky \u2014 was also the half carrying no information about the mechanism.\n\nFIXED by making the bound arm a told dependency: `ScreenRecordingProbe(timer:)` defaults to the `Task.sleep` it always did, and the converted case injects a timer that records what it was asked to wait for. The assertion is that the timer was asked for `GrantProbe.bound` \u2014 the product's own constant, which nothing in the test writes \u2014 so a probe bounded by something other than its bound now fails. Armed: with `await timer(bound)` changed to `await timer(bound + 1)` the case reports `Expectation failed: (asked.seconds \u2192 2.5) == (GrantProbe.bound \u2192 1.5)`.",
       "surface": "SURF-006",
       "req": "REQ-056"
+    },
+    {
+      "id": "DEF-050",
+      "status": "fixed",
+      "severity": "high",
+      "title": "The signature verdict cache was scoped per Session while the verdict it holds is a fact about a file, so fifteen sessions verified one 82 MB binary at once and starved the cooperative pool",
+      "found": "Raised by PRO-0083's verifier as DEF-044; reproduced and closed by PRO-0087",
+      "detail": "SignatureVerdictCache deduplicates a 0.32-0.39s SecStaticCodeCheckValidity per instance, and ToolProbes.init default-constructed one per probe set, which is one per Session. The file's own header argued that two concurrent callers both verifying was 'wasted work and nothing else' and that single-flight 'would buy one saved hash and a state machine to get wrong'; both halves assumed there were two callers, and the scoping made fifteen. Server.dispatchBlocking then had no thread for its Task.detached, and a peer with a 10s SO_RCVTIMEO went unserved, which took REQ-035's forged-caller witness with it.",
+      "evidence": "docs/test-campaign/evidence/PRO-0087/wedge-before.txt and wedge-before-2.txt, two samples of one hung run five minutes apart, each showing 15 of 22 threads inside SecStaticCodeCheckValidity on com.apple.root.default-qos.cooperative and blocked in Security::Dispatch::Group::wait() for the whole five-second sample; wedge-after-blocking.txt, the same measurement against the blocking fix, showing the wedge reshaped rather than removed. Run counts in docs/test-campaign/evidence/PRO-0087/run-ledger.md.",
+      "fix": "SignatureVerdictCache.shared is the ToolProbes default; the store is keyed by FileIdentity with a 16-entry bound; and verdict(for:) is async, so callers arriving on an identity already being verified register a continuation and give their thread back while one verification runs on a Thread of its own, off the cooperative pool. The blocking version of the same single-flight was built and measured first: it cut fifteen verifications to one and still hung a run, with all sixteen cooperative threads blocked and no non-cooperative worker in the process (wedge-after-blocking.txt). A pool capped at the core count does not replace a worker that blocks, so blocked waiters starve the verification exactly as duplicate verifiers did.",
+      "fixedBy": "PRO-0087",
+      "surface": "SURF-003",
+      "req": "REQ-053"
+    },
+    {
+      "id": "DEF-051",
+      "status": "open",
+      "severity": "low",
+      "title": "ScreenRecordingProbeWiringTests's 0.2s bound with 5s of headroom fails on a machine under heavy external load",
+      "found": "PRO-0087's run ledger, on the unmodified tree as well as the fixed one",
+      "detail": "aParkedCallDoesNotHang asserts elapsed < 5.0 for a probe whose bound is 0.2s. On this machine at load average 700-900, driven by other worktrees building rather than by this suite, it measured 10.7s. It failed on three of the four control runs taken on the unmodified tree, so it is independent of PRO-0087 and is recorded rather than fixed here: widening a bound to survive a loaded machine is the gate moving, which is the objection PRO-0087's brief raises against relaxing the forged peer's timeout.",
+      "evidence": "docs/test-campaign/evidence/PRO-0087/run-ledger.md",
+      "surface": "SURF-008",
+      "req": "REQ-053"
     }
   ]
 }

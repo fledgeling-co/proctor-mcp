@@ -1538,5 +1538,124 @@
     ],
     "armed": true,
     "armedBy": "wall_clock_census.py --arm, over git show <merge-base>:<path> for both historical offenders"
+  },
+  {
+    "id": "CASE-0110",
+    "req": "REQ-053",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Single-flight removed from SignatureVerdictCache.verdict(for:) (the in-flight join replaced by an unconditional break). The named test went red: Expectation failed: (cache.verificationCount -> 15) == 1. Restored, green.",
+    "note": "PRO-0087. Fifteen concurrent Tasks, which is what the production path uses and what the async design makes safe: no caller blocks, so the test cannot be starved by the defect it measures. The injected verify holds the one verification open until all fifteen have been through identify, and the test asserts that they had, so a run where they did not arrive together fails rather than passing on a warm cache. The count comes from verificationCount, which the cache increments.",
+    "defects": [
+      "DEF-050"
+    ]
+  },
+  {
+    "id": "CASE-0111",
+    "req": "REQ-053",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Each of the eight sessions given its own SignatureVerdictCache, which is what ToolProbes did before PRO-0087. The named test went red twice: (cache.verificationCount -> 0) == 1 and (arrivals.count -> 8) == 1. Restored, green.",
+    "note": "PRO-0087. The same claim through the path that carries it in production: Session.doctor -> SessionDoctor -> ToolProbes.cuaSignature. Eight concurrent doctor calls, one verification between them, and every report still carries evidence == .signature so the sharing did not cost a report its answer.",
+    "defects": [
+      "DEF-050"
+    ]
+  },
+  {
+    "id": "CASE-0112",
+    "req": "REQ-054",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "ToolProbes.init's cuaSignature default put back to SignatureVerdictCache(). The named test went red twice, on both identity assertions: two independently built ToolProbes no longer held the same cache, and neither held SignatureVerdictCache.shared. Restored, green.",
+    "note": "PRO-0087. The scoping half of DEF-050, and its counterweight: single-flight inside one cache buys nothing while a cache is built per Session, and a hard singleton would close the seam every existing doctor test injects through. The third assertion is that a ToolProbes handed a cache holds that one.",
+    "defects": [
+      "DEF-050"
+    ]
+  },
+  {
+    "id": "CASE-0113",
+    "req": "REQ-053",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift"
+    ],
+    "armed": false,
+    "armedBy": "Not armed by re-introducing a shipped defect: the single-slot cache it guards against was correct while the cache was per-Session, so there is no prior state of this repo in which this test is red. It guards a regression the shared store newly makes possible.",
+    "note": "PRO-0087. A process-wide store is asked about more than one path, so a suite's scripted path and this machine's real cua-driver land in the same cache. A single slot would have them evicting each other and re-verifying on every alternation, which is the wedge again in different clothes. Five alternations between two identities cost two verifications.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0114",
+    "req": "REQ-035",
+    "surface": "SURF-012",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0087/run-ledger.md",
+      "docs/test-campaign/evidence/PRO-0087/wedge-before.txt",
+      "docs/test-campaign/evidence/PRO-0087/wedge-before-2.txt"
+    ],
+    "armed": true,
+    "armedBy": "The control is the unmodified tree at the same load on the same afternoon: four runs, one green, one carrying ForgedCall(answered: false, ok: false) with four REQ-035 issues, and an earlier attempt that hung outright and had to be killed after six minutes. The forging arm has therefore been watched failing on this machine, not only reported failing by PRO-0083. Independently re-measured by the verifying reviewer, who ran the forging arm 6 of 6 green on the fixed tree.",
+    "note": "PRO-0087. Whether REQ-035's forged-caller witness is reachable at all, measured as a rate rather than as a single run. PRO-0083 recorded three of five runs reporting answered: false. Corrected 2026-08-21 against the raw logs: the shipped fix is set 4 of the run ledger \u2014 10 runs (final-1.log to final-10.log), 10 completed, the forging arm answering on all 10, no run hanging. The discarded blocking fix is set 3 \u2014 10 runs, 9 completed with the forging arm answering on all 9, and one that hung and was sampled. This note previously said \"14 runs completed ... and no run hanging\"; no set has 14 runs in it, the figure conflated sets 3 and 4, and \"no run hanging\" was false of the pair taken together. The run ledger carries the failures that remain in set 3, which are DEF-051 rather than this path.",
+    "defects": [
+      "DEF-050",
+      "DEF-051"
+    ]
+  },
+  {
+    "id": "CASE-0115",
+    "req": "REQ-053",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt",
+      "docs/test-campaign/evidence/PRO-0087/wedge-after-blocking.txt"
+    ],
+    "armed": true,
+    "armedBy": "The blocking single-flight put back (waiters on an NSCondition, verification on the first caller's own thread). The named test went red: Expectation failed: (finishedBeforeTheVerificationLanded.current -> 0) == (unrelated -> 32). Zero of thirty-two unrelated tasks ran in twenty seconds while seventeen callers waited on one verification. Restored, green.",
+    "note": "PRO-0087. What a caller waiting on a verification costs the rest of the process: one more caller than the pool is wide, on a cold entry, with the verification parked, and thirty-two unrelated tasks that have to finish anyway. Deduplicating fifteen verifications to one closes the wasted work and not the wedge, because fifteen threads blocked waiting for one verification hold the cooperative pool exactly as fifteen threads running one did, and the pool is capped at the core count and does not replace a blocked worker. The watchdog runs on a thread of its own so that a regression is a red test rather than a hung suite. SCOPE, corrected 2026-08-21: this case discriminates whether waiters suspend or block, and nothing more. It previously claimed to be \"the case that decides whether DEF-050 is closed rather than reshaped\", which overstates it \u2014 a reviewer substituted Task.detached through a synchronous helper, putting the verification back on the cooperative pool, and this case stayed green. CASE-0116 measures that half and has been watched failing against that exact substitution.",
+    "defects": [
+      "DEF-050"
+    ]
+  },
+  {
+    "id": "CASE-0116",
+    "req": "REQ-053",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two substitutions, each watched red. (1) The verifier's own: the cache's dedicated Thread replaced by Task.detached routed through a synchronous helper. Expectation failed: !((verificationRanOn.current -> \"com.apple.root.default-qos.cooperative\").contains(\"cooperative\") -> true), and .contains(\"overcommit\") against the same value; 2 issues. In that same run CASE-0110 and CASE-0115 both passed, which is the gap this case exists to close. (2) DispatchQueue.global().async, the shape that reads as the fix and is bounded by the same cap: Expectation failed: (verificationRanOn.current -> \"com.apple.root.default-qos\").contains(\"overcommit\"); 1 issue. Restored, green.",
+    "note": "PRO-0087. Where the verification itself runs, read from libdispatch's own root-queue label rather than inferred from timing. Measured on this machine 2026-08-21: a Thread reads com.apple.root.default-qos.overcommit, a Task.detached reads com.apple.root.default-qos.cooperative, and DispatchQueue.global() reads com.apple.root.default-qos. The caller's label is asserted first as the instrument check, because \"not on the cooperative pool\" means nothing unless the probe reports that pool when it is looking at it. What this does not measure: that a verification completes while every cooperative thread is blocked. A saturation test for that was drafted and dropped \u2014 it holds the process-wide pool for seconds in a green run and the suite runs in parallel, so it would stall unrelated tests and feed DEF-051. Recorded in arming.txt.",
+    "defects": [
+      "DEF-050"
+    ]
   }
 ]
