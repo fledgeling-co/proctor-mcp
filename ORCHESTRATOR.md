@@ -1735,3 +1735,19 @@ symptom.
 
 **Open:** PRO-0083's A2 clause (unblocked now 0087 has merged), and PRO-0086, 0088, 0090, 0092,
 0093, 0095.
+
+### The external-effect census is closed (2026-08-21)
+
+`campaign.py check`: **examined=25, witnessed=21, unwitnessed=0**. The finding that opened wave 11 —
+22 external requirements and not one case at the `effect-witness` rung — is answered. The oracle
+mix is `outcome 82 · metamorphic 10 · effect-witness 25 · raster-visual 9 · interactive-glass 1`,
+against `outcome 44 · metamorphic 5 · raster-visual 8 · interactive-glass 1` when the census first
+ran. Gate 1,920 tests in 234 suites, exit 0. Strict ratchet 106 → 124. Lineage judged 6 of 8, ratchet
+6 held.
+
+`check` still exits 1 on two `inconclusive` cases, both recorded against real ceilings checked in
+source: REQ-007's `isAPerson` requires `sourcePid == 0`, unforgeable from any process, and REQ-024's
+browser-routing path does not cross the boundary its declared class names.
+
+PRO-0083 and PRO-0095 merged. PRO-0088 is `Needs More Work` on four clauses and is the only wave-13
+item still out.
