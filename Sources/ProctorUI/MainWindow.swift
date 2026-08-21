@@ -67,18 +67,15 @@ private struct Header: View {
                 Image(systemName: "rectangle.on.rectangle.angled")
                     .font(.system(size: 22, weight: .medium))
                     .foregroundStyle(.tint)
-                Text("Proctor").font(.system(size: 26, weight: .semibold))
+                Text(StatusSurface.Copy.windowTitle)
+                    .font(.system(size: 26, weight: .semibold))
                 Spacer()
             }
-            Text("Proctor lets a model test a Mac app: read what is actually on screen, "
-                 + "drive the controls, and check what the app rendered.")
+            Text(StatusSurface.Copy.headerLede)
                 .font(.system(size: 13))
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("It runs in the background as its own process. That is deliberate — macOS "
-                 + "attributes a permission to the process responsible for asking, so the "
-                 + "grants below belong to Proctor and keep working when you change or "
-                 + "upgrade the tool driving it.")
+            Text(StatusSurface.Copy.headerProcessNote)
                 .font(.system(size: 12))
                 .foregroundStyle(.tertiary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -94,7 +91,7 @@ private struct ReadinessSection: View {
     var body: some View {
         Card {
             HStack(alignment: .firstTextBaseline) {
-                SectionTitle("Permissions")
+                SectionTitle(StatusSurface.Copy.permissionsHeading)
                 Spacer()
                 StatusPill(model: model)
             }
@@ -102,34 +99,36 @@ private struct ReadinessSection: View {
             // section below it read as two kinds of claim rather than one list
             // with a mixed subtitle. That mixture is what put a command-line tool
             // under "Optional — asked for per app".
-            Text("Decisions macOS holds about Proctor. You change these in System Settings, "
-                 + "and Proctor can only read them.")
+            Text(StatusSurface.Copy.permissionsNote)
                 .font(.system(size: 12)).foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
             switch model.reachability {
             case .unknown:
-                Text("Checking…").font(.system(size: 12)).foregroundStyle(.secondary)
+                Text(StatusSurface.Copy.checking)
+                    .font(.system(size: 12)).foregroundStyle(.secondary)
 
             case .unreachable(let why):
                 if model.isApplying {
                     HStack(spacing: 8) {
                         ProgressView().controlSize(.small)
-                        Text("Applying the new permission…")
+                        Text(StatusSurface.Copy.applying)
                             .font(.system(size: 13, weight: .medium))
                     }
                 } else {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("The background agent is not answering.")
+                    Text(StatusSurface.Copy.downTitle)
                         .font(.system(size: 13, weight: .medium))
                     Text(why).font(.system(size: 12)).foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
-                    Text("Until it is running, permissions cannot be read and no test can run.")
+                    Text(StatusSurface.Copy.permissionsDownConsequence)
                         .font(.system(size: 12)).foregroundStyle(.tertiary)
                     HStack {
-                        Button("Start the agent") { Actions.ensureAgent(); model.refresh() }
+                        Button(StatusSurface.Copy.downStart) {
+                            Actions.ensureAgent(); model.refresh()
+                        }
                             .buttonStyle(.borderedProminent)
-                        Button("Re-check") { model.refresh() }
+                        Button(StatusSurface.Copy.recheck) { model.refresh() }
                     }
                 }
                 }
@@ -145,7 +144,7 @@ private struct ReadinessSection: View {
                     }
                 }
                 if model.ready {
-                    Label("Ready. Every permission Proctor needs is granted.",
+                    Label(StatusSurface.Copy.ready,
                           systemImage: "checkmark.circle.fill")
                         .font(.system(size: 12))
                         .foregroundStyle(.green)
@@ -168,7 +167,7 @@ private struct ReadinessSection: View {
                 // unreachable branch above, which has its own button.
                 if let offer = model.recovery, offer.kind == .restartAgent {
                     Callout(icon: "arrow.clockwise.circle.fill", tint: .orange,
-                            title: "The agent is holding an out-of-date answer",
+                            title: StatusSurface.Copy.recoveryTitle,
                             message: offer.reason)
                     Button(offer.action) { model.take(offer) }
                         .buttonStyle(.borderedProminent)
@@ -177,12 +176,8 @@ private struct ReadinessSection: View {
                     Callout(
                         icon: "exclamationmark.triangle.fill",
                         tint: .orange,
-                        title: "This build is ad-hoc signed",
-                        message: "macOS ties these grants to the exact bytes of this build, so "
-                            + "rebuilding Proctor silently revokes them — and a revoked grant "
-                            + "shows up as \"element not found\", not as a permission error. "
-                            + "A Developer ID signed and notarised build keeps its grants "
-                            + "across upgrades.")
+                        title: StatusSurface.Copy.adHocTitle,
+                        message: StatusSurface.Copy.adHocMessage)
                 }
                 if model.buildReplaced {
                     // Said here as well as in the menu, because this window is
@@ -193,15 +188,12 @@ private struct ReadinessSection: View {
                         Callout(
                             icon: "arrow.triangle.2.circlepath",
                             tint: .orange,
-                            title: "Proctor was updated",
-                            message: "The app on disk is a newer build than the one running, so "
-                                + "anything this window reports comes from the old one. "
-                                + (model.agentBuildReplaced
-                                   ? "The agent's binary changed too, so relaunching restarts it "
-                                     + "as well — which ends any run in flight."
-                                   : "The installer already restarted the agent on the new build; "
-                                     + "relaunching leaves it, and any run in flight, alone."))
-                        Button("Relaunch Proctor") { Actions.relaunch(alsoAgent: model.agentBuildReplaced) }
+                            title: StatusSurface.Copy.updatedTitle,
+                            message: StatusSurface.Copy.updatedMessage(
+                                agentReplaced: model.agentBuildReplaced))
+                        Button(StatusSurface.Copy.relaunch) {
+                            Actions.relaunch(alsoAgent: model.agentBuildReplaced)
+                        }
                             .buttonStyle(.borderedProminent)
                     }
                 }
@@ -245,11 +237,13 @@ private struct GrantRow: View {
                 }
                 Spacer()
                 if !grant.granted, !unconfirmed, let pane = Actions.pane(for: grant.name) {
-                    Button("Open Settings") { Actions.openPane(pane) }
+                    Button(StatusSurface.Copy.openSettings) { Actions.openPane(pane) }
                         .controlSize(.small)
                 }
                 if !grant.granted {
-                    Button(showHow ? "Hide" : "How") { showHow.toggle() }
+                    Button(showHow ? StatusSurface.Copy.hide : StatusSurface.Copy.how) {
+                        showHow.toggle()
+                    }
                         .controlSize(.small).buttonStyle(.borderless)
                 }
             }
@@ -305,9 +299,8 @@ private struct ToolsSection: View {
         // its own small falsehood.
         if model.report != nil {
             Card {
-                SectionTitle("Tools")
-                Text("Programs on this Mac that Proctor uses but does not ship. None of them is "
-                     + "a permission, and Proctor drives Mac apps without any of them.")
+                SectionTitle(StatusSurface.Copy.toolsHeading)
+                Text(StatusSurface.Copy.toolsNote)
                     .font(.system(size: 12)).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
@@ -322,10 +315,7 @@ private struct ToolsSection: View {
                     // Moved here with its row rather than left behind in the agent
                     // card. It is a safety disclosure about what that tool is, and
                     // it belongs beside the tool it is about.
-                    Text("Proctor names browser-use for pages Obscura cannot open. It is an "
-                         + "autonomous agent driving a real browser with real credentials, and "
-                         + "nothing it does reaches Proctor's audit trail. Set by "
-                         + "PROCTOR_SECOND_LANE in the agent's launchd environment.")
+                    Text(StatusSurface.Copy.secondLaneDisclosure)
                         .font(.system(size: 11)).foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -350,18 +340,10 @@ private struct ToolRowView: View {
         }
     }
 
-    private var symbol: String {
-        switch row.tone {
-        case .good:    return "checkmark.circle.fill"
-        case .bad:     return "circle"
-        case .unknown: return "questionmark.circle"
-        }
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 10) {
-                Image(systemName: symbol).foregroundStyle(tint)
+                Image(systemName: row.tone.symbol).foregroundStyle(tint)
                 VStack(alignment: .leading, spacing: 1) {
                     Text(row.tool).font(.system(size: 13, weight: .medium, design: .monospaced))
                     Text(row.status).font(.system(size: 11)).foregroundStyle(.secondary)
@@ -373,7 +355,9 @@ private struct ToolRowView: View {
                         .foregroundStyle(.tertiary)
                 }
                 if row.detail != nil || !row.searched.isEmpty {
-                    Button(showDetail ? "Hide" : "Details") { showDetail.toggle() }
+                    Button(showDetail ? StatusSurface.Copy.hide : StatusSurface.Copy.details) {
+                        showDetail.toggle()
+                    }
                         .controlSize(.small).buttonStyle(.borderless)
                 }
             }
@@ -385,17 +369,13 @@ private struct ToolRowView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     if let path = row.path {
-                        Text("Found at \(path)")
+                        Text(StatusSurface.Copy.foundAt(path))
                             .font(.system(size: 10, design: .monospaced))
                             .foregroundStyle(.tertiary)
                             .textSelection(.enabled)
                     }
-                    // The paths earn their place: the agent is started by the
-                    // system and inherits none of a terminal's lookup settings, so
-                    // "but it IS installed" is only ever settled by comparing where
-                    // each side looked.
                     if !row.searched.isEmpty {
-                        Text("Looked in:\n" + row.searched.joined(separator: "\n"))
+                        Text(StatusSurface.Copy.lookedIn(row.searched))
                             .font(.system(size: 10, design: .monospaced))
                             .foregroundStyle(.tertiary)
                             .textSelection(.enabled)
@@ -433,16 +413,17 @@ private struct SwitchesSection: View {
     var body: some View {
         Card {
             HStack(alignment: .firstTextBaseline) {
-                SectionTitle("Switches")
+                SectionTitle(StatusSurface.Copy.switchesHeading)
                 Spacer()
                 if model.switchesNeedRestart {
-                    Button("Restart agent to apply") { model.restartAgentForSwitches() }
+                    Button(StatusSurface.Copy.restartToApply) {
+                        model.restartAgentForSwitches()
+                    }
                         .controlSize(.small)
                         .buttonStyle(.borderedProminent)
                 }
             }
-            Text("How Proctor behaves while it runs. These are read by the background agent, "
-                 + "so all but the run panel take effect when it next starts.")
+            Text(StatusSurface.Copy.switchesNote)
                 .font(.system(size: 12)).foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -455,16 +436,14 @@ private struct SwitchesSection: View {
 
             if let error = model.switchWriteError {
                 Callout(icon: "exclamationmark.triangle.fill", tint: .orange,
-                        title: "That setting was not saved",
+                        title: StatusSurface.Copy.switchWriteErrorTitle,
                         message: error)
             }
 
             // Said once, at the bottom, rather than on eight rows. It is a fact
             // about the file rather than about any one switch, and a caveat
             // repeated eight times is one nobody reads.
-            Text("Saved in Proctor's own support folder, not in the launchd job, so "
-                 + "reinstalling does not lose them. Any program running as you can change "
-                 + "that file — it is a convenience, not a lock.")
+            Text(StatusSurface.Copy.switchesStorageNote)
                 .font(.system(size: 10)).foregroundStyle(.tertiary)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -482,18 +461,9 @@ private struct SwitchRowView: View {
     private var isConsentGate: Bool { row.aSwitch.requiresConsent }
 
     private var sourceLine: String {
-        guard let running = row.running else {
-            return "Not yet known — waiting for the agent"
-        }
-        switch SwitchSource(rawValue: running.source) {
-        case .environment:
-            return "\(running.on ? "On" : "Off") — set by \(row.aSwitch.variable), which the "
-                 + "agent inherited when it started"
-        case .saved:
-            return "\(running.on ? "On" : "Off") — your saved setting"
-        case .builtInDefault, .none:
-            return "\(running.on ? "On" : "Off") — Proctor's default"
-        }
+        StatusSurface.Copy.switchSource(on: row.running?.on,
+                                        source: row.source,
+                                        variable: row.aSwitch.variable)
     }
 
     var body: some View {
@@ -530,13 +500,12 @@ private struct SwitchRowView: View {
                     .toggleStyle(.switch)
                     .disabled(row.locked)
                     .help(row.locked
-                          ? "\(row.aSwitch.variable) is set in the agent's environment, so it "
-                          + "wins over anything saved here."
+                          ? StatusSurface.Copy.lockedHelp(variable: row.aSwitch.variable)
                           : "")
             }
 
             if row.pending {
-                Text("Saved. The running agent still has the old value — restart it to apply.")
+                Text(StatusSurface.Copy.switchPending)
                     .font(.system(size: 11)).foregroundStyle(.orange)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -546,43 +515,29 @@ private struct SwitchRowView: View {
             if confirming {
                 VStack(alignment: .leading, spacing: 8) {
                     Callout(icon: "exclamationmark.shield.fill", tint: .orange,
-                            title: "Before you turn this on",
+                            title: StatusSurface.Copy.consentTitle,
                             message: consentText)
                     HStack {
-                        Button("Turn it on") {
+                        Button(StatusSurface.Copy.consentConfirm) {
                             confirming = false
                             model.setSwitch(row.aSwitch, on: true)
                         }
                         .buttonStyle(.borderedProminent)
-                        Button("Cancel") { confirming = false }
+                        Button(StatusSurface.Copy.cancel) { confirming = false }
                     }
                 }
             }
 
             if let warning = row.running?.pairingWarning {
                 Callout(icon: "eye.slash.fill", tint: .orange,
-                        title: "Nothing on screen will say this is happening",
+                        title: StatusSurface.Copy.pairingWarningTitle,
                         message: warning)
             }
         }
         .padding(.vertical, 8)
     }
 
-    /// Proctor's own words, and deliberately concrete about what is handed over.
-    /// `BrowserUseTool`'s existing disclosure is the model.
-    private var consentText: String {
-        if row.aSwitch == SwitchCatalogue.secondLane {
-            return "browser-use is an autonomous agent that drives a real browser with your "
-                 + "real cookies and logins, and nothing it does reaches Proctor's audit "
-                 + "trail. Turning this on names it to the model Proctor is serving. "
-                 + "Proctor does not install it and has no opinion about whether it "
-                 + "should be here."
-        }
-        return "Proctor will create an event tap that swallows your keyboard and mouse while "
-             + "it posts a step, so your typing cannot land in the app it is driving. While "
-             + "it is held, Escape stops the run, and Cmd-Tab, Force Quit, lock screen and "
-             + "the screenshot keys still reach the system."
-    }
+    private var consentText: String { StatusSurface.Copy.consentText(for: row.aSwitch) }
 }
 
 // MARK: - Activity
@@ -595,12 +550,12 @@ private struct ActivitySection: View {
     var body: some View {
         Card {
             HStack(alignment: .firstTextBaseline) {
-                SectionTitle("Activity")
+                SectionTitle(StatusSurface.Copy.activityHeading)
                 Spacer()
                 // This card answers "what is it doing"; the History window
                 // answers "what did it do". Reaching one from the other is the
                 // shortest path between the two questions a person actually asks.
-                Button("Show history") {
+                Button(StatusSurface.Copy.showHistory) {
                     NSApp.activate(ignoringOtherApps: true)
                     openWindow(id: "history")
                 }
@@ -609,18 +564,19 @@ private struct ActivitySection: View {
             if let current = model.currentActivity {
                 HStack(spacing: 8) {
                     LiveDot(reduceMotion: reduceMotion)
-                    Text("Running").font(.system(size: 13, weight: .medium))
+                    Text(StatusSurface.Copy.activityRunning)
+                        .font(.system(size: 13, weight: .medium))
                     Text(current).font(.system(size: 12, weight: .semibold, design: .monospaced))
                         .foregroundStyle(.tint)
                     Spacer()
                 }
             } else if model.recentActivity.isEmpty {
                 Text(model.reachability == .reachable
-                     ? "Idle — no model is driving Proctor right now."
-                     : "No activity to report.")
+                     ? StatusSurface.Copy.activityIdle
+                     : StatusSurface.Copy.activityNone)
                     .font(.system(size: 12)).foregroundStyle(.secondary)
             } else {
-                Text("Idle — last actions below.")
+                Text(StatusSurface.Copy.activityIdleWithHistory)
                     .font(.system(size: 12)).foregroundStyle(.secondary)
             }
 
@@ -677,24 +633,15 @@ private struct ConnectSection: View {
     let model: AgentModel
 
     private var shimPath: String {
-        Bundle.main.bundlePath + "/Contents/MacOS/proctor-shim"
+        Wire.shimPath(inBundle: Bundle.main.bundlePath)
     }
 
-    private var snippet: String {
-        """
-        {
-          "mcpServers": {
-            "proctor": { "command": "\(shimPath)" }
-          }
-        }
-        """
-    }
+    private var snippet: String { StatusSurface.Copy.connectSnippet(shimPath: shimPath) }
 
     var body: some View {
         Card {
-            SectionTitle("Connect a model to it")
-            Text("Add this to your MCP host's config. The command below holds no "
-                 + "permissions of its own — it forwards to Proctor, which does.")
+            SectionTitle(StatusSurface.Copy.connectHeading)
+            Text(StatusSurface.Copy.connectNote)
                 .font(.system(size: 12)).foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             Text(snippet)
@@ -704,8 +651,8 @@ private struct ConnectSection: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color(nsColor: .quaternarySystemFill), in: RoundedRectangle(cornerRadius: 6))
             HStack {
-                Button("Copy config") { Actions.copy(snippet) }
-                Button("Copy command path only") { Actions.copy(shimPath) }
+                Button(StatusSurface.Copy.copyConfig) { Actions.copy(snippet) }
+                Button(StatusSurface.Copy.copyCommandPath) { Actions.copy(shimPath) }
                     .buttonStyle(.borderless).controlSize(.small)
             }
         }
@@ -719,38 +666,40 @@ private struct AgentSection: View {
 
     var body: some View {
         Card {
-            SectionTitle("Background agent")
+            SectionTitle(StatusSurface.Copy.agentSectionHeading)
             // Facts about the running process. Tools moved to their own section:
             // "which programs are on this Mac" and "what is this process" are
             // different questions, and answering both in one grid is what let a
             // CLI be reported twice, in two registers, in two places.
             if let r = model.report {
                 Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 6) {
-                    Row("Version", "\(r.agentVersion)  ·  protocol \(r.protocolVersion)")
+                    Row(StatusSurface.Copy.agentVersionLabel,
+                        StatusSurface.Copy.agentVersion(r.agentVersion,
+                                                        protocolVersion: r.protocolVersion))
                     // The window is its own process from its own copy of the bundle,
                     // and an upgrade can leave the two halves on different builds for
                     // hours. Normally these two strings match; when they do not, the
                     // difference is the diagnosis, in words rather than in timestamps
                     // somebody has to go and read.
-                    Row("This window", BuildInfo.current.descriptor)
-                    Row("macOS", r.osVersion)
-                    Row("Socket", r.socketPath)
-                    Row("Attached apps", r.attachedApps.isEmpty
-                        ? "none" : r.attachedApps.map(\.name).joined(separator: ", "))
-                    Row("Live observers", "\(r.observersLive)")
-                    Row("Signature", model.signature.summary)
+                    Row(StatusSurface.Copy.agentWindowLabel, BuildInfo.current.descriptor)
+                    Row(StatusSurface.Copy.agentOSLabel, r.osVersion)
+                    Row(StatusSurface.Copy.agentSocketLabel, r.socketPath)
+                    Row(StatusSurface.Copy.agentAttachedLabel, r.attachedApps.isEmpty
+                        ? StatusSurface.Copy.agentAttachedNone
+                        : r.attachedApps.map(\.name).joined(separator: ", "))
+                    Row(StatusSurface.Copy.agentObserversLabel, "\(r.observersLive)")
+                    Row(StatusSurface.Copy.agentSignatureLabel, model.signature.summary)
                 }
                 if r.secureEventInputActive {
                     Callout(
                         icon: "keyboard.badge.ellipsis",
                         tint: .orange,
-                        title: "Secure Event Input is active",
-                        message: "Something on this Mac — usually a password field — is holding "
-                            + "secure input. Reading the accessibility tree and driving "
-                            + "controls still work; synthesised keystrokes do not.")
+                        title: StatusSurface.Copy.secureInputTitle,
+                        message: StatusSurface.Copy.secureInputMessage)
                 }
             } else {
-                Text("No agent to report on.").font(.system(size: 12)).foregroundStyle(.secondary)
+                Text(StatusSurface.Copy.agentAbsent)
+                    .font(.system(size: 12)).foregroundStyle(.secondary)
             }
         }
     }
@@ -789,12 +738,8 @@ private struct ObscuraOffer: View {
             Callout(
                 icon: "arrow.down.circle",
                 tint: .orange,
-                title: "Obscura is not installed",
-                message: "Proctor hands browser pages to Obscura rather than driving them "
-                    + "through the accessibility tree, so without it that advice names a "
-                    + "command this Mac does not have. Proctor does not install it: these "
-                    + "commands download a binary from the internet, and this process holds "
-                    + "Accessibility and Screen Recording.")
+                title: StatusSurface.Copy.obscuraTitle,
+                message: StatusSurface.Copy.obscuraMessage)
             Text(commands.joined(separator: "\n"))
                 .font(.system(size: 11, design: .monospaced))
                 .textSelection(.enabled)
@@ -803,10 +748,12 @@ private struct ObscuraOffer: View {
                 .background(Color(nsColor: .quaternarySystemFill),
                             in: RoundedRectangle(cornerRadius: 6))
             HStack {
-                Button("Copy install commands") { Actions.copy(commands.joined(separator: "\n")) }
-                Button("Open the project page") { Actions.open(absence.docs) }
+                Button(StatusSurface.Copy.copyInstallCommands) {
+                    Actions.copy(commands.joined(separator: "\n"))
+                }
+                Button(StatusSurface.Copy.openProjectPage) { Actions.open(absence.docs) }
                     .buttonStyle(.borderless).controlSize(.small)
-                Button("Re-check") { model.refresh() }
+                Button(StatusSurface.Copy.recheck) { model.refresh() }
                     .buttonStyle(.borderless).controlSize(.small)
             }
         }
@@ -834,8 +781,8 @@ private struct FooterSection: View {
     // one action that can move what the poll cannot.
     var body: some View {
         HStack(spacing: 10) {
-            Button("Open log") { Actions.openLog() }
-            Button("Restart agent") { Actions.restartAgent(); model.refresh() }
+            Button(StatusSurface.Copy.openLog) { Actions.openLog() }
+            Button(StatusSurface.Copy.restartAgent) { Actions.restartAgent(); model.refresh() }
             Spacer()
             if let t = model.lastChecked {
                 // "Checked …" was one freshness claim over every answer above it,
@@ -875,11 +822,13 @@ private struct StatusPill: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
         let (label, tint): (String, Color) = {
-            if model.isApplying { return ("Applying", .secondary) }
+            if model.isApplying { return (StatusSurface.Copy.pillApplying, .secondary) }
             switch model.reachability {
-            case .unknown: return ("Checking", .secondary)
-            case .unreachable: return ("Agent down", .red)
-            case .reachable: return model.ready ? ("Ready", .green) : ("Needs permission", .orange)
+            case .unknown: return (StatusSurface.Copy.pillChecking, .secondary)
+            case .unreachable: return (StatusSurface.Copy.pillDown, .red)
+            case .reachable: return model.ready
+                ? (StatusSurface.Copy.pillReady, .green)
+                : (StatusSurface.Copy.pillNeedsPermission, .orange)
             }
         }()
         Text(label)
@@ -927,14 +876,7 @@ private struct Callout: View {
 // MARK: - Side effects
 
 enum Actions {
-    static func pane(for grant: String) -> String? {
-        switch grant {
-        case "Accessibility":   return "Privacy_Accessibility"
-        case "Screen Recording": return "Privacy_ScreenCapture"
-        case "Automation":      return "Privacy_Automation"
-        default:                return nil
-        }
-    }
+    static func pane(for grant: String) -> String? { StatusChecks.settingsPane(for: grant) }
 
     static func openPane(_ anchor: String) {
         let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?\(anchor)")!
@@ -971,9 +913,9 @@ enum Actions {
         NSWorkspace.shared.open(log)
     }
 
-    static let label = "app.fledgeling.procter.agent"
+    static let label = Wire.agentLabel
 
-    private static var domain: String { "gui/\(getuid())" }
+    private static var domain: String { Wire.launchdDomain(uid: getuid()) }
 
     private static var plistPath: String {
         FileManager.default.homeDirectoryForCurrentUser
@@ -1107,7 +1049,7 @@ private struct AgentDownSection: View {
                         .buttonStyle(.borderedProminent)
                         .accessibilityIdentifier(StatusSurface.ID.startAgent)
 
-                        Button(StatusSurface.Copy.downRecheck) { model.refresh() }
+                        Button(StatusSurface.Copy.recheck) { model.refresh() }
                             .accessibilityIdentifier(StatusSurface.ID.recheck)
                     }
                     .padding(.top, 4)
