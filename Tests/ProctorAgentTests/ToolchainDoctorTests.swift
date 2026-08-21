@@ -324,6 +324,25 @@ struct SignatureVerdictCacheTests {
         var all: [ToolSignature] { lock.lock(); defer { lock.unlock() }; return values }
     }
 
+    /// A string one thread writes and another reads, for recording where a piece
+    /// of the production path actually ran.
+    private final class Label: @unchecked Sendable {
+        private let lock = NSLock()
+        private var value = ""
+        func set(_ text: String) { lock.lock(); value = text; lock.unlock() }
+        var current: String { lock.lock(); defer { lock.unlock() }; return value }
+    }
+
+    /// Which root queue the calling thread belongs to, read from libdispatch
+    /// rather than inferred. **MEASURED 2026-08-21 on this machine:** a `Thread`
+    /// reads `com.apple.root.default-qos.overcommit`, a `Task.detached` reads
+    /// `com.apple.root.default-qos.cooperative`, and `DispatchQueue.global()`
+    /// reads `com.apple.root.default-qos`. Those three are the fix, the shape
+    /// DEF-050 came from, and the shape that looks like the fix and is not.
+    private static func currentRootQueue() -> String {
+        String(cString: __dispatch_queue_get_label(nil))
+    }
+
     private static let oneIdentity = FileIdentity(device: 1, inode: 2, size: 3,
                                                   modified: 4, changed: 5)
 
@@ -419,6 +438,54 @@ struct SignatureVerdictCacheTests {
         #expect(finishedBeforeTheVerificationLanded.current == unrelated,
                 "only \(finishedBeforeTheVerificationLanded.current) of \(unrelated) unrelated tasks ran while \(callers) callers were waiting on one verification, so the callers were holding the pool")
         #expect(cache.verificationCount == 1)
+    }
+
+    @Test("the verification runs off the cooperative pool, on a thread the pool cannot refuse")
+    func theVerificationRunsOffTheCooperativePool() async {
+        // The half of the fix that `aVerificationInFlightBlocksNothing` does not
+        // discriminate, and this test exists because a reviewer measured that: he
+        // swapped the cache's `Thread` for a `Task.detached` routed through a
+        // synchronous helper — putting the verification straight back on the
+        // width-capped cooperative pool — and both concurrency tests stayed green.
+        // They measure the *waiters*, who suspend either way. Nothing measured
+        // where the verification itself ran.
+        //
+        // It runs where the pool cannot refuse it. The cooperative pool is capped
+        // at the core count and does not overcommit, so a verification queued on
+        // it waits behind whatever is holding those threads — which on 2026-08-21
+        // was sixteen blocked threads and no worker for Security's own dispatch
+        // group. A `Thread` is a thread that already exists by the time anything
+        // can be queued behind it.
+        //
+        // So this reads the root queue libdispatch says each half is on, rather
+        // than inferring it from timing: the caller must read `cooperative`, which
+        // is what proves the probe can see the pool at all, and the verification
+        // must read neither `cooperative` (the pool DEF-050 wedged) nor the bare
+        // non-overcommit `com.apple.root.default-qos` (the shape that looks like
+        // this fix and is starved by the same cap).
+        let callerRanOn = Label()
+        let verificationRanOn = Label()
+        let cache = SignatureVerdictCache(
+            identify: { _ in
+                callerRanOn.set(Self.currentRootQueue())
+                return Self.oneIdentity
+            },
+            verify: { _ in
+                verificationRanOn.set(Self.currentRootQueue())
+                return .valid
+            })
+
+        #expect(await cache.verdict(for: "/x/cua-driver") == .valid)
+
+        // The instrument check first: an assertion that the verification is not on
+        // the cooperative pool means nothing unless this probe reports that pool
+        // when it is looking at it.
+        #expect(callerRanOn.current.contains("cooperative"),
+                "the caller ran on \(callerRanOn.current), not a cooperative pool thread, so this run could not have told a pooled verification from an unpooled one")
+        #expect(!verificationRanOn.current.contains("cooperative"),
+                "the verification ran on \(verificationRanOn.current) — the width-capped pool, which is where DEF-050 starved it")
+        #expect(verificationRanOn.current.contains("overcommit"),
+                "the verification ran on \(verificationRanOn.current), a root queue that hands out a bounded number of threads, rather than one that creates the thread it needs")
     }
 
     @Test("eight sessions asking about one binary at once verify it once between them")

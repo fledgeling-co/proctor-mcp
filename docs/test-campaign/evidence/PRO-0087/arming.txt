@@ -88,3 +88,48 @@ verification. That is the wedge, in a unit test, deterministic.
 Green after restoring the async version, with the whole suite:
 
   Test run with 8 tests in 1 suite passed after 0.391 seconds.
+
+--------------------------------------------------------------------------------
+CASE-0116 · theVerificationRunsOffTheCooperativePool
+Added 2026-08-21 after a fresh verifier measured what CASE-0115 does not discriminate: he
+replaced the cache's dedicated `Thread` with a `Task.detached` routed through a synchronous
+helper — the verification straight back on the cooperative pool — and BOTH concurrency tests
+stayed green. CASE-0110 and CASE-0115 measure the waiters, who suspend either way.
+
+This case reads the root queue libdispatch reports for each half, so the execution context is
+measured rather than inferred from timing. Measured on this machine, 2026-08-21:
+
+    Thread                   com.apple.root.default-qos.overcommit
+    Task.detached            com.apple.root.default-qos.cooperative
+    DispatchQueue.global()   com.apple.root.default-qos
+
+Arming 1 — the verifier's own substitution, `Task.detached` through a synchronous helper:
+
+  Test "the verification runs off the cooperative pool, on a thread the pool cannot refuse"
+  recorded an issue at ToolchainDoctorTests.swift:485:9: Expectation failed:
+  !((verificationRanOn.current → "com.apple.root.default-qos.cooperative")
+    .contains("cooperative") → true)
+  ... and at :487:9 against .contains("overcommit").
+  failed after 0.001 seconds with 2 issues.
+
+In that same run, "fifteen callers arriving together on a cold entry cost one verification"
+and "a verification in flight holds no cooperative thread" both passed — the verifier's
+finding, reproduced here rather than taken on trust.
+
+Arming 2 — `DispatchQueue.global().async`, the shape that looks like the fix and is starved by
+the same cap (grok-4.6 named it during the design review as a substitution that reads as B and
+is not):
+
+  Expectation failed: (verificationRanOn.current → "com.apple.root.default-qos")
+  .contains("overcommit")
+  failed after 0.001 seconds with 1 issue.
+
+Green after restoring the shipped `Thread`, whole suite:
+
+  Test run with 9 tests in 1 suite passed after 0.084 seconds.
+
+What it does NOT measure: that a verification completes while every cooperative thread is
+blocked. That was drafted as a saturation test and dropped deliberately — it holds the whole
+process-wide pool for seconds in a green run, and the suite runs its tests in parallel, so it
+would stall unrelated tests and feed DEF-051's 0.2 s bound. The queue label is the same claim
+measured at the mechanism instead of through a timing race.

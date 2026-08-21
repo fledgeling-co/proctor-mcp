@@ -12,12 +12,20 @@ the hang; nothing is edited until that is on disk. PRO-0083's `ExternalWitnessTe
 puts fifteen sessions on the socket at once and they belong to PRO-0083's branch rather than this
 one.
 
+Copying the two files in is not the whole step, and this is the line the first version of this plan
+was missing. `ReflectorWitnessTests.swift` imports `ProctorReflector`, and `ProctorAgentTests` on this
+branch depends on `ProctorAgent`, `ProctorCore` and `ProctorCatch` only, so the test target fails to
+link until `Package.swift` gains that fourth dependency — PRO-0083 carries it, PRO-0087 does not. Add
+it for the duration of the measurement and revert it before committing, since the committed tree does
+not carry the suites that need it. Anyone recomputing the denominators in the run ledger hits this
+first.
+
 | Phase | Work |
 |---|---|
-| 0 | Copy PRO-0083's witness suites in. Run the suite until a hang. `sample` the hung process twice. |
+| 0 | Copy PRO-0083's witness suites in and add `ProctorReflector` to the test target. Run the suite until a hang. `sample` the hung process twice. |
 | 1 | The cache: shared default, single flight, identity-keyed map with a bound. |
 | 2 | `ToolProbes` defaults to the shared store. |
-| 3 | Four tests, each armed by re-introducing the defect it names. |
+| 3 | Tests, each armed by re-introducing the defect it names. |
 | 4 | Re-run the suite N times with the witness suites still present. Registry rows, spec, plan, changelog. |
 
 ## Phase 1 — the cache
@@ -62,17 +70,32 @@ fail is not known to bite.
 | Probe sets share one store | Default back to `SignatureVerdictCache()` | two `ToolProbes` not identical |
 | A verification in flight blocks nothing | Put the blocking single-flight back | 0 of 32 unrelated tasks ran in 20 s |
 | Two files, two entries | (guards the map against a regression to one slot) | — |
+| The verification runs off the pool | Swap the `Thread` for `Task.detached`, then for `DispatchQueue.global()` | root queue reads `…cooperative`, then `…default-qos` |
 
 The fifteen-caller test uses fifteen `Task`s, which is what the production path uses and what the
 async design makes safe: nothing in the path blocks, so a caller cannot be starved by the defect it
 is measuring. Its recorder is `verificationCount`, which the cache increments, so the assertion is
 not on a value the test wrote.
 
-The anti-wedge test is the one that decides whether this item is done. It puts one more caller than
-the pool is wide on a cold entry, parks the verification, and requires 32 unrelated tasks to finish
-while it is parked. Its watchdog runs on a thread of its own so that a regression comes back as a
-red test rather than as a hung suite — the failure mode this whole item exists to remove should not
-be the failure mode of the test guarding it.
+The anti-wedge test puts one more caller than the pool is wide on a cold entry, parks the
+verification, and requires 32 unrelated tasks to finish while it is parked. Its watchdog runs on a
+thread of its own so that a regression comes back as a red test rather than as a hung suite — the
+failure mode this whole item exists to remove should not be the failure mode of the test guarding it.
+
+It measures the waiters, and only the waiters, which the first version of this plan did not say. A
+reviewer proved the gap by measurement: he swapped the `Thread` for a `Task.detached` routed through
+a synchronous helper — the verification straight back on the width-capped pool — and both
+concurrency tests stayed green, because waiters suspend either way. The sixth test closes that half
+by reading the root queue libdispatch reports for each side: the caller must read `cooperative`,
+which is what proves the probe can see the pool at all, and the verification must read neither
+`cooperative` nor the bare non-overcommit `com.apple.root.default-qos`, which is the shape that
+reads as this fix and is bounded by the same cap. Both substitutions were watched red.
+
+Not tested, deliberately: that a verification completes while every cooperative thread is blocked. A
+saturation test for that holds the process-wide pool for seconds in a green run, and the suite runs
+its tests in parallel, so it would stall unrelated tests and feed the very 0.2 s bound named in the
+open question below. The queue label measures the same claim at the mechanism instead of through a
+timing race.
 
 The eight-session test drives `Session.doctor` and asserts on the shared counter and on the injected
 `verify` having run once. It proves the production path reaches one store; the overlap claim belongs

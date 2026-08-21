@@ -8,8 +8,25 @@ which is REQ-035's security clause failing to be exercised at all.
 The machine was shared with other worktrees building throughout, and its load average moved between
 90 and 900 across the afternoon. That is a confound and it is stated here rather than smoothed over:
 the two red sets below were taken at the high end and the green set at the low end. What is *not*
-load-dependent is CASE-0115, which reproduces the wedge deterministically in a unit test, and the
-two samples, which show what the threads were doing rather than how long they took.
+load-dependent is the pair of unit tests — CASE-0115, which measures that a caller waiting on a
+verification holds no cooperative thread, and CASE-0116, which measures that the verification itself
+is not on that pool — or the two samples, which show what the threads were doing rather than how long
+they took.
+
+## Reproducing the borrowed-suite runs
+
+Copying `ExternalWitnessTests.swift` and `ReflectorWitnessTests.swift` in is not enough on its own:
+`ReflectorWitnessTests` imports `ProctorReflector`, and this branch's `ProctorAgentTests` target does
+not depend on it, so the test target fails to link. PRO-0083 carries that dependency and PRO-0087
+does not. Add it to `Package.swift` for the duration of the measurement and take it out afterwards:
+
+    .testTarget(name: "ProctorAgentTests",
+                dependencies: ["ProctorAgent", "ProctorCore", "ProctorCatch",
+                               "ProctorReflector"]),
+
+That edit was made and reverted for sets 1 to 4 here (`/tmp/pro0087/Package.swift.orig` is the
+untouched copy it was restored from), and it appears in neither the plan nor the first version of
+this ledger — which is the step anyone recomputing this denominator hits first.
 
 ## Set 1 — unmodified tree, load average ~857
 
@@ -40,11 +57,36 @@ unmodified tree, and not this item's to fix.
 
 ## Set 3 — first fix: shared store, single flight, waiters blocking on an NSCondition
 
-Fourteen runs. Thirteen completed with the forging arm answering on all thirteen, so the wasted work
-was gone. One hung anyway, and that is what sent this item back to the drawing board:
-`wedge-after-blocking.txt` shows **all sixteen cooperative threads blocked** — fifteen in
+**Ten runs. Nine completed, one hung.** Corrected 2026-08-21: this section previously said
+"Fourteen runs. Thirteen completed", and no set in this ledger has fourteen runs in it. The figure
+conflated this set with set 4 — ten runs each, and the two were added and then partly re-attributed.
+The per-run lines below come from `/tmp/pro0087/after.summary` (runs 1-6) and `after2.summary`
+(runs 7-9), with run 10 the one that produced no verdict line at all.
+
+| Run | Log | Result | Time | forgeNoAnswer |
+|---|---|---|---|---|
+| 1 | `after-1.log` | failed, 1 issue | 25.1 s | 0 |
+| 2 | `after-2.log` | failed, 1 issue | 22.9 s | 0 |
+| 3 | `after-3.log` | failed, 3 issues | 25.2 s | 0 |
+| 4 | `after-4.log` | failed, 1 issue | 18.8 s | 0 |
+| 5 | `after-5.log` | failed, 1 issue | 17.6 s | 0 |
+| 6 | `after-6.log` | failed, 1 issue | 23.6 s | 0 |
+| 7 | `after2-1.log` | failed, 1 issue | 28.2 s | 0 |
+| 8 | `after2-2.log` | passed, 1836 tests | 24.4 s | 0 |
+| 9 | `after2-3.log` | passed, 1836 tests | 21.6 s | 0 |
+| 10 | `after2-4.log` | **hung** | no verdict line | n/a |
+
+The forging arm answered on all nine runs that finished, so the wasted work was gone. The single
+issue in runs 1, 2, 4, 5, 6 and 7 is DEF-051, `ScreenRecordingProbeWiringTests.swift:42`; run 3
+carried that plus two issues in `RunQueueWiringTests` ("a drop returns one call; everything else
+keeps its place", line 365 and line 470), which is the same 0.2 s-bound class under load and is not
+this item's path either.
+
+Run 10 hung anyway, and that is what sent this item back to the drawing board:
+`wedge-after-blocking.txt` — sampled at 17:10 while that run was stuck, byte-identical to
+`/tmp/pro0087/wedge-after.txt` — shows **all sixteen cooperative threads blocked**, fifteen in
 `__psynch_cvwait` inside `SignatureVerdictCache.verdict(for:)` and one in
-`Security::Dispatch::Group::wait()` — and **no non-cooperative `com.apple.root.default-qos` worker
+`Security::Dispatch::Group::wait()`, and **no non-cooperative `com.apple.root.default-qos` worker
 thread in the process at all**. Fifteen threads waiting on one verification starve it exactly as
 fifteen threads running one did.
 
@@ -63,7 +105,7 @@ fifteen threads running one did.
 | 9 | passed | 15.6 s | 0 |
 | 10 | passed | 11.6 s | 0 |
 
-**10 of 10 green.** No run hung. REQ-035's forging arm answered on all ten, against three of five
+**10 of 10 green**, `final-1.log` to `final-10.log`, summarised in `/tmp/pro0087/final.summary`. No run hung. REQ-035's forging arm answered on all ten, against three of five
 reported by PRO-0083 and one outright failure in four control runs here.
 
 The run time is worth recording on its own: 11.6-18.3 s against 20.8-31.4 s on the unmodified tree.

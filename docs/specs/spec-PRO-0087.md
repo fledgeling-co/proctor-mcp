@@ -95,5 +95,10 @@ raising it would move the gate rather than close the defect. `Server.dispatchBlo
    that one.
 4. With more callers than the cooperative pool is wide waiting on one verification, unrelated work
    still runs to completion while that verification is parked.
-5. The full suite green across a stated run count with its denominator, with PRO-0083's witness
+5. The verification itself runs off the cooperative pool: libdispatch reports the caller on
+   `com.apple.root.default-qos.cooperative` and the verification on an overcommit root queue, so a
+   substitution that puts it back on the width-capped pool is red. Clause 4 does not cover this —
+   waiters suspend either way — and the two were treated as one until a reviewer measured the
+   difference.
+6. The full suite green across a stated run count with its denominator, with PRO-0083's witness
    suites present, and REQ-035's forging arm answering on every run that completes.
