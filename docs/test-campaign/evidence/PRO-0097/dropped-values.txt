@@ -1,34 +1,92 @@
-registry drift: 2 file(s), 11461 id/field pair(s) examined
-  DROPPED  REQ-024.evidence: set at 6e5094e4 and reverted to the value its parent held
-      lost: "vacuous"
-      HEAD: "observed"
-  DROPPED  DEF-030.status: set at 6e5094e4 and reverted to the value its parent held
-      lost: "fixed"
-      HEAD: "open"
-  DROPPED  DEF-032.status: set at 6e5094e4 and reverted to the value its parent held
-      lost: "fixed"
-      HEAD: "open"
-  DROPPED  DEF-055.status: set at 6e5094e4 and reverted to the value its parent held
-      lost: "fixed"
-      HEAD: "open"
-  DROPPED  DEF-057.status: set at 6e5094e4 and reverted to the value its parent held
-      lost: "fixed"
-      HEAD: "open"
-  DROPPED  DEF-058.status: set at 6e5094e4 and reverted to the value its parent held
-      lost: "fixed"
-      HEAD: "open"
-  DROPPED  DEF-024: whole row present at 2420282e and absent at HEAD
-  DROPPED  CASE-0032.evidence: set at 964cfd5f and reverted to the value its parent held
-      lost: ["evidence/overlay-capture-default.json", "evidence/window-level-sharing.json", "evidence/PRO-0088/case-0032-population-before.json", "evidence/PRO-0088/glass/o
-      HEAD: ["evidence/overlay-capture-default.json", "evidence/window-level-sharing.json"]
-  DROPPED  CASE-0059.capture: set at 595179d1 and reverted to the value its parent held
-      lost: {"frameStatus": "SCFrameStatus=complete, framesWaited 2", "method": "ScreenCaptureKit window-scoped, signed Developer ID agent pid 97657, target Calculator pid 
-      HEAD: null
-  DROPPED  CASE-0063.witness: set at 595179d1 and reverted to the value its parent held
-      lost: {"count": 24, "effect": "device", "recorder": "listen-only tail-append CGEventTap in the witness_probe process, counting probe-marked posts that survived Procto
-      HEAD: null
+The values five merges dropped, and the tree getting them back
+==============================================================
 
-FAIL: 10 value(s) an ancestor commit set and this tree no longer
-      carries. Restore each from the commit that set it, or record why the
-      later value is the right one. A merge keeping ours over a registry it
-      did not read is how eleven of these were lost across four merges.
+Both runs use the SHIPPED scripts/campaign/defect_gate.py. An earlier draft of
+this check was path-limited (`rev-list --merges HEAD -- <path>`) and read only
+`theirs`; it saw 21 merges and 10 findings. A merge resolved with `-s ours`
+leaves the file identical to its first parent, so git's history simplification
+drops it from a path-limited listing — and that merge is exactly the one that
+discarded the other side's value. Unlimited and reading every parent, the same
+check sees 88 merges and finds THREE MORE, from a fifth merge the first draft
+could not reach: REQ-029, DEF-006 and DEF-007's evidence, set on c7fbe295 and
+dropped by b49b5a1e.
+
+
+RED — at 5e572d0, this item's first commit, before the restoration
+------------------------------------------------------------------
+  $ cd <worktree at 5e572d0>
+  $ python3 scripts/campaign/defect_gate.py dropped docs/test-campaign
+  registry drift: 2 file(s), 88 merge(s), 19070 id/field pair(s) examined
+    DROPPED  REQ-029.evidence: set on c7fbe295, dropped by merge b49b5a1e which came out holding the base's value
+        lost: "observed"
+        HEAD: null
+    DROPPED  DEF-006.evidence: set on c7fbe295, dropped by merge b49b5a1e which came out holding the base's value
+        lost: ["evidence/arming-mutations.json"]
+        HEAD: null
+    DROPPED  DEF-007.evidence: set on c7fbe295, dropped by merge b49b5a1e which came out holding the base's value
+        lost: ["evidence/sweepG-accessibility-floor.json"]
+        HEAD: null
+    DROPPED  REQ-024.evidence: set on 17bfcd19, dropped by merge f5098428 which came out holding the base's value
+        lost: "vacuous"
+        HEAD: "observed"
+    DROPPED  DEF-030.status: set on 17bfcd19, dropped by merge f5098428 which came out holding the base's value
+        lost: "fixed"
+        HEAD: "open"
+    DROPPED  DEF-032.status: set on 17bfcd19, dropped by merge f5098428 which came out holding the base's value
+        lost: "fixed"
+        HEAD: "open"
+    DROPPED  DEF-055.status: set on 17bfcd19, dropped by merge f5098428 which came out holding the base's value
+        lost: "fixed"
+        HEAD: "open"
+    DROPPED  DEF-057.status: set on 17bfcd19, dropped by merge f5098428 which came out holding the base's value
+        lost: "fixed"
+        HEAD: "open"
+    DROPPED  DEF-058.status: set on 17bfcd19, dropped by merge f5098428 which came out holding the base's value
+        lost: "fixed"
+        HEAD: "open"
+    DROPPED  DEF-024: added on 2420282e, not taken by merge 43a3684c, and absent at HEAD
+    DROPPED  CASE-0032.evidence: set on 69cb30ba, dropped by merge e96b23b4 which came out holding the base's value
+        lost: ["evidence/overlay-capture-default.json", "evidence/window-level-sharing.json", "evidence/PRO-0088/case-0032-population-before.json", "evidence/PRO-00
+        HEAD: ["evidence/overlay-capture-default.json", "evidence/window-level-sharing.json"]
+    DROPPED  CASE-0059.capture: set on 2420282e, dropped by merge 43a3684c which came out holding the base's value
+        lost: {"frameStatus": "SCFrameStatus=complete, framesWaited 2", "method": "ScreenCaptureKit window-scoped, signed Developer ID agent pid 97657, target Calcu
+        HEAD: null
+    DROPPED  CASE-0063.witness: set on 2420282e, dropped by merge 43a3684c which came out holding the base's value
+        lost: {"count": 24, "effect": "device", "recorder": "listen-only tail-append CGEventTap in the witness_probe process, counting probe-marked posts that survi
+        HEAD: null
+  
+  FAIL: 13 value(s) a merge discarded and this tree has not got
+        back. Restore each from the branch that set it, or record why the
+        base's value is the right one. A merge keeping ours over a registry
+        it did not read is how eleven of these were lost across four merges.
+  exit 1
+
+Fourteen values, thirteen of them findings. CASE-0032's `note` is prose and sits
+outside the watched field set (status, evidence, oracle, effect, source, witness,
+capture), so it does not appear above; it was restored with its evidence list
+from the same commit.
+
+Five merges, four items:
+  b49b5a1e  REQ-029.evidence, DEF-006.evidence, DEF-007.evidence   (c7fbe295)
+  f5098428  REQ-024.evidence + DEF-030/032/055/057/058.status      (17bfcd19, PRO-0091)
+  43a3684c  DEF-024's whole row, CASE-0059.capture, CASE-0063.witness (2420282e, PRO-0078)
+  e96b23b4  CASE-0032.evidence and note                            (69cb30ba, PRO-0088)
+
+
+GREEN — the working tree, every value restored from the commit that set it
+---------------------------------------------------------------------------
+  $ python3 scripts/campaign/defect_gate.py dropped docs/test-campaign
+  registry drift: 2 file(s), 88 merge(s), 19070 id/field pair(s) examined
+  
+  PASS: no merge on this history discarded a registry value that is still missing.
+  exit 0
+
+Same check, same history, same 88 merges and 19,070 id/field pairs. The green is
+a measurement rather than an absence: the red above is the same instrument on the
+same repository three commits earlier.
+
+Not a fixture, and not the only arming — test_instruments.py builds a real git
+repository holding one dropped value AND one legitimate later correction, and
+requires the check to report the first and not the second. A check that reported
+every difference would be as useless as one that reported none, and a single red
+cannot tell them apart.

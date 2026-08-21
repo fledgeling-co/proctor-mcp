@@ -160,64 +160,106 @@ def _index(doc) -> dict:
 
 
 def check_dropped(registry: Path, repo: Path | None = None) -> int:
+    """Every value a merge discarded and this tree has not got back.
+
+    The mechanism, stated exactly, because a looser rule reports every edit and
+    a tighter one reports nothing. A merge M has parents `ours` and `theirs` and
+    a base B. For one id and one field:
+
+        theirs != base   the branch changed it — there was something to keep
+        M       == base   the merge kept ours and did not take the change
+        HEAD    != theirs  and nobody has put it back since
+
+    All three, and it is a dropped value. Two of the three and it is not: a
+    field both sides changed is a conflict somebody decided, and a field HEAD
+    already carries has been restored. Reading the whole history instead — every
+    value any commit ever set, against HEAD — cannot tell a merge's own value
+    from a restoration of what it dropped, and reports the fix as a fresh
+    finding the moment it lands.
+    """
     repo = repo or Path.cwd()
     rel = []
     for name in ("inventory.json", "cases.json"):
-        p = registry / name
-        rel.append(str(p.relative_to(repo)) if p.is_absolute() else str(p))
+        q = registry / name
+        rel.append(str(q.relative_to(repo)) if q.is_absolute() else str(q))
 
     findings: list[str] = []
     examined = 0
+    merges = 0
     for path in rel:
-        head = _index(_load("HEAD", path))
+        # The WORKING TREE, not `HEAD`. This check answers "has this tree got
+        # the value back", and a restoration that is staged but not committed is
+        # a restoration. Reading HEAD instead reports every fix as still broken
+        # until it is committed, which teaches a reader to ignore it.
+        try:
+            head = _index(json.loads(Path(path).read_text()))
+        except (OSError, json.JSONDecodeError):
+            head = _index(_load("HEAD", path))
         if not head:
-            print(f"  skipping {path}: no record at HEAD")
+            print(f"  skipping {path}: no record in the working tree or at HEAD")
             continue
-        # Newest first, and the first commit that mentions an id/field is the
-        # one that decides it. Anything older has been superseded, so reading it
-        # would report a merge's own value as "dropped" the moment somebody
-        # restored what the merge lost — which is the shape the fixture in
-        # test_instruments.py caught.
-        commits = _git("rev-list", "--no-merges", "HEAD", "--", path).split()
-        seen: set[tuple[str, str]] = set()
-        for commit in commits:
-            doc = _index(_load(commit, path))
-            if not doc:
+        # NOT path-limited. A merge that resolves with `-s ours` leaves the
+        # file identical to its first parent, so git's history simplification
+        # drops it from a path-limited listing — and that merge is exactly the
+        # one that discarded the other side's value.
+        for merge in _git("rev-list", "--merges", "HEAD").split():
+            parents = _git("rev-parse", f"{merge}^@").split()
+            if len(parents) < 2:
                 continue
-            parent = _git("rev-parse", f"{commit}^").strip()
-            pdoc = _index(_load(parent, path)) if parent else {}
-            for rid, record in doc.items():
-                if rid not in head:
-                    if (rid, "*") not in seen:
-                        seen.add((rid, "*"))
-                        findings.append(
-                            f"{rid}: whole row present at {commit[:8]} and absent at HEAD")
-                    continue
-                for field in WATCHED:
-                    if field not in record or (rid, field) in seen:
+            merges += 1
+            merged = _index(_load(merge, path))
+            base_rev = _git("merge-base", "--octopus", *parents).strip()
+            if not base_rev:
+                continue
+            base = _index(_load(base_rev, path))
+            # EVERY parent, not just `theirs`. The loss is as often on the first
+            # parent's side: PRO-0088's four evidence paths for CASE-0032 were
+            # taken correctly by the merge that brought them, and then discarded
+            # by the NEXT merge, whose other branch had forked before them and
+            # carried the older two. A check that only reads `theirs` sees a
+            # branch that changed nothing and reports a clean merge.
+            for side in parents:
+                theirs = _index(_load(side, path))
+                for rid, record in theirs.items():
+                    if rid not in merged and rid not in base:
+                        if rid not in head:
+                            findings.append(
+                                f"{rid}: added on {side[:8]}, not taken by merge "
+                                f"{merge[:8]}, and absent at HEAD")
                         continue
-                    examined += 1
-                    seen.add((rid, field))
-                    was = json.dumps(record[field], sort_keys=True)
-                    now = json.dumps(head[rid].get(field), sort_keys=True)
-                    before = json.dumps(pdoc.get(rid, {}).get(field), sort_keys=True)
-                    # Set here, lost since, and HEAD holds what the parent held.
-                    if was != now and now == before and before != was:
-                        findings.append(
-                            f"{rid}.{field}: set at {commit[:8]} and reverted to the value its "
-                            f"parent held\n      lost: {was[:160]}\n      HEAD: {now[:160]}")
+                    for field in WATCHED:
+                        if field not in record:
+                            continue
+                        examined += 1
+                        t = json.dumps(record[field], sort_keys=True)
+                        b = json.dumps(base.get(rid, {}).get(field), sort_keys=True)
+                        m = json.dumps(merged.get(rid, {}).get(field), sort_keys=True)
+                        h = json.dumps(head.get(rid, {}).get(field), sort_keys=True)
+                        # This side changed it, the merge came out holding what
+                        # the BASE held, and nobody has put it back. `m == b` is
+                        # what keeps a real conflict — where somebody decided and
+                        # the result matches neither side's starting point — from
+                        # reading as a drop.
+                        if t != b and m == b and h != t:
+                            findings.append(
+                                f"{rid}.{field}: set on {side[:8]}, dropped by merge "
+                                f"{merge[:8]} which came out holding the base's value\n"
+                                f"      lost: {t[:150]}\n      HEAD: {h[:150]}")
 
-    print(f"registry drift: {len(rel)} file(s), {examined} id/field pair(s) examined")
-    for f in findings:
+    # De-duplicate: one value dropped by two merges is one value to restore.
+    unique = list(dict.fromkeys(findings))
+    print(f"registry drift: {len(rel)} file(s), {merges} merge(s), "
+          f"{examined} id/field pair(s) examined")
+    for f in unique:
         print(f"  DROPPED  {f}")
-    if findings:
+    if unique:
         print()
-        print(f"FAIL: {len(findings)} value(s) an ancestor commit set and this tree no longer")
-        print("      carries. Restore each from the commit that set it, or record why the")
-        print("      later value is the right one. A merge keeping ours over a registry it")
-        print("      did not read is how eleven of these were lost across four merges.")
+        print(f"FAIL: {len(unique)} value(s) a merge discarded and this tree has not got")
+        print("      back. Restore each from the branch that set it, or record why the")
+        print("      base's value is the right one. A merge keeping ours over a registry")
+        print("      it did not read is how eleven of these were lost across four merges.")
         return 1
-    print("\nPASS: every watched value an ancestor set is still here.")
+    print("\nPASS: no merge on this history discarded a registry value that is still missing.")
     return 0
 
 

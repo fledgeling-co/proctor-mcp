@@ -421,67 +421,76 @@ def test_defect_gate_dropped() -> None:
             (ROOT / "scripts/campaign/defect_gate.py").read_text())
 
         inv = repo / "docs/test-campaign/inventory.json"
-        cases = repo / "docs/test-campaign/cases.json"
-        cases.write_text("[]\n")
+        (repo / "docs/test-campaign/cases.json").write_text("[]\n")
+        env = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+               "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
+               "GIT_AUTHOR_DATE": "2026-01-01T00:00:00Z",
+               "GIT_COMMITTER_DATE": "2026-01-01T00:00:00Z",
+               "PATH": os.environ.get("PATH", ""), "HOME": tmp}
+
+        def git(*args: str) -> subprocess.CompletedProcess:
+            return subprocess.run(["git", *args], cwd=repo, capture_output=True,
+                                  text=True, env=env)
 
         def commit(message: str) -> None:
-            subprocess.run(["git", "add", "-A"], cwd=repo, capture_output=True)
-            subprocess.run(["git", "commit", "-q", "-m", message], cwd=repo,
-                           capture_output=True,
-                           env={"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
-                                "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
-                                "PATH": os.environ.get("PATH", "")})
+            git("add", "-A")
+            git("commit", "-q", "-m", message)
 
         def write(rows: list[dict]) -> None:
             inv.write_text(json.dumps({"defect": rows}, indent=2) + "\n")
 
-        subprocess.run(["git", "init", "-q", "-b", "main"], cwd=repo, capture_output=True)
+        def gate() -> subprocess.CompletedProcess:
+            return subprocess.run(
+                [sys.executable, "scripts/campaign/defect_gate.py", "dropped",
+                 "docs/test-campaign"], cwd=repo, capture_output=True, text=True)
 
-        # base: two open records
+        git("init", "-q", "-b", "main")
+
         write([{"id": "DEF-901", "status": "open"}, {"id": "DEF-902", "status": "open"}])
         commit("base")
-        # an item fixes both, and adds a row of its own
+
+        # An item branches, fixes both records and adds one of its own.
+        git("checkout", "-q", "-b", "item")
         write([{"id": "DEF-901", "status": "fixed"}, {"id": "DEF-902", "status": "fixed"},
                {"id": "DEF-903", "status": "open"}])
         commit("the item that fixed them")
-        # a merge keeps ours on one of the three, and drops the new row:
-        # DEF-901 reverts to open, DEF-903 disappears. DEF-902 stays fixed, and
-        # DEF-902 is then legitimately corrected — a change the check must not
-        # report, because reporting every change is the same as reporting none.
-        write([{"id": "DEF-901", "status": "open"},
-               {"id": "DEF-902", "status": "wontfix"}])
-        commit("a merge that kept ours, and a later correction")
 
-        red = subprocess.run(
-            [sys.executable, "scripts/campaign/defect_gate.py", "dropped",
-             "docs/test-campaign"],
-            capture_output=True, text=True, cwd=repo)
+        # Meanwhile main makes a decision of its own on DEF-902 — a genuine
+        # conflict, and the one thing this check must NOT report, because a
+        # check that reports every difference is as useless as one that reports
+        # none and a single red cannot tell them apart.
+        git("checkout", "-q", "main")
+        write([{"id": "DEF-901", "status": "open"}, {"id": "DEF-902", "status": "wontfix"}])
+        commit("a decision taken on main")
+
+        # The merge keeps ours wholesale. DEF-901 goes back to open, DEF-903
+        # never arrives, and DEF-902 comes out holding neither side's start.
+        git("merge", "-q", "-s", "ours", "--no-edit", "item")
+
+        red = gate()
         check(red.returncode == 1,
-              "dropped refuses a history whose merge reverted a value",
-              f"exit {red.returncode}: {red.stdout[-500:]}")
+              "dropped refuses a history whose merge came out holding the base",
+              f"exit {red.returncode}: {red.stdout[-600:]}")
         check("DEF-901.status" in red.stdout,
-              "dropped names the field the merge reverted",
-              red.stdout[-500:])
+              "dropped names the field the merge discarded",
+              red.stdout[-600:])
         check("DEF-903" in red.stdout and "absent at HEAD" in red.stdout,
-              "dropped names a whole row the merge lost",
-              red.stdout[-500:])
+              "dropped names a whole row the merge did not take",
+              red.stdout[-600:])
         check("DEF-902" not in red.stdout,
-              "a value legitimately changed since is not reported as dropped",
-              red.stdout[-500:])
+              "a field both sides changed is a decision, not a drop",
+              red.stdout[-600:])
 
-        # And the other direction, in the same session: restore both and the
-        # same history reads clean, so the green above is a measurement.
-        write([{"id": "DEF-901", "status": "fixed"},
-               {"id": "DEF-902", "status": "wontfix"},
+        # The other direction, in the same session: restore what the merge lost
+        # and the same history over the same merge reads clean, so the green is
+        # a measurement rather than an absence.
+        write([{"id": "DEF-901", "status": "fixed"}, {"id": "DEF-902", "status": "wontfix"},
                {"id": "DEF-903", "status": "open"}])
         commit("restore what the merge dropped")
-        green = subprocess.run(
-            [sys.executable, "scripts/campaign/defect_gate.py", "dropped",
-             "docs/test-campaign"],
-            capture_output=True, text=True, cwd=repo)
+        green = gate()
         check(green.returncode == 0,
-              "dropped passes once the reverted values are back",
-              f"exit {green.returncode}: {green.stdout[-500:]}")
+              "dropped passes once the discarded values are back",
+              f"exit {green.returncode}: {green.stdout[-600:]}")
 
 
 # ── The two gates, run against this repository's own registry ───────────────
