@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 94
+**Last allocated:** 95
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -101,3 +101,4 @@
 | PRO-0092 | ProctorAgent's mutants mostly survive | 2026-08-21 | Ready for AI |
 | PRO-0093 | A dead peer holds the queue | 2026-08-21 | Ready for AI |
 | PRO-0094 | A warning this project has already disproved | 2026-08-21 | Ready for AI |
+| PRO-0095 | Three that slipped the grouping | 2026-08-21 | Ready for AI |
