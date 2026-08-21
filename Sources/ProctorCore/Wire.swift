@@ -22,6 +22,13 @@ public enum Wire {
         return "\(home)/Library/Application Support/app.fledgeling.procter/agent.sock"
     }
 
+    /// The socket, as a URL for "Reveal the Socket in Finder".
+    ///
+    /// PRO-0090. `ProctorUIApp` assembled this from a `"file://"` of its own and
+    /// the path above, so the one place that turns the socket into something a
+    /// person can open kept half the answer in a view body.
+    public static var socketFileURL: String { "file://" + socketPath }
+
     public static let bundleIdentifier = "app.fledgeling.procter"
     public static let agentLabel = "app.fledgeling.procter.agent"
     public static let protocolVersion = 1

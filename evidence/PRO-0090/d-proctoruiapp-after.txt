@@ -1,0 +1,9 @@
+Sources/ProctorUI/ProctorUIApp.swift: 2 string literals examined
+  display         0
+  symbol          0
+  system          0
+  key             0
+  punctuation     2
+  interpolated    0
+
+PASS: 0 user-facing literals of 2 examined; 2 are identifiers, symbols, system strings or punctuation.

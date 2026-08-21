@@ -65,6 +65,72 @@ public enum StatusSurface {
         return lanesAllUsable ? .ready : .partial
     }
 
+    /// The SwiftUI scene id for the status window.
+    ///
+    /// PRO-0090. Four places named it: the `Window(_:id:)` that declares it, two
+    /// `openWindow(id:)` calls, and a `windows.first(where: { $0.title == … })`
+    /// lookup in the launch path that resizes it on first run. `Copy.windowTitle`
+    /// is the title half and already existed.
+    public static let sceneID = "main"
+
+    // MARK: - The menu bar's own lines
+    //
+    // PRO-0090. `ProctorUIApp.swift` held 53 user-facing literals of 69, and
+    // most of them were these: the status line under the icon, the activity
+    // line, and the refusals said plainly rather than left as a greyed item.
+    //
+    // Kept apart from `Copy` rather than folded into it, because the menu bar
+    // says shorter things than the window does about the same facts and the two
+    // are not paraphrases. `Copy.checking` is the one string both surfaces draw,
+    // and the menu bar reads it from there rather than keeping a second copy.
+
+    public enum MenuBar {
+        public static let agentNotAnswering = "Agent not answering"
+        public static let connected = "Connected"
+        public static func ready(attachedApps: Int) -> String {
+            "Ready · \(attachedApps) app(s) attached"
+        }
+        public static func permissionsNeeded(_ missing: Int) -> String {
+            "\(missing) permission\(missing == 1 ? "" : "s") needed"
+        }
+
+        /// The waiting count, as the suffix it is. It rides alongside whatever
+        /// is running so somebody can answer "is something of mine stuck behind
+        /// another session" without opening the run panel.
+        public static func waitingSuffix(_ waiting: Int) -> String {
+            waiting > 0 ? " · \(waiting) waiting" : ""
+        }
+        public static func takingForeground(waiting: Int) -> String {
+            "Taking the foreground now\(waitingSuffix(waiting))"
+        }
+        public static func running(_ tool: String, waiting: Int) -> String {
+            "Running \(tool)\(waitingSuffix(waiting))"
+        }
+        public static func lastRan(_ tool: String, waiting: Int) -> String {
+            "Last: \(tool)\(waitingSuffix(waiting))"
+        }
+        public static func held(_ line: String, waiting: Int) -> String {
+            "\(line)\(waitingSuffix(waiting))"
+        }
+        public static func sessionsWaiting(_ waiting: Int) -> String {
+            "\(waiting) session\(waiting == 1 ? "" : "s") waiting"
+        }
+        public static let idle = "Idle — no model connected"
+
+        /// The whole thing in one line, because a menu item has no room for a
+        /// title and a body. `Copy.updatedTitle` is the window's title half and
+        /// `Copy.relaunch` is the button both surfaces draw, which the menu bar
+        /// reads from there rather than keeping a second spelling of.
+        public static let updatedNote = "Proctor was updated. Relaunch to use the new version."
+        public static let panelUnavailable =
+            "Started with PROCTOR_HUD off — restart the agent to bring the panel back"
+
+        public static let foregroundSymbol = "cursorarrow.rays"
+        public static let runningSymbol = "dot.radiowaves.left.and.right"
+        public static let idleSymbol = "moon.zzz"
+        public static let foregroundNoticeSymbol = "rectangle.inset.filled.and.person.filled"
+    }
+
     // MARK: - Copy
     //
     // Every user-facing string in the window. A literal in the view is a string
