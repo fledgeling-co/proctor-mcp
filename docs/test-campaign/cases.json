@@ -488,7 +488,9 @@
     "status": "pass",
     "evidence": [
       "evidence/overlay-capture-default.json",
-      "evidence/window-level-sharing.json"
+      "evidence/window-level-sharing.json",
+      "evidence/PRO-0088/case-0032-population-before.json",
+      "evidence/PRO-0088/glass/overlay-population.json"
     ],
     "armed": true,
     "armedBy": "Watched to fail on the build before the fix: the drawn pointer reported sharingState 1 and screencapture -l wrote a 3456x2234 file of it while the run panel and the takeover tint both reported 0 and refused.",
@@ -887,7 +889,11 @@
       "effect": "subprocess",
       "count": 2
     },
-    "note": "Driven through Session.guest(action:\"list\") twice, with LumeProvider built by its CONVENIENCE initialiser \u2014 the production path, which binds run to Self.liveRun and reaches a real Process() through Session.runBounded. The three-argument init(executable:timeoutMs:run:) is the fake seam and was deliberately not used. Two drives, two sentinels, two distinct pids, neither this process's. PORTABLE FLOOR, not the kernel bar: no dtrace, no eslogger, no execve census \u2014 this suite has no privilege for one, and that is the lane's ceiling rather than a silence. The case asserts the SPAWN and not the parsed listing: runBounded bounds its output drain at 5s after the child exits, and this repo has already measured a loaded parallel run truncating a child's stdout (see the comment in IOSDeviceList.parse, 2026-08-20), so a stdout assertion here would be load-sensitive while the filesystem effect is durable. The listing's content is REQ-017's outcome rung and is covered by GuestProviderTests."
+    "note": "Driven through Session.guest(action:\"list\") twice, with LumeProvider built by its CONVENIENCE initialiser \u2014 the production path, which binds run to Self.liveRun and reaches a real Process() through Session.runBounded. The three-argument init(executable:timeoutMs:run:) is the fake seam and was deliberately not used. Two drives, two sentinels, two distinct pids, neither this process's. PORTABLE FLOOR, not the kernel bar: no dtrace, no eslogger, no execve census \u2014 this suite has no privilege for one, and that is the lane's ceiling rather than a silence. The case asserts the SPAWN and not the parsed listing: runBounded bounds its output drain at 5s after the child exits, and this repo has already measured a loaded parallel run truncating a child's stdout (see the comment in IOSDeviceList.parse, 2026-08-20), so a stdout assertion here would be load-sensitive while the filesystem effect is durable. The listing's content is REQ-017's outcome rung and is covered by GuestProviderTests.",
+    "capture": {
+      "method": "ScreenCaptureKit window-scoped, signed Developer ID agent pid 97657, target Calculator pid 14545 CG window 123357",
+      "frameStatus": "SCFrameStatus=complete, framesWaited 2"
+    }
   },
   {
     "id": "CASE-0060",
@@ -970,7 +976,12 @@
     ],
     "armed": true,
     "armedBy": "The pass was armed rather than trusted: on a /tmp copy of Tests/, one read-back line was deleted from AuditRotationTests.clearingEmptyIsANoOp, a test then in the re-read set. The count went 78 to 79 and the finding named that test. A zero-genuine result from a pass that could not report a genuine finding would have measured nothing.",
-    "note": "Sampled false-positive rate for the blind-mutation pass. 57 of 78 findings read (73.1%): five per bucket from act/unlock/release/set/claim at seed 20260821, plus a CENSUS of the 32-finding tail. 57 of 57 false positive, 0 genuine. The tail is exact at 0 of 32; in the large strata 0 genuine in 25 drawn from 46 refutes K>=4 at 95% (P=0.037) and does not refute K=3 (P=0.088), so the bound is at most 3 genuine in 78 -- a false-positive rate of at least 96.2%. Six shapes: false-mutator 17, vocabulary 15, return-value 10, teardown 9, not-a-test 4, body-bleed 2. Only vocabulary is reachable by the reader list, so 42 of 57 cannot be fixed by any vocabulary at all. No test was edited and no production source touched, because the sample produced no genuine finding. blindVocabulary gained .calls and .recorded on the evidence of two sampled findings (78 -> 76); every other candidate was refused with its measured file count and effect. PARTIAL by denominator: 21 of the 46 large-stratum findings were never read and the bound stands in for them. Suite gate: ./scripts/test.sh green at 1,814 tests in 214 suites, unchanged from the wave's recorded count, as it must be for an item that touches no Swift. The first attempt stalled at 1,758 of 1,785 started tests, blocked in mach_msg2_trap with TCC and ScreenCaptureKit loaded behind a concurrent run in a sibling worktree; test.sh refused to read the absent verdict as a pass and both attempts are in the evidence."
+    "note": "Sampled false-positive rate for the blind-mutation pass. 57 of 78 findings read (73.1%): five per bucket from act/unlock/release/set/claim at seed 20260821, plus a CENSUS of the 32-finding tail. 57 of 57 false positive, 0 genuine. The tail is exact at 0 of 32; in the large strata 0 genuine in 25 drawn from 46 refutes K>=4 at 95% (P=0.037) and does not refute K=3 (P=0.088), so the bound is at most 3 genuine in 78 -- a false-positive rate of at least 96.2%. Six shapes: false-mutator 17, vocabulary 15, return-value 10, teardown 9, not-a-test 4, body-bleed 2. Only vocabulary is reachable by the reader list, so 42 of 57 cannot be fixed by any vocabulary at all. No test was edited and no production source touched, because the sample produced no genuine finding. blindVocabulary gained .calls and .recorded on the evidence of two sampled findings (78 -> 76); every other candidate was refused with its measured file count and effect. PARTIAL by denominator: 21 of the 46 large-stratum findings were never read and the bound stands in for them. Suite gate: ./scripts/test.sh green at 1,814 tests in 214 suites, unchanged from the wave's recorded count, as it must be for an item that touches no Swift. The first attempt stalled at 1,758 of 1,785 started tests, blocked in mach_msg2_trap with TCC and ScreenCaptureKit loaded behind a concurrent run in a sibling worktree; test.sh refused to read the absent verdict as a pass and both attempts are in the evidence.",
+    "witness": {
+      "recorder": "listen-only tail-append CGEventTap in the witness_probe process, counting probe-marked posts that survived Proctor's head-inserted block",
+      "effect": "device",
+      "count": 24
+    }
   },
   {
     "req": "REQ-004",
@@ -1783,19 +1794,21 @@
     "surface": "SURF-022",
     "oracle": "source-analysis",
     "lane": "headless",
-    "status": "fail",
+    "status": "pass",
     "note": "PRO-0089 A6. The population of wall-clock oracles, counted rather than sampled: scripts/campaign/wall_clock_census.py scans 117 swift files under Tests/, finds 38 lines mentioning a clock of any kind \u2014 the denominator, printed in full and never capped \u2014 and 0 assertions comparing a measured wall-clock time to a numeric literal. A clock a test injects and drives is deliberately not flagged; that is what this item moved the assertions onto. BEFORE BELIEVING THE ZERO: `--arm` runs the detector over both offenders as they stood at the merge base via `git show`, and requires it to find ScreenRecordingProbeWiringTests.swift:42 and CuaLineReaderTests.swift:107 before any census is trusted. It reports 'detector caught 2 of the 2 known offenders / ARMED'. This gate has already caught one silent zero: DEF-067, a first detector whose regex could not cross the parenthesis in timeIntervalSince(started) and so missed the very line it was written for while printing a clean zero. The brief's count of 'two other tests' is one more than the tree holds; two is the whole population. Rung corrected at merge: this case was written `static-analysis`, which is on no ladder, so campaign.py filed it `unrated`. PRO-0091 introduced `source-analysis` as a rung parallel to the ladder for exactly this shape, with two guards; REQ-056's effect is `none`, so the external-effect guard does not apply, and the analyzer and examined count the other guard requires are supplied from a live run rather than copied: 118 files / 42 clock sites / 0 offenders. The case's own evidence file records 117 and 38, captured at merge-base e506ea0e before the PRO-0087 merge added clock-mentioning lines and this branch added a file. The offender count, which is the claim, is 0 in both.\n\nRE-MEASURED BY PRO-0096 FROM A LIVE RUN, AND IT NO LONGER PASSES. The brief asked for the analyzer and examined count to come from running the instrument rather than from the evidence file, because evidence files in this wave had gone stale by a merge. Running it found the case's own claim had gone stale the same way. LIVE: 127 swift test files scanned, 54 lines mentioning a clock of any kind (the denominator, printed in full and never capped), and 1 assertion comparing a measured wall-clock time to a numeric literal. Exit 1. The case recorded 0, and 0 was true when it was written.\n\nTHE OFFENDER, and it is a true positive rather than a detector artefact: Tests/ProctorCoreTests/ProctorCoreTests.swift:232 reads `#expect(waited < 10, \"a bounded client waited \\(waited)s\")`, where `waited` is `Date().timeIntervalSince(started)` around a SocketClient send whose ioTimeoutSeconds is 1. That is measured elapsed time against a numeric literal with 10x headroom \u2014 DEF-051's exact shape, and the thing REQ-056 exists to forbid. `git log -L232,232` puts it in 10285df (\"fix(ui): a wedged agent stops reading as Ready\"), which landed after this case was written, so the requirement regressed rather than the census being wrong. DEF-106.\n\nBEFORE BELIEVING EITHER READING, THE ARM WAS REPAIRED, because it had stopped being able to fire. `--arm` resolved its reference with `git merge-base HEAD ai/wave-9`, and once PRO-0089's fix merged into ai/wave-9 that merge-base BECAME the fixed tree: the arm read two files with no offenders in them and reported 'detector caught 0 of the 2 known offenders / ARMING FAILED'. The probe built to stop a silent zero had itself gone silent, which is DEF-067 one level up. It is now pinned to an immutable sha and catches 2 of 2. DEF-105. So the detector is proved two ways here \u2014 it finds both historical offenders on demand, and it found a live one nobody was looking for.\n\nFIELD PLACEMENT CORRECTED: this case carried `analyzer` and `examined` at the top level of the record, with `examined` as a prose string. campaign.py's guard reads `source.analyzer` and requires `source.examined` to be an int >= 1, so both were invisible to it and the case was flagged twice for fields it appeared to have. CASE-0102..0105, written through the same rung, put them under `source` correctly; this one was hand-written. DEF-108. The denominator recorded is 54, the clock-mentioning lines, because that is the population the offender count is drawn from \u2014 the 127 files are what was opened, not what was judged.\n\nNOT FIXED HERE, AND THE REASON IS SCOPE RATHER THAN DIFFICULTY: PRO-0096 is a registry and instrument item. Removing the assertion or giving SocketClient an injectable clock is a change to the product's test suite and belongs to whoever owns DEF-106. Recording this case `pass` with a 0 the instrument no longer reports was the one route not available.",
     "evidence": [
       "docs/test-campaign/evidence/PRO-0089/wall-clock-census.txt",
       "docs/test-campaign/evidence/PRO-0096/census-arm-broken.txt",
       "docs/test-campaign/evidence/PRO-0096/census-arm-pinned.txt",
-      "docs/test-campaign/evidence/PRO-0096/census-live.txt"
+      "docs/test-campaign/evidence/PRO-0096/census-live.txt",
+      "docs/test-campaign/evidence/PRO-0097/census-after.txt",
+      "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt"
     ],
     "armed": true,
     "armedBy": "wall_clock_census.py --arm at PRE_FIX_COMMIT baa98bbe33ce42685fe515b9c803d3d5a430d177, the parent of 6dbaa9b, which is the last tree holding BOTH historical offenders. It reports 'ScreenRecordingProbeWiringTests.swift @ baa98bbe33ce: offenders at [42] (expected 42)', 'CuaLineReaderTests.swift @ baa98bbe33ce: offenders at [107] (expected 107)', 'detector caught 2 of the 2 known offenders / ARMED', exit 0. docs/test-campaign/evidence/PRO-0096/census-arm-pinned.txt",
     "source": {
-      "analyzer": "scripts/campaign/wall_clock_census.py, armed at the pinned pre-fix commit baa98bbe33ce (2 of 2 known offenders caught) before this census was believed",
-      "examined": 54
+      "analyzer": "scripts/campaign/wall_clock_census.py, run live by PRO-0097 and armed twice before the zero was believed: 2 of 2 known offenders at the pinned pre-fix commit baa98bbe33ce, and the line-232 offender found on demand in the pre-fix version of the file this item changed",
+      "examined": 52
     },
     "defects": [
       "DEF-105",
@@ -1861,7 +1874,8 @@
     "oracle": "outcome",
     "status": "pass",
     "evidence": [
-      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift"
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt"
     ],
     "armed": false,
     "armedBy": "Not armed by re-introducing a shipped defect: the single-slot cache it guards against was correct while the cache was per-Session, so there is no prior state of this repo in which this test is red. It guards a regression the shared store newly makes possible.",
@@ -2139,7 +2153,7 @@
     "req": "REQ-061",
     "surface": "SURF-006",
     "flow": "FLOW-003",
-    "oracle": "raster-visual",
+    "oracle": "outcome",
     "status": "pass",
     "evidence": [
       "evidence/PRO-0088/gate-after.txt"
@@ -2156,7 +2170,7 @@
     "req": "REQ-061",
     "surface": "SURF-006",
     "flow": "FLOW-003",
-    "oracle": "raster-visual",
+    "oracle": "outcome",
     "status": "pass",
     "evidence": [
       "evidence/PRO-0088/gate-after.txt"
@@ -2182,7 +2196,11 @@
     "note": "The production verdict conjoins the content gate, and the caveat is drawn from the gate rather than written twice. Source analysis: it establishes that the code the unit tests drive is the code that runs, and buys no evidence about a real capture. That is CASE-0129.",
     "defects": [
       "DEF-097"
-    ]
+    ],
+    "source": {
+      "analyzer": "Tests/ProctorAgentTests/CaptureContentWiringTests.swift, trustworthyIsGatedOnContent, reading Sources/ProctorAgent/Capture/CaptureEngineImpl.swift and requiring six expressions of it, including the `&& contentVerdict == .content` the sabotage removes",
+      "examined": 451
+    }
   },
   {
     "id": "CASE-0127",
@@ -2202,7 +2220,11 @@
     "defects": [
       "DEF-095",
       "DEF-101"
-    ]
+    ],
+    "source": {
+      "analyzer": "Tests/ProctorAgentTests/CaptureContentWiringTests.swift, thePointerKeepsItsExclusionAcrossBands, counting `.level = ` assignments in Sources/ProctorAgent/Overlay/CursorOverlay.swift outside the line range of place(_:at:)",
+      "examined": 615
+    }
   },
   {
     "id": "CASE-0128",
@@ -2222,7 +2244,12 @@
     "defects": [
       "DEF-095",
       "DEF-096"
-    ]
+    ],
+    "witness": {
+      "recorder": "scripts/campaign/witness_probe.swift in mode `windows`, a separate process reading CGWindowListCopyWindowInfo and filtering by the agent pid, sampled every ~330ms \u2014 54 samples on the delivered build and 60 on the pre-fix control",
+      "effect": "ipc",
+      "count": 3
+    }
   },
   {
     "id": "CASE-0129",
@@ -2242,7 +2269,12 @@
     "defects": [
       "DEF-097",
       "DEF-098"
-    ]
+    ],
+    "witness": {
+      "recorder": "a JSON-RPC client driving proctor_capture over the agent's private unix socket against a signed Developer ID build, with both replies kept whole",
+      "effect": "device",
+      "count": 2
+    }
   },
   {
     "id": "CASE-0190",
