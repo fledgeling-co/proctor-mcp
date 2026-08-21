@@ -3,9 +3,12 @@
 
 The instruments that measure this project are measured here, because each of the
 defects below was found by somebody checking a tool rather than reading its
-output. Every check is watched in both directions: the fixture that trips it and
-the fixture that clears it, in the same run, so a check that cannot fire is
-distinguishable from a check that found nothing.
+output. All 15 checks here are watched in both directions — the fixture that
+trips it and the fixture that clears it, in one session, recorded in
+`docs/test-campaign/evidence/PRO-0091/instrument-arming.txt` with the mutation
+that armed each one — so a check that cannot fire is distinguishable from a check
+that found nothing. Arming the last seven caught one of them asserting over a
+population of zero, which is the same finding the file was written to close.
 
 `Tests/ProctorCoreTests/CampaignInstrumentTests.swift` runs this file, so
 `./scripts/test.sh` owns the verdict and a red here is a red suite.
@@ -64,7 +67,7 @@ def test_mutate_swift_closure_shorthand() -> None:
         "        $0.withMemoryRebound(to: sockaddr.self, capacity: 1) { bind(fd, $0, size) }\n"
         "    }\n"
         "    let attempts = 3\n"
-        "    let projected = $state\n"
+        "    let projected = $pane2\n"
         "}\n"
     )
     with tempfile.TemporaryDirectory() as tmp:
@@ -87,8 +90,16 @@ def test_mutate_swift_closure_shorthand() -> None:
     check("3" in ints,
           "the same operator still fires on a real integer literal",
           f"integer sites found: {ints}")
-    check(not any(spans(s)[0] == "state" for s in sites),
-          "a property wrapper's projected value is not a literal either")
+    # A property wrapper's projected value carries the same risk one character
+    # further in: the `2` of `$pane2` is a digit inside an identifier, held back
+    # by `\w` in the lookbehind rather than by `$`. Written against `$state` this
+    # check could not fire — no operator in the table matches a bare identifier,
+    # so `before == "state"` was true of every operator table that could exist
+    # and the check was watched green over a population of zero.
+    line6 = [s for s in sites if spans(s)[1] == 6]
+    check(not any(spans(s)[0] == "2" for s in line6),
+          "a property wrapper's projected value is not a literal either",
+          f"line 6 sites: {[spans(s) for s in line6]}")
 
 
 # ── DEF-058: a registry merge that swept two keys of five ───────────────────
