@@ -396,10 +396,26 @@ A resource shared by two tests is a test-order dependency wearing a green tick.
 Measured 20 August 2026 against maestro 2.4.0 and a booted iPhone 16 Pro on iOS 18.2: both tests
 pass, 55.6 seconds for the suite, green twice.
 
-## Eighteen defects, all eighteen fixed
+## Thirty-two defects, twenty-four fixed and eight open
+
+Corrected in PRO-0080. This table held DEF-006..023 and nothing else, while `inventory.json`
+held twenty-eight — and **all five open defects were among the ten missing**, so a reader of the
+report saw no open defect at all, under a heading that said all of them were fixed. The eighteen
+rows that were here agree with the inventory on every status; the drift was omission, in the
+opposite direction from the one brief `73` predicted. DEF-031.
+
+**There is no DEF-024, and that is deliberate.** Wave 11a's merge backfilled wave 10's four
+defects as DEF-020..023 and renumbered PRO-0078's five to DEF-025..029, so the sequence skips one.
+Twenty-three plus five is twenty-eight, and PRO-0080 adds four more for thirty-two. A reader counting sequentially would otherwise report a
+record that was never lost.
 
 | id | what | state |
 |---|---|---|
+| DEF-001 | Reopen from Dock or open -a does not restore the Status window | fixed |
+| DEF-002 | Status window kept claiming Ready while the agent was wedged | fixed |
+| DEF-003 | Installed Proctor.app is Developer ID signed but not notarised or stapled | fixed |
+| DEF-004 | Campaign recorded a refusal the product does not perform (profile filtering) | fixed |
+| DEF-005 | The drawn pointer was not excluded from screen capture | fixed |
 | DEF-006 | Three commands declared for the menu bar were never rendered in it | fixed |
 | DEF-007 | The permissions list omitted the one permission whose absence is silent | fixed |
 | DEF-008 | Three of the TUI's five panes had no data source | fixed |
@@ -418,6 +434,23 @@ pass, 55.6 seconds for the suite, green twice.
 | DEF-021 | A second copy of the guest-action list in the dispatcher refused `attach` and `detach` | fixed |
 | DEF-022 | `Bundle.module` traps in a shipped `.app` instead of returning nil, and crash-looped the guest agent | fixed |
 | DEF-023 | A relayed guest reply carried the host's `machine`, so a guest result could read as a host one | fixed |
+| DEF-025 | proctor_capture reports a fully transparent frame as status complete and trustworthy true | open |
+| DEF-026 | A run whose MCP peer dies keeps the agent queue past the 900-second pause backstop | open |
+| DEF-027 | Forty events swallowed by the takeover block produced no yield and no held reason | open |
+| DEF-028 | An agent window reports sharingState 1 where CASE-0032 records all three overlays at 0 | open |
+| DEF-029 | A bounded-probe test asserts wall-clock elapsed and fails on a loaded machine | open |
+| DEF-030 | The census control exercises one of the gate's two passes, so unclassed stayed an unwatched zero after it ran green | open |
+| DEF-031 | REPORT.md's defect table held 18 of the inventory's 28 records, and every open defect was among the missing | fixed |
+| DEF-032 | The mutation runner's integer-literal operator mutates closure shorthand $0, spending a sampled slot on an edit the compiler must reject | open |
+| DEF-033 | Nineteen of twenty-two trustworthy-scored ProctorAgent mutants survived, against half in ProctorCore | open |
+
+PRO-0080 adds four: DEF-030 (the census control reaching one of the gate's two passes),
+DEF-031 (this table itself), DEF-032 and DEF-033 (the mutation runner, and what it measured).
+DEF-031 is fixed by the correction above; the other three are open against the campaign's own
+instruments. Of the eight now open, five predate this item and are the ones to read first: DEF-025 (`proctor_capture` reporting a fully
+transparent frame as complete and trustworthy), DEF-026, DEF-027, DEF-028 and DEF-029 (a
+wall-clock assertion that fails on a loaded machine). None was fixed by the item that found it,
+each deliberately, and each says why in `inventory.json`.
 
 DEF-011 is the one worth reading twice. `StatusChecks` classifies every grant name the health
 report can carry and an unrecognised name falls to `.tool`, deliberately, because tool names
@@ -565,6 +598,196 @@ verdicts with the read that acquitted each), `rate.txt` (the arithmetic and the 
 `arming-control.txt`, `reader-sensitivity.txt`, `out-of-family-review-grok.md`,
 `blind-findings-after.txt` (76). Spec `docs/specs/spec-PRO-0079.md`, plan
 `docs/plans/plan-PRO-0079.md`.
+
+## The census gate, watched failing
+
+`vacuity-check.py` ships `--seed-strengthen` as the skill's own arming rule turned on its own gate:
+strengthen a requirement's declared constraint to one the registry cannot satisfy, and require the
+census to go red. **It had never been run against this campaign.** Until it had, the census's
+`unclassed examined=45 findings=0` and `uncensused examined=22 findings=0` were indistinguishable
+from predicates that cannot fire — which is exactly what the `blind` pass was before its vocabulary
+was replaced, at `examined=1857 mutating=1 blind=1`.
+
+**The precondition is checked rather than assumed.** `_census_clear` is
+`not (unclassed or uncensused)`. If the census were already red, `after` would be red for a reason
+the mutation did not cause and the tool would still print *the gate bites*. So the census is read
+immediately before, and `before=clear` in both transcripts is load-bearing rather than decorative.
+
+Verbatim, both directions — REQ-017 (`subprocess`, the requirement whose witness PRO-0077 built and
+merged) and REQ-001 (classed `none`). Full transcript at `evidence/census-control.txt`.
+
+```
+$ shasum -a 256 docs/test-campaign/inventory.json
+9215d5be401c61b55d3a85ef697279dc4f99dd389e6ce0226b232a7bdb225885  docs/test-campaign/inventory.json
+
+$ python3 vacuity-check.py docs/test-campaign --gate
+unclassed:  examined=45 findings=0
+uncensused: examined=22 findings=0
+blind:      NOT RUN — pass --tests <root> to scan the test tree. This is the cheapest of the three and needs no privilege.
+
+vacuity: requirements=45 external=22 findings=0
+exit 0
+
+$ python3 vacuity-check.py docs/test-campaign --seed-strengthen REQ-017
+seed-strengthen REQ-017: before=clear after=red
+The gate bites: strengthening the constraint turned it red, and the registry was restored byte-for-byte.
+exit 0
+
+$ python3 vacuity-check.py docs/test-campaign --seed-strengthen REQ-001
+seed-strengthen REQ-001: before=clear after=red
+The gate bites: strengthening the constraint turned it red, and the registry was restored byte-for-byte.
+exit 0
+
+$ shasum -a 256 docs/test-campaign/inventory.json
+9215d5be401c61b55d3a85ef697279dc4f99dd389e6ce0226b232a7bdb225885  docs/test-campaign/inventory.json
+```
+
+*Restored byte-for-byte* is a measurement here, not the tool's claim about itself: the SHA-256 is
+identical before the first run and after the last, and `git diff` is empty.
+
+### The control passed and left half the gate exactly where it found it
+
+The census has **two** exact passes at requirement level. `--seed-strengthen` sets
+`effect: "packet-filter"` and pops `provider` — which *is* the `uncensused` predicate. So it fires
+`uncensused` and only `uncensused`, whatever the requirement's starting class. Decomposed per pass
+on this registry:
+
+| seeded mutation | `unclassed` findings | `uncensused` findings |
+|---|---|---|
+| REQ-017 → `packet-filter`, provider dropped | 0 | 1 |
+| REQ-001 → `packet-filter`, provider dropped | 0 | 1 |
+
+Running it "in both directions" covers one predicate twice. After it printed *the gate bites*
+twice, `unclassed` was still a pass reporting `examined=45 findings=0` with nothing having watched
+it go red — **the position the control exists to end, surviving the control.** Recorded as DEF-030,
+against the campaign's instrument rather than against Proctor. It is the third instrument in three
+waves to read zero for a structural reason, after the blind vocabulary and after
+`capture_with_manifest.py` writing rows `capture-lineage.py` could not parse.
+
+`scripts/campaign/seed_unclass.py` is the missing direction. It strengthens the *specification*
+rather than the census record — removes a requirement's `effect` field and requires `unclassed` to
+flag it — and it refuses two ways, because a control that cannot refuse is the thing being guarded
+against:
+
+```
+$ python3 scripts/campaign/seed_unclass.py docs/test-campaign REQ-017
+seed-unclass REQ-017: before=clear after=red (unclassed examined=45 findings=1)
+  REQ-017 names subprocess and declares no `effect` — run the census, or record "effect": "none"
+registry restored byte-for-byte: True (sha256 9215d5be401c61b5…)
+The pass bites: removing the effect class turned unclassed red.
+exit 0
+
+$ python3 scripts/campaign/seed_unclass.py docs/test-campaign REQ-011
+REFUSING: REQ-011's text names no effect the vocabulary matches, so removing its `effect` field correctly produces no finding. Scoring that as a red would pass this control on a tautology. Pick a requirement whose text names an external effect.
+exit 2
+```
+
+It sits in this repo rather than as a patch to `vacuity-check.py`, which lives in a plugin cache
+this repo does not own — a fix there is reverted by the next plugin update with nothing saying so.
+DEF-030 stays `open` so it reaches whoever owns the skill.
+
+## ProctorAgent, sampled
+
+Every mutation site ever scored in this repo was in `ProctorCore`. `ProctorAgent` holds the
+session, the queue, the overlay, the actuation backend and every guest adapter, and no mutant had
+ever been generated in it.
+
+**24 mutants over a pool of 3,189 sites across all 84 files, seed 20260821. 3,165 sites unrun.**
+That is 0.75% of the package, and every number below is stated against that denominator.
+
+| | count |
+|---|---|
+| sites in pool | 3,189 |
+| selected and run | 24 |
+| **SURVIVED** | **19** |
+| scored killed | 5 |
+| unbuildable | 0 |
+| trustworthy kills | **3** |
+
+**Two of the five kills are not trustworthy, and the runner cannot tell.** `SessionActivate.swift:166`
+and `UnlockBroker.swift:110` both scored at exactly 600.0s, which is the timeout, and `run_suite`
+scores a timeout as killed. Load average was 22.9 when the run started and 271.4 when it finished.
+So the honest figure is **3 kills of 22 scored — a survival rate of 86.4%**, against `ProctorCore`'s
+50%. That is DEF-033, and it is DEF-018's shape one package over.
+
+Two things keep this readable rather than merely alarming. **Survivors are trustworthy in both
+directions**: starvation can turn a survivor into a false kill, but it cannot turn a kill into a
+false survivor, so all 19 stand whatever the load did. And **no kill below 600s is timeout-scored**:
+the three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so they are real test
+failures rather than starved runs. Per-mutant seconds are in `evidence/mutation-agent.json`.
+
+One of the two untrustworthy kills should not have been a mutant at all. `mutate_swift.py`'s
+integer-literal operator matched the `0` in a closure shorthand parameter and rewrote
+`bind(fd, $0, size)` to `bind(fd, $1, size)`, which cannot compile. It should have scored
+`unbuildable`; under load the build did not finish inside the timeout, so it scored a kill instead,
+and the summary's `unbuildable: 0` is wrong for a reason the tool cannot see. DEF-032.
+
+### The nineteen survivors, and what happened to each
+
+Five are killed by new tests in `Tests/ProctorAgentTests/MutationSurvivorTests.swift`. One is
+equivalent. Thirteen are recorded uncovered. **`equivalent` and `uncovered-by-lane` are different
+claims and are kept apart**, because recording a coverage hole as a mathematical impossibility is
+how a suite stops looking for the test.
+
+| # | site | mutation | disposition |
+|---|---|---|---|
+| 21 | `AX/KeyCodes.swift:18` | `"n": 45` → `46` | **killed** — CASE-0075 |
+| 2 | `RunIdentity.swift:30` | `prefix(12)` → `13` | **killed** — CASE-0076 |
+| 18 | `Session/PixelCompare.swift:38` | `by: 4` → `by: 5` | **killed** — CASE-0077 |
+| 17 | `Unlock/UnlockBroker.swift:51` | `+= 1` → `+= 2` | **killed** — CASE-0078 |
+| 14 | `Overlay/RunHUDContentView.swift:830` | `ms < 1000` → `<=` | **killed** — CASE-0079 |
+| 13 | `Session/SessionMaestro.swift:242` | `$0.key < $1.key` → `<=` | **equivalent** |
+| 1 | `AX/AXEngineImpl.swift:33` | `\|\|` → `&&` | uncovered-by-lane |
+| 4 | `Overlay/TakeoverOverlay.swift:771` | `+ 44` → `+ 45` | uncovered-by-lane |
+| 9 | `Capture/MarkRenderer.swift:141` | `scale * 2` → `* 3` | uncovered-by-lane |
+| 12 | `Overlay/RunHUDPanel.swift:653` | `canBecomeMain false` → `true` | uncovered-by-lane |
+| 16 | `AX/CGWindowCorrelation.swift:59` | `matches[0]` → `matches[1]` | uncovered-by-lane |
+| 20 | `Overlay/TakeoverOverlay.swift:363` | `==` → `!=` | uncovered-by-lane |
+| 3 | `Dispatch.swift:381` | `includeTiles` default `false` → `true` | no seam |
+| 11 | `Dispatch.swift:394` | `presentation` default `true` → `false` | no seam |
+| 5 | `Session/Session.swift:92` | `flowsLoaded false` → `true` | no seam |
+| 8 | `Session/SessionFlow.swift:493` | `timeoutMs: 3000` → `3001` | no seam |
+| 10 | `Session/SessionKill.swift:26` | `==` → `!=` | no seam |
+| 19 | `Overlay/RunHUDContentView.swift:97` | `hex(17, …)` → `hex(18, …)` | no seam |
+| 22 | `Session/AuditKeyStore.swift:47` | `isDirectory: false` → `true` | no seam |
+
+**The one equivalent mutant is argued, not asserted.** `SessionMaestro.swift:242` sorts
+`score.undersampled` by key. That value is `[Int: Int]` (`StabilityCaptures.swift:200`), so its keys
+are unique by construction, no two elements ever compare equal, and `<` and `<=` produce the same
+total order. No test can distinguish them. It joins `RunHUDGate.onSegment`'s `<=` boundary on the
+record rather than being chased.
+
+**`uncovered-by-lane` means the site needs a window server, a live event tap or a real workspace**
+that this headless lane does not have — AppKit view geometry, `NSPanel` focus behaviour,
+`CGWindowListCopyWindowInfo` records, `NSWorkspace.shared.runningApplications`, a `CGEvent` tap
+being disabled by the system. **`no seam` is the weaker and more honest label**: the behaviour is
+headless-testable in principle, but reaching it needs a fake the suite does not have today — a
+dispatcher drive that observes argument defaults, a `Session` over a populated on-disk flow store, a
+capture engine that records the `timeoutMs` it was handed, a design-token drift test binding the HUD
+palette to the generated tokens, and a `publicKeyURL` that is `private` with no accessor. Six of the
+thirteen are that, and they are a backlog rather than a limit.
+
+### The five that are now watched
+
+Each was armed by re-applying its mutant after the test was written and watching the named test go
+red — all five together, 8 issues, exit 1, then reverted. `evidence/mutation-arming.txt`.
+
+The oracle is deliberately never the constant in the source. `KeyCodes` is checked against Carbon's
+own `kVK_ANSI_*`; the RGBA stride against the identity that two uniform images differing by `delta`
+per channel have a mean absolute channel difference of exactly `delta / 255` whatever the pixel
+count; the run id's alphabet against the UUID it is drawn from. Asserting a value the test itself
+supplied is how DEF-019 shipped, and it is not repeated here.
+
+Two are worth reading twice. `KeyCodes` had **nothing checking the table against anything**, so with
+`"n": 46` the letters `n` and `m` shared a code — `proctor_act` typing "n" presses M — and 1,818
+tests stayed green. And `PixelCompare.meanDifference` backs the `regionMatches` assertion, so it is
+the instrument every caller's tolerance is measured in; at stride 5 it reads misaligned channels and
+visits four fifths of the pixels, and every existing test compared images that were either identical
+or wildly different, both of which survive a broken stride.
+
+**This figure is not copied into `.warrant/suite-health.json`.** `mutation_measured: false` there is
+correct and is not stale: it means warrant's own assay has not run, and a value copied into a
+generated file is a second source that drifts.
 
 ## What was not checked
 

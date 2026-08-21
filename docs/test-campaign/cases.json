@@ -1156,5 +1156,116 @@
       "effect": "ipc",
       "count": 825
     }
+  },
+  {
+    "id": "CASE-0072",
+    "req": "REQ-046",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/census-control.txt"
+    ],
+    "armed": true,
+    "armedBy": "This case IS the arming. --seed-strengthen is the skill's own arming rule turned on its own gate: it strengthens a requirement's declared constraint to one the registry cannot satisfy and requires the census to go red. Both directions read before=clear after=red, exit 0.",
+    "note": "PRO-0080 A1/A2. The census control run in both directions, first run ever against this campaign. REQ-017 (effect subprocess, the requirement whose witness PRO-0077 built and merged) and REQ-001 (classed none). Verbatim transcript in the evidence file, not summarised. PRECONDITION CHECKED RATHER THAN ASSUMED: _census_clear is not(unclassed or uncensused), so if the census were already red then after would be red for a reason the mutation did not cause and the tool would still print 'the gate bites'. Read immediately before: unclassed examined=45 findings=0, uncensused examined=22 findings=0, gate exit 0. The before=clear in both outputs is therefore load-bearing and measured. RESTORATION MEASURED, NOT CLAIMED: sha256 of inventory.json is 9215d5be401c61b55d3a85ef697279dc4f99dd389e6ce0226b232a7bdb225885 before the first run and after the last, and git diff is empty."
+  },
+  {
+    "id": "CASE-0073",
+    "req": "REQ-046",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/census-control.txt",
+      "scripts/campaign/seed_unclass.py"
+    ],
+    "armed": true,
+    "armedBy": "Both arms of the control were watched. It bites on REQ-017 (unclassed 0 findings to 1, exit 0) and REFUSES on REQ-011 (exit 2), whose text names no effect the vocabulary matches, because scoring that absent finding as a red would pass the control on a tautology. A control that cannot refuse is the thing being guarded against.",
+    "note": "PRO-0080 A3, and it exists because CASE-0072 passing did not mean what it looked like it meant. The census has two exact passes at requirement level. --seed-strengthen sets effect to packet-filter and pops provider, which IS the uncensused predicate, so it fires uncensused and only uncensused whatever the requirement's starting class. Decomposed per pass: REQ-017 seeded gives unclassed 0 / uncensused 1; REQ-001 seeded gives unclassed 0 / uncensused 1. So after the shipped control ran green, unclassed was still a pass reporting examined=45 findings=0 that nothing had watched go red, which is the position the control exists to get a gate out of, surviving the control. Recorded as DEF-030. scripts/campaign/seed_unclass.py is the missing direction: it strengthens the specification rather than the census record by removing a requirement's effect field, and requires unclassed to flag it. It is a separate script rather than a patch to vacuity-check.py because that file lives in a plugin cache this repo does not own and a fix there is reverted by the next plugin update with nothing saying so. Registry restored byte-for-byte, verified by sha256 rather than asserted."
+  },
+  {
+    "id": "CASE-0074",
+    "req": "REQ-047",
+    "surface": "SURF-002",
+    "oracle": "metamorphic",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/mutation-agent.json",
+      "docs/test-campaign/evidence/mutation-agent.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutate_swift.py refuses to start unless the suite is green before any mutation, because without that a suite already failing reports every mutant as killed and returns a 0% survival rate that means nothing. Baseline green was printed before the first mutant.",
+    "note": "PRO-0080 A4. The first mutation sample ever generated in ProctorAgent. PARTIAL BY DENOMINATOR AND SAID SO: 24 mutants run of a pool of 3,189 sites across all 84 files of the package, seed 20260821, 3,165 sites unrun. That is 0.75% of the surface. 19 SURVIVED, 5 scored killed, 0 unbuildable. TWO OF THE FIVE KILLS ARE NOT TRUSTWORTHY: SessionActivate.swift:166 and UnlockBroker.swift:110 both scored at exactly 600.0s, which is the timeout, and the runner scores a timeout as killed. Load average reached 271 during the run (11.20 at start, 271.39 at end). The honest kill count is 3 of 22 scored, giving a survival rate of 19/22 = 86.4%, against ProctorCore's 50%. Survivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor, so all 19 stand. NO KILL BELOW 600s IS TIMEOUT-SCORED: the three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so they are real test failures rather than starved runs. Disposition of the 19: 5 killed by new tests (CASE-0075..0079), 1 equivalent (SessionMaestro.swift:242), 13 uncovered-by-lane or unreachable from a headless seam, each with its reason in REPORT.md. The figure is deliberately NOT copied into .warrant/suite-health.json, where mutation_measured: false is correct and means warrant's own assay has not run."
+  },
+  {
+    "id": "CASE-0075",
+    "req": "REQ-047",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied by hand after the test was written: KeyCodes.swift:18 'n': 45 to 'n': 46. The named test went red with 2 issues, (actual -> 46) == (CGKeyCode(expected) -> 45) and (Set(codes).count -> 25) == 26. Mutant reverted, test green.",
+    "note": "PRO-0080 A5/A6, survivor 21. Nothing checked the keycode table against anything, so a letter could be remapped and 1,818 tests stayed green. With the mutation n and m both map to 46, meaning proctor_act typing 'n' presses M. The oracle is Carbon's own kVK_ANSI_* constants rather than a second copy of the table, so the test is not asserting a value it supplied itself, which is how DEF-019 shipped. Distinctness over all 26 letters is asserted separately because that is the property the mutation actually broke, and a count floor of 26 guards against a loop that examined nothing."
+  },
+  {
+    "id": "CASE-0076",
+    "req": "REQ-047",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied: RunIdentity.swift:30 prefix(12) to prefix(13). The named test went red: (id.count -> 13) == 12. Reverted, green.",
+    "note": "PRO-0080 A5/A6, survivor 2. The run id is written into every record of every tool call and nothing asserted its shape. Length checked against the contract in the doc comment, alphabet against the source it is drawn from (a hyphen-stripped lowercased UUID is hex), and 64 mints required to be 64 distinct ids so a constant could not satisfy the first two."
+  },
+  {
+    "id": "CASE-0077",
+    "req": "REQ-047",
+    "surface": "SURF-006",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied: PixelCompare.swift:38 stride by: 4 to by: 5. The named test went red: (abs(mean - delta / 255.0) -> 0.029411764705882353) < 0.0005. Reverted, green.",
+    "note": "PRO-0080 A5/A6, survivor 18. meanDifference backs the regionMatches assertion, so it is the instrument a caller's tolerance is measured in. At stride 5 it reads misaligned channels and visits four fifths of the pixels; every existing test compared images that were either identical or wildly different, both of which survive a broken stride. THE EXPECTED VALUE IS DERIVED, NOT COPIED: two uniform images differing by delta on all three colour channels have a mean absolute channel difference of exactly delta/255 whatever the pixel count, so the oracle comes from the definition rather than from the loop. An identical pair is required to read 0.0 in the same test, so the assertion cannot be satisfied by an instrument returning a constant."
+  },
+  {
+    "id": "CASE-0078",
+    "req": "REQ-047",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied: UnlockBroker.swift:51 contactCount += 1 to += 2. The named test went red with 3 issues, counting 2, 4 and 6 where 1, 2 and 3 were expected. Reverted, green.",
+    "note": "PRO-0080 A5/A6, survivor 17. contactCount is how proctor_unlock status proves the login-path mechanism actually reached the broker: os_log from a launchd agent is not reliably visible, so this counter is the evidence. A counter that double-counts reports two handshakes where one happened, and nothing watched it. The test uses a fresh UnlockTurn rather than .shared so the count starts at a known zero and no other test can move it."
+  },
+  {
+    "id": "CASE-0079",
+    "req": "REQ-047",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied: RunHUDContentView.swift:830 ms < 1000 to ms <= 1000. The named test went red: (RunHUDContentView.duration(1000) -> \"1000ms\") == \"1.0s\". Reverted, green.",
+    "note": "PRO-0080 A5/A6, survivor 14. The HUD's duration form. At the boundary the mutation prints 1000ms where the mock's form is 1.0s, and the existing tests only ever passed values well clear of the boundary. This is the same shape of untested boundary that RunHUDGate.onSegment is already on record for, except that this one is killable rather than equivalent."
   }
 ]

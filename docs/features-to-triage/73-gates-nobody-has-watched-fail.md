@@ -51,16 +51,27 @@ Three operating facts, each measured the hard way:
 Chasing equivalent mutants is out of scope. `RunHUDGate.onSegment`'s `<=` boundary is already
 recorded as one, and a suite contorted to kill an unkillable mutant is worse than the survivor.
 
-## Item 3 — DEF-019's record says `open` and the code says fixed
+## Item 3 — the defect registry (STALE: done at wave 11a's merge, verify instead)
 
-`inventory.json` carries `DEF-019` with `"status": "open"`. `REPORT.md`'s defect table carries the
-same id as `fixed`. The code agrees with the table: `Sources/ProctorCore/CLISurface.swift:148-155`
-now reads the top-level `ok`, the top-level `failed` count, and each assertion's `status == "fail"`,
-with a comment recording the two live measurements that found the original defect.
+**Corrected 2026-08-21 by PRO-0080.** This item was written before wave 11a merged and it describes
+a job that has since been done, larger than as described. What follows is what is actually true.
 
-Flip the inventory record and check the other 18 for the same drift in the same pass. This is a
-one-line fix with a five-minute audit attached, and it sits in this brief rather than on its own
-because it is the same failure mode: a ledger nobody re-read against the thing it describes.
+Wave 11a's merge reconciled the registry: it backfilled wave 10's four defects into
+`inventory.json`, renumbered PRO-0078's five from DEF-020..024 to DEF-025..029, and flipped DEF-019
+to `fixed`. So the one-line fix this item asked for is already made, and the "other 18" it asked to
+audit is now 28. **DEF-024 does not exist and that is deliberate** — the backfilled four took
+DEF-020..023 while PRO-0078's fifth moved to DEF-029, so 23 + 5 = 28 with a gap in the sequence and
+nothing recording why.
+
+Verified rather than redone: the inventory holds 28 records, and of the ids present in both
+registries there are **zero status disagreements**. That work is sound.
+
+**What the verification found instead.** The drift has reversed direction. `REPORT.md`'s defect
+table held **18 of the 28** — DEF-001..005 and DEF-025..029 appeared nowhere in it, not in the table
+and not in the prose. All five open defects were among the missing ten, so a reader of the report
+saw **no open defect at all**, under a heading reading "Eighteen defects, all eighteen fixed". Same
+failure mode as the one this item was written for, running the other way: a ledger nobody re-read
+against the thing it describes. Recorded as DEF-031 and fixed by completing the table.
 
 ## The conversion contract
 
@@ -70,7 +81,9 @@ because it is the same failure mode: a ledger nobody re-read against the thing i
   partial sample honestly reported is the deliverable; a full sweep is not required and the machine
   contention makes one unreliable anyway.
 - Every surviving mutant either gets a test that kills it or a recorded reason it is equivalent.
-- `inventory.json` and `REPORT.md` agreeing on all 19 defect records.
+- `inventory.json` and `REPORT.md` agreeing on every defect record. ~~19~~ 32 after PRO-0080:
+  28 inherited plus the four this item found. Zero status disagreements, neither registry ahead of
+  the other.
 - The four campaign gates re-run afterwards — `check`, `strict-check`, `capture-lineage --gate`,
   `vacuity-check --gate` — with `evidence.html` regenerated and `export-warrant` run.
 
