@@ -578,6 +578,30 @@
       "text": "The shared signature store is a default rather than a singleton: a ToolProbes handed a cache uses that one, so a test gets an isolated store and the identify/verify seam stays injectable",
       "source": "Sources/ProctorAgent/Session/ToolProbe.swift:280; docs/specs/spec-PRO-0087.md acceptance 3",
       "effect": "none"
+    },
+    {
+      "id": "REQ-057",
+      "text": "Every capped list the campaign gate prints carries its own denominator, so a truncated display cannot be read as a count",
+      "source": "docs/features-to-triage/84-the-campaigns-own-instruments.md",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "PRO-0091, from DEF-041. The instrument, not the product. Raising the cap is not the remedy \u2014 the next set outgrows the next cap \u2014 so the denominator prints whether the list truncated or not.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-058",
+      "text": "A registry merge sweeps every key of both documents and asserts id uniqueness per key",
+      "source": "docs/features-to-triage/84-the-campaigns-own-instruments.md",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "PRO-0091, from DEF-058. A hand-merge swept the two keys the conflict was about and dropped a third, unpublishing a judged capture. The remedy is a script rather than a resolution to be careful.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1899,6 +1923,24 @@
       "evidence": "docs/test-campaign/evidence/PRO-0087/run-ledger.md",
       "surface": "SURF-008",
       "req": "REQ-053"
+    },
+    {
+      "id": "DEF-075",
+      "status": "open",
+      "title": "vacuity-check.py --seed-strengthen prints 'The gate bites' from before=red after=red",
+      "found": "PRO-0091, arming DEF-030's second pass against the real registry",
+      "detail": "The shipped census control does not refuse a baseline that is already red. Run against docs/test-campaign as it stands, it prints 'seed-strengthen REQ-017: before=red after=red' and then 'The gate bites: strengthening the constraint turned it red' \u2014 a red the mutation did not cause, scored as proof that the mutation caused it.\n\nMEASURED: the registry has one standing census finding (REQ-049 declares an ipc effect and records no provider), so uncensused is red before any mutation is applied. The control ran, reported a bite, and had established nothing. Arming this item's CASE-0152 needed a fixture copy with REQ-049 given a provider so the pass started clear.\n\nThis is DEF-030's mechanism one layer deeper: a control that arms half a gate, and the half it does arm it can score on a red it did not produce. scripts/campaign/seed_unclass.py already implements the refusal \u2014 'REFUSING: unclassed is already red ... A red after the mutation would be red for a reason the mutation did not cause' \u2014 and vacuity-check.py does not.\n\nNOT FIXED HERE, and this is why: vacuity-check.py is the plugin's tool, and unlike campaign.py the fix is a behaviour change to a control rather than to a display, so it wants its own arming run and its own gate test rather than riding along with a denominator fix. Recorded against test-campaign 0.9.4.",
+      "surface": "SURF-022",
+      "req": "REQ-046"
+    },
+    {
+      "id": "DEF-076",
+      "status": "fixed",
+      "title": "seed_unclass.py pinned the plugin path to version 0.9.2, which one plugin update removes",
+      "found": "PRO-0091, running the census control after the plugin moved to 0.9.3",
+      "detail": "scripts/campaign/seed_unclass.py loaded vacuity-check.py from a literal '0.9.2/skills/test-campaign/scripts/vacuity-check.py'. The installed plugin is 0.9.3 and the active install path in installed_plugins.json is 0.9.3; 0.9.2 survives only as a stale cache directory. The two files are byte-identical today, so nothing was wrong with the measurement \u2014 but the next prune of the cache turns a control whose whole job is to prove a pass can fire into a script that exits on a missing file.\n\nFIXED: the path resolves to the newest installed version, comparing version directories as tuples of integers so 0.9.10 sorts after 0.9.9, and the resolved path is printed on every run so the evidence file records which copy was read. An absent plugin now exits saying it is a cannot-run rather than a pass.",
+      "surface": "SURF-022",
+      "req": "REQ-046"
     }
   ]
 }

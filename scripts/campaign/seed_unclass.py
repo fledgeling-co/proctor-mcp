@@ -51,13 +51,32 @@ import json
 import sys
 from pathlib import Path
 
-SKILL = Path.home() / (".claude/plugins/cache/fledgeling-plugins/test-campaign/"
-                       "0.9.2/skills/test-campaign/scripts/vacuity-check.py")
+# The newest installed version rather than a pinned one. This read
+# `0.9.2/...` literally, and 0.9.2 is one plugin update from being pruned — at
+# which point a control whose whole job is to prove a pass can fire would exit
+# on a missing file. Versions sort as tuples of integers so 0.9.10 lands after
+# 0.9.9 rather than before it. Fixed by PRO-0091.
+PLUGIN = Path.home() / ".claude/plugins/cache/fledgeling-plugins/test-campaign"
+
+
+def _skill() -> Path:
+    def key(p: Path) -> tuple:
+        try:
+            return tuple(int(part) for part in p.name.split("."))
+        except ValueError:
+            return ()
+    found = sorted((v / "skills/test-campaign/scripts/vacuity-check.py"
+                    for v in PLUGIN.glob("*") if v.is_dir()), key=lambda p: key(p.parent.parent.parent.parent))
+    return next((p for p in reversed(found) if p.exists()), PLUGIN / "vacuity-check.py")
 
 
 def _vacuity():
+    SKILL = _skill()
     if not SKILL.exists():
-        sys.exit(f"vacuity-check.py not found at {SKILL}")
+        sys.exit(f"vacuity-check.py not found under {PLUGIN} — the test-campaign "
+                 f"plugin is not installed, so this control cannot run. That is a "
+                 f"cannot-run, not a pass.")
+    print(f"# vacuity-check.py: {SKILL}")
     spec = importlib.util.spec_from_file_location("vacuity", SKILL)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)

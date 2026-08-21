@@ -1,0 +1,72 @@
+# test-campaign plugin gate tests after 0.9.4 — PRO-0091, 2026-08-21T08:09:15Z.
+# Source: ~/Dev/fledgeling-plugins/plugins/test-campaign/tests/run.sh
+
+ok    an empty campaign is not a passing one
+ok    a -glass lane with no proof blocks
+ok    the legacy visual rung blocks
+ok    a capture that is not an image blocks
+ok    a 1x1 placeholder capture blocks
+ok    a zero-byte capture blocks
+ok    one artifact for two cases blocks
+ok    a pixel claim with no channel blocks
+ok    inconclusive holds the gate shut
+ok    blocked holds the gate shut
+ok    the resolved campaign clears
+ok    unarming a case fails the ratchet
+ok    lowering the ratchet without a reason is refused
+ok    lowering it with a reason is allowed and recorded
+ok    'requirement' is read as 'req'
+ok    interactive-glass on non-glass lane blocks
+ok    interactive-glass on glass lane clears and counts as effect
+ok    cannot-attach for a missing signed app is refused
+ok    cannot-attach 'glass stays closed' is refused
+ok    a missing --artifact path tells you to build it
+ok    cannot-attach for a missing interactive desktop is recorded
+ok    a shot with no capture manifest is unsourced
+ok    a manifest naming each target clears
+ok    swapping two subjects turns the tie pass red
+ok    seed-swap restores the manifest it borrowed
+ok    a target that is not the subject's route is untied
+ok    a source-file route names the on-glass channel as the remedy
+ok    two subjects sharing one image fails
+ok    a declared share passes and prints
+ok    check reports the wall's distinct-image count
+ok    attach-shots refuses a write no capture manifest corroborates
+ok    --filename-only writes, and stamps the weakness into the inventory
+ok    check blocks on a filename-only binding
+ok    an observed external effect with no witness blocks
+ok    the same requirement recorded vacuous clears
+ok    an effect-witness claim with no recorder blocks
+ok    a witness that counted nothing blocks
+ok    a counted, recorded witness clears
+ok    a reported external effect is not counted as witnessed
+ok    and it is named as claimed-but-unwitnessed
+ok    a selective run prints the effect census too
+ok    an unrecognised effect class blocks rather than vanishing
+ok    correcting it to a real class clears
+ok    a bogus requirement evidence class is refused
+ok    a bogus requirement effect class is refused
+ok    a declared effect with no provider is uncensused
+ok    naming the provider clears the census
+ok    an undeclared effect named in the text is unclassed
+ok    --seed-strengthen turns a strengthened constraint red
+ok    --seed-strengthen restores the registry byte-identically
+ok    a mutate-and-never-read test is blind
+ok    reading the observable afterwards clears the blind pass
+ok    a missing test root is skipped out loud
+ok    a mutator does not fire inside a longer identifier
+ok    the same mutator still fires on a real method call
+ok    a helper its callers use is not counted as a test
+ok    a reader the defaults do not know reads as blind
+ok    the campaign's declared vocabulary is read and reported
+ok    strict-check counts effect-witness as an effect rung
+ok    a truncated list carries its denominator
+ok    the cap still caps
+ok    a complete list says it is complete
+ok    source-analysis is a rung, counted apart from the product ladder
+ok    an external effect cannot rest on source analysis alone
+ok    a source-analysis pass owes a denominator
+ok    the same campaign clears once the denominator is back
+ok    source-analysis buys no effect credit and is off the ladder
+
+campaign gate tests: 67 passed, 0 failed

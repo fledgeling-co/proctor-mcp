@@ -86,7 +86,17 @@ OPERATORS = [
     # An integer literal, one higher. Underscore separators are part of the
     # token, so `86_400` mutates as a whole rather than the `86` inside it, and
     # a decimal point on either side excludes a float's halves.
-    (re.compile(r"(?<![\w.])(\d[\d_]*)(?![\w.])"), None),
+    #
+    # `$` is in the lookbehind because Swift's closure shorthand parameters are
+    # spelled `$0`, `$1`, and the digit in one is not an integer literal. Mutant
+    # 24 of the first ProctorAgent sample rewrote `{ bind(fd, $0, size) }` to
+    # `bind(fd, $1, size)` — a closure that takes one parameter cannot name a
+    # second, so the compiler must reject it. That cost a slot out of 24 against
+    # a pool of 3,189 sites, and it did not even score as unbuildable: under load
+    # the build ran past the 600s timeout and the runner scores a timeout as a
+    # kill. Recorded as DEF-032. A property wrapper's projected value (`$name`)
+    # is excluded by the same lookbehind and is not a literal either.
+    (re.compile(r"(?<![\w.$])(\d[\d_]*)(?![\w.])"), None),
 ]
 
 def bump(match: re.Match) -> str:

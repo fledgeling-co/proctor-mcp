@@ -1,0 +1,30 @@
+# DEF-030 — the census control arms both passes, each watched red from a clear baseline.
+# PRO-0091, 2026-08-21T08:02:38Z. Fixture: /tmp/def030, a copy of
+# docs/test-campaign with REQ-049 given a provider so uncensused starts CLEAR.
+# Without that the shipped control runs before=red after=red and still prints
+# 'The gate bites' — recorded here as DEF-075.
+
+=== BASELINE: both passes clear ===
+unclassed:  examined=49 findings=0
+uncensused: examined=23 findings=0
+blind:      NOT RUN — pass --tests <root> to scan the test tree. This is the cheapest of the three and needs no privilege.
+
+vacuity: requirements=49 external=23 findings=0
+
+=== DIRECTION 1 — uncensused, via the shipped control (vacuity-check.py --seed-strengthen) ===
+seed-strengthen REQ-017: before=clear after=red
+The gate bites: strengthening the constraint turned it red, and the registry was restored byte-for-byte.
+
+=== DIRECTION 2 — unclassed, via scripts/campaign/seed_unclass.py ===
+seed-unclass REQ-017: before=clear after=red (unclassed examined=49 findings=1)
+  REQ-017 names subprocess and declares no `effect` — run the census, or record "effect": "none"
+registry restored byte-for-byte: True (sha256 f9ab33767aa177b0…)
+The pass bites: removing the effect class turned unclassed red.
+  exit: 0
+
+=== BASELINE AGAIN: the fixture is restored, both passes clear ===
+unclassed:  examined=49 findings=0
+uncensused: examined=23 findings=0
+blind:      NOT RUN — pass --tests <root> to scan the test tree. This is the cheapest of the three and needs no privilege.
+
+vacuity: requirements=49 external=23 findings=0
