@@ -124,9 +124,9 @@ struct Dispatcher: Sendable {
         // trail. `proctor_policy` action `audit` is a catalogue tool that already
         // opens the trail and returns whole records. This projection is strictly
         // narrower than that one.
-        case "proctor_history":
-            return await session.history(limit: args.int("limit") ?? 20)
-        case "proctor_history_clear":
+        case HistorySurface.Wire.historyTool:
+            return await session.history(limit: args.int(HistorySurface.Wire.limitArgument) ?? 20)
+        case HistorySurface.Wire.clearTool:
             return await session.clearHistory()
         // Internal verb behind Proctor's menu bar: the show/hide switch for the
         // run panel and the run's own Pause, Resume and Stop, so hiding the panel

@@ -1,0 +1,46 @@
+=== 0. CLEAN ===
+Sources/ProctorUI/HistoryModel.swift: 1 string literals examined
+  display         0
+  symbol          0
+  system          0
+  key             0
+  punctuation     1
+  interpolated    0
+
+PASS: 0 user-facing literals of 1 examined; 1 are identifiers, symbols, system strings or punctuation.
+status_literals exit=0
+
+=== 1. ARM the round-trip: the writer drifts one key back to a literal of its own ===
+    (this is exactly DEF-035's shape: two sources for one contract)
+test.sh exit=1
+􀢄  Test "DEF-039 · the window's wire keys resolve against what the agent writes" recorded an issue at RunHistoryWiringTests.swift:273:13: Expectation failed: (header[key] → nil) != nil
+􀢄  Test run with 1 test in 1 suite failed after 0.065 seconds with 1 issue.
+      􀢄  Test run with 1 test in 1 suite failed after 0.065 seconds with 1 issue.
+
+=== 2. ARM status_literals on the converted reader: a key typed back in ===
+Sources/ProctorUI/HistoryModel.swift: 2 string literals examined
+  display         1
+  symbol          0
+  system          0
+  key             0
+  punctuation     1
+  interpolated    0
+  VIOLATION   208 <none>()                           "capDays"
+
+FAIL: 1 user-facing literal(s) of 2 examined. Move them to StatusSurface.Copy.
+status_literals exit=1
+
+=== 3. RESTORED ===
+Sources/ProctorUI/HistoryModel.swift: 1 string literals examined
+  display         0
+  symbol          0
+  system          0
+  key             0
+  punctuation     1
+  interpolated    0
+
+PASS: 0 user-facing literals of 1 examined; 1 are identifiers, symbols, system strings or punctuation.
+status_literals exit=0
+ Sources/ProctorAgent/Session/SessionHistory.swift | 100 +++++++++++-----------
+ Sources/ProctorUI/HistoryModel.swift              |  82 +++++++++---------
+ 2 files changed, 91 insertions(+), 91 deletions(-)

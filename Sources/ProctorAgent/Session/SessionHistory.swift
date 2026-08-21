@@ -69,9 +69,9 @@ extension Session {
 
         let grouped = RunHistory.runs(from: entries, limit: runs)
         return .object([
-            "runs": .array(grouped.map(Self.encode(run:))),
-            "unreadable": .number(Double(unreadable)),
-            "header": historyHeader()
+            HistorySurface.Wire.runs: .array(grouped.map(Self.encode(run:))),
+            HistorySurface.Wire.unreadable: .number(Double(unreadable)),
+            HistorySurface.Wire.header: historyHeader()
         ])
     }
 
@@ -87,10 +87,10 @@ extension Session {
     func clearHistory() -> JSONValue {
         let ok = AuditLog.clear()
         return .object([
-            "cleared": .bool(ok),
-            "runs": .array([]),
-            "unreadable": .number(0),
-            "header": historyHeader()
+            HistorySurface.Wire.cleared: .bool(ok),
+            HistorySurface.Wire.runs: .array([]),
+            HistorySurface.Wire.unreadable: .number(0),
+            HistorySurface.Wire.header: historyHeader()
         ])
     }
 
@@ -107,34 +107,34 @@ extension Session {
         let verdict = AuditLog.verify()
 
         var out: [String: JSONValue] = [
-            "entries": .number(Double(entries)),
-            "capDays": .number(Double(caps.days)),
-            "capEntries": .number(Double(caps.entries)),
-            "remainingByEntries": .number(remaining.byEntries),
-            "writable": .bool(status.writable),
+            HistorySurface.Wire.entries: .number(Double(entries)),
+            HistorySurface.Wire.capDays: .number(Double(caps.days)),
+            HistorySurface.Wire.capEntries: .number(Double(caps.entries)),
+            HistorySurface.Wire.remainingByEntries: .number(remaining.byEntries),
+            HistorySurface.Wire.writable: .bool(status.writable),
             // A trail that verifies clean and a trail nobody could check are
             // different answers, and a history surface that showed neither would
             // present a rolled-back trail as an ordinary short one.
-            "verdictClean": .bool(verdict.isClean),
-            "verdictEntries": .number(Double(verdict.total)),
-            "keyConfirmed": .bool(verdict.keyConfirmed)
+            HistorySurface.Wire.verdictClean: .bool(verdict.isClean),
+            HistorySurface.Wire.verdictEntries: .number(Double(verdict.total)),
+            HistorySurface.Wire.keyConfirmed: .bool(verdict.keyConfirmed)
         ]
-        if let byAge = remaining.byAge { out["remainingByAge"] = .number(byAge) }
-        if let startedAt = status.startedAt { out["startedAt"] = .number(startedAt) }
-        if let error = status.error { out["error"] = .string(error) }
-        if status.dropped > 0 { out["dropped"] = .number(Double(status.dropped)) }
-        if status.keyMismatch { out["keyMismatch"] = .bool(true) }
+        if let byAge = remaining.byAge { out[HistorySurface.Wire.remainingByAge] = .number(byAge) }
+        if let startedAt = status.startedAt { out[HistorySurface.Wire.startedAt] = .number(startedAt) }
+        if let error = status.error { out[HistorySurface.Wire.error] = .string(error) }
+        if status.dropped > 0 { out[HistorySurface.Wire.dropped] = .number(Double(status.dropped)) }
+        if status.keyMismatch { out[HistorySurface.Wire.keyMismatch] = .bool(true) }
         if let fault = verdict.faults.first {
-            out["fault"] = .object([
-                "kind": .string(fault.kind.rawValue),
-                "entry": .number(Double(fault.position)),
-                "detail": .string(fault.detail)
+            out[HistorySurface.Wire.fault] = .object([
+                HistorySurface.Wire.faultKind: .string(fault.kind.rawValue),
+                HistorySurface.Wire.faultEntry: .number(Double(fault.position)),
+                HistorySurface.Wire.faultDetail: .string(fault.detail)
             ])
         }
         if let rotated = status.rotated {
-            out["rotated"] = .object([
-                "discarded": .number(Double(rotated.count)),
-                "reason": .string(rotated.reason.rawValue)
+            out[HistorySurface.Wire.rotated] = .object([
+                HistorySurface.Wire.rotatedDiscarded: .number(Double(rotated.count)),
+                HistorySurface.Wire.rotatedReason: .string(rotated.reason.rawValue)
             ])
         }
         return .object(out)
@@ -147,48 +147,48 @@ extension Session {
     /// somebody has to edit on purpose.
     private static func encode(run: RunHistory.Run) -> JSONValue {
         var out: [String: JSONValue] = [
-            "id": .string(run.id),
-            "tool": .string(run.tool),
-            "startedAt": .number(run.startedAt),
-            "endedAt": .number(run.endedAt),
-            "outcome": .string(run.outcome.rawValue),
-            "steps": .array(run.steps.map(encode(step:)))
+            HistorySurface.Wire.id: .string(run.id),
+            HistorySurface.Wire.tool: .string(run.tool),
+            HistorySurface.Wire.startedAt: .number(run.startedAt),
+            HistorySurface.Wire.endedAt: .number(run.endedAt),
+            HistorySurface.Wire.outcome: .string(run.outcome.rawValue),
+            HistorySurface.Wire.steps: .array(run.steps.map(encode(step:)))
         ]
-        if let bundleId = run.bundleId { out["bundleId"] = .string(bundleId) }
-        if let reason = run.reason { out["reason"] = .string(fence(reason)) }
-        if run.unreadable > 0 { out["unreadable"] = .number(Double(run.unreadable)) }
+        if let bundleId = run.bundleId { out[HistorySurface.Wire.bundleId] = .string(bundleId) }
+        if let reason = run.reason { out[HistorySurface.Wire.reason] = .string(fence(reason)) }
+        if run.unreadable > 0 { out[HistorySurface.Wire.unreadable] = .number(Double(run.unreadable)) }
         if let lane = run.lane {
             var laneOut: [String: JSONValue] = [
-                "lane": .string(lane.lane), "rule": .string(lane.rule)
+                HistorySurface.Wire.lane: .string(lane.lane), HistorySurface.Wire.laneRule: .string(lane.rule)
             ]
             // The scheme and never any other part of an address: PRO-0024 routes
             // on the scheme alone, and a history that carried the address would
             // be a browsing log.
-            if let scheme = lane.scheme { laneOut["scheme"] = .string(scheme) }
-            out["lane"] = .object(laneOut)
+            if let scheme = lane.scheme { laneOut[HistorySurface.Wire.laneScheme] = .string(scheme) }
+            out[HistorySurface.Wire.lane] = .object(laneOut)
         }
         return .object(out)
     }
 
     private static func encode(step: RunHistory.Step) -> JSONValue {
         var out: [String: JSONValue] = [
-            "seq": .number(Double(step.seq)),
-            "at": .number(step.at),
-            "outcome": .string(step.outcome.rawValue)
+            HistorySurface.Wire.seq: .number(Double(step.seq)),
+            HistorySurface.Wire.at: .number(step.at),
+            HistorySurface.Wire.outcome: .string(step.outcome.rawValue)
         ]
-        if let kind = step.kind { out["kind"] = .string(kind) }
+        if let kind = step.kind { out[HistorySurface.Wire.kind] = .string(kind) }
         // Proctor's own wording. Not fenced, because nothing outside Proctor can
         // reach it — that is the reason it is stored apart from the object.
-        if let act = step.act { out["act"] = .string(act) }
+        if let act = step.act { out[HistorySurface.Wire.act] = .string(act) }
         if let object = step.object {
-            out["object"] = .object([
-                "text": .string(object.text),
-                "supplied": .bool(object.supplied)
+            out[HistorySurface.Wire.object] = .object([
+                HistorySurface.Wire.text: .string(object.text),
+                HistorySurface.Wire.supplied: .bool(object.supplied)
             ])
         }
-        if let plane = step.plane { out["plane"] = .string(plane) }
-        if let ms = step.ms { out["ms"] = .number(Double(ms)) }
-        if let reason = step.reason { out["reason"] = .string(fence(reason)) }
+        if let plane = step.plane { out[HistorySurface.Wire.plane] = .string(plane) }
+        if let ms = step.ms { out[HistorySurface.Wire.ms] = .number(Double(ms)) }
+        if let reason = step.reason { out[HistorySurface.Wire.reason] = .string(fence(reason)) }
         return .object(out)
     }
 

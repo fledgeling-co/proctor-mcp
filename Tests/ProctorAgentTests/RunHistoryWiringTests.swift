@@ -200,6 +200,85 @@ struct RunHistoryWiringTests {
         #expect(json.contains("accessibility"))
     }
 
+    /// PRO-0090, DEF-039. The window's key set, asked of what the agent
+    /// actually writes.
+    ///
+    /// `SessionHistory.swift` wrote `"capDays"` and `HistoryModel.swift` read
+    /// `"capDays"`, and nothing bound them: a rename at either end would have
+    /// shipped as a column that silently reads zero, which is DEF-035's shape
+    /// one layer below the copy. Both ends now reach `HistorySurface.Wire`.
+    ///
+    /// Pinning the spellings alone would not establish that, because a test that
+    /// compares a constant to a literal it also wrote proves only that somebody
+    /// typed the same thing twice. So this runs the REAL writer and resolves the
+    /// projection with the READER's constants — the same expressions
+    /// `HistoryModel` evaluates — and asserts each finds a value.
+    @Test("DEF-039 · the window's wire keys resolve against what the agent writes")
+    func theWindowsKeysResolveAgainstTheAgentsPayload() async throws {
+        TrailIsolation.acquire()
+        let sealDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("history-wire-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: sealDir, withIntermediateDirectories: true)
+        let signer = AuditRotationTests.TestSigner()
+        let previousSigner = AuditLog.seams.signer
+        let previousAnchors = AuditLog.seams.anchors
+        let previousKeys = AuditLog.seams.keys
+        AuditLog.seams.directory = sealDir
+        AuditLog.seams.signer = signer
+        AuditLog.seams.anchors = signer
+        AuditLog.seams.keys = TestSealKeys()
+        defer {
+            AuditLog.seams.directory = nil
+            AuditLog.seams.signer = previousSigner
+            AuditLog.seams.anchors = previousAnchors
+            AuditLog.seams.keys = previousKeys
+            try? FileManager.default.removeItem(at: sealDir)
+            TrailIsolation.release()
+        }
+
+        var typed = ActionStep(kind: .type, node: "e3")
+        typed.text = "some text"
+        let record = AuditRecord.forStep(
+            typed, tool: "proctor_act", timestamp: 2_000, app: "app-1",
+            bundleId: "com.apple.TextEdit", window: "win-1", outcome: "ok",
+            postStateHash: "beef", run: "run-9", seq: 0, ms: 7,
+            plane: "accessibility", node: AXNode(id: "e3", role: "AXTextField",
+                                                 title: "Field"))
+        #expect(AuditLog.append(record))
+
+        let session = plainSession()
+        let projection = await session.history(limit: 10)
+
+        typealias W = HistorySurface.Wire
+        // The three parts of the reply, then a run, then a step, then the
+        // header — read exactly as HistoryModel reads them.
+        let header = try #require(projection[W.header], "the header key does not resolve")
+        #expect(projection[W.unreadable] != nil)
+        let runs = try #require(projection[W.runs]?.arrayValue, "the runs key does not resolve")
+        let run = try #require(runs.first, "the writer produced no run to read")
+
+        for key in [W.id, W.tool, W.startedAt, W.endedAt, W.outcome, W.steps] {
+            #expect(run[key] != nil, "a run's \(key) does not resolve")
+        }
+        #expect(run[W.bundleId]?.stringValue == "com.apple.TextEdit")
+
+        let step = try #require(run[W.steps]?.arrayValue?.first, "the run carries no step")
+        for key in [W.seq, W.at, W.outcome, W.kind, W.plane, W.ms] {
+            #expect(step[key] != nil, "a step's \(key) does not resolve")
+        }
+        #expect(step[W.plane]?.stringValue == "accessibility")
+
+        for key in [W.entries, W.capDays, W.capEntries, W.remainingByEntries,
+                    W.writable, W.verdictClean, W.verdictEntries, W.keyConfirmed] {
+            #expect(header[key] != nil, "the header's \(key) does not resolve")
+        }
+
+        // The clear verb answers with the same header shape and its own flag.
+        let cleared = await session.clearHistory()
+        #expect(cleared[W.cleared] != nil)
+        #expect(cleared[W.header] != nil)
+    }
+
     @Test("neither history verb is reachable as a tool")
     func historyIsNotInTheCatalogue() {
         // The shim gates tools/call on the catalogue, so this is what keeps a
