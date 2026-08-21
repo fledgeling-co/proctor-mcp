@@ -602,6 +602,31 @@
       ],
       "note": "PRO-0091, from DEF-058. A hand-merge swept the two keys the conflict was about and dropped a third, unpublishing a judged capture. The remedy is a script rather than a resolution to be careful.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-063",
+      "class": "safety guarantee",
+      "text": "The policy file is created with mode 0600 by the write that creates it, whatever the umask the agent inherited, and a policy file already on disk at a wider mode is narrowed to 0600 by the next save rather than keeping the mode an earlier build gave it",
+      "source": "docs/features-to-triage/88-three-that-slipped-the-grouping.md; spec-PRO-0095.md A1-A3; the standard AuditLog already sets at PolicyStore.swift appendRawLocked and withAuditFileLock",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-012"
+      ],
+      "note": "proved by reading the mode back off disk with attributesOfItem rather than from the options the write was given, with the pre-fix Data.write(to:options:.atomic) put back and the cases watched red",
+      "effect": "filesystem-write",
+      "provider": "PolicyStore.write in Sources/ProctorAgent/Session/PolicyStore.swift, which opens the temporary with Darwin.open(O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0o600) and replaces atomically with .usingNewMetadataOnly"
+    },
+    {
+      "id": "REQ-064",
+      "class": "honesty guardrail",
+      "text": "A seeded control refuses to score a red it did not cause: before mutating anything it establishes that the gate is clear, and a run it refuses names which pass was red and over what population rather than reporting a bite",
+      "source": "docs/features-to-triage/88-three-that-slipped-the-grouping.md; DEF-075; the refusal scripts/campaign/seed_unclass.py already carries for the other census pass",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "8 gate checks in scripts/campaign/test_instruments.py, all 8 watched red across four sabotages; the control is also watched running and biting from a clear baseline, so refusing everything does not satisfy it",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1929,12 +1954,15 @@
     },
     {
       "id": "DEF-068",
-      "status": "open",
+      "status": "fixed",
       "title": "policy.json is written world-readable while every audit file in the same subsystem is opened 0600",
       "found": "PRO-0089, reading the two stores side by side in PolicyStore.swift",
       "detail": "`PolicyStore.save` creates its directory with `.posixPermissions: 0o700` and then writes the file with `Data.write(to:options:.atomic)`, which takes the umask default. Measured on this Mac: `-rw-r--r-- policy.json` inside `drwx------ policy/`. `AuditLog` in the same file opens `audit.jsonl`, `audit.lock` and `audit.pub` with an explicit `0o600` and sets `0o600` on its temporaries; measured `-rw------- audit.jsonl`.\n\nThe 0700 directory is what carries the protection, so this is an inconsistency rather than an exposure: another user cannot traverse the directory to reach the file. It matters if the file is ever copied, archived, or the directory's mode is relaxed.\n\nNOT FIXED HERE, deliberately. This item is about test seams; changing the on-disk mode of an operator's existing configuration file is a separate change with its own migration question (an existing 0644 file keeps its mode through an atomic replace on some paths and not others), and fixing it in passing would put an unrelated line in this diff.",
       "surface": "SURF-012",
-      "req": "REQ-055"
+      "req": "REQ-055",
+      "fixedBy": "PRO-0095",
+      "fix": "PolicyStore.save no longer uses Data.write(to:options:.atomic), which takes no mode and so took the umask default. It opens its own temporary in the policy directory with Darwin.open(O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0o600) \u2014 the same explicit open AuditLog uses for audit.jsonl, audit.lock and audit.pub \u2014 writes it, fsyncs, closes, and replaces atomically with FileManager.replaceItemAt(options: [.usingNewMetadataOnly]). The mode is set at creation rather than by a chmod afterwards, because a file that existed world-readable for an instant has been world-readable. O_EXCL is what binds the mode argument: open applies it only when it creates the file, so O_TRUNC over a stale 0644 temporary would reuse that mode. .usingNewMetadataOnly is what narrows an operator's existing 0644 file, which replaceItemAt would otherwise carry across forever. The temporary is uniquely named per call: O_EXCL on one fixed name would refuse a concurrent save that Data.write(options: .atomic) allowed through, and two sessions in one agent share operatorDirectory. CASE-0198 guards that.",
+      "evidence": "CASE-0190..0193 and CASE-0198 in Tests/ProctorAgentTests/PolicyStoreSeamTests.swift, every one reading the mode back with attributesOfItem rather than trusting the write's options. Two sabotages in docs/test-campaign/evidence/PRO-0095/def068-arming.txt: the pre-fix Data.write put back reds all four (6 issues, 0o666 under umask(0) and 0o644 otherwise), and dropping .usingNewMetadataOnly alone reds exactly CASE-0191 (1 issue, 0o644)."
     },
     {
       "id": "DEF-069",
@@ -1971,12 +1999,15 @@
     },
     {
       "id": "DEF-075",
-      "status": "open",
+      "status": "fixed",
       "title": "vacuity-check.py --seed-strengthen prints 'The gate bites' from before=red after=red",
       "found": "PRO-0091, arming DEF-030's second pass against the real registry",
       "detail": "The shipped census control does not refuse a baseline that is already red. Run against docs/test-campaign as it stands, it prints 'seed-strengthen REQ-017: before=red after=red' and then 'The gate bites: strengthening the constraint turned it red' \u2014 a red the mutation did not cause, scored as proof that the mutation caused it.\n\nMEASURED: the registry has one standing census finding (REQ-049 declares an ipc effect and records no provider), so uncensused is red before any mutation is applied. The control ran, reported a bite, and had established nothing. Arming this item's CASE-0152 needed a fixture copy with REQ-049 given a provider so the pass started clear.\n\nThis is DEF-030's mechanism one layer deeper: a control that arms half a gate, and the half it does arm it can score on a red it did not produce. scripts/campaign/seed_unclass.py already implements the refusal \u2014 'REFUSING: unclassed is already red ... A red after the mutation would be red for a reason the mutation did not cause' \u2014 and vacuity-check.py does not.\n\nNOT FIXED HERE, and this is why: vacuity-check.py is the plugin's tool, and unlike campaign.py the fix is a behaviour change to a control rather than to a display, so it wants its own arming run and its own gate test rather than riding along with a denominator fix. Recorded against test-campaign 0.9.4.",
       "surface": "SURF-022",
-      "req": "REQ-046"
+      "req": "REQ-046",
+      "fixedBy": "PRO-0095",
+      "fix": "scripts/campaign/seed_strengthen.py, beside its sibling seed_unclass.py, refuses a run whose census is not clear and names which pass was red and over what population. It reads the mutation from the installed plugin module rather than reimplementing it, resolves that module by newest installed version (DEF-076's fix), restores the registry in a finally and verifies the restoration by SHA-256.\n\nNOT FIXED IN THE PLUGIN, and this is the part to read before assuming it is closed everywhere: nothing under ~/.claude/plugins was modified, so test-campaign 0.9.4's own --seed-strengthen still prints 'The gate bites' from before=red for every project on this machine. seed_unclass.py's docstring records why a cache patch is the wrong home. Fixing it at source in ~/Dev/fledgeling-plugins is PRO-0091's route for a project-agnostic plugin tool and would fix it for every consumer; that is a second and published repository, so spec-PRO-0095 carries it as an open decision for a human rather than an unattended run's call.",
+      "evidence": "docs/test-campaign/evidence/PRO-0095/def075-refusal.txt, which reproduces the shipped control's before=red after=red 'The gate bites' at exit 0 against a byte-identical copy of this registry, then shows the replacement refusing the same data at exit 2 naming 2 standing uncensused findings over 24 requirements, then running and biting at exit 0 on a fixture whose findings are cleared. 8 gate checks in scripts/campaign/test_instruments.py, all 8 watched red across four sabotages; 15 checks there before this item, 23 after."
     },
     {
       "id": "DEF-076",
@@ -1986,6 +2017,20 @@
       "detail": "scripts/campaign/seed_unclass.py loaded vacuity-check.py from a literal '0.9.2/skills/test-campaign/scripts/vacuity-check.py'. The installed plugin is 0.9.3 and the active install path in installed_plugins.json is 0.9.3; 0.9.2 survives only as a stale cache directory. The two files are byte-identical today, so nothing was wrong with the measurement \u2014 but the next prune of the cache turns a control whose whole job is to prove a pass can fire into a script that exits on a missing file.\n\nFIXED: the path resolves to the newest installed version, comparing version directories as tuples of integers so 0.9.10 sorts after 0.9.9, and the resolved path is printed on every run so the evidence file records which copy was read. An absent plugin now exits saying it is a cannot-run rather than a pass.",
       "surface": "SURF-022",
       "req": "REQ-046"
+    },
+    {
+      "id": "DEF-100",
+      "status": "fixed",
+      "severity": "high",
+      "title": "Session.doctor blocked a cooperative thread inside SecStaticCodeCheckValidity \u2014 DEF-043's disposition, checked rather than assumed",
+      "found": "Raised by PRO-0083 as DEF-043, the sibling of DEF-044; checked and closed by PRO-0095",
+      "detail": "DEF-043 recorded `Session.doctor` -> `SignatureVerdictCache.verdict` -> `CuaPreflight.verifySignature` -> `SecStaticCodeCheckValidity` as a synchronous blocking call made from inside the session actor, with fourteen to fifteen of the sixteen cooperative-pool threads parked on that stack across seven wiring suites and 3.4 seconds of CPU consumed in twelve minutes of elapsed time.\n\nDEF-043 HAS NO ROW OF ITS OWN IN THIS REGISTRY. Its record is prose in a PRO-0083 document that has not merged to ai/wave-9, so there was nothing here to move to `fixed`. This row is the disposition, in the shape DEF-050 already uses for DEF-044.\n\nPRO-0087 merged and made `verdict(for:)` async: a caller that has to wait leaves a continuation and gives its thread back, and the verification runs on a dedicated Thread that the cooperative pool cannot refuse. `SessionDoctor.swift:237` is the only production call site.\n\nThe rest of `doctor` was swept for a second blocking call, because the brief asked for a separate finding if one survived. The path is accessibilityProbe, screenRecordingProbe.state() (async and bounded), secureInputProbe, healthSnapshot, five ToolProbe.refreshed() calls, actuator.laneHealth (async), policyPosture() and SwitchStore.load. Its synchronous work is stat, readlink, one property-list read and two small file reads; ToolProbe.xcodeVersion parses version.plist rather than running xcodebuild, and DoctorSpawnFreeTests already guards that nothing on the path creates a process. No second blocking call was found, so no second defect is raised.",
+      "evidence": "CASE-0197 in Tests/ProctorAgentTests/ToolchainDoctorTests.swift, which puts CASE-0116's libdispatch root-queue instrument on the production path \u2014 eight sessions calling Session.doctor concurrently, the caller asserted to be on the cooperative pool as the instrument check and the verification asserted to be on neither the cooperative pool nor the bare non-overcommit root queue. Armed: the cache's dedicated Thread run via Task.detached, red with 2 issues reading com.apple.root.default-qos.cooperative. Sample sweep during a full suite run in docs/test-campaign/evidence/PRO-0095/def043-sample.txt.",
+      "fix": "No code change. PRO-0087's async verdict(for:) is the fix, and this item verified it reaches the production path rather than assuming it does.",
+      "fixedBy": "PRO-0087, verified by PRO-0095",
+      "surface": "SURF-003",
+      "req": "REQ-053",
+      "note": "WHAT CASE-0197 DOES NOT PROVE, recorded so the row is not read as more than it is: it does not prove a verification completes while every cooperative thread is blocked, and it would not catch a synchronous semaphore wrapper at the call site, which would block the caller while leaving the verification on its own Thread. Catching that needs more concurrent callers than the pool is wide; CASE-0116's note records that such a saturation test was drafted and dropped because it holds the process-wide pool for seconds in a green run and would feed DEF-051. The sample sweep is what covers that half, and it is a measurement rather than a guard."
     }
   ]
 }

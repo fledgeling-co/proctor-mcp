@@ -44,7 +44,92 @@ struct PolicyStore: Sendable {
                                                 attributes: [.posixPermissions: 0o700])
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        try encoder.encode(policy).write(to: url, options: .atomic)
+        try Self.write(encoder.encode(policy), to: url, in: directory)
+    }
+
+    /// What went wrong writing the policy, in the operator's terms. `save` used to
+    /// throw only whatever `Data.write` threw; the explicit `open` below has its
+    /// own failure and it carries the `errno` text rather than a bare code.
+    enum WriteFailure: Error, CustomStringConvertible {
+        case open(String)
+        case write(String)
+
+        var description: String {
+            switch self {
+            case .open(let why):  return "the policy file could not be created (\(why))"
+            case .write(let why): return "the policy file could not be written (\(why))"
+            }
+        }
+    }
+
+    /// The policy on disk: replaced atomically, and never wider than `0600` for an
+    /// instant.
+    ///
+    /// This was `Data.write(to:options:.atomic)`, which takes no mode and so takes
+    /// the umask default. Measured on this Mac before the change:
+    /// `-rw-r--r-- policy.json` inside `drwx------ policy/`, while `AuditLog` forty
+    /// lines below opens `audit.jsonl`, `audit.lock` and `audit.pub` explicitly
+    /// `0o600`. The `0700` directory carried the protection, so it was an
+    /// inconsistency with the neighbouring code rather than an exposure — until the
+    /// file is copied, backed up, or the directory's mode is loosened by anything.
+    /// The file records which applications an agent may drive. DEF-068.
+    ///
+    /// **The mode is set at creation, not afterwards.** A `chmod` following the
+    /// write closes a window rather than the defect: a file that existed
+    /// world-readable for an instant has been world-readable. So the temporary is
+    /// opened the way `AuditLog.appendRawLocked` opens the trail, and the atomic
+    /// same-directory replace is the one `AuditLog`'s rotation and conversion
+    /// already use. `O_EXCL` is what makes the mode argument mean anything: `O_TRUNC`
+    /// over a stale temporary left at `0644` would reuse that mode, because `open`
+    /// applies the mode only when it creates the file.
+    ///
+    /// **`.usingNewMetadataOnly` is load-bearing.** Without it `replaceItemAt`
+    /// carries the original item's metadata across, so an operator whose
+    /// `policy.json` was created `0644` by an earlier build would keep `0644`
+    /// through every save it ever saw afterwards. That is the upgrade half of
+    /// DEF-068 and CASE-0191 is the case that fails without this option.
+    private static func write(_ data: Data, to url: URL, in directory: URL) throws {
+        let fm = FileManager.default
+
+        // A name of its own per call, because `O_EXCL` would otherwise turn two
+        // concurrent saves into a failure where `Data.write(options: .atomic)`
+        // let both through and the last one won. Two sessions in one agent share
+        // `operatorDirectory`, so that race is reachable, and this change is not
+        // the place to start refusing it.
+        let temp = directory.appendingPathComponent("policy.json.writing-\(UUID().uuidString)",
+                                                    isDirectory: false)
+        // This call's own temporary is removed on both paths by the `defer` below.
+        // Sweeping the directory for older ones was tried and reverted: it deletes
+        // the temporaries of saves running right now, and CASE-0198 caught it at 4
+        // of 12 concurrent saves throwing. What that leaves is litter after a
+        // crash mid-write, one small file, itself `0600` inside the `0700`
+        // directory, so it is untidy rather than a second exposure.
+
+        let fd = Darwin.open(temp.path, O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, 0o600)
+        guard fd >= 0 else { throw WriteFailure.open(String(cString: strerror(errno))) }
+
+        var closed = false
+        func closeOnce() { if !closed { Darwin.close(fd); closed = true } }
+        defer { closeOnce(); try? fm.removeItem(at: temp) }
+
+        let written = data.withUnsafeBytes { buffer -> Bool in
+            guard let base = buffer.baseAddress else { return buffer.count == 0 }
+            var done = 0
+            while done < buffer.count {
+                let n = Darwin.write(fd, base.advanced(by: done), buffer.count - done)
+                if n <= 0 { return false }
+                done += n
+            }
+            return true
+        }
+        guard written else { throw WriteFailure.write(String(cString: strerror(errno))) }
+        guard Darwin.fsync(fd) == 0 else { throw WriteFailure.write(String(cString: strerror(errno))) }
+        closeOnce()
+
+        // No backup item is requested, so no readable copy of the previous policy
+        // survives the swap — the same rule the audit rotation follows.
+        _ = try fm.replaceItemAt(url, withItemAt: temp, backupItemName: nil,
+                                 options: [.usingNewMetadataOnly])
     }
 
     /// The operator's own policy directory, always — this is the path the agent

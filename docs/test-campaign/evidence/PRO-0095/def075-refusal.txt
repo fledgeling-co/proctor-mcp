@@ -1,0 +1,79 @@
+DEF-075 — the control that reports a bite from a red it did not cause.
+Arming run, 2026-08-21 21:48 AEST, this machine.
+
+== 1. The defect, reproduced on this registry's contents ==
+The shipped control, test-campaign 0.9.4, against a byte-identical copy of
+docs/test-campaign (sha256 5338b2c5f87ded3a70e31bdedb0787100fbbaf6b093206958f01e0320f24063c):
+
+  $ python3 .../0.9.4/skills/test-campaign/scripts/vacuity-check.py <copy> --seed-strengthen REQ-017
+  seed-strengthen REQ-017: before=red after=red
+  The gate bites: strengthening the constraint turned it red, and the registry was restored byte-for-byte.
+  exit 0
+
+A run that started red, ended red, and reported a bite. Nothing about the
+seeding was established. Run against a COPY, so the real registry was not
+mutated to take this measurement.
+
+== 2. The replacement, against the real registry as it stands ==
+# vacuity-check.py: /Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.9.4/skills/test-campaign/scripts/vacuity-check.py
+REFUSING: the census is already red before the mutation — uncensused (2 findings over 24 requirements). A red after the mutation would be red for a reason the mutation did not cause, which is what this control exists to rule out.
+  standing finding: REQ-049 declares a ipc effect and records no `provider` — nothing in production source is named as able to perform it
+  standing finding: REQ-055 declares a filesystem-write effect and records no `provider` — nothing in production source is named as able to perform it
+Clear the standing findings, or run against a fixture copy in which they are cleared, and run this again.
+  exit 2
+
+== 3. The refusal is not a way to pass by refusing everything ==
+The same control against a fixture copy whose standing findings are cleared:
+# vacuity-check.py: /Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.9.4/skills/test-campaign/scripts/vacuity-check.py
+seed-strengthen REQ-017: before=clear after=red (unclassed examined=55 findings=0; uncensused examined=24 findings=1)
+  REQ-017 declares a packet-filter effect and records no `provider` — nothing in production source is named as able to perform it
+registry restored byte-for-byte: True (sha256 2bbaaa61be9b7106…)
+The gate bites: strengthening the constraint turned a clear census red, from a baseline this run established rather than assumed.
+  exit 0
+
+== 4. Eight gate checks, 8 of 8 watched red ==
+scripts/campaign/test_instruments.py, run by
+Tests/ProctorCoreTests/CampaignInstrumentTests.swift, so ./scripts/test.sh
+owns the verdict. 15 checks before this item, 23 after.
+
+  SABOTAGE 4 — the precondition removed (the shipped control's behaviour):
+    FAIL  seed_strengthen refuses a census that is already red (exit 2)
+    FAIL  the refusal names the state it found
+    FAIL  the refusal reports which pass was red and over what population
+    campaign instruments: 20 passed, 3 failed
+    The sabotaged run printed: before missing, uncensused findings=3, and
+    still claimed "turned a clear census red" — DEF-075 reproduced in this
+    script rather than argued about.
+
+  SABOTAGE 5 — the control refuses every input:
+    FAIL  seed_strengthen still runs, and bites, on a clear baseline (exit 0)
+    FAIL  the run that is allowed through reports a bite from a clear baseline
+    FAIL  the control verifies its own restoration rather than asserting it
+    campaign instruments: 20 passed, 3 failed
+
+  SABOTAGE 6 — the registry is not restored:
+    FAIL  seed_strengthen still runs, and bites, on a clear baseline (exit 0)
+    FAIL  the registry is byte-identical after a completed run
+    FAIL  the control verifies its own restoration rather than asserting it
+    campaign instruments: 20 passed, 3 failed
+
+  SABOTAGE 7b — the refusal path mutates the registry before returning:
+    FAIL  a refused run leaves the registry untouched
+    campaign instruments: 22 passed, 1 failed
+
+  RESTORED:
+    campaign instruments: 23 passed, 0 failed
+
+== The near-miss, recorded because it nearly cost a check ==
+Sabotage 7's first form mutated nothing: it re-serialised the unmutated
+object with json.dumps(inv, indent=2), which reproduces this registry's
+bytes exactly, so the byte-comparison check saw no change and the run came
+back 23 passed, 0 failed. The check looked armed and was not. 7b sets
+REQ-017's effect first, and only then does the check fire. A byte comparison
+cannot see a write that writes the same bytes.
+
+== What is NOT changed ==
+Nothing under ~/.claude/plugins. The shipped 0.9.4 control still reports a
+bite from before=red for every project on this machine. Source and cache
+copies of vacuity-check.py are byte-identical (sha256 573ecd5c...), and both
+are untouched by this item. spec-PRO-0095 carries that as an open decision.

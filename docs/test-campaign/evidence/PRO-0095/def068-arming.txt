@@ -1,0 +1,81 @@
+DEF-068 — the policy file's mode. Arming run, 2026-08-21 21:42 AEST, this machine.
+
+The claim: policy.json is 0600 at creation. Both directions watched in one session.
+
+== The measurement the defect was filed on, reproduced before the change ==
+(sabotage 1 below IS the pre-fix code, so its numbers are that measurement)
+
+== GREEN, the fix in place: scripts/test.sh --filter PolicyFileModeTests ==
+􁁛  Test run with 4 tests in 1 suite passed after 0.294 seconds.
+exit 0, read from the script rather than from a pipeline
+
+== SABOTAGE 1: the pre-fix write put back ==
+   try encoder.encode(policy).write(to: url, options: .atomic)
+   (replacing: try Self.write(encoder.encode(policy), to: url, in: directory))
+
+􀢄  Test "a save under a permissive umask still lands 0600" recorded an issue at PolicyStoreSeamTests.swift:307:9: Expectation failed: (mode(store.url) → 438) == (0o600 → 384)
+􀢄  Test "a policy file created by save is 0600, and its directory is still 0700" recorded an issue at PolicyStoreSeamTests.swift:246:9: Expectation failed: (mode(store.url) → 438) == (0o600 → 384)
+􀢄  Test "a policy saved through the explicit open loads back equal" recorded an issue at PolicyStoreSeamTests.swift:326:13: Expectation failed: (mode(store.url) → 420) == (0o600 → 384)
+􀢄  Test "a policy saved through the explicit open loads back equal" recorded an issue at PolicyStoreSeamTests.swift:326:13: Expectation failed: (mode(store.url) → 420) == (0o600 → 384)
+􀢄  Test "a policy file already on disk at 0644 is 0600 after the next save" recorded an issue at PolicyStoreSeamTests.swift:279:9: Expectation failed: (mode(store.url) → 420) == (0o600 → 384)
+􀢄  Test "a policy saved through the explicit open loads back equal" recorded an issue at PolicyStoreSeamTests.swift:326:13: Expectation failed: (mode(store.url) → 420) == (0o600 → 384)
+􀢄  Test run with 4 tests in 1 suite failed after 0.828 seconds with 6 issues.
+      􀢄  Test run with 4 tests in 1 suite failed after 0.828 seconds with 6 issues.
+
+   4 of 4 cases red, 6 issues. 438 is 0o666 and 420 is 0o644; 384 is 0o600.
+   CASE-0192 reads 0o666 because it runs under umask(0) — the pre-fix write
+   takes whatever the umask gives it, which is the defect stated as a number.
+   CASE-0190 also read 0o666 rather than its own 0o644: the suite ran in
+   parallel then and CASE-0192's process-wide umask reached it. The suite is
+   .serialized now for that reason.
+
+== SABOTAGE 2: everything of the fix except .usingNewMetadataOnly ==
+   _ = try fm.replaceItemAt(url, withItemAt: temp)
+   (replacing the same call with options: [.usingNewMetadataOnly])
+
+􀢄  Test "a policy file already on disk at 0644 is 0600 after the next save" recorded an issue at PolicyStoreSeamTests.swift:279:9: Expectation failed: (mode(store.url) → 420) == (0o600 → 384)
+􀢄  Test run with 4 tests in 1 suite failed after 0.188 seconds with 1 issue.
+      􀢄  Test run with 4 tests in 1 suite failed after 0.188 seconds with 1 issue.
+
+   Exactly CASE-0191 red, 1 issue, and the other three still green. That is
+   the case built for this option: replaceItemAt carries the original item's
+   metadata across unless told not to, so an operator's existing 0644 file
+   would keep 0644 through every save. 420 is 0o644.
+
+== Restored, green again ==
+􁁛  Test run with 4 tests in 1 suite passed after 0.294 seconds.
+
+== SABOTAGE 3: one fixed temporary name instead of one per call ==
+   let temp = directory.appendingPathComponent("policy.json.writing", isDirectory: false)
+   (replacing the uniquely-named temporary)
+
+   Expectation failed: (failures.count -> 11) == 0
+   Test run with 5 tests in 1 suite failed after 1.016 seconds with 1 issue.
+
+   Eleven of twelve concurrent saves threw, and the other four cases stayed
+   green. O_EXCL is what makes the mode argument bind, and it is also what turns
+   a concurrent save into a refusal where Data.write(options: .atomic) let both
+   through. CASE-0198 is the case that caught this before it shipped.
+
+== The other thing CASE-0198 caught, which no sabotage was needed for ==
+   A first version of the fix swept the directory for stale temporaries on every
+   write. That deletes the temporaries of saves running at that moment, and the
+   case read 4 of 12 throwing on the very first run. The sweep was reverted
+   rather than made race-free with an age test. What it leaves behind is litter
+   after a crash mid-write: one small file, itself 0600 inside the 0700
+   directory, so untidy rather than a second exposure.
+
+== Counts ==
+   5 cases, all 5 green after the fix.
+   3 sabotages, each watched red:
+     1. the pre-fix Data.write        -> 4 of 5 cases red, 6 issues
+     2. .usingNewMetadataOnly dropped -> exactly CASE-0191 red, 1 issue
+     3. one fixed temporary name      -> exactly CASE-0198 red, 1 issue
+
+What no case here proves: that the file was never wider for an instant.
+The window is unobservable from a test in the same process. It is closed by
+construction instead — the temporary is created by Darwin.open with mode
+0o600 and O_EXCL, so no descriptor to a wider file ever exists, and the
+replace is a rename. O_EXCL is what makes the mode argument bind: open
+applies it only when it creates the file, so O_TRUNC over a stale 0644
+temporary would have reused that mode.

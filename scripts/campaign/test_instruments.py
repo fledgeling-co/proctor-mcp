@@ -18,6 +18,7 @@ population of zero, which is the same finding the file was written to close.
 """
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -244,10 +245,87 @@ def test_source_analysis_rung() -> None:
           f"row says {by_id['CASE-0102']['source']['examined']}")
 
 
+
+
+def _fixture(tmp: Path, clear: bool) -> Path:
+    """A copy of this project's registry, optionally with its standing census
+    findings cleared.
+
+    Copied rather than synthesised, so the control is exercised against the
+    shapes it actually meets. `clear=False` is the registry as it stands, which
+    is red on `uncensused` and is the state DEF-075 was found in.
+    """
+    d = tmp / ("clear" if clear else "red")
+    d.mkdir(parents=True)
+    for name in ("inventory.json", "cases.json"):
+        src = ROOT / "docs/test-campaign" / name
+        if src.exists():
+            (d / name).write_bytes(src.read_bytes())
+    if clear:
+        inv = json.loads((d / "inventory.json").read_text())
+        for r in inv.get("requirement", []):
+            if r.get("effect") and r["effect"] != "none" and not r.get("provider"):
+                r["provider"] = "fixture-only provider, so this copy starts clear"
+        (d / "inventory.json").write_text(json.dumps(inv, indent=2) + "\n")
+    return d
+
+
+def _seed_strengthen(d: Path) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(ROOT / "scripts/campaign/seed_strengthen.py"), str(d), "REQ-017"],
+        capture_output=True, text=True, cwd=str(ROOT))
+
+
+def test_seed_strengthen_refuses_a_red_baseline() -> None:
+    """DEF-075. The shipped control prints "The gate bites" from before=red.
+
+    Three checks, and the second is the one that keeps the first honest: a
+    control that refused every input would satisfy the refusal check alone and
+    have stopped being a control.
+    """
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+
+        red = _fixture(tmp, clear=False)
+        before = hashlib.sha256((red / "inventory.json").read_bytes()).hexdigest()
+        out = _seed_strengthen(red)
+        check(out.returncode == 2,
+              "seed_strengthen refuses a census that is already red (exit 2)",
+              f"exit {out.returncode}: {out.stdout[-400:]}")
+        check("REFUSING" in out.stdout and "already red" in out.stdout,
+              "the refusal names the state it found",
+              out.stdout[-400:])
+        # Naming the state means the counts, not just the word. The registry as
+        # it stands is red on uncensused, so that pass and its population appear.
+        check("uncensused (" in out.stdout and "findings over" in out.stdout,
+              "the refusal reports which pass was red and over what population",
+              out.stdout[-400:])
+        check(hashlib.sha256((red / "inventory.json").read_bytes()).hexdigest() == before,
+              "a refused run leaves the registry untouched",
+              "the refusal path mutated the registry")
+
+        clear = _fixture(tmp, clear=True)
+        before_clear = hashlib.sha256((clear / "inventory.json").read_bytes()).hexdigest()
+        out = _seed_strengthen(clear)
+        check(out.returncode == 0,
+              "seed_strengthen still runs, and bites, on a clear baseline (exit 0)",
+              f"exit {out.returncode}: {out.stdout[-400:]}")
+        check("before=clear after=red" in out.stdout,
+              "the run that is allowed through reports a bite from a clear baseline",
+              out.stdout[-400:])
+        check(hashlib.sha256((clear / "inventory.json").read_bytes()).hexdigest() == before_clear,
+              "the registry is byte-identical after a completed run",
+              "the mutation was not restored")
+        check("registry restored byte-for-byte: True" in out.stdout,
+              "the control verifies its own restoration rather than asserting it",
+              out.stdout[-400:])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
-               test_case_0074_load_matches_its_evidence, test_source_analysis_rung):
+               test_case_0074_load_matches_its_evidence, test_source_analysis_rung,
+               test_seed_strengthen_refuses_a_red_baseline):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

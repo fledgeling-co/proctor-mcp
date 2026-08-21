@@ -1,0 +1,116 @@
+DEF-043 — is Session.doctor still blocking a cooperative thread?
+Checked rather than assumed. PRO-0095, 2026-08-21, this machine.
+
+WHAT DEF-043 RECORDED
+  Session.doctor -> SignatureVerdictCache.verdict -> CuaPreflight.verifySignature
+  -> SecStaticCodeCheckValidity, made synchronously from inside the session actor.
+  Measured on the pre-fix tree: fourteen to fifteen of the sixteen cooperative-pool
+  threads parked on that stack, unmoved across samples seven minutes apart, with
+  3.4 seconds of CPU consumed in twelve minutes elapsed. `codesign -v` answered
+  instantly from a shell throughout, so the process was the bottleneck.
+
+DEF-043 HAS NO ROW IN THIS REPO'S REGISTRY
+  Its record is prose in a PRO-0083 document that has not merged to ai/wave-9:
+  `git grep DEF-043 ai/wave-9 -- docs` returns only the brief. So there was
+  nothing here to move to `fixed`, and the disposition is recorded as DEF-100
+  instead — the shape DEF-050 already uses for DEF-044.
+
+== 1. THE INSTRUMENT, CHECKED BEFORE ANY ZERO WAS BELIEVED ==
+
+A 25-line Swift program parked a thread inside SecStaticCodeCheckValidity on
+/System/Applications/Calculator.app. The same sample-and-grep read it:
+
+  process sampled: Process:         seccheck [57662]
+  frames matching SecStaticCodeCheckValidity: 1
+  +   ! 2449 SecStaticCodeCheckValidityWithErrors  (in Security) + 216  [0x18fc41a70]
+
+  Kept at instrument-control.txt. The symbol is spelled
+  SecStaticCodeCheckValidityWithErrors in the Security binary, and the grep
+  matches it as a prefix. So a zero below is a zero rather than a probe that
+  could not have reported anything else.
+
+  TWO INSTRUMENT FAULTS FOUND ON THE WAY, BOTH RECORDED BECAUSE EITHER WOULD
+  HAVE PRODUCED A CONFIDENT WRONG NUMBER:
+
+  (a) A sweep grepped for 'verifySignature' and read 8. Those were
+      AuditSigning.verifySignature from AuditChainWiringTests.TestSigner, an
+      unrelated symbol in the audit tests, nothing to do with code signing. The
+      counts below match CuaPreflight.verifySignature specifically.
+
+  (b) A sweep gated on 'Test started' appearing in the run log sampled the build
+      and read zero for everything. swift test buffers its output, so the log is
+      empty while tests are running. The samples below are kept only because
+      they contain frames from proctor-mcpPackageTests, which is what proves the
+      suite was executing when they were taken.
+
+== 2. THE SAMPLES ==
+
+Both taken from this worktree's own test binary during a full-suite run, pid
+resolved and cwd confirmed with lsof before sampling, because most swift
+processes on this machine belong to other repositories.
+
+  --- sample 1 (raw-2.txt -> sample-1.txt) ---
+    process:                                       swiftpm-testing-helper [59256]
+    frames in proctor-mcpPackageTests (the proof
+      the suite was executing, not building):      491
+    Thread_ entries in the sample:                 34
+    frames on com.apple.root.default-qos.cooperative: 6
+    frames naming SecStaticCodeCheckValidity:      0
+    frames naming Security::Dispatch::Group::wait: 0
+    frames naming CuaPreflight.verifySignature:    0
+    frames naming doctor(verbose:):                0
+
+  --- sample 2 (raw-3.txt -> sample-2.txt) ---
+    process:                                       swiftpm-testing-helper [59256]
+    frames in proctor-mcpPackageTests (the proof
+      the suite was executing, not building):      805
+    Thread_ entries in the sample:                 30
+    frames on com.apple.root.default-qos.cooperative: 4
+    frames naming SecStaticCodeCheckValidity:      0
+    frames naming Security::Dispatch::Group::wait: 0
+    frames naming CuaPreflight.verifySignature:    0
+    frames naming doctor(verbose:):                0
+
+== 3. WHAT THIS DOES AND DOES NOT ESTABLISH ==
+
+Establishes: across 2 samples of a green full-suite run, the count of threads
+inside SecStaticCodeCheckValidity is 0 and the count inside
+Security::Dispatch::Group::wait is 0, at 30 and 34 threads with 4 and 6 of them
+on the cooperative pool. The pre-fix tree parked fourteen to fifteen of sixteen
+there and held them across samples seven minutes apart. The wedge is absent.
+
+Does not establish: that a verification was in flight at the moment either
+sample was taken. CuaPreflight.verifySignature reads 0 in both, so these show an
+unwedged pool rather than a verification completing off it. The pre-fix
+signature was a persistent wedge, which is what makes its absence readable here;
+a single unlucky sample is not what produced the original measurement either.
+
+That second half is CASE-0197's job, and it is a guard rather than a
+measurement: it puts CASE-0116's libdispatch root-queue instrument on the
+production path, eight Sessions calling doctor(verbose:) at once, and reads
+where the verification actually ran. Armed by running the cache's dedicated
+Thread through Task.detached; red with 2 issues reading
+com.apple.root.default-qos.cooperative.
+
+Still not covered by either: a verification completing while every cooperative
+thread is blocked, and a synchronous semaphore wrapper at the call site that
+blocks the caller while leaving the verification on its own Thread. Catching
+that needs more concurrent callers than the pool is wide. CASE-0116's note
+records that such a saturation test was drafted and dropped, because it holds
+the process-wide pool for seconds in a green run and the suite runs in parallel,
+so it would stall unrelated tests and feed DEF-051. That is left as it was.
+
+== 4. THE REST OF doctor, SWEPT ==
+
+The brief asks for a separate finding if some other part of doctor still blocks.
+The path is: accessibilityProbe, screenRecordingProbe.state() (async, bounded),
+secureInputProbe, healthSnapshot, tools.refreshBoth() and five
+ToolProbe.refreshed() calls, actuator.laneHealth (async), Grants
+.inputMonitoringState, policyPosture() and SwitchStore.load. Its synchronous
+work is stat, readlink, one property-list read and two small file reads.
+ToolProbe.xcodeVersion parses version.plist rather than running xcodebuild, and
+DoctorSpawnFreeTests already guards, as source, that nothing on the path creates
+a process. SessionDoctor.swift:237 is the only production call site of
+verdict(for:).
+
+No second blocking call was found, so no second defect is raised.

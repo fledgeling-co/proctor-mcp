@@ -564,6 +564,72 @@ struct SignatureVerdictCacheTests {
         #expect(cache.verificationCount == 2)
         #expect(counter.count == 2)
     }
+
+    // MARK: CASE-0197 — DEF-043, the same claim through Session.doctor
+
+    @Test("through Session.doctor, the verification runs off the cooperative pool")
+    func doctorVerifiesOffTheCooperativePool() async {
+        // DEF-043: `Session.doctor` blocking a cooperative thread inside
+        // `SecStaticCodeCheckValidity`, recorded separately from DEF-044 and
+        // measured at fourteen to fifteen of the sixteen cooperative threads
+        // parked on that stack across seven wiring suites.
+        //
+        // Two cases already stand near this and neither covers it.
+        // `theVerificationRunsOffTheCooperativePool` reads the root queue, and
+        // reads it against a bare cache. `concurrentSessionsVerifyOnce` runs
+        // through `Session.doctor`, and counts verifications rather than reading
+        // where they ran. What neither watches is a synchronous wrapper appearing
+        // between `SessionDoctor.swift:237` and the cache — which is exactly the
+        // substitution a reviewer made to arm CASE-0116, and which would restore
+        // DEF-043 while both of those stayed green.
+        //
+        // So this is CASE-0116's instrument on the production path: eight sessions
+        // asking at once, the label read from libdispatch rather than inferred
+        // from timing.
+        let callerRanOn = Label()
+        let verificationRanOn = Label()
+        let cache = SignatureVerdictCache(
+            identify: { _ in
+                callerRanOn.set(Self.currentRootQueue())
+                return Self.oneIdentity
+            },
+            verify: { _ in
+                verificationRanOn.set(Self.currentRootQueue())
+                return .valid
+            })
+        let built = (0..<8).map { _ -> Session in
+            Session(ax: FakeAX(bundleId: "com.example.app"), capture: FakeCapture(),
+                    tools: ToolProbes(
+                        cuaDriver: ToolProbe(
+                            probe: { ToolPresence(tool: CuaDriverTool.binary, available: true,
+                                                  path: "/Users/x/.local/bin/cua-driver",
+                                                  searched: []) },
+                            presentTTL: ToolProbe.presentTTL, absentTTL: ToolProbe.presentTTL),
+                        cuaSignature: cache, environment: [:]),
+                    screenRecordingProbe: .fake(), accessibilityProbe: { true },
+                    secureInputProbe: { false }, actuator: FakeActuationBackend())
+        }
+        for session in built { await session.setAuditSink({ _ in }) }
+
+        await withTaskGroup(of: Void.self) { group in
+            for session in built {
+                group.addTask { _ = await session.doctor(verbose: false) }
+            }
+        }
+
+        // The instrument check first, and it is not decoration: "the verification
+        // was not on the cooperative pool" means nothing unless this probe reports
+        // that pool when it is looking at it. `identify` runs inline on the
+        // caller, so this is the doctor path's own thread.
+        #expect(callerRanOn.current.contains("cooperative"),
+                "the doctor call ran on \(callerRanOn.current), not a cooperative pool thread, so this run could not have told a pooled verification from an unpooled one")
+        #expect(!verificationRanOn.current.contains("cooperative"),
+                "the verification ran on \(verificationRanOn.current) — the width-capped pool, which is where DEF-043 parked fifteen of sixteen threads")
+        #expect(verificationRanOn.current.contains("overcommit"),
+                "the verification ran on \(verificationRanOn.current), a root queue that hands out a bounded number of threads rather than one that creates the thread it needs")
+        #expect(cache.verificationCount == 1)
+    }
+
 }
 
 @Suite("A health check starts no process")
