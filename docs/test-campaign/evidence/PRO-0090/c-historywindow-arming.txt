@@ -1,0 +1,63 @@
+=== 0. CLEAN ===
+Sources/ProctorUI/HistoryWindow.swift: 1 string literals examined
+  display         0
+  symbol          0
+  system          0
+  key             0
+  punctuation     0
+  interpolated    1
+
+PASS: 0 user-facing literals of 1 examined; 1 are identifiers, symbols, system strings or punctuation.
+status_literals exit=0
+
+=== 1. ARM DEF-130: put the dead singular spelling back ===
+test.sh exit=1
+􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.
+      􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.
+
+=== 2. ARM the counted sentences: break the plural agreement ===
+test.sh exit=1
+􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.
+      􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.
+
+=== 3. ARM the outcome marks: give two outcomes one mark ===
+test.sh exit=1
+􀢄  Test "every outcome has its own mark, and halted is not a failure mark" recorded an issue at HistorySurfaceTests.swift:168:9: Expectation failed: (HistorySurface.Copy.outcomeSymbol(.halted) → "xmark.circle.fill") != (HistorySurface.Copy.outcomeSymbol(.failed) → "xmark.circle.fill")
+􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.
+      􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.
+
+=== 4. ARM the literal guard: a sentence typed back into the view ===
+Sources/ProctorUI/HistoryWindow.swift: 2 string literals examined
+  display         1
+  symbol          0
+  system          0
+  key             0
+  punctuation     0
+  interpolated    1
+  VIOLATION    56 Text()                             "Nothing recorded yet."
+
+FAIL: 1 user-facing literal(s) of 2 examined. Move them to StatusSurface.Copy.
+status_literals exit=1
+test.sh exit=1
+􀢄  Test run with 1 test in 1 suite failed after 0.011 seconds with 1 issue.
+      􀢄  Test run with 1 test in 1 suite failed after 0.011 seconds with 1 issue.
+
+=== 5. ARM the capture exclusion: unbind the scene id ===
+test.sh exit=1
+􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.
+      􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.
+
+=== 6. RESTORED ===
+Sources/ProctorUI/HistoryWindow.swift: 1 string literals examined
+  display         0
+  symbol          0
+  system          0
+  key             0
+  punctuation     0
+  interpolated    1
+
+PASS: 0 user-facing literals of 1 examined; 1 are identifiers, symbols, system strings or punctuation.
+status_literals exit=0
+ Sources/ProctorCore/HistorySurface.swift | 301 +++++++++++++++++++++++++++++++
+ Sources/ProctorUI/HistoryWindow.swift    | 157 ++++++----------
+ 2 files changed, 357 insertions(+), 101 deletions(-)
