@@ -9,17 +9,29 @@ import ProctorCore
 /// The persisted app policy. Loading a missing or unreadable file yields an empty
 /// policy — no lists means the gate allows every app, which is the pre-feature
 /// behaviour, so installing the tool changes nothing until an operator configures it.
-enum PolicyStore {
+///
+/// **The root is told, not assumed.** This was a namespace of statics computing its
+/// own path from the home directory, and the consequence was that a test which
+/// configured a policy wrote the operator's real one — silently, on their own Mac,
+/// changing what the agent is allowed to drive. The shape here is the one
+/// `GuestProvider(executable:timeoutMs:run:)` and `SignatureVerdictCache(identify:verify:)`
+/// already use: an instance told its dependency, beside a `live` binding the real
+/// thing. A test points a store at a temporary directory and the operator's file is
+/// not in the path at all, rather than being written and put back — a restore that
+/// does not run, because the process was killed or an assertion threw, leaves the
+/// policy changed and says nothing about it.
+struct PolicyStore: Sendable {
 
-    static var directory: URL {
-        FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)/policy",
-                                    isDirectory: true)
+    /// Where `policy.json` lives for this store.
+    let directory: URL
+
+    init(directory: URL) {
+        self.directory = directory
     }
 
-    static var url: URL { directory.appendingPathComponent("policy.json", isDirectory: false) }
+    var url: URL { directory.appendingPathComponent("policy.json", isDirectory: false) }
 
-    static func load() -> AppPolicy {
+    func load() -> AppPolicy {
         guard let data = try? Data(contentsOf: url),
               let policy = try? JSONDecoder().decode(AppPolicy.self, from: data) else {
             return AppPolicy()
@@ -27,13 +39,54 @@ enum PolicyStore {
         return policy
     }
 
-    static func save(_ policy: AppPolicy) throws {
+    func save(_ policy: AppPolicy) throws {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true,
                                                 attributes: [.posixPermissions: 0o700])
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         try encoder.encode(policy).write(to: url, options: .atomic)
     }
+
+    /// The operator's own policy directory, always — this is the path the agent
+    /// reads and writes on a real Mac, and it stays truthful in a test process so a
+    /// test can name the file it must not touch.
+    static var operatorDirectory: URL {
+        FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)/policy",
+                                    isDirectory: true)
+    }
+
+    /// The store the agent uses. Injection is what makes a test safe; this is the
+    /// floor under it, and it is the same floor `AuditLog.directory` puts under the
+    /// trail a few lines below, for the same reason: relying on every future test
+    /// remembering to inject puts the operator's real configuration one forgotten
+    /// line away.
+    ///
+    /// **In a test process every read of this is a fresh, empty directory**, which
+    /// is deliberate and was measured. One shared temporary directory is the first
+    /// thing anyone writes here, and it reproduces the second half of the defect
+    /// with the operator's file swapped for a temporary one: 67 issues across 11
+    /// suites, every one of them `policyDenied` on an app the failing test had
+    /// never heard of, because one suite configured an allow list and every
+    /// un-injected `Session` afterwards loaded it. The pre-fix code shared a file
+    /// the same way — it shared the operator's own, so the whole suite's behaviour
+    /// depended on what the person running it had configured, and it looked fine
+    /// only because an empty policy allows everything.
+    ///
+    /// A `Session` reads this once at init, so its store is stable for its life;
+    /// two sessions simply do not share one. Nothing is created on disk until
+    /// something saves.
+    static var live: PolicyStore {
+        guard AuditLog.isTestProcess else { return PolicyStore(directory: operatorDirectory) }
+        return PolicyStore(directory: testFallbackRoot
+            .appendingPathComponent(UUID().uuidString, isDirectory: true))
+    }
+
+    /// Where an un-injected store lands in a test process. Named for what it is, so
+    /// a stray directory in `/tmp` explains itself.
+    static let testFallbackRoot = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+        .appendingPathComponent("proctor-test-policy-\(ProcessInfo.processInfo.processIdentifier)",
+                                isDirectory: true)
 }
 
 /// The append-only redacting audit trail, sealed at rest. One JSONL line per
