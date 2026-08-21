@@ -1,0 +1,35 @@
+CASE-0199 and CASE-0200 arming
+Date: 2026-08-21 13:09 UTC   Branch: ai/pro-0088 (after merge of ai/wave-9)
+
+CASE-0199 — the notMeasured caveat. Pre-fix design put back:
+  Sources/ProctorCore/FrameContent.swift
+  -        case .content:
+  -            return nil
+  -        case .notMeasured:
+  -            return "The content of window \(window) was not measured, ..."
+  +        case .content, .notMeasured:
+  +            return nil
+./scripts/test.sh --filter anUnmeasuredFrameCarriesItsReason
+  􀢄  Test "an unmeasured frame is untrustworthy with a reason, not untrustworthy in silence" recorded an issue at FrameContentTests.swift:118:9: Expectation failed: (caveat → nil) != nil
+  􀢄  Test "an unmeasured frame is untrustworthy with a reason, not untrustworthy in silence" recorded an issue at FrameContentTests.swift:119:9: Expectation failed: (caveat?.contains("win:4:0") → nil) == true
+  􀢄  Test "an unmeasured frame is untrustworthy with a reason, not untrustworthy in silence" recorded an issue at FrameContentTests.swift:120:9: Expectation failed: (caveat?.contains("not measured") → nil) == true
+  􀢄  Test "an unmeasured frame is untrustworthy with a reason, not untrustworthy in silence" recorded an issue at FrameContentTests.swift:125:9: Expectation failed: (caveat?.contains("no content") → nil) == false
+  􀢄  Test "an unmeasured frame is untrustworthy with a reason, not untrustworthy in silence" recorded an issue at FrameContentTests.swift:126:9: Expectation failed: (caveat?.contains("fully transparent") → nil) == false
+  􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 5 issues.
+        􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 5 issues.
+  EXIT=1
+
+CASE-0200 — the exclusion is taken from the switch. One overlay hardcoded back:
+  Sources/ProctorAgent/Overlay/RunHUDPanel.swift:379
+  -        created.sharingType = OverlayCapture.excludedFromCapture() ? .none : .readOnly
+  +        created.sharingType = .none
+This is the literal these three expectations used to assert, so the arming also shows
+which direction the merge moved: what was the assertion is now the regression.
+./scripts/test.sh --filter allThreeOverlaysAreExcludedByDefault
+  􀢄  Test "every overlay takes its capture exclusion from the switch, which is off by default" recorded an issue at CaptureContentWiringTests.swift:253:13: Expectation failed: assignments.allSatisfy { $0.contains("excludedFromCapture") }
+  􀢄  Test "every overlay takes its capture exclusion from the switch, which is off by default" recorded an issue at CaptureContentWiringTests.swift:255:13: Expectation failed: assignments.allSatisfy { $0.contains("? .none : .readOnly") }
+  􀢄  Test run with 1 test in 1 suite failed after 0.004 seconds with 2 issues.
+        􀢄  Test run with 1 test in 1 suite failed after 0.004 seconds with 2 issues.
+  EXIT=1
+
+Both sabotages reverted; the full-suite verdict after reverting is gate-final.txt.

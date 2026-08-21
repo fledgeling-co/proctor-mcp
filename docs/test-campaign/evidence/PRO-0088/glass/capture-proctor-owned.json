@@ -1,0 +1,52 @@
+{
+  "id": 4,
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"capturedAt\" : 1787313955.142858,\n  \"caveat\" : \"Window win:2:1 belongs to Proctor, and Proctor excludes its own windows from its own captures so the run HUD and the takeover statement never appear in a shot. The frame arrived, and it is empty because nothing was going to be in it. The status says a frame was delivered; it does not say the frame depicts anything.\",\n  \"content\" : {\n    \"allTransparent\" : true,\n    \"distinctColours\" : 1,\n    \"maxAlpha\" : 0,\n    \"pixelsSampled\" : 7720704\n  },\n  \"contentRect\" : {\n    \"h\" : 1117,\n    \"w\" : 1728,\n    \"x\" : 0,\n    \"y\" : 0\n  },\n  \"contentVerdict\" : \"excludedTarget\",\n  \"dirtyArea\" : 0,\n  \"dirtyRectCount\" : 1,\n  \"framesWaited\" : 8,\n  \"height\" : 662,\n  \"normalization\" : {\n    \"applied\" : true,\n    \"estimatedVisionTokens\" : 904,\n    \"height\" : 662,\n    \"maxLongEdge\" : 1024,\n    \"maxPixels\" : 750000,\n    \"originalHeight\" : 2234,\n    \"originalWidth\" : 3456,\n    \"purpose\" : \"verify\",\n    \"scale\" : 0.2962962962962963,\n    \"width\" : 1024\n  },\n  \"path\" : \"/tmp/pro0088/glass-after/proctor-owned.png\",\n  \"scale\" : 0.5925925925925926,\n  \"status\" : \"complete\",\n  \"trustworthy\" : false,\n  \"width\" : 1024,\n  \"window\" : \"win:2:1\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false,
+    "structuredContent": {
+      "capturedAt": 1787313955.142858,
+      "caveat": "Window win:2:1 belongs to Proctor, and Proctor excludes its own windows from its own captures so the run HUD and the takeover statement never appear in a shot. The frame arrived, and it is empty because nothing was going to be in it. The status says a frame was delivered; it does not say the frame depicts anything.",
+      "content": {
+        "allTransparent": true,
+        "distinctColours": 1,
+        "maxAlpha": 0,
+        "pixelsSampled": 7720704
+      },
+      "contentRect": {
+        "h": 1117,
+        "w": 1728,
+        "x": 0,
+        "y": 0
+      },
+      "contentVerdict": "excludedTarget",
+      "dirtyArea": 0,
+      "dirtyRectCount": 1,
+      "framesWaited": 8,
+      "height": 662,
+      "normalization": {
+        "applied": true,
+        "estimatedVisionTokens": 904,
+        "height": 662,
+        "maxLongEdge": 1024,
+        "maxPixels": 750000,
+        "originalHeight": 2234,
+        "originalWidth": 3456,
+        "purpose": "verify",
+        "scale": 0.2962962962962963,
+        "width": 1024
+      },
+      "path": "/tmp/pro0088/glass-after/proctor-owned.png",
+      "scale": 0.5925925925925926,
+      "status": "complete",
+      "trustworthy": false,
+      "width": 1024,
+      "window": "win:2:1"
+    }
+  }
+}

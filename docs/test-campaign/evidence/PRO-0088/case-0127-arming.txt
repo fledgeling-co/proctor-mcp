@@ -1,0 +1,28 @@
+CASE-0127 arming — the regression the check names, put back and watched red
+Date: 2026-08-21 13:09 UTC   Branch: ai/pro-0088 (after merge of ai/wave-9)
+
+WHY THIS RE-ARMING EXISTS
+The first arming (gate-sabotage.txt) restored 'surface.panel.level = Self.inPlaneLevel'.
+That receiver is 'surface.panel', so the trimmed line never began 'panel.level = ' and the
+old filter's prefix exclusion never applied to it. The check went red for a shape it was
+not blind to, and said nothing about the shape it was. DEF-101.
+
+THE SABOTAGE — Sources/ProctorAgent/Overlay/CursorOverlay.swift:548
+  -        Self.place(panel, at: Self.floatingLevel)
+  +        panel.level = Self.floatingLevel
+A panel built and given a level directly, never given a sharing type. This is DEF-028
+itself, and the local really is named 'panel', so it is exactly what the old filter skipped.
+
+BOTH PREDICATES OVER THE SABOTAGED FILE
+  OLD (prefix exclusion):     0 direct assignments found -> test GREEN. Dead against this.
+  NEW (helper body by range): 1 direct assignment  found -> test RED, at line 548.
+
+GATE, ./scripts/test.sh --filter thePointerKeepsItsExclusionAcrossBands
+􀟈  Test "the drawn pointer assigns sharingType everywhere it assigns level" started.
+􀢄  Test "the drawn pointer assigns sharingType everywhere it assigns level" recorded an issue at CaptureContentWiringTests.swift:205:9: Expectation failed: (direct → [(offset: 547, element: "        panel.level = Self.floatingLevel")]).isEmpty → false
+􀄵  every level assignment must go through place(_:at:); found ["line 548: panel.level = Self.floatingLevel"]
+􀢄  Test "the drawn pointer assigns sharingType everywhere it assigns level" failed after 0.001 seconds with 1 issue.
+􀄵  // CASE-0127
+􀢄  Suite "Capture content instrument" failed after 0.001 seconds with 1 issue.
+􀢄  Test run with 1 test in 1 suite failed after 0.002 seconds with 1 issue.
+

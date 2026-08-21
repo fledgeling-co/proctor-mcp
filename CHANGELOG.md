@@ -130,6 +130,20 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **A capture that came back empty used to pass as a good one.** Ask for a picture of a window Proctor owns and you'd get `status: complete, trustworthy: true` over a PNG in which all 2,942,720 pixels were fully transparent. The exclusion was doing exactly what it should; Proctor keeps its own windows out of its own captures so the run HUD never turns up in a shot. Nothing in the reply said so, and `dirtyArea 0` sitting next to `dirtyRectCount 1` reads as though something changed.
+
+  `SCFrameStatus complete` means a frame arrived, not that the frame depicts anything. The verdict now asks whether there's anything in it before vouching for it. An empty frame comes back `trustworthy: false` with the reason in plain words, and where Proctor owns the target it states the mechanism rather than guessing from pixels: this window is excluded from capture, so nothing was going to be in it.
+
+  Every reply carries a **`content`** block now, with the number of pixels examined, the highest alpha seen and how many distinct colours. Alpha is read over every pixel rather than a sample, because a stride over a 3456x2234 frame steps 7 or 8 pixels and would call a one pixel hairline an empty window.
+
+  There's a third answer beside "there's something in it" and "it's empty", and it's the one that used to say nothing: a frame whose bytes arrived in a layout the summariser can't read, either not 32BGRA or a buffer shorter than its own geometry. That came back `trustworthy: false` with no reason attached, on the reasoning that a check claiming nothing owes no explanation. It now names the window and says what couldn't be done, worded so it doesn't imply the window was empty; a measurement that never ran has no standing to call anything empty.
+
+  Note: a legitimately blank window is still a pass. An opaque single colour frame is content, not a fault; `distinctColours` is reported so you can make that call yourself, and nothing in the verdict keys off it.
+
+- **The drawn pointer was the one overlay you could photograph.** The run HUD and the takeover statement both set `sharingType = .none`, which keeps them out of every capture channel on this Mac. The pointer set it nowhere, and it's the only one of the three that changes window level while a run is going. Assigning a level resets the sharing type, so it sat at `sharingState 1` on the window server while its two siblings sat at 0.
+
+  Level and sharing type are set together now. Measured on two signed builds differing in that one file, sampled from a separate process: before, the agent owns three windows and one of them is capturable; after, it owns three and none are. That also settles what a fourth window nobody had identified actually was, which was this one.
+
 - **Proctor's policy file was written with looser permissions than everything beside it.** `policy.json` came out `-rw-r--r--`, whatever your umask happened to give it, while the audit files in the same subsystem have always been opened `0600` deliberately. The folder they share is `0700`, so nobody else on the machine could reach the file; that's why this was an inconsistency rather than a hole. It stops being one as soon as the file is copied, backed up, or that folder's mode is relaxed by something else, and the file is the record of which applications an agent is allowed to drive.
 
   It's now created `0600` by the call that creates it, rather than tightened afterwards. A file that existed world-readable for an instant has been world-readable, so the mode is set at the open rather than fixed a moment later. If an earlier build left you a wider `policy.json`, the next save narrows it.

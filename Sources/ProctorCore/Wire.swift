@@ -371,6 +371,15 @@ public struct CaptureResult: Codable, Sendable {
     /// and the marked sibling is at `pointer.annotatedPath`, so both remain
     /// available. It marks where the step acted, not a live cursor.
     public var pointer: PointerOverlay?
+    /// PRO-0088. What was measured in the frame's own bytes: how many pixels
+    /// were looked at, the highest alpha seen, how many distinct colours. Nil
+    /// on a lane that cannot read pixels back (the iOS device lane), which is
+    /// why it is optional rather than defaulted to an empty measurement.
+    public var content: FrameContentSummary?
+    /// PRO-0088. What the content check concluded, and the reason `trustworthy`
+    /// is false when it is false for this reason. Distinguishes an empty frame
+    /// from a window Proctor excludes from its own captures by design.
+    public var contentVerdict: CaptureContentVerdict?
 
     public init(window: String, path: String, width: Int, height: Int, scale: Double,
                 status: FrameStatus, contentRect: Rect?, dirtyRectCount: Int, dirtyArea: Double,
@@ -378,7 +387,9 @@ public struct CaptureResult: Codable, Sendable {
                 caveat: String? = nil, tileHashes: [String]? = nil,
                 annotation: MarkAnnotation? = nil,
                 normalization: CaptureNormalization? = nil, crop: CropRegion? = nil,
-                pointer: PointerOverlay? = nil) {
+                pointer: PointerOverlay? = nil,
+                content: FrameContentSummary? = nil,
+                contentVerdict: CaptureContentVerdict? = nil) {
         self.window = window; self.path = path; self.width = width; self.height = height
         self.scale = scale; self.status = status; self.contentRect = contentRect
         self.dirtyRectCount = dirtyRectCount; self.dirtyArea = dirtyArea
@@ -386,6 +397,7 @@ public struct CaptureResult: Codable, Sendable {
         self.trustworthy = trustworthy; self.caveat = caveat; self.tileHashes = tileHashes
         self.annotation = annotation; self.normalization = normalization; self.crop = crop
         self.pointer = pointer
+        self.content = content; self.contentVerdict = contentVerdict
     }
 }
 

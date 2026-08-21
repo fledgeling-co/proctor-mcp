@@ -1,0 +1,192 @@
+[
+  {
+    "artifact": "docs/test-campaign/evidence/witness/a2-hud-11.json",
+    "at": "2026-08-20T16:17:40Z",
+    "probePid": 66467,
+    "needle": "Proctor",
+    "rowsTotal": 5,
+    "owners": {
+      "21088": {
+        "ownerName": "Proctor",
+        "windowsOwned": 1,
+        "excluded": 1,
+        "notExcluded": 0,
+        "windows": [
+          {
+            "windowNumber": 121564,
+            "layer": 0,
+            "sharingState": 0,
+            "size": "760x968",
+            "name": "History"
+          }
+        ]
+      },
+      "76491": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 1,
+        "excluded": 1,
+        "notExcluded": 0,
+        "windows": [
+          {
+            "windowNumber": 99647,
+            "layer": 1000,
+            "sharingState": 0,
+            "size": "1728x1117",
+            "name": ""
+          }
+        ]
+      },
+      "86732": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 3,
+        "excluded": 2,
+        "notExcluded": 1,
+        "windows": [
+          {
+            "windowNumber": 121489,
+            "layer": 25,
+            "sharingState": 0,
+            "size": "352x230",
+            "name": ""
+          },
+          {
+            "windowNumber": 121490,
+            "layer": 24,
+            "sharingState": 0,
+            "size": "1710x1073",
+            "name": ""
+          },
+          {
+            "windowNumber": 121491,
+            "layer": 0,
+            "sharingState": 1,
+            "size": "1710x1073",
+            "name": ""
+          }
+        ]
+      }
+    }
+  },
+  {
+    "artifact": "docs/test-campaign/evidence/witness/a2-hud-12.json",
+    "at": "2026-08-20T16:17:44Z",
+    "probePid": 66871,
+    "needle": "Proctor",
+    "rowsTotal": 5,
+    "owners": {
+      "21088": {
+        "ownerName": "Proctor",
+        "windowsOwned": 1,
+        "excluded": 1,
+        "notExcluded": 0,
+        "windows": [
+          {
+            "windowNumber": 121564,
+            "layer": 0,
+            "sharingState": 0,
+            "size": "760x968",
+            "name": "History"
+          }
+        ]
+      },
+      "76491": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 1,
+        "excluded": 1,
+        "notExcluded": 0,
+        "windows": [
+          {
+            "windowNumber": 99647,
+            "layer": 1000,
+            "sharingState": 0,
+            "size": "1728x1117",
+            "name": ""
+          }
+        ]
+      },
+      "86732": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 3,
+        "excluded": 2,
+        "notExcluded": 1,
+        "windows": [
+          {
+            "windowNumber": 121489,
+            "layer": 25,
+            "sharingState": 0,
+            "size": "352x230",
+            "name": ""
+          },
+          {
+            "windowNumber": 121490,
+            "layer": 24,
+            "sharingState": 0,
+            "size": "1710x1073",
+            "name": ""
+          },
+          {
+            "windowNumber": 121491,
+            "layer": 0,
+            "sharingState": 1,
+            "size": "1710x1073",
+            "name": ""
+          }
+        ]
+      }
+    }
+  },
+  {
+    "artifact": "docs/test-campaign/evidence/witness/a2-hud-1.json",
+    "at": "2026-08-20T16:16:44Z",
+    "probePid": 61521,
+    "needle": "Proctor",
+    "rowsTotal": 3,
+    "owners": {
+      "21088": {
+        "ownerName": "Proctor",
+        "windowsOwned": 1,
+        "excluded": 1,
+        "notExcluded": 0,
+        "windows": [
+          {
+            "windowNumber": 121564,
+            "layer": 0,
+            "sharingState": 0,
+            "size": "760x968",
+            "name": "History"
+          }
+        ]
+      },
+      "76491": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 1,
+        "excluded": 1,
+        "notExcluded": 0,
+        "windows": [
+          {
+            "windowNumber": 99647,
+            "layer": 1000,
+            "sharingState": 0,
+            "size": "1728x1117",
+            "name": ""
+          }
+        ]
+      },
+      "86732": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 1,
+        "excluded": 0,
+        "notExcluded": 1,
+        "windows": [
+          {
+            "windowNumber": 121491,
+            "layer": 0,
+            "sharingState": 1,
+            "size": "1710x1073",
+            "name": ""
+          }
+        ]
+      }
+    }
+  }
+]
