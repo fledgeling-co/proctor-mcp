@@ -59,6 +59,13 @@ struct GuestOSVersionWiringTests {
         result.objectValue?["osVersion"]
     }
 
+    /// How many macOS guest slots the scheduler currently reports as held.
+    private func macPoolHeld(_ session: Session) async -> Int? {
+        let pools = await session.poolStatus().objectValue?["pools"]?.arrayValue
+        let mac = pools?.first { $0.objectValue?["platform"]?.stringValue == "macos" }
+        return mac?.objectValue?["held"]?.intValue
+    }
+
     // MARK: - CASE-0184
 
     @Test("an attached guest reports the version its own Proctor answered with")
@@ -70,11 +77,13 @@ struct GuestOSVersionWiringTests {
 
         let status = try await h.session.guest(action: "status", guest: "proctor-guest",
                                                provider: nil, newName: nil)
-        let os = osVersion(status)
-        #expect(os?.objectValue?["version"]?.stringValue == "26.6.2")
-        #expect(os?.objectValue?["source"]?.stringValue == "guest-agent")
-        #expect(os?.objectValue?["reason"] == nil || os?.objectValue?["reason"]?.stringValue == nil,
-                "a known version carries no reason")
+        // Required, not optional-chained: `os` being absent altogether would
+        // satisfy every `?.` check below by vacuum.
+        let os = try #require(osVersion(status)?.objectValue,
+                              "status must carry an osVersion object")
+        #expect(os["version"]?.stringValue == "26.6.2")
+        #expect(os["source"]?.stringValue == "guest-agent")
+        #expect(os["reason"]?.stringValue == nil, "a known version carries no reason")
 
         // The channel, named: the question that produced it went to the guest
         // and it was the one that actuates nothing.
@@ -193,8 +202,14 @@ struct GuestOSVersionWiringTests {
             record: Self.record(named), attachedByThisSession: false)
         let plain = GuestOSVersionResolution.obstacle(
             record: Self.record("x"), attachedByThisSession: false)
-        #expect((sequoiaShaped == nil) == (plain == nil),
-                "the obstacle must not depend on what the guest is called")
+        // Both must be REAL obstacles, not merely equal ones: `(nil == nil)` is
+        // true, so an obstacle() gutted to return nil unconditionally passed the
+        // first draft of this check. Found by the PRO-0094 completeness critic.
+        #expect(sequoiaShaped != nil, "an unattached guest has an obstacle whatever it is called")
+        #expect(plain != nil, "an unattached guest has an obstacle whatever it is called")
+        #expect(sequoiaShaped?.replacingOccurrences(of: named, with: "NAME")
+                == plain?.replacingOccurrences(of: "x", with: "NAME"),
+                "the obstacle must differ only where the guest's name is quoted back")
     }
 
     // MARK: - CASE-0188
@@ -205,10 +220,20 @@ struct GuestOSVersionWiringTests {
         _ = try await h.session.guest(action: "attach", guest: "held-mac",
                                       provider: nil, newName: nil)
 
+        let heldBefore = try #require(await macPoolHeld(h.session))
+        #expect(heldBefore == 1, "attaching took the slot this case is about")
+
         h.link.sendError = AgentError(code: .agentUnavailable, message: "connection reset")
         let status = try await h.session.guest(action: "status", guest: "held-mac",
                                                provider: nil, newName: nil)
         #expect(osVersion(status)?.objectValue?["version"]?.stringValue == nil)
+
+        // The slot itself, counted off the scheduler rather than inferred from
+        // the attachment surviving. The spec clause names both, and a release
+        // that dropped the ticket while leaving the record would pass the check
+        // below and fail this one.
+        #expect(await macPoolHeld(h.session) == heldBefore,
+                "a failed status read must not give back the macOS slot its session is holding")
 
         // Still attached, proved by an observable rather than by reading a field:
         // a released session answers a forwardable call here on this Mac instead.

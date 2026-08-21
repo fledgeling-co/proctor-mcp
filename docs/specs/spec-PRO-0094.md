@@ -117,7 +117,7 @@ bought with a claim this repo had already disproved.
 | DEF-091 | The same sentence hand-written in three places, so a correction lands in one and not the others | `ToolchainLanes.swift:161`, `ToolCatalogue.swift:1173`, `SessionGuest.swift:134` |
 | DEF-092 | `proctor_guest`'s `provider` input schema enumerates only `lume` and `prlctl`, so a caller naming the supported third provider is rejected by schema validation before reaching code that accepts it | `ToolCatalogue.swift:1205`, and the prose at `:1124`, `:1176`, `:1200` |
 | DEF-093 | No surface reports a guest's macOS version, which is what made DEF-090 uncheckable rather than merely wrong | `SessionGuest.guestStatus`; `osVersion`/`productVersion`/`sw_vers` return zero hits across the guest sources |
-| DEF-094 | Reserved for a fault this work uncovers; unallocated if none does | — |
+| DEF-094 | `proctor_guest --action status` can block indefinitely on a frozen guest agent: the link read is unbounded, and status had no exposure to the link before this change | `SessionGuest.guestOSVersion`; `Sources/ProctorCore/Transport.swift` sets no `SO_RCVTIMEO` |
 
 DEF-092 is the discoverability finding the brief asks to be recorded: `TartProvider` is at
 `Sources/ProctorAgent/Guest/GuestProvider.swift:307`, `ToolchainLanes.swift:134-153` builds the
@@ -147,8 +147,13 @@ All three sites interpolate that constant. The literal strings `FB21748086` and 
 **exactly once each** across `Sources/`, which is the mechanical form of "one source": a second
 occurrence is a second copy and is red.
 
-"verify against Sequoia" is gone. It is replaced by nothing rather than by different advice,
-because REQ-060 is the actionable form of the same instruction.
+"verify against Sequoia" is gone. What replaces it is a pointer to the surface that answers the
+question, never different advice about which image to fetch: the doctor's guest lane says where a
+guest's macOS version is reported, and the tool description documents the new field. An earlier
+draft of this clause said "replaced by nothing", which the D-prime validator read against the diff
+and correctly called a contradiction. The rule being kept is that no site tells a reader to go and
+get a different operating system; a sentence naming the surface that settles it is REQ-060 being
+discoverable, not the old advice in new words.
 
 ### REQ-060 — `proctor_guest --action status` reports the guest's macOS version
 
@@ -221,17 +226,22 @@ provider, change `GuestRecord`'s wire shape for `list`, or touch attach, detach 
 
 ## Acceptance
 
-1. `FB21748086` and `#870` each appear exactly once in `Sources/`, counted with `len()` over the
-   grep hits rather than read off a printed list. (CASE-0180)
+1. `FB21748086`, `#870` and the phrase `render no application windows` each appear exactly once
+   across **every readable file** under `Sources/`, not only the `.swift` ones, counted over a
+   population rather than read off a printed list. A paraphrase that keeps neither issue id nor
+   that phrasing is out of reach of any grep and is recorded as a limit below rather than claimed.
+   (CASE-0180)
 2. The doctor guest-lane note, the `proctor_guest` tool description and `guestCapabilities` each
    contain `GuestNotes.tahoeRendering` verbatim, asserted against the constant rather than against
    a copy of its text. (CASE-0181)
 3. The constant's measurement fields — `26.6.2`, `2026-08-21`, and each of Calculator, System
-   Settings and Setup Assistant — are each found in the recorded measurement at
-   `docs/specs/spec-PRO-0076.md`, read from disk at test time. The repo root is derived from
-   `#filePath`, never from the process's working directory, which `swift test` does not promise.
-   The test fails if the file moves or the paragraph changes, which is the drift it exists to
-   catch. (CASE-0182)
+   Settings and Setup Assistant — are each found **inside the section of
+   `docs/specs/spec-PRO-0076.md` that records the measurement**, located by an anchor the constant
+   itself carries, not merely somewhere in that file. Scoping is the clause: every one of those
+   five strings appears elsewhere in that document (`26.6.2` three times, `2026-08-21` six,
+   `Calculator` four), so a whole-file search stays green after the measurement paragraph is
+   deleted. The repo root is derived from `#filePath`, never from the working directory, which
+   `swift test` does not promise. (CASE-0182)
 4. No site anywhere in `Sources/` contains the string `verify against Sequoia`. (CASE-0183)
 5. A session attached to a guest whose injected link answers `proctor_doctor` with
    `osVersion: "26.6.2"` gets `osVersion.version == "26.6.2"`, `source == "guest-agent"`, and no
@@ -243,10 +253,60 @@ provider, change `GuestRecord`'s wire shape for `list`, or touch attach, detach 
    version. (CASE-0186)
 8. A guest named `macos-sequoia-cua` with a link answering `26.6.2` reports `26.6.2`; the same
    guest with no link reports `unknown`. The name is never the answer. (CASE-0187)
-9. A status call whose link throws leaves the attachment intact: the session is still attached
-   afterwards and its pool slot is still held. (CASE-0188)
-10. `proctor_guest`'s input schema enumerates `tart` alongside `lume` and `prlctl`, no prose in the
-    tool's description names a two-provider set, and the refusal a caller gets for a missing guest
-    names all three. (CASE-0189)
+9. A status call whose link throws leaves the attachment intact: a later forwarded call still
+   reaches the link, **and** the scheduler's macOS pool `held` count is the same before and after,
+   read off `poolStatus()` rather than inferred from the attachment surviving. (CASE-0188)
+10. `proctor_guest`'s input schema enumerates `tart` alongside `lume` and `prlctl`; no string
+    anywhere in the tool's description, title or input schema — including the per-argument
+    descriptions, walked recursively — names a two-provider set; and the refusal a caller gets for
+    a missing guest names all three. (CASE-0189)
 11. `./scripts/test.sh` green, with the run count and its denominator stated, and the real exit
     code read from a file rather than through a pipe.
+
+## Reviews, and what they changed
+
+Two gates ran against the built branch and both found real defects. Their findings are listed with
+what was done, because a review whose findings are not dispositioned in the artifact is a review
+nobody can check.
+
+**Out-of-family completeness critic** (`agy` / `gemini-3.7-flash-high`; the codex lane was still on
+its usage limit). 0 Critical, 1 High, 3 Medium, 3 Low. Transcript `/tmp/pro0094-critic.md`.
+**6 accepted, 1 recorded as a defect rather than fixed.**
+
+| finding | disposition |
+|---|---|
+| High: CASE-0188 asserted the attachment survived but never the pool slot the clause names | fixed; the case now reads `poolStatus()` before and after |
+| Medium: `(a == nil) == (b == nil)` in CASE-0187 passes when `obstacle` is gutted to return nil | fixed; both must be real obstacles, and they must differ only where the name is quoted |
+| Medium: `claims.count == 5` asserts an array the test had just built | fixed; it asserts `applications.count == 3` off the constant |
+| Medium: the link read in `guestOSVersion` is unbounded, so a frozen guest agent hangs a status call | **not fixed — DEF-094.** The transport sets no receive timeout, so every forwarded call shares this; a bespoke deadline on one read path would leave the actuation paths, which matter more, exactly as they are. Recorded with its reason rather than half-fixed |
+| Low: `reason == nil` passes vacuously when the whole `osVersion` object is absent | fixed; `#require` on the object first |
+| Low: the source walk read only `.swift` files | fixed; every readable file under `Sources/` |
+| Low: only the top-level description was checked for stale provider pairs | fixed; the whole input schema is walked |
+
+It also read the stopped-guest remedy against `guestAttach`'s own guard and found it contradictory:
+a guest stopped from under a session that is still attached was told to attach, which that guard
+refuses. Fixed — that case now says detach first.
+
+**Same-family fresh-context validation** (a fresh `claude-fable-5`, given the spec and the branch
+and none of the build). Two discrepancies, both accepted:
+
+- REQ-059 said the Sequoia advice was "replaced by nothing", and the diff adds a pointer sentence at
+  two sites. The diff is right and the spec sentence was too absolute; REQ-059 is amended above.
+- CASE-0182 checked the whole of `spec-PRO-0076.md` rather than the measurement section, so
+  deleting the measurement left it green. Fixed, and the clause now says why the scoping is the
+  point.
+
+It confirmed `guestOSVersion(for:)` on the four properties it was asked to attack — two sessions,
+the `slotHeld` latch, no path returning a version that did not come from the guest agent, and no
+failure path touching `guestAttachments`, `guestLinks` or the ticket.
+
+## Known limits
+
+- **A paraphrase escapes.** CASE-0180 counts two issue ids and one distinctive phrase. A second
+  hand-written note that keeps none of the three is not detectable by any grep, and this says so
+  rather than claiming a guarantee it does not have.
+- **DEF-094 is open.** A status read against a guest whose Proctor has frozen does not return. It
+  is recorded above with why it was not fixed here.
+- **No live guest was driven for this work.** `proctor-guest` and `anvil-mac-node` are stopped and
+  were not started, cloned, renamed or exported. The measurement this note cites is PRO-0076's,
+  taken on 2026-08-21; nothing here re-measures it, and the citation is what the drift test binds.

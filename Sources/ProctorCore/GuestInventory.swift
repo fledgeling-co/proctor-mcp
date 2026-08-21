@@ -626,6 +626,16 @@ public enum GuestNotes {
         /// Where the measurement is written down, so the sentence carries its
         /// own citation to a reader who has the repo.
         public static let citation = "docs/specs/spec-PRO-0076.md"
+        /// The sentence that opens the recorded measurement inside `citation`.
+        ///
+        /// Not decoration: `GuestNoteSourceTests` locates this, takes the section
+        /// around it and looks for the claims THERE. Checking the whole file
+        /// instead was the first draft, and it was green against a spec whose
+        /// measurement paragraph had been deleted, because every claim in it also
+        /// appears elsewhere in that document. Found by the PRO-0094 D-prime
+        /// validator, which counted the duplicates.
+        public static let measurementAnchor =
+            "The Tahoe window-rendering warning did not reproduce."
 
         /// The applications in prose: "A, B and C".
         static var applicationList: String {
@@ -713,9 +723,18 @@ public enum GuestOSVersionResolution {
                  + "either."
         }
         guard record.running else {
-            return "\(record.name) is \(record.state), so nothing inside it can be asked, and no "
-                 + "provider records a guest's macOS version in its listing. Start it with "
-                 + "proctor_guest action \"start\", attach, and read status again."
+            // A guest stopped from under a session that is still attached to it
+            // cannot be told to attach: that call is refused while an attachment
+            // stands. Found by the PRO-0094 completeness critic, which read the
+            // remedy against `guestAttach`'s own guard.
+            let lead = "\(record.name) is \(record.state), so nothing inside it can be asked, "
+                     + "and no provider records a guest's macOS version in its listing. "
+            guard attachedByThisSession else {
+                return lead + "Start it with proctor_guest action \"start\", attach, and read "
+                            + "status again."
+            }
+            return lead + "This session is still attached to it, so detach with proctor_guest "
+                        + "action \"detach\" first, then start it, attach again and read status."
         }
         guard attachedByThisSession else {
             return "this session is not attached to \(record.name), so there is no link to ask "

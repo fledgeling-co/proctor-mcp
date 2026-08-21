@@ -54,9 +54,12 @@ Three call sites, each replacing its hand-written copy with `\(GuestNotes.tahoeR
 initialised, so interpolating another `static let` from the same module is safe and needs no
 ordering care. `SessionGuest` is in `ProctorAgent`, which already imports `ProctorCore`.
 
-The words "verify against Sequoia" leave the tree entirely. Nothing replaces them at these sites:
-phase 2 is the actionable form of that instruction, and a second piece of advice here would be a
-second thing to keep true.
+The words "verify against Sequoia" leave the tree entirely. What replaces them is a pointer to the
+surface that answers the question — the doctor lane says where a guest's macOS version is reported,
+and the tool description documents the new field. No site tells a reader to go and get a different
+operating system, which is the rule; naming the surface that settles it is phase 2 being
+discoverable rather than the old advice rephrased. *(Amended after the D-prime validator read the
+original wording, "nothing replaces them", against the diff and called the contradiction.)*
 
 ## Phase 2 — `osVersion` on `proctor_guest --action status`
 
@@ -163,10 +166,10 @@ already uses. Never `currentDirectoryPath`, which `swift test` does not promise.
 
 | case | assertion | why it is red today |
 |---|---|---|
-| CASE-0180 | `FB21748086` and `#870` each appear exactly once under `Sources/`, counted with `len()` over the matching lines | three copies each |
+| CASE-0180 | `FB21748086`, `#870` and `render no application windows` each appear exactly once across every readable file under `Sources/` | three copies each |
 | CASE-0181a | `Toolchain.lanes(...)`'s `guest` row note contains `GuestNotes.tahoeRendering` | `GuestNotes` does not exist |
 | CASE-0181b | `ToolCatalogue.guest.description` contains `GuestNotes.tahoeRendering` | same |
-| CASE-0182 | each of `26.6.2`, `2026-08-21`, `Calculator`, `System Settings`, `Setup Assistant` from the constant is found in `docs/specs/spec-PRO-0076.md` read from disk | same |
+| CASE-0182 | each of `26.6.2`, `2026-08-21`, `Calculator`, `System Settings`, `Setup Assistant` from the constant is found in the *measurement section* of `docs/specs/spec-PRO-0076.md`, located by an anchor the constant carries | same |
 | CASE-0183 | `verify against Sequoia` appears zero times under `Sources/` | three today |
 
 CASE-0180 and CASE-0183 walk `Sources/` with an enumerator and count over a list, not over printed
@@ -187,8 +190,8 @@ so the guest's answer is the fixture rather than anything production wrote.
 | CASE-0185 | stopped / delegated / running-unattached / attached-and-link-throws → four `nil` versions with four **distinct** non-empty reasons, compared pairwise so two branches returning one string is red | same |
 | CASE-0186 | attached to A, `status` on B → B's not-attached reason, and `version == nil` | same |
 | CASE-0187 | guest named `macos-sequoia-cua`: with a link answering `26.6.2` → `26.6.2`; with no link → `unknown`. The name never appears in the answer | same |
-| CASE-0188 | after a `status` whose link throws, the session is still attached (a following forwarded call reaches the link) and the pool count is unchanged | same |
-| CASE-0189 | `ToolCatalogue.guest`'s `provider` enum contains `tart`; the description contains no two-provider list; `requireGuest(nil)`'s remedy names `tart` | enum is `["lume","prlctl"]` |
+| CASE-0188 | after a `status` whose link throws, the session is still attached (a following forwarded call reaches the link) and `poolStatus()`'s macOS `held` count is unchanged, read rather than inferred | same |
+| CASE-0189 | `ToolCatalogue.guest`'s `provider` enum contains `tart`; no string anywhere in its title, description or input schema names a two-provider set; `requireGuest(nil)`'s remedy names `tart` | enum is `["lume","prlctl"]` |
 
 CASE-0185's fixture answers are supplied by the test, but the *reasons* are produced by
 `GuestOSVersionResolution.obstacle`, which the test does not write — the assertion is that four
@@ -203,6 +206,10 @@ Whole-suite gate: `./scripts/test.sh`, exit code read from a file rather than th
 run count and its denominator go in the completion record; "the suite is green" without a number is
 not a claim this repo accepts.
 
+Each case is also mutation-checked rather than assumed armed: a mutant is planted in production (or,
+for the drift case, in the cited spec), the filtered suite is run, the kill is recorded, and the tree
+is restored with `git checkout`. A case no mutant can kill has measured nothing.
+
 ## Scope-narrowing check
 
 Every requirement in the spec is carried by a phase above: REQ-059 → phase 1, REQ-060 → phase 2,
@@ -210,8 +217,10 @@ REQ-060b → phase 3, and all ten cases → phase 4. The four triage assumptions
 1 and 2 are phase 2's design, 3 is phase 1's deletion, 4 is `TahoeRendering.citation` appearing in
 the sentence. Nothing in "What this does not change" overlaps a requirement. **No narrowing.**
 
-DEF-094 stays unallocated. It is reserved for a fault this work uncovers, and inventing one to fill
-the row would be the defect it is reserved for.
+DEF-094 was allocated by the work rather than invented for the row: the out-of-family critic found
+that `guestOSVersion`'s link read is unbounded, so a frozen guest agent hangs a `status` call. It is
+recorded in the spec and deliberately not fixed here, because the transport sets no receive timeout
+at all and a deadline on this one read would leave every actuation path exactly as it is.
 
 ## Out of scope
 

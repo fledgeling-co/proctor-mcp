@@ -30,17 +30,25 @@ struct GuestNoteSourceTests {
             .deletingLastPathComponent()  // repo root
     }
 
-    /// Every `.swift` file under `Sources/`, as (path, contents).
+    /// Every readable text file under `Sources/`, as (path, contents).
+    ///
+    /// **Not just `.swift`.** The first draft filtered on the extension, which
+    /// meant a copy of the note living in a resource, a plist or a generated
+    /// fragment shipped uncounted. Anything that will not decode as UTF-8 is
+    /// skipped as binary rather than silently counted as empty.
     ///
     /// Returned as a list so callers count with `count` over a population rather
-    /// than eyeballing printed output — a printed list is not a denominator.
+    /// than eyeballing printed output; a printed list is not a denominator.
     static func sourceFiles() throws -> [(path: String, text: String)] {
         let root = repositoryRoot.appendingPathComponent("Sources")
         guard let walker = FileManager.default.enumerator(
-            at: root, includingPropertiesForKeys: nil) else { return [] }
+            at: root, includingPropertiesForKeys: [.isRegularFileKey]) else { return [] }
         var out: [(String, String)] = []
-        for case let url as URL in walker where url.pathExtension == "swift" {
-            out.append((url.path, try String(contentsOf: url, encoding: .utf8)))
+        for case let url as URL in walker {
+            guard (try? url.resourceValues(forKeys: [.isRegularFileKey]))?
+                    .isRegularFile == true else { continue }
+            guard let text = try? String(contentsOf: url, encoding: .utf8) else { continue }
+            out.append((url.path, text))
         }
         return out
     }
@@ -67,7 +75,11 @@ struct GuestNoteSourceTests {
         #expect(files.count > 100,
                 "the source walk found \(files.count) swift files, which is too few to be the whole of Sources/ — a zero from this instrument would mean nothing")
 
-        for id in ["FB21748086", "#870"] {
+        // The issue ids, and the claim's own distinctive wording. A paraphrase
+        // that drops both ids still ships undetected, and that limit is recorded
+        // in the spec rather than papered over; catching a copy that keeps the
+        // phrasing is the reachable half. Raised by the PRO-0094 critic.
+        for id in ["FB21748086", "#870", "render no application windows"] {
             let hits = Self.occurrences(of: id, in: files)
             let where_ = Self.filesContaining(id, in: files)
             let names = where_.map { ($0 as NSString).lastPathComponent }.sorted()
@@ -124,14 +136,35 @@ struct GuestNoteSourceTests {
         #expect(spec.contains("Tahoe"),
                 "control: the cited spec must be the document that discusses Tahoe")
 
+        // **Scoped to the recorded measurement, not to the whole document.**
+        // Every claim the note makes also appears elsewhere in that spec
+        // (`26.6.2` three times, `2026-08-21` six, `Calculator` four), so a
+        // whole-file search stays green after the measurement paragraph is
+        // deleted, which is precisely the drift this case exists to catch.
+        let anchor = GuestNotes.TahoeRendering.measurementAnchor
+        let anchorAt = try #require(spec.range(of: anchor),
+                                    "the recorded measurement opens with \(anchor.debugDescription) and is not in the cited spec, so the note cites nothing")
+        let headings = spec.ranges(of: "\n## ")
+        let sectionStart = headings.last { $0.lowerBound < anchorAt.lowerBound }?.lowerBound
+                        ?? spec.startIndex
+        let sectionEnd = headings.first { $0.lowerBound > anchorAt.lowerBound }?.lowerBound
+                      ?? spec.endIndex
+        let measurement = String(spec[sectionStart..<sectionEnd])
+        #expect(measurement.count < spec.count,
+                "control: the section must be a proper part of the document, not all of it")
+
         var claims = [GuestNotes.TahoeRendering.guestOS,
                       GuestNotes.TahoeRendering.measuredOn]
         claims.append(contentsOf: GuestNotes.TahoeRendering.applications)
-        #expect(claims.count == 5, "five claims: a version, a date and three applications")
+        // The population is production data, not something assembled here: the
+        // first draft asserted `claims.count == 5` right after appending to it,
+        // which measures the test. This measures the constant.
+        #expect(GuestNotes.TahoeRendering.applications.count == 3,
+                "the note names three applications that rendered")
 
         for claim in claims {
-            #expect(spec.contains(claim),
-                    "the note states \(claim.debugDescription), which does not appear in \(GuestNotes.TahoeRendering.citation). The note and the record it cites have drifted apart.")
+            #expect(measurement.contains(claim),
+                    "the note states \(claim.debugDescription), which does not appear in the recorded measurement inside \(GuestNotes.TahoeRendering.citation). The note and the record it cites have drifted apart.")
         }
 
         // And the sentence a reader sees actually renders those fields, rather
@@ -161,11 +194,29 @@ struct GuestNoteSourceTests {
 
     @Test("no prose on the guest tool describes a two-provider world")
     func theDescriptionNamesTart() {
-        let text = ToolCatalogue.guest.description
-        for stale in ["lume or prlctl", "lume, prlctl, or both", "lume and prlctl"] {
-            #expect(!text.contains(stale),
-                    "the description still says \(stale.debugDescription); tart is supported")
+        /// Every string anywhere in a JSONValue, so a stale provider pair hiding
+        /// in a nested property description is counted. Checking only the tool's
+        /// top-level `description` was the first draft; the critic pointed out
+        /// that the per-argument descriptions are prose a caller reads too.
+        func strings(in value: JSONValue) -> [String] {
+            switch value {
+            case .string(let s):  return [s]
+            case .array(let a):   return a.flatMap(strings(in:))
+            case .object(let o):  return o.values.flatMap(strings(in:))
+            default:              return []
+            }
         }
-        #expect(text.contains("tart"), "the description must name tart")
+        var prose = strings(in: ToolCatalogue.guest.inputSchema)
+        prose.append(ToolCatalogue.guest.description)
+        prose.append(ToolCatalogue.guest.title)
+        #expect(prose.count > 10,
+                "control: the schema walk found \(prose.count) strings, too few to be the whole tool surface")
+
+        for stale in ["lume or prlctl", "lume, prlctl, or both", "lume and prlctl"] {
+            let offenders = prose.filter { $0.contains(stale) }
+            #expect(offenders.isEmpty,
+                    "\(offenders.count) string(s) on the guest tool still say \(stale.debugDescription); tart is supported and a reader going by this concludes otherwise")
+        }
+        #expect(prose.contains { $0.contains("tart") }, "the tool surface must name tart")
     }
 }
