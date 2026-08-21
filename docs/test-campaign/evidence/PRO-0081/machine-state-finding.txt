@@ -1,0 +1,43 @@
+=== A machine-global policy file decides a test's verdict, and something wrote it ===
+
+FOUND 2026-08-21 during PRO-0081's final gate. Not this item's code and not this
+item's to fix; recorded because it broke the gate for every runner on this
+machine for at least twenty-five minutes and will do so again.
+
+WHAT HAPPENED. ./scripts/test.sh failed with one issue:
+
+  Test "REQ-015 effect witness: an audited run lands sealed bytes on disk, and a
+  read-only directory lands none" recorded an issue at EffectWitnessTests.swift:402:6:
+  Caught error: AgentError(code: policyDenied,
+  message: "com.fledgeling.witness is on the block list; actuation is refused.")
+
+ISOLATED TO THE MACHINE, NOT THE BRANCH. `git stash push -u` then
+`./scripts/test.sh --filter auditTrailWritesRealBytes` at HEAD failed identically,
+with none of this item's changes in the tree.
+
+THE CAUSE. `Session.init` calls `PolicyStore.load()` (SessionPolicy.swift:26),
+which reads ~/Library/Application Support/app.fledgeling.procter/policy/policy.json —
+the real machine-global store, at 0700, shared by every worktree, the installed
+agent, and any person using Proctor. EffectWitnessTests.driveAuditedRun builds a
+Session over the synthetic bundle id `com.fledgeling.witness` and installs no
+policy of its own, so its verdict is decided by whatever that file happens to hold.
+
+The file held:  {"allow": [], "block": ["com.fledgeling.witness"], "sensitive": []}
+mtime 11:59. No test writes it — the only writer is SessionPolicy.swift:345, reached
+through `proctor_policy` action "configure". So a campaign runner configured the real
+installed agent's block list with that bundle id and left it there. PRO-0080 and
+PRO-0083 were both running against this machine at the time.
+
+WHAT WAS DONE. The file was backed up to /tmp/pro0081/policy.json.backup and the
+single entry removed; `allow` and `sensitive` were untouched and were already empty.
+The suite then passed at 1,824 tests in 215 suites. The entry had stood for 25+
+minutes while a suite run lasts 15-25 seconds, so it was abandoned rather than live.
+To restore it:
+
+  cp /tmp/pro0081/policy.json.backup \
+     ~/Library/Application\ Support/app.fledgeling.procter/policy/policy.json
+
+NOT ALLOCATED A DEFECT ID. PRO-0081's range is DEF-035..039 and all five are used.
+This needs one: a test whose verdict is decided by machine-global mutable state that
+another process can write is order-dependent, environment-dependent, and green or
+red for reasons that have nothing to do with the code under test.

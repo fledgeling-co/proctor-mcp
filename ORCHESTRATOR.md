@@ -1580,3 +1580,158 @@ case at `inconclusive` on a ceiling checked in source twice.
 
 **Wave 11b is next and is four items:** PRO-0080 (both dependencies now merged), PRO-0081,
 PRO-0082, PRO-0083.
+
+### Wave 11b dispatched, with id ranges allocated up front (2026-08-21)
+
+Three slots: PRO-0080 (both dependencies merged), PRO-0081, PRO-0083. PRO-0082 is held behind
+PRO-0081, because its two new status-window sections would otherwise add literals to the very file
+PRO-0081 is emptying.
+
+**Registry ids are allocated by the orchestrator this time rather than discovered by each runner.**
+Wave 11a produced three collisions from one cause — three runners each read a registry, each
+correctly took the next free id, and none could see the others. Reconciling that cost a renumber
+across two registries and one spec. Ranges are disjoint, so the same merge is now a plain append.
+
+| Item | Cases | Defects | Requirements |
+|---|---|---|---|
+| PRO-0080 | CASE-0072..0079 | DEF-030..034 | REQ-046..047 |
+| PRO-0081 | CASE-0100..0109 | DEF-035..039 | REQ-048..049 |
+| PRO-0083 | CASE-0080..0099 | DEF-040..049 | REQ-050..052 |
+
+High-water marks at dispatch: CASE-0071, DEF-029, REQ-045. A runner that needs more than its range
+asks the orchestrator rather than taking the next free id.
+
+Machine load at dispatch: 11.16, down from the 130-266 that killed the first verification attempt.
+That matters for PRO-0080, whose mutation run scores a timeout as a kill.
+
+## Wave 12 — two items from real use and one instruction file (2026-08-21)
+
+| ID | Brief | Depends on | Lane |
+|----|-------|-----------|------|
+| PRO-0084 | `77-the-cua-path-leaves-proctors-plane-silently.md` | — | this machine, live reproduction first |
+| PRO-0085 | `78-the-skill-and-the-guest-lane.md` | — | `~/Dev/fledgeling-plugins`, not this repo |
+
+**PRO-0084 is a reported defect and the source already names its mechanism.** A run routed to the
+cua backend shows no HUD, no takeover notice and no drawn pointer, and moves the real cursor;
+sometimes over a window in the background. `CuaActuationBackend.swift:302-306` says why in its own
+words: the guards that make a takeover visible *"arm before a post, from inside the process making
+it — and this post was made by another process, so nothing could have armed them."* A grep for
+`PointerOverlay`, `pointerMarker` or `drawnPointer` across `Actuation/` and `SessionAct.swift`
+returns zero, so wave 9's covered-target rule in `CursorOverlay.swift:273` is never consulted on
+this path. `"Automation Running"` is not Proctor's string, and its actual source is unconfirmed: it is
+absent from Proctor's sources and from `strings` on `cua-driver`, `obscura`, `XCTest` and
+`UIAutomation`. The honest claim is the negative one — Proctor does not draw it — and identifying
+what does is the reproduction's first job, because it names which automation stack took the
+machine. The escalation is already recorded as
+`unrequestedForeground`; what is missing is that it never reaches the screen.
+
+The item starts with a reproduction rather than a fix: the mechanism is read off source, the trigger
+and the frequency are not, and the reporter says it happens "not often".
+
+**PRO-0085 supersedes the still-open brief `53`**, which found a smaller version of the same drift
+on 2026-08-15. Measured today: `references/tools.md` advertises 20 tools against 27 shipped, missing
+`proctor_guest`, `proctor_queue`, `proctor_hud`, `proctor_history`, `proctor_recent`,
+`proctor_resource` and `proctor_actuation`. `proctor_guest` appears nowhere in the skill. The only
+VM sentence in it, `SKILL.md:802`, is a true statement about the two-guest cap that reads as a
+prohibition, and it answers a scale question an agent asking about isolation was not asking.
+
+**One question this brief deliberately does not answer**, and it is the reader's: whether
+`proctor_guest` should gain a `provision` action. Today it explicitly provisions nothing, because an
+install must not happen as a side effect of a tool call and agent calls cannot raise macOS
+permission UI. Documenting that is a skill change; changing it is a safety-posture change.
+
+### Wave 11b was killed by a usage limit, not by its work (2026-08-21)
+
+Workflow `wf_6ce708a4-f13` has no completion record. The scanner reports `0 done · 5 failed`, and
+that summary is wrong: its error detection is a substring match over transcripts, so every agent
+that merely *mentioned* the usage limit reads as failed. The journal is the authority and it holds
+`started=5 results=2`.
+
+Reconciled against git rather than against the run's own claims:
+
+| Item | Branch | Commits ahead | Tree | Journal result | Disposition |
+|---|---|---|---|---|---|
+| PRO-0080 | `ai/pro-0080` | 2 | clean | present, ready-to-verify | **verify** |
+| PRO-0081 | `ai/pro-0081` | 3 | clean | present, ready-to-verify, suite 1,824/215 | **verify** |
+| PRO-0083 | `ai/pro-0083` | 1 | **11 uncommitted files** | none | **resume in place** |
+
+The limit hit the whole account at about 15:00, not this fleet: runs in `warden`, `dAIolog`,
+`egress` and `anvil` died in the same minutes. It has since reset — a probe lane answered
+`LANE_OK`.
+
+**Not resuming the workflow.** Replay is a prefix and the miss flag is sticky, so a resume would
+serve PRO-0080 and PRO-0081 from cache, then cold-start PRO-0083 — discarding the eleven modified
+files its second attempt had produced before it died at 14:32 after 740 lines. Finishing directly
+keeps that work: two verifiers for the completed items, and PRO-0083 resumed on its own branch in
+its own worktree, which is what the branch-ahead-of-base case calls for.
+
+**One thing for PRO-0081's verifier to judge rather than assume.** Its commits include
+`fix(ui): disable the walkthrough's primary action until the grants are in` — a product behaviour
+change. A3's clause is *"the disabled next button is present in the tree in every state where it is
+disabled"*, which is about presence, not about when the control should be disabled. Whether that
+commit is the clause or a widening of it is a scope question the verifier decides.
+
+## Wave 13 — the twenty-one open defects, as six items (2026-08-21)
+
+Grouped by mechanism rather than by id. Ranges allocated up front; a runner needing more than its
+range asks rather than taking the next free id.
+
+| ID | Brief | Cases | Defects | Needs |
+|----|-------|-------|---------|-------|
+| PRO-0088 | `81-the-capture-path-reports-frames-it-did-not-get.md` | CASE-0120..0129 | DEF-060..064 | glass |
+| PRO-0089 | `82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md` | CASE-0130..0139 | DEF-065..069 | headless |
+| PRO-0090 | `83-what-the-surfaces-say-and-what-they-draw.md` | CASE-0140..0149 | DEF-070..074 | headless + glass |
+| PRO-0091 | `84-the-campaigns-own-instruments.md` | CASE-0150..0159 | DEF-075..079 | headless |
+| PRO-0092 | `85-proctoragents-mutants-mostly-survive.md` | CASE-0160..0169 | DEF-080..084 | quiet machine, long runs |
+| PRO-0093 | `86-a-dead-peer-holds-the-queue.md` | CASE-0170..0179 | DEF-085..089 | headless |
+
+**Dispatch order is set by what unblocks what.** PRO-0089 first among the six: the wall-clock oracle
+at `ScreenRecordingProbeWiringTests:42` has failed six recorded times this wave and costs a re-run
+every time somebody runs the gate, and `PolicyStore` writing the operator's real policy is the only
+open defect that can damage the machine the suite runs on. PRO-0091 alongside it, because it is
+mostly scripts and registries and conflicts with no source. PRO-0092 waits for a quiet machine —
+its two untrustworthy kills exist because the last run finished at load 271.
+
+**Still in flight from wave 11b:** PRO-0087 is built and unverified; PRO-0083 is verified
+`Needs More Work` on its A2 clause and waits on PRO-0087 merging, because the clause cannot close
+reproducibly until the cooperative pool stops starving.
+
+### Wave 13a-d closed: PRO-0087, 0089, 0091, 0094 merged (2026-08-21)
+
+Gate **1,862 tests in 220 suites, exit 0**. `strict-check` ratchet raised 81 → 106.
+`capture-lineage --gate` exit 0, judged 6 of 8, ratchet 6 held. `campaign.py check` exits 1 on five
+unwitnessed external effects and one inconclusive, all PRO-0083's and PRO-0088's, which is the gate
+naming real remaining work. **`unrated` is gone from the oracle mix** — every case now sits on a
+rung the tool recognises.
+
+**Three things this round established that are worth carrying forward.**
+
+**Arming finds dead predicates that reading does not.** PRO-0091 armed the seven instrument checks
+nobody had armed and one proved *unfireable*: it asserted no site had `before == "state"` over a
+fixture reading `$state`, and no operator in the eleven-entry table matches a bare identifier, so it
+was true of every table that could exist. That is the second dead predicate this wave, and both were
+found by arming rather than by review.
+
+**A fix is not present until it is on the branch.** PRO-0089 and PRO-0091 both failed verification
+on defects that were already fixed — 0089 deadlocked on DEF-044 at load 465, 0091's gate failed on
+the wall-clock oracle — because each branched off `ai/wave-9` before its own blocker landed. The
+chain was 0087 → 0089 → 0091, and merging `ai/wave-9` into each branch resolved both without either
+runner touching another item's code.
+
+**The registry-merge script inherits the defect it was written to prevent.** DEF-058 was an
+orchestrator merge dropping a key. The script that fixes it sweeps every key, but resolves a
+same-id conflict by keeping ours — so merging PRO-0091 silently dropped all five rows it existed to
+correct (CASE-0074's load figure, CASE-0102..0105's rung). Caught by reading the script's own
+`conflicting-same-id` line rather than by a gate. A same-id conflict is a decision, not a rule.
+
+**Two claims of mine were wrong and are corrected here.** I told the reader the plugin change was
+unpushed; `f37255f` is on `origin/main` and test-campaign 0.9.4 is installed, so it is published and
+live for every project on this machine. And I told a consumer session tart was supported because
+`TartProvider` exists — PRO-0094 found tart missing from the tool's `provider` enum, so a caller
+naming it was refused by schema validation before reaching that class. They were right about the
+symptom.
+
+**One case passes unarmed:** CASE-0113. Every other passing case has been watched to fail.
+
+**Open:** PRO-0083's A2 clause (unblocked now 0087 has merged), and PRO-0086, 0088, 0090, 0092,
+0093, 0095.

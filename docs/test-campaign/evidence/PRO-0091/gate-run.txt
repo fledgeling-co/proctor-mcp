@@ -1,0 +1,80 @@
+# PRO-0091 A9 — ./scripts/test.sh owns the verdict, run rather than cited.
+#
+# The first record of this item named `scripts/test.sh` only in a header comment
+# stating intent, and gave CASE-0159 the Python suite's own output as its evidence.
+# The Python suite passing is not the gate passing. This file is the gate.
+#
+# Both runs wrote swift test's output to a file and read the exit code back from
+# `$?` on the script itself, never through a pipe — a pipeline reports tail's
+# status, which is the trap scripts/test.sh exists to close.
+#
+# Load averages read on this machine during the session: 422.85 before the build,
+# 738.45 when RUN 1 was launched, 575.55 when this file was written.
+
+=== RUN 1 — the gate, whole suite, tree as it stands ===
+
+    $ PROCTOR_TEST_LOG=/tmp/pro91-swifttest.log ./scripts/test.sh
+
+    􀟈  Suite "Campaign instruments" started.
+    􁁛  Suite "Campaign instruments" passed after 1.251 seconds.
+    􁁛  Test run with 1838 tests in 217 suites passed after 4.364 seconds.
+    PASS: 􁁛  Test run with 1838 tests in 217 suites passed after 4.364 seconds.
+    GATE_RC=0
+
+  Exit code 0. 1838 tests in 217 suites, and "Campaign instruments" is among the
+  suites that ran, so scripts/campaign/test_instruments.py ran under the gate
+  rather than beside it.
+
+  ScreenRecordingProbeWiringTests — the failure the verifier hit at line 42 — did
+  not fail in this run. It is not clean here either: it leaked its continuation
+  3 times in the same run.
+
+    occurrences: 3
+    SWIFT TASK CONTINUATION MISUSE: ScreenRecordingProbeWiringTests leaked its continuation without resuming it. This may cause tasks waiting on it to remain suspended forever.
+
+  That is DEF-029/051, the wall-clock oracle, which PRO-0089 fixes and which is
+  not this item's. It passing here and failing for the verifier is the defect
+  rather than a disagreement about it — a timing oracle under a load that ranged
+  422 to 944 across this session decides differently between runs. Nothing in
+  that file was edited here.
+
+=== RUN 2 — the same gate, armed ===
+
+  A gate that cannot report red has measured nothing, so it was made to report
+  red. scripts/campaign/mutate_swift.py took MUTATION 1 of instrument-arming.txt
+  — the `$` out of the integer operator's lookbehind — and the gate ran again:
+
+    $ PROCTOR_TEST_LOG=/tmp/pro91-swifttest-armed.log ./scripts/test.sh --filter CampaignInstrumentTests
+
+    FAIL  the integer operator does not fire on closure shorthand $0
+    campaign instruments: 14 passed, 1 failed
+    􀄵  expected at least 15 instrument checks, got 14: FAIL  the integer operator does not fire on closure shorthand $0
+    􀢄  Test run with 3 tests in 1 suite failed after 0.654 seconds with 3 issues.
+    FAIL: swift test exited 1
+    GATE_ARMED_RC=1
+
+  Exit code 1. One red check inside the Python file turns the Swift suite red and
+  scripts/test.sh reports it, so RUN 1's zero is a measurement rather than the
+  absence of one. The mutation was put back with `git checkout --` and the suite
+  is green again: campaign instruments: 15 passed, 0 failed.
+
+  The filter matches the Swift function name rather than the @Test display string,
+  which is the other trap scripts/test.sh documents. It matched 3 tests, not 0,
+  and a 0-test run would have been refused as a pass by the script itself.
+
+=== RUN 3 — the gate over the tree as delivered ===
+
+  RUN 1 was taken before this pass edited cases.json and the suite's own fixture,
+  and test_instruments.py reads cases.json at run time, so the gate was run again
+  over the final tree rather than left standing on the earlier one.
+
+    $ PROCTOR_TEST_LOG=/tmp/pro91-swifttest-final.log ./scripts/test.sh
+
+    􁁛  Suite "Campaign instruments" passed after 1.494 seconds.
+    􁁛  Test run with 1838 tests in 217 suites passed after 3.384 seconds.
+    PASS: 􁁛  Test run with 1838 tests in 217 suites passed after 3.384 seconds.
+    GATE_FINAL_RC=0
+
+  Exit code 0, the same 1838 tests in 217 suites. ScreenRecordingProbeWiringTests
+  passed again and leaked its continuation 3 times again — DEF-029/051, unchanged
+  and untouched by this pass.

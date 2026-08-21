@@ -1,0 +1,76 @@
+=== A2 is file-scoped, and this is what it does not cover ===
+The clause names MainWindow.swift. Its siblings are reported, not gated:
+converting them is not this item's scope and claiming it would be false.
+
+Sources/ProctorUI/AgentModel.swift: 47 string literals examined
+  display        39
+  symbol          0
+  system          3
+  key             2
+  punctuation     3
+  interpolated    0
+  VIOLATION   123 menuBarAssetURL(asset:)            "idle-0"
+
+Sources/ProctorUI/HistoryModel.swift: 47 string literals examined
+  display        46
+  symbol          0
+  system          0
+  key             0
+  punctuation     1
+  interpolated    0
+  VIOLATION   114 call()                             "proctor_history"
+
+Sources/ProctorUI/HistoryWindow.swift: 91 string literals examined
+  display        71
+  symbol          9
+  system          0
+  key             7
+  punctuation     3
+  interpolated    1
+  VIOLATION    40 confirmationDialog()               "Clear Proctor's history?"
+
+Sources/ProctorUI/MainWindow.swift: 45 string literals examined
+  display         0
+  symbol         16
+  system         16
+  key             1
+  punctuation    11
+  interpolated    1
+
+
+Sources/ProctorUI/MenuBarCharacter.swift: 1 string literals examined
+  display         0
+  symbol          1
+  system          0
+  key             0
+  punctuation     0
+  interpolated    0
+
+
+Sources/ProctorUI/Motion.swift: 0 string literals examined
+  display         0
+  symbol          0
+  system          0
+  key             0
+  punctuation     0
+  interpolated    0
+
+
+Sources/ProctorUI/ProctorUIApp.swift: 68 string literals examined
+  display        53
+  symbol          1
+  system         10
+  key             1
+  punctuation     2
+  interpolated    1
+  VIOLATION    34 bool(forKey:)                      "walkthroughCompleted"
+
+Sources/ProctorUI/Walkthrough.swift: 56 string literals examined
+  display        49
+  symbol          4
+  system          0
+  key             2
+  punctuation     1
+  interpolated    0
+  VIOLATION    25 AppStorage()                       "walkthroughCompleted"
+

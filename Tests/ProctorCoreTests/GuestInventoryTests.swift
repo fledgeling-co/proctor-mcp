@@ -223,7 +223,11 @@ struct GuestLaneTests {
         #expect(guest.state == "unavailable")
         #expect(guest.blockers.isEmpty == false)
         #expect(guest.note?.contains("clone") == true)
-        #expect(guest.note?.contains("Sequoia") == true)
+        // PRO-0094. Bound to the constant, not to the word "Sequoia" that the
+        // old over-claim ended on. See GuestNoteSourceTests for why there is
+        // exactly one source for this sentence.
+        #expect(guest.note?.contains(GuestNotes.tahoeRendering) == true)
+        #expect(guest.note?.contains("verify against Sequoia") != true)
     }
 
     @Test("presence is enough for both CLIs — a health check does not run them")

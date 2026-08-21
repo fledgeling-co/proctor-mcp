@@ -1,0 +1,43 @@
+=== ARMING 4: the evasion the baseline exists to catch ===
+An out-of-family review said a printed count is not a threshold: emptying the
+file into a second file leaves display at 0 and the gate green. Proving otherwise.
+
+--- enum Actions moved out of the file; display is still 0 ---
+/tmp/pro0081/gutted.swift: 25 string literals examined
+  display         0
+  symbol         16
+  system          1
+  key             1
+  punctuation     6
+  interpolated    1
+
+PASS: 0 user-facing literals of 25 examined; 25 are identifiers, symbols, system strings or punctuation.
+exit without baseline=0
+
+--- the same file against the committed identifier set ---
+/tmp/pro0081/gutted.swift: 25 string literals examined
+  display         0
+  symbol         16
+  system          1
+  key             1
+  punctuation     6
+  interpolated    1
+
+  baseline docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json: 14 identifier(s) gone, 0 new
+  GONE      punctuation: "\(domain)/\(label)"  (x5)
+  GONE      system: "-k"  (x1)
+  GONE      system: "/bin/launchctl"  (x1)
+  GONE      system: "/bin/sh"  (x1)
+  GONE      system: "Library/LaunchAgents/\(label).plist"  (x1)
+  GONE      system: "Library/Logs/Proctor/agent.log"  (x1)
+  GONE      system: "bootout"  (x1)
+  GONE      system: "bootstrap"  (x1)
+  GONE      system: "hw.optional.arm64"  (x1)
+  GONE      system: "install"  (x1)
+  GONE      system: "kickstart"  (x3)
+  GONE      system: "print"  (x1)
+  GONE      system: "proctor-shim"  (x1)
+  GONE      system: "x-apple.systempreferences:com.apple.preference.security?\(anchor)"  (x1)
+
+FAIL: 14 identifier literal(s) left /tmp/pro0081/gutted.swift without being accounted for. The clause is about moving the copy out, not the machinery.
+exit=1

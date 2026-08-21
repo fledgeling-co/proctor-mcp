@@ -1,0 +1,41 @@
+# The campaign gate after PRO-0091 — 2026-08-21T08:09:26Z.
+# REQ-024 recorded vacuous (DEF-040); CASE-0102..0105 on source-analysis (DEF-057).
+
+proctor-mcp · lanes: macos, mcp-stdio, cli
+Requirements: 49 inventoried, 0 with no case
+Surfaces:   22 enumerated, 0 with no case
+External effects: examined=23 witnessed=12 vacuous=1 unwitnessed=6 — armed proves the suite bites, and only a witness proves the product acted.
+  Vacuous (the capability the claim constrains never runs): REQ-024
+  Effect claimed, no witness: REQ-029 (None), REQ-033 (None), REQ-034 (None), REQ-035 (None), REQ-037 (None), REQ-039 (None)
+Cases:      85 pass · 0 fail · 0 skip · 0 n/a · 0 carried · 1 inconclusive · 0 unoracled · 0 blocked · 0 open  (of 86)
+Observed:   85/86 cases produced a measurement · 1 could not be measured · 0 not attempted
+On glass:   guest-glass → .build/Proctor.app (Guest proctor-guest (lume, macOS 26.6.2 Tahoe), provisioned with lume create --unattended so it holds a real Aqua session: stat -f %Su /dev/console reads lume, not root, which is what the earlier proctor-mac-node clone could not offer. launchctl print gui/501/app.fledgeling.procter.agent reads state = running, pid = 1322. That agent's own proctor_doctor answers ready true with Accessibility and Screen Recording both granted, and lists attachedApps app:1085:1 Calculator windows 1 — the guest's accessibility API reading a window the guest's own window server owns. Reached from this Mac over an SSH StreamLocal forward between the two agents' unix sockets, with the host agent relaying.)
+On glass:   macos-glass → .build/Proctor.app (pid 88463 owns CG windows 43384 'History' and 43385 'Proctor' (640x572); glass_probe read it from CGWindowListCopyWindowInfo, the window server's own list. Launched with open -n because the installed build holds the same bundle id and LaunchServices activates it instead of starting a second instance — which is also why every capture names a CG window id rather than a title.)
+Oracles:    outcome 52 · metamorphic 6 · effect-witness 14 · raster-visual 9 · interactive-glass 1
+Off-ladder: source-analysis 4 — reads source, runs nothing, buys no effect credit
+Armed:      85/85 passing cases have been watched to fail
+Scope:      FULL — every case in the campaign was run
+Sample:     full multi-witness coverage across all 21 MCP tools, status/walkthrough/overlay UI surfaces, and guest/takeover controls
+
+Not ready to report:
+  · 1 case(s) inconclusive — attempted, and the instrument could not measure. Not a pass and not an n/a: 'we do not know' is a weaker claim than 'no difference found' and a different one from 'does not apply'
+  · 4 requirement(s) claiming an effect outside the product and recorded `observed` with no effect-witness case behind them — the shape that passed 230 cases over a product that performed no external I/O
+
+  External-effect claims with no witness (12 of 23 witnessed):
+    · REQ-007 claims a device effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-023 claims a ipc effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-027 claims a ipc effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-028 claims a device effect and is recorded `observed`, and no case backing it stands at effect-witness
+    (showing 4 of 4)
+  Drive the effect from a production entry point with a recorder attached and
+  record it:
+    campaign.py set <dir> --case CASE-0001 --status pass --oracle effect-witness \
+      --recorder 'strace -f -e trace=network' --effect-class outbound-socket \
+      --effect-count 3
+  Where the product does not perform the effect at all, the requirement is
+  `vacuous`, not `observed` — a guarantee that holds because nothing does the
+  thing is a finding, and recording it clears this blocker honestly.
+Wall:       8 published shot(s) · 8 distinct image(s)
+
+Finish them, resolve each to skip:/n-a: with a reason, or declare the stop with its resume point — in the reply, the verdict line and the report. Never silently.
+exit: 

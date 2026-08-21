@@ -1,0 +1,59 @@
+# DEF-041 — a capped list read as a population. PRO-0091, 2026-08-21T08:08:49Z.
+#
+# The fixture is the exact shape of the loss: eighteen external-effect requirements,
+# none witnessed. campaign.py check caps that list at twelve. The 0.9.3 copy is
+# read out of git rather than described, and is run OUTSIDE /tmp, because a stray
+# /tmp/copy.py on this machine shadows the stdlib copy module for anything run there.
+
+len() over the fixture registry:
+  18 external-effect requirements
+
+=== BEFORE — test-campaign 0.9.3 (git show HEAD~1) ===
+  External-effect claims with no witness (0 of 18 witnessed):
+    · REQ-001 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-002 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-003 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-004 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-005 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-006 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-007 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-008 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-009 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-010 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-011 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-012 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+  Drive the effect from a production entry point with a recorder attached and
+
+=== AFTER — test-campaign 0.9.4, as mirrored into the active cache ===
+  External-effect claims with no witness (0 of 18 witnessed):
+    · REQ-001 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-002 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-003 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-004 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-005 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-006 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-007 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-008 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-009 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-010 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-011 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-012 claims a outbound-socket effect and is recorded `observed`, and no case backing it stands at effect-witness
+    … (showing 12 of 18)
+  Drive the effect from a production entry point with a recorder attached and
+
+The twelve printed rows are unchanged. What changed is that the list now says it is
+twelve of eighteen, so it cannot be read as the population. Raising the cap was not
+the fix: the next set outgrows the next cap.
+
+=== the plugin's own gate tests ===
+ok    an observed external effect with no witness blocks
+ok    a reported external effect is not counted as witnessed
+ok    a truncated list carries its denominator
+ok    the cap still caps
+ok    a complete list says it is complete
+ok    source-analysis is a rung, counted apart from the product ladder
+ok    an external effect cannot rest on source analysis alone
+ok    a source-analysis pass owes a denominator
+ok    the same campaign clears once the denominator is back
+ok    source-analysis buys no effect credit and is off the ladder
+campaign gate tests: 67 passed, 0 failed

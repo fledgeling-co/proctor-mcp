@@ -1,0 +1,20 @@
+# scripts/campaign/test_instruments.py — PRO-0091, 2026-08-21T08:09:15Z.
+# Run through Tests/ProctorCoreTests/CampaignInstrumentTests.swift, so ./scripts/test.sh
+# owns the verdict rather than a Python file nobody runs.
+
+ok    the integer operator does not fire on closure shorthand $0
+ok    the same operator still fires on a real integer literal
+ok    a property wrapper's projected value is not a literal either
+ok    a key the merge did not sweep is caught and named
+ok    a key missing from the merge entirely is caught
+ok    the merge sweeps every key, including the one nobody was arguing about
+ok    the verifier passes the merge this script produced
+ok    two rows sharing an id with different content stop the merge
+ok    a registry that repeats an id is refused, not merged
+ok    the real inventory.json merges against itself cleanly
+ok    the verifier swept all 5 keys of the real registry
+ok    CASE-0074's note carries the load its evidence file records (22.92)
+ok    CASE-0102..0105 stand on source-analysis rather than an unknown rung
+ok    each names its analyzer and the number of units it examined
+ok    CASE-0102's denominator is what the classifier counts today (45)
+campaign instruments: 15 passed, 0 failed

@@ -1,0 +1,23 @@
+FINAL GATE — ./scripts/test.sh at ai/pro-0089 merged with ai/wave-9
+head: 6245e95
+run at 2026-08-21 19:45:49 AEST, machine load: 771.29 958.30 775.27
+
+==> swift test  (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.NRaTRfeNqe)
+􁁛  Test run with 1845 tests in 217 suites passed after 3.434 seconds.
+PASS: 􁁛  Test run with 1845 tests in 217 suites passed after 3.434 seconds.
+rc=0
+
+Exit code is ./scripts/test.sh's own, captured with `rc=$?` straight off the command and
+written to the file, not read through a pipeline. A bare `swift test` here exits 1 while
+reporting every test passing, and `cmd | tail` reports tail's status; neither was used.
+
+BASELINE, ai/pro-0089 before any change:
+􁁛  Test run with 1829 tests in 216 suites passed after 14.077 seconds.
+
+PREVIOUS GATE, ai/pro-0089 before the ai/wave-9 merge:
+􁁛  Test run with 1839 tests in 217 suites passed after 7.744 seconds.
+
+Net from baseline: +16 tests, +1 suite. +10 are this item's; the further +6 arrived with
+PRO-0087's signature-cache fix in the ai/wave-9 merge, CASE-0116 among them.
+
+A7's under-load half is docs/test-campaign/evidence/PRO-0089/under-load.txt: 5 runs, 5 green.

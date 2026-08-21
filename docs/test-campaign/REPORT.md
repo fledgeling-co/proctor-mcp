@@ -396,10 +396,26 @@ A resource shared by two tests is a test-order dependency wearing a green tick.
 Measured 20 August 2026 against maestro 2.4.0 and a booted iPhone 16 Pro on iOS 18.2: both tests
 pass, 55.6 seconds for the suite, green twice.
 
-## Eighteen defects, all eighteen fixed
+## Thirty-two defects, twenty-four fixed and eight open
+
+Corrected in PRO-0080. This table held DEF-006..023 and nothing else, while `inventory.json`
+held twenty-eight — and **all five open defects were among the ten missing**, so a reader of the
+report saw no open defect at all, under a heading that said all of them were fixed. The eighteen
+rows that were here agree with the inventory on every status; the drift was omission, in the
+opposite direction from the one brief `73` predicted. DEF-031.
+
+**There is no DEF-024, and that is deliberate.** Wave 11a's merge backfilled wave 10's four
+defects as DEF-020..023 and renumbered PRO-0078's five to DEF-025..029, so the sequence skips one.
+Twenty-three plus five is twenty-eight, and PRO-0080 adds four more for thirty-two. A reader counting sequentially would otherwise report a
+record that was never lost.
 
 | id | what | state |
 |---|---|---|
+| DEF-001 | Reopen from Dock or open -a does not restore the Status window | fixed |
+| DEF-002 | Status window kept claiming Ready while the agent was wedged | fixed |
+| DEF-003 | Installed Proctor.app is Developer ID signed but not notarised or stapled | fixed |
+| DEF-004 | Campaign recorded a refusal the product does not perform (profile filtering) | fixed |
+| DEF-005 | The drawn pointer was not excluded from screen capture | fixed |
 | DEF-006 | Three commands declared for the menu bar were never rendered in it | fixed |
 | DEF-007 | The permissions list omitted the one permission whose absence is silent | fixed |
 | DEF-008 | Three of the TUI's five panes had no data source | fixed |
@@ -418,6 +434,23 @@ pass, 55.6 seconds for the suite, green twice.
 | DEF-021 | A second copy of the guest-action list in the dispatcher refused `attach` and `detach` | fixed |
 | DEF-022 | `Bundle.module` traps in a shipped `.app` instead of returning nil, and crash-looped the guest agent | fixed |
 | DEF-023 | A relayed guest reply carried the host's `machine`, so a guest result could read as a host one | fixed |
+| DEF-025 | proctor_capture reports a fully transparent frame as status complete and trustworthy true | open |
+| DEF-026 | A run whose MCP peer dies keeps the agent queue past the 900-second pause backstop | open |
+| DEF-027 | Forty events swallowed by the takeover block produced no yield and no held reason | open |
+| DEF-028 | An agent window reports sharingState 1 where CASE-0032 records all three overlays at 0 | open |
+| DEF-029 | A bounded-probe test asserts wall-clock elapsed and fails on a loaded machine | open |
+| DEF-030 | The census control exercises one of the gate's two passes, so unclassed stayed an unwatched zero after it ran green | open |
+| DEF-031 | REPORT.md's defect table held 18 of the inventory's 28 records, and every open defect was among the missing | fixed |
+| DEF-032 | The mutation runner's integer-literal operator mutates closure shorthand $0, spending a sampled slot on an edit the compiler must reject | open |
+| DEF-033 | Nineteen of twenty-two trustworthy-scored ProctorAgent mutants survived, against half in ProctorCore | open |
+
+PRO-0080 adds four: DEF-030 (the census control reaching one of the gate's two passes),
+DEF-031 (this table itself), DEF-032 and DEF-033 (the mutation runner, and what it measured).
+DEF-031 is fixed by the correction above; the other three are open against the campaign's own
+instruments. Of the eight now open, five predate this item and are the ones to read first: DEF-025 (`proctor_capture` reporting a fully
+transparent frame as complete and trustworthy), DEF-026, DEF-027, DEF-028 and DEF-029 (a
+wall-clock assertion that fails on a loaded machine). None was fixed by the item that found it,
+each deliberately, and each says why in `inventory.json`.
 
 DEF-011 is the one worth reading twice. `StatusChecks` classifies every grant name the health
 report can carry and an unrecognised name falls to `.tool`, deliberately, because tool names
@@ -750,3 +783,67 @@ zero, check the instrument could have reported non-zero.
   published capture's manifest row names the source that draws it and when that source last
   moved, and in each case the source is older than the capture. That check exists because the
   one capture nobody ran it on turned out to show the wrong build.
+
+## The instruments, measured (PRO-0091)
+
+Seven findings about the tools that measure this project rather than about the product, closed as
+one item because they share a failure mode: an instrument reporting a clean result over a
+population it never examined.
+
+**The gate printed twelve and meant eighteen.** `campaign.py check` capped its list of unwitnessed
+requirements at twelve and said nothing about the cut. Wave 11 was scoped off that printed list
+against a real set of eighteen, and ten requirements were named by no item — the campaign's own
+first failure mode, covering a subset and reporting it as the whole, arriving through the gate
+rather than through a surface map. Raising the cap is not the remedy, because the next set
+outgrows the next cap. Every capped list now carries its own denominator: `… (showing 12 of 18)`
+when it truncates and `(showing 3 of 3)` when it does not, so a reader never has to work out
+whether anything was cut. Measured on a fixture built to the shape of the loss, with the 0.9.3
+bytes read out of git and run rather than described.
+
+**A rung that was not on the ladder, decided rather than relabelled.** CASE-0102..0105 recorded
+`oracle: "static-analysis"`, so all four counted `unrated` — the bucket whose own comment says it
+counts never as adequate — while being real armed instruments that exit 1 on a one-line mutation
+and 0 on the file as written. The fork went to grok-4.6 at effort xhigh, which ran its own
+three-family panel; fable-5 and gemini-3.7-flash-high agreed with the options presented in swapped
+order, and the codex lane failed to initialise and was recorded as a lane failure rather than
+counted as agreement. The answer was neither option: `source-analysis` is a rung **parallel** to
+the ladder rather than a position on it, because the ladder is one axis — what a case checked
+against the running product — and a reader of source text is off that axis rather than ranked on
+it. Re-expressing the four against the built product is not available, since a hardcoded
+`Text("Open log")` and a `Text(Copy.openLog)` render identically. The gate now reads
+`Off-ladder: source-analysis 4` where it read `unrated 4`. Reclassifying them to `structural` was
+the ruled-out route and was not taken.
+
+**REQ-024 is `vacuous`, not `none`.** Its declared `subprocess` effect named a boundary the
+browser-routing path does not cross: `BrowserTarget` is pure, `Session.browserHandoff` returns a
+disclosure that six call sites attach to a reply, and `ToolLocator.locate` decides availability
+with a stat. The class is kept and the evidence recorded `vacuous`, because the requirement's text
+does name a dispatch and the honest finding is that nothing performs it. Softening the class to
+`none` would have made the census green by denying the claim rather than by recording what was
+found. External effects now read `witnessed=12 vacuous=1`.
+
+**Three instruments repaired and guarded.** The census control arms both of the gate's
+requirement-level passes, each watched from clear to red in one session against a fixture — and
+that fixture is needed because `uncensused` is already red on the real registry, which the shipped
+control does not refuse, recorded as DEF-075. `mutate_swift.py`'s integer operator no longer
+matches closure shorthand, so a sampled slot stops going to an edit the compiler must reject.
+CASE-0074's starting load reads 22.92, parsed out of its evidence file rather than copied into the
+note, so the two cannot drift again silently.
+
+**The hand-merge is a script now.** `scripts/campaign/merge_registry.py` sweeps the union of both
+documents' keys, asserts id uniqueness per key, refuses a real conflict rather than resolving it to
+one side, and carries a `--verify` mode that reads a merge somebody else performed and names every
+dropped row. Its fixture is a reproduction of the loss it exists to prevent: a five-key registry
+hand-merged on `defect` and `requirement` with ours as the base, which exits 1 naming
+`flow/FLOW-010`.
+
+Fifteen checks in `scripts/campaign/test_instruments.py`, run by
+`Tests/ProctorCoreTests/CampaignInstrumentTests.swift` so `./scripts/test.sh` owns the verdict, and
+each of them watched red on a one-line mutation and green again in the same session. The wrapper
+asserts the count of checks as well as the exit code, because `0 passed, 0 failed` exits 0 and is
+the shape of the thing this whole item is about. Suite: 1,832 tests in 217 suites, up from 1,829 in
+216.
+
+`campaign.py` itself is not in this repo. It is fixed in `~/Dev/fledgeling-plugins` as
+test-campaign 0.9.4 and mirrored into the active plugin cache; both copies read sha256
+`a7d97822…`. Neither is pushed.

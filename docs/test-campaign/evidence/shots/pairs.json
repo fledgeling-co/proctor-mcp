@@ -48,5 +48,17 @@
   "shot": "evidence/shots/surf-007-zoom.png",
   "reference": null,
   "reason": "no design of record, for the same reason as SURF-006. The claim is that the crop is taken at device resolution from the region asked for, which the manifest's region and normalisation block record."
+ },
+ {
+  "surface": "STEP-A3-PRIMARY-DISABLED",
+  "name": "Walkthrough permissions step, primary disabled",
+  "shot": "evidence/shots/step-a3-walkthrough-primary-disabled.png",
+  "reference": "evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
+  "viewport": {
+   "width": 1280,
+   "height": 720
+  },
+  "settleMs": 0,
+  "note": "The reference is not a redraw. evidence/shots/mock/step-a3-walkthrough-primary-disabled.html lifts the data-state=\"permissions\" sub-frame out of design/surfaces/proctor-surfaces.html verbatim, carrying that page's own head, stylesheet and icon sprite, and adds one rule forcing .pane/.sub visible because the page hides every frame but the selected one. Rendered by obscura at 1280x720; the frame itself is the 560pt window centred in it. The design page has a single light palette and the build draws dark, so the pair is judged on composition, ordering, wording and control treatment rather than on colour, and the verdict says so. The build's capture is the whole window at its own size."
  }
 ]

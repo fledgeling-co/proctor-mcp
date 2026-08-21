@@ -156,6 +156,13 @@ actor Session {
     }
     var clock: @Sendable () -> Double = { Date().timeIntervalSince1970 }
 
+    /// Where the app policy is read from and written to. `.live` is the operator's
+    /// own policy on a real Mac and a per-process temporary directory in a test
+    /// process, so a suite that forgets to inject still cannot reach the operator's
+    /// file; a suite that means to exercise `configure` injects one and reads back
+    /// what it wrote. See `PolicyStore` and `SessionPolicy.setPolicyStore`.
+    var policyStore: PolicyStore = .live
+
     /// The recommendations already recorded this run, keyed by application, lane,
     /// rule and scheme. A repeat of the same advice is the same act: the advisory
     /// rides every listing, attach, snapshot, find and step batch, so recording

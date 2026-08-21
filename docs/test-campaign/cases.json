@@ -124,7 +124,7 @@
     ],
     "armed": true,
     "armedBy": "Armed by the default, which refuses: with PROCTOR_OVERLAY_CAPTURE unset every overlay reports sharingState 0 and screencapture -l exits 1 with \"could not create image from window\". The same commands with the switch set produce these pixels.",
-    "note": "704x460 at scale 2, 2517 distinct colours. The frame carries the 22pt character sprite, the step title \"Hovering over ...\", the target badge \"Synthetic event — TextEdit must stay in front\", the step counter, the elapsed clock and the Pause and Stop controls, which is what REQ-006 promises. Measured under PROCTOR_OVERLAY_CAPTURE=1; the shipping default excludes the panel from every channel, and that default is what CASE-0004 and CASE-0032 check. evidence/hud-capture-channels.json records the four channels that refuse when it is unset. Supporting measurements: evidence/overlay-capture-lifted.json (this capture) and evidence/overlay-capture-default.json (the refusal it is armed against)."
+    "note": "704x460 at scale 2, 2517 distinct colours. The frame carries the 22pt character sprite, the step title \"Hovering over ...\", the target badge \"Synthetic event \u2014 TextEdit must stay in front\", the step counter, the elapsed clock and the Pause and Stop controls, which is what REQ-006 promises. Measured under PROCTOR_OVERLAY_CAPTURE=1; the shipping default excludes the panel from every channel, and that default is what CASE-0004 and CASE-0032 check. evidence/hud-capture-channels.json records the four channels that refuse when it is unset. Supporting measurements: evidence/overlay-capture-lifted.json (this capture) and evidence/overlay-capture-default.json (the refusal it is armed against)."
   },
   {
     "id": "CASE-0009",
@@ -156,7 +156,7 @@
     ],
     "armed": true,
     "armedBy": "Armed by the default, which refuses: with PROCTOR_OVERLAY_CAPTURE unset every overlay reports sharingState 0 and screencapture -l exits 1 with \"could not create image from window\". The same commands with the switch set produce these pixels.",
-    "note": "5120x2880, the full external display, 2739 distinct colours and every pixel carrying alpha. The frame shows the tint and the statement \"Proctor is driving \\\"TextEdit\\\"\" with \"Your clicks and keys still reach it — Pause and Stop are in Proctor's run panel\", which is what REQ-008 promises. Measured under PROCTOR_OVERLAY_CAPTURE=1. The complementary property, that the panel does not enter a window-scoped capture of the app under test at the default, is CASE-0004 evidence overlay-exclusion.json. Supporting measurements: evidence/overlay-capture-lifted.json and evidence/overlay-exclusion.json."
+    "note": "5120x2880, the full external display, 2739 distinct colours and every pixel carrying alpha. The frame shows the tint and the statement \"Proctor is driving \\\"TextEdit\\\"\" with \"Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel\", which is what REQ-008 promises. Measured under PROCTOR_OVERLAY_CAPTURE=1. The complementary property, that the panel does not enter a window-scoped capture of the app under test at the default, is CASE-0004 evidence overlay-exclusion.json. Supporting measurements: evidence/overlay-capture-lifted.json and evidence/overlay-exclusion.json."
   },
   {
     "id": "CASE-0011",
@@ -174,8 +174,8 @@
     ],
     "armed": true,
     "armedBy": "corrupted doctor health payload; verified status window rendered error row; restored",
-    "note": "The window at 760x1000 so both sections are in one frame: seven tool rows, each saying what was established rather than that it exists — cua-driver reads 'Found and correctly signed, nothing has established that it works', which is the honesty this case is about. Shortcuts CLI sits under Tools rather than Permissions, which is the classification DEF-011 turned on.",
-    "captureMethod": "proctor_capture → ScreenCaptureKit, window-scoped",
+    "note": "The window at 760x1000 so both sections are in one frame: seven tool rows, each saying what was established rather than that it exists \u2014 cua-driver reads 'Found and correctly signed, nothing has established that it works', which is the honesty this case is about. Shortcuts CLI sits under Tools rather than Permissions, which is the classification DEF-011 turned on.",
+    "captureMethod": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
     "frameStatus": "complete"
   },
   {
@@ -410,7 +410,7 @@
       "evidence/glass-probe.json"
     ],
     "armed": true,
-    "armedBy": "Closed Status via AXPress close; proctor_apps activate returned windows []; open -a left axWindowCount=0; Window ▸ Proctor restored the window. The activate/open path is the one that fails.",
+    "armedBy": "Closed Status via AXPress close; proctor_apps activate returned windows []; open -a left axWindowCount=0; Window \u25b8 Proctor restored the window. The activate/open path is the one that fails.",
     "note": "Fixed and verified on the installed artifact. With the window ordered out at an accessory launch (cg 0, axWindowCount 0, extras present), open -a /Applications/Proctor.app produced cg 1 window 640x592 and axWindowCount 1 titled Proctor. Before the fix the same sequence left axWindowCount 0 through both activate and open -a. WindowPresentation.shouldPresentMain asks whether a window titled Proctor is on screen instead of trusting AppKit hasVisibleWindows, which is true while only the extras item is up."
   },
   {
@@ -510,7 +510,7 @@
     ],
     "armed": true,
     "armedBy": "Watched to fail on the build before the fix: the first render of the queue pane put '2 lanes' on the shelf where the design compiled '3 lanes', and the error pane placed its remedy keybar one row above the design's. Both were caught by the row-and-column comparison rather than by looking.",
-    "note": "The running binary was captured through a pty at both sizes by tui-craft's tui_capture.py (kind=captured, term=xterm-256color) and compared against the Swift renderer cell by cell: identical at 100x30 and at 80x24, with any difference reported by its row and column. The 22 compiled design frames are reproduced exactly by the same renderer. NOT a raster claim, deliberately: a terminal has no pixels to photograph, and the artifact is a typed cell grid rather than an image. For this class of defect the grid is the stronger instrument — a one-column offset from a double-width glyph is invisible in a screenshot and exact against a ruler, which is why both sides measure with the same width function. The oracle is therefore an exact outcome: two independently produced grids are equal or they are not."
+    "note": "The running binary was captured through a pty at both sizes by tui-craft's tui_capture.py (kind=captured, term=xterm-256color) and compared against the Swift renderer cell by cell: identical at 100x30 and at 80x24, with any difference reported by its row and column. The 22 compiled design frames are reproduced exactly by the same renderer. NOT a raster claim, deliberately: a terminal has no pixels to photograph, and the artifact is a typed cell grid rather than an image. For this class of defect the grid is the stronger instrument \u2014 a one-column offset from a double-width glyph is invisible in a screenshot and exact against a ruler, which is why both sides measure with the same width function. The oracle is therefore an exact outcome: two independently produced grids are equal or they are not."
   },
   {
     "id": "CASE-0034",
@@ -627,7 +627,7 @@
       "evidence/tui-live-switches.json"
     ],
     "armedBy": "Watched to fail on the build before the fix: both panes drew their empty state against a live agent, which reads as a quiet machine rather than as a pane nobody wired.",
-    "note": "Captured against a live agent: readiness draws four grants and five lanes with what each still wants, switches draws all eight with their real source and timing. History remains empty by design — the trail is sealed and no client can read it — and that is an open question rather than a fixed gap."
+    "note": "Captured against a live agent: readiness draws four grants and five lanes with what each still wants, switches draws all eight with their real source and timing. History remains empty by design \u2014 the trail is sealed and no client can read it \u2014 and that is an open question rather than a fixed gap."
   },
   {
     "id": "CASE-0042",
@@ -640,12 +640,12 @@
     "evidence": [
       "evidence/shots/surf-008-status-window.png"
     ],
-    "note": "The window draws four permission rows, Input Monitoring among them, reading a wave-9 agent on its own socket. `open -n --env PROCTOR_SOCKET=…` is what made it reachable: launching the binary directly from this harness exits immediately, and open passes an environment where a bare exec does not. The operator's installed app was never replaced.",
+    "note": "The window draws four permission rows, Input Monitoring among them, reading a wave-9 agent on its own socket. `open -n --env PROCTOR_SOCKET=\u2026` is what made it reachable: launching the binary directly from this harness exits immediately, and open passes an environment where a bare exec does not. The operator's installed app was never replaced.",
     "armedBy": "Watched to fail on the build before the fix, three times over: the window drew three rows against a health report carrying four, and two earlier captures of it were of a UI bound to the operator's installed agent, which predates the fix and reports three.",
-    "captureMethod": "proctor_capture → ScreenCaptureKit, window-scoped",
+    "captureMethod": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
     "frameStatus": "complete",
     "capture": {
-      "method": "proctor_capture → ScreenCaptureKit window-scoped",
+      "method": "proctor_capture \u2192 ScreenCaptureKit window-scoped",
       "frameStatus": "complete"
     }
   },
@@ -834,7 +834,7 @@
       "evidence/guest/a1-guest-doctor.json"
     ],
     "armed": true,
-    "note": "SETTLED LIVE 2026-08-21 on `proctor-guest`, a fresh lume guest built by route (c) of the three recorded below: `lume create proctor-guest --ipsw tahoe.ipsw --unattended tahoe --cpu 4 --memory 8`, which configures the user, SSH, autologin and no screen lock by preset. macOS 26.6.2 arm64. That preset is what unblocked it: `stat -f %Su /dev/console` reads `lume` rather than `root`, so there IS an Aqua session and `launchctl bootstrap gui/501` succeeds, which is precisely what `proctor-mac-node` could not do. The Developer ID signed, notarised and stapled wave-9 build is installed at /Applications/Proctor.app inside the guest (guest's own spctl: source=Notarized Developer ID); both TCC grants were switched on in the guest's own GUI session, driven over VNC, and survived a rebuild because the designated requirement is team-scoped. THE MEASUREMENT: one persistent MCP session against the host agent — attach names {kind: guest, name: proctor-guest, tier: native}; proctor_apps activate launches Calculator INSIDE the guest (pid 1085, win:1:0) while the host has none; proctor_act runs 5 of 5 key steps and its machine names the guest; proctor_find reads AXStaticText '4×7' and '28' from the guest's own accessibility tree; the VNC framebuffer shows the same two strings; detach. Host Calculator absent throughout, which is A2 in the same run. FOUR DEFECTS THIS FOUND, all fixed here: the lume provider called `ls --json` where 0.5.3 wants `--format json`, so the whole guest lane reported 'no guest matches' while the guest was listed and running; Dispatch.swift kept its own copy of the valid-action list and it never gained attach or detach, so every attach a real client sent was refused as unknown; the packaged app's SwiftPM resource bundle was unreachable on any Mac but the build machine, crash-looping the guest agent on the first call that drew the character; and a relayed guest reply carried the guest's own {kind: host}, telling the caller their step ran on their Mac. NOT reproduced: the capabilities note warns Tahoe guests render no application windows (trycua/cua #870) — Calculator, System Settings and Setup Assistant all rendered here. NOTE ON THE PROCEDURE: the spec's recipe said to attach with proctor-cli and then make an actuating call. That cannot work — an attachment is keyed to the peer process (pid:startTime), so a one-shot CLI attaches and exits, and the next call silently runs on the host. Measured: it launched Calculator on this Mac. The proof needs one persistent session, which is what an MCP client is.",
+    "note": "SETTLED LIVE 2026-08-21 on `proctor-guest`, a fresh lume guest built by route (c) of the three recorded below: `lume create proctor-guest --ipsw tahoe.ipsw --unattended tahoe --cpu 4 --memory 8`, which configures the user, SSH, autologin and no screen lock by preset. macOS 26.6.2 arm64. That preset is what unblocked it: `stat -f %Su /dev/console` reads `lume` rather than `root`, so there IS an Aqua session and `launchctl bootstrap gui/501` succeeds, which is precisely what `proctor-mac-node` could not do. The Developer ID signed, notarised and stapled wave-9 build is installed at /Applications/Proctor.app inside the guest (guest's own spctl: source=Notarized Developer ID); both TCC grants were switched on in the guest's own GUI session, driven over VNC, and survived a rebuild because the designated requirement is team-scoped. THE MEASUREMENT: one persistent MCP session against the host agent \u2014 attach names {kind: guest, name: proctor-guest, tier: native}; proctor_apps activate launches Calculator INSIDE the guest (pid 1085, win:1:0) while the host has none; proctor_act runs 5 of 5 key steps and its machine names the guest; proctor_find reads AXStaticText '4\u00d77' and '28' from the guest's own accessibility tree; the VNC framebuffer shows the same two strings; detach. Host Calculator absent throughout, which is A2 in the same run. FOUR DEFECTS THIS FOUND, all fixed here: the lume provider called `ls --json` where 0.5.3 wants `--format json`, so the whole guest lane reported 'no guest matches' while the guest was listed and running; Dispatch.swift kept its own copy of the valid-action list and it never gained attach or detach, so every attach a real client sent was refused as unknown; the packaged app's SwiftPM resource bundle was unreachable on any Mac but the build machine, crash-looping the guest agent on the first call that drew the character; and a relayed guest reply carried the guest's own {kind: host}, telling the caller their step ran on their Mac. NOT reproduced: the capabilities note warns Tahoe guests render no application windows (trycua/cua #870) \u2014 Calculator, System Settings and Setup Assistant all rendered here. NOTE ON THE PROCEDURE: the spec's recipe said to attach with proctor-cli and then make an actuating call. That cannot work \u2014 an attachment is keyed to the peer process (pid:startTime), so a one-shot CLI attaches and exits, and the next call silently runs on the host. Measured: it launched Calculator on this Mac. The proof needs one persistent session, which is what an MCP client is.",
     "lane": "guest-glass",
     "capture": {
       "method": "lume VNC framebuffer read of the guest's virtual display; corroborated by the guest's own accessibility tree through proctor_find",
@@ -875,7 +875,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Sabotage run in the same test body: executable pointed at a path that does not exist. The armed variant instead pointed it at the WORKING script, and the sabotage half went red with 3 issues — providerErrors nil, count 1.0 not 0, and a sentinel [8676] present. The live-count assertion was inverted in the same run and printed (livePIDs.count -> 2) < 0. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+    "armedBy": "Sabotage run in the same test body: executable pointed at a path that does not exist. The armed variant instead pointed it at the WORKING script, and the sabotage half went red with 3 issues \u2014 providerErrors nil, count 1.0 not 0, and a sentinel [8676] present. The live-count assertion was inverted in the same run and printed (livePIDs.count -> 2) < 0. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
     "evidence": [
       "Tests/ProctorAgentTests/EffectWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0077/witness-run.txt",
@@ -883,11 +883,11 @@
       "docs/test-campaign/evidence/PRO-0077/gate.txt"
     ],
     "witness": {
-      "recorder": "sentinel files written by each spawned /bin/sh child with its own $$, read back off the filesystem with FileManager and Data(contentsOf:) — no code under test participates in the reading",
+      "recorder": "sentinel files written by each spawned /bin/sh child with its own $$, read back off the filesystem with FileManager and Data(contentsOf:) \u2014 no code under test participates in the reading",
       "effect": "subprocess",
       "count": 2
     },
-    "note": "Driven through Session.guest(action:\"list\") twice, with LumeProvider built by its CONVENIENCE initialiser — the production path, which binds run to Self.liveRun and reaches a real Process() through Session.runBounded. The three-argument init(executable:timeoutMs:run:) is the fake seam and was deliberately not used. Two drives, two sentinels, two distinct pids, neither this process's. PORTABLE FLOOR, not the kernel bar: no dtrace, no eslogger, no execve census — this suite has no privilege for one, and that is the lane's ceiling rather than a silence. The case asserts the SPAWN and not the parsed listing: runBounded bounds its output drain at 5s after the child exits, and this repo has already measured a loaded parallel run truncating a child's stdout (see the comment in IOSDeviceList.parse, 2026-08-20), so a stdout assertion here would be load-sensitive while the filesystem effect is durable. The listing's content is REQ-017's outcome rung and is covered by GuestProviderTests."
+    "note": "Driven through Session.guest(action:\"list\") twice, with LumeProvider built by its CONVENIENCE initialiser \u2014 the production path, which binds run to Self.liveRun and reaches a real Process() through Session.runBounded. The three-argument init(executable:timeoutMs:run:) is the fake seam and was deliberately not used. Two drives, two sentinels, two distinct pids, neither this process's. PORTABLE FLOOR, not the kernel bar: no dtrace, no eslogger, no execve census \u2014 this suite has no privilege for one, and that is the lane's ceiling rather than a silence. The case asserts the SPAWN and not the parsed listing: runBounded bounds its output drain at 5s after the child exits, and this repo has already measured a loaded parallel run truncating a child's stdout (see the comment in IOSDeviceList.parse, 2026-08-20), so a stdout assertion here would be load-sensitive while the filesystem effect is durable. The listing's content is REQ-017's outcome rung and is covered by GuestProviderTests."
   },
   {
     "id": "CASE-0060",
@@ -896,7 +896,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Sabotage run in the same test body: simctl pointed at a path that does not exist, and readDevices raises the tool's own refusal. The armed variant pointed it at the WORKING script and the sabotage half went red with 2 issues — no error thrown, and a sentinel [8941] present. The live-count assertion was inverted in the same run and printed (pids.count -> 2) < 0. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
+    "armedBy": "Sabotage run in the same test body: simctl pointed at a path that does not exist, and readDevices raises the tool's own refusal. The armed variant pointed it at the WORKING script and the sabotage half went red with 2 issues \u2014 no error thrown, and a sentinel [8941] present. The live-count assertion was inverted in the same run and printed (pids.count -> 2) < 0. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
     "evidence": [
       "Tests/ProctorAgentTests/EffectWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0077/witness-run.txt",
@@ -925,7 +925,7 @@
       "docs/test-campaign/evidence/PRO-0077/gate.txt"
     ],
     "witness": {
-      "recorder": "the trail file's presence, byte size and mtime before and after, plus its bytes read with a FRESH FileHandle(forReadingFrom:) and each line opened with AuditSeal.open in ProctorCore using the injected private half — never AuditLog.readTrail or openedTail, which are the code under test confirming itself",
+      "recorder": "the trail file's presence, byte size and mtime before and after, plus its bytes read with a FRESH FileHandle(forReadingFrom:) and each line opened with AuditSeal.open in ProctorCore using the injected private half \u2014 never AuditLog.readTrail or openedTail, which are the code under test confirming itself",
       "effect": "filesystem-write",
       "count": 3
     },
@@ -950,7 +950,7 @@
       "effect": "ipc",
       "count": 3
     },
-    "note": "A real Server on a temporary path — Darwin.bind, listen, chmod 0600 and the accept loop in Server.swift — with three SocketClient instances from ProctorCore/Transport.swift each calling connect() (Darwin.connect) and send(). THE COUNT IS ANSWERED CONNECTIONS, NOT RECORDED REQUESTS: Server.serve reads many frames from one accepted descriptor, so a per-request count would report three for one client sending three frames. A reply cannot arrive on a descriptor the accept loop never took, so an answered connection is an accept. The identity half is the completion confirmation: the peer pid and working directory are the kernel's answer about the far end, obtainable only from an accepted fd, and the client never puts either on the wire. Settled by an out-of-family referral to grok-4.6 at xhigh on 2026-08-21, which also ruled out adding an onAccept seam to Server — a hook the product fires is the product logging its own accept, and no production source needed changing. PORTABLE FLOOR: no kernel socket tracer."
+    "note": "A real Server on a temporary path \u2014 Darwin.bind, listen, chmod 0600 and the accept loop in Server.swift \u2014 with three SocketClient instances from ProctorCore/Transport.swift each calling connect() (Darwin.connect) and send(). THE COUNT IS ANSWERED CONNECTIONS, NOT RECORDED REQUESTS: Server.serve reads many frames from one accepted descriptor, so a per-request count would report three for one client sending three frames. A reply cannot arrive on a descriptor the accept loop never took, so an answered connection is an accept. The identity half is the completion confirmation: the peer pid and working directory are the kernel's answer about the far end, obtainable only from an accepted fd, and the client never puts either on the wire. Settled by an out-of-family referral to grok-4.6 at xhigh on 2026-08-21, which also ruled out adding an onAccept seam to Server \u2014 a hook the product fires is the product logging its own accept, and no production source needed changing. PORTABLE FLOOR: no kernel socket tracer."
   },
   {
     "id": "CASE-0063",
@@ -1049,7 +1049,7 @@
     "oracle": "effect-witness",
     "lane": "macos-glass",
     "status": "inconclusive: PersonInput.isAPerson requires sourcePid == 0, which only hardware carries and no second process can forge, so the human-input path REQ-007 names cannot be driven by any instrument available on this lane. The instrument that would settle it is a physical HID event during a held run, or a signed virtual HID driver posting at pid 0. The reachable half was measured and did not yield: 40 events swallowed by the takeover tap across three runs produced no yield record and no held reason.",
-    "note": "PRO-0078 A4. NOT WITNESSED, and the ceiling is structural rather than an instrument that could be improved. REQ-007 names human mouse and keyboard interaction, and the predicate that decides it is PersonInput.isAPerson in Sources/ProctorCore/Contention.swift, which returns true only for sourcePid == 0. Zero is what hardware carries and no second process can forge it, so the path REQ-007 names cannot be driven from anything but a hand on a real keyboard: any helper's CGEventPost arrives carrying the helper's own pid and is correctly refused as a process rather than a person. That is deliberate product design, not a gap. The second path was measured and did not yield. The input block's tap calls onPersonInput for every event it swallows, and SessionTakeover.swift wires that to ContentionMonitor.noteUserInput, which is the field ContentionWatch reads. Across three runs the tap swallowed 6, 24 and 10 helper-posted events (evidence/witness/a45b-act.json, a4-act.json, a4c-burst.json) and no run recorded a yield: yields is null in every act result, and six consecutive proctor_doctor reads of the live queue during the third run report the active run with held reason null. For contrast, a yield on a different reason does fire and was captured: evidence/witness/a4-stranded-run-queue.json shows a run held with reason frontmostChanged for 552 to 932 seconds. So the userInput path produced no yield under 40 swallowed events, which is an observation for the orchestrator rather than something this item changed.\n\nSABOTAGE, two-way, built in the gap-fix session and previously missing — §A4 named one and none was recorded. It turns on one field. Agent pid 38933, started with PROCTOR_TAKEOVER_INPUT=1 and PROCTOR_YIELD=1 (doctor: inputBlockAvailable true), held a three-step drag run over win:1:0 while a separate probe process posted ten identical zero-delta scroll events into the session. TAGGED arm, .eventSourceUserData set to ProctorEventTag.value so InputBlock.isOurs is true: evidence/witness/a4-sabotage-tagged-poll.json, probe pid 42675, posted 10, survivedFromThisProbe 10 — every one reached the probe's tail-appended tap. The block was armed while they did, and the proof is in the same tail-tap record: a leftMouseUp from pid 38933, the agent itself, at 0.994s in the middle of the probe's scrolls, with evidence/witness/a4-sabotage-tagged-act.json reporting blocked true and blockedMs 18779. UNTAGGED arm, the probe's own mark instead so isOurs is false: evidence/witness/a4-sabotage-untagged-poll.json, probe pid 49751, posted 10, survivedFromThisProbe 2 — and the two survivors are the first two, at 0.073s and 0.238s, after which nothing of the probe's is seen again; evidence/witness/a4-sabotage-untagged-act.json reports blocked true, blockedMs 18764, swallowed 16. Same event, one field different: ten through, and eight of eight destroyed once the block was up. The block is reading the event rather than a clock.\n\nINSTRUMENT FAULT FOUND AND FIXED while building that, and it is why the number quoted is survivedFromThisProbe rather than survivedToTailTap. survivedToTailTap counts only events carrying the probe's own mark, which the tagged arm by construction does not carry, so it reads 0 there however many events sail through — read off that field this sabotage would have reported the exact opposite of what happened. witness_probe now also counts survivors by source pid, a field both arms carry. evidence/witness/lane-attach-gapfix.txt records it.\n\nOBSERVED AND NOT CLAIMED. Both arms recorded yields with reason userInput — tagged arm heldMs 8205 and 8109 at steps 1 and 2, untagged arm heldMs 1973 and 6672 — where the three runs above recorded none. REQ-007 is NOT thereby witnessed and the ceiling above is unchanged, because the driver is unattributable: userInput fired on the tagged arm too, where not one of the probe's events was swallowed, so nothing this instrument posted can account for it. PersonInput.isAPerson still demands sourcePid == 0, so what tripped it was hardware input this session neither produced nor can bound, on a machine carrying 22 login sessions at a load average above 400. An uncontrolled event is not a measurement. FLAGGED for the orchestrator.",
+    "note": "PRO-0078 A4. NOT WITNESSED, and the ceiling is structural rather than an instrument that could be improved. REQ-007 names human mouse and keyboard interaction, and the predicate that decides it is PersonInput.isAPerson in Sources/ProctorCore/Contention.swift, which returns true only for sourcePid == 0. Zero is what hardware carries and no second process can forge it, so the path REQ-007 names cannot be driven from anything but a hand on a real keyboard: any helper's CGEventPost arrives carrying the helper's own pid and is correctly refused as a process rather than a person. That is deliberate product design, not a gap. The second path was measured and did not yield. The input block's tap calls onPersonInput for every event it swallows, and SessionTakeover.swift wires that to ContentionMonitor.noteUserInput, which is the field ContentionWatch reads. Across three runs the tap swallowed 6, 24 and 10 helper-posted events (evidence/witness/a45b-act.json, a4-act.json, a4c-burst.json) and no run recorded a yield: yields is null in every act result, and six consecutive proctor_doctor reads of the live queue during the third run report the active run with held reason null. For contrast, a yield on a different reason does fire and was captured: evidence/witness/a4-stranded-run-queue.json shows a run held with reason frontmostChanged for 552 to 932 seconds. So the userInput path produced no yield under 40 swallowed events, which is an observation for the orchestrator rather than something this item changed.\n\nSABOTAGE, two-way, built in the gap-fix session and previously missing \u2014 \u00a7A4 named one and none was recorded. It turns on one field. Agent pid 38933, started with PROCTOR_TAKEOVER_INPUT=1 and PROCTOR_YIELD=1 (doctor: inputBlockAvailable true), held a three-step drag run over win:1:0 while a separate probe process posted ten identical zero-delta scroll events into the session. TAGGED arm, .eventSourceUserData set to ProctorEventTag.value so InputBlock.isOurs is true: evidence/witness/a4-sabotage-tagged-poll.json, probe pid 42675, posted 10, survivedFromThisProbe 10 \u2014 every one reached the probe's tail-appended tap. The block was armed while they did, and the proof is in the same tail-tap record: a leftMouseUp from pid 38933, the agent itself, at 0.994s in the middle of the probe's scrolls, with evidence/witness/a4-sabotage-tagged-act.json reporting blocked true and blockedMs 18779. UNTAGGED arm, the probe's own mark instead so isOurs is false: evidence/witness/a4-sabotage-untagged-poll.json, probe pid 49751, posted 10, survivedFromThisProbe 2 \u2014 and the two survivors are the first two, at 0.073s and 0.238s, after which nothing of the probe's is seen again; evidence/witness/a4-sabotage-untagged-act.json reports blocked true, blockedMs 18764, swallowed 16. Same event, one field different: ten through, and eight of eight destroyed once the block was up. The block is reading the event rather than a clock.\n\nINSTRUMENT FAULT FOUND AND FIXED while building that, and it is why the number quoted is survivedFromThisProbe rather than survivedToTailTap. survivedToTailTap counts only events carrying the probe's own mark, which the tagged arm by construction does not carry, so it reads 0 there however many events sail through \u2014 read off that field this sabotage would have reported the exact opposite of what happened. witness_probe now also counts survivors by source pid, a field both arms carry. evidence/witness/lane-attach-gapfix.txt records it.\n\nOBSERVED AND NOT CLAIMED. Both arms recorded yields with reason userInput \u2014 tagged arm heldMs 8205 and 8109 at steps 1 and 2, untagged arm heldMs 1973 and 6672 \u2014 where the three runs above recorded none. REQ-007 is NOT thereby witnessed and the ceiling above is unchanged, because the driver is unattributable: userInput fired on the tagged arm too, where not one of the probe's events was swallowed, so nothing this instrument posted can account for it. PersonInput.isAPerson still demands sourcePid == 0, so what tripped it was hardware input this session neither produced nor can bound, on a machine carrying 22 login sessions at a load average above 400. An uncontrolled event is not a measurement. FLAGGED for the orchestrator.",
     "id": "CASE-0067",
     "evidence": [
       "docs/test-campaign/evidence/witness/a4-act.json",
@@ -1098,7 +1098,7 @@
     "oracle": "effect-witness",
     "lane": "macos-glass",
     "status": "pass",
-    "note": "PRO-0078 A6. An accessibility action performed by the agent landed in another process, and the window server recorded the result. Agent pid 36605 acted on window 121564 of pid 21088, a Proctor UI process bound to the same private socket and a different process from the agent. evidence/witness/a6-act.json reports completed 1, plane accessibility, route valueWrite. The recorder is CGWindowListCopyWindowInfo read by a separate probe process either side of the action: evidence/witness/a6-windows-before.json puts window 121564 at x 438 y 30, and a6-windows-after.json puts it at x 500 y 90, which is the point the step asked for. The count is the 1 window the window server reports moved. No focus was stolen: frontmostName reads Ghostty before and EgressMac after, and neither is the target, so the action reached a window that was never brought to the front.\n\nSABOTAGE, built in the gap-fix session and previously missing — §A6 named one and none was recorded. The same instrument was pointed at a target that was then taken away. Control arm: agent pid 68474 acted on Calculator, pid 14545, CG window 123357, attached as win:1:0. evidence/witness/a6-sabotage-control-act.json reports completed 1, plane accessibility, route valueWrite, and the separate probe process moved the window server's own record with it, from x 624 y 339 (evidence/witness/a6-sabotage-windows-before.json, probe pid 24573) to x 700 y 400 (evidence/witness/a6-sabotage-windows-control-after.json), which is the point the step asked for; frontmost reads Ledger either side, so the front was not taken. Negative arm: Calculator was quit, and the same probe over the same needle returns rows 0 (evidence/witness/a6-sabotage-windows-after.json). That is the count this case rests on, taken to zero by the reader that produced the 1. The identical step against the identical handle is then refused rather than silently doing nothing: evidence/witness/a6-sabotage-act.json reports completed 0, failedAt 0, the step ok false, and an error carrying code actionFailed, message \"move: cannotComplete\", indeterminate false — a definite refusal with a reason, not a shrug.",
+    "note": "PRO-0078 A6. An accessibility action performed by the agent landed in another process, and the window server recorded the result. Agent pid 36605 acted on window 121564 of pid 21088, a Proctor UI process bound to the same private socket and a different process from the agent. evidence/witness/a6-act.json reports completed 1, plane accessibility, route valueWrite. The recorder is CGWindowListCopyWindowInfo read by a separate probe process either side of the action: evidence/witness/a6-windows-before.json puts window 121564 at x 438 y 30, and a6-windows-after.json puts it at x 500 y 90, which is the point the step asked for. The count is the 1 window the window server reports moved. No focus was stolen: frontmostName reads Ghostty before and EgressMac after, and neither is the target, so the action reached a window that was never brought to the front.\n\nSABOTAGE, built in the gap-fix session and previously missing \u2014 \u00a7A6 named one and none was recorded. The same instrument was pointed at a target that was then taken away. Control arm: agent pid 68474 acted on Calculator, pid 14545, CG window 123357, attached as win:1:0. evidence/witness/a6-sabotage-control-act.json reports completed 1, plane accessibility, route valueWrite, and the separate probe process moved the window server's own record with it, from x 624 y 339 (evidence/witness/a6-sabotage-windows-before.json, probe pid 24573) to x 700 y 400 (evidence/witness/a6-sabotage-windows-control-after.json), which is the point the step asked for; frontmost reads Ledger either side, so the front was not taken. Negative arm: Calculator was quit, and the same probe over the same needle returns rows 0 (evidence/witness/a6-sabotage-windows-after.json). That is the count this case rests on, taken to zero by the reader that produced the 1. The identical step against the identical handle is then refused rather than silently doing nothing: evidence/witness/a6-sabotage-act.json reports completed 0, failedAt 0, the step ok false, and an error carrying code actionFailed, message \"move: cannotComplete\", indeterminate false \u2014 a definite refusal with a reason, not a shrug.",
     "id": "CASE-0069",
     "evidence": [
       "docs/test-campaign/evidence/witness/a6-windows-before.json",
@@ -1164,7 +1164,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Same test body, inverted in the arming run: the non-zero assertion printed \"the recorder saw 3 records, attributions [Optional(\\\"cli\\\"), Optional(\\\"mcp\\\"), nil]\", the forgery assertion was flipped to demand [\"cli\"] and reported the row actually reads [nil], and the sabotage was pointed at the LIVE socket, where it went red with 1 record carrying via=cli and the CLI exiting 0 instead of 3. docs/test-campaign/evidence/PRO-0083/arming-w1-req035.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands — docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt — and the sabotages were removed again and watched to fail — docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.\n\nTHE FORGING ARM WAS REBUILT ON THE RESUME AND RE-ARMED. It was a hard-linked copy of proctor-cli launched at a fresh path; a fresh path is a first launch for syspolicyd, and beside the wiring suites' fifteen concurrent SecStaticCodeCheckValidity calls it overran a 120-second bound in the full run, deterministically, twice, while taking 0.1s with this test alone (DEF-044). It is now a raw AF_UNIX peer that is THIS TEST PROCESS - proc_pidpath reports proctor-mcpPackageTests, which frontEnd(named:) maps to nil - so no binary is launched. The ask also became real: --via is not a flag proctor-cli parses, so the old arm never put the claim on the wire, where the frame now carries \"via\":\"cli\" at the top level of the very object the server decodes. Re-armed by inverting three assertions in the same body: the peer WAS answered (ForgedCall(answered: true, ok: true)) and its row reads [nil] from those wire bytes, 1 row. docs/test-campaign/evidence/PRO-0083/arming-forger-rawpeer.txt",
+    "armedBy": "Same test body, inverted in the arming run: the non-zero assertion printed \"the recorder saw 3 records, attributions [Optional(\\\"cli\\\"), Optional(\\\"mcp\\\"), nil]\", the forgery assertion was flipped to demand [\"cli\"] and reported the row actually reads [nil], and the sabotage was pointed at the LIVE socket, where it went red with 1 record carrying via=cli and the CLI exiting 0 instead of 3. docs/test-campaign/evidence/PRO-0083/arming-w1-req035.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.\n\nTHE FORGING ARM WAS REBUILT ON THE RESUME AND RE-ARMED. It was a hard-linked copy of proctor-cli launched at a fresh path; a fresh path is a first launch for syspolicyd, and beside the wiring suites' fifteen concurrent SecStaticCodeCheckValidity calls it overran a 120-second bound in the full run, deterministically, twice, while taking 0.1s with this test alone (DEF-044). It is now a raw AF_UNIX peer that is THIS TEST PROCESS - proc_pidpath reports proctor-mcpPackageTests, which frontEnd(named:) maps to nil - so no binary is launched. The ask also became real: --via is not a flag proctor-cli parses, so the old arm never put the claim on the wire, where the frame now carries \"via\":\"cli\" at the top level of the very object the server decodes. Re-armed by inverting three assertions in the same body: the peer WAS answered (ForgedCall(answered: true, ok: true)) and its row reads [nil] from those wire bytes, 1 row. docs/test-campaign/evidence/PRO-0083/arming-forger-rawpeer.txt",
     "evidence": [
       "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0083/arming-w1-req035.txt",
@@ -1188,7 +1188,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Arming run printed \"the server answered 3 requests from real CLI children\" and \"4 distinct exit codes: agentUnreachable 3, ok 0, okPolicy 0, notReady 1, reflector 1, refused 1, usage 2, verdictFailed 2\". The sabotage was pointed at the LIVE socket and went red, reporting exit 0 where it demands 3. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands — docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt — and the sabotages were removed again and watched to fail — docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
+    "armedBy": "Arming run printed \"the server answered 3 requests from real CLI children\" and \"4 distinct exit codes: agentUnreachable 3, ok 0, okPolicy 0, notReady 1, reflector 1, refused 1, usage 2, verdictFailed 2\". The sabotage was pointed at the LIVE socket and went red, reporting exit 0 where it demands 3. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
     "evidence": [
       "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
@@ -1202,7 +1202,7 @@
       "effect": "ipc",
       "count": 3
     },
-    "note": "Real proctor-cli children against a real Server on a private socket. The count is the 3 doctor requests the server answered, each recording a kernel-read peer whose frontEnd resolved to \"cli\" and whose key names a CHILD process rather than this one. Four distinct exit codes were produced by real children and read through waitpid: 0 (ok), 1 (verdictFailed), 2 (usage) and 3 (agentUnreachable). The generated completion script was produced by a real child (`completion --shell zsh`) and contains all 26 of CLISurface.allVerbNames - 21 verbs derived from ToolCatalogue plus 5 service verbs. SCOPE, STATED RATHER THAN ROUNDED UP: exit 4 (refused) and exit 5 (notReady) were NOT produced from a child in this harness. Every gate that yields them sits behind a resolved window handle, and a handle is minted per session by an attach the child would have to perform first, so all three gated arms failed at handle resolution and mapped to verdictFailed. The six-code surface is carried by CLISurface.Exit.allCases and the pure exit(for:) mapping, which is a different rung from this one. SABOTAGE: with no socket bound the same verb exits 3 and the answered count is zero. WHAT THIS LANE CANNOT REACH, AND WHY IT IS SAID RATHER THAN DROPPED: `refused` (4) is not among the codes any child produced. Driving it needs `policy --action configure`, and `PolicyStore` has no test seam — `configurePolicy` calls `PolicyStore.save`, which writes the OPERATOR'S ~/Library/Application Support/app.fledgeling.procter/policy/policy.json. This witness did exactly that once, and PRO-0077's REQ-015 witness then failed with `policyDenied` in a later run where this suite was skipped, because the block had outlived the process that wrote it. The leaked entry was removed and the configure was dropped. DEF-042."
+    "note": "Real proctor-cli children against a real Server on a private socket. The count is the 3 doctor requests the server answered, each recording a kernel-read peer whose frontEnd resolved to \"cli\" and whose key names a CHILD process rather than this one. Four distinct exit codes were produced by real children and read through waitpid: 0 (ok), 1 (verdictFailed), 2 (usage) and 3 (agentUnreachable). The generated completion script was produced by a real child (`completion --shell zsh`) and contains all 26 of CLISurface.allVerbNames - 21 verbs derived from ToolCatalogue plus 5 service verbs. SCOPE, STATED RATHER THAN ROUNDED UP: exit 4 (refused) and exit 5 (notReady) were NOT produced from a child in this harness. Every gate that yields them sits behind a resolved window handle, and a handle is minted per session by an attach the child would have to perform first, so all three gated arms failed at handle resolution and mapped to verdictFailed. The six-code surface is carried by CLISurface.Exit.allCases and the pure exit(for:) mapping, which is a different rung from this one. SABOTAGE: with no socket bound the same verb exits 3 and the answered count is zero. WHAT THIS LANE CANNOT REACH, AND WHY IT IS SAID RATHER THAN DROPPED: `refused` (4) is not among the codes any child produced. Driving it needs `policy --action configure`, and `PolicyStore` has no test seam \u2014 `configurePolicy` calls `PolicyStore.save`, which writes the OPERATOR'S ~/Library/Application Support/app.fledgeling.procter/policy/policy.json. This witness did exactly that once, and PRO-0077's REQ-015 witness then failed with `policyDenied` in a later run where this suite was skipped, because the block had outlived the process that wrote it. The leaked entry was removed and the configure was dropped. DEF-042."
   },
   {
     "id": "CASE-0082",
@@ -1211,7 +1211,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Arming run printed \"3 frames published, 3 crossed the socket\" and \"the latch reads stopped=true after a stop over the socket\". The sabotage was pointed at the LIVE socket and went red at 2 frames crossed, so the zero in the passing run is a measurement rather than a structural silence. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands — docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt — and the sabotages were removed again and watched to fail — docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
+    "armedBy": "Arming run printed \"3 frames published, 3 crossed the socket\" and \"the latch reads stopped=true after a stop over the socket\". The sabotage was pointed at the LIVE socket and went red at 2 frames crossed, so the zero in the passing run is a measurement rather than a structural silence. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
     "evidence": [
       "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
@@ -1234,7 +1234,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Arming run printed \"read [4, 5, 8, 3] across grants, lanes, switches, history\" with the assertion inverted to demand every section be negative. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands — docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt — and the sabotages were removed again and watched to fail — docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
+    "armedBy": "Arming run printed \"read [4, 5, 8, 3] across grants, lanes, switches, history\" with the assertion inverted to demand every section be negative. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
     "evidence": [
       "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
@@ -1257,7 +1257,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Arming run printed \"the stalling listener accepted 3 of 3 connections\", and the two-way arm was inverted to demand that a real agent NOT answer inside the same bound, where it went red reporting connected=true answered=true. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands — docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt — and the sabotages were removed again and watched to fail — docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
+    "armedBy": "Arming run printed \"the stalling listener accepted 3 of 3 connections\", and the two-way arm was inverted to demand that a real agent NOT answer inside the same bound, where it went red reporting connected=true answered=true. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
     "evidence": [
       "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
@@ -1280,7 +1280,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Arming run printed \"the guest actuated 3 steps, the host 0\" with the assertion inverted, and the sabotage was run with the guest server left UP, where it went red reporting the attach returned ok=true. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands — docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt — and the sabotages were removed again and watched to fail — docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
+    "armedBy": "Arming run printed \"the guest actuated 3 steps, the host 0\" with the assertion inverted, and the sabotage was run with the guest server left UP, where it went red reporting the attach returned ok=true. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
     "evidence": [
       "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
@@ -1303,7 +1303,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Arming run printed \"arm A left 1 stop children [get, get, ls, ls, ls, run, stop]; arm B left 0 [ls]\" with the non-zero assertion inverted, and the sabotage printed the spawned set with a missing binary. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands — docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt — and the sabotages were removed again and watched to fail — docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
+    "armedBy": "Arming run printed \"arm A left 1 stop children [get, get, ls, ls, ls, run, stop]; arm B left 0 [ls]\" with the non-zero assertion inverted, and the sabotage printed the spawned set with a missing binary. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
     "evidence": [
       "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
@@ -1326,7 +1326,7 @@
     "oracle": "effect-witness",
     "status": "inconclusive",
     "armed": true,
-    "armedBy": "Arming run printed \"the locator chose <tmp>/complete/obscura, missing [], searched 2\" with the assertion inverted to demand no path at all, and the sabotage assertion was inverted and reported available=false at nowhere after chmod. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands — docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt — and the sabotages were removed again and watched to fail — docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
+    "armedBy": "Arming run printed \"the locator chose <tmp>/complete/obscura, missing [], searched 2\" with the assertion inverted to demand no path at all, and the sabotage assertion was inverted and reported available=false at nowhere after chmod. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
     "evidence": [
       "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
@@ -1377,7 +1377,7 @@
     "oracle": "effect-witness",
     "status": "pass",
     "armed": true,
-    "armedBy": "Sabotage run in the same test body: ProctorReflector.stop() closes the listening descriptor and unlinks the path, and the same client over the same window then fails connect with errno 2 on all three ops. The armed variant removed the stop() call and the sabotage half went red with four issues — the socket still existed, stillAnswered read 3, no refusal was a connect failure, and isRunning was still true. Every count was inverted in the same run and printed the number the recorder actually saw: answered 3, nodes 3 (NSView, NSTextField, NSTextFieldSimpleLabel), frame (22.0, 272.0, 110.5, 16.0), colour #FFFFFF catalog System name labelColor, constraints 2 (leading, top). docs/test-campaign/evidence/PRO-0083/arming-w9-req023.txt",
+    "armedBy": "Sabotage run in the same test body: ProctorReflector.stop() closes the listening descriptor and unlinks the path, and the same client over the same window then fails connect with errno 2 on all three ops. The armed variant removed the stop() call and the sabotage half went red with four issues \u2014 the socket still existed, stillAnswered read 3, no refusal was a connect failure, and isRunning was still true. Every count was inverted in the same run and printed the number the recorder actually saw: answered 3, nodes 3 (NSView, NSTextField, NSTextFieldSimpleLabel), frame (22.0, 272.0, 110.5, 16.0), colour #FFFFFF catalog System name labelColor, constraints 2 (leading, top). docs/test-campaign/evidence/PRO-0083/arming-w9-req023.txt",
     "evidence": [
       "Tests/ProctorAgentTests/ReflectorWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0083/witness-w9-req023.txt",
@@ -1386,10 +1386,675 @@
       "docs/test-campaign/evidence/PRO-0083/gate.txt"
     ],
     "witness": {
-      "recorder": "the replies read back off the Reflector's own socket by a raw Darwin.socket/connect client and decoded with JSONSerialization — never the target's Frame reader or its JSONValue decoder — carrying values AppKit computed rather than values the test wrote: a constraint-solved frame, a labelColor resolved against the window's effective appearance, and a CoreAnimation layer model. Plus the socket file's own mode, read off the inode.",
+      "recorder": "the replies read back off the Reflector's own socket by a raw Darwin.socket/connect client and decoded with JSONSerialization \u2014 never the target's Frame reader or its JSONValue decoder \u2014 carrying values AppKit computed rather than values the test wrote: a constraint-solved frame, a labelColor resolved against the window's effective appearance, and a CoreAnimation layer model. Plus the socket file's own mode, read off the inode.",
       "effect": "ipc",
       "count": 3
     },
-    "note": "A SECOND SOCKET, AND THAT IS WHY IT IS ITS OWN CASE. Five of this item's other witnesses stand on the agent's AF_UNIX listener in Sources/ProctorAgent/Server.swift. This one stands on Sources/ProctorReflector/SocketServer.swift — a different Darwin.bind/listen/accept, in a different target, embedded in other people's applications and taking no dependency on the agent. Folding it in would let one listener's silence hide behind the other's noise. DRIVEN FROM THE PRODUCTION ENTRY POINT: ProctorReflector.start(socketPath:) is the one-line adoption API an app calls from applicationDidFinishLaunching. It binds, listens, chmod 0600s and serves on its own concurrent queue. THE CLIENT SHARES NOTHING WITH THE SERVER: a raw Darwin.socket/connect in the test frames the 4-byte big-endian length prefix by hand and decodes the reply with JSONSerialization. Neither the target's Frame encoder nor its JSONValue decoder participates in the reading. One request per connection, so a reply is an accept. COUNT ONE, three answered connections — ping, revision and hierarchy, each on its own descriptor. The ping's pid is read by the server out of its own process and the request never carried it; the socket's mode is read off the inode with FileManager and comes back 0600. COUNT TWO, three resolved nodes: NSView, NSTextField, NSTextFieldSimpleLabel. THE RESOLVED HALF, WHICH IS WHAT REQ-023 ACTUALLY CLAIMS, and none of it is a value the test wrote. The window is built with Auto Layout and no explicit child frame. GEOMETRY: the label came back at (x 22.0, y 272.0, w 110.5, h 16.0). The width is AppKit's measurement of the string in the system font. The x is NOT the constraint's constant of 24 — NSTextField's alignment rect is inset from its frame, so the solver satisfies the leading constraint on the alignment rect and the frame lands to its left, which is the clearest evidence in this case that the number came back from AppKit rather than from the request. y + h = 288 is the relation the solver produced over a height nothing in the test named (content 320 minus a top inset of 32). COLOUR: labelColor resolved against the window's effective appearance to #FFFFFF, catalog System, name labelColor — the test never sets textColor. LAYER: the content view's CALayer model carried backgroundColor, borderWidth, cornerRadius, opacity and shadowRadius, all CoreAnimation's. CONSTRAINTS: two, leading and top, both active, read back off the common ancestor — which is where AppKit installs a constraint between two views, and the reason the case reads the content node rather than the label's. AN INSTRUMENT FAULT CAUGHT BEFORE IT COULD READ ZERO FOR A STRUCTURAL REASON: the first run asked for \"constraints\": true and got no constraints key at all, because Runtime.decode(options:) reads \"includeConstraints\". A constraints assertion on that request would have failed for a wire-protocol reason and been read as a product one. THE CEILING, RECORDED RATHER THAN IMPLIED: server and client are the same process, so what is witnessed is a real AF_UNIX round trip through the kernel and a real AppKit walk, not a cross-process one. The agent ships NullReflectorBridge, so there is no in-repo production client to drive this from a second process, and writing one would be building the subject rather than witnessing it. PORTABLE FLOOR: no kernel socket tracer, no dtrace, no eslogger — this suite has no privilege for one. Package.swift gains ProctorReflector on ProctorAgentTests' dependency list and nothing else: a build-graph edge, not a behaviour change. The Reflector compiles to nothing without DEBUG or PROCTOR_REFLECTOR and scripts/build-app.sh already fails a release artifact carrying it."
+    "note": "A SECOND SOCKET, AND THAT IS WHY IT IS ITS OWN CASE. Five of this item's other witnesses stand on the agent's AF_UNIX listener in Sources/ProctorAgent/Server.swift. This one stands on Sources/ProctorReflector/SocketServer.swift \u2014 a different Darwin.bind/listen/accept, in a different target, embedded in other people's applications and taking no dependency on the agent. Folding it in would let one listener's silence hide behind the other's noise. DRIVEN FROM THE PRODUCTION ENTRY POINT: ProctorReflector.start(socketPath:) is the one-line adoption API an app calls from applicationDidFinishLaunching. It binds, listens, chmod 0600s and serves on its own concurrent queue. THE CLIENT SHARES NOTHING WITH THE SERVER: a raw Darwin.socket/connect in the test frames the 4-byte big-endian length prefix by hand and decodes the reply with JSONSerialization. Neither the target's Frame encoder nor its JSONValue decoder participates in the reading. One request per connection, so a reply is an accept. COUNT ONE, three answered connections \u2014 ping, revision and hierarchy, each on its own descriptor. The ping's pid is read by the server out of its own process and the request never carried it; the socket's mode is read off the inode with FileManager and comes back 0600. COUNT TWO, three resolved nodes: NSView, NSTextField, NSTextFieldSimpleLabel. THE RESOLVED HALF, WHICH IS WHAT REQ-023 ACTUALLY CLAIMS, and none of it is a value the test wrote. The window is built with Auto Layout and no explicit child frame. GEOMETRY: the label came back at (x 22.0, y 272.0, w 110.5, h 16.0). The width is AppKit's measurement of the string in the system font. The x is NOT the constraint's constant of 24 \u2014 NSTextField's alignment rect is inset from its frame, so the solver satisfies the leading constraint on the alignment rect and the frame lands to its left, which is the clearest evidence in this case that the number came back from AppKit rather than from the request. y + h = 288 is the relation the solver produced over a height nothing in the test named (content 320 minus a top inset of 32). COLOUR: labelColor resolved against the window's effective appearance to #FFFFFF, catalog System, name labelColor \u2014 the test never sets textColor. LAYER: the content view's CALayer model carried backgroundColor, borderWidth, cornerRadius, opacity and shadowRadius, all CoreAnimation's. CONSTRAINTS: two, leading and top, both active, read back off the common ancestor \u2014 which is where AppKit installs a constraint between two views, and the reason the case reads the content node rather than the label's. AN INSTRUMENT FAULT CAUGHT BEFORE IT COULD READ ZERO FOR A STRUCTURAL REASON: the first run asked for \"constraints\": true and got no constraints key at all, because Runtime.decode(options:) reads \"includeConstraints\". A constraints assertion on that request would have failed for a wire-protocol reason and been read as a product one. THE CEILING, RECORDED RATHER THAN IMPLIED: server and client are the same process, so what is witnessed is a real AF_UNIX round trip through the kernel and a real AppKit walk, not a cross-process one. The agent ships NullReflectorBridge, so there is no in-repo production client to drive this from a second process, and writing one would be building the subject rather than witnessing it. PORTABLE FLOOR: no kernel socket tracer, no dtrace, no eslogger \u2014 this suite has no privilege for one. Package.swift gains ProctorReflector on ProctorAgentTests' dependency list and nothing else: a build-graph edge, not a behaviour change. The Reflector compiles to nothing without DEBUG or PROCTOR_REFLECTOR and scripts/build-app.sh already fails a release artifact carrying it."
+  },
+  {
+    "id": "CASE-0072",
+    "req": "REQ-046",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/census-control.txt"
+    ],
+    "armed": true,
+    "armedBy": "This case IS the arming. --seed-strengthen is the skill's own arming rule turned on its own gate: it strengthens a requirement's declared constraint to one the registry cannot satisfy and requires the census to go red. Both directions read before=clear after=red, exit 0.",
+    "note": "PRO-0080 A1/A2. The census control run in both directions, first run ever against this campaign. REQ-017 (effect subprocess, the requirement whose witness PRO-0077 built and merged) and REQ-001 (classed none). Verbatim transcript in the evidence file, not summarised. PRECONDITION CHECKED RATHER THAN ASSUMED: _census_clear is not(unclassed or uncensused), so if the census were already red then after would be red for a reason the mutation did not cause and the tool would still print 'the gate bites'. Read immediately before: unclassed examined=45 findings=0, uncensused examined=22 findings=0, gate exit 0. The before=clear in both outputs is therefore load-bearing and measured. RESTORATION MEASURED, NOT CLAIMED: sha256 of inventory.json is 9215d5be401c61b55d3a85ef697279dc4f99dd389e6ce0226b232a7bdb225885 before the first run and after the last, and git diff is empty."
+  },
+  {
+    "id": "CASE-0073",
+    "req": "REQ-046",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/census-control.txt",
+      "scripts/campaign/seed_unclass.py"
+    ],
+    "armed": true,
+    "armedBy": "Both arms of the control were watched. It bites on REQ-017 (unclassed 0 findings to 1, exit 0) and REFUSES on REQ-011 (exit 2), whose text names no effect the vocabulary matches, because scoring that absent finding as a red would pass the control on a tautology. A control that cannot refuse is the thing being guarded against.",
+    "note": "PRO-0080 A3, and it exists because CASE-0072 passing did not mean what it looked like it meant. The census has two exact passes at requirement level. --seed-strengthen sets effect to packet-filter and pops provider, which IS the uncensused predicate, so it fires uncensused and only uncensused whatever the requirement's starting class. Decomposed per pass: REQ-017 seeded gives unclassed 0 / uncensused 1; REQ-001 seeded gives unclassed 0 / uncensused 1. So after the shipped control ran green, unclassed was still a pass reporting examined=45 findings=0 that nothing had watched go red, which is the position the control exists to get a gate out of, surviving the control. Recorded as DEF-030. scripts/campaign/seed_unclass.py is the missing direction: it strengthens the specification rather than the census record by removing a requirement's effect field, and requires unclassed to flag it. It is a separate script rather than a patch to vacuity-check.py because that file lives in a plugin cache this repo does not own and a fix there is reverted by the next plugin update with nothing saying so. Registry restored byte-for-byte, verified by sha256 rather than asserted."
+  },
+  {
+    "id": "CASE-0074",
+    "req": "REQ-047",
+    "surface": "SURF-002",
+    "oracle": "metamorphic",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/mutation-agent.json",
+      "docs/test-campaign/evidence/mutation-agent.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutate_swift.py refuses to start unless the suite is green before any mutation, because without that a suite already failing reports every mutant as killed and returns a 0% survival rate that means nothing. Baseline green was printed before the first mutant.",
+    "note": "PRO-0080 A4. The first mutation sample ever generated in ProctorAgent. PARTIAL BY DENOMINATOR AND SAID SO: 24 mutants run of a pool of 3,189 sites across all 84 files of the package, seed 20260821, 3,165 sites unrun. That is 0.75% of the surface. 19 SURVIVED, 5 scored killed, 0 unbuildable. TWO OF THE FIVE KILLS ARE NOT TRUSTWORTHY: SessionActivate.swift:166 and UnlockBroker.swift:110 both scored at exactly 600.0s, which is the timeout, and the runner scores a timeout as killed. Load average reached 271 during the run (22.92 at start, 271.39 at end, read off evidence/mutation-agent.txt lines 2-3). CORRECTED: this note first read 11.20 at start, contradicting its own evidence file, and was carried as DEF-055 until PRO-0091 fixed it. The honest kill count is 3 of 22 scored, giving a survival rate of 19/22 = 86.4%, against ProctorCore's 50%. Survivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor, so all 19 stand. NO KILL BELOW 600s IS TIMEOUT-SCORED: the three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so they are real test failures rather than starved runs. Disposition of the 19: 5 killed by new tests (CASE-0075..0079), 1 equivalent (SessionMaestro.swift:242), 13 uncovered-by-lane or unreachable from a headless seam, each with its reason in REPORT.md. The figure is deliberately NOT copied into .warrant/suite-health.json, where mutation_measured: false is correct and means warrant's own assay has not run."
+  },
+  {
+    "id": "CASE-0075",
+    "req": "REQ-047",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied by hand after the test was written: KeyCodes.swift:18 'n': 45 to 'n': 46. The named test went red with 2 issues, (actual -> 46) == (CGKeyCode(expected) -> 45) and (Set(codes).count -> 25) == 26. Mutant reverted, test green.",
+    "note": "PRO-0080 A5/A6, survivor 21. Nothing checked the keycode table against anything, so a letter could be remapped and 1,818 tests stayed green. With the mutation n and m both map to 46, meaning proctor_act typing 'n' presses M. The oracle is Carbon's own kVK_ANSI_* constants rather than a second copy of the table, so the test is not asserting a value it supplied itself, which is how DEF-019 shipped. Distinctness over all 26 letters is asserted separately because that is the property the mutation actually broke, and a count floor of 26 guards against a loop that examined nothing."
+  },
+  {
+    "id": "CASE-0076",
+    "req": "REQ-047",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied: RunIdentity.swift:30 prefix(12) to prefix(13). The named test went red: (id.count -> 13) == 12. Reverted, green.",
+    "note": "PRO-0080 A5/A6, survivor 2. The run id is written into every record of every tool call and nothing asserted its shape. Length checked against the contract in the doc comment, alphabet against the source it is drawn from (a hyphen-stripped lowercased UUID is hex), and 64 mints required to be 64 distinct ids so a constant could not satisfy the first two."
+  },
+  {
+    "id": "CASE-0077",
+    "req": "REQ-047",
+    "surface": "SURF-006",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied: PixelCompare.swift:38 stride by: 4 to by: 5. The named test went red: (abs(mean - delta / 255.0) -> 0.029411764705882353) < 0.0005. Reverted, green.",
+    "note": "PRO-0080 A5/A6, survivor 18. meanDifference backs the regionMatches assertion, so it is the instrument a caller's tolerance is measured in. At stride 5 it reads misaligned channels and visits four fifths of the pixels; every existing test compared images that were either identical or wildly different, both of which survive a broken stride. THE EXPECTED VALUE IS DERIVED, NOT COPIED: two uniform images differing by delta on all three colour channels have a mean absolute channel difference of exactly delta/255 whatever the pixel count, so the oracle comes from the definition rather than from the loop. An identical pair is required to read 0.0 in the same test, so the assertion cannot be satisfied by an instrument returning a constant."
+  },
+  {
+    "id": "CASE-0078",
+    "req": "REQ-047",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied: UnlockBroker.swift:51 contactCount += 1 to += 2. The named test went red with 3 issues, counting 2, 4 and 6 where 1, 2 and 3 were expected. Reverted, green.",
+    "note": "PRO-0080 A5/A6, survivor 17. contactCount is how proctor_unlock status proves the login-path mechanism actually reached the broker: os_log from a launchd agent is not reliably visible, so this counter is the evidence. A counter that double-counts reports two handshakes where one happened, and nothing watched it. The test uses a fresh UnlockTurn rather than .shared so the count starts at a known zero and no other test can move it."
+  },
+  {
+    "id": "CASE-0079",
+    "req": "REQ-047",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/mutation-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutant re-applied: RunHUDContentView.swift:830 ms < 1000 to ms <= 1000. The named test went red: (RunHUDContentView.duration(1000) -> \"1000ms\") == \"1.0s\". Reverted, green.",
+    "note": "PRO-0080 A5/A6, survivor 14. The HUD's duration form. At the boundary the mutation prints 1000ms where the mock's form is 1.0s, and the existing tests only ever passed values well clear of the boundary. This is the same shape of untested boundary that RunHUDGate.onSegment is already on record for, except that this one is killable rather than equivalent."
+  },
+  {
+    "id": "CASE-0100",
+    "req": "REQ-049",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "PRO-0081 closing PRO-0067's carried A3: the disabled next button is present in the tree in every state where it is disabled. THE CLAUSE HAD NO POPULATION UNTIL THIS ITEM. Walkthrough.swift carried no `.disabled(` modifier on any control, so the set of states in which the primary is disabled was empty and the clause asked as written would have read green having measured nothing. The design of record mandates the behaviour by name (design/surfaces/proctor-surfaces.html, walkthrough/permissions, captioned 'Continue is disabled and visible rather than absent'), so the behaviour was built, the gap recorded as DEF-036, and the clause then asked over a population that is no longer empty. WHAT WAS OBSERVED. A Developer ID signed .build/Proctor.app (Authority=Developer ID Application: Luke Rhodes (H4HGFL52W7), TeamIdentifier=H4HGFL52W7) ran as pid 61666 with PROCTOR_SOCKET naming nothing, so its report is nil and every grant reads false \u2014 which is what puts the flow in the state the design draws disabled on a machine that holds the real grants. /Applications/Proctor.app was untouched. The reader is the INSTALLED proctor-agent, pid 76491, a different process sharing no memory with the target, resolving the control by AXIdentifier over AXUIElement. On the permissions step it read identifier proctor.walkthrough.action.primary, role AXButton, label 'Connect a model', enabled FALSE, frame 127x24 at (1431,781), actions [AXPress]. Present, sized, and disabled \u2014 not absent. THE COUNT is 1 state asked in which the control is disabled, 1 in which it was present, 0 in which it was absent; the Core rule disables it in 3 of 16 input combinations and 1 of those 3 is reachable from this flow without an agent. TWO-WAY ON ONE BUILD: the same read of the same identifier by the same process returned enabled TRUE on the intro step one AXPress earlier, with the label changing from 'Set up permissions' and the frame width from 140. A field pinned to false could not have produced that. THE PICTURE WAS READ, NOT NAMED: evidence/shots/a3-walkthrough-permissions-disabled.png was cropped at the control's own frame and shows 'Connect a model' drawn in a muted fill with a greyed label beside an undimmed 'Skip setup' \u2014 so the visual half of the clause holds too, which AXEnabled alone does not carry. LANE CEILING: AXEnabled is the app's own exported attribute. A third process reading it establishes what the accessibility plane projects across a process boundary, which is what a screen reader and Proctor itself both act on; it is not a kernel-level witness and is not claimed as one.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a3-tree-read.json",
+      "evidence/shots/a3-walkthrough-permissions-disabled.png",
+      "docs/test-campaign/evidence/PRO-0081/a3-negative-arm.json"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0101: the same measurement against a build with the .disabled modifier removed reads enabled TRUE in the identical state",
+    "witness": {
+      "recorder": "the installed proctor-agent (pid 76491) reading pid 61666's accessibility tree by AXIdentifier with its own AX client",
+      "effect": "ipc",
+      "count": 1
+    }
+  },
+  {
+    "id": "CASE-0101",
+    "req": "REQ-049",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "The negative arm for CASE-0100, built because an out-of-family review (grok-4.6, xhigh then high) objected by name: implementing the missing .disabled() and then witnessing it manufactures the evidence. The objection is answered by measurement. Sources/ProctorUI/Walkthrough.swift had the four-line .disabled(!WalkthroughFlow.primaryEnabled(...)) modifier removed and nothing else changed; scripts/build-app.sh rebuilt and Developer ID signed .build/Proctor.app from that source; the app was launched the same way, advanced to the permissions step by the same AXPress, and read by the same installed agent. It read identifier proctor.walkthrough.action.primary, label 'Connect a model', frame 127x24 at (1431,781) \u2014 IDENTICAL to the positive arm to the point \u2014 and enabled TRUE. Same reader, same identifier, same state, same geometry; one field differs and one line of source differs. That is what establishes the instrument reads the control rather than the change, and it is simultaneously the measurement of DEF-036: before this item the design-mandated disabled state rendered enabled. The source was restored from the pre-arm copy afterwards and the bundle rebuilt from it.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a3-negative-arm.json"
+    ],
+    "armed": true,
+    "armedBy": "this case IS the arming of CASE-0100; the two arms differ in exactly one line of source",
+    "witness": {
+      "recorder": "the installed proctor-agent (pid 76491) reading pid 45231's accessibility tree by AXIdentifier",
+      "effect": "ipc",
+      "count": 1
+    }
+  },
+  {
+    "id": "CASE-0102",
+    "req": "REQ-048",
+    "surface": "SURF-002",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0081 closing PRO-0066's carried A2: every user-facing string comes from StatusSurface, and a grep for a quoted string literal in MainWindow.swift outside an identifier returns nothing. The clause's own grep is scripts/campaign/status_literals.py, which decides the 'outside an identifier' half by SYNTACTIC POSITION and never by reading the string, so the distinction stays mechanical. It is DEFAULT-DENY: symbol (systemName:/systemImage:/icon:), system (URL, sysctlbyname, appendingPathComponent, launchctl, openWindow(id:), forAuxiliaryExecutable:, an inline arguments array), key (a case label or the right side of ==/!=), punctuation (nothing but separators once escapes and interpolation segments are stripped), interpolated (nothing but an interpolation), and display for EVERYTHING ELSE. A positive 'does this look like prose' rule would pass silently for any rendering construct nobody listed. BEFORE: 176 literals, 127 display, measured on git show ai/wave-9:Sources/ProctorUI/MainWindow.swift, committed here as evidence/PRO-0081/a2-wave9-MainWindow.swift. This case previously recorded 132 display and 44 identifiers. Those figures are not reproducible with any committed version of the instrument, which has exactly one commit (f8f0ed7) and reports 127 and 49 over the same two file versions, so they are corrected to what the instrument reports. AFTER: 45 literals, 0 display \u2014 16 symbol, 16 system, 1 key, 11 punctuation, 1 interpolated. The denominator is printed on every run. ONE WORDING DID CHANGE AND HAS BEEN RESTORED: a fresh verifier found the Connect section heading had gone from \"Connect a model to it\" (wave-9 MainWindow.swift:695) to \"Connect a model\" in StatusSurface.Copy.connectHeading. A2 is a move rather than a rewrite, so the original wording is back. With it restored, every one of the 127 wave-9 display literals resolves verbatim somewhere in Sources/ except six that interpolate a value and could not survive being moved into a function unchanged. Otherwise no wording changed: every string moved character for character into StatusSurface.Copy, or into Core beside the value it describes where it was an identifier returned from a computed property (StatusChecks.settingsPane, Wire.shimPath, Wire.launchdDomain, StatusChecks.ToolRow.Tone.symbol). ORACLE CORRECTED BY PRO-0091: this case recorded `static-analysis`, which was not on campaign.py's rung set, so it counted `unrated` \u2014 the bucket meaning the tool does not know what the case checked. It now records `source-analysis`, a rung parallel to the product ladder rather than a step on it (test-campaign 0.9.4), and carries the analyzer and the examined count that rung owes. What it checks is unchanged; DEF-057.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a2-arming.txt",
+      "docs/test-campaign/evidence/PRO-0081/a2-wave9-MainWindow.swift",
+      "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json",
+      "docs/test-campaign/evidence/PRO-0081/a2-baseline-pre-comparison.txt",
+      "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0103 and CASE-0104",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py over Sources/ProctorUI/MainWindow.swift",
+      "examined": 45
+    }
+  },
+  {
+    "id": "CASE-0103",
+    "req": "REQ-048",
+    "surface": "SURF-002",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "The classifier is proved able to fail before its passing is trusted. Two mutations of the converted file, each one line: a sentence put back into a Text( is reported as 'VIOLATION 74 Text() \"Proctor lets a model test a Mac app.\"' with exit 1, and a label put back into a Button( is reported as 'VIOLATION 784 Button() \"Open log\"' with exit 1. The unmodified file reports display 0 over 45 and exits 0 in the same run, so the three readings come from one instrument in one session rather than from three descriptions of one. ORACLE CORRECTED BY PRO-0091: this case recorded `static-analysis`, which was not on campaign.py's rung set, so it counted `unrated` \u2014 the bucket meaning the tool does not know what the case checked. It now records `source-analysis`, a rung parallel to the product ladder rather than a step on it (test-campaign 0.9.4), and carries the analyzer and the examined count that rung owes. What it checks is unchanged; DEF-057.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a2-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "this case IS the arming run for CASE-0102",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py over two one-line mutations of Sources/ProctorUI/MainWindow.swift and the file as written",
+      "examined": 45
+    }
+  },
+  {
+    "id": "CASE-0104",
+    "req": "REQ-048",
+    "surface": "SURF-002",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "The evasion the clause is most vulnerable to, named by an out-of-family review and then closed. grok-4.6 pointed out that a printed count is not a threshold: 'display 0' stays green if the file is emptied into a second file, and counts collide where sets do not. MEASURED: with enum Actions removed from MainWindow.swift, the checker reports 25 literals, display 0, and EXITS 0 \u2014 the clause passes over a file that has had its machinery taken out from under it. The identifier set is therefore committed as evidence/PRO-0081/a2-identifier-baseline.json and compared as a set. The same gutted file against that baseline reports 14 identifiers gone by name ('-k', '/bin/launchctl', '/bin/sh', 'bootout', 'bootstrap', 'hw.optional.arm64', 'install', 'kickstart' x3, 'print', 'proctor-shim', the Settings URL, the log path, the plist path, and 'gui/\u2026/\u2026' x5) and exits 1. The clause is about moving the copy out, not the machinery, and the gate now says so. CORRECTED AFTER VERIFICATION: the snapshot this case gated against, a2-identifier-baseline.json, was written from the POST-conversion file, so the comparison could only ever print '0 identifier(s) gone, 0 new'. It compared the final file to itself, which is the vacuity shape this campaign exists to catch, in this clause's own instrument. The baseline is now taken from the PRE-conversion file, git show ai/wave-9:Sources/ProctorUI/MainWindow.swift, byte-identical at the branch merge-base 346edfa and at f8f0ed7^, written to a2-identifier-baseline-pre.json at 49 identifier literals. Against it the delivered file reports 4 identifier(s) gone, 0 new and EXITS 1: key 'Accessibility', key 'Automation', key 'Screen Recording' and punctuation newline. That is a real finding rather than noise. Actions.pane(for:) moved to StatusChecks.settingsPane, where the three grant names became the StatusChecks constants that already carried the same strings at wave-9, and the newline separator travelled into StatusSurface.swift:186 with the 'Looked in:' sentence it joins. A decision function moved out of the view alongside the copy, which is a widening past A2 as written; it is recorded here rather than tuned away, and the instrument's buckets, exit codes and comparison were left untouched. a2-identifier-baseline.json is kept as the FORWARD guard on later edits to the file and is no longer cited as evidence that this conversion preserved the identifier set. THE GATE HAS NOW BEEN WATCHED FAILING: on a scratch copy with one system identifier ('/bin/launchctl') replaced by a symbol reference, the forward baseline goes from 0 gone/exit 0 to 1 gone/exit 1 naming the literal, the pre baseline goes from 4 gone to 5, and restoring the copy returns exit 0 with the source file's md5 unchanged throughout (evidence/PRO-0081/a2-baseline-bite.txt). ORACLE CORRECTED BY PRO-0091: this case recorded `static-analysis`, which was not on campaign.py's rung set, so it counted `unrated` \u2014 the bucket meaning the tool does not know what the case checked. It now records `source-analysis`, a rung parallel to the product ladder rather than a step on it (test-campaign 0.9.4), and carries the analyzer and the examined count that rung owes. What it checks is unchanged; DEF-057.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a2-arming-baseline.txt",
+      "docs/test-campaign/evidence/PRO-0081/a2-baseline-pre-comparison.txt",
+      "docs/test-campaign/evidence/PRO-0081/a2-baseline-bite.txt",
+      "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json",
+      "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json"
+    ],
+    "armed": true,
+    "armedBy": "the gutted-file run is itself the negative arm, and it is recorded with the exit code from both directions",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py --json against evidence/PRO-0081/a2-identifier-baseline.json, compared as a set",
+      "examined": 45
+    }
+  },
+  {
+    "id": "CASE-0105",
+    "req": "REQ-048",
+    "surface": "SURF-002",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "THIS CASE PASSES ON A MEASUREMENT OF A GAP, not on the gap being closed: what it establishes is the scope of A2's green, and the gap it found is open as DEF-039. What A2's green does NOT cover, measured rather than left implicit. The clause names one file. Its siblings in Sources/ProctorUI were run through the same classifier and are reported without being gated: HistoryWindow.swift 71 user-facing of 91 examined, ProctorUIApp.swift 53 of 68, Walkthrough.swift 49 of 56, HistoryModel.swift 46 of 47, AgentModel.swift 39 of 47 \u2014 258 in total. MenuBarCharacter.swift (1 of 1) and Motion.swift (0) are already clean. Recorded as DEF-039 and as `partial` rather than `pass`, because a case that reported this surface green would be claiming the file's clause covered the window's copy. ORACLE CORRECTED BY PRO-0091: this case recorded `static-analysis`, which was not on campaign.py's rung set, so it counted `unrated` \u2014 the bucket meaning the tool does not know what the case checked. It now records `source-analysis`, a rung parallel to the product ladder rather than a step on it (test-campaign 0.9.4), and carries the analyzer and the examined count that rung owes. What it checks is unchanged; DEF-057.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a2-sibling-scope.txt"
+    ],
+    "armed": true,
+    "armedBy": "the same classifier that reports 0 for MainWindow.swift reports non-zero for five of its siblings in the same run, so the zero is a property of the file rather than of the instrument",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py over the seven siblings of MainWindow.swift in Sources/ProctorUI",
+      "examined": 310
+    }
+  },
+  {
+    "id": "CASE-0106",
+    "req": "REQ-049",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "raster-visual",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "The visual half of A3, which AXEnabled does not carry. The clause's reason \u2014 'a control that disappears makes the layout jump and teaches the user the step does not exist' \u2014 is about what a person sees, and an accessibility attribute reading false is not by itself evidence that the control was drawn. So the published capture was OPENED rather than trusted by its filename. evidence/shots/step-a3-walkthrough-primary-disabled.png is 1280x1144 with 8,256 distinct colours, so it is not the empty-frame shape DEF-025 described, where 2,942,720 pixels all read RGBA(0,0,0,0) under status complete. Cropped at the control's own frame (127x24 at (1371,567), window origin (898,35), scale 2) it shows 'Connect a model' drawn in place with a flat grey fill and a low-contrast label, beside an undimmed 'Skip setup'; the control holds its full width and the footer does not close up around it. Crop: evidence/PRO-0081/a3-primary-disabled-crop.png. RECORDED SO A FIDELITY PASS KNOWS WHICH TREATMENT IT IS LOOKING AT: an earlier run of the identical state, captured while the window was key, drew the same control in a muted accent fill instead. Both are macOS disabled treatments and the difference is key-window state, not a difference in the control. This case does not claim the rendered appearance matches the design pane \u2014 that is a fidelity comparison at its own rung and it was not run here.",
+    "capture": {
+      "method": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, off this Mac's display server, taken through capture_with_manifest.py with the state confirmed by proctor_find before the shutter",
+      "frameStatus": "complete"
+    },
+    "evidence": [
+      "evidence/shots/step-a3-walkthrough-primary-disabled.png",
+      "evidence/PRO-0081/a3-primary-disabled-crop.png"
+    ],
+    "lineage": "evidence/PRO-0081/a3-lineage-arming.txt \u2014 the seed-swap arming for this capture's tie",
+    "armed": true,
+    "armedBy": "capture-lineage.py --seed-swap STEP-A3-PRIMARY-DISABLED against SURF-009 and against SURF-008: both CAUGHT with 2 hard failures each, so the tie pass reads the manifest rather than the filename"
+  },
+  {
+    "id": "CASE-0130",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A1. `Session.setPolicyStore(PolicyStore(directory:))` then `configurePolicy(allow:block:sensitive:)`: policy.json appears under the injected root. Read back through a SECOND PolicyStore over the same directory rather than through the session that wrote it, and compared against the `allow`/`block` arrays the tool itself returned rather than against the arguments this test passed in \u2014 so what is asserted is that the file on disk and the answer the caller got describe the same policy, not that a value survived a round trip to itself. Test: PolicyStoreSeamTests.configureWritesTheInjectedRoot.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0131's arming run, which shows the same suite failing when the seam is removed"
+  },
+  {
+    "id": "CASE-0131",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A1, and the brief's own proof obligation: DO NOT TRUST THE SEAM, MEASURE IT. The operator's real file \u2014 ~/Library/Application Support/app.fledgeling.procter/policy/policy.json, 52 bytes, mtime 1787282863, sha256 0c8dcc7f659233bb084de793108ababf973bfc5cb2cbbd6964209a60ed01524d \u2014 is read for existence, bytes and modification time immediately before and immediately after a configure through an injected store, and the two readings are compared. THE READER IS ARMED IN THE SAME CASE: the identical FileWitness, over the identical call, reports the injected file going from absent to written, so 'unchanged' is a measurement rather than a reader that says unchanged whatever happens. Not a write-and-restore: nothing is restored because nothing is written, so a run killed mid-test leaves the operator's policy as it found it. Test: PolicyStoreSeamTests.theOperatorsPolicyIsNotTouched.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/operator-policy-before.txt",
+      "docs/test-campaign/evidence/PRO-0089/operator-policy-after.txt",
+      "docs/test-campaign/evidence/PRO-0089/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "the arming run in evidence/PRO-0089/arming.txt: with the interlock disabled and operatorDirectory redirected to a decoy under /tmp, this assertion fails \u2014 'Expectation failed: (operatorBefore \u2192 38 bytes, modified 2026-08-21 07:59:30) == (operatorAfter \u2192 94 bytes, modified 2026-08-21 08:00:00)'. The real file was never in the path while the seam was off."
+  },
+  {
+    "id": "CASE-0132",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A2, the floor under the injection. A Session built with NO setPolicyStore call at all \u2014 the case that used to write the operator's file and the case a future test will forget \u2014 configures a policy, and the operator's file is unchanged across it. It did write: the session's own store directory holds a policy.json, that directory is not under PolicyStore.operatorDirectory, and it is under the named test fallback root. Asked of the session's own store rather than of PolicyStore.live, because in a test process every read of `live` mints a fresh directory. Test: PolicyStoreSeamTests.theInterlockCatchesAnUninjectedSession.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/arming.txt",
+      "docs/test-campaign/evidence/PRO-0089/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "the same arming run: with `guard AuditLog.isTestProcess` forced false, this case reports 'an un-injected session reached the operator's policy' and the fallback-prefix assertion inverts"
+  },
+  {
+    "id": "CASE-0133",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A2, the anti-vacuity check. Without it CASE-0132 could pass because the interlock never engaged and the operator simply has no policy file \u2014 a zero from an instrument that could not have reported anything else. Asserts the interlock is active in this process (AuditLog.isTestProcess), that PolicyStore.live is not under the operator's directory, and that the path being watched is the agent's own: derived from Wire.bundleIdentifier, last component 'policy', under the current user's home. `procter` is not a typo and SwitchStore.swift records why. Test: PolicyStoreSeamTests.theInterlockIsArmed.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "the arming run: with operatorDirectory redirected, two of this case's four assertions fail, including the home-directory prefix"
+  },
+  {
+    "id": "CASE-0134",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A1, the contract the statics used to carry, now on the instance: an absent policy loads empty (no lists means the gate allows every app, which is the pre-feature behaviour), a save round-trips through a second store over the same directory, and a store over a different directory is a different policy \u2014 which is the whole point of the root being told rather than assumed. Plus PolicyStoreSeamTests.theFallbackIsNotSharedBetweenSessions, the regression guard for DEF-065: two un-injected sessions get different directories, and the second loads an empty policy after the first configured one.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "DEF-065 is the arming: one shared fallback directory turned the gate red with 67 issues across 11 suites, all policyDenied on apps the failing tests never named"
+  },
+  {
+    "id": "CASE-0135",
+    "req": "REQ-056",
+    "surface": "SURF-006",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A3, closing DEF-029/DEF-051. The old oracle was `#expect(elapsed < 5.0)` around a real call and it failed six recorded times in one wave \u2014 5.6s, 6.1s, 6.58s, 8.13s, 10.25s, 14.73s \u2014 while the product answered correctly every time. The bound arm is now a told dependency: ScreenRecordingProbe(timer:) defaults to the Task.sleep it always used, and this case injects a timer that records what it was asked to wait for. Against a platform call parked on a continuation nobody resumes, the answer is `unconfirmed` AND the timer was asked for GrantProbe.bound. Nothing in the test writes that constant, so a probe bounded by anything other than its own bound fails. Runs in 0.001s and reads no clock. THE BOUND IS NOT RAISED: GrantProbe.bound is still 1.5. Test: ScreenRecordingProbeWiringTests.aParkedCallIsEndedByTheBound.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/arming.txt",
+      "docs/test-campaign/evidence/PRO-0089/under-load.txt"
+    ],
+    "armed": true,
+    "armedBy": "with `await timer(bound)` changed to `await timer(bound + 1)`: 'Expectation failed: (asked.seconds \u2192 2.5) == (GrantProbe.bound \u2192 1.5)'"
+  },
+  {
+    "id": "CASE-0136",
+    "req": "REQ-056",
+    "surface": "SURF-006",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A4, the other half of the race pinned the same way round. A timer that never returns is what a healthy platform call looks like from the bound's side, and the answer must still come back: a probe that waited for its timer would cost every doctor poll the full 1.5s on a Mac where the grant is fine. Deterministic \u2014 the losing arm is a continuation nobody resumes, so there is no timing to lose. Test: ScreenRecordingProbeWiringTests.anAnswerBeatsABoundThatNeverFires. Alongside it, ScreenRecordingProbeWiringTests.theDefaultTimerStillEndsAParkedCall keeps the un-substituted timer against the same parked call and asserts only that it comes back at all, which is the difference from the hang it replaced; it reads no clock, so a loaded machine makes it slower and never makes it fail.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/under-load.txt"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0135's arming exercises the same `bounded` race from the other side"
+  },
+  {
+    "id": "CASE-0137",
+    "req": "REQ-056",
+    "surface": "SURF-006",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A4. The seams are worth nothing if production does not take the real one, so this asserts ScreenRecordingProbe.live.bound == GrantProbe.bound and that the constant is 1.5 \u2014 the number proctor_doctor's own remedy text quotes back to an operator ('did not answer', '1.5s'), which is asserted separately in theRemedyIsNotALie. Test: ScreenRecordingProbeWiringTests.theLiveProbeCarriesTheRealBound.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "a bound other than GrantProbe.bound on the live probe fails this directly; the same constant is cross-checked by the doctor remedy and schema cases in the same suite"
+  },
+  {
+    "id": "CASE-0138",
+    "req": "REQ-056",
+    "surface": "SURF-003",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A5, the second wall-clock assertion converted with the first. CuaLineReader now takes its monotonic clock \u2014 the DispatchTime source it already used, made injectable \u2014 and the deadline case drives it. TWO ARMS THAT DISAGREE UNLESS THE DEADLINE IS REALLY JUDGED AGAINST THE INJECTED CLOCK. Stepping 100ms per reading against a 200ms budget: the reader throws timedOut, having read the clock at least three times, and the clock advanced past the budget \u2014 so it polled and came back before giving up rather than deciding once. Frozen at zero: the budget never runs down and a line written 300ms later is still served, which on the real clock against the same 200ms budget is a timeout. The old assertion, `#expect(Date().timeIntervalSince(started) < 2)`, said only that this Mac was fast. Tests: CuaLineReaderTests.silenceExpiresOnTheBudget and .aFrozenBudgetIsNeverSpent.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "with both now() call sites reverted to DispatchTime.now().uptimeNanoseconds: the stepping arm reports 'clock.count \u2192 0 >= 3' and 'clock.elapsed \u2192 0 >= 200000000', and the frozen arm reports 'Caught error: .timedOut'"
+  },
+  {
+    "id": "CASE-0139",
+    "req": "REQ-056",
+    "surface": "SURF-022",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A6. The population of wall-clock oracles, counted rather than sampled: scripts/campaign/wall_clock_census.py scans 117 swift files under Tests/, finds 38 lines mentioning a clock of any kind \u2014 the denominator, printed in full and never capped \u2014 and 0 assertions comparing a measured wall-clock time to a numeric literal. A clock a test injects and drives is deliberately not flagged; that is what this item moved the assertions onto. BEFORE BELIEVING THE ZERO: `--arm` runs the detector over both offenders as they stood at the merge base via `git show`, and requires it to find ScreenRecordingProbeWiringTests.swift:42 and CuaLineReaderTests.swift:107 before any census is trusted. It reports 'detector caught 2 of the 2 known offenders / ARMED'. This gate has already caught one silent zero: DEF-067, a first detector whose regex could not cross the parenthesis in timeIntervalSince(started) and so missed the very line it was written for while printing a clean zero. The brief's count of 'two other tests' is one more than the tree holds; two is the whole population. Rung corrected at merge: this case was written `static-analysis`, which is on no ladder, so campaign.py filed it `unrated`. PRO-0091 introduced `source-analysis` as a rung parallel to the ladder for exactly this shape, with two guards; REQ-056's effect is `none`, so the external-effect guard does not apply, and the analyzer and examined count the other guard requires are supplied from a live run rather than copied: 118 files / 42 clock sites / 0 offenders. The case's own evidence file records 117 and 38, captured at merge-base e506ea0e before the PRO-0087 merge added clock-mentioning lines and this branch added a file. The offender count, which is the claim, is 0 in both.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/wall-clock-census.txt"
+    ],
+    "armed": true,
+    "armedBy": "wall_clock_census.py --arm, over git show <merge-base>:<path> for both historical offenders",
+    "analyzer": "scripts/campaign/wall_clock_census.py",
+    "examined": "118 swift test files, 42 lines mentioning a clock (the denominator), 0 assertions comparing a measured wall-clock time to a literal"
+  },
+  {
+    "id": "CASE-0110",
+    "req": "REQ-053",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Single-flight removed from SignatureVerdictCache.verdict(for:) (the in-flight join replaced by an unconditional break). The named test went red: Expectation failed: (cache.verificationCount -> 15) == 1. Restored, green.",
+    "note": "PRO-0087. Fifteen concurrent Tasks, which is what the production path uses and what the async design makes safe: no caller blocks, so the test cannot be starved by the defect it measures. The injected verify holds the one verification open until all fifteen have been through identify, and the test asserts that they had, so a run where they did not arrive together fails rather than passing on a warm cache. The count comes from verificationCount, which the cache increments.",
+    "defects": [
+      "DEF-050"
+    ]
+  },
+  {
+    "id": "CASE-0111",
+    "req": "REQ-053",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Each of the eight sessions given its own SignatureVerdictCache, which is what ToolProbes did before PRO-0087. The named test went red twice: (cache.verificationCount -> 0) == 1 and (arrivals.count -> 8) == 1. Restored, green.",
+    "note": "PRO-0087. The same claim through the path that carries it in production: Session.doctor -> SessionDoctor -> ToolProbes.cuaSignature. Eight concurrent doctor calls, one verification between them, and every report still carries evidence == .signature so the sharing did not cost a report its answer.",
+    "defects": [
+      "DEF-050"
+    ]
+  },
+  {
+    "id": "CASE-0112",
+    "req": "REQ-054",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "ToolProbes.init's cuaSignature default put back to SignatureVerdictCache(). The named test went red twice, on both identity assertions: two independently built ToolProbes no longer held the same cache, and neither held SignatureVerdictCache.shared. Restored, green.",
+    "note": "PRO-0087. The scoping half of DEF-050, and its counterweight: single-flight inside one cache buys nothing while a cache is built per Session, and a hard singleton would close the seam every existing doctor test injects through. The third assertion is that a ToolProbes handed a cache holds that one.",
+    "defects": [
+      "DEF-050"
+    ]
+  },
+  {
+    "id": "CASE-0113",
+    "req": "REQ-053",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift"
+    ],
+    "armed": false,
+    "armedBy": "Not armed by re-introducing a shipped defect: the single-slot cache it guards against was correct while the cache was per-Session, so there is no prior state of this repo in which this test is red. It guards a regression the shared store newly makes possible.",
+    "note": "PRO-0087. A process-wide store is asked about more than one path, so a suite's scripted path and this machine's real cua-driver land in the same cache. A single slot would have them evicting each other and re-verifying on every alternation, which is the wedge again in different clothes. Five alternations between two identities cost two verifications.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0114",
+    "req": "REQ-035",
+    "surface": "SURF-012",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0087/run-ledger.md",
+      "docs/test-campaign/evidence/PRO-0087/wedge-before.txt",
+      "docs/test-campaign/evidence/PRO-0087/wedge-before-2.txt"
+    ],
+    "armed": true,
+    "armedBy": "The control is the unmodified tree at the same load on the same afternoon: four runs, one green, one carrying ForgedCall(answered: false, ok: false) with four REQ-035 issues, and an earlier attempt that hung outright and had to be killed after six minutes. The forging arm has therefore been watched failing on this machine, not only reported failing by PRO-0083. Independently re-measured by the verifying reviewer, who ran the forging arm 6 of 6 green on the fixed tree.",
+    "note": "PRO-0087. Whether REQ-035's forged-caller witness is reachable at all, measured as a rate rather than as a single run. PRO-0083 recorded three of five runs reporting answered: false. Corrected 2026-08-21 against the raw logs: the shipped fix is set 4 of the run ledger \u2014 10 runs (final-1.log to final-10.log), 10 completed, the forging arm answering on all 10, no run hanging. The discarded blocking fix is set 3 \u2014 10 runs, 9 completed with the forging arm answering on all 9, and one that hung and was sampled. This note previously said \"14 runs completed ... and no run hanging\"; no set has 14 runs in it, the figure conflated sets 3 and 4, and \"no run hanging\" was false of the pair taken together. The run ledger carries the failures that remain in set 3, which are DEF-051 rather than this path.",
+    "defects": [
+      "DEF-050",
+      "DEF-051"
+    ]
+  },
+  {
+    "id": "CASE-0115",
+    "req": "REQ-053",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt",
+      "docs/test-campaign/evidence/PRO-0087/wedge-after-blocking.txt"
+    ],
+    "armed": true,
+    "armedBy": "The blocking single-flight put back (waiters on an NSCondition, verification on the first caller's own thread). The named test went red: Expectation failed: (finishedBeforeTheVerificationLanded.current -> 0) == (unrelated -> 32). Zero of thirty-two unrelated tasks ran in twenty seconds while seventeen callers waited on one verification. Restored, green.",
+    "note": "PRO-0087. What a caller waiting on a verification costs the rest of the process: one more caller than the pool is wide, on a cold entry, with the verification parked, and thirty-two unrelated tasks that have to finish anyway. Deduplicating fifteen verifications to one closes the wasted work and not the wedge, because fifteen threads blocked waiting for one verification hold the cooperative pool exactly as fifteen threads running one did, and the pool is capped at the core count and does not replace a blocked worker. The watchdog runs on a thread of its own so that a regression is a red test rather than a hung suite. SCOPE, corrected 2026-08-21: this case discriminates whether waiters suspend or block, and nothing more. It previously claimed to be \"the case that decides whether DEF-050 is closed rather than reshaped\", which overstates it \u2014 a reviewer substituted Task.detached through a synchronous helper, putting the verification back on the cooperative pool, and this case stayed green. CASE-0116 measures that half and has been watched failing against that exact substitution.",
+    "defects": [
+      "DEF-050"
+    ]
+  },
+  {
+    "id": "CASE-0116",
+    "req": "REQ-053",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0087/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two substitutions, each watched red. (1) The verifier's own: the cache's dedicated Thread replaced by Task.detached routed through a synchronous helper. Expectation failed: !((verificationRanOn.current -> \"com.apple.root.default-qos.cooperative\").contains(\"cooperative\") -> true), and .contains(\"overcommit\") against the same value; 2 issues. In that same run CASE-0110 and CASE-0115 both passed, which is the gap this case exists to close. (2) DispatchQueue.global().async, the shape that reads as the fix and is bounded by the same cap: Expectation failed: (verificationRanOn.current -> \"com.apple.root.default-qos\").contains(\"overcommit\"); 1 issue. Restored, green.",
+    "note": "PRO-0087. Where the verification itself runs, read from libdispatch's own root-queue label rather than inferred from timing. Measured on this machine 2026-08-21: a Thread reads com.apple.root.default-qos.overcommit, a Task.detached reads com.apple.root.default-qos.cooperative, and DispatchQueue.global() reads com.apple.root.default-qos. The caller's label is asserted first as the instrument check, because \"not on the cooperative pool\" means nothing unless the probe reports that pool when it is looking at it. What this does not measure: that a verification completes while every cooperative thread is blocked. A saturation test for that was drafted and dropped \u2014 it holds the process-wide pool for seconds in a green run and the suite runs in parallel, so it would stall unrelated tests and feed DEF-051. Recorded in arming.txt.",
+    "defects": [
+      "DEF-050"
+    ]
+  },
+  {
+    "id": "CASE-0150",
+    "req": "REQ-057",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/def041-denominator.txt"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0151 is the arming run: the same gate over the same fixture, from the 0.9.3 bytes read out of git, prints the twelve rows with nothing saying it cut the list.",
+    "note": "PRO-0091, DEF-041. campaign.py check prints the denominator beside every capped list. MEASURED on a fixture built to the exact shape of the loss \u2014 eighteen external-effect requirements, none witnessed, against a cap of twelve. 0.9.3 prints twelve rows and stops. 0.9.4 prints the same twelve and then '\u2026 (showing 12 of 18)'. The twelve rows are unchanged: the cap was not raised, because the next set outgrows the next cap. An untruncated list prints '(showing N of N)' rather than nothing, so a reader never has to work out whether anything was cut, which is the position that caused the loss. The fix covers the unwitnessed-requirement list, the hollow witnesses, the unevidenced passes, the legacy-rung cases, the open cases, the duplicate and declared-share groups, the pixel claims, the surfaces with no case, the presence-only flows, and the lists carried inside blocker sentences. THE TOOL IS NOT IN THIS REPO: campaign.py belongs to the test-campaign plugin. Fixed at ~/Dev/fledgeling-plugins/plugins/test-campaign as 0.9.4 (commit f37255f, unpushed) and mirrored into the active plugin cache at 0.9.3/skills/test-campaign/scripts/campaign.py, sha256 a7d978224e6304875e1bd980f52f6cad25b6e9a163b4a6f7e864b3c7e6e50f27 on both copies."
+  },
+  {
+    "id": "CASE-0151",
+    "req": "REQ-057",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/def041-denominator.txt",
+      "docs/test-campaign/evidence/PRO-0091/plugin-gate-tests.txt"
+    ],
+    "armed": true,
+    "armedBy": "this case IS the arming run for CASE-0150, and the plugin's tests/run.sh carries it as a permanent guard: a truncated list that prints no denominator fails, and a complete list that claims a truncation fails.",
+    "note": "PRO-0091. Three gate tests added to the plugin's own tests/run.sh, each watched in both directions in the same run: 'a truncated list carries its denominator' (18 requirements, cap 12), 'the cap still caps' (exactly twelve rows printed, so the denominator is the registry's count rather than a raised cap), and 'a complete list says it is complete' (the same fixture trimmed to three). tests/run.sh reports 67 passed, 0 failed. THE 0.9.3 SIDE WAS RUN, NOT DESCRIBED: the pre-fix bytes come from `git show HEAD~1`, and were executed outside /tmp because a stray /tmp/copy.py on this machine shadows the stdlib copy module for any script run there \u2014 the first capture of this evidence was an empty BEFORE block for that reason."
+  },
+  {
+    "id": "CASE-0152",
+    "req": "REQ-046",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/def030-both-passes-armed.txt"
+    ],
+    "armed": true,
+    "armedBy": "the case is itself the arming: each of the census's two requirement-level passes is watched going from clear to red under a mutation aimed at it, in one session against one fixture.",
+    "note": "PRO-0091, DEF-030. The census control now arms BOTH passes rather than one twice. The shipped control (vacuity-check.py --seed-strengthen) fires the uncensused predicate; scripts/campaign/seed_unclass.py fires unclassed by removing a requirement's effect field. Run against a fixture copy of docs/test-campaign: baseline unclassed examined=49 findings=0 and uncensused examined=23 findings=0, then --seed-strengthen REQ-017 gives before=clear after=red, then seed_unclass REQ-017 gives before=clear after=red with unclassed examined=49 findings=1 and the registry restored byte-for-byte by sha256. Baseline re-read clear afterwards. 'unclassed examined=49 findings=0' is no longer an unwatched zero. WHY A FIXTURE RATHER THAN THE REAL REGISTRY: uncensused is currently red on the real one (REQ-049 declares an ipc effect and records no provider), and a red after a mutation proves nothing when it was red before. The fixture is docs/test-campaign with REQ-049 given a provider, and nothing else."
+  },
+  {
+    "id": "CASE-0153",
+    "req": "REQ-047",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",
+      "docs/test-campaign/evidence/PRO-0091/instrument-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutations 1, 7 and 8 of instrument-arming.txt take this check's family red one at a time \u2014 the $ out of the lookbehind, \\s into it so no literal fires at all, and \\w out of it so a digit inside an identifier does \u2014 and the same run is green once each is restored.",
+    "note": "PRO-0091, DEF-032. mutate_swift.py's integer-literal operator no longer matches Swift closure shorthand. The lookbehind is now (?<![\\w.$]). Tested over a fixture holding $0 three times, a property wrapper's projected value $pane2, and a real literal 3: no candidate is generated at the $0 sites, the 2 inside the projected value's name is left alone, and 3 \u2192 4 still is \u2014 a fix that stopped the operator firing at all would pass the first assertion by itself, so the second is what makes the first mean something. Mutant 24 of 24 in the first ProctorAgent sample rewrote `{ bind(fd, $0, size) }` to `bind(fd, $1, size)`, which cannot compile, and under load 271 it scored as a KILL at the 600s timeout rather than as unbuildable \u2014 so the summary's `unbuildable: 0` was wrong for a reason the tool could not see. The projected-value assertion was written against $state and could not fire: no operator in the 11-entry table matches a bare identifier, so it was true of every table that could exist. It now asserts over $pane2, where the digit is held back by \\w in the same lookbehind, and mutation 8 of instrument-arming.txt watches it red."
+  },
+  {
+    "id": "CASE-0154",
+    "req": "REQ-047",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",
+      "docs/test-campaign/evidence/mutation-agent.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutation 4 of instrument-arming.txt puts 11.20 back into the note and the check goes red naming 22.92, which is read out of the evidence file rather than typed into the test.",
+    "note": "PRO-0091, DEF-055. CASE-0074's note recorded a starting load of 11.20 where evidence/mutation-agent.txt line 2 records 22.92. Corrected, and guarded: the check parses the figure out of the evidence file and requires the note to carry it, so the two cannot drift again without the suite saying so. The note's conclusion is unchanged \u2014 the run was starved either way and the case already discounts its two 600.0s kills \u2014 but 22.92 is twice the number the note used to establish that the machine started healthy."
+  },
+  {
+    "id": "CASE-0155",
+    "req": "REQ-048",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/campaign-check-after.txt",
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutations 5 and 6 of instrument-arming.txt put the old oracle string back, and then move the examined count off what the classifier reports; each goes red on its own.",
+    "note": "PRO-0091, DEF-057, and the decision is recorded rather than assumed. CASE-0102..0105 recorded oracle 'static-analysis', which was not on campaign.py's rung set, so all four counted 'unrated' \u2014 the bucket whose own comment says it counts never as adequate. THE FORK WAS REFERRED TO GROK (grok-4.6, effort xhigh), which ran its own three-family panel: fable-5 at high and gemini-3.7-flash-high both answered the same way with the options presented in swapped order, and the codex lane failed to initialise and was reported as a lane failure rather than counted. The answer was neither of the two options the brief named. Re-expressing the four against the built product is not available: 'no user-facing copy is hardcoded in this file' is a property OF the source, and a hardcoded Text(\"Open log\") and a Text(Copy.openLog) render identically, so there is no product-side observable. Giving the ladder a source-analysis rung BELOW outcome invents a comparison the coverage model does not have \u2014 the ladder is one axis, what a case checked against the running product, and a reader of source text is off that axis rather than ranked on it. So SOURCE_RUNGS is a parallel set alongside EFFECT_RUNGS and RASTER_RUNGS: accepted by add, counted in its own bucket, printed on its own 'Off-ladder:' line, and absent from EFFECT_RUNGS. The gate now reads 'Off-ladder: source-analysis 4' where it read 'unrated 4'. Reclassifying the four to 'structural' was the route the brief ruled out and was not taken; what they check is unchanged."
+  },
+  {
+    "id": "CASE-0156",
+    "req": "REQ-048",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/plugin-gate-tests.txt"
+    ],
+    "armed": true,
+    "armedBy": "three gate tests in the plugin's tests/run.sh, each watched red on a fixture and green once the fixture is repaired: a requirement claiming a subprocess effect covered by source-analysis alone blocks, a source-analysis pass with examined=0 blocks, and the same campaign clears when the denominator returns.",
+    "note": "PRO-0091. The two guards that stop source-analysis becoming the cheap rung a campaign fills up on. A passing source-analysis case owes the analyzer that ran and the number of units it examined, the same obligation shape effect-witness carries for its recorder and count, because a search with no denominator cannot tell an empty result from an empty search. And a requirement claiming an effect outside the process may not rest on source analysis alone. A fourth check reads SOURCE_RUNGS out of the module and asserts it is disjoint from both EFFECT_RUNGS and ORACLE_RUNGS, so the rung cannot acquire effect credit by an edit nobody noticed."
+  },
+  {
+    "id": "CASE-0157",
+    "req": "REQ-058",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",
+      "docs/test-campaign/evidence/PRO-0091/instrument-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutations 2 and 3 of instrument-arming.txt reproduce the original loss \u2014 the merge restricted to the two keys the conflict was about, and then the verifier stopped reporting what it found \u2014 and each goes red naming flow/FLOW-010.",
+    "note": "PRO-0091, DEF-058. scripts/campaign/merge_registry.py sweeps the union of both documents' keys, asserts id uniqueness per key, and refuses rather than resolving a real conflict to one side. --verify is the gate half: it reads a merge somebody else performed and names every row of either input the result does not carry. THE ORIGINAL LOSS IS THE FIXTURE: a five-key registry where theirs adds DEF-002, REQ-002 and FLOW-010, hand-merged the way the PRO-0081 merge was \u2014 defect and requirement taken from theirs, ours taken as the base document \u2014 and --verify exits 1 naming flow/FLOW-010 (from theirs). The whole key absent rather than one row is caught separately. Without an --ancestor a one-sided absence is an ADDITION and never a deletion, which is the safe direction and the one the hand-merge inverted; deletion is representable only with an ancestor, so an unrepresentable deletion cannot be an accidental one."
+  },
+  {
+    "id": "CASE-0158",
+    "req": "REQ-058",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt"
+    ],
+    "armed": true,
+    "armedBy": "the same verifier that reports 5 of 5 keys here exits 1 and names the dropped row on the hand-merge fixture in CASE-0157, in the same run.",
+    "note": "PRO-0091. The merge script is pointed at this project's own registry rather than only at a fixture: docs/test-campaign/inventory.json merged against itself must be itself, and the check asserts the verifier swept all five of its keys (component, defect, flow, requirement, surface) rather than trusting a clean exit. The key count is read with len() over the file, so a registry that grows a sixth key fails this check until the check is looked at."
+  },
+  {
+    "id": "CASE-0159",
+    "req": "REQ-057",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/gate-run.txt",
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt"
+    ],
+    "armed": true,
+    "armedBy": "run 2 of gate-run.txt puts mutation 1 back into mutate_swift.py and runs ./scripts/test.sh itself: the gate exits 1 and names the check, so run 1's exit 0 is a measurement rather than the absence of one.",
+    "note": "PRO-0091. Tests/ProctorCoreTests/CampaignInstrumentTests.swift runs scripts/campaign/test_instruments.py, so ./scripts/test.sh owns the verdict \u2014 a Python file nobody runs is the same shape of finding as the ones it was written to close. It requires at least 15 checks to have been made, then requires the exit code to be 0. Two of the checks are additionally re-expressed in Swift, driving the same two scripts directly: the mutation runner over a closure-shorthand fixture, and the merge verifier over the hand-merge that lost FLOW-010. Run under ./scripts/test.sh on 2026-08-21: exit 0, 1838 tests in 217 suites, with the Campaign instruments suite among them. ScreenRecordingProbeWiringTests did not fail in that run but leaked its continuation three times; that is DEF-029/051's wall-clock oracle, which PRO-0089 owns, and nothing in it was touched here."
   }
 ]

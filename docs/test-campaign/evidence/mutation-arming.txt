@@ -1,0 +1,24 @@
+# PRO-0080 — arming the five killing tests.
+# All five mutants re-applied together, then ./scripts/test.sh --filter MutationSurvivorTests.
+# Exit code 1. Every one of the five tests went red, and each names its own mutant.
+
+􀟈  Test run started.
+􀢄  Test "Each contact recorded on the unlock turn counts exactly once" recorded an issue at MutationSurvivorTests.swift:134:13: Expectation failed: (turn.contactInfo().contactCount → 2) == (i → 1)
+􀢄  Test "A minted run id is twelve lowercase hex characters, and two differ" recorded an issue at MutationSurvivorTests.swift:74:9: Expectation failed: (id.count → 13) == 12
+􀢄  Test "Each contact recorded on the unlock turn counts exactly once" recorded an issue at MutationSurvivorTests.swift:134:13: Expectation failed: (turn.contactInfo().contactCount → 4) == (i → 2)
+􀢄  Test "Every letter key maps to the virtual keycode Carbon names for it" recorded an issue at MutationSurvivorTests.swift:51:13: Expectation failed: (actual → 46) == (CGKeyCode(expected) → 45)
+􀢄  Test "Each contact recorded on the unlock turn counts exactly once" recorded an issue at MutationSurvivorTests.swift:134:13: Expectation failed: (turn.contactInfo().contactCount → 6) == (i → 3)
+􀢄  Test "Every letter key maps to the virtual keycode Carbon names for it" recorded an issue at MutationSurvivorTests.swift:62:9: Expectation failed: (Set(codes).count → 25) == 26
+􀢄  Test "Each contact recorded on the unlock turn counts exactly once" failed after 0.001 seconds with 3 issues.
+􀢄  Test "Every letter key maps to the virtual keycode Carbon names for it" failed after 0.001 seconds with 2 issues.
+􀢄  Test "A minted run id is twelve lowercase hex characters, and two differ" failed after 0.001 seconds with 1 issue.
+􀢄  Test "A duration switches from milliseconds to seconds at exactly one second" recorded an issue at MutationSurvivorTests.swift:155:9: Expectation failed: (RunHUDContentView.duration(1000) → "1000ms") == "1.0s"
+􀢄  Test "A duration switches from milliseconds to seconds at exactly one second" failed after 0.005 seconds with 1 issue.
+􀢄  Test "Mean difference reads all four bytes of every RGBA pixel" recorded an issue at MutationSurvivorTests.swift:109:9: Expectation failed: (abs(mean - delta / 255.0) → 0.029411764705882353) < 0.0005
+􀢄  Test "Mean difference reads all four bytes of every RGBA pixel" failed after 0.019 seconds with 1 issue.
+􀢄  Suite "Mutation survivors, ProctorAgent" failed after 0.020 seconds with 8 issues.
+􀢄  Test run with 5 tests in 1 suite failed after 0.020 seconds with 8 issues.
+      􀢄  Test run with 5 tests in 1 suite failed after 0.020 seconds with 8 issues.
+
+# Reverted with: git checkout -- Sources/ProctorAgent
+# Re-run after revert is recorded in evidence/gate-test-sh-PRO-0080.txt

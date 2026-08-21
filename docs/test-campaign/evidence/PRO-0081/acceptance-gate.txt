@@ -1,0 +1,31 @@
+=== PRO-0081 ACCEPTANCE GATE — re-measured 2026-08-21 12:27 ===
+Every number below was produced by this run, not copied from a prior one.
+
+--- clause 1+3: the A2 grep, and the identifier baseline ---
+Sources/ProctorUI/MainWindow.swift: 45 string literals examined
+  display         0
+  symbol         16
+  system         16
+  key             1
+  punctuation    11
+  interpolated    1
+
+  baseline docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json: 0 identifier(s) gone, 0 new
+PASS: 0 user-facing literals of 45 examined; 45 are identifiers, symbols, system strings or punctuation.
+exit=0
+
+--- clause 8: capture lineage, HEAD vs this branch ---
+at HEAD:
+published captures: 7  ·  distinct images: 7  ·  files in shots dir: 42
+ratchet: 5 — held
+Every published capture names a target that ties to its subject.
+on this branch:
+published captures: 8  ·  distinct images: 8  ·  files in shots dir: 43
+ratchet: 5 — held
+Every published capture names a target that ties to its subject.
+exit=0
+
+--- clause 11: registries appended only ---
+inventory.json lines removed: 0
+cases.json lines removed:     0
+LEDGER.md touched:            0

@@ -234,7 +234,7 @@ extension Session {
             case "simctl":
                 facts.installVersion = ToolProbe.xcodeVersion(simctlPath: presence.path)
             case CuaDriverTool.binary:
-                facts.signature = tools.cuaSignature.verdict(for: presence.path)
+                facts.signature = await tools.cuaSignature.verdict(for: presence.path)
                 facts.laneReport = laneHealth
             default:
                 break

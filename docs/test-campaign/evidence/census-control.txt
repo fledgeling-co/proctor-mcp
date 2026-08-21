@@ -1,0 +1,34 @@
+$ shasum -a 256 docs/test-campaign/inventory.json
+9215d5be401c61b55d3a85ef697279dc4f99dd389e6ce0226b232a7bdb225885  docs/test-campaign/inventory.json
+
+$ python3 vacuity-check.py docs/test-campaign --gate
+unclassed:  examined=45 findings=0
+uncensused: examined=22 findings=0
+blind:      NOT RUN — pass --tests <root> to scan the test tree. This is the cheapest of the three and needs no privilege.
+
+vacuity: requirements=45 external=22 findings=0
+exit 0
+
+$ python3 vacuity-check.py docs/test-campaign --seed-strengthen REQ-017
+seed-strengthen REQ-017: before=clear after=red
+The gate bites: strengthening the constraint turned it red, and the registry was restored byte-for-byte.
+exit 0
+
+$ python3 vacuity-check.py docs/test-campaign --seed-strengthen REQ-001
+seed-strengthen REQ-001: before=clear after=red
+The gate bites: strengthening the constraint turned it red, and the registry was restored byte-for-byte.
+exit 0
+
+$ python3 scripts/campaign/seed_unclass.py docs/test-campaign REQ-017
+seed-unclass REQ-017: before=clear after=red (unclassed examined=45 findings=1)
+  REQ-017 names subprocess and declares no `effect` — run the census, or record "effect": "none"
+registry restored byte-for-byte: True (sha256 9215d5be401c61b5…)
+The pass bites: removing the effect class turned unclassed red.
+exit 0
+
+$ python3 scripts/campaign/seed_unclass.py docs/test-campaign REQ-011
+REFUSING: REQ-011's text names no effect the vocabulary matches, so removing its `effect` field correctly produces no finding. Scoring that as a red would pass this control on a tautology. Pick a requirement whose text names an external effect.
+exit 2
+
+$ shasum -a 256 docs/test-campaign/inventory.json
+9215d5be401c61b55d3a85ef697279dc4f99dd389e6ce0226b232a7bdb225885  docs/test-campaign/inventory.json

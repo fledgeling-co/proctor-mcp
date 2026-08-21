@@ -1,7 +1,7 @@
 {
- "judged": 5,
- "judgeable": 7,
- "at": "2026-08-20T21:16:13+00:00",
- "reason": "PRO-0078 gap-fix clause 8: two captures taken through capture_with_manifest.py with the row written at the shutter, published as FLOW-003 steps, and judged. Population 5 to 7, judged 3 to 5.",
- "previous": 3
+ "judged": 6,
+ "judgeable": 8,
+ "at": "2026-08-21T05:58:36+00:00",
+ "reason": "PRO-0081 gap-fix: STEP-A3-PRIMARY-DISABLED was published unjudged, which dropped the ratio to 5 of 8 while the ratchet held at 5. It is now judged pass against the design of record's own permissions frame, lifted verbatim from design/surfaces/proctor-surfaces.html into evidence/shots/mock/step-a3-walkthrough-primary-disabled.html and rendered. Judged 5 to 6 of 8. The two still unjudged, SURF-006 and SURF-007, are the capture engines pairs.json records as structurally unjudgeable, and they predate this item.",
+ "previous": 5
 }

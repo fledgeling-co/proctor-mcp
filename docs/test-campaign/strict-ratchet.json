@@ -1,7 +1,6 @@
 {
- "checked": 79,
- "total": 81,
- "at": "2026-08-21T02:50:49+00:00",
- "reason": "PRO-0083: ten effect-witness cases for the ten external requirements no item in wave 11 named. CASE-0080..0089, nine pass and one inconclusive (REQ-024, DEF-040).",
- "previous": 70
+  "checked": 106,
+  "total": 113,
+  "at": "2026-08-21T10:55:48+00:00",
+  "previous": 81
 }

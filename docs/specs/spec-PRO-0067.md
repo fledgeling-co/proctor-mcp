@@ -64,10 +64,53 @@ folding it in would make this a grant-diagnosis item.
 - **A5** — `screenRecording.needsRestart` is true and `accessibility` false, and the note says
   so, because macOS caches the answer per process for that process's life.
 
-**A3 is not verified.** The disabled-next-button clause needs the rendered view, and this repo
-has no `ProctorUI` test target. The identifier is defined and set; whether the control is
-present-and-disabled rather than absent is a fidelity-harness question and is carried to the
+**A3 was not verified.** The disabled-next-button clause needs the rendered view, and this repo
+had no `ProctorUI` test target. The identifier was defined and set; whether the control was
+present-and-disabled rather than absent was a fidelity-harness question and was carried to the
 campaign lane rather than claimed here.
+
+### A3 is closed, and it was worse than unverified. PRO-0081, 2026-08-21
+
+**The clause had no population.** `Walkthrough.swift` carried no `.disabled(` modifier on any
+control, so no state disabled the primary action and "every state where it is disabled" was the
+empty set. Asked as written, A3 would have read green having measured nothing — the failure wave
+11a named, where an instrument reads zero for a structural reason and the zero looks like a
+result.
+
+The design of record settles that this was a gap rather than a choice.
+`design/surfaces/proctor-surfaces.html`, the `walkthrough` surface's `permissions` pane, draws
+`Connect a model` disabled and captions it: *"Continue is disabled and visible rather than absent
+— a control that disappears makes the layout jump and teaches the user the step does not exist."*
+The state matrix says the same of the whole class. So the behaviour was built to the design, the
+gap recorded as DEF-036, and only then was the clause asked.
+
+`WalkthroughFlow.primaryEnabled(on:accessibility:screenRecording:)` decides it in Core, tested at
+all sixteen combinations with the disabled set asserted by name rather than by count. Three of the
+sixteen refuse and they are the three the design draws disabled. `Skip setup` is never disabled,
+so nobody is trapped by a grant macOS will not give.
+
+**Witnessed on `macos-glass`.** A Developer ID signed `.build/Proctor.app` ran with
+`PROCTOR_SOCKET` naming nothing, so its report is nil and every grant reads false — which is what
+puts the flow in the state the design draws disabled, on a machine that holds the real grants.
+`/Applications/Proctor.app` was untouched. The reader is the installed `proctor-agent`, a
+different process, resolving `proctor.walkthrough.action.primary` by identifier: role `AXButton`,
+label `Connect a model`, **`enabled` false**, frame 127x24 at (1431,781). Present, sized and
+disabled, not absent.
+
+**Two arms, because an out-of-family review objected that building the behaviour and then
+witnessing it manufactures the evidence.** On the same build the same read one `AXPress` earlier
+returns `enabled` true. And on a build with the modifier removed and nothing else changed, the
+same reader in the identical state at the identical frame returns `enabled` **true** — which is
+simultaneously the measurement of DEF-036 and the proof that the field tracks the control.
+
+The picture was read rather than named: the capture cropped at the control's own frame shows the
+button in a muted fill with a greyed label beside an undimmed `Skip setup`, so the visual half of
+the clause holds too, which `AXEnabled` alone does not carry. The ceiling is recorded: `AXEnabled`
+is the app's own exported attribute, so what a third process establishes is what the accessibility
+plane projects across a process boundary — what a screen reader and Proctor itself both act on —
+and not a kernel-level witness.
+
+Cases CASE-0100 and CASE-0101; requirement REQ-049.
 
 ### The view keeps its own enum, on purpose
 

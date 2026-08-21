@@ -1,0 +1,45 @@
+# ProctorAgent mutation sample — PRO-0080, seed 20260821
+# Load average at start: 22.92 29.47 26.94
+# Load average at end:   271.39 192.06 133.13
+# Command:
+#   python3 scripts/campaign/mutate_swift.py --targets $(find Sources/ProctorAgent -name '*.swift' | sort) \
+#     --count 24 --seed 20260821 --timeout 600 --out docs/test-campaign/evidence/mutation-agent.json
+
+baseline: running the suite once before mutating anything…
+baseline: green
+sites 3189 in 84 file(s) · running 24
+[1/24] SURVIVED    AXEngineImpl.swift:33 || -> &&  (21.2s)
+[2/24] SURVIVED    RunIdentity.swift:30 12 -> 13  (12.2s)
+[3/24] SURVIVED    Dispatch.swift:381 false -> true  (13.4s)
+[4/24] SURVIVED    TakeoverOverlay.swift:771 44 -> 45  (12.7s)
+[5/24] SURVIVED    Session.swift:92 false -> true  (21.3s)
+[6/24] killed      CursorOverlay.swift:374 == -> !=  (23.6s)
+[7/24] killed      Dispatch.swift:614 == -> !=  (37.8s)
+[8/24] SURVIVED    SessionFlow.swift:493 3000 -> 3001  (17.1s)
+[9/24] SURVIVED    MarkRenderer.swift:141 2 -> 3  (14.9s)
+[10/24] SURVIVED    SessionKill.swift:26 == -> !=  (17.2s)
+[11/24] SURVIVED    Dispatch.swift:394 true -> false  (17.5s)
+[12/24] SURVIVED    RunHUDPanel.swift:653 false -> true  (26.5s)
+[13/24] SURVIVED    SessionMaestro.swift:242 < -> <=  (32.6s)
+[14/24] SURVIVED    RunHUDContentView.swift:830 < -> <=  (23.0s)
+[15/24] killed      CaptureEngineImpl.swift:395 0 -> 1  (32.4s)
+[16/24] SURVIVED    CGWindowCorrelation.swift:59 0 -> 1  (34.6s)
+[17/24] SURVIVED    UnlockBroker.swift:51 1 -> 2  (31.1s)
+[18/24] SURVIVED    PixelCompare.swift:38 4 -> 5  (29.2s)
+[19/24] SURVIVED    RunHUDContentView.swift:97 17 -> 18  (27.4s)
+[20/24] SURVIVED    TakeoverOverlay.swift:363 == -> !=  (38.1s)
+[21/24] SURVIVED    KeyCodes.swift:18 45 -> 46  (24.8s)
+[22/24] SURVIVED    AuditKeyStore.swift:47 false -> true  (20.7s)
+[23/24] killed      SessionActivate.swift:166 false -> true  (600.1s)
+[24/24] killed      UnlockBroker.swift:110 0 -> 1  (600.0s)
+
+scored 24 of 24 run (of 3189 sites) · killed 5 · SURVIVED 19 · unbuildable 0
+survival rate 19/24 = 79.2% — a survivor is a behaviour nothing is watching
+
+  int-literal        killed   2  survived   9  unbuildable   0  survival 82%
+  false -> true      killed   1  survived   4  unbuildable   0  survival 80%
+  == -> !=           killed   2  survived   2  unbuildable   0  survival 50%
+  < -> <=            killed   0  survived   2  unbuildable   0  survival 100%
+  || -> &&           killed   0  survived   1  unbuildable   0  survival 100%
+  true -> false      killed   0  survived   1  unbuildable   0  survival 100%
+tree clean after: True

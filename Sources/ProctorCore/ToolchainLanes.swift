@@ -157,9 +157,10 @@ public extension Toolchain {
                 + "here provisions a guest as a side effect of a tool call, and this row locates "
                 + "the CLIs by reading the filesystem without running any of them. At most two "
                 + "macOS guests may run at once, which is Apple's rule rather than a Proctor "
-                + "setting; the pool and who holds it are reported beside this lane. Tahoe guests "
-                + "currently render no application windows (trycua/cua #870, Apple FB21748086); "
-                + "verify against Sequoia.")
+                + "setting; the pool and who holds it are reported beside this lane. "
+                + GuestNotes.tahoeRendering
+                + " Which macOS a given guest runs is reported by proctor_guest action "
+                + "\"status\", where it can be established.")
     }
 
     /// A lane is as established as the least established thing it needs. A tool

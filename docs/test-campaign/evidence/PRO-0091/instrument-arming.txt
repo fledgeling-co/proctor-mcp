@@ -1,0 +1,123 @@
+# PRO-0091 arming — the count, and every check watched red.
+#
+# 2026-08-21T09:47:17Z. One mutation at a time, applied to the tree and restored with
+# `git checkout --` before the next, so each red names one cause. The suite emits
+# 15 checks, counted with len() over its own `ok`/`FAIL` labels rather than
+# read off a printed list, and this run arms every one of them.
+
+=== GREEN, as the tree stands ===
+campaign instruments: 15 passed, 0 failed
+
+=== MUTATION 1 — DEF-032's fix removed: $ taken out of the integer operator's lookbehind ===
+    mutate_swift.py  (?<![\w.$]) -> (?<![\w.])
+FAIL  the integer operator does not fire on closure shorthand $0
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 2 — DEF-058's fix removed: the merge sweeps only the two keys the conflict was about ===
+    merge_registry.py  keys = union(base, theirs) -> keys = ['defect', 'requirement']
+FAIL  the merge sweeps every key, including the one nobody was arguing about
+FAIL  the verifier passes the merge this script produced
+campaign instruments: 13 passed, 2 failed
+
+=== MUTATION 3 — the verifier stops naming a dropped row ===
+    merge_registry.py  --verify: lost/absent_keys forced empty
+FAIL  a key the merge did not sweep is caught and named
+FAIL  a key missing from the merge entirely is caught
+campaign instruments: 13 passed, 2 failed
+
+=== MUTATION 4 — CASE-0074's note put back to the figure its own evidence contradicts ===
+    cases.json  CASE-0074.note load figure -> 465.00
+FAIL  CASE-0074's note carries the load its evidence file records (22.92)
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 5 — CASE-0102's oracle put back to a string the ladder does not know ===
+    cases.json  CASE-0102.oracle -> static-read
+FAIL  CASE-0102..0105 stand on source-analysis rather than an unknown rung
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 6 — CASE-0102's examined count moved off what the classifier reports ===
+    cases.json  CASE-0102.source.examined -> 44
+FAIL  CASE-0102's denominator is what the classifier counts today (45)
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 7 — DEF-032's fix over-tightened: whitespace added to the lookbehind, so no integer literal fires at all ===
+    mutate_swift.py  (?<![\w.$]) -> (?<![\w.$\s])
+FAIL  the same operator still fires on a real integer literal
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 8 — the lookbehind stops guarding a digit inside an identifier, so the digit in a projected value's name reads as a literal ===
+    mutate_swift.py  (?<![\w.$]) -> (?<![.$])
+FAIL  a property wrapper's projected value is not a literal either
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 9 — a real conflict resolves itself to ours instead of stopping the merge ===
+    merge_registry.py  conflicts.append(...) for a two-sided edit removed
+FAIL  two rows sharing an id with different content stop the merge
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 10 — the per-key uniqueness assertion is neutered, so a registry repeating an id merges instead of being refused ===
+    merge_registry.py  assert_unique body -> return
+FAIL  a registry that repeats an id is refused, not merged
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 11 — the real inventory.json is given a duplicate row id, so a self-merge of it is no longer clean ===
+    inventory.json  first key's first row duplicated
+FAIL  the real inventory.json merges against itself cleanly
+FAIL  the verifier swept all 5 keys of the real registry
+campaign instruments: 13 passed, 2 failed
+
+=== MUTATION 12 — the verifier stops naming how many keys it swept (the DEF-041 shape, in the DEF-058 tool) ===
+    merge_registry.py  OK line drops the key count
+FAIL  the verifier passes the merge this script produced
+FAIL  the verifier swept all 5 keys of the real registry
+campaign instruments: 13 passed, 2 failed
+
+=== MUTATION 13 — CASE-0103 loses the analyzer its source rung owes ===
+    cases.json  CASE-0103.source.analyzer removed
+FAIL  each names its analyzer and the number of units it examined
+campaign instruments: 14 passed, 1 failed
+
+=== RESTORED — green again, in the same session ===
+campaign instruments: 15 passed, 0 failed
+
+=== THE COUNT: 15 of 15 checks watched red ===
+  [ 1] the integer operator does not fire on closure shorthand $0
+  [ 7] the same operator still fires on a real integer literal
+  [ 8] a property wrapper's projected value is not a literal either
+  [ 3] a key the merge did not sweep is caught and named
+  [ 3] a key missing from the merge entirely is caught
+  [ 2] the merge sweeps every key, including the one nobody was arguing about
+  [ 2] the verifier passes the merge this script produced
+  [ 9] two rows sharing an id with different content stop the merge
+  [10] a registry that repeats an id is refused, not merged
+  [11] the real inventory.json merges against itself cleanly
+  [11] the verifier swept all 5 keys of the real registry
+  [ 4] CASE-0074's note carries the load its evidence file records (22.92)
+  [ 5] CASE-0102..0105 stand on source-analysis rather than an unknown rung
+  [13] each names its analyzer and the number of units it examined
+  [ 6] CASE-0102's denominator is what the classifier counts today (45)
+
+Unarmed: none. Every label the suite emits appears above under a mutation
+that made it fail, and green again once that mutation was put back.
+
+WHAT ARMING THE SEVEN FOUND
+
+The first record of this arming claimed every check and armed 8 of 15. Arming the
+other seven turned one of them up as unfireable rather than merely unarmed:
+
+  "a property wrapper's projected value is not a literal either" asserted that no
+  mutation site had `before == "state"`, over a fixture line reading `$state`. No
+  operator in the 11-entry table matches a bare identifier — probed by running all
+  11 patterns against that line, which returns 0 matches — so the assertion was
+  true of every operator table that could exist, including one with the DEF-032 fix
+  torn out. It was a check watched green over a population of zero, which is the
+  failure mode this whole item is about.
+
+  The fixture now reads `$pane2` and the check asserts that the `2` inside a
+  projected value's name does not fire. That is guarded by `\w` in the same
+  lookbehind rather than by `$` — a real and distinct guarantee, and MUTATION 8
+  above watches it red by removing `\w`.
+
+git status after restoring (this item's own work only):
+ M docs/test-campaign/evidence/PRO-0091/instrument-arming.txt
+ M scripts/campaign/test_instruments.py

@@ -23,7 +23,7 @@ extension Session {
 
     func loadPolicyIfNeeded() {
         guard !policyLoadedFlag else { return }
-        policy = PolicyStore.load()
+        policy = policyStore.load()
         policyLoadedFlag = true
     }
 
@@ -45,6 +45,13 @@ extension Session {
     /// substituted only so a test can read what was recorded and cross a TTL
     /// boundary exactly rather than by sleeping.
     func setAuditSink(_ sink: @escaping @Sendable (AuditRecord) -> Void) { auditSink = sink }
+
+    /// Point the policy at a directory this test owns. The gate's `configure` action
+    /// writes a file, and the file it wrote before this seam existed was the
+    /// operator's. Injecting the root rather than saving and restoring the real one
+    /// means there is nothing to restore: a run killed mid-test leaves the operator's
+    /// policy exactly as it found it.
+    func setPolicyStore(_ store: PolicyStore) { policyStore = store }
     func setClock(_ clock: @escaping @Sendable () -> Double) { self.clock = clock }
 
     private func tokenValid(for bundleId: String?) -> Bool {
@@ -342,7 +349,7 @@ extension Session {
         if let allow { policy.allow = Set(allow) }
         if let block { policy.block = Set(block) }
         if let sensitive { policy.sensitive = Set(sensitive) }
-        try PolicyStore.save(policy)
+        try policyStore.save(policy)
         return policyStatus()
     }
 

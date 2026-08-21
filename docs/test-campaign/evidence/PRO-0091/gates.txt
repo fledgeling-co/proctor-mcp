@@ -1,0 +1,61 @@
+# The four campaign gates after PRO-0091 — 2026-08-21T08:11:30Z.
+# test-campaign 0.9.4 bytes, running from the 0.9.3 install path.
+# Exit codes are read from the process, never from the left of a pipe.
+
+=== python3 campaign.py check docs/test-campaign ===
+Scope:      FULL — every case in the campaign was run
+Sample:     full multi-witness coverage across all 21 MCP tools, status/walkthrough/overlay UI surfaces, and guest/takeover controls
+
+Not ready to report:
+  · 1 case(s) inconclusive — attempted, and the instrument could not measure. Not a pass and not an n/a: 'we do not know' is a weaker claim than 'no difference found' and a different one from 'does not apply'
+  · 4 requirement(s) claiming an effect outside the product and recorded `observed` with no effect-witness case behind them — the shape that passed 230 cases over a product that performed no external I/O
+
+  External-effect claims with no witness (12 of 23 witnessed):
+    · REQ-007 claims a device effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-023 claims a ipc effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-027 claims a ipc effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-028 claims a device effect and is recorded `observed`, and no case backing it stands at effect-witness
+    (showing 4 of 4)
+  Drive the effect from a production entry point with a recorder attached and
+  record it:
+    campaign.py set <dir> --case CASE-0001 --status pass --oracle effect-witness \
+      --recorder 'strace -f -e trace=network' --effect-class outbound-socket \
+      --effect-count 3
+  Where the product does not perform the effect at all, the requirement is
+  `vacuous`, not `observed` — a guarantee that holds because nothing does the
+  thing is a finding, and recording it clears this blocker honestly.
+Wall:       8 published shot(s) · 8 distinct image(s)
+
+Finish them, resolve each to skip:/n-a: with a reason, or declare the stop with its resume point — in the reply, the verdict line and the report. Never silently.
+exit: 1
+
+=== python3 strict-check.py docs/test-campaign ===
+CHECKED   91 of 96 cases (95%)
+UNCHECKED 5  — and unchecked is failed
+
+     4  only proves something rendered
+     1  status is inconclusive
+
+ratchet: 81
+checked ROSE from 81 to 91 — raise the ratchet with --set-ratchet in the same commit, so it cannot fall back.
+exit: 0
+
+=== python3 capture-lineage.py docs/test-campaign --gate ===
+published captures: 8  ·  distinct images: 8  ·  files in shots dir: 43
+
+JUDGED 6 of 8 judgeable capture(s) (75%)
+   An unjudged capture is an uncompared one. It is not a pass.
+
+ratchet: 6 — held
+
+Every published capture names a target that ties to its subject.
+exit: 0
+
+=== python3 vacuity-check.py docs/test-campaign ===
+unclassed:  examined=51 findings=0
+uncensused: examined=23 findings=1
+  · REQ-049 declares a ipc effect and records no `provider` — nothing in production source is named as able to perform it
+blind:      NOT RUN — pass --tests <root> to scan the test tree. This is the cheapest of the three and needs no privilege.
+
+vacuity: requirements=51 external=23 findings=1
+exit: 0

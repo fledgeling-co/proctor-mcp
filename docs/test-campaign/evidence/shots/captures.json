@@ -366,5 +366,40 @@
    "elapsedSeconds": 1.087
   },
   "capturedAt": "2026-08-21T07:06:46+1000"
+ },
+ {
+  "path": "evidence/shots/step-a3-walkthrough-primary-disabled.png",
+  "subject": "STEP-A3-PRIMARY-DISABLED",
+  "target": "proctor://win:11:0/walkthrough/permissions/primary-disabled",
+  "sha256": "d7d9f2b5dfc172dc45df52d68f08e0be344c46503e6822ca438607d9f24b168f",
+  "bytes": 147672,
+  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on the PRO-0081 test build (Proctor UI pid 96306, CG window 130808, launched with PROCTOR_SOCKET naming nothing so every grant reads false)",
+  "resolvedTarget": {
+   "window": "win:11:0",
+   "app": "app:96306:11",
+   "contentRect": {
+    "h": 572,
+    "w": 640,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-11-0-1787278171947.png"
+  },
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 4,
+  "normalization": null,
+  "conditions": {
+   "targetPid": 96306,
+   "cgWindowID": 130808,
+   "step": "permissions",
+   "grantsVisibleToTheApp": "none \u2014 the socket names nothing, so the report is nil",
+   "primaryEnabledAsReadFromTheTree": false,
+   "readerProcess": "installed proctor-agent pid 76491, a different process from the target",
+   "installedAppUntouched": true,
+   "elapsedSeconds": 0.716,
+   "stateConfirmedBy": "proctor_find matched 'proctor.walkthrough.action.primary' in this window before the shutter"
+  },
+  "capturedAt": "2026-08-21T12:09:31+1000"
  }
 ]

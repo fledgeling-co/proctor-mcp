@@ -1,0 +1,53 @@
+--- arming: the detector over the pre-PRO-0089 files ---
+  Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift @ e506ea0e4e62: offenders at [42] (expected 42)
+  Tests/ProctorAgentTests/CuaLineReaderTests.swift @ e506ea0e4e62: offenders at [107] (expected 107)
+  detector caught 2 of the 2 known offenders
+ARMED
+
+swift test files scanned: 117
+lines mentioning a clock of any kind (the denominator): 38
+assertions comparing a measured wall-clock time to a literal: 0
+
+--- every clock site, in full, not a sample ---
+  Tests/ProctorAgentTests/AcceptanceE2ETests.swift:32: capturedAt: Date().timeIntervalSince1970,
+  Tests/ProctorAgentTests/CuaLineReaderTests.swift:53: var elapsed: UInt64 { lock.lock(); defer { lock.unlock() }; return t }
+  Tests/ProctorAgentTests/CuaLineReaderTests.swift:147: #expect(clock.elapsed >= 200_000_000)
+  Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:28: now: @escaping @Sendable () -> Double = { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:304: let now = Date().timeIntervalSince1970
+  Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:356: now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:385: now: Date().timeIntervalSince1970 + 30))
+  Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:398: now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/HoldAttributionWiringTests.swift:423: now: Date().timeIntervalSince1970 + 30))
+  Tests/ProctorAgentTests/RunHUDWiringTests.swift:307: h.control.now = { Date().timeIntervalSince1970 }
+  Tests/ProctorAgentTests/RunQueueWiringTests.swift:491: let scheduler = RunScheduler(waitLimit: 0.2, now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/RunQueueWiringTests.swift:522: let scheduler = RunScheduler(waitLimit: 45, now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/StopReachabilityWiringTests.swift:58: let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/TakeoverWiringTests.swift:92: let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/TakeoverWiringTests.swift:333: let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/YieldWiringTests.swift:130: now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/YieldWiringTests.swift:196: let control = RunControl(pauseLimit: 0.05, now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/YieldWiringTests.swift:201: let now = Date().timeIntervalSince1970
+  Tests/ProctorAgentTests/YieldWiringTests.swift:341: let control = RunControl(pauseLimit: 900, now: { Date().timeIntervalSince1970 })
+  Tests/ProctorAgentTests/YieldWiringTests.swift:345: let now = Date().timeIntervalSince1970
+  Tests/ProctorCoreTests/BuildInfoTests.swift:438: try FileManager.default.setAttributes([.modificationDate: Date().addingTimeInterval(3600)],
+  Tests/ProctorCoreTests/MenuBarReadinessTests.swift:297: try FileManager.default.setAttributes([.modificationDate: Date().addingTimeInterval(600)],
+  Tests/ProctorCoreTests/RunHUDMenuBarTests.swift:67: #expect(RunHUDMotion.frameIndex(in: frames, elapsed: 0) == 0)
+  Tests/ProctorCoreTests/RunHUDMenuBarTests.swift:68: #expect(RunHUDMotion.frameIndex(in: frames, elapsed: 0.12) == 0)
+  Tests/ProctorCoreTests/RunHUDMenuBarTests.swift:69: #expect(RunHUDMotion.frameIndex(in: frames, elapsed: 0.13) == 1)
+  Tests/ProctorCoreTests/RunHUDMenuBarTests.swift:70: #expect(RunHUDMotion.frameIndex(in: frames, elapsed: 0.39) == 3)
+  Tests/ProctorCoreTests/RunHUDMenuBarTests.swift:71: #expect(RunHUDMotion.frameIndex(in: frames, elapsed: 0.52) == 0)
+  Tests/ProctorCoreTests/RunHUDMenuBarTests.swift:72: #expect(RunHUDMotion.frameIndex(in: frames, elapsed: 0.65) == 1)
+  Tests/ProctorCoreTests/RunHUDMenuBarTests.swift:78: #expect(RunHUDMotion.frameIndex(in: frames, elapsed: -12) == 0)
+  Tests/ProctorCoreTests/RunHUDMenuBarTests.swift:84: #expect(RunHUDMotion.frameIndex(in: frames, elapsed: 900) == 0)
+  Tests/ProctorCoreTests/TUIRenderFidelityTests.swift:92: .init("backend", "native"), .init("elapsed", "00:12.4")],
+  Tests/ProctorCoreTests/TUIRenderFidelityTests.swift:105: .init("pause cap", "15:00"), .init("elapsed", "00:12.4")],
+  Tests/ProctorCoreTests/TUIRenderFidelityTests.swift:120: .init("elapsed", "00:41.8")],
+  Tests/ProctorCoreTests/TUISupervisionTests.swift:39: let model = TUISurface.model(pane: .run, frame: nil, receivedAt: nil, now: Date(),
+  Tests/ProctorCoreTests/TUISupervisionTests.swift:52: let model = TUISurface.model(pane: .run, frame: nil, receivedAt: nil, now: Date(),
+  Tests/ProctorCoreTests/TUISupervisionTests.swift:70: let taken = Date()
+  Tests/ProctorCoreTests/TUISupervisionTests.swift:88: let model = TUISurface.model(pane: .run, frame: nil, receivedAt: nil, now: Date())
+  Tests/ProctorCoreTests/TUISupervisionTests.swift:115: #expect(run?.facts.contains { $0.label == "elapsed" && $0.value == "01:14.0" } == true)
+
+--- wall-clock assertions ---
+  (none)
+census exit=0
