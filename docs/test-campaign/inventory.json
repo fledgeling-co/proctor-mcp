@@ -549,7 +549,7 @@
         "SURF-012"
       ],
       "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change",
-      "effect": "filesystem"
+      "effect": "filesystem-write"
     },
     {
       "id": "REQ-056",
