@@ -130,6 +130,14 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **When another program is driving your Mac, the run panel now says so properly.** Run Proctor with `PROCTOR_ACTUATION=cua` and cua-driver performs the steps instead of Proctor's own planes. Two things about that used to reach the run record and never reach the screen, which is where you're actually looking.
+
+  The first is an escalation nobody asked for. cua-driver tries an accessibility action, then an event routed to one process, and only brings the app to the front when neither works. It decides that per element, so it can happen partway through a batch that never requested the foreground. The panel used to say the batch needed the front, which is a different claim. It now says the front was taken and the batch didn't ask for it.
+
+  The second is whose cursor you're watching. If the installed cua-driver can't be asked to stop drawing its own cursor, Proctor stands its drawn pointer down rather than put two cursors on one screen. That left a real cursor moving with nothing on screen to explain it, which looks exactly like your own mouse misbehaving. The panel now names the driver as the thing moving it.
+
+  Note: Proctor can't hide the driver's cursor when the target window is covered, and that limit is now recorded in the code rather than worked around. The covered-target rule works by moving or hiding a panel Proctor owns, and a cursor drawn by another process isn't one.
+
 - **A capture that came back empty used to pass as a good one.** Ask for a picture of a window Proctor owns and you'd get `status: complete, trustworthy: true` over a PNG in which all 2,942,720 pixels were fully transparent. The exclusion was doing exactly what it should; Proctor keeps its own windows out of its own captures so the run HUD never turns up in a shot. Nothing in the reply said so, and `dirtyArea 0` sitting next to `dirtyRectCount 1` reads as though something changed.
 
   `SCFrameStatus complete` means a frame arrived, not that the frame depicts anything. The verdict now asks whether there's anything in it before vouching for it. An empty frame comes back `trustworthy: false` with the reason in plain words, and where Proctor owns the target it states the mechanism rather than guessing from pixels: this window is excluded from capture, so nothing was going to be in it.

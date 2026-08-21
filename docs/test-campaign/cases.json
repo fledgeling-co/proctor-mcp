@@ -2428,5 +2428,228 @@
       "docs/test-campaign/evidence/PRO-0096/gate-inconclusive-exemption.txt"
     ],
     "note": "PRO-0096 finding 3, and it closed as NO CHANGE with the plugin left exactly as shipped. The brief reported that CASE-0067 (REQ-007) and CASE-0087 (REQ-024) were being flagged for a witness count of 0 while both are `inconclusive`, called that possibly over-strict, and asked whether the check should exempt an inconclusive case \u2014 to be fixed in the plugin and declared, since the plugin is live for every project on this machine.\n\nMEASURED FIRST: test-campaign 0.9.4 ALREADY EXEMPTS THEM, so there was nothing to fix and nothing to ask. The guard is `if c.get('oracle') in WITNESS_RUNGS and st == 'pass'` (campaign.py:751), and `state_of` maps both cases off `pass` \u2014 CASE-0087's bare 'inconclusive' and CASE-0067's 'inconclusive: PersonInput.isAPerson requires sourcePid == 0...' both resolve to `inconclusive` via the startswith branch. A live gate run on the unmodified registry names only CASE-0114 in 'Effect witnesses that witnessed nothing', three times, and neither of the two the brief named appears anywhere in it.\n\nThe code read alone would not have settled it, so it was armed rather than asserted: flipping ONLY CASE-0067's status to `pass`, with count 0 left exactly as it was, makes the gate flag it immediately. The guard can fire on that case; it declines to, on the status. That is the exemption working, not a case the check never visits.\n\nNO PLUGIN CHANGE WAS MADE AND NOTHING NOW DIFFERS FROM STOCK on this machine. campaign.py at ~/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.9.4/skills/test-campaign/scripts/campaign.py is byte-for-byte as installed. The clarify referral the brief asked for was not raised either, and deliberately: clarify's own gate drops a question whose answer cannot change the work, and a measurement had already answered this one in both directions. The two cases were not touched, as instructed \u2014 they remain `inconclusive` and remain a declared stop on the gate, which is the honest place for them.\n\nWHAT DOES STILL HOLD THE GATE for these two is separate and is not this: REQ-007 and REQ-024 are two of the four requirements recorded `observed` with an external effect and no passing effect-witness case behind them. That blocker is real, it is upstream of these cases' status, and PRO-0096 did not touch it."
+  },
+  {
+    "id": "CASE-0230",
+    "req": "REQ-070",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Probe A of docs/test-campaign/evidence/PRO-0084/arming.txt: with the escalation rung deleted from RunHUDState.planeException the suite exits 1 and this case reads failed; restored, it reads passed and the suite exits 0.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "An unrequested escalation reaches the panel's exception line. Carries its own in-test arming: the line is asserted absent before the event."
+  },
+  {
+    "id": "CASE-0231",
+    "req": "REQ-070",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Probe C: with setPlaneStatement reverted to a direct assignment instead of the resolver, this case reads failed - the exact defect the resolver exists to prevent, a latched fact overwritten by the next step.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "The disclosure survives the steps that follow it. setPlaneStatement rewrites the exception line on every approach and act, so a disclosure written once would be gone by the next step while the front it announced was still taken."
+  },
+  {
+    "id": "CASE-0232",
+    "req": "REQ-071",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Probe B: with the deferred-pointer rung deleted from the resolver, this case reads failed and no other case moves. Probe C: with setPlaneStatement reverted to a direct assignment instead of the resolver, this case reads failed - the exact defect the resolver exists to prevent, a latched fact overwritten by the next step.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "A stood-down pointer is stated, and it also survives a following step."
+  },
+  {
+    "id": "CASE-0233",
+    "req": "REQ-070",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Probe A of docs/test-campaign/evidence/PRO-0084/arming.txt: with the escalation rung deleted from RunHUDState.planeException the suite exits 1 and this case reads failed; restored, it reads passed and the suite exits 0.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "An escalation outranks a stood-down pointer on the one available line, in either arrival order."
+  },
+  {
+    "id": "CASE-0234",
+    "req": "REQ-070",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Probe A of docs/test-campaign/evidence/PRO-0084/arming.txt: with the escalation rung deleted from RunHUDState.planeException the suite exits 1 and this case reads failed; restored, it reads passed and the suite exits 0.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "A guest run states neither disclosure: the statement, the block and the yield are all claims about this Mac, and a guest's foreground is not this Mac's."
+  },
+  {
+    "id": "CASE-0235",
+    "req": "REQ-070",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Probe D: with the two flag resets deleted from runBegan, this case reads failed and no other case moves.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "runBegan clears both flags, so one run's disclosure cannot appear on the next run's panel."
+  },
+  {
+    "id": "CASE-0236",
+    "req": "REQ-070",
+    "surface": "SURF-005",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Probe E: with cgevent_fg remapped from .syntheticEvent to .routedEvent, this case reads failed and no other case moves.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "Every CuaVocabulary.foregroundPaths member maps to .syntheticEvent, the plane SessionAct raises the takeover statement for. This is the guard that replaced a dead predicate: nothing previously held this coupling, and breaking it would silently stop the statement appearing for a real takeover."
+  },
+  {
+    "id": "CASE-0237",
+    "req": "REQ-070",
+    "surface": "SURF-005",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Structural two-way with CASE-0236: one asserts the foreground set maps to .syntheticEvent, the other asserts the complement does not, so a vocabulary collapsing the distinction in either direction reddens one. Probe E reddens CASE-0236 with this one still passing, so they are independent.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "No background path maps to that plane. The arming control for CASE-0236, which would otherwise pass against a vocabulary that mapped every path to .syntheticEvent and announced a takeover for steps that took nothing."
+  },
+  {
+    "id": "CASE-0238",
+    "req": "REQ-070",
+    "surface": "SURF-005",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Reads a default branch the two cases above cannot reach: they enumerate known keys, this one passes a key absent from the table and nil.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "An unrecognised path stays .unknown rather than being guessed into a background plane, since it could be either and there is no safe direction to assume."
+  },
+  {
+    "id": "CASE-0241",
+    "req": "REQ-070",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Probes A and B leave this case passing while reddening the disclosure cases, so it measures the unchanged rung rather than riding on the new ones.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "The existing synthetic wording still wins when no disclosure is latched - the control on the resolver's precedence order."
+  },
+  {
+    "id": "CASE-0242",
+    "req": "REQ-071",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Two-way against its own pair: CASE-0242 and CASE-0243 drive the same run with cursorSuppressible false and true and read opposite values of pointerDrawnBy, so neither asserts a constant.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "A driver that cannot stand its cursor down leaves a run with no Proctor pointer, and the run records which pointer it left drawing. This is the reported state: no Proctor pointer anywhere and the real cursor moving on its own."
+  },
+  {
+    "id": "CASE-0243",
+    "req": "REQ-071",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Two-way against its own pair: CASE-0242 and CASE-0243 drive the same run with cursorSuppressible false and true and read opposite values of pointerDrawnBy, so neither asserts a constant.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "A driver that can stand its cursor down leaves Proctor drawing, and the field is absent."
+  },
+  {
+    "id": "CASE-0244",
+    "req": "REQ-071",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Pairs with CASE-0242 across the lane boundary rather than the switch: same assertion, delegated backend removed, and CASE-0242 shows the value is reachable.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "The native lane never defers its pointer, whatever a driver would have said: PointerOwnership.decide short-circuits on delegated."
+  },
+  {
+    "id": "CASE-0245",
+    "req": "REQ-072",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "inconclusive: Proctor never observes the driver's cursor, so no instrument on this lane can read whether that cursor is over a covered target. The reachable half was measured and agreed: CASE-0242 shows a non-suppressible driver leaves the run recording deferredToDriver, the state in which Proctor draws no pointer of its own.",
+    "armed": false,
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "Wave 9's covered-target rule acts by placing or hiding Proctor's OWN panel - cursorPlane reads the window list, CursorOverlay.applyPlane restacks and reads back, PointerPlanePolicy.fallback hides on a covered target. A pointer drawn by another process has no panel Proctor can place or hide and no window id Proctor can find in an order, so the rule cannot cross the stand-down. Recorded as a ceiling in source at the guard in SessionCursor.showCursor. Both workarounds are worse: drawing a Proctor pointer anyway puts two cursors on one screen, which PointerOwner refuses because a reader then cannot tell which the machine follows; drawing one only when the driver's is believed absent rests on a belief about another process Proctor never observes. What Proctor can still do is say so, which is REQ-071."
+  },
+  {
+    "id": "CASE-0246",
+    "req": "REQ-072",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "macos",
+    "status": "inconclusive: the runs the report's first clause describes are driven by another automation stack entirely, so there is no Proctor run to instrument. What WAS measured is the attribution, and it is exact.",
+    "armed": false,
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "docs/test-campaign/evidence/PRO-0084/automation-mode.txt"
+    ],
+    "note": "'Automation Running' is macOS's own: the value of 'Automation Mode Enabled Title' in /System/Library/PrivateFrameworks/AutomationMode.framework/AutomationModeUI.app/Contents/Resources/Localizable.loctable, drawn by AutomationModeUI.app (measured running as pid 64198, ppid 1), whose binary carries the classes Overlay and OverlayView and the companion mac string 'Press . to stop'. Driven by XCTest / testmanagerd. Proctor's Sources contain 0 matches and cua-driver's strings 0. The brief instructed that the macOS attribution not be inherited as an assumption; it was re-established from artifacts instead, and it holds. A dyld-shared-cache sweep also returned 0 and is NOT part of this evidence: a control probe for a string that must be present returned 0 from the same instrument, so that zero measured nothing. No Proctor surface can appear over another stack's run, so nothing here is fixable and nothing was changed for it."
   }
 ]

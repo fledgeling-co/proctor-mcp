@@ -1,0 +1,64 @@
+PRO-0084 — identifying what draws "Automation Running". Measured Sat 22 Aug 2026 00:38:46 AEST.
+
+The brief required this be settled before any fix, because it names which
+automation stack took the machine. It is macOS's own, from a private framework.
+
+=== 1. The literal, in macOS's own localisation table
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Automation Mode Disabling Interaction</key>
+	<dict>
+		<key>NSStringDeviceSpecificRuleType</key>
+		<dict>
+			<key>appletv</key>
+			<string>Hold TV + Menu to stop</string>
+			<key>applevision</key>
+			<string>Triple press the top button to stop</string>
+			<key>applewatch</key>
+			<string>Hold Digital Crown to stop</string>
+			<key>iphone</key>
+			<string>Hold both volume buttons to stop</string>
+			<key>mac</key>
+			<string>Press . to stop</string>
+		</dict>
+	</dict>
+	<key>Automation Mode Enabled Title</key>
+	<string>Automation Running</string>
+</dict>
+</plist>
+
+=== 2. The process drawing it, running on this machine at the time of measurement
+  PID  PPID STARTED                      COMM
+64198     1 Fri 21 Aug 21:24:22 2026     /System/Library/PrivateFrameworks/AutomationMode.framework/AutomationModeUI.app/Contents/MacOS/AutomationModeUI
+
+=== 3. Its overlay classes and its own log line
+Overlay
+OverlayView
+screensToOverlays
+_TtC16AutomationModeUI7Overlay
+_TtC16AutomationModeUI11OverlayView
+screensToOverlays
+Failed to set up event tap, user interaction will not cause the automation mode UI to fade.
+Automation Mode Enabled Title
+AutomationModeUI/Overlay~macos.swift
+OverlayAppearsInScreenCapture
+
+=== 4. It is not Proctor's
+matches in Sources/:        0
+
+=== 5. It is not cua-driver's
+matches in cua-driver: 0
+
+=== 6. THE SCAN THAT PROVED NOTHING, recorded because it was armed and failed
+A strings sweep of the dyld shared cache returned zero for the target.
+It also returned zero for a control string that must be present, so the
+instrument was dead and its zero is not a negative:
+  control 'NSApplicationDelegate' in $C: 0
+  target  'Automation Running'   in $C: 0
+
+CONCLUSION. "Automation Running" is macOS's AutomationMode indicator,
+driven by XCTest / testmanagerd. The report's first clause therefore names
+runs Proctor never drove, and no Proctor surface can appear over them.
+This is recorded as REQ-072's ceiling rather than fixed.
