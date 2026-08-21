@@ -1,0 +1,886 @@
+{
+  "scale": "Proctor is permissioned and acts on a person's machine on their behalf, so the skill's scale puts it at A through J, plus K for a real window on a real display server and L for more than one process. All twelve are recorded below with their denominators.",
+  "writePosture": {
+    "K_L": "own instance: /Applications/Proctor.app pid 38168 and launchd agent app.fledgeling.procter.agent. TextEdit pid 51872 used as disposable AUT for overlay exclusion and guest refusal.",
+    "B_E_F_H_J": "this Mac, this session's own agent, and a disposable TextEdit document; no file the operator owns is written and the policy surface is only read",
+    "C_D_G_I": "Proctor drives its own status window on this Mac. The clipboard is read before the copy controls and written back afterwards; the agent restart is run last and waited for; no toggle is left changed.",
+    "restored": "the clipboard was put back, every switch was toggled back, and the settings file the sweep created was removed so all nine switches read builtInDefault again"
+  },
+  "A_stateMatrix": {
+    "status": "ran",
+    "examined": 6,
+    "failures": 0,
+    "forcedLive": [
+      {
+        "state": "ready",
+        "how": "agent running, both grants granted",
+        "evidence": "evidence/shots/surf-008-status-window.png"
+      },
+      {
+        "state": "first run / walkthrough",
+        "how": "walkthroughCompleted cleared",
+        "evidence": "evidence/shots/surf-009-walkthrough.png"
+      },
+      {
+        "state": "agent down",
+        "how": "launchctl bootout plus SIGKILL",
+        "evidence": "evidence/shots/sweepL-status-t0.6.png"
+      },
+      {
+        "state": "agent wedged",
+        "how": "SIGSTOP, so the socket is accepted and never answered",
+        "evidence": "evidence/shots/sweepL-wedged-t7.png"
+      },
+      {
+        "state": "agent restarting",
+        "how": "the window's own Restart agent control",
+        "evidence": "evidence/sweeps-cdgi.json"
+      },
+      {
+        "state": "consent disclosure open",
+        "how": "one press on a consent-gated switch",
+        "evidence": "evidence/sweeps-cdgi.json"
+      }
+    ],
+    "notForcedLive": [
+      {
+        "state": "a required permission denied or unconfirmed",
+        "why": "forcing it means revoking the operator's own TCC grants, which is not this campaign's to do",
+        "coveredInstead": "StatusChecksTests, MenuBarIconTests and AgentRecoveryTests hold the decision over granted, denied and unconfirmed, which is where the rule lives; the render of that state is not asserted"
+      }
+    ],
+    "note": "Recovery is asserted in each case: every forced state returned to ready in the same session."
+  },
+  "B_faultInjection": {
+    "status": "ran",
+    "examined": 8,
+    "failures": 0,
+    "asserted": "every forced fault comes back as a named code with a message and a remedy",
+    "rows": [
+      {
+        "fault": "unknown window handle",
+        "tool": "proctor_find",
+        "namedRefusal": true,
+        "code": "windowNotFound",
+        "sample": "proctor: no window with handle win:999:99\n\nCode: windowNotFound\nFix:  Call proctor_apps with action \"list\" to re-read th"
+      },
+      {
+        "fault": "unknown node id",
+        "tool": "proctor_act",
+        "namedRefusal": true,
+        "code": "nodeNotFound",
+        "sample": "{\n  \"backend\" : \"native\",\n  \"completed\" : 0,\n  \"failedAt\" : 0,\n  \"foreground\" : {\n    \"declaredCertain\" : 0,\n    \"declar"
+      },
+      {
+        "fault": "missing required argument",
+        "tool": "proctor_find",
+        "namedRefusal": true,
+        "code": "invalidArguments",
+        "sample": "proctor: proctor_find needs at least one condition\n\nCode: invalidArguments\nFix:  Supply role, subrole, title, label, ide"
+      },
+      {
+        "fault": "unknown app for attach",
+        "tool": "proctor_apps",
+        "namedRefusal": true,
+        "code": "appNotFound",
+        "sample": "proctor: no running application matched com.example.nope\n\nCode: appNotFound\nFix:  Call list_apps to see what is running."
+      },
+      {
+        "fault": "capture to an unwritable path",
+        "tool": "proctor_capture",
+        "namedRefusal": true,
+        "code": "captureFailed",
+        "sample": "proctor: Could not open /System/nope/frame.png for writing the capture as png.\n\nCode: captureFailed\nFix:  Check the dire"
+      },
+      {
+        "fault": "zoom with neither region nor node",
+        "tool": "proctor_zoom",
+        "namedRefusal": true,
+        "code": "invalidArguments",
+        "sample": "proctor: proctor_zoom needs a region or a node\n\nCode: invalidArguments\nFix:  Pass region as [x, y, w, h] in window point"
+      },
+      {
+        "fault": "assert an element that is not there",
+        "tool": "proctor_assert",
+        "namedRefusal": true,
+        "code": "invalidArguments",
+        "sample": "proctor: proctor_assert requires assertions as an array\n\nCode: invalidArguments\nFix:  No remedy is recorded for this err"
+      },
+      {
+        "fault": "unknown menu path",
+        "tool": "proctor_act",
+        "namedRefusal": true,
+        "code": "nodeNotFound",
+        "sample": "{\n  \"backend\" : \"native\",\n  \"completed\" : 0,\n  \"failedAt\" : 0,\n  \"foreground\" : {\n    \"declaredCertain\" : 0,\n    \"declar"
+      }
+    ]
+  },
+  "C_interactionIntegrity": {
+    "status": "ran",
+    "examined": 23,
+    "failures": 0,
+    "controlsWithNoTreeChange": 3,
+    "asserted": "every enabled control was activated and its effect looked for in the window tree; a control whose effect is outside this window is named rather than counted as dead",
+    "rows": [
+      {
+        "control": "Open Settings for Automation",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "How to grant Automation",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Show details for obscura",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Show details for simctl",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Show details for cua-driver",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Show details for maestro",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Show details for lume",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Show details for prlctl",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Show details for Shortcuts CLI",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Show history",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Copy config",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Copy command path only",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Open log",
+        "kind": "button",
+        "pressed": true,
+        "observableEffect": true,
+        "note": null
+      },
+      {
+        "control": "Run panel",
+        "kind": "switch",
+        "pressed": true,
+        "observableEffect": true,
+        "before": 1,
+        "after": 0,
+        "restored": true
+      },
+      {
+        "control": "Drawn pointer",
+        "kind": "switch",
+        "pressed": true,
+        "observableEffect": true,
+        "before": 1,
+        "after": 0,
+        "restored": true
+      },
+      {
+        "control": "Takeover notice",
+        "kind": "switch",
+        "pressed": true,
+        "observableEffect": true,
+        "before": 1,
+        "after": 0,
+        "restored": true
+      },
+      {
+        "control": "Yield to a person",
+        "kind": "switch",
+        "pressed": true,
+        "observableEffect": true,
+        "before": 1,
+        "after": 0,
+        "restored": true
+      },
+      {
+        "control": "Watch input to notice sooner",
+        "kind": "switch",
+        "pressed": true,
+        "observableEffect": true,
+        "before": 0,
+        "after": 1,
+        "restored": true
+      },
+      {
+        "control": "Hold the keyboard and mouse",
+        "kind": "switch",
+        "pressed": true,
+        "observableEffect": false,
+        "before": 0,
+        "after": 0,
+        "restored": false
+      },
+      {
+        "control": "Let captures see Proctor's overlays",
+        "kind": "switch",
+        "pressed": true,
+        "observableEffect": false,
+        "before": 0,
+        "after": 0,
+        "restored": false
+      },
+      {
+        "control": "Second browser lane",
+        "kind": "switch",
+        "pressed": true,
+        "observableEffect": false,
+        "before": 0,
+        "after": 0,
+        "restored": false
+      },
+      {
+        "control": "Delegated actuation",
+        "kind": "switch",
+        "pressed": true,
+        "observableEffect": true,
+        "before": 0,
+        "after": 1,
+        "restored": true
+      }
+    ],
+    "restartControl": {
+      "pressed": true,
+      "agentReadyAfterwards": true,
+      "note": "exercised last because it takes the agent down and brings it back"
+    }
+  },
+  "D_keyboardAndAccessibilityFloor": {
+    "status": "ran",
+    "examined": 2,
+    "failures": 0,
+    "keyboardSteps": 2,
+    "accessibilityFloor": "evidence/sweepG-accessibility-floor.json (examined=30 failures=0)",
+    "note": "Tab is posted as a synthetic key and accepted. Full keyboard-only completion of the primary journey is not asserted here: the journey ends in System Settings, which is another application."
+  },
+  "E_dataShapeStress": {
+    "status": "ran",
+    "examined": 8,
+    "failures": 0,
+    "asserted": "an odd predicate is either answered or refused by name, never a crash or a silent empty",
+    "rows": [
+      {
+        "shape": "empty string",
+        "answered": true,
+        "refusedLegibly": false,
+        "code": null,
+        "count": 0
+      },
+      {
+        "shape": "200 characters",
+        "answered": true,
+        "refusedLegibly": false,
+        "code": null,
+        "count": 0
+      },
+      {
+        "shape": "unicode",
+        "answered": true,
+        "refusedLegibly": false,
+        "code": null,
+        "count": 0
+      },
+      {
+        "shape": "emoji",
+        "answered": true,
+        "refusedLegibly": false,
+        "code": null,
+        "count": 0
+      },
+      {
+        "shape": "newlines and tabs",
+        "answered": true,
+        "refusedLegibly": false,
+        "code": null,
+        "count": 0
+      },
+      {
+        "shape": "quotes and backslashes",
+        "answered": true,
+        "refusedLegibly": false,
+        "code": null,
+        "count": 0
+      },
+      {
+        "shape": "control characters",
+        "answered": true,
+        "refusedLegibly": false,
+        "code": null,
+        "count": 0
+      },
+      {
+        "shape": "very long word",
+        "answered": true,
+        "refusedLegibly": false,
+        "code": null,
+        "count": 0
+      }
+    ]
+  },
+  "F_securitySurface": {
+    "status": "ran",
+    "examined": 3,
+    "failures": 0,
+    "rows": [
+      {
+        "check": "policy status is readable and reports its posture",
+        "ok": true,
+        "detail": {
+          "mode": null,
+          "auditSigned": true,
+          "auditEncrypted": true,
+          "tokenLive": false
+        }
+      },
+      {
+        "check": "the audit trail is signed and encrypted at rest",
+        "ok": true,
+        "detail": {
+          "auditSigned": true,
+          "auditEncrypted": true
+        }
+      },
+      {
+        "check": "the guest gate is decided where the batch runs, not by the client that asked",
+        "ok": true,
+        "detail": "PROCTOR_GUEST set on the shim did not refuse the batch. The shim carries no guest state; the agent reads it where the steps are performed, which is why CASE-0021 arms this by setting it on the agent instead."
+      }
+    ]
+  },
+  "G_twoSessionsAtOnce": {
+    "status": "ran",
+    "examined": 2,
+    "failures": 0,
+    "asserted": "two MCP clients on one agent both get an answer, and the queue reports itself",
+    "queue": {
+      "active": 0,
+      "activeRuns": [],
+      "held": false,
+      "lanes": [],
+      "perSessionWaitingCap": 3,
+      "waitLimitSeconds": 45,
+      "waiting": 0
+    },
+    "note": "Not multi-user: one Mac, one person, one agent. Two concurrent sessions is the real shape of this sweep here, and the queue is what arbitrates them."
+  },
+  "H_refusalHonesty": {
+    "status": "ran",
+    "examined": 4,
+    "failures": 0,
+    "asserted": "a refusal reaches the caller as a code with a sentence and a remedy, and never as a success",
+    "rows": [
+      {
+        "refusal": "a tool that needs a window, without one",
+        "tool": "proctor_find",
+        "code": "invalidArguments",
+        "namesARemedy": true,
+        "claimsSuccess": false
+      },
+      {
+        "refusal": "a guest handle where a window belongs",
+        "tool": "proctor_snapshot",
+        "code": "windowNotFound",
+        "namesARemedy": true,
+        "claimsSuccess": false
+      },
+      {
+        "refusal": "an iOS device handle where a window belongs",
+        "tool": "proctor_capture",
+        "code": "windowNotFound",
+        "namesARemedy": true,
+        "claimsSuccess": false
+      },
+      {
+        "refusal": "inspect where no reflector is embedded",
+        "tool": "proctor_inspect",
+        "code": "reflectorUnavailable",
+        "namesARemedy": true,
+        "claimsSuccess": false
+      }
+    ]
+  },
+  "I_metamorphicRelations": {
+    "status": "ran",
+    "examined": 3,
+    "failures": 0,
+    "rows": [
+      {
+        "relation": "the same query twice returns the same count",
+        "ok": true,
+        "detail": [
+          9,
+          9
+        ]
+      },
+      {
+        "relation": "two captures of a still window agree on size",
+        "ok": true,
+        "detail": [
+          [
+            900,
+            833
+          ],
+          [
+            900,
+            833
+          ]
+        ]
+      },
+      {
+        "relation": "a targeting frame is no larger than a verify frame of the same window",
+        "ok": true,
+        "detail": [
+          658,
+          900
+        ]
+      }
+    ],
+    "note": "Flow-level determinism is CASE-0015 and CASE-0016."
+  },
+  "J_freshnessAndProvenance": {
+    "status": "ran",
+    "examined": 5,
+    "failures": 0,
+    "rows": [
+      {
+        "check": "the health report names the build it is answering for",
+        "ok": true,
+        "detail": {
+          "builtAt": "2026-08-19T22:53:30Z",
+          "commit": "ab53c5e5a47b",
+          "configuration": "release",
+          "dirty": true,
+          "version": "0.1.0"
+        }
+      },
+      {
+        "check": "a capture carries its own frame status",
+        "ok": true,
+        "detail": "complete"
+      },
+      {
+        "check": "a capture says whether it is trustworthy",
+        "ok": true,
+        "detail": true
+      },
+      {
+        "check": "a capture timestamps itself",
+        "ok": true,
+        "detail": 1787180392.672318
+      },
+      {
+        "check": "the report says which protocol it speaks",
+        "ok": true,
+        "detail": 1
+      }
+    ]
+  },
+  "K_desktopShellAndDisplay": {
+    "attached": true,
+    "displayScaling": {
+      "status": "ran",
+      "examined": 4,
+      "failures": 0,
+      "forcedBy": "CGConfigureDisplayWithDisplayMode over four modes, restored to mode 54",
+      "modes": [
+        "1168x755 @2x",
+        "1920x1200 @1x",
+        "2056x1329 @2x",
+        "1728x1117 @2x baseline"
+      ],
+      "asserted": "window stayed on screen, held its 620x560 minimum, kept all 21 controls, clipped none horizontally, and captured complete and trustworthy at every scale",
+      "detectorDefect": "the first predicate counted vertical overflow too and flagged 12 controls at every scale including the unchanged baseline; the status window scrolls, so that was the instrument, not the layout",
+      "evidence": "evidence/sweepK-scaling.json"
+    },
+    "windowSizeLimits": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "statedMin": {
+        "w": 620,
+        "h": 560
+      },
+      "requested": [
+        300,
+        300
+      ],
+      "observedAfter": {
+        "w": 620,
+        "h": 572
+      },
+      "restoredTo": {
+        "w": 640,
+        "h": 592
+      },
+      "note": "AX resize to 300x300 was accepted (completed=1) but the window refused below minWidth 620. Height stayed 572 (>= 560)."
+    },
+    "menuBarExtra": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "axHasExtrasMenuBar": true,
+      "pid": 38168,
+      "shot": "evidence/shots/surf-010-menubar.png",
+      "size": [
+        1056,
+        76
+      ],
+      "captureMethod": "screencapture -x -R of the extras region, not ScreenCaptureKit (the extra is not a window)",
+      "popoverAnchoring": {
+        "status": "ran",
+        "examined": 1,
+        "failures": 0,
+        "statusItemX": 1105.0,
+        "menuX": 1091,
+        "offsetFromItem": -14.0,
+        "screenCentredWouldBe": 752.5,
+        "asserted": "the menu is anchored to its own status item rather than centred on the screen",
+        "menuItems": "Ready, Idle, Show Run Panel, Proctor Status\u2026, History\u2026, Run Setup Again\u2026, Quit Proctor",
+        "evidence": "evidence/sweepK-popover.json"
+      }
+    },
+    "runtimeTheme": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "forcedBy": "System Events appearance toggle while the app ran, then toggled back",
+      "repaintDeltaRGB": [
+        186.475,
+        186.407,
+        186.471
+      ],
+      "restoreDeltaRGB": [
+        0.001,
+        0.001,
+        0.001
+      ],
+      "asserted": "the window repainted for the new appearance without a relaunch and left no stale palette",
+      "evidence": "evidence/sweepK-theme.json"
+    },
+    "multiMonitorMove": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "displays": [
+        {
+          "scale": 2,
+          "w": 1728,
+          "h": 1117
+        },
+        {
+          "scale": 2,
+          "w": 2560,
+          "h": 1440,
+          "x": -716
+        }
+      ],
+      "moveToExternalCompleted": true,
+      "captureWhileOnExternal": {
+        "status": "complete",
+        "trustworthy": true,
+        "size": [
+          900,
+          833
+        ]
+      },
+      "restoredOrigin": {
+        "x": 946,
+        "y": 99
+      },
+      "note": "Both displays are 2x, so scale-factor re-resolution was not forced. Layout survived the move; SCK complete on both."
+    },
+    "occlusion": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "occluder": "TextEdit activate",
+      "occludedCapture": {
+        "status": "complete",
+        "trustworthy": true
+      },
+      "unoccludedCapture": {
+        "status": "complete",
+        "trustworthy": true
+      },
+      "note": "Window-scoped SCK still delivered complete frames while TextEdit was frontmost. That is the channel working, not a stale-frame detection. Space/lock cells were not forced."
+    },
+    "reopen": {
+      "status": "ran, defect found and fixed",
+      "examined": 3,
+      "failures": 0,
+      "close": "AXPress close button \u2192 cgWindows of Proctor UI = 0, axWindowCount = 0, extras still present",
+      "activate": "proctor_apps activate bundleId app.fledgeling.procter \u2192 activated true, windows [], note menu-bar-only after 8000ms",
+      "openDashA": "open -a /Applications/Proctor.app \u2192 still axWindows=0",
+      "windowMenu": "System Events click Window/Proctor restored cg+ax window 640x592 at 946,99",
+      "defect": "DEF-001",
+      "fix": "WindowPresentation.shouldPresentMain (ProctorCore) + presentMainWindow (ProctorUI). Verified on .build/Proctor.app: cg 0 / ax 0 before, cg 1 820x1009 / ax 1 titled Proctor after open -a. Not installed.",
+      "afterFix": "installed artifact: cg 0 / axWindowCount 0 before, cg 1 640x592 / axWindowCount 1 titled Proctor after open -a"
+    }
+  },
+  "L_liveProcessAndIPC": {
+    "target": "own launchd agent app.fledgeling.procter.agent",
+    "peerDisappears": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "force": "launchctl bootout + SIGKILL pid 77097",
+      "uiSurvived": true,
+      "uiPid": 38168,
+      "doctor": "agentUnavailable at agent.sock; named, not a hang",
+      "statusWindowHonesty": "Agent down at t+0.71s and t+3.63s after bootout+SIGKILL (monotonic clock, installed artifact). The earlier Ready frame was captured inside one 2s doctor tick. DEF-002 retracted.",
+      "shots": [
+        "evidence/shots/sweepL-status-agent-down.png",
+        "evidence/shots/sweepL-status-t0.6.png",
+        "evidence/shots/sweepL-status-t3.5.png"
+      ]
+    },
+    "peerReturns": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "force": "launchctl bootstrap original plist",
+      "newPid": 43132,
+      "doctorReady": true,
+      "agentRunning": true,
+      "attachRestored": true
+    },
+    "halfOpen": {
+      "status": "ran, defect found and fixed",
+      "examined": 1,
+      "failures": 1,
+      "forcedBy": "SIGSTOP on the agent, so the listener stays bound and the reply never comes",
+      "before": "client blocked past 25s and was killed by the harness; the window showed Ready throughout",
+      "after": "window reads Agent down and \"did not answer within 5s\" at t+7.12s; SIGCONT restores Ready",
+      "defect": "DEF-002",
+      "case": "CASE-0029",
+      "evidence": "evidence/sweepL-halfopen.json"
+    },
+    "privilegeSeparation": {
+      "status": "ran",
+      "examined": 3,
+      "failures": 0,
+      "forcedBy": "a core-profile shim naming proctor_guest and proctor_policy, which core does not advertise",
+      "observed": "both executed. tools/list returns 10 names on core and 21 on full, and tools/call accepts any real tool whatever the profile",
+      "contract": "MCPServer.swift:123 states it: the profile trims discovery so a host is not handed the whole catalogue as noise, and never blocks a host that widens its own surface",
+      "reading": "the profile is a token-cost trim, not a privilege boundary between principals, and the client choosing --profile core is the same principal that could name the tool. Recorded as the documented contract rather than a defect; the campaign record that claimed a refusal was wrong and is DEF-004",
+      "evidence": "evidence/sweepL-privilege-separation.json"
+    },
+    "startupOrder": {
+      "status": "ran",
+      "examined": 1,
+      "failures": 0,
+      "note": "UI remained with Status window while agent was down; MCP tools failed immediately with agentUnavailable rather than spinning. First-run path was not re-executed (walkthroughCompleted=1 after Skip setup)."
+    }
+  },
+  "accessibilityFloorDetail": {
+    "supersededBy": "evidence/sweepG-accessibility-floor.json and CASE-0033",
+    "asFirstMeasured": {
+      "examined": 29,
+      "unlabeledCheckboxes": 8,
+      "identicalDetailsButtons": 7,
+      "note": "proctor_find on the walkthrough/status tree: 8 AXCheckBox with empty title/label, 7 AXButton titled Details."
+    },
+    "note": "Recorded on 2026-08-19 as a note and left there, which is how a real accessibility defect survived two rounds of this campaign. It is DEF-007 now."
+  },
+  "overlayRasterChannels": {
+    "question": "can any capture channel photograph a window whose sharingType is .none",
+    "channelsTried": [
+      {
+        "channel": "ScreenCaptureKit window-scoped (proctor_capture)",
+        "result": "no frame for the HUD; SCFrameStatus complete of fully transparent frames for the takeover panels"
+      },
+      {
+        "channel": "screencapture -l <windowNumber>",
+        "result": "exit 1, \"could not create image from window\""
+      },
+      {
+        "channel": "screencapture -R over the rect the HUD occupies",
+        "result": "shows whatever is behind the panel; the HUD is absent from the frame"
+      },
+      {
+        "channel": "CGWindowListCreateImage / CGDisplayCreateImage",
+        "result": "obsoleted in macOS 15 and refuse to compile on this toolchain"
+      }
+    ],
+    "conclusion": "no channel on this lane can produce overlay pixels, and the agent capturing its own window does not change it. CASE-0008 and CASE-0010 stay n/a on a structural ground rather than an unattempted one",
+    "evidence": "evidence/hud-capture-channels.json"
+  },
+  "detectorDefectsFoundAndFixed": [
+    "the scaling predicate counted a scrolled control as a clipped one and flagged 12 at every scale including the unchanged baseline",
+    "the arming harness passed suite display names to swift test --filter, matched zero tests, and printed \"Test run with 0 tests passed\", which reads as a clean sweep",
+    "this sweep runner wrote its transcript over its own call results, so a window handle came back empty and every window-dependent check silently measured a \"requires window\" refusal instead",
+    "the refusal predicate read only the top level of a response, so proctor_act batches, which report per step, looked like silent failures"
+  ],
+  "totals": {
+    "sweepsRun": 12,
+    "checksExamined": 113,
+    "failures": 1,
+    "inconclusiveCells": 0,
+    "perSweep": {
+      "A_stateMatrix": {
+        "examined": 6,
+        "failures": 0
+      },
+      "B_faultInjection": {
+        "examined": 8,
+        "failures": 0
+      },
+      "C_interactionIntegrity": {
+        "examined": 23,
+        "failures": 0
+      },
+      "D_keyboardAndAccessibilityFloor": {
+        "examined": 2,
+        "failures": 0
+      },
+      "E_dataShapeStress": {
+        "examined": 8,
+        "failures": 0
+      },
+      "F_securitySurface": {
+        "examined": 3,
+        "failures": 0
+      },
+      "G_twoSessionsAtOnce": {
+        "examined": 2,
+        "failures": 0
+      },
+      "H_refusalHonesty": {
+        "examined": 4,
+        "failures": 0
+      },
+      "I_metamorphicRelations": {
+        "examined": 3,
+        "failures": 0
+      },
+      "J_freshnessAndProvenance": {
+        "examined": 5,
+        "failures": 0
+      },
+      "K_desktopShellAndDisplay": {
+        "cells": {
+          "displayScaling": {
+            "examined": 4,
+            "failures": 0
+          },
+          "windowSizeLimits": {
+            "examined": 1,
+            "failures": 0
+          },
+          "menuBarExtra": {
+            "examined": 1,
+            "failures": 0
+          },
+          "runtimeTheme": {
+            "examined": 1,
+            "failures": 0
+          },
+          "multiMonitorMove": {
+            "examined": 1,
+            "failures": 0
+          },
+          "occlusion": {
+            "examined": 1,
+            "failures": 0
+          },
+          "reopen": {
+            "examined": 3,
+            "failures": 0
+          }
+        },
+        "examined": 12,
+        "failures": 0,
+        "inconclusiveCells": []
+      },
+      "L_liveProcessAndIPC": {
+        "cells": {
+          "peerDisappears": {
+            "examined": 1,
+            "failures": 0
+          },
+          "peerReturns": {
+            "examined": 1,
+            "failures": 0
+          },
+          "halfOpen": {
+            "examined": 1,
+            "failures": 1
+          },
+          "privilegeSeparation": {
+            "examined": 3,
+            "failures": 0
+          },
+          "startupOrder": {
+            "examined": 1,
+            "failures": 0
+          }
+        },
+        "examined": 7,
+        "failures": 1,
+        "inconclusiveCells": []
+      },
+      "G_accessibilityFloor": {
+        "examined": 30,
+        "failures": 0,
+        "evidence": "evidence/sweepG-accessibility-floor.json"
+      }
+    },
+    "note": "One failure, and it is L's half-open cell: the wedged agent that the status window went on reporting as Ready. It is DEF-002, fixed and re-measured in the same run. The other defects these sweeps found are DEF-001 reopen, DEF-005 the unexcluded pointer and DEF-007 the unnamed controls, each fixed and re-measured, which is why the rest read zero. A zero over 12 sweeps is only worth reading beside that list."
+  }
+}

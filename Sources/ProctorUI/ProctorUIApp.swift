@@ -66,12 +66,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Actions.stopAgent()
     }
 
-    /// Reopening from the Dock or the menu bar should bring the window back
-    /// rather than silently doing nothing.
+    /// Reopening from the Dock or `open -a` should bring the Status window back.
+    ///
+    /// AppKit's `hasVisibleWindows` is the wrong signal: after setup the extras
+    /// item stays up, so the flag is true while Status is gone, and this used
+    /// to activate a process that showed nothing. `WindowPresentation` asks
+    /// whether a window titled Proctor is actually on screen.
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        if !flag { NSApp.windows.first?.makeKeyAndOrderFront(nil) }
+        Self.presentMainWindow()
         NSApp.activate(ignoringOtherApps: true)
         return true
+    }
+
+    static func presentMainWindow() {
+        let windows = NSApp.windows
+        if WindowPresentation.shouldPresentMain(
+            titles: windows.map { $0.title },
+            visible: windows.map { $0.isVisible }) {
+            if let window = windows.first(where: { WindowPresentation.isMainWindow(title: $0.title) }) {
+                window.makeKeyAndOrderFront(nil)
+            } else {
+                NotificationCenter.default.post(
+                    name: Notification.Name(WindowPresentation.presentMainNotification),
+                    object: nil)
+            }
+        }
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     static func applyPolicy() {
@@ -221,6 +241,13 @@ struct ProctorUIApp: App {
             // looking at or hidden outright. Falls back to the agent's status
             // symbol when there is something more urgent to say than a phase.
             MenuBarLabel(icon: model.menuBarIcon, character: model.character)
+                // The extras label is the view that stays alive with Status
+                // closed. AppDelegate posts when reopen must create the scene
+                // rather than order an existing window.
+                .onReceive(NotificationCenter.default.publisher(
+                    for: Notification.Name(WindowPresentation.presentMainNotification))) { _ in
+                    openWindow(id: "main")
+                }
         }
     }
 }

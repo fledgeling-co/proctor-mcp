@@ -1,0 +1,64 @@
+==> swift test --filter theTrailNamesTheRealFrontEnd (output: /tmp/pro83-w1-arm.log)
+warning: 'pro-0083': found 4 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/browser-routing-baseline.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/simctl-devices.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-fail.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-pass.json
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Compiling ProctorAgentTests ExternalWitnessTests.swift
+[6/7] Emitting module ProctorAgentTests
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (21.84s)
+Test Suite 'Selected tests' started at 2026-08-21 11:48:56.090.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-21 11:48:56.138.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-21 11:48:56.138.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-21 11:48:56.138.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.048) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "External effect witnesses: the ten a capped gate hid" started.
+􀟈  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" started.
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:340:13: Expectation failed: (records.count → 3) < 0
+􀄵  ARMING: the recorder saw 3 records, attributions [Optional("cli"), Optional("mcp"), nil]
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:340:13: Expectation failed: (records.count → 3) < 0
+􀄵  ARMING: the recorder saw 3 records, attributions [Optional("cli"), Optional("mcp"), nil]
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:355:13: Expectation failed: (Self.attributions(in: forgedRows) → [nil]) == (["cli"] → [Optional("cli")])
+􀅺  inserted [nil], removed [Optional("cli")]
+􀄵  // The security clause. A request asking to be recorded as the CLI is
+􀄵  // recorded as nothing, because the field is not readable from a request.
+􀄵  ARMING: the forger's row reads [nil], so the request did NOT set it
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:355:13: Expectation failed: (Self.attributions(in: forgedRows) → [nil]) == (["cli"] → [Optional("cli")])
+􀅺  inserted [nil], removed [Optional("cli")]
+􀄵  // The security clause. A request asking to be recorded as the CLI is
+􀄵  // recorded as nothing, because the field is not readable from a request.
+􀄵  ARMING: the forger's row reads [nil], so the request did NOT set it
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:357:13: Expectation failed: (named.count → 2) < 0
+􀄵  ARMING: 2 rows named a front end: ["cli", "mcp"]
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:357:13: Expectation failed: (named.count → 2) < 0
+􀄵  ARMING: 2 rows named a front end: ["cli", "mcp"]
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:377:13: Expectation failed: (dead.status → 0) == (CLISurface.Exit.agentUnreachable.rawValue → 3)
+􀄵  // Exit 3 is `CLISurface.Exit.agentUnreachable`: nothing was measured.
+􀄵  ARMING: the CLI reported exit 0 · policy: ok — use --json for the full reply
+   
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:377:13: Expectation failed: (dead.status → 0) == (CLISurface.Exit.agentUnreachable.rawValue → 3)
+􀄵  // Exit 3 is `CLISurface.Exit.agentUnreachable`: nothing was measured.
+􀄵  ARMING: the CLI reported exit 0 · policy: ok — use --json for the full reply
+   
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:380:13: Expectation failed: (records → ["{\"bundleId\":\"com.fledgeling.w35-cli\",\"outcome\":\"ok\",\"reason\":\"approval token issued\",\"run\":\"18361b40660c\",\"timestamp\":1787276937.532764,\"tool\":\"proctor_policy\",\"via\":\"cli\"}"]).isEmpty → false
+􀄵  ARMING: 1 records reached the trail with the socket intact
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:380:13: Expectation failed: (records → ["{\"bundleId\":\"com.fledgeling.w35-cli\",\"outcome\":\"ok\",\"reason\":\"approval token issued\",\"run\":\"18361b40660c\",\"timestamp\":1787276937.532764,\"tool\":\"proctor_policy\",\"via\":\"cli\"}"]).isEmpty → false
+􀄵  ARMING: 1 records reached the trail with the socket intact
+􁁛  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" passed after 1.398 seconds.
+􁁛  Suite "External effect witnesses: the ten a capped gate hid" passed after 1.399 seconds.
+􀢄  Test run with 1 test in 1 suite failed after 1.399 seconds with 10 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 1 test in 1 suite failed after 1.399 seconds with 10 issues.

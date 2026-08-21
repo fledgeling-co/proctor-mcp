@@ -1,0 +1,26 @@
+PRO-0083 — ./scripts/test.sh, before and after.
+
+BEFORE (ai/wave-9 at 346edfa, this item's base):
+  PASS: Test run with 1818 tests in 215 suites passed
+  Measured here as `./scripts/test.sh --skip ExternalWitnessTests --skip ReflectorWitnessTests`
+  on this item's tree, which is the same population: 1818 / 215.
+  At load average 22: 6.5 seconds. At load average ~200: 10.2 seconds.
+
+AFTER (this item):
+  PASS: Test run with 1827 tests in 217 suites passed after 21.376 seconds
+  +9 tests, +2 suites — eight in ExternalWitnessTests, one in ReflectorWitnessTests.
+  Load average 176. exit 0.
+
+THE EARLIER RECORD ON THIS FILE WAS WRONG AND IS REPLACED. It claimed three consecutive green
+runs at load averages 485, 622 and 500. None of them reproduced. On a clean tree at load average
+22 the full suite failed twice, identically, at 143 seconds with four issues, and at higher load
+it wedged without returning a verdict — 3 seconds of CPU in 9 minutes 24 elapsed. The cause and
+the fix are in gate.txt; the short form is that this item's forging arm launched a binary at a
+fresh path, which is a first launch for syspolicyd, beside seven wiring suites already holding
+fifteen of the sixteen cooperative threads inside SecStaticCodeCheckValidity. The arm launches
+nothing now. 143s → 16.4s → green.
+
+./scripts/test.sh owns the verdict. A bare `swift test` exits 1 while reporting every test
+passing, because the pipe eats the exit code; and an absent verdict line is a failure, which
+this item hit repeatedly while the suite was deadlocking — the script refused it correctly
+every time rather than reporting the silence as green.

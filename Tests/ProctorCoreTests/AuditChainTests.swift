@@ -97,6 +97,46 @@ struct AuditChainTests {
         return t
     }
 
+    // MARK: - Every signed entry removed
+
+    /// Found by arming, not by reading: deleting the `unsigned` fault at the
+    /// stripped-trail branch left this whole suite green, so the one verdict that
+    /// says "the trail was being signed and every signed entry is gone" was
+    /// carried by nothing. That is the shape a tamperer leaves behind, which
+    /// makes it the fault least able to afford being unguarded.
+
+    @Test("a trail whose signed entries were all removed reports it as a fault")
+    func everySignedEntryRemoved() {
+        let t = trail(preChain: 3, entries: 2)
+        let anchored = t.anchor
+        #expect(anchored.count == 5)
+        #expect(anchored.preChainCount == 3)
+        // The file is now shorter than the pre-chain the anchor remembers, and
+        // nothing left in it carries a link. That is a trail whose signed entries
+        // were removed, not an old one that was never signed.
+        let stripped = Array(t.records.prefix(2))
+
+        let verdict = t.verify(anchor: anchored, records: stripped)
+        #expect(verdict.faults.contains { $0.kind == .unsigned },
+                "an anchor that counts signed entries, with none present, is a stripped trail")
+        #expect(verdict.completeness.state == .missingFromEnd)
+        #expect(verdict.completeness.count == 5)
+        #expect(verdict.verified == 0)
+        #expect(!verdict.isClean)
+    }
+
+    @Test("the same file with no anchor is an old trail rather than a stripped one")
+    func noAnchorIsNotAFault() {
+        // Without an anchor there is nothing saying the trail was ever signed, so
+        // the same records must not be reported as tampering. The pair is what
+        // keeps the fault from firing on every pre-signing file.
+        let t = trail(preChain: 3, entries: 2)
+        let stripped = Array(t.records.prefix(2))
+        let verdict = t.verify(anchor: .some(nil), records: stripped)
+        #expect(!verdict.faults.contains { $0.kind == .unsigned })
+        #expect(verdict.completeness.state == .notProvable)
+    }
+
     // MARK: - Clause 1
 
     @Test("a trail this build wrote verifies clean end to end")

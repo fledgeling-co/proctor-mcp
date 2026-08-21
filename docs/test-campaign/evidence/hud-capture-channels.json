@@ -34,5 +34,11 @@
   "hudMovedTheFrame": true,
   "baselineReturned": false,
   "controlMovedTheFrame": true,
-  "verdict": "the HUD entered a screencapture frame"
+  "verdict": "the HUD entered a screencapture frame",
+  "framesThatWereNotEvidence": [
+    "evidence/shots/surf-005-takeover-sck-external.png",
+    "evidence/shots/surf-005-takeover-sck-laptop.png",
+    "evidence/shots/surf-005-takeover-sck-window.png"
+  ],
+  "note": "Kept as the record of the false raster pass this campaign corrected: SCFrameStatus complete frames that are entirely transparent. They are not evidence of the shield, which is what made them dangerous."
 }

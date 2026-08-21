@@ -1,0 +1,104 @@
+PRO-0083 · A2 re-measurement · CASE-0080's forged-peer arm, after PRO-0087 landed
+
+THE QUESTION. The verifier saw 3 of 5 verdict-returning runs report
+ForgedCall(answered: false, ok: false): the raw AF_UNIX peer never got a reply, so
+REQ-035's security clause went unexercised on those runs. The diagnosed cause was
+cooperative-pool starvation, fixed by PRO-0087 and merged into this branch at b4c1bd5.
+This file is the re-measurement, not a re-argument.
+
+THE DENOMINATOR IS 30, and it is a len() over the run logs rather than a printed list:
+
+  $ python3 -c "import glob; print(len(glob.glob('/tmp/pro0083/run-*.log')))"
+  30
+
+Thirty consecutive FULL-suite runs through ./scripts/test.sh on one build
+(swift build --build-tests, 111.59s, 150 tasks). Not --filter: the arm's failure mode
+was contention from the other suites, so running it alone would measure the wrong thing.
+
+WHAT ANSWERED.
+
+  runs                                        30
+  runs where the REQ-035 test passed          30
+  runs reporting 'the forging peer stopped'    0
+  full-suite verdicts green                  29
+
+The forged-peer arm answered on 30 of 30. The three assertions it carries —
+answered, ok, and attributions(in: forgedRows) == [nil] — all ran on all thirty,
+because a #expect that did not run cannot report 'passed after'.
+
+CONTENTION, so the number is not a quiet-machine number. Load average was sampled
+every 10s across the window (104 samples): min 245, median 396, max 567.
+That brackets the 176-589 range the original failures and the DEF-043 wedge were seen
+at, so the re-measurement is not standing on a calmer machine than the failures were.
+
+THE INSTRUMENT COULD HAVE REPORTED NON-ZERO. The `answered` expectation was inverted
+on this build and went red, which is the whole of the reason a zero here means anything:
+
+  Expectation failed: !((drives.forger -> ForgedCall(answered: true, ok: true,
+    sent: "{\"id\":\"w35-forged\",\"tool\":\"proctor_policy\",\"via\":\"cli\",...}",
+    stage: "answered", readSeconds: 0.006734967231750488)).answered -> true -> true)
+  ARMING: the forging peer WAS answered, stage=answered after 0.006734967231750488s
+  Test run with 1 test in 1 suite failed after 0.578 seconds with 1 issue.   [gate rc=1]
+
+HOW MUCH HEADROOM, rather than merely 'it passed'. A pass says the read returned
+inside 10 seconds; it does not say by how much, and an arm sitting at 9.9s is one
+scheduler hiccup from the old failure. So the elapsed read was measured directly, by
+temporarily asserting readSeconds > 3600 inside three more FULL-suite runs and reading
+the number off the failure:
+
+  MARGIN: stage=answered read took 0.03034806251525879s of the 10s bound   load1 93.8
+  MARGIN: stage=answered read took 0.03832590579986572s of the 10s bound   load1 670.4
+  MARGIN: stage=answered read took 0.18102300167083740s of the 10s bound   load1 560.9
+
+Worst of the three is 0.181s: 1.8% of the bound, a 55x margin, at load average 561.
+The bound was NOT raised. Raising it would have hidden a starvation rather than closing
+one, and the margin is the evidence that there is no starvation left to hide.
+
+WHAT CHANGED IN THE TEST. `ForgedCall` gained two diagnostic fields, `stage` and
+`readSeconds`, and each early return in `forgeBlocking` now names where it stopped
+(socket / connect / write / read, each with its errno). Nothing asserts on either
+field. The value is in the next failure: the verifier's 3-of-5 reported
+`answered: false` and nothing else, so 'the peer never reached the server' had to be
+inferred rather than read. A repeat now names the syscall and the elapsed time.
+
+ONE RUN OF THE THIRTY WENT RED, AND NOT HERE. run-30 failed after 110.469 seconds with
+4 issues, at the most contended moment of the window. The failures were REQ-020
+(EffectWitnessTests.swift:231, pids.count 0 == 2) and REQ-039
+(ExternalWitnessTests.swift:1393/1395/1400, evictableVerbs empty). REQ-035 passed in
+that same run. Those are other arms and other clauses; recorded here because a
+29-of-30 green suite is the honest number and is not the number this clause turns on.
+
+VERDICT ON A2. The arm reproduces. 30 of 30, at load averages spanning 245 to 567,
+with a 55x timing margin measured rather than assumed.
+
+PER-RUN LEDGER (run, REQ-035 passed, forger stalls, suite verdict):
+  run 1   req035=pass  stalls=0  suite=passed
+  run 2   req035=pass  stalls=0  suite=passed
+  run 3   req035=pass  stalls=0  suite=passed
+  run 4   req035=pass  stalls=0  suite=passed
+  run 5   req035=pass  stalls=0  suite=passed
+  run 6   req035=pass  stalls=0  suite=passed
+  run 7   req035=pass  stalls=0  suite=passed
+  run 8   req035=pass  stalls=0  suite=passed
+  run 9   req035=pass  stalls=0  suite=passed
+  run 10  req035=pass  stalls=0  suite=passed
+  run 11  req035=pass  stalls=0  suite=passed
+  run 12  req035=pass  stalls=0  suite=passed
+  run 13  req035=pass  stalls=0  suite=passed
+  run 14  req035=pass  stalls=0  suite=passed
+  run 15  req035=pass  stalls=0  suite=passed
+  run 16  req035=pass  stalls=0  suite=passed
+  run 17  req035=pass  stalls=0  suite=passed
+  run 18  req035=pass  stalls=0  suite=passed
+  run 19  req035=pass  stalls=0  suite=passed
+  run 20  req035=pass  stalls=0  suite=passed
+  run 21  req035=pass  stalls=0  suite=passed
+  run 22  req035=pass  stalls=0  suite=passed
+  run 23  req035=pass  stalls=0  suite=passed
+  run 24  req035=pass  stalls=0  suite=passed
+  run 25  req035=pass  stalls=0  suite=passed
+  run 26  req035=pass  stalls=0  suite=passed
+  run 27  req035=pass  stalls=0  suite=passed
+  run 28  req035=pass  stalls=0  suite=passed
+  run 29  req035=pass  stalls=0  suite=passed
+  run 30  req035=pass  stalls=0  suite=failed

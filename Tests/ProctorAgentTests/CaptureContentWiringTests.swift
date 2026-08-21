@@ -160,42 +160,108 @@ struct CaptureContentInstrumentTests {
         #expect(text.contains("CaptureContentGate.caveat(for: contentVerdict,"))
     }
 
+    /// The body of `place(_:at:)`, as a line range, so a check can exclude the
+    /// helper's own assignment without excluding anything that merely looks like
+    /// it. Returns `nil` when the helper is not there at all, which is itself a
+    /// failure the caller reports rather than swallows.
+    private func placeHelperBody(in lines: [String]) -> Range<Int>? {
+        let signature = "private static func place(_ panel: NSPanel, at level: NSWindow.Level)"
+        guard let start = lines.firstIndex(where: { $0.contains(signature) }) else { return nil }
+        // Closes at the first line that is the type's own one-level indent, which
+        // is where a nested `private static func` body ends.
+        guard let end = ((start + 1)..<lines.count).first(where: { lines[$0] == "    }" })
+        else { return nil }
+        return (start + 1)..<end
+    }
+
     // CASE-0127
     @Test("the drawn pointer assigns sharingType everywhere it assigns level")
     func thePointerKeepsItsExclusionAcrossBands() throws {
         let text = try source("Sources/ProctorAgent/Overlay/CursorOverlay.swift")
+        let lines = text.components(separatedBy: .newlines)
 
         // Every band change goes through one helper, and that helper sets both.
-        #expect(text.contains("private static func place(_ panel: NSPanel, at level: NSWindow.Level)"))
-        #expect(text.contains("panel.sharingType = .none"))
+        let body = placeHelperBody(in: lines)
+        #expect(body != nil, "place(_:at:) must exist for anything below to mean anything")
+        guard let body else { return }
 
-        // Count the direct level assignments left outside it. Written as a count
-        // rather than a `contains`, because "no direct assignment" is a claim
-        // about a population and a printed line is not a population.
-        let direct = text.components(separatedBy: .newlines).filter { line in
+        // Count the direct level assignments left outside the helper's BODY,
+        // located by line range rather than by what a line says.
+        //
+        // The predicate this replaces excluded every line beginning
+        // `panel.level = `, meaning to skip the helper's own `panel.level =
+        // level`. A direct assignment inside a band-change function is written
+        // `panel.level = .floating` and begins the same way, so the check
+        // excluded precisely the regression it exists to catch and could not go
+        // red. Armed by putting that line back: see
+        // docs/test-campaign/evidence/PRO-0088/case-0127-arming.txt.
+        let direct = lines.enumerated().filter { index, line in
+            guard !body.contains(index) else { return false }
             let t = line.trimmingCharacters(in: .whitespaces)
-            guard !t.hasPrefix("//"), !t.hasPrefix("///") else { return false }
-            return t.contains(".level = ") && !t.hasPrefix("panel.level = ")
+            guard !t.hasPrefix("//") else { return false }
+            return t.contains(".level = ")
         }
+        let reported = direct.map { "line \($0.offset + 1): \($0.element.trimmingCharacters(in: .whitespaces))" }
         #expect(direct.isEmpty,
-                "every level assignment must go through place(_:at:); found \(direct)")
+                "every level assignment must go through place(_:at:); found \(reported)")
 
-        // The instrument's control: it does find the one assignment that is
-        // supposed to be there, inside the helper. A filter that matched nothing
-        // at all would pass the check above while measuring nothing.
-        let insideHelper = text.components(separatedBy: .newlines).filter {
-            $0.trimmingCharacters(in: .whitespaces) == "panel.level = level"
+        // The instrument's control: inside the range it excluded, it does find
+        // the one assignment that is supposed to be there. A range that had
+        // drifted off the helper would pass the check above while measuring
+        // nothing.
+        let insideHelper = body.filter {
+            lines[$0].trimmingCharacters(in: .whitespaces).hasPrefix("panel.level = ")
         }
         #expect(insideHelper.count == 1)
     }
 
-    // The two siblings are unchanged and stay that way: the exclusion on the run
-    // HUD and the takeover statement is correct, and this item does not weaken it.
-    @Test("the run HUD and the takeover statement still exclude themselves")
-    func theSiblingExclusionsAreIntact() throws {
-        #expect(try source("Sources/ProctorAgent/Overlay/RunHUDPanel.swift")
-            .contains("sharingType = .none"))
-        #expect(try source("Sources/ProctorAgent/Overlay/TakeoverOverlay.swift")
-            .contains("panel.sharingType = .none"))
+    /// Every line in a file that assigns `sharingType`, trimmed.
+    private func sharingAssignments(in text: String) -> [String] {
+        text.components(separatedBy: .newlines)
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.hasPrefix("//") && $0.contains("sharingType = ") }
+    }
+
+    // All three overlays, and the property they now share.
+    //
+    // Rewritten against what shipped rather than against this branch's version.
+    // These three expectations were `contains("sharingType = .none")`, written
+    // when the exclusion was an unconditional literal. On `main` it is decided by
+    // `OverlayCapture.excludedFromCapture()`, a capability switch that is off
+    // unless somebody sets `PROCTOR_OVERLAY_CAPTURE`, so a campaign can
+    // photograph the overlays deliberately. A literal `.none` no longer appears
+    // in any of the three files and all three expectations went red on the merge.
+    //
+    // What is asserted instead is the property the literal used to carry: every
+    // `sharingType` assignment in every overlay is decided by that switch, none
+    // is hardcoded, and the switch's own default is exclusion. The last leg is a
+    // behavioural call rather than a source read, so "excluded by default"
+    // is measured rather than inferred from the text of an expression.
+    @Test("every overlay takes its capture exclusion from the switch, which is off by default")
+    func allThreeOverlaysAreExcludedByDefault() throws {
+        let files = [
+            "Sources/ProctorAgent/Overlay/CursorOverlay.swift",
+            "Sources/ProctorAgent/Overlay/RunHUDPanel.swift",
+            "Sources/ProctorAgent/Overlay/TakeoverOverlay.swift",
+        ]
+        var total = 0
+        for file in files {
+            let assignments = sharingAssignments(in: try source(file))
+            // A file with no assignment at all would pass an `allSatisfy` over an
+            // empty list, so the population is required before it is judged.
+            #expect(assignments.count == 1, "\(file) assigns sharingType \(assignments.count) times")
+            #expect(assignments.allSatisfy { $0.contains("excludedFromCapture") },
+                    "\(file): \(assignments)")
+            #expect(assignments.allSatisfy { $0.contains("? .none : .readOnly") },
+                    "\(file): \(assignments)")
+            total += assignments.count
+        }
+        #expect(total == 3)
+
+        // And the switch is off unless asked, so the shipped default over all
+        // three is the exclusion the literal used to state outright.
+        #expect(OverlayCapture.excludedFromCapture(in: [:]))
+        // Armed: it is a real switch and not a constant returning true.
+        #expect(!OverlayCapture.excludedFromCapture(in: [OverlayCapture.variable: "1"]))
     }
 }

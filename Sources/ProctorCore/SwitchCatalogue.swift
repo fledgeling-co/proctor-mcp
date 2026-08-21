@@ -120,6 +120,14 @@ public enum SwitchCatalogue {
                + "Proctor posts a step, so your typing cannot land in the app it is driving.",
         requiresConsent: true)
 
+    public static let overlayCapture = ProctorSwitch(
+        variable: OverlayCapture.variable, kind: .capability, timing: .nextStart,
+        title: "Let captures see Proctor's overlays",
+        summary: "Drop the run panel's and the takeover tint's exclusion from screen "
+               + "captures, so a test can photograph what they draw. While this is on, "
+               + "anything recording the screen sees them too.",
+        requiresConsent: true)
+
     public static let secondLane = ProctorSwitch(
         variable: BrowserUseTool.laneVariable, kind: .lane, timing: .nextStart,
         onValue: BrowserUseTool.binary,
@@ -138,7 +146,7 @@ public enum SwitchCatalogue {
     /// what you see, then what Proctor may take, then which path a run runs on.
     public static let all: [ProctorSwitch] = [
         hud, cursor, takeover, yield,
-        yieldInput, takeoverInput,
+        yieldInput, takeoverInput, overlayCapture,
         secondLane, actuation
     ]
 

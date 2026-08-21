@@ -1,0 +1,13 @@
+{
+  "channel" : "CGImageSource in a process that did not take the capture",
+  "distinctColours" : 1,
+  "fullyTransparentFraction" : 1,
+  "fullyTransparentPixels" : 40000,
+  "height" : 200,
+  "luminanceMean" : 0,
+  "luminanceStdDev" : 0,
+  "ok" : true,
+  "path" : "control-blank.png",
+  "pixels" : 40000,
+  "width" : 200
+}

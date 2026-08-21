@@ -1,0 +1,30 @@
+warning: 'pro-0083': found 4 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-fail.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-pass.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/simctl-devices.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/browser-routing-baseline.json
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Compiling ProctorAgentTests ReflectorWitnessTests.swift
+[6/7] Emitting module ProctorAgentTests
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (42.39s)
+Test Suite 'Selected tests' started at 2026-08-21 12:47:32.812.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-21 12:47:32.813.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-21 12:47:32.813.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-21 12:47:32.813.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "External effect witnesses: the Reflector's own socket" started.
+􀟈  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" started.
+􁁛  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" passed after 1.661 seconds.
+􁁛  Suite "External effect witnesses: the Reflector's own socket" passed after 1.673 seconds.
+􁁛  Test run with 1 test in 1 suite passed after 1.674 seconds.

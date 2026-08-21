@@ -239,12 +239,16 @@ private struct GrantRow: View {
                 if !grant.granted, !unconfirmed, let pane = Actions.pane(for: grant.name) {
                     Button(StatusSurface.Copy.openSettings) { Actions.openPane(pane) }
                         .controlSize(.small)
+                        .accessibilityLabel(AccessibilityNames.grantAction(.openSettings,
+                                                                           grant: grant.name))
                 }
                 if !grant.granted {
                     Button(showHow ? StatusSurface.Copy.hide : StatusSurface.Copy.how) {
                         showHow.toggle()
                     }
                         .controlSize(.small).buttonStyle(.borderless)
+                        .accessibilityLabel(AccessibilityNames.grantAction(
+                            showHow ? .hideHow : .how, grant: grant.name))
                 }
             }
             if let mobility {
@@ -359,6 +363,11 @@ private struct ToolRowView: View {
                         showDetail.toggle()
                     }
                         .controlSize(.small).buttonStyle(.borderless)
+                        // Seven rows carry this button and the word on it is the
+                        // same on every one, so the tool it belongs to is what
+                        // makes it answerable.
+                        .accessibilityLabel(AccessibilityNames.toolDisclosure(
+                            tool: row.tool, expanded: showDetail))
                 }
             }
             if showDetail {
@@ -499,6 +508,11 @@ private struct SwitchRowView: View {
                     .labelsHidden()
                     .toggleStyle(.switch)
                     .disabled(row.locked)
+                    // The visible label is the row's own heading, which the
+                    // toggle does not carry: without this the control reaches
+                    // the accessibility tree as an unnamed checkbox, and nine
+                    // of them in a column are indistinguishable.
+                    .accessibilityLabel(AccessibilityNames.switchToggle(title: row.aSwitch.title))
                     .help(row.locked
                           ? StatusSurface.Copy.lockedHelp(variable: row.aSwitch.variable)
                           : "")

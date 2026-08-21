@@ -1,0 +1,41 @@
+{
+  "at" : "2026-08-21T02:11:35Z",
+  "frontmostBundleID" : "com.apple.Safari",
+  "frontmostName" : "Safari",
+  "frontmostPid" : 86284,
+  "mode" : "windows",
+  "needle" : "Proctor",
+  "probePid" : 2982,
+  "rows" : [
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 1117,
+        "Width" : 1728,
+        "X" : 0,
+        "Y" : 0
+      },
+      "layer" : 1000,
+      "name" : "",
+      "ownerName" : "Proctor Agent",
+      "ownerPID" : 76491,
+      "sharingState" : 0,
+      "windowNumber" : 130709
+    },
+    {
+      "alpha" : 1,
+      "bounds" : {
+        "Height" : 1440,
+        "Width" : 2560,
+        "X" : -716,
+        "Y" : -1440
+      },
+      "layer" : 1000,
+      "name" : "",
+      "ownerName" : "Proctor Agent",
+      "ownerPID" : 76491,
+      "sharingState" : 0,
+      "windowNumber" : 130710
+    }
+  ]
+}

@@ -599,195 +599,194 @@ verdicts with the read that acquitted each), `rate.txt` (the arithmetic and the 
 `blind-findings-after.txt` (76). Spec `docs/specs/spec-PRO-0079.md`, plan
 `docs/plans/plan-PRO-0079.md`.
 
-## The census gate, watched failing
+## The external denominator is 22, and it is a `len()` rather than a printed list
 
-`vacuity-check.py` ships `--seed-strengthen` as the skill's own arming rule turned on its own gate:
-strengthen a requirement's declared constraint to one the registry cannot satisfy, and require the
-census to go red. **It had never been run against this campaign.** Until it had, the census's
-`unclassed examined=45 findings=0` and `uncensused examined=22 findings=0` were indistinguishable
-from predicates that cannot fire — which is exactly what the `blind` pass was before its vocabulary
-was replaced, at `examined=1857 mutating=1 blind=1`.
-
-**The precondition is checked rather than assumed.** `_census_clear` is
-`not (unclassed or uncensused)`. If the census were already red, `after` would be red for a reason
-the mutation did not cause and the tool would still print *the gate bites*. So the census is read
-immediately before, and `before=clear` in both transcripts is load-bearing rather than decorative.
-
-Verbatim, both directions — REQ-017 (`subprocess`, the requirement whose witness PRO-0077 built and
-merged) and REQ-001 (classed `none`). Full transcript at `evidence/census-control.txt`.
+**PRO-0083.** Wave 11 scoped twelve external requirements because `campaign.py check` printed
+twelve. The gate caps that list at twelve and says nothing about the cap. The population is:
 
 ```
-$ shasum -a 256 docs/test-campaign/inventory.json
-9215d5be401c61b55d3a85ef697279dc4f99dd389e6ce0226b232a7bdb225885  docs/test-campaign/inventory.json
-
-$ python3 vacuity-check.py docs/test-campaign --gate
-unclassed:  examined=45 findings=0
-uncensused: examined=22 findings=0
-blind:      NOT RUN — pass --tests <root> to scan the test tree. This is the cheapest of the three and needs no privilege.
-
-vacuity: requirements=45 external=22 findings=0
-exit 0
-
-$ python3 vacuity-check.py docs/test-campaign --seed-strengthen REQ-017
-seed-strengthen REQ-017: before=clear after=red
-The gate bites: strengthening the constraint turned it red, and the registry was restored byte-for-byte.
-exit 0
-
-$ python3 vacuity-check.py docs/test-campaign --seed-strengthen REQ-001
-seed-strengthen REQ-001: before=clear after=red
-The gate bites: strengthening the constraint turned it red, and the registry was restored byte-for-byte.
-exit 0
-
-$ shasum -a 256 docs/test-campaign/inventory.json
-9215d5be401c61b55d3a85ef697279dc4f99dd389e6ce0226b232a7bdb225885  docs/test-campaign/inventory.json
+$ python3 -c "import json; d=json.load(open('docs/test-campaign/inventory.json'));
+  print(len([r for r in d['requirement'] if r.get('effect') not in (None, 'none')]))"
+22
 ```
 
-*Restored byte-for-byte* is a measurement here, not the tool's claim about itself: the SHA-256 is
-identical before the first run and after the last, and `git diff` is empty.
+PRO-0077 took four and PRO-0078 took eight, so **ten were named by no item in the wave** —
+REQ-023, 024, 027, 028, 029, 033, 034, 035, 037, 039. That is the campaign's own first failure
+mode, covering a subset and reporting it as the whole, arriving through the gate rather than
+through a surface map. The number was one `len()` away throughout, and PRO-0077's runner found the
+gap from arithmetic rather than from the gate. Recorded as DEF-041 so the cause sits in the
+registry rather than in a runner's report, and written into this section so the denominator is a
+count of the registry from here on.
 
-### The control passed and left half the gate exactly where it found it
+**Ten cases, one per requirement, because they are different guarantees over shared providers.**
+Six of the ten rest on the agent's single `AF_UNIX` socket. A case covering two of them would let
+one guarantee's silence hide behind the other's noise.
 
-The census has **two** exact passes at requirement level. `--seed-strengthen` sets
-`effect: "packet-filter"` and pops `provider` — which *is* the `uncensused` predicate. So it fires
-`uncensused` and only `uncensused`, whatever the requirement's starting class. Decomposed per pass
-on this registry:
+| Case | Req | Effect | Count | What the recorder is |
+|---|---|---|---:|---|
+| CASE-0080 | REQ-035 | `ipc` | 3 | the trail's sealed bytes on disk, read with a fresh `FileHandle` |
+| CASE-0081 | REQ-034 | `ipc` | 3 | exit status through `waitpid`, plus the server's answered connections |
+| CASE-0082 | REQ-029 | `ipc` | 3 | frames delivered on a held connection, and the `RunControl` latch |
+| CASE-0083 | REQ-033 | `ipc` | 20 | reply bytes off the socket, projected into readiness, switches, history |
+| CASE-0084 | REQ-027 | `ipc` | 3 | a stalling listener's own accepted-descriptor count |
+| CASE-0085 | REQ-037 | `ipc` | 3 | the guest server's own dispatcher, with the host's actuation count beside it |
+| CASE-0086 | REQ-039 | `subprocess` | 7 | sentinel files carrying each child's `$$` and the argv it was given |
+| CASE-0087 | REQ-024 | `subprocess` | 0 | `inconclusive` — see below |
+| CASE-0088 | REQ-023 | `ipc` | 3 | replies off the Reflector's own socket, decoded by `JSONSerialization` |
+| CASE-0089 | REQ-028 | `device` | 2 | the window server's list, `screencapture -l`, and the target's AX server |
 
-| seeded mutation | `unclassed` findings | `uncensused` findings |
-|---|---|---|
-| REQ-017 → `packet-filter`, provider dropped | 0 | 1 |
-| REQ-001 → `packet-filter`, provider dropped | 0 | 1 |
+Every count was read off an arming run with the non-zero assertion inverted, so each one is the
+number the recorder actually saw rather than a number chosen in advance. Every case carries its
+own sabotage in the same test body, so the arming run and the passing run are one measurement
+taken twice on one build.
 
-Running it "in both directions" covers one predicate twice. After it printed *the gate bites*
-twice, `unclassed` was still a pass reporting `examined=45 findings=0` with nothing having watched
-it go red — **the position the control exists to end, surviving the control.** Recorded as DEF-030,
-against the campaign's instrument rather than against Proctor. It is the third instrument in three
-waves to read zero for a structural reason, after the blind vocabulary and after
-`capture_with_manifest.py` writing rows `capture-lineage.py` could not parse.
+**REQ-035 is the one where a wrong answer would have been a security answer.** The claim is that
+the audit trail records which front end called, read from the peer process rather than from the
+request. Two genuinely different front-end children — the real `proctor-cli` and the real
+`proctor-shim`, both built by the same `swift build --build-tests` — were driven against one real
+`Server` on a private socket, and the trail was read back off disk and opened with `AuditSeal`. The
+rows read `via: cli` and `via: mcp`. A third child, neither shipped name, sent a request whose body
+asked to be recorded as `cli`; its row carries `via` **absent**. Same wire bytes, different peers,
+different rows — the field is not reachable from a request.
 
-`scripts/campaign/seed_unclass.py` is the missing direction. It strengthens the *specification*
-rather than the census record — removes a requirement's `effect` field and requires `unclassed` to
-flag it — and it refuses two ways, because a control that cannot refuse is the thing being guarded
-against:
+**That arm did not reproduce when the verifier ran it, and the re-measurement is 30 of 30.** A
+first verification saw the forging peer report `ForgedCall(answered: false, ok: false)` on 3 of 5
+verdict-returning runs: the raw `AF_UNIX` peer never got a reply, so the one clause worth having
+went unexercised on those runs. The cause was the cooperative-pool starvation of DEF-043 seen from
+the client side — `forgeBlocking` waits 10 seconds on `SO_RCVTIMEO` while `Server.dispatchBlocking`
+hands the request to a `Task.detached` that cannot get a pool thread. PRO-0087 made
+`SignatureVerdictCache.verdict(for:)` `async` so waiters suspend instead of blocking, and this
+branch carries it. Re-measured on that build: **thirty consecutive full-suite runs through
+`./scripts/test.sh`, and the REQ-035 test passed on 30 of them, with zero runs reporting a stalled
+peer.** The denominator is a `len()` over the thirty run logs, not a list somebody read off a
+screen. Load average was sampled every ten seconds across the window — min 245, median 396, max 567
+— which brackets the range the original failures were seen at, so this is not a quiet-machine
+number. The bound was **not** raised; raising it would have hidden a starvation rather than closed
+one. What replaces the raise is a measurement of the margin: with `readSeconds > 3600` asserted
+temporarily inside three more full-suite runs, the forger's `read` returned in 0.030s, 0.038s and
+0.181s, the worst of them 1.8% of the 10-second bound at load average 561. `ForgedCall` now carries
+`stage` and `readSeconds` as diagnostics that nothing asserts on, because the verifier's failure
+reported `answered: false` and nothing else, and the next one should name the syscall and the
+elapsed time instead of leaving it to be inferred. One of the thirty runs went red — run 30, 110.5
+seconds, four issues in REQ-020 and REQ-039 at the most contended moment of the window, with
+REQ-035 passing in that same run. Twenty-nine of thirty green is the honest suite number and it is
+not the number this clause turns on. Evidence:
+`evidence/PRO-0083/remeasure-forged-peer.txt`, which carries the per-run ledger and the arming run
+that proves the expectation can still go red.
 
-```
-$ python3 scripts/campaign/seed_unclass.py docs/test-campaign REQ-017
-seed-unclass REQ-017: before=clear after=red (unclassed examined=45 findings=1)
-  REQ-017 names subprocess and declares no `effect` — run the census, or record "effect": "none"
-registry restored byte-for-byte: True (sha256 9215d5be401c61b5…)
-The pass bites: removing the effect class turned unclassed red.
-exit 0
+**REQ-028 shows content and absence in the same second, which is the only way it proves anything.**
+PRO-0078 found `proctor_capture` reporting `status: complete, trustworthy: true` over 2,942,720
+pixels of `RGBA(0,0,0,0)` of a Proctor-owned window (DEF-025, open). The exclusion working and the
+capture path not noticing that exclusion was all it got are one mechanism seen from two sides, so a
+blank frame here would prove nothing. THE ABSENCE: `CGWindowListCopyWindowInfo` reported two
+Proctor Agent windows on screen, CG windows 130709 and 130710, pid 76491, layer 1000, alpha 1,
+`sharingState` 0 — and `screencapture -l`, run by a third process, refused both outright with
+"could not create image from window", which is a stronger negative than an empty frame because the
+channel could not produce an image at all. THE CONTENT, same utility, same second: CG window
+130785, Activity Monitor, pid 28274, a 2536×1640 frame carrying 3,159 distinct colours at 0.054%
+transparent, luminance standard deviation 14.25. The subject is proved by text rather than by
+filename — an independent AX client walked pid 28274 and read 270 strings over 361 nodes, among
+them "Activity Monitor — All Processes" and "coreaudiod", both of which are painted in the
+delivered frame. The blank-frame detector was armed against a hand-built transparent PNG, which
+reads 1 distinct colour and standard deviation 0.0.
 
-$ python3 scripts/campaign/seed_unclass.py docs/test-campaign REQ-011
-REFUSING: REQ-011's text names no effect the vocabulary matches, so removing its `effect` field correctly produces no finding. Scoring that as a red would pass this control on a tautology. Pick a requirement whose text names an external effect.
-exit 2
-```
+`sharingType = .none` on the run HUD and the takeover overlay is correct and was not touched.
+Evidence must not change because somebody was watching.
 
-It sits in this repo rather than as a patch to `vacuity-check.py`, which lives in a plugin cache
-this repo does not own — a fix there is reverted by the next plugin update with nothing saying so.
-DEF-030 stays `open` so it reaches whoever owns the skill.
+**REQ-024 resolves `inconclusive`, and the reason is a registry error rather than a missing
+instrument.** The census records REQ-024 with effect `subprocess` and names `Process()` in
+`Actuation/CuaClients.swift` as its provider. The browser-routing path reaches neither, established
+in source: `BrowserTarget` is pure by its own header, `Session.browserHandoff` returns a disclosure
+six call sites attach to a reply, `ToolProbe`'s header reads "cached, and never executed", and
+`ToolLocator.locate` decides availability with a stat. The two `Process()` sites in that file are
+real and spawn `cua-driver`, but they belong to the CUA delegation lane rather than to browser
+routing. The only boundary this capability crosses is a filesystem **read**, and the campaign's
+closed class list has no member for it. The read was measured anyway — the production locator over
+two real directories answers `missingCompanions: ["obscura-worker"]` for one and none for the
+other, and `chmod 0600` takes availability to false — and recorded under an `inconclusive` case
+rather than dressed up as a witness of a class it is not. REQ-024's row is unchanged: not marked
+`n/a`, not reclassed to `none`, which would silence the gate rather than answer it. DEF-040.
 
-## ProctorAgent, sampled
+**REQ-007 was not revisited.** PRO-0078 recorded it `inconclusive` against a real ceiling, and the
+ceiling was re-read in source here rather than re-argued: `PersonInput.isAPerson`
+(`Contention.swift:265`) returns true only for `sourcePid == 0`, and
+`ContentionMonitor.considerInput:199` guards on it. Zero is what hardware carries and no process
+can forge it. A ceiling that was measured stays measured.
 
-Every mutation site ever scored in this repo was in `ProctorCore`. `ProctorAgent` holds the
-session, the queue, the overlay, the actuation backend and every guest adapter, and no mutant had
-ever been generated in it.
+**The suite, before and after.** 1,818 tests in 215 suites → **1,827 in 217**, exit 0, 21.376
+seconds at load average 176. `./scripts/test.sh` owns that verdict, and it refused every one of the
+deadlocked runs correctly: an absent verdict line is a failure, and it reported one rather than
+reading the silence as green.
 
-**24 mutants over a pool of 3,189 sites across all 84 files, seed 20260821. 3,165 sites unrun.**
-That is 0.75% of the package, and every number below is stated against that denominator.
+That verdict took a second pass to earn. The first recorded green run did not reproduce: on a clean
+tree the full suite failed twice, identically, at 143 seconds with four issues, and wedged outright
+at higher load — 3 seconds of CPU in 9 minutes 24 of elapsed time. The cause was this item's own
+forging arm, which launched a hard-linked copy of `proctor-cli` at a fresh path. A fresh path is a
+first launch for `syspolicyd` however the inode is shared, and it was being assessed while fifteen
+of the sixteen cooperative threads sat inside `SecStaticCodeCheckValidity`; `driveBlocking`
+terminated it at its 120-second bound while the same test passed alone in 0.416 seconds. The arm
+now launches nothing — it is a raw AF_UNIX peer that is the test process itself, which the kernel
+names `proctor-mcpPackageTests` and which maps to no front end — and the run went 143s → 16.4s and
+four issues → one. The claim got stronger in the same change: `--via` is not a flag `proctor-cli`
+parses, so the old arm never put its forgery on the wire, where the hand-framed request now carries
+`"via":"cli"` in the object the server decodes and the trail row still reads nothing.
 
-| | count |
-|---|---|
-| sites in pool | 3,189 |
-| selected and run | 24 |
-| **SURVIVED** | **19** |
-| scored killed | 5 |
-| unbuildable | 0 |
-| trustworthy kills | **3** |
+**What the gates read after this item.** `campaign.py check`: external effects
+`examined=22 witnessed=20`, up from 11 — and it still exits 1, correctly, over the two
+`inconclusive` cases. `strict-check` 79 of 81 checked, ratchet raised 70 → 79 in the same commit.
+`capture-lineage --gate` exit 0 at ratchet 5, published 7 and distinct 7 — **unmoved, and checked
+rather than assumed**: CASE-0089's frame is a case-level artifact under
+`evidence/PRO-0083/glass/`, not a surface's `shot`, so the lineage population it is measured
+against genuinely does not include it. Wave 11a's lesson was that a gate reading an empty
+population exits 0 while examining nothing, so the count was read before and after rather than
+inferred.
 
-**Two of the five kills are not trustworthy, and the runner cannot tell.** `SessionActivate.swift:166`
-and `UnlockBroker.swift:110` both scored at exactly 600.0s, which is the timeout, and `run_suite`
-scores a timeout as killed. Load average was 22.9 when the run started and 271.4 when it finished.
-So the honest figure is **3 kills of 22 scored — a survival rate of 86.4%**, against `ProctorCore`'s
-50%. That is DEF-033, and it is DEF-018's shape one package over.
+**The gate did not return a verdict at first, and what that cost is the second finding.** Adding
+nine integration tests beside the suite stopped `./scripts/test.sh` completing at all. `sample` on
+the wedged process, repeatedly and across samples seven minutes apart, put fourteen to fifteen of
+the sixteen cooperative-pool threads inside one call: `Session.doctor` →
+`SignatureVerdictCache.verdict` → `CuaPreflight.verifySignature` → `SecStaticCodeCheckValidity`,
+in seven unrelated wiring suites. It is a synchronous blocking call made from inside the session
+actor, and Swift's cooperative pool has exactly `activeProcessorCount` threads and never grows.
+`codesign -v` on the same binary returned instantly from a shell throughout, so the system was not
+the bottleneck — the process was. Recorded as DEF-043.
 
-Two things keep this readable rather than merely alarming. **Survivors are trustworthy in both
-directions**: starvation can turn a survivor into a false kill, but it cannot turn a kill into a
-false survivor, so all 19 stand whatever the load did. And **no kill below 600s is timeout-scored**:
-the three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so they are real test
-failures rather than starved runs. Per-mutant seconds are in `evidence/mutation-agent.json`.
+That leaves two free slots, and anything needing a third while holding a lock other tests block on
+deadlocks the run. This item hit it three ways, each fixed in the test rather than in the product:
+blocking waits on child processes and sockets moved onto threads the tests own; `TrailIsolation`
+held only across code that never suspends, so the lock never waits on a pool slot two other trail
+suites are already blocked for; and the witness sessions given tool probes that answer from a
+table instead of locating the real `cua-driver` on this machine. Attribution was measured rather
+than assumed at each step — `--skip` over this item's two suites passed at 1,818 tests in 12.5
+seconds while the full run never returned, and the same comparison was re-run at load average 500
+so that load could be ruled out as the confound.
 
-One of the two untrustworthy kills should not have been a mutant at all. `mutate_swift.py`'s
-integer-literal operator matched the `0` in a closure shorthand parameter and rewrote
-`bind(fd, $0, size)` to `bind(fd, $1, size)`, which cannot compile. It should have scored
-`unbuildable`; under load the build did not finish inside the timeout, so it scored a kill instead,
-and the summary's `unbuildable: 0` is wrong for a reason the tool cannot see. DEF-032.
+**A test wrote the operator's real policy file, and a neighbouring witness failed because of it.**
+Driving `proctor-cli policy --action configure --block` to reach exit code `refused` created
+`~/Library/Application Support/app.fledgeling.procter/policy/policy.json` on this machine with the
+test's bundle id blocked. `AuditLog` carries `seams.directory` and an `isTestProcess` interlock for
+exactly this reason; `PolicyStore` carries neither. PRO-0077's REQ-015 witness then failed with
+`policyDenied` **in a later run where this item's suites were skipped entirely**, because the block
+had outlived the process that wrote it. The entry was removed from the operator's file, the
+configure was dropped, and CASE-0081 now records that the policy gate is unreachable from that lane
+rather than dropping it silently. DEF-042.
 
-### The nineteen survivors, and what happened to each
+**The ceilings, named rather than left as silence.** The nine passing cases stand on the portable
+floor from `references/effect-boundary.md`: real child processes, real sockets answering real
+connections, real files read back with fresh descriptors, and a third process holding the recorder
+wherever one could. There is no kernel bar anywhere in this item — no `dtrace`, no `eslogger`, no
+`execve` census — because SIP is on and this suite has no privilege for one. CASE-0088's server and
+client are the same process, so what it witnesses is a real `AF_UNIX` round trip through the kernel
+and a real AppKit walk rather than a cross-process one; the agent ships `NullReflectorBridge`, so
+there is no in-repo production client to drive it from a second process, and writing one would be
+building the subject rather than witnessing it.
 
-Five are killed by new tests in `Tests/ProctorAgentTests/MutationSurvivorTests.swift`. One is
-equivalent. Thirteen are recorded uncovered. **`equivalent` and `uncovered-by-lane` are different
-claims and are kept apart**, because recording a coverage hole as a mathematical impossibility is
-how a suite stops looking for the test.
-
-| # | site | mutation | disposition |
-|---|---|---|---|
-| 21 | `AX/KeyCodes.swift:18` | `"n": 45` → `46` | **killed** — CASE-0075 |
-| 2 | `RunIdentity.swift:30` | `prefix(12)` → `13` | **killed** — CASE-0076 |
-| 18 | `Session/PixelCompare.swift:38` | `by: 4` → `by: 5` | **killed** — CASE-0077 |
-| 17 | `Unlock/UnlockBroker.swift:51` | `+= 1` → `+= 2` | **killed** — CASE-0078 |
-| 14 | `Overlay/RunHUDContentView.swift:830` | `ms < 1000` → `<=` | **killed** — CASE-0079 |
-| 13 | `Session/SessionMaestro.swift:242` | `$0.key < $1.key` → `<=` | **equivalent** |
-| 1 | `AX/AXEngineImpl.swift:33` | `\|\|` → `&&` | uncovered-by-lane |
-| 4 | `Overlay/TakeoverOverlay.swift:771` | `+ 44` → `+ 45` | uncovered-by-lane |
-| 9 | `Capture/MarkRenderer.swift:141` | `scale * 2` → `* 3` | uncovered-by-lane |
-| 12 | `Overlay/RunHUDPanel.swift:653` | `canBecomeMain false` → `true` | uncovered-by-lane |
-| 16 | `AX/CGWindowCorrelation.swift:59` | `matches[0]` → `matches[1]` | uncovered-by-lane |
-| 20 | `Overlay/TakeoverOverlay.swift:363` | `==` → `!=` | uncovered-by-lane |
-| 3 | `Dispatch.swift:381` | `includeTiles` default `false` → `true` | no seam |
-| 11 | `Dispatch.swift:394` | `presentation` default `true` → `false` | no seam |
-| 5 | `Session/Session.swift:92` | `flowsLoaded false` → `true` | no seam |
-| 8 | `Session/SessionFlow.swift:493` | `timeoutMs: 3000` → `3001` | no seam |
-| 10 | `Session/SessionKill.swift:26` | `==` → `!=` | no seam |
-| 19 | `Overlay/RunHUDContentView.swift:97` | `hex(17, …)` → `hex(18, …)` | no seam |
-| 22 | `Session/AuditKeyStore.swift:47` | `isDirectory: false` → `true` | no seam |
-
-**The one equivalent mutant is argued, not asserted.** `SessionMaestro.swift:242` sorts
-`score.undersampled` by key. That value is `[Int: Int]` (`StabilityCaptures.swift:200`), so its keys
-are unique by construction, no two elements ever compare equal, and `<` and `<=` produce the same
-total order. No test can distinguish them. It joins `RunHUDGate.onSegment`'s `<=` boundary on the
-record rather than being chased.
-
-**`uncovered-by-lane` means the site needs a window server, a live event tap or a real workspace**
-that this headless lane does not have — AppKit view geometry, `NSPanel` focus behaviour,
-`CGWindowListCopyWindowInfo` records, `NSWorkspace.shared.runningApplications`, a `CGEvent` tap
-being disabled by the system. **`no seam` is the weaker and more honest label**: the behaviour is
-headless-testable in principle, but reaching it needs a fake the suite does not have today — a
-dispatcher drive that observes argument defaults, a `Session` over a populated on-disk flow store, a
-capture engine that records the `timeoutMs` it was handed, a design-token drift test binding the HUD
-palette to the generated tokens, and a `publicKeyURL` that is `private` with no accessor. Six of the
-thirteen are that, and they are a backlog rather than a limit.
-
-### The five that are now watched
-
-Each was armed by re-applying its mutant after the test was written and watching the named test go
-red — all five together, 8 issues, exit 1, then reverted. `evidence/mutation-arming.txt`.
-
-The oracle is deliberately never the constant in the source. `KeyCodes` is checked against Carbon's
-own `kVK_ANSI_*`; the RGBA stride against the identity that two uniform images differing by `delta`
-per channel have a mean absolute channel difference of exactly `delta / 255` whatever the pixel
-count; the run id's alphabet against the UUID it is drawn from. Asserting a value the test itself
-supplied is how DEF-019 shipped, and it is not repeated here.
-
-Two are worth reading twice. `KeyCodes` had **nothing checking the table against anything**, so with
-`"n": 46` the letters `n` and `m` shared a code — `proctor_act` typing "n" presses M — and 1,818
-tests stayed green. And `PixelCompare.meanDifference` backs the `regionMatches` assertion, so it is
-the instrument every caller's tolerance is measured in; at stride 5 it reads misaligned channels and
-visits four fifths of the pixels, and every existing test compared images that were either identical
-or wildly different, both of which survive a broken stride.
-
-**This figure is not copied into `.warrant/suite-health.json`.** `mutation_measured: false` there is
-correct and is not stale: it means warrant's own assay has not run, and a value copied into a
-generated file is a second source that drifts.
+**One instrument fault caught before it could read zero for a structural reason.** CASE-0088's
+first run asked the Reflector for `"constraints": true` and got no constraints key at all, because
+`Runtime.decode(options:)` reads `"includeConstraints"`. A constraints assertion on that request
+would have failed for a wire-protocol reason and been read as a product one — the same shape as
+PRO-0078's probe counting survivors by a mark the tagged arm could not carry. Before believing a
+zero, check the instrument could have reported non-zero.
 
 ## What was not checked
 

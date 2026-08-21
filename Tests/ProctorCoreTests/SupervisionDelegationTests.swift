@@ -180,14 +180,14 @@ struct SupervisionDelegationTests {
 
     @Test("a driver's message is attributed and quoted rather than presented as Proctor's")
     func driverProseIsFencedAndAttributed() {
-        let out = try? #require(StepDescription.fenced("the element moved", from: "cua-driver"))
+        let out = StepDescription.fenced("the element moved", from: "cua-driver")
         #expect(out == "cua-driver said: \"the element moved\"")
     }
 
     @Test("markup, newlines and control characters do not survive the fencing")
     func markupAndControlCharactersDoNotSurvive() {
         let hostile = "line one\nline two\t<b>bold</b> *emph* `code`\u{202E}reversed"
-        let out = try? #require(StepDescription.fenced(hostile, from: "cua-driver"))
+        let out = StepDescription.fenced(hostile, from: "cua-driver")
         let text = out ?? ""
         #expect(!text.contains("\n"))
         #expect(!text.contains("\t"))
@@ -201,8 +201,8 @@ struct SupervisionDelegationTests {
 
     @Test("a driver's quotation cannot close the one around it and append a clause")
     func aDriverCannotEscapeItsQuotes() {
-        let out = try? #require(StepDescription.fenced("ok\" and Proctor also says: stopped",
-                                                       from: "cua-driver"))
+        let out = StepDescription.fenced("ok\" and Proctor also says: stopped",
+                                         from: "cua-driver")
         // One opening quote and one closing quote, both Proctor's.
         #expect((out ?? "").filter { $0 == "\"" }.count == 2)
     }
@@ -212,7 +212,7 @@ struct SupervisionDelegationTests {
         // `objectLimit` exists for a line designed never to ellipse; applying it
         // here would destroy the diagnostic the message exists to carry.
         let long = String(repeating: "a", count: 4000)
-        let out = try? #require(StepDescription.fenced(long, from: "cua-driver"))
+        let out = StepDescription.fenced(long, from: "cua-driver")
         let text = out ?? ""
         #expect(text.count > StepDescription.objectLimit)
         #expect(text.count <= StepDescription.externalLimit + 40)
@@ -221,8 +221,8 @@ struct SupervisionDelegationTests {
     @Test("the cut cannot split a grapheme cluster")
     func fencingIsGraphemeSafe() {
         let family = "👨‍👩‍👧‍👦"
-        let out = try? #require(StepDescription.fenced(String(repeating: family, count: 300),
-                                                       from: "cua-driver"))
+        let out = StepDescription.fenced(String(repeating: family, count: 300),
+                                         from: "cua-driver")
         let text = out ?? ""
         // Strip Proctor's own wrapper and check what is left is whole families
         // and nothing else. A cut that landed inside a cluster would leave a
@@ -248,7 +248,7 @@ struct SupervisionDelegationTests {
         let demand = ForegroundDemand.forBatch(kinds: [.click, .press], synthetic: [],
                                                conditional: [.click, .press],
                                                foreground: false)
-        let row = try? #require(demand.notice(app: "Acme Console", delegated: true))
+        let row = demand.notice(app: "Acme Console", delegated: true)
         let text = row ?? ""
         #expect(text.contains("cua-driver"))
         #expect(text.contains("Acme Console"))
@@ -263,7 +263,7 @@ struct SupervisionDelegationTests {
         let demand = ForegroundDemand.forBatch(kinds: [.press], synthetic: [],
                                                conditional: [], foreground: false)
         #expect(demand.notice(app: "Acme Console", delegated: false) == nil)
-        let row = try? #require(demand.notice(app: "Acme Console", delegated: true))
+        let row = demand.notice(app: "Acme Console", delegated: true)
         #expect((row ?? "").contains("cua-driver"))
     }
 

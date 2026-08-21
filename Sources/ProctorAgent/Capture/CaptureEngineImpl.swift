@@ -152,8 +152,17 @@ final class CaptureEngineImpl: CaptureEngine {
             bundleIdentifier: scWindow.owningApplication?.bundleIdentifier)
         let contentVerdict = CaptureContentGate.verdict(summary: contentSummary,
                                                         targetIsProctorOwned: ownedByProctor)
-        let trustworthy = meta.status == .complete && contentRectIsReal
-                       && contentVerdict == .content
+
+        // Completeness and a real rect stay in `CaptureTrust`, in Core, where a
+        // machine with no window server can drive them — both were once found
+        // unguarded by arming, and that is the fix. The content check is
+        // conjoined here rather than folded in, because it needs the frame's
+        // bytes and those never reach Core.
+        let trustworthy = CaptureTrust.trustworthy(
+            frameComplete: meta.status == .complete,
+            contentWidth: meta.contentRect?.w ?? 0,
+            contentHeight: meta.contentRect?.h ?? 0)
+            && contentVerdict == .content
 
         var caveat: String?
         if !trustworthy {

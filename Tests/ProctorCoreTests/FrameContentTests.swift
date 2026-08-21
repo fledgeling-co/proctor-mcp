@@ -98,12 +98,40 @@ struct FrameContentGateTests {
                                                   distinctColours: 0, allTransparent: false)
         #expect(CaptureContentGate.verdict(summary: nothingLookedAt,
                                            targetIsProctorOwned: false) == .notMeasured)
-        #expect(CaptureContentGate.caveat(for: .notMeasured, summary: nothingLookedAt,
-                                          window: "win:4:0") == nil)
 
         // Armed: hand it a real sample and the verdict leaves .notMeasured.
         #expect(CaptureContentGate.verdict(summary: summary(alpha: 0),
                                            targetIsProctorOwned: false) != .notMeasured)
+    }
+
+    // CASE-0199 — a verdict that makes a frame untrustworthy must say why.
+    @Test("an unmeasured frame is untrustworthy with a reason, not untrustworthy in silence")
+    func anUnmeasuredFrameCarriesItsReason() {
+        // `CaptureEngineImpl` conjoins `contentVerdict == .content` into
+        // `trustworthy`, so .notMeasured returns false, and its caveat ladder
+        // reaches this function in the final `else`. Returning nil there hands a
+        // caller `trustworthy: false` with nothing beside it.
+        let nothingLookedAt = FrameContentSummary(pixelsSampled: 0, maxAlpha: 0,
+                                                  distinctColours: 0, allTransparent: false)
+        let caveat = CaptureContentGate.caveat(for: .notMeasured, summary: nothingLookedAt,
+                                               window: "win:4:0")
+        #expect(caveat != nil)
+        #expect(caveat?.contains("win:4:0") == true)
+        #expect(caveat?.contains("not measured") == true)
+
+        // And it does not say the window was empty, which is the claim a
+        // measurement that never ran has no standing to make. `.emptyFrame` is
+        // the verdict that says that, and it says it in different words.
+        #expect(caveat?.contains("no content") == false)
+        #expect(caveat?.contains("fully transparent") == false)
+        #expect(caveat != CaptureContentGate.caveat(for: .emptyFrame, summary: nothingLookedAt,
+                                                    window: "win:4:0"))
+
+        // Armed against the opposite over-correction: `.content` is still the
+        // one verdict with nothing to say, so this is not a function that has
+        // started returning a sentence for everything.
+        #expect(CaptureContentGate.caveat(for: .content, summary: summary(alpha: 255),
+                                          window: "win:4:0") == nil)
     }
 
     // CASE-0123b — ownership is decided by the bundle identifier the window

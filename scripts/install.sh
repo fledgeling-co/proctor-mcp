@@ -71,7 +71,30 @@ if [ -d "$BUILT_APP" ] && xcrun stapler validate "$BUILT_APP" >/dev/null 2>&1; t
   STAPLED=yes
 fi
 
-if [ "$STAPLED" = yes ] && [ -z "${PROCTOR_FORCE_BUILD:-}" ]; then
+# ...but only while it still matches the source it was built from. Reusing a
+# stapled bundle whose sources have moved installs the previous build and says
+# "notarised: yes" while doing it, which is indistinguishable from success.
+# Measured 2026-08-19: two consecutive installs shipped a binary predating the
+# edit they were run to install, and the second was only caught by reading the
+# file's timestamp. Newer source wins; the rebuild re-notarises below.
+STALE=no
+if [ "$STAPLED" = yes ]; then
+  BUILT_BINARY="$BUILT_APP/Contents/MacOS/proctor-agent"
+  if [ ! -f "$BUILT_BINARY" ]; then
+    STALE=yes
+  elif [ -n "$(find "$REPO_ROOT/Sources" "$REPO_ROOT/Apps" "$REPO_ROOT/Package.swift" \
+                    -newer "$BUILT_BINARY" -print -quit 2>/dev/null)" ]; then
+    STALE=yes
+  fi
+fi
+
+if [ "$STAPLED" = yes ] && [ "$STALE" = yes ] && [ -z "${PROCTOR_REUSE_BUNDLE:-}" ]; then
+  say "==> the notarised bundle is older than the source it was built from — rebuilding"
+  say "    (PROCTOR_REUSE_BUNDLE=1 installs it as it stands anyway)"
+fi
+
+if [ "$STAPLED" = yes ] && { [ "$STALE" = no ] || [ -n "${PROCTOR_REUSE_BUNDLE:-}" ]; } \
+   && [ -z "${PROCTOR_FORCE_BUILD:-}" ]; then
   say "==> using the notarised bundle as built (PROCTOR_FORCE_BUILD=1 to rebuild)"
 else
   say "==> building"

@@ -1,0 +1,29 @@
+PRO-0095 — ./scripts/test.sh, before and after.
+Run rather than cited. The exit code is read from a file, not from a
+pipeline: this script exists because 'swift test | tail' reports tail's
+status and reads a red suite as green.
+
+== BEFORE, on ai/pro-0095 at 4d76b3c with no change applied ==
+$ PROCTOR_TEST_LOG=... ./scripts/test.sh
+􁁛  Test run with 1862 tests in 220 suites passed after 16.096 seconds.
+EXIT=0
+
+== AFTER ==
+$ PROCTOR_TEST_LOG=... ./scripts/test.sh
+􁁛  Test run with 1868 tests in 221 suites passed after 22.713 seconds.
+EXIT=0
+
+== THE DELTA ==
+  1862 tests in 220 suites  ->  1868 tests in 221 suites
+  +6 tests, +1 suite:
+    5 in the new 'Policy file mode' suite  (CASE-0190..0193, CASE-0198)
+    1 in 'Signature verdict cache'         (CASE-0197)
+
+  The 8 checks for DEF-075 add no Swift test to the count: they live in
+  scripts/campaign/test_instruments.py, which one existing Swift test runs.
+  That file went from 15 checks to 23:
+    campaign instruments: 23 passed, 0 failed
+
+== WHAT IS NOT GREEN BY THIS RUN ==
+  Nothing in this item. The item stops before the verify stage and before
+  merge, so no cross-family verdict has been taken and nothing is merged.

@@ -25,9 +25,20 @@ import Foundation
 /// measured over the same pixels the PNG on disk was encoded from, so the
 /// verdict and the file a person opens are about the same frame.
 public struct FrameContentSummary: Codable, Sendable, Equatable {
-    /// How many pixels the summary looked at. Sampling is strided, so this is
-    /// the population of the measurement and not the size of the frame — a
-    /// claim about "every pixel" would be false for anything large.
+    /// How many pixels the summary looked at, which is every pixel in the
+    /// frame.
+    ///
+    /// Alpha is read exhaustively rather than on a stride. A square stride over
+    /// a 3456x2234 frame steps 7-8 pixels, so a one-pixel hairline falls between
+    /// every sample and a window with something in it reports empty — a false
+    /// positive on the exact edge this file exists for. `allTransparent` is
+    /// therefore a claim about the whole frame, and this is its denominator.
+    ///
+    /// `distinctColours` is the one field here that is still strided, and it is
+    /// reported rather than judged, so nothing keys off its population.
+    ///
+    /// Zero means no measurement was taken at all — a layout this cannot read,
+    /// or a buffer shorter than its own geometry. It never means an empty frame.
     public var pixelsSampled: Int
     /// The highest alpha byte seen, 0...255.
     public var maxAlpha: Int
@@ -79,13 +90,30 @@ public enum CaptureContentGate {
     }
 
     /// Why the frame cannot be vouched for, in the words a caller reading the
-    /// reply needs. `nil` when there is nothing to say.
+    /// reply needs. `nil` only for `.content`, which is the only verdict that
+    /// leaves the frame trustworthy and so the only one with nothing to say.
+    ///
+    /// `.notMeasured` used to return `nil` too, on the reading that a check
+    /// which claims nothing owes no explanation. That was wrong once the verdict
+    /// started gating `trustworthy`: the caller gets `trustworthy: false` over a
+    /// frame whose bytes were never read, and an untrustworthy verdict with no
+    /// reason beside it is the shape of report this whole item exists to stop.
+    /// The sentence says what could not be done, and takes care not to imply the
+    /// window was empty — that is the claim not being made.
     public static func caveat(for verdict: CaptureContentVerdict,
                               summary: FrameContentSummary?,
                               window: String) -> String? {
         switch verdict {
-        case .content, .notMeasured:
+        case .content:
             return nil
+        case .notMeasured:
+            return "The content of window \(window) was not measured, so nothing here says "
+                 + "whether the frame depicts anything. The bytes did not arrive in the 32BGRA "
+                 + "layout the capture stream asks for, or the buffer was shorter than its own "
+                 + "geometry, and reading them either way would have reported a colour channel "
+                 + "as alpha. This is not a report that the window was empty. The PNG was "
+                 + "written from these same bytes, so it is the thing to look at; retry the "
+                 + "capture if the picture disagrees."
         case .excludedTarget:
             return "Window \(window) belongs to Proctor, and Proctor excludes its own windows from "
                  + "its own captures so the run HUD and the takeover statement never appear in a "
