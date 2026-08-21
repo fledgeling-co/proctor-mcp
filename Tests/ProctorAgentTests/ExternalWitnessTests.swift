@@ -432,6 +432,12 @@ struct ExternalWitnessTests {
         var answered = false
         var ok = false
         var sent = ""
+        /// Where the forging peer stopped, for a failure that has to name a
+        /// cause. Diagnostic only: nothing asserts on it.
+        var stage = "unstarted"
+        /// Wall-clock seconds the peer spent in `read`, so a bound that was hit
+        /// is distinguishable from a socket that answered nothing.
+        var readSeconds: Double = 0
     }
 
     /// The MCP front end's real job, as one stdio conversation.
@@ -470,7 +476,7 @@ struct ExternalWitnessTests {
             """
         call.sent = body
         let fd = socket(AF_UNIX, SOCK_STREAM, 0)
-        guard fd >= 0 else { return call }
+        guard fd >= 0 else { call.stage = "socket(errno \(Darwin.errno))"; return call }
         defer { close(fd) }
         var addr = sockaddr_un()
         addr.sun_family = sa_family_t(AF_UNIX)
@@ -481,7 +487,7 @@ struct ExternalWitnessTests {
                 Darwin.connect(fd, $0, size)
             }
         }
-        guard rc == 0 else { return call }
+        guard rc == 0 else { call.stage = "connect(errno \(Darwin.errno))"; return call }
         var bound = timeval(tv_sec: 10, tv_usec: 0)
         setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &bound, socklen_t(MemoryLayout<timeval>.size))
         let payload = Data(body.utf8)
@@ -490,10 +496,19 @@ struct ExternalWitnessTests {
         withUnsafeBytes(of: &declared) { frame.append(contentsOf: $0) }
         frame.append(payload)
         let sent = frame.withUnsafeBytes { raw in write(fd, raw.baseAddress!, raw.count) }
-        guard sent == frame.count else { return call }
+        guard sent == frame.count else {
+            call.stage = "write(\(sent) of \(frame.count), errno \(Darwin.errno))"
+            return call
+        }
         var chunk = [UInt8](repeating: 0, count: 16384)
+        let began = Date()
         let read = Darwin.read(fd, &chunk, chunk.count)
-        guard read > 4 else { return call }
+        call.readSeconds = Date().timeIntervalSince(began)
+        guard read > 4 else {
+            call.stage = "read(\(read) bytes, errno \(Darwin.errno), after \(String(format: "%.1f", call.readSeconds))s)"
+            return call
+        }
+        call.stage = "answered"
         call.answered = true
         if let decoded = try? JSONDecoder().decode(AgentResponse.self,
                                                    from: Data(chunk[4..<read])) {
@@ -569,7 +584,7 @@ struct ExternalWitnessTests {
         #expect(drives.mcp.out.contains("\"id\":2"),
                 "the shim answered nothing for the call · \(drives.mcp.summary)")
         #expect(drives.forger.answered,
-                "the forging peer got no answer to \(drives.forger.sent)")
+                "the forging peer stopped at \(drives.forger.stage) sending \(drives.forger.sent)")
         #expect(drives.forger.ok,
                 "the forging peer's call was refused, so it left no row to read")
 

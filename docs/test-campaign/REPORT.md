@@ -649,6 +649,31 @@ rows read `via: cli` and `via: mcp`. A third child, neither shipped name, sent a
 asked to be recorded as `cli`; its row carries `via` **absent**. Same wire bytes, different peers,
 different rows — the field is not reachable from a request.
 
+**That arm did not reproduce when the verifier ran it, and the re-measurement is 30 of 30.** A
+first verification saw the forging peer report `ForgedCall(answered: false, ok: false)` on 3 of 5
+verdict-returning runs: the raw `AF_UNIX` peer never got a reply, so the one clause worth having
+went unexercised on those runs. The cause was the cooperative-pool starvation of DEF-043 seen from
+the client side — `forgeBlocking` waits 10 seconds on `SO_RCVTIMEO` while `Server.dispatchBlocking`
+hands the request to a `Task.detached` that cannot get a pool thread. PRO-0087 made
+`SignatureVerdictCache.verdict(for:)` `async` so waiters suspend instead of blocking, and this
+branch carries it. Re-measured on that build: **thirty consecutive full-suite runs through
+`./scripts/test.sh`, and the REQ-035 test passed on 30 of them, with zero runs reporting a stalled
+peer.** The denominator is a `len()` over the thirty run logs, not a list somebody read off a
+screen. Load average was sampled every ten seconds across the window — min 245, median 396, max 567
+— which brackets the range the original failures were seen at, so this is not a quiet-machine
+number. The bound was **not** raised; raising it would have hidden a starvation rather than closed
+one. What replaces the raise is a measurement of the margin: with `readSeconds > 3600` asserted
+temporarily inside three more full-suite runs, the forger's `read` returned in 0.030s, 0.038s and
+0.181s, the worst of them 1.8% of the 10-second bound at load average 561. `ForgedCall` now carries
+`stage` and `readSeconds` as diagnostics that nothing asserts on, because the verifier's failure
+reported `answered: false` and nothing else, and the next one should name the syscall and the
+elapsed time instead of leaving it to be inferred. One of the thirty runs went red — run 30, 110.5
+seconds, four issues in REQ-020 and REQ-039 at the most contended moment of the window, with
+REQ-035 passing in that same run. Twenty-nine of thirty green is the honest suite number and it is
+not the number this clause turns on. Evidence:
+`evidence/PRO-0083/remeasure-forged-peer.txt`, which carries the per-run ledger and the arming run
+that proves the expectation can still go red.
+
 **REQ-028 shows content and absence in the same second, which is the only way it proves anything.**
 PRO-0078 found `proctor_capture` reporting `status: complete, trustworthy: true` over 2,942,720
 pixels of `RGBA(0,0,0,0)` of a Proctor-owned window (DEF-025, open). The exclusion working and the
