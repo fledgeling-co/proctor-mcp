@@ -35,8 +35,8 @@ in full, so the contract below is the brief's rather than a re-derivation of it.
 | A5 | DEF-057 decided and recorded, with the fork referred out of family | CASE-0155, CASE-0156 |
 | A6 | REQ-024 recorded `vacuous` rather than reclassed to `none` | `evidence/PRO-0091/campaign-check-after.txt` |
 | A7 | A registry-merge script sweeps every key, with a test that a dropped key is caught | CASE-0157, CASE-0158 |
-| A8 | Every check is watched red on a fixture built to trip it, and green when restored | `evidence/PRO-0091/instrument-arming.txt` |
-| A9 | `./scripts/test.sh` owns the verdict on all of it | CASE-0159 |
+| A8 | All 15 checks the suite emits are watched red on a fixture built to trip it, and green when restored | `evidence/PRO-0091/instrument-arming.txt` |
+| A9 | `./scripts/test.sh` run, not cited: exit 0 over 1838 tests, and exit 1 when one instrument check is armed | `evidence/PRO-0091/gate-run.txt`, CASE-0159 |
 
 ## The two decisions this item had to make rather than assume
 

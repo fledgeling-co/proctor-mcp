@@ -1466,8 +1466,8 @@
       "docs/test-campaign/evidence/PRO-0091/instrument-arming.txt"
     ],
     "armed": true,
-    "armedBy": "mutation 1 of instrument-arming.txt takes the $ back out of the operator's lookbehind and the check goes red, naming closure shorthand; restored, the same run is green.",
-    "note": "PRO-0091, DEF-032. mutate_swift.py's integer-literal operator no longer matches Swift closure shorthand. The lookbehind is now (?<![\\w.$]). Tested over a fixture holding $0 three times, a property wrapper's projected value $state, and a real literal 3: no candidate is generated at the $0 sites, the projected value is left alone, and 3 \u2192 4 still is \u2014 a fix that stopped the operator firing at all would pass the first assertion by itself, so the second is what makes the first mean something. Mutant 24 of 24 in the first ProctorAgent sample rewrote `{ bind(fd, $0, size) }` to `bind(fd, $1, size)`, which cannot compile, and under load 271 it scored as a KILL at the 600s timeout rather than as unbuildable \u2014 so the summary's `unbuildable: 0` was wrong for a reason the tool could not see."
+    "armedBy": "mutations 1, 7 and 8 of instrument-arming.txt take this check's family red one at a time \u2014 the $ out of the lookbehind, \\s into it so no literal fires at all, and \\w out of it so a digit inside an identifier does \u2014 and the same run is green once each is restored.",
+    "note": "PRO-0091, DEF-032. mutate_swift.py's integer-literal operator no longer matches Swift closure shorthand. The lookbehind is now (?<![\\w.$]). Tested over a fixture holding $0 three times, a property wrapper's projected value $pane2, and a real literal 3: no candidate is generated at the $0 sites, the 2 inside the projected value's name is left alone, and 3 \u2192 4 still is \u2014 a fix that stopped the operator firing at all would pass the first assertion by itself, so the second is what makes the first mean something. Mutant 24 of 24 in the first ProctorAgent sample rewrote `{ bind(fd, $0, size) }` to `bind(fd, $1, size)`, which cannot compile, and under load 271 it scored as a KILL at the 600s timeout rather than as unbuildable \u2014 so the summary's `unbuildable: 0` was wrong for a reason the tool could not see. The projected-value assertion was written against $state and could not fire: no operator in the 11-entry table matches a bare identifier, so it was true of every table that could exist. It now asserts over $pane2, where the digit is held back by \\w in the same lookbehind, and mutation 8 of instrument-arming.txt watches it red."
   },
   {
     "id": "CASE-0154",
@@ -1550,11 +1550,12 @@
     "lane": "headless",
     "status": "pass",
     "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/gate-run.txt",
       "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt"
     ],
     "armed": true,
-    "armedBy": "the Swift wrapper asserts the count as well as the exit code, so a suite that discovered nothing fails: '0 passed, 0 failed' exits 0 and is the shape of an instrument reporting a clean result over a population it never examined.",
-    "note": "PRO-0091. Tests/ProctorCoreTests/CampaignInstrumentTests.swift runs scripts/campaign/test_instruments.py, so ./scripts/test.sh owns the verdict \u2014 a Python file nobody runs is the same shape of finding as the ones it was written to close. It requires at least 15 checks to have been made, then requires the exit code to be 0. Two of the checks are additionally re-expressed in Swift, driving the same two scripts directly: the mutation runner over a closure-shorthand fixture, and the merge verifier over the hand-merge that lost FLOW-010."
+    "armedBy": "run 2 of gate-run.txt puts mutation 1 back into mutate_swift.py and runs ./scripts/test.sh itself: the gate exits 1 and names the check, so run 1's exit 0 is a measurement rather than the absence of one.",
+    "note": "PRO-0091. Tests/ProctorCoreTests/CampaignInstrumentTests.swift runs scripts/campaign/test_instruments.py, so ./scripts/test.sh owns the verdict \u2014 a Python file nobody runs is the same shape of finding as the ones it was written to close. It requires at least 15 checks to have been made, then requires the exit code to be 0. Two of the checks are additionally re-expressed in Swift, driving the same two scripts directly: the mutation runner over a closure-shorthand fixture, and the merge verifier over the hand-merge that lost FLOW-010. Run under ./scripts/test.sh on 2026-08-21: exit 0, 1838 tests in 217 suites, with the Campaign instruments suite among them. ScreenRecordingProbeWiringTests did not fail in that run but leaked its continuation three times; that is DEF-029/051's wall-clock oracle, which PRO-0089 owns, and nothing in it was touched here."
   },
   {
     "id": "CASE-0110",
