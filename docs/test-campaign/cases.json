@@ -2428,5 +2428,346 @@
       "docs/test-campaign/evidence/PRO-0096/gate-inconclusive-exemption.txt"
     ],
     "note": "PRO-0096 finding 3, and it closed as NO CHANGE with the plugin left exactly as shipped. The brief reported that CASE-0067 (REQ-007) and CASE-0087 (REQ-024) were being flagged for a witness count of 0 while both are `inconclusive`, called that possibly over-strict, and asked whether the check should exempt an inconclusive case \u2014 to be fixed in the plugin and declared, since the plugin is live for every project on this machine.\n\nMEASURED FIRST: test-campaign 0.9.4 ALREADY EXEMPTS THEM, so there was nothing to fix and nothing to ask. The guard is `if c.get('oracle') in WITNESS_RUNGS and st == 'pass'` (campaign.py:751), and `state_of` maps both cases off `pass` \u2014 CASE-0087's bare 'inconclusive' and CASE-0067's 'inconclusive: PersonInput.isAPerson requires sourcePid == 0...' both resolve to `inconclusive` via the startswith branch. A live gate run on the unmodified registry names only CASE-0114 in 'Effect witnesses that witnessed nothing', three times, and neither of the two the brief named appears anywhere in it.\n\nThe code read alone would not have settled it, so it was armed rather than asserted: flipping ONLY CASE-0067's status to `pass`, with count 0 left exactly as it was, makes the gate flag it immediately. The guard can fire on that case; it declines to, on the status. That is the exemption working, not a case the check never visits.\n\nNO PLUGIN CHANGE WAS MADE AND NOTHING NOW DIFFERS FROM STOCK on this machine. campaign.py at ~/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.9.4/skills/test-campaign/scripts/campaign.py is byte-for-byte as installed. The clarify referral the brief asked for was not raised either, and deliberately: clarify's own gate drops a question whose answer cannot change the work, and a measurement had already answered this one in both directions. The two cases were not touched, as instructed \u2014 they remain `inconclusive` and remain a declared stop on the gate, which is the honest place for them.\n\nWHAT DOES STILL HOLD THE GATE for these two is separate and is not this: REQ-007 and REQ-024 are two of the four requirements recorded `observed` with an external effect and no passing effect-witness case behind them. That blocker is real, it is upstream of these cases' status, and PRO-0096 did not touch it."
+  },
+  {
+    "id": "CASE-0250",
+    "req": "REQ-073",
+    "surface": "SURF-009",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "docs/test-campaign/evidence/PRO-0090/a-walkthrough-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two sentences planted at the top of the file \u2014 one in an array, one returned from a function: FAIL: 2 user-facing literal(s) of 2 examined, exit 1. Removed, exit 0. The denominator matters here: Walkthrough.swift went from 56 examined to 0, so a PASS could have meant the instrument had nothing left to read, and this shows it still bites at the new denominator.",
+    "note": "Walkthrough.swift holds no literal the classifier calls user-facing. 56 of 56 display literals moved to WalkthroughFlow.Copy in commit 154bd84; the file now examines 0 and reports 0. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py, plus WalkthroughFlowTests.theWalkthroughViewHoldsNoLiterals, which counts quote characters outside comments over the whole file",
+      "examined": 322
+    }
+  },
+  {
+    "id": "CASE-0251",
+    "req": "REQ-073",
+    "surface": "SURF-009",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0090/gate-final.txt"
+    ],
+    "armed": true,
+    "armedBy": "One moved sentence altered by a word in the constant: the verbatim test failed naming both spellings. Restored, green.",
+    "note": "The moved walkthrough copy is character-identical to what shipped, asserted against the pre-conversion text committed as evidence. PRO-0081 lost a section heading in the same move and a fresh verifier found it; this is the guard against a repeat."
+  },
+  {
+    "id": "CASE-0252",
+    "req": "REQ-073",
+    "surface": "SURF-009",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/gate-final.txt"
+    ],
+    "armed": true,
+    "armedBy": "The two twins made equal: the test failed on the inequality it asserts. Restored, green.",
+    "note": "DEF-035's kept pairs. The walkthrough's unrendered twins are asserted to differ from what ships, so a silent convergence is a change somebody made rather than drift nobody noticed."
+  },
+  {
+    "id": "CASE-0253",
+    "req": "REQ-075",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/RunHistoryWiringTests.swift",
+      "Tests/ProctorCoreTests/HistorySurfaceTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/b-history-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "A HistorySurface.Wire key respelled on the writer side alone: the test failed naming the key the reader could not find. Restored, green.",
+    "note": "The history wire contract has one definition both ends reach. SessionHistory.swift wrote \"capDays\" and HistoryModel.swift read \"capDays\" with nothing binding them; both now name HistorySurface.Wire. The reader takes a default for a key it cannot find, so a parted rename reports a wrong answer quietly rather than failing."
+  },
+  {
+    "id": "CASE-0254",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "docs/test-campaign/evidence/PRO-0090/c-historywindow-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two sentences planted: FAIL: 2 user-facing literal(s) of 3 examined, exit 1. Removed, exit 0. HistoryWindow fell from 91 examined to 1, so the arming is what makes the PASS mean anything.",
+    "note": "HistoryWindow.swift holds no literal the classifier calls user-facing. 71 of 91 display literals moved to HistorySurface.Copy in commit 1276dd0. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py, plus HistorySurfaceTests.theHistoryViewHoldsNoUserFacingLiterals, which reads every line holding a quote and requires an interpolation in it",
+      "examined": 552
+    }
+  },
+  {
+    "id": "CASE-0255",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/HistorySurfaceTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/c-historywindow-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The label switched back to matching the singular spelling: the test failed reporting the raw wire word where the label belonged. Restored, green.",
+    "note": "DEF-130, found in the HistoryWindow conversion. PlaneBadge matched case \"appleEvent\" while ActuationPlane's raw value is \"appleEvents\", so every Apple Events step drew the wire word. The label matches on the enum now, which makes the mismatch a compile error."
+  },
+  {
+    "id": "CASE-0256",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/HistorySurfaceTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/gate-final.txt"
+    ],
+    "armed": true,
+    "armedBy": "The halted outcome given the failure mark: the test failed on the clause that halted is not a failure. The counted-sentence check armed separately by making one sentence disagree with its number. Both restored, green.",
+    "note": "The history window's outcome vocabulary. Every outcome has its own mark, halted is not drawn as a failure, a run whose outcome is unknown is never summarised as failed, every counted sentence agrees with its number, and a step's cost is said in a unit that reads."
+  },
+  {
+    "id": "CASE-0257",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/d-proctoruiapp-gate.txt",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two ways. The classifier: two sentences planted, FAIL: 2 of 4 examined, exit 1. The Swift guard: the scene id respelled as the literal \"main\" in ProctorUIApp.swift, which failed at SurfaceLiteralsTests.swift:190 \u2014 recorded in g-surfaces-arming.txt. Both restored, green.",
+    "note": "ProctorUIApp.swift holds no literal the classifier calls user-facing, and the scene names have one definition rather than four. 53 of 69 display literals moved in commit a6d10e8. The scene id is what openWindow addresses and the title is what the launch path resizes on, so a drift in either fails silently \u2014 which is why the id, the title and the defaults key are each asserted at their Core home and scanned for at the drawing site. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py, plus SurfaceLiteralsTests.sceneNamesAreNamed, which scans the comment-stripped file for five named spellings",
+      "examined": 292
+    }
+  },
+  {
+    "id": "CASE-0258",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/h-def135-runner-abort.txt"
+    ],
+    "armed": true,
+    "armedBy": "Both directions. A name in CommandID with no command behind it: Expectation failed: (command -> nil) != nil, and title(id) fell back to the id. A command in the catalogue CommandID does not name: Expectation failed on the contains check. Both recorded in g-surfaces-arming.txt and h-def135-runner-abort.txt. Restored, green.",
+    "note": "Every named command id resolves against the catalogue and title() returns the catalogue's wording, and every catalogue command has a named id. A typo in an id took a menu item off the menu bar silently before this: commandButton draws nothing at all for an id that does not resolve."
+  },
+  {
+    "id": "CASE-0259",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "ExtrasCopy.status set to the catalogue's \"Status\": Expectation failed: (ExtrasCopy.status -> \"Status\") != (title(CommandID.status) -> \"Status\"). Restored, green.",
+    "note": "DEF-035's kept pairs, on the menu bar. The extra draws three wordings of its own; two differ from the catalogue deliberately and one agrees. The two that differ are asserted to differ and the one that agrees is asserted to agree, so neither can move without somebody deciding to move it."
+  },
+  {
+    "id": "CASE-0260",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Quit's shortcut written as the two-key \"\u2318QQ\": Expectation failed: (keys.count -> 2) == 1. Restored, green. The instrument could also report zero by finding no shortcuts at all, so the same test asserts at least five commands carry one.",
+    "note": "Every shortcut reduces to named modifier glyphs plus exactly one key, which is what KeyEquivalentParser can read. A shortcut it cannot parse draws no key equivalent and the command becomes mouse-only."
+  },
+  {
+    "id": "CASE-0261",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/e-agentmodel-gate.txt",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two ways. The classifier: two sentences planted, FAIL: 2 of 9 examined, exit 1. The Swift guard: AgentModel reading value[\"canShow\"] as a literal again, which failed at SurfaceLiteralsTests.swift:138. Both restored, green.",
+    "note": "AgentModel.swift holds no literal the classifier calls user-facing, and the 29 keys it reads out of the agent's replies are scanned for by name so a literal cannot come back. 39 of 47 display literals moved in commit ebdabc5. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py, plus SurfaceLiteralsTests.agentModelNamesTheWireKeys, which scans the comment-stripped file for 29 named wire keys",
+      "examined": 443
+    }
+  },
+  {
+    "id": "CASE-0262",
+    "req": "REQ-075",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/AgentVerbsWiringTests.swift",
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The writers mutated rather than the readers, which is the half that fails silently: RunHUDFeed writing \"canShowX\" and Session writing \"yieldX\". Five tests across three suites failed naming the missing keys \u2014 Set(wire.keys) -> [\"phase\", \"canShowX\", \"running\", \"drawing\"] against the expected set, and yield?[\"active\"] -> nil == true in the hold-attribution wiring. Restored, green.",
+    "note": "REQ-075 on the second wire contract: the HUD and foreground payload the agent writes and the window reads. AgentModel took a ?? false default for a key it could not find, so a parted rename did not fail \u2014 it drew a wrong answer. Both ends name AgentVerbs now, and the guard binds the writers as well as the reader."
+  },
+  {
+    "id": "CASE-0263",
+    "req": "REQ-074",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "Sources/ProctorCore/StatusSurface.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The branch put back as `if case .unreachable = model.reachability { EmptyView() }`: Expectation failed at SurfaceLiteralsTests.swift:27 naming ReadinessSection. Restored, green. The state-machine half is asserted in the same test and is a value read rather than a source scan.",
+    "note": "DEF-037. The permissions section carried a branch for an unreachable agent, and sections(for: .down) returns [.agentDown] alone \u2014 so the branch drew for nobody while duplicating AgentDownSection's two buttons without their accessibility identifiers. Deleted in commit b2db8a3. The guard holds both clauses: the state machine never gives that section that state, and the section no longer matches on it. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "SurfaceLiteralsTests.readinessHasNoUnreachableBranch, slicing the comment-stripped MainWindow.swift between two declaration anchors that fail the test if either has moved",
+      "examined": 823
+    }
+  },
+  {
+    "id": "CASE-0264",
+    "req": "REQ-074",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The applying treatment's condition replaced with `if false`: Expectation failed at SurfaceLiteralsTests.swift:39, the section no longer naming model.isApplying. Restored, green.",
+    "note": "The other half of DEF-037. isApplying with an unreachable agent is a reachable state \u2014 a grant lands, reprobeAfterGrant() restarts the agent, and the poll meets the gap \u2014 so the spinner moved into AgentDownSection, which is the block actually on screen then. The 1.2-second timer that clears the flag is not made trustworthy by this and stays open as DEF-132. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "SurfaceLiteralsTests.agentDownDrawsApplying, over the same anchored slice of MainWindow.swift",
+      "examined": 823
+    }
+  },
+  {
+    "id": "CASE-0265",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The Tools card pointed at Copy.toolsNoteInDesign: Expectation failed at SurfaceLiteralsTests.swift:65, the file drawing the twin. Restored, green.",
+    "note": "DEF-035 at the drawing site rather than at the constant, which is how it survived a suite that already had a value-level check. The Tools card is asserted to reference StatusSurface.Copy.toolsNote and no file in Sources/ProctorUI may mention either \u2026InDesign twin. Source-analysis and claims nothing above that rung: it proves the view names the constant, not that a rendered window carries the sentence. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "SurfaceLiteralsTests.toolsCardBindsToShippedNote, over the anchored ToolsSection slice plus all eight files in Sources/ProctorUI for the \u2026InDesign twins",
+      "examined": 823
+    }
+  },
+  {
+    "id": "CASE-0266",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/gate-final.txt"
+    ],
+    "armed": true,
+    "armedBy": "One assembled line altered by its separator: the test failed printing both spellings. Restored, green.",
+    "note": "The composed sentences, where the assembly is what can drift rather than the words. Twelve menu-bar lines and the login-item log line are asserted character for character, including the singular and plural forms and the waiting suffix that must be empty at zero."
+  },
+  {
+    "id": "CASE-0267",
+    "req": "REQ-073",
+    "surface": "SURF-009",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/a-walkthrough-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "prominentGrant made unconditional: the at-most-one clause failed at the combination where both grants are missing. Restored, green.",
+    "note": "DEF-056. Exactly one grant is prominent at all four combinations of the two grants, a grant is nominated in every state where one is still missing, and GrantRow takes prominence as a parameter rather than deciding it. This is the one decision function this item introduced; it did not exist before and is named in the spec as a deliberate move."
+  },
+  {
+    "id": "CASE-0268",
+    "req": "REQ-064",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/CommandSurfaceTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/h-def135-runner-abort.txt"
+    ],
+    "armed": true,
+    "armedBy": "The probe is two-way and that is the whole of it. One mutation \u2014 the catalogue's pause and show-panel entries given different ids \u2014 run against both forms of the assertion. Pre-fix `command(id)!`: signal 5, 0 tests reported, 0 suites reported, 0 verdict lines, scripts/test.sh exit 1 on 'no swift-testing verdict line'. Post-fix `try #require`: Test run with 1963 tests in 239 suites failed with 12 issues, exit 1, four guards naming what they found. Same mutation, opposite reporting.",
+    "note": "DEF-135. A test that force-unwraps a lookup takes the runner down with it, so the suite reports nothing about any of its 1,963 tests \u2014 including the four honest failures the kill-switch test had already recorded in the same run. This case exists because a suite that cannot report is not green and is not red; it puts every zero in the run in question."
+  },
+  {
+    "id": "CASE-0269",
+    "req": "REQ-064",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Five files, two sentences planted in each, every one moving from exit 0 to exit 1 with display 2. Removed, all five back to exit 0.",
+    "note": "The denominator guard the plan named as a risk. This conversion moves machinery out of the files it certifies, and the examined counts fall hard \u2014 Walkthrough 56 to 0, HistoryWindow 91 to 1, ProctorUIApp 69 to 2, AgentModel 47 to 7. A PASS at a denominator of 0 is a PASS over nothing, so the classifier is shown to still bite at each file's new size rather than at the size it had when the item started."
   }
 ]

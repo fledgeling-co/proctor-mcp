@@ -1,0 +1,56 @@
+PRO-0090 — arming run for the guards added in steps 4-7 (ProctorUIApp, AgentModel, DEF-037, DEF-035).
+Command: PROCTOR_TEST_LOG=... ./scripts/test.sh   (whole suite, no filter)
+Date: 2026-08-21T22:35:29Z  Worktree: .worktrees/PRO-0090  Branch: ai/pro-0090 @ b2db8a3 + arming
+
+== The six mutations armed, one per production file ==
+  -            AgentVerbs.HUD.canShow: .bool(now.canShow)
+  +            "canShowX": .bool(now.canShow)
+  -            AgentVerbs.Foreground.yield: yieldJSON
+  +            "yieldX": yieldJSON
+  -        .init(id: CommandID.quit, title: "Quit Proctor", shortcut: "⌘Q", menu: .proctor,
+  +        .init(id: CommandID.quit, title: "Quit Proctor", shortcut: "⌘QQ", menu: .proctor,
+  -            help, refusals, diagnostics,
+  +            help, refusals, diagnostics, "nonesuch",
+  -        public static let status = "Proctor Status…"
+  +        public static let status = "Status"
+  -            self.canShow = value[AgentVerbs.HUD.canShow]?.boolValue ?? false
+  +            self.canShow = value["canShow"]?.boolValue ?? false
+  +            if case .unreachable = model.reachability { EmptyView() }
+  -                Text(StatusSurface.Copy.toolsNote)
+  +                Text(StatusSurface.Copy.toolsNoteInDesign)
+  -            if model.isApplying {
+  +            if false {
+  -        Window(StatusSurface.Copy.windowTitle, id: StatusSurface.sceneID) {
+  +        Window(StatusSurface.Copy.windowTitle, id: "main") {
+
+== Verdict ==
+􀢄  Test run with 1963 tests in 239 suites failed after 9.533 seconds with 26 issues.
+scripts/test.sh exit: 1
+
+== Every guard that fired ==
+  􀢄  Test "the wire shape carries everything the menu bar needs and nothing else" recorded an issue at RunHUDMenuBarWiringTests.swift:76:9: Expectation failed: (wire["canShow"]?.boolValue → nil) == true
+  􀢄  Test "the wire shape carries everything the menu bar needs and nothing else" recorded an issue at RunHUDMenuBarWiringTests.swift:77:9: Expectation failed: (Set(wire.keys) → ["phase", "canShowX", "running", "drawing"]) == ["phase", "running", "drawing", "canShow"]
+  􀢄  Test "the activity feed carries the keys the menu bar reads out of it" recorded an issue at AgentVerbsWiringTests.swift:66:13: Expectation failed: (foreground[key] → nil) != nil
+  􀢄  Test "the activity feed carries the keys the menu bar reads out of it" recorded an issue at AgentVerbsWiringTests.swift:69:25: Expectation failed: (foreground[AgentVerbs.Foreground.yield] → nil).objectValue → nil → nil
+  􀢄  Test "the run panel's payload carries exactly the keys the window reads" recorded an issue at AgentVerbsWiringTests.swift:27:9: Expectation failed: (Set(object.keys) → ["drawing", "phase", "running", "canShowX"]) == (expected → ["running", "phase", "drawing", "canShow"])
+  􀢄  Test "A2 · the window reads the agent's payload through named constants" recorded an issue at SurfaceLiteralsTests.swift:138:13: Expectation failed: !((model → "import Foundation
+  􀢄  Test "A2 · the scene names have one definition, not four" recorded an issue at SurfaceLiteralsTests.swift:190:13: Expectation failed: !((app → "import SwiftUI
+  􀢄  Test "A2 · every shortcut is written with the named glyphs and one key" recorded an issue at SurfaceLiteralsTests.swift:114:13: Expectation failed: (keys.count → 2) == 1
+  􀢄  Test "A2 · the extra's own three wordings are the three that differ" recorded an issue at SurfaceLiteralsTests.swift:96:9: Expectation failed: (CommandSurface.ExtrasCopy.status → "Status") != (CommandSurface.title(CommandSurface.CommandID.status) → "Status")
+  􀢄  Test "A4 · the agent-down block is what draws while a grant is being applied" recorded an issue at SurfaceLiteralsTests.swift:39:9: Expectation failed: (section → "
+  􀢄  Test "A4 · the permissions section has no branch for an unreachable agent" recorded an issue at SurfaceLiteralsTests.swift:27:9: Expectation failed: !((section → "
+  􀢄  Test "A2 · every named command id resolves, and title returns the catalogue's" recorded an issue at SurfaceLiteralsTests.swift:77:13: Expectation failed: (command → nil) != nil
+  􀢄  Test "A2 · every named command id resolves, and title returns the catalogue's" recorded an issue at SurfaceLiteralsTests.swift:79:13: Expectation failed: (CommandSurface.title(id) → "nonesuch") == (command?.title → nil)
+  􀢄  Test "A6 · the Tools card names Copy.toolsNote, and no view draws the twin" recorded an issue at SurfaceLiteralsTests.swift:65:17: Expectation failed: !((source → "import SwiftUI
+  􀢄  Test "the menu bar carries the hold, and the icon ladder is untouched" recorded an issue at YieldWiringTests.swift:426:25: Expectation failed: activity["foreground"]?["yield"] → nil
+  􀢄  Test "the yield block names the session, the app and the display" recorded an issue at HoldAttributionWiringTests.swift:413:9: Expectation failed: (yield?["active"]?.boolValue → nil) == true
+  􀢄  Test "the yield block names the session, the app and the display" recorded an issue at HoldAttributionWiringTests.swift:414:9: Expectation failed: (yield?["reason"]?.stringValue → nil) == "frontmostChanged"
+  􀢄  Test "the yield block names the session, the app and the display" recorded an issue at HoldAttributionWiringTests.swift:418:9: Expectation failed: (yield?["session"]?.stringValue → nil) == "diolog-web 0000"
+  􀢄  Test "the yield block names the session, the app and the display" recorded an issue at HoldAttributionWiringTests.swift:419:9: Expectation failed: (yield?["line"]?.stringValue?.contains("diolog-web 0000") → nil) == true
+  􀢄  Test "the yield block names the session, the app and the display" recorded an issue at HoldAttributionWiringTests.swift:420:9: Expectation failed: (yield?["line"]?.stringValue?.hasPrefix(YieldReason.frontmostChanged.line) → nil) == true
+  􀢄  Test "the yield block keeps its shape when nothing is held" recorded an issue at HoldAttributionWiringTests.swift:447:9: Expectation failed: (yield?["active"]?.boolValue → nil) == false
+  􀢄  Test "the yield block keeps its shape when nothing is held" recorded an issue at HoldAttributionWiringTests.swift:451:13: Expectation failed: (yield?[key] → nil) == .null
+  􀢄  Test "the yield block keeps its shape when nothing is held" recorded an issue at HoldAttributionWiringTests.swift:451:13: Expectation failed: (yield?[key] → nil) == .null
+  􀢄  Test "the yield block keeps its shape when nothing is held" recorded an issue at HoldAttributionWiringTests.swift:451:13: Expectation failed: (yield?[key] → nil) == .null
+  􀢄  Test "the yield block keeps its shape when nothing is held" recorded an issue at HoldAttributionWiringTests.swift:451:13: Expectation failed: (yield?[key] → nil) == .null
+  􀢄  Test "the yield block keeps its shape when nothing is held" recorded an issue at HoldAttributionWiringTests.swift:451:13: Expectation failed: (yield?[key] → nil) == .null

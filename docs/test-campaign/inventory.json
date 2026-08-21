@@ -2246,11 +2246,12 @@
   },
   {
    "id": "DEF-133",
-   "status": "open",
+   "status": "fixed",
    "severity": "low",
-   "title": "Three commits on ai/pro-0090 cite arming evidence at paths that were never committed",
+   "title": "This item wrote its arming evidence into two different roots, so six commits cite a path that resolves in only one of them",
    "found": "PRO-0090 resume, reading what survived",
-   "detail": "154bd84, 4cedfc8 and 1276dd0 each close with a path under evidence/PRO-0090/ \u2014 a-walkthrough-arming.txt, b-history-arming.txt, c-historywindow-arming.txt. `git ls-files evidence/` lists none of them and the directory held nothing before this session wrote to it. The runs may well have happened; what is missing is the artifact, so five guards' arming is asserted by a commit message and cannot be read. The predecessor was killed by a stall detector mid-item, which is the likeliest explanation and is not a reason to believe the zeros without re-arming them."
+   "detail": "Read again at the resume with `git ls-files` over both roots. The artifacts were committed and the earlier reading of this row was wrong; what is true is that they went to two places. 154bd84, 4cedfc8 and 1276dd0 cite `evidence/PRO-0090/a-walkthrough-arming.txt` and its two siblings, which were committed to `docs/test-campaign/evidence/PRO-0090/` \u2014 the root the repo's other ~120 campaign artifacts use. a6d10e8, ebdabc5 and b2db8a3 then cite `evidence/PRO-0090/d-proctoruiapp-gate.txt` and five siblings, which really were at the repository root, in an `evidence/` directory holding nothing in the whole repo but this item's seven files. So three commits name a path that never existed and three name a second root nothing else uses, and a reader following either citation from the wrong half finds nothing.",
+   "fix": "The seven root files are `git mv`'d into docs/test-campaign/evidence/PRO-0090/ and the root `evidence/` directory is gone. Every PRO-0090 artifact sits under one root and the six commit messages' citations resolve by basename. The commits themselves are not rewritten. This item."
   },
   {
    "id": "DEF-134",
@@ -2260,6 +2261,23 @@
    "found": "PRO-0090, when DEF-037's explanation was added to AgentDownSection",
    "detail": "The 'right three' scan took String(source[region.lowerBound...]).prefix(1600) from `private struct AgentDownSection` and asserted the Re-check button was inside it. Adding the paragraph explaining why the applying spinner moved into that block pushed the button past character 1600 and the assertion failed while the button was exactly where it belonged. The same test's footer check already bounded its region at the next declaration and says in a comment why; this loop did not. It does now.",
    "fix": "this item"
+  },
+  {
+   "id": "DEF-135",
+   "status": "fixed",
+   "severity": "high",
+   "title": "A force-unwrapped optional in a test aborted the whole runner, so 1,963 tests reported no verdict at all and the failures already found were lost with them",
+   "found": "PRO-0090, when the guards added in steps 4-7 were armed and the armed run died instead of reporting",
+   "detail": "CommandSurfaceTests.swift:47 read `CommandSurface.command(id)!` over the literal ids [\"pause\", \"stop\"], and :65/:70 did the same for \"show-panel\" and \"hide-panel\". An id that stops resolving is exactly what these tests exist to catch, and the way they caught it was a fatal error: swiftpm-testing-helper takes signal 5, the process is gone, and swift-testing never prints a verdict line. Measured with the catalogue's pause entry given a different id, in docs/test-campaign/evidence/PRO-0090/h-def135-runner-abort.txt: 0 tests reported a verdict, 0 suites reported a verdict, 0 'Test run with N tests' lines, and scripts/test.sh exit 1 reading 'no swift-testing verdict line in the output'. What it masked is in the three lines printed immediately before the abort: the kill-switch test had already recorded four honest failures about Pause missing from the menu bar, the extras menu and the run panel, and none of them reached a verdict. A whole-suite abort is worse than a red suite, because a red suite says which tests failed and this said nothing about any of the 1,963. It also puts every other zero in the run in question: a suite that cannot report cannot be read as green or as red.",
+   "fix": "All three sites take `try #require` and name their ids from CommandSurface.CommandID rather than spelling them, so a rename moves both ends at once. Armed both ways under one mutation: the pre-fix form aborted with no verdict; the fixed form under the identical mutation reported 1,963 tests in 239 suites failed with 12 issues, exit 1, with all four affected guards naming what they found. This item."
+  },
+  {
+   "id": "DEF-136",
+   "status": "open",
+   "severity": "medium",
+   "title": "Twenty-seven more force-unwrap sites across nine test files carry DEF-135's shape, each able to abort the runner rather than fail its own test",
+   "found": "PRO-0090, sweeping for the shape once DEF-135 was measured",
+   "detail": "`grep -rn ')!' Tests` outside the file this item fixed: AuditChainTests 11, AuditChainWiringTests 4, ProctorCoreTests 3, TUIHistoryPaneTests 2, ToolchainTests 2, SwitchSettingsTests 2, MenuBarReadinessTests 1, GuestInventoryTests 1, RunHUDCharacterAssetTests 1. Not all are equally live \u2014 TimeZone(identifier: \"UTC\")! cannot fail on a Mac. But Toolchain.entry(for:)!, AuditSeal.decode(...)! and script.range(of: \"kill -0\")! each unwrap a lookup against production data, which is DEF-135's shape exactly: the regression the test exists for is the input that kills the runner. Left open rather than fixed here because a sweep across nine unrelated suites is a different item from this one's four surfaces, and each site needs a reading of whether #require or a restructure is right."
   }
  ]
 }

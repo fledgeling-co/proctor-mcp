@@ -1,0 +1,26 @@
+PRO-0090 — the literals classifier armed on every file it certifies.
+Date: 2026-08-21T22:37:48Z  scripts/campaign/status_literals.py, untouched by this item.
+
+The denominator falls hard in this conversion — Walkthrough goes 56 examined to 0,
+HistoryWindow 91 to 1, ProctorUIApp 69 to 2, AgentModel 47 to 7 — so a PASS could
+mean the instrument has nothing left to read. Two sentences planted into each file
+prove it still bites at the new denominator.
+
+== As written ==
+  Walkthrough.swift      exit=0  PASS: 0 user-facing literals of 0 examined; 0 are identifiers, symbols, system strings or punctuation.
+  HistoryModel.swift     exit=0  PASS: 0 user-facing literals of 1 examined; 1 are identifiers, symbols, system strings or punctuation.
+  HistoryWindow.swift    exit=0  PASS: 0 user-facing literals of 1 examined; 1 are identifiers, symbols, system strings or punctuation.
+  ProctorUIApp.swift     exit=0  PASS: 0 user-facing literals of 2 examined; 2 are identifiers, symbols, system strings or punctuation.
+  AgentModel.swift       exit=0  PASS: 0 user-facing literals of 7 examined; 7 are identifiers, symbols, system strings or punctuation.
+  MainWindow.swift       exit=0  PASS: 0 user-facing literals of 45 examined; 45 are identifiers, symbols, system strings or punctuation.
+  MenuBarCharacter.swift exit=0  PASS: 0 user-facing literals of 1 examined; 1 are identifiers, symbols, system strings or punctuation.
+  Motion.swift           exit=0  PASS: 0 user-facing literals of 0 examined; 0 are identifiers, symbols, system strings or punctuation.
+
+== With two sentences planted at the top of the file ==
+     let proctorArmingProbe = ["a sentence a person reads"]
+     func proctorArmingDraw() -> String { return "Restart the agent" }
+  Walkthrough.swift      exit=1  FAIL: 2 user-facing literal(s) of 2 examined. Move them to StatusSurface.Copy.
+  HistoryWindow.swift    exit=1  FAIL: 2 user-facing literal(s) of 3 examined. Move them to StatusSurface.Copy.
+  ProctorUIApp.swift     exit=1  FAIL: 2 user-facing literal(s) of 4 examined. Move them to StatusSurface.Copy.
+  AgentModel.swift       exit=1  FAIL: 2 user-facing literal(s) of 9 examined. Move them to StatusSurface.Copy.
+  MainWindow.swift       exit=1  FAIL: 2 user-facing literal(s) of 47 examined. Move them to StatusSurface.Copy.
