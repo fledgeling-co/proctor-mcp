@@ -1,0 +1,104 @@
+PRO-0094 — what arms each case, measured rather than asserted
+=============================================================
+Worktree: .worktrees/PRO-0094   Branch: ai/pro-0094 off ai/wave-9
+Base for the "red" column: c989023 (the tip of ai/wave-9 this branch sits on)
+Gate: ./scripts/test.sh   (exit code read from a file; a bare `swift test` piped
+      to `tail` reports the status of `tail`, which is 0 on a red suite)
+
+1. RED AT BASE — measured on the base tree, same method the tests use
+--------------------------------------------------------------------
+Population: 188 .swift files under Sources/ at c989023, counted with len().
+
+  'FB21748086'             3 occurrences in 3 files
+                           -> SessionGuest.swift x1, ToolCatalogue.swift x1,
+                              ToolchainLanes.swift x1
+  '#870'                   3 occurrences in 3 files (same three)
+  'verify against Sequoia' 3 occurrences in 3 files (same three)
+  'osVersion' in SessionGuest.swift          0
+  '.string("tart")' in ToolCatalogue.swift   0
+
+CASE-0180 wants 1 and found 3.  CASE-0183 wants 0 and found 3.
+CASE-0184..0188 need a field that did not exist.  CASE-0189 needs an enum
+value that was not there.  Every clause was falsifiable where the work started.
+
+2. MUTATION KILLS — each case proved able to report non-zero
+------------------------------------------------------------
+Method: plant one mutant, run the filtered suite, record the kill, restore with
+`git checkout`. `git status` was clean after each. A case no mutant can kill has
+measured nothing, so the absence of this section would make section 3 unreadable.
+
+  A  obstacle() returns nil unconditionally
+     (no situation is ever unanswerable)                    -> 2 issues, rc=1
+  B  guestOSVersion returns .known(record.name)
+     (the version read off the image name, the one thing
+      the whole feature says it never does)                 -> 20 issues, rc=1
+  C  the doctor lane note reverts to a hand-written copy
+     of the old unqualified sentence                        -> 6 issues, rc=1
+  D  the measurement paragraph deleted from the cited spec
+     docs/specs/spec-PRO-0076.md (446 characters removed)   -> 2 issues, rc=1
+  E  the failed status read releases the attachment         -> 3 issues, rc=1
+
+  D and E are the two the review gates added. Before the fixes they landed on,
+  D was GREEN (every string CASE-0182 looked for also appears elsewhere in that
+  spec, so deleting the measurement changed nothing) and E was GREEN on the pool
+  (the case asserted the attachment survived, never the slot).
+
+3. SUITE RUNS — the verdict line and the real exit code
+-------------------------------------------------------
+  run 1  1849 tests / 218 suites  FAILED, 2 issues, rc=1
+         GuestToolTests and GuestInventoryTests asserted the old copy via
+         contains("Sequoia"). Both were rebound to GuestNotes.tahoeRendering,
+         which is stricter than the substring they replaced.
+  run 2  1849 tests / 218 suites  passed, rc=0
+  run 3  1849 tests / 218 suites  passed, rc=0   (post-mutation baseline)
+  run 4  1849 tests / 218 suites  passed, rc=0   (post-critic fixes)
+  run 5  1849 tests / 218 suites  passed, rc=0   (post-D-prime fixes)
+
+  4 of 5 runs green; run 1's red is the affected-test sweep doing its job and is
+  listed rather than dropped. Base was 1835 tests in 216 suites: 1849 minus the
+  14 tests in 2 suites this branch adds. The two edited suites changed assertions,
+  not counts.
+
+  Filtered run of the new suites alone: 14 tests / 2 suites passed, rc=0.
+
+4. CANNOT-FAIL SCAN — the eight syntactic shapes
+------------------------------------------------
+  Tests/ProctorCoreTests/GuestNoteSourceTests.swift        21 assertions, none
+  Tests/ProctorAgentTests/GuestOSVersionWiringTests.swift  35 assertions, none
+
+  Two shapes were present in the first draft and were found by review rather
+  than by this scan, which is worth recording as a limit of the scan:
+    - `#expect((a == nil) == (b == nil))`, true when both are nil
+    - `#expect(claims.count == 5)` on an array the test had just built
+  Both are fixed. The scan is syntactic; it does not read what an assertion means.
+
+5. WIRE-THROUGH — every new symbol reaches a non-test caller
+------------------------------------------------------------
+  GuestNotes.tahoeRendering   3 call sites in Sources/
+                              ToolchainLanes.swift:161, ToolCatalogue.swift:1174,
+                              SessionGuest.swift:135
+  GuestOSVersion              12 references, produced by SessionGuest.guestStatus
+  GuestOSVersionResolution    6 references, all in SessionGuest.guestOSVersion
+  guestOSVersion(for:)        1, from guestStatus
+
+6. THE RENDERED SENTENCE — read out of the built module, not re-derived
+-----------------------------------------------------------------------
+"Tahoe guests were reported to render no application windows — trycua/cua #870
+ and Apple FB21748086, both still open — but on 2026-08-21 Proctor drove a macOS
+ 26.6.2 guest in which Calculator, System Settings and Setup Assistant all
+ rendered normally (docs/specs/spec-PRO-0076.md), so treat it as an open report
+ upstream rather than a settled property of every Tahoe guest."
+
+7. WHAT WAS NOT DONE, AND WHY
+------------------------------
+  - No guest was provisioned, started, stopped, cloned, deleted, pruned, renamed
+    or exported. `proctor-guest` and `anvil-mac-node` were stopped before this
+    work and were not touched. Every guest case above runs on FakeGuestProvider
+    and FakeGuestLink, which is the seam this lane was built with.
+  - The live Tahoe measurement is NOT re-taken here. It is PRO-0076's, dated
+    2026-08-21, and this work binds a citation to it rather than reproducing it.
+  - DEF-094 (the unbounded link read) is recorded, not fixed. See the spec.
+  - docs/test-campaign/cases.json was not written. Its highest id on this branch
+    is CASE-0116 and this item holds CASE-0180..0189, so the rows for 0117..0179
+    belong to other worktrees in this wave; ten runners appending to one registry
+    conflicts on every merge. Same hazard as LEDGER.md, same handling.
