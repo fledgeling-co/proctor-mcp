@@ -1580,3 +1580,26 @@ case at `inconclusive` on a ceiling checked in source twice.
 
 **Wave 11b is next and is four items:** PRO-0080 (both dependencies now merged), PRO-0081,
 PRO-0082, PRO-0083.
+
+### Wave 11b dispatched, with id ranges allocated up front (2026-08-21)
+
+Three slots: PRO-0080 (both dependencies merged), PRO-0081, PRO-0083. PRO-0082 is held behind
+PRO-0081, because its two new status-window sections would otherwise add literals to the very file
+PRO-0081 is emptying.
+
+**Registry ids are allocated by the orchestrator this time rather than discovered by each runner.**
+Wave 11a produced three collisions from one cause — three runners each read a registry, each
+correctly took the next free id, and none could see the others. Reconciling that cost a renumber
+across two registries and one spec. Ranges are disjoint, so the same merge is now a plain append.
+
+| Item | Cases | Defects | Requirements |
+|---|---|---|---|
+| PRO-0080 | CASE-0072..0079 | DEF-030..034 | REQ-046..047 |
+| PRO-0081 | CASE-0100..0109 | DEF-035..039 | REQ-048..049 |
+| PRO-0083 | CASE-0080..0099 | DEF-040..049 | REQ-050..052 |
+
+High-water marks at dispatch: CASE-0071, DEF-029, REQ-045. A runner that needs more than its range
+asks the orchestrator rather than taking the next free id.
+
+Machine load at dispatch: 11.16, down from the 130-266 that killed the first verification attempt.
+That matters for PRO-0080, whose mutation run scores a timeout as a kill.
