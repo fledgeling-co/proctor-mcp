@@ -315,14 +315,14 @@
       "text": "Automatic browser routing dispatches web URLs to Obscura or browser-use engines",
       "source": "docs/PRD.md:20",
       "class": "behaviour",
-      "evidence": "observed",
+      "evidence": "vacuous",
       "surfaces": [
         "SURF-001",
         "SURF-003"
       ],
-      "note": "Dispatches browser automation transparently while maintaining session provenance",
+      "note": "Dispatches browser automation transparently while maintaining session provenance EVIDENCE RECORDED `vacuous` BY PRO-0091 (DEF-040). The declared `subprocess` class is kept rather than softened to `none`, because the requirement's text does name a dispatch and the honest finding is that nothing performs it: the guarantee holds because the capability never runs, which is the condition `vacuous` exists for. The only boundary the browser capability crosses is a filesystem READ, and the campaign's closed effect-class list has no member for it \u2014 `filesystem-write` is its only filesystem class. CASE-0087 on ai/pro-0083 measures the read that does happen and resolves `inconclusive` with the instrument named. Reclassifying to `none` would have made the census green by denying the claim rather than by recording what was found.",
       "effect": "subprocess",
-      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift \u2014 obscura and cua-driver"
+      "provider": "NONE \u2014 the browser-routing path crosses no process boundary. BrowserTarget is pure by its own header; Session.browserHandoff returns a disclosure that six call sites attach to a reply and nothing executes; ToolProbe's header reads \"Whether Obscura is on this machine, cached, and never executed\" and ToolLocator.locate decides availability with isExecutable(path), a stat. The eleven Process() sites in Sources/ are the guest providers, simctl, the cua driver, `shortcuts run`, the dictionary, the installer and the UI; no browser handoff reaches one."
     },
     {
       "id": "REQ-025",
@@ -538,6 +538,30 @@
       ],
       "note": "witnessed on macos-glass by a process that is not the app under test, with a negative arm on a build lacking the modifier",
       "effect": "ipc"
+    },
+    {
+      "id": "REQ-057",
+      "text": "Every capped list the campaign gate prints carries its own denominator, so a truncated display cannot be read as a count",
+      "source": "docs/features-to-triage/84-the-campaigns-own-instruments.md",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "PRO-0091, from DEF-041. The instrument, not the product. Raising the cap is not the remedy \u2014 the next set outgrows the next cap \u2014 so the denominator prints whether the list truncated or not.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-058",
+      "text": "A registry merge sweeps every key of both documents and asserts id uniqueness per key",
+      "source": "docs/features-to-triage/84-the-campaigns-own-instruments.md",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "PRO-0091, from DEF-058. A hand-merge swept the two keys the conflict was about and dropped a third, unpublishing a judged capture. The remedy is a script rather than a resolution to be careful.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1678,10 +1702,10 @@
     },
     {
       "id": "DEF-030",
-      "status": "open",
+      "status": "fixed",
       "title": "The census control exercises one of the gate's two passes, so unclassed stayed an unwatched zero after it ran green",
       "found": "PRO-0080 item 1: per-pass decomposition of what --seed-strengthen actually mutates",
-      "detail": "vacuity-check.py --seed-strengthen sets a requirement's effect to packet-filter and pops its provider, then requires _census_clear to go false. _census_clear is not(unclassed or uncensused), and the mutation it applies IS the uncensused predicate (declares an external effect class, records no provider).\n\nMEASURED, per pass, on this registry: seeding REQ-017 gives unclassed 0 findings / uncensused 1. Seeding REQ-001, which is classed none, gives unclassed 0 / uncensused 1. The starting class makes no difference because the mutation overwrites it.\n\nSo running the control in 'both directions' covers one predicate twice. After it printed 'the gate bites' twice, unclassed was still reporting examined=45 findings=0 with nothing having watched it go red, which is the exact position the control exists to get a gate out of, surviving the control.\n\nThis is the campaign's own failure mode arriving through the instrument built to prevent it, and it is the third time in three waves: the blind pass shipped with a vocabulary that read examined=1857 mutating=1 blind=1, and capture_with_manifest.py wrote rows capture-lineage.py could not read.\n\nCLOSED HERE BY ADDITION, NOT BY PATCH: scripts/campaign/seed_unclass.py supplies the missing direction and CASE-0073 records it. vacuity-check.py itself is not edited, because it lives in a plugin cache this repo does not own and a fix there is reverted by the next plugin update with nothing saying so. Recorded as open against the skill rather than fixed, so it reaches whoever owns test-campaign.",
+      "detail": "vacuity-check.py --seed-strengthen sets a requirement's effect to packet-filter and pops its provider, then requires _census_clear to go false. _census_clear is not(unclassed or uncensused), and the mutation it applies IS the uncensused predicate (declares an external effect class, records no provider).\n\nMEASURED, per pass, on this registry: seeding REQ-017 gives unclassed 0 findings / uncensused 1. Seeding REQ-001, which is classed none, gives unclassed 0 / uncensused 1. The starting class makes no difference because the mutation overwrites it.\n\nSo running the control in 'both directions' covers one predicate twice. After it printed 'the gate bites' twice, unclassed was still reporting examined=45 findings=0 with nothing having watched it go red, which is the exact position the control exists to get a gate out of, surviving the control.\n\nThis is the campaign's own failure mode arriving through the instrument built to prevent it, and it is the third time in three waves: the blind pass shipped with a vocabulary that read examined=1857 mutating=1 blind=1, and capture_with_manifest.py wrote rows capture-lineage.py could not read.\n\nCLOSED HERE BY ADDITION, NOT BY PATCH: scripts/campaign/seed_unclass.py supplies the missing direction and CASE-0073 records it. vacuity-check.py itself is not edited, because it lives in a plugin cache this repo does not own and a fix there is reverted by the next plugin update with nothing saying so. Recorded as open against the skill rather than fixed, so it reaches whoever owns test-campaign.\n\nCLOSED BY PRO-0091. Both requirement-level passes are now watched red from a clear baseline in one session: --seed-strengthen fires uncensused, scripts/campaign/seed_unclass.py fires unclassed. Evidence: docs/test-campaign/evidence/PRO-0091/def030-both-passes-armed.txt, CASE-0152. The arming runs against a fixture copy rather than the real registry because uncensused is already red on the real one \u2014 recorded as DEF-075.",
       "surface": "SURF-022",
       "req": "REQ-046"
     },
@@ -1696,10 +1720,10 @@
     },
     {
       "id": "DEF-032",
-      "status": "open",
+      "status": "fixed",
       "title": "The mutation runner's integer-literal operator mutates closure shorthand $0, spending a sampled slot on an edit the compiler must reject",
       "found": "PRO-0080 item 2: mutant 24 of 24 in the ProctorAgent sample",
-      "detail": "mutate_swift.py's integer-literal increment matched the 0 in a closure shorthand parameter. Mutant 24 rewrote UnlockBroker.swift:110 from `$0.withMemoryRebound(to: sockaddr.self, capacity: 1) { bind(fd, $0, size) }` to `bind(fd, $1, size)`, which cannot compile: the closure takes one parameter.\n\n$0 and $1 are not integer literals. The operator table's stated contract is that every operator keeps the types the same so the file still compiles, because a mutant the compiler rejects is not a fault the tests failed to catch.\n\nCOST MEASURED: the sample budget here was 24 mutants against a pool of 3,189, so one wasted slot is 4.2% of everything this run could see. Worse, it did not even score as unbuildable. Under load average 271 the build did not finish inside the 600s timeout, so it was scored a KILL at 600.0s, which inflates the kill count with a mutant that could never have run at all. The summary's `unbuildable: 0` is wrong for a reason the tool cannot see.\n\nNOT FIXED HERE: the fix is a negative lookbehind for $ in the integer-literal operator, and editing the generator mid-item would invalidate the seed this sample is reported under. Recorded so the next sample starts from a pool that does not contain it.",
+      "detail": "mutate_swift.py's integer-literal increment matched the 0 in a closure shorthand parameter. Mutant 24 rewrote UnlockBroker.swift:110 from `$0.withMemoryRebound(to: sockaddr.self, capacity: 1) { bind(fd, $0, size) }` to `bind(fd, $1, size)`, which cannot compile: the closure takes one parameter.\n\n$0 and $1 are not integer literals. The operator table's stated contract is that every operator keeps the types the same so the file still compiles, because a mutant the compiler rejects is not a fault the tests failed to catch.\n\nCOST MEASURED: the sample budget here was 24 mutants against a pool of 3,189, so one wasted slot is 4.2% of everything this run could see. Worse, it did not even score as unbuildable. Under load average 271 the build did not finish inside the 600s timeout, so it was scored a KILL at 600.0s, which inflates the kill count with a mutant that could never have run at all. The summary's `unbuildable: 0` is wrong for a reason the tool cannot see.\n\nNOT FIXED HERE: the fix is a negative lookbehind for $ in the integer-literal operator, and editing the generator mid-item would invalidate the seed this sample is reported under. Recorded so the next sample starts from a pool that does not contain it.\n\nFIXED BY PRO-0091. The lookbehind is now (?<![\\w.$]), so closure shorthand and a property wrapper's projected value are both excluded and a real integer literal still mutates. Guarded by a test over a fixture containing $0: scripts/campaign/test_instruments.py, CASE-0153, armed at instrument-arming.txt mutation 1.",
       "surface": "SURF-022",
       "req": "REQ-047"
     },
@@ -1759,10 +1783,10 @@
     },
     {
       "id": "DEF-055",
-      "status": "open",
+      "status": "fixed",
       "title": "CASE-0074's note records a starting load of 11.20 where its own evidence file records 22.92",
       "found": "PRO-0081 gap-fix, from a fresh verifier's read of the merged mutation item",
-      "detail": "CASE-0074 (PRO-0080 A4, the first ProctorAgent mutation sample) explains its two untrustworthy timeout-scored kills by naming the load the run was under: \"Load average reached 271 during the run (11.20 at start, 271.39 at end).\" The evidence it cites disagrees. docs/test-campaign/evidence/mutation-agent.txt line 2 reads \"# Load average at start: 22.92 29.47 26.94\" and line 3 \"# Load average at end: 271.39 192.06 133.13\". The end figure matches; the start figure does not, and 22.92 is already twice the number the note uses to establish that the machine started healthy. The note's conclusion is unaffected \u2014 the run was starved either way and the case already discounts the two 600.0s kills \u2014 but a figure that contradicts its own evidence file is the thing this campaign asks readers not to trust.\n\nNOT CORRECTED HERE, AND THIS IS WHY: CASE-0074 does not exist on ai/pro-0081. This branch's cases.json holds CASE-0001..0071 and CASE-0100..0106; CASE-0072..0099, including 0074, live on ai/wave-9, which is not an ancestor of this branch (merge-base 346edfa). Correcting it from here would mean merging or editing ai/wave-9, and this gap-fix was scoped to leave that branch alone. The correction is one substring: in CASE-0074's note, \"(11.20 at start, 271.39 at end)\" becomes \"(22.92 at start, 271.39 at end)\". Apply it wherever the two branches meet.",
+      "detail": "CASE-0074 (PRO-0080 A4, the first ProctorAgent mutation sample) explains its two untrustworthy timeout-scored kills by naming the load the run was under: \"Load average reached 271 during the run (11.20 at start, 271.39 at end).\" The evidence it cites disagrees. docs/test-campaign/evidence/mutation-agent.txt line 2 reads \"# Load average at start: 22.92 29.47 26.94\" and line 3 \"# Load average at end: 271.39 192.06 133.13\". The end figure matches; the start figure does not, and 22.92 is already twice the number the note uses to establish that the machine started healthy. The note's conclusion is unaffected \u2014 the run was starved either way and the case already discounts the two 600.0s kills \u2014 but a figure that contradicts its own evidence file is the thing this campaign asks readers not to trust.\n\nNOT CORRECTED HERE, AND THIS IS WHY: CASE-0074 does not exist on ai/pro-0081. This branch's cases.json holds CASE-0001..0071 and CASE-0100..0106; CASE-0072..0099, including 0074, live on ai/wave-9, which is not an ancestor of this branch (merge-base 346edfa). Correcting it from here would mean merging or editing ai/wave-9, and this gap-fix was scoped to leave that branch alone. The correction is one substring: in CASE-0074's note, \"(11.20 at start, 271.39 at end)\" becomes \"(22.92 at start, 271.39 at end)\". Apply it wherever the two branches meet.\n\nFIXED BY PRO-0091. CASE-0074's note reads 22.92 at start, and the check parses the figure out of evidence/mutation-agent.txt rather than carrying a copy of it, so the two cannot drift again silently. CASE-0154, armed at instrument-arming.txt mutation 4.",
       "surface": "SURF-002",
       "req": "REQ-047",
       "note": " Recorded as DEF-040 by PRO-0081, which overran its allocated DEF-035..039 by two. Renumbered at merge because PRO-0083 holds DEF-040..049; no other document referenced the old ids."
@@ -1779,17 +1803,35 @@
     },
     {
       "id": "DEF-057",
-      "status": "open",
+      "status": "fixed",
       "title": "Four cases carry an oracle rung that is not on the ladder, so they count as unrated",
       "found": "Orchestrator reconciliation at the PRO-0081 merge, 2026-08-21",
-      "detail": "CASE-0102..0105 (all REQ-048) record `oracle: \"static-analysis\"`. That string is not in campaign.py's ORCHESTRATOR rung set, so `mix[...] += 1` files all four under `unrated`, and the tool's own comment says unrated is counted \"never as adequate \u2014 the whole point is that a plan cannot look\" adequate on them. REQ-048's coverage therefore rests on four cases the ladder does not recognise.\n\nThe rung may be honest rather than wrong: the ladder describes checks against a running product (touch, presence, structural, structural-visual, outcome, metamorphic, effect-witness, raster-visual, interactive-glass), and a grep over source runs none of it. That is a real gap in the ladder rather than obviously a mistake in the cases. It is recorded rather than reclassified, because silently moving four cases onto a rung they do not occupy would raise the score and lower what the suite knows.\n\nThe decision this needs: either the ladder gains a source-analysis rung with a stated position below `outcome`, or these four cases are re-expressed as checks against the built product and take a real rung. Reclassifying them to `structural` without changing what they check would be the second option's label with the first option's evidence."
+      "detail": "CASE-0102..0105 (all REQ-048) record `oracle: \"static-analysis\"`. That string is not in campaign.py's ORCHESTRATOR rung set, so `mix[...] += 1` files all four under `unrated`, and the tool's own comment says unrated is counted \"never as adequate \u2014 the whole point is that a plan cannot look\" adequate on them. REQ-048's coverage therefore rests on four cases the ladder does not recognise.\n\nThe rung may be honest rather than wrong: the ladder describes checks against a running product (touch, presence, structural, structural-visual, outcome, metamorphic, effect-witness, raster-visual, interactive-glass), and a grep over source runs none of it. That is a real gap in the ladder rather than obviously a mistake in the cases. It is recorded rather than reclassified, because silently moving four cases onto a rung they do not occupy would raise the score and lower what the suite knows.\n\nThe decision this needs: either the ladder gains a source-analysis rung with a stated position below `outcome`, or these four cases are re-expressed as checks against the built product and take a real rung. Reclassifying them to `structural` without changing what they check would be the second option's label with the first option's evidence.\n\nDECIDED AND CLOSED BY PRO-0091, and by neither of the two options above. Referred to grok-4.6 at effort xhigh, which ran its own panel; fable-5 and gemini-3.7-flash-high agreed with the options in swapped order, and the codex lane failed to initialise and was recorded as a lane failure. source-analysis is now a rung PARALLEL to the ladder rather than a position on it, because the ladder is one axis \u2014 what a case checked against the running product \u2014 and a reader of source text is off that axis rather than ranked on it. Re-expressing the four against the built product is not available: a hardcoded Text(\"Open log\") and a Text(Copy.openLog) render identically, so the clause has no product-side observable. SOURCE_RUNGS is absent from EFFECT_RUNGS and stays absent, a passing case on it owes its analyzer and examined count, and a requirement claiming an external effect may not rest on it alone. The gate reads 'Off-ladder: source-analysis 4' where it read 'unrated 4'. Reclassifying to structural was the ruled-out route and was not taken. test-campaign 0.9.4; CASE-0155, CASE-0156."
     },
     {
       "id": "DEF-058",
-      "status": "open",
+      "status": "fixed",
       "title": "An orchestrator merge silently dropped a flow, unpublishing a judged capture",
       "found": "capture-lineage --gate, immediately after the PRO-0081 merge, 2026-08-21",
-      "detail": "Reconciling inventory.json at the PRO-0081 merge, the orchestrator merged only the `defect` and `requirement` lists and took ours as the base document. PRO-0081's addition to `flow` \u2014 FLOW-010, carrying STEP-A3-PRIMARY-DISABLED and its `shot` \u2014 was dropped. The capture stayed on disk and its verdict stayed in witness-verdicts.json, but the subject left the published set, so judged fell 6 to 5 against a ratchet of 6.\n\nThe gate caught it and exited 2. That is the ratchet doing exactly its job: without it a judged capture would have quietly stopped being published and the wall would have shrunk with no green turning red.\n\nThe lesson is mechanical rather than about care: a hand-written merge of a multi-key registry must sweep every key, not the keys the conflict happened to be about. Repaired in the same commit by appending every theirs-only row across component, defect, flow, requirement and surface, with a uniqueness assertion per key."
+      "detail": "Reconciling inventory.json at the PRO-0081 merge, the orchestrator merged only the `defect` and `requirement` lists and took ours as the base document. PRO-0081's addition to `flow` \u2014 FLOW-010, carrying STEP-A3-PRIMARY-DISABLED and its `shot` \u2014 was dropped. The capture stayed on disk and its verdict stayed in witness-verdicts.json, but the subject left the published set, so judged fell 6 to 5 against a ratchet of 6.\n\nThe gate caught it and exited 2. That is the ratchet doing exactly its job: without it a judged capture would have quietly stopped being published and the wall would have shrunk with no green turning red.\n\nThe lesson is mechanical rather than about care: a hand-written merge of a multi-key registry must sweep every key, not the keys the conflict happened to be about. Repaired in the same commit by appending every theirs-only row across component, defect, flow, requirement and surface, with a uniqueness assertion per key.\n\nCLOSED BY PRO-0091 with the script the record asked for. scripts/campaign/merge_registry.py sweeps the union of both documents' keys, asserts id uniqueness per key, refuses a real conflict rather than resolving it to one side, and carries a --verify mode that reads a merge somebody else performed and names every dropped row. Tested against a reproduction of this exact loss \u2014 a five-key registry hand-merged on defect and requirement with ours as the base \u2014 which exits 1 naming flow/FLOW-010. CASE-0157, CASE-0158, armed at instrument-arming.txt mutations 2 and 3."
+    },
+    {
+      "id": "DEF-075",
+      "status": "open",
+      "title": "vacuity-check.py --seed-strengthen prints 'The gate bites' from before=red after=red",
+      "found": "PRO-0091, arming DEF-030's second pass against the real registry",
+      "detail": "The shipped census control does not refuse a baseline that is already red. Run against docs/test-campaign as it stands, it prints 'seed-strengthen REQ-017: before=red after=red' and then 'The gate bites: strengthening the constraint turned it red' \u2014 a red the mutation did not cause, scored as proof that the mutation caused it.\n\nMEASURED: the registry has one standing census finding (REQ-049 declares an ipc effect and records no provider), so uncensused is red before any mutation is applied. The control ran, reported a bite, and had established nothing. Arming this item's CASE-0152 needed a fixture copy with REQ-049 given a provider so the pass started clear.\n\nThis is DEF-030's mechanism one layer deeper: a control that arms half a gate, and the half it does arm it can score on a red it did not produce. scripts/campaign/seed_unclass.py already implements the refusal \u2014 'REFUSING: unclassed is already red ... A red after the mutation would be red for a reason the mutation did not cause' \u2014 and vacuity-check.py does not.\n\nNOT FIXED HERE, and this is why: vacuity-check.py is the plugin's tool, and unlike campaign.py the fix is a behaviour change to a control rather than to a display, so it wants its own arming run and its own gate test rather than riding along with a denominator fix. Recorded against test-campaign 0.9.4.",
+      "surface": "SURF-022",
+      "req": "REQ-046"
+    },
+    {
+      "id": "DEF-076",
+      "status": "fixed",
+      "title": "seed_unclass.py pinned the plugin path to version 0.9.2, which one plugin update removes",
+      "found": "PRO-0091, running the census control after the plugin moved to 0.9.3",
+      "detail": "scripts/campaign/seed_unclass.py loaded vacuity-check.py from a literal '0.9.2/skills/test-campaign/scripts/vacuity-check.py'. The installed plugin is 0.9.3 and the active install path in installed_plugins.json is 0.9.3; 0.9.2 survives only as a stale cache directory. The two files are byte-identical today, so nothing was wrong with the measurement \u2014 but the next prune of the cache turns a control whose whole job is to prove a pass can fire into a script that exits on a missing file.\n\nFIXED: the path resolves to the newest installed version, comparing version directories as tuples of integers so 0.9.10 sorts after 0.9.9, and the resolved path is printed on every run so the evidence file records which copy was read. An absent plugin now exits saying it is a cannot-run rather than a pass.",
+      "surface": "SURF-022",
+      "req": "REQ-046"
     }
   ]
 }

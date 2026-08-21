@@ -809,3 +809,67 @@ generated file is a second source that drifts.
   published capture's manifest row names the source that draws it and when that source last
   moved, and in each case the source is older than the capture. That check exists because the
   one capture nobody ran it on turned out to show the wrong build.
+
+## The instruments, measured (PRO-0091)
+
+Seven findings about the tools that measure this project rather than about the product, closed as
+one item because they share a failure mode: an instrument reporting a clean result over a
+population it never examined.
+
+**The gate printed twelve and meant eighteen.** `campaign.py check` capped its list of unwitnessed
+requirements at twelve and said nothing about the cut. Wave 11 was scoped off that printed list
+against a real set of eighteen, and ten requirements were named by no item — the campaign's own
+first failure mode, covering a subset and reporting it as the whole, arriving through the gate
+rather than through a surface map. Raising the cap is not the remedy, because the next set
+outgrows the next cap. Every capped list now carries its own denominator: `… (showing 12 of 18)`
+when it truncates and `(showing 3 of 3)` when it does not, so a reader never has to work out
+whether anything was cut. Measured on a fixture built to the shape of the loss, with the 0.9.3
+bytes read out of git and run rather than described.
+
+**A rung that was not on the ladder, decided rather than relabelled.** CASE-0102..0105 recorded
+`oracle: "static-analysis"`, so all four counted `unrated` — the bucket whose own comment says it
+counts never as adequate — while being real armed instruments that exit 1 on a one-line mutation
+and 0 on the file as written. The fork went to grok-4.6 at effort xhigh, which ran its own
+three-family panel; fable-5 and gemini-3.7-flash-high agreed with the options presented in swapped
+order, and the codex lane failed to initialise and was recorded as a lane failure rather than
+counted as agreement. The answer was neither option: `source-analysis` is a rung **parallel** to
+the ladder rather than a position on it, because the ladder is one axis — what a case checked
+against the running product — and a reader of source text is off that axis rather than ranked on
+it. Re-expressing the four against the built product is not available, since a hardcoded
+`Text("Open log")` and a `Text(Copy.openLog)` render identically. The gate now reads
+`Off-ladder: source-analysis 4` where it read `unrated 4`. Reclassifying them to `structural` was
+the ruled-out route and was not taken.
+
+**REQ-024 is `vacuous`, not `none`.** Its declared `subprocess` effect named a boundary the
+browser-routing path does not cross: `BrowserTarget` is pure, `Session.browserHandoff` returns a
+disclosure that six call sites attach to a reply, and `ToolLocator.locate` decides availability
+with a stat. The class is kept and the evidence recorded `vacuous`, because the requirement's text
+does name a dispatch and the honest finding is that nothing performs it. Softening the class to
+`none` would have made the census green by denying the claim rather than by recording what was
+found. External effects now read `witnessed=12 vacuous=1`.
+
+**Three instruments repaired and guarded.** The census control arms both of the gate's
+requirement-level passes, each watched from clear to red in one session against a fixture — and
+that fixture is needed because `uncensused` is already red on the real registry, which the shipped
+control does not refuse, recorded as DEF-075. `mutate_swift.py`'s integer operator no longer
+matches closure shorthand, so a sampled slot stops going to an edit the compiler must reject.
+CASE-0074's starting load reads 22.92, parsed out of its evidence file rather than copied into the
+note, so the two cannot drift again silently.
+
+**The hand-merge is a script now.** `scripts/campaign/merge_registry.py` sweeps the union of both
+documents' keys, asserts id uniqueness per key, refuses a real conflict rather than resolving it to
+one side, and carries a `--verify` mode that reads a merge somebody else performed and names every
+dropped row. Its fixture is a reproduction of the loss it exists to prevent: a five-key registry
+hand-merged on `defect` and `requirement` with ours as the base, which exits 1 naming
+`flow/FLOW-010`.
+
+Fifteen checks in `scripts/campaign/test_instruments.py`, run by
+`Tests/ProctorCoreTests/CampaignInstrumentTests.swift` so `./scripts/test.sh` owns the verdict, and
+each of them watched red on a one-line mutation and green again in the same session. The wrapper
+asserts the count of checks as well as the exit code, because `0 passed, 0 failed` exits 0 and is
+the shape of the thing this whole item is about. Suite: 1,832 tests in 217 suites, up from 1,829 in
+216.
+
+`campaign.py` itself is not in this repo. It is fixed in `~/Dev/fledgeling-plugins` as
+test-campaign 0.9.4 and mirrored into the active plugin cache; both copies read sha256
+`a7d97822…`. Neither is pushed.

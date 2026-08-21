@@ -1196,7 +1196,7 @@
     ],
     "armed": true,
     "armedBy": "mutate_swift.py refuses to start unless the suite is green before any mutation, because without that a suite already failing reports every mutant as killed and returns a 0% survival rate that means nothing. Baseline green was printed before the first mutant.",
-    "note": "PRO-0080 A4. The first mutation sample ever generated in ProctorAgent. PARTIAL BY DENOMINATOR AND SAID SO: 24 mutants run of a pool of 3,189 sites across all 84 files of the package, seed 20260821, 3,165 sites unrun. That is 0.75% of the surface. 19 SURVIVED, 5 scored killed, 0 unbuildable. TWO OF THE FIVE KILLS ARE NOT TRUSTWORTHY: SessionActivate.swift:166 and UnlockBroker.swift:110 both scored at exactly 600.0s, which is the timeout, and the runner scores a timeout as killed. Load average reached 271 during the run (11.20 at start, 271.39 at end). The honest kill count is 3 of 22 scored, giving a survival rate of 19/22 = 86.4%, against ProctorCore's 50%. Survivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor, so all 19 stand. NO KILL BELOW 600s IS TIMEOUT-SCORED: the three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so they are real test failures rather than starved runs. Disposition of the 19: 5 killed by new tests (CASE-0075..0079), 1 equivalent (SessionMaestro.swift:242), 13 uncovered-by-lane or unreachable from a headless seam, each with its reason in REPORT.md. The figure is deliberately NOT copied into .warrant/suite-health.json, where mutation_measured: false is correct and means warrant's own assay has not run."
+    "note": "PRO-0080 A4. The first mutation sample ever generated in ProctorAgent. PARTIAL BY DENOMINATOR AND SAID SO: 24 mutants run of a pool of 3,189 sites across all 84 files of the package, seed 20260821, 3,165 sites unrun. That is 0.75% of the surface. 19 SURVIVED, 5 scored killed, 0 unbuildable. TWO OF THE FIVE KILLS ARE NOT TRUSTWORTHY: SessionActivate.swift:166 and UnlockBroker.swift:110 both scored at exactly 600.0s, which is the timeout, and the runner scores a timeout as killed. Load average reached 271 during the run (22.92 at start, 271.39 at end, read off evidence/mutation-agent.txt lines 2-3). CORRECTED: this note first read 11.20 at start, contradicting its own evidence file, and was carried as DEF-055 until PRO-0091 fixed it. The honest kill count is 3 of 22 scored, giving a survival rate of 19/22 = 86.4%, against ProctorCore's 50%. Survivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor, so all 19 stand. NO KILL BELOW 600s IS TIMEOUT-SCORED: the three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so they are real test failures rather than starved runs. Disposition of the 19: 5 killed by new tests (CASE-0075..0079), 1 equivalent (SessionMaestro.swift:242), 13 uncovered-by-lane or unreachable from a headless seam, each with its reason in REPORT.md. The figure is deliberately NOT copied into .warrant/suite-health.json, where mutation_measured: false is correct and means warrant's own assay has not run."
   },
   {
     "id": "CASE-0075",
@@ -1314,10 +1314,10 @@
     "id": "CASE-0102",
     "req": "REQ-048",
     "surface": "SURF-002",
-    "oracle": "static-analysis",
+    "oracle": "source-analysis",
     "lane": "headless",
     "status": "pass",
-    "note": "PRO-0081 closing PRO-0066's carried A2: every user-facing string comes from StatusSurface, and a grep for a quoted string literal in MainWindow.swift outside an identifier returns nothing. The clause's own grep is scripts/campaign/status_literals.py, which decides the 'outside an identifier' half by SYNTACTIC POSITION and never by reading the string, so the distinction stays mechanical. It is DEFAULT-DENY: symbol (systemName:/systemImage:/icon:), system (URL, sysctlbyname, appendingPathComponent, launchctl, openWindow(id:), forAuxiliaryExecutable:, an inline arguments array), key (a case label or the right side of ==/!=), punctuation (nothing but separators once escapes and interpolation segments are stripped), interpolated (nothing but an interpolation), and display for EVERYTHING ELSE. A positive 'does this look like prose' rule would pass silently for any rendering construct nobody listed. BEFORE: 176 literals, 127 display, measured on git show ai/wave-9:Sources/ProctorUI/MainWindow.swift, committed here as evidence/PRO-0081/a2-wave9-MainWindow.swift. This case previously recorded 132 display and 44 identifiers. Those figures are not reproducible with any committed version of the instrument, which has exactly one commit (f8f0ed7) and reports 127 and 49 over the same two file versions, so they are corrected to what the instrument reports. AFTER: 45 literals, 0 display \u2014 16 symbol, 16 system, 1 key, 11 punctuation, 1 interpolated. The denominator is printed on every run. ONE WORDING DID CHANGE AND HAS BEEN RESTORED: a fresh verifier found the Connect section heading had gone from \"Connect a model to it\" (wave-9 MainWindow.swift:695) to \"Connect a model\" in StatusSurface.Copy.connectHeading. A2 is a move rather than a rewrite, so the original wording is back. With it restored, every one of the 127 wave-9 display literals resolves verbatim somewhere in Sources/ except six that interpolate a value and could not survive being moved into a function unchanged. Otherwise no wording changed: every string moved character for character into StatusSurface.Copy, or into Core beside the value it describes where it was an identifier returned from a computed property (StatusChecks.settingsPane, Wire.shimPath, Wire.launchdDomain, StatusChecks.ToolRow.Tone.symbol).",
+    "note": "PRO-0081 closing PRO-0066's carried A2: every user-facing string comes from StatusSurface, and a grep for a quoted string literal in MainWindow.swift outside an identifier returns nothing. The clause's own grep is scripts/campaign/status_literals.py, which decides the 'outside an identifier' half by SYNTACTIC POSITION and never by reading the string, so the distinction stays mechanical. It is DEFAULT-DENY: symbol (systemName:/systemImage:/icon:), system (URL, sysctlbyname, appendingPathComponent, launchctl, openWindow(id:), forAuxiliaryExecutable:, an inline arguments array), key (a case label or the right side of ==/!=), punctuation (nothing but separators once escapes and interpolation segments are stripped), interpolated (nothing but an interpolation), and display for EVERYTHING ELSE. A positive 'does this look like prose' rule would pass silently for any rendering construct nobody listed. BEFORE: 176 literals, 127 display, measured on git show ai/wave-9:Sources/ProctorUI/MainWindow.swift, committed here as evidence/PRO-0081/a2-wave9-MainWindow.swift. This case previously recorded 132 display and 44 identifiers. Those figures are not reproducible with any committed version of the instrument, which has exactly one commit (f8f0ed7) and reports 127 and 49 over the same two file versions, so they are corrected to what the instrument reports. AFTER: 45 literals, 0 display \u2014 16 symbol, 16 system, 1 key, 11 punctuation, 1 interpolated. The denominator is printed on every run. ONE WORDING DID CHANGE AND HAS BEEN RESTORED: a fresh verifier found the Connect section heading had gone from \"Connect a model to it\" (wave-9 MainWindow.swift:695) to \"Connect a model\" in StatusSurface.Copy.connectHeading. A2 is a move rather than a rewrite, so the original wording is back. With it restored, every one of the 127 wave-9 display literals resolves verbatim somewhere in Sources/ except six that interpolate a value and could not survive being moved into a function unchanged. Otherwise no wording changed: every string moved character for character into StatusSurface.Copy, or into Core beside the value it describes where it was an identifier returned from a computed property (StatusChecks.settingsPane, Wire.shimPath, Wire.launchdDomain, StatusChecks.ToolRow.Tone.symbol). ORACLE CORRECTED BY PRO-0091: this case recorded `static-analysis`, which was not on campaign.py's rung set, so it counted `unrated` \u2014 the bucket meaning the tool does not know what the case checked. It now records `source-analysis`, a rung parallel to the product ladder rather than a step on it (test-campaign 0.9.4), and carries the analyzer and the examined count that rung owes. What it checks is unchanged; DEF-057.",
     "evidence": [
       "docs/test-campaign/evidence/PRO-0081/a2-arming.txt",
       "docs/test-campaign/evidence/PRO-0081/a2-wave9-MainWindow.swift",
@@ -1326,30 +1326,38 @@
       "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json"
     ],
     "armed": true,
-    "armedBy": "CASE-0103 and CASE-0104"
+    "armedBy": "CASE-0103 and CASE-0104",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py over Sources/ProctorUI/MainWindow.swift",
+      "examined": 45
+    }
   },
   {
     "id": "CASE-0103",
     "req": "REQ-048",
     "surface": "SURF-002",
-    "oracle": "static-analysis",
+    "oracle": "source-analysis",
     "lane": "headless",
     "status": "pass",
-    "note": "The classifier is proved able to fail before its passing is trusted. Two mutations of the converted file, each one line: a sentence put back into a Text( is reported as 'VIOLATION 74 Text() \"Proctor lets a model test a Mac app.\"' with exit 1, and a label put back into a Button( is reported as 'VIOLATION 784 Button() \"Open log\"' with exit 1. The unmodified file reports display 0 over 45 and exits 0 in the same run, so the three readings come from one instrument in one session rather than from three descriptions of one.",
+    "note": "The classifier is proved able to fail before its passing is trusted. Two mutations of the converted file, each one line: a sentence put back into a Text( is reported as 'VIOLATION 74 Text() \"Proctor lets a model test a Mac app.\"' with exit 1, and a label put back into a Button( is reported as 'VIOLATION 784 Button() \"Open log\"' with exit 1. The unmodified file reports display 0 over 45 and exits 0 in the same run, so the three readings come from one instrument in one session rather than from three descriptions of one. ORACLE CORRECTED BY PRO-0091: this case recorded `static-analysis`, which was not on campaign.py's rung set, so it counted `unrated` \u2014 the bucket meaning the tool does not know what the case checked. It now records `source-analysis`, a rung parallel to the product ladder rather than a step on it (test-campaign 0.9.4), and carries the analyzer and the examined count that rung owes. What it checks is unchanged; DEF-057.",
     "evidence": [
       "docs/test-campaign/evidence/PRO-0081/a2-arming.txt"
     ],
     "armed": true,
-    "armedBy": "this case IS the arming run for CASE-0102"
+    "armedBy": "this case IS the arming run for CASE-0102",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py over two one-line mutations of Sources/ProctorUI/MainWindow.swift and the file as written",
+      "examined": 45
+    }
   },
   {
     "id": "CASE-0104",
     "req": "REQ-048",
     "surface": "SURF-002",
-    "oracle": "static-analysis",
+    "oracle": "source-analysis",
     "lane": "headless",
     "status": "pass",
-    "note": "The evasion the clause is most vulnerable to, named by an out-of-family review and then closed. grok-4.6 pointed out that a printed count is not a threshold: 'display 0' stays green if the file is emptied into a second file, and counts collide where sets do not. MEASURED: with enum Actions removed from MainWindow.swift, the checker reports 25 literals, display 0, and EXITS 0 \u2014 the clause passes over a file that has had its machinery taken out from under it. The identifier set is therefore committed as evidence/PRO-0081/a2-identifier-baseline.json and compared as a set. The same gutted file against that baseline reports 14 identifiers gone by name ('-k', '/bin/launchctl', '/bin/sh', 'bootout', 'bootstrap', 'hw.optional.arm64', 'install', 'kickstart' x3, 'print', 'proctor-shim', the Settings URL, the log path, the plist path, and 'gui/\u2026/\u2026' x5) and exits 1. The clause is about moving the copy out, not the machinery, and the gate now says so. CORRECTED AFTER VERIFICATION: the snapshot this case gated against, a2-identifier-baseline.json, was written from the POST-conversion file, so the comparison could only ever print '0 identifier(s) gone, 0 new'. It compared the final file to itself, which is the vacuity shape this campaign exists to catch, in this clause's own instrument. The baseline is now taken from the PRE-conversion file, git show ai/wave-9:Sources/ProctorUI/MainWindow.swift, byte-identical at the branch merge-base 346edfa and at f8f0ed7^, written to a2-identifier-baseline-pre.json at 49 identifier literals. Against it the delivered file reports 4 identifier(s) gone, 0 new and EXITS 1: key 'Accessibility', key 'Automation', key 'Screen Recording' and punctuation newline. That is a real finding rather than noise. Actions.pane(for:) moved to StatusChecks.settingsPane, where the three grant names became the StatusChecks constants that already carried the same strings at wave-9, and the newline separator travelled into StatusSurface.swift:186 with the 'Looked in:' sentence it joins. A decision function moved out of the view alongside the copy, which is a widening past A2 as written; it is recorded here rather than tuned away, and the instrument's buckets, exit codes and comparison were left untouched. a2-identifier-baseline.json is kept as the FORWARD guard on later edits to the file and is no longer cited as evidence that this conversion preserved the identifier set. THE GATE HAS NOW BEEN WATCHED FAILING: on a scratch copy with one system identifier ('/bin/launchctl') replaced by a symbol reference, the forward baseline goes from 0 gone/exit 0 to 1 gone/exit 1 naming the literal, the pre baseline goes from 4 gone to 5, and restoring the copy returns exit 0 with the source file's md5 unchanged throughout (evidence/PRO-0081/a2-baseline-bite.txt).",
+    "note": "The evasion the clause is most vulnerable to, named by an out-of-family review and then closed. grok-4.6 pointed out that a printed count is not a threshold: 'display 0' stays green if the file is emptied into a second file, and counts collide where sets do not. MEASURED: with enum Actions removed from MainWindow.swift, the checker reports 25 literals, display 0, and EXITS 0 \u2014 the clause passes over a file that has had its machinery taken out from under it. The identifier set is therefore committed as evidence/PRO-0081/a2-identifier-baseline.json and compared as a set. The same gutted file against that baseline reports 14 identifiers gone by name ('-k', '/bin/launchctl', '/bin/sh', 'bootout', 'bootstrap', 'hw.optional.arm64', 'install', 'kickstart' x3, 'print', 'proctor-shim', the Settings URL, the log path, the plist path, and 'gui/\u2026/\u2026' x5) and exits 1. The clause is about moving the copy out, not the machinery, and the gate now says so. CORRECTED AFTER VERIFICATION: the snapshot this case gated against, a2-identifier-baseline.json, was written from the POST-conversion file, so the comparison could only ever print '0 identifier(s) gone, 0 new'. It compared the final file to itself, which is the vacuity shape this campaign exists to catch, in this clause's own instrument. The baseline is now taken from the PRE-conversion file, git show ai/wave-9:Sources/ProctorUI/MainWindow.swift, byte-identical at the branch merge-base 346edfa and at f8f0ed7^, written to a2-identifier-baseline-pre.json at 49 identifier literals. Against it the delivered file reports 4 identifier(s) gone, 0 new and EXITS 1: key 'Accessibility', key 'Automation', key 'Screen Recording' and punctuation newline. That is a real finding rather than noise. Actions.pane(for:) moved to StatusChecks.settingsPane, where the three grant names became the StatusChecks constants that already carried the same strings at wave-9, and the newline separator travelled into StatusSurface.swift:186 with the 'Looked in:' sentence it joins. A decision function moved out of the view alongside the copy, which is a widening past A2 as written; it is recorded here rather than tuned away, and the instrument's buckets, exit codes and comparison were left untouched. a2-identifier-baseline.json is kept as the FORWARD guard on later edits to the file and is no longer cited as evidence that this conversion preserved the identifier set. THE GATE HAS NOW BEEN WATCHED FAILING: on a scratch copy with one system identifier ('/bin/launchctl') replaced by a symbol reference, the forward baseline goes from 0 gone/exit 0 to 1 gone/exit 1 naming the literal, the pre baseline goes from 4 gone to 5, and restoring the copy returns exit 0 with the source file's md5 unchanged throughout (evidence/PRO-0081/a2-baseline-bite.txt). ORACLE CORRECTED BY PRO-0091: this case recorded `static-analysis`, which was not on campaign.py's rung set, so it counted `unrated` \u2014 the bucket meaning the tool does not know what the case checked. It now records `source-analysis`, a rung parallel to the product ladder rather than a step on it (test-campaign 0.9.4), and carries the analyzer and the examined count that rung owes. What it checks is unchanged; DEF-057.",
     "evidence": [
       "docs/test-campaign/evidence/PRO-0081/a2-arming-baseline.txt",
       "docs/test-campaign/evidence/PRO-0081/a2-baseline-pre-comparison.txt",
@@ -1358,21 +1366,29 @@
       "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json"
     ],
     "armed": true,
-    "armedBy": "the gutted-file run is itself the negative arm, and it is recorded with the exit code from both directions"
+    "armedBy": "the gutted-file run is itself the negative arm, and it is recorded with the exit code from both directions",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py --json against evidence/PRO-0081/a2-identifier-baseline.json, compared as a set",
+      "examined": 45
+    }
   },
   {
     "id": "CASE-0105",
     "req": "REQ-048",
     "surface": "SURF-002",
-    "oracle": "static-analysis",
+    "oracle": "source-analysis",
     "lane": "headless",
     "status": "pass",
-    "note": "THIS CASE PASSES ON A MEASUREMENT OF A GAP, not on the gap being closed: what it establishes is the scope of A2's green, and the gap it found is open as DEF-039. What A2's green does NOT cover, measured rather than left implicit. The clause names one file. Its siblings in Sources/ProctorUI were run through the same classifier and are reported without being gated: HistoryWindow.swift 71 user-facing of 91 examined, ProctorUIApp.swift 53 of 68, Walkthrough.swift 49 of 56, HistoryModel.swift 46 of 47, AgentModel.swift 39 of 47 \u2014 258 in total. MenuBarCharacter.swift (1 of 1) and Motion.swift (0) are already clean. Recorded as DEF-039 and as `partial` rather than `pass`, because a case that reported this surface green would be claiming the file's clause covered the window's copy.",
+    "note": "THIS CASE PASSES ON A MEASUREMENT OF A GAP, not on the gap being closed: what it establishes is the scope of A2's green, and the gap it found is open as DEF-039. What A2's green does NOT cover, measured rather than left implicit. The clause names one file. Its siblings in Sources/ProctorUI were run through the same classifier and are reported without being gated: HistoryWindow.swift 71 user-facing of 91 examined, ProctorUIApp.swift 53 of 68, Walkthrough.swift 49 of 56, HistoryModel.swift 46 of 47, AgentModel.swift 39 of 47 \u2014 258 in total. MenuBarCharacter.swift (1 of 1) and Motion.swift (0) are already clean. Recorded as DEF-039 and as `partial` rather than `pass`, because a case that reported this surface green would be claiming the file's clause covered the window's copy. ORACLE CORRECTED BY PRO-0091: this case recorded `static-analysis`, which was not on campaign.py's rung set, so it counted `unrated` \u2014 the bucket meaning the tool does not know what the case checked. It now records `source-analysis`, a rung parallel to the product ladder rather than a step on it (test-campaign 0.9.4), and carries the analyzer and the examined count that rung owes. What it checks is unchanged; DEF-057.",
     "evidence": [
       "docs/test-campaign/evidence/PRO-0081/a2-sibling-scope.txt"
     ],
     "armed": true,
-    "armedBy": "the same classifier that reports 0 for MainWindow.swift reports non-zero for five of its siblings in the same run, so the zero is a property of the file rather than of the instrument"
+    "armedBy": "the same classifier that reports 0 for MainWindow.swift reports non-zero for five of its siblings in the same run, so the zero is a property of the file rather than of the instrument",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py over the seven siblings of MainWindow.swift in Sources/ProctorUI",
+      "examined": 310
+    }
   },
   {
     "id": "CASE-0106",
@@ -1394,5 +1410,150 @@
     "lineage": "evidence/PRO-0081/a3-lineage-arming.txt \u2014 the seed-swap arming for this capture's tie",
     "armed": true,
     "armedBy": "capture-lineage.py --seed-swap STEP-A3-PRIMARY-DISABLED against SURF-009 and against SURF-008: both CAUGHT with 2 hard failures each, so the tie pass reads the manifest rather than the filename"
+  },
+  {
+    "id": "CASE-0150",
+    "req": "REQ-057",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/def041-denominator.txt"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0151 is the arming run: the same gate over the same fixture, from the 0.9.3 bytes read out of git, prints the twelve rows with nothing saying it cut the list.",
+    "note": "PRO-0091, DEF-041. campaign.py check prints the denominator beside every capped list. MEASURED on a fixture built to the exact shape of the loss \u2014 eighteen external-effect requirements, none witnessed, against a cap of twelve. 0.9.3 prints twelve rows and stops. 0.9.4 prints the same twelve and then '\u2026 (showing 12 of 18)'. The twelve rows are unchanged: the cap was not raised, because the next set outgrows the next cap. An untruncated list prints '(showing N of N)' rather than nothing, so a reader never has to work out whether anything was cut, which is the position that caused the loss. The fix covers the unwitnessed-requirement list, the hollow witnesses, the unevidenced passes, the legacy-rung cases, the open cases, the duplicate and declared-share groups, the pixel claims, the surfaces with no case, the presence-only flows, and the lists carried inside blocker sentences. THE TOOL IS NOT IN THIS REPO: campaign.py belongs to the test-campaign plugin. Fixed at ~/Dev/fledgeling-plugins/plugins/test-campaign as 0.9.4 (commit f37255f, unpushed) and mirrored into the active plugin cache at 0.9.3/skills/test-campaign/scripts/campaign.py, sha256 a7d978224e6304875e1bd980f52f6cad25b6e9a163b4a6f7e864b3c7e6e50f27 on both copies."
+  },
+  {
+    "id": "CASE-0151",
+    "req": "REQ-057",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/def041-denominator.txt",
+      "docs/test-campaign/evidence/PRO-0091/plugin-gate-tests.txt"
+    ],
+    "armed": true,
+    "armedBy": "this case IS the arming run for CASE-0150, and the plugin's tests/run.sh carries it as a permanent guard: a truncated list that prints no denominator fails, and a complete list that claims a truncation fails.",
+    "note": "PRO-0091. Three gate tests added to the plugin's own tests/run.sh, each watched in both directions in the same run: 'a truncated list carries its denominator' (18 requirements, cap 12), 'the cap still caps' (exactly twelve rows printed, so the denominator is the registry's count rather than a raised cap), and 'a complete list says it is complete' (the same fixture trimmed to three). tests/run.sh reports 67 passed, 0 failed. THE 0.9.3 SIDE WAS RUN, NOT DESCRIBED: the pre-fix bytes come from `git show HEAD~1`, and were executed outside /tmp because a stray /tmp/copy.py on this machine shadows the stdlib copy module for any script run there \u2014 the first capture of this evidence was an empty BEFORE block for that reason."
+  },
+  {
+    "id": "CASE-0152",
+    "req": "REQ-046",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/def030-both-passes-armed.txt"
+    ],
+    "armed": true,
+    "armedBy": "the case is itself the arming: each of the census's two requirement-level passes is watched going from clear to red under a mutation aimed at it, in one session against one fixture.",
+    "note": "PRO-0091, DEF-030. The census control now arms BOTH passes rather than one twice. The shipped control (vacuity-check.py --seed-strengthen) fires the uncensused predicate; scripts/campaign/seed_unclass.py fires unclassed by removing a requirement's effect field. Run against a fixture copy of docs/test-campaign: baseline unclassed examined=49 findings=0 and uncensused examined=23 findings=0, then --seed-strengthen REQ-017 gives before=clear after=red, then seed_unclass REQ-017 gives before=clear after=red with unclassed examined=49 findings=1 and the registry restored byte-for-byte by sha256. Baseline re-read clear afterwards. 'unclassed examined=49 findings=0' is no longer an unwatched zero. WHY A FIXTURE RATHER THAN THE REAL REGISTRY: uncensused is currently red on the real one (REQ-049 declares an ipc effect and records no provider), and a red after a mutation proves nothing when it was red before. The fixture is docs/test-campaign with REQ-049 given a provider, and nothing else."
+  },
+  {
+    "id": "CASE-0153",
+    "req": "REQ-047",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",
+      "docs/test-campaign/evidence/PRO-0091/instrument-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutation 1 of instrument-arming.txt takes the $ back out of the operator's lookbehind and the check goes red, naming closure shorthand; restored, the same run is green.",
+    "note": "PRO-0091, DEF-032. mutate_swift.py's integer-literal operator no longer matches Swift closure shorthand. The lookbehind is now (?<![\\w.$]). Tested over a fixture holding $0 three times, a property wrapper's projected value $state, and a real literal 3: no candidate is generated at the $0 sites, the projected value is left alone, and 3 \u2192 4 still is \u2014 a fix that stopped the operator firing at all would pass the first assertion by itself, so the second is what makes the first mean something. Mutant 24 of 24 in the first ProctorAgent sample rewrote `{ bind(fd, $0, size) }` to `bind(fd, $1, size)`, which cannot compile, and under load 271 it scored as a KILL at the 600s timeout rather than as unbuildable \u2014 so the summary's `unbuildable: 0` was wrong for a reason the tool could not see."
+  },
+  {
+    "id": "CASE-0154",
+    "req": "REQ-047",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",
+      "docs/test-campaign/evidence/mutation-agent.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutation 4 of instrument-arming.txt puts 11.20 back into the note and the check goes red naming 22.92, which is read out of the evidence file rather than typed into the test.",
+    "note": "PRO-0091, DEF-055. CASE-0074's note recorded a starting load of 11.20 where evidence/mutation-agent.txt line 2 records 22.92. Corrected, and guarded: the check parses the figure out of the evidence file and requires the note to carry it, so the two cannot drift again without the suite saying so. The note's conclusion is unchanged \u2014 the run was starved either way and the case already discounts its two 600.0s kills \u2014 but 22.92 is twice the number the note used to establish that the machine started healthy."
+  },
+  {
+    "id": "CASE-0155",
+    "req": "REQ-048",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/campaign-check-after.txt",
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutations 5 and 6 of instrument-arming.txt put the old oracle string back, and then move the examined count off what the classifier reports; each goes red on its own.",
+    "note": "PRO-0091, DEF-057, and the decision is recorded rather than assumed. CASE-0102..0105 recorded oracle 'static-analysis', which was not on campaign.py's rung set, so all four counted 'unrated' \u2014 the bucket whose own comment says it counts never as adequate. THE FORK WAS REFERRED TO GROK (grok-4.6, effort xhigh), which ran its own three-family panel: fable-5 at high and gemini-3.7-flash-high both answered the same way with the options presented in swapped order, and the codex lane failed to initialise and was reported as a lane failure rather than counted. The answer was neither of the two options the brief named. Re-expressing the four against the built product is not available: 'no user-facing copy is hardcoded in this file' is a property OF the source, and a hardcoded Text(\"Open log\") and a Text(Copy.openLog) render identically, so there is no product-side observable. Giving the ladder a source-analysis rung BELOW outcome invents a comparison the coverage model does not have \u2014 the ladder is one axis, what a case checked against the running product, and a reader of source text is off that axis rather than ranked on it. So SOURCE_RUNGS is a parallel set alongside EFFECT_RUNGS and RASTER_RUNGS: accepted by add, counted in its own bucket, printed on its own 'Off-ladder:' line, and absent from EFFECT_RUNGS. The gate now reads 'Off-ladder: source-analysis 4' where it read 'unrated 4'. Reclassifying the four to 'structural' was the route the brief ruled out and was not taken; what they check is unchanged."
+  },
+  {
+    "id": "CASE-0156",
+    "req": "REQ-048",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/plugin-gate-tests.txt"
+    ],
+    "armed": true,
+    "armedBy": "three gate tests in the plugin's tests/run.sh, each watched red on a fixture and green once the fixture is repaired: a requirement claiming a subprocess effect covered by source-analysis alone blocks, a source-analysis pass with examined=0 blocks, and the same campaign clears when the denominator returns.",
+    "note": "PRO-0091. The two guards that stop source-analysis becoming the cheap rung a campaign fills up on. A passing source-analysis case owes the analyzer that ran and the number of units it examined, the same obligation shape effect-witness carries for its recorder and count, because a search with no denominator cannot tell an empty result from an empty search. And a requirement claiming an effect outside the process may not rest on source analysis alone. A fourth check reads SOURCE_RUNGS out of the module and asserts it is disjoint from both EFFECT_RUNGS and ORACLE_RUNGS, so the rung cannot acquire effect credit by an edit nobody noticed."
+  },
+  {
+    "id": "CASE-0157",
+    "req": "REQ-058",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",
+      "docs/test-campaign/evidence/PRO-0091/instrument-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "mutations 2 and 3 of instrument-arming.txt reproduce the original loss \u2014 the merge restricted to the two keys the conflict was about, and then the verifier stopped reporting what it found \u2014 and each goes red naming flow/FLOW-010.",
+    "note": "PRO-0091, DEF-058. scripts/campaign/merge_registry.py sweeps the union of both documents' keys, asserts id uniqueness per key, and refuses rather than resolving a real conflict to one side. --verify is the gate half: it reads a merge somebody else performed and names every row of either input the result does not carry. THE ORIGINAL LOSS IS THE FIXTURE: a five-key registry where theirs adds DEF-002, REQ-002 and FLOW-010, hand-merged the way the PRO-0081 merge was \u2014 defect and requirement taken from theirs, ours taken as the base document \u2014 and --verify exits 1 naming flow/FLOW-010 (from theirs). The whole key absent rather than one row is caught separately. Without an --ancestor a one-sided absence is an ADDITION and never a deletion, which is the safe direction and the one the hand-merge inverted; deletion is representable only with an ancestor, so an unrepresentable deletion cannot be an accidental one."
+  },
+  {
+    "id": "CASE-0158",
+    "req": "REQ-058",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt"
+    ],
+    "armed": true,
+    "armedBy": "the same verifier that reports 5 of 5 keys here exits 1 and names the dropped row on the hand-merge fixture in CASE-0157, in the same run.",
+    "note": "PRO-0091. The merge script is pointed at this project's own registry rather than only at a fixture: docs/test-campaign/inventory.json merged against itself must be itself, and the check asserts the verifier swept all five of its keys (component, defect, flow, requirement, surface) rather than trusting a clean exit. The key count is read with len() over the file, so a registry that grows a sixth key fails this check until the check is looked at."
+  },
+  {
+    "id": "CASE-0159",
+    "req": "REQ-057",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt"
+    ],
+    "armed": true,
+    "armedBy": "the Swift wrapper asserts the count as well as the exit code, so a suite that discovered nothing fails: '0 passed, 0 failed' exits 0 and is the shape of an instrument reporting a clean result over a population it never examined.",
+    "note": "PRO-0091. Tests/ProctorCoreTests/CampaignInstrumentTests.swift runs scripts/campaign/test_instruments.py, so ./scripts/test.sh owns the verdict \u2014 a Python file nobody runs is the same shape of finding as the ones it was written to close. It requires at least 15 checks to have been made, then requires the exit code to be 0. Two of the checks are additionally re-expressed in Swift, driving the same two scripts directly: the mutation runner over a closure-shorthand fixture, and the merge verifier over the hand-merge that lost FLOW-010."
   }
 ]

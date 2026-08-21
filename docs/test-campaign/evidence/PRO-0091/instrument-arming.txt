@@ -1,0 +1,40 @@
+# PRO-0091 arming — every check in scripts/campaign/test_instruments.py watched red.
+# 2026-08-21T08:05:10Z. One mutation at a time, applied to a backed-up copy of
+# the tree and restored before the next, so each red names one cause.
+
+=== GREEN, as the tree stands ===
+campaign instruments: 15 passed, 0 failed
+
+=== MUTATION 1 — DEF-032's fix removed: $ taken out of the integer operator's lookbehind ===
+FAIL  the integer operator does not fire on closure shorthand $0
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 2 — DEF-058's fix removed: the merge sweeps only the two keys the conflict was about ===
+FAIL  the merge sweeps every key, including the one nobody was arguing about
+FAIL  the verifier passes the merge this script produced
+campaign instruments: 13 passed, 2 failed
+
+=== MUTATION 3 — the verifier stops naming a dropped row ===
+FAIL  a key the merge did not sweep is caught and named
+FAIL  a key missing from the merge entirely is caught
+campaign instruments: 13 passed, 2 failed
+
+=== MUTATION 4 — CASE-0074's note put back to the figure its own evidence contradicts ===
+FAIL  CASE-0074's note carries the load its evidence file records (22.92)
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 5 — CASE-0102's oracle put back to the string the ladder does not know ===
+FAIL  CASE-0102..0105 stand on source-analysis rather than an unknown rung
+campaign instruments: 14 passed, 1 failed
+
+=== MUTATION 6 — CASE-0102's examined count moved off what the classifier reports ===
+FAIL  CASE-0102's denominator is what the classifier counts today (45)
+campaign instruments: 14 passed, 1 failed
+
+=== RESTORED — green again, in the same session ===
+campaign instruments: 15 passed, 0 failed
+
+git status of the mutated files (nothing listed as changed beyond this item's own work):
+ M docs/test-campaign/cases.json
+ M scripts/campaign/mutate_swift.py
+?? scripts/campaign/merge_registry.py
