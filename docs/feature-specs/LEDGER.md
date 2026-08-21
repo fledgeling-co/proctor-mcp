@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 86
+**Last allocated:** 87
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -93,3 +93,4 @@
 | PRO-0084 | The cua path leaves Proctor's plane silently | 2026-08-21 | Ready for AI |
 | PRO-0085 | The skill and the guest lane | 2026-08-21 | Ready for AI |
 | PRO-0086 | The walkthrough will not advance without its grants | 2026-08-21 | Ready for AI |
+| PRO-0087 | The signature cache is per-session, the work is not | 2026-08-21 | Ready for AI |
