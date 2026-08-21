@@ -1,0 +1,13 @@
+{
+  "channel" : "CGImageSource in a process that did not take the capture",
+  "distinctColours" : 3159,
+  "fullyTransparentFraction" : 0.00054339462952989154,
+  "fullyTransparentPixels" : 2260,
+  "height" : 1640,
+  "luminanceMean" : 44.680624988869603,
+  "luminanceStdDev" : 14.251235695506837,
+  "ok" : true,
+  "path" : "docs\/test-campaign\/evidence\/PRO-0083\/glass\/subject.png",
+  "pixels" : 4159040,
+  "width" : 2536
+}

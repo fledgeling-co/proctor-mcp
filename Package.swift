@@ -96,7 +96,14 @@ let package = Package(
         // drive paths — against fake AX/capture engines. Session takes both as
         // injected protocols, so the gate ordering and the trail contents are
         // checkable without a Mac, a grant, or a real application.
+        // ProctorReflector is on this list for PRO-0083's REQ-023 witness and for
+        // nothing else: the Reflector binds its own AF_UNIX socket, separate from
+        // the agent's, and a witness for it has to reach the real listener. It is
+        // a build-graph edge and not a behaviour change — the Reflector compiles
+        // to nothing without DEBUG or PROCTOR_REFLECTOR, and scripts/build-app.sh
+        // already fails a release artifact that carries it.
         .testTarget(name: "ProctorAgentTests",
-                    dependencies: ["ProctorAgent", "ProctorCore", "ProctorCatch"]),
+                    dependencies: ["ProctorAgent", "ProctorCore", "ProctorCatch",
+                                   "ProctorReflector"]),
     ]
 )

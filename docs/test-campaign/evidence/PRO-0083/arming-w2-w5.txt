@@ -1,0 +1,116 @@
+==> swift test --filter theOperatorCLIEarnsItsExitCodesOverTheSocket|anOperatorWatchesAndHaltsOverTheSocket|aSupervisionClientReadsMoreThanRunAndQueue|aHeldSocketIsItsOwnState (output: /tmp/pro83-arm2.log)
+warning: 'pro-0083': found 4 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/browser-routing-baseline.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/simctl-devices.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-pass.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-fail.json
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Compiling ProctorAgentTests ExternalWitnessTests.swift
+[6/7] Emitting module ProctorAgentTests
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (17.23s)
+Test Suite 'Selected tests' started at 2026-08-21 11:57:33.895.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-21 11:57:33.900.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-21 11:57:33.900.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-21 11:57:33.900.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.005) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "External effect witnesses: the ten a capped gate hid" started.
+􀟈  Test "REQ-034 effect witness: real CLI children earn real exit codes over a real socket" started.
+􀢄  Test "REQ-034 effect witness: real CLI children earn real exit codes over a real socket" recorded an issue at ExternalWitnessTests.swift:475:9: Expectation failed: (answered → 1) < 0
+􀄵  ARMING W2: the server answered 1 requests from real CLI children
+􀢄  Test "REQ-034 effect witness: real CLI children earn real exit codes over a real socket" recorded an issue at ExternalWitnessTests.swift:488:9: Expectation failed: (dead.status → 0) == (CLISurface.Exit.agentUnreachable.rawValue → 3)
+􀄵  ARMING W2 sabotage: against a LIVE socket the CLI reported exit 0 · policy: ok — use --json for the full reply
+   
+􀢄  Test "REQ-034 effect witness: real CLI children earn real exit codes over a real socket" recorded an issue at ExternalWitnessTests.swift:494:9: Expectation failed: (distinct.count → 3) < 0
+􀄵  ARMING W2: 3 distinct exit codes: [(key: "agentUnreachable", value: 0), (key: "notReady", value: 1), (key: "ok", value: 0), (key: "okPolicy", value: 0), (key: "refused", value: 1), (key: "usage", value: 2), (key: "verdictFailed", value: 2)]
+􀢄  Test "REQ-034 effect witness: real CLI children earn real exit codes over a real socket" failed after 1.406 seconds with 3 issues.
+􀟈  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" started.
+􀢄  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" recorded an issue at ExternalWitnessTests.swift:586:9: Expectation failed: (sink.count → 3) < 0
+􀄵  ARMING W3: 3 frames published, 3 crossed the socket
+􀢄  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" recorded an issue at ExternalWitnessTests.swift:600:9: Expectation failed: !((RunControl.shared → ProctorAgent.RunControl).isStopped → true → true)
+􀄵  // The recorder for the halt is neither the client nor the transport: it is
+􀄵  // the latch the run loop reads and the HUD panel writes.
+􀄵  ARMING W3: the latch reads stopped=true after a stop over the socket
+􀢄  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" recorded an issue at ExternalWitnessTests.swift:615:9: Expectation failed: (deadSink.count → 2) == 0
+􀄵  ARMING W3 sabotage: 2 frames crossed the LIVE socket
+􀢄  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" recorded an issue at ExternalWitnessTests.swift:617:9: Expectation failed: (deadSink.reason → nil) != nil
+􀄵  the watch of an absent agent reported no reason
+􀢄  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" recorded an issue at ExternalWitnessTests.swift:621:9: Expectation failed: an error was expected but none was thrown
+􀢄  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" failed after 3.559 seconds with 5 issues.
+􀟈  Test "REQ-033 effect witness: a supervision client reads readiness, switches and history off the socket" started.
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:677:13: Expectation failed: sections.allSatisfy { $0 < 0 }
+􀄵  ARMING W4: read [4, 5, 8, 3] across grants, lanes, switches, history
+􀢄  Test «unknown» recorded an issue at ExternalWitnessTests.swift:677:13: Expectation failed: sections.allSatisfy { $0 < 0 }
+􀄵  ARMING W4: read [4, 5, 8, 3] across grants, lanes, switches, history
+􁁛  Test "REQ-033 effect witness: a supervision client reads readiness, switches and history off the socket" passed after 0.365 seconds.
+􀟈  Test "REQ-027 effect witness: a socket that accepts and never answers is a state of its own, distinct from an absent one" started.
+􀢄  Test "REQ-027 effect witness: a socket that accepts and never answers is a state of its own, distinct from an absent one" recorded an issue at ExternalWitnessTests.swift:809:9: Expectation failed: (acceptedAndUnanswered → 3) < 0
+􀄵  ARMING W5: the stalling listener accepted 3 of 3 connections
+􀢄  Test "REQ-027 effect witness: a socket that accepts and never answers is a state of its own, distinct from an absent one" recorded an issue at ExternalWitnessTests.swift:823:9: Expectation failed: !((live.connected → true) && (live.answered → true) → true)
+􀄵  ARMING W5: a real agent answered inside the bound: connected=true answered=true
+􀢄  Test "REQ-027 effect witness: a socket that accepts and never answers is a state of its own, distinct from an absent one" failed after 6.258 seconds with 2 issues.
+􀢄  Suite "External effect witnesses: the ten a capped gate hid" failed after 11.590 seconds with 10 issues.
+􀢄  Test run with 4 tests in 1 suite failed after 11.590 seconds with 12 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 4 tests in 1 suite failed after 11.590 seconds with 12 issues.
+==> swift test --filter aSessionExecutesItsStepsInsideTheGuest|thePoolNeverEvictsAGuestItDidNotStart|theBrowserLaneReadsTheDiskAndSpawnsNothing (output: /tmp/pro83-arm68.log)
+warning: 'pro-0083': found 4 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/browser-routing-baseline.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-fail.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-pass.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/simctl-devices.json
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Emitting module ProctorAgentTests
+[6/7] Compiling ProctorAgentTests ExternalWitnessTests.swift
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (18.75s)
+Test Suite 'Selected tests' started at 2026-08-21 12:04:02.649.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-21 12:04:02.654.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-21 12:04:02.654.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-21 12:04:02.654.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.004) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "External effect witnesses: the ten a capped gate hid" started.
+􀟈  Test "REQ-037 effect witness: a forwarded call crosses a real socket into a guest, and the host actuates nothing" started.
+􀢄  Test "REQ-037 effect witness: a forwarded call crosses a real socket into a guest, and the host actuates nothing" recorded an issue at ExternalWitnessTests.swift:942:9: Expectation failed: (guestAX.performed.count → 3) < 0
+􀄵  ARMING W6: the guest actuated 3 steps, the host 0
+􀢄  Test "REQ-037 effect witness: a forwarded call crosses a real socket into a guest, and the host actuates nothing" recorded an issue at ExternalWitnessTests.swift:961:9: Expectation failed: !((deadAttach → AgentResponse(id: "w6-dead", ok: true, result: Optional(ProctorCore.JSONValue.object(["note": ProctorCore.JSONValue.string("Every tool call from this session now runs inside witness-guest. The Proctor there holds that machine\'s Accessibility and Screen Recording grants and talks to its window server; this Mac actuates nothing on its behalf. proctor_guest, proctor_doctor, proctor_policy and the history and queue verbs still answer about this Mac. Call action \"detach\" to drive this Mac again."), "guest": ProctorCore.JSONValue.object(["provider": ProctorCore.JSONValue.string("tart"), "state": ProctorCore.JSONValue.string("running"), "handle": ProctorCore.JSONValue.string("gst-acff710bf0f4f30e"), "identifier": ProctorCore.JSONValue.string("witness-guest"), "name": ProctorCore.JSONValue.string("witness-guest"), "running": ProctorCore.JSONValue.bool(true), "platform": ProctorCore.JSONValue.string("macos")]), "machine": ProctorCore.JSONValue.object(["platform": ProctorCore.JSONValue.string("macos"), "kind": ProctorCore.JSONValue.string("guest"), "tier": ProctorCore.JSONValue.string("native"), "provider": ProctorCore.JSONValue.string("tart"), "name": ProctorCore.JSONValue.string("witness-guest")]), "localSocket": ProctorCore.JSONValue.string("/tmp/pw83-81d591f4.sock"), "startedByProctor": ProctorCore.JSONValue.bool(false), "pool": ProctorCore.JSONValue.object(["pools": ProctorCore.JSONValue.array([ProctorCore.JSONValue.object(["platform": ProctorCore.JSONValue.string("macos"), "capacity": ProctorCore.JSONValue.number(2.0), "waiting": ProctorCore.JSONValue.number(0.0), "held": ProctorCore.JSONValue.number(1.0), "reason": ProctorCore.JSONValue.string("macOS on Apple silicon permits at most two concurrently running macOS guests per host. This is Apple\'s rule, not a Proctor setting.")])]), "waiting": ProctorCore.JSONValue.array([]), "held": ProctorCore.JSONValue.array([ProctorCore.JSONValue.object(["guest": ProctorCore.JSONValue.string("tart:witness-guest"), "session": ProctorCore.JSONValue.string("PRO-0083 b834"), "heldForSeconds": ProctorCore.JSONValue.number(0.0)])]), "note": ProctorCore.JSONValue.string("Counted from Proctor\'s own scheduler, which is state on this Mac, so reading this runs no provider and starts no VM. A guest a person started outside Proctor is not in this count and is never stopped to free a slot.")]), "attached": ProctorCore.JSONValue.bool(true)])), error: nil)).ok → true → true)
+􀄵  ARMING W6 sabotage: attach onto the LIVE socket returned ok=true
+􀢄  Test "REQ-037 effect witness: a forwarded call crosses a real socket into a guest, and the host actuates nothing" recorded an issue at ExternalWitnessTests.swift:962:9: Expectation failed: (deadAttach.error?.message.contains(guestPath) → nil) == true
+􀄵  the refusal does not name the socket: 
+􀢄  Test "REQ-037 effect witness: a forwarded call crosses a real socket into a guest, and the host actuates nothing" failed after 0.482 seconds with 3 issues.
+􀟈  Test "REQ-039 effect witness: a guest this agent started is stopped by a real child, and one a person started is not" started.
+􀢄  Test "REQ-039 effect witness: a guest this agent started is stopped by a real child, and one a person started is not" recorded an issue at ExternalWitnessTests.swift:1093:9: Expectation failed: (evictableStops → 1) < 0
+􀄵  ARMING W7: arm A left 1 stop children · ["get", "get", "ls", "ls", "ls", "run", "stop"]; arm B left 0 · ["ls"]
+􀢄  Test "REQ-039 effect witness: a guest this agent started is stopped by a real child, and one a person started is not" failed after 1.394 seconds with 1 issue.
+􀟈  Test "REQ-024: the browser lane's only boundary crossing is a filesystem read, and the census names a provider it never reaches" started.
+􀢄  Test "REQ-024: the browser lane's only boundary crossing is a filesystem read, and the census names a provider it never reaches" recorded an issue at ExternalWitnessTests.swift:1195:13: Expectation failed: (both.path → "/var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/pro83-8B62415D-FF5D-4E80-8C7C-67068AED8B60/complete/obscura") == nil
+􀄵  ARMING W8: the locator chose /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/pro83-8B62415D-FF5D-4E80-8C7C-67068AED8B60/complete/obscura, missing [], searched 2
+􀢄  Test "REQ-024: the browser lane's only boundary crossing is a filesystem read, and the census names a provider it never reaches" recorded an issue at ExternalWitnessTests.swift:1213:13: Expectation failed: (sabotaged → ToolPresence(tool: "obscura", available: false, path: nil, searched: ["/var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/pro83-8B62415D-FF5D-4E80-8C7C-67068AED8B60/incomplete/obscura", "/var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/pro83-8B62415D-FF5D-4E80-8C7C-67068AED8B60/complete/obscura"], missingCompanions: [], usability: nil, evidence: nil, version: nil, detail: nil, checkedAt: nil)).available → false
+􀄵  ARMING W8 sabotage: after chmod the locator reports available=false at nowhere
+􀢄  Test "REQ-024: the browser lane's only boundary crossing is a filesystem read, and the census names a provider it never reaches" failed after 0.033 seconds with 2 issues.
+􀢄  Suite "External effect witnesses: the ten a capped gate hid" failed after 1.911 seconds with 6 issues.
+􀢄  Test run with 3 tests in 1 suite failed after 1.911 seconds with 6 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 3 tests in 1 suite failed after 1.911 seconds with 6 issues.

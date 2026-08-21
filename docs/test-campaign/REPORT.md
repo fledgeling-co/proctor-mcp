@@ -566,6 +566,122 @@ verdicts with the read that acquitted each), `rate.txt` (the arithmetic and the 
 `blind-findings-after.txt` (76). Spec `docs/specs/spec-PRO-0079.md`, plan
 `docs/plans/plan-PRO-0079.md`.
 
+## The external denominator is 22, and it is a `len()` rather than a printed list
+
+**PRO-0083.** Wave 11 scoped twelve external requirements because `campaign.py check` printed
+twelve. The gate caps that list at twelve and says nothing about the cap. The population is:
+
+```
+$ python3 -c "import json; d=json.load(open('docs/test-campaign/inventory.json'));
+  print(len([r for r in d['requirement'] if r.get('effect') not in (None, 'none')]))"
+22
+```
+
+PRO-0077 took four and PRO-0078 took eight, so **ten were named by no item in the wave** —
+REQ-023, 024, 027, 028, 029, 033, 034, 035, 037, 039. That is the campaign's own first failure
+mode, covering a subset and reporting it as the whole, arriving through the gate rather than
+through a surface map. The number was one `len()` away throughout, and PRO-0077's runner found the
+gap from arithmetic rather than from the gate. Recorded as DEF-041 so the cause sits in the
+registry rather than in a runner's report, and written into this section so the denominator is a
+count of the registry from here on.
+
+**Ten cases, one per requirement, because they are different guarantees over shared providers.**
+Six of the ten rest on the agent's single `AF_UNIX` socket. A case covering two of them would let
+one guarantee's silence hide behind the other's noise.
+
+| Case | Req | Effect | Count | What the recorder is |
+|---|---|---|---:|---|
+| CASE-0080 | REQ-035 | `ipc` | 3 | the trail's sealed bytes on disk, read with a fresh `FileHandle` |
+| CASE-0081 | REQ-034 | `ipc` | 3 | exit status through `waitpid`, plus the server's answered connections |
+| CASE-0082 | REQ-029 | `ipc` | 3 | frames delivered on a held connection, and the `RunControl` latch |
+| CASE-0083 | REQ-033 | `ipc` | 20 | reply bytes off the socket, projected into readiness, switches, history |
+| CASE-0084 | REQ-027 | `ipc` | 3 | a stalling listener's own accepted-descriptor count |
+| CASE-0085 | REQ-037 | `ipc` | 3 | the guest server's own dispatcher, with the host's actuation count beside it |
+| CASE-0086 | REQ-039 | `subprocess` | 7 | sentinel files carrying each child's `$$` and the argv it was given |
+| CASE-0087 | REQ-024 | `subprocess` | 0 | `inconclusive` — see below |
+| CASE-0088 | REQ-023 | `ipc` | 3 | replies off the Reflector's own socket, decoded by `JSONSerialization` |
+| CASE-0089 | REQ-028 | `device` | 2 | the window server's list, `screencapture -l`, and the target's AX server |
+
+Every count was read off an arming run with the non-zero assertion inverted, so each one is the
+number the recorder actually saw rather than a number chosen in advance. Every case carries its
+own sabotage in the same test body, so the arming run and the passing run are one measurement
+taken twice on one build.
+
+**REQ-035 is the one where a wrong answer would have been a security answer.** The claim is that
+the audit trail records which front end called, read from the peer process rather than from the
+request. Two genuinely different front-end children — the real `proctor-cli` and the real
+`proctor-shim`, both built by the same `swift build --build-tests` — were driven against one real
+`Server` on a private socket, and the trail was read back off disk and opened with `AuditSeal`. The
+rows read `via: cli` and `via: mcp`. A third child, neither shipped name, sent a request whose body
+asked to be recorded as `cli`; its row carries `via` **absent**. Same wire bytes, different peers,
+different rows — the field is not reachable from a request.
+
+**REQ-028 shows content and absence in the same second, which is the only way it proves anything.**
+PRO-0078 found `proctor_capture` reporting `status: complete, trustworthy: true` over 2,942,720
+pixels of `RGBA(0,0,0,0)` of a Proctor-owned window (DEF-025, open). The exclusion working and the
+capture path not noticing that exclusion was all it got are one mechanism seen from two sides, so a
+blank frame here would prove nothing. THE ABSENCE: `CGWindowListCopyWindowInfo` reported two
+Proctor Agent windows on screen, CG windows 130709 and 130710, pid 76491, layer 1000, alpha 1,
+`sharingState` 0 — and `screencapture -l`, run by a third process, refused both outright with
+"could not create image from window", which is a stronger negative than an empty frame because the
+channel could not produce an image at all. THE CONTENT, same utility, same second: CG window
+130785, Activity Monitor, pid 28274, a 2536×1640 frame carrying 3,159 distinct colours at 0.054%
+transparent, luminance standard deviation 14.25. The subject is proved by text rather than by
+filename — an independent AX client walked pid 28274 and read 270 strings over 361 nodes, among
+them "Activity Monitor — All Processes" and "coreaudiod", both of which are painted in the
+delivered frame. The blank-frame detector was armed against a hand-built transparent PNG, which
+reads 1 distinct colour and standard deviation 0.0.
+
+`sharingType = .none` on the run HUD and the takeover overlay is correct and was not touched.
+Evidence must not change because somebody was watching.
+
+**REQ-024 resolves `inconclusive`, and the reason is a registry error rather than a missing
+instrument.** The census records REQ-024 with effect `subprocess` and names `Process()` in
+`Actuation/CuaClients.swift` as its provider. The browser-routing path reaches neither, established
+in source: `BrowserTarget` is pure by its own header, `Session.browserHandoff` returns a disclosure
+six call sites attach to a reply, `ToolProbe`'s header reads "cached, and never executed", and
+`ToolLocator.locate` decides availability with a stat. The two `Process()` sites in that file are
+real and spawn `cua-driver`, but they belong to the CUA delegation lane rather than to browser
+routing. The only boundary this capability crosses is a filesystem **read**, and the campaign's
+closed class list has no member for it. The read was measured anyway — the production locator over
+two real directories answers `missingCompanions: ["obscura-worker"]` for one and none for the
+other, and `chmod 0600` takes availability to false — and recorded under an `inconclusive` case
+rather than dressed up as a witness of a class it is not. REQ-024's row is unchanged: not marked
+`n/a`, not reclassed to `none`, which would silence the gate rather than answer it. DEF-040.
+
+**REQ-007 was not revisited.** PRO-0078 recorded it `inconclusive` against a real ceiling, and the
+ceiling was re-read in source here rather than re-argued: `PersonInput.isAPerson`
+(`Contention.swift:265`) returns true only for `sourcePid == 0`, and
+`ContentionMonitor.considerInput:199` guards on it. Zero is what hardware carries and no process
+can forge it. A ceiling that was measured stays measured.
+
+**What the gates read after this item.** `campaign.py check`: external effects
+`examined=22 witnessed=20`, up from 11 — and it still exits 1, correctly, over the two
+`inconclusive` cases. `strict-check` 79 of 81 checked, ratchet raised 70 → 79 in the same commit.
+`capture-lineage --gate` exit 0 at ratchet 5, published 7 and distinct 7 — **unmoved, and checked
+rather than assumed**: CASE-0089's frame is a case-level artifact under
+`evidence/PRO-0083/glass/`, not a surface's `shot`, so the lineage population it is measured
+against genuinely does not include it. Wave 11a's lesson was that a gate reading an empty
+population exits 0 while examining nothing, so the count was read before and after rather than
+inferred.
+
+**The ceilings, named rather than left as silence.** The nine passing cases stand on the portable
+floor from `references/effect-boundary.md`: real child processes, real sockets answering real
+connections, real files read back with fresh descriptors, and a third process holding the recorder
+wherever one could. There is no kernel bar anywhere in this item — no `dtrace`, no `eslogger`, no
+`execve` census — because SIP is on and this suite has no privilege for one. CASE-0088's server and
+client are the same process, so what it witnesses is a real `AF_UNIX` round trip through the kernel
+and a real AppKit walk rather than a cross-process one; the agent ships `NullReflectorBridge`, so
+there is no in-repo production client to drive it from a second process, and writing one would be
+building the subject rather than witnessing it.
+
+**One instrument fault caught before it could read zero for a structural reason.** CASE-0088's
+first run asked the Reflector for `"constraints": true` and got no constraints key at all, because
+`Runtime.decode(options:)` reads `"includeConstraints"`. A constraints assertion on that request
+would have failed for a wire-protocol reason and been read as a product one — the same shape as
+PRO-0078's probe counting survivors by a mark the tagged arm could not carry. Before believing a
+zero, check the instrument could have reported non-zero.
+
 ## What was not checked
 
 - **Twenty-one of the seventy-eight blind findings** — the `act`, `unlock`, `release`, `set` and

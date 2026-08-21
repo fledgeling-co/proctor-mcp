@@ -1,0 +1,94 @@
+warning: 'pro-0083': found 4 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/browser-routing-baseline.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-fail.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-pass.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/simctl-devices.json
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Compiling ProctorAgentTests ReflectorWitnessTests.swift
+[6/7] Emitting module ProctorAgentTests
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (45.90s)
+Test Suite 'Selected tests' started at 2026-08-21 12:46:36.045.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-21 12:46:36.046.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-21 12:46:36.046.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-21 12:46:36.046.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "External effect witnesses: the Reflector's own socket" started.
+􀟈  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" started.
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" recorded an issue at ReflectorWitnessTests.swift:281:9: Expectation failed: (answered → 3) < 0
+􀄵  ARMING: the recorder saw 3 answered connections · errors [:]
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" recorded an issue at ReflectorWitnessTests.swift:304:9: Expectation failed: (nodes.count → 3) < 0
+􀄵  ARMING: the walk resolved 3 nodes · ["NSView", "NSTextField", "NSTextFieldSimpleLabel"]
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" recorded an issue at ReflectorWitnessTests.swift:325:9: Expectation failed: (frame.x → 22.0) < (0 → 0.0)
+􀄵  // The resolved x is NOT the constant the constraint was written with, and
+􀄵  // that gap is the clearest evidence in this test that the number came back
+􀄵  // from AppKit rather than from the request: `NSTextField`'s alignment rect
+􀄵  // is inset from its frame, so the solver satisfies the leading constraint
+􀄵  // on the alignment rect and the frame lands to the left of it. Measured at
+􀄵  // 22.0 against a constant of 24 on 2026-08-21. Nothing was laid out at all
+􀄵  // would read 0.
+􀄵  ARMING: the label resolved to frame (x: 22.0, y: 272.0, w: 110.5, h: 16.0) against a leading constant of 24.0
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" recorded an issue at ReflectorWitnessTests.swift:339:9: Expectation failed: (hex → "#FFFFFF").isEmpty → false
+􀄵  ARMING: the resolved colour reads #FFFFFF · catalog Optional(System) name Optional(labelColor)
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" recorded an issue at ReflectorWitnessTests.swift:360:9: Expectation failed: (constraints.count → 2) < 0
+􀄵  ARMING: the content view reported 2 constraints · ["leading", "top"]
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" recorded an issue at ReflectorWitnessTests.swift:371:9: Expectation failed: !((FileManager.default → <NSFileManager: 0x102c74580>).fileExists(atPath: path → "/tmp/pro83r-ef370a66/reflector-witness.sock") → true)
+􀄵  // --- The sabotage ----------------------------------------------------
+􀄵  // `stop()` closes the listening descriptor and unlinks the path. Nothing
+􀄵  // else changes: same client, same window, same tree.
+􀄵  // ARMING: the sabotage is removed. The socket stays up.
+􀄵  stop() left the socket behind at /tmp/pro83r-ef370a66/reflector-witness.sock
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" recorded an issue at ReflectorWitnessTests.swift:387:9: Expectation failed: (stillAnswered → 3) == 0
+􀄵  3 connections were answered after stop() · ["hierarchy": "answered", "ping": "answered", "revision": "answered"]
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" recorded an issue at ReflectorWitnessTests.swift:389:9: Expectation failed: afterStop.values.allSatisfy { $0.contains("connect failed") }
+􀄵  a refusal after stop() was not a connect failure · ["hierarchy": "answered", "ping": "answered", "revision": "answered"]
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" recorded an issue at ReflectorWitnessTests.swift:391:9: Expectation failed: !(ProctorReflector.isRunning → true → true)
+􀢄  Test "REQ-023 effect witness: the Reflector's own socket answers real connections with values AppKit resolved, and a stopped one answers none" failed after 0.603 seconds with 9 issues.
+􀢄  Suite "External effect witnesses: the Reflector's own socket" failed after 0.603 seconds with 9 issues.
+􀄵  // PRO-0083, W9. REQ-023: `ProctorReflector` inspection reads resolved layout
+􀄵  // constraints, colours and CALayer models over its own socket.
+􀄵  //
+􀄵  // **A second socket, and that is why it is its own case.** Five of this item's
+􀄵  // other witnesses stand on the agent's `AF_UNIX` listener in `Server.swift`.
+􀄵  // This one stands on `ProctorReflector/SocketServer.swift` — a different
+􀄵  // `Darwin.bind`/`listen`/`accept`, in a different target, embedded in other
+􀄵  // people's applications and taking no dependency on the agent. Folding it into
+􀄵  // the agent-socket cases would let one listener's silence hide behind the
+􀄵  // other's noise.
+􀄵  //
+􀄵  // **What is asked, and what answers.** `ProctorReflector.start(socketPath:)` is
+􀄵  // the one-line adoption API an app calls from `applicationDidFinishLaunching`.
+􀄵  // It binds, listens, `chmod 0600`s and serves. This test connects with a raw
+􀄵  // `Darwin.socket`/`connect` client of its own, frames the request by hand and
+􀄵  // decodes the reply with `JSONSerialization` — no framing, no decoder and no
+􀄵  // client belonging to the target under test participates in the reading.
+􀄵  //
+􀄵  // **The resolved half, which is what REQ-023 actually claims.** The window is
+􀄵  // built with Auto Layout and no explicit child frame, so the label's width and
+􀄵  // height are AppKit's own measurement of the string and its origin is the
+􀄵  // constraint solver's. Its colour is `labelColor` resolved against the window's
+􀄵  // effective appearance, which nothing here sets. Its layer is CoreAnimation's.
+􀄵  // No literal in this file names any of those values; what is checked is the
+􀄵  // RELATION the solver produced over a height nothing here wrote, and the shape
+􀄵  // of values only AppKit could have computed.
+􀄵  //
+􀄵  // **The ceiling, recorded rather than implied.** Server and client are the same
+􀄵  // process. What is witnessed is a real `AF_UNIX` round trip through the kernel
+􀄵  // and a real AppKit walk, not a cross-process one. The agent ships
+􀄵  // `NullReflectorBridge`, so there is no in-repo production client to drive this
+􀄵  // from a second process, and writing one would be building the subject rather
+􀄵  // than witnessing it.
+􀄵  //
+􀄵  // Serialized because `Runtime.shared` is process-wide and the walk reaches
+􀄵  // `NSApplication.shared.windows`.
+􀢄  Test run with 1 test in 1 suite failed after 0.603 seconds with 9 issues.

@@ -1156,5 +1156,213 @@
       "effect": "ipc",
       "count": 825
     }
+  },
+  {
+    "id": "CASE-0080",
+    "req": "REQ-035",
+    "surface": "SURF-018",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Same test body, inverted in the arming run: the non-zero assertion printed \"the recorder saw 3 records, attributions [Optional(\\\"cli\\\"), Optional(\\\"mcp\\\"), nil]\", the forgery assertion was flipped to demand [\"cli\"] and reported the row actually reads [nil], and the sabotage was pointed at the LIVE socket, where it went red with 1 record carrying via=cli and the CLI exiting 0 instead of 3. docs/test-campaign/evidence/PRO-0083/arming-w1-req035.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0083/suite-after-headless.txt",
+      "docs/test-campaign/evidence/PRO-0083/arming-w1-req035.txt"
+    ],
+    "witness": {
+      "recorder": "the audit trail's bytes on disk, read with a fresh FileHandle and opened with AuditSeal and the injected private half - never AuditLog.readTrail, which is the reader under test confirming itself",
+      "effect": "ipc",
+      "count": 3
+    },
+    "note": "THE SECURITY CLAUSE, AND IT WAS DRIVEN FROM TWO GENUINELY DIFFERENT FRONT ENDS. A real Server bound a temporary AF_UNIX socket with the session's sink set to the production AuditLog.append and AuditLog.seams.directory redirected to a temporary trail. Three real child processes were spawned against it with PROCTOR_SOCKET pointing at that socket: .build/debug/proctor-cli running `policy --action approve`, .build/debug/proctor-shim running `serve` and speaking real MCP over its stdio (initialize then tools/call proctor_policy), and a copy of proctor-cli at the path <tmp>/proctor-imposter running the same verb with `--via cli` appended. All three are built by the same `swift build --build-tests` that builds this suite, and the test locates them through Bundle(for:) on an ObjC anchor class - an absent binary fails the test rather than skipping it. WHAT THE TRAIL SAID: three sealed records, via=cli for the CLI child, via=mcp for the shim child, and via ABSENT for the forger that asked to be recorded as the CLI. Every via was produced by SessionIdentity.frontEnd(for:) from proc_pidpath of the pid getsockopt(SOL_LOCAL, LOCAL_PEERPID) reported for the accepted descriptor (Server.swift:126, bound as a task-local at :270, stamped at PolicyStore.swift:232). None of it was on the wire. The count is the 3 records read back off disk. SABOTAGE: unlink the socket between start() and the children - the CLI exits 3 (CLISurface.Exit.agentUnreachable) and the trail holds nothing. NO onAccept SEAM WAS ADDED; the grok lane settled that for CASE-0062 and the reason still holds."
+  },
+  {
+    "id": "CASE-0081",
+    "req": "REQ-034",
+    "surface": "SURF-018",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Arming run printed \"the server answered 3 requests from real CLI children\" and \"4 distinct exit codes: agentUnreachable 3, ok 0, okPolicy 0, notReady 1, reflector 1, refused 1, usage 2, verdictFailed 2\". The sabotage was pointed at the LIVE socket and went red, reporting exit 0 where it demands 3. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0083/suite-after-headless.txt",
+      "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt"
+    ],
+    "witness": {
+      "recorder": "the exit status the kernel reports through waitpid on each real proctor-cli child, plus the server's own record of the peer it read off each accepted descriptor",
+      "effect": "ipc",
+      "count": 3
+    },
+    "note": "Real proctor-cli children against a real Server on a private socket. The count is the 3 doctor requests the server answered, each recording a kernel-read peer whose frontEnd resolved to \"cli\" and whose key names a CHILD process rather than this one. Four distinct exit codes were produced by real children and read through waitpid: 0 (ok), 1 (verdictFailed), 2 (usage) and 3 (agentUnreachable). The generated completion script was produced by a real child (`completion --shell zsh`) and contains all 26 of CLISurface.allVerbNames - 21 verbs derived from ToolCatalogue plus 5 service verbs. SCOPE, STATED RATHER THAN ROUNDED UP: exit 4 (refused) and exit 5 (notReady) were NOT produced from a child in this harness. Every gate that yields them sits behind a resolved window handle, and a handle is minted per session by an attach the child would have to perform first, so all three gated arms failed at handle resolution and mapped to verdictFailed. The six-code surface is carried by CLISurface.Exit.allCases and the pure exit(for:) mapping, which is a different rung from this one. SABOTAGE: with no socket bound the same verb exits 3 and the answered count is zero."
+  },
+  {
+    "id": "CASE-0082",
+    "req": "REQ-029",
+    "surface": "SURF-017",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Arming run printed \"3 frames published, 3 crossed the socket\" and \"the latch reads stopped=true after a stop over the socket\". The sabotage was pointed at the LIVE socket and went red at 2 frames crossed, so the zero in the passing run is a measurement rather than a structural silence. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0083/suite-after-headless.txt",
+      "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt"
+    ],
+    "witness": {
+      "recorder": "the frames that arrived on a held SocketClient.watch connection, counted client-side on its own Thread, and RunControl.shared read afterwards - which is neither the client nor the transport",
+      "effect": "ipc",
+      "count": 3
+    },
+    "note": "The surface that reaches furthest - across SSH onto a Mac with no window server - and can do least. A real Server, a real watch held open on a dedicated Thread (SocketClient.watch blocks in read(), so a cooperative thread would wedge the pool), and frames pushed through the product's own SupervisionBroadcast.shared. 3 published, 3 crossed. The halt went over a SECOND real connection as proctor.control {action: stop}, and the recorder for it is RunControl.shared - the same object the HUD panel writes and the run loop reads, which is A4's one-latch claim. THE LATCH IS PROCESS-WIDE, so it is read before, asserted un-stopped, and restored with the product's own begin(run:) reset, with the restoration asserted; PRO-0053 recorded a suite reaching another suite through exactly this object. SABOTAGE: with the server stopped the watch cannot connect, zero frames arrive, the watch reports a reason rather than an absence, and the latch does not move."
+  },
+  {
+    "id": "CASE-0083",
+    "req": "REQ-033",
+    "surface": "SURF-017",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Arming run printed \"read [4, 5, 8, 3] across grants, lanes, switches, history\" with the assertion inverted to demand every section be negative. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0083/suite-after-headless.txt",
+      "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt"
+    ],
+    "witness": {
+      "recorder": "the reply bytes read off a real socket by a real SocketClient, projected through TUISurface.readiness/switches/history - the same three projections the TUI draws",
+      "effect": "ipc",
+      "count": 20
+    },
+    "note": "Its own case rather than a slice of CASE-0082: the guarantee is about WHAT a supervision client can read, and folding it into the watch would let an empty readiness projection hide behind a non-zero frame count. The TUI's own two calls in the TUI's own order - proctor_doctor then proctor_history - over one real connection to a real Server, with the trail redirected because proctor_history projects the trail and this must never read the operator's own. Three audited calls were driven over the same socket first so the history pane had something to project. MEASURED: 4 grant rows, 5 lane rows, 8 switch rows, 3 history rows; the count is the 20 rows across all four. SABOTAGE: the identical three projections over a refusal reply return zero rows everywhere, so an empty pane is a measurement rather than a default."
+  },
+  {
+    "id": "CASE-0084",
+    "req": "REQ-027",
+    "surface": "SURF-008",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Arming run printed \"the stalling listener accepted 3 of 3 connections\", and the two-way arm was inverted to demand that a real agent NOT answer inside the same bound, where it went red reporting connected=true answered=true. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0083/suite-after-headless.txt",
+      "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt"
+    ],
+    "witness": {
+      "recorder": "the stalling listener's own accepted-descriptor count - forty lines of Darwin bind/listen/accept in the test, so a client blocking on it is blocking on the kernel's socket buffer rather than on anything Proctor decided",
+      "effect": "ipc",
+      "count": 3
+    },
+    "note": "SCOPE NARROWED AND THE REASON IS A BRANCH FACT, NOT A PRODUCT ONE. What is witnessed here is the BOUNDARY CONDITION the requirement is about: a listener that binds, accepts and never writes is a state of its own, and connect() SUCCEEDS against it where it fails outright against a path nothing is bound to. Three connections were accepted and deliberately never answered; a real Server answered inside the same 2s SO_RCVTIMEO bound, so the silence is the peer's and not the clock's; and after the listener stopped, connect() failed. WHAT IS NOT WITNESSED, said out loud: the product's own remedy. REQ-027 claims the status window stops claiming Ready when the agent holds the socket and never answers, and the mechanism for that is SocketClient's opt-in ioTimeoutSeconds applied as SO_RCVTIMEO/SO_SNDTIMEO, with AgentModel setting 5s on its doctor, activity and HUD polls. That landed in commit 10285df on `main`. This item's base branch ai/wave-9 is eight commits behind main and does not carry it: `grep -rn ioTimeout Sources/` returns nothing on this tree, AgentModel.callDoctor uses a bare SocketClient, and SocketClient.send blocks in read() with no bound. So the bound in this test is the TEST'S OWN, applied by the caller, and it is named as such rather than passed off as the product's. See DEF-042."
+  },
+  {
+    "id": "CASE-0085",
+    "req": "REQ-037",
+    "surface": "SURF-019",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Arming run printed \"the guest actuated 3 steps, the host 0\" with the assertion inverted, and the sabotage was run with the guest server left UP, where it went red reporting the attach returned ok=true. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0083/suite-after-headless.txt",
+      "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt"
+    ],
+    "witness": {
+      "recorder": "the guest Session's own FakeAX actuator, reachable only over the forwarded socket, set against the host Session's actuator which must stay empty",
+      "effect": "ipc",
+      "count": 3
+    },
+    "note": "Two real Servers on two temporary sockets. The second plays the guest's own Proctor on the end of the socket a person forwarded; the host attaches to it through the DEFAULT SocketGuestLink - a real SocketClient on that path, probed - and not through the injected guest-link seam. Everything rides ONE client connection so the peer key the host reads is the same for the attach and for the calls that follow, which is what guestAttachments[key] is keyed on. A forwarded proctor_apps attach came back naming com.fledgeling.inside-the-guest, a bundle identifier that exists only inside the guest's Session; three forwarded proctor_act calls then actuated three steps, and the count is those 3 steps read off the GUEST's actuator. THE SECOND HALF OF THE CLAIM: the host's own actuator performed 0 steps, before and after. SABOTAGE: with the guest server stopped, the attach is refused and the refusal names the socket rather than falling back to the host - which would be the verdict-about-the-wrong-machine this feature exists to prevent. CEILING: both servers are in this process, so what crosses is a real AF_UNIX round trip through the kernel and not a process boundary; the cross-machine claim is CASE-0056's, settled live on proctor-guest."
+  },
+  {
+    "id": "CASE-0086",
+    "req": "REQ-039",
+    "surface": "SURF-020",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Arming run printed \"arm A left 1 stop children [get, get, ls, ls, ls, run, stop]; arm B left 0 [ls]\" with the non-zero assertion inverted, and the sabotage printed the spawned set with a missing binary. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0083/suite-after-headless.txt",
+      "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt"
+    ],
+    "witness": {
+      "recorder": "sentinel files written by each spawned /bin/sh child carrying its own $$ AND the verb it was handed, read back off the filesystem with FileManager - no code under test participates in the reading",
+      "effect": "subprocess",
+      "count": 7
+    },
+    "note": "THE NEVER-EVICT RULE, WITNESSED AS A TWO-WAY OVER REAL CHILD PROCESSES. Both arms use LumeProvider's CONVENIENCE initialiser, which binds run to Self.liveRun and reaches a real Process() through Session.runBounded; the three-argument init(executable:timeoutMs:run:) is the fake seam and was deliberately not used. ARM A, a guest THIS AGENT started: the listing reports state \"stopped\", so guestAttach starts it through the audited guestMutate path and startedByThisAgent is true; the detach then stops it. Seven real children were spawned, their verbs read off the sentinels as [get, get, ls, ls, ls, run, stop] - one of them a stop. ARM B, a guest A PERSON started: the listing reports state \"running\", so nothing is started and startedByThisAgent is false; the IDENTICAL detach call spawns one child [ls] and NO stop. Same call, one field different, opposite outcome - releaseGuestAttachment gates on `stopGuest && attachment.startedByThisAgent` (SessionGuest.swift:562). Arm B's non-empty spawn set is asserted too, so its zero stops is a measurement rather than a structural silence - the failure mode PRO-0078's survivor count had. The count is the 7 children arm A spawned. SABOTAGE: point the executable at a path that does not exist; runBounded catches the spawn failure and answers exitCode -1 so the call still returns, and the sentinel count goes to zero."
+  },
+  {
+    "id": "CASE-0087",
+    "req": "REQ-024",
+    "surface": "SURF-003",
+    "oracle": "effect-witness",
+    "status": "inconclusive",
+    "armed": true,
+    "armedBy": "Arming run printed \"the locator chose <tmp>/complete/obscura, missing [], searched 2\" with the assertion inverted to demand no path at all, and the sabotage assertion was inverted and reported available=false at nowhere after chmod. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0083/suite-after-headless.txt",
+      "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt"
+    ],
+    "witness": {
+      "recorder": "real executable files this test placed on a real filesystem, and the production ToolLocator.locate answering differently depending on which of them exist",
+      "effect": "subprocess",
+      "count": 0
+    },
+    "note": "INCONCLUSIVE, AND THE INSTRUMENT IS NAMED. REQ-024 declares effect `subprocess` and the census names Process() in Actuation/CuaClients.swift as its provider. THE BROWSER-ROUTING PATH REACHES NEITHER, established in source rather than asserted: BrowserTarget is pure by its own header (\"The agent supplies what it read from the accessibility tree as a WebContentProbe; this file decides\"); Session.browserHandoff returns a disclosure that SessionAct and five other call sites attach to a reply; ToolProbe's header reads \"Whether Obscura is on this machine, cached, and never executed\"; and ToolLocator.locate decides availability with isExecutable(path), a stat. `grep -rn 'Process()' Sources/` returns nine sites - the guest providers, simctl, the cua driver, `shortcuts run`, the dictionary, the installer and the UI - and not one of them is on the browser path. So the ONLY boundary this capability crosses is a filesystem READ, and the campaign's closed class list (subprocess, outbound-socket, inbound-socket, packet-filter, multicast, filesystem-write, device, ipc, none) has no member for it: filesystem-write is the only filesystem class. WHAT WAS MEASURED ANYWAY, so the boundary is recorded even though it cannot be classed: two directories on a real filesystem, one holding an executable `obscura` alone and one holding it with the `obscura-worker` the release ships beside it. The production locator with the production isExecutable reports missingCompanions [obscura-worker] for the incomplete directory, and offered BOTH with the incomplete one first it walks past the first hit to the complete one - which it can only know by stat-ing both. chmod 0600 on the two binaries takes availability to false over the same paths. Two-way, real files, real stats. THE ROW IS NOT REWRITTEN: REQ-024's effect class is unchanged, it is not marked n/a and it is not reclassed to none, which would silence the gate rather than answer it. See DEF-040."
+  },
+  {
+    "id": "CASE-0089",
+    "req": "REQ-028",
+    "surface": "SURF-004",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "A control frame proves the content detector can report blankness: a hand-built 200x200 fully transparent PNG reads distinctColours 1, fullyTransparentFraction 1.0, luminanceStdDev 0.0, against the subject frame's 3159 / 0.00054 / 14.25. docs/test-campaign/evidence/PRO-0083/glass/control-blank-content.json",
+    "evidence": [
+      "scripts/campaign/overlay_witness.sh",
+      "scripts/campaign/frame_content.swift",
+      "docs/test-campaign/evidence/PRO-0083/glass/windows-proctor.json",
+      "docs/test-campaign/evidence/PRO-0083/glass/overlay-captures.json",
+      "docs/test-campaign/evidence/PRO-0083/glass/subject-capture.json",
+      "docs/test-campaign/evidence/PRO-0083/glass/subject-content.json",
+      "docs/test-campaign/evidence/PRO-0083/glass/subject-axtext.json",
+      "docs/test-campaign/evidence/PRO-0083/glass/control-blank-content.json",
+      "docs/test-campaign/evidence/PRO-0083/glass/subject.png"
+    ],
+    "capture": "docs/test-campaign/evidence/PRO-0083/glass/subject.png",
+    "captureMethod": "screencapture -l, the system's own utility, run by the witness_probe process - not ScreenCaptureKit through Proctor's stream and not this program compositing anything",
+    "witness": {
+      "recorder": "four channels, none of which is Proctor's capture path: CGWindowListCopyWindowInfo for what the window server says is on screen and at what sharingState; screencapture -l for the frames; the target's own accessibility server for what the frame depicts; and CGImageSource in a fourth process for the pixels",
+      "effect": "device",
+      "count": 2
+    },
+    "note": "BOTH HALVES IN ONE SECOND, WHICH IS THE WHOLE POINT. PRO-0078 found proctor_capture reporting status complete, trustworthy true over 2,942,720 pixels of RGBA(0,0,0,0) of a Proctor-owned window (DEF-025, open) - the exclusion working, and the capture path not noticing that exclusion was all it got. So a blank frame proves nothing here and this witness refuses to let one stand. THE ABSENCE: CGWindowListCopyWindowInfo reported two Proctor Agent windows on screen, CG windows 130709 and 130710, owner pid 76491, layer 1000, alpha 1, sharingState 0. Driven through screencapture -l by a third process, BOTH were refused outright - \"screencapture -l wrote nothing: could not create image from window\" - which is a stronger negative than an empty frame, because the channel could not produce an image at all. THE CONTENT, same utility, same second: CG window 130785, Activity Monitor, pid 28274, sharingState 1, delivered a 2536x1640 frame of 4,159,040 pixels carrying 3,159 distinct colours, 0.054% fully transparent, luminance mean 44.68 and standard deviation 14.25. THE SUBJECT, proved by text rather than by filename: an independent AX client in the probe walked pid 28274 and read 270 strings over 361 nodes, among them \"Activity Monitor - All Processes\" and \"coreaudiod\". A third process read the text; the frame is a picture of that window. The count is the 2 excluded overlays. THE SUBJECT OF THIS LANE IS THE INSTALLED, NOTARISED BUILD - /Applications/Proctor.app's running agent at pid 76491, read only and never driven - and NOT .build/Proctor.app, so the existing macos-glass laneProof is neither reused nor rewritten and this row carries no lane. THAT DISTINCTION MATTERS HERE: the running build carries OverlayCapture and sets sharingType on all three overlays including CursorOverlay, which is why the pointer panels read sharingState 0. This item's base ai/wave-9 does not carry OverlayCapture at all and CursorOverlay sets no sharingType on it, so the same measurement against a build of THIS tree would report the drawn pointer at sharingState 1. See DEF-042. sharingType = .none on the HUD and the takeover overlay is correct and was not touched: evidence must not change because somebody was watching. NOT WITNESSED: the `unless somebody lifts it` clause, whose mechanism is PROCTOR_OVERLAY_CAPTURE in commit 15f86ea on main and absent from this base."
+  },
+  {
+    "id": "CASE-0088",
+    "req": "REQ-023",
+    "surface": "SURF-015",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Sabotage run in the same test body: ProctorReflector.stop() closes the listening descriptor and unlinks the path, and the same client over the same window then fails connect with errno 2 on all three ops. The armed variant removed the stop() call and the sabotage half went red with four issues \u2014 the socket still existed, stillAnswered read 3, no refusal was a connect failure, and isRunning was still true. Every count was inverted in the same run and printed the number the recorder actually saw: answered 3, nodes 3 (NSView, NSTextField, NSTextFieldSimpleLabel), frame (22.0, 272.0, 110.5, 16.0), colour #FFFFFF catalog System name labelColor, constraints 2 (leading, top). docs/test-campaign/evidence/PRO-0083/arming-w9-req023.txt",
+    "evidence": [
+      "Tests/ProctorAgentTests/ReflectorWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0083/witness-w9-req023.txt",
+      "docs/test-campaign/evidence/PRO-0083/arming-w9-req023.txt"
+    ],
+    "witness": {
+      "recorder": "the replies read back off the Reflector's own socket by a raw Darwin.socket/connect client and decoded with JSONSerialization \u2014 never the target's Frame reader or its JSONValue decoder \u2014 carrying values AppKit computed rather than values the test wrote: a constraint-solved frame, a labelColor resolved against the window's effective appearance, and a CoreAnimation layer model. Plus the socket file's own mode, read off the inode.",
+      "effect": "ipc",
+      "count": 3
+    },
+    "note": "A SECOND SOCKET, AND THAT IS WHY IT IS ITS OWN CASE. Five of this item's other witnesses stand on the agent's AF_UNIX listener in Sources/ProctorAgent/Server.swift. This one stands on Sources/ProctorReflector/SocketServer.swift \u2014 a different Darwin.bind/listen/accept, in a different target, embedded in other people's applications and taking no dependency on the agent. Folding it in would let one listener's silence hide behind the other's noise. DRIVEN FROM THE PRODUCTION ENTRY POINT: ProctorReflector.start(socketPath:) is the one-line adoption API an app calls from applicationDidFinishLaunching. It binds, listens, chmod 0600s and serves on its own concurrent queue. THE CLIENT SHARES NOTHING WITH THE SERVER: a raw Darwin.socket/connect in the test frames the 4-byte big-endian length prefix by hand and decodes the reply with JSONSerialization. Neither the target's Frame encoder nor its JSONValue decoder participates in the reading. One request per connection, so a reply is an accept. COUNT ONE, three answered connections \u2014 ping, revision and hierarchy, each on its own descriptor. The ping's pid is read by the server out of its own process and the request never carried it; the socket's mode is read off the inode with FileManager and comes back 0600. COUNT TWO, three resolved nodes: NSView, NSTextField, NSTextFieldSimpleLabel. THE RESOLVED HALF, WHICH IS WHAT REQ-023 ACTUALLY CLAIMS, and none of it is a value the test wrote. The window is built with Auto Layout and no explicit child frame. GEOMETRY: the label came back at (x 22.0, y 272.0, w 110.5, h 16.0). The width is AppKit's measurement of the string in the system font. The x is NOT the constraint's constant of 24 \u2014 NSTextField's alignment rect is inset from its frame, so the solver satisfies the leading constraint on the alignment rect and the frame lands to its left, which is the clearest evidence in this case that the number came back from AppKit rather than from the request. y + h = 288 is the relation the solver produced over a height nothing in the test named (content 320 minus a top inset of 32). COLOUR: labelColor resolved against the window's effective appearance to #FFFFFF, catalog System, name labelColor \u2014 the test never sets textColor. LAYER: the content view's CALayer model carried backgroundColor, borderWidth, cornerRadius, opacity and shadowRadius, all CoreAnimation's. CONSTRAINTS: two, leading and top, both active, read back off the common ancestor \u2014 which is where AppKit installs a constraint between two views, and the reason the case reads the content node rather than the label's. AN INSTRUMENT FAULT CAUGHT BEFORE IT COULD READ ZERO FOR A STRUCTURAL REASON: the first run asked for \"constraints\": true and got no constraints key at all, because Runtime.decode(options:) reads \"includeConstraints\". A constraints assertion on that request would have failed for a wire-protocol reason and been read as a product one. THE CEILING, RECORDED RATHER THAN IMPLIED: server and client are the same process, so what is witnessed is a real AF_UNIX round trip through the kernel and a real AppKit walk, not a cross-process one. The agent ships NullReflectorBridge, so there is no in-repo production client to drive this from a second process, and writing one would be building the subject rather than witnessing it. PORTABLE FLOOR: no kernel socket tracer, no dtrace, no eslogger \u2014 this suite has no privilege for one. Package.swift gains ProctorReflector on ProctorAgentTests' dependency list and nothing else: a build-graph edge, not a behaviour change. The Reflector compiles to nothing without DEBUG or PROCTOR_REFLECTOR and scripts/build-app.sh already fails a release artifact carrying it."
   }
 ]
