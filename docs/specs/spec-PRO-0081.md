@@ -130,10 +130,29 @@ name of the file.
    `0 identifier(s) gone, 0 new`, so the copy moved out of the view and the view's machinery did
    not move out of the file.
 
+   **NOT MET AS WRITTEN, and the clause is left standing rather than reworded.** The snapshot this
+   was first run against, `a2-identifier-baseline.json`, had been written from the *post*-conversion
+   file, so the comparison could only ever print `0 gone, 0 new` — it compared the final file to
+   itself. Re-run against a baseline taken from the pre-conversion file
+   (`a2-identifier-baseline-pre.json`, from `git show ai/wave-9:Sources/ProctorUI/MainWindow.swift`),
+   it reports **`4 identifier(s) gone, 0 new`** and exits 1: `key "Accessibility"`,
+   `key "Automation"`, `key "Screen Recording"` and `punctuation "\n"`. All four are accounted for —
+   `Actions.pane(for:)` moved to `StatusChecks.settingsPane`, where the three grant names became the
+   `StatusChecks` constants that already carried those strings at `ai/wave-9`, and the `"\n"`
+   separator went into `StatusSurface.swift:186` with the "Looked in:" sentence it joins — so a
+   decision function left the view alongside the copy. That is the second half of this clause failing:
+   some machinery did move out of the file. The bound was not widened and no allowance was added to
+   the instrument; the departure is recorded in
+   `evidence/PRO-0081/a2-baseline-pre-comparison.txt` and as the widening it is.
+   The gate has since been watched failing on a seeded removal and coming back clean on restore
+   (`evidence/PRO-0081/a2-baseline-bite.txt`), so it is known to bite rather than assumed to.
+
    **This clause was redrafted mid-item and the original wording is recorded rather than
    overwritten.** It first read *"the literal total examined at the end is not materially below
    the 176 measured at the start"*. That is unsatisfiable alongside clause 1 and always was:
-   moving 132 user-facing literals out of the file necessarily takes the total from 176 to 44,
+   moving 127 user-facing literals out of the file necessarily takes the total from 176 to 49
+   (the 132 and 44 this passage first carried are not reproducible with any committed version of
+   `status_literals.py`; its one commit reports 127 and 49 over the same two file versions),
    so the numeric form could only ever have been failed or waived, never passed. It was a stale
    proxy for the real question — did the machinery leave too? — written before the baseline gate
    existed. An out-of-family review (grok-4.6) had already replaced the count with a set
@@ -144,6 +163,17 @@ name of the file.
 4. Every string the five older sections lost is reachable from `StatusSurface.Copy` or from a
    Core value beside the type it describes, and the wording is unchanged. A test asserts the copy
    is non-empty and that no two constants hold the same string by accident.
+
+   **One wording did change, and it has been restored rather than ratified.** The Connect section
+   heading went from "Connect a model to it" (`MainWindow.swift:695` at `ai/wave-9`) to
+   "Connect a model" in `StatusSurface.Copy.connectHeading`. A verifier found it; this item did not
+   record it, which is the failure — an undisclosed rewrite inside a move is exactly what the second
+   half of this clause exists to catch. A2 is a move, so the original wording is back. With it
+   restored, every one of the 127 display literals in the wave-9 file resolves verbatim somewhere in
+   `Sources/` except six that interpolate a value and could not survive being moved into a function
+   unchanged: the three `"\(running.on ? "On" : "Off") — …"` switch-source sentences, the
+   `"\(row.aSwitch.variable) is set in the agent's environment…"` sentence, the MCP config snippet,
+   and `"\(r.agentVersion)  ·  protocol \(r.protocolVersion)"`.
 5. `WalkthroughFlow.primaryEnabled(on:accessibility:screenRecording:)` is tested at every
    combination of its inputs, and the `permissions` step with a grant missing is the only
    combination that returns false.

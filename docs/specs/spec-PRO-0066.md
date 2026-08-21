@@ -78,15 +78,35 @@ case label or comparison, `punctuation` for a literal that is nothing but separa
 and interpolation are stripped, and `display` for **everything else**. Default-deny, so the only
 way to green is to move the string rather than to widen a list.
 
-**176 literals, 132 of them user-facing, to 45 literals and 0.** The identifier count went 44 to
-45, so the copy moved out of the view and the machinery did not move out of the file — and that
-is gated rather than printed, against a committed snapshot of the identifier set
-(`docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json`), because an out-of-family
-review pointed out that a count collides where a set does not.
+**176 literals, 127 of them user-facing, to 45 literals and 0.** The identifier count went **49 to
+45**, and the four that left are named rather than absorbed. `enum Actions.pane(for:)` moved to
+`StatusChecks.settingsPane`, so its three quoted grant names — `"Accessibility"`,
+`"Screen Recording"`, `"Automation"` — became the `StatusChecks` constants that already held those
+same strings at `ai/wave-9`; and the `joined(separator: "\n")` of the "Looked in:" list travelled
+with its own sentence into `StatusSurface.swift`. The copy moved out of the view, and one decision
+function moved with it, which is a widening past A2 as written.
 
-No wording changed. Every string moved character for character into `StatusSurface.Copy`, or into
-Core beside the value it describes where it was an identifier a computed property returned:
+That is gated rather than printed, against a committed snapshot of the identifier set taken from
+the **pre**-conversion file — `docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json`,
+written from `git show ai/wave-9:Sources/ProctorUI/MainWindow.swift` — because an out-of-family
+review pointed out that a count collides where a set does not. That comparison reports
+**4 identifier(s) gone, 0 new** and exits 1. The four are accounted for above and in
+`evidence/PRO-0081/a2-baseline-pre-comparison.txt`; the instrument was left alone rather than
+widened to turn the red green. `a2-identifier-baseline.json` stays as the forward guard on later
+edits to the file, and the gate has now been watched failing on a seeded removal and coming back
+clean on restore (`evidence/PRO-0081/a2-baseline-bite.txt`).
+
+The 132 and 44 this paragraph used to carry are not reproducible with any committed version of
+`status_literals.py`. The instrument has one commit, f8f0ed7, and that version reports 127 and 49
+over the same two file versions; the old figures came from a run of it before it was committed.
+The instrument is what is believed here.
+
+Every string moved character for character into `StatusSurface.Copy`, or into Core beside the
+value it describes where it was an identifier a computed property returned:
 `StatusChecks.settingsPane`, `Wire.shimPath`, `Wire.launchdDomain`, `StatusChecks.ToolRow.Tone.symbol`.
+One did not, and it was caught by a verifier rather than by this note: the Connect section heading
+went from "Connect a model to it" to "Connect a model" in `StatusSurface.Copy.connectHeading`.
+A2 is a move, so the original wording is restored and the claim above holds again.
 
 Three things this item found while doing it, none of them fixed in passing: `Copy` already held
 three sentences the window has never rendered while the window rendered three different ones

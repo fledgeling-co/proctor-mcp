@@ -113,7 +113,7 @@ public enum StatusSurface {
             + "switches start on; a capability starts off and stays off if either source says so."
 
         public static let activityHeading = "Activity"
-        public static let connectHeading = "Connect a model"
+        public static let connectHeading = "Connect a model to it"
         public static let agentHeading = "Agent"
 
         public static let checking = "Checking…"

@@ -1706,6 +1706,24 @@
       "detail": "PRO-0066's A2 names one file and PRO-0081 closed it: MainWindow.swift reports 0 user-facing literals over 45 examined. The reason A2 exists applies unchanged to its siblings, and they were measured rather than left unstated.\n\nMEASURED by scripts/campaign/status_literals.py: HistoryWindow.swift 71 of 91, ProctorUIApp.swift 53 of 68, Walkthrough.swift 49 of 56, HistoryModel.swift 46 of 47, AgentModel.swift 39 of 47. Total 258. MenuBarCharacter.swift and Motion.swift are already clean. Evidence: docs/test-campaign/evidence/PRO-0081/a2-sibling-scope.txt.\n\nWalkthrough.swift is the one worth naming: PRO-0081 gave it a Core decision function and a disabled control, and its copy still sits in the view beside strings WalkthroughFlow.Copy already holds — the same two-values-one-name shape as DEF-035.\n\nNot fixed here: A2 is file-scoped and widening it in this item would be scope the brief declined. Recorded so the clause's green is read as covering one file rather than the surface.",
       "surface": "SURF-002",
       "req": "REQ-048"
+    },
+    {
+      "id": "DEF-040",
+      "status": "open",
+      "title": "CASE-0074's note records a starting load of 11.20 where its own evidence file records 22.92",
+      "found": "PRO-0081 gap-fix, from a fresh verifier's read of the merged mutation item",
+      "detail": "CASE-0074 (PRO-0080 A4, the first ProctorAgent mutation sample) explains its two untrustworthy timeout-scored kills by naming the load the run was under: \"Load average reached 271 during the run (11.20 at start, 271.39 at end).\" The evidence it cites disagrees. docs/test-campaign/evidence/mutation-agent.txt line 2 reads \"# Load average at start: 22.92 29.47 26.94\" and line 3 \"# Load average at end: 271.39 192.06 133.13\". The end figure matches; the start figure does not, and 22.92 is already twice the number the note uses to establish that the machine started healthy. The note's conclusion is unaffected — the run was starved either way and the case already discounts the two 600.0s kills — but a figure that contradicts its own evidence file is the thing this campaign asks readers not to trust.\n\nNOT CORRECTED HERE, AND THIS IS WHY: CASE-0074 does not exist on ai/pro-0081. This branch's cases.json holds CASE-0001..0071 and CASE-0100..0106; CASE-0072..0099, including 0074, live on ai/wave-9, which is not an ancestor of this branch (merge-base 346edfa). Correcting it from here would mean merging or editing ai/wave-9, and this gap-fix was scoped to leave that branch alone. The correction is one substring: in CASE-0074's note, \"(11.20 at start, 271.39 at end)\" becomes \"(22.92 at start, 271.39 at end)\". Apply it wherever the two branches meet.",
+      "surface": "SURF-002",
+      "req": "REQ-047"
+    },
+    {
+      "id": "DEF-041",
+      "status": "open",
+      "title": "Both walkthrough grant rows draw a prominent button, so nothing says which permission to grant first",
+      "found": "PRO-0081 gap-fix, judging STEP-A3-PRIMARY-DISABLED against the design of record",
+      "detail": "The design of record states the rule in the permissions frame's own caption: \"Only one Grant is prominent at a time: the one to press next\" (design/surfaces/proctor-surfaces.html, walkthrough / data-state=\"permissions\"). It draws Accessibility's Grant filled and Screen Recording's plain.\n\nThe build does not implement it. HeroPermRow gives every ungranted row Button(\"Allow\").buttonStyle(.borderedProminent) unconditionally (Sources/ProctorUI/Walkthrough.swift:267-269), with nothing reading the other row's state. With neither grant held — the state the walkthrough opens in, and the state evidence/shots/step-a3-walkthrough-primary-disabled.png captures — the two Allow buttons are identical and the frame offers no first move. The one-prominent-action-per-view rule the design applies to the footer is honoured there (Skip setup unfilled beside the disabled primary); it is the grant rows that diverge.\n\nNot fixed here: this gap-fix closes two named clauses on PRO-0081, and the walkthrough's visual hierarchy is not one of them. Recorded so the pass on STEP-A3-PRIMARY-DISABLED is read as covering what that step publishes — the disabled primary is drawn rather than removed — and not as agreement with the design across the whole frame. Verdict and the four differences: docs/test-campaign/witness-verdicts.json, subject STEP-A3-PRIMARY-DISABLED.",
+      "surface": "SURF-009",
+      "req": "REQ-048"
     }
   ]
 }

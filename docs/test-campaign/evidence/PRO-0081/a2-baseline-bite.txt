@@ -1,0 +1,44 @@
+PRO-0081 clause 3 — watching the baseline check go red on a seeded removal.
+A baseline nobody has watched fail is not known to bite. Scratch copy only;
+Sources/ is untouched throughout and the restore is verified by checksum.
+
+md5 of Sources/ProctorUI/MainWindow.swift and of the scratch copy:
+ea6c5e63a7a735e358ae35cfa36c4d66
+ea6c5e63a7a735e358ae35cfa36c4d66
+
+--- ARM 1: clean scratch vs the FORWARD baseline (post-conversion) ---
+  interpolated    1
+
+  baseline docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json: 0 identifier(s) gone, 0 new
+PASS: 0 user-facing literals of 45 examined; 45 are identifiers, symbols, system strings or punctuation.
+exit: 
+exit: 0
+
+--- SEED: delete one system identifier, "/bin/launchctl", from the scratch copy ---
+seeded: URL(fileURLWithPath: "/bin/launchctl") -> URL(fileURLWithPath: LaunchctlPath.value)
+
+--- ARM 2: seeded scratch vs the FORWARD baseline ---
+  interpolated    1
+
+  baseline docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json: 1 identifier(s) gone, 0 new
+  GONE      system: "/bin/launchctl"  (x1)
+
+FAIL: 1 identifier literal(s) left /tmp/pro0081/scratch.swift without being accounted for. The clause is about moving the copy out, not the machinery.
+exit: 1
+
+--- ARM 3: seeded scratch vs the PRE-conversion baseline ---
+  baseline docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json: 5 identifier(s) gone, 0 new
+  GONE      key: "Accessibility"  (x1)
+  GONE      key: "Automation"  (x1)
+  GONE      key: "Screen Recording"  (x1)
+  GONE      punctuation: "\n"  (x1)
+  GONE      system: "/bin/launchctl"  (x1)
+
+FAIL: 5 identifier literal(s) left /tmp/pro0081/scratch.swift without being accounted for. The clause is about moving the copy out, not the machinery.
+exit: 1
+
+--- RESTORE ---
+scratch md5 after restore: ea6c5e63a7a735e358ae35cfa36c4d66
+Sources md5 unchanged:     ea6c5e63a7a735e358ae35cfa36c4d66
+  baseline docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json: 0 identifier(s) gone, 0 new
+exit after restore: 0
