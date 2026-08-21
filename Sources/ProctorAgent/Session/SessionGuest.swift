@@ -74,7 +74,8 @@ extension Session {
         guard let guest, !guest.isEmpty else {
             throw AgentError(code: .invalidArguments,
                              message: "proctor_guest needs a guest for this action",
-                             remedy: "Pass a gst- handle from action \"list\", or the name you type at lume or prlctl.")
+                             remedy: "Pass a gst- handle from action \"list\", or the name you "
+                                   + "type at lume, prlctl or tart.")
         }
         return guest
     }
@@ -131,8 +132,7 @@ extension Session {
         ]),
         "note": .string(
             "A person grants Accessibility and Screen Recording once inside the guest's GUI "
-            + "session, then clone reproduces the grants. Tahoe guests currently render no "
-            + "application windows (trycua/cua #870, Apple FB21748086); verify against Sequoia.")
+            + "session, then clone reproduces the grants. " + GuestNotes.tahoeRendering)
     ])
 
     // MARK: - status / start / stop / clone
@@ -142,8 +142,73 @@ extension Session {
         return .object([
             "guest": try JSONValue.encode(record),
             "machine": try JSONValue.encode(record.machine),
+            "osVersion": try JSONValue.encode(await guestOSVersion(for: record)),
             "capabilities": Session.guestCapabilities
         ])
+    }
+
+    /// PRO-0094. Which macOS this guest is running, asked of the guest itself.
+    ///
+    /// **The only channel is the guest's own Proctor.** No provider carries an OS
+    /// version in its listing — `lume get` and tart's `config.json` say `macOS`
+    /// and `darwin`, and `prlctl` says no more — so a version read off anything
+    /// this Mac already holds would be a guess, and the guess this note exists to
+    /// prevent is the one taken from the image name. What is asked is the same
+    /// `proctor_doctor` that `SocketGuestLink.probe()` sends, which actuates
+    /// nothing inside the guest.
+    ///
+    /// **A read, and it stays one.** `forwardToGuestIfAttached` answers *for* the
+    /// guest, so a dead link there releases the attachment and refuses — a
+    /// verdict about the wrong machine is the thing it exists to prevent. This
+    /// answers *about* the guest: a link that fails yields `unknown` carrying what
+    /// the link said, and leaves the attachment and its pool slot exactly as they
+    /// were. Releasing here would let a status poll evict a live run's slot, and
+    /// `guestVanishedError()` is not called for the same reason.
+    private func guestOSVersion(for record: GuestRecord) async -> GuestOSVersion {
+        let key = SessionIdentity.current.key
+        // Attached to THIS guest, not merely attached to something. A session
+        // holding guest A must not read A's version into a report about B, so the
+        // provider and the name are both matched and the slot must still be held.
+        let attachment = guestAttachments[key]
+        let attachedHere = attachment.map {
+            $0.slotHeld && $0.provider == record.provider && $0.name == record.name
+        } ?? false
+
+        if let obstacle = GuestOSVersionResolution.obstacle(
+            record: record, attachedByThisSession: attachedHere) {
+            return .unknown(reason: obstacle)
+        }
+        guard let link = guestLinks[key] else {
+            // Attached by the ledger and with no link: the pair is written
+            // together and torn down together, so this is a shape that should not
+            // occur. Reported rather than crashed, because a status read is the
+            // wrong place to discover it.
+            return .unknown(reason: GuestOSVersionResolution.silentAgent(
+                name: record.name, said: "no link is open for this session"))
+        }
+
+        let request = AgentRequest(id: UUID().uuidString, tool: "proctor_doctor",
+                                   arguments: .object([:]))
+        let response: AgentResponse
+        do {
+            response = try await link.send(request)
+        } catch {
+            return .unknown(reason: GuestOSVersionResolution.silentAgent(
+                name: record.name, said: (error as? AgentError)?.message ?? "\(error)"))
+        }
+        if let error = response.error {
+            return .unknown(reason: GuestOSVersionResolution.silentAgent(
+                name: record.name, said: error.message))
+        }
+        guard case .object(let fields)? = response.result,
+              case .string(let version)? = fields["osVersion"],
+              !version.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            // An answer that carried no version is not an empty version. `""`
+            // would read as a fact about the guest; this reads as what happened.
+            return .unknown(reason: GuestOSVersionResolution.silentAgent(
+                name: record.name, said: nil))
+        }
+        return .known(version)
     }
 
     private func guestMutate(action: String, tool: String, guest: String,
