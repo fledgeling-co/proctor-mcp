@@ -1821,5 +1821,158 @@
     "armed": true,
     "armedBy": "run 2 of gate-run.txt puts mutation 1 back into mutate_swift.py and runs ./scripts/test.sh itself: the gate exits 1 and names the check, so run 1's exit 0 is a measurement rather than the absence of one.",
     "note": "PRO-0091. Tests/ProctorCoreTests/CampaignInstrumentTests.swift runs scripts/campaign/test_instruments.py, so ./scripts/test.sh owns the verdict \u2014 a Python file nobody runs is the same shape of finding as the ones it was written to close. It requires at least 15 checks to have been made, then requires the exit code to be 0. Two of the checks are additionally re-expressed in Swift, driving the same two scripts directly: the mutation runner over a closure-shorthand fixture, and the merge verifier over the hand-merge that lost FLOW-010. Run under ./scripts/test.sh on 2026-08-21: exit 0, 1838 tests in 217 suites, with the Campaign instruments suite among them. ScreenRecordingProbeWiringTests did not fail in that run but leaked its continuation three times; that is DEF-029/051's wall-clock oracle, which PRO-0089 owns, and nothing in it was touched here."
+  },
+  {
+    "id": "CASE-0190",
+    "req": "REQ-063",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0095/def068-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-fix write put back \u2014 try encoder.encode(policy).write(to: url, options: .atomic). Expectation failed: (mode(store.url) -> 438) == (0o600 -> 384); 438 is 0o666. Restored, green.",
+    "note": "PRO-0095, DEF-068. A fresh policy.json is 0o600 inside a 0o700 directory, read back with attributesOfItem rather than inferred from the options the write was given \u2014 the defect was precisely a call whose options said nothing about the mode. Also asserts the directory holds policy.json and nothing else afterwards, since a surviving temporary would be a second copy of the same app list beside the file. It reads the directory rather than probing one expected name, because the temporaries are uniquely named.",
+    "defects": [
+      "DEF-068"
+    ]
+  },
+  {
+    "id": "CASE-0191",
+    "req": "REQ-063",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0095/def068-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two substitutions, each watched red. (1) The pre-fix Data.write: Expectation failed: (mode(store.url) -> 420) == (0o600 -> 384). (2) .usingNewMetadataOnly dropped and nothing else \u2014 exactly this case red, 1 issue, 420 again, with the other three still green. Restored, green.",
+    "note": "PRO-0095, DEF-068's upgrade half, and the half that ships broken by default. The fixture starts at a real 0o644 file, and the case asserts it started wide before asserting it ended narrow, so a fixture that failed to set up cannot pass this. FileManager.replaceItemAt carries the original item's metadata across unless told not to, so without .usingNewMetadataOnly an operator whose policy.json was created by an earlier build keeps 0644 through every save it ever sees. Substitution (2) is what proves this case is the one guarding that option.",
+    "defects": [
+      "DEF-068"
+    ]
+  },
+  {
+    "id": "CASE-0192",
+    "req": "REQ-063",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0095/def068-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-fix Data.write put back: Expectation failed: (mode(store.url) -> 438) == (0o600 -> 384). 438 is 0o666, which is what the umask gives when the umask is 0 and the write sets no mode. Restored, green.",
+    "note": "PRO-0095. The case that discriminates set from inherited: it saves under umask(0), where the pre-fix code yields 0o666 rather than the 0o644 it yields under this machine's usual umask. Without it a fix that merely narrowed the usual default would pass CASE-0190. umask is process-wide, so the suite is .serialized and the umask is restored on both the throwing and the non-throwing path; the window against the rest of the suite is one open inside one test, and nothing outside PolicyStoreSeamTests.swift asserts on a mode. Measured during arming: run in parallel this leaked into CASE-0190, which read 0o666 rather than its own 0o644 \u2014 which is why the suite is serialized.",
+    "defects": [
+      "DEF-068"
+    ]
+  },
+  {
+    "id": "CASE-0193",
+    "req": "REQ-063",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0095/def068-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-fix Data.write put back: 3 issues, one per save, Expectation failed: (mode(store.url) -> 420) == (0o600 -> 384). Restored, green.",
+    "note": "PRO-0095. The mode is worth nothing if the file stopped being a policy. Three saves rather than one, because the second and third take the replace-over-an-existing-file path rather than the create path, and each asserts both the contents and the mode. What no case here proves: that the file was never wider for an instant. That window is unobservable from a test in the same process, and is closed by construction instead \u2014 Darwin.open with O_EXCL and mode 0o600 means no descriptor to a wider file ever exists, and the replace is a rename.",
+    "defects": [
+      "DEF-068"
+    ]
+  },
+  {
+    "id": "CASE-0194",
+    "req": "REQ-064",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0095/def075-refusal.txt"
+    ],
+    "armed": true,
+    "armedBy": "The precondition removed, which is the shipped control's behaviour: 3 of the 8 checks red \u2014 the refusal exit code, the refusal naming the state, and the refusal naming which pass was red and over what population. The sabotaged run printed uncensused findings=3 and still claimed it had turned a clear census red. Restored, green.",
+    "note": "PRO-0095, DEF-075. Run against a copy of this project's own registry rather than a synthesised one, so the control meets the shape it actually meets: docs/test-campaign is red on uncensused as it stands, which is the state DEF-075 was found in. Four checks: exit 2, the word REFUSING with the state, the pass name with its population, and that a refused run leaves the registry byte-identical. The fourth needed two attempts to arm \u2014 see the near-miss recorded in the evidence file, where re-serialising the unmutated object reproduced the file's bytes exactly and the check could not fire.",
+    "defects": [
+      "DEF-075"
+    ]
+  },
+  {
+    "id": "CASE-0195",
+    "req": "REQ-064",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0095/def075-refusal.txt"
+    ],
+    "armed": true,
+    "armedBy": "The control made to refuse every input: 3 checks red, including this one and the bite report. Separately, the restore dropped: this check red again alongside the byte-identical check. Restored, green.",
+    "note": "PRO-0095. The check that keeps CASE-0194 honest. A control that refused everything would satisfy the refusal checks alone and have stopped being a control, so this runs it against a fixture whose standing census findings are cleared and requires before=clear after=red at exit 0. Measured on the fixture: unclassed examined=55 findings=0, uncensused examined=24 findings=1, the one finding being the strengthened REQ-017.",
+    "defects": [
+      "DEF-075"
+    ]
+  },
+  {
+    "id": "CASE-0196",
+    "req": "REQ-064",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0095/def075-refusal.txt"
+    ],
+    "armed": true,
+    "armedBy": "The restore dropped from the finally: 3 checks red, including the byte-identical comparison and the control's own restored-byte-for-byte report. Separately, a refusal path that mutates REQ-017 before returning: the refused-run check red, 1 issue. Restored, green.",
+    "note": "PRO-0095. The registry is restored on both paths and the restoration is verified by SHA-256 rather than asserted, following seed_unclass.py. Both the control's own report and the test's independent digest are checked, because a control that reported its own restoration truthfully while a test never looked would be one instrument marking its own work.",
+    "defects": [
+      "DEF-075"
+    ]
+  },
+  {
+    "id": "CASE-0197",
+    "req": "REQ-053",
+    "surface": "SURF-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0095/def043-sample.txt"
+    ],
+    "armed": true,
+    "armedBy": "The cache's dedicated Thread run through Task.detached, which is the substitution a reviewer used to arm CASE-0116 and which puts the verification back on the width-capped pool. Red with 2 issues: Expectation failed: !((verificationRanOn.current -> \"com.apple.root.default-qos.cooperative\").contains(\"cooperative\") -> true), and .contains(\"overcommit\") against the same value. Restored, green.",
+    "note": "PRO-0095, DEF-043. CASE-0116's libdispatch root-queue instrument applied through the production path: eight Sessions calling doctor(verbose:) at once against an injected cache. The caller's label is asserted to contain cooperative first as the instrument check, because 'the verification was not on the cooperative pool' means nothing unless the probe reports that pool when it is looking at it. CASE-0116 reads the same labels against a bare cache; concurrentSessionsVerifyOnce runs through doctor and counts verifications rather than reading where they ran; this closes the gap between them, which is a synchronous wrapper appearing between SessionDoctor.swift:237 and the cache. SCOPE: it does not prove a verification completes while every cooperative thread is blocked, and it would not catch a semaphore wrapper at the call site that blocks the caller while leaving the verification on its own Thread \u2014 catching that needs more concurrent callers than the pool is wide, and CASE-0116's note records why that saturation test was dropped. The sample sweep covers that half as a measurement rather than a guard.",
+    "defects": [
+      "DEF-100"
+    ]
+  },
+  {
+    "id": "CASE-0198",
+    "req": "REQ-063",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0095/def068-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "One fixed temporary name put back, which is what O_EXCL turns into a refusal: Expectation failed: (failures.count -> 11) == 0. Eleven of twelve concurrent saves threw, and the other four cases stayed green. Restored, green.",
+    "note": "PRO-0095. A regression this item nearly shipped and this case caught twice. Data.write(options: .atomic) uses a temporary of its own per call, so two sessions saving at once both succeeded and the last won; an explicit open with O_EXCL on one fixed temporary name turns that into a thrown error, and two sessions in one agent share operatorDirectory so the race is reachable. The temporaries are therefore uniquely named.\n\nThe second catch is the more useful one: a first attempt swept the directory for stale temporaries on every write, which deletes the temporaries of saves running at that moment, and this case read 4 of 12 throwing. The sweep was reverted. What that leaves is litter after a crash mid-write \u2014 one small file, itself 0600 inside the 0700 directory, so untidy rather than a second exposure. Recorded rather than fixed, because a sweep that does not race a live writer needs an age test and this item is not the place for it.",
+    "defects": [
+      "DEF-068"
+    ]
   }
 ]
