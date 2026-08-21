@@ -464,27 +464,42 @@ struct StatusWindowSourceTests {
         #expect(footerBody.contains("StatusSurface.Copy.restart"))
         #expect(footerBody.contains("StatusSurface.Copy.openLog"))
 
+        // PRO-0090 changed the population, and this is the second time that has
+        // happened for a reason that is not a relaxed bound. DEF-037 removed the
+        // permissions section's `.unreachable` branch: `sections(for: .down)`
+        // returns `[.agentDown]` alone, so that branch drew for nobody, and its
+        // Re-check was a second copy of the agent-down block's — same label, same
+        // `model.refresh()`, and without the identifier the surviving one carries.
+        // Two of the three named below were one button drawn twice, and the count
+        // is two because one of them is gone rather than because the bound moved.
         let remaining = source.components(separatedBy: recheckButton).count - 1
-        #expect(remaining == 3,
+        #expect(remaining == 2,
                 """
-                three Re-check buttons are honest and stay: the one beside Start the agent in \
-                the unreachable branch, the one in the agent-down block, and the one under \
-                Obscura's install commands. Each reads something uncached inside a remediation \
-                block. See the verdict table.
+                two Re-check buttons are honest and stay: the one in the agent-down block, \
+                beside Start the agent, and the one under Obscura's install commands. Each \
+                reads something uncached inside a remediation block. See the verdict table.
                 """)
 
-        // And they are the *right* three. Counting alone would pass a change that
+        // And they are the *right* two. Counting alone would pass a change that
         // moved the footer's button into another view while deleting one of the
-        // survivors, since the total would still read three.
-        let unreachable = try #require(source.range(of: startAgentButton))
-        let obscuraOffer = try #require(source.range(of: "private struct ObscuraOffer"))
-        let agentDown = try #require(source.range(of: "private struct AgentDownSection"))
-        for (label, region) in [("the agent-not-answering branch", unreachable),
-                                ("the Obscura install block", obscuraOffer),
-                                ("the agent-down block", agentDown)] {
-            let after = String(source[region.lowerBound...]).prefix(1600)
-            #expect(after.contains(recheckButton),
-                    "\(label) lost its Re-check; it is one of the three the verdict table keeps")
+        // survivors, since the total would still read two.
+        // Start the agent now has exactly one site, and it is inside the block
+        // below — asserted rather than assumed, because "there is only one" is
+        // the whole of what DEF-037 established.
+        #expect(source.components(separatedBy: startAgentButton).count - 1 == 1,
+                "Start the agent is drawn more than once again; DEF-037 was that it was drawn twice")
+        // Bounded at the next declaration, the way the footer above is, rather
+        // than at a fixed character count. A 1600-character window read the right
+        // region until DEF-037 put a paragraph at the top of AgentDownSection
+        // explaining why the applying spinner had moved into it, and then the
+        // window stopped short of the button while the button was still there —
+        // a scan that fails for a reason that has nothing to do with what it
+        // measures.
+        for (label, name) in [("the Obscura install block", "ObscuraOffer"),
+                              ("the agent-down block", "AgentDownSection")] {
+            let block = try Self.declaration(named: name, in: source)
+            #expect(block.contains(recheckButton),
+                    "\(label) lost its Re-check; it is one of the two the verdict table keeps")
         }
 
         // The window's second opinion about a tool the report already judged.

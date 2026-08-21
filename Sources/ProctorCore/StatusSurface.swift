@@ -393,10 +393,6 @@ public enum StatusSurface {
         // MARK: The permissions section
 
         public static let applying = "Applying the new permission…"
-        /// The one-line form, said beside the permission rows. `downConsequence`
-        /// is the longer form the agent-down block uses instead of the window.
-        public static let permissionsDownConsequence =
-            "Until it is running, permissions cannot be read and no test can run."
         public static let recoveryTitle = "The agent is holding an out-of-date answer"
         public static let adHocTitle = "This build is ad-hoc signed"
         public static let adHocMessage =
@@ -510,7 +506,6 @@ public enum StatusSurface {
              ("pillReady", pillReady),
              ("pillNeedsPermission", pillNeedsPermission),
              ("applying", applying),
-             ("permissionsDownConsequence", permissionsDownConsequence),
              ("recoveryTitle", recoveryTitle),
              ("adHocTitle", adHocTitle),
              ("adHocMessage", adHocMessage),

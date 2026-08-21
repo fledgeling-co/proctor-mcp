@@ -103,37 +103,29 @@ private struct ReadinessSection: View {
                 .font(.system(size: 12)).foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            switch model.reachability {
-            case .unknown:
+            // Two states here, not three. DEF-037: this section had a third
+            // branch for an unreachable agent, and nothing could reach it.
+            // `MainWindow.state` turns `.unreachable` into `StatusSurface.State`
+            // `.down`, and `sections(for: .down)` returns `[.agentDown]` alone —
+            // deliberately, because a permission row drawn over data nothing has
+            // read is the one failure this surface must not have. So the branch
+            // drew a second copy of `AgentDownSection`'s two buttons, calling the
+            // same two actions and without its accessibility identifiers, for a
+            // state that never arrives.
+            //
+            // The one thing in it that was not redundant went with it rather than
+            // being deleted: the progress spinner for `isApplying`. That state is
+            // reachable — `reprobeAfterGrant()` restarts the agent after a grant
+            // lands, and a 2-second poll meeting a restarting agent gets a refused
+            // connection and reports unreachable — so it now draws in
+            // `AgentDownSection`, which is the block that is actually on screen
+            // then. Without the move, a restart Proctor itself asked for shows a
+            // red warning saying the agent is not answering.
+            if case .unknown = model.reachability {
                 Text(StatusSurface.Copy.checking)
                     .font(.system(size: 12)).foregroundStyle(.secondary)
-
-            case .unreachable(let why):
-                if model.isApplying {
-                    HStack(spacing: 8) {
-                        ProgressView().controlSize(.small)
-                        Text(StatusSurface.Copy.applying)
-                            .font(.system(size: 13, weight: .medium))
-                    }
-                } else {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(StatusSurface.Copy.downTitle)
-                        .font(.system(size: 13, weight: .medium))
-                    Text(why).font(.system(size: 12)).foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(StatusSurface.Copy.permissionsDownConsequence)
-                        .font(.system(size: 12)).foregroundStyle(.tertiary)
-                    HStack {
-                        Button(StatusSurface.Copy.downStart) {
-                            Actions.ensureAgent(); model.refresh()
-                        }
-                            .buttonStyle(.borderedProminent)
-                        Button(StatusSurface.Copy.recheck) { model.refresh() }
-                    }
-                }
-                }
-
-            case .reachable:
+            }
+            if case .reachable = model.reachability {
                 VStack(alignment: .leading, spacing: 0) {
                     ForEach(model.requiredGrants, id: \.name) { grant in
                         GrantRow(grant: grant)
@@ -1040,6 +1032,26 @@ private struct AgentDownSection: View {
 
     var body: some View {
         Card {
+            // DEF-037. A restart Proctor asked for is not the agent failing.
+            // `reprobeAfterGrant()` restarts the agent so macOS will answer the
+            // Screen Recording probe again, and the window's own 2-second poll
+            // meets the gap: a refused connection reports unreachable, which is
+            // this section. Saying "the background agent is not answering" in red
+            // about a restart it started itself is a true sentence and the wrong
+            // one, so while it is applying, this says what is happening instead.
+            //
+            // Its limit, stated rather than left to be rediscovered: `isApplying`
+            // is cleared by a 1.2-second timer rather than by the restart
+            // finishing, so a restart that outlives the timer falls back to the
+            // red block. That is unchanged by this and is written up as its own
+            // defect rather than fixed here.
+            if model.isApplying {
+                HStack(spacing: 8) {
+                    ProgressView().controlSize(.small)
+                    Text(StatusSurface.Copy.applying)
+                        .font(.system(size: 13, weight: .medium))
+                }
+            } else {
             HStack(alignment: .top, spacing: 11) {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .foregroundStyle(.red)
@@ -1068,6 +1080,7 @@ private struct AgentDownSection: View {
                     }
                     .padding(.top, 4)
                 }
+            }
             }
         }
     }
