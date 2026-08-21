@@ -88,6 +88,16 @@ final class CursorOverlay {
         OverlaySwitch.mayRaise(isAgent: AgentProcess.isAgent, switchedOn: switchedOn)
     }
 
+    /// Level and sharing type are set together because AppKit resets the
+    /// sharing type when a panel changes level at runtime, so setting them
+    /// apart leaves a window that is excluded from capture until the first
+    /// time it moves plane. Taken from `main` at 15f86ea, where the
+    /// env-gated lift lets a test photograph the overlays deliberately.
+    private static func place(_ panel: NSPanel, at level: NSWindow.Level) {
+        panel.level = level
+        panel.sharingType = OverlayCapture.excludedFromCapture() ? .none : .readOnly
+    }
+
     private static let pointerSize = CGSize(width: 19, height: 32)
     private static let ringDiameter: CGFloat = 46
     /// The band the pointer joins to sit in a target window's plane. It has to
@@ -285,9 +295,9 @@ final class CursorOverlay {
             // can land between this panel and its target and fail the read-back
             // below for a placement that was actually correct.
             for other in surfaces where other.panel !== surface.panel {
-                other.panel.level = Self.floatingLevel
+                Self.place(other.panel, at: Self.floatingLevel)
             }
-            surface.panel.level = Self.inPlaneLevel
+            Self.place(surface.panel, at: Self.inPlaneLevel)
             surface.panel.orderFrontRegardless()
             surface.panel.order(.above, relativeTo: Int(target))
             let panelNumber = surface.panel.windowNumber
@@ -334,7 +344,7 @@ final class CursorOverlay {
     }
 
     private func float(_ surface: Surface) {
-        surface.panel.level = Self.floatingLevel
+        Self.place(surface.panel, at: Self.floatingLevel)
         surface.panel.orderFrontRegardless()
         mark(surface, opacity: PointerPlanePolicy.dimmedOpacity, dashed: true)
     }
@@ -535,7 +545,7 @@ final class CursorOverlay {
         // Click-through is the whole safety story: the panels cover every
         // display, so anything less would put a sheet of glass over the machine.
         panel.ignoresMouseEvents = true
-        panel.level = Self.floatingLevel
+        Self.place(panel, at: Self.floatingLevel)
         panel.collectionBehavior = [.canJoinAllSpaces, .stationary,
                                     .ignoresCycle, .fullScreenAuxiliary]
 

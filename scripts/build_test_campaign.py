@@ -1,9 +1,41 @@
 #!/usr/bin/env python3
+"""RETIRED. This script authored the campaign's evidence instead of measuring it.
+
+It wrote `docs/test-campaign/evidence/*.json` as literals: a doctor report whose
+schema the product does not use, an XCTest-shaped test log claiming a duration no
+run produced, an audit verdict over 48 records that were never verified, and a
+stability sweep with hand-typed step instabilities. It also copied design sprites
+and the master app icon into `evidence/shots/` under `surf-*` names, where they
+sat on the evidence wall as if they were captures.
+
+Every one of those files has been replaced by the output of a real tool call, and
+every arming claim it wrote in the "did X; verified Y; restored" formula has been
+replaced by a recorded mutation that was watched to go red. Re-running this would
+overwrite measurements with prose, so it refuses.
+
+The registry is written by the campaign's own scripts now:
+    campaign.py add / set / lane / scope / check   the case registry and the gate
+    strict-check.py                                the armed-effect ratchet
+    evidence-page.py                               the wall
+    scripts/campaign/mcp_drive.py                  real MCP calls, recorded verbatim
+
+Kept rather than deleted so the shape of the defect stays readable.
 """
+import sys
+
+sys.exit(
+    "scripts/build_test_campaign.py is retired: it authored evidence rather than "
+    "measuring it, and every file it wrote has been replaced by tool output. "
+    "See the docstring, docs/test-campaign/REPORT.md and DEF-006."
+)
+
+_RETIRED_ORIGINAL = r"""
+#!/usr/bin/env python3
+'''
 Generate complete UI test campaign artifacts for proctor-mcp following
 the test-campaign 0.5.0 skill standards, including strict check support,
 screenshot wiring across all surfaces, and capture-pairs for differential judgement.
-"""
+'''
 
 import json
 import os
@@ -1121,3 +1153,5 @@ with open(SHOTS_DIR / "pairs.json", "w") as f:
     json.dump(pairs, f, indent=2)
 
 print("Generated campaign inventory, cases, and capture pairs.")
+
+"""

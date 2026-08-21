@@ -74,10 +74,11 @@ struct BrowserLaneWiringTests {
                 browserUse: ToolProbe(probe: { b.read() }, now: { clock.now },
                                       presentTTL: ToolProbe.presentTTL,
                                       absentTTL: ToolProbe.presentTTL),
+                cuaSignature: SignatureVerdictCache(verify: { _ in .valid }),
                 environment: laneSet ? [BrowserUseTool.laneVariable: BrowserUseTool.binary] : [:]),
             screenRecordingProbe: .fake())
         await session.setAuditSink(AuditCollector().sink)
-        _ = try await session.attachResolved(bundleId: bundleId, pid: nil, name: nil)
+        _ = try await session.attachResolved(bundleId: bundleId, pid: nil as Int32?, name: nil as String?)
         return (session, o, b, clock)
     }
 

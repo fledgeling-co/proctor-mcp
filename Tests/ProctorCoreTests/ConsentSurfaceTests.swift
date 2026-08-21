@@ -29,10 +29,18 @@ struct ConsentSurfaceTests {
         #expect(ConsentSurface.raisesSheet(yieldInput!, turningOn: true) == false)
     }
 
-    @Test("A1 · exactly the two switches that hand something away ask")
+    @Test("A1 · exactly the switches that hand something away ask")
     func onlyTheTwo() {
+        // PROCTOR_OVERLAY_CAPTURE joined this set when `main` merged in: it drops
+        // the run panel's and the takeover tint's exclusion from screen capture,
+        // so while it is on anything recording the screen sees them too. That is
+        // the same shape as the other two — a switch that hands something away —
+        // and its consent flag was set deliberately rather than by omission.
+        //
+        // This assertion is a canary, not a rule. It fired on that merge, which
+        // is what it is for; the list moves only with the reason written beside it.
         let asking = SwitchCatalogue.all.filter { $0.requiresConsent }.map(\.variable).sorted()
-        #expect(asking == ["PROCTOR_SECOND_LANE", "PROCTOR_TAKEOVER_INPUT"],
+        #expect(asking == ["PROCTOR_OVERLAY_CAPTURE", "PROCTOR_SECOND_LANE", "PROCTOR_TAKEOVER_INPUT"],
                 "the set of switches that ask has changed: \(asking)")
     }
 

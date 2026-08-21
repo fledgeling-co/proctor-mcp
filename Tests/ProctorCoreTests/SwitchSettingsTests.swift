@@ -14,17 +14,17 @@ import Foundation
 @Suite("PRO-0029 switch catalogue")
 struct SwitchCatalogueTests {
 
-    @Test("The catalogue names exactly the eight runtime switches")
-    func namesTheEight() {
-        #expect(SwitchCatalogue.all.count == 8)
+    @Test("The catalogue names exactly the nine runtime switches")
+    func namesTheNine() {
+        #expect(SwitchCatalogue.all.count == 9)
         #expect(Set(SwitchCatalogue.all.map(\.variable)) == [
             "PROCTOR_HUD", "PROCTOR_CURSOR", "PROCTOR_TAKEOVER", "PROCTOR_YIELD",
-            "PROCTOR_YIELD_INPUT", "PROCTOR_TAKEOVER_INPUT",
+            "PROCTOR_YIELD_INPUT", "PROCTOR_TAKEOVER_INPUT", "PROCTOR_OVERLAY_CAPTURE",
             "PROCTOR_SECOND_LANE", "PROCTOR_ACTUATION"
         ])
     }
 
-    @Test("Defaults: the four drawing switches are on, the other four are off")
+    @Test("Defaults: the four drawing switches are on, the other five are off")
     func defaults() {
         for aSwitch in SwitchCatalogue.all {
             #expect(aSwitch.defaultOn == (aSwitch.kind == .drawing),
@@ -36,20 +36,21 @@ struct SwitchCatalogueTests {
     /// Clause 11. The arithmetic the out-of-family gate caught: the first draft
     /// said six of eight applied at next start while also saying HUD alone was
     /// live, and eight minus one is seven.
-    @Test("Exactly one switch applies live; the other seven need a fresh agent")
+    @Test("Exactly one switch applies live; the other eight need a fresh agent")
     func timingCount() {
         let live = SwitchCatalogue.all.filter { $0.timing == .live }
         #expect(live.map(\.variable) == ["PROCTOR_HUD"])
-        #expect(SwitchCatalogue.all.filter { $0.timing == .nextStart }.count == 7)
+        #expect(SwitchCatalogue.all.filter { $0.timing == .nextStart }.count == 8)
     }
 
     /// Clause 20's testable half. `PROCTOR_YIELD_INPUT` is deliberately not a
     /// consent gate: it observes input and intercepts nothing, and a confirmation
     /// there would train people to click through the two that matter.
-    @Test("Exactly two switches require consent: the input block and the second lane")
+    @Test("Three switches require consent: the input block, the second lane, and overlay capture")
     func consentGates() {
         let gates = SwitchCatalogue.all.filter(\.requiresConsent).map(\.variable)
-        #expect(gates.sorted() == ["PROCTOR_SECOND_LANE", "PROCTOR_TAKEOVER_INPUT"])
+        #expect(gates.sorted() == ["PROCTOR_OVERLAY_CAPTURE", "PROCTOR_SECOND_LANE",
+                                   "PROCTOR_TAKEOVER_INPUT"])
         #expect(!SwitchCatalogue.yieldInput.requiresConsent)
         // Every consent gate is off by default: a gate on a default-on switch
         // would be a confirmation nobody ever sees.
@@ -392,13 +393,21 @@ struct SwitchPairingTests {
         }
     }
 
-    @Test("Both capability switches have a pairing, and no other switch does")
+    /// A pairing exists where a capability would otherwise act on somebody with
+    /// the notice that says so switched off. `PROCTOR_OVERLAY_CAPTURE` is the one
+    /// capability that conceals nothing: it makes Proctor's own panels visible to
+    /// a capture rather than taking anything from the person at the keyboard, so
+    /// there is no drawing switch that would announce it and pairing it with one
+    /// would be inventing a warning nobody needs.
+    @Test("Every capability that acts on the person is paired; overlay capture is not one")
     func everyCapabilityIsPaired() {
-        #expect(SwitchCatalogue.pairings.count == SwitchCatalogue.capabilities.count)
-        for capability in SwitchCatalogue.capabilities {
+        let paired = SwitchCatalogue.capabilities.filter { $0 != SwitchCatalogue.overlayCapture }
+        #expect(SwitchCatalogue.pairings.count == paired.count)
+        for capability in paired {
             #expect(SwitchCatalogue.pairings.contains { $0.capability == capability },
                     "\(capability.variable) needs a pairing")
         }
+        #expect(!SwitchCatalogue.pairings.contains { $0.capability == SwitchCatalogue.overlayCapture })
     }
 }
 

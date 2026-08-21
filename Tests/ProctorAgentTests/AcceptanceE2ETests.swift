@@ -52,14 +52,24 @@ struct AcceptanceE2ETests {
     private static let testBundleID = "com.fledgeling.testapp"
 
     private func makeHarness(environment: [String: String] = [:],
-                             tri: (any TriObserving)? = nil) async throws
+                             tri: (any TriObserving)? = nil,
+                             tools: ToolProbes? = nil) async throws
         -> (session: Session, ax: FakeAX, capture: SuccessFakeCapture, collector: AuditCollector) {
         let ax = FakeAX(bundleId: Self.testBundleID)
         let capture = SuccessFakeCapture()
+        let probeTools = tools ?? ToolProbes(
+            obscura: ToolProbe(probe: { ToolPresence(tool: "obscura", available: true, path: "/usr/local/bin/obscura") }),
+            simctl: ToolProbe(probe: { ToolPresence(tool: "simctl", available: false, path: nil, searched: [], detail: "Xcode is not installed") }),
+            cuaDriver: ToolProbe(probe: { ToolPresence(tool: "cua-driver", available: false, path: nil) }),
+            maestro: ToolProbe(probe: { ToolPresence(tool: "maestro", available: false, path: nil, searched: [], detail: "Maestro is not installed") }),
+            lume: ToolProbe(probe: { ToolPresence(tool: "lume", available: false, path: nil) }),
+            prlctl: ToolProbe(probe: { ToolPresence(tool: "prlctl", available: false, path: nil) }),
+            environment: environment
+        )
         let session = Session(
             ax: ax, capture: capture,
             tri: tri,
-            tools: ToolProbes(environment: environment),
+            tools: probeTools,
             secureInputProbe: { false })
         let collector = AuditCollector()
         await session.setAuditSink(collector.sink)

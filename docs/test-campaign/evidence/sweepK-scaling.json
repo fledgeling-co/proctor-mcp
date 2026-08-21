@@ -132,5 +132,11 @@
   "failures": 0,
   "verdict": "examined=4 failures=0: at 1168x755@2x, 1920x1200@1x, 2056x1329@2x and the 1728x1117@2x baseline the window stayed on screen, held its 620x560 minimum, kept all 21 controls, clipped none horizontally, and captured complete and trustworthy at every scale. Display restored to mode 54.",
   "detectorNote": "The first predicate counted any control whose frame fell outside the window rect, and flagged 12 at every scale including the unchanged baseline. The status window is a ScrollView, so a control below the fold is scrolled rather than clipped and its frame is legitimately outside the visible rect. A uniform count across a mode that was not changed is the signature of the instrument rather than the application, so the predicate was narrowed to horizontal overflow, which scrolling cannot explain.",
-  "controlCountStableAcrossScales": true
+  "controlCountStableAcrossScales": true,
+  "shots": [
+    "evidence/shots/sweepK-scale-1x.png",
+    "evidence/shots/sweepK-scale-small.png",
+    "evidence/shots/sweepK-external.png",
+    "evidence/shots/sweepK-laptop.png"
+  ]
 }

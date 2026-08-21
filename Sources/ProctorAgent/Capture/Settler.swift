@@ -49,10 +49,8 @@ actor Settler {
         let firstReflector = reflectorIdle()
         var reflectorAvailable = firstReflector != nil
 
-        var signals: [String] = []
-        if captureAvailable { signals.append(Signal.capture) }
-        if axAvailable { signals.append(Signal.ax) }
-        if reflectorAvailable { signals.append(Signal.reflector) }
+        var signals = SettleSignals.available(capture: captureAvailable, ax: axAvailable,
+                                              reflector: reflectorAvailable)
 
         var quietFrames = 0
         var lastDirtyArea = 0.0

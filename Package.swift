@@ -91,7 +91,8 @@ let package = Package(
         // anything that can reach it.
         .executableTarget(name: "ProctorUI", dependencies: ["ProctorCore", "ProctorReflector"]),
         .target(name: "ProctorReflector", exclude: ["README.md"]),
-        .testTarget(name: "ProctorCoreTests", dependencies: ["ProctorCore"]),
+        .testTarget(name: "ProctorCoreTests", dependencies: ["ProctorCore"],
+                    resources: [.copy("Fixtures")]),
         // The agent's own wiring — the policy gate and the audit trail around the
         // drive paths — against fake AX/capture engines. Session takes both as
         // injected protocols, so the gate ordering and the trail contents are
