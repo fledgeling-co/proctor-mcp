@@ -1751,3 +1751,43 @@ browser-routing path does not cross the boundary its declared class names.
 
 PRO-0083 and PRO-0095 merged. PRO-0088 is `Needs More Work` on four clauses and is the only wave-13
 item still out.
+
+### Wave 13 closed: PRO-0088 and PRO-0096 merged (2026-08-21)
+
+Gate **1,934 tests in 236 suites, exit 0**. `campaign.py check`: examined=27, witnessed=23,
+**unwitnessed=0**. Oracle mix `outcome 88 · metamorphic 11 · effect-witness 26 · raster-visual 11 ·
+interactive-glass 1`.
+
+**The orchestrator's own fix to CASE-0139 was wrong, and PRO-0096 corrected it.** At the PRO-0091
+merge this file recorded supplying the analyzer and examined count "from a live run rather than
+copied". Both were written at the **top level** of the case with `examined` as prose. The guard
+(`campaign.py:772-781`) reads `c["source"]["analyzer"]` and `c["source"]["examined"]` **as an
+integer**, so neither condition was satisfied and the case stayed flagged. Three errors followed
+from one: the fields were misplaced and mistyped; the resulting flag was attributed to
+CASE-0102..0105, which had carried correct `source` blocks all along; and the gate was suspected of
+capping its output when it had printed `showing 2 of 2` honestly.
+
+**The gate reports findings, not cases.** One case missing both fields produces two findings. That
+single fact explains the whole misreading, and it is worth holding: a count from this gate is a
+count of problems, not of rows.
+
+**CASE-0139 is now `fail`, and correctly.** Its census, re-armed against a pinned pre-fix commit
+rather than a moving merge-base, found a live REQ-056 regression: `ProctorCoreTests.swift:232`
+asserts `waited < 10` on a 1s-bounded client, added by `10285df` — one of the eight commits that
+came in from `main`. The wall-clock guarantee this wave established was broken by the reconciliation
+itself, and the instrument caught it. Recorded DEF-106, open, needing a choice between deleting the
+assertion and giving `SocketClient` a clock.
+
+**Two more dead predicates, taking this wave's total to five.** PRO-0088's CASE-0127 excluded the
+helper by text prefix, which also swallowed the bare-`panel` regression it existed to catch — the
+verifier proved it by doing the sabotage. And PRO-0096 found the census's own arming dead: its
+merge-base became the fixed tree once PRO-0089 merged, so it reported `caught 0 of the 2`. Pinned,
+it catches 2 of 2.
+
+**PRO-0096 found two of the three findings it was given were inside out**, and one needed no fix at
+all — stock 0.9.4 already exempts an inconclusive case at `campaign.py:751`, proved two-way by
+flipping CASE-0067 to `pass` and watching the flagged count move 3 → 4.
+
+**Still open, all recorded:** CASE-0126 and CASE-0127 carry empty `source` blocks (2 cases, 4
+findings); two `raster-visual` claims lack a usable capture and two lack pixel provenance; DEF-106;
+DEF-099. One passing case remains unarmed.
