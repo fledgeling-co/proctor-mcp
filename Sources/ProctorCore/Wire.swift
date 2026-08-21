@@ -701,11 +701,11 @@ public struct Machine: Codable, Sendable, Equatable {
 
     public var kind: Kind
     /// The guest's name as its own provider knows it, so the name in a report is
-    /// the name you can type at `lume` or `prlctl`. Nil for the host.
+    /// the name you can type at `lume`, `prlctl` or `tart`. Nil for the host.
     public var name: String?
-    /// Which adapter reached it — `lume`, `prlctl`. Nil for the host. Recorded
-    /// because two providers can hold guests of the same name and a bare name
-    /// would not identify one.
+    /// Which adapter reached it — `lume`, `prlctl` or `tart`. Nil for the host.
+    /// Recorded because two providers can hold guests of the same name and a bare
+    /// name would not identify one.
     public var provider: String?
     public var platform: MachinePlatform?
     /// How much of Proctor's observation this machine supports.

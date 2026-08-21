@@ -1121,7 +1121,8 @@ public enum ToolCatalogue {
         name: "proctor_guest",
         title: "List and manage virtual-machine guests",
         description: """
-        List, start, stop and clone the virtual machines this Mac can reach through lume or prlctl.
+        List, start, stop and clone the virtual machines this Mac can reach through lume, prlctl \
+        or tart.
 
         **This is a guest lane, not a window lane, and the difference is not cosmetic.** A guest \
         handle looks like `gst-` plus a short hash and is not a window handle: proctor_snapshot, \
@@ -1170,11 +1171,15 @@ public enum ToolCatalogue {
         A macOS guest is a native witness: a full Proctor inside it has frame status, the \
         accessibility tree and the tri-observer check. A Linux or Windows guest is delegated: \
         actuation and screenshots only, and every tree-reading assertion is skipped with a \
-        reason rather than passed. Tahoe guests currently render no application windows \
-        (trycua/cua #870, Apple FB21748086); verify against Sequoia.
+        reason rather than passed. \(GuestNotes.tahoeRendering)
 
-        Requires lume, prlctl, or both. proctor_doctor carries a guest lane saying whether this \
-        machine has either.
+        status reports which macOS a guest is running where that can be established, and \
+        `unknown` with the reason where it cannot. The version comes from the Proctor inside the \
+        guest answering over an attach link this session already holds; no provider records one \
+        in its listing, and it is never guessed from the image name.
+
+        Requires lume, prlctl or tart — any one of the three is enough. proctor_doctor carries a \
+        guest lane saying which of them this machine has.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -1197,12 +1202,13 @@ public enum ToolCatalogue {
                     "type": .string("string"),
                     "description": .string(
                         "Which guest: a gst- handle from action \"list\", or the name you type at "
-                        + "lume or prlctl. Required for status, start, stop and clone. Ambiguity "
-                        + "across two providers is an error naming the candidates rather than a guess.")
+                        + "lume, prlctl or tart. Required for status, start, stop and clone. "
+                        + "Ambiguity across providers is an error naming the candidates rather "
+                        + "than a guess.")
                 ]),
                 "provider": .object([
                     "type": .string("string"),
-                    "enum": .array([.string("lume"), .string("prlctl")]),
+                    "enum": .array([.string("lume"), .string("prlctl"), .string("tart")]),
                     "description": .string(
                         "Which adapter to use when a name is held by both. Omit when the handle "
                         + "already names one, or when only one provider has that name.")

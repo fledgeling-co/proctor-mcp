@@ -102,7 +102,12 @@ struct GuestToolSurfaceTests {
         #expect(spec.description.contains("guest lane, not a window lane"))
         #expect(spec.description.contains("Nothing here provisions"))
         #expect(spec.description.contains("grant-once"))
-        #expect(spec.description.contains("Sequoia"))
+        // PRO-0094. Was `contains("Sequoia")`, the tail of a claim this repo had
+        // already measured and not reproduced. The note is now one constant, so
+        // the description is bound to that constant rather than to a word in it:
+        // a hand-written copy that drifts fails here, where a substring passed.
+        #expect(spec.description.contains(GuestNotes.tahoeRendering))
+        #expect(!spec.description.contains("verify against Sequoia"))
         let actions = spec.inputSchema["properties"]?["action"]?["enum"]?
             .arrayValue?.compactMap(\.stringValue) ?? []
         #expect(Set(actions) == ["list", "status", "start", "stop", "clone", "reach",

@@ -586,3 +586,154 @@ private func columns(_ line: String) -> [String] {
         .map(String.init)
         .filter { !$0.isEmpty }
 }
+
+// MARK: - PRO-0094: what is known about Tahoe guests, held as the measurement
+
+/// Notes the guest lane carries on every surface a reader sees.
+///
+/// **One constant, because three copies is three sources.** The Tahoe
+/// window-rendering sentence was hand-written into the doctor's guest lane, the
+/// `proctor_guest` tool description and every `proctor_guest` result, and a
+/// correction landing in one of them would leave the other two saying the old
+/// thing. This repo has shipped that defect twice already.
+public enum GuestNotes {
+
+    /// The upstream reports, and this project's own measurement against them.
+    ///
+    /// **The prose is composed from the fields rather than written beside
+    /// them.** A note that states a version, a date and three application names
+    /// is a claim somebody can check, and a claim somebody can check drifts the
+    /// moment it is only prose: the fields are the measurement, `sentence` is a
+    /// rendering of it, and `GuestNoteSourceTests` binds the fields back to the
+    /// spec section that recorded them.
+    ///
+    /// What is deliberately NOT said: that the bug is fixed, that it never
+    /// bites, or that the reader should go and find a Sequoia image. One guest
+    /// on one host at one version refutes nothing — it is one measurement, and
+    /// the reader is given it with its provenance so they can weigh it against
+    /// two reports that are still open.
+    public enum TahoeRendering {
+        /// The reports this note is about. **Both still open**, which is why the
+        /// note qualifies the measurement rather than replacing them with it.
+        public static let upstream = "trycua/cua #870 and Apple FB21748086"
+        /// The guest's own macOS version, as its Proctor reported it over the
+        /// attach link — not read off an image name.
+        public static let guestOS = "26.6.2"
+        public static let measuredOn = "2026-08-21"
+        /// What drew a window. Three applications, named, because "it worked"
+        /// is not a measurement.
+        public static let applications = ["Calculator", "System Settings", "Setup Assistant"]
+        /// Where the measurement is written down, so the sentence carries its
+        /// own citation to a reader who has the repo.
+        public static let citation = "docs/specs/spec-PRO-0076.md"
+
+        /// The applications in prose: "A, B and C".
+        static var applicationList: String {
+            guard let last = applications.last else { return "" }
+            guard applications.count > 1 else { return last }
+            return applications.dropLast().joined(separator: ", ") + " and " + last
+        }
+
+        /// One sentence, composed from the fields above.
+        public static let sentence =
+            "Tahoe guests were reported to render no application windows — \(upstream), both "
+          + "still open — but on \(measuredOn) Proctor drove a macOS \(guestOS) guest in which "
+          + "\(applicationList) all rendered normally (\(citation)), so treat it as an open "
+          + "report upstream rather than a settled property of every Tahoe guest."
+    }
+
+    /// The sentence every guest surface carries. Interpolated, never copied.
+    public static var tahoeRendering: String { TahoeRendering.sentence }
+}
+
+// MARK: - PRO-0094: which macOS a guest is running
+
+/// A guest's macOS version, or the reason Proctor cannot establish it.
+///
+/// **`unknown` with a reason is the honest answer, and it is the common one.**
+/// No provider records a guest's OS version: `lume get` and tart's `config.json`
+/// both report only `macOS`/`darwin`, and `prlctl` does not carry one either. The
+/// only thing that knows is the machine itself, so the version is what the
+/// Proctor inside the guest said when it was asked — and where nothing can be
+/// asked, this says so and names what would change the answer.
+///
+/// **Never inferred.** Not from the image name, not from the provider, not from
+/// `platform`. `platform` answers *which OS*; it has never answered *which
+/// version*, and a guest called `macos-sequoia-cua` is evidence of what somebody
+/// typed. That negative is checkable rather than asserted: `obstacle` below takes
+/// a record and a bool and reads neither the name nor the image.
+public struct GuestOSVersion: Codable, Sendable, Equatable {
+    /// The version string, exactly as the guest's own Proctor reported it. Nil
+    /// exactly when it could not be established.
+    public var version: String?
+    /// Where the answer came from. `guest-agent` when a Proctor inside the guest
+    /// answered; `unknown` otherwise.
+    ///
+    /// A string rather than an enum, for the reason `GuestRecord.state` is one: a
+    /// channel a later build adds survives into an older reader's report instead
+    /// of being flattened into whichever case looked closest.
+    public var source: String
+    /// Why there is no version, and what would change that. Present exactly when
+    /// `version` is nil.
+    public var reason: String?
+
+    public init(version: String?, source: String, reason: String?) {
+        self.version = version; self.source = source; self.reason = reason
+    }
+
+    public static func known(_ version: String) -> GuestOSVersion {
+        GuestOSVersion(version: version, source: "guest-agent", reason: nil)
+    }
+
+    public static func unknown(reason: String) -> GuestOSVersion {
+        GuestOSVersion(version: nil, source: "unknown", reason: reason)
+    }
+}
+
+/// Whether a guest can be asked which macOS it is running, decided purely.
+///
+/// Pure so every branch is provable on a machine with none of `lume`, `prlctl` or
+/// `tart` installed — the rule this file sets for the whole lane — and so the
+/// "never inferred from the image name" guarantee is a property of the signature
+/// rather than a promise in a comment.
+public enum GuestOSVersionResolution {
+
+    /// Why this guest cannot be asked, or nil when it can be.
+    ///
+    /// **The order of these three checks is load-bearing.** Platform comes first
+    /// because a delegated guest has no answer at any power state, so telling its
+    /// reader to start it would send them to do something that cannot work.
+    /// Power comes before attachment for the same reason in miniature: attaching
+    /// to a stopped guest is not the next step, starting it is.
+    public static func obstacle(record: GuestRecord,
+                                attachedByThisSession: Bool) -> String? {
+        guard record.platform == .macos else {
+            return "\(record.name) is not a macOS guest, so there is no Proctor inside it to "
+                 + "ask. A delegated guest is driven through Cua, which reports no OS version "
+                 + "either."
+        }
+        guard record.running else {
+            return "\(record.name) is \(record.state), so nothing inside it can be asked, and no "
+                 + "provider records a guest's macOS version in its listing. Start it with "
+                 + "proctor_guest action \"start\", attach, and read status again."
+        }
+        guard attachedByThisSession else {
+            return "this session is not attached to \(record.name), so there is no link to ask "
+                 + "over. Attach with proctor_guest action \"attach\" and read status again; the "
+                 + "version comes from the Proctor inside the guest, never from the image name."
+        }
+        return nil
+    }
+
+    /// A guest that should have been answerable and was not.
+    ///
+    /// Carries what the link said verbatim, because the two reasons a reader
+    /// might be here — a tunnel that dropped and a Proctor that is not running
+    /// inside the guest — are fixed in different places.
+    public static func silentAgent(name: String, said: String?) -> String {
+        let tail = said?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let detail = (tail?.isEmpty == false) ? " The link said: \(tail!)" : ""
+        return "the Proctor inside \(name) did not report an OS version.\(detail) The attachment "
+             + "is untouched — this is a read, and a read does not release a slot."
+    }
+}

@@ -47,6 +47,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   That last part matters more than it sounds. The Reflector walks AppKit views, so a SwiftUI subtree shows up as its hosting view and whatever backing views SwiftUI happened to create. There's no supported way to read a resolved SwiftUI modifier value from outside the framework. Identifiers, roles, geometry and pixels are settled properly; a style that SwiftUI never puts in a layer comes back as inconclusive and says so.
 
+- **`proctor_guest` status now tells you which macOS a guest is running.** Ask for `status` and you get an `osVersion` beside the guest and the machine. Where Proctor can establish it, that's the version the Proctor inside the guest gave when it was asked. Where it can't, you get `unknown` and the reason, naming what would change the answer.
+
+  Here's how it works. No provider records a guest's OS version: `lume get` and tart's `config.json` both report only `macOS` or `darwin`, and `prlctl` is no better. The only thing that knows is the machine itself, reached over the link an `attach` has already opened. A stopped guest, a Linux or Windows guest, a guest this session isn't attached to, and a guest whose Proctor doesn't answer each get their own reason rather than sharing one.
+
+  It's never guessed from the image name. A guest called `macos-sequoia-cua` reports `unknown` until something inside it answers, and a session attached to one guest never reports that guest's version in a status about another.
+
 ### Changed
 
 - **The statement said Fake because the test suite was drawing it.** Reported from real use: the full-screen tint read `Proctor is driving "Fake"`, always that word. No app on this Mac is called Fake and no shipped string contains it. It's `FakeAX`'s app handle, out of the test fixtures, and it was reaching the screen because `Session` defaults to the live takeover driver and most of the wiring suites build a session without replacing it.
@@ -116,6 +122,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release started.
 
+- **The Tahoe guest warning now carries its measurement instead of a verdict.** `proctor_doctor`'s guest lane, the `proctor_guest` description and every `proctor_guest` result used to tell you flatly that Tahoe guests render no application windows, and to go and verify against Sequoia. Both upstream reports are real and both are still open (trycua/cua #870, Apple FB21748086). What the note left out is that Proctor drove a macOS 26.6.2 guest on 2026-08-21 in which Calculator, System Settings and Setup Assistant all rendered normally.
+
+  You now get the reports, the measurement, the date and the machine in one sentence, and you can weigh it yourself. This isn't a claim the bug is fixed; one guest on one host at one version settles nothing. It's the difference between reading a hedged finding and reading a verdict, and the verdict had someone about to download a different macOS image on the strength of it.
+
+  The advice to verify against Sequoia is gone, because status is the version of that instruction you can actually act on. There's one copy of the sentence now rather than three hand written ones, and a test binds what it states back to the spec section that recorded the measurement, so the note and the record can't quietly drift apart.
+
 ### Fixed
 
 - **A Mac running several Proctor sessions could stall for minutes on a health check.** Proctor caches what `cua-driver`'s code signature says so it doesn't re-hash an 82 MB binary every time you ask. The cache was built per session rather than per machine, so fifteen sessions each verified the same file at the same time, at 0.5 to 0.9 seconds a go. That filled every thread Swift gives the process, which meant unrelated work couldn't run at all: calls sat unanswered, and a caller with a ten-second timeout gave up before Proctor got to it. One process now verifies a given file once, however many sessions ask and however many ask at once. The ones that arrive while a check is running wait for that answer instead of starting their own, and they wait without holding a thread, so the rest of the process keeps moving. The check itself is unchanged.
@@ -151,6 +163,8 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
   It's now disabled until both grants land. The decision comes from a pure function in Core, `WalkthroughFlow.primaryEnabled`, tested at all sixteen combinations of its inputs, rather than from a condition inside a view body where nothing can check it.
 
   The control dims in place rather than disappearing. A control that vanishes makes the layout jump and teaches you the step isn't there at all. "Skip setup" stays enabled throughout, so a grant macOS won't give you is never a dead end.
+
+- **`tart` was missing from the guest tool's provider list.** Proctor has driven tart guests since the third provider landed, and `proctor_doctor`'s guest lane named all three, but `proctor_guest`'s own schema enumerated `lume` and `prlctl` only. Passing `provider: "tart"` was refused by validation before it ever reached the code that handles it, and a reader going by the tool description reasonably concluded tart wasn't supported. The schema, the description, the field docs and the refusal you get for a missing guest all name three providers now.
 
 ## [0.2.0] - 2026-08-17
 
