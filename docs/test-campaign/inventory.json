@@ -602,6 +602,33 @@
       ],
       "note": "PRO-0091, from DEF-058. A hand-merge swept the two keys the conflict was about and dropped a third, unpublishing a judged capture. The remedy is a script rather than a resolution to be careful.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-061",
+      "text": "A capture whose frame carries no content is never reported trustworthy, and says which of the two reasons applies",
+      "source": "docs/features-to-triage/81-the-capture-path-reports-frames-it-did-not-get.md",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-006"
+      ],
+      "note": "PRO-0088, from DEF-025. SCFrameStatus complete means a frame was delivered, not that it depicts anything. The verdict now asks whether the frame has anything in it, and distinguishes a window Proctor excludes by design from a frame that arrived empty from a window it does not own.",
+      "effect": "device",
+      "provider": "CaptureContentGate in Sources/ProctorCore/FrameContent.swift, spent at Sources/ProctorAgent/Capture/CaptureEngineImpl.swift"
+    },
+    {
+      "id": "REQ-062",
+      "text": "The drawn pointer's capture exclusion survives a level change, so every overlay panel the agent owns reports sharingState 0 at the default",
+      "source": "docs/features-to-triage/81-the-capture-path-reports-frames-it-did-not-get.md",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "note": "PRO-0088, from DEF-028. Assigning NSWindow.level resets sharingType, and the drawn pointer is the only overlay that changes band at runtime. Measured by intervention: reverting CursorOverlay.swift alone flips the layer-0 window from sharingState 0 to 1 and nothing else moves.",
+      "effect": "device",
+      "provider": "CursorOverlay.place(_:at:) in Sources/ProctorAgent/Overlay/CursorOverlay.swift, readable back through CGWindowListCopyWindowInfo from a separate process"
     }
   ],
   "surface": [
@@ -1941,6 +1968,51 @@
       "detail": "scripts/campaign/seed_unclass.py loaded vacuity-check.py from a literal '0.9.2/skills/test-campaign/scripts/vacuity-check.py'. The installed plugin is 0.9.3 and the active install path in installed_plugins.json is 0.9.3; 0.9.2 survives only as a stale cache directory. The two files are byte-identical today, so nothing was wrong with the measurement \u2014 but the next prune of the cache turns a control whose whole job is to prove a pass can fire into a script that exits on a missing file.\n\nFIXED: the path resolves to the newest installed version, comparing version directories as tuples of integers so 0.9.10 sorts after 0.9.9, and the resolved path is printed on every run so the evidence file records which copy was read. An absent plugin now exits saying it is a cannot-run rather than a pass.",
       "surface": "SURF-022",
       "req": "REQ-046"
+    },
+    {
+      "id": "DEF-095",
+      "status": "fixed",
+      "title": "The drawn pointer's panel never set sharingType, so it was capturable while the other two overlays were not",
+      "found": "PRO-0088, reproduced on glass against two signed builds of this branch",
+      "detail": "CursorOverlay assigned NSWindow.level at four sites and set sharingType at none of them. Assigning a level resets the sharing type, and this is the only overlay that changes band at runtime, so the surface whose whole purpose is to be drawn over somebody else's window was the one anybody could photograph.\n\nMeasured by intervention rather than by inference: two Developer ID builds differing in one file, sampled every ~330ms from a separate probe process. Pre-fix agent pid 53748 owns 3 windows, 1 of them not excluded, and it is the layer-0 one. Post-fix agent pid 12838 owns 3 windows, 0 not excluded. 60 samples before, 54 after; populations are len() over rows filtered by owning pid.\n\nThis also identifies DEF-028's window 121491: it is the drawn pointer sitting in the normal band after an in-plane placement, not a window CASE-0032 did not know about.\n\nEvidence: docs/test-campaign/evidence/PRO-0088/glass/overlay-population.json and glass/README.md. FIXED HERE: level and sharing type are set together in CursorOverlay.place(_:at:); CASE-0127 holds the count of direct level assignments at zero.",
+      "surface": "SURF-004",
+      "req": "REQ-062"
+    },
+    {
+      "id": "DEF-096",
+      "status": "fixed",
+      "title": "CASE-0032 claimed all three overlays were excluded against a population it never counted",
+      "found": "PRO-0088, re-deriving the case's population with len()",
+      "detail": "The case read 'all three overlays now report sharingState 0'. Counting the rows of its own sibling evidence rather than repeating the number: agent pid 86732 owns 3 windows during a run, of which 2 report sharingState 0 and 1 reports 1. Before a run it owns 1, and that one is at sharingState 1.\n\nSo the denominator 3 was right and the claim made over it was wrong. Derived by scripts/campaign/count_agent_windows.py from evidence/witness/a2-hud-11.json, a2-hud-12.json and a2-hud-1.json into docs/test-campaign/evidence/PRO-0088/case-0032-population-before.json.\n\nFIXED HERE: the case note is corrected against the counted population, and CASE-0128 re-measures it on both builds.",
+      "surface": "SURF-004",
+      "req": "REQ-062"
+    },
+    {
+      "id": "DEF-097",
+      "status": "fixed",
+      "title": "proctor_capture reported a fully transparent frame as status complete and trustworthy true",
+      "found": "Carried from DEF-025, found in PRO-0078 phase 6",
+      "detail": "trustworthy was meta.status == .complete && contentRectIsReal, and a fully transparent frame satisfies both.\n\nFIXED HERE: the verdict is conjoined with a content check reading the alpha channel of every pixel of the frame the PNG was written from. Alpha is exhaustive rather than strided: a square stride over a 3456x2234 frame steps 7-8 pixels and would report a one-pixel hairline as an empty window, which was raised by the out-of-family spec review and accepted as a real defect in the draft.\n\nGuarded by CASE-0120..0126 and measured on glass as CASE-0129, where a Proctor-owned window returns trustworthy false and Calculator returns trustworthy true one call later.",
+      "surface": "SURF-006",
+      "req": "REQ-061"
+    },
+    {
+      "id": "DEF-098",
+      "status": "fixed",
+      "title": "The capture reply gave a caller no way to tell an empty frame from a full one without decoding the PNG",
+      "found": "Carried from DEF-025, found in PRO-0078 phase 6",
+      "detail": "dirtyArea 0 sat next to dirtyRectCount 1, which reads as though something changed.\n\nFIXED HERE: the reply carries a content block naming the population examined, the highest alpha seen and the number of distinct colours, plus a contentVerdict separating excludedTarget from emptyFrame from notMeasured. A frame in a pixel layout the summariser cannot read is notMeasured rather than empty, so a plumbing fault is never reported as a claim about the target.",
+      "surface": "SURF-006",
+      "req": "REQ-061"
+    },
+    {
+      "id": "DEF-099",
+      "status": "open",
+      "title": "REQ-028 cites a source file the branch under test does not contain",
+      "found": "PRO-0088, grounding the brief against the tree",
+      "detail": "REQ-028's source field reads 'Sources/ProctorCore/OverlayCapture.swift; RunHUDPanel, TakeoverOverlay and CursorOverlay'. That file does not exist on ai/wave-9. It arrives with commit 15f86ea, which is on main and is not an ancestor of this lineage: git merge-base --is-ancestor 15f86ea HEAD returns non-zero, and main holds 8 commits this branch lacks.\n\nSo the registry described a fix present on one lineage while the lineage under test lacked it, which is how DEF-028 came to be recorded as an unexplained window rather than as a known missing exclusion.\n\nNOT FIXED HERE. It is a registry-wide provenance question about which tree a requirement was written against, and correcting one row would leave the practice in place. Recorded so the eventual merge of main into this lineage resolves CursorOverlay.swift knowingly: main's version wraps the same fix in a PROCTOR_OVERLAY_CAPTURE switch and should win.",
+      "surface": "SURF-004",
+      "req": "REQ-028"
     }
   ]
 }

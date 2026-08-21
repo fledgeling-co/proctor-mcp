@@ -1,0 +1,107 @@
+{
+  "item": "PRO-0088",
+  "what": "CGWindowListCopyWindowInfo sampled from a separate probe process (scripts/campaign/witness_probe.swift, mode windows), against two agent builds that differ in one file.",
+  "probe": "witness_probe windows Proctor <out.json>, sampled every ~330ms",
+  "preFix": {
+    "samples": 60,
+    "owners": {
+      "52976": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 1,
+        "excluded": 1,
+        "notExcluded": 0,
+        "windows": {
+          "143516": {
+            "layer": 1000,
+            "sharingState": 0,
+            "size": "1728x1117",
+            "ownerName": "Proctor Agent",
+            "name": ""
+          }
+        }
+      },
+      "53748": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 3,
+        "excluded": 2,
+        "notExcluded": 1,
+        "windows": {
+          "147588": {
+            "layer": 25,
+            "sharingState": 0,
+            "size": "350x198",
+            "ownerName": "Proctor Agent",
+            "name": ""
+          },
+          "147589": {
+            "layer": 24,
+            "sharingState": 0,
+            "size": "1728x1117",
+            "ownerName": "Proctor Agent",
+            "name": ""
+          },
+          "147590": {
+            "layer": 0,
+            "sharingState": 1,
+            "size": "1728x1117",
+            "ownerName": "Proctor Agent",
+            "name": ""
+          }
+        }
+      }
+    },
+    "build": "Sources/ProctorAgent/Overlay/CursorOverlay.swift reverted to 4d76b3c; every other file as delivered",
+    "agentPid": 53748
+  },
+  "postFix": {
+    "samples": 54,
+    "owners": {
+      "12838": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 3,
+        "excluded": 3,
+        "notExcluded": 0,
+        "windows": {
+          "147539": {
+            "layer": 25,
+            "sharingState": 0,
+            "size": "346x196",
+            "ownerName": "Proctor Agent",
+            "name": ""
+          },
+          "147540": {
+            "layer": 24,
+            "sharingState": 0,
+            "size": "1694x1095",
+            "ownerName": "Proctor Agent",
+            "name": ""
+          },
+          "147541": {
+            "layer": 0,
+            "sharingState": 0,
+            "size": "1728x1117",
+            "ownerName": "Proctor Agent",
+            "name": ""
+          }
+        }
+      },
+      "52976": {
+        "ownerName": "Proctor Agent",
+        "windowsOwned": 1,
+        "excluded": 1,
+        "notExcluded": 0,
+        "windows": {
+          "143516": {
+            "layer": 1000,
+            "sharingState": 0,
+            "size": "1728x1117",
+            "ownerName": "Proctor Agent",
+            "name": ""
+          }
+        }
+      }
+    },
+    "build": "the delivered tree",
+    "agentPid": 12838
+  }
+}

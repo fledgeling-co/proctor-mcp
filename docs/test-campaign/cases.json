@@ -488,13 +488,16 @@
     "status": "pass",
     "evidence": [
       "evidence/overlay-capture-default.json",
-      "evidence/window-level-sharing.json"
+      "evidence/window-level-sharing.json",
+      "evidence/PRO-0088/case-0032-population-before.json",
+      "evidence/PRO-0088/glass/overlay-population.json"
     ],
     "armed": true,
     "armedBy": "Watched to fail on the build before the fix: the drawn pointer reported sharingState 1 and screencapture -l wrote a 3456x2234 file of it while the run panel and the takeover tint both reported 0 and refused.",
-    "note": "All three overlays now report sharingState 0 at the default, on both displays: layer 24 at 1728x1117 and 2560x1440, layer 25 at 352x230, layer 1000 at 1728x1117 and 2560x1440. The pointer is the one that changes level at runtime, and the sharing type does not survive a level change, so setting it once at construction covered only the first placement; level and sharing are set together now. Ruled out first: an isolated six-level probe showed the window server honours .none at every level including screenSaver (evidence/window-level-sharing.json), so the level was not the cause.",
+    "note": "All three overlays now report sharingState 0 at the default, on both displays: layer 24 at 1728x1117 and 2560x1440, layer 25 at 352x230, layer 1000 at 1728x1117 and 2560x1440. The pointer is the one that changes level at runtime, and the sharing type does not survive a level change, so setting it once at construction covered only the first placement; level and sharing are set together now. Ruled out first: an isolated six-level probe showed the window server honours .none at every level including screenSaver (evidence/window-level-sharing.json), so the level was not the cause.\n\nCORRECTED BY PRO-0088 (DEF-096). 'All three' was never counted. Re-derived with len() over the rows of this case's own sibling evidence: agent pid 86732 owns 3 windows during a run, of which 2 report sharingState 0 and 1 reports 1 \u2014 the layer-0 panel, which PRO-0088 identified by intervention as the drawn pointer. Before a run the same process owns 1 window and it is at sharingState 1. So the denominator was right and the claim made over it was wrong on this lineage; the fix it describes lives in commit 15f86ea, which is on main and is not an ancestor of ai/wave-9 (DEF-099). The claim now holds on the delivered build and is re-measured with a live pre-fix control as CASE-0128: 3 owned, 0 not excluded, over 54 samples. Counts: evidence/PRO-0088/case-0032-population-before.json and evidence/PRO-0088/glass/overlay-population.json.",
     "defects": [
-      "DEF-005"
+      "DEF-005",
+      "DEF-096"
     ]
   },
   {
@@ -1821,5 +1824,179 @@
     "armed": true,
     "armedBy": "run 2 of gate-run.txt puts mutation 1 back into mutate_swift.py and runs ./scripts/test.sh itself: the gate exits 1 and names the check, so run 1's exit 0 is a measurement rather than the absence of one.",
     "note": "PRO-0091. Tests/ProctorCoreTests/CampaignInstrumentTests.swift runs scripts/campaign/test_instruments.py, so ./scripts/test.sh owns the verdict \u2014 a Python file nobody runs is the same shape of finding as the ones it was written to close. It requires at least 15 checks to have been made, then requires the exit code to be 0. Two of the checks are additionally re-expressed in Swift, driving the same two scripts directly: the mutation runner over a closure-shorthand fixture, and the merge verifier over the hand-merge that lost FLOW-010. Run under ./scripts/test.sh on 2026-08-21: exit 0, 1838 tests in 217 suites, with the Campaign instruments suite among them. ScreenRecordingProbeWiringTests did not fail in that run but leaked its continuation three times; that is DEF-029/051's wall-clock oracle, which PRO-0089 owns, and nothing in it was touched here."
+  },
+  {
+    "id": "CASE-0120",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/gate-after.txt",
+      "evidence/PRO-0088/gate-sabotage.txt"
+    ],
+    "armed": true,
+    "armedBy": "The same all-zero sample over a window Proctor does not own returns a different verdict and a different sentence, so the branch is reading ownership rather than agreeing with itself.",
+    "note": "An empty frame over a Proctor-owned target returns excludedTarget and a caveat naming the exclusion. Unit, in ProctorCoreTests/FrameContentTests.swift.",
+    "defects": [
+      "DEF-097"
+    ]
+  },
+  {
+    "id": "CASE-0121",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "One pixel given alpha 1 moves the verdict to content and drops the caveat, so the check measures alpha rather than restating allTransparent.",
+    "note": "An empty frame over a foreign target returns emptyFrame with the sampled population in the sentence: 'empty' without a denominator is the claim this item exists to stop being made.",
+    "defects": [
+      "DEF-097",
+      "DEF-098"
+    ]
+  },
+  {
+    "id": "CASE-0122",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "The same single colour with no alpha is emptyFrame, so the test would not pass a gate that had stopped reading alpha altogether.",
+    "note": "The honest edge. An opaque single-colour frame is content, not a defect: a blank document is a real window and downgrading it would be this item's own false positive. distinctColours is published and no branch keys off it.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0123",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "outcome",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "A real sample moves the verdict off notMeasured.",
+    "note": "Not looking and looking and finding nothing are different answers. A nil summary and a zero-pixel sample are both notMeasured, and neither produces a caveat: an instrument that examined nothing must not be able to call a frame empty.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0124",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "raster-visual",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "Before believing the zero: one pixel, one channel, set to alpha 7 over the same buffer, and the instrument reports 7. It could have said non-zero.",
+    "note": "FramePixels.contentSummary over a synthesised all-transparent BGRA buffer reports maxAlpha 0 and allTransparent true. Includes the out-of-family review's High finding as CASE-0124b: one lit pixel at (733,1019) in a 1520x1936 frame \u2014 an offset no square stride lands on \u2014 is content, not emptiness. Also covers the Medium: a buffer whose pixelFormat is not 32BGRA is notMeasured rather than read with a colour channel mistaken for alpha.",
+    "defects": [
+      "DEF-097"
+    ]
+  },
+  {
+    "id": "CASE-0125",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "raster-visual",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "Zeroing the same geometry inverts both readings, so the measurement is of the bytes rather than of the frame's size.",
+    "note": "A frame with real content measures as content: maxAlpha 255 and more than one distinct colour.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0126",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "source-analysis",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/gate-sabotage.txt",
+      "evidence/PRO-0088/gate.md"
+    ],
+    "armed": true,
+    "armedBy": "Watched to fail: deleting '&& contentVerdict == .content' from CaptureEngineImpl.swift turned this test red and the run exited 1. Transcript in gate-sabotage.txt.",
+    "note": "The production verdict conjoins the content gate, and the caveat is drawn from the gate rather than written twice. Source analysis: it establishes that the code the unit tests drive is the code that runs, and buys no evidence about a real capture. That is CASE-0129.",
+    "defects": [
+      "DEF-097"
+    ]
+  },
+  {
+    "id": "CASE-0127",
+    "req": "REQ-062",
+    "surface": "SURF-004",
+    "flow": "FLOW-004",
+    "oracle": "source-analysis",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/gate-sabotage.txt",
+      "evidence/PRO-0088/gate.md"
+    ],
+    "armed": true,
+    "armedBy": "Watched to fail: restoring one direct 'surface.panel.level = Self.inPlaneLevel' turned this test red and the run exited 1. Transcript in gate-sabotage.txt.",
+    "note": "Every level assignment in CursorOverlay goes through place(_:at:), which sets sharingType with it. Written as a count of the direct assignments left outside the helper rather than a contains, because a claim about a population is not settled by a printed line. The filter's own control asserts it still finds the one assignment inside the helper, so a matcher that had stopped matching would fail rather than pass.",
+    "defects": [
+      "DEF-095"
+    ]
+  },
+  {
+    "id": "CASE-0128",
+    "req": "REQ-062",
+    "surface": "SURF-004",
+    "flow": "FLOW-004",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/glass/overlay-population.json",
+      "evidence/PRO-0088/glass/README.md",
+      "evidence/PRO-0088/case-0032-population-before.json"
+    ],
+    "armed": true,
+    "armedBy": "A live control build, not a citation. Two signed Developer ID builds differing only in CursorOverlay.swift: the pre-fix agent (pid 53748) reports 3 windows owned with 1 not excluded \u2014 the layer-0 one \u2014 over 60 samples. The instrument could and did report sharingState 1.",
+    "note": "Every window CGWindowListCopyWindowInfo attributes to the agent pid reports sharingState 0 on the delivered build: pid 12838 owns 3 (layers 25, 24, 0) with notExcluded len() 0, over 54 samples. Read from a separate probe process, so the process being measured is not the one measuring. The population is len() over rows filtered by pid, never a printed list. This is also what identifies DEF-028's window 121491 as the drawn pointer: the one-file revert flips exactly that window and nothing else.",
+    "defects": [
+      "DEF-095",
+      "DEF-096"
+    ]
+  },
+  {
+    "id": "CASE-0129",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "flow": "FLOW-003",
+    "oracle": "effect-witness",
+    "status": "pass",
+    "evidence": [
+      "evidence/PRO-0088/glass/capture-proctor-owned.json",
+      "evidence/PRO-0088/glass/capture-calculator.json",
+      "evidence/PRO-0088/glass/README.md"
+    ],
+    "armed": true,
+    "armedBy": "The Calculator leg is the sabotage and it is a real frame, not a stub: the same code path one call later returns trustworthy true, contentVerdict content, maxAlpha 255 over 1,099,968 pixels. A gate that had simply started refusing everything would fail here.",
+    "note": "proctor_capture through the production path against a signed build on a private socket. A Proctor-owned window (win:2:1, CG 147541) returns status complete, trustworthy FALSE, contentVerdict excludedTarget, 7,720,704 pixels sampled and every one fully transparent, with a caveat naming the exclusion. Before this change the same call returned trustworthy true. /Applications/Proctor.app was never replaced. What this does not establish: the Proctor UI's own History window was not captured, because AX exposed no window for either UI process and this harness cannot click a menu item on a window it cannot address.",
+    "defects": [
+      "DEF-097",
+      "DEF-098"
+    ]
   }
 ]
