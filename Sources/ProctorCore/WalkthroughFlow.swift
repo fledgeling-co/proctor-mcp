@@ -81,6 +81,33 @@ public enum WalkthroughFlow {
         step == .granted && accessibility && screenRecording
     }
 
+    /// Whether the primary action may be pressed.
+    ///
+    /// PRO-0081, closing PRO-0067's carried A3. That clause reads *the disabled
+    /// next button is present in the tree in every state where it is disabled* —
+    /// and until this function existed there was no such state, because nothing
+    /// in the flow ever disabled it. A clause asked over an empty set reads green
+    /// and has measured nothing, which is the shape of failure this campaign
+    /// exists to remove.
+    ///
+    /// The design of record settles what the rule is rather than this deciding
+    /// it: `design/surfaces/proctor-surfaces.html`, the `walkthrough` surface's
+    /// `permissions` pane, draws `Connect a model` disabled while a grant is
+    /// missing, captioned *"Continue is disabled and visible rather than absent
+    /// — a control that disappears makes the layout jump and teaches the user
+    /// the step does not exist."*
+    ///
+    /// `permissions` is the only step that can refuse, and it refuses only while
+    /// a grant is missing. `Skip setup` sits beside it and is never disabled, so
+    /// a person macOS will not grant to is never trapped — the flow declines to
+    /// pretend the grants landed, it does not hold the door shut.
+    public static func primaryEnabled(on step: Step,
+                                      accessibility: Bool,
+                                      screenRecording: Bool) -> Bool {
+        guard step == .permissions else { return true }
+        return accessibility && screenRecording
+    }
+
     /// The step after this one, or nil at the end.
     public static func next(after step: Step) -> Step? {
         switch step {
