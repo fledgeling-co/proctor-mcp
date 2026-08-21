@@ -1,0 +1,27 @@
+ARMING RUN — every new assertion in PRO-0089, shown failing.
+
+The patch, applied to the three source files and reverted immediately afterwards:
+  PolicyStore.operatorDirectory -> a decoy under /tmp/pro0089-arming-decoy, so the
+    operator's real file was never in the path while the interlock was off
+  PolicyStore.live             -> 'guard false', i.e. the pre-fix behaviour of
+    handing every session the operator directory
+  ScreenRecordingProbe          -> await timer(bound + 1) instead of await timer(bound)
+  CuaLineReader                 -> both now() call sites reverted to
+    DispatchTime.now().uptimeNanoseconds, i.e. the injected clock ignored
+
+Result: ./scripts/test.sh --filter 'PolicyStoreSeamTests|ScreenRecordingProbe|CuaLineReader' exited 1.
+
+􀢄  Test "a platform call that never answers is ended by the bound, on the bound the product ships" recorded an issue at ScreenRecordingProbeWiringTests.swift:50:9: Expectation failed: (asked.seconds → 2.5) == (GrantProbe.bound → 1.5)
+􀢄  Test "the interlock is active in this process and the operator path is the real one" recorded an issue at PolicyStoreSeamTests.swift:153:9: Expectation failed: (PolicyStore.live.directory → file:///tmp/pro0089-arming-decoy/app.fledgeling.procter/policy/) != (PolicyStore.operatorDirectory → file:///tmp/pro0089-arming-decoy/app.fledgeling.procter/policy/)
+􀢄  Test "the interlock is active in this process and the operator path is the real one" recorded an issue at PolicyStoreSeamTests.swift:160:9: Expectation failed: (PolicyStore.operatorDirectory.path → "/tmp/pro0089-arming-decoy/app.fledgeling.procter/policy").hasPrefix(FileManager.default.homeDirectoryForCurrentUser.path → "/Users/lukerhodes")
+􀢄  Test "a session that injects nothing still cannot reach the operator's policy" recorded an issue at PolicyStoreSeamTests.swift:135:9: Expectation failed: (FileWitness.read(operatorFile) → 94 bytes, modified 2026-08-21 08:00:00 +0000) == (before → 38 bytes, modified 2026-08-21 07:59:30 +0000)
+􀢄  Test "a session that injects nothing still cannot reach the operator's policy" recorded an issue at PolicyStoreSeamTests.swift:142:9: Expectation failed: !((fallback.path → "/tmp/pro0089-arming-decoy/app.fledgeling.procter/policy").hasPrefix(PolicyStore.operatorDirectory.path → "/tmp/pro0089-arming-decoy/app.fledgeling.procter/policy") → true)
+􀢄  Test "configuring a policy in a test leaves the operator's real policy file alone" recorded an issue at PolicyStoreSeamTests.swift:109:9: Expectation failed: (operatorBefore → 38 bytes, modified 2026-08-21 07:59:30 +0000) == (operatorAfter → 94 bytes, modified 2026-08-21 08:00:00 +0000)
+􀢄  Test "it does not give up while the budget it was given is unspent, however long that takes" recorded an issue at CuaLineReaderTests.swift:151:6: Caught error: .timedOut
+􀢄  Test "a driver that never answers gives up when the budget it was given is spent" recorded an issue at CuaLineReaderTests.swift:146:9: Expectation failed: (clock.count → 0) >= 3
+􀢄  Test "a driver that never answers gives up when the budget it was given is spent" recorded an issue at CuaLineReaderTests.swift:147:9: Expectation failed: (clock.elapsed → 0) >= (200_000_000 → 200000000)
+
+The unexpected signal code 13 in the same run is DEF-066, found here and fixed:
+􀄵  // the real one, on the machine running the serror: Process '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec/swift/pm/swiftpm-testing-helper --test-bundle-path /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0089/.build/arm64-apple-macosx/debug/proctor-mcpPackageTests.xctest/Contents/MacOS/proctor-mcpPackageTests --filter PolicyStoreSeamTests|ScreenRecordingProbe|CuaLineReader /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0089/.build/arm64-apple-macosx/debug/proctor-mcpPackageTests.xctest/Contents/MacOS/proctor-mcpPackageTests --testing-library swift-testing' exited with unexpected signal code 13
+
+Revert confirmed by git: the three source files are back to the committed fix.

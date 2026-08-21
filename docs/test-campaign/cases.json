@@ -1394,5 +1394,149 @@
     "lineage": "evidence/PRO-0081/a3-lineage-arming.txt \u2014 the seed-swap arming for this capture's tie",
     "armed": true,
     "armedBy": "capture-lineage.py --seed-swap STEP-A3-PRIMARY-DISABLED against SURF-009 and against SURF-008: both CAUGHT with 2 hard failures each, so the tie pass reads the manifest rather than the filename"
+  },
+  {
+    "id": "CASE-0130",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A1. `Session.setPolicyStore(PolicyStore(directory:))` then `configurePolicy(allow:block:sensitive:)`: policy.json appears under the injected root. Read back through a SECOND PolicyStore over the same directory rather than through the session that wrote it, and compared against the `allow`/`block` arrays the tool itself returned rather than against the arguments this test passed in \u2014 so what is asserted is that the file on disk and the answer the caller got describe the same policy, not that a value survived a round trip to itself. Test: PolicyStoreSeamTests.configureWritesTheInjectedRoot.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0131's arming run, which shows the same suite failing when the seam is removed"
+  },
+  {
+    "id": "CASE-0131",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A1, and the brief's own proof obligation: DO NOT TRUST THE SEAM, MEASURE IT. The operator's real file \u2014 ~/Library/Application Support/app.fledgeling.procter/policy/policy.json, 52 bytes, mtime 1787282863, sha256 0c8dcc7f659233bb084de793108ababf973bfc5cb2cbbd6964209a60ed01524d \u2014 is read for existence, bytes and modification time immediately before and immediately after a configure through an injected store, and the two readings are compared. THE READER IS ARMED IN THE SAME CASE: the identical FileWitness, over the identical call, reports the injected file going from absent to written, so 'unchanged' is a measurement rather than a reader that says unchanged whatever happens. Not a write-and-restore: nothing is restored because nothing is written, so a run killed mid-test leaves the operator's policy as it found it. Test: PolicyStoreSeamTests.theOperatorsPolicyIsNotTouched.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/operator-policy-before.txt",
+      "docs/test-campaign/evidence/PRO-0089/operator-policy-after.txt",
+      "docs/test-campaign/evidence/PRO-0089/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "the arming run in evidence/PRO-0089/arming.txt: with the interlock disabled and operatorDirectory redirected to a decoy under /tmp, this assertion fails \u2014 'Expectation failed: (operatorBefore \u2192 38 bytes, modified 2026-08-21 07:59:30) == (operatorAfter \u2192 94 bytes, modified 2026-08-21 08:00:00)'. The real file was never in the path while the seam was off."
+  },
+  {
+    "id": "CASE-0132",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A2, the floor under the injection. A Session built with NO setPolicyStore call at all \u2014 the case that used to write the operator's file and the case a future test will forget \u2014 configures a policy, and the operator's file is unchanged across it. It did write: the session's own store directory holds a policy.json, that directory is not under PolicyStore.operatorDirectory, and it is under the named test fallback root. Asked of the session's own store rather than of PolicyStore.live, because in a test process every read of `live` mints a fresh directory. Test: PolicyStoreSeamTests.theInterlockCatchesAnUninjectedSession.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/arming.txt",
+      "docs/test-campaign/evidence/PRO-0089/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "the same arming run: with `guard AuditLog.isTestProcess` forced false, this case reports 'an un-injected session reached the operator's policy' and the fallback-prefix assertion inverts"
+  },
+  {
+    "id": "CASE-0133",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A2, the anti-vacuity check. Without it CASE-0132 could pass because the interlock never engaged and the operator simply has no policy file \u2014 a zero from an instrument that could not have reported anything else. Asserts the interlock is active in this process (AuditLog.isTestProcess), that PolicyStore.live is not under the operator's directory, and that the path being watched is the agent's own: derived from Wire.bundleIdentifier, last component 'policy', under the current user's home. `procter` is not a typo and SwitchStore.swift records why. Test: PolicyStoreSeamTests.theInterlockIsArmed.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "the arming run: with operatorDirectory redirected, two of this case's four assertions fail, including the home-directory prefix"
+  },
+  {
+    "id": "CASE-0134",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A1, the contract the statics used to carry, now on the instance: an absent policy loads empty (no lists means the gate allows every app, which is the pre-feature behaviour), a save round-trips through a second store over the same directory, and a store over a different directory is a different policy \u2014 which is the whole point of the root being told rather than assumed. Plus PolicyStoreSeamTests.theFallbackIsNotSharedBetweenSessions, the regression guard for DEF-065: two un-injected sessions get different directories, and the second loads an empty policy after the first configured one.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "DEF-065 is the arming: one shared fallback directory turned the gate red with 67 issues across 11 suites, all policyDenied on apps the failing tests never named"
+  },
+  {
+    "id": "CASE-0135",
+    "req": "REQ-056",
+    "surface": "SURF-006",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A3, closing DEF-029/DEF-051. The old oracle was `#expect(elapsed < 5.0)` around a real call and it failed six recorded times in one wave \u2014 5.6s, 6.1s, 6.58s, 8.13s, 10.25s, 14.73s \u2014 while the product answered correctly every time. The bound arm is now a told dependency: ScreenRecordingProbe(timer:) defaults to the Task.sleep it always used, and this case injects a timer that records what it was asked to wait for. Against a platform call parked on a continuation nobody resumes, the answer is `unconfirmed` AND the timer was asked for GrantProbe.bound. Nothing in the test writes that constant, so a probe bounded by anything other than its own bound fails. Runs in 0.001s and reads no clock. THE BOUND IS NOT RAISED: GrantProbe.bound is still 1.5. Test: ScreenRecordingProbeWiringTests.aParkedCallIsEndedByTheBound.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/arming.txt",
+      "docs/test-campaign/evidence/PRO-0089/under-load.txt"
+    ],
+    "armed": true,
+    "armedBy": "with `await timer(bound)` changed to `await timer(bound + 1)`: 'Expectation failed: (asked.seconds \u2192 2.5) == (GrantProbe.bound \u2192 1.5)'"
+  },
+  {
+    "id": "CASE-0136",
+    "req": "REQ-056",
+    "surface": "SURF-006",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A4, the other half of the race pinned the same way round. A timer that never returns is what a healthy platform call looks like from the bound's side, and the answer must still come back: a probe that waited for its timer would cost every doctor poll the full 1.5s on a Mac where the grant is fine. Deterministic \u2014 the losing arm is a continuation nobody resumes, so there is no timing to lose. Test: ScreenRecordingProbeWiringTests.anAnswerBeatsABoundThatNeverFires. Alongside it, ScreenRecordingProbeWiringTests.theDefaultTimerStillEndsAParkedCall keeps the un-substituted timer against the same parked call and asserts only that it comes back at all, which is the difference from the hang it replaced; it reads no clock, so a loaded machine makes it slower and never makes it fail.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/under-load.txt"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0135's arming exercises the same `bounded` race from the other side"
+  },
+  {
+    "id": "CASE-0137",
+    "req": "REQ-056",
+    "surface": "SURF-006",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A4. The seams are worth nothing if production does not take the real one, so this asserts ScreenRecordingProbe.live.bound == GrantProbe.bound and that the constant is 1.5 \u2014 the number proctor_doctor's own remedy text quotes back to an operator ('did not answer', '1.5s'), which is asserted separately in theRemedyIsNotALie. Test: ScreenRecordingProbeWiringTests.theLiveProbeCarriesTheRealBound.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "a bound other than GrantProbe.bound on the live probe fails this directly; the same constant is cross-checked by the doctor remedy and schema cases in the same suite"
+  },
+  {
+    "id": "CASE-0138",
+    "req": "REQ-056",
+    "surface": "SURF-003",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A5, the second wall-clock assertion converted with the first. CuaLineReader now takes its monotonic clock \u2014 the DispatchTime source it already used, made injectable \u2014 and the deadline case drives it. TWO ARMS THAT DISAGREE UNLESS THE DEADLINE IS REALLY JUDGED AGAINST THE INJECTED CLOCK. Stepping 100ms per reading against a 200ms budget: the reader throws timedOut, having read the clock at least three times, and the clock advanced past the budget \u2014 so it polled and came back before giving up rather than deciding once. Frozen at zero: the budget never runs down and a line written 300ms later is still served, which on the real clock against the same 200ms budget is a timeout. The old assertion, `#expect(Date().timeIntervalSince(started) < 2)`, said only that this Mac was fast. Tests: CuaLineReaderTests.silenceExpiresOnTheBudget and .aFrozenBudgetIsNeverSpent.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "with both now() call sites reverted to DispatchTime.now().uptimeNanoseconds: the stepping arm reports 'clock.count \u2192 0 >= 3' and 'clock.elapsed \u2192 0 >= 200000000', and the frozen arm reports 'Caught error: .timedOut'"
+  },
+  {
+    "id": "CASE-0139",
+    "req": "REQ-056",
+    "surface": "SURF-022",
+    "oracle": "static-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0089 A6. The population of wall-clock oracles, counted rather than sampled: scripts/campaign/wall_clock_census.py scans 117 swift files under Tests/, finds 38 lines mentioning a clock of any kind \u2014 the denominator, printed in full and never capped \u2014 and 0 assertions comparing a measured wall-clock time to a numeric literal. A clock a test injects and drives is deliberately not flagged; that is what this item moved the assertions onto. BEFORE BELIEVING THE ZERO: `--arm` runs the detector over both offenders as they stood at the merge base via `git show`, and requires it to find ScreenRecordingProbeWiringTests.swift:42 and CuaLineReaderTests.swift:107 before any census is trusted. It reports 'detector caught 2 of the 2 known offenders / ARMED'. This gate has already caught one silent zero: DEF-067, a first detector whose regex could not cross the parenthesis in timeIntervalSince(started) and so missed the very line it was written for while printing a clean zero. The brief's count of 'two other tests' is one more than the tree holds; two is the whole population.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0089/wall-clock-census.txt"
+    ],
+    "armed": true,
+    "armedBy": "wall_clock_census.py --arm, over git show <merge-base>:<path> for both historical offenders"
   }
 ]

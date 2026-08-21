@@ -1,0 +1,9 @@
+burners: 24 perl CPU loops on a 16-core machine
+load at start: 207.39 171.12 271.54
+run 1: rc=0 wall=20s load=234.57 179.44 272.18 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 12.250 seconds.
+run 2: rc=0 wall=23s load=265.81 190.56 273.46 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 14.887 seconds.
+run 3: rc=0 wall=20s load=313.55 206.39 277.22 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 11.835 seconds.
+run 4: rc=0 wall=23s load=410.15 237.31 286.29 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 13.041 seconds.
+run 5: rc=0 wall=20s load=448.37 257.37 292.36 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 13.863 seconds.
+runs=5 passed=5 failed=0
+burners stopped; load now 448.37 257.37 292.36

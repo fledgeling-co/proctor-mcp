@@ -1,0 +1,5 @@
+operator policy file, after all PRO-0089 work: the full suite run 8 times (1 baseline, 1 with a shared-fallback regression, 1 green, 5 under deliberate load) plus one arming run with the interlock deliberately disabled
+path=/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/policy/policy.json size=52 mtime=1787282863
+0c8dcc7f659233bb084de793108ababf973bfc5cb2cbbd6964209a60ed01524d  /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/policy/policy.json
+
+compare with operator-policy-before.txt: size, mtime and sha256 must all be identical

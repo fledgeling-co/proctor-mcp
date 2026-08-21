@@ -1,0 +1,13 @@
+FINAL GATE — ./scripts/test.sh at ai/pro-0089
+machine load at run: 268.75 272.67 295.54
+
+==> swift test  (output: /tmp/pro0089/final.log)
+􁁛  Test run with 1839 tests in 217 suites passed after 7.744 seconds.
+PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 7.744 seconds.
+
+BASELINE for comparison, ai/pro-0089 before any change:
+􁁛  Test run with 1829 tests in 216 suites passed after 14.077 seconds.
+PASS: 􁁛  Test run with 1829 tests in 216 suites passed after 14.077 seconds.
+
+Net: +10 tests, +1 suite. The run also got faster (14.077s to 7.744s), because the
+converted bounded-probe case no longer waits out a real timer.

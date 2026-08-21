@@ -118,6 +118,16 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **Running the test suite used to edit your Proctor policy.** `PolicyStore` worked out its own path from your home directory, so a test that configured a policy wrote the real file at `~/Library/Application Support/app.fledgeling.procter/policy/policy.json`. Nothing announced it and nothing put it back.
+
+  The read was the wider half. Every session in the suite that didn't say otherwise loaded that same file, so the whole run inherited whatever policy you had configured. On a Mac with an empty policy that's invisible, because an empty policy allows every app; on a Mac with an allow list in force, tests that never mentioned a policy start refusing apps they've never heard of.
+
+  `PolicyStore` now takes the directory it should use. Production hands it the real path, and in a test process a store nobody pointed anywhere gets a fresh empty temporary directory of its own. Not by writing your file and putting it back afterwards: a restore that doesn't run, because the process was killed or an assertion threw, leaves your policy changed and says nothing about it.
+
+- **A test was measuring this Mac rather than the product.** The bounded Screen Recording probe was checked with a stopwatch, `elapsed < 5.0`, and it failed six times in one wave at 5.6s, 6.1s, 6.58s, 8.13s, 10.25s and 14.73s. The probe answered correctly on every one of those runs; what moved was how busy the machine was.
+
+  The thing that ends the wait is now told to the probe rather than buried inside it, so the test watches that mechanism fire and reads no clock at all. The bound itself is unchanged at 1.5s. Raising it would have made the test fail less often while saying nothing more about the product than it already did.
+
 - **The guest lane's `attach` and `detach` were advertised and refused.** The tool catalogue listed them, and a second copy of the action list inside the dispatcher didn't have them, so the call was turned away before it reached the code that handles it. That second list is gone rather than corrected. The session code already switches on the action and already refuses an unknown one with the same message, so the only thing the copy ever added was somewhere to drift, and the two actions it had fallen behind on happened to be the entire feature.
 
 - **Proctor couldn't see your `lume` guests.** The listing asked for `--json`, which lume 0.5.3 rejects by name, so every guest came back empty and the lane reported that lume wasn't usable on this Mac. It now tries `ls --format json` first and falls back to the older spellings, and reads a single guest's state with `get <name> --format json`.
