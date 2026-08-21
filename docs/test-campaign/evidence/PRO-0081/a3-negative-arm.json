@@ -1,0 +1,42 @@
+{
+  "case": "CASE-0101",
+  "claim": "the instrument reads the control rather than the change, because it reported the opposite on a build that did not carry the change",
+  "whyThisArmExists": "An out-of-family review (grok-4.6) objected that implementing the missing .disabled() and then witnessing it manufactures the evidence. The objection is answered by measurement rather than by argument: the same read, by the same process, of the same identifier, in the same state, on a build with the modifier removed.",
+  "method": "Sources/ProctorUI/Walkthrough.swift had the four-line .disabled(!WalkthroughFlow.primaryEnabled(...)) modifier removed and nothing else changed. scripts/build-app.sh rebuilt and Developer ID signed .build/Proctor.app from that source. The app was launched the same way, advanced to the permissions step by the same AXPress, and read by the same installed agent.",
+  "arms": [
+    {
+      "build": "pre-change — no .disabled modifier on the primary action",
+      "pid": 45231,
+      "window": "win:10:0",
+      "read": {
+        "identifier": "proctor.walkthrough.action.primary",
+        "label": "Connect a model",
+        "role": "AXButton",
+        "enabled": true,
+        "frame": {"x": 1431, "y": 781, "w": 127, "h": 24}
+      },
+      "verdict": "the design of record draws this control disabled in this state and the build rendered it enabled. That is the defect, measured rather than inferred: DEF-036."
+    },
+    {
+      "build": "this item's — .disabled gated by WalkthroughFlow.primaryEnabled",
+      "pid": 61666,
+      "window": "win:9:0",
+      "read": {
+        "identifier": "proctor.walkthrough.action.primary",
+        "label": "Connect a model",
+        "role": "AXButton",
+        "enabled": false,
+        "frame": {"x": 1431, "y": 781, "w": 127, "h": 24}
+      },
+      "verdict": "present in the tree and disabled, which is PRO-0067's A3"
+    }
+  ],
+  "whatIsControlled": "Same reader process (installed proctor-agent pid 76491), same AXIdentifier, same step reached by the same press, same label, same frame to the point. One field differs and one line of source differs. Nothing else was changed between the two builds.",
+  "counts": {
+    "armsRun": 2,
+    "armsInWhichTheControlWasPresent": 2,
+    "armsInWhichTheControlWasAbsent": 0,
+    "distinctEnabledValuesObserved": 2
+  },
+  "afterwards": "Sources/ProctorUI/Walkthrough.swift was restored from the pre-arm copy and .build/Proctor.app rebuilt from it. /Applications/Proctor.app was never touched."
+}

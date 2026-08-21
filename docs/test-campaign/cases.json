@@ -1156,5 +1156,126 @@
       "effect": "ipc",
       "count": 825
     }
+  },
+  {
+    "id": "CASE-0100",
+    "req": "REQ-049",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "PRO-0081 closing PRO-0067's carried A3: the disabled next button is present in the tree in every state where it is disabled. THE CLAUSE HAD NO POPULATION UNTIL THIS ITEM. Walkthrough.swift carried no `.disabled(` modifier on any control, so the set of states in which the primary is disabled was empty and the clause asked as written would have read green having measured nothing. The design of record mandates the behaviour by name (design/surfaces/proctor-surfaces.html, walkthrough/permissions, captioned 'Continue is disabled and visible rather than absent'), so the behaviour was built, the gap recorded as DEF-036, and the clause then asked over a population that is no longer empty. WHAT WAS OBSERVED. A Developer ID signed .build/Proctor.app (Authority=Developer ID Application: Luke Rhodes (H4HGFL52W7), TeamIdentifier=H4HGFL52W7) ran as pid 61666 with PROCTOR_SOCKET naming nothing, so its report is nil and every grant reads false — which is what puts the flow in the state the design draws disabled on a machine that holds the real grants. /Applications/Proctor.app was untouched. The reader is the INSTALLED proctor-agent, pid 76491, a different process sharing no memory with the target, resolving the control by AXIdentifier over AXUIElement. On the permissions step it read identifier proctor.walkthrough.action.primary, role AXButton, label 'Connect a model', enabled FALSE, frame 127x24 at (1431,781), actions [AXPress]. Present, sized, and disabled — not absent. THE COUNT is 1 state asked in which the control is disabled, 1 in which it was present, 0 in which it was absent; the Core rule disables it in 3 of 16 input combinations and 1 of those 3 is reachable from this flow without an agent. TWO-WAY ON ONE BUILD: the same read of the same identifier by the same process returned enabled TRUE on the intro step one AXPress earlier, with the label changing from 'Set up permissions' and the frame width from 140. A field pinned to false could not have produced that. THE PICTURE WAS READ, NOT NAMED: evidence/shots/a3-walkthrough-permissions-disabled.png was cropped at the control's own frame and shows 'Connect a model' drawn in a muted fill with a greyed label beside an undimmed 'Skip setup' — so the visual half of the clause holds too, which AXEnabled alone does not carry. LANE CEILING: AXEnabled is the app's own exported attribute. A third process reading it establishes what the accessibility plane projects across a process boundary, which is what a screen reader and Proctor itself both act on; it is not a kernel-level witness and is not claimed as one.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a3-tree-read.json",
+      "evidence/shots/a3-walkthrough-permissions-disabled.png",
+      "docs/test-campaign/evidence/PRO-0081/a3-negative-arm.json"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0101: the same measurement against a build with the .disabled modifier removed reads enabled TRUE in the identical state",
+    "witness": {
+      "recorder": "the installed proctor-agent (pid 76491) reading pid 61666's accessibility tree by AXIdentifier with its own AX client",
+      "effect": "ipc",
+      "count": 1
+    }
+  },
+  {
+    "id": "CASE-0101",
+    "req": "REQ-049",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "The negative arm for CASE-0100, built because an out-of-family review (grok-4.6, xhigh then high) objected by name: implementing the missing .disabled() and then witnessing it manufactures the evidence. The objection is answered by measurement. Sources/ProctorUI/Walkthrough.swift had the four-line .disabled(!WalkthroughFlow.primaryEnabled(...)) modifier removed and nothing else changed; scripts/build-app.sh rebuilt and Developer ID signed .build/Proctor.app from that source; the app was launched the same way, advanced to the permissions step by the same AXPress, and read by the same installed agent. It read identifier proctor.walkthrough.action.primary, label 'Connect a model', frame 127x24 at (1431,781) — IDENTICAL to the positive arm to the point — and enabled TRUE. Same reader, same identifier, same state, same geometry; one field differs and one line of source differs. That is what establishes the instrument reads the control rather than the change, and it is simultaneously the measurement of DEF-036: before this item the design-mandated disabled state rendered enabled. The source was restored from the pre-arm copy afterwards and the bundle rebuilt from it.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a3-negative-arm.json"
+    ],
+    "armed": true,
+    "armedBy": "this case IS the arming of CASE-0100; the two arms differ in exactly one line of source",
+    "witness": {
+      "recorder": "the installed proctor-agent (pid 76491) reading pid 45231's accessibility tree by AXIdentifier",
+      "effect": "ipc",
+      "count": 1
+    }
+  },
+  {
+    "id": "CASE-0102",
+    "req": "REQ-048",
+    "surface": "SURF-002",
+    "oracle": "static-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "PRO-0081 closing PRO-0066's carried A2: every user-facing string comes from StatusSurface, and a grep for a quoted string literal in MainWindow.swift outside an identifier returns nothing. The clause's own grep is scripts/campaign/status_literals.py, which decides the 'outside an identifier' half by SYNTACTIC POSITION and never by reading the string, so the distinction stays mechanical. It is DEFAULT-DENY: symbol (systemName:/systemImage:/icon:), system (URL, sysctlbyname, appendingPathComponent, launchctl, openWindow(id:), forAuxiliaryExecutable:, an inline arguments array), key (a case label or the right side of ==/!=), punctuation (nothing but separators once escapes and interpolation segments are stripped), interpolated (nothing but an interpolation), and display for EVERYTHING ELSE. A positive 'does this look like prose' rule would pass silently for any rendering construct nobody listed. BEFORE: 176 literals, 132 display. AFTER: 45 literals, 0 display — 16 symbol, 16 system, 1 key, 11 punctuation, 1 interpolated. The denominator is printed on every run. No wording changed: every string moved character for character into StatusSurface.Copy, or into Core beside the value it describes where it was an identifier returned from a computed property (StatusChecks.settingsPane, Wire.shimPath, Wire.launchdDomain, StatusChecks.ToolRow.Tone.symbol).",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a2-arming.txt",
+      "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json"
+    ],
+    "armed": true,
+    "armedBy": "CASE-0103 and CASE-0104"
+  },
+  {
+    "id": "CASE-0103",
+    "req": "REQ-048",
+    "surface": "SURF-002",
+    "oracle": "static-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "The classifier is proved able to fail before its passing is trusted. Two mutations of the converted file, each one line: a sentence put back into a Text( is reported as 'VIOLATION 74 Text() \"Proctor lets a model test a Mac app.\"' with exit 1, and a label put back into a Button( is reported as 'VIOLATION 784 Button() \"Open log\"' with exit 1. The unmodified file reports display 0 over 45 and exits 0 in the same run, so the three readings come from one instrument in one session rather than from three descriptions of one.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a2-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "this case IS the arming run for CASE-0102"
+  },
+  {
+    "id": "CASE-0104",
+    "req": "REQ-048",
+    "surface": "SURF-002",
+    "oracle": "static-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "The evasion the clause is most vulnerable to, named by an out-of-family review and then closed. grok-4.6 pointed out that a printed count is not a threshold: 'display 0' stays green if the file is emptied into a second file, and counts collide where sets do not. MEASURED: with enum Actions removed from MainWindow.swift, the checker reports 25 literals, display 0, and EXITS 0 — the clause passes over a file that has had its machinery taken out from under it. The identifier set is therefore committed as evidence/PRO-0081/a2-identifier-baseline.json and compared as a set. The same gutted file against that baseline reports 14 identifiers gone by name ('-k', '/bin/launchctl', '/bin/sh', 'bootout', 'bootstrap', 'hw.optional.arm64', 'install', 'kickstart' x3, 'print', 'proctor-shim', the Settings URL, the log path, the plist path, and 'gui/…/…' x5) and exits 1. The clause is about moving the copy out, not the machinery, and the gate now says so.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a2-arming-baseline.txt",
+      "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json"
+    ],
+    "armed": true,
+    "armedBy": "the gutted-file run is itself the negative arm, and it is recorded with the exit code from both directions"
+  },
+  {
+    "id": "CASE-0105",
+    "req": "REQ-048",
+    "surface": "SURF-002",
+    "oracle": "static-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "note": "THIS CASE PASSES ON A MEASUREMENT OF A GAP, not on the gap being closed: what it establishes is the scope of A2's green, and the gap it found is open as DEF-039. What A2's green does NOT cover, measured rather than left implicit. The clause names one file. Its siblings in Sources/ProctorUI were run through the same classifier and are reported without being gated: HistoryWindow.swift 71 user-facing of 91 examined, ProctorUIApp.swift 53 of 68, Walkthrough.swift 49 of 56, HistoryModel.swift 46 of 47, AgentModel.swift 39 of 47 — 258 in total. MenuBarCharacter.swift (1 of 1) and Motion.swift (0) are already clean. Recorded as DEF-039 and as `partial` rather than `pass`, because a case that reported this surface green would be claiming the file's clause covered the window's copy.",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0081/a2-sibling-scope.txt"
+    ],
+    "armed": true,
+    "armedBy": "the same classifier that reports 0 for MainWindow.swift reports non-zero for five of its siblings in the same run, so the zero is a property of the file rather than of the instrument"
+  },
+  {
+    "id": "CASE-0106",
+    "req": "REQ-049",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "raster-visual",
+    "lane": "macos-glass",
+    "status": "pass",
+    "note": "The visual half of A3, which AXEnabled does not carry. The clause's reason — 'a control that disappears makes the layout jump and teaches the user the step does not exist' — is about what a person sees, and an accessibility attribute reading false is not by itself evidence that the control was drawn. So the published capture was OPENED rather than trusted by its filename. evidence/shots/step-a3-walkthrough-primary-disabled.png is 1280x1144 with 8,256 distinct colours, so it is not the empty-frame shape DEF-025 described, where 2,942,720 pixels all read RGBA(0,0,0,0) under status complete. Cropped at the control's own frame (127x24 at (1371,567), window origin (898,35), scale 2) it shows 'Connect a model' drawn in place with a flat grey fill and a low-contrast label, beside an undimmed 'Skip setup'; the control holds its full width and the footer does not close up around it. Crop: evidence/PRO-0081/a3-primary-disabled-crop.png. RECORDED SO A FIDELITY PASS KNOWS WHICH TREATMENT IT IS LOOKING AT: an earlier run of the identical state, captured while the window was key, drew the same control in a muted accent fill instead. Both are macOS disabled treatments and the difference is key-window state, not a difference in the control. This case does not claim the rendered appearance matches the design pane — that is a fidelity comparison at its own rung and it was not run here.",
+    "capture": {
+      "method": "proctor_capture → ScreenCaptureKit, window-scoped, off this Mac's display server, taken through capture_with_manifest.py with the state confirmed by proctor_find before the shutter",
+      "frameStatus": "complete"
+    },
+    "evidence": [
+      "evidence/shots/step-a3-walkthrough-primary-disabled.png",
+      "evidence/PRO-0081/a3-primary-disabled-crop.png"
+    ],
+    "lineage": "evidence/PRO-0081/a3-lineage-arming.txt — the seed-swap arming for this capture's tie",
+    "armed": true,
+    "armedBy": "capture-lineage.py --seed-swap STEP-A3-PRIMARY-DISABLED against SURF-009 and against SURF-008: both CAUGHT with 2 hard failures each, so the tie pass reads the manifest rather than the filename"
   }
 ]

@@ -1,0 +1,116 @@
+{
+  "case": "CASE-0100",
+  "clause": "PRO-0067 A3 — the disabled next button is present in the tree in every state where it is disabled",
+  "reader": {
+    "process": "the installed Proctor agent, /Applications/Proctor.app/Contents/MacOS/proctor-agent, pid 76491",
+    "channel": "AXUIElement over the accessibility plane, cross-process",
+    "note": "the reader is not the app under test and shares no memory with it; it resolves the control by AXIdentifier, which is the selector the developer sets deliberately"
+  },
+  "target": {
+    "process": ".worktrees/PRO-0081/.build/Proctor.app/Contents/MacOS/Proctor, pid 61666",
+    "signature": "Authority=Developer ID Application: Luke Rhodes (H4HGFL52W7), TeamIdentifier=H4HGFL52W7",
+    "launchedWith": "PROCTOR_SOCKET=/tmp/pro0081-none.sock -walkthroughCompleted NO",
+    "whyNoAgent": "the socket names nothing, so the model's report is nil and every grant reads false. That is what puts the flow in the state the design draws disabled; on this machine the real grants are held and the control would be enabled.",
+    "window": "win:9:0, AXWindow identified 'main', 760x1000 at (898,35)",
+    "installedAppUntouched": true
+  },
+  "states": [
+    {
+      "step": "intro",
+      "expectedEnabled": true,
+      "read": {
+        "identifier": "proctor.walkthrough.action.primary",
+        "role": "AXButton",
+        "label": "Set up permissions",
+        "enabled": true,
+        "frame": {
+          "x": 1418,
+          "y": 781,
+          "w": 140,
+          "h": 24
+        },
+        "actions": [
+          "AXPress"
+        ]
+      },
+      "present": true
+    },
+    {
+      "step": "permissions, both grants missing",
+      "expectedEnabled": false,
+      "read": {
+        "identifier": "proctor.walkthrough.action.primary",
+        "role": "AXButton",
+        "label": "Connect a model",
+        "enabled": false,
+        "frame": {
+          "x": 1431,
+          "y": 781,
+          "w": 127,
+          "h": 24
+        },
+        "actions": [
+          "AXPress"
+        ]
+      },
+      "present": true,
+      "absent": false
+    },
+    {
+      "step": "permissions, both grants missing — the published run, on the restored build",
+      "expectedEnabled": false,
+      "read": {
+        "identifier": "proctor.walkthrough.action.primary",
+        "role": "AXButton",
+        "label": "Connect a model",
+        "enabled": false,
+        "frame": {
+          "x": 1371,
+          "y": 567,
+          "w": 127,
+          "h": 24
+        },
+        "actions": [
+          "AXPress"
+        ]
+      },
+      "present": true,
+      "absent": false,
+      "target": {
+        "pid": 96306,
+        "window": "win:11:0",
+        "cgWindowID": 130808
+      },
+      "note": "The capture published as STEP-A3-PRIMARY-DISABLED comes from this run, taken through capture_with_manifest.py with the state confirmed by proctor_find before the shutter. The window is 640x572 here rather than 760x1000 because the walkthrough sets its own frame and this launch opened straight into it; the control's own frame is 127x24 in both, which is the measurement.",
+      "siblingControl": {
+        "identifier": "proctor.walkthrough.action.skip",
+        "enabled": true,
+        "why": "the flow declines to pretend a grant landed; it does not hold the door shut"
+      }
+    }
+  ],
+  "counts": {
+    "statesAskedInWhichTheControlIsDisabled": 2,
+    "statesInWhichTheControlWasPresent": 2,
+    "statesInWhichTheControlWasAbsent": 0,
+    "disabledStatesInTheCoreRule": 3,
+    "disabledStatesReachableFromThisFlowWithoutAnAgent": 1
+  },
+  "twoWay": {
+    "claim": "the enabled field tracks the control rather than reading a constant",
+    "evidence": "the same identifier read by the same process on the same window returned enabled true on intro and enabled false on permissions, one AXPress apart, with the label changing from 'Set up permissions' to 'Connect a model' and the frame width from 140 to 127. A field structurally pinned to false could not have produced the first reading.",
+    "residual": "the pre-change build, which never disabled this control, was measured separately — see a3-negative-arm.json"
+  },
+  "ceilings": [
+    "AXEnabled is the app's own exported attribute. A third process reading it establishes what the accessibility plane projects across a process boundary, which is what a screen reader and Proctor itself both act on. It is not a pixel witness: that the control is drawn dimmed rather than merely marked disabled is a visual claim, and the capture beside this file is what carries it.",
+    "The frame is 127x24 at a real position rather than zero-sized, so the control occupies layout. Whether its rendered appearance matches the design pane is a fidelity question at its own rung, not this clause's."
+  ],
+  "publishedCapture": {
+    "subject": "STEP-A3-PRIMARY-DISABLED",
+    "path": "evidence/shots/step-a3-walkthrough-primary-disabled.png",
+    "sha256Prefix": "d7d9f2b5dfc1",
+    "frameStatus": "complete",
+    "readRatherThanNamed": "The PNG was opened and cropped at the control's own frame rather than trusted by its filename: 1280x1144, 8,256 distinct colours, so not the empty-frame shape DEF-025 described. The crop (a3-primary-disabled-crop.png) shows 'Connect a model' drawn in place with a flat grey fill and a low-contrast label, beside an undimmed 'Skip setup'. The control occupies its full width in the footer; the layout does not close up around it. That is the visual half of the clause, which AXEnabled does not carry.",
+    "treatmentNote": "An earlier run of the same state, captured while the window was key, drew the same control in a muted accent fill. Both are macOS's disabled treatments and the difference is key-window state rather than a difference in the control. Recorded because a fidelity comparison against the design pane has to know which of the two it is looking at."
+  }
+}

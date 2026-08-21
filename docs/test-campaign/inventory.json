@@ -500,6 +500,30 @@
       "text": "A campaign instrument carries a measured false-positive rate with its denominator before anything is gated on its count: the blind-mutation pass over the Swift suite reports a number that is 96% noise, and a count read as a defect count would be the misconfiguration the tool warns about",
       "source": "test-campaign 0.9.2 scripts/vacuity-check.py pass_blind; docs/test-campaign/campaign.json blindVocabulary; spec-PRO-0079.md A1, A2, A5",
       "effect": "none"
+    },
+    {
+      "id": "REQ-048",
+      "text": "Every user-facing string the status window can show is a value in ProctorCore rather than a literal in the view, so a test can read it and a translator can find it; the clause is enforced by a default-deny classifier over MainWindow.swift plus a committed snapshot of the identifier literals it legitimately keeps",
+      "source": "spec-PRO-0066.md A2; spec-PRO-0081.md clauses 1-4",
+      "class": "maintainability guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-002"
+      ],
+      "note": "scripts/campaign/status_literals.py, armed four ways; docs/test-campaign/evidence/PRO-0081/",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-049",
+      "text": "A control the flow will not let a person use is drawn disabled and stays in the accessibility tree rather than being removed from it, because a control that disappears makes the layout jump and teaches the user the step does not exist",
+      "source": "spec-PRO-0067.md A3; design/surfaces/proctor-surfaces.html walkthrough/permissions pane and its state matrix",
+      "class": "accessibility guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "witnessed on macos-glass by a process that is not the app under test, with a negative arm on a build lacking the modifier",
+      "effect": "ipc"
     }
   ],
   "surface": [
@@ -1091,6 +1115,28 @@
           ]
         }
       ]
+    },
+    {
+      "id": "FLOW-010",
+      "title": "First run refuses to advance while a grant is missing, and says so in place",
+      "critical": true,
+      "steps": [
+        {
+          "id": "STEP-A3-PRIMARY-DISABLED",
+          "surface": "SURF-009",
+          "route": "ui://walkthrough/permissions/primary-disabled",
+          "shot": "evidence/shots/step-a3-walkthrough-primary-disabled.png",
+          "label": "The permissions step with both grants missing: the primary action is drawn disabled rather than removed",
+          "action": "Open the walkthrough with no agent reachable, press the intro's primary once, and read the footer",
+          "observableAtoms": [
+            "proctor.walkthrough.action.primary is in the accessibility tree",
+            "it reads enabled false",
+            "its frame is 127x24 rather than zero-sized, so it occupies layout",
+            "proctor.walkthrough.action.skip is present and enabled beside it, so nobody is trapped",
+            "the capture shows it in a muted fill with a greyed label next to an undimmed Skip setup"
+          ]
+        }
+      ]
     }
   ],
   "component": [
@@ -1615,6 +1661,51 @@
       "detail": "Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift:42, in 'a platform call that never answers returns unconfirmed within the bound', asserts `elapsed < 5.0` around a probe whose bound is 0.2 seconds. The comment calls the 25x headroom generous so it does not flake on a loaded machine.\n\nMEASURED: with a signed Proctor agent live on the glass lane and captures in flight, the same test recorded elapsed 5.016569018363953 on one run and 10.252003073692322 on the next, failing the whole suite both times: 'FAIL: swift test exited 1 ... 1814 tests in 214 suites failed'. With the agent stopped and nothing else running, the same command passed: 'PASS: Test run with 1814 tests in 214 suites passed after 21.366 seconds'.\n\nThe behaviour under test is correct in all three runs; the probe returned .unconfirmed every time. What moved was the wall clock. A 25x margin on a 0.2 second bound is 4.8 seconds of scheduler slack, and this machine consumed all of it and then twice that.\n\nNOT FIXED HERE, and deliberately not: a gate edited to make it green is a finish line that moved, and the choice between a larger margin, a mocked clock and a relative assertion belongs to whoever owns the probe. Recorded because a suite that fails under load fails in CI, where load is the normal condition.",
       "surface": "SURF-006",
       "req": "REQ-004"
+    },
+    {
+      "id": "DEF-035",
+      "status": "open",
+      "title": "StatusSurface.Copy held three sentences the status window has never rendered, while the window rendered three different ones",
+      "found": "PRO-0081 track A, moving the five older sections' strings out of MainWindow.swift",
+      "detail": "PRO-0066 wrote `toolsNote`, `switchesNote` and `restart` into StatusSurface.Copy and the view kept literals of its own. The values are not paraphrases of each other.\n\nMEASURED. Copy.toolsNote read 'What is on this Mac. Proctor finds these by reading the filesystem and never runs them to check. It installs nothing — the commands are here for you to run.' The window rendered 'Programs on this Mac that Proctor uses but does not ship. None of them is a permission, and Proctor drives Mac apps without any of them.' Copy.switchesNote read 'What you see, then what Proctor may take, then which path a run takes…'; the window rendered 'How Proctor behaves while it runs. These are read by the background agent…'. Copy.restart read 'Restart the agent'; the footer's button says 'Restart agent'.\n\nThe design of record (design/surfaces/proctor-surfaces.html, mac/status pane) carries the CORE wording in each case, so the build diverges from its design and the divergence was invisible because two strings existed and only one was on screen. StatusSurfaceTests asserted 'installs nothing' against the unrendered one, so a green test guarded copy nobody could read.\n\nWHAT PRO-0081 DID AND DID NOT DO. Copy.toolsNote and Copy.switchesNote now hold what the window renders, so the enum means what its doc comment says; the design's wording is kept beside each as toolsNoteInDesign and switchesNoteInDesign, and a test asserts the pair differ so this record cannot rot silently. The rendered WORDING was not changed: wave 9 settled the status window's explanation and this item was told not to revisit it. Choosing which of the two sentences ships is a reader's call, not a runner's.",
+      "surface": "SURF-002",
+      "req": "REQ-048"
+    },
+    {
+      "id": "DEF-036",
+      "status": "fixed",
+      "title": "The walkthrough's primary action rendered enabled in the state the design of record draws it disabled",
+      "found": "PRO-0081 track B, asking PRO-0067's carried A3 on the macos-glass lane",
+      "detail": "A3 reads 'the disabled next button is present in the tree in every state where it is disabled'. It merged unverified. The investigation found something worse than unverified: Walkthrough.swift carried no `.disabled(` modifier on any control, so no state disabled it and the clause's population was EMPTY. Asked as written it would have reported green having measured nothing — the third failure mode wave 11a named.\n\nTHE DESIGN IS EXPLICIT. design/surfaces/proctor-surfaces.html, the walkthrough surface's permissions pane, draws a disabled 'Connect a model' button and captions it: 'Continue is disabled and visible rather than absent — a control that disappears makes the layout jump and teaches the user the step does not exist.' The state matrix says the same of the class: 'disabled … Menu bar, walkthrough, history toolbar, status switches. Drawn. Every one dims in place and keeps its shortcut, rather than disappearing.'\n\nMEASURED, BOTH WAYS, on real glass. A Developer ID signed .build/Proctor.app launched with no reachable agent so every grant reads false, advanced to the permissions step, its accessibility tree read by the installed proctor-agent (pid 76491) which is a different process. Pre-change build, pid 45231: identifier proctor.walkthrough.action.primary, label 'Connect a model', frame 127x24 at (1431,781), enabled TRUE. Post-change build, pid 61666: same identifier, same label, same frame, enabled FALSE. One line of source differs between the builds. Evidence: docs/test-campaign/evidence/PRO-0081/a3-negative-arm.json and a3-tree-read.json.\n\nFIXED by WalkthroughFlow.primaryEnabled(on:accessibility:screenRecording:), decided in Core and tested at all sixteen combinations; three of the sixteen refuse and they are the three the design draws disabled. Skip setup is never disabled, so nobody is trapped by a grant macOS will not give.",
+      "surface": "SURF-009",
+      "req": "REQ-049"
+    },
+    {
+      "id": "DEF-037",
+      "status": "open",
+      "title": "The status window's agent-not-answering branch cannot be reached, and carries a button pair nothing can draw",
+      "found": "PRO-0081 track A, while moving ReadinessSection's strings",
+      "detail": "MainWindow.ReadinessSection switches on model.reachability and has a `case .unreachable(let why)` branch drawing 'The background agent is not answering', a Start the agent button and a Re-check button.\n\nIt is unreachable. MainWindow.state maps reachability .unreachable to StatusSurface.state(reachable: false, answered: true, …), which returns .down; StatusSurface.sections(for: .down) returns exactly [.agentDown]; so ReadinessSection is never drawn while reachability is .unreachable. PRO-0066 added AgentDownSection to replace that branch and left the branch in place. Its .unknown case is the one that still draws, as 'Checking…'.\n\nNot fixed here: deleting a branch is a change to what the window can draw, and this item's scope is where its strings live. Flagged because the dead branch is what a reader edits when they want to change the agent-down wording, and their edit would have no effect.",
+      "surface": "SURF-002",
+      "req": "REQ-048"
+    },
+    {
+      "id": "DEF-038",
+      "status": "fixed",
+      "title": "A source-scanning test read a region it did not mean and counted a population it could not see",
+      "found": "PRO-0081 track A, when the conversion made the third instance visible",
+      "detail": "StatusChecksTests.theRightRecheckWasDeleted, PRO-0028's guard on which Re-check buttons survive, had two faults that cancelled each other into a green.\n\nONE. It sliced source from the FooterSection declaration to the END OF THE FILE and asserted the slice held no Re-check. That slice contains every view declared after the footer, including AgentDownSection, which has one. It passed only because AgentDownSection read its label from StatusSurface.Copy while the scan matched the literal Button(\"Re-check\").\n\nTWO. `remaining == 2` counted literal occurrences over a population of three, for the same reason. The window has three Re-check buttons and has had since PRO-0066; the verdict table's claim was about which ones, and the count was measuring a different set than the one it named.\n\nFIXED: the footer slice is bounded at the next `private struct`, all three buttons are asserted individually in their own blocks, and the label the constant carries is pinned so a renamed constant holding different words cannot satisfy the scan.",
+      "surface": "SURF-002",
+      "req": "REQ-048"
+    },
+    {
+      "id": "DEF-039",
+      "status": "open",
+      "title": "Four sibling views in ProctorUI hold 258 user-facing string literals that no test can see",
+      "found": "PRO-0081 track A, measuring the scope of the clause it was closing",
+      "detail": "PRO-0066's A2 names one file and PRO-0081 closed it: MainWindow.swift reports 0 user-facing literals over 45 examined. The reason A2 exists applies unchanged to its siblings, and they were measured rather than left unstated.\n\nMEASURED by scripts/campaign/status_literals.py: HistoryWindow.swift 71 of 91, ProctorUIApp.swift 53 of 68, Walkthrough.swift 49 of 56, HistoryModel.swift 46 of 47, AgentModel.swift 39 of 47. Total 258. MenuBarCharacter.swift and Motion.swift are already clean. Evidence: docs/test-campaign/evidence/PRO-0081/a2-sibling-scope.txt.\n\nWalkthrough.swift is the one worth naming: PRO-0081 gave it a Core decision function and a disabled control, and its copy still sits in the view beside strings WalkthroughFlow.Copy already holds — the same two-values-one-name shape as DEF-035.\n\nNot fixed here: A2 is file-scoped and widening it in this item would be scope the brief declined. Recorded so the clause's green is read as covering one file rather than the surface.",
+      "surface": "SURF-002",
+      "req": "REQ-048"
     }
   ]
 }

@@ -58,11 +58,45 @@ First run belongs to PRO-0067. The two must not both own the no-grants-yet state
   is fail-closed on `isUsable` exactly as `unavailable` is.
 - **A6** — skeleton height equals row height from one constant.
 
-**A2 is partly done and is honestly recorded as such.** The window's body, the new agent-down
+**A2 was partly done and was honestly recorded as such.** The window's body, the new agent-down
 block and the new Lanes section read every string from `StatusSurface.Copy`. The five older
-sections still carry their own literals; converting them is mechanical and did not fit this
-change without risking a working window. The grep clause in A2 therefore does not pass yet and
-is carried as remaining work on this item rather than reported green.
+sections still carried their own literals; converting them was mechanical and did not fit this
+change without risking a working window. The grep clause in A2 therefore did not pass, and was
+carried as remaining work on this item rather than reported green.
+
+### A2 is closed. PRO-0081, 2026-08-21
+
+The carry was made because there was no instrument to prove the window still worked after the
+conversion. `SurfaceFidelity` and the embedded `ProctorReflector` shipped in PRO-0067 and supplied
+one, and the clause is now green with its grep run rather than described.
+
+The clause's own grep is `scripts/campaign/status_literals.py`. A plain `grep` cannot decide the
+"outside an identifier" half and a person deciding it per literal is the judgement this clause
+asks to keep mechanical, so it decides by **syntactic position and never by reading the string**:
+`symbol` for an SF Symbol argument, `system` for a path, argv word, URL or window id, `key` for a
+case label or comparison, `punctuation` for a literal that is nothing but separators once escapes
+and interpolation are stripped, and `display` for **everything else**. Default-deny, so the only
+way to green is to move the string rather than to widen a list.
+
+**176 literals, 132 of them user-facing, to 45 literals and 0.** The identifier count went 44 to
+45, so the copy moved out of the view and the machinery did not move out of the file — and that
+is gated rather than printed, against a committed snapshot of the identifier set
+(`docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json`), because an out-of-family
+review pointed out that a count collides where a set does not.
+
+No wording changed. Every string moved character for character into `StatusSurface.Copy`, or into
+Core beside the value it describes where it was an identifier a computed property returned:
+`StatusChecks.settingsPane`, `Wire.shimPath`, `Wire.launchdDomain`, `StatusChecks.ToolRow.Tone.symbol`.
+
+Three things this item found while doing it, none of them fixed in passing: `Copy` already held
+three sentences the window has never rendered while the window rendered three different ones
+(DEF-035); the `.unreachable` branch of `ReadinessSection` has been unreachable since this item
+added `AgentDownSection` (DEF-037); and `StatusChecksTests.theRightRecheckWasDeleted` read from
+the footer to the end of the file and counted two Re-check buttons over a population of three
+(DEF-038, fixed, because the conversion is what made the third visible).
+
+Cases CASE-0102..0105. A2 is file-scoped and the five sibling views still hold 258 user-facing
+literals between them; that is measured and recorded as DEF-039 rather than left implied.
 
 ### The defect this item found, which it did not cause
 
