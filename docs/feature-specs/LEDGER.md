@@ -93,12 +93,12 @@
 | PRO-0084 | The cua path leaves Proctor's plane silently | 2026-08-21 | Ready for AI |
 | PRO-0085 | The skill and the guest lane | 2026-08-21 | Ready for AI |
 | PRO-0086 | The walkthrough will not advance without its grants | 2026-08-21 | Ready for AI |
-| PRO-0087 | The signature cache is per-session, the work is not | 2026-08-21 | Ready for AI |
+| PRO-0087 | The signature cache is per-session, the work is not | 2026-08-21 | Merged |
 | PRO-0088 | The capture path reports frames it did not get | 2026-08-21 | Ready for AI |
-| PRO-0089 | Tests that touch the real machine, and tests that time themselves | 2026-08-21 | Ready for AI |
+| PRO-0089 | Tests that touch the real machine, and tests that time themselves | 2026-08-21 | Merged |
 | PRO-0090 | What the surfaces say and what they draw | 2026-08-21 | Ready for AI |
-| PRO-0091 | The campaign's own instruments | 2026-08-21 | Ready for AI |
+| PRO-0091 | The campaign's own instruments | 2026-08-21 | Merged |
 | PRO-0092 | ProctorAgent's mutants mostly survive | 2026-08-21 | Ready for AI |
 | PRO-0093 | A dead peer holds the queue | 2026-08-21 | Ready for AI |
-| PRO-0094 | A warning this project has already disproved | 2026-08-21 | Ready for AI |
+| PRO-0094 | A warning this project has already disproved | 2026-08-21 | Merged |
 | PRO-0095 | Three that slipped the grouping | 2026-08-21 | Ready for AI |

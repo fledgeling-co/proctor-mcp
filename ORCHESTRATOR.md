@@ -1695,3 +1695,43 @@ its two untrustworthy kills exist because the last run finished at load 271.
 **Still in flight from wave 11b:** PRO-0087 is built and unverified; PRO-0083 is verified
 `Needs More Work` on its A2 clause and waits on PRO-0087 merging, because the clause cannot close
 reproducibly until the cooperative pool stops starving.
+
+### Wave 13a-d closed: PRO-0087, 0089, 0091, 0094 merged (2026-08-21)
+
+Gate **1,862 tests in 220 suites, exit 0**. `strict-check` ratchet raised 81 → 106.
+`capture-lineage --gate` exit 0, judged 6 of 8, ratchet 6 held. `campaign.py check` exits 1 on five
+unwitnessed external effects and one inconclusive, all PRO-0083's and PRO-0088's, which is the gate
+naming real remaining work. **`unrated` is gone from the oracle mix** — every case now sits on a
+rung the tool recognises.
+
+**Three things this round established that are worth carrying forward.**
+
+**Arming finds dead predicates that reading does not.** PRO-0091 armed the seven instrument checks
+nobody had armed and one proved *unfireable*: it asserted no site had `before == "state"` over a
+fixture reading `$state`, and no operator in the eleven-entry table matches a bare identifier, so it
+was true of every table that could exist. That is the second dead predicate this wave, and both were
+found by arming rather than by review.
+
+**A fix is not present until it is on the branch.** PRO-0089 and PRO-0091 both failed verification
+on defects that were already fixed — 0089 deadlocked on DEF-044 at load 465, 0091's gate failed on
+the wall-clock oracle — because each branched off `ai/wave-9` before its own blocker landed. The
+chain was 0087 → 0089 → 0091, and merging `ai/wave-9` into each branch resolved both without either
+runner touching another item's code.
+
+**The registry-merge script inherits the defect it was written to prevent.** DEF-058 was an
+orchestrator merge dropping a key. The script that fixes it sweeps every key, but resolves a
+same-id conflict by keeping ours — so merging PRO-0091 silently dropped all five rows it existed to
+correct (CASE-0074's load figure, CASE-0102..0105's rung). Caught by reading the script's own
+`conflicting-same-id` line rather than by a gate. A same-id conflict is a decision, not a rule.
+
+**Two claims of mine were wrong and are corrected here.** I told the reader the plugin change was
+unpushed; `f37255f` is on `origin/main` and test-campaign 0.9.4 is installed, so it is published and
+live for every project on this machine. And I told a consumer session tart was supported because
+`TartProvider` exists — PRO-0094 found tart missing from the tool's `provider` enum, so a caller
+naming it was refused by schema validation before reaching that class. They were right about the
+symptom.
+
+**One case passes unarmed:** CASE-0113. Every other passing case has been watched to fail.
+
+**Open:** PRO-0083's A2 clause (unblocked now 0087 has merged), and PRO-0086, 0088, 0090, 0092,
+0093, 0095.
