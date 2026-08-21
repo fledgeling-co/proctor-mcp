@@ -1639,3 +1639,34 @@ prohibition, and it answers a scale question an agent asking about isolation was
 `proctor_guest` should gain a `provision` action. Today it explicitly provisions nothing, because an
 install must not happen as a side effect of a tool call and agent calls cannot raise macOS
 permission UI. Documenting that is a skill change; changing it is a safety-posture change.
+
+### Wave 11b was killed by a usage limit, not by its work (2026-08-21)
+
+Workflow `wf_6ce708a4-f13` has no completion record. The scanner reports `0 done · 5 failed`, and
+that summary is wrong: its error detection is a substring match over transcripts, so every agent
+that merely *mentioned* the usage limit reads as failed. The journal is the authority and it holds
+`started=5 results=2`.
+
+Reconciled against git rather than against the run's own claims:
+
+| Item | Branch | Commits ahead | Tree | Journal result | Disposition |
+|---|---|---|---|---|---|
+| PRO-0080 | `ai/pro-0080` | 2 | clean | present, ready-to-verify | **verify** |
+| PRO-0081 | `ai/pro-0081` | 3 | clean | present, ready-to-verify, suite 1,824/215 | **verify** |
+| PRO-0083 | `ai/pro-0083` | 1 | **11 uncommitted files** | none | **resume in place** |
+
+The limit hit the whole account at about 15:00, not this fleet: runs in `warden`, `dAIolog`,
+`egress` and `anvil` died in the same minutes. It has since reset — a probe lane answered
+`LANE_OK`.
+
+**Not resuming the workflow.** Replay is a prefix and the miss flag is sticky, so a resume would
+serve PRO-0080 and PRO-0081 from cache, then cold-start PRO-0083 — discarding the eleven modified
+files its second attempt had produced before it died at 14:32 after 740 lines. Finishing directly
+keeps that work: two verifiers for the completed items, and PRO-0083 resumed on its own branch in
+its own worktree, which is what the branch-ahead-of-base case calls for.
+
+**One thing for PRO-0081's verifier to judge rather than assume.** Its commits include
+`fix(ui): disable the walkthrough's primary action until the grants are in` — a product behaviour
+change. A3's clause is *"the disabled next button is present in the tree in every state where it is
+disabled"*, which is about presence, not about when the control should be disabled. Whether that
+commit is the clause or a widening of it is a scope question the verifier decides.
