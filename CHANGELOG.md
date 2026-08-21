@@ -118,7 +118,6 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
-<<<<<<< HEAD
 - **Running the test suite used to edit your Proctor policy.** `PolicyStore` worked out its own path from your home directory, so a test that configured a policy wrote the real file at `~/Library/Application Support/app.fledgeling.procter/policy/policy.json`. Nothing announced it and nothing put it back.
 
   The read was the wider half. Every session in the suite that didn't say otherwise loaded that same file, so the whole run inherited whatever policy you had configured. On a Mac with an empty policy that's invisible, because an empty policy allows every app; on a Mac with an allow list in force, tests that never mentioned a policy start refusing apps they've never heard of.
@@ -128,9 +127,7 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 - **A test was measuring this Mac rather than the product.** The bounded Screen Recording probe was checked with a stopwatch, `elapsed < 5.0`, and it failed six times in one wave at 5.6s, 6.1s, 6.58s, 8.13s, 10.25s and 14.73s. The probe answered correctly on every one of those runs; what moved was how busy the machine was.
 
   The thing that ends the wait is now told to the probe rather than buried inside it, so the test watches that mechanism fire and reads no clock at all. The bound itself is unchanged at 1.5s. Raising it would have made the test fail less often while saying nothing more about the product than it already did.
-=======
 - **A Mac running several Proctor sessions could stall for minutes on a health check.** Proctor caches what `cua-driver`'s code signature says so it doesn't re-hash an 82 MB binary every time you ask. The cache was built per session rather than per machine, so fifteen sessions each verified the same file at the same time, at 0.5 to 0.9 seconds a go. That filled every thread Swift gives the process, which meant unrelated work couldn't run at all: calls sat unanswered, and a caller with a ten-second timeout gave up before Proctor got to it. One process now verifies a given file once, however many sessions ask and however many ask at once. The ones that arrive while a check is running wait for that answer instead of starting their own, and they wait without holding a thread, so the rest of the process keeps moving. The check itself is unchanged.
->>>>>>> ai/wave-9
 
 - **The guest lane's `attach` and `detach` were advertised and refused.** The tool catalogue listed them, and a second copy of the action list inside the dispatcher didn't have them, so the call was turned away before it reached the code that handles it. That second list is gone rather than corrected. The session code already switches on the action and already refuses an unknown one with the same message, so the only thing the copy ever added was somewhere to drift, and the two actions it had fallen behind on happened to be the entire feature.
 
