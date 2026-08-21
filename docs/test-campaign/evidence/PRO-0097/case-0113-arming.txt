@@ -1,0 +1,66 @@
+CASE-0113, the one passing case that stood unarmed
+==================================================
+
+The registry's own count found it. `campaign.py check docs/test-campaign`
+reported `Armed: 155/156 passing cases have been watched to fail` — one case
+claiming a guarantee nobody had watched bite. It is CASE-0113, REQ-053, and its
+`armedBy` field said it could not be armed:
+
+  "Not armed by re-introducing a shipped defect: the single-slot cache it
+   guards against was correct while the cache was per-Session, so there is no
+   prior state of this repo in which this test is red."
+
+That is true and it is not a reason. Arming does not require a shipped defect to
+reinstate; it requires the behaviour removed and the assertion watched. The
+behaviour here is a store that holds more than one file identity, and removing
+it is one line.
+
+
+THE MUTANT
+----------
+`SignatureVerdictCache.capacity`, 16 -> 1. A single slot is precisely the store
+the case names, so the mutant is the defect the test exists to refuse rather
+than an arbitrary break.
+
+  $ ./scripts/test.sh --filter twoFilesDoNotEvictEachOther
+
+  RED, with the mutant:
+    Test "two different files in one store are one entry each, not one slot
+    they fight over" recorded an issue at ToolchainDoctorTests.swift:564:9:
+      Expectation failed: (cache.verificationCount -> 10) == 2
+    Test ... recorded an issue at ToolchainDoctorTests.swift:565:9:
+      Expectation failed: (counter.count -> 10) == 2
+    Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.
+    exit 1
+
+  GREEN, reverted:
+    Test run with 1 test in 1 suite passed after 0.001 seconds.
+    exit 0
+
+Ten verifications where the store should have cost two: five alternations
+between two identities, every one of them a miss, which is the eviction thrash
+the case's note describes in the words "evicting each other and re-verifying on
+every alternation". The count is not merely non-2 — it is the exact number the
+described failure produces, so the assertion is watching the mechanism and not
+a coincidence.
+
+Both directions ran in this session, three minutes apart, through the same
+script. The tree carries the real capacity:
+
+  $ grep -n 'capacity = ' Sources/ProctorAgent/Session/SignatureVerdictCache.swift
+  126:    private static let capacity = 16
+  $ grep -c MUTANT Sources/ProctorAgent/Session/SignatureVerdictCache.swift
+  0
+
+
+WHAT THIS SAYS ABOUT THE FLAG
+-----------------------------
+`armed: false` with a prose reason attached reads as a considered exemption, and
+this one survived from PRO-0087 to here unchallenged. It was not an exemption;
+it was a mutation nobody had tried. DEF-116.
+
+The armed ratio afterwards is 157/157, and the denominator is the point: 157
+passing cases, every one of them watched to fail. The ratio could report less
+than that — it did, reading 155/156 on this same registry an hour before this
+file was written. The denominator moved too — 141, then 156, then 157 as this
+item added cases — so the ratio is quoted with the run it came from.

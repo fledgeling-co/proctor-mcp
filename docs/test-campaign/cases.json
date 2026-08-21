@@ -1794,19 +1794,21 @@
     "surface": "SURF-022",
     "oracle": "source-analysis",
     "lane": "headless",
-    "status": "fail",
-    "note": "PRO-0089 A6. The population of wall-clock oracles, counted rather than sampled: scripts/campaign/wall_clock_census.py scans 117 swift files under Tests/, finds 38 lines mentioning a clock of any kind \u2014 the denominator, printed in full and never capped \u2014 and 0 assertions comparing a measured wall-clock time to a numeric literal. A clock a test injects and drives is deliberately not flagged; that is what this item moved the assertions onto. BEFORE BELIEVING THE ZERO: `--arm` runs the detector over both offenders as they stood at the merge base via `git show`, and requires it to find ScreenRecordingProbeWiringTests.swift:42 and CuaLineReaderTests.swift:107 before any census is trusted. It reports 'detector caught 2 of the 2 known offenders / ARMED'. This gate has already caught one silent zero: DEF-067, a first detector whose regex could not cross the parenthesis in timeIntervalSince(started) and so missed the very line it was written for while printing a clean zero. The brief's count of 'two other tests' is one more than the tree holds; two is the whole population. Rung corrected at merge: this case was written `static-analysis`, which is on no ladder, so campaign.py filed it `unrated`. PRO-0091 introduced `source-analysis` as a rung parallel to the ladder for exactly this shape, with two guards; REQ-056's effect is `none`, so the external-effect guard does not apply, and the analyzer and examined count the other guard requires are supplied from a live run rather than copied: 118 files / 42 clock sites / 0 offenders. The case's own evidence file records 117 and 38, captured at merge-base e506ea0e before the PRO-0087 merge added clock-mentioning lines and this branch added a file. The offender count, which is the claim, is 0 in both.\n\nRE-MEASURED BY PRO-0096 FROM A LIVE RUN, AND IT NO LONGER PASSES. The brief asked for the analyzer and examined count to come from running the instrument rather than from the evidence file, because evidence files in this wave had gone stale by a merge. Running it found the case's own claim had gone stale the same way. LIVE: 127 swift test files scanned, 54 lines mentioning a clock of any kind (the denominator, printed in full and never capped), and 1 assertion comparing a measured wall-clock time to a numeric literal. Exit 1. The case recorded 0, and 0 was true when it was written.\n\nTHE OFFENDER, and it is a true positive rather than a detector artefact: Tests/ProctorCoreTests/ProctorCoreTests.swift:232 reads `#expect(waited < 10, \"a bounded client waited \\(waited)s\")`, where `waited` is `Date().timeIntervalSince(started)` around a SocketClient send whose ioTimeoutSeconds is 1. That is measured elapsed time against a numeric literal with 10x headroom \u2014 DEF-051's exact shape, and the thing REQ-056 exists to forbid. `git log -L232,232` puts it in 10285df (\"fix(ui): a wedged agent stops reading as Ready\"), which landed after this case was written, so the requirement regressed rather than the census being wrong. DEF-106.\n\nBEFORE BELIEVING EITHER READING, THE ARM WAS REPAIRED, because it had stopped being able to fire. `--arm` resolved its reference with `git merge-base HEAD ai/wave-9`, and once PRO-0089's fix merged into ai/wave-9 that merge-base BECAME the fixed tree: the arm read two files with no offenders in them and reported 'detector caught 0 of the 2 known offenders / ARMING FAILED'. The probe built to stop a silent zero had itself gone silent, which is DEF-067 one level up. It is now pinned to an immutable sha and catches 2 of 2. DEF-105. So the detector is proved two ways here \u2014 it finds both historical offenders on demand, and it found a live one nobody was looking for.\n\nFIELD PLACEMENT CORRECTED: this case carried `analyzer` and `examined` at the top level of the record, with `examined` as a prose string. campaign.py's guard reads `source.analyzer` and requires `source.examined` to be an int >= 1, so both were invisible to it and the case was flagged twice for fields it appeared to have. CASE-0102..0105, written through the same rung, put them under `source` correctly; this one was hand-written. DEF-108. The denominator recorded is 54, the clock-mentioning lines, because that is the population the offender count is drawn from \u2014 the 127 files are what was opened, not what was judged.\n\nNOT FIXED HERE, AND THE REASON IS SCOPE RATHER THAN DIFFICULTY: PRO-0096 is a registry and instrument item. Removing the assertion or giving SocketClient an injectable clock is a change to the product's test suite and belongs to whoever owns DEF-106. Recording this case `pass` with a 0 the instrument no longer reports was the one route not available.",
+    "status": "pass",
+    "note": "PRO-0089 A6. The population of wall-clock oracles, counted rather than sampled: scripts/campaign/wall_clock_census.py scans 117 swift files under Tests/, finds 38 lines mentioning a clock of any kind \u2014 the denominator, printed in full and never capped \u2014 and 0 assertions comparing a measured wall-clock time to a numeric literal. A clock a test injects and drives is deliberately not flagged; that is what this item moved the assertions onto. BEFORE BELIEVING THE ZERO: `--arm` runs the detector over both offenders as they stood at the merge base via `git show`, and requires it to find ScreenRecordingProbeWiringTests.swift:42 and CuaLineReaderTests.swift:107 before any census is trusted. It reports 'detector caught 2 of the 2 known offenders / ARMED'. This gate has already caught one silent zero: DEF-067, a first detector whose regex could not cross the parenthesis in timeIntervalSince(started) and so missed the very line it was written for while printing a clean zero. The brief's count of 'two other tests' is one more than the tree holds; two is the whole population. Rung corrected at merge: this case was written `static-analysis`, which is on no ladder, so campaign.py filed it `unrated`. PRO-0091 introduced `source-analysis` as a rung parallel to the ladder for exactly this shape, with two guards; REQ-056's effect is `none`, so the external-effect guard does not apply, and the analyzer and examined count the other guard requires are supplied from a live run rather than copied: 118 files / 42 clock sites / 0 offenders. The case's own evidence file records 117 and 38, captured at merge-base e506ea0e before the PRO-0087 merge added clock-mentioning lines and this branch added a file. The offender count, which is the claim, is 0 in both.\n\nRE-MEASURED BY PRO-0096 FROM A LIVE RUN, AND IT NO LONGER PASSES. The brief asked for the analyzer and examined count to come from running the instrument rather than from the evidence file, because evidence files in this wave had gone stale by a merge. Running it found the case's own claim had gone stale the same way. LIVE: 127 swift test files scanned, 54 lines mentioning a clock of any kind (the denominator, printed in full and never capped), and 1 assertion comparing a measured wall-clock time to a numeric literal. Exit 1. The case recorded 0, and 0 was true when it was written.\n\nTHE OFFENDER, and it is a true positive rather than a detector artefact: Tests/ProctorCoreTests/ProctorCoreTests.swift:232 reads `#expect(waited < 10, \"a bounded client waited \\(waited)s\")`, where `waited` is `Date().timeIntervalSince(started)` around a SocketClient send whose ioTimeoutSeconds is 1. That is measured elapsed time against a numeric literal with 10x headroom \u2014 DEF-051's exact shape, and the thing REQ-056 exists to forbid. `git log -L232,232` puts it in 10285df (\"fix(ui): a wedged agent stops reading as Ready\"), which landed after this case was written, so the requirement regressed rather than the census being wrong. DEF-106.\n\nBEFORE BELIEVING EITHER READING, THE ARM WAS REPAIRED, because it had stopped being able to fire. `--arm` resolved its reference with `git merge-base HEAD ai/wave-9`, and once PRO-0089's fix merged into ai/wave-9 that merge-base BECAME the fixed tree: the arm read two files with no offenders in them and reported 'detector caught 0 of the 2 known offenders / ARMING FAILED'. The probe built to stop a silent zero had itself gone silent, which is DEF-067 one level up. It is now pinned to an immutable sha and catches 2 of 2. DEF-105. So the detector is proved two ways here \u2014 it finds both historical offenders on demand, and it found a live one nobody was looking for.\n\nFIELD PLACEMENT CORRECTED: this case carried `analyzer` and `examined` at the top level of the record, with `examined` as a prose string. campaign.py's guard reads `source.analyzer` and requires `source.examined` to be an int >= 1, so both were invisible to it and the case was flagged twice for fields it appeared to have. CASE-0102..0105, written through the same rung, put them under `source` correctly; this one was hand-written. DEF-108. The denominator recorded is 54, the clock-mentioning lines, because that is the population the offender count is drawn from \u2014 the 127 files are what was opened, not what was judged.\n\nNOT FIXED HERE, AND THE REASON IS SCOPE RATHER THAN DIFFICULTY: PRO-0096 is a registry and instrument item. Removing the assertion or giving SocketClient an injectable clock is a change to the product's test suite and belongs to whoever owns DEF-106. Recording this case `pass` with a 0 the instrument no longer reports was the one route not available.\n\nRETURNED TO PASS BY PRO-0097, ON A LIVE RUN RATHER THAN A RE-READ. DEF-106 is closed: SocketClient takes its bound mechanism (`applyBound: BoundApplier`, defaulting to `SocketClient.liveBound`), the test asserts the kernel was asked for both directions at exactly `client.ioTimeoutSeconds`, and the two timing lines are gone. LIVE: 129 swift test files scanned, 52 lines mentioning a clock of any kind, 0 assertions comparing a measured wall-clock time to a literal, exit 0. The denominator moved 54 to 52 because the two clock lines removed from this file were two of the 54; the file count moved 127 to 129 because this branch added test files.\n\nTHE ZERO WAS ARMED TWO WAYS BEFORE IT WAS BELIEVED, because a detector that has gone quiet and a population that has gone clean read identically. `--arm` still catches 2 of 2 at the pinned pre-fix commit; and the same `scan()` run over THIS file at HEAD reports the offender at line 232 and reports nothing over the working tree. docs/test-campaign/evidence/PRO-0097/def-106-arming.txt.\n\nTHE BOUND DID NOT MOVE: `ioTimeoutSeconds` is 1 before and after, and the assertion names the client's own field rather than a literal, so it cannot be satisfied by widening it. CASE-0219, CASE-0220, CASE-0221.",
     "evidence": [
       "docs/test-campaign/evidence/PRO-0089/wall-clock-census.txt",
       "docs/test-campaign/evidence/PRO-0096/census-arm-broken.txt",
       "docs/test-campaign/evidence/PRO-0096/census-arm-pinned.txt",
-      "docs/test-campaign/evidence/PRO-0096/census-live.txt"
+      "docs/test-campaign/evidence/PRO-0096/census-live.txt",
+      "docs/test-campaign/evidence/PRO-0097/census-after.txt",
+      "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt"
     ],
     "armed": true,
     "armedBy": "wall_clock_census.py --arm at PRE_FIX_COMMIT baa98bbe33ce42685fe515b9c803d3d5a430d177, the parent of 6dbaa9b, which is the last tree holding BOTH historical offenders. It reports 'ScreenRecordingProbeWiringTests.swift @ baa98bbe33ce: offenders at [42] (expected 42)', 'CuaLineReaderTests.swift @ baa98bbe33ce: offenders at [107] (expected 107)', 'detector caught 2 of the 2 known offenders / ARMED', exit 0. docs/test-campaign/evidence/PRO-0096/census-arm-pinned.txt",
     "source": {
-      "analyzer": "scripts/campaign/wall_clock_census.py, armed at the pinned pre-fix commit baa98bbe33ce (2 of 2 known offenders caught) before this census was believed",
-      "examined": 54
+      "analyzer": "scripts/campaign/wall_clock_census.py, run live by PRO-0097 and armed twice before the zero was believed: 2 of 2 known offenders at the pinned pre-fix commit baa98bbe33ce, and the line-232 offender found on demand in the pre-fix version of the file this item changed",
+      "examined": 52
     },
     "defects": [
       "DEF-105",
@@ -1872,12 +1874,15 @@
     "oracle": "outcome",
     "status": "pass",
     "evidence": [
-      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift"
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt"
     ],
-    "armed": false,
-    "armedBy": "Not armed by re-introducing a shipped defect: the single-slot cache it guards against was correct while the cache was per-Session, so there is no prior state of this repo in which this test is red. It guards a regression the shared store newly makes possible.",
+    "armed": true,
+    "armedBy": "Armed by mutation, which is what the field asked for and what the previous entry declined. `SignatureVerdictCache.capacity` 16 -> 1 \u2014 a single slot, the exact store the case names \u2014 turns it red: 'Expectation failed: (cache.verificationCount \u2192 10) == 2' and '(counter.count \u2192 10) == 2', exit 1, through ./scripts/test.sh --filter twoFilesDoNotEvictEachOther. Ten is not merely non-2: it is five alternations over two identities missing every time, the thrash the note describes, so the assertion watches the mechanism. Reverted, the same filter through the same script passes in 0.001s, exit 0, and `grep -c MUTANT` on the file reads 0. WHAT THE OLD REASON GOT WRONG: it required a shipped defect to reinstate, and arming requires only the behaviour removed and the assertion watched. DEF-116; run in docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt.",
     "note": "PRO-0087. A process-wide store is asked about more than one path, so a suite's scripted path and this machine's real cua-driver land in the same cache. A single slot would have them evicting each other and re-verifying on every alternation, which is the wedge again in different clothes. Five alternations between two identities cost two verifications.",
-    "defects": []
+    "defects": [
+      "DEF-116"
+    ]
   },
   {
     "id": "CASE-0114",
@@ -2457,5 +2462,272 @@
       "docs/test-campaign/evidence/PRO-0096/gate-inconclusive-exemption.txt"
     ],
     "note": "PRO-0096 finding 3, and it closed as NO CHANGE with the plugin left exactly as shipped. The brief reported that CASE-0067 (REQ-007) and CASE-0087 (REQ-024) were being flagged for a witness count of 0 while both are `inconclusive`, called that possibly over-strict, and asked whether the check should exempt an inconclusive case \u2014 to be fixed in the plugin and declared, since the plugin is live for every project on this machine.\n\nMEASURED FIRST: test-campaign 0.9.4 ALREADY EXEMPTS THEM, so there was nothing to fix and nothing to ask. The guard is `if c.get('oracle') in WITNESS_RUNGS and st == 'pass'` (campaign.py:751), and `state_of` maps both cases off `pass` \u2014 CASE-0087's bare 'inconclusive' and CASE-0067's 'inconclusive: PersonInput.isAPerson requires sourcePid == 0...' both resolve to `inconclusive` via the startswith branch. A live gate run on the unmodified registry names only CASE-0114 in 'Effect witnesses that witnessed nothing', three times, and neither of the two the brief named appears anywhere in it.\n\nThe code read alone would not have settled it, so it was armed rather than asserted: flipping ONLY CASE-0067's status to `pass`, with count 0 left exactly as it was, makes the gate flag it immediately. The guard can fire on that case; it declines to, on the status. That is the exemption working, not a case the check never visits.\n\nNO PLUGIN CHANGE WAS MADE AND NOTHING NOW DIFFERS FROM STOCK on this machine. campaign.py at ~/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.9.4/skills/test-campaign/scripts/campaign.py is byte-for-byte as installed. The clarify referral the brief asked for was not raised either, and deliberately: clarify's own gate drops a question whose answer cannot change the work, and a measurement had already answered this one in both directions. The two cases were not touched, as instructed \u2014 they remain `inconclusive` and remain a declared stop on the gate, which is the honest place for them.\n\nWHAT DOES STILL HOLD THE GATE for these two is separate and is not this: REQ-007 and REQ-024 are two of the four requirements recorded `observed` with an external effect and no passing effect-witness case behind them. That blocker is real, it is upstream of these cases' status, and PRO-0096 did not touch it."
+  },
+  {
+    "id": "CASE-0210",
+    "req": "REQ-067",
+    "surface": "SURF-022",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0097/defect-reconciliation.md",
+      "docs/test-campaign/evidence/PRO-0097/source-denominators.txt"
+    ],
+    "armed": true,
+    "armedBy": "The procedure could and did return `still open`. Reading each of the 24 records against the tree returned `fixed` sixteen times and `open` seven times, and one of the sevens was re-measured live rather than reasoned about: `python3 scripts/campaign/status_literals.py Sources/ProctorUI/HistoryWindow.swift` exits 1 with 'FAIL: 71 user-facing literal(s) of 91 examined', which is DEF-039 still open. A reconciliation that flipped everything whose item merged would have flipped all 23.",
+    "source": {
+      "analyzer": "per-defect read of inventory.json against the source on this branch, with each disposition citing the file and line or the run that settled it; recorded in defect-reconciliation.md",
+      "examined": 24
+    },
+    "note": "A1. 24 defect records examined \u2014 the 23 that read `open` plus DEF-024, whose row a merge had dropped. 16 flipped to `fixed`, each citing what closed it: DEF-025 and DEF-028 against the FrameContent gate and CursorOverlay.place; DEF-024, DEF-029 and DEF-051 against the injected timer; DEF-042 against PolicyStore.live; DEF-043 and DEF-044 against their duplicates DEF-100 and DEF-050; DEF-035 against StatusSurface.Copy's split; DEF-030, DEF-032, DEF-055, DEF-057, DEF-058 and DEF-040 restored from the commits that set them. 7 left open with the reason: DEF-026 and DEF-027 wait on PRO-0093, DEF-037, DEF-039 and DEF-056 on PRO-0090, all `Ready for AI` rather than merged; DEF-033 is a survival rate that closes when the number moves; DEF-099 is excluded by brief 89 and carries the measurement that its stated condition no longer holds. DEF-106 closes separately in this item.",
+    "defects": [
+      "DEF-112",
+      "DEF-114"
+    ]
+  },
+  {
+    "id": "CASE-0211",
+    "req": "REQ-068",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0097/dropped-values.txt"
+    ],
+    "armed": true,
+    "armedBy": "Watched to fail on the real tree, not a fixture: run from a worktree at 5e572d0, this item's first commit and before the restoration, the SHIPPED defect_gate.py dropped exits 1 and names thirteen values over 19,070 id/field pairs across 88 merges. On the restored tree it exits 0 over the same 19,070 pairs. The instrument could and did report non-zero on this repository's own history, three commits apart, with no fixture involved.",
+    "note": "A2. Fourteen values set by a merged item and absent at HEAD, restored from the commits that set them: REQ-029, DEF-006 and DEF-007's evidence (c7fbe295, merge b49b5a1e), DEF-024's whole row plus CASE-0059's capture and CASE-0063's witness (PRO-0078), CASE-0032's evidence and note (PRO-0088), five defect status flips and REQ-024's `vacuous` evidence and note (PRO-0091). Thirteen appear as findings; CASE-0032's `note` is prose and is outside the watched field set, and was restored with its evidence list. THE COUNT WAS ELEVEN UNTIL THE CHECK WAS WIDENED: the first draft was path-limited and read only `theirs`, which hides a `-s ours` merge by construction. DEF-115.",
+    "defects": [
+      "DEF-112",
+      "DEF-115"
+    ]
+  },
+  {
+    "id": "CASE-0212",
+    "req": "REQ-067",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "Tests/ProctorCoreTests/CampaignInstrumentTests.swift"
+    ],
+    "armed": true,
+    "armedBy": "Both directions in one session over one fixture registry and one fixture spec: with all four records `open` the check exits 1 and names each; with all four `fixed` the same spec and the same check exit 0. Neither reading is inferred from the other.",
+    "note": "A3. `defect_gate.py claims` reads the spec's `**Defects:**` range and its `## Defects` table \u2014 both, because an item that overran its allocation records the overrun in the table only, which is the shape PRO-0081 took \u2014 and refuses when a claimed defect still reads `open`.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0213",
+    "req": "REQ-067",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "The two ways this check can be confident and hollow, each watched: a claimed defect with no row at all exits 1 as UNKNOWN rather than passing on `status.get() != 'open'`, and a spec whose claims did not parse exits 1 saying it measured nothing rather than passing empty. Both were run and both returned 1.",
+    "note": "A3, the half that keeps the check from passing for the wrong reason. A missing row is not a closed one, and a spec the parser could not read is a cannot-run rather than a pass. The `(recorded)` marker is the third leg: a defect an item found and left open is set aside and reported, because reading PRO-0088's honest DEF-099 row as a fix claim would refuse an item for telling the truth.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0214",
+    "req": "REQ-068",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "The fixture is a real git repository built in the test \u2014 base commit, an item that fixes two records and adds a third, then a commit that reverts one and drops the new row. The check exits 1 and names both. It is a repository rather than a stub of one because the check reads history, and a history check tested against a stub of its own input has been watched fail nothing.",
+    "note": "A4. `dropped` reports a field a commit set that HEAD lost to its parent's value, and a row a commit held that HEAD does not.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0215",
+    "req": "REQ-068",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "The same fixture history carries a legitimate later correction beside the dropped value, and the check does not report it \u2014 a check that reported every change would be as useless as one that reported none, and the two are indistinguishable from a single red. Then both dropped values are restored in a further commit and the same check exits 0, so the green is a measurement rather than an absence.",
+    "note": "A4's other half, and the defect arming found in the check itself. The first draft reported a merge's own value as dropped the moment somebody restored what it lost, because every historical value was read rather than the deciding one. The newest non-merge commit that touches a field now decides it.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0216",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0097/source-denominators.txt",
+      "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt"
+    ],
+    "armed": true,
+    "armedBy": "Armed by the gate itself, in both directions and on the real registry: before, `campaign.py check` printed four findings naming CASE-0126 and CASE-0127 as claiming source-analysis with no analyzer and no denominator; after, that blocker is gone and the source-analysis count reads 7. The fields were written INSIDE `source` because that is where campaign.py:772-781 reads them \u2014 written at the top level with `examined` as prose they satisfy neither condition, which is the mistake this registry made once already and the reason this case exists twice.",
+    "source": {
+      "analyzer": "the two Swift source-analysis tests themselves, re-read live: CaptureContentWiringTests.trustworthyIsGatedOnContent over CaptureEngineImpl.swift and thePointerKeepsItsExclusionAcrossBands over CursorOverlay.swift",
+      "examined": 1066
+    },
+    "note": "A5. 451 lines of CaptureEngineImpl.swift and 615 of CursorOverlay.swift, 1,066 examined between them, read off the tree at the commit named in the evidence file rather than copied from a previous run. CursorOverlay carries 0 direct `.level = ` assignments outside place(_:at:) and 1 inside it, which is the range control.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0217",
+    "req": "REQ-061",
+    "surface": "SURF-006",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt",
+      "docs/test-campaign/evidence/PRO-0097/campaign-check-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two-way on the real gate: before, four findings named CASE-0124 and CASE-0125 \u2014 'not a raster image \u2014 starts ==> swift test' and 'names no capture method'. After, the raster blockers are gone and the oracle mix reads raster-visual 9 where it read 11. The count went DOWN, which is the direction that distinguishes correcting a mislabel from reclassifying to clear a gate.",
+    "note": "A6. Both cases measure FramePixels.contentSummary over a BGRA buffer synthesised in a unit test. No pixels came off a display server and their evidence file is a test transcript, so `raster-visual` was a claim neither could support. The raster claim REQ-061 actually rests on is CASE-0129, which drove proctor_capture against a signed build and kept the reply; it keeps its rung.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0218",
+    "req": "REQ-062",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt",
+      "docs/test-campaign/evidence/PRO-0097/campaign-check-after.txt",
+      "docs/test-campaign/evidence/PRO-0088/glass/overlay-population.json"
+    ],
+    "armed": true,
+    "armedBy": "Two-way on the real gate: before, six findings under 'Effect witnesses that witnessed nothing' named CASE-0128 and CASE-0129 three times each; after, that blocker is gone. The numbers written into the witness blocks are read out of the evidence files those cases already cited, so nothing was measured twice and nothing was invented.",
+    "note": "A7. Brief 89 names four cases and these two are not among them \u2014 the same class of finding one axis over, recorded as DEF-113. CASE-0128 witnesses 3 agent-owned windows at sharingState 0 over 54 samples on the delivered build against 1 not excluded over 60 on the pre-fix control; CASE-0129 witnesses 2 ScreenCaptureKit captures, the second of which is what makes the first a measurement rather than a gate that had started refusing everything.",
+    "defects": [
+      "DEF-113"
+    ]
+  },
+  {
+    "id": "CASE-0219",
+    "req": "REQ-056",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/ProctorCoreTests.swift",
+      "Sources/ProctorCore/Transport.swift",
+      "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt",
+      "docs/test-campaign/evidence/PRO-0097/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two mutants on the product, each run through ./scripts/test.sh --filter boundedWhenAsked and each watched to turn the test red. (1) Delete the SO_SNDTIMEO call: 'Expectation failed: (asked.options \u2192 [4102]) == ([SO_RCVTIMEO, SO_SNDTIMEO] \u2192 [4102, 4101])', exit 1, 2 issues. (2) Ask the kernel for `ioTimeoutSeconds + 5` on the receive direction: 'Expectation failed: (asked.seconds \u2192 [6, 1]) == ([client.ioTimeoutSeconds, client.ioTimeoutSeconds] \u2192 [1, 1])', exit 1. The second mutant also ran for 6.004 seconds against the first's 1.007, which is the bound being real rather than recorded. Both reverted; the tree carries neither.",
+    "note": "A8, DEF-106. `SocketClient.init` takes `applyBound: BoundApplier` defaulting to `SocketClient.liveBound`, because the bound is spent through `setsockopt(SO_RCVTIMEO/SO_SNDTIMEO)` and that call IS the mechanism \u2014 the same shape as `ScreenRecordingProbe.timer` in PRO-0089, followed rather than re-derived. The test's spy records and then forwards to the real applier, so the `agentUnavailable` it asserts arrives because the kernel really timed the receive out.\n\nWHAT WAS REMOVED: `let started = Date()`, `let waited = Date().timeIntervalSince(started)` and `#expect(waited < 10, ...)` around a 1-second bound. Nine seconds of slack passes on a healthy machine whatever the client does and fails on a loaded one whatever the client does \u2014 DEF-051's exact shape, measured at 10.7s on this machine under load. The test now reads no clock at all.\n\nTHE BOUND DID NOT MOVE. `ioTimeoutSeconds` is 1 before and after, and the assertion is written against `client.ioTimeoutSeconds` rather than a literal, so it cannot be satisfied by changing the bound. Nothing in the change touches what a caller chooses.",
+    "defects": [
+      "DEF-106"
+    ]
+  },
+  {
+    "id": "CASE-0220",
+    "req": "REQ-056",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/ProctorCoreTests.swift",
+      "docs/test-campaign/evidence/PRO-0097/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "A third mutant, on the default itself: `liveBound` replaced by `{ _, _, _ in 0 }`, an applier that reports success and sets nothing. THE TEST DOES NOT FAIL BY A MARGIN \u2014 IT HANGS, because a client with no bound applied waits forever on a listener nobody accepts on. Measured: the build finished in 15.19s and the run then sat with no verdict; a 420-second alarm killed the wrapper and the swift-test process itself was still alive at 11:09 elapsed, holding the .build lock, and had to be killed by pid. Unmutated, the same two tests run through the same script return 'Test run with 2 tests in 1 suite passed after 1.007 seconds', exit 0. One second against eleven minutes and counting is the contrast this seam is worth having, and it is the failure mode this case wants: a hang is unambiguous where a slow pass is not. Reverted; the tree carries the real applier and `grep -c MUTANT Sources/ProctorCore/Transport.swift` reads 0.",
+    "note": "A8's other half. An injected seam whose default nobody exercises is a seam that can rot with no test noticing, so the default path is measured twice. First, directly: `SocketClient.liveBound` is applied to a socket this test owns and `getsockopt` reads back tv_sec 3 where it was asked for 3. Second, end to end: a client built with NO applier argument is established as genuinely bounded by a send against an unaccepting listener, which returns `agentUnavailable` with 'did not answer within 1s'. Neither half reads a clock.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0221",
+    "req": "REQ-056",
+    "surface": "SURF-022",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0097/census-after.txt",
+      "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two arms, because the pinned one no longer touches this change. (1) `wall_clock_census.py --arm` runs the detector over both historical offenders at the pinned pre-fix commit baa98bbe33ce and reports 'offenders at [42] (expected 42)', 'offenders at [107] (expected 107)', 'detector caught 2 of the 2 known offenders / ARMED', exit 0. (2) The same `scan()` run over THIS item's file in both versions: at HEAD it reports 'Tests/ProctorCoreTests/ProctorCoreTests.swift:232: #expect(waited < 10, ...)' \u2014 1 offender over 2 clock sites; over the working tree, 0 offenders over 0 clock sites. The zero is the detector declining, not the detector gone quiet, which is DEF-067 and DEF-105 both.",
+    "note": "A9. The census returns to 0 and says so with its denominator: 129 swift test files scanned, 52 lines mentioning a clock of any kind \u2014 printed in full, never sampled, never capped \u2014 and 0 assertions comparing a measured wall-clock time to a numeric literal. Exit 0. The examined count recorded here is 52, the clock sites, because that is the population the offender count is drawn from; the 129 files are what was opened rather than what was judged. CASE-0139 recorded 54 of 127 with 1 offender at wave 13 and moves back to `pass` on this run.",
+    "source": {
+      "analyzer": "scripts/campaign/wall_clock_census.py, armed two ways before this census was believed: 2 of 2 at the pinned pre-fix commit, and the offender at line 232 of the changed file found on demand at HEAD",
+      "examined": 52
+    },
+    "defects": [
+      "DEF-106"
+    ]
+  },
+  {
+    "id": "CASE-0222",
+    "req": "REQ-067",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt",
+      "scripts/campaign/defect_gate.py"
+    ],
+    "armed": true,
+    "armedBy": "THE GATE CAUGHT THIS ITEM, which is the arming that matters \u2014 a gate proved only on a fixture is a gate nobody has watched refuse a real merge. DEF-106 was written into this spec's `## Defects` table while the registry still read `open`, and `defect_gate.py claims docs/specs/spec-PRO-0097.md docs/test-campaign` exited 1: 'OPEN     DEF-106 still reads `open`', 'FAIL: 1 claimed defect(s) the registry does not agree are closed'. Real spec, real registry of 75 records, no fixture. Once DEF-106 was flipped with the evidence that closed it, the same command over the same spec exits 0.",
+    "note": "A11. DEF-106 is claimed in the table and NOT on the `**Defects:**` header line, because this item closed a record outside its own DEF-110..DEF-114 allocation \u2014 PRO-0081's shape, and the reason the check reads both places. The run also reports the two `(recorded)` rows it set aside: DEF-110 and DEF-111 are findings this item states and does not claim to have closed, and reading them as fix claims would refuse the item for being honest.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0223",
+    "req": "REQ-068",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0097/dropped-values.txt",
+      "scripts/campaign/defect_gate.py"
+    ],
+    "armed": true,
+    "armedBy": "The widening is itself the arming, and it was measured rather than argued: the same check over the same commit sees 21 merges and 11,149 id/field pairs path-limited and reading only `theirs`, and 88 merges and 19,070 pairs unlimited and reading every parent. Ten findings become thirteen. The three recovered are REQ-029, DEF-006 and DEF-007's `evidence`, and they are in the tree now.",
+    "note": "A12, DEF-115. Both narrowings hide the same merge shape. A merge resolved `-s ours` leaves the file byte-identical to its first parent, so git's history simplification drops it from a path-limited listing \u2014 and that merge is exactly the one that discarded the other side's registry. Reading only `theirs` misses the symmetric loss, where the value went on the FIRST parent's side: PRO-0088's evidence paths for CASE-0032 were taken correctly by the merge that brought them and discarded by the next one, whose other branch had forked before them. A drift check that under-reports is worse than no check, because its green gets read as a measurement. Both narrowings are now named in the code beside the merge shape each hides, so a later reader does not restore them as an optimisation.",
+    "defects": [
+      "DEF-115"
+    ]
+  },
+  {
+    "id": "CASE-0224",
+    "req": "REQ-067",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt",
+      "docs/test-campaign/evidence/PRO-0097/campaign-check-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "The ratio is its own arming, two-way on the real registry an hour apart. Before: `campaign.py check docs/test-campaign` printed 'Armed: 155/156 passing cases have been watched to fail' \u2014 the instrument reporting short, one passing case nobody had watched bite. After CASE-0113 was armed by mutation, the same command over the same registry prints 157/157: 156 once the flip landed, 157 with this case, which is armed by the 155/156 it was written to record. A ratio that had only ever read N/N would prove nothing about whether it can count short; this one was seen short.",
+    "note": "A13. Every passing case in this registry has now been watched to fail, and the denominator is stated rather than implied: 157 passing of 159, and 157 armed. The two non-passing cases are `inconclusive` and are not in the ratio, because an instrument that could not measure is not a pass to arm. The denominator moved during this item \u2014 141 at campaign-check-before.txt, 156 once its twelve new cases and CASE-0139's flip landed, 157 with this one \u2014 so the ratio is quoted with the run it came from rather than as a standing figure.\n\nHOW THE ONE WAS FOUND: not by reading the cases, but by subtracting the two numbers campaign.py already prints. `armedOfPassing` had been reading 155/156 on every run of this campaign since PRO-0087 and nobody had taken the difference. The case it named carried a prose exemption in `armedBy` while `armed` read false, which is the shape that survives review \u2014 a considered-looking reason attached to a flag saying the opposite. DEF-116 records it.",
+    "defects": [
+      "DEF-116"
+    ]
   }
 ]

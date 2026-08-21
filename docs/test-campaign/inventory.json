@@ -382,7 +382,8 @@
       "source": "Sources/ProctorCore/TUISurface.swift; SupervisionBroadcast, SupervisionControl, ProctorCLI/TUI",
       "class": "capability",
       "effect": "ipc",
-      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift"
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "evidence": "observed"
     },
     {
       "id": "REQ-030",
@@ -665,6 +666,30 @@
         "SURF-022"
       ],
       "note": "Armed two-way in CASE-0200 by moving one status field and watching the guard turn on and off. No plugin change was needed or made; stock 0.9.4 already behaves this way.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-067",
+      "text": "An item that claims to fix a defect cannot merge while that defect still reads `open`: the claim is read out of the item's own spec and checked against the registry by a gate, not by whoever remembers",
+      "source": "docs/features-to-triage/89-the-registry-says-open-and-the-code-says-fixed.md; spec-PRO-0097.md A3; scripts/campaign/defect_gate.py",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "The registry reported 23 open defects over a tree that had fixed sixteen of them. A defect an item RECORDS rather than fixes is marked `(recorded)` in the spec's Defects table and is not checked for closure, because reading PRO-0088's honest DEF-099 row as a fix claim would make the gate refuse an item for telling the truth.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-068",
+      "text": "A registry value set by a merged item is present at HEAD, and a merge that drops one is found by reading history rather than by noticing later",
+      "source": "docs/features-to-triage/89-the-registry-says-open-and-the-code-says-fixed.md; spec-PRO-0097.md A4; scripts/campaign/defect_gate.py",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "Fourteen values were lost across five merges. The test that separates a drop from a legitimate change is the parent: a commit that sets x where its parent held y, against a HEAD holding y, lost a value; the newest non-merge commit that touches a field is the one that decides it, which is what stops a restoration reading as a fresh drop.",
       "effect": "none"
     }
   ],
@@ -1623,7 +1648,10 @@
       "title": "Three commands declared for the menu bar were never rendered in it",
       "found": "proctor_menu against the running app, compared with CommandSurface.all",
       "detail": "Clear Waiting Runs, Takeover Notice and Drawn Pointer were declared with surfaces: [.menuBar] and SwiftUI never declared them. commandsMissingFromMenuBar could not see it: it compares the catalogue against its own surfaces field, so it passes whether or not a command renders. The published count was wrong too \u2014 21 was the number of MCP tools, not commands; the catalogue holds 20.",
-      "fix": "The two drawing switches became toggles bound to the saved value. Clearing the queue needed a route: RunQueueControl is the queue's own vocabulary, kept disjoint from the run's because an existing test refuses a queue word in RunHUDControl, and proctor_queue is internal for the same reason proctor_hud is."
+      "fix": "The two drawing switches became toggles bound to the saved value. Clearing the queue needed a route: RunQueueControl is the queue's own vocabulary, kept disjoint from the run's because an existing test refuses a queue word in RunHUDControl, and proctor_queue is internal for the same reason proctor_hud is.",
+      "evidence": [
+        "evidence/arming-mutations.json"
+      ]
     },
     {
       "id": "DEF-007",
@@ -1631,7 +1659,10 @@
       "title": "The permissions list omitted the one permission whose absence is silent",
       "found": "Photographing the status window and comparing it against the design of record",
       "detail": "The design draws Input Monitoring; the window drew Automation and not it, because the health report never carried it. Grants.inputMonitoringState() already read it for the takeover path, and its own comment names the consequence: an operator who turned the input block on can find it silently unavailable. StatusSurface.ID.all named Input Monitoring and omitted Automation, so the uniqueness test was checking a set that did not describe the surface.",
-      "fix": "The health report carries Input Monitoring, never required. The identifier list names all five grants the report can carry."
+      "fix": "The health report carries Input Monitoring, never required. The identifier list names all five grants the report can carry.",
+      "evidence": [
+        "evidence/sweepG-accessibility-floor.json"
+      ]
     },
     {
       "id": "DEF-008",
@@ -2212,12 +2243,14 @@
     },
     {
       "id": "DEF-106",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "title": "A bounded socket client's test asserts measured elapsed time against a literal, which is the thing REQ-056 forbids",
       "found": "PRO-0096, by the re-armed wall-clock census \u2014 the offender count went 0 to 1",
       "detail": "Tests/ProctorCoreTests/ProctorCoreTests.swift:232 reads `#expect(waited < 10, \"a bounded client waited \\(waited)s\")`, where `waited` is `Date().timeIntervalSince(started)` measured around a SocketClient send whose `ioTimeoutSeconds` is 1. A measured wall-clock interval compared to a numeric literal is precisely what REQ-056 rules out, and the 10x headroom is DEF-051's shape exactly \u2014 DEF-051 is a 5.0s bound on a 0.2s probe that measured 10.7s on this machine at load 700-900 and went red on three of four control runs while the product was correct throughout.\n\n`git log -L232,232:Tests/ProctorCoreTests/ProctorCoreTests.swift` puts the line in 10285df 'fix(ui): a wedged agent stops reading as Ready', which landed after CASE-0139 was written. So the requirement regressed; the census did not become wrong.\n\nNOT FIXED HERE. PRO-0096 is a registry and instrument item and this is a change to the product's test suite. There is also a real call inside it that wants an owner rather than a drive-by: the two other assertions in the same test (`thrown?.code == .agentUnavailable` and a message containing 'did not answer within 1s') already carry the product claim, so deleting the wall-clock line loses nothing \u2014 but SocketClient has no injectable clock, so the alternative fix is a small production change. Whoever takes it should decide that rather than inherit it. CASE-0139 is recorded `fail` against it in the meantime.",
-      "evidence": "docs/test-campaign/evidence/PRO-0096/census-live.txt \u2014 127 files, 54 clock sites, 1 offender, exit 1, with the arm at 2 of 2 in census-arm-pinned.txt",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/census-after.txt \u2014 129 files, 52 clock sites, 0 offenders, exit 0, with the arm at 2 of 2; and docs/test-campaign/evidence/PRO-0097/def-106-arming.txt, where the same detector is run over this very file at HEAD and reports the offender at line 232.",
+      "fix": "PRO-0089's seam, not a re-derivation of it. The bound is spent through `setsockopt(SO_RCVTIMEO/SO_SNDTIMEO)`, so that call IS the bound mechanism the way `ScreenRecordingProbe.timer` is, and it is what `SocketClient.init` now takes: `applyBound: BoundApplier`, defaulting to `SocketClient.liveBound`. The test hands it a spy that records and then forwards to the real one, so the `agentUnavailable` it asserts still arrives because the kernel really timed the receive out. The two timing lines are gone and the assertions are on the mechanism: both directions bounded, each asked for exactly `client.ioTimeoutSeconds`. THE BOUND DID NOT MOVE \u2014 `ioTimeoutSeconds` is still 1, and nothing in the change touches what a caller chooses. A second test keeps the default path from rotting: `liveBound` is applied to a socket the test owns and `getsockopt` reads back 3s where it asked for 3, and a client built with NO applier is established as genuinely bounded by a send against a listener nobody accepts on \u2014 which fails by hanging if the default were inert, rather than by a margin, and reads no clock either way.",
+      "fixedBy": "PRO-0097",
       "surface": "SURF-022",
       "req": "REQ-056"
     },
@@ -2242,6 +2275,91 @@
       "evidence": "docs/test-campaign/evidence/PRO-0096/source-field-placement.txt",
       "surface": "SURF-022",
       "req": "REQ-056"
+    },
+    {
+      "id": "DEF-110",
+      "severity": "medium",
+      "status": "open",
+      "title": "REQ-055 declares a filesystem-write effect and no case backing it stands at effect-witness",
+      "found": "PRO-0097, reading campaign.py check rather than the brief's summary of it",
+      "detail": "REQ-055 ('Running the test suite does not read or write any state belonging to the operator of the machine it runs on') records effect `filesystem-write`, evidence `observed`, and no provider. Its five cases CASE-0130..CASE-0134 are all `outcome`. campaign.py's external-effect pass therefore names it under 'External-effect claims with no witness', and has since the census closed \u2014 the wave-13 note recorded unwitnessed=0 from the header line while the blocker list named it. NOT FIXED HERE: the requirement is a negative guarantee, so the honest witness is a recorder watching the suite run and reporting zero writes under the operator's home, and building it is an item's work rather than a line in this one. The alternative disposition is `vacuous`, and it should not be taken without the recorder that would establish it.",
+      "surface": "SURF-022",
+      "req": "REQ-055"
+    },
+    {
+      "id": "DEF-111",
+      "severity": "medium",
+      "status": "open",
+      "title": "REQ-063 declares a filesystem-write effect with no effect-witness case, over a path that really does write",
+      "found": "PRO-0097, the same read",
+      "detail": "REQ-063 ('The policy file is created with mode 0600 by the write that creates it') names PolicyStore.write as its provider, which opens a temporary with Darwin.open(O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0o600) and replaces. Its five cases CASE-0190..CASE-0193 and CASE-0198 are all `outcome` \u2014 they stat the result, which is the outcome of the write rather than a recording of it. Unlike DEF-110 this one does perform the effect, so the witness is available: a recorder over the write with the count of files created. NOT FIXED HERE for scope; brief 89 does not name it and building the witness is an item's work.",
+      "surface": "SURF-022",
+      "req": "REQ-063"
+    },
+    {
+      "id": "DEF-112",
+      "severity": "high",
+      "status": "fixed",
+      "title": "Five merges dropped fourteen registry values between them, which is DEF-058 recurring",
+      "found": "PRO-0097, by walking non-merge ancestor commits rather than by noticing a wrong number",
+      "detail": "REQ-029, DEF-006 and DEF-007's evidence (c7fbe295, dropped by merge b49b5a1e); DEF-024's whole row (2420282, PRO-0078); CASE-0059's capture block and CASE-0063's witness block (595179d/2420282, PRO-0078); CASE-0032's evidence list and note (964cfd5/69cb30ba, PRO-0088); DEF-030, DEF-032, DEF-055, DEF-057 and DEF-058's status flips and REQ-024's `vacuous` evidence with its note (6e5094e/17bfcd19, PRO-0091). Each was set by a commit that is an ancestor of this branch and each was absent at HEAD, with HEAD holding exactly what that commit's parent held \u2014 the signature of a merge resolving a same-id conflict by keeping ours. This is the defect merge_registry.py was written to prevent, arriving through the merge rather than through the script. THE COUNT ROSE FROM ELEVEN TO FOURTEEN DURING THIS ITEM, and not by finding more history: the first draft of the check was path-limited and read only `theirs`, and a merge resolved `-s ours` is dropped from a path-limited listing precisely because it discarded the other side. Unlimited and reading every parent it sees 88 merges where the draft saw 21. That is DEF-115.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt \u2014 the shipped defect_gate.py dropped run at 5e572d0, exit 1, thirteen findings over 19,070 id/field pairs across 88 merges; exit 0 over the same 19,070 pairs on the restored tree. The fourteenth value is CASE-0032's `note`, which is prose and sits outside the watched field set.",
+      "fix": "Every value restored from the commit that set it, and scripts/campaign/defect_gate.py dropped added so the next one is caught by a check rather than by a reader. Armed in both directions on a git fixture in test_instruments.py.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-022",
+      "req": "REQ-068"
+    },
+    {
+      "id": "DEF-113",
+      "severity": "medium",
+      "status": "fixed",
+      "title": "CASE-0128 and CASE-0129 claimed effect-witness and carried no witness block, so six gate findings were nobody's",
+      "found": "PRO-0097, running campaign.py check rather than reading the brief's account of what it flags",
+      "detail": "Both cases stand on `effect-witness` and both had real glass evidence on disk \u2014 overlay-population.json with 54 and 60 samples across two signed builds, and two whole proctor_capture replies. Neither carried `witness.recorder`, `witness.effect` or `witness.count`, so the rung's guard produced three findings each. Brief 89 names four cases and these two are not among them; they are the same class of finding one axis over.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt, six findings under 'Effect witnesses that witnessed nothing'.",
+      "fix": "Witness blocks written from the files each case already cited: CASE-0128 ipc/3 over 54 samples, CASE-0129 device/2. No new measurement was invented \u2014 the numbers are read out of the evidence.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-022",
+      "req": "REQ-062"
+    },
+    {
+      "id": "DEF-114",
+      "severity": "medium",
+      "status": "fixed",
+      "title": "DEF-024's row was absent from inventory.json, having been present at 2420282",
+      "found": "PRO-0097, by the drift walk; nothing else would have found it, because a missing row produces no finding anywhere",
+      "detail": "DEF-024 is PRO-0078's record of the wall-clock assertion at ScreenRecordingProbeWiringTests.swift:42 \u2014 the same defect later recorded again as DEF-029. The row was written at 2420282 and lost at the PRO-0078 merge. A dropped status is visible as a wrong number; a dropped ROW is visible as nothing at all, which is why this is recorded separately from DEF-112.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt, 'DEF-024: whole row present at 2420282e and absent at HEAD'.",
+      "fix": "Row restored from 2420282 and then closed on the same evidence as DEF-029: PRO-0089 gave ScreenRecordingProbe its bound timer.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-006",
+      "req": "REQ-004"
+    },
+    {
+      "id": "DEF-115",
+      "severity": "medium",
+      "status": "fixed",
+      "title": "The drift check's first draft was path-limited and read only theirs, so it could not see the merge that discards a value wholesale",
+      "found": "PRO-0097, by arming defect_gate.py dropped rather than by trusting its first clean-ish run",
+      "detail": "The draft ran `git rev-list --merges HEAD -- <registry path>` and compared only the second parent against the base. Both narrowings hide the same merge. A merge resolved with `-s ours` leaves the file byte-identical to its first parent, so git's history simplification drops it from a PATH-LIMITED listing \u2014 and that merge is exactly the one that discarded the other side's registry. Reading only `theirs` misses the symmetric case, where the loss is on the first parent's side: PRO-0088's evidence paths for CASE-0032 were taken correctly by the merge that brought them and discarded by the NEXT merge, whose other branch had forked before them. The draft saw 21 merges and 11,149 id/field pairs and reported ten findings. Unlimited, reading every parent, the same check over the same commit sees 88 merges and 19,070 pairs and reports thirteen. The three it could not reach are REQ-029, DEF-006 and DEF-007's `evidence`, set on c7fbe295 and dropped by merge b49b5a1e. A drift check that under-reports is worse than none, because its green is read as a measurement.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt \u2014 both runs use the shipped script; the header records 88 merges and 19,070 pairs where the draft's own output recorded 21 and 11,149.",
+      "fix": "`rev-list --merges HEAD` with no path limit, and the parent loop iterates every parent rather than `parents[1]`. Both narrowings are named in the code with the merge shape each one hides, so a later reader does not re-introduce them as an optimisation.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-022",
+      "req": "REQ-068"
+    },
+    {
+      "id": "DEF-116",
+      "status": "fixed",
+      "severity": "low",
+      "title": "A passing case stood unarmed behind a prose exemption that did not hold, and the registry's own count had been reporting it unread since PRO-0087",
+      "found": "PRO-0097, by subtracting the two numbers campaign.py check already prints: Armed: 155/156",
+      "detail": "CASE-0113 (REQ-053, `two different files in one store are one entry each, not one slot they fight over`) carried `armed: false` with an `armedBy` reading 'Not armed by re-introducing a shipped defect: the single-slot cache it guards against was correct while the cache was per-Session, so there is no prior state of this repo in which this test is red.'\n\nThe claim is true and it is not a reason. Arming asks that the behaviour be removed and the assertion watched; it does not ask that the removal be a defect this repo once shipped. A guarantee whose only defence is that nobody has broken it yet is exactly the guarantee worth mutating, and this one was the newest in the file.\n\nThe wider shape is the reason this is recorded at all: a false flag with a considered-sounding sentence beside it reads, to a reviewer, as a decision rather than an omission, so it survives every pass. It survived from PRO-0087 through PRO-0089, PRO-0091, PRO-0096 and into this item, while `armedOfPassing` printed 155/156 on the terminal each time.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt \u2014 the mutant red with its two expectation lines, the revert green, and grep -c MUTANT reading 0; and campaign-check-after.txt, where the ratio reads 157/157 against the 155/156 the same gate printed over the same registry before the flip.",
+      "fix": "Mutated rather than re-argued. `SignatureVerdictCache.capacity` 16 -> 1 makes the store the single slot the case names; the test fails with `cache.verificationCount \u2192 10` against 2 \u2014 five alternations between two identities, every one a miss, which is the eviction thrash the case's note describes. Reverted immediately; the tree carries 16. CASE-0113 is now `armed: true` with the run cited, and CASE-0224 records the registry-wide ratio with its denominator.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-022",
+      "req": "REQ-067"
     }
   ]
 }
