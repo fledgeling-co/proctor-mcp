@@ -132,7 +132,7 @@ struct CuaLineReaderTests {
         //
         // This used to end with `#expect(Date().timeIntervalSince(started) < 2)`,
         // which asserts how fast this Mac is. The claim worth making is that the
-        // reader gives up on *its budget* — so the clock is told to it, stepped 50ms
+        // reader gives up on *its budget* — so the clock is told to it, stepped 100ms
         // per reading, so the 200ms budget is spent in three readings: one to set
         // the deadline, one inside it that polls, and one past it that gives up.
         let clock = TestClock(stepNanoseconds: 100_000_000)
