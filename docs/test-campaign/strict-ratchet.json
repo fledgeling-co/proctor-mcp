@@ -1,7 +1,6 @@
 {
-  "checked": 78,
-  "total": 79,
-  "at": "2026-08-21T02:22:24+00:00",
-  "reason": "PRO-0080: CASE-0072..0079 \u2014 the two census controls, the ProctorAgent mutation sample, and the five survivors it closed.",
-  "previous": 70
+ "checked": 81,
+ "total": 86,
+ "at": "2026-08-21T07:40:21+00:00",
+ "previous": 78
 }

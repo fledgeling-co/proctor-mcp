@@ -1129,6 +1129,28 @@
           ]
         }
       ]
+    },
+    {
+      "id": "FLOW-010",
+      "title": "First run refuses to advance while a grant is missing, and says so in place",
+      "critical": true,
+      "steps": [
+        {
+          "id": "STEP-A3-PRIMARY-DISABLED",
+          "surface": "SURF-009",
+          "route": "ui://walkthrough/permissions/primary-disabled",
+          "shot": "evidence/shots/step-a3-walkthrough-primary-disabled.png",
+          "label": "The permissions step with both grants missing: the primary action is drawn disabled rather than removed",
+          "action": "Open the walkthrough with no agent reachable, press the intro's primary once, and read the footer",
+          "observableAtoms": [
+            "proctor.walkthrough.action.primary is in the accessibility tree",
+            "it reads enabled false",
+            "its frame is 127x24 rather than zero-sized, so it occupies layout",
+            "proctor.walkthrough.action.skip is present and enabled beside it, so nobody is trapped",
+            "the capture shows it in a muted fill with a greyed label next to an undimmed Skip setup"
+          ]
+        }
+      ]
     }
   ],
   "component": [
@@ -1754,6 +1776,20 @@
       "surface": "SURF-009",
       "req": "REQ-048",
       "note": " Recorded as DEF-041 by PRO-0081, which overran its allocated DEF-035..039 by two. Renumbered at merge because PRO-0083 holds DEF-040..049; no other document referenced the old ids."
+    },
+    {
+      "id": "DEF-057",
+      "status": "open",
+      "title": "Four cases carry an oracle rung that is not on the ladder, so they count as unrated",
+      "found": "Orchestrator reconciliation at the PRO-0081 merge, 2026-08-21",
+      "detail": "CASE-0102..0105 (all REQ-048) record `oracle: \"static-analysis\"`. That string is not in campaign.py's ORCHESTRATOR rung set, so `mix[...] += 1` files all four under `unrated`, and the tool's own comment says unrated is counted \"never as adequate \u2014 the whole point is that a plan cannot look\" adequate on them. REQ-048's coverage therefore rests on four cases the ladder does not recognise.\n\nThe rung may be honest rather than wrong: the ladder describes checks against a running product (touch, presence, structural, structural-visual, outcome, metamorphic, effect-witness, raster-visual, interactive-glass), and a grep over source runs none of it. That is a real gap in the ladder rather than obviously a mistake in the cases. It is recorded rather than reclassified, because silently moving four cases onto a rung they do not occupy would raise the score and lower what the suite knows.\n\nThe decision this needs: either the ladder gains a source-analysis rung with a stated position below `outcome`, or these four cases are re-expressed as checks against the built product and take a real rung. Reclassifying them to `structural` without changing what they check would be the second option's label with the first option's evidence."
+    },
+    {
+      "id": "DEF-058",
+      "status": "open",
+      "title": "An orchestrator merge silently dropped a flow, unpublishing a judged capture",
+      "found": "capture-lineage --gate, immediately after the PRO-0081 merge, 2026-08-21",
+      "detail": "Reconciling inventory.json at the PRO-0081 merge, the orchestrator merged only the `defect` and `requirement` lists and took ours as the base document. PRO-0081's addition to `flow` \u2014 FLOW-010, carrying STEP-A3-PRIMARY-DISABLED and its `shot` \u2014 was dropped. The capture stayed on disk and its verdict stayed in witness-verdicts.json, but the subject left the published set, so judged fell 6 to 5 against a ratchet of 6.\n\nThe gate caught it and exited 2. That is the ratchet doing exactly its job: without it a judged capture would have quietly stopped being published and the wall would have shrunk with no green turning red.\n\nThe lesson is mechanical rather than about care: a hand-written merge of a multi-key registry must sweep every key, not the keys the conflict happened to be about. Repaired in the same commit by appending every theirs-only row across component, defect, flow, requirement and surface, with a uniqueness assertion per key."
     }
   ]
 }
