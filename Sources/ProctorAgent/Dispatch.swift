@@ -58,7 +58,7 @@ struct Dispatcher: Sendable {
     /// recent_activity) and any unknown or malformed tool — none of which are in
     /// the catalogue — are excluded without a hand-maintained list.
     private static let trackedTools: Set<String> =
-        Set(ToolCatalogue.all.map(\.name)).subtracting(["proctor_doctor"])
+        Set(ToolCatalogue.all.map(\.name)).subtracting([AgentVerbs.doctor])
 
     private static func tracksActivity(_ tool: String) -> Bool {
         trackedTools.contains(tool)
@@ -93,7 +93,7 @@ struct Dispatcher: Sendable {
         case "proctor_flow":      return try await flow(args)
         case "proctor_stability": return try await stability(args)
         case "proctor_inspect":   return try await inspect(args)
-        case "proctor_doctor":    return try await doctor(args)
+        case AgentVerbs.doctor:   return try await doctor(args)
         case "proctor_unlock":    return try await unlock(args)
         case "proctor_computer":         return try await computer(args)
         case "proctor_openai_computer":  return try await openaiComputer(args)
@@ -111,7 +111,7 @@ struct Dispatcher: Sendable {
         // Internal read-only verb the UI polls for the "what is it doing now"
         // feed. Like proctor_resource it is never in ToolCatalogue, so the public
         // tool count is unchanged and no host can reach it as a tool.
-        case "proctor_recent_activity":
+        case AgentVerbs.recentActivity:
             return await session.recentActivity(limit: args.int("limit") ?? 12)
         // Internal verbs behind Proctor's own History window: the projection a
         // person reads, and the clear that rotates the trail. Never in
@@ -124,22 +124,24 @@ struct Dispatcher: Sendable {
         // trail. `proctor_policy` action `audit` is a catalogue tool that already
         // opens the trail and returns whole records. This projection is strictly
         // narrower than that one.
-        case "proctor_history":
-            return await session.history(limit: args.int("limit") ?? 20)
-        case "proctor_history_clear":
+        case HistorySurface.Wire.historyTool:
+            return await session.history(limit: args.int(HistorySurface.Wire.limitArgument) ?? 20)
+        case HistorySurface.Wire.clearTool:
             return await session.clearHistory()
         // Internal verb behind Proctor's menu bar: the show/hide switch for the
         // run panel and the run's own Pause, Resume and Stop, so hiding the panel
         // never hides the kill switch. Never in ToolCatalogue either, so the shim
         // — which gates tools/call on the catalogue — cannot reach it and no MCP
         // host can put a person's stop button away.
-        case "proctor_hud":
-            return try await session.hudControl(RunHUDControl.parse(args.string("action")))
+        case AgentVerbs.hud:
+            return try await session.hudControl(
+                RunHUDControl.parse(args.string(AgentVerbs.actionArgument)))
         // PRO-0075. The queue's own controls, in the queue's own words, and
         // internal for the same reason `proctor_hud` is: a person's Hold and
         // Clear are not something an MCP host should be able to reach.
-        case "proctor_queue":
-            return try await session.queueControl(RunQueueControl.parse(args.string("action")))
+        case AgentVerbs.queue:
+            return try await session.queueControl(
+                RunQueueControl.parse(args.string(AgentVerbs.actionArgument)))
         default:
             throw AgentError(
                 code: .invalidArguments,

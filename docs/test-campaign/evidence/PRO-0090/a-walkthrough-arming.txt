@@ -1,0 +1,58 @@
+=== 0. CLEAN: the file as written ===
+Sources/ProctorUI/Walkthrough.swift: 0 string literals examined
+  display         0
+  symbol          0
+  system          0
+  key             0
+  punctuation     0
+  interpolated    0
+
+PASS: 0 user-facing literals of 0 examined; 0 are identifiers, symbols, system strings or punctuation.
+status_literals exit=0
+
+=== 1. ARM status_literals: a sentence put back into a Text( ===
+Sources/ProctorUI/Walkthrough.swift: 1 string literals examined
+  display         1
+  symbol          0
+  system          0
+  key             0
+  punctuation     0
+  interpolated    0
+  VIOLATION   108 Text()                             "Proctor lets a model test a Mac app the way a person would check it."
+
+FAIL: 1 user-facing literal(s) of 1 examined. Move them to StatusSurface.Copy.
+status_literals exit=1
+
+=== 2. ARM the gate's own literal guard, same mutation ===
+test.sh exit=1
+􀢄  Test "DEF-039 · the walkthrough view holds no string literal of its own" recorded an issue at WalkthroughFlowTests.swift:252:9: Expectation failed: (quotes → 2) == 0
+􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.
+      􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.
+
+=== 3. ARM the prominence source guard: both rows prominent again (the DEF-056 defect) ===
+test.sh exit=1
+􀢄  Test "DEF-056 · the row takes prominence as a parameter rather than deciding it" recorded an issue at WalkthroughFlowTests.swift:234:26: Expectation failed: (row → "private struct HeroPermRow: View {
+􀢄  Test run with 1 test in 1 suite failed after 0.004 seconds with 2 issues.
+      􀢄  Test run with 1 test in 1 suite failed after 0.004 seconds with 2 issues.
+
+=== 4. ARM the Core rule: prominentGrant always nominates Accessibility ===
+test.sh exit=1
+􀢄  Test "DEF-056 · exactly one grant is prominent, at all four combinations" recorded an issue at WalkthroughFlowTests.swift:186:13: Expectation failed: (got → .accessibility) == (expected → .screenRecording)
+􀢄  Test "DEF-056 · exactly one grant is prominent, at all four combinations" recorded an issue at WalkthroughFlowTests.swift:186:13: Expectation failed: (got → .accessibility) == (expected → nil)
+􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.
+      􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.
+
+=== 5. RESTORED: clean again ===
+Sources/ProctorUI/Walkthrough.swift: 0 string literals examined
+  display         0
+  symbol          0
+  system          0
+  key             0
+  punctuation     0
+  interpolated    0
+
+PASS: 0 user-facing literals of 0 examined; 0 are identifiers, symbols, system strings or punctuation.
+status_literals exit=0
+ Sources/ProctorCore/WalkthroughFlow.swift | 133 +++++++++++++++++++++++
+ Sources/ProctorUI/Walkthrough.swift       | 170 ++++++++++++++++++------------
+ 2 files changed, 233 insertions(+), 70 deletions(-)

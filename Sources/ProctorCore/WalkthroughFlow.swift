@@ -47,6 +47,38 @@ public enum WalkthroughFlow {
             }
         }
 
+        /// The SF Symbol the hero row draws beside the name.
+        ///
+        /// PRO-0090. A symbol name returned from a computed property is one the
+        /// literal classifier cannot see as an identifier, because it never
+        /// reaches a `systemName:` label — the same case PRO-0081 met with
+        /// `StatusChecks.ToolRow.Tone.symbol`, and resolved the same way: the
+        /// mapping lives beside the value it describes.
+        public var glyph: String {
+            switch self {
+            case .accessibility: return "accessibility"
+            case .screenRecording: return "display"
+            }
+        }
+
+        /// What the hero row says under the name.
+        ///
+        /// Not a paraphrase of `why`, and both are kept rather than one deleted.
+        /// `why` is the status window's longer sentence about what the grant
+        /// buys; this is the walkthrough's shorter one about what Proctor does
+        /// with it, and it is what the build has always rendered. Naming each
+        /// for where it is drawn is what stops the pair becoming DEF-035 again.
+        public var rowDescription: String {
+            switch self {
+            case .accessibility: return "Lets Proctor read the control tree and drive it"
+            case .screenRecording: return "Lets Proctor see what your app drew"
+            }
+        }
+
+        /// What a screen reader hears on the row's own button, where "Allow"
+        /// alone would be one of two identical labels on one screen.
+        public var allowLabel: String { "\(WalkthroughFlow.Copy.allow) \(title)" }
+
         /// macOS caches the Screen Recording answer per process through
         /// `SCShareableContent` for that process's life, so a grant given now is
         /// not visible to this process until it restarts. PRO-0028 and PRO-0041
@@ -108,6 +140,33 @@ public enum WalkthroughFlow {
         return accessibility && screenRecording
     }
 
+    /// Which grant's button is drawn prominent, or nil when none should be.
+    ///
+    /// PRO-0090, closing DEF-056. The design of record states the rule in the
+    /// permissions frame's own caption: *"Only one Grant is prominent at a time:
+    /// the one to press next"* (`design/surfaces/proctor-surfaces.html`,
+    /// walkthrough, `data-state="permissions"`), and draws Accessibility's Grant
+    /// filled with Screen Recording's plain. The build gave every ungranted row
+    /// `.borderedProminent` unconditionally, so with neither grant held — the
+    /// state the walkthrough opens in — the frame offered two identical calls to
+    /// action and no first move.
+    ///
+    /// THIS IS A DECISION THAT DID NOT EXIST IN THE VIEW BEFORE. It is not one
+    /// lifted out of a view body, which is the widening PRO-0081's carried
+    /// clause warns against; it is a new rule, and a rule about which of two rows
+    /// is prominent cannot be asked of a repo with no `ProctorUI` test target
+    /// unless it is a value. Same footing as `primaryEnabled`.
+    ///
+    /// Order is `Grant.allCases`, so the answer is the first grant still
+    /// missing. That is what "the one to press next" means when both are
+    /// missing, and it matches the pane the design draws.
+    public static func prominentGrant(accessibility: Bool,
+                                      screenRecording: Bool) -> Grant? {
+        let held: [Grant: Bool] = [.accessibility: accessibility,
+                                   .screenRecording: screenRecording]
+        return Grant.allCases.first { held[$0] == false }
+    }
+
     /// The step after this one, or nil at the end.
     public static func next(after step: Step) -> Step? {
         switch step {
@@ -153,6 +212,21 @@ public enum WalkthroughFlow {
         }
     }
 
+    /// The title drawn above a step's content, or empty where the step's own
+    /// content carries it.
+    ///
+    /// PRO-0090. A copy table keyed by step, beside the three that already live
+    /// here — `primaryAction`, `heading` and `lede`. `permissions` and `granted`
+    /// return empty because the hero sheet draws its own title, and an empty
+    /// string here is what the view already tested for.
+    public static func stepTitle(for step: Step) -> String {
+        switch step {
+        case .intro: return "What Proctor does"
+        case .permissions, .granted: return ""
+        case .connect: return "Point a model at it"
+        }
+    }
+
     public enum Copy {
         public static let skip = "Skip setup"
         public static let back = "Back"
@@ -166,7 +240,66 @@ public enum WalkthroughFlow {
         public static let menuBarNote =
             "Proctor lives in the menu bar from here. The window is always one click away from "
             + "the icon."
+        /// The short form of the MCP host config, written by PRO-0067 and never
+        /// rendered: the walkthrough draws the full object, which is
+        /// `StatusSurface.Copy.connectSnippet(shimPath:)` and is the same text
+        /// the status window's Connect card copies. Both kept and both named, as
+        /// with `StatusSurface.Copy.toolsNote`. DEF-035.
         public static let connectSnippet = #"{ "proctor": { "command": "proctor-shim" } }"#
+
+        // MARK: - PRO-0090. What the walkthrough draws, moved out of the view.
+        //
+        // Every string below moved character for character from
+        // `Sources/ProctorUI/Walkthrough.swift`. No wording changed: wave 9
+        // settled this surface's composition and DEF-039 is a move, not a
+        // rewrite.
+
+        public static let introParagraph1 =
+            "Proctor lets a model test a Mac app the way a person would check it: read what "
+            + "is actually on screen, operate the controls, and look at what the app drew."
+        public static let introParagraph2 =
+            "It works through macOS's accessibility system rather than by faking mouse and "
+            + "keyboard input, so it can drive a window that is behind another one, or on "
+            + "another Space, without stealing your focus or interrupting what you are doing."
+        /// Character-identical to `heading(for: .permissions)` and deliberately a
+        /// constant of its own: the intro's callout and the permissions step's
+        /// heading say the same thing today because they are about the same two
+        /// grants, and binding one to the other would make a later edit to either
+        /// silently change the other.
+        public static let introCalloutTitle = "Two permissions, asked once"
+        public static let introCalloutMessage =
+            "macOS gives these to Proctor itself, not to the tool driving it. That is "
+            + "why they survive when you upgrade or switch the model you use."
+        public static let introCalloutIcon = "lock.shield"
+
+        public static let connectParagraph =
+            "Last step. Add Proctor to whichever tool you drive it from. The command below "
+            + "holds no permissions of its own; it just forwards to Proctor, which does."
+        public static let connectReadyTitle = "You're all set"
+        public static let connectReadyMessage =
+            "Both permissions are granted. Proctor stays running in the "
+            + "background and lives in the menu bar — no Dock icon. Open Proctor "
+            + "Status any time to re-check, see attached apps, or copy this again."
+        public static let connectReadyIcon = "checkmark.seal.fill"
+        public static let connectPendingTitle = "Proctor lives in the menu bar"
+        public static let connectPendingMessage =
+            "It stays running in the background — no Dock icon, because it is "
+            + "something a model drives. You can grant the remaining permission any "
+            + "time from Proctor Status."
+        public static let copyConfig = "Copy config"
+
+        public static let heroTitle = "Enable Proctor"
+        public static let heroLede =
+            "Proctor needs two macOS permissions to read and drive your apps. They go to "
+            + "Proctor itself, asked once, and are used only when a model you connect asks "
+            + "it to run a test."
+        public static let openSettings = "Already allowed? Open System Settings"
+        public static let allowed = "Allowed"
+        /// The build's label on an ungranted row's button. `grant` above is the
+        /// design of record's word for the same control and the window has never
+        /// rendered it; both kept and both named, as with `toolsNote`. DEF-035.
+        public static let allow = "Allow"
+        public static let grantedCheckSymbol = "checkmark.circle.fill"
     }
 
     // MARK: - Identifiers

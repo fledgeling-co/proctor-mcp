@@ -29,7 +29,7 @@ struct CommandSurfaceTests {
     }
 
     @Test("A2 · a command that cannot act is dimmed, never absent")
-    func presenceIsUnconditional() {
+    func presenceIsUnconditional() throws {
         // Enablement is a separate question from presence. A control that
         // disappears makes the layout jump and teaches the user the feature
         // does not exist.
@@ -43,8 +43,16 @@ struct CommandSurfaceTests {
             #expect(!command.surfaces.isEmpty, "\(command.id) vanished when disabled")
         }
         // Pause and Stop are disabled with no run and enabled with one.
-        for id in ["pause", "stop"] {
-            let c = CommandSurface.command(id)!
+        //
+        // PRO-0090. `command(id)!` on a literal id used to be here, and it fails
+        // in the worst way available: an id that stops resolving is a fatal error
+        // that takes the whole runner down — measured, 1,963 tests aborted with no
+        // verdict line — rather than one test reporting one failure. `#require`
+        // fails this test and lets the rest report, and the ids come from
+        // `CommandID` so a rename moves both ends at once. DEF-135.
+        for id in [CommandSurface.CommandID.pause, CommandSurface.CommandID.stop] {
+            let c = try #require(CommandSurface.command(id),
+                                 "CommandSurface.all no longer defines \(id)")
             #expect(!CommandSurface.isEnabled(c, hasLiveRun: false, runIsHeld: false,
                                               agentReachable: true, panelEnabled: true))
             #expect(CommandSurface.isEnabled(c, hasLiveRun: true, runIsHeld: false,
@@ -53,13 +61,19 @@ struct CommandSurfaceTests {
     }
 
     @Test("A5 · the panel switch needs an agent launched with the panel enabled")
-    func panelSwitchGated() {
-        let show = CommandSurface.command("show-panel")!
+    func panelSwitchGated() throws {
+        // PRO-0090, DEF-135, the same shape as the loop above: a literal id and
+        // `!`. Measured with the panel commands dropped from the catalogue, the
+        // pre-fix form aborted the runner on SIGTRAP with 0 tests and 0 suites
+        // reporting and no verdict line at all.
+        let show = try #require(CommandSurface.command(CommandSurface.CommandID.showPanel),
+                                "CommandSurface.all no longer defines show-panel")
         #expect(show.requires == .panelEnabled)
         #expect(!CommandSurface.isEnabled(show, hasLiveRun: false, runIsHeld: false,
                                           agentReachable: true, panelEnabled: false))
         // Hiding stays available, and is always reversible within the launch.
-        let hide = CommandSurface.command("hide-panel")!
+        let hide = try #require(CommandSurface.command(CommandSurface.CommandID.hidePanel),
+                                "CommandSurface.all no longer defines hide-panel")
         #expect(CommandSurface.isEnabled(hide, hasLiveRun: false, runIsHeld: false,
                                          agentReachable: true, panelEnabled: false))
     }

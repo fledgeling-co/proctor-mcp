@@ -109,3 +109,148 @@ struct HistorySurfaceTests {
         for id in all { #expect(id.hasPrefix("proctor.history.")) }
     }
 }
+
+// PRO-0090. What the history window draws, now that it is a value.
+//
+// `HistoryWindow.swift` held 71 user-facing literals of 91 examined and now
+// holds none: one interpolated count with no words in it is all that is left.
+// These are the claims the window itself could not be asked for — there is no
+// `ProctorUI` test target and `swift test` has no window server — so they are
+// asked of the values it now reads.
+@Suite("History window copy")
+struct HistoryWindowCopyTests {
+
+    /// DEF-130, found while moving this table out of the view.
+    ///
+    /// The view matched `case "appleEvent"` and `ActuationPlane`'s raw value is
+    /// `appleEvents`. Nothing in this repo produces the singular spelling, so
+    /// the branch was unreachable and an Apple Events step fell through to the
+    /// default arm and drew the wire word. Asked here against the enum's own
+    /// raw values rather than against literals, which is what makes the answer
+    /// track a rename instead of surviving one.
+    @Test("DEF-130 · an Apple Events step is labelled, not drawn as its wire word")
+    func appleEventsIsSaidInWords() {
+        // The defect itself. Keyed off the enum, so a rename of the case moves
+        // this expectation with it instead of leaving it passing over a
+        // spelling nothing produces any more — which is how the branch this
+        // replaces went dead in the first place.
+        let wire = ActuationPlane.appleEvents.rawValue
+        #expect(HistorySurface.Copy.planeLabel(wire) == "Apple event")
+        #expect(HistorySurface.Copy.planeLabel(wire) != wire,
+                "an Apple Events step still draws the wire word \(wire)")
+        // The other two planes read as English already, so their label and their
+        // wire word coincide by design rather than by accident. Asserted as
+        // equality so that is on the record rather than looking like an
+        // oversight.
+        #expect(HistorySurface.Copy.planeLabel(ActuationPlane.accessibility.rawValue)
+                == "accessibility")
+        #expect(HistorySurface.Copy.planeLabel(ActuationPlane.syntheticEvent.rawValue)
+                == "synthetic")
+    }
+
+    /// A plane this build has no word for is echoed rather than hidden. The
+    /// window would otherwise draw a blank where the agent named something
+    /// newer than itself, which is worse than an unfamiliar word.
+    @Test("an unrecognised plane is echoed rather than dropped")
+    func anUnknownPlaneIsEchoed() {
+        #expect(HistorySurface.Copy.planeLabel("something-newer") == "something-newer")
+        #expect(HistorySurface.Copy.planeLabel(ActuationPlane.routedEvent.rawValue)
+                == ActuationPlane.routedEvent.rawValue)
+    }
+
+    /// Every outcome draws a distinct mark, and a person's own stop is not
+    /// drawn as a fault.
+    @Test("every outcome has its own mark, and halted is not a failure mark")
+    func everyOutcomeHasItsOwnMark() {
+        let marks = RunHistory.Outcome.allCases.map(HistorySurface.Copy.outcomeSymbol)
+        #expect(Set(marks).count == marks.count, "two outcomes share a mark")
+        #expect(marks.allSatisfy { !$0.isEmpty })
+        #expect(HistorySurface.Copy.outcomeSymbol(.halted)
+                != HistorySurface.Copy.outcomeSymbol(.failed))
+    }
+
+    /// `indeterminate` is never the word "failed". The whole reason that
+    /// outcome exists is that Proctor has no basis for saying the step did not
+    /// happen, and a summary that says "failed" throws that away.
+    @Test("a run whose outcome is unknown is never summarised as failed")
+    func indeterminateIsNeverCalledFailed() {
+        let summary = HistorySurface.Copy.runSummary(steps: 3, outcome: .indeterminate)
+        #expect(!summary.contains("failed"), "an indeterminate run reads as \(summary)")
+        #expect(summary == "3 steps, outcome unknown")
+    }
+
+    /// The counts read as English at one and at many. Each of these was a
+    /// ternary inside a `Text(` before this item, where nothing could ask it.
+    @Test("every counted sentence agrees with its number")
+    func countedSentencesAgreeWithTheirNumbers() {
+        #expect(HistorySurface.Copy.runSummary(steps: 0, outcome: .ok) == "no steps")
+        #expect(HistorySurface.Copy.runSummary(steps: 1, outcome: .ok) == "1 step")
+        #expect(HistorySurface.Copy.runSummary(steps: 2, outcome: .ok) == "2 steps")
+        #expect(HistorySurface.Copy.entriesHeld(1) == "entry held")
+        #expect(HistorySurface.Copy.entriesHeld(0) == "entries held")
+        #expect(HistorySurface.Copy.droppedTitle(1) == "1 action was not recorded")
+        #expect(HistorySurface.Copy.droppedTitle(2) == "2 actions were not recorded")
+        #expect(HistorySurface.Copy.unopenedTitle(1) == "1 entry could not be opened")
+        #expect(HistorySurface.Copy.unopenedTitle(3) == "3 entries could not be opened")
+        #expect(HistorySurface.Copy.droppedMessage(1).contains("it is"))
+        #expect(HistorySurface.Copy.droppedMessage(2).contains("they are"))
+        #expect(HistorySurface.Copy.unopenedMessage(1).hasPrefix("It was"))
+        #expect(HistorySurface.Copy.unopenedMessage(2).hasPrefix("They were"))
+        #expect(HistorySurface.Copy.rotatedMessage(1).contains("entry was"))
+        #expect(HistorySurface.Copy.rotatedMessage(2).contains("entries were"))
+        #expect(HistorySurface.Copy.runUnreadable(1).hasPrefix("1 entry "))
+        #expect(HistorySurface.Copy.runUnreadable(4).hasPrefix("4 entries "))
+    }
+
+    /// A cost under a second is said in milliseconds and over one in seconds,
+    /// with the boundary asked rather than assumed.
+    @Test("a step's cost is said in the unit that reads")
+    func durationsUseTheUnitThatReads() {
+        #expect(HistorySurface.Copy.duration(ms: 999) == "999 ms")
+        #expect(HistorySurface.Copy.duration(ms: 1000) == "1.0 s")
+        #expect(HistorySurface.Copy.duration(ms: 1500) == "1.5 s")
+    }
+
+    /// The window's scene id and title, which three places name and one of them
+    /// silently depends on: `excludeFromCapture()` keeps a window holding
+    /// opened history out of every screenshot — `proctor_capture`'s included —
+    /// by matching the id and falling back to the title.
+    @Test("the history scene's id and title have one definition")
+    func theSceneIsNamedOnce() throws {
+        #expect(HistorySurface.sceneID == "history")
+        #expect(HistorySurface.sceneTitle == "History")
+        let ui = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Sources/ProctorUI")
+        let window = try String(contentsOf: ui.appendingPathComponent("HistoryWindow.swift"),
+                                encoding: .utf8)
+        #expect(window.contains("HistorySurface.sceneID"),
+                "the capture exclusion does not read the shared scene id")
+        #expect(window.contains("HistorySurface.sceneTitle"),
+                "the capture exclusion does not read the shared scene title")
+    }
+
+    /// DEF-039's clause for this file, asked inside the gate: no string literal
+    /// in the view outside a comment. `source-analysis` and nothing above it —
+    /// it says the view holds no literal, not that the window renders the
+    /// constant.
+    @Test("DEF-039 · the history view holds no user-facing literal of its own")
+    func theHistoryViewHoldsNoUserFacingLiterals() throws {
+        let ui = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Sources/ProctorUI")
+        for name in ["HistoryWindow.swift", "HistoryModel.swift"] {
+            let source = WalkthroughFlowTests.withoutComments(
+                try String(contentsOf: ui.appendingPathComponent(name), encoding: .utf8))
+            // What survives in each is an interpolated string with no words in
+            // it — a row id, and a count drawn beside its own noun — which is
+            // the classifier's `punctuation` and `interpolated`, not `display`.
+            for line in source.components(separatedBy: "\n") where line.contains("\"") {
+                #expect(line.contains("\\("),
+                        "\(name) holds a literal with no interpolation in it: \(line)")
+            }
+        }
+    }
+}

@@ -159,4 +159,163 @@ struct WalkthroughFlowTests {
         #expect(!around.contains("if step != .connect {\n                    Button(WalkthroughFlow.primaryAction"),
                 "the primary action is behind a condition; A3 requires it present and disabled")
     }
+
+    // MARK: - PRO-0090, DEF-056. One prominent Grant at a time.
+
+    /// The design of record's caption is the specification: *"Only one Grant is
+    /// prominent at a time: the one to press next"*
+    /// (`design/surfaces/proctor-surfaces.html`, walkthrough,
+    /// `data-state="permissions"`), drawn with Accessibility's Grant filled and
+    /// Screen Recording's plain.
+    ///
+    /// Before this item `HeroPermRow` gave every ungranted row
+    /// `.borderedProminent` unconditionally, so the state the walkthrough opens
+    /// in — neither grant held — drew two identical calls to action.
+    @Test("DEF-056 · exactly one grant is prominent, at all four combinations")
+    func oneProminentGrantAtATime() {
+        typealias G = WalkthroughFlow.Grant
+        let cases: [(Bool, Bool, G?)] = [
+            (false, false, .accessibility),    // the design's own drawing
+            (true,  false, .screenRecording),
+            (false, true,  .accessibility),
+            (true,  true,  nil),
+        ]
+        for (accessibility, screenRecording, expected) in cases {
+            let got = WalkthroughFlow.prominentGrant(accessibility: accessibility,
+                                                     screenRecording: screenRecording)
+            #expect(got == expected,
+                    "accessibility=\(accessibility) screenRecording=\(screenRecording) gave \(String(describing: got))")
+        }
+    }
+
+    /// The count, said as a count. `prominentGrant` returning one value makes
+    /// "only one is prominent" true by construction, so what is worth asserting
+    /// is that it is never nil while a grant is still missing — a nil there
+    /// would draw two plain buttons and offer no first move either.
+    @Test("DEF-056 · a grant is nominated in every state where one is still missing")
+    func aGrantIsAlwaysNominatedWhileOneIsMissing() {
+        for accessibility in [false, true] {
+            for screenRecording in [false, true] {
+                let got = WalkthroughFlow.prominentGrant(accessibility: accessibility,
+                                                         screenRecording: screenRecording)
+                let anyMissing = !(accessibility && screenRecording)
+                #expect((got != nil) == anyMissing,
+                        "a=\(accessibility) sr=\(screenRecording) nominated \(String(describing: got))")
+                if let got { #expect(!(got == .accessibility ? accessibility : screenRecording),
+                                     "the nominated grant is already held") }
+            }
+        }
+    }
+
+    /// The half a pure function cannot answer: that the view reads the rule
+    /// rather than keeping its own. Read from the view's source, because there
+    /// is no `ProctorUI` test target and no window server here — the same
+    /// footing `theViewDisablesRatherThanHides` above stands on, and it claims
+    /// no more than that.
+    @Test("DEF-056 · the row takes prominence as a parameter rather than deciding it")
+    func theRowDoesNotDecideItsOwnProminence() throws {
+        #expect(try Self.walkthroughSource().contains("WalkthroughFlow.prominentGrant("),
+                "the view does not read the Core rule")
+        #expect(try Self.walkthroughSource().contains("let prominent: Bool"),
+                "HeroPermRow does not take prominence as a parameter")
+        // The defect itself: a row that reaches `.borderedProminent` with
+        // nothing gating it. Every occurrence must sit under the `prominent`
+        // branch, so the unguarded form must not appear at all.
+        // Comments stripped first. The count below is of code, and a guard that
+        // counted a doc comment naming `.borderedProminent` would report the
+        // defect present in a file that had fixed it — which is how this
+        // expectation first failed.
+        let source = Self.withoutComments(try Self.walkthroughSource())
+        let rowStart = try #require(source.range(of: "private struct HeroPermRow"))
+        let row = String(source[rowStart.lowerBound...])
+        let prominentUses = row.components(separatedBy: ".borderedProminent").count - 1
+        #expect(prominentUses == 1,
+                "HeroPermRow draws .borderedProminent \(prominentUses) times; DEF-056 needs exactly one, under the `prominent` branch")
+        let branch = try #require(row.range(of: "if prominent {"))
+        let filled = try #require(row.range(of: ".borderedProminent"))
+        #expect(branch.lowerBound < filled.lowerBound,
+                ".borderedProminent is not inside the prominent branch")
+    }
+
+    // MARK: - PRO-0090, DEF-039. The strings left the view.
+
+    /// The clause `status_literals.py` measures, asked here so the gate owns it
+    /// too: no string literal in `Walkthrough.swift` outside a comment.
+    ///
+    /// This is `source-analysis` and nothing above it. It says the view holds no
+    /// literal, not that the window renders the constant — a value-level check
+    /// standing in for a rendered one is DEF-035's own lesson.
+    @Test("DEF-039 · the walkthrough view holds no string literal of its own")
+    func theWalkthroughViewHoldsNoLiterals() throws {
+        let quotes = Self.withoutComments(try Self.walkthroughSource())
+            .filter { $0 == "\"" }.count
+        #expect(quotes == 0,
+                "Walkthrough.swift holds \(quotes) quote characters outside comments; every user-facing string belongs in WalkthroughFlow")
+    }
+
+    /// Every string this item moved resolves verbatim in Core, so the move was a
+    /// move. PRO-0081 shortened one heading in the same operation and a fresh
+    /// verifier found it; these are the sentences most likely to be paraphrased.
+    @Test("DEF-039 · the moved walkthrough copy is character-identical to what shipped")
+    func themovedCopyIsVerbatim() {
+        #expect(WalkthroughFlow.Copy.heroTitle == "Enable Proctor")
+        #expect(WalkthroughFlow.Copy.allow == "Allow")
+        #expect(WalkthroughFlow.Copy.allowed == "Allowed")
+        #expect(WalkthroughFlow.Copy.copyConfig == "Copy config")
+        #expect(WalkthroughFlow.Copy.openSettings == "Already allowed? Open System Settings")
+        #expect(WalkthroughFlow.Copy.connectReadyTitle == "You're all set")
+        #expect(WalkthroughFlow.Copy.introCalloutTitle == "Two permissions, asked once")
+        #expect(WalkthroughFlow.stepTitle(for: .intro) == "What Proctor does")
+        #expect(WalkthroughFlow.stepTitle(for: .connect) == "Point a model at it")
+        #expect(WalkthroughFlow.stepTitle(for: .permissions).isEmpty)
+        #expect(WalkthroughFlow.Grant.accessibility.glyph == "accessibility")
+        #expect(WalkthroughFlow.Grant.screenRecording.glyph == "display")
+        #expect(WalkthroughFlow.Grant.accessibility.rowDescription
+                == "Lets Proctor read the control tree and drive it")
+        #expect(WalkthroughFlow.Grant.screenRecording.rowDescription
+                == "Lets Proctor see what your app drew")
+        #expect(WalkthroughFlow.Grant.accessibility.allowLabel == "Allow Accessibility")
+        #expect(WalkthroughFlow.Grant.screenRecording.allowLabel == "Allow Screen Recording")
+    }
+
+    /// The two-values-one-name pairs this file now carries, each kept and each
+    /// named. Asserted to DIFFER, so the record cannot rot into a claim that
+    /// they agree — the same guard `StatusSurfaceTests` puts on `toolsNote`.
+    @Test("DEF-035 · the walkthrough's unrendered twins are kept and differ from what ships")
+    func theUnrenderedTwinsAreNamed() {
+        #expect(WalkthroughFlow.Copy.grant != WalkthroughFlow.Copy.allow,
+                "the design's word and the build's word for the grant control agree; one of the two records is now wrong")
+        #expect(WalkthroughFlow.Copy.connectSnippet
+                != StatusSurface.Copy.connectSnippet(shimPath: "proctor-shim"),
+                "the short snippet and the rendered one agree; one record is now wrong")
+        #expect(WalkthroughFlow.Grant.accessibility.why
+                != WalkthroughFlow.Grant.accessibility.rowDescription)
+    }
+
+    /// Whole-line comments removed, so a source guard counts code.
+    ///
+    /// Line-based and deliberately crude: it does not understand a trailing
+    /// comment after code, which is why every guard above looks for a construct
+    /// that lives at the start of its own line.
+    static func withoutComments(_ source: String) -> String {
+        var out = ""
+        var inBlock = false
+        for line in source.components(separatedBy: "\n") {
+            let t = line.trimmingCharacters(in: .whitespaces)
+            if inBlock { if t.contains("*/") { inBlock = false }; continue }
+            if t.hasPrefix("/*") { if !t.contains("*/") { inBlock = true }; continue }
+            if t.hasPrefix("//") { continue }
+            out += line + "\n"
+        }
+        return out
+    }
+
+    private static func walkthroughSource() throws -> String {
+        try String(
+            contentsOf: URL(fileURLWithPath: #filePath)
+                .deletingLastPathComponent().deletingLastPathComponent()
+                .deletingLastPathComponent()
+                .appendingPathComponent("Sources/ProctorUI/Walkthrough.swift"),
+            encoding: .utf8)
+    }
 }

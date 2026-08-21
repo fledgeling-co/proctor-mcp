@@ -48,6 +48,12 @@ public enum RunHUDCharacter {
     /// paused, finished or errored run is being read, not watched.
     public static let moving: Set<RunHUDPhase> = [.idle, .travelling, .acting]
 
+    /// The first idle cell. Named because it is the picture two other things
+    /// point at: the animation's first frame, and `AgentModel.appPaths`, which
+    /// stamps it to notice a reinstall that replaced only the resource bundle —
+    /// the shape of failure PRO-0030 was actually reported for. PRO-0090.
+    public static let idleAsset = "idle-0"
+
     /// What a phase plays, in order, looping.
     public static func frames(for phase: RunHUDPhase) -> [Frame] {
         switch phase {
@@ -56,7 +62,7 @@ public enum RunHUDCharacter {
             // rest: the second picture is the first lifted a pixel. The sheet's
             // four idle cells are four attempts at the same still, and cycling
             // them boils rather than bobs.
-            return [Frame(asset: "idle-0", durationMs: 1800),
+            return [Frame(asset: idleAsset, durationMs: 1800),
                     Frame(asset: "idle-1", durationMs: 1800)]
         case .travelling:
             // Four drawn frames; the speed lines grow behind it and reset.

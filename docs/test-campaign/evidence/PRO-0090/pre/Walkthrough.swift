@@ -18,11 +18,11 @@ struct Walkthrough: View {
     @State private var goingBack = false
     /// Which permission most recently flipped to granted, so its row plays the
     /// success animation once rather than on every redraw.
-    @State private var justGranted: WalkthroughFlow.Grant?
+    @State private var justGranted: String?
     /// Auto-advance is a convenience for someone already working the grants.
     /// Letting it fire before that skips the step that says what Proctor is.
     @State private var started = false
-    @AppStorage(WalkthroughFlow.completionDefaultsKey) private var completed = false
+    @AppStorage("walkthroughCompleted") private var completed = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// PRO-0067. The view keeps an `Int`-backed enum because the slide
@@ -40,10 +40,13 @@ struct Walkthrough: View {
             case .connect: return .connect
             }
         }
-        /// PRO-0090. The table moved to `WalkthroughFlow.stepTitle(for:)`,
-        /// beside `primaryAction`, `heading` and `lede`. `permissions` still
-        /// returns empty there — the hero carries its own title.
-        var title: String { WalkthroughFlow.stepTitle(for: flow) }
+        var title: String {
+            switch self {
+            case .intro:       return "What Proctor does"
+            case .permissions: return ""          // the hero carries its own title
+            case .connect:     return "Point a model at it"
+            }
+        }
     }
 
     private var motion: Animation? { reduceMotion ? nil : Motion.step }
@@ -90,14 +93,14 @@ struct Walkthrough: View {
                     .buttonStyle(.borderedProminent)
                     .disabled(!WalkthroughFlow.primaryEnabled(
                         on: step.flow,
-                        accessibility: granted(.accessibility),
-                        screenRecording: granted(.screenRecording)))
+                        accessibility: granted("Accessibility"),
+                        screenRecording: granted("Screen Recording")))
             }
             .padding(.horizontal, 30).padding(.vertical, 16)
         }
         .frame(width: 620, height: 540)
-        .onChange(of: granted(.accessibility)) { _, ok in onGrant(.accessibility, ok) }
-        .onChange(of: granted(.screenRecording)) { _, ok in onGrant(.screenRecording, ok) }
+        .onChange(of: granted("Accessibility")) { _, ok in onGrant("Accessibility", ok) }
+        .onChange(of: granted("Screen Recording")) { _, ok in onGrant("Screen Recording", ok) }
     }
 
     // MARK: steps
@@ -105,43 +108,43 @@ struct Walkthrough: View {
     @ViewBuilder private var content: some View {
         switch step {
         case .intro:
-            Para(WalkthroughFlow.Copy.introParagraph1)
-            Para(WalkthroughFlow.Copy.introParagraph2)
-            Callout(icon: WalkthroughFlow.Copy.introCalloutIcon, tint: .accentColor,
-                    title: WalkthroughFlow.Copy.introCalloutTitle,
-                    message: WalkthroughFlow.Copy.introCalloutMessage)
+            Para("Proctor lets a model test a Mac app the way a person would check it: read what "
+                 + "is actually on screen, operate the controls, and look at what the app drew.")
+            Para("It works through macOS's accessibility system rather than by faking mouse and "
+                 + "keyboard input, so it can drive a window that is behind another one, or on "
+                 + "another Space, without stealing your focus or interrupting what you are doing.")
+            Callout(icon: "lock.shield", tint: .accentColor,
+                    title: "Two permissions, asked once",
+                    message: "macOS gives these to Proctor itself, not to the tool driving it. That is "
+                        + "why they survive when you upgrade or switch the model you use.")
 
         case .permissions:
             HeroPermissions(
                 appIcon: NSApp.applicationIconImage,
-                accessibilityGranted: granted(.accessibility),
-                screenRecordingGranted: granted(.screenRecording),
+                accessibilityGranted: granted("Accessibility"),
+                screenRecordingGranted: granted("Screen Recording"),
                 justGranted: justGranted,
                 reduceMotion: reduceMotion,
                 onAllowAccessibility: { model.requestAccessibilityPrompt() },
                 onAllowScreenRecording: { model.requestScreenRecordingPrompt() },
-                onOpenSettings: {
-                    // The pane anchor was a literal here and is a Core mapping
-                    // that `MainWindow` already reads the same way. PRO-0081
-                    // moved it there because an anchor macOS does not recognise
-                    // opens the top of Settings and looks like the button did
-                    // nothing.
-                    if let pane = Actions.pane(for: WalkthroughFlow.Grant.accessibility.title) {
-                        Actions.openPane(pane)
-                    }
-                })
+                onOpenSettings: { Actions.openPane("Privacy_Accessibility") })
 
         case .connect:
-            Para(WalkthroughFlow.Copy.connectParagraph)
+            Para("Last step. Add Proctor to whichever tool you drive it from. The command below "
+                 + "holds no permissions of its own; it just forwards to Proctor, which does.")
             ConnectSnippet()
             if model.ready {
-                Callout(icon: WalkthroughFlow.Copy.connectReadyIcon, tint: .green,
-                        title: WalkthroughFlow.Copy.connectReadyTitle,
-                        message: WalkthroughFlow.Copy.connectReadyMessage)
+                Callout(icon: "checkmark.seal.fill", tint: .green,
+                        title: "You're all set",
+                        message: "Both permissions are granted. Proctor stays running in the "
+                            + "background and lives in the menu bar — no Dock icon. Open Proctor "
+                            + "Status any time to re-check, see attached apps, or copy this again.")
             } else {
-                Callout(icon: WalkthroughFlow.Copy.introCalloutIcon, tint: .accentColor,
-                        title: WalkthroughFlow.Copy.connectPendingTitle,
-                        message: WalkthroughFlow.Copy.connectPendingMessage)
+                Callout(icon: "lock.shield", tint: .accentColor,
+                        title: "Proctor lives in the menu bar",
+                        message: "It stays running in the background — no Dock icon, because it is "
+                            + "something a model drives. You can grant the remaining permission any "
+                            + "time from Proctor Status.")
             }
         }
     }
@@ -163,11 +166,11 @@ struct Walkthrough: View {
     private func complete() { completed = true; finish() }
 
     /// A grant landed. Play it back on its row, and once both are in, move on.
-    private func onGrant(_ grant: WalkthroughFlow.Grant, _ ok: Bool) {
+    private func onGrant(_ name: String, _ ok: Bool) {
         guard ok else { return }
-        if step == .permissions { justGranted = grant }
+        if step == .permissions { justGranted = name }
         guard started, step == .permissions,
-              granted(.accessibility), granted(.screenRecording) else { return }
+              granted("Accessibility"), granted("Screen Recording") else { return }
         // Let the success animation finish before sliding the step away.
         DispatchQueue.main.asyncAfter(deadline: .now() + (reduceMotion ? 0 : 0.6)) {
             guard step == .permissions else { return }
@@ -176,8 +179,8 @@ struct Walkthrough: View {
         }
     }
 
-    private func granted(_ grant: WalkthroughFlow.Grant) -> Bool {
-        model.report?.grants.first { $0.name == grant.title }?.granted ?? false
+    private func granted(_ name: String) -> Bool {
+        model.report?.grants.first { $0.name == name }?.granted ?? false
     }
 }
 
@@ -187,7 +190,7 @@ private struct HeroPermissions: View {
     let appIcon: NSImage
     let accessibilityGranted: Bool
     let screenRecordingGranted: Bool
-    let justGranted: WalkthroughFlow.Grant?
+    let justGranted: String?
     let reduceMotion: Bool
     let onAllowAccessibility: () -> Void
     let onAllowScreenRecording: () -> Void
@@ -198,42 +201,34 @@ private struct HeroPermissions: View {
             Image(nsImage: appIcon)
                 .resizable().frame(width: 72, height: 72)
                 .padding(.top, 2).padding(.bottom, 16)
-            Text(WalkthroughFlow.Copy.heroTitle).font(.system(size: 22, weight: .bold))
+            Text("Enable Proctor").font(.system(size: 22, weight: .bold))
                 .padding(.bottom, 7)
-            Text(WalkthroughFlow.Copy.heroLede)
+            Text("Proctor needs two macOS permissions to read and drive your apps. They go to "
+                 + "Proctor itself, asked once, and are used only when a model you connect asks "
+                 + "it to run a test.")
                 .font(.system(size: 12)).foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: 420)
                 .padding(.bottom, 20)
 
-            // PRO-0090, closing DEF-056. Which row is prominent is
-            // `WalkthroughFlow.prominentGrant`, decided in Core where it is
-            // tested at all four combinations, because the design of record's
-            // rule — "Only one Grant is prominent at a time: the one to press
-            // next" — is a claim about the pair and this repo cannot ask a view
-            // about a pair.
-            let prominent = WalkthroughFlow.prominentGrant(
-                accessibility: accessibilityGranted,
-                screenRecording: screenRecordingGranted)
-
             VStack(spacing: 10) {
                 HeroPermRow(
-                    grant: .accessibility,
+                    name: "Accessibility", glyph: "accessibility",
+                    desc: "Lets Proctor read the control tree and drive it",
                     granted: accessibilityGranted,
-                    justGranted: justGranted == .accessibility,
-                    prominent: prominent == .accessibility,
+                    justGranted: justGranted == "Accessibility",
                     reduceMotion: reduceMotion, onAllow: onAllowAccessibility)
                 HeroPermRow(
-                    grant: .screenRecording,
+                    name: "Screen Recording", glyph: "display",
+                    desc: "Lets Proctor see what your app drew",
                     granted: screenRecordingGranted,
-                    justGranted: justGranted == .screenRecording,
-                    prominent: prominent == .screenRecording,
+                    justGranted: justGranted == "Screen Recording",
                     reduceMotion: reduceMotion, onAllow: onAllowScreenRecording)
             }
 
             if !(accessibilityGranted && screenRecordingGranted) {
-                Button(WalkthroughFlow.Copy.openSettings, action: onOpenSettings)
+                Button("Already allowed? Open System Settings", action: onOpenSettings)
                     .buttonStyle(.borderless).controlSize(.small)
                     .padding(.top, 14)
             }
@@ -243,36 +238,36 @@ private struct HeroPermissions: View {
 }
 
 private struct HeroPermRow: View {
-    let grant: WalkthroughFlow.Grant
+    let name: String
+    let glyph: String
+    let desc: String
     let granted: Bool
     let justGranted: Bool
-    /// Whether this is the Grant to press next. Decided by
-    /// `WalkthroughFlow.prominentGrant` and passed in, never worked out here:
-    /// the rule is about both rows and a row can only see itself.
-    let prominent: Bool
     let reduceMotion: Bool
     let onAllow: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: grant.glyph)
+            Image(systemName: glyph)
                 .font(.system(size: 20, weight: .medium))
                 .foregroundStyle(.tint)
                 .frame(width: 40, height: 40)
             VStack(alignment: .leading, spacing: 2) {
-                Text(grant.title).font(.system(size: 13, weight: .semibold))
-                Text(grant.rowDescription).font(.system(size: 11)).foregroundStyle(.secondary)
+                Text(name).font(.system(size: 13, weight: .semibold))
+                Text(desc).font(.system(size: 11)).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 12)
             if granted {
                 HStack(spacing: 5) {
                     GrantSuccessCheck(animate: justGranted, reduceMotion: reduceMotion)
-                    Text(WalkthroughFlow.Copy.allowed).font(.system(size: 12, weight: .medium))
+                    Text("Allowed").font(.system(size: 12, weight: .medium))
                         .foregroundStyle(.green)
                 }
             } else {
-                allowButton
+                Button("Allow", action: onAllow)
+                    .buttonStyle(.borderedProminent).controlSize(.small)
+                    .accessibilityLabel("Allow \(name)")
             }
         }
         .padding(12)
@@ -282,25 +277,6 @@ private struct HeroPermRow: View {
         .overlay(RoundedRectangle(cornerRadius: 9)
             .stroke(granted ? Color.green.opacity(0.35) : Color(nsColor: .separatorColor),
                     lineWidth: 1))
-    }
-
-    /// One button, two treatments. `.borderedProminent` is the filled Grant the
-    /// design draws on the row to press next; `.bordered` is the plain one it
-    /// draws on the other. Written as two branches rather than a conditional
-    /// modifier because `buttonStyle` returns a different opaque type per style
-    /// and SwiftUI has no way to pick one at the call site.
-    @ViewBuilder private var allowButton: some View {
-        if prominent {
-            Button(WalkthroughFlow.Copy.allow, action: onAllow)
-                .buttonStyle(.borderedProminent).controlSize(.small)
-                .accessibilityIdentifier(WalkthroughFlow.ID.grantButton(grant))
-                .accessibilityLabel(grant.allowLabel)
-        } else {
-            Button(WalkthroughFlow.Copy.allow, action: onAllow)
-                .buttonStyle(.bordered).controlSize(.small)
-                .accessibilityIdentifier(WalkthroughFlow.ID.grantButton(grant))
-                .accessibilityLabel(grant.allowLabel)
-        }
     }
 }
 
@@ -323,7 +299,7 @@ private struct GrantSuccessCheck: View {
                     .scaleEffect(ringScale)
                     .opacity(ringOpacity)
             }
-            Image(systemName: WalkthroughFlow.Copy.grantedCheckSymbol)
+            Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 14))
                 .foregroundStyle(.green)
                 .scaleEffect(playing ? scale : 1)
@@ -377,14 +353,10 @@ private struct Para: View {
 }
 
 private struct ConnectSnippet: View {
-    /// PRO-0090. Both halves were literals here and both already had one Core
-    /// definition: `Wire.shimPath` (PRO-0081, after two views assembled the same
-    /// path by hand) and `StatusSurface.Copy.connectSnippet`, which the status
-    /// window's Connect card copies. The two snippets were character-identical,
-    /// so this is the same text a person pastes into an MCP host reaching one
-    /// definition instead of two.
-    private var path: String { Wire.shimPath(inBundle: Bundle.main.bundlePath) }
-    private var snippet: String { StatusSurface.Copy.connectSnippet(shimPath: path) }
+    private var path: String { Bundle.main.bundlePath + "/Contents/MacOS/proctor-shim" }
+    private var snippet: String {
+        "{\n  \"mcpServers\": {\n    \"proctor\": { \"command\": \"\(path)\" }\n  }\n}"
+    }
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(snippet).font(.system(size: 11, design: .monospaced))
@@ -392,9 +364,7 @@ private struct ConnectSnippet: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color(nsColor: .quaternarySystemFill),
                             in: RoundedRectangle(cornerRadius: 6))
-            Button(WalkthroughFlow.Copy.copyConfig) { Actions.copy(snippet) }
-                .accessibilityIdentifier(WalkthroughFlow.ID.copySnippet)
-                .controlSize(.small)
+            Button("Copy config") { Actions.copy(snippet) }.controlSize(.small)
         }
     }
 }

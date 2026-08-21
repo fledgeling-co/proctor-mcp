@@ -37,12 +37,13 @@ struct HistoryWindow: View {
             model.load()
         }
         .onDisappear { model.forget() }
-        .confirmationDialog(HistorySurface.Copy.clearDialogTitle,
-                            isPresented: $confirmingClear) {
-            Button(HistorySurface.Copy.clearConfirm, role: .destructive) { model.clear() }
-            Button(HistorySurface.Copy.clearCancel, role: .cancel) {}
+        .confirmationDialog("Clear Proctor's history?", isPresented: $confirmingClear) {
+            Button("Clear history", role: .destructive) { model.clear() }
+            Button("Keep it", role: .cancel) {}
         } message: {
-            Text(HistorySurface.Copy.clearWarning)
+            Text("Everything recorded here is removed from this Mac and cannot be brought "
+                 + "back. Proctor keeps a note that the history was cleared, how much went, "
+                 + "and when — but not what was in it.")
         }
     }
 
@@ -53,40 +54,42 @@ struct HistoryWindow: View {
             Card { ProgressView().controlSize(.small) }
         case .empty:
             Card {
-                Text(HistorySurface.Copy.nothingRecordedTitle)
-                    .font(.system(size: 13, weight: .medium))
-                Text(HistorySurface.Copy.nothingRecordedBody)
+                Text("Nothing recorded yet.").font(.system(size: 13, weight: .medium))
+                Text("Proctor writes to its history whenever a model drives this Mac. "
+                     + "When that has happened, the runs appear here.")
                     .font(.system(size: 12)).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
         case .unreadable(let why):
             Card {
-                Label(HistorySurface.Copy.unreadableTitle,
-                      systemImage: HistorySurface.Copy.unreadableSymbol)
+                Label("The history cannot be opened on this Mac",
+                      systemImage: "lock.trianglebadge.exclamationmark")
                     .font(.system(size: 13, weight: .medium))
                 // The agent's own words. It knows why; this window does not, and
                 // guessing would be worse than quoting.
                 Text(verbatim: why)
                     .font(.system(size: 12)).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(HistorySurface.Copy.unreadableNote)
+                Text("Proctor's history is encrypted, and the key lives in this Mac's login "
+                     + "keychain and nowhere else. There is no copy and no recovery key: that "
+                     + "was chosen deliberately, so a stolen backup is unreadable.")
                     .font(.system(size: 11)).foregroundStyle(.tertiary)
                     .fixedSize(horizontal: false, vertical: true)
             }
         case .unreachable(let why):
             Card {
-                Label(HistorySurface.Copy.unreachableTitle,
-                      systemImage: HistorySurface.Copy.unreachableSymbol)
+                Label("Proctor's background agent is not answering",
+                      systemImage: "bolt.horizontal.circle")
                     .font(.system(size: 13, weight: .medium))
                 Text(verbatim: why)
                     .font(.system(size: 12)).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(HistorySurface.Copy.unreachableNote)
+                Text("The agent holds the key, so nothing can be read until it is running.")
                     .font(.system(size: 11)).foregroundStyle(.tertiary)
             }
         case .loaded:
             VStack(alignment: .leading, spacing: 8) {
-                SectionTitle(HistorySurface.Copy.runsHeading)
+                SectionTitle("Runs")
                 ForEach(model.runs) { run in
                     RunRow(run: run,
                            expanded: model.expanded.contains(run.id),
@@ -109,8 +112,8 @@ struct HistoryWindow: View {
     /// photograph, and `proctor_capture` is a tool that model can call.
     private func excludeFromCapture() {
         for window in NSApplication.shared.windows
-        where window.identifier?.rawValue.contains(HistorySurface.sceneID) == true
-                || window.title == HistorySurface.sceneTitle {
+        where window.identifier?.rawValue.contains("history") == true
+                || window.title == "History" {
             window.sharingType = .none
         }
     }
@@ -153,8 +156,8 @@ struct Fence: View {
             .overlay(RoundedRectangle(cornerRadius: 4)
                 .stroke(Color(nsColor: .separatorColor), lineWidth: 1))
             .help(value.supplied
-                  ? HistorySurface.Copy.suppliedNameHelp
-                  : HistorySurface.Copy.readNameHelp)
+                  ? "A name the model driving Proctor supplied"
+                  : "A name Proctor read from the application")
     }
 }
 
@@ -167,16 +170,15 @@ private struct HistoryHeader: View {
     var body: some View {
         Card {
             HStack(alignment: .firstTextBaseline) {
-                SectionTitle(HistorySurface.Copy.historyHeading)
+                SectionTitle("History")
                 Spacer()
-                Button(HistorySurface.Copy.refresh) { model.load() }.controlSize(.small)
-                Button(HistorySurface.Copy.clearAction, role: .destructive) {
-                    confirmingClear = true
-                }
+                Button("Refresh") { model.load() }.controlSize(.small)
+                Button("Clear…", role: .destructive) { confirmingClear = true }
                     .controlSize(.small)
                     .disabled(model.header?.entries ?? 0 == 0)
             }
-            Text(HistorySurface.Copy.headerNote)
+            Text("What Proctor did on this Mac, one row per run. It is kept on this Mac only, "
+                 + "encrypted, and it clears itself as it ages.")
                 .font(.system(size: 12)).foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -186,29 +188,41 @@ private struct HistoryHeader: View {
                 // as an ordinary short one. These are the only places this window
                 // says something is wrong, so they are on the face of it.
                 if !header.verdictClean || !header.keyConfirmed {
-                    Callout(icon: HistorySurface.Copy.verdictSymbol, tint: .orange,
+                    Callout(icon: "exclamationmark.triangle.fill", tint: .orange,
                             title: header.keyConfirmed
-                                ? HistorySurface.Copy.verdictFailedTitle
-                                : HistorySurface.Copy.verdictUncheckedTitle,
+                                ? "This history does not check out"
+                                : "This history could not be checked",
                             message: header.faultDetail
-                                ?? HistorySurface.Copy.verdictUncheckedMessage)
+                                ?? "The signing key could not be reached, so what is below is "
+                                 + "internally consistent but unconfirmed: nothing proves it was "
+                                 + "written by Proctor on this Mac.")
                 }
                 if header.dropped > 0 {
-                    Callout(icon: HistorySurface.Copy.droppedSymbol, tint: .orange,
-                            title: HistorySurface.Copy.droppedTitle(header.dropped),
-                            message: HistorySurface.Copy.droppedMessage(header.dropped))
+                    Callout(icon: "square.stack.3d.up.slash", tint: .orange,
+                            title: "\(header.dropped) "
+                                + "\(header.dropped == 1 ? "action was" : "actions were") not recorded",
+                            message: "Proctor could not write \(header.dropped == 1 ? "it" : "them") "
+                                + "to the history this run, so \(header.dropped == 1 ? "it is" : "they are") "
+                                + "missing from the list below. A history with nothing wrong in it is "
+                                + "not the same as a complete one.")
                 }
                 if model.unreadable > 0 {
-                    Callout(icon: HistorySurface.Copy.unopenedSymbol, tint: .secondary,
-                            title: HistorySurface.Copy.unopenedTitle(model.unreadable),
-                            message: HistorySurface.Copy.unopenedMessage(model.unreadable))
+                    Callout(icon: "questionmark.square.dashed", tint: .secondary,
+                            title: "\(model.unreadable) "
+                                + "\(model.unreadable == 1 ? "entry" : "entries") could not be opened",
+                            message: "\(model.unreadable == 1 ? "It was" : "They were") sealed with a "
+                                + "key this Mac no longer holds. Something happened; this window "
+                                + "cannot say what.")
                 }
                 if let discarded = header.rotatedDiscarded {
-                    Callout(icon: HistorySurface.Copy.rotatedSymbol, tint: .secondary,
-                            title: header.rotatedReason == HistoryRetention.Reason.person.rawValue
-                                ? HistorySurface.Copy.rotatedByPersonTitle
-                                : HistorySurface.Copy.rotatedByLimitTitle,
-                            message: HistorySurface.Copy.rotatedMessage(discarded))
+                    Callout(icon: "clock.arrow.circlepath", tint: .secondary,
+                            title: header.rotatedReason == "person"
+                                ? "History was cleared"
+                                : "History reached its limit and started again",
+                            message: "\(discarded) earlier "
+                                + "\(discarded == 1 ? "entry was" : "entries were") removed. Proctor "
+                                + "keeps a note that it happened and how much went, and nothing else "
+                                + "about them.")
                 }
             }
         }
@@ -228,11 +242,10 @@ private struct Retention: View {
                 Text("\(header.entries)")
                     .font(.system(size: 12, weight: .semibold, design: .monospaced))
                     .monospacedDigit()
-                Text(HistorySurface.Copy.entriesHeld(header.entries))
+                Text(header.entries == 1 ? "entry held" : "entries held")
                     .font(.system(size: 12)).foregroundStyle(.secondary)
                 Spacer()
-                Text(HistorySurface.Copy.retentionNote(capDays: header.capDays,
-                                                       capEntries: header.capEntries))
+                Text("keeps \(header.capDays) days or \(header.capEntries) entries, then starts again")
                     .font(.system(size: 11)).foregroundStyle(.tertiary)
             }
             ProgressView(value: max(0, min(1, 1 - header.remaining)))
@@ -253,8 +266,7 @@ private struct RunRow: View {
         VStack(alignment: .leading, spacing: 0) {
             Button(action: toggle) {
                 HStack(spacing: 10) {
-                    Image(systemName: expanded ? HistorySurface.Copy.expandedSymbol
-                              : HistorySurface.Copy.collapsedSymbol)
+                    Image(systemName: expanded ? "chevron.down" : "chevron.right")
                         .font(.system(size: 9, weight: .semibold))
                         .foregroundStyle(.tertiary)
                         .frame(width: 10)
@@ -293,7 +305,7 @@ private struct RunRow: View {
                 VStack(alignment: .leading, spacing: 0) {
                     if let reason = run.reason {
                         HStack(alignment: .top, spacing: 8) {
-                            Image(systemName: HistorySurface.Copy.stepDetailSymbol)
+                            Image(systemName: "text.alignleft")
                                 .font(.system(size: 9)).foregroundStyle(.tertiary)
                                 .frame(width: 10)
                             Fence(value: reason, maxWidth: 460)
@@ -301,7 +313,7 @@ private struct RunRow: View {
                         .padding(.vertical, 6).padding(.horizontal, 10)
                     }
                     if run.steps.isEmpty && run.reason == nil {
-                        Text(HistorySurface.Copy.noStepsRecorded)
+                        Text("No steps were recorded for this run.")
                             .font(.system(size: 11)).foregroundStyle(.tertiary)
                             .padding(.vertical, 6).padding(.horizontal, 10)
                     }
@@ -309,7 +321,8 @@ private struct RunRow: View {
                         StepRow(step: step)
                     }
                     if run.unreadable > 0 {
-                        Text(HistorySurface.Copy.runUnreadable(run.unreadable))
+                        Text("\(run.unreadable) \(run.unreadable == 1 ? "entry" : "entries") "
+                             + "in this run could not be opened.")
                             .font(.system(size: 11)).foregroundStyle(.tertiary)
                             .padding(.vertical, 6).padding(.horizontal, 10)
                     }
@@ -324,10 +337,24 @@ private struct RunRow: View {
     }
 
     private var summary: String {
-        HistorySurface.Copy.runSummary(steps: run.steps.count, outcome: run.outcome)
+        let steps = run.steps.count
+        let count = steps == 0 ? "no steps" : (steps == 1 ? "1 step" : "\(steps) steps")
+        switch run.outcome {
+        case .ok:          return count
+        case .failed:      return "\(count), failed"
+        case .refused:     return "\(count), refused"
+        case .halted:      return "\(count), stopped by a person"
+        case .recommended: return "named another lane"
+        case .mixed:       return "\(count), some failed"
+        // Never "failed". The whole reason this outcome exists is that Proctor
+        // has no basis for saying the step did not happen.
+        case .indeterminate: return "\(count), outcome unknown"
+        }
     }
 
-    static func duration(_ ms: Int) -> String { HistorySurface.Copy.duration(ms: ms) }
+    static func duration(_ ms: Int) -> String {
+        ms < 1000 ? "\(ms) ms" : String(format: "%.1f s", Double(ms) / 1000)
+    }
 }
 
 /// One step. The shape is fixed and identical for every row — mark, Proctor's
@@ -343,7 +370,7 @@ private struct StepRow: View {
                     .frame(width: 12)
                 // Proctor's own past-tense wording, stored apart from the object
                 // exactly so it can be drawn plainly here.
-                Text(step.act ?? step.kind ?? HistorySurface.Copy.actedHeading)
+                Text(step.act ?? step.kind ?? "Acted")
                     .font(.system(size: 11, weight: .medium))
                 if let object = step.object {
                     Fence(value: object)
@@ -379,18 +406,24 @@ private struct StepRow: View {
 private struct PlaneBadge: View {
     let plane: String
 
-    private var label: String { HistorySurface.Copy.planeLabel(plane) }
+    private var label: String {
+        switch plane {
+        case "accessibility": return "accessibility"
+        case "appleEvent":    return "Apple event"
+        case "syntheticEvent": return "synthetic"
+        default:              return plane
+        }
+    }
 
     var body: some View {
         Text(label)
             .font(.system(size: 9, weight: .medium))
             .padding(.horizontal, 5).padding(.vertical, 1)
-            .background(plane == ActuationPlane.syntheticEvent.rawValue
+            .background(plane == "syntheticEvent"
                         ? Color.orange.opacity(0.14)
                         : Color(nsColor: .quaternarySystemFill),
                         in: Capsule())
-            .foregroundStyle(plane == ActuationPlane.syntheticEvent.rawValue
-                             ? Color.orange : Color.secondary)
+            .foregroundStyle(plane == "syntheticEvent" ? Color.orange : Color.secondary)
     }
 }
 
@@ -404,7 +437,19 @@ private struct OutcomeMark: View {
             .foregroundStyle(tint)
     }
 
-    private var symbol: String { HistorySurface.Copy.outcomeSymbol(outcome) }
+    private var symbol: String {
+        switch outcome {
+        case .ok:          return "checkmark.circle.fill"
+        case .failed:      return "xmark.circle.fill"
+        case .refused:     return "hand.raised.fill"
+        // A person's own stop is not a fault, and is not drawn as one. The run
+        // panel already refuses to paint it red and this agrees with it.
+        case .halted:      return "stop.circle.fill"
+        case .recommended: return "arrow.turn.down.right"
+        case .mixed:       return "exclamationmark.circle.fill"
+        case .indeterminate: return "questionmark.circle.fill"
+        }
+    }
 
     private var tint: Color {
         switch outcome {

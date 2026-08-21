@@ -32,6 +32,16 @@ public enum GrantState: String, Codable, Sendable, CaseIterable {
 /// The bound, and the schedule for asking again after the platform ignores us.
 public enum GrantProbe {
 
+    /// The `AXIsProcessTrustedWithOptions` key that turns a silent read of the
+    /// recorded answer into a consent dialog.
+    ///
+    /// PRO-0090. Two processes spell it — `AgentModel.requestAccessibilityPrompt`
+    /// and the agent's `Contracts.swift` — and a misspelt key is not rejected: the
+    /// dictionary is simply ignored and the call returns the recorded answer with
+    /// no dialog drawn, which is indistinguishable from the person dismissing one.
+    public static let trustedCheckOptionPrompt = "AXTrustedCheckOptionPrompt"
+
+
     /// How long to wait for the platform before answering `unconfirmed`.
     ///
     /// The healthy answer measured 0.037s, so this is ~40x the observed latency

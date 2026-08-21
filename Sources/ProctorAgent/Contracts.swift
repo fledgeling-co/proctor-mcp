@@ -199,7 +199,7 @@ enum Grants {
     }
 
     static func promptAccessibility() {
-        let key = "AXTrustedCheckOptionPrompt" as CFString
+        let key = GrantProbe.trustedCheckOptionPrompt as CFString
         _ = AXIsProcessTrustedWithOptions([key: true] as CFDictionary)
     }
 

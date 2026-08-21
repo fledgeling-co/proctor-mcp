@@ -488,13 +488,11 @@
     "status": "pass",
     "evidence": [
       "evidence/overlay-capture-default.json",
-      "evidence/window-level-sharing.json",
-      "evidence/PRO-0088/case-0032-population-before.json",
-      "evidence/PRO-0088/glass/overlay-population.json"
+      "evidence/window-level-sharing.json"
     ],
     "armed": true,
     "armedBy": "Watched to fail on the build before the fix: the drawn pointer reported sharingState 1 and screencapture -l wrote a 3456x2234 file of it while the run panel and the takeover tint both reported 0 and refused.",
-    "note": "All three overlays now report sharingState 0 at the default, on both displays: layer 24 at 1728x1117 and 2560x1440, layer 25 at 352x230, layer 1000 at 1728x1117 and 2560x1440. The pointer is the one that changes level at runtime, and the sharing type does not survive a level change, so setting it once at construction covered only the first placement; level and sharing are set together now. Ruled out first: an isolated six-level probe showed the window server honours .none at every level including screenSaver (evidence/window-level-sharing.json), so the level was not the cause.\n\nCORRECTED BY PRO-0088 (DEF-096). 'All three' was never counted. Re-derived with len() over the rows of this case's own sibling evidence: agent pid 86732 owns 3 windows during a run, of which 2 report sharingState 0 and 1 reports 1 \u2014 the layer-0 panel, which PRO-0088 identified by intervention as the drawn pointer. Before a run the same process owns 1 window and it is at sharingState 1. So the denominator was right and the claim made over it was wrong on this lineage; the fix it describes lives in commit 15f86ea, which is on main and is not an ancestor of ai/wave-9 (DEF-099). The claim now holds on the delivered build and is re-measured with a live pre-fix control as CASE-0128: 3 owned, 0 not excluded, over 54 samples. Counts: evidence/PRO-0088/case-0032-population-before.json and evidence/PRO-0088/glass/overlay-population.json.",
+    "note": "All three overlays now report sharingState 0 at the default, on both displays: layer 24 at 1728x1117 and 2560x1440, layer 25 at 352x230, layer 1000 at 1728x1117 and 2560x1440. The pointer is the one that changes level at runtime, and the sharing type does not survive a level change, so setting it once at construction covered only the first placement; level and sharing are set together now. Ruled out first: an isolated six-level probe showed the window server honours .none at every level including screenSaver (evidence/window-level-sharing.json), so the level was not the cause.",
     "defects": [
       "DEF-005"
     ]
@@ -889,11 +887,7 @@
       "effect": "subprocess",
       "count": 2
     },
-    "note": "Driven through Session.guest(action:\"list\") twice, with LumeProvider built by its CONVENIENCE initialiser \u2014 the production path, which binds run to Self.liveRun and reaches a real Process() through Session.runBounded. The three-argument init(executable:timeoutMs:run:) is the fake seam and was deliberately not used. Two drives, two sentinels, two distinct pids, neither this process's. PORTABLE FLOOR, not the kernel bar: no dtrace, no eslogger, no execve census \u2014 this suite has no privilege for one, and that is the lane's ceiling rather than a silence. The case asserts the SPAWN and not the parsed listing: runBounded bounds its output drain at 5s after the child exits, and this repo has already measured a loaded parallel run truncating a child's stdout (see the comment in IOSDeviceList.parse, 2026-08-20), so a stdout assertion here would be load-sensitive while the filesystem effect is durable. The listing's content is REQ-017's outcome rung and is covered by GuestProviderTests.",
-    "capture": {
-      "method": "ScreenCaptureKit window-scoped, signed Developer ID agent pid 97657, target Calculator pid 14545 CG window 123357",
-      "frameStatus": "SCFrameStatus=complete, framesWaited 2"
-    }
+    "note": "Driven through Session.guest(action:\"list\") twice, with LumeProvider built by its CONVENIENCE initialiser \u2014 the production path, which binds run to Self.liveRun and reaches a real Process() through Session.runBounded. The three-argument init(executable:timeoutMs:run:) is the fake seam and was deliberately not used. Two drives, two sentinels, two distinct pids, neither this process's. PORTABLE FLOOR, not the kernel bar: no dtrace, no eslogger, no execve census \u2014 this suite has no privilege for one, and that is the lane's ceiling rather than a silence. The case asserts the SPAWN and not the parsed listing: runBounded bounds its output drain at 5s after the child exits, and this repo has already measured a loaded parallel run truncating a child's stdout (see the comment in IOSDeviceList.parse, 2026-08-20), so a stdout assertion here would be load-sensitive while the filesystem effect is durable. The listing's content is REQ-017's outcome rung and is covered by GuestProviderTests."
   },
   {
     "id": "CASE-0060",
@@ -976,12 +970,7 @@
     ],
     "armed": true,
     "armedBy": "The pass was armed rather than trusted: on a /tmp copy of Tests/, one read-back line was deleted from AuditRotationTests.clearingEmptyIsANoOp, a test then in the re-read set. The count went 78 to 79 and the finding named that test. A zero-genuine result from a pass that could not report a genuine finding would have measured nothing.",
-    "note": "Sampled false-positive rate for the blind-mutation pass. 57 of 78 findings read (73.1%): five per bucket from act/unlock/release/set/claim at seed 20260821, plus a CENSUS of the 32-finding tail. 57 of 57 false positive, 0 genuine. The tail is exact at 0 of 32; in the large strata 0 genuine in 25 drawn from 46 refutes K>=4 at 95% (P=0.037) and does not refute K=3 (P=0.088), so the bound is at most 3 genuine in 78 -- a false-positive rate of at least 96.2%. Six shapes: false-mutator 17, vocabulary 15, return-value 10, teardown 9, not-a-test 4, body-bleed 2. Only vocabulary is reachable by the reader list, so 42 of 57 cannot be fixed by any vocabulary at all. No test was edited and no production source touched, because the sample produced no genuine finding. blindVocabulary gained .calls and .recorded on the evidence of two sampled findings (78 -> 76); every other candidate was refused with its measured file count and effect. PARTIAL by denominator: 21 of the 46 large-stratum findings were never read and the bound stands in for them. Suite gate: ./scripts/test.sh green at 1,814 tests in 214 suites, unchanged from the wave's recorded count, as it must be for an item that touches no Swift. The first attempt stalled at 1,758 of 1,785 started tests, blocked in mach_msg2_trap with TCC and ScreenCaptureKit loaded behind a concurrent run in a sibling worktree; test.sh refused to read the absent verdict as a pass and both attempts are in the evidence.",
-    "witness": {
-      "recorder": "listen-only tail-append CGEventTap in the witness_probe process, counting probe-marked posts that survived Proctor's head-inserted block",
-      "effect": "device",
-      "count": 24
-    }
+    "note": "Sampled false-positive rate for the blind-mutation pass. 57 of 78 findings read (73.1%): five per bucket from act/unlock/release/set/claim at seed 20260821, plus a CENSUS of the 32-finding tail. 57 of 57 false positive, 0 genuine. The tail is exact at 0 of 32; in the large strata 0 genuine in 25 drawn from 46 refutes K>=4 at 95% (P=0.037) and does not refute K=3 (P=0.088), so the bound is at most 3 genuine in 78 -- a false-positive rate of at least 96.2%. Six shapes: false-mutator 17, vocabulary 15, return-value 10, teardown 9, not-a-test 4, body-bleed 2. Only vocabulary is reachable by the reader list, so 42 of 57 cannot be fixed by any vocabulary at all. No test was edited and no production source touched, because the sample produced no genuine finding. blindVocabulary gained .calls and .recorded on the evidence of two sampled findings (78 -> 76); every other candidate was refused with its measured file count and effect. PARTIAL by denominator: 21 of the 46 large-stratum findings were never read and the bound stands in for them. Suite gate: ./scripts/test.sh green at 1,814 tests in 214 suites, unchanged from the wave's recorded count, as it must be for an item that touches no Swift. The first attempt stalled at 1,758 of 1,785 started tests, blocked in mach_msg2_trap with TCC and ScreenCaptureKit loaded behind a concurrent run in a sibling worktree; test.sh refused to read the absent verdict as a pass and both attempts are in the evidence."
   },
   {
     "req": "REQ-004",
@@ -1794,21 +1783,19 @@
     "surface": "SURF-022",
     "oracle": "source-analysis",
     "lane": "headless",
-    "status": "pass",
-    "note": "PRO-0089 A6. The population of wall-clock oracles, counted rather than sampled: scripts/campaign/wall_clock_census.py scans 117 swift files under Tests/, finds 38 lines mentioning a clock of any kind \u2014 the denominator, printed in full and never capped \u2014 and 0 assertions comparing a measured wall-clock time to a numeric literal. A clock a test injects and drives is deliberately not flagged; that is what this item moved the assertions onto. BEFORE BELIEVING THE ZERO: `--arm` runs the detector over both offenders as they stood at the merge base via `git show`, and requires it to find ScreenRecordingProbeWiringTests.swift:42 and CuaLineReaderTests.swift:107 before any census is trusted. It reports 'detector caught 2 of the 2 known offenders / ARMED'. This gate has already caught one silent zero: DEF-067, a first detector whose regex could not cross the parenthesis in timeIntervalSince(started) and so missed the very line it was written for while printing a clean zero. The brief's count of 'two other tests' is one more than the tree holds; two is the whole population. Rung corrected at merge: this case was written `static-analysis`, which is on no ladder, so campaign.py filed it `unrated`. PRO-0091 introduced `source-analysis` as a rung parallel to the ladder for exactly this shape, with two guards; REQ-056's effect is `none`, so the external-effect guard does not apply, and the analyzer and examined count the other guard requires are supplied from a live run rather than copied: 118 files / 42 clock sites / 0 offenders. The case's own evidence file records 117 and 38, captured at merge-base e506ea0e before the PRO-0087 merge added clock-mentioning lines and this branch added a file. The offender count, which is the claim, is 0 in both.\n\nRE-MEASURED BY PRO-0096 FROM A LIVE RUN, AND IT NO LONGER PASSES. The brief asked for the analyzer and examined count to come from running the instrument rather than from the evidence file, because evidence files in this wave had gone stale by a merge. Running it found the case's own claim had gone stale the same way. LIVE: 127 swift test files scanned, 54 lines mentioning a clock of any kind (the denominator, printed in full and never capped), and 1 assertion comparing a measured wall-clock time to a numeric literal. Exit 1. The case recorded 0, and 0 was true when it was written.\n\nTHE OFFENDER, and it is a true positive rather than a detector artefact: Tests/ProctorCoreTests/ProctorCoreTests.swift:232 reads `#expect(waited < 10, \"a bounded client waited \\(waited)s\")`, where `waited` is `Date().timeIntervalSince(started)` around a SocketClient send whose ioTimeoutSeconds is 1. That is measured elapsed time against a numeric literal with 10x headroom \u2014 DEF-051's exact shape, and the thing REQ-056 exists to forbid. `git log -L232,232` puts it in 10285df (\"fix(ui): a wedged agent stops reading as Ready\"), which landed after this case was written, so the requirement regressed rather than the census being wrong. DEF-106.\n\nBEFORE BELIEVING EITHER READING, THE ARM WAS REPAIRED, because it had stopped being able to fire. `--arm` resolved its reference with `git merge-base HEAD ai/wave-9`, and once PRO-0089's fix merged into ai/wave-9 that merge-base BECAME the fixed tree: the arm read two files with no offenders in them and reported 'detector caught 0 of the 2 known offenders / ARMING FAILED'. The probe built to stop a silent zero had itself gone silent, which is DEF-067 one level up. It is now pinned to an immutable sha and catches 2 of 2. DEF-105. So the detector is proved two ways here \u2014 it finds both historical offenders on demand, and it found a live one nobody was looking for.\n\nFIELD PLACEMENT CORRECTED: this case carried `analyzer` and `examined` at the top level of the record, with `examined` as a prose string. campaign.py's guard reads `source.analyzer` and requires `source.examined` to be an int >= 1, so both were invisible to it and the case was flagged twice for fields it appeared to have. CASE-0102..0105, written through the same rung, put them under `source` correctly; this one was hand-written. DEF-108. The denominator recorded is 54, the clock-mentioning lines, because that is the population the offender count is drawn from \u2014 the 127 files are what was opened, not what was judged.\n\nNOT FIXED HERE, AND THE REASON IS SCOPE RATHER THAN DIFFICULTY: PRO-0096 is a registry and instrument item. Removing the assertion or giving SocketClient an injectable clock is a change to the product's test suite and belongs to whoever owns DEF-106. Recording this case `pass` with a 0 the instrument no longer reports was the one route not available.\n\nRETURNED TO PASS BY PRO-0097, ON A LIVE RUN RATHER THAN A RE-READ. DEF-106 is closed: SocketClient takes its bound mechanism (`applyBound: BoundApplier`, defaulting to `SocketClient.liveBound`), the test asserts the kernel was asked for both directions at exactly `client.ioTimeoutSeconds`, and the two timing lines are gone. LIVE: 129 swift test files scanned, 52 lines mentioning a clock of any kind, 0 assertions comparing a measured wall-clock time to a literal, exit 0. The denominator moved 54 to 52 because the two clock lines removed from this file were two of the 54; the file count moved 127 to 129 because this branch added test files.\n\nTHE ZERO WAS ARMED TWO WAYS BEFORE IT WAS BELIEVED, because a detector that has gone quiet and a population that has gone clean read identically. `--arm` still catches 2 of 2 at the pinned pre-fix commit; and the same `scan()` run over THIS file at HEAD reports the offender at line 232 and reports nothing over the working tree. docs/test-campaign/evidence/PRO-0097/def-106-arming.txt.\n\nTHE BOUND DID NOT MOVE: `ioTimeoutSeconds` is 1 before and after, and the assertion names the client's own field rather than a literal, so it cannot be satisfied by widening it. CASE-0219, CASE-0220, CASE-0221.",
+    "status": "fail",
+    "note": "PRO-0089 A6. The population of wall-clock oracles, counted rather than sampled: scripts/campaign/wall_clock_census.py scans 117 swift files under Tests/, finds 38 lines mentioning a clock of any kind \u2014 the denominator, printed in full and never capped \u2014 and 0 assertions comparing a measured wall-clock time to a numeric literal. A clock a test injects and drives is deliberately not flagged; that is what this item moved the assertions onto. BEFORE BELIEVING THE ZERO: `--arm` runs the detector over both offenders as they stood at the merge base via `git show`, and requires it to find ScreenRecordingProbeWiringTests.swift:42 and CuaLineReaderTests.swift:107 before any census is trusted. It reports 'detector caught 2 of the 2 known offenders / ARMED'. This gate has already caught one silent zero: DEF-067, a first detector whose regex could not cross the parenthesis in timeIntervalSince(started) and so missed the very line it was written for while printing a clean zero. The brief's count of 'two other tests' is one more than the tree holds; two is the whole population. Rung corrected at merge: this case was written `static-analysis`, which is on no ladder, so campaign.py filed it `unrated`. PRO-0091 introduced `source-analysis` as a rung parallel to the ladder for exactly this shape, with two guards; REQ-056's effect is `none`, so the external-effect guard does not apply, and the analyzer and examined count the other guard requires are supplied from a live run rather than copied: 118 files / 42 clock sites / 0 offenders. The case's own evidence file records 117 and 38, captured at merge-base e506ea0e before the PRO-0087 merge added clock-mentioning lines and this branch added a file. The offender count, which is the claim, is 0 in both.\n\nRE-MEASURED BY PRO-0096 FROM A LIVE RUN, AND IT NO LONGER PASSES. The brief asked for the analyzer and examined count to come from running the instrument rather than from the evidence file, because evidence files in this wave had gone stale by a merge. Running it found the case's own claim had gone stale the same way. LIVE: 127 swift test files scanned, 54 lines mentioning a clock of any kind (the denominator, printed in full and never capped), and 1 assertion comparing a measured wall-clock time to a numeric literal. Exit 1. The case recorded 0, and 0 was true when it was written.\n\nTHE OFFENDER, and it is a true positive rather than a detector artefact: Tests/ProctorCoreTests/ProctorCoreTests.swift:232 reads `#expect(waited < 10, \"a bounded client waited \\(waited)s\")`, where `waited` is `Date().timeIntervalSince(started)` around a SocketClient send whose ioTimeoutSeconds is 1. That is measured elapsed time against a numeric literal with 10x headroom \u2014 DEF-051's exact shape, and the thing REQ-056 exists to forbid. `git log -L232,232` puts it in 10285df (\"fix(ui): a wedged agent stops reading as Ready\"), which landed after this case was written, so the requirement regressed rather than the census being wrong. DEF-106.\n\nBEFORE BELIEVING EITHER READING, THE ARM WAS REPAIRED, because it had stopped being able to fire. `--arm` resolved its reference with `git merge-base HEAD ai/wave-9`, and once PRO-0089's fix merged into ai/wave-9 that merge-base BECAME the fixed tree: the arm read two files with no offenders in them and reported 'detector caught 0 of the 2 known offenders / ARMING FAILED'. The probe built to stop a silent zero had itself gone silent, which is DEF-067 one level up. It is now pinned to an immutable sha and catches 2 of 2. DEF-105. So the detector is proved two ways here \u2014 it finds both historical offenders on demand, and it found a live one nobody was looking for.\n\nFIELD PLACEMENT CORRECTED: this case carried `analyzer` and `examined` at the top level of the record, with `examined` as a prose string. campaign.py's guard reads `source.analyzer` and requires `source.examined` to be an int >= 1, so both were invisible to it and the case was flagged twice for fields it appeared to have. CASE-0102..0105, written through the same rung, put them under `source` correctly; this one was hand-written. DEF-108. The denominator recorded is 54, the clock-mentioning lines, because that is the population the offender count is drawn from \u2014 the 127 files are what was opened, not what was judged.\n\nNOT FIXED HERE, AND THE REASON IS SCOPE RATHER THAN DIFFICULTY: PRO-0096 is a registry and instrument item. Removing the assertion or giving SocketClient an injectable clock is a change to the product's test suite and belongs to whoever owns DEF-106. Recording this case `pass` with a 0 the instrument no longer reports was the one route not available.",
     "evidence": [
       "docs/test-campaign/evidence/PRO-0089/wall-clock-census.txt",
       "docs/test-campaign/evidence/PRO-0096/census-arm-broken.txt",
       "docs/test-campaign/evidence/PRO-0096/census-arm-pinned.txt",
-      "docs/test-campaign/evidence/PRO-0096/census-live.txt",
-      "docs/test-campaign/evidence/PRO-0097/census-after.txt",
-      "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt"
+      "docs/test-campaign/evidence/PRO-0096/census-live.txt"
     ],
     "armed": true,
     "armedBy": "wall_clock_census.py --arm at PRE_FIX_COMMIT baa98bbe33ce42685fe515b9c803d3d5a430d177, the parent of 6dbaa9b, which is the last tree holding BOTH historical offenders. It reports 'ScreenRecordingProbeWiringTests.swift @ baa98bbe33ce: offenders at [42] (expected 42)', 'CuaLineReaderTests.swift @ baa98bbe33ce: offenders at [107] (expected 107)', 'detector caught 2 of the 2 known offenders / ARMED', exit 0. docs/test-campaign/evidence/PRO-0096/census-arm-pinned.txt",
     "source": {
-      "analyzer": "scripts/campaign/wall_clock_census.py, run live by PRO-0097 and armed twice before the zero was believed: 2 of 2 known offenders at the pinned pre-fix commit baa98bbe33ce, and the line-232 offender found on demand in the pre-fix version of the file this item changed",
-      "examined": 52
+      "analyzer": "scripts/campaign/wall_clock_census.py, armed at the pinned pre-fix commit baa98bbe33ce (2 of 2 known offenders caught) before this census was believed",
+      "examined": 54
     },
     "defects": [
       "DEF-105",
@@ -1874,15 +1861,12 @@
     "oracle": "outcome",
     "status": "pass",
     "evidence": [
-      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
-      "docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt"
+      "Tests/ProctorAgentTests/ToolchainDoctorTests.swift"
     ],
-    "armed": true,
-    "armedBy": "Armed by mutation, which is what the field asked for and what the previous entry declined. `SignatureVerdictCache.capacity` 16 -> 1 \u2014 a single slot, the exact store the case names \u2014 turns it red: 'Expectation failed: (cache.verificationCount \u2192 10) == 2' and '(counter.count \u2192 10) == 2', exit 1, through ./scripts/test.sh --filter twoFilesDoNotEvictEachOther. Ten is not merely non-2: it is five alternations over two identities missing every time, the thrash the note describes, so the assertion watches the mechanism. Reverted, the same filter through the same script passes in 0.001s, exit 0, and `grep -c MUTANT` on the file reads 0. WHAT THE OLD REASON GOT WRONG: it required a shipped defect to reinstate, and arming requires only the behaviour removed and the assertion watched. DEF-116; run in docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt.",
+    "armed": false,
+    "armedBy": "Not armed by re-introducing a shipped defect: the single-slot cache it guards against was correct while the cache was per-Session, so there is no prior state of this repo in which this test is red. It guards a regression the shared store newly makes possible.",
     "note": "PRO-0087. A process-wide store is asked about more than one path, so a suite's scripted path and this machine's real cua-driver land in the same cache. A single slot would have them evicting each other and re-verifying on every alternation, which is the wedge again in different clothes. Five alternations between two identities cost two verifications.",
-    "defects": [
-      "DEF-116"
-    ]
+    "defects": []
   },
   {
     "id": "CASE-0114",
@@ -2155,14 +2139,14 @@
     "req": "REQ-061",
     "surface": "SURF-006",
     "flow": "FLOW-003",
-    "oracle": "outcome",
+    "oracle": "raster-visual",
     "status": "pass",
     "evidence": [
       "evidence/PRO-0088/gate-after.txt"
     ],
     "armed": true,
     "armedBy": "Before believing the zero: one pixel, one channel, set to alpha 7 over the same buffer, and the instrument reports 7. It could have said non-zero.",
-    "note": "FramePixels.contentSummary over a synthesised all-transparent BGRA buffer reports maxAlpha 0 and allTransparent true. Includes the out-of-family review's High finding as CASE-0124b: one lit pixel at (733,1019) in a 1520x1936 frame \u2014 an offset no square stride lands on \u2014 is content, not emptiness. Also covers the Medium: a buffer whose pixelFormat is not 32BGRA is notMeasured rather than read with a colour channel mistaken for alpha.\n\nRUNG CORRECTED BY PRO-0097, and this lowers the raster count rather than raising anything. This case measures FramePixels.contentSummary over a BGRA buffer synthesised in a unit test \u2014 no pixels came off a display server, and its evidence file is a test transcript rather than an image, which is what campaign.py was reporting as 'not a raster image'. `raster-visual` was a claim this measurement cannot support; `outcome` is the rung it stands on. The raster claim REQ-061 rests on is CASE-0129, which drove proctor_capture against a signed build and kept the reply, and it keeps its rung. Moving a case DOWN to what it measured is the opposite of reclassifying to clear a gate: the oracle mix falls raster-visual 11 to 9 and what the registry knows goes up.",
+    "note": "FramePixels.contentSummary over a synthesised all-transparent BGRA buffer reports maxAlpha 0 and allTransparent true. Includes the out-of-family review's High finding as CASE-0124b: one lit pixel at (733,1019) in a 1520x1936 frame \u2014 an offset no square stride lands on \u2014 is content, not emptiness. Also covers the Medium: a buffer whose pixelFormat is not 32BGRA is notMeasured rather than read with a colour channel mistaken for alpha.",
     "defects": [
       "DEF-097"
     ]
@@ -2172,14 +2156,14 @@
     "req": "REQ-061",
     "surface": "SURF-006",
     "flow": "FLOW-003",
-    "oracle": "outcome",
+    "oracle": "raster-visual",
     "status": "pass",
     "evidence": [
       "evidence/PRO-0088/gate-after.txt"
     ],
     "armed": true,
     "armedBy": "Zeroing the same geometry inverts both readings, so the measurement is of the bytes rather than of the frame's size.",
-    "note": "A frame with real content measures as content: maxAlpha 255 and more than one distinct colour.\n\nRUNG CORRECTED BY PRO-0097, and this lowers the raster count rather than raising anything. This case measures the same synthesised buffer with content in it \u2014 no pixels came off a display server, and its evidence file is a test transcript rather than an image, which is what campaign.py was reporting as 'not a raster image'. `raster-visual` was a claim this measurement cannot support; `outcome` is the rung it stands on. The raster claim REQ-061 rests on is CASE-0129, which drove proctor_capture against a signed build and kept the reply, and it keeps its rung. Moving a case DOWN to what it measured is the opposite of reclassifying to clear a gate: the oracle mix falls raster-visual 11 to 9 and what the registry knows goes up.",
+    "note": "A frame with real content measures as content: maxAlpha 255 and more than one distinct colour.",
     "defects": []
   },
   {
@@ -2195,14 +2179,10 @@
     ],
     "armed": true,
     "armedBy": "Watched to fail: deleting '&& contentVerdict == .content' from CaptureEngineImpl.swift turned this test red and the run exited 1. Transcript in gate-sabotage.txt.",
-    "note": "The production verdict conjoins the content gate, and the caveat is drawn from the gate rather than written twice. Source analysis: it establishes that the code the unit tests drive is the code that runs, and buys no evidence about a real capture. That is CASE-0129.\n\nSOURCE BLOCK SUPPLIED BY PRO-0097, from a live read rather than a copy: 451 lines of CaptureEngineImpl.swift examined, the four CaptureContentGate call sites at lines 150, 151, 153 and 193. docs/test-campaign/evidence/PRO-0097/source-denominators.txt. The fields go INSIDE `source` because that is where campaign.py:772-781 reads them and `examined` is read as an integer \u2014 written at the top level with `examined` as prose they satisfy neither condition, which is the mistake this registry already made once.",
+    "note": "The production verdict conjoins the content gate, and the caveat is drawn from the gate rather than written twice. Source analysis: it establishes that the code the unit tests drive is the code that runs, and buys no evidence about a real capture. That is CASE-0129.",
     "defects": [
       "DEF-097"
-    ],
-    "source": {
-      "analyzer": "Tests/ProctorAgentTests/CaptureContentWiringTests.swift, trustworthyIsGatedOnContent, reading Sources/ProctorAgent/Capture/CaptureEngineImpl.swift and requiring six expressions of it, including the `&& contentVerdict == .content` the sabotage removes",
-      "examined": 451
-    }
+    ]
   },
   {
     "id": "CASE-0127",
@@ -2218,15 +2198,11 @@
     ],
     "armed": true,
     "armedBy": "Armed twice, and the second is the one that counts. First arming restored 'surface.panel.level = Self.inPlaneLevel' and the test went red (gate-sabotage.txt) \u2014 but that receiver is 'surface.panel', so it never met the prefix the filter excluded. The filter skipped every line beginning 'panel.level = ', which is the shape a direct assignment takes wherever the local is called 'panel', so the check could not go red against the regression it names. Re-armed against that shape: 'Self.place(panel, at: Self.floatingLevel)' at CursorOverlay.swift:548 replaced by 'panel.level = Self.floatingLevel', which is a panel built and never given a sharing type. Transcript in case-0127-arming.txt.",
-    "note": "Every level assignment in CursorOverlay goes through place(_:at:), which sets sharingType with it. Counted rather than matched with a contains, because a claim about a population is not settled by a printed line. The helper's own assignment is excluded BY LINE RANGE \u2014 the body of place(_:at:) located by its signature and closing brace \u2014 rather than by what a line says, which is the correction: an exclusion written as a text prefix cannot distinguish the helper's 'panel.level = level' from a regression's 'panel.level = .floating'. The range's control asserts it still contains exactly one assignment, so a range that had drifted off the helper fails rather than passes.\n\nSOURCE BLOCK SUPPLIED BY PRO-0097, from a live read rather than a copy: 615 lines of CursorOverlay.swift examined, place(_:at:) body at lines 97..98, 0 direct `.level = ` assignments outside it and 1 inside it, which is the range control. docs/test-campaign/evidence/PRO-0097/source-denominators.txt.",
+    "note": "Every level assignment in CursorOverlay goes through place(_:at:), which sets sharingType with it. Counted rather than matched with a contains, because a claim about a population is not settled by a printed line. The helper's own assignment is excluded BY LINE RANGE \u2014 the body of place(_:at:) located by its signature and closing brace \u2014 rather than by what a line says, which is the correction: an exclusion written as a text prefix cannot distinguish the helper's 'panel.level = level' from a regression's 'panel.level = .floating'. The range's control asserts it still contains exactly one assignment, so a range that had drifted off the helper fails rather than passes.",
     "defects": [
       "DEF-095",
       "DEF-101"
-    ],
-    "source": {
-      "analyzer": "Tests/ProctorAgentTests/CaptureContentWiringTests.swift, thePointerKeepsItsExclusionAcrossBands, counting `.level = ` assignments in Sources/ProctorAgent/Overlay/CursorOverlay.swift outside the line range of place(_:at:)",
-      "examined": 615
-    }
+    ]
   },
   {
     "id": "CASE-0128",
@@ -2242,16 +2218,11 @@
     ],
     "armed": true,
     "armedBy": "A live control build, not a citation. Two signed Developer ID builds differing only in CursorOverlay.swift: the pre-fix agent (pid 53748) reports 3 windows owned with 1 not excluded \u2014 the layer-0 one \u2014 over 60 samples. The instrument could and did report sharingState 1.",
-    "note": "Every window CGWindowListCopyWindowInfo attributes to the agent pid reports sharingState 0 on the delivered build: pid 12838 owns 3 (layers 25, 24, 0) with notExcluded len() 0, over 54 samples. Read from a separate probe process, so the process being measured is not the one measuring. The population is len() over rows filtered by pid, never a printed list. This is also what identifies DEF-028's window 121491 as the drawn pointer: the one-file revert flips exactly that window and nothing else.\n\nWITNESS BLOCK SUPPLIED BY PRO-0097 from the file this case already cited, docs/test-campaign/evidence/PRO-0088/glass/overlay-population.json: delivered build pid 12838, windowsOwned 3, notExcluded 0 over 54 samples; pre-fix pid 53748, windowsOwned 3, notExcluded 1 over 60 samples. The count is the three windows the window server attributes to the agent, each read back at sharingState 0. Recorded as DEF-113: the case claimed effect-witness and carried no witness block, so three of the gate's findings were nobody's.",
+    "note": "Every window CGWindowListCopyWindowInfo attributes to the agent pid reports sharingState 0 on the delivered build: pid 12838 owns 3 (layers 25, 24, 0) with notExcluded len() 0, over 54 samples. Read from a separate probe process, so the process being measured is not the one measuring. The population is len() over rows filtered by pid, never a printed list. This is also what identifies DEF-028's window 121491 as the drawn pointer: the one-file revert flips exactly that window and nothing else.",
     "defects": [
       "DEF-095",
       "DEF-096"
-    ],
-    "witness": {
-      "recorder": "scripts/campaign/witness_probe.swift in mode `windows`, a separate process reading CGWindowListCopyWindowInfo and filtering by the agent pid, sampled every ~330ms \u2014 54 samples on the delivered build and 60 on the pre-fix control",
-      "effect": "ipc",
-      "count": 3
-    }
+    ]
   },
   {
     "id": "CASE-0129",
@@ -2267,16 +2238,11 @@
     ],
     "armed": true,
     "armedBy": "The Calculator leg is the sabotage and it is a real frame, not a stub: the same code path one call later returns trustworthy true, contentVerdict content, maxAlpha 255 over 1,099,968 pixels. A gate that had simply started refusing everything would fail here.",
-    "note": "proctor_capture through the production path against a signed build on a private socket. A Proctor-owned window (win:2:1, CG 147541) returns status complete, trustworthy FALSE, contentVerdict excludedTarget, 7,720,704 pixels sampled and every one fully transparent, with a caveat naming the exclusion. Before this change the same call returned trustworthy true. /Applications/Proctor.app was never replaced. What this does not establish: the Proctor UI's own History window was not captured, because AX exposed no window for either UI process and this harness cannot click a menu item on a window it cannot address.\n\nWITNESS BLOCK SUPPLIED BY PRO-0097 from the two files this case already cited. capture-proctor-owned.json: trustworthy false, contentVerdict excludedTarget, 7,720,704 pixels sampled, maxAlpha 0. capture-calculator.json: contentVerdict content, 1,099,968 pixels sampled, maxAlpha 255, distinctColours 256. The count is the two ScreenCaptureKit captures that crossed the boundary, and the second is what makes the first a measurement rather than a gate that had started refusing everything. Recorded as DEF-113.",
+    "note": "proctor_capture through the production path against a signed build on a private socket. A Proctor-owned window (win:2:1, CG 147541) returns status complete, trustworthy FALSE, contentVerdict excludedTarget, 7,720,704 pixels sampled and every one fully transparent, with a caveat naming the exclusion. Before this change the same call returned trustworthy true. /Applications/Proctor.app was never replaced. What this does not establish: the Proctor UI's own History window was not captured, because AX exposed no window for either UI process and this harness cannot click a menu item on a window it cannot address.",
     "defects": [
       "DEF-097",
       "DEF-098"
-    ],
-    "witness": {
-      "recorder": "a JSON-RPC client driving proctor_capture over the agent's private unix socket against a signed Developer ID build, with both replies kept whole",
-      "effect": "device",
-      "count": 2
-    }
+    ]
   },
   {
     "id": "CASE-0190",
@@ -2952,5 +2918,346 @@
     "defects": [
       "DEF-116"
     ]
+  },
+  {
+    "id": "CASE-0250",
+    "req": "REQ-073",
+    "surface": "SURF-009",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "docs/test-campaign/evidence/PRO-0090/a-walkthrough-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two sentences planted at the top of the file \u2014 one in an array, one returned from a function: FAIL: 2 user-facing literal(s) of 2 examined, exit 1. Removed, exit 0. The denominator matters here: Walkthrough.swift went from 56 examined to 0, so a PASS could have meant the instrument had nothing left to read, and this shows it still bites at the new denominator.",
+    "note": "Walkthrough.swift holds no literal the classifier calls user-facing. 56 of 56 display literals moved to WalkthroughFlow.Copy in commit 154bd84; the file now examines 0 and reports 0. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py, plus WalkthroughFlowTests.theWalkthroughViewHoldsNoLiterals, which counts quote characters outside comments over the whole file",
+      "examined": 322
+    }
+  },
+  {
+    "id": "CASE-0251",
+    "req": "REQ-073",
+    "surface": "SURF-009",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0090/gate-final.txt"
+    ],
+    "armed": true,
+    "armedBy": "One moved sentence altered by a word in the constant: the verbatim test failed naming both spellings. Restored, green.",
+    "note": "The moved walkthrough copy is character-identical to what shipped, asserted against the pre-conversion text committed as evidence. PRO-0081 lost a section heading in the same move and a fresh verifier found it; this is the guard against a repeat."
+  },
+  {
+    "id": "CASE-0252",
+    "req": "REQ-073",
+    "surface": "SURF-009",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/gate-final.txt"
+    ],
+    "armed": true,
+    "armedBy": "The two twins made equal: the test failed on the inequality it asserts. Restored, green.",
+    "note": "DEF-035's kept pairs. The walkthrough's unrendered twins are asserted to differ from what ships, so a silent convergence is a change somebody made rather than drift nobody noticed."
+  },
+  {
+    "id": "CASE-0253",
+    "req": "REQ-075",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/RunHistoryWiringTests.swift",
+      "Tests/ProctorCoreTests/HistorySurfaceTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/b-history-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "A HistorySurface.Wire key respelled on the writer side alone: the test failed naming the key the reader could not find. Restored, green.",
+    "note": "The history wire contract has one definition both ends reach. SessionHistory.swift wrote \"capDays\" and HistoryModel.swift read \"capDays\" with nothing binding them; both now name HistorySurface.Wire. The reader takes a default for a key it cannot find, so a parted rename reports a wrong answer quietly rather than failing."
+  },
+  {
+    "id": "CASE-0254",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "docs/test-campaign/evidence/PRO-0090/c-historywindow-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two sentences planted: FAIL: 2 user-facing literal(s) of 3 examined, exit 1. Removed, exit 0. HistoryWindow fell from 91 examined to 1, so the arming is what makes the PASS mean anything.",
+    "note": "HistoryWindow.swift holds no literal the classifier calls user-facing. 71 of 91 display literals moved to HistorySurface.Copy in commit 1276dd0. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py, plus HistorySurfaceTests.theHistoryViewHoldsNoUserFacingLiterals, which reads every line holding a quote and requires an interpolation in it",
+      "examined": 552
+    }
+  },
+  {
+    "id": "CASE-0255",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/HistorySurfaceTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/c-historywindow-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The label switched back to matching the singular spelling: the test failed reporting the raw wire word where the label belonged. Restored, green.",
+    "note": "DEF-130, found in the HistoryWindow conversion. PlaneBadge matched case \"appleEvent\" while ActuationPlane's raw value is \"appleEvents\", so every Apple Events step drew the wire word. The label matches on the enum now, which makes the mismatch a compile error."
+  },
+  {
+    "id": "CASE-0256",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/HistorySurfaceTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/gate-final.txt"
+    ],
+    "armed": true,
+    "armedBy": "The halted outcome given the failure mark: the test failed on the clause that halted is not a failure. The counted-sentence check armed separately by making one sentence disagree with its number. Both restored, green.",
+    "note": "The history window's outcome vocabulary. Every outcome has its own mark, halted is not drawn as a failure, a run whose outcome is unknown is never summarised as failed, every counted sentence agrees with its number, and a step's cost is said in a unit that reads."
+  },
+  {
+    "id": "CASE-0257",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/d-proctoruiapp-gate.txt",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two ways. The classifier: two sentences planted, FAIL: 2 of 4 examined, exit 1. The Swift guard: the scene id respelled as the literal \"main\" in ProctorUIApp.swift, which failed at SurfaceLiteralsTests.swift:190 \u2014 recorded in g-surfaces-arming.txt. Both restored, green.",
+    "note": "ProctorUIApp.swift holds no literal the classifier calls user-facing, and the scene names have one definition rather than four. 53 of 69 display literals moved in commit a6d10e8. The scene id is what openWindow addresses and the title is what the launch path resizes on, so a drift in either fails silently \u2014 which is why the id, the title and the defaults key are each asserted at their Core home and scanned for at the drawing site. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py, plus SurfaceLiteralsTests.sceneNamesAreNamed, which scans the comment-stripped file for five named spellings",
+      "examined": 292
+    }
+  },
+  {
+    "id": "CASE-0258",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/h-def135-runner-abort.txt"
+    ],
+    "armed": true,
+    "armedBy": "Both directions. A name in CommandID with no command behind it: Expectation failed: (command -> nil) != nil, and title(id) fell back to the id. A command in the catalogue CommandID does not name: Expectation failed on the contains check. Both recorded in g-surfaces-arming.txt and h-def135-runner-abort.txt. Restored, green.",
+    "note": "Every named command id resolves against the catalogue and title() returns the catalogue's wording, and every catalogue command has a named id. A typo in an id took a menu item off the menu bar silently before this: commandButton draws nothing at all for an id that does not resolve."
+  },
+  {
+    "id": "CASE-0259",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "ExtrasCopy.status set to the catalogue's \"Status\": Expectation failed: (ExtrasCopy.status -> \"Status\") != (title(CommandID.status) -> \"Status\"). Restored, green.",
+    "note": "DEF-035's kept pairs, on the menu bar. The extra draws three wordings of its own; two differ from the catalogue deliberately and one agrees. The two that differ are asserted to differ and the one that agrees is asserted to agree, so neither can move without somebody deciding to move it."
+  },
+  {
+    "id": "CASE-0260",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Quit's shortcut written as the two-key \"\u2318QQ\": Expectation failed: (keys.count -> 2) == 1. Restored, green. The instrument could also report zero by finding no shortcuts at all, so the same test asserts at least five commands carry one.",
+    "note": "Every shortcut reduces to named modifier glyphs plus exactly one key, which is what KeyEquivalentParser can read. A shortcut it cannot parse draws no key equivalent and the command becomes mouse-only."
+  },
+  {
+    "id": "CASE-0261",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/e-agentmodel-gate.txt",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two ways. The classifier: two sentences planted, FAIL: 2 of 9 examined, exit 1. The Swift guard: AgentModel reading value[\"canShow\"] as a literal again, which failed at SurfaceLiteralsTests.swift:138. Both restored, green.",
+    "note": "AgentModel.swift holds no literal the classifier calls user-facing, and the 29 keys it reads out of the agent's replies are scanned for by name so a literal cannot come back. 39 of 47 display literals moved in commit ebdabc5. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "scripts/campaign/status_literals.py, plus SurfaceLiteralsTests.agentModelNamesTheWireKeys, which scans the comment-stripped file for 29 named wire keys",
+      "examined": 443
+    }
+  },
+  {
+    "id": "CASE-0262",
+    "req": "REQ-075",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/AgentVerbsWiringTests.swift",
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The writers mutated rather than the readers, which is the half that fails silently: RunHUDFeed writing \"canShowX\" and Session writing \"yieldX\". Five tests across three suites failed naming the missing keys \u2014 Set(wire.keys) -> [\"phase\", \"canShowX\", \"running\", \"drawing\"] against the expected set, and yield?[\"active\"] -> nil == true in the hold-attribution wiring. Restored, green.",
+    "note": "REQ-075 on the second wire contract: the HUD and foreground payload the agent writes and the window reads. AgentModel took a ?? false default for a key it could not find, so a parted rename did not fail \u2014 it drew a wrong answer. Both ends name AgentVerbs now, and the guard binds the writers as well as the reader."
+  },
+  {
+    "id": "CASE-0263",
+    "req": "REQ-074",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "Sources/ProctorCore/StatusSurface.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The branch put back as `if case .unreachable = model.reachability { EmptyView() }`: Expectation failed at SurfaceLiteralsTests.swift:27 naming ReadinessSection. Restored, green. The state-machine half is asserted in the same test and is a value read rather than a source scan.",
+    "note": "DEF-037. The permissions section carried a branch for an unreachable agent, and sections(for: .down) returns [.agentDown] alone \u2014 so the branch drew for nobody while duplicating AgentDownSection's two buttons without their accessibility identifiers. Deleted in commit b2db8a3. The guard holds both clauses: the state machine never gives that section that state, and the section no longer matches on it. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "SurfaceLiteralsTests.readinessHasNoUnreachableBranch, slicing the comment-stripped MainWindow.swift between two declaration anchors that fail the test if either has moved",
+      "examined": 823
+    }
+  },
+  {
+    "id": "CASE-0264",
+    "req": "REQ-074",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The applying treatment's condition replaced with `if false`: Expectation failed at SurfaceLiteralsTests.swift:39, the section no longer naming model.isApplying. Restored, green.",
+    "note": "The other half of DEF-037. isApplying with an unreachable agent is a reachable state \u2014 a grant lands, reprobeAfterGrant() restarts the agent, and the poll meets the gap \u2014 so the spinner moved into AgentDownSection, which is the block actually on screen then. The 1.2-second timer that clears the flag is not made trustworthy by this and stays open as DEF-132. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "SurfaceLiteralsTests.agentDownDrawsApplying, over the same anchored slice of MainWindow.swift",
+      "examined": 823
+    }
+  },
+  {
+    "id": "CASE-0265",
+    "req": "REQ-073",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The Tools card pointed at Copy.toolsNoteInDesign: Expectation failed at SurfaceLiteralsTests.swift:65, the file drawing the twin. Restored, green.",
+    "note": "DEF-035 at the drawing site rather than at the constant, which is how it survived a suite that already had a value-level check. The Tools card is asserted to reference StatusSurface.Copy.toolsNote and no file in Sources/ProctorUI may mention either \u2026InDesign twin. Source-analysis and claims nothing above that rung: it proves the view names the constant, not that a rendered window carries the sentence. The denominator is code lines the analyzer read, not literals it found: the classifier's own literal count falls to 0-7 in these files after the conversion, which is why CASE-0269 arms it separately rather than letting a zero over an empty population read as a pass.",
+    "source": {
+      "analyzer": "SurfaceLiteralsTests.toolsCardBindsToShippedNote, over the anchored ToolsSection slice plus all eight files in Sources/ProctorUI for the \u2026InDesign twins",
+      "examined": 823
+    }
+  },
+  {
+    "id": "CASE-0266",
+    "req": "REQ-073",
+    "surface": "SURF-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/gate-final.txt"
+    ],
+    "armed": true,
+    "armedBy": "One assembled line altered by its separator: the test failed printing both spellings. Restored, green.",
+    "note": "The composed sentences, where the assembly is what can drift rather than the words. Twelve menu-bar lines and the login-item log line are asserted character for character, including the singular and plural forms and the waiting suffix that must be empty at zero."
+  },
+  {
+    "id": "CASE-0267",
+    "req": "REQ-073",
+    "surface": "SURF-009",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/a-walkthrough-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "prominentGrant made unconditional: the at-most-one clause failed at the combination where both grants are missing. Restored, green.",
+    "note": "DEF-056. Exactly one grant is prominent at all four combinations of the two grants, a grant is nominated in every state where one is still missing, and GrantRow takes prominence as a parameter rather than deciding it. This is the one decision function this item introduced; it did not exist before and is named in the spec as a deliberate move."
+  },
+  {
+    "id": "CASE-0268",
+    "req": "REQ-064",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/CommandSurfaceTests.swift",
+      "docs/test-campaign/evidence/PRO-0090/h-def135-runner-abort.txt"
+    ],
+    "armed": true,
+    "armedBy": "The probe is two-way and that is the whole of it. One mutation \u2014 the catalogue's pause and show-panel entries given different ids \u2014 run against both forms of the assertion. Pre-fix `command(id)!`: signal 5, 0 tests reported, 0 suites reported, 0 verdict lines, scripts/test.sh exit 1 on 'no swift-testing verdict line'. Post-fix `try #require`: Test run with 1963 tests in 239 suites failed with 12 issues, exit 1, four guards naming what they found. Same mutation, opposite reporting.",
+    "note": "DEF-135. A test that force-unwraps a lookup takes the runner down with it, so the suite reports nothing about any of its 1,963 tests \u2014 including the four honest failures the kill-switch test had already recorded in the same run. This case exists because a suite that cannot report is not green and is not red; it puts every zero in the run in question."
+  },
+  {
+    "id": "CASE-0269",
+    "req": "REQ-064",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/status_literals.py",
+      "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Five files, two sentences planted in each, every one moving from exit 0 to exit 1 with display 2. Removed, all five back to exit 0.",
+    "note": "The denominator guard the plan named as a risk. This conversion moves machinery out of the files it certifies, and the examined counts fall hard \u2014 Walkthrough 56 to 0, HistoryWindow 91 to 1, ProctorUIApp 69 to 2, AgentModel 47 to 7. A PASS at a denominator of 0 is a PASS over nothing, so the classifier is shown to still bite at each file's new size rather than at the size it had when the item started."
   }
 ]

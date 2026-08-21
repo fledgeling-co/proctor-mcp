@@ -39,7 +39,11 @@ public enum RunHistory {
 
     /// How something ended, in the vocabulary a person reads rather than the
     /// one the record stores.
-    public enum Outcome: String, Codable, Sendable, Equatable {
+    /// PRO-0090 added `CaseIterable` so a test asking something of *every*
+    /// outcome enumerates them rather than hand-listing them — a hand-listed
+    /// set stops covering the enum the moment a case is added, and reads green
+    /// while doing it.
+    public enum Outcome: String, Codable, Sendable, Equatable, CaseIterable {
         case ok
         case failed
         /// The policy gate turned it down.

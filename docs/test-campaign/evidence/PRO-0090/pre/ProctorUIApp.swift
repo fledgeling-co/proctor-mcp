@@ -31,8 +31,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // picks the change up and updates the window.
         DispatchQueue.global(qos: .userInitiated).async { Actions.ensureAgent() }
 
-        let firstRun = !UserDefaults.standard.bool(forKey: WalkthroughFlow.completionDefaultsKey)
-        let window = NSApp.windows.first(where: { $0.title == StatusSurface.Copy.windowTitle })
+        let firstRun = !UserDefaults.standard.bool(forKey: "walkthroughCompleted")
+        let window = NSApp.windows.first(where: { $0.title == "Proctor" })
 
         if firstRun {
             NSApp.activate(ignoringOtherApps: true)
@@ -95,7 +95,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     static func applyPolicy() {
-        let configured = UserDefaults.standard.bool(forKey: WalkthroughFlow.completionDefaultsKey)
+        let configured = UserDefaults.standard.bool(forKey: "walkthroughCompleted")
         NSApp.setActivationPolicy(configured ? .accessory : .regular)
     }
 
@@ -124,25 +124,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let service = SMAppService.mainApp
         guard service.status != .enabled else { return }
         do { try service.register() }
-        catch { NSLog("%@", AppLog.loginItemNotRegistered(error.localizedDescription)) }
+        catch { NSLog("Proctor: could not register login item — \(error.localizedDescription)") }
     }
 }
-
-/// Shorthand for the command ids, which this file names twenty-two times.
-private typealias CID = CommandSurface.CommandID
 
 @main
 struct ProctorUIApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     @State private var model = AgentModel()
-    @AppStorage(WalkthroughFlow.completionDefaultsKey) private var walkthroughCompleted = false
+    @AppStorage("walkthroughCompleted") private var walkthroughCompleted = false
     @Environment(\.openWindow) private var openWindow
 
     var body: some Scene {
         // Proctor is LSUIElement: no Dock icon, because it is a background
         // agent that an MCP host drives, not something you switch to. The menu
         // bar is how you reach it once the window is closed.
-        Window(StatusSurface.Copy.windowTitle, id: StatusSurface.sceneID) {
+        Window("Proctor", id: "main") {
             Group {
                 if walkthroughCompleted {
                     MainWindow(model: model)
@@ -178,43 +175,43 @@ struct ProctorUIApp: App {
         .commands {
             CommandGroup(replacing: .newItem) {}
             CommandGroup(after: .appInfo) {
-                commandButton(CID.setupAgain) {
+                commandButton("setup-again") {
                     walkthroughCompleted = false
                     AppDelegate.applyPolicy()
-                    openWindow(id: StatusSurface.sceneID)
+                    openWindow(id: "main")
                 }
-                commandButton(CID.restartAgent) { Actions.restartAgent() }
-                commandButton(CID.revealSocket) { Actions.open(Wire.socketFileURL) }
+                commandButton("restart-agent") { Actions.restartAgent() }
+                commandButton("reveal-socket") { Actions.open("file://" + Wire.socketPath) }
             }
             // Its own menu, because the kill switch should not be filed under
             // something else.
-            CommandMenu(CommandSurface.Menu.run.title) {
-                commandButton(CID.pause) { model.togglePause() }
+            CommandMenu("Run") {
+                commandButton("pause") { model.togglePause() }
                     .disabled(model.hudPhase == .paused)
-                commandButton(CID.resume) { model.togglePause() }
+                commandButton("resume") { model.togglePause() }
                     .disabled(model.hudPhase != .paused)
-                commandButton(CID.stop) { model.stopRun() }
+                commandButton("stop") { model.stopRun() }
                 Divider()
-                commandButton(CID.showPanel) { model.setPanel(visible: true) }
-                commandButton(CID.hidePanel) { model.setPanel(visible: false) }
+                commandButton("show-panel") { model.setPanel(visible: true) }
+                commandButton("hide-panel") { model.setPanel(visible: false) }
                 Divider()
-                commandButton(CID.dropWaiting) { model.dropWaiting() }
+                commandButton("drop-waiting") { model.dropWaiting() }
                 Divider()
                 // The two drawing switches, as toggles rather than buttons: a
                 // menu item that flips a setting has to say which way it is set,
                 // and a person reading "Takeover Notice" with no state cannot
                 // tell whether choosing it turns the notice on or off.
-                switchToggle(SwitchCatalogue.takeover, id: CID.takeoverNotice, model: model)
-                switchToggle(SwitchCatalogue.cursor, id: CID.drawnPointer, model: model)
+                switchToggle(SwitchCatalogue.takeover, id: "takeover-notice", model: model)
+                switchToggle(SwitchCatalogue.cursor, id: "drawn-pointer", model: model)
             }
             CommandGroup(after: .windowList) {
-                commandButton(CID.status) { openWindow(id: StatusSurface.sceneID) }
-                commandButton(CID.history) { openWindow(id: HistorySurface.sceneID) }
+                commandButton("status") { openWindow(id: "main") }
+                commandButton("history") { openWindow(id: "history") }
             }
             CommandGroup(replacing: .help) {
-                commandButton(CID.help) { Actions.open(CommandSurface.Help.readme) }
-                commandButton(CID.refusals) { Actions.open(CommandSurface.Help.refusals) }
-                commandButton(CID.diagnostics) { Actions.copy(BuildInfo.current.descriptor + "\n" + Wire.socketPath) }
+                commandButton("help") { Actions.open("https://github.com/fledgeling-co/proctor-mcp#readme") }
+                commandButton("refusals") { Actions.open("https://github.com/fledgeling-co/proctor-mcp#what-it-can-and-cannot-do") }
+                commandButton("diagnostics") { Actions.copy(BuildInfo.current.descriptor + "\n" + Wire.socketPath) }
             }
         }
 
@@ -222,7 +219,7 @@ struct ProctorUIApp: App {
         // rather than a section of the status window: the status window answers
         // "is this working", and a scrolling record of past runs inside it would
         // fight that question rather than join it.
-        Window(HistorySurface.sceneTitle, id: HistorySurface.sceneID) {
+        Window("History", id: "history") {
             HistoryWindow()
         }
         .windowResizability(.contentMinSize)
@@ -230,12 +227,12 @@ struct ProctorUIApp: App {
 
         MenuBarExtra {
             MenuBarContent(model: model,
-                           openMain: { openWindow(id: StatusSurface.sceneID) },
-                           openHistory: { openWindow(id: HistorySurface.sceneID) },
+                           openMain: { openWindow(id: "main") },
+                           openHistory: { openWindow(id: "history") },
                            rerunSetup: {
                                walkthroughCompleted = false
                                AppDelegate.applyPolicy()
-                               openWindow(id: StatusSurface.sceneID)
+                               openWindow(id: "main")
                            })
         } label: {
             // The character, in the state the agent's own run HUD is in — so a
@@ -249,7 +246,7 @@ struct ProctorUIApp: App {
                 // rather than order an existing window.
                 .onReceive(NotificationCenter.default.publisher(
                     for: Notification.Name(WindowPresentation.presentMainNotification))) { _ in
-                    openWindow(id: StatusSurface.sceneID)
+                    openWindow(id: "main")
                 }
         }
     }
@@ -270,8 +267,8 @@ struct MenuBarContent: View {
         // a rule that was working.
         if model.buildReplaced {
             Divider()
-            Text(StatusSurface.MenuBar.updatedNote)
-            Button(StatusSurface.Copy.relaunch) { Actions.relaunch(alsoAgent: model.agentBuildReplaced) }
+            Text("Proctor was updated. Relaunch to use the new version.")
+            Button("Relaunch Proctor") { Actions.relaunch(alsoAgent: model.agentBuildReplaced) }
         }
         // Below the stale build, above everything else, and only when there is
         // something it can fix. This is what "Re-check now" became.
@@ -298,7 +295,7 @@ struct MenuBarContent: View {
         // own — one sentence, computed once from the batch's steps — so the two
         // surfaces cannot say different things about the same run.
         if let notice = foregroundNotice {
-            Label(notice, systemImage: StatusSurface.MenuBar.foregroundNoticeSymbol)
+            Label(notice, systemImage: "rectangle.inset.filled.and.person.filled")
         }
         if runControlsShown {
             Divider()
@@ -310,13 +307,13 @@ struct MenuBarContent: View {
             // the panel's queue bar, and are deliberately not here — the two
             // pairs never sit together and never share a word, because calling
             // both "pause" is how somebody stops the wrong thing.
-            Button(CommandSurface.title(model.hudPhase == .paused ? CID.resume : CID.pause)) {
+            Button(model.hudPhase == .paused ? "Resume Run" : "Pause Run") {
                 model.togglePause()
             }
-            Button(CommandSurface.title(CID.stop)) { model.stopRun() }
+            Button("Stop Run") { model.stopRun() }
         }
         Divider()
-        Toggle(CommandSurface.title(CID.showPanel), isOn: Binding(
+        Toggle("Show Run Panel", isOn: Binding(
             get: { model.hudDrawing },
             set: { model.setPanel(visible: $0) }))
             .disabled(!panelSwitchEnabled)
@@ -324,11 +321,11 @@ struct MenuBarContent: View {
             Text(refusal)
         }
         Divider()
-        Button(CommandSurface.ExtrasCopy.status) { NSApp.activate(ignoringOtherApps: true); openMain() }
-        Button(CommandSurface.ExtrasCopy.history) { NSApp.activate(ignoringOtherApps: true); openHistory() }
-        Button(CommandSurface.title(CID.setupAgain)) { NSApp.activate(ignoringOtherApps: true); rerunSetup() }
+        Button("Proctor Status…") { NSApp.activate(ignoringOtherApps: true); openMain() }
+        Button("History…") { NSApp.activate(ignoringOtherApps: true); openHistory() }
+        Button("Run Setup Again…") { NSApp.activate(ignoringOtherApps: true); rerunSetup() }
         Divider()
-        Button(CommandSurface.ExtrasCopy.quit, role: .destructive) { NSApp.terminate(nil) }
+        Button("Quit Proctor", role: .destructive) { NSApp.terminate(nil) }
     }
 
     /// The live "what is it doing" line: the tool in flight, or the last one it
@@ -336,7 +333,11 @@ struct MenuBarContent: View {
     /// is nothing to report until it answers.
     private var activityLine: String? {
         guard case .reachable = model.reachability else { return nil }
-        let waiting = model.queueWaiting
+        // The waiting count rides alongside whatever is running, so somebody can
+        // answer "is something of mine stuck behind another session" without
+        // opening the run panel.
+        let waiting = model.queueWaiting > 0
+            ? " · \(model.queueWaiting) waiting" : ""
         // A run taking the machine is the thing worth reading first, and the
         // reason this line exists on a surface that does not depend on which
         // display the panel landed on.
@@ -344,20 +345,16 @@ struct MenuBarContent: View {
         // across the room, and it is the one they can do something about — the
         // Resume below this line is the answer to it.
         if model.foreground.yielded, let held = model.foreground.yieldLine {
-            return StatusSurface.MenuBar.held(held, waiting: waiting)
+            return "\(held)\(waiting)"
         }
         if model.foreground.active {
-            return StatusSurface.MenuBar.takingForeground(waiting: waiting)
+            return "Taking the foreground now\(waiting)"
         }
-        if let current = model.currentActivity {
-            return StatusSurface.MenuBar.running(current, waiting: waiting)
-        }
-        if let last = model.recentActivity.first {
-            return StatusSurface.MenuBar.lastRan(last.tool, waiting: waiting)
-        }
-        return waiting > 0
-            ? StatusSurface.MenuBar.sessionsWaiting(waiting)
-            : StatusSurface.MenuBar.idle
+        if let current = model.currentActivity { return "Running \(current)\(waiting)" }
+        if let last = model.recentActivity.first { return "Last: \(last.tool)\(waiting)" }
+        return model.queueWaiting > 0
+            ? "\(model.queueWaiting) session\(model.queueWaiting == 1 ? "" : "s") waiting"
+            : "Idle — no model connected"
     }
 
     /// Pause and Stop appear only while there is a run for them to act on. A
@@ -381,13 +378,12 @@ struct MenuBarContent: View {
     private var panelRefusal: String? {
         guard case .reachable = model.reachability, !model.hudDrawing, !model.hudCanShow
         else { return nil }
-        return StatusSurface.MenuBar.panelUnavailable
+        return "Started with PROCTOR_HUD off — restart the agent to bring the panel back"
     }
 
     private var activityIcon: String {
-        if model.foreground.active { return StatusSurface.MenuBar.foregroundSymbol }
-        return model.currentActivity != nil
-            ? StatusSurface.MenuBar.runningSymbol : StatusSurface.MenuBar.idleSymbol
+        if model.foreground.active { return "cursorarrow.rays" }
+        return model.currentActivity != nil ? "dot.radiowaves.left.and.right" : "moon.zzz"
     }
 
     /// What the run in flight is going to do to the foreground. Absent while a
@@ -401,13 +397,13 @@ struct MenuBarContent: View {
 
     private var statusLine: String {
         switch model.reachability {
-        case .unknown: return StatusSurface.Copy.checking
-        case .unreachable: return StatusSurface.MenuBar.agentNotAnswering
+        case .unknown: return "Checking…"
+        case .unreachable: return "Agent not answering"
         case .reachable:
-            guard let r = model.report else { return StatusSurface.MenuBar.connected }
-            if r.ready { return StatusSurface.MenuBar.ready(attachedApps: r.attachedApps.count) }
+            guard let r = model.report else { return "Connected" }
+            if r.ready { return "Ready · \(r.attachedApps.count) app(s) attached" }
             let missing = r.grants.filter { $0.required && !$0.granted }.count
-            return StatusSurface.MenuBar.permissionsNeeded(missing)
+            return "\(missing) permission\(missing == 1 ? "" : "s") needed"
         }
     }
 }
@@ -448,12 +444,8 @@ enum KeyEquivalentParser {
     static func parse(_ shortcut: String) -> (key: KeyEquivalent, modifiers: EventModifiers)? {
         var modifiers: EventModifiers = []
         var remaining = shortcut
-        let map: [(Character, EventModifiers)] = [
-            (CommandSurface.ShortcutGlyph.command, .command),
-            (CommandSurface.ShortcutGlyph.shift, .shift),
-            (CommandSurface.ShortcutGlyph.control, .control),
-            (CommandSurface.ShortcutGlyph.option, .option),
-        ]
+        let map: [(Character, EventModifiers)] = [("⌘", .command), ("⇧", .shift),
+                                                  ("⌃", .control), ("⌥", .option)]
         for (glyph, modifier) in map where remaining.contains(glyph) {
             modifiers.insert(modifier)
             remaining.removeAll { $0 == glyph }

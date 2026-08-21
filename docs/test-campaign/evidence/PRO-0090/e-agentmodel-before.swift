@@ -120,7 +120,7 @@ final class AgentModel {
     /// Mach-O stamp untouched and the character wrong anyway.
     private static var appPaths: [String] {
         [Bundle.main.executablePath,
-         RunHUDCharacter.menuBarAssetURL(asset: RunHUDCharacter.idleAsset, scale: 1)?.path].compactMap { $0 }
+         RunHUDCharacter.menuBarAssetURL(asset: "idle-0", scale: 1)?.path].compactMap { $0 }
     }
 
     /// The agent's binary, beside this one in the same bundle.
@@ -424,7 +424,7 @@ final class AgentModel {
     func requestAccessibilityPrompt() {
         NSApp.activate(ignoringOtherApps: true)
         _ = AXIsProcessTrustedWithOptions(
-            [GrantProbe.trustedCheckOptionPrompt as CFString: true] as CFDictionary)
+            ["AXTrustedCheckOptionPrompt" as CFString: true] as CFDictionary)
         refresh()
     }
 
@@ -579,13 +579,12 @@ final class AgentModel {
 
         init?(_ value: JSONValue?, refusal: String? = nil) {
             guard let value,
-                  let phase = value[AgentVerbs.HUD.phase]?
-                    .stringValue.flatMap(RunHUDPhase.init(rawValue:))
+                  let phase = value["phase"]?.stringValue.flatMap(RunHUDPhase.init(rawValue:))
             else { return nil }
             self.phase = phase
-            self.running = value[AgentVerbs.HUD.running]?.boolValue ?? false
-            self.drawing = value[AgentVerbs.HUD.drawing]?.boolValue ?? true
-            self.canShow = value[AgentVerbs.HUD.canShow]?.boolValue ?? false
+            self.running = value["running"]?.boolValue ?? false
+            self.drawing = value["drawing"]?.boolValue ?? true
+            self.canShow = value["canShow"]?.boolValue ?? false
             self.refusal = refusal
         }
     }
@@ -618,21 +617,17 @@ final class AgentModel {
     private nonisolated static func callDoctor(requestAccessibility: Bool,
                                                requestScreenRecording: Bool) -> Outcome {
         var flags: [String: JSONValue] = [:]
-        if requestAccessibility {
-            flags[AgentVerbs.DoctorFlag.requestAccessibility] = .bool(true)
-        }
-        if requestScreenRecording {
-            flags[AgentVerbs.DoctorFlag.requestScreenRecording] = .bool(true)
-        }
+        if requestAccessibility { flags["requestAccessibility"] = .bool(true) }
+        if requestScreenRecording { flags["requestScreenRecording"] = .bool(true) }
         let client = SocketClient()
         client.ioTimeoutSeconds = Self.pollTimeoutSeconds
         defer { client.disconnect() }
         do {
             let response = try client.send(
-                AgentRequest(id: UUID().uuidString, tool: AgentVerbs.doctor,
+                AgentRequest(id: UUID().uuidString, tool: "proctor_doctor",
                               arguments: .object(flags)))
             guard response.ok, let result = response.result else {
-                return .failure(response.error?.message ?? StatusSurface.Copy.agentRefused)
+                return .failure(response.error?.message ?? "the agent refused the request")
             }
             let data = try JSONEncoder().encode(result)
             return .success(try JSONDecoder().decode(DoctorReport.self, from: data))
@@ -651,34 +646,28 @@ final class AgentModel {
         client.ioTimeoutSeconds = Self.pollTimeoutSeconds
         defer { client.disconnect() }
         guard let response = try? client.send(
-                AgentRequest(id: UUID().uuidString, tool: AgentVerbs.recentActivity,
+                AgentRequest(id: UUID().uuidString, tool: "proctor_recent_activity",
                              arguments: .object([:]))),
               response.ok, let result = response.result else { return nil }
         let iso = ISO8601DateFormatter()
-        let items = result[AgentVerbs.Activity.recent]?.arrayValue?
-            .compactMap { entry -> ActivityItem? in
-                guard let tool = entry[AgentVerbs.Activity.tool]?.stringValue else { return nil }
-                let at = entry[AgentVerbs.Activity.at]?.stringValue
-                    .flatMap(iso.date(from:)) ?? Date()
-                return ActivityItem(
-                    tool: tool, at: at,
-                    ok: entry[AgentVerbs.Activity.ok]?.boolValue ?? true)
-            } ?? []
-        let f = result[AgentVerbs.Activity.foreground]
-        let yield = f?[AgentVerbs.Foreground.yield]
+        let items = result["recent"]?.arrayValue?.compactMap { entry -> ActivityItem? in
+            guard let tool = entry["tool"]?.stringValue else { return nil }
+            let at = entry["at"]?.stringValue.flatMap(iso.date(from:)) ?? Date()
+            return ActivityItem(tool: tool, at: at, ok: entry["ok"]?.boolValue ?? true)
+        } ?? []
+        let f = result["foreground"]
         let foreground = ForegroundStatus(
-            running: f?[AgentVerbs.Foreground.running]?.boolValue ?? false,
-            active: f?[AgentVerbs.Foreground.active]?.boolValue ?? false,
-            takesForeground: f?[AgentVerbs.Foreground.takesForeground]?.boolValue ?? false,
-            mayTakeForeground: f?[AgentVerbs.Foreground.mayTakeForeground]?.boolValue ?? false,
-            notice: f?[AgentVerbs.Foreground.notice]?.stringValue,
-            yielded: yield?[AgentVerbs.Foreground.active]?.boolValue ?? false,
-            yieldLine: yield?[AgentVerbs.Foreground.line]?.stringValue)
-        return ActivitySnapshot(
-            current: result[AgentVerbs.Activity.current]?.stringValue, items: items,
-            queueWaiting: result[AgentVerbs.Activity.queueWaiting]?.intValue ?? 0,
-            hud: HUDState(result[AgentVerbs.Activity.hud]),
-            foreground: foreground)
+            running: f?["running"]?.boolValue ?? false,
+            active: f?["active"]?.boolValue ?? false,
+            takesForeground: f?["takesForeground"]?.boolValue ?? false,
+            mayTakeForeground: f?["mayTakeForeground"]?.boolValue ?? false,
+            notice: f?["notice"]?.stringValue,
+            yielded: f?["yield"]?["active"]?.boolValue ?? false,
+            yieldLine: f?["yield"]?["line"]?.stringValue)
+        return ActivitySnapshot(current: result["current"]?.stringValue, items: items,
+                                queueWaiting: result["queueWaiting"]?.intValue ?? 0,
+                                hud: HUDState(result["hud"]),
+                                foreground: foreground)
     }
 
     /// The run panel's switch and the run's controls, over the same socket. An
@@ -691,10 +680,8 @@ final class AgentModel {
         let client = SocketClient()
         defer { client.disconnect() }
         guard let response = try? client.send(
-                AgentRequest(
-                    id: UUID().uuidString, tool: AgentVerbs.queue,
-                    arguments: .object(
-                        [AgentVerbs.actionArgument: .string(action.rawValue)])))
+                AgentRequest(id: UUID().uuidString, tool: "proctor_queue",
+                             arguments: .object(["action": .string(action.rawValue)])))
         else { return false }
         return response.ok
     }
@@ -704,13 +691,10 @@ final class AgentModel {
         client.ioTimeoutSeconds = Self.pollTimeoutSeconds
         defer { client.disconnect() }
         guard let response = try? client.send(
-                AgentRequest(
-                    id: UUID().uuidString, tool: AgentVerbs.hud,
-                    arguments: .object(
-                        [AgentVerbs.actionArgument: .string(action.rawValue)]))),
+                AgentRequest(id: UUID().uuidString, tool: "proctor_hud",
+                             arguments: .object(["action": .string(action.rawValue)]))),
               response.ok, let result = response.result else { return nil }
-        return HUDState(result[AgentVerbs.Activity.hud],
-                        refusal: result[AgentVerbs.HUD.refused]?.stringValue)
+        return HUDState(result["hud"], refusal: result["refused"]?.stringValue)
     }
 }
 
@@ -722,7 +706,7 @@ struct SignatureInfo: Sendable {
 
     var summary: String {
         if let authority, let teamID { return "\(authority) (\(teamID))" }
-        return isAdHoc ? StatusSurface.Copy.signatureAdHoc : StatusSurface.Copy.signatureUnsigned
+        return isAdHoc ? "Ad-hoc — grants are tied to these exact bytes" : "Unsigned"
     }
 
     static func current() -> SignatureInfo {
@@ -743,10 +727,10 @@ struct SignatureInfo: Sendable {
             }
             return nil
         }
-        let team = field(CodesignOutput.teamIdentifier)
+        let team = field("TeamIdentifier")
         return SignatureInfo(
-            isAdHoc: text.contains(CodesignOutput.adHocMarker),
-            teamID: (team == CodesignOutput.teamNotSet) ? nil : team,
-            authority: field(CodesignOutput.authority))
+            isAdHoc: text.contains("Signature=adhoc"),
+            teamID: (team == "not set") ? nil : team,
+            authority: field("Authority"))
     }
 }

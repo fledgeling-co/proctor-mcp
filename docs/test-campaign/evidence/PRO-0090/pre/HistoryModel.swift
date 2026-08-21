@@ -111,8 +111,8 @@ final class HistoryModel {
     func load() {
         state = runs.isEmpty ? .loading : state
         Task.detached(priority: .userInitiated) {
-            let answer = Self.call(HistorySurface.Wire.historyTool,
-                                   arguments: [HistorySurface.Wire.limitArgument: JSONValue.number(30)])
+            let answer = Self.call("proctor_history",
+                                   arguments: ["limit": JSONValue.number(30)])
             await MainActor.run { self.apply(answer) }
         }
     }
@@ -122,7 +122,7 @@ final class HistoryModel {
     func clear() {
         state = .loading
         Task.detached(priority: .userInitiated) {
-            let answer = Self.call(HistorySurface.Wire.clearTool, arguments: [:])
+            let answer = Self.call("proctor_history_clear", arguments: [:])
             await MainActor.run { self.apply(answer) }
         }
     }
@@ -150,9 +150,9 @@ final class HistoryModel {
         case .noAnswer(let message):
             state = .unreachable(message)
         case .reply(let value):
-            header = Self.header(from: value[HistorySurface.Wire.header])
-            unreadable = value[HistorySurface.Wire.unreadable]?.intValue ?? 0
-            runs = value[HistorySurface.Wire.runs]?.arrayValue?.compactMap(Self.run(from:)) ?? []
+            header = Self.header(from: value["header"])
+            unreadable = value["unreadable"]?.intValue ?? 0
+            runs = value["runs"]?.arrayValue?.compactMap(Self.run(from:)) ?? []
             expanded = expanded.intersection(Set(runs.map(\.id)))
             if let error = header?.error, !(header?.writable ?? true) {
                 state = .unreadable(error)
@@ -167,57 +167,57 @@ final class HistoryModel {
     // MARK: - Decoding
 
     private static func run(from value: JSONValue) -> Run? {
-        guard let id = value[HistorySurface.Wire.id]?.stringValue, let tool = value[HistorySurface.Wire.tool]?.stringValue,
-              let started = value[HistorySurface.Wire.startedAt]?.doubleValue else { return nil }
-        let ended = value[HistorySurface.Wire.endedAt]?.doubleValue ?? started
+        guard let id = value["id"]?.stringValue, let tool = value["tool"]?.stringValue,
+              let started = value["startedAt"]?.doubleValue else { return nil }
+        let ended = value["endedAt"]?.doubleValue ?? started
         return Run(
             id: id,
             tool: tool,
-            bundleId: value[HistorySurface.Wire.bundleId]?.stringValue,
+            bundleId: value["bundleId"]?.stringValue,
             startedAt: Date(timeIntervalSince1970: started),
             endedAt: Date(timeIntervalSince1970: ended),
-            outcome: value[HistorySurface.Wire.outcome]?.stringValue.flatMap(RunHistory.Outcome.init(rawValue:)) ?? .ok,
-            steps: value[HistorySurface.Wire.steps]?.arrayValue?.compactMap(step(from:)) ?? [],
-            lane: value[HistorySurface.Wire.lane]?[HistorySurface.Wire.lane]?.stringValue,
-            unreadable: value[HistorySurface.Wire.unreadable]?.intValue ?? 0,
-            reason: value[HistorySurface.Wire.reason]?.stringValue.map { Foreign(text: $0, supplied: false) })
+            outcome: value["outcome"]?.stringValue.flatMap(RunHistory.Outcome.init(rawValue:)) ?? .ok,
+            steps: value["steps"]?.arrayValue?.compactMap(step(from:)) ?? [],
+            lane: value["lane"]?["lane"]?.stringValue,
+            unreadable: value["unreadable"]?.intValue ?? 0,
+            reason: value["reason"]?.stringValue.map { Foreign(text: $0, supplied: false) })
     }
 
     private static func step(from value: JSONValue) -> Step? {
-        guard let at = value[HistorySurface.Wire.at]?.doubleValue else { return nil }
-        let object = value[HistorySurface.Wire.object].flatMap { o -> Foreign? in
-            guard let text = o[HistorySurface.Wire.text]?.stringValue else { return nil }
-            return Foreign(text: text, supplied: o[HistorySurface.Wire.supplied]?.boolValue ?? false)
+        guard let at = value["at"]?.doubleValue else { return nil }
+        let object = value["object"].flatMap { o -> Foreign? in
+            guard let text = o["text"]?.stringValue else { return nil }
+            return Foreign(text: text, supplied: o["supplied"]?.boolValue ?? false)
         }
         return Step(
-            seq: value[HistorySurface.Wire.seq]?.intValue ?? 0,
+            seq: value["seq"]?.intValue ?? 0,
             at: Date(timeIntervalSince1970: at),
-            kind: value[HistorySurface.Wire.kind]?.stringValue,
-            act: value[HistorySurface.Wire.act]?.stringValue,
+            kind: value["kind"]?.stringValue,
+            act: value["act"]?.stringValue,
             object: object,
-            plane: value[HistorySurface.Wire.plane]?.stringValue,
-            ms: value[HistorySurface.Wire.ms]?.intValue,
-            outcome: value[HistorySurface.Wire.outcome]?.stringValue.flatMap(RunHistory.Outcome.init(rawValue:)) ?? .ok,
-            reason: value[HistorySurface.Wire.reason]?.stringValue.map { Foreign(text: $0, supplied: false) })
+            plane: value["plane"]?.stringValue,
+            ms: value["ms"]?.intValue,
+            outcome: value["outcome"]?.stringValue.flatMap(RunHistory.Outcome.init(rawValue:)) ?? .ok,
+            reason: value["reason"]?.stringValue.map { Foreign(text: $0, supplied: false) })
     }
 
     private static func header(from value: JSONValue?) -> Header? {
         guard let value else { return nil }
         var out = Header()
-        out.entries = value[HistorySurface.Wire.entries]?.intValue ?? 0
-        out.capDays = value[HistorySurface.Wire.capDays]?.intValue ?? 0
-        out.capEntries = value[HistorySurface.Wire.capEntries]?.intValue ?? 0
-        out.remainingByAge = value[HistorySurface.Wire.remainingByAge]?.doubleValue
-        out.remainingByEntries = value[HistorySurface.Wire.remainingByEntries]?.doubleValue ?? 1
-        out.writable = value[HistorySurface.Wire.writable]?.boolValue ?? true
-        out.verdictClean = value[HistorySurface.Wire.verdictClean]?.boolValue ?? true
-        out.keyConfirmed = value[HistorySurface.Wire.keyConfirmed]?.boolValue ?? true
-        out.dropped = value[HistorySurface.Wire.dropped]?.intValue ?? 0
-        out.keyMismatch = value[HistorySurface.Wire.keyMismatch]?.boolValue ?? false
-        out.faultDetail = value[HistorySurface.Wire.fault]?[HistorySurface.Wire.faultDetail]?.stringValue
-        out.error = value[HistorySurface.Wire.error]?.stringValue
-        out.rotatedDiscarded = value[HistorySurface.Wire.rotated]?[HistorySurface.Wire.rotatedDiscarded]?.intValue
-        out.rotatedReason = value[HistorySurface.Wire.rotated]?[HistorySurface.Wire.rotatedReason]?.stringValue
+        out.entries = value["entries"]?.intValue ?? 0
+        out.capDays = value["capDays"]?.intValue ?? 0
+        out.capEntries = value["capEntries"]?.intValue ?? 0
+        out.remainingByAge = value["remainingByAge"]?.doubleValue
+        out.remainingByEntries = value["remainingByEntries"]?.doubleValue ?? 1
+        out.writable = value["writable"]?.boolValue ?? true
+        out.verdictClean = value["verdictClean"]?.boolValue ?? true
+        out.keyConfirmed = value["keyConfirmed"]?.boolValue ?? true
+        out.dropped = value["dropped"]?.intValue ?? 0
+        out.keyMismatch = value["keyMismatch"]?.boolValue ?? false
+        out.faultDetail = value["fault"]?["detail"]?.stringValue
+        out.error = value["error"]?.stringValue
+        out.rotatedDiscarded = value["rotated"]?["discarded"]?.intValue
+        out.rotatedReason = value["rotated"]?["reason"]?.stringValue
         return out
     }
 
@@ -232,7 +232,7 @@ final class HistoryModel {
             let response = try client.send(
                 AgentRequest(id: UUID().uuidString, tool: tool, arguments: .object(arguments)))
             guard response.ok, let result = response.result else {
-                return .noAnswer(response.error?.message ?? HistorySurface.Copy.agentRefused)
+                return .noAnswer(response.error?.message ?? "the agent refused the request")
             }
             return .reply(result)
         } catch let error as AgentError {
