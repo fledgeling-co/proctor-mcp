@@ -1,0 +1,88 @@
+Sources/ProctorUI/MainWindow.swift: 45 string literals examined
+  display         0
+  symbol         16
+  system         16
+  key             1
+  punctuation    11
+  interpolated    1
+
+PASS: 0 user-facing literals of 45 examined; 45 are identifiers, symbols, system strings or punctuation.
+exit=0
+
+Sources/ProctorUI/HistoryWindow.swift: 91 string literals examined
+  display        71
+  symbol          9
+  system          0
+  key             7
+  punctuation     3
+  interpolated    1
+  VIOLATION    40 confirmationDialog()               "Clear Proctor's history?"
+FAIL: 71 user-facing literal(s) of 91 examined. Move them to StatusSurface.Copy.
+exit=1
+
+Sources/ProctorUI/ProctorUIApp.swift: 69 string literals examined
+  display        53
+  symbol          1
+  system         11
+  key             1
+  punctuation     2
+  interpolated    1
+  VIOLATION    34 bool(forKey:)                      "walkthroughCompleted"
+FAIL: 53 user-facing literal(s) of 69 examined. Move them to StatusSurface.Copy.
+exit=1
+
+Sources/ProctorUI/Walkthrough.swift: 56 string literals examined
+  display        49
+  symbol          4
+  system          0
+  key             2
+  punctuation     1
+  interpolated    0
+  VIOLATION    25 AppStorage()                       "walkthroughCompleted"
+FAIL: 49 user-facing literal(s) of 56 examined. Move them to StatusSurface.Copy.
+exit=1
+
+Sources/ProctorUI/HistoryModel.swift: 47 string literals examined
+  display        46
+  symbol          0
+  system          0
+  key             0
+  punctuation     1
+  interpolated    0
+  VIOLATION   114 call()                             "proctor_history"
+FAIL: 46 user-facing literal(s) of 47 examined. Move them to StatusSurface.Copy.
+exit=1
+
+Sources/ProctorUI/AgentModel.swift: 47 string literals examined
+  display        39
+  symbol          0
+  system          3
+  key             2
+  punctuation     3
+  interpolated    0
+  VIOLATION   123 menuBarAssetURL(asset:)            "idle-0"
+FAIL: 39 user-facing literal(s) of 47 examined. Move them to StatusSurface.Copy.
+exit=1
+
+Sources/ProctorUI/MenuBarCharacter.swift: 1 string literals examined
+  display         0
+  symbol          1
+  system          0
+  key             0
+  punctuation     0
+  interpolated    0
+
+PASS: 0 user-facing literals of 1 examined; 1 are identifiers, symbols, system strings or punctuation.
+exit=0
+
+Sources/ProctorUI/Motion.swift: 0 string literals examined
+  display         0
+  symbol          0
+  system          0
+  key             0
+  punctuation     0
+  interpolated    0
+
+PASS: 0 user-facing literals of 0 examined; 0 are identifiers, symbols, system strings or punctuation.
+exit=0
+
