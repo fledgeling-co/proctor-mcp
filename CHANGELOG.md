@@ -130,6 +130,18 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **A capture that came back empty used to pass as a good one.** Ask for a picture of a window Proctor owns and you'd get `status: complete, trustworthy: true` over a PNG in which all 2,942,720 pixels were fully transparent. The exclusion was doing exactly what it should; Proctor keeps its own windows out of its own captures so the run HUD never turns up in a shot. Nothing in the reply said so, and `dirtyArea 0` sitting next to `dirtyRectCount 1` reads as though something changed.
+
+  `SCFrameStatus complete` means a frame arrived, not that the frame depicts anything. The verdict now asks whether there's anything in it before vouching for it. An empty frame comes back `trustworthy: false` with the reason in plain words, and where Proctor owns the target it states the mechanism rather than guessing from pixels: this window is excluded from capture, so nothing was going to be in it.
+
+  Every reply carries a **`content`** block now, with the number of pixels examined, the highest alpha seen and how many distinct colours. Alpha is read over every pixel rather than a sample, because a stride over a 3456x2234 frame steps 7 or 8 pixels and would call a one pixel hairline an empty window.
+
+  Note: a legitimately blank window is still a pass. An opaque single colour frame is content, not a fault; `distinctColours` is reported so you can make that call yourself, and nothing in the verdict keys off it.
+
+- **The drawn pointer was the one overlay you could photograph.** The run HUD and the takeover statement both set `sharingType = .none`, which keeps them out of every capture channel on this Mac. The pointer set it nowhere, and it's the only one of the three that changes window level while a run is going. Assigning a level resets the sharing type, so it sat at `sharingState 1` on the window server while its two siblings sat at 0.
+
+  Level and sharing type are set together now. Measured on two signed builds differing in that one file, sampled from a separate process: before, the agent owns three windows and one of them is capturable; after, it owns three and none are. That also settles what a fourth window nobody had identified actually was, which was this one.
+
 - **Running the test suite used to edit your Proctor policy.** `PolicyStore` worked out its own path from your home directory, so a test that configured a policy wrote the real file at `~/Library/Application Support/app.fledgeling.procter/policy/policy.json`. Nothing announced it and nothing put it back.
 
   The read was the wider half. Every session in the suite that didn't say otherwise loaded that same file, so the whole run inherited whatever policy you had configured. On a Mac with an empty policy that's invisible, because an empty policy allows every app; on a Mac with an allow list in force, tests that never mentioned a policy start refusing apps they've never heard of.
