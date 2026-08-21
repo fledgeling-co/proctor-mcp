@@ -1603,3 +1603,36 @@ asks the orchestrator rather than taking the next free id.
 
 Machine load at dispatch: 11.16, down from the 130-266 that killed the first verification attempt.
 That matters for PRO-0080, whose mutation run scores a timeout as a kill.
+
+## Wave 12 — two items from real use and one instruction file (2026-08-21)
+
+| ID | Brief | Depends on | Lane |
+|----|-------|-----------|------|
+| PRO-0084 | `77-the-cua-path-leaves-proctors-plane-silently.md` | — | this machine, live reproduction first |
+| PRO-0085 | `78-the-skill-and-the-guest-lane.md` | — | `~/Dev/fledgeling-plugins`, not this repo |
+
+**PRO-0084 is a reported defect and the source already names its mechanism.** A run routed to the
+cua backend shows no HUD, no takeover notice and no drawn pointer, and moves the real cursor;
+sometimes over a window in the background. `CuaActuationBackend.swift:302-306` says why in its own
+words: the guards that make a takeover visible *"arm before a post, from inside the process making
+it — and this post was made by another process, so nothing could have armed them."* A grep for
+`PointerOverlay`, `pointerMarker` or `drawnPointer` across `Actuation/` and `SessionAct.swift`
+returns zero, so wave 9's covered-target rule in `CursorOverlay.swift:273` is never consulted on
+this path. `"Automation Running"` is not Proctor's string at all — it is macOS's own indicator, and
+seeing it is the tell that the run left Proctor's plane. The escalation is already recorded as
+`unrequestedForeground`; what is missing is that it never reaches the screen.
+
+The item starts with a reproduction rather than a fix: the mechanism is read off source, the trigger
+and the frequency are not, and the reporter says it happens "not often".
+
+**PRO-0085 supersedes the still-open brief `53`**, which found a smaller version of the same drift
+on 2026-08-15. Measured today: `references/tools.md` advertises 20 tools against 27 shipped, missing
+`proctor_guest`, `proctor_queue`, `proctor_hud`, `proctor_history`, `proctor_recent`,
+`proctor_resource` and `proctor_actuation`. `proctor_guest` appears nowhere in the skill. The only
+VM sentence in it, `SKILL.md:802`, is a true statement about the two-guest cap that reads as a
+prohibition, and it answers a scale question an agent asking about isolation was not asking.
+
+**One question this brief deliberately does not answer**, and it is the reader's: whether
+`proctor_guest` should gain a `provision` action. Today it explicitly provisions nothing, because an
+install must not happen as a side effect of a tool call and agent calls cannot raise macOS
+permission UI. Documenting that is a skill change; changing it is a safety-posture change.
