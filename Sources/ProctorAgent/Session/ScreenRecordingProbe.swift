@@ -55,14 +55,29 @@ struct ScreenRecordingProbe: Sendable {
     let keeper: GrantProbeKeeper
     let bound: Double
     let now: @Sendable () -> Double
+    /// The arm that ends the wait. It is asked to wait `bound` seconds and then the
+    /// probe answers `unconfirmed`, so this closure *is* the bound mechanism rather
+    /// than a detail of it.
+    ///
+    /// Injectable because otherwise the only way to ask "did the bound fire?" is to
+    /// time the call, and a stopwatch measures the machine. That test failed six
+    /// recorded times in one wave — at 5.6s, 6.1s, 6.58s, 8.13s, 10.25s and 14.73s
+    /// against a 5.0s ceiling — while the product it was asserting about was correct
+    /// every time. With the timer told to the probe, a test watches the mechanism
+    /// fire and reads no clock at all.
+    let timer: @Sendable (Double) async -> Void
 
     init(bound: Double = GrantProbe.bound,
          keeper: GrantProbeKeeper? = nil,
          now: @escaping @Sendable () -> Double = { Date().timeIntervalSince1970 },
+         timer: @escaping @Sendable (Double) async -> Void = { seconds in
+             try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+         },
          platform: @escaping @Sendable () async -> GrantState) {
         self.bound = bound
         self.keeper = keeper ?? GrantProbeKeeper(bound: bound)
         self.now = now
+        self.timer = timer
         self.platform = platform
     }
 
@@ -129,7 +144,7 @@ struct ScreenRecordingProbe: Sendable {
                 finish(result)
             }
             Task.detached {
-                try? await Task.sleep(nanoseconds: UInt64(bound * 1_000_000_000))
+                await timer(bound)
                 finish(.unconfirmed)
             }
         }

@@ -28,18 +28,53 @@ struct ScreenRecordingProbeWiringTests {
 
     // MARK: A1 — the probe is bounded
 
-    @Test("a platform call that never answers returns unconfirmed within the bound")
-    func aParkedCallDoesNotHang() async {
-        let started = Date()
-        let probe = probe(bound: 0.2, platform: Self.neverAnswers)
+    @Test("a platform call that never answers is ended by the bound, on the bound the product ships")
+    func aParkedCallIsEndedByTheBound() async {
+        // This case used to end `#expect(elapsed < 5.0)` against a stopwatch, and
+        // the stopwatch was measuring the machine: six recorded failures in one wave
+        // — 5.6s, 6.1s, 6.58s, 8.13s, 10.25s and 14.73s — against a product that
+        // answered correctly every time, and 1.8s when the same case ran alone.
+        //
+        // The claim worth making is the mechanism, not the duration: a call that
+        // never answers is ended by the bound arm rather than by luck. So the bound
+        // arm is told to the probe, and the test watches it fire. `GrantProbe.bound`
+        // is the product's own constant and nothing here writes it, so this also
+        // catches a probe that bounds itself by something other than its bound.
+        let asked = BoundRequest()
+        let probe = ScreenRecordingProbe(timer: { seconds in asked.record(seconds) },
+                                         platform: Self.neverAnswers)
+
         let state = await probe.state()
-        let elapsed = Date().timeIntervalSince(started)
 
         #expect(state == .unconfirmed)
-        // The bound is a bound, not a hope. Generous headroom so this does not
-        // flake on a loaded machine, and still nowhere near the "forever" it
-        // replaced.
-        #expect(elapsed < 5.0)
+        #expect(asked.seconds == GrantProbe.bound)
+    }
+
+    @Test("an answer inside the bound wins even when the bound never fires")
+    func anAnswerBeatsABoundThatNeverFires() async {
+        // The other half of the race, pinned the same way round. A timer that never
+        // returns is what a healthy call looks like from the bound's side, and the
+        // answer must still come back — a probe that waited for its timer would make
+        // every doctor poll cost the full 1.5s on a Mac where the grant is fine.
+        let probe = ScreenRecordingProbe(timer: { _ in await Self.never() },
+                                         platform: { .granted })
+        #expect(await probe.state() == .granted)
+    }
+
+    @Test("the probe the agent actually runs is bounded by the constant the report quotes")
+    func theLiveProbeCarriesTheRealBound() {
+        // The seams above are only worth anything if production takes the real one.
+        #expect(ScreenRecordingProbe.live.bound == GrantProbe.bound)
+        #expect(GrantProbe.bound == 1.5)
+    }
+
+    @Test("the real timer still ends a parked call, however long the machine takes about it")
+    func theDefaultTimerStillEndsAParkedCall() async {
+        // The default timer, unsubstituted, against the call this whole item exists
+        // for. No clock is read: what is asserted is that it comes back at all,
+        // which is the difference from the hang it replaced. On a loaded machine
+        // this takes longer and still passes, which is the point.
+        #expect(await probe(bound: 0.2, platform: Self.neverAnswers).state() == .unconfirmed)
     }
 
     @Test("an answering platform call is reported as it answered")
@@ -202,6 +237,20 @@ struct ScreenRecordingProbeWiringTests {
     }
 
     // MARK: - Helpers
+
+    /// What the bound arm was asked to wait for. One `Double`, recorded once, so a
+    /// test can ask whether the bound fired and on what number instead of timing it.
+    private final class BoundRequest: @unchecked Sendable {
+        private let lock = NSLock()
+        private var value: Double?
+        func record(_ seconds: Double) { lock.lock(); value = value ?? seconds; lock.unlock() }
+        var seconds: Double? { lock.lock(); defer { lock.unlock() }; return value }
+    }
+
+    /// A wait that never ends, for standing in as the arm that loses the race.
+    private static func never() async {
+        await withCheckedContinuation { (_: CheckedContinuation<Void, Never>) in }
+    }
 
     private final class Counter: @unchecked Sendable {
         private let lock = NSLock()
