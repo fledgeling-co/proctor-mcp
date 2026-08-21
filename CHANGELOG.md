@@ -130,6 +130,10 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **Proctor's policy file was written with looser permissions than everything beside it.** `policy.json` came out `-rw-r--r--`, whatever your umask happened to give it, while the audit files in the same subsystem have always been opened `0600` deliberately. The folder they share is `0700`, so nobody else on the machine could reach the file; that's why this was an inconsistency rather than a hole. It stops being one as soon as the file is copied, backed up, or that folder's mode is relaxed by something else, and the file is the record of which applications an agent is allowed to drive.
+
+  It's now created `0600` by the call that creates it, rather than tightened afterwards. A file that existed world-readable for an instant has been world-readable, so the mode is set at the open rather than fixed a moment later. If an earlier build left you a wider `policy.json`, the next save narrows it.
+
 - **Running the test suite used to edit your Proctor policy.** `PolicyStore` worked out its own path from your home directory, so a test that configured a policy wrote the real file at `~/Library/Application Support/app.fledgeling.procter/policy/policy.json`. Nothing announced it and nothing put it back.
 
   The read was the wider half. Every session in the suite that didn't say otherwise loaded that same file, so the whole run inherited whatever policy you had configured. On a Mac with an empty policy that's invisible, because an empty policy allows every app; on a Mac with an allow list in force, tests that never mentioned a policy start refusing apps they've never heard of.
