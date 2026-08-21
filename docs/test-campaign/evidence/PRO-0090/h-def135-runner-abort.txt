@@ -1,0 +1,55 @@
+PRO-0090, DEF-135 — a force-unwrap in a test aborts the whole runner.
+
+Two runs, one mutation, two forms of the same assertion. The mutation is a command
+dropped from the catalogue under a different id, which is the regression the test
+exists to catch:
+
+    Sources/ProctorCore/CommandSurface.swift
+      .init(id: CommandID.pause,     ...)  ->  .init(id: "pause-renamed",     ...)
+      .init(id: CommandID.showPanel, ...)  ->  .init(id: "show-panel-renamed", ...)
+
+== ARM A · the pre-fix form, `CommandSurface.command(id)!` on a literal id ==
+  command: PROCTOR_TEST_LOG=... ./scripts/test.sh   (whole suite)
+  scripts/test.sh exit: 1
+  1772:ProctorCoreTests/CommandSurfaceTests.swift:47: Fatal error: Unexpectedly found nil while unwrapping an Optional value
+  swiftpm-testing-helper exited with unexpected signal code 5
+  tests that reported a verdict: 0
+  suites that reported a verdict: 0
+  'Test run with N tests' lines: 0
+
+  What was masked. The three lines immediately before the abort are honest
+  failures from a different test, which never reached a verdict:
+    􀢄  Test "A1 · the kill switch is reachable from every surface that has one" recorded an issue at CommandSurfaceTests.swift:26:13: Expectation failed: (command?.surfaces.contains(.extrasMenu) → nil) == true
+    􀄵  pause is not in the extras menu
+    􀢄  Test "A1 · the kill switch is reachable from every surface that has one" recorded an issue at CommandSurfaceTests.swift:27:13: Expectation failed: (command?.surfaces.contains(.runPanel) → nil) == true
+    􀄵  pause is not on the run panel
+    ProctorCoreTests/CommandSurfaceTests.swift:47: Fatal error: Unexpectedly found nil while unwrapping an Optional value
+
+  scripts/test.sh's own reading:
+    FAIL: no swift-testing verdict line in the output.
+          Either the run died before reporting, or a --filter matched no
+          tests. --filter matches the Swift function name, not the @Test
+          display string. An absent verdict is not a pass.
+
+== ARM B · the fixed form, `try #require(CommandSurface.command(CommandID.pause))` ==
+  same mutation, same command, same suite.
+  scripts/test.sh exit: 1
+  􀢄  Test run with 1963 tests in 239 suites failed after 13.404 seconds with 12 issues.
+  Fatal errors: 0
+
+  The four guards that fired, all of them reporting:
+    􀢄  Test "A2 · every named command id resolves, and title returns the catalogue's" recorded an issue at SurfaceLiteralsTests.swift:77:13: Expectation failed: (command → nil) != nil
+    􀢄  Test "A2 · every named command id resolves, and title returns the catalogue's" recorded an issue at SurfaceLiteralsTests.swift:79:13: Expectation failed: (CommandSurface.title(id) → "pause") == (command?.title → nil)
+    􀢄  Test "A2 · every named command id resolves, and title returns the catalogue's" recorded an issue at SurfaceLiteralsTests.swift:77:13: Expectation failed: (command → nil) != nil
+    􀢄  Test "A2 · every named command id resolves, and title returns the catalogue's" recorded an issue at SurfaceLiteralsTests.swift:79:13: Expectation failed: (CommandSurface.title(id) → "show-panel") == (command?.title → nil)
+    􀢄  Test "A2 · every named command id resolves, and title returns the catalogue's" recorded an issue at SurfaceLiteralsTests.swift:85:13: Expectation failed: (named → ["drawn-pointer", "help", "reveal-socket", "diagnostics", "show-panel", "quit", "refusals", "status", "bring-all", "restart-agent", "drop-waiting", "minimise", "setup-again", "resume", "about", "hide-panel", "takeover-notice", "pause", "stop", "history"]).contains(command.id → "pause-renamed")
+    􀢄  Test "A2 · every named command id resolves, and title returns the catalogue's" recorded an issue at SurfaceLiteralsTests.swift:85:13: Expectation failed: (named → ["drawn-pointer", "help", "reveal-socket", "diagnostics", "show-panel", "quit", "refusals", "status", "bring-all", "restart-agent", "drop-waiting", "minimise", "setup-again", "resume", "about", "hide-panel", "takeover-notice", "pause", "stop", "history"]).contains(command.id → "show-panel-renamed")
+    􀢄  Test "A5 · the panel switch needs an agent launched with the panel enabled" recorded an issue at CommandSurfaceTests.swift:69:24: Expectation failed: CommandSurface.command(CommandSurface.CommandID.showPanel → "show-panel") → nil
+    􀢄  Test "A1 · the kill switch is reachable from every surface that has one" recorded an issue at CommandSurfaceTests.swift:24:13: Expectation failed: (command → nil) != nil
+    􀢄  Test "A1 · the kill switch is reachable from every surface that has one" recorded an issue at CommandSurfaceTests.swift:25:13: Expectation failed: (command?.surfaces.contains(.menuBar) → nil) == true
+    􀢄  Test "A1 · the kill switch is reachable from every surface that has one" recorded an issue at CommandSurfaceTests.swift:26:13: Expectation failed: (command?.surfaces.contains(.extrasMenu) → nil) == true
+    􀢄  Test "A1 · the kill switch is reachable from every surface that has one" recorded an issue at CommandSurfaceTests.swift:27:13: Expectation failed: (command?.surfaces.contains(.runPanel) → nil) == true
+    􀢄  Test "A2 · a command that cannot act is dimmed, never absent" recorded an issue at CommandSurfaceTests.swift:54:25: Expectation failed: CommandSurface.command(id → "pause") → nil
+
+== DISARMED ==
+  Sources reverted; final gate in docs/test-campaign/evidence/PRO-0090/gate-final.txt.
