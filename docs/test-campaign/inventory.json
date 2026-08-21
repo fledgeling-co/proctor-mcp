@@ -540,6 +540,32 @@
       "effect": "ipc"
     },
     {
+      "id": "REQ-055",
+      "text": "Running the test suite does not read or write any state belonging to the operator of the machine it runs on: the policy store is reached through a root the caller supplies, and a caller that supplies none is redirected to a fresh directory of its own rather than allowed through to the operator's",
+      "source": "docs/features-to-triage/82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md; spec-PRO-0089.md A1-A2; the interlock precedent at PolicyStore.swift AuditLog.isTestProcess",
+      "class": "safety guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-012"
+      ],
+      "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change",
+      "effect": "filesystem-write"
+    },
+    {
+      "id": "REQ-056",
+      "text": "A test's verdict does not depend on how busy the machine is: a claim about a timeout, deadline or bound is asserted against a clock or timer the test supplies and can observe, never against measured elapsed time compared to a numeric literal",
+      "source": "docs/features-to-triage/82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md; spec-PRO-0089.md A3-A6; DEF-029",
+      "class": "test-oracle guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-006",
+        "SURF-003",
+        "SURF-022"
+      ],
+      "note": "the population is enumerated by scripts/campaign/wall_clock_census.py, which arms itself against both pre-PRO-0089 offenders before any zero it prints is believed",
+      "effect": "none"
+    },
+    {
       "id": "REQ-053",
       "class": "behaviour",
       "text": "One process verifies a given binary's code signature once per file identity, however many sessions ask about it and however many ask at the same moment: fifteen concurrent callers on a cold entry produce one verification and fourteen waiters, and no caller and no verification holds a thread of the cooperative pool while it waits, so unrelated work runs to completion while a verification is in flight",
@@ -1804,6 +1830,51 @@
       "title": "An orchestrator merge silently dropped a flow, unpublishing a judged capture",
       "found": "capture-lineage --gate, immediately after the PRO-0081 merge, 2026-08-21",
       "detail": "Reconciling inventory.json at the PRO-0081 merge, the orchestrator merged only the `defect` and `requirement` lists and took ours as the base document. PRO-0081's addition to `flow` \u2014 FLOW-010, carrying STEP-A3-PRIMARY-DISABLED and its `shot` \u2014 was dropped. The capture stayed on disk and its verdict stayed in witness-verdicts.json, but the subject left the published set, so judged fell 6 to 5 against a ratchet of 6.\n\nThe gate caught it and exited 2. That is the ratchet doing exactly its job: without it a judged capture would have quietly stopped being published and the wall would have shrunk with no green turning red.\n\nThe lesson is mechanical rather than about care: a hand-written merge of a multi-key registry must sweep every key, not the keys the conflict happened to be about. Repaired in the same commit by appending every theirs-only row across component, defect, flow, requirement and surface, with a uniqueness assertion per key."
+    },
+    {
+      "id": "DEF-065",
+      "status": "fixed",
+      "title": "The suite did not only write the operator's policy, it read it too, so the whole run depended on what the operator had configured",
+      "found": "PRO-0089, closing DEF-042: measured by pointing the un-injected fallback at one shared directory",
+      "detail": "DEF-042 named the write. The read is the half nobody had looked at and it is the wider one. `Session.loadPolicyIfNeeded` went through the same seamless `PolicyStore`, so EVERY un-injected Session in the suite loaded `~/Library/Application Support/app.fledgeling.procter/policy/policy.json` \u2014 the person's own file. On a Mac with an allow list configured, the gate is in force for tests that never mentioned a policy.\n\nMEASURED, and not by argument. The first fix gave a test process one shared temporary policy directory. That is the same sharing with a different file, and it turned the suite red immediately: `Test run with 1838 tests in 217 suites failed after 129.814 seconds with 67 issues` \u2014 67 issues across 11 suites (TakeoverWiringTests 16, HoldAttributionWiringTests 14, DelegatedAuditTests 13, YieldWiringTests 8, StopReachabilityWiringTests 8, RunHUDWiringTests 3, and one each in RunQueueWiringTests, ForegroundWiringTests, EffectWitnessTests, DelegatedSupervisionWiringTests, BrowserRoutingTests), every one of them `policyDenied: An allow list is in force and com.example.fake is not on it` for an app the failing test had never named. One case configured a policy; every un-injected session afterwards inherited it.\n\nThat is precisely what the operator's file did before this item, and it looked fine only because this Mac's policy.json is `{allow:[],block:[],sensitive:[]}` and an empty policy allows everything.\n\nFIXED: in a test process every read of `PolicyStore.live` is a fresh, empty directory, so two sessions never share one file. Gate green afterwards at 1,839 tests in 217 suites.",
+      "surface": "SURF-012",
+      "req": "REQ-055"
+    },
+    {
+      "id": "DEF-066",
+      "status": "fixed",
+      "title": "A pipe-backed test killed the whole test process with SIGPIPE when it failed, so a failure crashed instead of reporting",
+      "found": "PRO-0089, while arming the CuaLineReader deadline cases",
+      "detail": "The frozen-clock case writes a late line from a detached thread. With only the write handle captured, a run in which the reader gave up early released the reading end first, and the write 300ms later took SIGPIPE. The arming run shows it: after the expected expectation failures, `swiftpm-testing-helper ... exited with unexpected signal code 13`.\n\nThe consequence is worse than the crash. A test that kills its own process on the failure path destroys the report of every other failure in the run, so the one condition under which the evidence matters is the one under which it is lost.\n\nFIXED by having the writer thread hold the whole `Pipe` rather than its writing half, so the reading end outlives the write, and by writing through `try? write(contentsOf:)`. Recorded because the shape is general: any test pairing a `Pipe` with a thread that outlives the assertion has it.",
+      "surface": "SURF-003",
+      "req": "REQ-056"
+    },
+    {
+      "id": "DEF-067",
+      "status": "fixed",
+      "title": "The first wall-clock detector reported zero offenders and could not have reported anything else",
+      "found": "PRO-0089, by the detector's own arming probe",
+      "detail": "The census that proves clause A6 \u2014 no assertion compares a measured elapsed time to a numeric literal \u2014 was first written as a single regex whose character class `[^)]*` cannot cross the `)` inside `timeIntervalSince(started)`. It therefore missed `#expect(Date().timeIntervalSince(started) < 2)`, which is the exact line it was written to find, while reporting a clean-looking zero and one false positive on an injected clock.\n\nIt was caught in the same minute only because the script printed an arming line: `input: #expect(Date().timeIntervalSince(started) < 2)` / `caught: False`. Without that line the zero would have been published.\n\nFIXED: `scripts/campaign/wall_clock_census.py` now runs a two-stage scan that tracks variables derived from a real-time source, and `--arm` runs the detector over both offenders as they stood at the merge base via `git show`, requiring it to find both before any census is believed. A clock a test injects and drives is deliberately not flagged.",
+      "surface": "SURF-022",
+      "req": "REQ-056"
+    },
+    {
+      "id": "DEF-068",
+      "status": "open",
+      "title": "policy.json is written world-readable while every audit file in the same subsystem is opened 0600",
+      "found": "PRO-0089, reading the two stores side by side in PolicyStore.swift",
+      "detail": "`PolicyStore.save` creates its directory with `.posixPermissions: 0o700` and then writes the file with `Data.write(to:options:.atomic)`, which takes the umask default. Measured on this Mac: `-rw-r--r-- policy.json` inside `drwx------ policy/`. `AuditLog` in the same file opens `audit.jsonl`, `audit.lock` and `audit.pub` with an explicit `0o600` and sets `0o600` on its temporaries; measured `-rw------- audit.jsonl`.\n\nThe 0700 directory is what carries the protection, so this is an inconsistency rather than an exposure: another user cannot traverse the directory to reach the file. It matters if the file is ever copied, archived, or the directory's mode is relaxed.\n\nNOT FIXED HERE, deliberately. This item is about test seams; changing the on-disk mode of an operator's existing configuration file is a separate change with its own migration question (an existing 0644 file keeps its mode through an atomic replace on some paths and not others), and fixing it in passing would put an unrelated line in this diff.",
+      "surface": "SURF-012",
+      "req": "REQ-055"
+    },
+    {
+      "id": "DEF-069",
+      "status": "fixed",
+      "title": "The bounded-probe oracle could not tell the bound firing from the probe never running",
+      "found": "PRO-0089, reading ScreenRecordingProbe.state() against the test that asserted on it",
+      "detail": "The old case asserted `state == .unconfirmed` and `elapsed < 5.0`. Neither half distinguishes the bound firing from a path where no bound exists: `ScreenRecordingProbe.state()` returns `.unconfirmed` directly on the keeper's `.unconfirmed` decision, without entering `bounded(token:)` at all, and that return satisfies both assertions. So the test named for the bound could have passed with the bound mechanism never engaged, and the stopwatch \u2014 the half that was flaky \u2014 was also the half carrying no information about the mechanism.\n\nFIXED by making the bound arm a told dependency: `ScreenRecordingProbe(timer:)` defaults to the `Task.sleep` it always did, and the converted case injects a timer that records what it was asked to wait for. The assertion is that the timer was asked for `GrantProbe.bound` \u2014 the product's own constant, which nothing in the test writes \u2014 so a probe bounded by something other than its bound now fails. Armed: with `await timer(bound)` changed to `await timer(bound + 1)` the case reports `Expectation failed: (asked.seconds \u2192 2.5) == (GrantProbe.bound \u2192 1.5)`.",
+      "surface": "SURF-006",
+      "req": "REQ-056"
     },
     {
       "id": "DEF-050",

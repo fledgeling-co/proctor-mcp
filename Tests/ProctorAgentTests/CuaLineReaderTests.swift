@@ -24,6 +24,36 @@ struct CuaLineReaderTests {
         return (pipe, CuaLineReader(fd: pipe.fileHandleForReading.fileDescriptor))
     }
 
+    private func pipeAndReader(clock: TestClock) -> (Pipe, CuaLineReader) {
+        let pipe = Pipe()
+        return (pipe, CuaLineReader(fd: pipe.fileHandleForReading.fileDescriptor,
+                                    now: { clock.read() }))
+    }
+
+    /// A monotonic clock the test drives. `step` is what each reading advances it
+    /// by, so a budget can be spent without any of it being waited out; a step of
+    /// zero freezes it, which is the arm that says what the reader does while its
+    /// budget is *not* spent.
+    private final class TestClock: @unchecked Sendable {
+        private let lock = NSLock()
+        private let step: UInt64
+        private var t: UInt64 = 0
+        private var readings = 0
+
+        init(stepNanoseconds: UInt64) { self.step = stepNanoseconds }
+
+        func read() -> UInt64 {
+            lock.lock(); defer { lock.unlock() }
+            let value = t
+            t &+= step
+            readings += 1
+            return value
+        }
+
+        var elapsed: UInt64 { lock.lock(); defer { lock.unlock() }; return t }
+        var count: Int { lock.lock(); defer { lock.unlock() }; return readings }
+    }
+
     @Test("a line already written comes back whole")
     func readsOneLine() throws {
         let (pipe, reader) = pipeAndReader()
@@ -93,18 +123,50 @@ struct CuaLineReaderTests {
         }
     }
 
-    @Test("a driver that never answers gives up on the deadline instead of hanging")
-    func silenceExpires() throws {
+    @Test("a driver that never answers gives up when the budget it was given is spent")
+    func silenceExpiresOnTheBudget() throws {
         // The defect this slice exists to fix. `callTimeout` was declared in
         // PRO-0044 and never read, so this read was unbounded: a driver that
         // accepted a request and never replied held the step, the batch and the
         // run panel for as long as the agent lived.
-        let (pipe, reader) = pipeAndReader()
-        let started = Date()
+        //
+        // This used to end with `#expect(Date().timeIntervalSince(started) < 2)`,
+        // which asserts how fast this Mac is. The claim worth making is that the
+        // reader gives up on *its budget* — so the clock is told to it, stepped 100ms
+        // per reading, so the 200ms budget is spent in three readings: one to set
+        // the deadline, one inside it that polls, and one past it that gives up.
+        let clock = TestClock(stepNanoseconds: 100_000_000)
+        let (pipe, reader) = pipeAndReader(clock: clock)
         #expect(throws: CuaLineReader.Fault.timedOut) {
             _ = try reader.readLine(within: 0.2)
         }
-        #expect(Date().timeIntervalSince(started) < 2)
+        // Three readings, not one: the deadline was re-read inside the loop rather
+        // than decided once, so the reader polled and came back before giving up. A
+        // reader that read the clock only twice never entered the loop body.
+        #expect(clock.count >= 3)
+        #expect(clock.elapsed >= 200_000_000)
         _ = pipe
+    }
+
+    @Test("it does not give up while the budget it was given is unspent, however long that takes")
+    func aFrozenBudgetIsNeverSpent() throws {
+        // The other arm, and the one a stopwatch cannot give. With the clock frozen
+        // the budget never runs down, so a reply arriving 300ms late is still served
+        // — which on the real clock, against this 200ms budget, would be a timeout.
+        // That is what makes the pair discriminating: the two arms disagree unless
+        // the deadline really is judged against the injected clock.
+        let clock = TestClock(stepNanoseconds: 0)
+        let (pipe, reader) = pipeAndReader(clock: clock)
+        // The writer holds the whole `Pipe`, not just the writing half. Measured
+        // while arming this case: with only the write handle captured, a run in
+        // which the reader gave up early released the reading end first and the
+        // late write took SIGPIPE, killing the test process — so a failure crashed
+        // the run instead of reporting itself.
+        Thread.detachNewThread {
+            Thread.sleep(forTimeInterval: 0.3)
+            try? pipe.fileHandleForWriting.write(contentsOf: Data("late\n".utf8))
+        }
+        let line = try reader.readLine(within: 0.2)
+        #expect(String(decoding: line, as: UTF8.self) == "late")
     }
 }
