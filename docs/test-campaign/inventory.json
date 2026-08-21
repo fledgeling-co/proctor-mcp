@@ -627,6 +627,18 @@
       ],
       "note": "8 gate checks in scripts/campaign/test_instruments.py, all 8 watched red across four sabotages; the control is also watched running and biting from a clear baseline, so refusing everything does not satisfy it",
       "effect": "none"
+    },
+    {
+      "id": "REQ-065",
+      "class": "test-oracle guarantee",
+      "text": "The campaign gate distinguishes a witness that measured nothing from one that could not measure at all: the non-zero-count guard on the effect-witness rung applies to a case recorded `pass` and does not apply to one recorded `inconclusive`, because 'the instrument saw zero' and 'the instrument could not be pointed at it' are different readings with opposite remedies and only the first is the condition that rung exists to catch",
+      "source": "PRO-0096 finding 3; campaign.py:751 (test-campaign 0.9.4); the inconclusive/unoracled split at campaign.py:87-101",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "Armed two-way in CASE-0200 by moving one status field and watching the guard turn on and off. No plugin change was needed or made; stock 0.9.4 already behaves this way.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -2031,6 +2043,50 @@
       "surface": "SURF-003",
       "req": "REQ-053",
       "note": "WHAT CASE-0197 DOES NOT PROVE, recorded so the row is not read as more than it is: it does not prove a verification completes while every cooperative thread is blocked, and it would not catch a synchronous semaphore wrapper at the call site, which would block the caller while leaving the verification on its own Thread. Catching that needs more concurrent callers than the pool is wide; CASE-0116's note records that such a saturation test was drafted and dropped because it holds the process-wide pool for seconds in a green run and would feed DEF-051. The sample sweep is what covers that half, and it is a measurement rather than a guard."
+    },
+    {
+      "id": "DEF-105",
+      "status": "fixed",
+      "severity": "high",
+      "title": "The wall-clock census armed itself against a moving branch, so merging the fix it guards silently disarmed it",
+      "found": "PRO-0096, on the first live run of the instrument the brief asked to be re-run",
+      "detail": "scripts/campaign/wall_clock_census.py --arm proves the detector can find the two pre-PRO-0089 offenders before any zero it prints is believed. It resolved those historical files with `git merge-base HEAD ai/wave-9`. That is a moving target: once PRO-0089's fix merged into ai/wave-9, the merge-base BECAME a tree in which both offenders are already fixed, so the arm read two clean files, found nothing, and printed 'detector caught 0 of the 2 known offenders / ARMING FAILED' with exit 1.\n\nThe failure is loud rather than silent, which is the one mercy here \u2014 but the effect is that the guard against a silent zero had itself stopped working, and every census run after that merge was unarmed. This is DEF-067 one level up: DEF-067 was a detector that could not catch the line it was written for; this is the probe that catches DEF-067 losing the ability to catch anything.\n\nFIXED: the reference is now the pinned immutable sha baa98bbe33ce42685fe515b9c803d3d5a430d177 (PRE_FIX_COMMIT), the parent of 6dbaa9b 'test(probe): assert the bound fired rather than timing the machine', which is the last commit holding BOTH offenders. The arm now reports offenders at [42] and [107] as expected, 'detector caught 2 of the 2 known offenders / ARMED', exit 0. A sha rather than a ref, because a ref means something different every time a branch moves and this reading has to mean the same thing in a year.",
+      "evidence": "docs/test-campaign/evidence/PRO-0096/census-arm-broken.txt (the dead arm) and docs/test-campaign/evidence/PRO-0096/census-arm-pinned.txt (2 of 2, ARMED)",
+      "surface": "SURF-022",
+      "req": "REQ-056"
+    },
+    {
+      "id": "DEF-106",
+      "status": "open",
+      "severity": "medium",
+      "title": "A bounded socket client's test asserts measured elapsed time against a literal, which is the thing REQ-056 forbids",
+      "found": "PRO-0096, by the re-armed wall-clock census \u2014 the offender count went 0 to 1",
+      "detail": "Tests/ProctorCoreTests/ProctorCoreTests.swift:232 reads `#expect(waited < 10, \"a bounded client waited \\(waited)s\")`, where `waited` is `Date().timeIntervalSince(started)` measured around a SocketClient send whose `ioTimeoutSeconds` is 1. A measured wall-clock interval compared to a numeric literal is precisely what REQ-056 rules out, and the 10x headroom is DEF-051's shape exactly \u2014 DEF-051 is a 5.0s bound on a 0.2s probe that measured 10.7s on this machine at load 700-900 and went red on three of four control runs while the product was correct throughout.\n\n`git log -L232,232:Tests/ProctorCoreTests/ProctorCoreTests.swift` puts the line in 10285df 'fix(ui): a wedged agent stops reading as Ready', which landed after CASE-0139 was written. So the requirement regressed; the census did not become wrong.\n\nNOT FIXED HERE. PRO-0096 is a registry and instrument item and this is a change to the product's test suite. There is also a real call inside it that wants an owner rather than a drive-by: the two other assertions in the same test (`thrown?.code == .agentUnavailable` and a message containing 'did not answer within 1s') already carry the product claim, so deleting the wall-clock line loses nothing \u2014 but SocketClient has no injectable clock, so the alternative fix is a small production change. Whoever takes it should decide that rather than inherit it. CASE-0139 is recorded `fail` against it in the meantime.",
+      "evidence": "docs/test-campaign/evidence/PRO-0096/census-live.txt \u2014 127 files, 54 clock sites, 1 offender, exit 1, with the arm at 2 of 2 in census-arm-pinned.txt",
+      "surface": "SURF-022",
+      "req": "REQ-056"
+    },
+    {
+      "id": "DEF-107",
+      "status": "fixed",
+      "severity": "medium",
+      "title": "CASE-0114 stood at effect-witness with no witness block, recording a control run as though it were a measurement",
+      "found": "PRO-0096 finding 2",
+      "detail": "CASE-0114 (REQ-035) recorded `oracle: effect-witness`, status `pass`, and carried no `witness` object at all \u2014 no recorder, no effect class, no count \u2014 which the gate flagged three times. It is not a merge loss: the case has no witness block on ai/pro-0087 either, so it was written at that rung without the fields the rung requires.\n\nWhat it measured is a rate, not an effect: on the fixed tree the forging arm answered on 10 of 10 runs with none hanging. Its `armedBy` is a control run on the unmodified tree \u2014 arming evidence that the arm bites, which is not a recorder watching the product cross a boundary.\n\nIt is also duplicative as a witness. REQ-035's real external-effect witness is CASE-0080: three sealed records read back off the audit trail's bytes with a fresh FileHandle, effect ipc, count 3, driven from three separate front ends.\n\nFIXED by moving it to `metamorphic`, the rung its measurement actually occupies, rather than by manufacturing a second witness block for a guarantee CASE-0080 already witnesses. Verified after the change: REQ-035 is still counted witnessed and the external-effect total is unmoved at 21 of 25 witnessed.",
+      "evidence": "docs/test-campaign/evidence/PRO-0096/gate-after.txt, alongside gate-before.txt where the three flags are named",
+      "surface": "SURF-012",
+      "req": "REQ-035"
+    },
+    {
+      "id": "DEF-108",
+      "status": "fixed",
+      "severity": "low",
+      "title": "CASE-0139 carried its analyzer and denominator at the top level of the record, where the guard that requires them does not look",
+      "found": "PRO-0096 finding 1, which had been reported against the wrong four cases",
+      "detail": "campaign.py's source-analysis guard reads `case['source']['analyzer']` and requires `case['source']['examined']` to be an int >= 1. CASE-0139 wrote `analyzer` and `examined` as siblings of `id` instead, with `examined` as the prose string '118 swift test files, 42 lines mentioning a clock (the denominator), 0 assertions...'. Both were therefore invisible to the guard, and the case was flagged twice for fields it appeared to a reader to have.\n\nTHE REPORTED SHAPE OF THIS FINDING WAS WRONG AND IS CORRECTED HERE. It was raised as 'four source-analysis cases carry no analyzer and no examined count, CASE-0102..0105', with the gate's count of 2 treated as a possible cap or miscount of the DEF-041 kind. Measured: CASE-0102, 0103, 0104 and 0105 all carry `source.analyzer` and an integer `source.examined` (45, 45, 45, 310) and none of them is flagged. The gate's 2 is the number of FINDINGS, both against CASE-0139, and it printed 'showing 2 of 2' with the full list beneath it \u2014 no cap, no undercount, and no defect. The only thing that reads awkwardly is the word 'claim(s)', which a reader can take as cases; that is a wording nit, not DEF-041's shape, which was a truncated list printed with no denominator.\n\nFIXED: the fields are under `source`, `examined` is the integer 54 (the clock-mentioning lines, which is the population the offender count is drawn from), and both come from a live run rather than from the evidence file.",
+      "evidence": "docs/test-campaign/evidence/PRO-0096/source-field-placement.txt",
+      "surface": "SURF-022",
+      "req": "REQ-056"
     }
   ]
 }

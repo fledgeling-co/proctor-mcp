@@ -1,0 +1,32 @@
+PRO-0096 finding 1 — which source-analysis cases are actually missing analyzer/examined?
+The finding was reported against CASE-0102..0105. Measured over the registry at HEAD:
+
+The guard, campaign.py:772-780 — it reads case['source'], not the top level:
+        # the wrong file, and the two are indistinguishable without the count.
+        if c.get("oracle") in SOURCE_RUNGS and st == "pass":
+            src = c.get("source") or {}
+            if not src.get("analyzer"):
+                hollow_source.append(
+                    f"{c['id']} claims source-analysis and names no analyzer")
+            if not isinstance(src.get("examined"), int) or src.get("examined", 0) < 1:
+                hollow_source.append(
+                    f"{c['id']} claims source-analysis over {src.get('examined')!r} "
+                    f"unit(s) — a search with no denominator cannot tell an empty "
+
+source-analysis cases: 5   (a len(), not a reading off the gate)
+
+case        source.analyzer  source.examined  top-level analyzer  flagged
+-------------------------------------------------------------------------
+CASE-0102   present          45 (int)         -                   no
+CASE-0103   present          45 (int)         -                   no
+CASE-0104   present          45 (int)         -                   no
+CASE-0105   present          310 (int)        -                   no
+CASE-0139   MISSING          MISSING          present             YES x2
+
+cases missing the fields: 1 -> ['CASE-0139']
+findings the gate raises:  2  (one per missing field, per case)
+
+So the gate's '2 source-analysis claim(s)' is 2 FINDINGS against 1 CASE, and it printed
+'showing 2 of 2' with the full list beneath. No cap and no undercount, so this is NOT
+DEF-041's shape — DEF-041 is a list truncated at twelve with no denominator printed.
+The reported premise was inverted: CASE-0102..0105 are correct, CASE-0139 was not. DEF-108.

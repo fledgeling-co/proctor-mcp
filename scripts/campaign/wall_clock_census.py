@@ -76,14 +76,29 @@ def census(paths):
     return sites, offenders
 
 
+# The last commit at which BOTH known offenders are present:
+#   Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift:42  #expect(elapsed < 5.0)
+#   Tests/ProctorAgentTests/CuaLineReaderTests.swift:107              #expect(Date().timeIntervalSince(started) < 2)
+# It is the parent of 6dbaa9b ("test(probe): assert the bound fired rather than
+# timing the machine"). A sha rather than a ref, because a ref is a moving target
+# and this reading has to mean the same thing in a year.
+PRE_FIX_COMMIT = "baa98bbe33ce42685fe515b9c803d3d5a430d177"
+
+
 def arm():
     """The detector against the two offenders as they stood before PRO-0089."""
     known = {
         "Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift": 42,
         "Tests/ProctorAgentTests/CuaLineReaderTests.swift": 107,
     }
-    base = subprocess.run(["git", "merge-base", "HEAD", "ai/wave-9"],
-                          capture_output=True, text=True).stdout.strip() or "HEAD"
+    # PINNED, AND NEVER A MERGE-BASE. This was `git merge-base HEAD ai/wave-9`,
+    # which names a different tree every time ai/wave-9 moves. Once PRO-0089's
+    # fix merged into that branch the merge-base BECAME the fixed tree, so the
+    # arm read two files with no offenders in them, found none, and reported
+    # ARMING FAILED — the probe that exists to prove the detector can fire had
+    # itself stopped being able to fire, which is DEF-067 one level up. The two
+    # offenders live at one immutable commit and that is what this reads.
+    base = PRE_FIX_COMMIT
     found = {}
     for path, line in known.items():
         text = subprocess.run(["git", "show", f"{base}:{path}"],

@@ -1,0 +1,15 @@
+PRO-0096 — the arming probe as it stood, before the pin.
+$ git show HEAD:scripts/campaign/wall_clock_census.py > /tmp/census_prefix.py
+$ python3 /tmp/census_prefix.py --arm
+
+--- arming: the detector over the pre-PRO-0089 files ---
+  Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift @ 0d6f12071b48: offenders at [] (expected 42)
+  Tests/ProctorAgentTests/CuaLineReaderTests.swift @ 0d6f12071b48: offenders at [] (expected 107)
+  detector caught 0 of the 2 known offenders
+ARMING FAILED: the detector cannot catch a known offender
+exit=1
+
+The reference it used: git merge-base HEAD ai/wave-9
+  resolves here to: 0d6f12071b4806db86c50adf37fb339c969ce268
+  which is ai/wave-9's own head — a tree in which BOTH offenders are already fixed.
+  So the probe that exists to stop a silent zero could no longer fire. DEF-105.
