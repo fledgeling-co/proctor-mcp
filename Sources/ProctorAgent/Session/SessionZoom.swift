@@ -106,7 +106,12 @@ extension Session {
             scale: full.scale, status: full.status, contentRect: full.contentRect,
             dirtyRectCount: full.dirtyRectCount, dirtyArea: full.dirtyArea,
             capturedAt: full.capturedAt, framesWaited: full.framesWaited,
-            trustworthy: full.trustworthy, caveat: full.caveat, crop: crop)
+            trustworthy: full.trustworthy, caveat: full.caveat, crop: crop,
+            // PRO-0088. A crop inherits its parent's freshness, and it inherits
+            // its parent's emptiness for the same reason: it is a window onto
+            // the same frame, so a crop of a frame with nothing in it has
+            // nothing in it either.
+            content: full.content, contentVerdict: full.contentVerdict)
         return try JSONValue.encode(result)
     }
 

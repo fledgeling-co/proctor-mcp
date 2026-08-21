@@ -41,6 +41,90 @@ struct FramePixels: Sendable {
     var width: Int
     var height: Int
     var bytesPerRow: Int
+    /// The CoreVideo pixel format the bytes were copied from.
+    /// `StreamBuilder.configuration` asks for `kCVPixelFormatType_32BGRA`, and
+    /// everything downstream reads the buffer as tightly packed BGRA. Carried
+    /// rather than assumed so a frame that arrived in some other layout can be
+    /// declined instead of misread — a wide-gamut buffer read as BGRA would
+    /// report a colour channel as alpha, which is exactly the misreading this
+    /// item exists to stop.
+    var pixelFormat: OSType = kCVPixelFormatType_32BGRA
+}
+
+extension FramePixels {
+
+    /// What is actually in this frame, measured over the same bytes the PNG is
+    /// encoded from.
+    ///
+    /// PRO-0088. `PixelProbe` cannot answer this: it decodes with
+    /// `premultipliedLast` and drops alpha, so a fully transparent frame reads
+    /// to it as pure black and is indistinguishable from a real dark window.
+    /// The alpha channel is the whole distinction, so it is read here off the
+    /// raw BGRA buffer before anything premultiplies it away.
+    ///
+    /// Alpha is read over every pixel; the colour histogram is strided. The two
+    /// differ because only one of them decides anything: `allTransparent` gates
+    /// the verdict, so it is measured over the whole population, and
+    /// `pixelsSampled` reports that population.
+    func contentSummary(maxColourSamples: Int = 65_536) -> FrameContentSummary {
+        // A layout this cannot read is declined rather than guessed at. An
+        // unmeasured frame claims nothing; a misread one would claim the wrong
+        // thing, and `notMeasured` is the verdict that says so.
+        guard pixelFormat == kCVPixelFormatType_32BGRA,
+              width > 0, height > 0, bytesPerRow >= width * 4,
+              data.count >= bytesPerRow * height else {
+            return FrameContentSummary(pixelsSampled: 0, maxAlpha: 0,
+                                       distinctColours: 0, allTransparent: false)
+        }
+
+        // Alpha is read over EVERY pixel, not a stride.
+        //
+        // Raised by the out-of-family review of the spec (gemini-3.7-flash-high,
+        // 2026-08-21) and accepted: on a 3456x2234 frame a square stride is 7-8
+        // pixels, so a one-pixel hairline, a focus ring or a small spinner can
+        // fall between every sample and a window with something in it would be
+        // reported `allTransparent`. That is a false positive on the exact edge
+        // this whole item is built to avoid, and it costs one byte read per
+        // pixel to remove. `distinctColours` keeps its stride, because it is
+        // reported rather than judged and no branch keys off it.
+        let cap = CaptureContentGate.colourCap
+        let cells = width * height
+        let colourStride = max(1, Int((Double(cells) / Double(max(maxColourSamples, 1)))
+                                      .squareRoot().rounded(.up)))
+
+        var maxAlpha = 0
+        var colours = Set<UInt32>()
+
+        data.withUnsafeBytes { raw in
+            guard let base = raw.baseAddress?.assumingMemoryBound(to: UInt8.self) else { return }
+            for y in 0..<height {
+                let row = base.advanced(by: y * bytesPerRow)
+                var x = 0
+                while x < width {
+                    // Tightly packed 32BGRA, byte order little: b, g, r, a.
+                    let a = Int(row[x * 4 + 3])
+                    if a > maxAlpha { maxAlpha = a }
+                    x += 1
+                }
+                guard y % colourStride == 0, colours.count < cap else { continue }
+                var cx = 0
+                while cx < width {
+                    let px = row.advanced(by: cx * 4)
+                    colours.insert(UInt32(px[0]) << 24 | UInt32(px[1]) << 16
+                                   | UInt32(px[2]) << 8 | UInt32(px[3]))
+                    if colours.count >= cap { break }
+                    cx += colourStride
+                }
+            }
+        }
+
+        // The population is every pixel, and it is reported as such: the alpha
+        // claim is about all of them.
+        return FrameContentSummary(pixelsSampled: cells,
+                                   maxAlpha: maxAlpha,
+                                   distinctColours: colours.count,
+                                   allTransparent: cells > 0 && maxAlpha == 0)
+    }
 }
 
 enum FrameStatusRank {
@@ -245,7 +329,8 @@ final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Se
                        dstStride)
             }
         }
-        return FramePixels(data: out, width: w, height: h, bytesPerRow: dstStride)
+        return FramePixels(data: out, width: w, height: h, bytesPerRow: dstStride,
+                           pixelFormat: CVPixelBufferGetPixelFormatType(pb))
     }
 }
 

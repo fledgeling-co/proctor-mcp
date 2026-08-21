@@ -143,7 +143,17 @@ final class CaptureEngineImpl: CaptureEngine {
         }
 
         let contentRectIsReal = (meta.contentRect?.w ?? 0) > 0 && (meta.contentRect?.h ?? 0) > 0
+
+        // PRO-0088. A frame that arrived is not the same as a frame with
+        // something in it. Measured over the bytes the PNG above was written
+        // from, so the verdict and the file a person opens are the same frame.
+        let contentSummary = pixels.contentSummary()
+        let ownedByProctor = CaptureContentGate.isProctorOwned(
+            bundleIdentifier: scWindow.owningApplication?.bundleIdentifier)
+        let contentVerdict = CaptureContentGate.verdict(summary: contentSummary,
+                                                        targetIsProctorOwned: ownedByProctor)
         let trustworthy = meta.status == .complete && contentRectIsReal
+                       && contentVerdict == .content
 
         var caveat: String?
         if !trustworthy {
@@ -165,9 +175,15 @@ final class CaptureEngineImpl: CaptureEngine {
                        + "the best frame seen, status \(meta.status.rawValue)."
             } else if meta.status != .complete {
                 caveat = "Frame status was \(meta.status.rawValue), not complete."
-            } else {
+            } else if !contentRectIsReal {
                 caveat = "Frame reported status complete with an empty content rect, which means "
                        + "the surface carried no content for this window."
+            } else {
+                // Freshness is fine and the rect is real: the only remaining
+                // reason is the content check, and it is the one that knows why.
+                caveat = CaptureContentGate.caveat(for: contentVerdict,
+                                                   summary: contentSummary,
+                                                   window: window.id)
             }
         }
 
@@ -188,7 +204,9 @@ final class CaptureEngineImpl: CaptureEngine {
             trustworthy: trustworthy,
             caveat: caveat,
             tileHashes: tileHashes ? CaptureEngineImpl.tileHashes(of: pixels) : nil,
-            normalization: normalization)
+            normalization: normalization,
+            content: contentSummary,
+            contentVerdict: contentVerdict)
     }
 
     // MARK: - Quiet watch
