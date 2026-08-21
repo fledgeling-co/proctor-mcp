@@ -514,7 +514,21 @@
       "text": "Mutation survival for the agent package is measured with its denominator, its seed and its unrun count rather than inferred from the core package's figure, and every survivor the lane can reach is closed by a test that was watched failing on the mutant, the rest recorded with a reason typed equivalent or uncovered-by-lane",
       "source": "scripts/campaign/mutate_swift.py; docs/test-campaign/evidence/mutation-agent.json; spec-PRO-0080.md A4, A5, A6",
       "effect": "none"
-    }
+    },
+  {
+    "id": "REQ-053",
+    "class": "behaviour",
+    "text": "One process verifies a given binary's code signature once per file identity, however many sessions ask about it and however many ask at the same moment: fifteen concurrent callers on a cold entry produce one verification and fourteen waiters, and no caller and no verification holds a thread of the cooperative pool while it waits, so unrelated work runs to completion while a verification is in flight",
+    "source": "Sources/ProctorAgent/Session/SignatureVerdictCache.swift; docs/specs/spec-PRO-0087.md acceptance 1-2",
+    "effect": "none"
+  },
+  {
+    "id": "REQ-054",
+    "class": "affordance",
+    "text": "The shared signature store is a default rather than a singleton: a ToolProbes handed a cache uses that one, so a test gets an isolated store and the identify/verify seam stays injectable",
+    "source": "Sources/ProctorAgent/Session/ToolProbe.swift:280; docs/specs/spec-PRO-0087.md acceptance 3",
+    "effect": "none"
+  }
   ],
   "surface": [
     {
@@ -1665,6 +1679,30 @@
       "detail": "24 mutants over a pool of 3,189 sites across all 84 files of ProctorAgent. 19 SURVIVED, 5 scored killed, 0 unbuildable. Two of the five kills are timeout-scored at exactly 600.0s under a load average that reached 271, and the runner scores a timeout as killed, so they are not trustworthy. The honest figure is 3 kills of 22 scored: A SURVIVAL RATE OF 86.4%.\n\nDEF-018 recorded half of ProctorCore's sampled mutants surviving and was found only because somebody sampled. ProctorAgent is worse, and it holds the session, the queue, the overlay, the actuation backend and every guest adapter.\n\nSurvivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor, so all 19 stand regardless of the load. The three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so none of them is a starved run.\n\nPARTIALLY CLOSED: 5 survivors are killed by new tests in Tests/ProctorAgentTests/MutationSurvivorTests.swift, each armed by re-applying its mutant and watching the named test go red. 1 is equivalent (SessionMaestro.swift:242, a sorted(by:) comparator over dictionary keys, which are unique, so < and <= order identically). 13 are recorded as uncovered-by-lane or unreachable from a headless seam, with a reason each in REPORT.md. Those two are different claims and are kept apart, because recording a coverage hole as a mathematical impossibility is how a suite stops looking for the test.\n\nOPEN because the sample is 0.75% of the package and the rate it measured is the rate over that sample, not over the package.",
       "surface": "SURF-002",
       "req": "REQ-047"
-    }
+    },
+  {
+    "id": "DEF-050",
+    "status": "fixed",
+    "severity": "high",
+    "title": "The signature verdict cache was scoped per Session while the verdict it holds is a fact about a file, so fifteen sessions verified one 82 MB binary at once and starved the cooperative pool",
+    "found": "Raised by PRO-0083's verifier as DEF-044; reproduced and closed by PRO-0087",
+    "detail": "SignatureVerdictCache deduplicates a 0.32-0.39s SecStaticCodeCheckValidity per instance, and ToolProbes.init default-constructed one per probe set, which is one per Session. The file's own header argued that two concurrent callers both verifying was 'wasted work and nothing else' and that single-flight 'would buy one saved hash and a state machine to get wrong'; both halves assumed there were two callers, and the scoping made fifteen. Server.dispatchBlocking then had no thread for its Task.detached, and a peer with a 10s SO_RCVTIMEO went unserved, which took REQ-035's forged-caller witness with it.",
+    "evidence": "docs/test-campaign/evidence/PRO-0087/wedge-before.txt and wedge-before-2.txt, two samples of one hung run five minutes apart, each showing 15 of 22 threads inside SecStaticCodeCheckValidity on com.apple.root.default-qos.cooperative and blocked in Security::Dispatch::Group::wait() for the whole five-second sample; wedge-after-blocking.txt, the same measurement against the blocking fix, showing the wedge reshaped rather than removed. Run counts in docs/test-campaign/evidence/PRO-0087/run-ledger.md.",
+    "fix": "SignatureVerdictCache.shared is the ToolProbes default; the store is keyed by FileIdentity with a 16-entry bound; and verdict(for:) is async, so callers arriving on an identity already being verified register a continuation and give their thread back while one verification runs on a Thread of its own, off the cooperative pool. The blocking version of the same single-flight was built and measured first: it cut fifteen verifications to one and still hung a run, with all sixteen cooperative threads blocked and no non-cooperative worker in the process (wedge-after-blocking.txt). A pool capped at the core count does not replace a worker that blocks, so blocked waiters starve the verification exactly as duplicate verifiers did.",
+    "fixedBy": "PRO-0087",
+    "surface": "SURF-003",
+    "req": "REQ-053"
+  },
+  {
+    "id": "DEF-051",
+    "status": "open",
+    "severity": "low",
+    "title": "ScreenRecordingProbeWiringTests's 0.2s bound with 5s of headroom fails on a machine under heavy external load",
+    "found": "PRO-0087's run ledger, on the unmodified tree as well as the fixed one",
+    "detail": "aParkedCallDoesNotHang asserts elapsed < 5.0 for a probe whose bound is 0.2s. On this machine at load average 700-900, driven by other worktrees building rather than by this suite, it measured 10.7s. It failed on three of the four control runs taken on the unmodified tree, so it is independent of PRO-0087 and is recorded rather than fixed here: widening a bound to survive a loaded machine is the gate moving, which is the objection PRO-0087's brief raises against relaxing the forged peer's timeout.",
+    "evidence": "docs/test-campaign/evidence/PRO-0087/run-ledger.md",
+    "surface": "SURF-008",
+    "req": "REQ-053"
+  }
   ]
 }

@@ -1,0 +1,90 @@
+PRO-0087 — the four new tests, each watched failing with its defect re-introduced
+Recorded 2026-08-21 on the PRO-0087 worktree. Runner: ./scripts/test.sh --filter <function>.
+
+An assertion nobody has watched fail is not known to bite, so each test below was run against
+a tree carrying the defect it names before being run against the fix.
+
+--------------------------------------------------------------------------------
+CASE-0110 · concurrentCallersCostOneVerification
+Arming: the in-flight wait removed from SignatureVerdictCache.verdict(for:) —
+
+    -            guard inFlight.contains(identity) else { break }
+    -            lock.wait()
+    +            break // ARMING: single-flight removed
+
+Red:
+  Test "fifteen callers arriving together on a cold entry cost one verification" recorded an
+  issue at ToolchainDoctorTests.swift:378:9: Expectation failed:
+  (cache.verificationCount → 15) == 1
+  Test "fifteen callers arriving together on a cold entry cost one verification" failed after
+  0.046 seconds with 1 issue.
+
+The figure the assertion reports, 15, is the defect's own count.
+
+--------------------------------------------------------------------------------
+CASE-0111 · concurrentSessionsVerifyOnce
+Arming: each of the eight sessions given its own SignatureVerdictCache, which is what
+ToolProbes did before this change.
+
+Red:
+  Test "eight sessions asking about one binary at once verify it once between them" recorded
+  an issue at ToolchainDoctorTests.swift:418:9: Expectation failed:
+  (cache.verificationCount → 0) == 1
+  Test "eight sessions asking about one binary at once verify it once between them" recorded
+  an issue at ToolchainDoctorTests.swift:419:9: Expectation failed: (arrivals.count → 8) == 1
+  Test "eight sessions asking about one binary at once verify it once between them" failed
+  after 1.050 seconds with 2 issues.
+
+Both numbers are the defect's: nothing reached the shared store, and the injected verification
+ran once per session.
+
+--------------------------------------------------------------------------------
+CASE-0112 · probeSetsShareOneStore
+Arming: ToolProbes.init's cuaSignature default put back to SignatureVerdictCache().
+
+Red:
+  Test "every probe set shares one cache, because the verdict is a fact about the file"
+  recorded an issue at ToolchainDoctorTests.swift:430:9: Expectation failed:
+  (ToolProbes(environment: [:]).cuaSignature → ProctorAgent.SignatureVerdictCache)
+  === (ToolProbes(environment: [:]).cuaSignature → ProctorAgent.SignatureVerdictCache)
+  ... and at :432:9 against SignatureVerdictCache.shared.
+  failed after 0.001 seconds with 2 issues.
+
+--------------------------------------------------------------------------------
+CASE-0113 · twoFilesDoNotEvictEachOther
+NOT armed by a shipped defect, and recorded as such rather than left to look armed. A single
+slot was correct while the cache was per-Session, so no prior state of this repo makes this
+test red. It guards a regression the shared store newly makes possible: two paths in one store
+evicting each other and re-verifying on every alternation.
+
+--------------------------------------------------------------------------------
+All four green after the arming was reverted:
+
+  Test run with 7 tests in 1 suite passed after 0.145 seconds.
+
+--------------------------------------------------------------------------------
+CASE-0115 · aVerificationInFlightBlocksNothing
+Added after the first fix was measured and found to have reshaped the wedge rather than
+removed it. Arming: the blocking single-flight put back — waiters on an NSCondition, the
+verification on the first caller's own thread, which is what the first fix did.
+
+Note that the Swift compiler refuses that shape outright once verdict(for:) is async:
+
+  error: instance method 'lock' is unavailable from asynchronous contexts;
+         Use async-safe scoped locking instead
+
+so the arming had to route the blocking through a synchronous helper — which is exactly how
+the original cache escaped the check, being a synchronous function called from an async one.
+
+Red:
+  Test "a verification in flight holds no cooperative thread, so the rest of the process runs"
+  recorded an issue at ToolchainDoctorTests.swift:419:9: Expectation failed:
+  (finishedBeforeTheVerificationLanded.current → 0) == (unrelated → 32)
+  failed after 20.001 seconds with 1 issue.
+
+Zero of thirty-two unrelated tasks ran in twenty seconds while seventeen callers waited on one
+verification. That is the wedge, in a unit test, deterministic.
+
+Green after restoring the async version, with the whole suite:
+
+  Test run with 8 tests in 1 suite passed after 0.391 seconds.

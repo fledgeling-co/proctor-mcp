@@ -272,7 +272,7 @@ struct SignatureVerdictCacheTests {
     }
 
     @Test("an unchanged file is verified once, however often it is asked about")
-    func verifiesOnce() {
+    func verifiesOnce() async {
         // Measured at 0.32-0.39s on an 82 MB binary, against a 2.0s doctor poll.
         // Without this the status window spends a fifth of every poll re-hashing
         // a file that has not moved.
@@ -280,12 +280,12 @@ struct SignatureVerdictCacheTests {
         let cache = SignatureVerdictCache(
             identify: { _ in FileIdentity(device: 1, inode: 2, size: 3, modified: 4, changed: 5) },
             verify: { _ in _ = counter.bump(); return .valid })
-        for _ in 0..<10 { #expect(cache.verdict(for: "/x/cua-driver") == .valid) }
+        for _ in 0..<10 { #expect(await cache.verdict(for: "/x/cua-driver") == .valid) }
         #expect(counter.count == 1)
     }
 
     @Test("a file replaced with its timestamps preserved is verified again")
-    func replacedFileIsRechecked() {
+    func replacedFileIsRechecked() async {
         // The plan review's finding: (path, size, mtime) aliases two different
         // binaries. ctime cannot be set with utimes, and the inode catches a
         // replacement in place.
@@ -293,18 +293,209 @@ struct SignatureVerdictCacheTests {
         let counter = Counter()
         let cache = SignatureVerdictCache(identify: { _ in identity.current },
                                           verify: { _ in _ = counter.bump(); return .valid })
-        _ = cache.verdict(for: "/x/cua-driver")
+        _ = await cache.verdict(for: "/x/cua-driver")
         identity.replaceFileKeepingTimestamps()
-        _ = cache.verdict(for: "/x/cua-driver")
+        _ = await cache.verdict(for: "/x/cua-driver")
         #expect(counter.count == 2)
     }
 
     @Test("nothing to look at is not checked, rather than being called unsigned")
-    func absentFileIsNotChecked() {
+    func absentFileIsNotChecked() async {
         let cache = SignatureVerdictCache(identify: { _ in nil }, verify: { _ in .valid })
-        #expect(cache.verdict(for: "/x/missing") == .notChecked)
-        #expect(cache.verdict(for: nil) == .notChecked)
-        #expect(cache.verdict(for: "") == .notChecked)
+        #expect(await cache.verdict(for: "/x/missing") == .notChecked)
+        #expect(await cache.verdict(for: nil) == .notChecked)
+        #expect(await cache.verdict(for: "") == .notChecked)
+    }
+
+    /// A number one thread writes and another reads, for recording what the
+    /// production path saw at a moment the test cannot otherwise observe.
+    private final class Slot: @unchecked Sendable {
+        private let lock = NSLock()
+        private var value = 0
+        func set(_ n: Int) { lock.lock(); value = n; lock.unlock() }
+        var current: Int { lock.lock(); defer { lock.unlock() }; return value }
+    }
+
+    /// What every caller got back, gathered off the threads that got it.
+    private final class Verdicts: @unchecked Sendable {
+        private let lock = NSLock()
+        private var values: [ToolSignature] = []
+        func record(_ verdict: ToolSignature) { lock.lock(); values.append(verdict); lock.unlock() }
+        var all: [ToolSignature] { lock.lock(); defer { lock.unlock() }; return values }
+    }
+
+    private static let oneIdentity = FileIdentity(device: 1, inode: 2, size: 3,
+                                                  modified: 4, changed: 5)
+
+    @Test("fifteen callers arriving together on a cold entry cost one verification")
+    func concurrentCallersCostOneVerification() async {
+        // DEF-044/DEF-050, and the reason this cache stopped being per-Session.
+        // The old note called two callers both verifying "wasted work and nothing
+        // else"; there were fifteen of them, one per session, each hashing the
+        // same 82 MB binary, and a sample taken during the wedge found 15 of 22
+        // threads inside SecStaticCodeCheckValidity, none of them moving across a
+        // five-second sample.
+        let callers = 15
+        let arrivals = Counter()
+        let arrivedBeforeTheVerificationReturned = Slot()
+        let cache = SignatureVerdictCache(
+            identify: { _ in
+                _ = arrivals.bump()
+                return Self.oneIdentity
+            },
+            verify: { _ in
+                // Hold the one verification open until every caller has been
+                // through `identify`, so this measures fifteen callers on a cold
+                // entry rather than fourteen callers on an entry that warmed
+                // while they were being started. This runs on the cache's own
+                // thread, so parking it here parks nothing else.
+                let deadline = Date().addingTimeInterval(60)
+                while arrivals.count < callers && Date() < deadline {
+                    usleep(500)
+                }
+                arrivedBeforeTheVerificationReturned.set(arrivals.count)
+                return .valid
+            })
+
+        let verdicts = await withTaskGroup(of: ToolSignature.self) { group -> [ToolSignature] in
+            for _ in 0..<callers {
+                group.addTask { await cache.verdict(for: "/x/cua-driver") }
+            }
+            var seen: [ToolSignature] = []
+            for await verdict in group { seen.append(verdict) }
+            return seen
+        }
+
+        // `verifications` is incremented inside the cache, so this is the
+        // production path counting its own work rather than the test counting
+        // calls to a closure the test supplied.
+        #expect(cache.verificationCount == 1)
+        #expect(arrivedBeforeTheVerificationReturned.current == callers,
+                "\(arrivedBeforeTheVerificationReturned.current) of \(callers) callers had reached the cache while the verification was still running, so nothing about concurrent arrival was measured")
+        #expect(verdicts == Array(repeating: ToolSignature.valid, count: callers))
+    }
+
+    @Test("a verification in flight holds no cooperative thread, so the rest of the process runs")
+    func aVerificationInFlightBlocksNothing() async {
+        // The half of DEF-050 that the obvious fix does not close, measured
+        // 2026-08-21. Deduplicating fifteen verifications down to one and having
+        // the other fourteen block on a condition variable left the pool just as
+        // dead: a sample of a run that hung with that version showed all sixteen
+        // cooperative threads blocked, fifteen of them in the cache's own wait,
+        // and no non-cooperative worker thread in the process for Security's
+        // dispatch group to use. Fifteen threads waiting for one verification
+        // starve it exactly as fifteen threads running one did.
+        //
+        // So: more callers than the pool is wide, all of them on a cold entry,
+        // and unrelated work that has to finish while the verification is parked.
+        let callers = ProcessInfo.processInfo.activeProcessorCount + 1
+        let unrelated = 32
+        let release = DispatchSemaphore(value: 0)
+        let finishedUnrelated = Counter()
+        let finishedBeforeTheVerificationLanded = Slot()
+        let cache = SignatureVerdictCache(identify: { _ in Self.oneIdentity },
+                                          verify: { _ in release.wait(); return .valid })
+
+        // The watchdog runs on a thread of its own so that it fires even when the
+        // pool is held, which turns a regression into a red test rather than a
+        // hung suite.
+        let watchdog = Thread {
+            let deadline = Date().addingTimeInterval(20)
+            while finishedUnrelated.count < unrelated && Date() < deadline { usleep(500) }
+            finishedBeforeTheVerificationLanded.set(finishedUnrelated.count)
+            release.signal()
+        }
+        watchdog.start()
+
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<callers {
+                group.addTask { _ = await cache.verdict(for: "/x/cua-driver") }
+            }
+            for _ in 0..<unrelated {
+                group.addTask { _ = finishedUnrelated.bump() }
+            }
+        }
+
+        #expect(finishedBeforeTheVerificationLanded.current == unrelated,
+                "only \(finishedBeforeTheVerificationLanded.current) of \(unrelated) unrelated tasks ran while \(callers) callers were waiting on one verification, so the callers were holding the pool")
+        #expect(cache.verificationCount == 1)
+    }
+
+    @Test("eight sessions asking about one binary at once verify it once between them")
+    func concurrentSessionsVerifyOnce() async {
+        // The same claim through the production path that carries it:
+        // Session.doctor -> SessionDoctor -> ToolProbes.cuaSignature.
+        let sessions = 8
+        let arrivals = Counter()
+        let cache = SignatureVerdictCache(identify: { _ in Self.oneIdentity },
+                                          verify: { _ in _ = arrivals.bump(); return .valid })
+        let built = (0..<sessions).map { _ -> Session in
+            Session(ax: FakeAX(bundleId: "com.example.app"), capture: FakeCapture(),
+                    tools: ToolProbes(
+                        cuaDriver: ToolProbe(
+                            probe: { ToolPresence(tool: CuaDriverTool.binary, available: true,
+                                                  path: "/Users/x/.local/bin/cua-driver",
+                                                  searched: []) },
+                            presentTTL: ToolProbe.presentTTL, absentTTL: ToolProbe.presentTTL),
+                        cuaSignature: cache, environment: [:]),
+                    screenRecordingProbe: .fake(), accessibilityProbe: { true },
+                    secureInputProbe: { false }, actuator: FakeActuationBackend())
+        }
+        for session in built { await session.setAuditSink({ _ in }) }
+
+        let reports = await withTaskGroup(of: ToolEvidence?.self) { group -> [ToolEvidence?] in
+            for session in built {
+                group.addTask {
+                    let report = await session.doctor(verbose: false)
+                    return report.tools.first { $0.tool == CuaDriverTool.binary }?.evidence
+                }
+            }
+            var seen: [ToolEvidence?] = []
+            for await evidence in group { seen.append(evidence) }
+            return seen
+        }
+
+        #expect(cache.verificationCount == 1)
+        #expect(arrivals.count == 1, "the verification itself ran \(arrivals.count) times")
+        // Every session got the same verdict out of the one verification, so the
+        // sharing did not cost a report its answer.
+        #expect(reports.compactMap { $0 } == Array(repeating: ToolEvidence.signature, count: sessions))
+    }
+
+    @Test("every probe set shares one cache, because the verdict is a fact about the file")
+    func probeSetsShareOneStore() {
+        // The scoping half of DEF-044. Single-flight inside one cache is no use
+        // when a cache is built per Session, so this asserts on the default two
+        // independently constructed probe sets actually get.
+        #expect(ToolProbes(environment: [:]).cuaSignature
+                === ToolProbes(environment: [:]).cuaSignature)
+        #expect(ToolProbes(environment: [:]).cuaSignature === SignatureVerdictCache.shared)
+        // And the seam the shared default must not close: a caller that hands
+        // over a cache gets that one.
+        let mine = SignatureVerdictCache(identify: { _ in nil }, verify: { _ in .valid })
+        #expect(ToolProbes(cuaSignature: mine, environment: [:]).cuaSignature === mine)
+    }
+
+    @Test("two different files in one store are one entry each, not one slot they fight over")
+    func twoFilesDoNotEvictEachOther() async {
+        // The store is process-wide now, so it is asked about more than one path:
+        // a suite's scripted path and this machine's real cua-driver land in the
+        // same cache. A single slot would have them evicting each other and
+        // re-verifying on every alternation — the wedge again, wearing a
+        // different hat.
+        let counter = Counter()
+        let identities = [
+            "/x/one": FileIdentity(device: 1, inode: 1, size: 1, modified: 1, changed: 1),
+            "/x/two": FileIdentity(device: 1, inode: 2, size: 2, modified: 2, changed: 2)
+        ]
+        let cache = SignatureVerdictCache(identify: { identities[$0] },
+                                          verify: { _ in _ = counter.bump(); return .valid })
+        for _ in 0..<5 {
+            _ = await cache.verdict(for: "/x/one")
+            _ = await cache.verdict(for: "/x/two")
+        }
+        #expect(cache.verificationCount == 2)
+        #expect(counter.count == 2)
     }
 }
 
