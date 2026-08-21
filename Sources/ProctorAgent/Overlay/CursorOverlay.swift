@@ -285,9 +285,9 @@ final class CursorOverlay {
             // can land between this panel and its target and fail the read-back
             // below for a placement that was actually correct.
             for other in surfaces where other.panel !== surface.panel {
-                other.panel.level = Self.floatingLevel
+                Self.place(other.panel, at: Self.floatingLevel)
             }
-            surface.panel.level = Self.inPlaneLevel
+            Self.place(surface.panel, at: Self.inPlaneLevel)
             surface.panel.orderFrontRegardless()
             surface.panel.order(.above, relativeTo: Int(target))
             let panelNumber = surface.panel.windowNumber
@@ -333,8 +333,28 @@ final class CursorOverlay {
         surfaces.compactMap { $0.panel.windowNumber > 0 ? UInt32($0.panel.windowNumber) : nil }
     }
 
+    /// Move a panel between bands, and re-apply the capture exclusion.
+    ///
+    /// PRO-0088. Measured 2026-08-20 against agent pid 86732: this panel
+    /// reported `sharingState 1` on the window server while the run panel
+    /// (window 121489, layer 25) and the takeover statement (window 121490,
+    /// layer 24) both reported 0 — evidence/witness/a2-hud-11.json. Those two
+    /// set `sharingType` once at construction and never move; this is the only
+    /// overlay that changes level at runtime, and the sharing type does not
+    /// survive the change. So the two are set together here, and `level` is
+    /// assigned nowhere else in this file.
+    ///
+    /// Unconditional `.none`, matching `RunHUDPanel` and `TakeoverOverlay`:
+    /// evidence must not change because somebody was watching, and the surface
+    /// whose whole job is to be drawn over somebody else's window is the last
+    /// one that should be photographable.
+    private static func place(_ panel: NSPanel, at level: NSWindow.Level) {
+        panel.level = level
+        panel.sharingType = .none
+    }
+
     private func float(_ surface: Surface) {
-        surface.panel.level = Self.floatingLevel
+        Self.place(surface.panel, at: Self.floatingLevel)
         surface.panel.orderFrontRegardless()
         mark(surface, opacity: PointerPlanePolicy.dimmedOpacity, dashed: true)
     }
@@ -535,7 +555,7 @@ final class CursorOverlay {
         // Click-through is the whole safety story: the panels cover every
         // display, so anything less would put a sheet of glass over the machine.
         panel.ignoresMouseEvents = true
-        panel.level = Self.floatingLevel
+        Self.place(panel, at: Self.floatingLevel)
         panel.collectionBehavior = [.canJoinAllSpaces, .stationary,
                                     .ignoresCycle, .fullScreenAuxiliary]
 
