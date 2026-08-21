@@ -1,0 +1,19 @@
+# PRO-0097 — the denominators CASE-0126 and CASE-0127 owe, read off the tree they analyse
+# 2026-08-21T14:29:20Z  commit 98b48da
+
+Sources/ProctorAgent/Capture/CaptureEngineImpl.swift: 451 lines
+Sources/ProctorAgent/Overlay/CursorOverlay.swift: 614 lines
+
+CASE-0127 population, counted the way the test counts it:
+  place(_:at:) body = lines 97..98
+  lines examined: 615
+  direct `.level = ` assignments outside the helper: 0 []
+  assignments inside the helper (the range control): 1 [(97, 'panel.level = level')]
+  `sharingType = ` assignments in the file: 1
+
+CASE-0126 expressions required of CaptureEngineImpl.swift:
+  lines examined: 451
+  150:        let contentSummary = pixels.contentSummary()
+  151:        let ownedByProctor = CaptureContentGate.isProctorOwned(
+  153:        let contentVerdict = CaptureContentGate.verdict(summary: contentSummary,
+  193:                caveat = CaptureContentGate.caveat(for: contentVerdict,

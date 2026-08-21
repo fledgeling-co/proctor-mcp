@@ -2150,14 +2150,14 @@
     "req": "REQ-061",
     "surface": "SURF-006",
     "flow": "FLOW-003",
-    "oracle": "raster-visual",
+    "oracle": "outcome",
     "status": "pass",
     "evidence": [
       "evidence/PRO-0088/gate-after.txt"
     ],
     "armed": true,
     "armedBy": "Before believing the zero: one pixel, one channel, set to alpha 7 over the same buffer, and the instrument reports 7. It could have said non-zero.",
-    "note": "FramePixels.contentSummary over a synthesised all-transparent BGRA buffer reports maxAlpha 0 and allTransparent true. Includes the out-of-family review's High finding as CASE-0124b: one lit pixel at (733,1019) in a 1520x1936 frame \u2014 an offset no square stride lands on \u2014 is content, not emptiness. Also covers the Medium: a buffer whose pixelFormat is not 32BGRA is notMeasured rather than read with a colour channel mistaken for alpha.",
+    "note": "FramePixels.contentSummary over a synthesised all-transparent BGRA buffer reports maxAlpha 0 and allTransparent true. Includes the out-of-family review's High finding as CASE-0124b: one lit pixel at (733,1019) in a 1520x1936 frame \u2014 an offset no square stride lands on \u2014 is content, not emptiness. Also covers the Medium: a buffer whose pixelFormat is not 32BGRA is notMeasured rather than read with a colour channel mistaken for alpha.\n\nRUNG CORRECTED BY PRO-0097, and this lowers the raster count rather than raising anything. This case measures FramePixels.contentSummary over a BGRA buffer synthesised in a unit test \u2014 no pixels came off a display server, and its evidence file is a test transcript rather than an image, which is what campaign.py was reporting as 'not a raster image'. `raster-visual` was a claim this measurement cannot support; `outcome` is the rung it stands on. The raster claim REQ-061 rests on is CASE-0129, which drove proctor_capture against a signed build and kept the reply, and it keeps its rung. Moving a case DOWN to what it measured is the opposite of reclassifying to clear a gate: the oracle mix falls raster-visual 11 to 9 and what the registry knows goes up.",
     "defects": [
       "DEF-097"
     ]
@@ -2167,14 +2167,14 @@
     "req": "REQ-061",
     "surface": "SURF-006",
     "flow": "FLOW-003",
-    "oracle": "raster-visual",
+    "oracle": "outcome",
     "status": "pass",
     "evidence": [
       "evidence/PRO-0088/gate-after.txt"
     ],
     "armed": true,
     "armedBy": "Zeroing the same geometry inverts both readings, so the measurement is of the bytes rather than of the frame's size.",
-    "note": "A frame with real content measures as content: maxAlpha 255 and more than one distinct colour.",
+    "note": "A frame with real content measures as content: maxAlpha 255 and more than one distinct colour.\n\nRUNG CORRECTED BY PRO-0097, and this lowers the raster count rather than raising anything. This case measures the same synthesised buffer with content in it \u2014 no pixels came off a display server, and its evidence file is a test transcript rather than an image, which is what campaign.py was reporting as 'not a raster image'. `raster-visual` was a claim this measurement cannot support; `outcome` is the rung it stands on. The raster claim REQ-061 rests on is CASE-0129, which drove proctor_capture against a signed build and kept the reply, and it keeps its rung. Moving a case DOWN to what it measured is the opposite of reclassifying to clear a gate: the oracle mix falls raster-visual 11 to 9 and what the registry knows goes up.",
     "defects": []
   },
   {
@@ -2190,10 +2190,14 @@
     ],
     "armed": true,
     "armedBy": "Watched to fail: deleting '&& contentVerdict == .content' from CaptureEngineImpl.swift turned this test red and the run exited 1. Transcript in gate-sabotage.txt.",
-    "note": "The production verdict conjoins the content gate, and the caveat is drawn from the gate rather than written twice. Source analysis: it establishes that the code the unit tests drive is the code that runs, and buys no evidence about a real capture. That is CASE-0129.",
+    "note": "The production verdict conjoins the content gate, and the caveat is drawn from the gate rather than written twice. Source analysis: it establishes that the code the unit tests drive is the code that runs, and buys no evidence about a real capture. That is CASE-0129.\n\nSOURCE BLOCK SUPPLIED BY PRO-0097, from a live read rather than a copy: 451 lines of CaptureEngineImpl.swift examined, the four CaptureContentGate call sites at lines 150, 151, 153 and 193. docs/test-campaign/evidence/PRO-0097/source-denominators.txt. The fields go INSIDE `source` because that is where campaign.py:772-781 reads them and `examined` is read as an integer \u2014 written at the top level with `examined` as prose they satisfy neither condition, which is the mistake this registry already made once.",
     "defects": [
       "DEF-097"
-    ]
+    ],
+    "source": {
+      "analyzer": "Tests/ProctorAgentTests/CaptureContentWiringTests.swift, trustworthyIsGatedOnContent, reading Sources/ProctorAgent/Capture/CaptureEngineImpl.swift and requiring six expressions of it, including the `&& contentVerdict == .content` the sabotage removes",
+      "examined": 451
+    }
   },
   {
     "id": "CASE-0127",
@@ -2209,11 +2213,15 @@
     ],
     "armed": true,
     "armedBy": "Armed twice, and the second is the one that counts. First arming restored 'surface.panel.level = Self.inPlaneLevel' and the test went red (gate-sabotage.txt) \u2014 but that receiver is 'surface.panel', so it never met the prefix the filter excluded. The filter skipped every line beginning 'panel.level = ', which is the shape a direct assignment takes wherever the local is called 'panel', so the check could not go red against the regression it names. Re-armed against that shape: 'Self.place(panel, at: Self.floatingLevel)' at CursorOverlay.swift:548 replaced by 'panel.level = Self.floatingLevel', which is a panel built and never given a sharing type. Transcript in case-0127-arming.txt.",
-    "note": "Every level assignment in CursorOverlay goes through place(_:at:), which sets sharingType with it. Counted rather than matched with a contains, because a claim about a population is not settled by a printed line. The helper's own assignment is excluded BY LINE RANGE \u2014 the body of place(_:at:) located by its signature and closing brace \u2014 rather than by what a line says, which is the correction: an exclusion written as a text prefix cannot distinguish the helper's 'panel.level = level' from a regression's 'panel.level = .floating'. The range's control asserts it still contains exactly one assignment, so a range that had drifted off the helper fails rather than passes.",
+    "note": "Every level assignment in CursorOverlay goes through place(_:at:), which sets sharingType with it. Counted rather than matched with a contains, because a claim about a population is not settled by a printed line. The helper's own assignment is excluded BY LINE RANGE \u2014 the body of place(_:at:) located by its signature and closing brace \u2014 rather than by what a line says, which is the correction: an exclusion written as a text prefix cannot distinguish the helper's 'panel.level = level' from a regression's 'panel.level = .floating'. The range's control asserts it still contains exactly one assignment, so a range that had drifted off the helper fails rather than passes.\n\nSOURCE BLOCK SUPPLIED BY PRO-0097, from a live read rather than a copy: 615 lines of CursorOverlay.swift examined, place(_:at:) body at lines 97..98, 0 direct `.level = ` assignments outside it and 1 inside it, which is the range control. docs/test-campaign/evidence/PRO-0097/source-denominators.txt.",
     "defects": [
       "DEF-095",
       "DEF-101"
-    ]
+    ],
+    "source": {
+      "analyzer": "Tests/ProctorAgentTests/CaptureContentWiringTests.swift, thePointerKeepsItsExclusionAcrossBands, counting `.level = ` assignments in Sources/ProctorAgent/Overlay/CursorOverlay.swift outside the line range of place(_:at:)",
+      "examined": 615
+    }
   },
   {
     "id": "CASE-0128",
@@ -2229,11 +2237,16 @@
     ],
     "armed": true,
     "armedBy": "A live control build, not a citation. Two signed Developer ID builds differing only in CursorOverlay.swift: the pre-fix agent (pid 53748) reports 3 windows owned with 1 not excluded \u2014 the layer-0 one \u2014 over 60 samples. The instrument could and did report sharingState 1.",
-    "note": "Every window CGWindowListCopyWindowInfo attributes to the agent pid reports sharingState 0 on the delivered build: pid 12838 owns 3 (layers 25, 24, 0) with notExcluded len() 0, over 54 samples. Read from a separate probe process, so the process being measured is not the one measuring. The population is len() over rows filtered by pid, never a printed list. This is also what identifies DEF-028's window 121491 as the drawn pointer: the one-file revert flips exactly that window and nothing else.",
+    "note": "Every window CGWindowListCopyWindowInfo attributes to the agent pid reports sharingState 0 on the delivered build: pid 12838 owns 3 (layers 25, 24, 0) with notExcluded len() 0, over 54 samples. Read from a separate probe process, so the process being measured is not the one measuring. The population is len() over rows filtered by pid, never a printed list. This is also what identifies DEF-028's window 121491 as the drawn pointer: the one-file revert flips exactly that window and nothing else.\n\nWITNESS BLOCK SUPPLIED BY PRO-0097 from the file this case already cited, docs/test-campaign/evidence/PRO-0088/glass/overlay-population.json: delivered build pid 12838, windowsOwned 3, notExcluded 0 over 54 samples; pre-fix pid 53748, windowsOwned 3, notExcluded 1 over 60 samples. The count is the three windows the window server attributes to the agent, each read back at sharingState 0. Recorded as DEF-113: the case claimed effect-witness and carried no witness block, so three of the gate's findings were nobody's.",
     "defects": [
       "DEF-095",
       "DEF-096"
-    ]
+    ],
+    "witness": {
+      "recorder": "scripts/campaign/witness_probe.swift in mode `windows`, a separate process reading CGWindowListCopyWindowInfo and filtering by the agent pid, sampled every ~330ms \u2014 54 samples on the delivered build and 60 on the pre-fix control",
+      "effect": "ipc",
+      "count": 3
+    }
   },
   {
     "id": "CASE-0129",
@@ -2249,11 +2262,16 @@
     ],
     "armed": true,
     "armedBy": "The Calculator leg is the sabotage and it is a real frame, not a stub: the same code path one call later returns trustworthy true, contentVerdict content, maxAlpha 255 over 1,099,968 pixels. A gate that had simply started refusing everything would fail here.",
-    "note": "proctor_capture through the production path against a signed build on a private socket. A Proctor-owned window (win:2:1, CG 147541) returns status complete, trustworthy FALSE, contentVerdict excludedTarget, 7,720,704 pixels sampled and every one fully transparent, with a caveat naming the exclusion. Before this change the same call returned trustworthy true. /Applications/Proctor.app was never replaced. What this does not establish: the Proctor UI's own History window was not captured, because AX exposed no window for either UI process and this harness cannot click a menu item on a window it cannot address.",
+    "note": "proctor_capture through the production path against a signed build on a private socket. A Proctor-owned window (win:2:1, CG 147541) returns status complete, trustworthy FALSE, contentVerdict excludedTarget, 7,720,704 pixels sampled and every one fully transparent, with a caveat naming the exclusion. Before this change the same call returned trustworthy true. /Applications/Proctor.app was never replaced. What this does not establish: the Proctor UI's own History window was not captured, because AX exposed no window for either UI process and this harness cannot click a menu item on a window it cannot address.\n\nWITNESS BLOCK SUPPLIED BY PRO-0097 from the two files this case already cited. capture-proctor-owned.json: trustworthy false, contentVerdict excludedTarget, 7,720,704 pixels sampled, maxAlpha 0. capture-calculator.json: contentVerdict content, 1,099,968 pixels sampled, maxAlpha 255, distinctColours 256. The count is the two ScreenCaptureKit captures that crossed the boundary, and the second is what makes the first a measurement rather than a gate that had started refusing everything. Recorded as DEF-113.",
     "defects": [
       "DEF-097",
       "DEF-098"
-    ]
+    ],
+    "witness": {
+      "recorder": "a JSON-RPC client driving proctor_capture over the agent's private unix socket against a signed Developer ID build, with both replies kept whole",
+      "effect": "device",
+      "count": 2
+    }
   },
   {
     "id": "CASE-0190",

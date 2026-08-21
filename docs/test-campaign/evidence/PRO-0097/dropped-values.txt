@@ -1,0 +1,34 @@
+registry drift: 2 file(s), 11461 id/field pair(s) examined
+  DROPPED  REQ-024.evidence: set at 6e5094e4 and reverted to the value its parent held
+      lost: "vacuous"
+      HEAD: "observed"
+  DROPPED  DEF-030.status: set at 6e5094e4 and reverted to the value its parent held
+      lost: "fixed"
+      HEAD: "open"
+  DROPPED  DEF-032.status: set at 6e5094e4 and reverted to the value its parent held
+      lost: "fixed"
+      HEAD: "open"
+  DROPPED  DEF-055.status: set at 6e5094e4 and reverted to the value its parent held
+      lost: "fixed"
+      HEAD: "open"
+  DROPPED  DEF-057.status: set at 6e5094e4 and reverted to the value its parent held
+      lost: "fixed"
+      HEAD: "open"
+  DROPPED  DEF-058.status: set at 6e5094e4 and reverted to the value its parent held
+      lost: "fixed"
+      HEAD: "open"
+  DROPPED  DEF-024: whole row present at 2420282e and absent at HEAD
+  DROPPED  CASE-0032.evidence: set at 964cfd5f and reverted to the value its parent held
+      lost: ["evidence/overlay-capture-default.json", "evidence/window-level-sharing.json", "evidence/PRO-0088/case-0032-population-before.json", "evidence/PRO-0088/glass/o
+      HEAD: ["evidence/overlay-capture-default.json", "evidence/window-level-sharing.json"]
+  DROPPED  CASE-0059.capture: set at 595179d1 and reverted to the value its parent held
+      lost: {"frameStatus": "SCFrameStatus=complete, framesWaited 2", "method": "ScreenCaptureKit window-scoped, signed Developer ID agent pid 97657, target Calculator pid 
+      HEAD: null
+  DROPPED  CASE-0063.witness: set at 595179d1 and reverted to the value its parent held
+      lost: {"count": 24, "effect": "device", "recorder": "listen-only tail-append CGEventTap in the witness_probe process, counting probe-marked posts that survived Procto
+      HEAD: null
+
+FAIL: 10 value(s) an ancestor commit set and this tree no longer
+      carries. Restore each from the commit that set it, or record why the
+      later value is the right one. A merge keeping ours over a registry it
+      did not read is how eleven of these were lost across four merges.
