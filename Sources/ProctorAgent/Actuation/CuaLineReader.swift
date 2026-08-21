@@ -30,13 +30,23 @@ final class CuaLineReader {
     }
 
     private let fd: Int32
+    /// The monotonic clock the deadline is judged against. Injectable for the same
+    /// reason the reader takes a descriptor rather than a transport: the deadline is
+    /// the part worth testing, and a test that asserts how long the machine took is
+    /// asserting about the machine. With the clock told to the reader, a test can
+    /// spend the budget without spending the time, and — the arm a stopwatch cannot
+    /// give — freeze it and prove the reader does *not* give up while the budget it
+    /// was given is unspent.
+    private let now: @Sendable () -> UInt64
     /// Bytes read past the end of the line that was returned. Kept because a
     /// single `read(2)` can span frames: dropping the remainder would silently
     /// lose the reply after the one being served.
     private var residual = Data()
 
-    init(fd: Int32) {
+    init(fd: Int32,
+         now: @escaping @Sendable () -> UInt64 = { DispatchTime.now().uptimeNanoseconds }) {
         self.fd = fd
+        self.now = now
     }
 
     /// One complete line, without its terminator, or a fault.
@@ -48,11 +58,10 @@ final class CuaLineReader {
 
         // Monotonic. A wall clock jumps when the machine sleeps, which would make
         // a lid closed for an hour look like a driver that stopped answering.
-        let deadline = DispatchTime.now().uptimeNanoseconds
-            &+ UInt64(max(0, budget) * 1_000_000_000)
+        let deadline = now() &+ UInt64(max(0, budget) * 1_000_000_000)
 
         while true {
-            let now = DispatchTime.now().uptimeNanoseconds
+            let now = self.now()
             guard now < deadline else {
                 // The budget is spent, so look once more before giving up: a line
                 // can have landed in the residual during the last read of the
