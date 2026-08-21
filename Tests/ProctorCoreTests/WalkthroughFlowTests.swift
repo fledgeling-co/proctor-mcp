@@ -93,4 +93,70 @@ struct WalkthroughFlowTests {
         #expect(seen == [.intro, .permissions, .granted, .connect])
         #expect(WalkthroughFlow.next(after: .connect) == nil)
     }
+
+    // MARK: - PRO-0081, closing PRO-0067's carried A3
+
+    @Test("A3 · the primary refuses on permissions with a grant missing, and nowhere else")
+    func primaryEnablement() {
+        // All sixteen combinations written out rather than looped, so a wrong
+        // answer names its case. This function is what gives A3 a population:
+        // before it, no state disabled the control, and the clause "present in
+        // the tree in every state where it is disabled" was asked over an empty
+        // set and would have read green having measured nothing.
+        var disabled: [String] = []
+        for step in WalkthroughFlow.Step.allCases {
+            for ax in [false, true] {
+                for sr in [false, true] {
+                    let enabled = WalkthroughFlow.primaryEnabled(
+                        on: step, accessibility: ax, screenRecording: sr)
+                    let expected = step != .permissions || (ax && sr)
+                    #expect(enabled == expected,
+                            "\(step.rawValue) ax=\(ax) sr=\(sr): enabled \(enabled), expected \(expected)")
+                    if !enabled { disabled.append("\(step.rawValue)/\(ax)/\(sr)") }
+                }
+            }
+        }
+        // The count, printed rather than implied. Three of the sixteen refuse,
+        // and they are the three the design of record draws disabled.
+        #expect(disabled.sorted() == ["permissions/false/false",
+                                      "permissions/false/true",
+                                      "permissions/true/false"],
+                "the disabled set is \(disabled.sorted()); A3's population is these states")
+    }
+
+    @Test("A3 · intro and connect never refuse, whatever macOS has answered")
+    func theOnlyRefusalIsTheOneWithAGrantMissing() {
+        // The specific regression: disabling the primary on `intro` would trap
+        // somebody on the step that explains the app, and on `connect` it would
+        // stop them finishing. Skip setup is never disabled either — the flow
+        // declines to pretend a grant landed, it does not hold the door shut.
+        for step in [WalkthroughFlow.Step.intro, .granted, .connect] {
+            #expect(WalkthroughFlow.primaryEnabled(on: step,
+                                                   accessibility: false,
+                                                   screenRecording: false))
+        }
+    }
+
+    @Test("A3 · the walkthrough draws the disabled control rather than removing it")
+    func theViewDisablesRatherThanHides() throws {
+        // The half a pure function cannot answer, read from the view's source:
+        // the button is declared unconditionally and carries a `.disabled`
+        // modifier, rather than sitting behind an `if` that would take it out of
+        // the tree. Whether it is genuinely in the rendered tree is a question
+        // for the glass lane, and CASE-0100 asks it there.
+        let source = try String(
+            contentsOf: URL(fileURLWithPath: #filePath)
+                .deletingLastPathComponent().deletingLastPathComponent()
+                .deletingLastPathComponent()
+                .appendingPathComponent("Sources/ProctorUI/Walkthrough.swift"),
+            encoding: .utf8)
+        let primary = try #require(source.range(of: "WalkthroughFlow.ID.primary"))
+        let before = String(source[..<primary.lowerBound]).suffix(400)
+        let after = String(source[primary.upperBound...]).prefix(400)
+        let around = before + after
+        #expect(around.contains(".disabled(!WalkthroughFlow.primaryEnabled("),
+                "the primary action is not gated by the Core rule")
+        #expect(!around.contains("if step != .connect {\n                    Button(WalkthroughFlow.primaryAction"),
+                "the primary action is behind a condition; A3 requires it present and disabled")
+    }
 }

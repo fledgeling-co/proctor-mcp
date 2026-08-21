@@ -1,0 +1,174 @@
+{
+  "file": "Sources/ProctorUI/MainWindow.swift",
+  "total": 45,
+  "counts": {
+    "display": 0,
+    "symbol": 16,
+    "system": 16,
+    "key": 1,
+    "punctuation": 11,
+    "interpolated": 1
+  },
+  "identifiers": [
+    {
+      "bucket": "interpolated",
+      "text": "\"\\(r.observersLive)\"",
+      "count": 1
+    },
+    {
+      "bucket": "key",
+      "text": "\"ready\"",
+      "count": 1
+    },
+    {
+      "bucket": "punctuation",
+      "text": "\"\"",
+      "count": 2
+    },
+    {
+      "bucket": "punctuation",
+      "text": "\", \"",
+      "count": 2
+    },
+    {
+      "bucket": "punctuation",
+      "text": "\"\\(domain)/\\(label)\"",
+      "count": 5
+    },
+    {
+      "bucket": "punctuation",
+      "text": "\"\\n\"",
+      "count": 2
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"arrow.clockwise.circle.fill\"",
+      "count": 1
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"arrow.down.circle\"",
+      "count": 1
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"arrow.triangle.2.circlepath\"",
+      "count": 1
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"checkmark.circle.fill\"",
+      "count": 3
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"circle\"",
+      "count": 1
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"exclamationmark.shield.fill\"",
+      "count": 1
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"exclamationmark.triangle.fill\"",
+      "count": 3
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"eye.slash.fill\"",
+      "count": 1
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"keyboard.badge.ellipsis\"",
+      "count": 1
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"questionmark.circle\"",
+      "count": 1
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"rectangle.on.rectangle.angled\"",
+      "count": 1
+    },
+    {
+      "bucket": "symbol",
+      "text": "\"xmark.circle.fill\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"-k\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"/bin/launchctl\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"/bin/sh\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"Library/LaunchAgents/\\(label).plist\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"Library/Logs/Proctor/agent.log\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"bootout\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"bootstrap\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"history\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"hw.optional.arm64\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"install\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"kickstart\"",
+      "count": 3
+    },
+    {
+      "bucket": "system",
+      "text": "\"print\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"proctor-shim\"",
+      "count": 1
+    },
+    {
+      "bucket": "system",
+      "text": "\"x-apple.systempreferences:com.apple.preference.security?\\(anchor)\"",
+      "count": 1
+    }
+  ]
+}

@@ -82,9 +82,19 @@ struct Walkthrough: View {
                         .accessibilityIdentifier(WalkthroughFlow.ID.skip)
                         .buttonStyle(.borderless)
                 }
+                // PRO-0081, closing PRO-0067's A3. Disabled and visible rather
+                // than absent: a control that disappears makes the layout jump
+                // and teaches the user the step does not exist. The rule is
+                // `WalkthroughFlow.primaryEnabled`, decided in Core where it is
+                // tested at every combination, because a decision made in a view
+                // body is one this repo cannot prove.
                 Button(WalkthroughFlow.primaryAction(for: step.flow)) { advance() }
                     .accessibilityIdentifier(WalkthroughFlow.ID.primary)
                     .buttonStyle(.borderedProminent)
+                    .disabled(!WalkthroughFlow.primaryEnabled(
+                        on: step.flow,
+                        accessibility: granted("Accessibility"),
+                        screenRecording: granted("Screen Recording")))
             }
             .padding(.horizontal, 30).padding(.vertical, 16)
         }

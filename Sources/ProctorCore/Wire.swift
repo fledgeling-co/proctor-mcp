@@ -26,6 +26,23 @@ public enum Wire {
     public static let agentLabel = "app.fledgeling.procter.agent"
     public static let protocolVersion = 1
 
+    /// Where the permissionless shim sits inside Proctor.app.
+    ///
+    /// PRO-0081. Two views assembled this path from a literal of their own and a
+    /// third read it back to a person as the command to paste into an MCP host,
+    /// so a wrong one would have been discovered by somebody else's tool failing
+    /// to launch. One definition, and `WireIdentityTests` pins it.
+    public static func shimPath(inBundle bundlePath: String) -> String {
+        bundlePath + "/Contents/MacOS/proctor-shim"
+    }
+
+    /// The launchd domain the agent's job lives in.
+    ///
+    /// Per-user (`gui/<uid>`) rather than system: the agent holds a person's own
+    /// TCC grants and needs their Aqua session, and a system-domain job has
+    /// neither.
+    public static func launchdDomain(uid: uid_t) -> String { "gui/\(uid)" }
+
     /// The agent's own LaunchServices identity, since PRO-0040.
     ///
     /// The agent is a second Mach-O inside Proctor.app, so it used to inherit the

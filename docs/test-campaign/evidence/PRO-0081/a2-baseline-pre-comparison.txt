@@ -1,0 +1,63 @@
+PRO-0081 clause 3 — the baseline compared against the PRE-conversion file.
+
+The snapshot this replaces was written from the post-conversion file, so its
+comparison could only ever print 0 gone / 0 new. The pre-conversion file is
+git show ai/wave-9:Sources/ProctorUI/MainWindow.swift, byte-identical to the file
+at the branch merge-base (346edfa) and at f8f0ed7^ — the commit that did the move.
+It is committed here as a2-wave9-MainWindow.swift so this is re-runnable offline.
+
+$ python3 scripts/campaign/status_literals.py docs/test-campaign/evidence/PRO-0081/a2-wave9-MainWindow.swift --write-baseline=docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json
+wrote docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json: 49 identifier literals
+
+$ python3 scripts/campaign/status_literals.py Sources/ProctorUI/MainWindow.swift --baseline=docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json
+Sources/ProctorUI/MainWindow.swift: 45 string literals examined
+  display         0
+  symbol         16
+  system         16
+  key             1
+  punctuation    11
+  interpolated    1
+
+  baseline docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json: 4 identifier(s) gone, 0 new
+  GONE      key: "Accessibility"  (x1)
+  GONE      key: "Automation"  (x1)
+  GONE      key: "Screen Recording"  (x1)
+  GONE      punctuation: "\n"  (x1)
+
+FAIL: 4 identifier literal(s) left Sources/ProctorUI/MainWindow.swift without being accounted for. The clause is about moving the copy out, not the machinery.
+exit: 1
+
+WHERE THE FOUR WENT — the accounting the gate's red demands. Each was traced by
+reading the current tree, not by trusting the commit message.
+
+  key: "Accessibility"      MainWindow.swift:929-934 held enum Actions.pane(for:), a
+  key: "Screen Recording"   switch on three quoted grant names. It now reads
+  key: "Automation"         `static func pane(for grant: String) -> String? {
+                            StatusChecks.settingsPane(for: grant) }` at
+                            MainWindow.swift:879, and the switch lives at
+                            StatusChecks.swift:139-145 where its cases are the
+                            constants `accessibility` / `screenRecording` /
+                            `automation`. Those constants are declared at
+                            StatusChecks.swift:57-59 and ALREADY EXISTED AT wave-9
+                            (git show ai/wave-9:Sources/ProctorCore/StatusChecks.swift
+                            lines 57-59), so the three literals were folded onto names
+                            that predate this item rather than retyped or deleted.
+
+  punctuation: "\n"         The `joined(separator: "\n")` of MainWindow.swift:398,
+                            `Text("Looked in:\n" + row.searched.joined(separator: "\n"))`.
+                            It moved with the copy it belongs to, into
+                            StatusSurface.swift:186:
+                            `"Looked in:\n" + paths.joined(separator: "\n")`.
+
+So none of the four left the product; three were deduplicated onto pre-existing Core
+constants and one travelled with its own sentence. That is a WIDENING beyond A2 as
+written — A2 asks for copy to move out, and this also moved a decision function — and
+it is recorded here rather than absorbed. The gate stays red against the pre-conversion
+baseline because that is what the instrument is for: it refuses to let a departure pass
+silently, and the account above is the answer it was asking for. Nothing in the
+instrument, and no bound in it, was changed to produce a green.
+
+a2-identifier-baseline.json (the post-conversion snapshot) is retained as the FORWARD
+guard on future edits to MainWindow.swift. It is not evidence that this conversion
+preserved the identifier set; a2-identifier-baseline-pre.json is the file that answers
+that question, and its answer is the four above.

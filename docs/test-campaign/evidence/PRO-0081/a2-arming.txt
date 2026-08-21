@@ -1,0 +1,55 @@
+=== ARMING RE-RUN, current instrument, 2026-08-21 ===
+Instrument: scripts/campaign/status_literals.py at bba943b6d150
+
+--- 1. the real file, unmodified ---
+Sources/ProctorUI/MainWindow.swift: 45 string literals examined
+  display         0
+  symbol         16
+  system         16
+  key             1
+  punctuation    11
+  interpolated    1
+
+PASS: 0 user-facing literals of 45 examined; 45 are identifiers, symbols, system strings or punctuation.
+exit=0
+
+--- 2. one sentence put back into a Text( ---
+/tmp/pro0081/armed.swift: 46 string literals examined
+  display         1
+  symbol         16
+  system         16
+  key             1
+  punctuation    11
+  interpolated    1
+  VIOLATION    74 Text()                             "Proctor lets a model test a Mac app."
+
+FAIL: 1 user-facing literal(s) of 46 examined. Move them to StatusSurface.Copy.
+exit=1
+
+--- 3. a Button label put back ---
+/tmp/pro0081/armed2.swift: 46 string literals examined
+  display         1
+  symbol         16
+  system         16
+  key             1
+  punctuation    11
+  interpolated    1
+  VIOLATION    70 Button()                           "Open log"
+
+FAIL: 1 user-facing literal(s) of 46 examined. Move them to StatusSurface.Copy.
+exit=1
+
+--- 4. baseline gate armed: an identifier deleted from the file ---
+/tmp/pro0081/armed3.swift: 44 string literals examined
+  display         0
+  symbol         15
+  system         16
+  key             1
+  punctuation    11
+  interpolated    1
+
+  baseline docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json: 1 identifier(s) gone, 0 new
+  GONE      symbol: "arrow.clockwise.circle.fill"  (x1)
+
+FAIL: 1 identifier literal(s) left /tmp/pro0081/armed3.swift without being accounted for. The clause is about moving the copy out, not the machinery.
+exit=1

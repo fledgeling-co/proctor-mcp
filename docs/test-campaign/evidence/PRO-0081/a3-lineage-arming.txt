@@ -1,0 +1,20 @@
+=== the lineage gate, armed over this item's new capture ===
+A gate reading an empty population exits 0 and looks identical to a clean one.
+PRO-0078 found exactly that here. So the tie pass is seeded in both directions.
+
+--- clean ---
+JUDGED 5 of 8 judgeable capture(s) (62%)
+   An unjudged capture is an uncompared one. It is not a pass.
+
+ratchet: 5 — held
+
+Every published capture names a target that ties to its subject.
+exit=
+
+--- STEP-A3-PRIMARY-DISABLED swapped with SURF-009 ---
+seed-swap CAUGHT — swapping STEP-A3-PRIMARY-DISABLED and SURF-009 produced 2 hard failure(s). The tie pass reads what it claims to read.
+exit=
+
+--- and with SURF-008, the status window ---
+seed-swap CAUGHT — swapping STEP-A3-PRIMARY-DISABLED and SURF-008 produced 2 hard failure(s). The tie pass reads what it claims to read.
+exit=

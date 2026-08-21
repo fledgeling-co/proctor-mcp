@@ -123,6 +123,28 @@ public enum StatusChecks {
     /// currently the only optional permission left; keying on the kind makes it a
     /// rule instead of an accident that survives only while the list stays as it
     /// is. Behaviour on today's report is identical.
+    /// The System Settings privacy pane a grant is granted in, or nil where
+    /// macOS offers no pane for it.
+    ///
+    /// PRO-0081. An anchor is an identifier macOS matches, not words a person
+    /// reads, and it moved here from the view for the same reason the rest of
+    /// this file exists: the window has no test target, and a mapping nothing
+    /// checks is one that goes wrong silently — an anchor macOS does not
+    /// recognise opens the top of Settings and looks like the button did
+    /// nothing.
+    ///
+    /// `Shortcuts CLI` and `Input Monitoring` are absent deliberately. The first
+    /// is a program on a disk rather than a decision macOS holds; the second has
+    /// no anchor of its own in this pane family.
+    public static func settingsPane(for grant: String) -> String? {
+        switch grant {
+        case accessibility:   return "Privacy_Accessibility"
+        case screenRecording: return "Privacy_ScreenCapture"
+        case automation:      return "Privacy_Automation"
+        default:              return nil
+        }
+    }
+
     public static func statusText(for grant: DoctorReport.Grant) -> String {
         if grant.granted { return "Granted" }
         if grant.resolvedState == .unconfirmed { return "Not established — macOS did not answer" }
@@ -199,7 +221,24 @@ public enum StatusChecks {
         public var path: String?
         public var searched: [String]
 
-        public enum Tone: String, Sendable, Equatable { case good, bad, unknown }
+        public enum Tone: String, Sendable, Equatable {
+            case good, bad, unknown
+
+            /// The SF Symbol each tone draws with.
+            ///
+            /// PRO-0081. It sits here rather than in the view for the same
+            /// reason `StatusSurface.LaneState.pill` does: a mapping from a
+            /// verdict to a token is a decision, and a decision in a view body
+            /// is one this repo cannot prove. Colour is never the only carrier —
+            /// the row's status text says the same thing in words.
+            public var symbol: String {
+                switch self {
+                case .good:    return "checkmark.circle.fill"
+                case .bad:     return "circle"
+                case .unknown: return "questionmark.circle"
+                }
+            }
+        }
 
         public init(tool: String, status: String, tone: Tone, version: String? = nil,
                     detail: String? = nil, path: String? = nil, searched: [String] = []) {

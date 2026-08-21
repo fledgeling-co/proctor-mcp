@@ -359,6 +359,20 @@ struct StatusWindowSourceTests {
         try String(contentsOf: repositoryRoot.appendingPathComponent(path), encoding: .utf8)
     }
 
+    /// One `private struct X: View` declaration, bounded at the next one.
+    ///
+    /// A slice that runs to the end of the file answers questions about every
+    /// declaration after the one it names, and agrees whenever none of them
+    /// happens to hold the token being looked for. That is a scan reading the
+    /// wrong region and passing, which is indistinguishable from a measurement.
+    private static func declaration(named name: String, in source: String) throws -> String {
+        let opening = try #require(source.range(of: "private struct \(name)"),
+                                   "no declaration named \(name)")
+        let rest = String(source[opening.upperBound...])
+        guard let next = rest.range(of: "\nprivate struct ") else { return rest }
+        return String(rest[..<next.lowerBound])
+    }
+
     /// The same source with whole-line comments dropped.
     ///
     /// Needed because the checks below forbid certain strings *in the code*, and
@@ -411,41 +425,65 @@ struct StatusWindowSourceTests {
                 """)
     }
 
-    @Test("the footer's Re-check is gone and the other two are not")
+    @Test("the footer's Re-check is gone and the three that stay are the right three")
     func theRightRecheckWasDeleted() throws {
         // Which one went, not how many are left. A bare count would pass a change
-        // that deleted one of the two honest buttons and kept the footer's. The
-        // spec's verdict table says what each of the three reads, whether that
-        // read is cached, and whether pressing it can change the answer.
+        // that deleted one of the honest buttons and kept the footer's. The
+        // spec's verdict table says what each one reads, whether that read is
+        // cached, and whether pressing it can change the answer.
+        //
+        // PRO-0081 changed two things here, and neither is a relaxed bound.
+        //
+        // The subject moved. Closing PRO-0066's carried A2 put the window's copy
+        // in `StatusSurface.Copy`, so a button names a constant rather than a
+        // literal. The label the constant holds is pinned below, so the scan
+        // cannot be satisfied by a renamed constant carrying different words.
+        //
+        // The population was always three and this scan could only see two. It
+        // matched the literal `Button("Re-check")`; the agent-down block has
+        // read its label from a constant since PRO-0066, so its button was
+        // invisible to the count and the count read two over a set of three.
+        // Naming all three is what the verdict table always meant, and each is
+        // asserted in its own block rather than in a total.
         let source = try Self.source("Sources/ProctorUI/MainWindow.swift")
+        #expect(StatusSurface.Copy.recheck == "Re-check")
+        let recheckButton = "Button(StatusSurface.Copy.recheck)"
+        let startAgentButton = "Button(StatusSurface.Copy.downStart)"
 
-        let footer = try #require(source.range(of: "private struct FooterSection"))
-        let footerBody = String(source[footer.lowerBound...])
-        #expect(!footerBody.contains("Button(\"Re-check\")"),
+        // Bounded at the next declaration rather than run to the end of the
+        // file. The open-ended slice swept up every view declared after the
+        // footer, and passed only because none of them held the token it was
+        // looking for — a scan that reads the wrong region and agrees anyway.
+        let footerBody = try Self.declaration(named: "FooterSection", in: source)
+        #expect(!footerBody.contains(recheckButton),
                 """
                 the footer's Re-check refreshed rows that refresh themselves, beside a clock \
                 that already ticks. See the spec's per-button verdict table.
                 """)
-        #expect(footerBody.contains("Restart agent"))
-        #expect(footerBody.contains("Open log"))
+        #expect(footerBody.contains("StatusSurface.Copy.restart"))
+        #expect(footerBody.contains("StatusSurface.Copy.openLog"))
 
-        let remaining = source.components(separatedBy: "Button(\"Re-check\")").count - 1
-        #expect(remaining == 2,
+        let remaining = source.components(separatedBy: recheckButton).count - 1
+        #expect(remaining == 3,
                 """
-                two Re-check buttons are honest and stay: the one beside Start the agent, and \
-                the one under Obscura's install commands. See the verdict table.
+                three Re-check buttons are honest and stay: the one beside Start the agent in \
+                the unreachable branch, the one in the agent-down block, and the one under \
+                Obscura's install commands. Each reads something uncached inside a remediation \
+                block. See the verdict table.
                 """)
 
-        // And they are the *right* two. Counting alone would pass a change that
+        // And they are the *right* three. Counting alone would pass a change that
         // moved the footer's button into another view while deleting one of the
-        // survivors, since the total would still read two.
-        let unreachable = try #require(source.range(of: "Button(\"Start the agent\")"))
+        // survivors, since the total would still read three.
+        let unreachable = try #require(source.range(of: startAgentButton))
         let obscuraOffer = try #require(source.range(of: "private struct ObscuraOffer"))
-        for (label, region) in [("the agent-not-answering block", unreachable),
-                                ("the Obscura install block", obscuraOffer)] {
+        let agentDown = try #require(source.range(of: "private struct AgentDownSection"))
+        for (label, region) in [("the agent-not-answering branch", unreachable),
+                                ("the Obscura install block", obscuraOffer),
+                                ("the agent-down block", agentDown)] {
             let after = String(source[region.lowerBound...]).prefix(1600)
-            #expect(after.contains("Button(\"Re-check\")"),
-                    "\(label) lost its Re-check; it is one of the two the verdict table keeps")
+            #expect(after.contains(recheckButton),
+                    "\(label) lost its Re-check; it is one of the three the verdict table keeps")
         }
 
         // The window's second opinion about a tool the report already judged.

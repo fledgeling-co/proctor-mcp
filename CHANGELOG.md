@@ -144,6 +144,12 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
   The test that should have caught this built its own reply in a shape the product doesn't emit, so it passed against a fiction for as long as it existed. The replacement is built from a real reply, and it comes with a control: a passing check has to still exit 0, or a fix that just fails everything would look identical.
 
+- **The setup walkthrough let you continue without the permissions it was asking for.** On the permissions step, "Connect a model" was drawn enabled whether or not Accessibility and Screen Recording had been granted. The design of record has that control visible and disabled until both are in, and the build had it live the whole time.
+
+  It's now disabled until both grants land. The decision comes from a pure function in Core, `WalkthroughFlow.primaryEnabled`, tested at all sixteen combinations of its inputs, rather than from a condition inside a view body where nothing can check it.
+
+  The control dims in place rather than disappearing. A control that vanishes makes the layout jump and teaches you the step isn't there at all. "Skip setup" stays enabled throughout, so a grant macOS won't give you is never a dead end.
+
 ## [0.2.0] - 2026-08-17
 
 ### Added
