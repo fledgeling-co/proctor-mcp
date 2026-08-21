@@ -1,0 +1,47 @@
+DEF-106, and the gate that would have refused it
+================================================
+
+Two instruments are armed here, each in the direction that matters: not that it
+runs clean on a fixed tree, but that it fires on the broken one.
+
+
+1. THE DRIFT GATE CAUGHT THIS ITEM
+----------------------------------
+The spec's `## Defects` table was made to claim DEF-106 while the registry still
+read `open`. This is the real spec against the real registry, not a fixture.
+
+  $ python3 scripts/campaign/defect_gate.py claims docs/specs/spec-PRO-0097.md docs/test-campaign
+  spec-PRO-0097.md: claims 4 defect(s) — DEF-106, DEF-112, DEF-113, DEF-114
+    registry: docs/test-campaign/inventory.json, 75 defect record(s)
+    recorded rather than claimed, and not checked here: DEF-110, DEF-111
+    OPEN     DEF-106 still reads `open` — A bounded socket client's test asserts measured elapsed time against a literal, which is t
+  
+  FAIL: 1 claimed defect(s) the registry does not
+        agree are closed. Flip the record with the evidence that closed it, or
+        drop the claim from the spec. A merge that leaves them apart is how the
+        registry came to report 23 open defects over a tree that had fixed most.
+  exit 1
+
+DEF-106 is claimed in the table and NOT on the `**Defects:**` header line, which
+is PRO-0081's shape: an item that closes a record outside its own allocation.
+Both places are read, so the claim could not hide in either one.
+
+
+2. THE CENSUS DETECTOR, OVER THE FILE THIS ITEM CHANGED
+-------------------------------------------------------
+`--arm` proves the detector on two historical offenders. This proves it on THIS
+change, by running the same `scan()` over both versions of the one file:
+
+  $ python3 -c "from wall_clock_census import scan; ... git show HEAD:<file>"
+  at HEAD, before the fix:
+    OFFENDER Tests/ProctorCoreTests/ProctorCoreTests.swift:232: #expect(waited < 10, "a bounded client waited \(waited)s")
+    2 clock site(s) in this file, 1 offender(s)
+  in the working tree, after the fix:
+    0 clock site(s) in this file, 0 offender(s)
+
+The offender the census reported at wave 13 is line 232 of this file, and the
+detector still finds it on demand. It reports nothing over the same file now, so
+the zero in census-after.txt is a measurement rather than a detector gone quiet
+— which is DEF-067 and DEF-105, both of which happened to this instrument.
+
+The bound did not move. `ioTimeoutSeconds` is 1 before and after.

@@ -216,20 +216,101 @@ struct FrameCodecTests {
         try #require(bound == 0)
         try #require(listen(listener, 4) == 0)
 
-        let client = SocketClient(path: path)
+        // The bound is a socket option, so the mechanism is the setsockopt call
+        // and the spy watches it. It records and then forwards to the real one,
+        // so the bound the assertion is about is the bound this run got — the
+        // `agentUnavailable` below arrives because the kernel really did time
+        // the receive out, not because the spy short-circuited it.
+        //
+        // What this replaces: `#expect(waited < 10)` around a 1-second bound.
+        // Nine seconds of slack passes on a healthy machine whatever the client
+        // does and fails on a loaded one whatever the client does, which is a
+        // measurement of the machine wearing a guarantee's clothes. REQ-056 and
+        // DEF-106. The bound has not moved: it is still 1.
+        let asked = BoundRequests()
+        let client = SocketClient(path: path, applyBound: { fd, option, seconds in
+            asked.record(option: option, seconds: seconds)
+            return SocketClient.liveBound(fd, option, seconds)
+        })
         client.ioTimeoutSeconds = 1
         defer { client.disconnect() }
-        let started = Date()
         var thrown: AgentError?
         do {
             _ = try client.send(AgentRequest(id: "1", tool: "proctor_doctor", arguments: .object([:])))
         } catch let error as AgentError {
             thrown = error
         }
-        let waited = Date().timeIntervalSince(started)
         #expect(thrown?.code == .agentUnavailable)
         #expect(thrown?.message.contains("did not answer within 1s") == true)
-        #expect(waited < 10, "a bounded client waited \(waited)s")
+
+        // The mechanism, asserted rather than timed. Both directions are bounded,
+        // because a receive timeout alone leaves a wedged peer able to hold a
+        // write, and each is asked for exactly what the caller set.
+        #expect(asked.options == [SO_RCVTIMEO, SO_SNDTIMEO],
+                "both directions must be bounded; asked \(asked.options)")
+        #expect(asked.seconds == [client.ioTimeoutSeconds, client.ioTimeoutSeconds],
+                "the kernel must be asked for the bound the caller set; asked \(asked.seconds)")
+    }
+
+    @Test("the applier a client gets by default really sets the bound on the socket")
+    func theDefaultApplierIsTheLiveOne() throws {
+        // The injected path must not be the only one exercised: a seam whose
+        // default nobody runs is a seam that can rot with no test noticing.
+        //
+        // Two halves, because neither alone is enough. First: the value the
+        // initialiser defaults to is a real applier — applied to a socket this
+        // test owns, the kernel reads back what it was asked for. Second: a
+        // client built with no applier at all is genuinely bounded, established
+        // by a send against a listener nobody accepts on. If the default were
+        // inert that send would never return, so this half fails by hanging
+        // rather than by a margin, and it reads no clock either way.
+        let fd = socket(AF_UNIX, SOCK_STREAM, 0)
+        try #require(fd >= 0)
+        defer { close(fd) }
+        #expect(SocketClient.liveBound(fd, SO_RCVTIMEO, 3) == 0)
+        var tv = timeval()
+        var len = socklen_t(MemoryLayout<timeval>.size)
+        #expect(getsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, &len) == 0)
+        #expect(tv.tv_sec == 3, "the live applier set \(tv.tv_sec)s where it was asked for 3")
+
+        let path = NSTemporaryDirectory() + "proctor-test-\(UUID().uuidString).sock"
+        let listener = socket(AF_UNIX, SOCK_STREAM, 0)
+        try #require(listener >= 0)
+        defer { close(listener); unlink(path) }
+        var addr = sockaddr_un()
+        addr.sun_family = sa_family_t(AF_UNIX)
+        withUnsafeMutableBytes(of: &addr.sun_path) { $0.copyBytes(from: Array(path.utf8)) }
+        let size = socklen_t(MemoryLayout<sockaddr_un>.size)
+        let bound = withUnsafePointer(to: &addr) { ptr in
+            ptr.withMemoryRebound(to: sockaddr.self, capacity: 1) { Darwin.bind(listener, $0, size) }
+        }
+        try #require(bound == 0)
+        try #require(listen(listener, 4) == 0)
+
+        let client = SocketClient(path: path)
+        client.ioTimeoutSeconds = 1
+        defer { client.disconnect() }
+        var thrown: AgentError?
+        do {
+            _ = try client.send(AgentRequest(id: "2", tool: "proctor_doctor", arguments: .object([:])))
+        } catch let error as AgentError {
+            thrown = error
+        }
+        #expect(thrown?.code == .agentUnavailable)
+        #expect(thrown?.message.contains("did not answer within 1s") == true)
+    }
+
+    /// Every bound the client asked the kernel for, in the order it asked. A
+    /// list rather than one value, because "both directions were bounded" is
+    /// half of what this seam exists to make checkable.
+    private final class BoundRequests: @unchecked Sendable {
+        private let lock = NSLock()
+        private var asks: [(option: Int32, seconds: Int)] = []
+        func record(option: Int32, seconds: Int) {
+            lock.lock(); asks.append((option, seconds)); lock.unlock()
+        }
+        var options: [Int32] { lock.lock(); defer { lock.unlock() }; return asks.map(\.option) }
+        var seconds: [Int] { lock.lock(); defer { lock.unlock() }; return asks.map(\.seconds) }
     }
 }
 

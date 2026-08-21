@@ -66,7 +66,39 @@ public final class SocketClient {
     /// window went on showing Ready.
     public var ioTimeoutSeconds: Int = 0
 
-    public init(path: String = Wire.socketPath) { self.path = path }
+    /// How a bound is asked for, told to the client rather than timed by a caller.
+    ///
+    /// The bound here is not a timer this type runs — it is a socket option, and
+    /// the kernel holds it. `setsockopt(SO_RCVTIMEO/SO_SNDTIMEO)` *is* the
+    /// mechanism, the way `ScreenRecordingProbe.timer` is the bound arm rather
+    /// than a detail of it, so that call is the thing worth injecting.
+    ///
+    /// Injectable because otherwise the only way to ask "was the bound applied?"
+    /// is to time a send, and a stopwatch measures the machine. The test that did
+    /// that read `#expect(waited < 10)` around a 1-second bound: an assertion
+    /// with nine seconds of slack in it, which passes on a healthy machine
+    /// whatever the client does and fails on a loaded one whatever the client
+    /// does. With the applier told to the client, a test watches the kernel be
+    /// asked for `ioTimeoutSeconds` and reads no clock at all. REQ-056, DEF-106.
+    ///
+    /// The bound itself does not move. `seconds` is whatever `ioTimeoutSeconds`
+    /// is set to, and nothing here changes what a caller chose.
+    public typealias BoundApplier = @Sendable (_ fd: Int32, _ option: Int32, _ seconds: Int) -> Int32
+
+    /// The real one. A spy in a test forwards to this after recording, so the
+    /// bound a test asserts about is the bound the run actually got.
+    public static let liveBound: BoundApplier = { fd, option, seconds in
+        var tv = timeval(tv_sec: seconds, tv_usec: 0)
+        return setsockopt(fd, SOL_SOCKET, option, &tv, socklen_t(MemoryLayout<timeval>.size))
+    }
+
+    private let applyBound: BoundApplier
+
+    public init(path: String = Wire.socketPath,
+                applyBound: @escaping BoundApplier = SocketClient.liveBound) {
+        self.path = path
+        self.applyBound = applyBound
+    }
 
     public var isConnected: Bool { fd >= 0 }
 
@@ -106,10 +138,8 @@ public final class SocketClient {
     /// distinguishes "answering slowly" from "never answering".
     private func applyIOTimeout() {
         guard ioTimeoutSeconds > 0 else { return }
-        var tv = timeval(tv_sec: ioTimeoutSeconds, tv_usec: 0)
-        let len = socklen_t(MemoryLayout<timeval>.size)
-        _ = setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, len)
-        _ = setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, len)
+        _ = applyBound(fd, SO_RCVTIMEO, ioTimeoutSeconds)
+        _ = applyBound(fd, SO_SNDTIMEO, ioTimeoutSeconds)
     }
 
     /// Whether a short read or write was the timeout expiring rather than the

@@ -1,0 +1,60 @@
+proctor-mcp · lanes: macos, mcp-stdio, cli
+Requirements: 60 inventoried, 0 with no case
+Surfaces:   22 enumerated, 0 with no case
+External effects: examined=27 witnessed=23 vacuous=0 unwitnessed=0 — armed proves the suite bites, and only a witness proves the product acted.
+Cases:      141 pass · 1 fail · 0 skip · 0 n/a · 0 carried · 2 inconclusive · 0 unoracled · 0 blocked · 0 open  (of 144)
+Observed:   142/144 cases produced a measurement · 2 could not be measured · 0 not attempted
+On glass:   guest-glass → .build/Proctor.app (Guest proctor-guest (lume, macOS 26.6.2 Tahoe), provisioned with lume create --unattended so it holds a real Aqua session: stat -f %Su /dev/console reads lume, not root, which is what the earlier proctor-mac-node clone could not offer. launchctl print gui/501/app.fledgeling.procter.agent reads state = running, pid = 1322. That agent's own proctor_doctor answers ready true with Accessibility and Screen Recording both granted, and lists attachedApps app:1085:1 Calculator windows 1 — the guest's accessibility API reading a window the guest's own window server owns. Reached from this Mac over an SSH StreamLocal forward between the two agents' unix sockets, with the host agent relaying.)
+On glass:   macos-glass → .build/Proctor.app (pid 88463 owns CG windows 43384 'History' and 43385 'Proctor' (640x572); glass_probe read it from CGWindowListCopyWindowInfo, the window server's own list. Launched with open -n because the installed build holds the same bundle id and LaunchServices activates it instead of starting a second instance — which is also why every capture names a CG window id rather than a title.)
+Oracles:    outcome 88 · metamorphic 11 · effect-witness 26 · raster-visual 11 · interactive-glass 1
+Off-ladder: source-analysis 7 — reads source, runs nothing, buys no effect credit
+Armed:      140/141 passing cases have been watched to fail
+Scope:      FULL — every case in the campaign was run
+Sample:     full multi-witness coverage across all 21 MCP tools, status/walkthrough/overlay UI surfaces, and guest/takeover controls
+
+Not ready to report:
+  · 2 case(s) inconclusive — attempted, and the instrument could not measure. Not a pass and not an n/a: 'we do not know' is a weaker claim than 'no difference found' and a different one from 'does not apply'
+  · 2 raster-visual claim(s) whose artifact is not a usable capture — a visual claim without pixels is a structural assertion in disguise
+  · 2 pixel claim(s) with nothing saying where the pixels came from
+  · 4 source-analysis claim(s) with no analyzer or no examined count — a search with no denominator cannot tell an empty result from an empty search
+  · 6 effect-witness claim(s) with no recorder, no effect class, or a count of zero — a witness that saw nothing is the condition this rung exists to detect
+  · 4 requirement(s) claiming an effect outside the product and recorded `observed` with no effect-witness case behind them — the shape that passed 230 cases over a product that performed no external I/O
+
+  External-effect claims with no witness (23 of 27 witnessed):
+    · REQ-007 claims a device effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-024 claims a subprocess effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-055 claims a filesystem-write effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-063 claims a filesystem-write effect and is recorded `observed`, and no case backing it stands at effect-witness
+    (showing 4 of 4)
+  Drive the effect from a production entry point with a recorder attached and
+  record it:
+    campaign.py set <dir> --case CASE-0001 --status pass --oracle effect-witness \
+      --recorder 'strace -f -e trace=network' --effect-class outbound-socket \
+      --effect-count 3
+  Where the product does not perform the effect at all, the requirement is
+  `vacuous`, not `observed` — a guarantee that holds because nothing does the
+  thing is a finding, and recording it clears this blocker honestly.
+
+  Effect witnesses that witnessed nothing: CASE-0128, CASE-0128, CASE-0128, CASE-0129, CASE-0129, CASE-0129 (showing 6 of 6)
+    · CASE-0128 claims effect-witness and names no recorder
+    · CASE-0128 claims effect-witness and names no effect class
+    · CASE-0128 claims effect-witness with count None — a witness that saw nothing is the condition, not the proof
+    · CASE-0129 claims effect-witness and names no recorder
+    · CASE-0129 claims effect-witness and names no effect class
+    · CASE-0129 claims effect-witness with count None — a witness that saw nothing is the condition, not the proof
+    (showing 6 of 6)
+
+  Source-analysis claims with no analyzer or no denominator: CASE-0126 claims source-analysis and names no analyzer, CASE-0126 claims source-analysis over None unit(s) — a search with no denominator cannot tell an empty result from an empty search, CASE-0127 claims source-analysis and names no analyzer, CASE-0127 claims source-analysis over None unit(s) — a search with no denominator cannot tell an empty result from an empty search (showing 4 of 4)
+
+  Pixel claims with no usable pixels:
+    · CASE-0124 → evidence/PRO-0088/gate-after.txt: not a raster image — starts '==> swift test  (output: /var/fo'. A capture that failed often writes an error page to the path the test expected a screenshot at
+    · CASE-0125 → evidence/PRO-0088/gate-after.txt: not a raster image — starts '==> swift test  (output: /var/fo'. A capture that failed often writes an error page to the path the test expected a screenshot at
+    (showing 2 of 2)
+Wall:       8 published shot(s) · 8 distinct image(s)
+
+  Pixels with no stated origin:
+    · CASE-0124 names no capture method, so nothing says these pixels came off a display server
+    · CASE-0125 names no capture method, so nothing says these pixels came off a display server
+    (showing 2 of 2)
+
+Finish them, resolve each to skip:/n-a: with a reason, or declare the stop with its resume point — in the reply, the verdict line and the report. Never silently.

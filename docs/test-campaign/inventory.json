@@ -315,12 +315,12 @@
       "text": "Automatic browser routing dispatches web URLs to Obscura or browser-use engines",
       "source": "docs/PRD.md:20",
       "class": "behaviour",
-      "evidence": "observed",
+      "evidence": "vacuous",
       "surfaces": [
         "SURF-001",
         "SURF-003"
       ],
-      "note": "Dispatches browser automation transparently while maintaining session provenance",
+      "note": "Dispatches browser automation transparently while maintaining session provenance EVIDENCE RECORDED `vacuous` BY PRO-0091 (DEF-040). The declared `subprocess` class is kept rather than softened to `none`, because the requirement's text does name a dispatch and the honest finding is that nothing performs it: the guarantee holds because the capability never runs, which is the condition `vacuous` exists for. The only boundary the browser capability crosses is a filesystem READ, and the campaign's closed effect-class list has no member for it \u2014 `filesystem-write` is its only filesystem class. CASE-0087 on ai/pro-0083 measures the read that does happen and resolves `inconclusive` with the instrument named. Reclassifying to `none` would have made the census green by denying the claim rather than by recording what was found.",
       "effect": "subprocess",
       "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift \u2014 obscura and cua-driver"
     },
@@ -382,7 +382,8 @@
       "source": "Sources/ProctorCore/TUISurface.swift; SupervisionBroadcast, SupervisionControl, ProctorCLI/TUI",
       "class": "capability",
       "effect": "ipc",
-      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift"
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "evidence": "observed"
     },
     {
       "id": "REQ-030",
@@ -703,6 +704,30 @@
         "SURF-004"
       ],
       "note": "The 'Automation Running' banner the report named is macOS's own: 'Automation Mode Enabled Title' in AutomationModeUI.app's Localizable.loctable, drawn by AutomationModeUI.app (pid 64198, ppid 1) and driven by XCTest/testmanagerd. It is not Proctor's and not cua-driver's, so the report's first clause names runs Proctor never drove and no change here can put an overlay over them. Recorded inconclusive against a stated ceiling rather than passed.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-067",
+      "text": "An item that claims to fix a defect cannot merge while that defect still reads `open`: the claim is read out of the item's own spec and checked against the registry by a gate, not by whoever remembers",
+      "source": "docs/features-to-triage/89-the-registry-says-open-and-the-code-says-fixed.md; spec-PRO-0097.md A3; scripts/campaign/defect_gate.py",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "The registry reported 23 open defects over a tree that had fixed sixteen of them. A defect an item RECORDS rather than fixes is marked `(recorded)` in the spec's Defects table and is not checked for closure, because reading PRO-0088's honest DEF-099 row as a fix claim would make the gate refuse an item for telling the truth.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-068",
+      "text": "A registry value set by a merged item is present at HEAD, and a merge that drops one is found by reading history rather than by noticing later",
+      "source": "docs/features-to-triage/89-the-registry-says-open-and-the-code-says-fixed.md; spec-PRO-0097.md A4; scripts/campaign/defect_gate.py",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "Fourteen values were lost across five merges. The test that separates a drop from a legitimate change is the parent: a commit that sets x where its parent held y, against a HEAD holding y, lost a value; the newest non-merge commit that touches a field is the one that decides it, which is what stops a restoration reading as a fresh drop.",
       "effect": "none"
     }
   ],
@@ -1661,7 +1686,10 @@
       "title": "Three commands declared for the menu bar were never rendered in it",
       "found": "proctor_menu against the running app, compared with CommandSurface.all",
       "detail": "Clear Waiting Runs, Takeover Notice and Drawn Pointer were declared with surfaces: [.menuBar] and SwiftUI never declared them. commandsMissingFromMenuBar could not see it: it compares the catalogue against its own surfaces field, so it passes whether or not a command renders. The published count was wrong too \u2014 21 was the number of MCP tools, not commands; the catalogue holds 20.",
-      "fix": "The two drawing switches became toggles bound to the saved value. Clearing the queue needed a route: RunQueueControl is the queue's own vocabulary, kept disjoint from the run's because an existing test refuses a queue word in RunHUDControl, and proctor_queue is internal for the same reason proctor_hud is."
+      "fix": "The two drawing switches became toggles bound to the saved value. Clearing the queue needed a route: RunQueueControl is the queue's own vocabulary, kept disjoint from the run's because an existing test refuses a queue word in RunHUDControl, and proctor_queue is internal for the same reason proctor_hud is.",
+      "evidence": [
+        "evidence/arming-mutations.json"
+      ]
     },
     {
       "id": "DEF-007",
@@ -1669,7 +1697,10 @@
       "title": "The permissions list omitted the one permission whose absence is silent",
       "found": "Photographing the status window and comparing it against the design of record",
       "detail": "The design draws Input Monitoring; the window drew Automation and not it, because the health report never carried it. Grants.inputMonitoringState() already read it for the takeover path, and its own comment names the consequence: an operator who turned the input block on can find it silently unavailable. StatusSurface.ID.all named Input Monitoring and omitted Automation, so the uniqueness test was checking a set that did not describe the surface.",
-      "fix": "The health report carries Input Monitoring, never required. The identifier list names all five grants the report can carry."
+      "fix": "The health report carries Input Monitoring, never required. The identifier list names all five grants the report can carry.",
+      "evidence": [
+        "evidence/sweepG-accessibility-floor.json"
+      ]
     },
     {
       "id": "DEF-008",
@@ -1799,12 +1830,15 @@
     },
     {
       "id": "DEF-025",
-      "status": "open",
+      "status": "fixed",
       "title": "proctor_capture reports a fully transparent frame as status complete and trustworthy true",
       "found": "PRO-0078 phase 6, building the REQ-004 effect witness: the first capture was taken of a Proctor-owned window, and the picture was read rather than trusted",
       "detail": "proctor_capture on win:1:0, CG window 121564, a window Proctor's own UI process owns, returned {\"status\":\"complete\",\"trustworthy\":true,\"dirtyRectCount\":1,\"dirtyArea\":0,\"width\":1520,\"height\":1936,\"scale\":2}. Every one of the 2,942,720 pixels in the resulting PNG is RGBA(0,0,0,0). Measured by decompressing the IDAT stream and counting: alpha histogram is {0: 2942720}, and no pixel has a non-zero byte in any channel.\n\nThe emptiness itself is almost certainly correct behaviour. Proctor excludes its own windows from its own captures so the HUD and the takeover statement do not appear in a shot, and an excluded window has nothing to deliver. The problem is that nothing in the reply says so. A caller asking for a picture of an excluded window gets `complete` and `trustworthy`, and dirtyArea 0 is the only hint, next to dirtyRectCount 1 which reads as though something changed.\n\nEvidence: docs/test-campaign/evidence/witness/a1-capture.json and docs/test-campaign/evidence/witness/a1-agent-capture.png. The contrast is docs/test-campaign/evidence/witness/a1b-capture.json against Calculator, a window Proctor does not own, which returns a frame carrying the target's actual content.\n\nNOT FIXED HERE. The fix is a design call about what proctor_capture should say when the target is one it excludes, and PRO-0078 is a witness item rather than a capture-semantics item. Recorded so it is visible.\n\nWHY IT MATTERS TO THE CAMPAIGN: the effect-witness and raster-visual rungs both rest on a frame status, and this is a measured case of a status bit reading complete over a frame with no content in it. A raster case whose subject is an excluded window would pass every gate the campaign has.",
       "surface": "SURF-006",
-      "req": "REQ-004"
+      "req": "REQ-004",
+      "evidence": "docs/test-campaign/evidence/PRO-0088/glass/capture-proctor-owned.json, a live proctor_capture through the production path on a signed build: status complete, trustworthy FALSE, contentVerdict excludedTarget, 7,720,704 pixels sampled and every one transparent, with a caveat naming the exclusion. CASE-0129.",
+      "fix": "CaptureContentGate.verdict in Sources/ProctorCore/FrameContent.swift:85-88 returns .excludedTarget or .empty when the frame's summary reads allTransparent, and CaptureEngineImpl conjoins it into `trustworthy`. Recorded as DEF-097 by the item that fixed it.",
+      "fixedBy": "PRO-0088 (as DEF-097); reconciled by PRO-0097"
     },
     {
       "id": "DEF-026",
@@ -1813,7 +1847,8 @@
       "found": "PRO-0078 phase 6, driving the glass lane: three separate runs stranded this way and each one had to be cleared by restarting the agent",
       "detail": "When the shim process driving a run exits while a run is in flight, the run stays in the agent's queue holding the slot. Every subsequent proctor_act returns queueBusy with 'another session was driving this Mac ... gave up without running any step', so the lane is unusable until the agent is restarted.\n\nMEASURED: docs/test-campaign/evidence/witness/a4-stranded-run-queue.json reads heldForSeconds 552 with reason frontmostChanged; docs/test-campaign/evidence/witness/a4-stranded-run-queue-2.json reads the same run at 932 seconds, still held. The documented pause backstop is 900 seconds, so the second reading is past it and the run is still there.\n\nHappened three times in one session, each time after the driving process died rather than after any product action. NOT FIXED HERE: the repair is in run lifecycle and belongs to whoever owns the queue, not to a witness item.",
       "surface": "SURF-004",
-      "req": "REQ-009"
+      "req": "REQ-009",
+      "note": "STILL OPEN, checked rather than assumed (PRO-0097). The fixing item is PRO-0093 ('A dead peer holds the queue', brief 86), which reads `Ready for AI` in docs/feature-specs/LEDGER.md and has no branch merged into this lineage. Nothing on this branch clears the queue when the driving shim exits."
     },
     {
       "id": "DEF-027",
@@ -1822,77 +1857,99 @@
       "found": "PRO-0078 phase 6, building the REQ-007 effect witness across three runs",
       "detail": "The takeover block's tap calls onPersonInput for every event it declines to deliver, and SessionTakeover.swift:137 wires that to ContentionMonitor.noteUserInput, which sets the field ContentionWatch reads to decide the userInput condition.\n\nMEASURED across three runs driven with a helper process posting into the session while the run held the foreground: the agent reported swallowing 6, 24 and 10 events (docs/test-campaign/evidence/witness/a45b-act.json, a4-act.json, a4c-burst.json). No run recorded a yield: yields is null in all three act results. Six consecutive proctor_doctor reads of the live queue during the third run report the active run with held reason null (docs/test-campaign/evidence/witness/a4-poll.json).\n\nThe path is not dead in general: a yield on a different reason was captured in the same session, at docs/test-campaign/evidence/witness/a4-stranded-run-queue.json, reason frontmostChanged.\n\nThis may be correct by design. PersonInput.isAPerson requires sourcePid == 0, so a helper's events are correctly not a person, and the swallow count rising without a yield may be exactly the intended asymmetry. What is not established either way is whether the userInput yield fires for a real hand on a real keyboard, because nothing in this session could post at pid 0. Recorded as the open half of CASE-0062.",
       "surface": "SURF-005",
-      "req": "REQ-007"
+      "req": "REQ-007",
+      "note": "STILL OPEN, checked rather than assumed (PRO-0097). Same fixing item as DEF-026: PRO-0093 is `Ready for AI`, not merged. The takeover tap still wires onPersonInput to ContentionMonitor.noteUserInput with nothing recording a yield or a held reason."
     },
     {
       "id": "DEF-028",
-      "status": "open",
+      "status": "fixed",
       "title": "An agent window reports sharingState 1 where CASE-0032 records all three overlays at 0",
       "found": "PRO-0078 phase 6, sampling the window server for the REQ-006 witness",
       "detail": "CASE-0032 records that all three Proctor overlays report sharingState 0 at the default, which is what keeps them out of other applications' captures. Sampling CGWindowListCopyWindowInfo from a separate probe process on agent pid 86732 found the run HUD panel (window 121489, layer 25) and the takeover statement (window 121490, layer 24) both at sharingState 0 as recorded, and alongside them window 121491 at layer 0, 1710x1073, reporting sharingState 1, present whether or not a run is in flight.\n\nEvidence: docs/test-campaign/evidence/witness/a2-hud-11.json and a2-hud-12.json.\n\nWhether window 121491 is one of the three CASE-0032 means is not established here. It may be an ordinary agent window that the claim was never about. Recorded because a reader comparing the two would otherwise have to work that out from scratch. NOT FIXED HERE.",
       "surface": "SURF-004",
-      "req": "REQ-006"
+      "req": "REQ-006",
+      "evidence": "docs/test-campaign/evidence/PRO-0088/glass/overlay-population.json, CGWindowListCopyWindowInfo sampled from a separate probe process against two signed builds differing in one file: the pre-fix agent (pid 53748) owns 3 windows with notExcluded 1 over 60 samples; the delivered agent (pid 12838) owns 3 with notExcluded 0 over 54 samples. CASE-0128.",
+      "fix": "Sources/ProctorAgent/Overlay/CursorOverlay.swift:98 sets `panel.sharingType` inside `place(_:at:)`, so the exclusion is reapplied with every level assignment rather than once at build. Recorded as DEF-095 and DEF-096 by the item that fixed it.",
+      "fixedBy": "PRO-0088 (as DEF-095/DEF-096); reconciled by PRO-0097"
     },
     {
       "id": "DEF-029",
-      "status": "open",
+      "status": "fixed",
       "title": "A bounded-probe test asserts wall-clock elapsed and fails on a loaded machine",
       "found": "PRO-0078 phase 6: three consecutive ./scripts/test.sh runs while the glass lane agent was live",
       "detail": "Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift:42, in 'a platform call that never answers returns unconfirmed within the bound', asserts `elapsed < 5.0` around a probe whose bound is 0.2 seconds. The comment calls the 25x headroom generous so it does not flake on a loaded machine.\n\nMEASURED: with a signed Proctor agent live on the glass lane and captures in flight, the same test recorded elapsed 5.016569018363953 on one run and 10.252003073692322 on the next, failing the whole suite both times: 'FAIL: swift test exited 1 ... 1814 tests in 214 suites failed'. With the agent stopped and nothing else running, the same command passed: 'PASS: Test run with 1814 tests in 214 suites passed after 21.366 seconds'.\n\nThe behaviour under test is correct in all three runs; the probe returned .unconfirmed every time. What moved was the wall clock. A 25x margin on a 0.2 second bound is 4.8 seconds of scheduler slack, and this machine consumed all of it and then twice that.\n\nNOT FIXED HERE, and deliberately not: a gate edited to make it green is a finish line that moved, and the choice between a larger margin, a mocked clock and a relative assertion belongs to whoever owns the probe. Recorded because a suite that fails under load fails in CI, where load is the normal condition.",
       "surface": "SURF-006",
-      "req": "REQ-004"
+      "req": "REQ-004",
+      "evidence": "Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift now builds the probe with `ScreenRecordingProbe(timer: { seconds in asked.record(seconds) }, ...)` and asserts `asked.seconds == GrantProbe.bound`; `grep -n 'elapsed' ` over the file returns nothing. The bound did not move: `ScreenRecordingProbe.live.bound == GrantProbe.bound == 1.5`. Live: `./scripts/test.sh` exit 0 over 1,934 tests in 236 suites, docs/test-campaign/evidence/PRO-0097/gate-before.txt.",
+      "fix": "ScreenRecordingProbe takes `timer` as an injected seam; the test watches the mechanism fire and reads no clock.",
+      "fixedBy": "PRO-0089; reconciled by PRO-0097"
     },
     {
       "id": "DEF-040",
-      "status": "open",
+      "status": "fixed",
       "title": "REQ-024's declared effect class and provider name a boundary the browser-routing path never crosses",
       "found": "PRO-0083 W8: building the effect witness the census asked for, and finding nothing to witness",
       "detail": "inventory.json records REQ-024 (\"Automatic browser routing dispatches web URLs to Obscura or browser-use engines\") with effect `subprocess` and provider \"Process() in Sources/ProctorAgent/Actuation/CuaClients.swift \u2014 obscura and cua-driver\". Neither is on the browser-routing path, established in source rather than asserted:\n\n- `BrowserTarget` is pure by its own header: \"The agent supplies what it read from the accessibility tree as a WebContentProbe; this file decides.\"\n- `Session.browserHandoff` returns a disclosure that `SessionAct` and five other call sites attach to a reply. Nothing executes.\n- `ToolProbe`'s header reads \"Whether Obscura is on this machine, cached, and never executed\", and `ToolLocator.locate` decides availability with `isExecutable(path)` \u2014 a stat, not a spawn.\n- `grep -rn 'Process()' Sources/` returns eleven sites across eight files: the guest providers, simctl, the cua driver, `shortcuts run`, the dictionary, the installer and the UI. Not one is reached by a browser handoff.\n\nThe two `Process()` sites in CuaClients.swift are real and do spawn `cua-driver`, but they belong to the CUA delegation lane, not to browser routing. The only boundary the browser capability crosses is a filesystem READ, and the campaign's closed effect-class list (subprocess, outbound-socket, inbound-socket, packet-filter, multicast, filesystem-write, device, ipc, none) has no member for it \u2014 `filesystem-write` is its only filesystem class.\n\nCONSEQUENCE: `campaign.py check` will demand a `subprocess` witness for REQ-024 forever, and the only way to make it green is to fabricate one or to reclass the requirement to `none`. Both are finish lines that moved. CASE-0087 therefore resolves `inconclusive` with the instrument named, and measures the read that does happen: the production `ToolLocator.locate` over two real directories, answering `missingCompanions [obscura-worker]` for one and none for the other, with `chmod 0600` taking availability to false.\n\nNOT FIXED HERE, and deliberately. Rewriting REQ-024's row would be this item editing the registry it is being measured against. The fix is either a `filesystem-read` class in the campaign's vocabulary or a corrected provider field, and both belong to whoever owns the census.",
       "surface": "SURF-003",
-      "req": "REQ-024"
+      "req": "REQ-024",
+      "evidence": "docs/test-campaign/evidence/PRO-0091/campaign-check-after.txt line 8, 'Vacuous (the capability the claim constrains never runs): REQ-024'. The value was set at 6e5094e and dropped by the merge f509842, which kept ours; restored here from that commit.",
+      "fix": "REQ-024's `evidence` reads `vacuous` with the reasoning in its note: the declared subprocess class is kept rather than softened to `none`, because the requirement's text does name a dispatch and the honest finding is that nothing performs it.",
+      "fixedBy": "PRO-0091; the dropped value restored by PRO-0097"
     },
     {
       "id": "DEF-041",
-      "status": "open",
+      "status": "fixed",
       "title": "campaign.py check prints a capped list of unwitnessed requirements, and the cap reads as the population",
       "found": "PRO-0083: the whole reason this item exists",
       "detail": "`campaign.py check` prints at most twelve requirements under \"External-effect claims with no witness\", and at most twenty per pass elsewhere. Nothing in the output says the list is truncated, and no denominator is printed beside it.\n\nMEASURED: the external set is 22 requirements \u2014 `len([r for r in inventory['requirement'] if r.get('effect') not in (None, 'none')])`. After PRO-0077 witnessed four, eighteen were unwitnessed and the gate printed twelve of them. Briefs 70 and 71 were written against that printed list, so wave 11 scoped twelve requirements and left ten named by no item: REQ-023, 024, 027, 028, 029, 033, 034, 035, 037, 039. This item is those ten.\n\nThis is the campaign's own first failure mode \u2014 covering a subset and reporting it as the whole \u2014 arriving through the gate rather than through a surface map. The denominator was one `len()` away the whole time, and PRO-0077's runner found the gap from arithmetic rather than from the gate.\n\nNOT FIXED HERE: `campaign.py` is the skill's tool and lives outside this repo (~/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.9.2/). Recorded so the cause is on the record rather than in a runner's report. The mitigation this item ships is REPORT.md carrying the census denominator as a `len()` over the registry rather than as whatever the gate printed.",
       "surface": "SURF-003",
-      "req": "REQ-024"
+      "req": "REQ-024",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt, a live run of test-campaign 0.9.4: 'External-effect claims with no witness (23 of 27 witnessed)' and '(showing 4 of 4)' under it. The denominator prints whether or not the list was cut.",
+      "fix": "campaign.py's `capped`/`capped_tail` print '(showing N of M)' on every capped list, and the external-effect header carries witnessed-of-examined. Fixed upstream in the plugin rather than in this repo, which does not own campaign.py.",
+      "fixedBy": "PRO-0091, released in test-campaign 0.9.4; reconciled by PRO-0097"
     },
     {
       "id": "DEF-042",
-      "status": "open",
+      "status": "fixed",
       "title": "PolicyStore has no test seam, so a test that configures the policy writes the operator's real policy file",
       "found": "PRO-0083 W2: a witness drove `proctor-cli policy --action configure --block` against its own in-process server",
       "detail": "`AuditLog` carries `seams.directory` and an `isTestProcess` interlock precisely so a test cannot write the operator's trail. `PolicyStore` carries neither. `PolicyStore.directory` is computed straight from `homeDirectoryForCurrentUser`, and `Session.configurePolicy` calls `PolicyStore.save(policy)` unconditionally.\n\nMEASURED 2026-08-21: PRO-0083's REQ-034 witness drove `policy --action configure --block [\"com.fledgeling.witness\"]` through a real `proctor-cli` child against a private test socket. That created ~/Library/Application Support/app.fledgeling.procter/policy/policy.json on this machine \u2014 the operator's own file, not a redirected one \u2014 with the test's bundle id on the block list. The file's birth time was the minute the run started, so nothing of the operator's was overwritten on this occasion; `configurePolicy` replaces the whole block set, so on a machine where one had been configured it would have been.\n\nThe blast radius is not limited to the writing test. PRO-0077's REQ-015 witness drives an audited run against `com.fledgeling.witness`, and it then failed with `policyDenied: com.fledgeling.witness is on the block list; actuation is refused` in a LATER run in which PRO-0083's suites were skipped entirely \u2014 the block had outlived the process that wrote it. A test that fails because of a file another test left on disk yesterday is the kind of flake that gets a real finding dismissed.\n\nREPAIRED, NOT FIXED. The leaked entry was removed from the operator's file and the witness no longer drives `configure` at all; CASE-0081 records that the policy gate is therefore unreachable from that lane and says so rather than dropping it silently. The fix is a `seams.directory` on `PolicyStore` matching `AuditLog`'s, which is a production change and belongs to whoever owns the policy rail.",
       "surface": "SURF-008",
-      "req": "REQ-035"
+      "req": "REQ-035",
+      "evidence": "Sources/ProctorAgent/Session/PolicyStore.swift:164-166 \u2014 `static var live` returns the operator directory only when `AuditLog.isTestProcess` is false, and a fresh per-UUID temporary directory under `testFallbackRoot` otherwise.",
+      "fix": "PolicyStore gained the seam AuditLog already had, with the interlock rather than relying on every future test injecting.",
+      "fixedBy": "PRO-0089; reconciled by PRO-0097"
     },
     {
       "id": "DEF-043",
-      "status": "open",
+      "status": "fixed",
       "title": "Session.doctor blocks a cooperative thread inside SecStaticCodeCheckValidity, and fourteen such tests saturate the pool",
       "found": "PRO-0083: the full suite stopped returning a verdict once nine integration tests were added beside it",
       "detail": "`Session.doctor` reaches `SignatureVerdictCache.verdict(for:)` for the cua-driver, which calls `CuaPreflight.verifySignature` and blocks in `SecStaticCodeCheckValidity` -> `Security::Dispatch::Group::wait()`. It is a synchronous blocking call made from inside the session actor, so it occupies a Swift cooperative-pool thread for its whole duration, and that pool has exactly `activeProcessorCount` threads and never grows.\n\nMEASURED 2026-08-21, by `sample` on the wedged process, repeatedly: fourteen to fifteen of the sixteen cooperative threads inside that one call, in `BrowserLaneWiringTests`, `ObscuraPresenceWiringTests`, `ScreenRecordingProbeWiringTests`, `GuestDoctorWiringTests`, `MachineDisclosureWiringTests`, `DoctorReplyWiringTests` and `ToolchainOnThisMachineTests`. The same thread ids in the same frames across samples seven minutes apart, with 3.4 seconds of CPU consumed in twelve minutes of elapsed time. Meanwhile `codesign -v` on the same binary returned instantly from a shell, so the system was not the bottleneck.\n\nWHAT THAT MAKES FRAGILE. With the pool at fourteen of sixteen there are two slots left, and anything that needs a third while holding a lock other tests block on deadlocks the whole run. `TrailIsolation` is exactly such a lock: every trail suite takes it from a cooperative thread. PRO-0083's witnesses hit this three separate ways and each is now avoided in the test rather than in the product \u2014 blocking work moved onto owned threads, the trail held only across code that never suspends, and the witness sessions given probes that answer from a table instead of from this machine. Before those, the suite ran to a verdict in 12 to 26 seconds with these files skipped and never returned with them present.\n\nNOT FIXED HERE, and it is a product-shaped question rather than a test one: whether a health report should do a blocking code-signature check on the actor at all, or hand it to a detached executor and report `unconfirmed` until it answers. The same shape is already recorded once as DEF-029, where the wall clock rather than the pool was what moved. Recorded because a suite that deadlocks under load deadlocks in CI, where load is normal.\n\nRE-MEASURED ON THE RESUME, 2026-08-21: still live, and the mechanism narrowed a step further - see DEF-044. The blocked frame is `Security::Dispatch::Group::wait()`, so the cooperative thread is not merely slow inside a syscall, it is waiting on libdispatch global-pool workers that this suite's child processes compete for. The three test-side mitigations recorded above reduce this item's contribution but cannot remove it: the concurrency that saturates the pool is the wiring suites' own.",
       "surface": "SURF-008",
-      "req": "REQ-034"
+      "req": "REQ-034",
+      "evidence": "Recorded again as DEF-100, which is `fixed`: CASE-0197 in Tests/ProctorAgentTests/ToolchainDoctorTests.swift puts the libdispatch root-queue instrument on the production path with eight concurrent Session.doctor callers. Sources/ProctorAgent/Session/SignatureVerdictCache.swift:181-195 runs the verification on a `Thread` of its own rather than on the cooperative pool.",
+      "fix": "verdict(for:) is async and single-flight; the blocking SecStaticCodeCheckValidity call left the cooperative pool. No code change was needed in PRO-0095, which verified it reaches the production path.",
+      "fixedBy": "PRO-0087, verified by PRO-0095 (as DEF-100); reconciled by PRO-0097"
     },
     {
       "id": "DEF-044",
-      "status": "open",
+      "status": "fixed",
       "title": "SignatureVerdictCache verifies outside its own lock, so N cold caches verify one file N times at once",
       "found": "PRO-0083 resume: the full suite failed deterministically at 143s with two bound overruns, and wedged entirely at higher load",
       "detail": "`SignatureVerdictCache.verdict(for:)` takes its lock, misses, RELEASES the lock, and only then calls `verify(path)`. Concurrent callers with a cold cache therefore all enter `SecStaticCodeCheckValidity` together rather than one doing the work and the rest waiting on it. There is no single-flight, and the doc comment above the method - \"verifying only when the file is one this cache has not already seen\" - describes behaviour the method does not have under concurrency.\n\nMEASURED 2026-08-21 by `sample`, twice, on two separate full runs: fifteen of the sixteen cooperative threads inside `SecStaticCodeCheckValidityWithErrors` -> `SecStaticCode::staticValidate` -> `Security::Dispatch::Group::wait()` -> `_dispatch_group_wait_slow` -> `__ulock_wait`, in ScreenRecordingProbeWiringTests, ObscuraPresenceWiringTests, ToolchainDoctorTests and GuestProviderTests. `staticValidate` farms its page hashing to the libdispatch global pool and waits on a group, so a blocked cooperative thread is waiting on a worker pool that any second load can starve.\n\nWHY A PER-INSTANCE FIX DOES NOT CLOSE IT: each Session holds its own cache, so the fifteen concurrent verifications are fifteen SEPARATE cache instances each legitimately missing once. Single-flighting one instance would not deduplicate them; the dedupe would have to be process-wide, which is a design change rather than a lock move. Recorded rather than fixed for that reason.\n\nATTRIBUTION, measured rather than assumed: the full suite WITHOUT this item's two suites passes 1,818 tests in 6.5 seconds with ScreenRecordingProbeWiringTests' bounded test taking 0.655s. This item's two suites alone pass in 9.5 seconds. Together the run takes 143 seconds and that same bounded test overruns its 5-second bound to 10.6s. The suites do not fail each other's assertions; they exhaust a shared pool.\n\nINTERMITTENT AFTER THIS ITEM'S FIX, and measured as such. Removing the forging arm's launch took the full run from 143s to 16.4s and from four issues to one, and it went green at 1,827 tests in 21.376s. It does not go green every time: sampled during a later wedge, fifteen threads sat in the same staticValidate stack and NONE of them were this item's - `pro83.`-named threads in the sample: zero, ExternalWitnessTests frames: zero. This suite's child processes perturb the libdispatch global pool and the pre-existing race is then lost by the wiring suites on their own. Run tally on the fixed tree: with this item's suites present, 2 green of 4 (21.376s and 20.261s green, one failing only on the neighbouring 5-second bound at 16.4s, one wedged); with them skipped, 2 of 2. Two skip runs is not proof the wedge cannot happen without this item, and it is not claimed as one.\n\nWHAT WOULD CLOSE IT, neither of them this item's to do: a process-wide dedupe of signature verification in `Sources/`, or replacing Foundation `Process` with raw posix_spawn/waitpid in these tests so no child registers a dispatch source on the global queue that `Security::Dispatch::Group::wait()` is starving for.",
       "surface": "SURF-003",
-      "req": "REQ-024"
+      "req": "REQ-024",
+      "evidence": "Recorded again as DEF-050, which is `fixed`. Sources/ProctorAgent/Session/SignatureVerdictCache.swift:149-171 \u2014 a caller that finds `waiting[identity]` populated appends its continuation and returns rather than entering the verification, so N cold callers on one identity cost one verification.",
+      "fix": "SignatureVerdictCache.shared is the ToolProbes default, keyed by FileIdentity with a 16-entry bound, and single-flight through the `waiting` map.",
+      "fixedBy": "PRO-0087 (as DEF-050); reconciled by PRO-0097"
     },
     {
       "id": "DEF-030",
-      "status": "open",
+      "status": "fixed",
       "title": "The census control exercises one of the gate's two passes, so unclassed stayed an unwatched zero after it ran green",
       "found": "PRO-0080 item 1: per-pass decomposition of what --seed-strengthen actually mutates",
-      "detail": "vacuity-check.py --seed-strengthen sets a requirement's effect to packet-filter and pops its provider, then requires _census_clear to go false. _census_clear is not(unclassed or uncensused), and the mutation it applies IS the uncensused predicate (declares an external effect class, records no provider).\n\nMEASURED, per pass, on this registry: seeding REQ-017 gives unclassed 0 findings / uncensused 1. Seeding REQ-001, which is classed none, gives unclassed 0 / uncensused 1. The starting class makes no difference because the mutation overwrites it.\n\nSo running the control in 'both directions' covers one predicate twice. After it printed 'the gate bites' twice, unclassed was still reporting examined=45 findings=0 with nothing having watched it go red, which is the exact position the control exists to get a gate out of, surviving the control.\n\nThis is the campaign's own failure mode arriving through the instrument built to prevent it, and it is the third time in three waves: the blind pass shipped with a vocabulary that read examined=1857 mutating=1 blind=1, and capture_with_manifest.py wrote rows capture-lineage.py could not read.\n\nCLOSED HERE BY ADDITION, NOT BY PATCH: scripts/campaign/seed_unclass.py supplies the missing direction and CASE-0073 records it. vacuity-check.py itself is not edited, because it lives in a plugin cache this repo does not own and a fix there is reverted by the next plugin update with nothing saying so. Recorded as open against the skill rather than fixed, so it reaches whoever owns test-campaign.",
+      "detail": "vacuity-check.py --seed-strengthen sets a requirement's effect to packet-filter and pops its provider, then requires _census_clear to go false. _census_clear is not(unclassed or uncensused), and the mutation it applies IS the uncensused predicate (declares an external effect class, records no provider).\n\nMEASURED, per pass, on this registry: seeding REQ-017 gives unclassed 0 findings / uncensused 1. Seeding REQ-001, which is classed none, gives unclassed 0 / uncensused 1. The starting class makes no difference because the mutation overwrites it.\n\nSo running the control in 'both directions' covers one predicate twice. After it printed 'the gate bites' twice, unclassed was still reporting examined=45 findings=0 with nothing having watched it go red, which is the exact position the control exists to get a gate out of, surviving the control.\n\nThis is the campaign's own failure mode arriving through the instrument built to prevent it, and it is the third time in three waves: the blind pass shipped with a vocabulary that read examined=1857 mutating=1 blind=1, and capture_with_manifest.py wrote rows capture-lineage.py could not read.\n\nCLOSED HERE BY ADDITION, NOT BY PATCH: scripts/campaign/seed_unclass.py supplies the missing direction and CASE-0073 records it. vacuity-check.py itself is not edited, because it lives in a plugin cache this repo does not own and a fix there is reverted by the next plugin update with nothing saying so. Recorded as open against the skill rather than fixed, so it reaches whoever owns test-campaign.\n\nCLOSED BY PRO-0091. Both requirement-level passes are now watched red from a clear baseline in one session: --seed-strengthen fires uncensused, scripts/campaign/seed_unclass.py fires unclassed. Evidence: docs/test-campaign/evidence/PRO-0091/def030-both-passes-armed.txt, CASE-0152. The arming runs against a fixture copy rather than the real registry because uncensused is already red on the real one \u2014 recorded as DEF-075.",
       "surface": "SURF-022",
       "req": "REQ-046"
     },
@@ -1907,10 +1964,10 @@
     },
     {
       "id": "DEF-032",
-      "status": "open",
+      "status": "fixed",
       "title": "The mutation runner's integer-literal operator mutates closure shorthand $0, spending a sampled slot on an edit the compiler must reject",
       "found": "PRO-0080 item 2: mutant 24 of 24 in the ProctorAgent sample",
-      "detail": "mutate_swift.py's integer-literal increment matched the 0 in a closure shorthand parameter. Mutant 24 rewrote UnlockBroker.swift:110 from `$0.withMemoryRebound(to: sockaddr.self, capacity: 1) { bind(fd, $0, size) }` to `bind(fd, $1, size)`, which cannot compile: the closure takes one parameter.\n\n$0 and $1 are not integer literals. The operator table's stated contract is that every operator keeps the types the same so the file still compiles, because a mutant the compiler rejects is not a fault the tests failed to catch.\n\nCOST MEASURED: the sample budget here was 24 mutants against a pool of 3,189, so one wasted slot is 4.2% of everything this run could see. Worse, it did not even score as unbuildable. Under load average 271 the build did not finish inside the 600s timeout, so it was scored a KILL at 600.0s, which inflates the kill count with a mutant that could never have run at all. The summary's `unbuildable: 0` is wrong for a reason the tool cannot see.\n\nNOT FIXED HERE: the fix is a negative lookbehind for $ in the integer-literal operator, and editing the generator mid-item would invalidate the seed this sample is reported under. Recorded so the next sample starts from a pool that does not contain it.",
+      "detail": "mutate_swift.py's integer-literal increment matched the 0 in a closure shorthand parameter. Mutant 24 rewrote UnlockBroker.swift:110 from `$0.withMemoryRebound(to: sockaddr.self, capacity: 1) { bind(fd, $0, size) }` to `bind(fd, $1, size)`, which cannot compile: the closure takes one parameter.\n\n$0 and $1 are not integer literals. The operator table's stated contract is that every operator keeps the types the same so the file still compiles, because a mutant the compiler rejects is not a fault the tests failed to catch.\n\nCOST MEASURED: the sample budget here was 24 mutants against a pool of 3,189, so one wasted slot is 4.2% of everything this run could see. Worse, it did not even score as unbuildable. Under load average 271 the build did not finish inside the 600s timeout, so it was scored a KILL at 600.0s, which inflates the kill count with a mutant that could never have run at all. The summary's `unbuildable: 0` is wrong for a reason the tool cannot see.\n\nNOT FIXED HERE: the fix is a negative lookbehind for $ in the integer-literal operator, and editing the generator mid-item would invalidate the seed this sample is reported under. Recorded so the next sample starts from a pool that does not contain it.\n\nFIXED BY PRO-0091. The lookbehind is now (?<![\\w.$]), so closure shorthand and a property wrapper's projected value are both excluded and a real integer literal still mutates. Guarded by a test over a fixture containing $0: scripts/campaign/test_instruments.py, CASE-0153, armed at instrument-arming.txt mutation 1.",
       "surface": "SURF-022",
       "req": "REQ-047"
     },
@@ -1921,16 +1978,20 @@
       "found": "PRO-0080 item 2: the first mutation sample ever generated in ProctorAgent, seed 20260821",
       "detail": "24 mutants over a pool of 3,189 sites across all 84 files of ProctorAgent. 19 SURVIVED, 5 scored killed, 0 unbuildable. Two of the five kills are timeout-scored at exactly 600.0s under a load average that reached 271, and the runner scores a timeout as killed, so they are not trustworthy. The honest figure is 3 kills of 22 scored: A SURVIVAL RATE OF 86.4%.\n\nDEF-018 recorded half of ProctorCore's sampled mutants surviving and was found only because somebody sampled. ProctorAgent is worse, and it holds the session, the queue, the overlay, the actuation backend and every guest adapter.\n\nSurvivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor, so all 19 stand regardless of the load. The three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so none of them is a starved run.\n\nPARTIALLY CLOSED: 5 survivors are killed by new tests in Tests/ProctorAgentTests/MutationSurvivorTests.swift, each armed by re-applying its mutant and watching the named test go red. 1 is equivalent (SessionMaestro.swift:242, a sorted(by:) comparator over dictionary keys, which are unique, so < and <= order identically). 13 are recorded as uncovered-by-lane or unreachable from a headless seam, with a reason each in REPORT.md. Those two are different claims and are kept apart, because recording a coverage hole as a mathematical impossibility is how a suite stops looking for the test.\n\nOPEN because the sample is 0.75% of the package and the rate it measured is the rate over that sample, not over the package.",
       "surface": "SURF-002",
-      "req": "REQ-047"
+      "req": "REQ-047",
+      "note": "STILL OPEN, and it closes when the number moves rather than when an item lands (PRO-0097). This is a survival-rate measurement \u2014 19 of 22 trustworthy-scored ProctorAgent mutants survived, 86.4% against ProctorCore's 50%. PRO-0092 is the item that would move it and reads `Ready for AI`. Flipping it because an item merged would raise the count and lower what the registry knows."
     },
     {
       "id": "DEF-035",
-      "status": "open",
+      "status": "fixed",
       "title": "StatusSurface.Copy held three sentences the status window has never rendered, while the window rendered three different ones",
       "found": "PRO-0081 track A, moving the five older sections' strings out of MainWindow.swift",
       "detail": "PRO-0066 wrote `toolsNote`, `switchesNote` and `restart` into StatusSurface.Copy and the view kept literals of its own. The values are not paraphrases of each other.\n\nMEASURED. Copy.toolsNote read 'What is on this Mac. Proctor finds these by reading the filesystem and never runs them to check. It installs nothing \u2014 the commands are here for you to run.' The window rendered 'Programs on this Mac that Proctor uses but does not ship. None of them is a permission, and Proctor drives Mac apps without any of them.' Copy.switchesNote read 'What you see, then what Proctor may take, then which path a run takes\u2026'; the window rendered 'How Proctor behaves while it runs. These are read by the background agent\u2026'. Copy.restart read 'Restart the agent'; the footer's button says 'Restart agent'.\n\nThe design of record (design/surfaces/proctor-surfaces.html, mac/status pane) carries the CORE wording in each case, so the build diverges from its design and the divergence was invisible because two strings existed and only one was on screen. StatusSurfaceTests asserted 'installs nothing' against the unrendered one, so a green test guarded copy nobody could read.\n\nWHAT PRO-0081 DID AND DID NOT DO. Copy.toolsNote and Copy.switchesNote now hold what the window renders, so the enum means what its doc comment says; the design's wording is kept beside each as toolsNoteInDesign and switchesNoteInDesign, and a test asserts the pair differ so this record cannot rot silently. The rendered WORDING was not changed: wave 9 settled the status window's explanation and this item was told not to revisit it. Choosing which of the two sentences ships is a reader's call, not a runner's.",
       "surface": "SURF-002",
-      "req": "REQ-048"
+      "req": "REQ-048",
+      "evidence": "Sources/ProctorCore/StatusSurface.swift:89 and :95 carry `toolsNote` and `toolsNoteInDesign` as separate values, with :107 and :111 the same split for the Switches card; Sources/ProctorUI/MainWindow.swift:307 and :435 read the Copy values rather than literals of their own.",
+      "fix": "The divergence between what Copy held and what the window drew is recorded rather than papered over: the rendered sentence and the design's sentence are separate named values, and the view reads the rendered one.",
+      "fixedBy": "PRO-0081; reconciled by PRO-0097"
     },
     {
       "id": "DEF-036",
@@ -1948,7 +2009,8 @@
       "found": "PRO-0081 track A, while moving ReadinessSection's strings",
       "detail": "MainWindow.ReadinessSection switches on model.reachability and has a `case .unreachable(let why)` branch drawing 'The background agent is not answering', a Start the agent button and a Re-check button.\n\nIt is unreachable. MainWindow.state maps reachability .unreachable to StatusSurface.state(reachable: false, answered: true, \u2026), which returns .down; StatusSurface.sections(for: .down) returns exactly [.agentDown]; so ReadinessSection is never drawn while reachability is .unreachable. PRO-0066 added AgentDownSection to replace that branch and left the branch in place. Its .unknown case is the one that still draws, as 'Checking\u2026'.\n\nNot fixed here: deleting a branch is a change to what the window can draw, and this item's scope is where its strings live. Flagged because the dead branch is what a reader edits when they want to change the agent-down wording, and their edit would have no effect.",
       "surface": "SURF-002",
-      "req": "REQ-048"
+      "req": "REQ-048",
+      "note": "STILL OPEN, checked rather than assumed (PRO-0097). Sources/ProctorUI/MainWindow.swift:111 still holds `case .unreachable(let why)` in ReadinessSection, and MainWindow.state still maps reachability .unreachable through StatusSurface. The fixing item PRO-0090 reads `Ready for AI`."
     },
     {
       "id": "DEF-038",
@@ -1966,14 +2028,15 @@
       "found": "PRO-0081 track A, measuring the scope of the clause it was closing",
       "detail": "PRO-0066's A2 names one file and PRO-0081 closed it: MainWindow.swift reports 0 user-facing literals over 45 examined. The reason A2 exists applies unchanged to its siblings, and they were measured rather than left unstated.\n\nMEASURED by scripts/campaign/status_literals.py: HistoryWindow.swift 71 of 91, ProctorUIApp.swift 53 of 68, Walkthrough.swift 49 of 56, HistoryModel.swift 46 of 47, AgentModel.swift 39 of 47. Total 258. MenuBarCharacter.swift and Motion.swift are already clean. Evidence: docs/test-campaign/evidence/PRO-0081/a2-sibling-scope.txt.\n\nWalkthrough.swift is the one worth naming: PRO-0081 gave it a Core decision function and a disabled control, and its copy still sits in the view beside strings WalkthroughFlow.Copy already holds \u2014 the same two-values-one-name shape as DEF-035.\n\nNot fixed here: A2 is file-scoped and widening it in this item would be scope the brief declined. Recorded so the clause's green is read as covering one file rather than the surface.",
       "surface": "SURF-002",
-      "req": "REQ-048"
+      "req": "REQ-048",
+      "note": "STILL OPEN, and re-measured live rather than carried (PRO-0097). `python3 scripts/campaign/status_literals.py Sources/ProctorUI/HistoryWindow.swift` exits 1 with 'FAIL: 71 user-facing literal(s) of 91 examined'. The fixing item PRO-0090 reads `Ready for AI`."
     },
     {
       "id": "DEF-055",
-      "status": "open",
+      "status": "fixed",
       "title": "CASE-0074's note records a starting load of 11.20 where its own evidence file records 22.92",
       "found": "PRO-0081 gap-fix, from a fresh verifier's read of the merged mutation item",
-      "detail": "CASE-0074 (PRO-0080 A4, the first ProctorAgent mutation sample) explains its two untrustworthy timeout-scored kills by naming the load the run was under: \"Load average reached 271 during the run (11.20 at start, 271.39 at end).\" The evidence it cites disagrees. docs/test-campaign/evidence/mutation-agent.txt line 2 reads \"# Load average at start: 22.92 29.47 26.94\" and line 3 \"# Load average at end: 271.39 192.06 133.13\". The end figure matches; the start figure does not, and 22.92 is already twice the number the note uses to establish that the machine started healthy. The note's conclusion is unaffected \u2014 the run was starved either way and the case already discounts the two 600.0s kills \u2014 but a figure that contradicts its own evidence file is the thing this campaign asks readers not to trust.\n\nNOT CORRECTED HERE, AND THIS IS WHY: CASE-0074 does not exist on ai/pro-0081. This branch's cases.json holds CASE-0001..0071 and CASE-0100..0106; CASE-0072..0099, including 0074, live on ai/wave-9, which is not an ancestor of this branch (merge-base 346edfa). Correcting it from here would mean merging or editing ai/wave-9, and this gap-fix was scoped to leave that branch alone. The correction is one substring: in CASE-0074's note, \"(11.20 at start, 271.39 at end)\" becomes \"(22.92 at start, 271.39 at end)\". Apply it wherever the two branches meet.",
+      "detail": "CASE-0074 (PRO-0080 A4, the first ProctorAgent mutation sample) explains its two untrustworthy timeout-scored kills by naming the load the run was under: \"Load average reached 271 during the run (11.20 at start, 271.39 at end).\" The evidence it cites disagrees. docs/test-campaign/evidence/mutation-agent.txt line 2 reads \"# Load average at start: 22.92 29.47 26.94\" and line 3 \"# Load average at end: 271.39 192.06 133.13\". The end figure matches; the start figure does not, and 22.92 is already twice the number the note uses to establish that the machine started healthy. The note's conclusion is unaffected \u2014 the run was starved either way and the case already discounts the two 600.0s kills \u2014 but a figure that contradicts its own evidence file is the thing this campaign asks readers not to trust.\n\nNOT CORRECTED HERE, AND THIS IS WHY: CASE-0074 does not exist on ai/pro-0081. This branch's cases.json holds CASE-0001..0071 and CASE-0100..0106; CASE-0072..0099, including 0074, live on ai/wave-9, which is not an ancestor of this branch (merge-base 346edfa). Correcting it from here would mean merging or editing ai/wave-9, and this gap-fix was scoped to leave that branch alone. The correction is one substring: in CASE-0074's note, \"(11.20 at start, 271.39 at end)\" becomes \"(22.92 at start, 271.39 at end)\". Apply it wherever the two branches meet.\n\nFIXED BY PRO-0091. CASE-0074's note reads 22.92 at start, and the check parses the figure out of evidence/mutation-agent.txt rather than carrying a copy of it, so the two cannot drift again silently. CASE-0154, armed at instrument-arming.txt mutation 4.",
       "surface": "SURF-002",
       "req": "REQ-047",
       "note": " Recorded as DEF-040 by PRO-0081, which overran its allocated DEF-035..039 by two. Renumbered at merge because PRO-0083 holds DEF-040..049; no other document referenced the old ids."
@@ -1986,21 +2049,21 @@
       "detail": "The design of record states the rule in the permissions frame's own caption: \"Only one Grant is prominent at a time: the one to press next\" (design/surfaces/proctor-surfaces.html, walkthrough / data-state=\"permissions\"). It draws Accessibility's Grant filled and Screen Recording's plain.\n\nThe build does not implement it. HeroPermRow gives every ungranted row Button(\"Allow\").buttonStyle(.borderedProminent) unconditionally (Sources/ProctorUI/Walkthrough.swift:267-269), with nothing reading the other row's state. With neither grant held \u2014 the state the walkthrough opens in, and the state evidence/shots/step-a3-walkthrough-primary-disabled.png captures \u2014 the two Allow buttons are identical and the frame offers no first move. The one-prominent-action-per-view rule the design applies to the footer is honoured there (Skip setup unfilled beside the disabled primary); it is the grant rows that diverge.\n\nNot fixed here: this gap-fix closes two named clauses on PRO-0081, and the walkthrough's visual hierarchy is not one of them. Recorded so the pass on STEP-A3-PRIMARY-DISABLED is read as covering what that step publishes \u2014 the disabled primary is drawn rather than removed \u2014 and not as agreement with the design across the whole frame. Verdict and the four differences: docs/test-campaign/witness-verdicts.json, subject STEP-A3-PRIMARY-DISABLED.",
       "surface": "SURF-009",
       "req": "REQ-048",
-      "note": " Recorded as DEF-041 by PRO-0081, which overran its allocated DEF-035..039 by two. Renumbered at merge because PRO-0083 holds DEF-040..049; no other document referenced the old ids."
+      "note": "Recorded as DEF-041 by PRO-0081, which overran its allocated DEF-035..039 by two. Renumbered at merge because PRO-0083 holds DEF-040..049; no other document referenced the old ids.\n\nSTILL OPEN, checked rather than assumed (PRO-0097). The fixing item PRO-0090 reads `Ready for AI` and nothing on this branch changes which walkthrough Grant is prominent."
     },
     {
       "id": "DEF-057",
-      "status": "open",
+      "status": "fixed",
       "title": "Four cases carry an oracle rung that is not on the ladder, so they count as unrated",
       "found": "Orchestrator reconciliation at the PRO-0081 merge, 2026-08-21",
-      "detail": "CASE-0102..0105 (all REQ-048) record `oracle: \"static-analysis\"`. That string is not in campaign.py's ORCHESTRATOR rung set, so `mix[...] += 1` files all four under `unrated`, and the tool's own comment says unrated is counted \"never as adequate \u2014 the whole point is that a plan cannot look\" adequate on them. REQ-048's coverage therefore rests on four cases the ladder does not recognise.\n\nThe rung may be honest rather than wrong: the ladder describes checks against a running product (touch, presence, structural, structural-visual, outcome, metamorphic, effect-witness, raster-visual, interactive-glass), and a grep over source runs none of it. That is a real gap in the ladder rather than obviously a mistake in the cases. It is recorded rather than reclassified, because silently moving four cases onto a rung they do not occupy would raise the score and lower what the suite knows.\n\nThe decision this needs: either the ladder gains a source-analysis rung with a stated position below `outcome`, or these four cases are re-expressed as checks against the built product and take a real rung. Reclassifying them to `structural` without changing what they check would be the second option's label with the first option's evidence."
+      "detail": "CASE-0102..0105 (all REQ-048) record `oracle: \"static-analysis\"`. That string is not in campaign.py's ORCHESTRATOR rung set, so `mix[...] += 1` files all four under `unrated`, and the tool's own comment says unrated is counted \"never as adequate \u2014 the whole point is that a plan cannot look\" adequate on them. REQ-048's coverage therefore rests on four cases the ladder does not recognise.\n\nThe rung may be honest rather than wrong: the ladder describes checks against a running product (touch, presence, structural, structural-visual, outcome, metamorphic, effect-witness, raster-visual, interactive-glass), and a grep over source runs none of it. That is a real gap in the ladder rather than obviously a mistake in the cases. It is recorded rather than reclassified, because silently moving four cases onto a rung they do not occupy would raise the score and lower what the suite knows.\n\nThe decision this needs: either the ladder gains a source-analysis rung with a stated position below `outcome`, or these four cases are re-expressed as checks against the built product and take a real rung. Reclassifying them to `structural` without changing what they check would be the second option's label with the first option's evidence.\n\nDECIDED AND CLOSED BY PRO-0091, and by neither of the two options above. Referred to grok-4.6 at effort xhigh, which ran its own panel; fable-5 and gemini-3.7-flash-high agreed with the options in swapped order, and the codex lane failed to initialise and was recorded as a lane failure. source-analysis is now a rung PARALLEL to the ladder rather than a position on it, because the ladder is one axis \u2014 what a case checked against the running product \u2014 and a reader of source text is off that axis rather than ranked on it. Re-expressing the four against the built product is not available: a hardcoded Text(\"Open log\") and a Text(Copy.openLog) render identically, so the clause has no product-side observable. SOURCE_RUNGS is absent from EFFECT_RUNGS and stays absent, a passing case on it owes its analyzer and examined count, and a requirement claiming an external effect may not rest on it alone. The gate reads 'Off-ladder: source-analysis 4' where it read 'unrated 4'. Reclassifying to structural was the ruled-out route and was not taken. test-campaign 0.9.4; CASE-0155, CASE-0156."
     },
     {
       "id": "DEF-058",
-      "status": "open",
+      "status": "fixed",
       "title": "An orchestrator merge silently dropped a flow, unpublishing a judged capture",
       "found": "capture-lineage --gate, immediately after the PRO-0081 merge, 2026-08-21",
-      "detail": "Reconciling inventory.json at the PRO-0081 merge, the orchestrator merged only the `defect` and `requirement` lists and took ours as the base document. PRO-0081's addition to `flow` \u2014 FLOW-010, carrying STEP-A3-PRIMARY-DISABLED and its `shot` \u2014 was dropped. The capture stayed on disk and its verdict stayed in witness-verdicts.json, but the subject left the published set, so judged fell 6 to 5 against a ratchet of 6.\n\nThe gate caught it and exited 2. That is the ratchet doing exactly its job: without it a judged capture would have quietly stopped being published and the wall would have shrunk with no green turning red.\n\nThe lesson is mechanical rather than about care: a hand-written merge of a multi-key registry must sweep every key, not the keys the conflict happened to be about. Repaired in the same commit by appending every theirs-only row across component, defect, flow, requirement and surface, with a uniqueness assertion per key."
+      "detail": "Reconciling inventory.json at the PRO-0081 merge, the orchestrator merged only the `defect` and `requirement` lists and took ours as the base document. PRO-0081's addition to `flow` \u2014 FLOW-010, carrying STEP-A3-PRIMARY-DISABLED and its `shot` \u2014 was dropped. The capture stayed on disk and its verdict stayed in witness-verdicts.json, but the subject left the published set, so judged fell 6 to 5 against a ratchet of 6.\n\nThe gate caught it and exited 2. That is the ratchet doing exactly its job: without it a judged capture would have quietly stopped being published and the wall would have shrunk with no green turning red.\n\nThe lesson is mechanical rather than about care: a hand-written merge of a multi-key registry must sweep every key, not the keys the conflict happened to be about. Repaired in the same commit by appending every theirs-only row across component, defect, flow, requirement and surface, with a uniqueness assertion per key.\n\nCLOSED BY PRO-0091 with the script the record asked for. scripts/campaign/merge_registry.py sweeps the union of both documents' keys, asserts id uniqueness per key, refuses a real conflict rather than resolving it to one side, and carries a --verify mode that reads a merge somebody else performed and names every dropped row. Tested against a reproduction of this exact loss \u2014 a five-key registry hand-merged on defect and requirement with ours as the base \u2014 which exits 1 naming flow/FLOW-010. CASE-0157, CASE-0158, armed at instrument-arming.txt mutations 2 and 3."
     },
     {
       "id": "DEF-065",
@@ -2065,14 +2128,16 @@
     },
     {
       "id": "DEF-051",
-      "status": "open",
+      "status": "fixed",
       "severity": "low",
       "title": "ScreenRecordingProbeWiringTests's 0.2s bound with 5s of headroom fails on a machine under heavy external load",
       "found": "PRO-0087's run ledger, on the unmodified tree as well as the fixed one",
       "detail": "aParkedCallDoesNotHang asserts elapsed < 5.0 for a probe whose bound is 0.2s. On this machine at load average 700-900, driven by other worktrees building rather than by this suite, it measured 10.7s. It failed on three of the four control runs taken on the unmodified tree, so it is independent of PRO-0087 and is recorded rather than fixed here: widening a bound to survive a loaded machine is the gate moving, which is the objection PRO-0087's brief raises against relaxing the forged peer's timeout.",
-      "evidence": "docs/test-campaign/evidence/PRO-0087/run-ledger.md",
+      "evidence": "The same site as DEF-029, raised again from PRO-0087's run ledger. Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift now builds the probe with `ScreenRecordingProbe(timer: { seconds in asked.record(seconds) }, ...)` and asserts `asked.seconds == GrantProbe.bound`; `grep -n 'elapsed' ` over the file returns nothing. The bound did not move: `ScreenRecordingProbe.live.bound == GrantProbe.bound == 1.5`.",
       "surface": "SURF-008",
-      "req": "REQ-053"
+      "req": "REQ-053",
+      "fix": "ScreenRecordingProbe takes `timer` as an injected seam. A test that reads no clock cannot fail on load.",
+      "fixedBy": "PRO-0089; reconciled by PRO-0097"
     },
     {
       "id": "DEF-075",
@@ -2138,7 +2203,8 @@
       "found": "PRO-0088, grounding the brief against the tree",
       "detail": "REQ-028's source field reads 'Sources/ProctorCore/OverlayCapture.swift; RunHUDPanel, TakeoverOverlay and CursorOverlay'. That file does not exist on ai/wave-9. It arrives with commit 15f86ea, which is on main and is not an ancestor of this lineage: git merge-base --is-ancestor 15f86ea HEAD returns non-zero, and main holds 8 commits this branch lacks.\n\nSo the registry described a fix present on one lineage while the lineage under test lacked it, which is how DEF-028 came to be recorded as an unexplained window rather than as a known missing exclusion.\n\nNOT FIXED HERE. It is a registry-wide provenance question about which tree a requirement was written against, and correcting one row would leave the practice in place. Recorded so the eventual merge of main into this lineage resolves CursorOverlay.swift knowingly: main's version wraps the same fix in a PROCTOR_OVERLAY_CAPTURE switch and should win.",
       "surface": "SURF-004",
-      "req": "REQ-028"
+      "req": "REQ-028",
+      "note": "STILL OPEN BY THIS ITEM'S SCOPE, with what was measured recorded so the next reader does not have to re-measure it (PRO-0097). The condition the row states no longer holds on this branch: `git merge-base --is-ancestor 15f86ea HEAD` returns 0 and Sources/ProctorCore/OverlayCapture.swift is present, arriving with the b49b5a1 merge of main into ai/wave-9. Brief 89 excludes DEF-099 from this item explicitly ('It does not close DEF-099'), so the row is left as it stands rather than flipped on an instruction this item is not the one to reverse. Whoever owns it has the measurement."
     },
     {
       "id": "DEF-100",
@@ -2203,12 +2269,14 @@
     },
     {
       "id": "DEF-106",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "title": "A bounded socket client's test asserts measured elapsed time against a literal, which is the thing REQ-056 forbids",
       "found": "PRO-0096, by the re-armed wall-clock census \u2014 the offender count went 0 to 1",
       "detail": "Tests/ProctorCoreTests/ProctorCoreTests.swift:232 reads `#expect(waited < 10, \"a bounded client waited \\(waited)s\")`, where `waited` is `Date().timeIntervalSince(started)` measured around a SocketClient send whose `ioTimeoutSeconds` is 1. A measured wall-clock interval compared to a numeric literal is precisely what REQ-056 rules out, and the 10x headroom is DEF-051's shape exactly \u2014 DEF-051 is a 5.0s bound on a 0.2s probe that measured 10.7s on this machine at load 700-900 and went red on three of four control runs while the product was correct throughout.\n\n`git log -L232,232:Tests/ProctorCoreTests/ProctorCoreTests.swift` puts the line in 10285df 'fix(ui): a wedged agent stops reading as Ready', which landed after CASE-0139 was written. So the requirement regressed; the census did not become wrong.\n\nNOT FIXED HERE. PRO-0096 is a registry and instrument item and this is a change to the product's test suite. There is also a real call inside it that wants an owner rather than a drive-by: the two other assertions in the same test (`thrown?.code == .agentUnavailable` and a message containing 'did not answer within 1s') already carry the product claim, so deleting the wall-clock line loses nothing \u2014 but SocketClient has no injectable clock, so the alternative fix is a small production change. Whoever takes it should decide that rather than inherit it. CASE-0139 is recorded `fail` against it in the meantime.",
-      "evidence": "docs/test-campaign/evidence/PRO-0096/census-live.txt \u2014 127 files, 54 clock sites, 1 offender, exit 1, with the arm at 2 of 2 in census-arm-pinned.txt",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/census-after.txt \u2014 129 files, 52 clock sites, 0 offenders, exit 0, with the arm at 2 of 2; and docs/test-campaign/evidence/PRO-0097/def-106-arming.txt, where the same detector is run over this very file at HEAD and reports the offender at line 232.",
+      "fix": "PRO-0089's seam, not a re-derivation of it. The bound is spent through `setsockopt(SO_RCVTIMEO/SO_SNDTIMEO)`, so that call IS the bound mechanism the way `ScreenRecordingProbe.timer` is, and it is what `SocketClient.init` now takes: `applyBound: BoundApplier`, defaulting to `SocketClient.liveBound`. The test hands it a spy that records and then forwards to the real one, so the `agentUnavailable` it asserts still arrives because the kernel really timed the receive out. The two timing lines are gone and the assertions are on the mechanism: both directions bounded, each asked for exactly `client.ioTimeoutSeconds`. THE BOUND DID NOT MOVE \u2014 `ioTimeoutSeconds` is still 1, and nothing in the change touches what a caller chooses. A second test keeps the default path from rotting: `liveBound` is applied to a socket the test owns and `getsockopt` reads back 3s where it asked for 3, and a client built with NO applier is established as genuinely bounded by a send against a listener nobody accepts on \u2014 which fails by hanging if the default were inert, rather than by a margin, and reads no clock either way.",
+      "fixedBy": "PRO-0097",
       "surface": "SURF-022",
       "req": "REQ-056"
     },
@@ -2233,6 +2301,103 @@
       "evidence": "docs/test-campaign/evidence/PRO-0096/source-field-placement.txt",
       "surface": "SURF-022",
       "req": "REQ-056"
+    },
+    {
+      "id": "DEF-024",
+      "status": "fixed",
+      "title": "A bounded-probe test asserts wall-clock elapsed and fails on a loaded machine",
+      "found": "PRO-0078 phase 6: three consecutive ./scripts/test.sh runs while the glass lane agent was live",
+      "detail": "Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift:42, in 'a platform call that never answers returns unconfirmed within the bound', asserts `elapsed < 5.0` around a probe whose bound is 0.2 seconds. The comment calls the 25x headroom generous so it does not flake on a loaded machine.\n\nMEASURED: with a signed Proctor agent live on the glass lane and captures in flight, the same test recorded elapsed 5.016569018363953 on one run and 10.252003073692322 on the next, failing the whole suite both times: 'FAIL: swift test exited 1 ... 1814 tests in 214 suites failed'. With the agent stopped and nothing else running, the same command passed: 'PASS: Test run with 1814 tests in 214 suites passed after 21.366 seconds'.\n\nThe behaviour under test is correct in all three runs; the probe returned .unconfirmed every time. What moved was the wall clock. A 25x margin on a 0.2 second bound is 4.8 seconds of scheduler slack, and this machine consumed all of it and then twice that.\n\nNOT FIXED HERE, and deliberately not: a gate edited to make it green is a finish line that moved, and the choice between a larger margin, a mocked clock and a relative assertion belongs to whoever owns the probe. Recorded because a suite that fails under load fails in CI, where load is the normal condition.",
+      "surface": "SURF-006",
+      "req": "REQ-004",
+      "evidence": "The duplicate of DEF-029, recorded by PRO-0078 and dropped from this registry by the PRO-0078 merge; restored and closed here. Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift now builds the probe with `ScreenRecordingProbe(timer: { seconds in asked.record(seconds) }, ...)` and asserts `asked.seconds == GrantProbe.bound`; `grep -n 'elapsed' ` over the file returns nothing. The bound did not move: `ScreenRecordingProbe.live.bound == GrantProbe.bound == 1.5`.",
+      "fix": "PRO-0089 gave ScreenRecordingProbe its bound timer and moved the assertion onto the mechanism.",
+      "fixedBy": "PRO-0089; row restored and reconciled by PRO-0097"
+    },
+    {
+      "id": "DEF-110",
+      "severity": "medium",
+      "status": "open",
+      "title": "REQ-055 declares a filesystem-write effect and no case backing it stands at effect-witness",
+      "found": "PRO-0097, reading campaign.py check rather than the brief's summary of it",
+      "detail": "REQ-055 ('Running the test suite does not read or write any state belonging to the operator of the machine it runs on') records effect `filesystem-write`, evidence `observed`, and no provider. Its five cases CASE-0130..CASE-0134 are all `outcome`. campaign.py's external-effect pass therefore names it under 'External-effect claims with no witness', and has since the census closed \u2014 the wave-13 note recorded unwitnessed=0 from the header line while the blocker list named it. NOT FIXED HERE: the requirement is a negative guarantee, so the honest witness is a recorder watching the suite run and reporting zero writes under the operator's home, and building it is an item's work rather than a line in this one. The alternative disposition is `vacuous`, and it should not be taken without the recorder that would establish it.",
+      "surface": "SURF-022",
+      "req": "REQ-055"
+    },
+    {
+      "id": "DEF-111",
+      "severity": "medium",
+      "status": "open",
+      "title": "REQ-063 declares a filesystem-write effect with no effect-witness case, over a path that really does write",
+      "found": "PRO-0097, the same read",
+      "detail": "REQ-063 ('The policy file is created with mode 0600 by the write that creates it') names PolicyStore.write as its provider, which opens a temporary with Darwin.open(O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0o600) and replaces. Its five cases CASE-0190..CASE-0193 and CASE-0198 are all `outcome` \u2014 they stat the result, which is the outcome of the write rather than a recording of it. Unlike DEF-110 this one does perform the effect, so the witness is available: a recorder over the write with the count of files created. NOT FIXED HERE for scope; brief 89 does not name it and building the witness is an item's work.",
+      "surface": "SURF-022",
+      "req": "REQ-063"
+    },
+    {
+      "id": "DEF-112",
+      "severity": "high",
+      "status": "fixed",
+      "title": "Five merges dropped fourteen registry values between them, which is DEF-058 recurring",
+      "found": "PRO-0097, by walking non-merge ancestor commits rather than by noticing a wrong number",
+      "detail": "REQ-029, DEF-006 and DEF-007's evidence (c7fbe295, dropped by merge b49b5a1e); DEF-024's whole row (2420282, PRO-0078); CASE-0059's capture block and CASE-0063's witness block (595179d/2420282, PRO-0078); CASE-0032's evidence list and note (964cfd5/69cb30ba, PRO-0088); DEF-030, DEF-032, DEF-055, DEF-057 and DEF-058's status flips and REQ-024's `vacuous` evidence with its note (6e5094e/17bfcd19, PRO-0091). Each was set by a commit that is an ancestor of this branch and each was absent at HEAD, with HEAD holding exactly what that commit's parent held \u2014 the signature of a merge resolving a same-id conflict by keeping ours. This is the defect merge_registry.py was written to prevent, arriving through the merge rather than through the script. THE COUNT ROSE FROM ELEVEN TO FOURTEEN DURING THIS ITEM, and not by finding more history: the first draft of the check was path-limited and read only `theirs`, and a merge resolved `-s ours` is dropped from a path-limited listing precisely because it discarded the other side. Unlimited and reading every parent it sees 88 merges where the draft saw 21. That is DEF-115.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt \u2014 the shipped defect_gate.py dropped run at 5e572d0, exit 1, thirteen findings over 19,070 id/field pairs across 88 merges; exit 0 over the same 19,070 pairs on the restored tree. The fourteenth value is CASE-0032's `note`, which is prose and sits outside the watched field set.",
+      "fix": "Every value restored from the commit that set it, and scripts/campaign/defect_gate.py dropped added so the next one is caught by a check rather than by a reader. Armed in both directions on a git fixture in test_instruments.py.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-022",
+      "req": "REQ-068"
+    },
+    {
+      "id": "DEF-113",
+      "severity": "medium",
+      "status": "fixed",
+      "title": "CASE-0128 and CASE-0129 claimed effect-witness and carried no witness block, so six gate findings were nobody's",
+      "found": "PRO-0097, running campaign.py check rather than reading the brief's account of what it flags",
+      "detail": "Both cases stand on `effect-witness` and both had real glass evidence on disk \u2014 overlay-population.json with 54 and 60 samples across two signed builds, and two whole proctor_capture replies. Neither carried `witness.recorder`, `witness.effect` or `witness.count`, so the rung's guard produced three findings each. Brief 89 names four cases and these two are not among them; they are the same class of finding one axis over.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt, six findings under 'Effect witnesses that witnessed nothing'.",
+      "fix": "Witness blocks written from the files each case already cited: CASE-0128 ipc/3 over 54 samples, CASE-0129 device/2. No new measurement was invented \u2014 the numbers are read out of the evidence.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-022",
+      "req": "REQ-062"
+    },
+    {
+      "id": "DEF-114",
+      "severity": "medium",
+      "status": "fixed",
+      "title": "DEF-024's row was absent from inventory.json, having been present at 2420282",
+      "found": "PRO-0097, by the drift walk; nothing else would have found it, because a missing row produces no finding anywhere",
+      "detail": "DEF-024 is PRO-0078's record of the wall-clock assertion at ScreenRecordingProbeWiringTests.swift:42 \u2014 the same defect later recorded again as DEF-029. The row was written at 2420282 and lost at the PRO-0078 merge. A dropped status is visible as a wrong number; a dropped ROW is visible as nothing at all, which is why this is recorded separately from DEF-112.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt, 'DEF-024: whole row present at 2420282e and absent at HEAD'.",
+      "fix": "Row restored from 2420282 and then closed on the same evidence as DEF-029: PRO-0089 gave ScreenRecordingProbe its bound timer.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-006",
+      "req": "REQ-004"
+    },
+    {
+      "id": "DEF-115",
+      "severity": "medium",
+      "status": "fixed",
+      "title": "The drift check's first draft was path-limited and read only theirs, so it could not see the merge that discards a value wholesale",
+      "found": "PRO-0097, by arming defect_gate.py dropped rather than by trusting its first clean-ish run",
+      "detail": "The draft ran `git rev-list --merges HEAD -- <registry path>` and compared only the second parent against the base. Both narrowings hide the same merge. A merge resolved with `-s ours` leaves the file byte-identical to its first parent, so git's history simplification drops it from a PATH-LIMITED listing \u2014 and that merge is exactly the one that discarded the other side's registry. Reading only `theirs` misses the symmetric case, where the loss is on the first parent's side: PRO-0088's evidence paths for CASE-0032 were taken correctly by the merge that brought them and discarded by the NEXT merge, whose other branch had forked before them. The draft saw 21 merges and 11,149 id/field pairs and reported ten findings. Unlimited, reading every parent, the same check over the same commit sees 88 merges and 19,070 pairs and reports thirteen. The three it could not reach are REQ-029, DEF-006 and DEF-007's `evidence`, set on c7fbe295 and dropped by merge b49b5a1e. A drift check that under-reports is worse than none, because its green is read as a measurement.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt \u2014 both runs use the shipped script; the header records 88 merges and 19,070 pairs where the draft's own output recorded 21 and 11,149.",
+      "fix": "`rev-list --merges HEAD` with no path limit, and the parent loop iterates every parent rather than `parents[1]`. Both narrowings are named in the code with the merge shape each one hides, so a later reader does not re-introduce them as an optimisation.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-022",
+      "req": "REQ-068"
+    },
+    {
+      "id": "DEF-116",
+      "status": "fixed",
+      "severity": "low",
+      "title": "A passing case stood unarmed behind a prose exemption that did not hold, and the registry's own count had been reporting it unread since PRO-0087",
+      "found": "PRO-0097, by subtracting the two numbers campaign.py check already prints: Armed: 155/156",
+      "detail": "CASE-0113 (REQ-053, `two different files in one store are one entry each, not one slot they fight over`) carried `armed: false` with an `armedBy` reading 'Not armed by re-introducing a shipped defect: the single-slot cache it guards against was correct while the cache was per-Session, so there is no prior state of this repo in which this test is red.'\n\nThe claim is true and it is not a reason. Arming asks that the behaviour be removed and the assertion watched; it does not ask that the removal be a defect this repo once shipped. A guarantee whose only defence is that nobody has broken it yet is exactly the guarantee worth mutating, and this one was the newest in the file.\n\nThe wider shape is the reason this is recorded at all: a false flag with a considered-sounding sentence beside it reads, to a reviewer, as a decision rather than an omission, so it survives every pass. It survived from PRO-0087 through PRO-0089, PRO-0091, PRO-0096 and into this item, while `armedOfPassing` printed 155/156 on the terminal each time.",
+      "evidence": "docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt \u2014 the mutant red with its two expectation lines, the revert green, and grep -c MUTANT reading 0; and campaign-check-after.txt, where the ratio reads 157/157 against the 155/156 the same gate printed over the same registry before the flip.",
+      "fix": "Mutated rather than re-argued. `SignatureVerdictCache.capacity` 16 -> 1 makes the store the single slot the case names; the test fails with `cache.verificationCount \u2192 10` against 2 \u2014 five alternations between two identities, every one a miss, which is the eviction thrash the case's note describes. Reverted immediately; the tree carries 16. CASE-0113 is now `armed: true` with the run cited, and CASE-0224 records the registry-wide ratio with its denominator.",
+      "fixedBy": "PRO-0097",
+      "surface": "SURF-022",
+      "req": "REQ-067"
     }
   ]
 }

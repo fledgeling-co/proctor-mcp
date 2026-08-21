@@ -21,6 +21,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -321,11 +322,202 @@ def test_seed_strengthen_refuses_a_red_baseline() -> None:
               out.stdout[-400:])
 
 
+# ── REQ-067: an item cannot merge claiming a defect the registry calls open ──
+#
+# `inventory.json` reported 23 open defects over a tree that had fixed most of
+# them, because the items that fixed them never moved the records and nothing
+# read the two together. The claim is already written down — an item's spec
+# states its defects on the `**Defects:**` line and again in its `## Defects`
+# table — so the check reads the claim rather than asking anyone to remember it.
+#
+# Armed in both directions on one fixture registry, with the same spec: the
+# defect open, and the defect fixed.
+
+def _gate(*args) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(ROOT / "scripts/campaign/defect_gate.py"), *map(str, args)],
+        capture_output=True, text=True, cwd=ROOT)
+
+
+def test_defect_gate_claims() -> None:
+    spec = (
+        "# FIX-0001: a fixture\n\n"
+        "**ID:** FIX-0001 · **Defects:** DEF-901..DEF-903 · **Cases:** CASE-0001\n\n"
+        "## Defects\n\n"
+        "| Id | What |\n|---|---|\n"
+        "| DEF-901 | the first |\n| DEF-904 | recorded in the table and not the header |\n"
+    )
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        spec_path = root / "spec-FIX-0001.md"
+        spec_path.write_text(spec)
+        reg = root / "registry"
+        reg.mkdir()
+
+        def write(statuses: dict[str, str]) -> None:
+            (reg / "inventory.json").write_text(json.dumps(
+                {"defect": [{"id": i, "status": s, "title": f"fixture {i}"}
+                            for i, s in statuses.items()]}, indent=2))
+
+        every = ["DEF-901", "DEF-902", "DEF-903", "DEF-904"]
+
+        write({i: "open" for i in every})
+        red = _gate("claims", spec_path, reg)
+        check(red.returncode == 1,
+              "claims refuses a spec whose claimed defects still read open",
+              f"exit {red.returncode}: {red.stdout[-400:]}")
+        # The range on the header line and the extra row in the table are both
+        # read: an item that overran its allocation records the overrun in the
+        # table only, which is the shape PRO-0081 took.
+        for i in every:
+            check(f"OPEN     {i}" in red.stdout,
+                  f"claims names {i} as the reason it refused",
+                  red.stdout[-600:])
+
+        write({i: "fixed" for i in every})
+        green = _gate("claims", spec_path, reg)
+        check(green.returncode == 0,
+              "claims passes over the same spec once every record reads fixed",
+              f"exit {green.returncode}: {green.stdout[-400:]}")
+
+        # A claim with no row at all is not the same as a claim that is closed,
+        # and reporting it as a pass is how a renumbered id disappears.
+        write({"DEF-901": "fixed", "DEF-902": "fixed", "DEF-903": "fixed"})
+        missing = _gate("claims", spec_path, reg)
+        check(missing.returncode == 1 and "UNKNOWN  DEF-904" in missing.stdout,
+              "a claimed defect with no registry row is a finding, not a pass",
+              missing.stdout[-400:])
+
+        # A spec naming no defects measured nothing, and a check that cannot
+        # tell that from a clean result is the condition this file exists for.
+        bare = root / "spec-FIX-0002.md"
+        bare.write_text("# FIX-0002\n\nNo defects here.\n")
+        empty = _gate("claims", bare, reg)
+        check(empty.returncode == 1 and "measured nothing" in empty.stdout,
+              "a spec with no parsable claim refuses rather than passing empty",
+              empty.stdout[-300:])
+
+
+# ── REQ-068: a value a merged item set is still in the tree ─────────────────
+#
+# The drift the reconciliation found. Eleven values were set by merged items and
+# were not at HEAD — five defect flips and REQ-024's `vacuous` from PRO-0091,
+# CASE-0032's evidence from PRO-0088, CASE-0059's capture block, CASE-0063's
+# witness block and DEF-024's whole row from PRO-0078. `merge_registry.py`
+# resolves a same-id conflict by keeping ours, which is right for a hand merge
+# and wrong for one nobody reads afterwards.
+#
+# The fixture is a real git repository, because the check reads history and a
+# check tested against a stub of its own input has been watched fail nothing.
+# It holds one dropped value AND one legitimate later correction, so a run that
+# reported both would be indistinguishable from one that reported neither.
+
+def test_defect_gate_dropped() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = Path(tmp) / "repo"
+        (repo / "docs/test-campaign").mkdir(parents=True)
+        (repo / "scripts/campaign").mkdir(parents=True)
+        (repo / "scripts/campaign/defect_gate.py").write_text(
+            (ROOT / "scripts/campaign/defect_gate.py").read_text())
+
+        inv = repo / "docs/test-campaign/inventory.json"
+        (repo / "docs/test-campaign/cases.json").write_text("[]\n")
+        env = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+               "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
+               "GIT_AUTHOR_DATE": "2026-01-01T00:00:00Z",
+               "GIT_COMMITTER_DATE": "2026-01-01T00:00:00Z",
+               "PATH": os.environ.get("PATH", ""), "HOME": tmp}
+
+        def git(*args: str) -> subprocess.CompletedProcess:
+            return subprocess.run(["git", *args], cwd=repo, capture_output=True,
+                                  text=True, env=env)
+
+        def commit(message: str) -> None:
+            git("add", "-A")
+            git("commit", "-q", "-m", message)
+
+        def write(rows: list[dict]) -> None:
+            inv.write_text(json.dumps({"defect": rows}, indent=2) + "\n")
+
+        def gate() -> subprocess.CompletedProcess:
+            return subprocess.run(
+                [sys.executable, "scripts/campaign/defect_gate.py", "dropped",
+                 "docs/test-campaign"], cwd=repo, capture_output=True, text=True)
+
+        git("init", "-q", "-b", "main")
+
+        write([{"id": "DEF-901", "status": "open"}, {"id": "DEF-902", "status": "open"}])
+        commit("base")
+
+        # An item branches, fixes both records and adds one of its own.
+        git("checkout", "-q", "-b", "item")
+        write([{"id": "DEF-901", "status": "fixed"}, {"id": "DEF-902", "status": "fixed"},
+               {"id": "DEF-903", "status": "open"}])
+        commit("the item that fixed them")
+
+        # Meanwhile main makes a decision of its own on DEF-902 — a genuine
+        # conflict, and the one thing this check must NOT report, because a
+        # check that reports every difference is as useless as one that reports
+        # none and a single red cannot tell them apart.
+        git("checkout", "-q", "main")
+        write([{"id": "DEF-901", "status": "open"}, {"id": "DEF-902", "status": "wontfix"}])
+        commit("a decision taken on main")
+
+        # The merge keeps ours wholesale. DEF-901 goes back to open, DEF-903
+        # never arrives, and DEF-902 comes out holding neither side's start.
+        git("merge", "-q", "-s", "ours", "--no-edit", "item")
+
+        red = gate()
+        check(red.returncode == 1,
+              "dropped refuses a history whose merge came out holding the base",
+              f"exit {red.returncode}: {red.stdout[-600:]}")
+        check("DEF-901.status" in red.stdout,
+              "dropped names the field the merge discarded",
+              red.stdout[-600:])
+        check("DEF-903" in red.stdout and "absent at HEAD" in red.stdout,
+              "dropped names a whole row the merge did not take",
+              red.stdout[-600:])
+        check("DEF-902" not in red.stdout,
+              "a field both sides changed is a decision, not a drop",
+              red.stdout[-600:])
+
+        # The other direction, in the same session: restore what the merge lost
+        # and the same history over the same merge reads clean, so the green is
+        # a measurement rather than an absence.
+        write([{"id": "DEF-901", "status": "fixed"}, {"id": "DEF-902", "status": "wontfix"},
+               {"id": "DEF-903", "status": "open"}])
+        commit("restore what the merge dropped")
+        green = gate()
+        check(green.returncode == 0,
+              "dropped passes once the discarded values are back",
+              f"exit {green.returncode}: {green.stdout[-600:]}")
+
+
+# ── The two gates, run against this repository's own registry ───────────────
+#
+# The fixtures above prove the checks can fire. This one is the claim that
+# matters to a reader: on this tree, right now, nothing is dropped and every
+# defect this item claims is closed. It runs the real thing rather than citing
+# an evidence file, because an evidence file is what went stale in this wave.
+
+def test_defect_gate_on_this_repository() -> None:
+    out = _gate("dropped", ROOT / "docs/test-campaign")
+    check(out.returncode == 0,
+          "no registry value an ancestor commit set is missing from this tree",
+          out.stdout[-800:])
+    out = _gate("claims", ROOT / "docs/specs/spec-PRO-0097.md", ROOT / "docs/test-campaign")
+    check(out.returncode == 0,
+          "every defect this item's spec claims reads fixed in the registry",
+          out.stdout[-800:])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
                test_case_0074_load_matches_its_evidence, test_source_analysis_rung,
-               test_seed_strengthen_refuses_a_red_baseline):
+               test_seed_strengthen_refuses_a_red_baseline,
+               test_defect_gate_claims, test_defect_gate_dropped,
+               test_defect_gate_on_this_repository):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001
