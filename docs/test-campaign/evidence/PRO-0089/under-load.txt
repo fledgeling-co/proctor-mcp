@@ -1,9 +1,35 @@
+re-measured 2026-08-21 19:43:42 AEST on ai/pro-0089 merged with ai/wave-9 (PRO-0087 signature-cache fix present)
+head: 6245e95
 burners: 24 perl CPU loops on a 16-core machine
-load at start: 207.39 171.12 271.54
-run 1: rc=0 wall=20s load=234.57 179.44 272.18 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 12.250 seconds.
-run 2: rc=0 wall=23s load=265.81 190.56 273.46 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 14.887 seconds.
-run 3: rc=0 wall=20s load=313.55 206.39 277.22 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 11.835 seconds.
-run 4: rc=0 wall=23s load=410.15 237.31 286.29 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 13.041 seconds.
-run 5: rc=0 wall=20s load=448.37 257.37 292.36 :: PASS: 􁁛  Test run with 1839 tests in 217 suites passed after 13.863 seconds.
+load at start: 831.49 866.44 716.93
+load after burners settled: 864.31 870.21 723.42
+run 1: rc=0 wall=46s load=500.86 952.39 762.11 :: PASS: 􁁛  Test run with 1845 tests in 217 suites passed after 4.949 seconds.
+run 2: rc=0 wall=6s load=543.15 953.66 763.67 :: PASS: 􁁛  Test run with 1845 tests in 217 suites passed after 3.749 seconds.
+run 3: rc=0 wall=4s load=584.78 955.47 765.42 :: PASS: 􁁛  Test run with 1845 tests in 217 suites passed after 2.774 seconds.
+run 4: rc=0 wall=7s load=624.51 957.56 767.27 :: PASS: 􁁛  Test run with 1845 tests in 217 suites passed after 4.433 seconds.
+run 5: rc=0 wall=6s load=663.47 960.10 769.29 :: PASS: 􁁛  Test run with 1845 tests in 217 suites passed after 4.616 seconds.
 runs=5 passed=5 failed=0
-burners stopped; load now 448.37 257.37 292.36
+burners stopped; load now 693.86 961.48 770.89
+DONE
+
+A7 verdict: 5 runs, 5 green, 0 failed. Every run's exit code is ./scripts/test.sh's own,
+captured to a variable before anything read it, not a pipeline's last stage.
+
+The clause was inconclusive because the verifier's first run deadlocked at load 465 —
+sixteen doctor-family tests parked in SignatureVerdictCache.verdict ->
+SecStaticCodeCheckValidityWithErrors -> Dispatch::Group::wait. That is DEF-044, not this
+item, and it is fixed by PRO-0087. This re-measurement is on the merged tree that carries
+the fix: `SignatureVerdictCache.verdict(for:)` is `async` at
+Sources/ProctorAgent/Session/SignatureVerdictCache.swift:149, and CASE-0116 exists. Head 6245e95.
+
+Load ran higher here than in the run that deadlocked, on both ends and throughout: the
+1-minute average was 831 before the burners and 693 after, and never fell below 500 across
+the five runs; the 5-minute average sat between 952 and 960 for all five. The verifier's
+deadlock was at 465. So the run that hung is not simply the run that got unlucky on a
+quieter machine — this measurement was made at more load, not less, and none of the five
+hung. No run exceeded 46s wall (that one built; the other four reused the build and took
+4-7s), against the 900s alarm each was given, so a hang would have been recorded as a
+non-zero rc rather than waited out.
+
+Test count is 1845 in 217 suites, up from the 1839 recorded in gate-after.txt before the
+merge; the +6 are PRO-0087's, arriving with its fix.
