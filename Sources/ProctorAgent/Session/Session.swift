@@ -369,22 +369,22 @@ actor Session {
         let iso = ISO8601DateFormatter()
         let recent = activityRing.suffix(limit).reversed().map { entry in
             JSONValue.object([
-                "tool": .string(entry.tool),
-                "at": .string(iso.string(from: entry.at)),
-                "ok": .bool(entry.ok)
+                AgentVerbs.Activity.tool: .string(entry.tool),
+                AgentVerbs.Activity.at: .string(iso.string(from: entry.at)),
+                AgentVerbs.Activity.ok: .bool(entry.ok)
             ])
         }
         return .object([
-            "current": activityCurrent.map(JSONValue.string) ?? .null,
-            "recent": .array(Array(recent)),
+            AgentVerbs.Activity.current: activityCurrent.map(JSONValue.string) ?? .null,
+            AgentVerbs.Activity.recent: .array(Array(recent)),
             // The menu bar mirrors the waiting count, so the queue is answerable
             // without the run panel being on screen at all.
-            "queueWaiting": .number(Double(queueWaitingMirror)),
+            AgentVerbs.Activity.queueWaiting: .number(Double(queueWaitingMirror)),
             // And the run HUD's phase, which is what lets the menu bar draw the
             // same character in the same state — the one `RunHUDState` reduced,
             // never a second one derived here.
-            "hud": hudFeed.wire,
-            "foreground": foregroundJSON
+            AgentVerbs.Activity.hud: hudFeed.wire,
+            AgentVerbs.Activity.foreground: foregroundJSON
         ])
     }
 
@@ -667,12 +667,13 @@ actor Session {
         // least welcome right now.
         guard let hold = YieldReason.allCases.lazy
             .compactMap({ reason in holds.first { $0.reason == reason } }).first else {
-            return .object(["active": .bool(false), "reason": .null, "line": .null,
+            return .object([AgentVerbs.Foreground.active: .bool(false),
+                            "reason": .null, AgentVerbs.Foreground.line: .null,
                             "session": .null, "app": .null, "display": .null])
         }
-        return .object(["active": .bool(true),
+        return .object([AgentVerbs.Foreground.active: .bool(true),
                         "reason": .string(hold.reason.rawValue),
-                        "line": .string(hold.line),
+                        AgentVerbs.Foreground.line: .string(hold.line),
                         "session": .string(hold.session),
                         "app": hold.app.map(JSONValue.string) ?? .null,
                         "display": hold.display.map { .string($0.name) } ?? .null])
@@ -687,10 +688,11 @@ actor Session {
         let taking = runs.filter(\.demand.takesForeground)
         let subject = taking.first ?? runs.first
         return .object([
-            "running": .bool(!runs.isEmpty),
-            "active": .bool(runs.contains { $0.active }),
-            "takesForeground": .bool(!taking.isEmpty),
-            "mayTakeForeground": .bool(runs.contains { $0.demand.mayTakeForeground }),
+            AgentVerbs.Foreground.running: .bool(!runs.isEmpty),
+            AgentVerbs.Foreground.active: .bool(runs.contains { $0.active }),
+            AgentVerbs.Foreground.takesForeground: .bool(!taking.isEmpty),
+            AgentVerbs.Foreground.mayTakeForeground:
+                .bool(runs.contains { $0.demand.mayTakeForeground }),
             "certain": .number(Double(subject?.demand.certainSteps ?? 0)),
             "conditional": .number(Double(subject?.demand.conditionalSteps ?? 0)),
             "total": .number(Double(subject?.demand.totalSteps ?? 0)),
@@ -700,13 +702,13 @@ actor Session {
             // which display the run panel landed on. Proctor's own enum, never a
             // string the driver supplied.
             "backend": .string(actuator.id.rawValue),
-            "notice": subject.flatMap {
+            AgentVerbs.Foreground.notice: subject.flatMap {
                 $0.demand.notice(app: $0.app, delegated: actuator.id != .native)
             }.map(JSONValue.string) ?? .null,
             // Held, and why. Read ahead of `active` by the menu bar: a run that
             // has got out of somebody's way is not taking the machine, and
             // saying both at once would be two claims about one instant.
-            "yield": yieldJSON
+            AgentVerbs.Foreground.yield: yieldJSON
         ])
     } /// The waiting count, kept here so the UI's own poll answers without hopping
     /// to the scheduler. Written by the scheduler's observer at start-up.

@@ -131,10 +131,10 @@ final class RunHUDFeed: @unchecked Sendable {
     var wire: JSONValue {
         let now = snapshot
         return .object([
-            "phase": .string(now.phase.rawValue),
-            "running": .bool(now.running),
-            "drawing": .bool(now.drawing),
-            "canShow": .bool(now.canShow)
+            AgentVerbs.HUD.phase: .string(now.phase.rawValue),
+            AgentVerbs.HUD.running: .bool(now.running),
+            AgentVerbs.HUD.drawing: .bool(now.drawing),
+            AgentVerbs.HUD.canShow: .bool(now.canShow)
         ])
     }
 

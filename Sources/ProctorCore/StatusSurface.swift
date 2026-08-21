@@ -353,6 +353,15 @@ public enum StatusSurface {
         public static let agentObserversLabel = "Live observers"
         public static let agentSignatureLabel = "Signature"
         public static let agentAbsent = "No agent to report on."
+        /// What the window says when the agent answered and said no, and the
+        /// reply carried no message of its own. PRO-0090: it was a bare `??`
+        /// fallback inside `AgentModel.callDoctor`.
+        public static let agentRefused = "the agent refused the request"
+        /// The two signature summaries that are not a real authority. Beside
+        /// `adHocTitle` and `adHocMessage`, which say the same thing at length
+        /// in the callout this line labels.
+        public static let signatureAdHoc = "Ad-hoc — grants are tied to these exact bytes"
+        public static let signatureUnsigned = "Unsigned"
         public static let secureInputTitle = "Secure Event Input is active"
         public static let secureInputMessage =
             "Something on this Mac — usually a password field — is holding "
@@ -488,6 +497,9 @@ public enum StatusSurface {
              ("agentObserversLabel", agentObserversLabel),
              ("agentSignatureLabel", agentSignatureLabel),
              ("agentAbsent", agentAbsent),
+             ("agentRefused", agentRefused),
+             ("signatureAdHoc", signatureAdHoc),
+             ("signatureUnsigned", signatureUnsigned),
              ("secureInputTitle", secureInputTitle),
              ("secureInputMessage", secureInputMessage),
              ("openLog", openLog),

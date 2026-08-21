@@ -1,0 +1,9 @@
+Sources/ProctorUI/AgentModel.swift: 7 string literals examined
+  display         0
+  symbol          0
+  system          3
+  key             1
+  punctuation     3
+  interpolated    0
+
+PASS: 0 user-facing literals of 7 examined; 7 are identifiers, symbols, system strings or punctuation.

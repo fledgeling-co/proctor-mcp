@@ -93,7 +93,7 @@ extension Session {
             // fault — answers false here, because a person reading this is asking
             // one question and it is that one.
             "available": .bool(feed.drawing && feed.canShow && status.reason == nil),
-            "canShow": .bool(feed.canShow),
+            AgentVerbs.HUD.canShow: .bool(feed.canShow),
             "pauseLimitSeconds": .number(runControl.pauseLimit)
         ]
         // Four different absences, and a person deciding whether to trust an
@@ -219,8 +219,8 @@ extension Session {
             await RunHUDPanel.shared.refresh()
         }
 
-        var out: [String: JSONValue] = ["hud": feed.wire]
-        if let refused { out["refused"] = .string(refused) }
+        var out: [String: JSONValue] = [AgentVerbs.Activity.hud: feed.wire]
+        if let refused { out[AgentVerbs.HUD.refused] = .string(refused) }
         return .object(out)
     }
 
