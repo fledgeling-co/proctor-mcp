@@ -1670,3 +1670,28 @@ its own worktree, which is what the branch-ahead-of-base case calls for.
 change. A3's clause is *"the disabled next button is present in the tree in every state where it is
 disabled"*, which is about presence, not about when the control should be disabled. Whether that
 commit is the clause or a widening of it is a scope question the verifier decides.
+
+## Wave 13 — the twenty-one open defects, as six items (2026-08-21)
+
+Grouped by mechanism rather than by id. Ranges allocated up front; a runner needing more than its
+range asks rather than taking the next free id.
+
+| ID | Brief | Cases | Defects | Needs |
+|----|-------|-------|---------|-------|
+| PRO-0088 | `81-the-capture-path-reports-frames-it-did-not-get.md` | CASE-0120..0129 | DEF-060..064 | glass |
+| PRO-0089 | `82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md` | CASE-0130..0139 | DEF-065..069 | headless |
+| PRO-0090 | `83-what-the-surfaces-say-and-what-they-draw.md` | CASE-0140..0149 | DEF-070..074 | headless + glass |
+| PRO-0091 | `84-the-campaigns-own-instruments.md` | CASE-0150..0159 | DEF-075..079 | headless |
+| PRO-0092 | `85-proctoragents-mutants-mostly-survive.md` | CASE-0160..0169 | DEF-080..084 | quiet machine, long runs |
+| PRO-0093 | `86-a-dead-peer-holds-the-queue.md` | CASE-0170..0179 | DEF-085..089 | headless |
+
+**Dispatch order is set by what unblocks what.** PRO-0089 first among the six: the wall-clock oracle
+at `ScreenRecordingProbeWiringTests:42` has failed six recorded times this wave and costs a re-run
+every time somebody runs the gate, and `PolicyStore` writing the operator's real policy is the only
+open defect that can damage the machine the suite runs on. PRO-0091 alongside it, because it is
+mostly scripts and registries and conflicts with no source. PRO-0092 waits for a quiet machine —
+its two untrustworthy kills exist because the last run finished at load 271.
+
+**Still in flight from wave 11b:** PRO-0087 is built and unverified; PRO-0083 is verified
+`Needs More Work` on its A2 clause and waits on PRO-0087 merging, because the clause cannot close
+reproducibly until the cooperative pool stops starving.
