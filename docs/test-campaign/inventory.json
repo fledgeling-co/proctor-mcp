@@ -538,6 +538,20 @@
       ],
       "note": "witnessed on macos-glass by a process that is not the app under test, with a negative arm on a build lacking the modifier",
       "effect": "ipc"
+    },
+    {
+      "id": "REQ-053",
+      "class": "behaviour",
+      "text": "One process verifies a given binary's code signature once per file identity, however many sessions ask about it and however many ask at the same moment: fifteen concurrent callers on a cold entry produce one verification and fourteen waiters, and no caller and no verification holds a thread of the cooperative pool while it waits, so unrelated work runs to completion while a verification is in flight",
+      "source": "Sources/ProctorAgent/Session/SignatureVerdictCache.swift; docs/specs/spec-PRO-0087.md acceptance 1-2",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-054",
+      "class": "affordance",
+      "text": "The shared signature store is a default rather than a singleton: a ToolProbes handed a cache uses that one, so a test gets an isolated store and the identify/verify seam stays injectable",
+      "source": "Sources/ProctorAgent/Session/ToolProbe.swift:280; docs/specs/spec-PRO-0087.md acceptance 3",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1790,6 +1804,30 @@
       "title": "An orchestrator merge silently dropped a flow, unpublishing a judged capture",
       "found": "capture-lineage --gate, immediately after the PRO-0081 merge, 2026-08-21",
       "detail": "Reconciling inventory.json at the PRO-0081 merge, the orchestrator merged only the `defect` and `requirement` lists and took ours as the base document. PRO-0081's addition to `flow` \u2014 FLOW-010, carrying STEP-A3-PRIMARY-DISABLED and its `shot` \u2014 was dropped. The capture stayed on disk and its verdict stayed in witness-verdicts.json, but the subject left the published set, so judged fell 6 to 5 against a ratchet of 6.\n\nThe gate caught it and exited 2. That is the ratchet doing exactly its job: without it a judged capture would have quietly stopped being published and the wall would have shrunk with no green turning red.\n\nThe lesson is mechanical rather than about care: a hand-written merge of a multi-key registry must sweep every key, not the keys the conflict happened to be about. Repaired in the same commit by appending every theirs-only row across component, defect, flow, requirement and surface, with a uniqueness assertion per key."
+    },
+    {
+      "id": "DEF-050",
+      "status": "fixed",
+      "severity": "high",
+      "title": "The signature verdict cache was scoped per Session while the verdict it holds is a fact about a file, so fifteen sessions verified one 82 MB binary at once and starved the cooperative pool",
+      "found": "Raised by PRO-0083's verifier as DEF-044; reproduced and closed by PRO-0087",
+      "detail": "SignatureVerdictCache deduplicates a 0.32-0.39s SecStaticCodeCheckValidity per instance, and ToolProbes.init default-constructed one per probe set, which is one per Session. The file's own header argued that two concurrent callers both verifying was 'wasted work and nothing else' and that single-flight 'would buy one saved hash and a state machine to get wrong'; both halves assumed there were two callers, and the scoping made fifteen. Server.dispatchBlocking then had no thread for its Task.detached, and a peer with a 10s SO_RCVTIMEO went unserved, which took REQ-035's forged-caller witness with it.",
+      "evidence": "docs/test-campaign/evidence/PRO-0087/wedge-before.txt and wedge-before-2.txt, two samples of one hung run five minutes apart, each showing 15 of 22 threads inside SecStaticCodeCheckValidity on com.apple.root.default-qos.cooperative and blocked in Security::Dispatch::Group::wait() for the whole five-second sample; wedge-after-blocking.txt, the same measurement against the blocking fix, showing the wedge reshaped rather than removed. Run counts in docs/test-campaign/evidence/PRO-0087/run-ledger.md.",
+      "fix": "SignatureVerdictCache.shared is the ToolProbes default; the store is keyed by FileIdentity with a 16-entry bound; and verdict(for:) is async, so callers arriving on an identity already being verified register a continuation and give their thread back while one verification runs on a Thread of its own, off the cooperative pool. The blocking version of the same single-flight was built and measured first: it cut fifteen verifications to one and still hung a run, with all sixteen cooperative threads blocked and no non-cooperative worker in the process (wedge-after-blocking.txt). A pool capped at the core count does not replace a worker that blocks, so blocked waiters starve the verification exactly as duplicate verifiers did.",
+      "fixedBy": "PRO-0087",
+      "surface": "SURF-003",
+      "req": "REQ-053"
+    },
+    {
+      "id": "DEF-051",
+      "status": "open",
+      "severity": "low",
+      "title": "ScreenRecordingProbeWiringTests's 0.2s bound with 5s of headroom fails on a machine under heavy external load",
+      "found": "PRO-0087's run ledger, on the unmodified tree as well as the fixed one",
+      "detail": "aParkedCallDoesNotHang asserts elapsed < 5.0 for a probe whose bound is 0.2s. On this machine at load average 700-900, driven by other worktrees building rather than by this suite, it measured 10.7s. It failed on three of the four control runs taken on the unmodified tree, so it is independent of PRO-0087 and is recorded rather than fixed here: widening a bound to survive a loaded machine is the gate moving, which is the objection PRO-0087's brief raises against relaxing the forged peer's timeout.",
+      "evidence": "docs/test-campaign/evidence/PRO-0087/run-ledger.md",
+      "surface": "SURF-008",
+      "req": "REQ-053"
     }
   ]
 }

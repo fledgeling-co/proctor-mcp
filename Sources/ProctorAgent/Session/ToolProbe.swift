@@ -245,6 +245,13 @@ final class ToolProbes: Sendable {
     /// Held here beside the presences because it answers the same question they
     /// do — can this be used — and because it is the one part of that answer a
     /// stat cannot give.
+    ///
+    /// Defaulted to the shared store rather than to a fresh one. A probe set is
+    /// built per `Session`, and a verdict is a fact about a file rather than
+    /// about a session, so a cache per session is fifteen sessions verifying one
+    /// 82 MB binary at once — which is DEF-044, and which starved the cooperative
+    /// pool badly enough to take a security witness with it. A test that wants an
+    /// isolated store still passes one.
     let cuaSignature: SignatureVerdictCache
     let environment: [String: String]
 
@@ -270,7 +277,7 @@ final class ToolProbes: Sendable {
          tart: ToolProbe = ToolProbe(probe: ToolProbe.tartOnDisk,
                                      presentTTL: ToolProbe.presentTTL,
                                      absentTTL: ToolProbe.presentTTL),
-         cuaSignature: SignatureVerdictCache = SignatureVerdictCache(),
+         cuaSignature: SignatureVerdictCache = .shared,
          environment: [String: String] = ProctorEnvironment.current) {
         self.obscura = obscura
         self.browserUse = browserUse
