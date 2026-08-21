@@ -1,1 +1,0 @@
-==> swift test  (output: /tmp/pro83-full2.log)

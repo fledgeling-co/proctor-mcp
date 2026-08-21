@@ -1,0 +1,60 @@
+PRO-0083 — ./scripts/test.sh, the verdict, and what it took to get one that reproduces.
+
+THE PASSING RUN (the resume, 2026-08-21, load average 176):
+  PASS: 􁁛  Test run with 1827 tests in 217 suites passed after 21.376 seconds
+  exit 0.
+
+WHAT THE FIRST RESUME RUN FOUND. The run recorded before this one did not reproduce. On a clean
+tree at load average 22 the full suite FAILED twice, identically, at 143 seconds with four issues:
+
+  ExternalWitnessTests.swift:525  (drives.forger.status → 15) == 0
+  ExternalWitnessTests.swift:531  (records.count → 2) >= 3
+  ExternalWitnessTests.swift:546  (attributions(in: forgedRows) → []) == [nil]
+  ScreenRecordingProbeWiringTests.swift:42  (elapsed → 10.745) < 5.0
+
+Status 15 is SIGTERM: `driveBlocking` terminated the forging child at its 120-second bound. The
+same test passed ALONE in 0.416 seconds. At higher load the run stopped returning a verdict at
+all — 3 seconds of CPU in 9 minutes 24 of elapsed time, which is a wedge and not slowness.
+
+ATTRIBUTION, measured at each step rather than assumed:
+  full suite, this item's two suites SKIPPED   1818 tests, 6.5s, PASS   (probe test 0.655s)
+  this item's two suites ALONE                    9 tests, 9.5s, PASS
+  full suite, together                         1827 tests, 143s, FAIL
+
+WHERE IT BLOCKED. `sample` on the running process, on two separate full runs, put fifteen of the
+sixteen cooperative threads in one stack:
+
+  SecStaticCodeCheckValidityWithErrors  (in Security)
+    Security::CodeSigning::SecStaticCode::staticValidate(unsigned int, ...)
+      Security::Dispatch::Group::wait()
+        _dispatch_group_wait_slow
+          _dlock_wait
+            __ulock_wait
+
+in ScreenRecordingProbeWiringTests, ObscuraPresenceWiringTests, ToolchainDoctorTests and
+GuestProviderTests — none of them this item's. `staticValidate` farms its page hashing to the
+libdispatch global pool and waits on a group, so each blocked cooperative thread is waiting on a
+worker pool that a second load can starve. This item's second load was its child processes, and
+the most expensive of them was the forging arm's imposter: a hard link at a FRESH PATH is a first
+launch for syspolicyd however the inode is shared. DEF-043, DEF-044.
+
+THE FIX, in this item's test and not in the product. The forging arm no longer launches anything.
+It is a raw AF_UNIX peer that is the test process itself, which `proc_pidpath` reports as
+`proctor-mcpPackageTests` and `SessionIdentity.frontEnd(named:)` maps to nil — the same third-peer
+condition, at no launch cost. The run went 143s → 16.4s and four issues → one.
+
+  after the fix, load 250:  FAIL, 16.387s, 1 issue  (ScreenRecordingProbeWiringTests, 5.692 < 5.0)
+  after the fix, load 176:  PASS, 21.376s, exit 0
+  after the fix, load 241:  PASS, 20.261s, exit 0
+  after the fix, one run wedged and was killed — see DEF-044, and note that the sample taken
+  during it found ZERO threads belonging to this item: fifteen in staticValidate, all of them
+  ScreenRecordingProbeWiringTests, ObscuraPresenceWiringTests and ToolchainDoctorTests.
+
+THE ONE REMAINING ISSUE IS NOT THIS ITEM'S, and was measured rather than argued. At load ~200 with
+this item's two suites SKIPPED ENTIRELY, that same bounded test takes 5.393 seconds against its own
+5.0-second bound — it is already marginal on an unloaded-by-this-item tree, and this item adds
+0.3s. At load 22 it takes 0.655s. It is a tight bound on a loaded machine, and it passed in the
+green run above.
+
+./scripts/test.sh owns the verdict. An absent verdict line is a failure, and it reported one for
+every wedged run rather than reading the silence as green.

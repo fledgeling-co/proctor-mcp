@@ -359,3 +359,98 @@ before and after rather than assumed.
 dependency list, which is a build-graph edge: the Reflector compiles to nothing without `DEBUG` or
 `PROCTOR_REFLECTOR`, and `scripts/build-app.sh` already fails a release artifact carrying it. No
 `Sources/` file was edited by this item.
+
+## What it cost to make the gate return a verdict
+
+The nine headless witnesses passed in their own run from the first build and stopped
+`./scripts/test.sh` returning a verdict at all. That is recorded here rather than in a runner's
+report, because the cause is a property of this suite that the next person adding an integration
+test will meet.
+
+**The measurement.** `sample` on the wedged process, repeatedly, across samples seven minutes
+apart with the same thread ids in the same frames and 3.4 seconds of CPU consumed in twelve minutes
+of elapsed time: fourteen to fifteen of the sixteen cooperative-pool threads inside
+`Session.doctor` → `SignatureVerdictCache.verdict` → `CuaPreflight.verifySignature` →
+`SecStaticCodeCheckValidity`, across `BrowserLaneWiringTests`, `ObscuraPresenceWiringTests`,
+`ScreenRecordingProbeWiringTests`, `GuestDoctorWiringTests`, `MachineDisclosureWiringTests`,
+`DoctorReplyWiringTests` and `ToolchainOnThisMachineTests`. `codesign -v` on the same binary
+answered instantly from a shell throughout, so the system was not the bottleneck. DEF-043.
+
+**Attribution was measured at each step rather than assumed.** `--skip` over this item's two suites
+passed at 1,818 tests in 12.5 seconds while the full run never returned; the same comparison was
+then re-run at load average 500 so that machine load could be ruled out as the confound, and the
+skip run still passed in 26 seconds. Three separate causes were found and each was narrowed the
+same way — skip one test, run, sample.
+
+**The three fixes, all in the tests and none in the product.**
+
+1. **Blocking work moved onto threads the tests own.** `drive` waits on a child process for
+   seconds; `askWithBound` waits two seconds on a socket that never answers by design; `W7` blocked
+   on a semaphore while its own work ran on the same pool. All of it now runs through `offPool`,
+   which is the shape `Server.dispatchBlocking` already uses and for the same reason. The two pipe
+   drains moved off `DispatchQueue.global()` too, because that is the same libdispatch pool
+   `SecStaticCodeCheckValidity` needs a worker from.
+2. **`TrailIsolation` held only across code that never suspends.** Every trail suite here blocks in
+   `acquire()` from a cooperative thread, so a holder that suspends is betting it can get a slot
+   back while two of the sixteen are blocked waiting on it. `withRedirectedTrailBlocking` acquires,
+   redirects, runs a synchronous body and releases, all on one owned thread; the async setup moved
+   out above the call. The async variant was deleted rather than left available.
+3. **The witness sessions given probes that answer from a table.** `ToolProbes(environment: [:])`
+   locates the real `cua-driver` on this Mac, so every `proctor-cli doctor` child made the server
+   run a real signature check too — one more concurrent `verifySignature` on an already-full pool.
+   It is also simply the right probe: a witness that a CLI call crosses a socket has no business
+   validating a third-party binary, and a test whose result depends on what is installed is not a
+   measurement of the product.
+
+**A test wrote the operator's real policy file.** Reaching exit code `refused` needs
+`policy --action configure`, and `PolicyStore` has no `seams.directory` — `AuditLog` has one, and
+an `isTestProcess` interlock besides. The witness created
+`~/Library/Application Support/app.fledgeling.procter/policy/policy.json` with its own bundle id
+blocked; PRO-0077's REQ-015 witness then failed with `policyDenied` in a later run where this
+item's suites were skipped, because the block had outlived the process. The entry was removed from
+the operator's file and the configure dropped. CASE-0081 records that `refused` is unreachable from
+that lane and why. DEF-042.
+
+**Everything was re-armed after the rewrite**, because the rewrite changed every body. Each count
+was re-established on the code as it now stands, and each sabotage removed again and watched to
+fail — and that second pass caught an arming that could not fire, W3's dead watch pointed at a
+socket whose server had already been stopped. Evidence:
+`evidence/PRO-0083/arming-counts-after-refactor.txt` and `arming-sabotage-after-refactor.txt`.
+
+**The suite:** 1,818 tests in 215 suites → **1,827 in 217**, exit 0, three consecutive green runs
+at load averages 485, 622 and 500. `evidence/PRO-0083/suite-before-after.txt` and `gate.txt`.
+
+## What the resume corrected
+
+The run recorded in the section above did not reproduce. On a clean tree the full suite failed
+twice, identically, at 143 seconds with four issues, and wedged outright at higher load. The item
+was not finished; it was finished-looking, and the difference was one gate run.
+
+**The forging arm was the load, and its own claim was weaker than it read.** `driveBlocking`
+terminated the imposter child at its 120-second bound — status 15 is SIGTERM — while the same test
+passed alone in 0.416 seconds. The hard link was supposed to have removed the first launch, and it
+does not: a hard link at a **fresh path** is a first launch for `syspolicyd` however the inode is
+shared, and this suite runs beside seven wiring suites that hold fifteen of the sixteen cooperative
+threads inside `SecStaticCodeCheckValidity` at once. Separately, `--via` is not a flag
+`proctor-cli` parses — `grep -rn via Sources/ProctorCLI/` returns nothing — so the arm described as
+"a request asking to be recorded as `cli`" never put that ask on the wire at all.
+
+**Both were fixed by removing the launch.** The forging peer is now a raw AF_UNIX client that is
+the test process itself: `proc_pidpath` reports `proctor-mcpPackageTests`, which
+`SessionIdentity.frontEnd(named:)` maps to nil, so it is the same third peer at no launch cost. And
+because it hand-frames its own request, the ask is real — the frame's JSON carries `"via":"cli"` at
+the top level of the very object the server decodes, and `AgentRequest` has no such field. Re-armed
+by inverting three assertions: the peer **was** answered, `ForgedCall(answered: true, ok: true)`,
+and its row reads `[nil]` from those bytes. The run went 143s → 16.4s, four issues → one, then
+green: **1,827 tests in 217 suites, exit 0, 21.376 seconds at load average 176.**
+
+**The remaining risk is named rather than absorbed.** `ScreenRecordingProbeWiringTests`'s "a
+platform call that never answers returns unconfirmed within the bound" asserts `elapsed < 5.0`. At
+load ~200 with this item's two suites **skipped entirely** it takes 5.393 seconds; at load 22 it
+takes 0.655. It is a tight bound on a loaded machine rather than anything this item introduced, and
+attribution was measured both ways rather than argued. DEF-044 records the mechanism underneath it:
+`SignatureVerdictCache.verdict` releases its lock before calling `verify`, so concurrent callers
+with cold caches all verify at once. A per-instance single-flight would not close it, because the
+fifteen verifications come from fifteen separate Session caches each missing legitimately once — the
+dedupe would have to be process-wide, which is a design change and not this item's to make. No file
+under `Sources/` was edited.

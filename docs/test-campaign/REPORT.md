@@ -655,6 +655,24 @@ ceiling was re-read in source here rather than re-argued: `PersonInput.isAPerson
 `ContentionMonitor.considerInput:199` guards on it. Zero is what hardware carries and no process
 can forge it. A ceiling that was measured stays measured.
 
+**The suite, before and after.** 1,818 tests in 215 suites → **1,827 in 217**, exit 0, 21.376
+seconds at load average 176. `./scripts/test.sh` owns that verdict, and it refused every one of the
+deadlocked runs correctly: an absent verdict line is a failure, and it reported one rather than
+reading the silence as green.
+
+That verdict took a second pass to earn. The first recorded green run did not reproduce: on a clean
+tree the full suite failed twice, identically, at 143 seconds with four issues, and wedged outright
+at higher load — 3 seconds of CPU in 9 minutes 24 of elapsed time. The cause was this item's own
+forging arm, which launched a hard-linked copy of `proctor-cli` at a fresh path. A fresh path is a
+first launch for `syspolicyd` however the inode is shared, and it was being assessed while fifteen
+of the sixteen cooperative threads sat inside `SecStaticCodeCheckValidity`; `driveBlocking`
+terminated it at its 120-second bound while the same test passed alone in 0.416 seconds. The arm
+now launches nothing — it is a raw AF_UNIX peer that is the test process itself, which the kernel
+names `proctor-mcpPackageTests` and which maps to no front end — and the run went 143s → 16.4s and
+four issues → one. The claim got stronger in the same change: `--via` is not a flag `proctor-cli`
+parses, so the old arm never put its forgery on the wire, where the hand-framed request now carries
+`"via":"cli"` in the object the server decodes and the trail row still reads nothing.
+
 **What the gates read after this item.** `campaign.py check`: external effects
 `examined=22 witnessed=20`, up from 11 — and it still exits 1, correctly, over the two
 `inconclusive` cases. `strict-check` 79 of 81 checked, ratchet raised 70 → 79 in the same commit.
@@ -664,6 +682,36 @@ rather than assumed**: CASE-0089's frame is a case-level artifact under
 against genuinely does not include it. Wave 11a's lesson was that a gate reading an empty
 population exits 0 while examining nothing, so the count was read before and after rather than
 inferred.
+
+**The gate did not return a verdict at first, and what that cost is the second finding.** Adding
+nine integration tests beside the suite stopped `./scripts/test.sh` completing at all. `sample` on
+the wedged process, repeatedly and across samples seven minutes apart, put fourteen to fifteen of
+the sixteen cooperative-pool threads inside one call: `Session.doctor` →
+`SignatureVerdictCache.verdict` → `CuaPreflight.verifySignature` → `SecStaticCodeCheckValidity`,
+in seven unrelated wiring suites. It is a synchronous blocking call made from inside the session
+actor, and Swift's cooperative pool has exactly `activeProcessorCount` threads and never grows.
+`codesign -v` on the same binary returned instantly from a shell throughout, so the system was not
+the bottleneck — the process was. Recorded as DEF-043.
+
+That leaves two free slots, and anything needing a third while holding a lock other tests block on
+deadlocks the run. This item hit it three ways, each fixed in the test rather than in the product:
+blocking waits on child processes and sockets moved onto threads the tests own; `TrailIsolation`
+held only across code that never suspends, so the lock never waits on a pool slot two other trail
+suites are already blocked for; and the witness sessions given tool probes that answer from a
+table instead of locating the real `cua-driver` on this machine. Attribution was measured rather
+than assumed at each step — `--skip` over this item's two suites passed at 1,818 tests in 12.5
+seconds while the full run never returned, and the same comparison was re-run at load average 500
+so that load could be ruled out as the confound.
+
+**A test wrote the operator's real policy file, and a neighbouring witness failed because of it.**
+Driving `proctor-cli policy --action configure --block` to reach exit code `refused` created
+`~/Library/Application Support/app.fledgeling.procter/policy/policy.json` on this machine with the
+test's bundle id blocked. `AuditLog` carries `seams.directory` and an `isTestProcess` interlock for
+exactly this reason; `PolicyStore` carries neither. PRO-0077's REQ-015 witness then failed with
+`policyDenied` **in a later run where this item's suites were skipped entirely**, because the block
+had outlived the process that wrote it. The entry was removed from the operator's file, the
+configure was dropped, and CASE-0081 now records that the policy gate is unreachable from that lane
+rather than dropping it silently. DEF-042.
 
 **The ceilings, named rather than left as silence.** The nine passing cases stand on the portable
 floor from `references/effect-boundary.md`: real child processes, real sockets answering real
