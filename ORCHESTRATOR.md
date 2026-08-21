@@ -1618,8 +1618,11 @@ words: the guards that make a takeover visible *"arm before a post, from inside 
 it — and this post was made by another process, so nothing could have armed them."* A grep for
 `PointerOverlay`, `pointerMarker` or `drawnPointer` across `Actuation/` and `SessionAct.swift`
 returns zero, so wave 9's covered-target rule in `CursorOverlay.swift:273` is never consulted on
-this path. `"Automation Running"` is not Proctor's string at all — it is macOS's own indicator, and
-seeing it is the tell that the run left Proctor's plane. The escalation is already recorded as
+this path. `"Automation Running"` is not Proctor's string, and its actual source is unconfirmed: it is
+absent from Proctor's sources and from `strings` on `cua-driver`, `obscura`, `XCTest` and
+`UIAutomation`. The honest claim is the negative one — Proctor does not draw it — and identifying
+what does is the reproduction's first job, because it names which automation stack took the
+machine. The escalation is already recorded as
 `unrequestedForeground`; what is missing is that it never reaches the screen.
 
 The item starts with a reproduction rather than a fix: the mechanism is read off source, the trigger

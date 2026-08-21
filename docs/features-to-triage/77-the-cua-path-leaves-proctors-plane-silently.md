@@ -13,9 +13,13 @@ Mac.
 
 ## What the code says, measured 2026-08-21
 
-**"Automation Running" is not Proctor's.** `grep -rn "Automation Running" Sources/` returns nothing.
-That banner is macOS's own automation indicator, and its appearance is the tell that something other
-than Proctor's in-process actuation is driving the machine.
+**"Automation Running" is not Proctor's, and where it does come from is unconfirmed.**
+`grep -rn "Automation Running" Sources/` returns nothing, so Proctor does not draw it. It is also
+absent from `strings` on `cua-driver` and `obscura`, and from `XCTest` and `UIAutomation`. So the
+honest statement is the negative one: **Proctor is not drawing that banner**, and identifying what
+is drawing it is the first thing the reproduction should settle, because it names which automation
+stack actually took the machine. Do not carry the assumption that it is macOS's own indicator into
+the work; it was assumed once in drafting this brief and did not survive a check.
 
 **The cua backend already knows it cannot arm the overlays, and says so in a comment.**
 `Sources/ProctorAgent/Actuation/CuaActuationBackend.swift:302-306`:
