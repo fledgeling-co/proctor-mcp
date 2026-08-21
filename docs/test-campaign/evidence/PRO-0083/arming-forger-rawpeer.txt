@@ -1,0 +1,17 @@
+PRO-0083 resume — CASE-0080's forger arm, re-armed after it was rebuilt as a raw-socket peer.
+The launched imposter was replaced by a peer that is this test process: no binary is launched, so
+the arm no longer pays a first-launch code-signature assessment (DEF-044). The ask is now genuinely
+on the wire — the frame's JSON carries "via":"cli" at the top level of the object the server
+decodes — where the old --via flag was not a flag proctor-cli parses and never reached the socket.
+
+Three assertions inverted in the same body; all three went red:
+
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" recorded an issue at ExternalWitnessTests.swift:571:9: Expectation failed: !((drives.forger → ForgedCall(answered: true, ok: true, sent: "{\"id\":\"w35-forged\",\"tool\":\"proctor_policy\",\"via\":\"cli\",\"arguments\":{\"action\":\"approve\",\"bundleId\":\"com.fledgeling.w35-forged\",\"ttlMs\":1000}}")).answered → true → true)
+􀄵  ARMING: the forging peer WAS answered · {"id":"w35-forged","tool":"proctor_policy","via":"cli","arguments":{"action":"approve","bundleId":"com.fledgeling.w35-forged","ttlMs":1000}}
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" recorded an issue at ExternalWitnessTests.swift:573:9: Expectation failed: !((drives.forger → ForgedCall(answered: true, ok: true, sent: "{\"id\":\"w35-forged\",\"tool\":\"proctor_policy\",\"via\":\"cli\",\"arguments\":{\"action\":\"approve\",\"bundleId\":\"com.fledgeling.w35-forged\",\"ttlMs\":1000}}")).ok → true → true)
+􀄵  ARMING: the forging peer's call was accepted, ok=true
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" recorded an issue at ExternalWitnessTests.swift:594:9: Expectation failed: (Self.attributions(in: forgedRows) → [nil]) == (["cli"] → [Optional("cli")])
+􀄵  ARMING: the forged row actually reads [nil] from a request that asked for cli · rows=1
+
+Restored, and the test passes as written:
+PASS: 􁁛  Test run with 1 test in 1 suite passed after 0.577 seconds.

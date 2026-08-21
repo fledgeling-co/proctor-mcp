@@ -1,0 +1,125 @@
+warning: 'pro-0083': found 4 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/simctl-devices.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/browser-routing-baseline.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-pass.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-fail.json
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Compiling ProctorAgentTests ExternalWitnessTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorAgentTests/ExternalWitnessTests.swift:115:24: warning: result of call to 'offPool' is unused [#no-usage]
+ 113 |     /// `nil` if it did not raise one. `#expect(throws:)` cannot span an `await`.
+ 114 |     static func offPoolRefusal(_ body: @escaping @Sendable () throws -> Void) async -> String? {
+ 115 |         do { try await offPool { try body(); return true }; return nil }
+     |                        `- warning: result of call to 'offPool' is unused [#no-usage]
+ 116 |         catch { return (error as? AgentError)?.message ?? "\(error)" }
+ 117 |     }
+[6/7] Emitting module ProctorAgentTests
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (54.84s)
+Test Suite 'Selected tests' started at 2026-08-21 14:01:53.141.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-21 14:01:53.142.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-21 14:01:53.142.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-21 14:01:53.142.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "External effect witnesses: the ten a capped gate hid" started.
+􀟈  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" started.
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" recorded an issue at ExternalWitnessTests.swift:465:9: Expectation failed: (records.count → 3) < 0
+􀄵  ARMING W1: 3 records reached the disk, attributions [Optional("cli"), Optional("mcp"), nil]
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" recorded an issue at ExternalWitnessTests.swift:482:9: Expectation failed: (named.count → 2) < 0
+􀄵  ARMING W1: 2 rows named a front end: ["cli", "mcp"]
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" failed after 1.435 seconds with 2 issues.
+􀟈  Test "REQ-034 effect witness: real CLI children earn real exit codes over a real socket" started.
+􀢄  Test "REQ-034 effect witness: real CLI children earn real exit codes over a real socket" recorded an issue at ExternalWitnessTests.swift:624:9: Expectation failed: (answered → 3) < 0
+􀄵  ARMING W2: the server answered 3 connections from real CLI children
+􀢄  Test "REQ-034 effect witness: real CLI children earn real exit codes over a real socket" recorded an issue at ExternalWitnessTests.swift:644:9: Expectation failed: (distinct.count → 4) < 0
+􀄵  ARMING W2: real children produced 4 distinct exit codes: [(key: "actNoHandle", value: 1), (key: "agentUnreachable", value: 3), (key: "notReady", value: 1), (key: "ok", value: 0), (key: "okPolicy", value: 0), (key: "reflector", value: 1), (key: "usage", value: 2), (key: "verdictFailed", value: 2)]
+􀢄  Test "REQ-034 effect witness: real CLI children earn real exit codes over a real socket" failed after 1.659 seconds with 2 issues.
+􀟈  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" started.
+􀢄  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" recorded an issue at ExternalWitnessTests.swift:750:9: Expectation failed: (sink.count → 3) < 0
+􀄵  ARMING W3: 3 frames were published and 3 crossed the socket
+􀢄  Test "REQ-029 effect witness: frames reach a remote watcher over the socket, and a halt over it moves the one latch" failed after 0.486 seconds with 1 issue.
+􀟈  Test "REQ-033 effect witness: a supervision client reads readiness, switches and history off the socket" started.
+􀢄  Test "REQ-033 effect witness: a supervision client reads readiness, switches and history off the socket" recorded an issue at ExternalWitnessTests.swift:852:9: Expectation failed: sections.allSatisfy { $0 < 0 }
+􀄵  ARMING W4: a supervision client read [4, 5, 8, 3] across grants, lanes, switches, history
+􀢄  Test "REQ-033 effect witness: a supervision client reads readiness, switches and history off the socket" failed after 0.051 seconds with 1 issue.
+􀟈  Test "REQ-027 effect witness: a socket that accepts and never answers is a state of its own, distinct from an absent one" started.
+􀢄  Test "REQ-027 effect witness: a socket that accepts and never answers is a state of its own, distinct from an absent one" recorded an issue at ExternalWitnessTests.swift:990:9: Expectation failed: (acceptedAndUnanswered → 3) < 0
+􀄵  ARMING W5: the stalling listener accepted 3 connections and answered none
+􀢄  Test "REQ-027 effect witness: a socket that accepts and never answers is a state of its own, distinct from an absent one" failed after 6.070 seconds with 1 issue.
+􀟈  Test "REQ-037 effect witness: a forwarded call crosses a real socket into a guest, and the host actuates nothing" started.
+􀢄  Test "REQ-037 effect witness: a forwarded call crosses a real socket into a guest, and the host actuates nothing" recorded an issue at ExternalWitnessTests.swift:1129:9: Expectation failed: (forwarded.answeredByGuest → 3) < 0
+􀄵  // The count is steps the guest's own Proctor actuated, read off the guest's
+􀄵  // actuator rather than off the reply the host relayed.
+􀄵  ARMING W6: 3 calls were answered inside the guest · []
+􀢄  Test "REQ-037 effect witness: a forwarded call crosses a real socket into a guest, and the host actuates nothing" recorded an issue at ExternalWitnessTests.swift:1131:9: Expectation failed: (guestAX.performed.count → 3) < 0
+􀄵  ARMING W6: the guest actuated 3 steps, the host 0
+􀢄  Test "REQ-037 effect witness: a forwarded call crosses a real socket into a guest, and the host actuates nothing" failed after 0.225 seconds with 2 issues.
+􀟈  Test "REQ-039 effect witness: a guest this agent started is stopped by a real child, and one a person started is not" started.
+􀢄  Test "REQ-039 effect witness: a guest this agent started is stopped by a real child, and one a person started is not" recorded an issue at ExternalWitnessTests.swift:1253:9: Expectation failed: (evictableStops → 1) < 0
+􀄵  ARMING W7: evictable arm spawned ["get", "get", "ls", "ls", "ls", "run", "stop"], protected arm spawned ["ls"]
+􀢄  Test "REQ-039 effect witness: a guest this agent started is stopped by a real child, and one a person started is not" failed after 1.222 seconds with 1 issue.
+􀟈  Test "REQ-024: the browser lane's only boundary crossing is a filesystem read, and the census names a provider it never reaches" started.
+􀢄  Test "REQ-024: the browser lane's only boundary crossing is a filesystem read, and the census names a provider it never reaches" recorded an issue at ExternalWitnessTests.swift:1370:13: Expectation failed: (placed → 3) < 0
+􀄵  ARMING W8: 3 executables were placed and the locator answered over both
+􀢄  Test "REQ-024: the browser lane's only boundary crossing is a filesystem read, and the census names a provider it never reaches" failed after 0.024 seconds with 1 issue.
+􀢄  Suite "External effect witnesses: the ten a capped gate hid" failed after 11.176 seconds with 11 issues.
+􀢄  Test run with 8 tests in 1 suite failed after 11.176 seconds with 11 issues.
+PRO-0083 W1 (REQ-035) — re-armed after the forging front end became a hard link rather than a copy.
+A fresh copy at a fresh path is a first launch, and at load average 635 it was still being validated when the 30-second bound expired. The bound was not raised; the first launch was removed.
+
+warning: 'pro-0083': found 4 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/browser-routing-baseline.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-pass.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/simctl-devices.json
+    /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorCoreTests/Fixtures/maestro-commands-fail.json
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Emitting module ProctorAgentTests
+[6/7] Compiling ProctorAgentTests ExternalWitnessTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0083/Tests/ProctorAgentTests/ExternalWitnessTests.swift:115:24: warning: result of call to 'offPool' is unused [#no-usage]
+ 113 |     /// `nil` if it did not raise one. `#expect(throws:)` cannot span an `await`.
+ 114 |     static func offPoolRefusal(_ body: @escaping @Sendable () throws -> Void) async -> String? {
+ 115 |         do { try await offPool { try body(); return true }; return nil }
+     |                        `- warning: result of call to 'offPool' is unused [#no-usage]
+ 116 |         catch { return (error as? AgentError)?.message ?? "\(error)" }
+ 117 |     }
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (23.49s)
+Test Suite 'Selected tests' started at 2026-08-21 14:11:20.599.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-21 14:11:20.600.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-21 14:11:20.600.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-21 14:11:20.600.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "External effect witnesses: the ten a capped gate hid" started.
+􀟈  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" started.
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" recorded an issue at ExternalWitnessTests.swift:478:9: Expectation failed: (records.count → 3) < 0
+􀄵  ARMING W1: 3 records reached the disk, attributions [Optional("cli"), Optional("mcp"), nil]
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" recorded an issue at ExternalWitnessTests.swift:487:9: Expectation failed: (Self.attributions(in: cliRows) → [Optional("cli")]) == ([String?.none] → [nil])
+􀅺  inserted [Optional("cli")], removed [nil]
+􀄵  ARMING W1: the hard-linked CLI's row reads [Optional("cli")]
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" recorded an issue at ExternalWitnessTests.swift:493:9: Expectation failed: (Self.attributions(in: forgedRows) → [nil]) == (["cli"] → [Optional("cli")])
+􀅺  inserted [nil], removed [Optional("cli")]
+􀄵  // The security clause. A request asking to be recorded as the CLI is
+􀄵  // recorded as nothing, because the field is not readable from a request.
+􀄵  ARMING W1: the forger's row reads [nil], from a request that asked for cli
+􀢄  Test "REQ-035 effect witness: the trail names the front end the kernel saw, not the one the request claimed" failed after 0.949 seconds with 3 issues.
+􀢄  Suite "External effect witnesses: the ten a capped gate hid" failed after 0.949 seconds with 3 issues.
+􀢄  Test run with 1 test in 1 suite failed after 0.949 seconds with 3 issues.

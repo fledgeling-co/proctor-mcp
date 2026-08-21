@@ -1,0 +1,20 @@
+[
+  {
+    "captureOk": false,
+    "layer": 1000,
+    "onScreenAlpha": 1,
+    "ownerPID": 76491,
+    "reason": "screencapture -l wrote nothing: could not create image from window\n",
+    "sharingState": 0,
+    "windowNumber": 130709
+  },
+  {
+    "captureOk": false,
+    "layer": 1000,
+    "onScreenAlpha": 1,
+    "ownerPID": 76491,
+    "reason": "screencapture -l wrote nothing: could not create image from window\n",
+    "sharingState": 0,
+    "windowNumber": 130710
+  }
+]
