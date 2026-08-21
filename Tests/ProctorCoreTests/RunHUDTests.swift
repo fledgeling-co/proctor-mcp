@@ -577,3 +577,117 @@ struct RunHUDWordingTests {
         #expect(StepDescription.objectText(for: step(.appleScript, node: nil), node: nil) == nil)
     }
 }
+
+// MARK: - PRO-0084: the two facts the delegated lane used to keep to itself
+
+// The cua path records an unrequested escalation and a stood-down pointer on the
+// wire and said neither on screen. Both now reach the exception line — the one
+// sentence the panel ever says about a plane — and the tests that matter here
+// are the ones proving a disclosure SURVIVES the next step, because
+// `setPlaneStatement` recomputes that line on every one.
+@Suite("Delegated plane disclosures")
+struct DelegatedPlaneDisclosureTests {
+
+    private func delegatedRun(app: String? = "Acme Console",
+                              machine: Machine = .host) -> RunHUDState {
+        var state = RunHUDState()
+        state.apply(.runBegan(total: 4, app: app, foreground: ForegroundDemand(),
+                              delegated: true, machine: machine))
+        return state
+    }
+
+    private func approaching(_ state: inout RunHUDState) {
+        state.apply(.stepApproaching(step: ActionStep(kind: .click, node: "n1"),
+                                     node: AXNode(id: "n1", role: "AXButton", title: "Send"),
+                                     synthetic: false))
+    }
+
+    @Test("CASE-0230: an unrequested escalation reaches the exception line")
+    func escalationIsStated() {
+        var state = delegatedRun()
+        // The arming half: before the event there is no such sentence, so the
+        // assertion below is measuring the event rather than the wording of
+        // whatever the line happened to hold.
+        #expect(state.model.exception != RunHUDState.escalationLine(app: "Acme Console"))
+        state.apply(.escalatedToForeground)
+        #expect(state.model.exception == RunHUDState.escalationLine(app: "Acme Console"))
+    }
+
+    @Test("CASE-0231: the escalation survives the steps that follow it")
+    func escalationSurvivesLaterSteps() {
+        // The defect this slice exists to prevent. `setPlaneStatement` rewrites
+        // the exception line on every approach and every act, so a disclosure
+        // written once at the moment it became true would be gone by the next
+        // step — while the front it announced was still taken.
+        var state = delegatedRun()
+        state.apply(.escalatedToForeground)
+        approaching(&state)
+        #expect(state.model.exception == RunHUDState.escalationLine(app: "Acme Console"),
+                "the next step overwrote a fact that was still true")
+        state.apply(.stepActing(step: ActionStep(kind: .click, node: "n1"),
+                                node: nil, synthetic: false))
+        #expect(state.model.exception == RunHUDState.escalationLine(app: "Acme Console"))
+    }
+
+    @Test("CASE-0232: a stood-down pointer is stated, and it also survives a step")
+    func pointerDeferredIsStated() {
+        var state = delegatedRun()
+        #expect(state.model.exception != RunHUDState.pointerDeferredLine)
+        state.apply(.pointerDeferred)
+        #expect(state.model.exception == RunHUDState.pointerDeferredLine)
+        approaching(&state)
+        #expect(state.model.exception == RunHUDState.pointerDeferredLine)
+    }
+
+    @Test("CASE-0233: an escalation outranks a stood-down pointer when both hold")
+    func escalationOutranksPointer() {
+        // Both are true at once on a driver that neither suppresses its cursor
+        // nor stays in the background. One line, so one of them wins, and it is
+        // the one reporting that the machine was taken.
+        var state = delegatedRun()
+        state.apply(.pointerDeferred)
+        state.apply(.escalatedToForeground)
+        #expect(state.model.exception == RunHUDState.escalationLine(app: "Acme Console"))
+
+        // And the order they arrive in does not decide it.
+        var other = delegatedRun()
+        other.apply(.escalatedToForeground)
+        other.apply(.pointerDeferred)
+        #expect(other.model.exception == RunHUDState.escalationLine(app: "Acme Console"))
+    }
+
+    @Test("CASE-0234: a guest run states neither, because it takes nothing from this Mac")
+    func guestKeepsItsOwnLine() {
+        let guest = Machine(kind: .guest, name: "tart-sonoma",
+                            provider: "tart", platform: .macos, tier: .native)
+        var state = delegatedRun(machine: guest)
+        state.apply(.pointerDeferred)
+        state.apply(.escalatedToForeground)
+        #expect(state.model.exception == RunHUDState.guestFreeLine(guest),
+                "a guest run claimed it had taken this Mac's foreground")
+    }
+
+    @Test("CASE-0235: a new run clears both, so one run's disclosure cannot leak into the next")
+    func runBeganClearsBoth() {
+        var state = delegatedRun()
+        state.apply(.pointerDeferred)
+        state.apply(.escalatedToForeground)
+        #expect(state.model.exception == RunHUDState.escalationLine(app: "Acme Console"))
+
+        state.apply(.runBegan(total: 2, app: "Other App", foreground: ForegroundDemand(),
+                              delegated: true))
+        #expect(state.model.exception != RunHUDState.escalationLine(app: "Other App"))
+        #expect(state.model.exception != RunHUDState.pointerDeferredLine)
+    }
+
+    @Test("CASE-0241: a synthetic step in flight still says so when no escalation has happened")
+    func syntheticWordingIsUnchanged() {
+        // The control on the precedence order: the existing sentence keeps the
+        // line in every case the two new ones do not claim.
+        var state = delegatedRun()
+        state.apply(.pointerDeferred)
+        state.apply(.stepApproaching(step: ActionStep(kind: .click, node: "n1"),
+                                     node: nil, synthetic: true))
+        #expect(state.model.exception == RunHUDState.exceptionLine(app: "Acme Console"))
+    }
+}

@@ -350,6 +350,15 @@ extension Session {
             delegated: delegatedLane,
             driverSuppressible: await actuator.cursorSuppressible)
         run.pointerOwner = pointerOwner
+        // Said once, here, where the decision is made rather than re-derived
+        // somewhere that could disagree with it (PRO-0084).
+        //
+        // `pointerDrawnBy` has carried this to the wire since PRO-0046, and the
+        // wire is not where somebody watching their own cursor move is looking.
+        // A run with no Proctor pointer and a real cursor travelling on its own
+        // is indistinguishable from a person's own hand, and that is the
+        // confusion this item was reported for. The panel says which it is.
+        if pointerOwner == .deferredToDriver { await hud(.pointerDeferred) }
         // The pid whose events the guards should treat as this run's own doing,
         // read once for the batch. Nil is not a failure — it is what made this
         // batch take the exclusive lane, so nothing else is holding the block.
@@ -660,6 +669,30 @@ extension Session {
                     armContention(run: foregroundRun, because: "a step travelled the event stream")
                 }
             }
+            // The delegated lane's twin, and PRO-0084's subject — but NOT a
+            // second raise, and the difference was found by arming rather than
+            // by reading.
+            //
+            // The statement above has ALREADY gone up by the time this runs, and
+            // it is `CuaVocabulary` that guarantees it: `escalated` is set only
+            // for a path in `foregroundPaths`, every member of which maps to
+            // `.syntheticEvent` in `planes`. So an unrequested escalation is a
+            // strict subset of the branch above, and a `takeoverShow` here could
+            // never fire when that one had not. It was written, and the test
+            // asserting it passed with the line deleted — which is what a dead
+            // predicate looks like. `CuaPlaneCouplingTests` now pins the
+            // coupling instead, so a vocabulary change that broke it would
+            // redden a test rather than silently stop raising the statement.
+            //
+            // What was genuinely missing is the WORDING. The statement and the
+            // panel's exception line both said this batch needed the front —
+            // which is what `exceptionLine` means — and neither said the batch
+            // never asked for it and the driver took it anyway. That distinction
+            // is the whole of what a person watching an unexplained takeover
+            // needs, and `unrequestedForeground` is the only thing that carries
+            // it. It has reached the wire since PRO-0044 and reaches the screen
+            // here.
+            if outcome.unrequestedForeground { await hud(.escalatedToForeground) }
             if let stateHash {
                 run.finalHash = stateHash
                 run.hashes.append(stateHash)

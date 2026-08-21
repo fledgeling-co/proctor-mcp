@@ -1,0 +1,108 @@
+PRO-0084 arming ledger — each new predicate run against a sabotaged tree.
+Verdict from ./scripts/test.sh, exit read from a file. Sat 22 Aug 2026 00:32:34 AEST
+
+### A. resolver loses the escalation rung (expect CASE-0230/0231/0233 to fail)
+exit=1
+CASE-0230 -> failed
+CASE-0231 -> failed
+CASE-0232 -> passed
+CASE-0233 -> failed
+CASE-0234 -> passed
+CASE-0235 -> failed
+CASE-0236 -> passed
+CASE-0237 -> passed
+CASE-0238 -> passed
+CASE-0241 -> passed
+CASE-0242 -> passed
+CASE-0243 -> passed
+CASE-0244 -> passed
+FAIL: swift test exited 1
+
+### B. resolver loses the deferred-pointer rung (expect CASE-0232 to fail)
+exit=1
+CASE-0230 -> passed
+CASE-0231 -> passed
+CASE-0232 -> failed
+CASE-0233 -> passed
+CASE-0234 -> passed
+CASE-0235 -> passed
+CASE-0236 -> passed
+CASE-0237 -> passed
+CASE-0238 -> passed
+CASE-0241 -> passed
+CASE-0242 -> passed
+CASE-0243 -> passed
+CASE-0244 -> passed
+FAIL: swift test exited 1
+
+### C. setPlaneStatement stops using the resolver (expect the survive-a-step cases to fail)
+exit=1
+CASE-0230 -> passed
+CASE-0231 -> failed
+CASE-0232 -> failed
+CASE-0233 -> passed
+CASE-0234 -> passed
+CASE-0235 -> passed
+CASE-0236 -> passed
+CASE-0237 -> passed
+CASE-0238 -> passed
+CASE-0241 -> passed
+CASE-0242 -> passed
+CASE-0243 -> passed
+CASE-0244 -> passed
+FAIL: swift test exited 1
+
+### D. runBegan stops clearing the flags (expect CASE-0235 to fail)
+exit=1
+CASE-0230 -> passed
+CASE-0231 -> passed
+CASE-0232 -> passed
+CASE-0233 -> passed
+CASE-0234 -> passed
+CASE-0235 -> failed
+CASE-0236 -> passed
+CASE-0237 -> passed
+CASE-0238 -> passed
+CASE-0241 -> passed
+CASE-0242 -> passed
+CASE-0243 -> passed
+CASE-0244 -> passed
+FAIL: swift test exited 1
+
+### E. a foreground path stops reporting the raising plane (expect CASE-0236 to fail)
+exit=1
+CASE-0230 -> passed
+CASE-0231 -> passed
+CASE-0232 -> passed
+CASE-0233 -> passed
+CASE-0234 -> passed
+CASE-0235 -> passed
+CASE-0236 -> failed
+CASE-0237 -> passed
+CASE-0238 -> passed
+CASE-0241 -> passed
+CASE-0242 -> passed
+CASE-0243 -> passed
+CASE-0244 -> passed
+FAIL: swift test exited 1
+
+### F. the run stops emitting the deferred-pointer decision (expect NO case to fail: the emission is unwitnessed)
+exit=0
+CASE-0230 -> passed
+CASE-0231 -> passed
+CASE-0232 -> passed
+CASE-0233 -> passed
+CASE-0234 -> passed
+CASE-0235 -> passed
+CASE-0236 -> passed
+CASE-0237 -> passed
+CASE-0238 -> passed
+CASE-0241 -> passed
+CASE-0242 -> passed
+CASE-0243 -> passed
+CASE-0244 -> passed
+PASS: 􁁛  Test run with 1947 tests in 239 suites passed after 15.214 seconds.
+
+restored; final confirmation run
+final exit=0
+PASS: 􁁛  Test run with 1947 tests in 239 suites passed after 13.054 seconds.

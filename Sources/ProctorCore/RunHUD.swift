@@ -81,6 +81,30 @@ public enum RunHUDEvent: Sendable {
     case stepRefused(step: ActionStep, node: AXNode?)
     /// It failed or never settled.
     case stepFailed(step: ActionStep, node: AXNode?)
+    /// A delegated step brought the application to the front without this batch
+    /// asking for it (PRO-0084).
+    ///
+    /// Knowable only when the driver's `perform` returns: it tries an
+    /// accessibility action, then a routed event, and escalates only when
+    /// neither works, deciding at the element. So nothing could have said this
+    /// before the post — which is precisely why it has to be said after one,
+    /// rather than not at all. The run panel is the surface that answers "is
+    /// something driving my Mac right now, and what", and a batch that came to
+    /// the front unasked is the event that question exists for.
+    ///
+    /// No payload: the application is already held from `runBegan`, and a second
+    /// copy of the name is a second thing that can disagree with it.
+    case escalatedToForeground
+    /// Proctor stood its own drawn pointer down for this run, because the
+    /// installed driver could not be asked to stop drawing one of its own
+    /// (PRO-0084, and `PointerOwner.deferredToDriver`).
+    ///
+    /// Said because the alternative is the confusion this item was reported for:
+    /// a run with no visible Proctor pointer and a real cursor moving on its own
+    /// is indistinguishable from a person's own mouse. Deliberately NOT a
+    /// fabricated pointer standing in for one Proctor is not posting — that
+    /// would be a drawn claim about a position Proctor never chose.
+    case pointerDeferred
     /// A person pressed Pause; the step named is the one being held before.
     case paused(step: ActionStep?, node: AXNode?)
     /// Nobody pressed anything: the run noticed somebody using the machine and
@@ -320,6 +344,14 @@ public struct RunHUDState: Sendable {
     private var pending: (step: ActionStep, node: AXNode?)?
     /// Whether another program is performing this run's steps.
     private var delegated = false
+    /// Whether a delegated step has taken the front without this batch asking.
+    /// Latched for the rest of the run rather than shown for one step: the front
+    /// stays taken after the step that took it, so a sentence that came and went
+    /// would describe a state that is still true.
+    private var escalated = false
+    /// Whether Proctor stood its own pointer down for this run. A standing
+    /// condition of the run, decided once, so it is held rather than re-derived.
+    private var pointerDeferred = false
     /// The machine the steps are landing on. Host by default, so every
     /// existing caller keeps today's wording.
     private var machine: Machine = .host
@@ -342,6 +374,11 @@ public struct RunHUDState: Sendable {
             self.demand = foreground
             self.delegated = delegated
             self.machine = machine
+            // Cleared with everything else a run owns. Without this, one run's
+            // escalation would put its sentence on the next run's panel, which
+            // is a claim about a machine that is no longer being taken.
+            self.escalated = false
+            self.pointerDeferred = false
             self.knownForeground = foreground.certainSteps
             self.resolvedConditional = 0
             self.pending = nil
@@ -353,9 +390,7 @@ public struct RunHUDState: Sendable {
             } else {
                 // Before anything runs, and stated as what the batch contains
                 // rather than as a prediction about what will happen.
-                fresh.exception = foreground.notice(app: app, known: knownForeground,
-                                                    resolvedConditional: resolvedConditional,
-                                                    delegated: delegated)
+                fresh.exception = planeException(synthetic: false)
             }
             model = fresh
 
@@ -415,6 +450,14 @@ public struct RunHUDState: Sendable {
             model.phase = .error
             model.line = StepDescription.line(for: step, node: node, outcome: .failed)
             push(RunHUDModel.Row(text: model.line, settleMs: nil, outcome: .failed))
+
+        case .escalatedToForeground:
+            escalated = true
+            model.exception = planeException(synthetic: model.syntheticInFlight)
+
+        case .pointerDeferred:
+            pointerDeferred = true
+            model.exception = planeException(synthetic: model.syntheticInFlight)
 
         case .paused(let step, let node):
             model.phase = .paused
@@ -530,12 +573,59 @@ public struct RunHUDState: Sendable {
             model.exception = Self.guestFreeLine(machine)
             return
         }
-        model.exception = synthetic
-            ? Self.exceptionLine(app: app)
-            : demand.notice(app: app, known: knownForeground,
-                            resolvedConditional: resolvedConditional,
-                            delegated: delegated)
+        model.exception = planeException(synthetic: synthetic)
     }
+
+    /// The one sentence about a plane, resolved in one place.
+    ///
+    /// **Every writer of `model.exception` goes through here, and that is the
+    /// point rather than tidiness.** `setPlaneStatement` recomputes the line on
+    /// every `stepApproaching` and `stepActing`, so a disclosure written once at
+    /// the moment it became true would survive exactly until the next step and
+    /// then vanish — while the thing it disclosed went on being true. A latched
+    /// fact needs a resolver, not an assignment.
+    ///
+    /// The order is by what a person most needs to know, and every rung above
+    /// the last is a state Proctor has *measured* rather than predicted:
+    ///
+    /// 1. A guest run takes nothing from this Mac, so no claim about taking it
+    ///    may appear. This guard already existed and keeps precedence.
+    /// 2. The front was taken without this batch asking. The strongest thing
+    ///    the panel can say, and the only one reporting a completed escalation.
+    /// 3. A synthetic step is in flight — today's wording, unchanged.
+    /// 4. Proctor is not drawing this run's pointer. A standing condition, so it
+    ///    yields to the two events above and outranks the count.
+    /// 5. What the batch contains, exactly as before.
+    private func planeException(synthetic: Bool) -> String? {
+        if machine.isGuest { return Self.guestFreeLine(machine) }
+        if escalated { return Self.escalationLine(app: app) }
+        if synthetic { return Self.exceptionLine(app: app) }
+        if pointerDeferred { return Self.pointerDeferredLine }
+        return demand.notice(app: app, known: knownForeground,
+                             resolvedConditional: resolvedConditional,
+                             delegated: delegated)
+    }
+
+    /// A delegated step took the front and this batch did not ask it to.
+    ///
+    /// Stated as something that HAS happened, not as something that might: by
+    /// the time this is on screen the driver has already escalated and returned.
+    /// The word is "took" for the same reason `exceptionLine` says "must stay in
+    /// front" — the panel's one sentence about a plane is read by somebody
+    /// deciding whether to reach for their own mouse.
+    public static func escalationLine(app: String?) -> String {
+        let who = StepDescription.sanitised(app) ?? "the app under test"
+        return "cua-driver brought \(who) to the front — this batch did not ask"
+    }
+
+    /// Proctor is not drawing this run's pointer.
+    ///
+    /// Names the driver rather than the absence, because "no pointer" is exactly
+    /// the reading that makes a moving cursor look like the person's own hand.
+    /// No application name: the pointer is a fact about the run's cursor rather
+    /// than about the window, and the target row already names the window.
+    public static let pointerDeferredLine =
+        "cua-driver is moving the real cursor — the pointer on screen is not Proctor's"
 
     /// The one sentence the panel ever says about a plane, and it is only ever
     /// said about the exception.

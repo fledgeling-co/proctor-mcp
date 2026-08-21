@@ -36,6 +36,27 @@ extension Session {
     /// deferred costs exactly what `PROCTOR_CURSOR=0` costs: nothing.
     func showCursor(for step: ActionStep, window: WindowHandle,
                     owner: PointerOwner = .proctor) async {
+        // THE CEILING WAVE 9'S COVERED-TARGET RULE STOPS AT (PRO-0084, REQ-072).
+        //
+        // Below this line every plane decision is about a panel THIS process
+        // owns: `cursorPlane` reads the window list, `CursorOverlay.applyPlane`
+        // restacks and reads back, and `PointerPlanePolicy.fallback` hides the
+        // pointer when something covers the target. All three act by moving or
+        // hiding Proctor's own panel.
+        //
+        // A driver's cursor is another process's drawing. Proctor can neither
+        // place it in the target's plane nor hide it when the target is covered,
+        // so the rule cannot be carried across this return — not because nobody
+        // wired it, but because there is nothing here to place or hide. What
+        // Proctor CAN still do is say so, and `RunHUDEvent.pointerDeferred` does
+        // that at the run's one decision point.
+        //
+        // This is recorded as a ceiling rather than worked around. The two
+        // workarounds both make things worse: drawing a Proctor pointer anyway
+        // puts two cursors on one screen, which `PointerOwner` refuses on the
+        // grounds that a reader then cannot tell which one the machine follows;
+        // and drawing one only when the driver's is believed absent rests on a
+        // belief about another process that Proctor never observes.
         guard owner == .proctor else { return }
         guard CursorOverlay.isEnabled else { return }
         let plane = cursorPlane(for: window)

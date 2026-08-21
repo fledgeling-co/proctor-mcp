@@ -666,6 +666,44 @@
       ],
       "note": "Armed two-way in CASE-0200 by moving one status field and watching the guard turn on and off. No plugin change was needed or made; stock 0.9.4 already behaves this way.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-070",
+      "class": "disclosure guarantee",
+      "text": "A delegated batch whose driver brings the application to the front without the batch asking is distinguishable on screen from one that asked: the run panel's exception line states that the front was taken and not requested, rather than the existing sentence which states that the batch needs the front. The takeover statement itself is already raised by the plane the escalation reports and is not raised a second time",
+      "source": "PRO-0084; brief 77 items 1 and 4; CuaActuationBackend.swift:302-306; SessionAct.swift:653; CuaVocabulary.planes and .foregroundPaths (CuaTransport.swift:151-165)",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "note": "The brief's claim that no takeover statement is raised did not survive arming: a test asserting the raise passed with the raising line deleted, because every foregroundPaths member maps to .syntheticEvent, which SessionAct already raises on. The redundant raise was removed and the previously unguarded coupling is now pinned by CASE-0236..0238. What was genuinely absent, and is what this requirement covers, is the wording.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-071",
+      "class": "disclosure guarantee",
+      "text": "A run in which Proctor stood its own drawn pointer down - because the installed driver could not be asked to stop drawing one of its own - says so on the run panel, rather than leaving a moving real cursor with no visible Proctor pointer, which is indistinguishable from a person's own mouse. No fabricated pointer stands in for one Proctor is not posting",
+      "source": "PRO-0084; brief 77 item 2; PointerOwnership.decide; SessionAct.swift:349-361; SessionCursor.swift stand-down guard",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-004",
+        "SURF-003"
+      ],
+      "note": "The state is proved end to end on the wire by CASE-0242/0243/0244 and the panel wording by CASE-0232. The hud(.pointerDeferred) emission joining the two is NOT witnessed by any test: RunHUDPanel's feed is hardcoded to RunHUDFeed.shared, so a wiring assertion would read a singleton other suites write concurrently. Probe F of the arming ledger records this honestly - deleting the emission reddens nothing.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-072",
+      "class": "ceiling",
+      "text": "Two limits on how far Proctor's plane disclosures can reach are recorded as ceilings rather than worked around: wave 9's covered-target rule cannot be carried to a pointer another process draws, because the rule acts by placing or hiding Proctor's own panel and there is nothing of Proctor's to place or hide; and a run driven by another automation stack entirely is outside every surface Proctor arms",
+      "source": "PRO-0084; brief 77 item 3; SessionCursor.swift stand-down guard; PointerOwner header; /System/Library/PrivateFrameworks/AutomationMode.framework",
+      "evidence": "inconclusive",
+      "surfaces": [
+        "SURF-004"
+      ],
+      "note": "The 'Automation Running' banner the report named is macOS's own: 'Automation Mode Enabled Title' in AutomationModeUI.app's Localizable.loctable, drawn by AutomationModeUI.app (pid 64198, ppid 1) and driven by XCTest/testmanagerd. It is not Proctor's and not cua-driver's, so the report's first clause names runs Proctor never drove and no change here can put an overlay over them. Recorded inconclusive against a stated ceiling rather than passed.",
+      "effect": "none"
     }
   ],
   "surface": [
