@@ -1,0 +1,12 @@
+PRO-0096 — the arming probe with its reference pinned to an immutable sha.
+$ python3 scripts/campaign/wall_clock_census.py --arm
+
+--- arming: the detector over the pre-PRO-0089 files ---
+  Tests/ProctorAgentTests/ScreenRecordingProbeWiringTests.swift @ baa98bbe33ce: offenders at [42] (expected 42)
+  Tests/ProctorAgentTests/CuaLineReaderTests.swift @ baa98bbe33ce: offenders at [107] (expected 107)
+  detector caught 2 of the 2 known offenders
+ARMED
+exit=0
+
+PRE_FIX_COMMIT baa98bbe33ce = baa98bb fix(policy): give PolicyStore a root it is told, not one it assumes
+It is the parent of 6dbaa9b, the last tree holding both offenders.

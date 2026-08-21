@@ -1,0 +1,18 @@
+PRO-0096 finding 3 — is campaign.py 0.9.4 over-strict on an inconclusive witness?
+Two-way, over the UNMODIFIED registry from HEAD. One field moves: CASE-0067's status.
+Its witness count stays 0 in both arms.
+
+=== DISARMED: CASE-0067 as it is, status 'inconclusive: ...', count 0 ===
+  · 3 effect-witness claim(s) with no recorder, no effect class, or a count of zero — a witness that saw nothing is the condition this rung exists to detect
+  Effect witnesses that witnessed nothing: CASE-0114, CASE-0114, CASE-0114 (showing 3 of 3)
+
+=== ARMED: the same registry, CASE-0067 status flipped to 'pass', count still 0 ===
+  · 4 effect-witness claim(s) with no recorder, no effect class, or a count of zero — a witness that saw nothing is the condition this rung exists to detect
+  Effect witnesses that witnessed nothing: CASE-0067, CASE-0114, CASE-0114, CASE-0114 (showing 4 of 4)
+
+The guard turns on and off with the status alone, so the exemption is a live branch
+rather than a case the check never reaches. campaign.py:751 —
+        if c.get("oracle") in WITNESS_RUNGS and st == "pass":
+
+VERDICT: stock 0.9.4 already exempts an inconclusive case. No plugin change made.
+campaign.py sha256 as installed: a7d978224e6304875e1bd980f52f6cad25b6e9a163b4a6f7e864b3c7e6e50f27
