@@ -1,0 +1,98 @@
+{
+ "schema": "reckoning-run/1",
+ "taken_at": "2026-08-22T06:40:30Z",
+ "project": "proctor-mcp",
+ "tree": {
+  "repo": "proctor-mcp",
+  "commit": "2bd01beb2c9a4d4359520279510b87e7fc01e0f3",
+  "short": "2bd01be",
+  "branch": "ai/wave-9",
+  "tree_named": true,
+  "dirty_inputs": []
+ },
+ "tool": {
+  "name": "reckon",
+  "version": "1.0.0+local-patch",
+  "script": "~/.claude/plugins/cache/fledgeling-plugins/reckon/1.0.0/skills/reckon/scripts/reckon.py, patched in place for the tokens() crash on list-valued evidence",
+  "manifest": null,
+  "source_commit": null,
+  "classes": null
+ },
+ "inputs": {
+  "briefs": "docs/features-to-triage",
+  "campaign": "docs/test-campaign"
+ },
+ "gate": {
+  "build_exit": null,
+  "check_exit": null
+ },
+ "headline": "218 piece(s) of work remain — 183 product, 31 evidence, 4 decision — across 516 ledger rows. This reckoning speaks for 98% of the campaign's designed cases and 64% of its stated requirements; the rest is not known to be done, it is simply not known.",
+ "summary": {
+  "counts": {
+   "verified-done": 298,
+   "unmeasured": 31,
+   "undecided": 4,
+   "broken": 108,
+   "unbuilt": 75
+  },
+  "work_items": 218,
+  "work_by_class": {
+   "undecided": 4,
+   "unmeasured": 27,
+   "broken": 108,
+   "unbuilt": 75
+  },
+  "work_by_kind": {
+   "decision-work": 4,
+   "evidence-work": 31,
+   "product-work": 183
+  },
+  "rows": 516
+ },
+ "denominators": {
+  "cases_adjudicated": {
+   "n": 227,
+   "of": 231,
+   "pct": 98.3,
+   "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+  },
+  "decisions_taken": {
+   "n": 0,
+   "of": 231,
+   "pct": 0.0,
+   "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+  },
+  "requirements_observed": {
+   "n": 49,
+   "of": 76,
+   "pct": 64.5,
+   "means": "somebody watched it happen, rather than the project reporting it of itself."
+  },
+  "surfaces_spoken_for": {
+   "n": 22,
+   "of": 22,
+   "pct": 100.0,
+   "means": "at least one case on this surface reached a verdict."
+  },
+  "briefs_joined": {
+   "n": 16,
+   "of": 91,
+   "pct": 17.6,
+   "means": "the brief could be tied to something in the registry at all."
+  }
+ },
+ "class_counts": {
+  "verified-done": 298,
+  "unmeasured": 31,
+  "undecided": 4,
+  "broken": 108,
+  "unbuilt": 75
+ },
+ "provenance": "transcribed",
+ "notes": [
+  "Provenance transcribed from the report's own first line, not measured: this run predates the stamp and was deliberately not re-taken, because a baseline edited to suit is not a baseline.",
+  "The published report carries a human-adjudicated join of 78/91 briefs (66 cited plus 12 confirmed by title). The ledger's mechanical join is 16/91, and every delta computed from these files is mechanical on both sides.",
+  "The ledger's own headline — 218 remain, 183 product — is the one the report declined to reproduce. Two faults produced it: all 108 defects classed broken without reading status, and 75 briefs classed unbuilt for failing to join. Both are repaired in reckon 1.1.0, so any delta against this ledger measures the tool unless the tool is held constant.",
+  "The report excludes PRO-0082, PRO-0085 and PRO-0099 from its prose counts as mid-flight. The ledger does not exclude them."
+ ]
+}

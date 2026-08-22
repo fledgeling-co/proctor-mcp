@@ -99,6 +99,22 @@ def git(repo, *args):
     return code, out.strip(), err.strip()
 
 
+def repo_name(repo):
+    """The repository's name, not the worktree's.
+
+    A reading taken in `.worktrees/PRO-0103` is a reading about proctor-mcp, and
+    a provenance record that says otherwise sends the next comparison looking
+    for a repository that does not exist.
+    """
+    code, common, _ = git(repo, "rev-parse", "--git-common-dir")
+    if code == 0 and common:
+        path = Path(common)
+        if not path.is_absolute():
+            path = Path(repo) / path
+        return path.resolve().parent.name
+    return Path(repo).resolve().name
+
+
 def load_json(path):
     with open(path, encoding="utf-8") as fh:
         return json.load(fh)
@@ -211,7 +227,7 @@ def resolve_tree(repo, inputs, allow_dirty=False):
     code, dirty, _ = git(repo, "status", "--porcelain", "--", *inputs)
     dirty_paths = [line[3:] for line in dirty.splitlines() if line.strip()]
 
-    tree = {"repo": Path(repo).resolve().name, "commit": head, "short": head[:7],
+    tree = {"repo": repo_name(repo), "commit": head, "short": head[:7],
             "branch": branch, "tree_named": True, "dirty_inputs": dirty_paths}
     if dirty_paths:
         if not allow_dirty:
@@ -723,7 +739,7 @@ def cmd_stamp(args):
         "schema": SCHEMA,
         "taken_at": args.taken_at,
         "project": ledger.get("project"),
-        "tree": {"repo": repo.name, "commit": full, "short": full[:7], "branch": args.branch,
+        "tree": {"repo": repo_name(repo), "commit": full, "short": full[:7], "branch": args.branch,
                  "tree_named": True, "dirty_inputs": []},
         "tool": {"name": "reckon", "version": args.tool_version, "script": args.tool_script,
                  "manifest": None, "source_commit": args.tool_commit, "classes": None},
