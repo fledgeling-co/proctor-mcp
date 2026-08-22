@@ -2486,3 +2486,45 @@ the `GIT_DIR` one: the predicate is any git write the harness invokes, those cal
 dependencies rather than first-party code, and **`git init` under `GIT_DIR` exits 0 with no output and
 no `.git` while being ineffective** — so a fixture's non-repo-ness cannot be detected at creation, and
 a check placed after the next command is checking a tree already written to.
+
+### PRO-0092 verified `Needs More Work`, corrected, and now waiting on a machine that cannot admit it (2026-08-23)
+
+**The verdict turned on the record rather than the engineering.** Every acceptance clause passed, no
+code needed redoing, and four numbers were wrong — one of them the item's headline, in the flattering
+direction. All four are corrected on `ai/pro-0092` at `cae0f29`.
+
+| What the record said | What the evidence says |
+|---|---|
+| The class closed covers **34** argument-decode sites, **1.1%** of the pool | `Dispatch.swift` holds 34 `args.bool` sites; the join compares only sites whose tool declares a default, and the check's own comment records **sixteen comparable pairs** with a floor at twelve. **~16 sites, 0.5%** |
+| Nine killed, four recorded | The plan's own table: seven `seam + kill` plus three other kills. **Ten killed, three recorded** — and the wrong figure had reached shipped source in `MutationSeamTests.swift`'s header |
+| Longest mutant **31.9s** of 600s | **36.0s**, `SessionAssert.swift:63`. 31.9s is third |
+| (unstated) | `ToolCatalogue.swift` gained *"Defaults to false."* at the three descriptions the agreement test compares against, so **three of the sixteen pairs are pairs this item created**. Now recorded as a specification-completion step |
+
+**All twenty survivors were shown to land, and that is a reconstruction rather than a proof.** The
+verifier rebuilt all 24 mutants against the tree the run used: every recorded offset holds the recorded
+`before` text, and a simulated splice changes exactly one line at exactly the recorded line number. So
+no survivor here is an aborted mutation wearing a survivor's label — which is a live risk rather than a
+hypothetical, because a mutator elsewhere the same night aborted on an anchor that occurred in both the
+source and the test asserting it, ran against pristine code, and published a live guard as decorative.
+**A survivor has two readings: the guard is decorative, or the mutation never happened.**
+
+**DEF-207 and DEF-208** carry the instrument half. `mutate_swift.py` splices by byte offset and never
+reads back, so it cannot prove its own substitution while its sibling arm can — and the reconstruction
+that saved this sample is not available to the next one. `mutation_seam_arm.py` scores
+`armed = code != 0`, so a process that dies in setup counts as red; CASE-0461's trapping mutant gave
+signal 5, zero verdict lines and the suite's own `FAIL: no swift-testing verdict line`, and that case is
+right only because its log proves the named test was running when it trapped.
+
+**PRO-0092 is not merged, because its gate could not be admitted.** The comment correction touches a
+test file, so the suite owes a re-run, and `governor-run --weight 6` returned **75**. The machine at
+01:30Z: load average **480.09** across 16 cores (**27.85 per core**), pressure `critical`, thermal
+`limited`, **governor ceiling 3** — so a weight-6 claim cannot be granted *at all*, which is a different
+failure from a busy machine and presents as a queue while being a ceiling. Disk has also fallen from
+13.66% free earlier tonight to **10.2%**.
+
+A gate that could not be admitted is not a gate that passed. A retry is armed outside this session: it
+samples the ceiling every three minutes and runs the suite only once a weight-6 claim can be granted,
+writing the verdict to `/tmp/pro0092-gate.out`. Nothing merges until that verdict exists.
+
+**Wave 16 remains closed and correct at four items.** PRO-0092 is a wave-13 defect being closed late,
+not part of it.
