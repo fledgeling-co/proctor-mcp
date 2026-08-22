@@ -15,7 +15,36 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
     private var sessions: [String: AppSession] = [:]
     private var epochCounter = 0
 
-    init() {}
+    /// One running application, reduced to the four fields `listApps` reads.
+    /// A value rather than an `NSRunningApplication`, because the point of the
+    /// seam is that a test can state a population without a window server
+    /// agreeing to launch one.
+    struct RunningApp: Sendable {
+        var pid: pid_t
+        var isRegular: Bool
+        var bundleId: String?
+        var localizedName: String?
+    }
+
+    /// The live population, and the only place `NSWorkspace` is read for it.
+    static let liveRunningApps: @Sendable () -> [RunningApp] = {
+        NSWorkspace.shared.runningApplications.map {
+            RunningApp(pid: $0.processIdentifier,
+                       isRegular: $0.activationPolicy == .regular,
+                       bundleId: $0.bundleIdentifier,
+                       localizedName: $0.localizedName)
+        }
+    }
+
+    private let runningApps: @Sendable () -> [RunningApp]
+
+    /// PRO-0092. The seam is a parameter with the live implementation as its
+    /// default, which is `GuestProvider.init(executable:timeoutMs:run:)`'s shape
+    /// and `SignatureVerdictCache.init(identify:verify:)`'s. Production calls
+    /// `AXEngineImpl()` and is unchanged; a test supplies a population.
+    init(runningApps: @escaping @Sendable () -> [RunningApp] = AXEngineImpl.liveRunningApps) {
+        self.runningApps = runningApps
+    }
 
     private func withLock<T>(_ body: () throws -> T) rethrows -> T {
         lock.lock()
@@ -29,13 +58,13 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
         let attached = withLock { sessions.values.reduce(into: [pid_t: AppHandle]()) {
             $0[$1.pid] = $1.handle
         } }
-        return NSWorkspace.shared.runningApplications.compactMap { app in
-            guard includeWindowless || app.activationPolicy == .regular else { return nil }
-            let pid = app.processIdentifier
+        return runningApps().compactMap { app in
+            guard includeWindowless || app.isRegular else { return nil }
+            let pid = app.pid
             if let known = attached[pid] { return known }
             return AppHandle(id: "app:\(pid):0", pid: pid,
-                             bundleId: app.bundleIdentifier,
-                             name: app.localizedName ?? app.bundleIdentifier ?? "pid \(pid)")
+                             bundleId: app.bundleId,
+                             name: app.localizedName ?? app.bundleId ?? "pid \(pid)")
         }
     }
 

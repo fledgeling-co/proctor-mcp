@@ -348,6 +348,21 @@ final class InputBlocker: @unchecked Sendable {
 
     // MARK: The decision
 
+    /// PRO-0092. The two event types that are macOS telling the tap it has been
+    /// switched off, named apart from the handler that acts on them.
+    ///
+    /// It is a predicate rather than an inline comparison because the handler
+    /// itself cannot be called from a test — it needs a live `CGEvent` and a
+    /// tap this process has been granted — while the question it asks first is
+    /// pure. The mutation this exists for turned `==` into `!=`, which makes
+    /// every ordinary keystroke look like a disable notice and every disable
+    /// notice look like a keystroke: the run would let go of the machine on the
+    /// second key a person pressed, and go on claiming a hold after macOS had
+    /// actually taken the tap away.
+    static func isTapDisabledNotice(_ type: CGEventType) -> Bool {
+        type == .tapDisabledByTimeout || type == .tapDisabledByUserInput
+    }
+
     /// Nothing here may wait on anything. It writes counters under its own lock
     /// and calls two closures that do the same; it never hops to the main actor,
     /// never joins this thread, and never exits the process. A callback that
@@ -360,7 +375,7 @@ final class InputBlocker: @unchecked Sendable {
         // a tap that cannot be serviced must not be the thing holding somebody's
         // keyboard. The run carries on exactly as it would at HEAD; what must
         // not happen is the overlay going on claiming a hold that ended.
-        if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
+        if Self.isTapDisabledNotice(type) {
             lock.lock()
             let firstTime = unavailable == nil
             let port = tap

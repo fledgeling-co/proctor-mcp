@@ -43,8 +43,17 @@ final class AuditKeyStore: AuditSealKeys, @unchecked Sendable {
     private let service = "\(Wire.bundleIdentifier).audit"
     private let account = "audit-x25519-v1"
 
+    /// PRO-0092. A pure function of the directory, so the shape of the path can
+    /// be stated without the Keychain, the audit directory or the singleton.
+    /// `isDirectory: false` is load-bearing rather than cosmetic: with `true`
+    /// the URL carries a trailing slash and reads as a directory, and the
+    /// cached public key is a file.
+    static func publicKeyURL(in directory: URL) -> URL {
+        directory.appendingPathComponent("audit.pub", isDirectory: false)
+    }
+
     private var publicKeyURL: URL {
-        AuditLog.directory.appendingPathComponent("audit.pub", isDirectory: false)
+        Self.publicKeyURL(in: AuditLog.directory)
     }
 
     /// The sealing half. Read from the on-disk cache first, which is what keeps the
