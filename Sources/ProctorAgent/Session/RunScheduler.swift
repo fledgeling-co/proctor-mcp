@@ -110,6 +110,22 @@ actor RunScheduler {
     var capacities: [String: Int] = GuestPool.capacities
     func setCapacities(_ capacities: [String: Int]) { self.capacities = capacities }
 
+    /// Whether the process that took a lane is still there. Substitutable so the
+    /// three verdicts are provable without three processes; the default asks the
+    /// kernel about the pid the identity key already carries.
+    var peerProbe: @Sendable (String) -> PeerLiveness.Verdict = { key in
+        SessionIdentity.liveness(ofKey: key)
+    }
+    func setPeerProbe(_ probe: @escaping @Sendable (String) -> PeerLiveness.Verdict) {
+        self.peerProbe = probe
+    }
+
+    /// Told which ticket a reclaim took, so the automatic hold a dead run left on
+    /// the latch does not outlive its slot. Set once by the agent; nil in a test
+    /// that only cares about the lane.
+    var onReclaim: (@Sendable (Int) -> Void)?
+    func setOnReclaim(_ handler: @escaping @Sendable (Int) -> Void) { self.onReclaim = handler }
+
     init(waitLimit: TimeInterval = RunQueuePlan.waitLimit(from: ProcessInfo.processInfo.environment),
          now: @escaping @Sendable () -> Double = { Date().timeIntervalSince1970 },
          sleep: @escaping @Sendable (TimeInterval) async -> Void = { seconds in
@@ -165,6 +181,11 @@ actor RunScheduler {
     /// come back for another.
     func acquire(lanes: LaneDemand, identity: RunSessionIdentity,
                  summary: String) async throws -> LaneTicket {
+        // A slot held by a process that has exited is given back before this
+        // call decides anything. Done here rather than on a timer because this
+        // is the exact moment the failure is met: the caller about to be refused
+        // as `queueBusy` is the one that clears the strand.
+        reclaimDeadPeers()
         let id = nextID
         nextID += 1
         let info = RunTicketInfo(id: id, identity: identity, summary: summary,
@@ -227,6 +248,37 @@ actor RunScheduler {
         waiter.continuation.resume(throwing: refusal.error)
         publish()
         promote()
+    }
+
+    /// Give back every lane held by a run whose peer has exited.
+    ///
+    /// RECLAIM ON DEATH, NEVER ON SILENCE. `PeerLiveness` answers `unknown` for
+    /// everything that is not positive proof the process is gone — an identity
+    /// whose key does not parse, a pid the kernel will not describe, a start
+    /// time neither side can read — and only `gone` acts. A run that is slow,
+    /// stopped at a breakpoint or blocked in a syscall leaves its process in the
+    /// table with its original start time and reads `alive`, so its lane is not
+    /// touched.
+    ///
+    /// Waiting runs are deliberately not swept. `deadlineTask` already bounds
+    /// every waiter at `waitLimit` whatever its caller is doing, so a waiter
+    /// whose peer died leaves on its own; an active run has no such bound, which
+    /// is why it is the one that strands.
+    @discardableResult
+    func reclaimDeadPeers() -> [Int] {
+        let dead = active.values
+            .filter { peerProbe($0.identity.key) == .gone }
+            .map(\.id)
+            .sorted()
+        guard !dead.isEmpty else { return [] }
+        for id in dead {
+            // `forceRelease` is the same path `LaneTicket`'s teardown takes, and
+            // it guards on the entry still being there — so a reclaim racing the
+            // dead run's own unwind is absorbed rather than double-counted.
+            forceRelease(id: id)
+            onReclaim?(id)
+        }
+        return dead
     }
 
     // MARK: - Giving it back

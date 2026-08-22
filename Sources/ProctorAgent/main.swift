@@ -177,6 +177,15 @@ FileHandle.standardError.write(Data("proctor-agent \(build.descriptor) listening
 if Session.hudEnabledByDefault {
     Task { @MainActor in RunHUDPanel.shared.bind(scheduler: session.runScheduler) }
 }
+// A lane reclaimed from a dead peer takes that run's automatic hold with it.
+// The scheduler owns the slot and `RunControl` owns the latch, and a hold left
+// behind by a run that no longer exists would keep `heldBy` naming it and
+// `pausedAt` running for the rest of the process's life.
+Task {
+    await session.runScheduler.setOnReclaim { ticket in
+        RunControl.shared.release(run: ticket)
+    }
+}
 Task {
     await session.runScheduler.observe { snapshot in
         Task { await session.setQueueWaiting(snapshot.waitingCount) }
