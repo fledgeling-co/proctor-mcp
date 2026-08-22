@@ -3369,6 +3369,45 @@
       "note": "The crash is the lucky half. A registry without list-valued evidence would get a silent 1.0.0 reading instead, with fixed defects classed broken and unjoined briefs classed unbuilt, which is exactly the headline the first reckoning here had to decline. Recorded as low severity because the shared source is correct and the cache refreshes on the next marketplace sync, and because scripts/reckoning/reckoning.py now reads the manifest version and the class list before it measures anything, so this repository's own cadence refuses the stale copy rather than believing it. CASE-0447."
     },
     {
+      "id": "DEF-204",
+      "title": "Two different tools with the same version string compare as the same tool",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "requirements": [
+        "REQ-102"
+      ],
+      "note": "reckoning.py's compare refuses a tool on disk that is not the one that took the current reading, and the refusal is keyed on a declared version string rather than on the tool. PRO-0103's verifier proved the gap two ways. The 1.0.0 cache relabelled 1.1.0 is caught, but by the class-vocabulary check (missing `unjoined`) rather than by the version. And the real 1.1.0 source, with CLASSES and ratchet intact and classify() altered to reclassify unjoined as verified-done, manifest reading 1.1.0, was ACCEPTED at exit 0 — and the published delta silently became -163 tool / +79 project against a true -88 / +4. run.json already records tool.source_commit; compare never reads it. This is the same shape as DEF-216 one level up: a version string is exactly what goes wrong, so a version string cannot be the test. The repair is to compare the artifact rather than its label."
+    },
+    {
+      "id": "DEF-205",
+      "title": "cmd_take discards the digests sweep() computed, so the witness records names without content",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "requirements": [
+        "REQ-102"
+      ],
+      "note": "sweep() walks the run directory and computes a byte count and sha256 for every file; cmd_take stores only the filenames and the count. So the effect witness for REQ-102 can say two files appeared and cannot say what was in them, and a file replaced between the two sweeps would be invisible. It also let CASE-0456 record a claim nobody could check: the case said four files each with byte count and sha256, run.json holds two names and no digests, and campaign.py counted the case witnessed without opening the artifact. The case is corrected; this row is the instrument. Two repairs, and the second is the one that generalises: store what sweep() already computed, and have the witness check read the artifact rather than the case's description of it."
+    },
+    {
+      "id": "DEF-206",
+      "title": "resolve_tree prints a path that does not exist in its own refusal",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "requirements": [
+        "REQ-102"
+      ],
+      "note": "git() strips its output, so a porcelain status line arrives as `M docs/...` rather than ` M docs/...`, and the [3:] slice that was written to drop the two status characters and the space removes the first character of the path instead: `docs/test-campaign/cases.json` is refused as `ocs/test-campaign/cases.json`. Untracked entries are unaffected because `?? ` survives the strip intact. The refusal is correct and its message names a file nobody can find, which sends the reader looking for a phantom; and with --allow-dirty the mangled name is written into run.json.dirty_inputs, where it becomes a permanent record of a path that never existed. It fires on the commonest case, a modified tracked file."
+    },
+    {
       "id": "DEF-215",
       "severity": "low",
       "status": "open",

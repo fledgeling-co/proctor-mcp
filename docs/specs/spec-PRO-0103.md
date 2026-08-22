@@ -302,3 +302,54 @@ is a reader who is told a path is missing and not told how to fix it. Not taken:
 over candidate locations. The nearest candidate on this machine is the installed plugin cache,
 which holds 1.0.0 and is exactly what DEF-216 records as unsafe to fall back to, and the repository
 already resolves cross-repo skill paths this way in `scripts/campaign/skill_doc_measure.py`.
+
+
+## Verification — 2026-08-22, `Done`
+
+Verified fresh-context on the branch with `main` merged in at `98db23f`. The branch did **not** merge
+clean — `cases.json` and `inventory.json` conflicted, wave-16 rows appended at the same array
+positions — and the verifier resolved it as an id-keyed union. Checked independently before it was
+taken: 320 cases and 121 defect rows with **zero duplicates**, `defect_gate.py dropped` passing over
+116 merges and 49,881 id/field pairs, and `main`'s newer DEF-201 and DEF-202 text preserved intact.
+
+`./scripts/test.sh` 2,064 tests in 251 suites exit 0; `reckoning_selftest.py` 28 checks 0 failed exit
+0; `defect_gate.py` claims and dropped both exit 0 and exit 2 when invoked bare; `test_instruments.py`
+62 passed exit 0. `campaign.py check` exits 1 at head and at both bases, and the blocker sets differ
+by exactly one line — *External-effect claims with no witness (27 of 29)* → *(28 of 30)*. The named
+ids are identical; the **denominator** grew because REQ-102 declares `filesystem-write` and CASE-0456
+witnesses it. This item's own new requirement, not a regression.
+
+### The separation reproduces, including on a row moved by both causes
+
+The rebuild of `2bdc808` from its named commit is byte-identical at sha256 `ca5f76ff27daf95d…5e` over
+582,690 bytes, and an independent control rebuild at `2bd01be` gives work 130, product 11, evidence
+36, decision 83 — the same **−88 tool, +4 project**. A second checkout of the same tool produced a
+`delta.md` byte-identical to the published one.
+
+The hard case was constructed rather than waited for: a row moved by *both* causes
+(`BRIEF-00-WAVE-7-DIRECTION`, `unbuilt`→`unjoined` by the tool, then `unjoined`→`verified-done` by the
+project) splits at the control pivot — the tool column unchanged, the project column moving +4 to +3,
+and the row table showing the project's move only. No double count and no misattribution.
+
+### Three findings outside the acceptance set, and one case corrected rather than routed
+
+**CASE-0456 was recording evidence it did not have, so it is fixed here rather than filed.** Its note
+claimed four files each carrying a byte count and sha256; `run.json` holds `count: 2`, two filenames
+and no digests. The delta files are written *after* the sweep, so they were never in the after-set,
+and `cmd_take` discards the digests `sweep()` computes, so they were never stored. `campaign.py`
+counted the case witnessed without opening the artifact. The witness still stands at a count of 2,
+which is non-zero and is what the recorder actually saw.
+
+- **DEF-204.** `compare`'s new refusal is keyed on a declared version string rather than on the tool.
+  The relabelled 1.0.0 cache is caught, but by the class-vocabulary check rather than the version — and
+  the real 1.1.0 source with `classify()` altered to reclassify `unjoined` as `verified-done` was
+  **accepted at exit 0**, publishing −163 tool / +79 project against a true −88 / +4. `run.json`
+  already records `tool.source_commit`; `compare` never reads it. Same shape as DEF-216 one level up.
+- **DEF-205.** `cmd_take` stores names and a count while `sweep()` computed digests, so the witness
+  cannot say what was in the files and a file replaced between sweeps would be invisible. It is also
+  what let CASE-0456 make an uncheckable claim.
+- **DEF-206.** `git()` strips its output, so ` M docs/…` arrives as `M docs/…` and the `[3:]` slice
+  removes the first character of the path: `docs/test-campaign/cases.json` is refused as
+  `ocs/test-campaign/cases.json`. Untracked entries survive because `?? ` strips intact. It fires on
+  the commonest case, and with `--allow-dirty` the mangled name is written permanently into
+  `run.json.dirty_inputs`.
