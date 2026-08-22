@@ -953,7 +953,7 @@
       "surfaces": [
         "SURF-009"
       ],
-      "note": "PRO-0100. Sibling to REQ-082, which is about the refusal being STATED; this is about it being LEGIBLE. Both halves failed differently: PRO-0081 built a refusal nobody could see the reason for, and PRO-0086 found the refusal itself drawn as an invitation. The rule is primaryEnabled, read twice in one place — the .disabled and the fill take the same call, so they cannot nominate different states. CASE-0391, CASE-0392.",
+      "note": "PRO-0100. Sibling to REQ-082, which is about the refusal being STATED; this is about it being LEGIBLE. Both halves failed differently: PRO-0081 built a refusal nobody could see the reason for, and PRO-0086 found the refusal itself drawn as an invitation. The rule is primaryEnabled, read twice in one place — the .disabled and the fill take the same call, so they cannot nominate different states. CASE-0391, CASE-0392. LIMIT OF THE GUARDS, recorded rather than left to be discovered: the three prominence guards partition Walkthrough.swift into [0, PrimaryProminence) = 0 fills, the branch span = 1, and [HeroPermRow, EOF) = 1, so no unbranched .borderedProminent can hide anywhere in the file. They read that one spelling. An accent fill drawn through .tint, or a .background on the primary, would satisfy all three while destroying the treatment REQ-094 exists to protect. Nothing in the tree draws one today, which is why this is a limit and not a defect; it is also the kind of gap that only announces itself once somebody writes the second spelling. Established by PRO-0100 verification.",
       "effect": "none"
     },
     {
@@ -3059,6 +3059,19 @@
       "req": "REQ-091",
       "fix": "FIXED by PRO-0100. The one word is corrected in the shared repository at 82ebe7d, committed by explicit path only with the tree measured clean before and after. The repair that matters is the denominator: skill_doc_measure.py read SKILL.md and references/tools.md and never opened gemini.md, which is why all five stale counts were found by a person reading. It now reads every *.md under the skill on both dimensions, stated counts and named tools, with subset counts allowlisted with their reason; skill_doc_arm.py copies the whole tree rather than two files, which was the same mistake one layer down. 27 of 27 checks armed. It also found two files no check had ever opened. CASE-0397, CASE-0398, CASE-0399.",
       "evidence": "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt"
+    },
+    {
+      "id": "DEF-200",
+      "title": "CASE-0392 records armed: false with a reason the verification disproved",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "requirements": [
+        "REQ-094"
+      ],
+      "note": "The case asserts the design of record still draws the refusing primary plain-and-disabled and never in the accent fill, and records `armed: false` on the grounds that arming it would mean breaking the design of record. PRO-0100's verifier broke it on a scratch basis anyway \u2014 giving the refusing primary class=\"btn prominent\" \u2014 and the check reds at WalkthroughDesignTests line 397. So the case is armable and the record understates its own strength. Understating is the safe direction and it is still wrong: this campaign counts armed and unarmed passes separately and forever, so an armable case recorded unarmed lowers a number that is supposed to mean something. The repair is to arm it properly with an artifact rather than to flip the flag on a verbal report \u2014 no artifact, no verdict, and the verifier's probe left no evidence file. Found by the non-AC findings sweep at PRO-0100's merge, the first item through that gate."
     }
   ]
 }

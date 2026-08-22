@@ -236,3 +236,54 @@ nothing read the same without the count.
 are PRO-0099's rows. They are a small fix, and correcting another item's registry rows is exactly
 where the orchestrator's merge has dropped values three times, so they are reported rather than
 edited. REQ-086 and CASE-0318 are the same call.
+
+## Verification — 2026-08-22, `Done`
+
+Verified fresh-context on `a33ac1c` by an agent that did not build the work. Every gate re-run:
+`./scripts/test.sh` `EXITCODE=0` at *Test run with 2064 tests in 251 suites passed after 68.588
+seconds*; `defect_gate.py` `claims` 0 and `dropped` 0 over 108 merges and 39,060 id/field pairs;
+`test_instruments.py` 0 with 62 passed; `operator_path_gate.py` 0/0/0 over 13 sites and 15 classed
+entries; `skill_doc_measure.py` 0 at 27/27 and `skill_doc_arm.py` 0 at 27/27 armed. `campaign.py
+check` exits 1 on a blocker set of REQ-007, REQ-024, REQ-086, CASE-0318 and CASE-0333–0335 — none of
+CASE-0390–0400, none of REQ-094/095/096.
+
+**Every recorded arming was re-applied and every one bit.** CASE-0395 reproduced the contrast the
+whole of DEF-140 rests on: the bare unwrap fed a nil printed `Fatal error: Unexpectedly found nil`,
+`Executed 0 tests, with 0 failures`, **zero verdict lines** and `FAIL: no swift-testing verdict line`,
+while the same nil through `try #require` produced one verdict line naming the failing test at 30:30.
+CASE-0394's no-op ticket raised four issues, one per ending, over 256 seconds — the wait does not
+report success regardless.
+
+### The three kept unwraps stand, and the reason is narrower than "they are safe"
+
+All three stated input spaces were verified true in source: `box.value!` where both the `do` and
+`catch` arms `set` before `resume`; `frame.baseAddress!` with four prefix bytes appended two lines
+above; and the second `baseAddress!` in `FrameCodec.encode`, where `Transport.swift:17-20` prepends
+four bytes unconditionally. What settles it is that the acceptance clause is *no force-unwrap shape
+that can end a run with no verdict line*, and a total unwrap cannot. Converting sites 2 and 3 would
+mean handing a pointer out of `withUnsafeBytes`, trading a proven-total unwrap for a pointer-lifetime
+hazard, and would leave DEF-136's four surviving group-1 sites inconsistent with them. So no
+zero-exemption sweep is owed. The gemini plan review had read the exemptions as narrowing triage
+assumption 5; on the source they narrow nothing.
+
+### Two things the verification produced that are not acceptance clauses
+
+Both were routed by the fleet's non-AC findings gate, which PRO-0100 is the first item through.
+
+- **DEF-200, opened before this merge.** CASE-0392 records `armed: false` on the grounds that arming
+  it would mean breaking the design of record; the verifier broke it on a scratch basis anyway and the
+  check reds at line 397. The case is armable and the record understates its own strength. The flag is
+  not flipped here, because the probe left no evidence file and no artifact means no verdict.
+- **A limit of the prominence guards, recorded on REQ-094.** The three guards partition
+  `Walkthrough.swift` so no unbranched `.borderedProminent` can hide, and they read that one spelling.
+  An accent fill through `.tint` or a `.background` would satisfy all three. Nothing draws one today,
+  which is what makes it a limit rather than a defect.
+
+### One lane artifact worth naming, because it manufactured a finding
+
+Gemini marked the first unwrap site `UNPROVEN` while accepting the other two. The cause was the
+packet rather than the code: the excerpt handed to it began one line below the `do`/`catch` that makes
+the site total. An out-of-family reviewer reading an excerpt can only be as right as its boundaries,
+and an excerpt boundary is invisible in the reply. It answered about PRO-0100 throughout — citing
+`WalkthroughFlowTests`, `PrimaryProminence` and `Transport.swift:10-22` — so the lane itself held:
+`OVERALL: ACCEPT`, with A2, A3 and A6 met and the exemptions defensible.
