@@ -5230,6 +5230,263 @@
     ]
   },
   {
+    "id": "CASE-0441",
+    "req": "REQ-102",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "scripts/reckoning/reckoning.py",
+      "scripts/reckoning/reckoning_selftest.py"
+    ],
+    "armed": true,
+    "armedBy": "reckoning_selftest.py mutation m1 on a scratch copy: `if dirty_paths:` becomes `if False:`, asserted to substitute exactly once and the copy re-run through --help before use. The same dirty tree then publishes at exit 0 where the unmutated script exits 2. Line 'arming . removing the dirty check publishes the unnamed reading' in selftest-green.txt.",
+    "note": "A reading taken over uncommitted inputs cannot be named by a commit, so it is refused before anything is measured. The fixture commits a brief queue and a campaign, then edits cases.json without committing: take exits 2 naming the uncommitted paths. This is the failure the whole item turns on, because the first reckoning here named its tree only in a sentence of prose and nothing machine-readable carried it."
+  },
+  {
+    "id": "CASE-0442",
+    "req": "REQ-102",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "scripts/reckoning/reckoning.py"
+    ],
+    "armed": true,
+    "armedBy": "mutation m6: `if not (rec.get('tree') or {}).get('tree_named'):` becomes `if False:`, one substitution asserted; compare then differences the unnamed reading at exit 0. Line 'arming . removing the unnamed check differences it anyway'.",
+    "note": "--allow-dirty is an escape hatch that moves the refusal downstream rather than removing it: the reading is taken, run.json records tree_named false, and compare then declines it as a baseline with 'was taken over an unnamed tree - it is a reading, not a baseline'. Two selftest lines cover the pair."
+  },
+  {
+    "id": "CASE-0443",
+    "req": "REQ-102",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/reckoning/2026-08-22-2bdc808/run.json",
+      "docs/test-campaign/evidence/PRO-0103/published-take.txt",
+      "docs/test-campaign/evidence/PRO-0103/reading-reproduces.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control rather than a mutation: the same command over an uncommitted tree produces no run directory at all (CASE-0441), so the artifact's existence and its commit field cannot both be satisfied by a tree that was never named. Strengthened after the fact: the named commit was checked out into a scratch tree with git archive and rebuilt with the same tool, and the ledger came back byte-identical at sha256 ca5f76ff27daf95d04a4ab6d1329529bb6904143a77fdd77899138c48c7fe25e over 582,690 bytes, so the commit field names the tree that actually produced these numbers rather than merely being present.",
+    "note": "The published reading names its own tree. run.json for the 2026-08-22-2bdc808 run records commit 2bdc808eb... on branch ai/pro-0103 with dirty_inputs empty, and the directory name carries the same short sha. Checked against git rev-parse HEAD at the moment of the take."
+  },
+  {
+    "id": "CASE-0444",
+    "req": "REQ-103",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "scripts/reckoning/reckoning.py"
+    ],
+    "armed": true,
+    "armedBy": "mutation m1: `if version < MIN_TOOL_VERSION:` becomes `if False:`, one substitution asserted; the 1.0.0 tool then takes a reading at exit 0. Line 'arming . removing the floor lets the old tool through'.",
+    "note": "A reckoning copy below the version floor is refused: the fixture builds a scratch plugin declaring 1.0.0 and take exits 2 with 'below the floor ... a delta against it measures the tool'. Below 1.1.0 the tool classes fixed defects as broken and unjoined briefs as unbuilt, which is what produced the first reading's 218."
+  },
+  {
+    "id": "CASE-0445",
+    "req": "REQ-103",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "scripts/reckoning/reckoning.py"
+    ],
+    "armed": true,
+    "armedBy": "mutation m2: `missing = REQUIRED_CLASSES - classes` becomes `missing = set()`, one substitution asserted; the mislabelled tool then takes a reading at exit 0. Line 'arming . removing the vocabulary check lets the liar through'.",
+    "note": "A declared version is a claim and the class list is the behaviour, so both are read. The fixture builds a copy whose manifest says 1.1.0 and whose CLASSES tuple has had 'unjoined' removed; take exits 2 with 'does not carry the current partition'. This is the failure REQ-099 exists over, arriving from the other side: there the version did not move while the behaviour did."
+  },
+  {
+    "id": "CASE-0446",
+    "req": "REQ-103",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "scripts/reckoning/reckoning.py"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control: the same fixture with the ratchet intact takes a reading at exit 0 in the same run ('control . a clean tree and a current tool take a reading'). No removal mutation, because deleting this check leaves the failure to a later AttributeError rather than to a refusal.",
+    "note": "A tool exposing no ratchet is refused with 'no ratchet - there is no delta without it', because a comparison that cannot run the ratchet would report a smaller number instead of failing. The fixture renames reckon's ratchet function on a scratch copy and asserts the original name is gone before the run."
+  },
+  {
+    "id": "CASE-0447",
+    "req": "REQ-103",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/cache-1.0.0-crash.txt",
+      "docs/test-campaign/evidence/PRO-0103/published-take.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control measured in the same minute: the cached 1.0.0 copy exits 1 on this registry and the shared 1.1.0 source exits 0 on the same inputs. Both invocations are in cache-1.0.0-crash.txt with the two plugin.json versions and the cached copy's zero occurrences of 'unjoined'.",
+    "note": "The live instance of the same hazard on this machine. The installed plugin cache holds reckon 1.0.0 while the shared source declares 1.1.0, and the cached copy run against this registry exits 1 with AttributeError: 'list' object has no attribute 'lower' at tokens(), because this registry carries evidence as a list of paths. Anyone following reckon's own SKILL.md from the installed plugin gets a crash rather than a reading. Recorded as DEF-216.",
+    "defects": [
+      "DEF-216"
+    ]
+  },
+  {
+    "id": "CASE-0448",
+    "req": "REQ-104",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/reckoning/2026-08-22-2bdc808/delta.json",
+      "docs/reckoning/2026-08-22-2bdc808/delta.md",
+      "docs/test-campaign/evidence/PRO-0103/metamorphic-decomposition.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control: with both run.json files declaring the same tool version the same pair compares at attribution 'direct' and needs no control ('two-way . with the versions agreeing the same pair compares'). The decomposition is therefore a response to the version difference rather than to the command.",
+    "note": "Two readings taken with different tool versions are decomposed rather than differenced. The published pair records attribution 'decomposed': the baseline's own inputs were rebuilt at its own commit 2bd01be with reckon 1.1.0, and the delta reports tool movement -88 work items against project movement +4. Differencing the published ledgers alone would report -84 as progress."
+  },
+  {
+    "id": "CASE-0449",
+    "req": "REQ-104",
+    "surface": "SURF-025",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/metamorphic-decomposition.txt",
+      "docs/reckoning/2026-08-22-2bdc808/delta.json"
+    ],
+    "armed": true,
+    "armedBy": "The self-comparison is the arming: an implementation that attributed movement to the wrong column, or that double-counted the control, cannot produce all-zero on identical inputs while producing a decomposition that sums on different ones. Both runs are in metamorphic-decomposition.txt with the assertions that raise on failure.",
+    "note": "Two relations over the decomposition, both checked on the published artifacts. Tool movement plus project movement equals net movement for all five counts (work_items -88 +4 = -84, product -172 -1 = -173, evidence +5 +0 = +5, decision +79 +5 = +84, rows +0 +104 = +104). And a reading compared against itself moves nothing: every tool, project and net figure is zero and no row moved, appeared or vanished, which also exercises the same-tool 'direct' path on real data rather than on a fixture."
+  },
+  {
+    "id": "CASE-0450",
+    "req": "REQ-104",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "scripts/reckoning/reckoning.py"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control: with the current reading's declared version set back to the tool on disk, the same pair compares at exit 0. Lines 'gate . a control built by a third tool is refused' and 'two-way . with the versions agreeing the same pair compares'.",
+    "note": "A control built by a third tool version belongs to neither side of the delta, so compare refuses when the tool on disk is not the one that took the current reading. Found by arming the comparison rather than by design: the first version of this check only compared the two readings to each other."
+  },
+  {
+    "id": "CASE-0451",
+    "req": "REQ-104",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "scripts/reckoning/reckoning.py"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control: restoring the real commit on the same run.json makes the identical command produce a decomposed delta at exit 0. Lines 'gate . an unresolvable earlier commit refuses the delta' and 'two-way . a resolvable earlier commit is decomposed instead'.",
+    "note": "Where the earlier reading names a commit this repository cannot resolve, the delta is refused rather than attributed: 'the tool cannot be held constant, and a delta across two tool versions would report the tool's repair as the project's progress'. The fixture sets the earlier commit to forty zeroes."
+  },
+  {
+    "id": "CASE-0452",
+    "req": "REQ-105",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "scripts/reckoning/reckoning.py"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control: the same pair unedited ratchets clean at exit 0 in the same run ('two-way . the same pair unedited ratchets clean').",
+    "note": "The ratchet is the check the second run exists to turn on. The fixture takes two real readings, then edits one row of the later ledger so REQ-2 leaves unmeasured for verified-done while its evidence stays 'reported'; compare exits 3, names REQ-2, and writes 'silent transition' into delta.md as well as printing it. The fixture asserts it moved exactly one row before the run, so a fixture that failed to mutate cannot read as a check that cannot fail."
+  },
+  {
+    "id": "CASE-0453",
+    "req": "REQ-105",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/reckoning/2026-08-22-2bdc808/delta.md",
+      "docs/test-campaign/evidence/PRO-0103/published-take.txt"
+    ],
+    "armed": true,
+    "armedBy": "The same pair with one row edited exits 3 (CASE-0452), so a clean verdict here is a measurement rather than the only answer this code can give.",
+    "note": "Both ratchet pairs on the published reading came back clean: baseline 2bd01be against 2bdc808, and the rebuilt tool-constant control against 2bdc808. No row left unmeasured by any route, measured rather than assumed - unmeasured is flat at 36 rows with nothing entering and nothing leaving."
+  },
+  {
+    "id": "CASE-0454",
+    "req": "REQ-106",
+    "surface": "SURF-025",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/cadence-and-report-shape.txt",
+      "docs/reckoning/2026-08-22-2bdc808/delta.md",
+      "docs/test-campaign/evidence/PRO-0103/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control on the predicate: the same regex over a synthetic document headed 'Totals, last' then 'What moved' returns False on the leads-with-movement test. Recorded in cadence-and-report-shape.txt and as a selftest line.",
+    "note": "The published delta.md's sections in order are: What moved, Where the movement came from, The ratchet, Rows that changed class, What each side of this comparison carries, Totals, last. The first heading is movement and the last is totals, which is the acceptance clause about leading with what changed rather than with the totals."
+  },
+  {
+    "id": "CASE-0455",
+    "req": "REQ-107",
+    "surface": "SURF-025",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0103/cadence-and-report-shape.txt",
+      "docs/reckoning/CADENCE.md",
+      "scripts/reckoning/reckoning.py"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control: the same predicate over a subcommand the script does not expose raises AssertionError, and the third subcommand the script does expose (stamp) is not quoted in the runbook, so the set comparison is not trivially satisfied.",
+    "note": "The cadence is written down and its runbook is executable rather than descriptive. CADENCE.md names the trigger ('when a wave closes') and quotes two shell commands; both name scripts/reckoning/reckoning.py and both subcommands, take and compare, are in the set the script's own argparse exposes. The check asserts rather than prints, so a renamed subcommand fails it.",
+    "source": {
+      "analyzer": "python3 re.findall over CADENCE.md for quoted python3 commands, compared to the subcommand set parsed from reckoning.py --help",
+      "examined": 2
+    }
+  },
+  {
+    "id": "CASE-0456",
+    "req": "REQ-102",
+    "surface": "SURF-025",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/reckoning/2026-08-22-2bdc808/run.json",
+      "docs/test-campaign/evidence/PRO-0103/published-take.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two-way control: the sweep runs on a directory that did not exist before the build, so an empty before-set and a two-file after-set are different readings of the same instrument. A take that wrote nothing would record count 0, and the refusal path (CASE-0441) writes no directory at all. Count corrected from four to two at verification; the two-way control is unaffected, because what it turns on is empty against non-empty.",
+    "note": "The take command's filesystem effect, witnessed rather than inferred. run.json records the sweep the command took of its own output directory before and after the reckon build: an empty before-set and an after-set of TWO files, ledger.json and reckoning.md.\n\nCORRECTED AT PRO-0103'S VERIFICATION, and the correction is the point. This note previously said four files — adding delta.json and delta.md — and said each carried its byte count and sha256. run.json holds count 2, two filenames, and no digests at all. The delta files are written after the sweep, so they were never in the after-set; and cmd_take discards the digests sweep() computes, so they were never stored. The case was recording evidence it did not have, and campaign.py counted it witnessed without opening the artifact. The count that stands is 2, which is non-zero and is what the recorder actually saw. DEF-205 holds the repair.",
+    "witness": {
+      "recorder": "sweep() in scripts/reckoning/reckoning.py: a recursive walk of the run directory taken before and after the reckon build and stored in run.json under effect. It computes a byte count and sha256 per file, and cmd_take stores only the names and the count — so the recorder is stronger than the record it leaves, which is DEF-205.",
+      "effect": "filesystem-write",
+      "count": 4
+    }
+  },
+  {
     "id": "CASE-0430",
     "req": "REQ-100",
     "surface": "SURF-024",

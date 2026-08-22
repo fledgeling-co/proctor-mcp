@@ -1,0 +1,123 @@
+{
+ "schema": "reckoning-run/1",
+ "taken_at": "2026-08-22T13:13:25Z",
+ "project": "proctor-mcp",
+ "tree": {
+  "repo": "proctor-mcp",
+  "commit": "2bdc8087471dc930af04d981fbac16e172d263b6",
+  "short": "2bdc808",
+  "branch": "ai/pro-0103",
+  "tree_named": true,
+  "dirty_inputs": [],
+  "inputs": {
+   "docs/features-to-triage": {
+    "last_commit": "7c8bdedec341043f2b326ad35bd375b375a11b31"
+   },
+   "docs/test-campaign": {
+    "last_commit": "2bdc8087471dc930af04d981fbac16e172d263b6"
+   }
+  }
+ },
+ "tool": {
+  "name": "reckon",
+  "version": "1.1.0",
+  "script": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py",
+  "manifest": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/.claude-plugin/plugin.json",
+  "source_commit": "e63832a8cbd8998ffb9c2d8e69240faf6c3c06fb",
+  "classes": [
+   "broken",
+   "retirable",
+   "unbuilt",
+   "undecided",
+   "unjoined",
+   "unmeasured",
+   "unnamed",
+   "verified-done",
+   "waived"
+  ]
+ },
+ "inputs": {
+  "briefs": "docs/features-to-triage",
+  "campaign": "docs/test-campaign"
+ },
+ "gate": {
+  "build_exit": 0,
+  "check_exit": 0
+ },
+ "headline": "134 piece(s) of work remain — 10 product, 36 evidence, 88 decision — across 620 ledger rows. This reckoning speaks for 99% of the campaign's designed cases and 70% of its stated requirements; the rest is not known to be done, it is simply not known. 80 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.",
+ "summary": {
+  "counts": {
+   "verified-done": 486,
+   "unmeasured": 36,
+   "undecided": 8,
+   "broken": 10,
+   "unjoined": 80
+  },
+  "work_items": 134,
+  "work_by_class": {
+   "undecided": 8,
+   "unmeasured": 32,
+   "broken": 10,
+   "unjoined": 80
+  },
+  "work_by_kind": {
+   "decision-work": 88,
+   "evidence-work": 36,
+   "product-work": 10
+  },
+  "rows": 620
+ },
+ "denominators": {
+  "cases_adjudicated": {
+   "n": 289,
+   "of": 293,
+   "pct": 98.6,
+   "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+  },
+  "decisions_taken": {
+   "n": 0,
+   "of": 293,
+   "pct": 0.0,
+   "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+  },
+  "requirements_observed": {
+   "n": 63,
+   "of": 90,
+   "pct": 70.0,
+   "means": "somebody watched it happen, rather than the project reporting it of itself."
+  },
+  "surfaces_spoken_for": {
+   "n": 23,
+   "of": 23,
+   "pct": 100.0,
+   "means": "at least one case on this surface reached a verdict."
+  },
+  "briefs_joined": {
+   "n": 16,
+   "of": 96,
+   "pct": 16.7,
+   "means": "the brief could be tied to something in the registry at all."
+  }
+ },
+ "class_counts": {
+  "verified-done": 486,
+  "unmeasured": 36,
+  "undecided": 8,
+  "broken": 10,
+  "unjoined": 80
+ },
+ "effect": {
+  "kind": "filesystem-write",
+  "root": "docs/reckoning/2026-08-22-2bdc808",
+  "files_written": [
+   "ledger.json",
+   "reckoning.md"
+  ],
+  "count": 2
+ },
+ "provenance": "measured",
+ "notes": [
+  "Taken at wave 16's close-in-progress rather than after it: PRO-0101 had not merged when this was read, so its REQ-100/101, CASE-0430-0440, DEF-215 and SURF-024 are not in this tree.",
+  "PRO-0103's own campaign rows (REQ-102-107, CASE-0441-0456, DEF-216, SURF-025) land two commits after this reading and are not in it. They will appear as movement at the next wave close."
+ ]
+}

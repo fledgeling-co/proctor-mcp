@@ -1017,6 +1017,78 @@
       "effect": "none"
     },
     {
+      "id": "REQ-102",
+      "text": "A published reckoning names the tree it was taken on by commit, and a reading over uncommitted inputs is refused rather than published",
+      "source": "docs/specs/spec-PRO-0103.md acceptance sketch; docs/features-to-triage/94-a-reckoning-worth-comparing-against.md; scripts/reckoning/reckoning.py",
+      "class": "reporting correctness",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "note": "The failure the item turns on. The first reckoning here names its tree in one sentence of prose, so a second run could difference against it only by trusting somebody to have read that sentence. take resolves HEAD, refuses uncommitted inputs, and writes run.json; --allow-dirty marks the reading unnamed and compare then declines it as a baseline. CASE-0441, CASE-0442, CASE-0443, CASE-0456.",
+      "effect": "filesystem-write"
+    },
+    {
+      "id": "REQ-103",
+      "text": "The reckoning tool is checked for its declared version and for its actual class vocabulary before a reading is taken, so a copy whose manifest and behaviour disagree is refused",
+      "source": "docs/specs/spec-PRO-0103.md; ~/Dev/fledgeling-plugins/plugins/reckon/.claude-plugin/plugin.json; scripts/reckoning/reckoning.py resolve_tool",
+      "class": "test-oracle guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "note": "Two checks because they fail in opposite directions: the manifest version catches an old copy that is honest about being old, and the class list catches a copy whose manifest and behaviour disagree. REQ-099 is the same fault from the other side, where the behaviour moved and the version did not. The live instance is DEF-216. CASE-0444, CASE-0445, CASE-0446, CASE-0447.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-104",
+      "text": "Two readings taken with different versions of the reckoning tool are not differenced directly: the comparison rebuilds the earlier run's own inputs at its own commit with the current tool, and reports tool movement separately from project movement",
+      "source": "docs/specs/spec-PRO-0103.md; docs/reckoning/CADENCE.md; docs/reckoning/2026-08-22-2bdc808/delta.md",
+      "class": "reporting correctness",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "note": "Measured on the published pair: the two reckonings straddle PRO-0102's repair of the tool, and the tool accounts for -88 work items against the project's +4. A reader differencing the published headlines alone records a day in which this project shed 84 pieces of work. The decomposition is only possible because the earlier run names its commit, which is why REQ-102 is the requirement underneath this one. CASE-0448, CASE-0449, CASE-0450, CASE-0451.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-105",
+      "text": "The comparison runs the ratchet on every pair it reports and exits 3 where an item left the unmeasured class with no evidence-bearing event, with the violation written into the report rather than only printed",
+      "source": "docs/specs/spec-PRO-0103.md acceptance sketch; reckon.py ratchet(); scripts/reckoning/reckoning.py",
+      "class": "test-oracle guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "note": "A snapshot gate catches a bad run; this catches the slow version, where a row is quietly reclassified across runs until nothing remembers it was never checked. A run that cannot show the item was measured fails rather than reporting a smaller number, which is the acceptance clause verbatim. CASE-0452, CASE-0453.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-106",
+      "text": "The delta report leads with what moved and puts totals last",
+      "source": "docs/specs/spec-PRO-0103.md acceptance sketch; docs/reckoning/2026-08-22-2bdc808/delta.md",
+      "class": "reporting correctness",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "note": "The single-run report already answers how much there is, and only two runs can answer whether it is moving, so the delta opens on movement and the totals table carries the sentence saying to read it second. Checked structurally on the published report rather than asserted. CASE-0454.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-107",
+      "text": "The cadence is recorded in the repository as a trigger tied to wave close, and every command its runbook quotes resolves to a subcommand the script exposes",
+      "source": "docs/reckoning/CADENCE.md; docs/specs/spec-PRO-0103.md section 'The cadence, settled 2026-08-22'",
+      "class": "maintainability guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "note": "The fifth thing the proposal asked for, and the one the reader settled rather than the builder. A wave close is the trigger, not a date: a clock fires whether or not anything changed. The runbook is checked rather than trusted, and the note's stated count of the selftest's own checks is read back by that selftest so it cannot go stale unwatched, which is DEF-193's class of fault. CASE-0455.",
+      "effect": "none"
+    },
+    {
       "id": "REQ-100",
       "text": "Every one of the 99 files in docs/specs carries a citation saying where it came from — a brief path, a brief path plus the commit that still holds it, or an explicit statement that it was never a brief and what it was instead — and the check that proves the citation is present proves it resolves in the same pass",
       "source": "spec-PRO-0101.md, section 'A citation has to resolve, and this repo has already proved that is a separate claim'; docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md; scripts/campaign/spec_citation_measure.py",
@@ -1381,6 +1453,19 @@
         "selftested"
       ],
       "description": "reckon's classifier, packaged in ~/Dev/fledgeling-plugins/plugins/reckon and run against this repo's registry. It is a shared portfolio instrument rather than a Proctor surface, and it is given a surface of its own because SURF-022 is scoped by its own route to an in-repo script: a case about a tool in another repository filed there would name a denominator that instrument never examined. Its verdict decides which rows appear as unbuilt, broken, unmeasured, unnamed, undecided, retirable, waived or unjoined, so a misclassification here becomes a wrong headline about the whole campaign."
+    },
+    {
+      "id": "SURF-025",
+      "name": "Reckoning comparison",
+      "title": "The in-repo machinery that takes a reading and differences two of them",
+      "route": "tool://reckoning/compare",
+      "status": "reachable",
+      "states": [
+        "taking",
+        "comparing",
+        "refusing"
+      ],
+      "description": "scripts/reckoning/reckoning.py and its selftest: the take, compare and stamp subcommands that stamp a reading with the commit it was taken on, hold the reckoning tool constant across a version change, run the ratchet on every pair, and write the delta. Given a surface of its own rather than filed under SURF-023 because that surface's route is tool://reckon/build in ~/Dev/fledgeling-plugins and its subject is the shared classifier; this one is in-repo code that calls that classifier and decides what a comparison between two of its ledgers is allowed to claim. SURF-022's route is tool://vacuity-check/blind, a different in-repo script."
     },
     {
       "id": "SURF-024",
@@ -3266,6 +3351,61 @@
         "REQ-098"
       ],
       "note": "reckon classifies a defect as broken and as remaining work on any status word other than `fixed`. This registry uses only `fixed` and `open`, so the behaviour is correct here and PRO-0102's acceptance is unaffected; it is recorded because 1.1.0 has been announced to nine projects as the version to run.\n\nMEASURED IN A SIBLING PROJECT the same evening, not predicted: its register reads fixed 55, open 11, partially-fixed 3, characterised 2, resolved 1, not-a-defect 1, inconclusive 1, vacuous 1. Six rows land in broken and count as work owed against an adjudicated true queue of nine briefs — a large proportional error on a small true number, which is the shape that gets believed. Fifteen where nine is the truth reads as a backlog rather than as a bug.\n\nTHE WORD LIST WAS WRONG WHEN FIRST FILED, corrected by the project that owns those rows. `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce`, `resolved`, `not-a-defect` and `vacuous` do not owe remaining work. `partially-fixed` DOES, and was wrongly grouped with them here: a half still broken owes a reproduction for that half, and none of that project's three partially-fixed rows had one. Retiring it would make the tool under-report for the first time.\n\nAND THE REAL FINDING IS LARGER THAN THE LIST, which is why this row is titled for the mechanism rather than for the six words. An unrecognised vocabulary item fails in TWO directions and only one of them is visible. reckon over-reports on an unknown word: annoying, self-announcing, and it makes somebody look. The same project checked its own reproduction gate for this shape and found the opposite failure — it selected its population with a single status string, `open`, so a register growing a word meaning still-broken (`regressed`, `reopened`) would have dropped those rows out of the obligation entirely while the gate went on printing a clean count over a quietly smaller population. A clean green is a worse failure than an inflated backlog, because nothing about it asks to be checked.\n\nSO THE REPAIR IS NOT A LONGER LIST. Classify every status as owing or not owing, and make an unclassified word A FINDING THAT NAMES THE WORD AND ITS ROW COUNT rather than a default in either direction. Widening its own gate that way immediately surfaced five real defects there and took owing from 19 to 24. Same shape as DEF-201 and DEF-203: an input a check cannot classify should be a finding, not a silent pass or a silent fail."
+    },
+    {
+      "id": "DEF-216",
+      "title": "The installed reckon plugin is still 1.0.0, and 1.0.0 crashes on this registry",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-023"
+      ],
+      "requirements": [
+        "REQ-099",
+        "REQ-103"
+      ],
+      "found": "PRO-0103, while resolving which copy of the tool a wave-close reading should run",
+      "detail": "~/.claude/plugins/cache/fledgeling-plugins/reckon/ holds one directory, 1.0.0, whose plugin.json declares 1.0.0 and whose reckon.py contains zero occurrences of 'unjoined'. The shared source at ~/Dev/fledgeling-plugins/plugins/reckon declares 1.1.0. Running the cached copy against docs/test-campaign exits 1 with AttributeError: 'list' object has no attribute 'lower' at tokens(), because this registry carries a case's evidence as a list of paths. So somebody following reckon's own SKILL.md, which resolves its scripts from the installed skill directory, gets a crash rather than a reading, and the version announced to nine projects as the one to run is not the version installed here.",
+      "note": "The crash is the lucky half. A registry without list-valued evidence would get a silent 1.0.0 reading instead, with fixed defects classed broken and unjoined briefs classed unbuilt, which is exactly the headline the first reckoning here had to decline. Recorded as low severity because the shared source is correct and the cache refreshes on the next marketplace sync, and because scripts/reckoning/reckoning.py now reads the manifest version and the class list before it measures anything, so this repository's own cadence refuses the stale copy rather than believing it. CASE-0447."
+    },
+    {
+      "id": "DEF-204",
+      "title": "Two different tools with the same version string compare as the same tool",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "requirements": [
+        "REQ-102"
+      ],
+      "note": "reckoning.py's compare refuses a tool on disk that is not the one that took the current reading, and the refusal is keyed on a declared version string rather than on the tool. PRO-0103's verifier proved the gap two ways. The 1.0.0 cache relabelled 1.1.0 is caught, but by the class-vocabulary check (missing `unjoined`) rather than by the version. And the real 1.1.0 source, with CLASSES and ratchet intact and classify() altered to reclassify unjoined as verified-done, manifest reading 1.1.0, was ACCEPTED at exit 0 — and the published delta silently became -163 tool / +79 project against a true -88 / +4. run.json already records tool.source_commit; compare never reads it. This is the same shape as DEF-216 one level up: a version string is exactly what goes wrong, so a version string cannot be the test. The repair is to compare the artifact rather than its label."
+    },
+    {
+      "id": "DEF-205",
+      "title": "cmd_take discards the digests sweep() computed, so the witness records names without content",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "requirements": [
+        "REQ-102"
+      ],
+      "note": "sweep() walks the run directory and computes a byte count and sha256 for every file; cmd_take stores only the filenames and the count. So the effect witness for REQ-102 can say two files appeared and cannot say what was in them, and a file replaced between the two sweeps would be invisible. It also let CASE-0456 record a claim nobody could check: the case said four files each with byte count and sha256, run.json holds two names and no digests, and campaign.py counted the case witnessed without opening the artifact. The case is corrected; this row is the instrument. Two repairs, and the second is the one that generalises: store what sweep() already computed, and have the witness check read the artifact rather than the case's description of it."
+    },
+    {
+      "id": "DEF-206",
+      "title": "resolve_tree prints a path that does not exist in its own refusal",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-025"
+      ],
+      "requirements": [
+        "REQ-102"
+      ],
+      "note": "git() strips its output, so a porcelain status line arrives as `M docs/...` rather than ` M docs/...`, and the [3:] slice that was written to drop the two status characters and the space removes the first character of the path instead: `docs/test-campaign/cases.json` is refused as `ocs/test-campaign/cases.json`. Untracked entries are unaffected because `?? ` survives the strip intact. The refusal is correct and its message names a file nobody can find, which sends the reader looking for a phantom; and with --allow-dirty the mangled name is written into run.json.dirty_inputs, where it becomes a permanent record of a path that never existed. It fires on the commonest case, a modified tracked file."
     },
     {
       "id": "DEF-215",

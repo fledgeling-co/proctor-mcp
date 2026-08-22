@@ -1,0 +1,7 @@
+$ git archive 2bdc808 docs/features-to-triage docs/test-campaign | tar -x -C /tmp/...  && reckon.py build
+
+ca5f76ff27daf95d04a4ab6d1329529bb6904143a77fdd77899138c48c7fe25e  /tmp/pro0103-repro/out/ledger.json
+ca5f76ff27daf95d04a4ab6d1329529bb6904143a77fdd77899138c48c7fe25e  docs/reckoning/2026-08-22-2bdc808/ledger.json
+
+rebuilt at the named commit is byte-identical to the published ledger: True
+bytes: 582690 vs 582690

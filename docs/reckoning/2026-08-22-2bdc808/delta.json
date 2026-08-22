@@ -1,0 +1,913 @@
+{
+ "schema": "reckoning-delta/1",
+ "project": "proctor-mcp",
+ "attribution": "decomposed",
+ "previous": {
+  "dir_stamp": "2026-08-22T06:40:30Z",
+  "commit": "2bd01beb2c9a4d4359520279510b87e7fc01e0f3",
+  "short": "2bd01be",
+  "tool": "1.0.0+local-patch",
+  "provenance": "transcribed",
+  "notes": [
+   "Provenance transcribed from the report's own first line, not measured: this run predates the stamp and was deliberately not re-taken, because a baseline edited to suit is not a baseline.",
+   "The published report carries a human-adjudicated join of 78/91 briefs (66 cited plus 12 confirmed by title). The ledger's mechanical join is 16/91, and every delta computed from these files is mechanical on both sides.",
+   "The ledger's own headline — 218 remain, 183 product — is the one the report declined to reproduce. Two faults produced it: all 108 defects classed broken without reading status, and 75 briefs classed unbuilt for failing to join. Both are repaired in reckon 1.1.0, so any delta against this ledger measures the tool unless the tool is held constant.",
+   "The report excludes PRO-0082, PRO-0085 and PRO-0099 from its prose counts as mid-flight. The ledger does not exclude them."
+  ]
+ },
+ "current": {
+  "dir_stamp": "2026-08-22T13:13:25Z",
+  "commit": "2bdc8087471dc930af04d981fbac16e172d263b6",
+  "short": "2bdc808",
+  "tool": "1.1.0",
+  "provenance": "measured",
+  "notes": [
+   "Taken at wave 16's close-in-progress rather than after it: PRO-0101 had not merged when this was read, so its REQ-100/101, CASE-0430-0440, DEF-215 and SURF-024 are not in this tree.",
+   "PRO-0103's own campaign rows (REQ-102-107, CASE-0441-0456, DEF-216, SURF-025) land two commits after this reading and are not in it. They will appear as movement at the next wave close."
+  ]
+ },
+ "verdict": "2 of 5 axes improved, 2 flat, 1 worsened; evidence work flat at 36 and the unmeasured class flat at 36 rows.",
+ "movement": {
+  "tool": {
+   "work_items": -88,
+   "product": -172,
+   "evidence": 5,
+   "decision": 79,
+   "rows": 0
+  },
+  "project": {
+   "work_items": 4,
+   "product": -1,
+   "evidence": 0,
+   "decision": 5,
+   "rows": 104
+  },
+  "net": {
+   "work_items": -84,
+   "product": -173,
+   "evidence": 5,
+   "decision": 84,
+   "rows": 104
+  },
+  "previous": {
+   "work_items": 218,
+   "product": 183,
+   "evidence": 31,
+   "decision": 4,
+   "rows": 516
+  },
+  "control": {
+   "work_items": 130,
+   "product": 11,
+   "evidence": 36,
+   "decision": 83,
+   "rows": 516
+  },
+  "current": {
+   "work_items": 134,
+   "product": 10,
+   "evidence": 36,
+   "decision": 88,
+   "rows": 620
+  }
+ },
+ "classes": {
+  "previous": {
+   "verified-done": 298,
+   "unmeasured": 31,
+   "undecided": 4,
+   "broken": 108,
+   "unbuilt": 75
+  },
+  "control": {
+   "verified-done": 386,
+   "unmeasured": 36,
+   "undecided": 8,
+   "broken": 11,
+   "unjoined": 75
+  },
+  "current": {
+   "verified-done": 486,
+   "unmeasured": 36,
+   "undecided": 8,
+   "broken": 10,
+   "unjoined": 80
+  }
+ },
+ "axes": [
+  {
+   "key": "cases_adjudicated",
+   "label": "Cases adjudicated",
+   "prev": {
+    "n": 227,
+    "of": 231,
+    "pct": 98.3,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "control": {
+    "n": 227,
+    "of": 231,
+    "pct": 98.3,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "current": {
+    "n": 289,
+    "of": 293,
+    "pct": 98.6,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "decisions_taken",
+   "label": "Cases ruled out by decision",
+   "prev": {
+    "n": 0,
+    "of": 231,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "control": {
+    "n": 0,
+    "of": 231,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "current": {
+    "n": 0,
+    "of": 293,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "requirements_observed",
+   "label": "Requirements observed",
+   "prev": {
+    "n": 49,
+    "of": 76,
+    "pct": 64.5,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "control": {
+    "n": 49,
+    "of": 76,
+    "pct": 64.5,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "current": {
+    "n": 63,
+    "of": 90,
+    "pct": 70.0,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "surfaces_spoken_for",
+   "label": "Surfaces spoken for",
+   "prev": {
+    "n": 22,
+    "of": 22,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "control": {
+    "n": 22,
+    "of": 22,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "current": {
+    "n": 23,
+    "of": 23,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "briefs_joined",
+   "label": "Briefs joined to evidence",
+   "prev": {
+    "n": 16,
+    "of": 91,
+    "pct": 17.6,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "control": {
+    "n": 16,
+    "of": 91,
+    "pct": 17.6,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "current": {
+    "n": 16,
+    "of": 96,
+    "pct": 16.7,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "denominator_moved": true,
+   "direction": "worsened"
+  }
+ ],
+ "unmeasured": {
+  "control_rows": 36,
+  "current_rows": 36,
+  "left": [],
+  "entered": [],
+  "direction": "flat"
+ },
+ "rows": {
+  "moved": [
+   {
+    "id": "DEF-099",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "REQ-028 cites a source file the branch under test does not contain",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-140",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "Two force-unwrap shapes sit outside `grep -rn ')!' Tests` and carry DEF-136's hazard unswept",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-162",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "The design of record's permissions pane draws no Skip setup, and the build draws one on every step but connect",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-163",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "The disabled primary still draws filled accent while the design of record draws it plain, so a control that ca",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-165",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "BrowserLaneWiringTests asserts doctor's `ready` is invariant while reading two live machine probes",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   }
+  ],
+  "appeared": [
+   {
+    "id": "BRIEF-92-a-spec-says-which-brief-it-came-from",
+    "entity": "brief",
+    "class": "unjoined",
+    "title": "A spec says which brief it came from"
+   },
+   {
+    "id": "BRIEF-93-the-reckoning-tool-mis-read-this-registry",
+    "entity": "brief",
+    "class": "unjoined",
+    "title": "The reckoning tool mis-read this registry three ways"
+   },
+   {
+    "id": "BRIEF-94-a-reckoning-worth-comparing-against",
+    "entity": "brief",
+    "class": "unjoined",
+    "title": "A reckoning worth comparing against"
+   },
+   {
+    "id": "BRIEF-95-six-named-repairs",
+    "entity": "brief",
+    "class": "unjoined",
+    "title": "Six repairs whose diagnosis is already done"
+   },
+   {
+    "id": "BRIEF-96-what-1-1-0-still-groups-and-still-grades",
+    "entity": "brief",
+    "class": "unjoined",
+    "title": "What 1.1.0 still groups, and what it still lets a citation grade"
+   },
+   {
+    "id": "CASE-0330",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0331",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0332",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0333",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0334",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0335",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0350",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0351",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0352",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0353",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-017 · ?"
+   },
+   {
+    "id": "CASE-0354",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-017 · ?"
+   },
+   {
+    "id": "CASE-0355",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0356",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0357",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0358",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0359",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0360",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0361",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0362",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0363",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0364",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0365",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-009 · ?"
+   },
+   {
+    "id": "CASE-0366",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-009 · ?"
+   },
+   {
+    "id": "CASE-0367",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-009 · ?"
+   },
+   {
+    "id": "CASE-0368",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0369",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-008 · ?"
+   },
+   {
+    "id": "CASE-0370",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0371",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-013 · ?"
+   },
+   {
+    "id": "CASE-0372",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0373",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0374",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0390",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-009 · ?"
+   },
+   {
+    "id": "CASE-0391",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-009 · ?"
+   },
+   {
+    "id": "CASE-0392",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-009 · ?"
+   },
+   {
+    "id": "CASE-0393",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-004 · ?"
+   },
+   {
+    "id": "CASE-0394",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0395",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-022 · ?"
+   },
+   {
+    "id": "CASE-0396",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-022 · ?"
+   },
+   {
+    "id": "CASE-0397",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0398",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0399",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0400",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0410",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0411",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0412",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0413",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0414",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0415",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0416",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0417",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0418",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0419",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0420",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0421",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0422",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0423",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0424",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0425",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0426",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0427",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0428",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "CASE-0429",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · ?"
+   },
+   {
+    "id": "DEF-170",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The operator-path gate attributed a literal to a nested type that had already closed above it"
+   },
+   {
+    "id": "DEF-171",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The operator-path gate resolved a dotted name to a nested type's member and reported the audit interlock as un"
+   },
+   {
+    "id": "DEF-172",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The test suite could write the operator's own saved switches"
+   },
+   {
+    "id": "DEF-173",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The test suite could create run directories in the operator's maestro debug root"
+   },
+   {
+    "id": "DEF-174",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The iOS device-frame lane wrote into the operator's captures directory, the half DEF-142 left open"
+   },
+   {
+    "id": "DEF-175",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "HoldAttributionWiringTests reads the scheduler's ticket before the hold has reached it"
+   },
+   {
+    "id": "DEF-180",
+    "entity": "defect",
+    "class": "broken",
+    "title": "A Screen Recording answer is frozen for the life of the agent process, so a revoked grant is reported as grant"
+   },
+   {
+    "id": "DEF-181",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The health report filed the Shortcuts CLI under grants, so every reader but the status window drew a program o"
+   },
+   {
+    "id": "DEF-182",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The walkthrough's Settings button asked \"Already allowed?\", the misdirection PRO-0041 removed from the status "
+   },
+   {
+    "id": "DEF-183",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The policy posture has been on the wire since PRO-0050 and no surface read it, so the gate's shape and the aud"
+   },
+   {
+    "id": "DEF-190",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The proctor skill never mentions the guest lane it routes agents to"
+   },
+   {
+    "id": "DEF-191",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The skill's only VM sentence answers a scale question and reads as a prohibition"
+   },
+   {
+    "id": "DEF-192",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "references/tools.md states four tool counts and all four were wrong"
+   },
+   {
+    "id": "DEF-193",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "A fifth stale tool count survives in the proctor skill's gemini.md"
+   },
+   {
+    "id": "DEF-200",
+    "entity": "defect",
+    "class": "broken",
+    "title": "CASE-0392 records armed: false with a reason the verification disproved"
+   },
+   {
+    "id": "DEF-201",
+    "entity": "defect",
+    "class": "broken",
+    "title": "A quoted placeholder id is read as a citation at confidence 1.0"
+   },
+   {
+    "id": "DEF-202",
+    "entity": "defect",
+    "class": "broken",
+    "title": "Six status words that mean not-work are classified as remaining work"
+   },
+   {
+    "id": "DEF-210",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The reckoning classed every defect record broken without reading its status"
+   },
+   {
+    "id": "DEF-211",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The reckoning classed a brief it could not join as unbuilt, so 75 shipped items read as never built"
+   },
+   {
+    "id": "DEF-212",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "A correct repair to the reckoning never reached any installed copy, because the version never moved"
+   },
+   {
+    "id": "DEF-213",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "A brief joined only to a repaired defect would still have read broken"
+   },
+   {
+    "id": "DEF-214",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "The reverse-citation scan turned a brief's file number into a confidence-1.0 citation"
+   },
+   {
+    "id": "REQ-085",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Every declaration in Sources/ that names a path under the operator's Proctor application-support root is class"
+   },
+   {
+    "id": "REQ-086",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Adding a test-process interlock to an operator path does not change what that path resolves to in production: "
+   },
+   {
+    "id": "REQ-088",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The health report's permissions list carries only decisions macOS holds about Proctor, on every surface that r"
+   },
+   {
+    "id": "REQ-089",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The status window states the gate's posture and the trail's honesty — whether a step is likely to be refused, "
+   },
+   {
+    "id": "REQ-090",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A control that offers a person a trip to System Settings names where it goes rather than asking a question who"
+   },
+   {
+    "id": "REQ-091",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The proctor skill's tool documentation names exactly the tools ToolCatalogue.all ships (21) and no other proct"
+   },
+   {
+    "id": "REQ-092",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The proctor skill routes an agent to the guest lane on isolation grounds (a machine in a known state, a pinned"
+   },
+   {
+    "id": "REQ-093",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "No verb declared in AgentVerbs other than proctor_doctor has a ToolCatalogue spec, so the shim's tools/call ga"
+   },
+   {
+    "id": "REQ-094",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The walkthrough's primary action is drawn filled where it can be pressed and plain where it refuses, so a cont"
+   },
+   {
+    "id": "REQ-095",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "No test's verdict depends on the machine it runs on: every input to an asserted invariant is injected rather t"
+   },
+   {
+    "id": "REQ-096",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Every count and every proctor_* name the proctor skill states about Proctor matches ToolCatalogue.all, in ever"
+   },
+   {
+    "id": "REQ-097",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A defect record's own status decides whether it counts as remaining work: fixed, resolved, closed, done or ver"
+   },
+   {
+    "id": "REQ-098",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A brief the join cannot tie to any registry entity is classed unjoined — its own visible outcome, counted as d"
+   },
+   {
+    "id": "REQ-099",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The reckon plugin's published version rises with a repair, and its manifest and the marketplace entry declare "
+   },
+   {
+    "id": "SURF-023",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "The shared tool that decides what in this repo counts as remaining work"
+   }
+  ],
+  "vanished": []
+ },
+ "ratchets": [
+  {
+   "pair": "published",
+   "from": "2bd01be",
+   "to": "2bdc808",
+   "exit": 0,
+   "violations": []
+  },
+  {
+   "pair": "tool-constant",
+   "from": "2bd01be (rebuilt)",
+   "to": "2bdc808",
+   "exit": 0,
+   "violations": []
+  }
+ ]
+}

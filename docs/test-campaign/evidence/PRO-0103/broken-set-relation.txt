@@ -1,0 +1,8 @@
+defect rows in the registry: 118
+classifier `broken` rows: 10 ({'defect': 7, 'brief': 3})
+broken defect rows: ['DEF-033', 'DEF-141', 'DEF-151', 'DEF-180', 'DEF-200', 'DEF-201', 'DEF-202']
+registry non-fixed:  ['DEF-033', 'DEF-141', 'DEF-151', 'DEF-180', 'DEF-200', 'DEF-201', 'DEF-202']
+relation holds: True
+
+The class count and the defect count differ because `broken` also carries briefs joined
+to a defect or a failing case: ['BRIEF-85-proctoragents-mutants-mostly-survive', 'BRIEF-89-the-registry-says-open-and-the-code-says-fixed', 'BRIEF-90-the-four-nobody-owns']

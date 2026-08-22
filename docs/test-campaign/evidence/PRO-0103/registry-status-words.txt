@@ -1,0 +1,9 @@
+defect rows examined: 118
+distinct status words: {'fixed': 111, 'open': 7}
+DEF-202 over-reporting words present: none
+DEF-202 bites here: False
+briefs examined: 96
+registry ids cited in briefs: 176
+ids inside a code fence: 0
+ids wrapped in backticks or quotes: 1
+DEF-201 live instances here: 0
