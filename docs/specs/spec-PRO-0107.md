@@ -128,6 +128,26 @@ reproducing the passing reading.
 | DEF-224 | Case evidence and the lineage manifest disagree about the same five files (recorded) | open |
 | DEF-225 | A passing case cites a shots file that does not exist, and no gate looks (recorded) | open |
 
+## Gates
+
+| Gate | Exit |
+|---|---|
+| `capture-lineage.py docs/test-campaign --gate` | **0** — 43 files, 8 published, `COUNTED APART (35)`, judged 6 of 8, ratchet 6 held (was **2** with 35 hard failures) |
+| `defect_gate.py claims docs/specs/spec-PRO-0107.md docs/test-campaign` | **0** — claims DEF-209, 8 recorded and not checked |
+| `defect_gate.py dropped docs/test-campaign` | **0** — 2 files, 120 merges, 55,908 pairs |
+| `test_instruments.py` | **0** — 62 passed |
+| `spec_citation_measure.py` | **0** — 15/15, unclaimed briefs 0, specs 104 |
+| `shot_disposition.py` (this item's own) | **0** — 43 disposed, 4 byte-identical groups |
+| `campaign.py check docs/test-campaign` | 1 on head and on merge base, **blocker sets identical**, naming none of this item's ids |
+| `./scripts/test.sh` | **0** — `Test run with 2074 tests in 252 suites passed after 18.008 seconds`, the `main` baseline exactly. A control: no Swift changed |
+
+The suite took five attempts to be admitted, and what blocked it was berth accounting rather than
+capacity: `available 0`, `in_use 12`, `ceiling 12`, twelve berths held at weight 6 by two other
+projects with every claimant alive, while `load_per_core` read **0.63** and pressure read `healthy`.
+Admitted on the fifth at `available 6`. Another reading in the direction this file already records:
+`available` is authoritative as an admission predicate and worthless as a load proxy, and this time the
+machine was idle while nothing could be granted.
+
 ## Out-of-family review — 2026-08-23
 
 `gemini-3.7-flash-high` via `agy --new-project` from `/tmp`, answering about PRO-0107 by name and

@@ -2743,3 +2743,12 @@ anyone who clicks it. DEF-225.
 
 Registry with those two: **344 cases · 136 defect rows · 104 requirements · 27 surfaces**, and open
 defects rise by seven rather than five.
+
+**The suite is a control and it is green:** `Test run with 2074 tests in 252 suites passed after 18.008
+seconds`, exit 0 — the `main` baseline exactly, as expected since no Swift changed. It took five
+attempts to be admitted, and the block was berth accounting rather than capacity: `available 0`,
+`in_use 12`, `ceiling 12`, twelve berths held at weight 6 by two other projects with every claimant
+alive, while load per core read **0.63** and pressure read `healthy`. `governor-run`'s own refusal said
+`no berth available` and advised against looping on it. Admitted on the fifth at `available 6`. So the
+corrected predicate holds in the other direction too: an idle machine that can grant nothing looks
+exactly like a busy one, and only `available` tells you which.
