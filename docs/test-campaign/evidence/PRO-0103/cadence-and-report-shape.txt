@@ -1,0 +1,11 @@
+delta.md sections, in order: ['What moved', 'Where the movement came from', 'The ratchet', 'Rows that changed class (5), appeared (104), vanished (0)', 'What each side of this comparison carries', 'Totals, last']
+leads with movement: True
+totals last:         True
+the same predicate over a report that leads with totals:
+  first section 'Totals, last' -> leads with movement: False
+
+CADENCE.md names the trigger: True
+shell commands quoted in CADENCE.md: 2
+subcommands the script actually exposes: ['compare', 'stamp', 'take']
+  scripts/reckoning/reckoning.py                 take     resolves: True
+  scripts/reckoning/reckoning.py                 compare  resolves: True

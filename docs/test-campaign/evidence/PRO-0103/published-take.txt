@@ -1,0 +1,11 @@
+warning: only 16.7% of briefs could be joined to the registry at all. The join is the inferential step in this pipeline; below half, retirement claims are withheld and every brief stays in its documentary class.
+warning: only 16.7% of briefs could be joined to the registry at all. The join is the inferential step in this pipeline; below half, retirement claims are withheld and every brief stays in its documentary class.
+proctor-mcp · 620 rows · 134 piece(s) of work remain — 10 product, 36 evidence, 88 decision — across 620 ledger rows. This reckoning speaks for 99% of the campaign's designed cases and 70% of its stated requirements; the rest is not known to be done, it is simply not known. 80 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.
+wrote docs/reckoning/2026-08-22-2bdc808/ledger.json
+620 rows · unjoined 80 · broken 10 · unmeasured 36 · undecided 8 · verified-done 486
+gate: clean
+took docs/reckoning/2026-08-22-2bdc808 · commit 2bdc808 · reckon 1.1.0
+wrote docs/reckoning/2026-08-22-2bdc808/delta.md
+2 of 5 axes improved, 2 flat, 1 worsened; evidence work flat at 36 and the unmeasured class flat at 36 rows.
+ratchet published: clean
+ratchet tool-constant: clean
