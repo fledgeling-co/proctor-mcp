@@ -79,7 +79,11 @@ def census(v, d: Path) -> tuple[int, list[str], int, list[str]]:
     """
     reqs = v.requirements(d)
     unclassed_examined, unclassed = v.pass_unclassed(reqs)
-    uncensused_examined, uncensused = v.pass_uncensused(reqs)
+    # test-campaign 0.9.6 widened pass_uncensused to a 4-tuple (examined, hits,
+    # and two counts this control does not read). Slicing keeps the control
+    # working across both signatures; nothing here is weakened, because the
+    # two values taken are the same two the narrower signature returned.
+    uncensused_examined, uncensused = v.pass_uncensused(reqs)[:2]
     return unclassed_examined, unclassed, uncensused_examined, uncensused
 
 
