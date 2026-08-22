@@ -59,6 +59,26 @@ def full_row(replacement):
     return apply
 
 
+def out_of_description(phrase, replacement):
+    """Move `phrase` out of the frontmatter description, leaving it in the body.
+
+    A check that matched the whole of SKILL.md stays PASS under this mutation,
+    which is exactly what makes it the arming a description claim needs: the
+    phrase is still in the file, just no longer in the few hundred words a host
+    reads to route.
+    """
+    def apply(text):
+        fm = re.match(r"---\n.*?\n---\n", text, re.S)
+        assert fm, "SKILL.md has no frontmatter"
+        head, body = text[:fm.end()], text[fm.end():]
+        assert phrase in head, f"{phrase!r} is not in the description"
+        assert phrase not in body, f"{phrase!r} is already in the body; nothing would move"
+        head = head.replace(phrase, replacement)
+        assert phrase not in head, f"{phrase!r} survived the description rewrite"
+        return head + body.rstrip("\n") + f"\n\nArming: the body mentions {phrase} here.\n"
+    return apply
+
+
 MUTATIONS = [
     ("tools.md names every shipped tool", TOOLS, sub("proctor_policy", "policyTool", 1)),
     ("tools.md names no tool the server lacks", TOOLS, sub("## Reading results honestly", "`proctor_bogus`\n\n## Reading results honestly")),
@@ -66,12 +86,18 @@ MUTATIONS = [
     ("tools.md specifies 15 sections", TOOLS, sub("\n## `proctor_wait`", "\n### `proctor_wait`")),
     ("proctor_guest has a specified section", TOOLS, sub("\n## `proctor_guest`", "\n## The guest tool")),
     ("tools.md states the count the catalogue ships", TOOLS, sub("ships **21 tools**", "ships **20 tools**")),
-    ("full profile row totals 21", TOOLS, full_row(lambda l: l.replace("| 21 |", "| 20 |"))),
+    ("full profile row totals the catalogue", TOOLS, full_row(lambda l: l.replace("| 21 |", "| 20 |"))),
+    ("every profile row totals the tools it names", TOOLS, full_row(lambda l: l.replace(" `openai_computer`", ""))),
+    ("tools.md's specified-plus-named split is the catalogue", TOOLS, sub("Six more are named", "Five more are named", 1)),
+    ("tools.md restates the split as the catalogue count", TOOLS, sub("Fifteen plus six is the 21 above", "Fifteen plus six is the 20 above", 1)),
+    ("SKILL.md states the catalogue count in words", SKILLMD, sub("rather than all twenty-one", "rather than all twenty", 1)),
+    ("SKILL.md's depth line states the catalogue count", SKILLMD, sub("the 21 tools the server ships", "the 20 tools the server ships", 1)),
+    ("both files state the core profile's size", TOOLS, sub("`core` is the ten that", "`core` is the eleven that", 1)),
     ("guest listed in full profile adds", TOOLS, full_row(lambda l: l.replace(" `guest`", ""))),
     ("all three providers named", TOOLS, sub("prlctl", "parallels-cli", 1)),
     ("SKILL.md has a guest lane section", SKILLMD, sub("\n## The guest lane", "\n## The VM lane")),
-    ("description names the guest lane", SKILLMD, sub("virtual-machine guests", "VM guests", 1)),
-    ("description distinguishes delegated", SKILLMD, sub("delegated to coordinates", "limited to coordinates", 1)),
+    ("description names the guest lane", SKILLMD, out_of_description("virtual-machine guests", "VM guests")),
+    ("description distinguishes delegated", SKILLMD, out_of_description("delegated to coordinates", "limited to coordinates")),
     ("nothing provisions, stated in both", TOOLS, sub("Nothing here provisions a guest", "Nothing provisions a guest", 1)),
     ("no provision action documented", TOOLS, sub("## Reading results honestly", "`provision`\n\n## Reading results honestly")),
     ("two-guest cap survives in SKILL.md", SKILLMD, sub("caps concurrent macOS guests at two", "limits macOS guests to two")),

@@ -233,8 +233,27 @@ mutated file. And nothing read the count the page states about itself, so
 `The server ships **20 tools**` — the headline number DEF-192 exists to correct —
 survived a green run of the instrument written to catch it. Providers are now
 matched on a word boundary, headings are anchored to the start of a line, and the
-stated count is compared to the catalogue. The instrument is 18 checks, and
-`skill_doc_arm.py` watches each of the 18 go red under a mutation of its own.
+stated count is compared to the catalogue.
+
+**Two more could not fail, and both carried an acceptance criterion.** `description
+names the guest lane` and `description distinguishes delegated` tested membership
+against the whole of `SKILL.md`, so a phrase 800 lines into the body satisfied a
+claim about the ~300-word frontmatter description a host actually reads to route.
+Both now read the `description:` value alone, and each is armed against a mutation
+that rewrites the phrase in the description while planting it in the body — a file
+the old predicate still passes on, recorded as such in
+`doc-description-anchor-arming.txt`.
+
+**The count check read two of the six sites either file states one at**, and
+`SKILL.md:103` — one of the four sites DEF-192's own fix corrected — was among the
+four it did not read. All six are now read
+against `ToolCatalogue.all`: the `21 tools` headline, the profile table's four row
+totals against the names they nest over, the `15` plus `Six more` split, its
+`Fifteen plus six is the 21 above` restatement, `SKILL.md`'s word-form `all
+twenty-one`, and its Depth line's `the 21 tools the server ships`. The core
+profile's stated size is read in both files against the same table. The instrument
+is 24 checks, and `skill_doc_arm.py` watches each of the 24 go red under a mutation
+of its own.
 
 **Two counts were still wrong and are now fixed**: `references/tools.md:11`
 (20 → 21) and `SKILL.md:103` ("all twenty" → "all twenty-one"), which completes

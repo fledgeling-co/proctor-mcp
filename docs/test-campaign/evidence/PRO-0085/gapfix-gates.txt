@@ -1,0 +1,44 @@
+PRO-0085 gap-fix gates, run 2026-08-22.
+
+=== python3 scripts/campaign/defect_gate.py claims docs/specs/spec-PRO-0085.md docs/test-campaign ===
+spec-PRO-0085.md: claims 3 defect(s) — DEF-190, DEF-191, DEF-192
+  registry: docs/test-campaign/inventory.json, 100 defect record(s)
+
+PASS: every claimed defect reads `fixed`.
+EXIT=0
+
+=== python3 scripts/campaign/defect_gate.py dropped docs/test-campaign ===
+registry drift: 2 file(s), 102 merge(s), 32078 id/field pair(s) examined
+
+PASS: no merge on this history discarded a registry value that is still missing.
+EXIT=0
+
+=== python3 strict-check.py docs/test-campaign (before) ===
+CHECKED   208 of 236 cases (88%)
+UNCHECKED 28  — and unchecked is failed
+
+    23  only proves something rendered
+     4  status is inconclusive
+     1  never watched to fail
+
+ratchet: 203
+checked ROSE from 203 to 208 — raise the ratchet with --set-ratchet in the same commit, so it cannot fall back.
+EXIT=0
+
+=== python3 strict-check.py docs/test-campaign --set-ratchet ===
+     1  never watched to fail
+
+ratchet set to 208 (was 203)
+EXIT=0
+
+=== python3 strict-check.py docs/test-campaign (after) ===
+CHECKED   208 of 236 cases (88%)
+UNCHECKED 28  — and unchecked is failed
+
+    23  only proves something rendered
+     4  status is inconclusive
+     1  never watched to fail
+
+ratchet: 208
+held.
+EXIT=0
