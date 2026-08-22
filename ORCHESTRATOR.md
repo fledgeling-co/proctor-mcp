@@ -1831,3 +1831,24 @@ a question about the row rather than about the branch.** What caught all three w
 **Two unreproduced SIGTRAPs** remain unexplained, each a run reporting no verdict line at all. Both
 are recorded rather than diagnosed. DEF-136's conversion removed the class that causes them from 24
 sites, which is why they should now be rare rather than why they are gone.
+
+### Intake from the 2026-08-22 reckoning — three briefs, untriaged, routed 2026-08-22
+
+Two asked-for and one proposed. No ids allocated; triage owns that write.
+
+- `92-a-spec-says-which-brief-it-came-from.md` — the reckoning joined 78 of 91 briefs. All thirteen
+  it missed name a merged item, so nothing is hiding behind them; they are unlinkable rather than
+  unbuilt. Twenty-four specs carry no citation, sixty-six do and every one of those joined. Two
+  halves: backfill the twenty-four, and have the stage that mints a spec write it, which is a change
+  outside this repository.
+- `93-the-reckoning-tool-mis-read-this-registry.md` — three faults measured against this registry:
+  a crash on a field carried as a list where a string was assumed, all 108 defect records classed
+  `broken` without reading `status` when 88 are fixed, and 75 briefs classed `unbuilt` when every one
+  names a shipped item. The last two share a root — an entity absent from the evidence treated as an
+  entity that failed — which is the tool's own target failure arriving from the other side. Shared
+  tooling, so it reaches every project here.
+- `94-a-reckoning-worth-comparing-against.md` — **proposed-by-ai**. Today's run is a snapshot and the
+  ratchet has nothing to compare against. Delete the file to veto.
+
+**Nothing new was briefed for the nine old unjoined briefs.** Each was checked against the ledger
+individually and each names a merged item, so the join failure is bookkeeping rather than work.
