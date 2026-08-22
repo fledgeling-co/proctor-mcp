@@ -48,3 +48,7 @@ design/icon/*-arrow-*.svg
 # Runner worktrees and Python bytecode, neither of which belongs in history.
 .claude/worktrees/
 __pycache__/
+
+# better-goal
+.claude/goals/
+.claude/settings.local.json.bak.*
