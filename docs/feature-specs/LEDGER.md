@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 98
+**Last allocated:** 99
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -105,3 +105,4 @@
 | PRO-0096 | The gate's own registry findings | 2026-08-21 | Merged |
 | PRO-0097 | The registry says open where the code says fixed | 2026-08-22 | Merged |
 | PRO-0098 | The four nobody owns | 2026-08-22 | Merged |
+| PRO-0099 | Eight more operator paths with no seam | 2026-08-22 | Ready for AI |
