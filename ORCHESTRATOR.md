@@ -1994,3 +1994,47 @@ load 0.504 per core (8.07 / 12.52 / 19.06 falling). Its stated unblock condition
 locally when the machine is genuinely idle", and that is now met. It stays queued behind 16a
 because its mutation runner compiles the whole package per mutant and would poison the verifier's
 own timing gate — the same contention that makes it score a timeout as a kill.
+
+### Wave 16b dispatched, and three cautions the fleet is now carrying (2026-08-22)
+
+**The token for 16b and 16c came from the armada conductor.** 16c stays unstarted: PRO-0103 is behind
+PRO-0102 by its own spec, and PRO-0102 is in gap-fix rather than verified.
+
+**One thermal read is not a verdict, and this machine proved it inside forty seconds.** Sampled three
+times, twenty seconds apart: `not_limited` held 364s → `not_limited` held 395s → **`limited` with
+`held_for_sec: 0`**, reason "P0 busy at 100% but spent 0.8% of active time at or near its 4512 MHz
+ladder top". `dwell_required_sec` is 60 and `held_for_sec` counts only the current state, so the
+verdict flips on one quiet minute; this machine sat `limited` for 8,805 seconds earlier tonight. Load
+held steady across all three samples at 6.15–7.47 over 16 cores (0.38–0.47 per core), memory 44% free
+with no swap, disk 255 GiB but **13.72%** — the tightest axis. So 16b goes out as **one** runner
+rather than two, and PRO-0092 is not added alongside it. Running narrower than the count allows is
+the response to a clamp inside the last hour.
+
+**`berths.py` is claim accounting, not load.** It reported `in_use 0` while this session had two Opus
+runners live, because workflow-inner agents never register as claimants. A peer measured the same
+thing with five live runners, and another reached it from the opposite side: its `available 0` was a
+true statement about other registered work that said nothing about its own. Read `load_per_core`
+alongside it; `available 12` means nothing governed is claiming, not that twelve cores are idle.
+
+**Three cautions for PRO-0092 specifically, all measured elsewhere tonight rather than reasoned:**
+
+- A mutation harness copy orphaned to PID 1 kept cycling, and a `git add -A` swept a **mutated source
+  file into a real commit**. Nothing errored, because the harness asserts the tree clean between
+  cases and a status read inside that gap genuinely is clean. It surfaced only as a baseline going red
+  over a tree `git diff HEAD` called clean. PRO-0092 commits by explicit path, never `-a` and never
+  `.`, and checks for an orphaned harness before starting.
+- A review lane handed `--dangerously-skip-permissions --add-dir <worktree>` while a mutation harness
+  was live let **production source acquire a literal from the mutation table**. No review lane runs
+  against a worktree while that item's harness is running.
+- Its own known fault stands: the runner scores a timeout as a kill. Under the thermal reading above,
+  a kill it reports is not yet trustworthy in that direction — a survivor is trustworthy in both, a
+  starved run can turn a survivor into a false kill but never a kill into a false survivor.
+
+**Brief 96 is filed rather than folded into PRO-0102.** A peer ran this registry through both
+versions of `reckon`: cached 1.0.0 gave 48 product / 21 evidence / 0 decision, source `224a696` gave
+0 / 21 / 48, ratchet and gate clean both ways, and the 19 requirements marked `observed` while sourced
+to the brief that states them stayed `unmeasured` under both — the new class did not swallow a finding
+the old one surfaced. What the fixed tool still does is two things: it groups all four unmeasured
+cells as one `BLOCK-0001` at 16.7%, and it neither joins on `source` nor refuses to let `source`
+grade, when that one field is both the citation tying a brief and the circular case that must not
+promote a requirement to `observed`.
