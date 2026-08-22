@@ -17,6 +17,15 @@ fails on is KILLED; one it passes on SURVIVED, and a survivor names a behaviour
 nothing is watching. One that will not build is neither, and is counted apart:
 a mutant the compiler rejected is not a fault the tests failed to catch.
 
+A fourth verdict, TIMEOUT, and it is the one this file used to get wrong. A run
+that reached the bound was scored KILLED, so a starved run reported a suite that
+was catching faults it had never actually run against. PRO-0080's first
+ProctorAgent sample carried two of those at exactly 600.0s under a load average
+of 271: the reported rate was 79.2% and the honest one was 86.4%. A timeout is
+now counted apart and left out of the survival-rate denominator, because it is
+the absence of a measurement rather than a measurement, and the summary names
+every scored mutant that came within 2% of the bound without reaching it.
+
 The count is stated here because the first version of this file said six and
 listed an integer literal increment it did not implement. A docstring that
 describes a table it does not read is a second source, which is the defect this
@@ -177,6 +186,36 @@ def revert(mutant: dict) -> None:
         _APPLIED.remove(mutant["file"])
 
 
+# How close to the bound an elapsed time has to be before the reader is told.
+# 0.98 rather than equality because a run that is starved rather than failing does
+# not always reach the bound exactly — PRO-0080's two both did, at 600.0s and
+# 600.1s, but the next one need not.
+NEAR_BOUND = 0.98
+
+
+def score(passed: bool, why: str, elapsed: float, bound: int) -> tuple[str, bool]:
+    """The verdict for one mutant, and whether it is close enough to the bound to
+    be worth saying so.
+
+    PRO-0092. THE RUNNER USED TO SCORE A TIMEOUT AS A KILL, and that is the
+    direction that flatters the suite. Starvation can turn a survivor into a false
+    kill; it can never turn a kill into a false survivor. Two of the five kills in
+    the first ProctorAgent sample ran to exactly 600.0s under a load average that
+    reached 271, and reading the summary alone there was no way to tell them from
+    the three real ones — the honest rate was 86.4% and the reported one was 79.2%.
+
+    A timeout is now its own verdict, counted apart and excluded from the
+    survival-rate denominator, because it is the absence of a measurement rather
+    than a measurement. `nearBound` marks a scored mutant that came close without
+    reaching it, which is the shape a reader should look at twice.
+    """
+    if why == "build-failed":
+        return "unbuildable", False
+    if why == "timeout":
+        return "TIMEOUT", True
+    return ("SURVIVED" if passed else "killed"), elapsed >= bound * NEAR_BOUND
+
+
 def run_suite(timeout: int) -> tuple[bool, str]:
     """(suite passed, why). A build failure is not a kill and is reported apart."""
     try:
@@ -236,31 +275,36 @@ def main() -> int:
           flush=True)
 
     results = []
-    killed = survived = unbuildable = 0
+    killed = survived = unbuildable = timed_out = 0
     for i, m in enumerate(chosen, 1):
         apply(m)
         started = time.time()
         passed, why = run_suite(args.timeout)
         revert(m)
         elapsed = round(time.time() - started, 1)
-        if why == "build-failed":
-            verdict, unbuildable = "unbuildable", unbuildable + 1
-        elif passed:
-            verdict, survived = "SURVIVED", survived + 1
+        verdict, near_bound = score(passed, why, elapsed, args.timeout)
+        if verdict == "unbuildable":
+            unbuildable += 1
+        elif verdict == "TIMEOUT":
+            timed_out += 1
+        elif verdict == "SURVIVED":
+            survived += 1
         else:
-            verdict, killed = "killed", killed + 1
-        row = {**m, "verdict": verdict, "why": why, "seconds": elapsed}
+            killed += 1
+        row = {**m, "verdict": verdict, "why": why, "seconds": elapsed,
+               "nearBound": near_bound, "boundSeconds": args.timeout}
         results.append(row)
         short = Path(m["file"]).name
+        near = f"  [at the {args.timeout}s bound]" if near_bound else ""
         print(f"[{i}/{len(chosen)}] {verdict:<11} {short}:{m['line']} "
-              f"{m['before']} -> {m['after']}  ({elapsed}s)", flush=True)
+              f"{m['before']} -> {m['after']}  ({elapsed}s){near}", flush=True)
         # Written every mutant rather than at the end, so a run that is killed
         # still reports what it scored. The first re-run was killed by a harness
         # timeout and left a zero-byte output file beside a mutated tree.
         Path(args.out).write_text(json.dumps(
             {"summary": {"partial": True, "run": i, "of": len(chosen),
                          "killed": killed, "survived": survived,
-                         "unbuildable": unbuildable},
+                         "unbuildable": unbuildable, "timedOut": timed_out},
              "mutants": results}, indent=1) + "\n")
 
     # Its own artifact does not count as an unrestored mutation. Without this the
@@ -273,9 +317,10 @@ def main() -> int:
     for r in results:
         key = ("int-literal" if r["before"].replace("_", "").isdigit()
                else f"{r['before']} -> {r['after']}")
-        row = by_op.setdefault(key, {"killed": 0, "survived": 0, "unbuildable": 0})
+        row = by_op.setdefault(key, {"killed": 0, "survived": 0, "unbuildable": 0,
+                                     "timedOut": 0})
         row[{"killed": "killed", "SURVIVED": "survived",
-             "unbuildable": "unbuildable"}[r["verdict"]]] += 1
+             "unbuildable": "unbuildable", "TIMEOUT": "timedOut"}[r["verdict"]]] += 1
 
     still_dirty = "\n".join(
         line for line in subprocess.run(["git", "status", "--porcelain"],
@@ -284,8 +329,11 @@ def main() -> int:
     scored = killed + survived
     summary = {
         "sites": len(pool), "run": len(chosen), "killed": killed, "survived": survived,
-        "unbuildable": unbuildable, "scored": scored,
+        "unbuildable": unbuildable, "timedOut": timed_out, "scored": scored,
         "survivalRate": round(survived / scored, 4) if scored else None,
+        "timeoutBoundSeconds": args.timeout,
+        "nearBound": [f"{Path(r['file']).name}:{r['line']} {r['verdict']} at {r['seconds']}s"
+                      for r in results if r["nearBound"]],
         "treeCleanAfter": not still_dirty,
         "targets": args.targets, "seed": args.seed, "byOperator": by_op,
         "baselineGreen": True,
@@ -294,17 +342,27 @@ def main() -> int:
                                          indent=1) + "\n")
     print()
     print(f"scored {scored} of {len(chosen)} run (of {len(pool)} sites) · "
-          f"killed {killed} · SURVIVED {survived} · unbuildable {unbuildable}")
+          f"killed {killed} · SURVIVED {survived} · unbuildable {unbuildable} · "
+          f"TIMEOUT {timed_out}")
     if scored:
         print(f"survival rate {survived}/{scored} = {survived / scored:.1%} "
               f"— a survivor is a behaviour nothing is watching")
+    if timed_out:
+        print(f"{timed_out} mutant(s) reached the {args.timeout}s bound and are NOT in that "
+              f"denominator. A timeout is the absence of a measurement, and scoring one as a "
+              f"kill is the direction that flatters the suite.")
+    near = [r for r in results if r["nearBound"] and r["verdict"] != "TIMEOUT"]
+    for r in near:
+        print(f"  near the bound: {Path(r['file']).name}:{r['line']} {r['verdict']} "
+              f"at {r['seconds']}s of {args.timeout}s")
     print()
     for key in sorted(by_op, key=lambda k: -sum(by_op[k].values())):
         row = by_op[key]
         n = row["killed"] + row["survived"]
         rate = f"{row['survived'] / n:.0%}" if n else "n/a"
         print(f"  {key:<18} killed {row['killed']:>3}  survived {row['survived']:>3}  "
-              f"unbuildable {row['unbuildable']:>3}  survival {rate}")
+              f"unbuildable {row['unbuildable']:>3}  timeout {row['timedOut']:>3}  "
+              f"survival {rate}")
     print(f"tree clean after: {not still_dirty}")
     return 0 if not still_dirty else 3
 
