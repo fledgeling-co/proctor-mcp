@@ -62,10 +62,20 @@ final class FakeContention: ContentionSampling, @unchecked Sendable {
 
     /// PRO-0026's block hands a person's swallowed event over here, because a
     /// swallowed event never reaches an `NSEvent` monitor.
+    ///
+    /// IT CARRIES THE SIGNAL NOW, AND THAT IS DEF-152. This counted the call and
+    /// stopped, so `sample()` served the script whatever the block had swallowed
+    /// — and the only thing any test could assert about a swallowed event was
+    /// that this counter had moved. Everything downstream of it was unchecked,
+    /// including the yield record and the held reason the feature exists to
+    /// produce. The real `ContentionMonitor` stamps `lastUserInputAt` and reports
+    /// the arrival on the next sample; so does this.
     private(set) var userInputs = 0
+    private var pendingUserInput = false
     func noteUserInput() {
         lock.lock(); defer { lock.unlock() }
         userInputs += 1
+        pendingUserInput = true
     }
 
     /// How far the repeating tail's clock moves on each read.
@@ -84,12 +94,22 @@ final class FakeContention: ContentionSampling, @unchecked Sendable {
 
     func sample() -> ContentionSample {
         lock.lock(); defer { lock.unlock() }
+        var out: ContentionSample
         if script.count > 1 {
-            return script.removeFirst()
+            out = script.removeFirst()
+        } else {
+            out = script[0]
+            script[0].now += Self.tailStep
         }
-        let next = script[0]
-        script[0].now += Self.tailStep
-        return next
+        // An arrival, consumed in the asking, exactly as the real monitor
+        // reports it. The timestamp goes with it so the hold decays and releases
+        // through the ordinary window rather than being held open by the flag.
+        if pendingUserInput {
+            out.userInputSince = true
+            out.lastUserInputAt = out.now
+            pendingUserInput = false
+        }
+        return out
     }
 }
 

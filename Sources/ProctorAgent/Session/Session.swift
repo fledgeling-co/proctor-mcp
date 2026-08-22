@@ -500,6 +500,13 @@ actor Session {
             closeOpenHold(&run, endedBy: runControl.isStopped ? .stopped : .runEnded)
             yieldRuns[token] = run
         }
+        // The RECORD is closed above; the LATCH is closed here, and they were not
+        // the same thing. A run that ended while yielded left its entry in
+        // `RunControl.yields` forever: `paused` stayed true, `pausedAt` was never
+        // cleared, and `heldBy` went on naming a run that had finished, so the
+        // next run's `begin` could not clear the clock either. An automatic hold
+        // belongs to one run, so it ends when that run does.
+        runControl.release(run: RunScheduler.currentRun)
         // The three endings the probe never sees — a person's Stop, the
         // backstop giving up, and the run simply finishing — all unwind through
         // here, so this is where the published copy is cleared for them. Without
