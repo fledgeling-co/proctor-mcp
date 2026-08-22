@@ -1,0 +1,39 @@
+mutation landed: return matches.count == 1 ? matches[1].number : nil
+EXIT= 1
+==> swift test --filter correlateReturnsTheMatchingWindowsNumber (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.wkbYoqs3M6)
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling ProctorAgent CGWindowCorrelation.swift
+[6/10] Emitting module ProctorAgent
+[7/10] Compiling ProctorAgent AuditKeyStore.swift
+[7/12] Write Objects.LinkFileList
+[8/12] Linking proctor-agent
+[9/12] Applying proctor-agent
+[11/13] Emitting module ProctorAgentTests
+[11/13] Write Objects.LinkFileList
+[12/13] Linking proctor-mcpPackageTests
+Build complete! (4.83s)
+error: Process '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec/swift/pm/swiftpm-testing-helper --test-bundle-path /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0092/.build/arm64-apple-macosx/debug/proctor-mcpPackageTests.xctest/Contents/MacOS/proctor-mcpPackageTests --filter correlateReturnsTheMatchingWindowsNumber /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0092/.build/arm64-apple-macosx/debug/proctor-mcpPackageTests.xctest/Contents/MacOS/proctor-mcpPackageTests --testing-library swift-testing' exited with unexpected signal code 5
+Test Suite 'Selected tests' started at 2026-08-23 00:01:55.810.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-23 00:01:55.811.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-23 00:01:55.811.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-23 00:01:55.811.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Mutation seams, ProctorAgent" started.
+􀟈  Test "A single fitting window is correlated to its own number" started.
+Swift/ContiguousArrayBuffer.swift:692: Fatal error: Index out of range
+
+FAIL: no swift-testing verdict line in the output.
+      Either the run died before reporting, or a --filter matched no
+      tests. --filter matches the Swift function name, not the @Test
+      display string. An absent verdict is not a pass.
+
+
+restored: True
