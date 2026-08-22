@@ -2322,3 +2322,61 @@ nothing of theirs was touched. `364c785` is the forward half.
 `limited` held 0 → `not_limited` held 0, across 63 seconds, with load per core *falling* 0.498 →
 0.441 → 0.359. `dwell_required_sec` is 60 and `held_for_sec` counts only the current state, so a
 single quiet minute flips the verdict in either direction. Three samples remain the minimum.
+
+### PRO-0101 merged — wave 16 is three-quarters closed (2026-08-22)
+
+`main` carries PRO-0100, PRO-0101 and PRO-0102. PRO-0103 is still building. Nothing pushed.
+
+| Gate on merged `main` | Exit |
+|---|---|
+| `./scripts/test.sh` | **0** — 2,064 tests in 251 suites |
+| `spec_citation_measure.py` | **0** — 15/15; specs 99, briefs 96 (claimed 92 · registered 4 · **unclaimed 0**) |
+| `spec_citation_arm.py` | **0** — 23/23 mutations as pinned, 15/15 checks watched to fail |
+| `defect_gate.py dropped` | **0** |
+| `test_instruments.py` | **0** — 62 passed |
+| `campaign.py check` | 1, unmoved from its merge base |
+
+**The registry merge conflicted a fifth time and the per-row rule held a third time.** Again `main`
+won as corrector on exactly DEF-140, 162, 163, 165, 175 and 193 — the branch forked before PRO-0100
+landed and still recorded them `open`. Nothing was changed on both sides in any merge tonight, which
+is worth stating: **the rule that took three bad merges to learn costs nothing to apply.**
+`ORCHESTRATOR.md` also conflicted and both sides were kept, because the branch's account of its own
+build carries detail this file's summary does not.
+
+**Open defects: nine.** DEF-033 (PRO-0092's), DEF-141/151/180 (recorded limits), DEF-215 (four ledger
+rows with no spec, deliberately left open), and four opened by the findings gate in one evening —
+DEF-200, 201, 202, 203.
+
+### One class of defect showed up in two instruments in two repositories within a day
+
+DEF-201: reckon's `ID_RE` reads a brief's whole body, so a quoted example id becomes a citation at
+confidence 1.0. DEF-203: `spec_citation_measure.py`'s legacy fallback accepts a brief path from a
+fenced block, an HTML comment or a struck-through line, its `none.` floor accepts an unresolvable
+reference and any backtick pair padded to twenty characters, and reverse totality is satisfied by an
+incidental mention in an unrelated spec.
+
+**A scanner that reads a whole document for a token, with no exclusion for fences, comments or
+struck-through text, cannot tell a citation from a mention of one.** Two tools written independently
+grew that blind spot within a day of each other, which makes it a shape to check for rather than a
+mistake either author made.
+
+**And DEF-202 has been retitled, because the list was the smaller half of it.** The word list was
+wrong as first filed — `partially-fixed` was grouped with the words meaning *not* remaining work, and
+it does owe a reproduction for the half still broken, so retiring it would make the tool under-report
+for the first time. The correction came from the project that owns those rows. What the correction
+exposed is larger: **an unrecognised status word fails in two directions and only one is visible.**
+reckon over-reports on an unknown word — annoying, self-announcing, somebody looks. A gate that
+selects its population by a single status string does the opposite: a register growing a word meaning
+*still broken* drops those rows out of the obligation entirely while the gate prints a clean count
+over a quietly smaller population. **A clean green is a worse failure than an inflated backlog,
+because nothing about it asks to be checked.**
+
+So the repair is not a longer list. Classify every status as owing or not owing, and make an
+unclassified word **a finding that names the word and its row count** rather than a default in either
+direction — which is DEF-201's and DEF-203's repair too, one level up: an input a check cannot
+classify should be a finding, never a silent pass and never a silent fail.
+
+**DEF-201's zero is a fact about this repo's idiom, not about the risk.** All 24 legacy citations here
+sit in real prose at fence depth 0. A repository whose briefs cite by convention — "the brief names
+the defects it closes" — has the opposite prior, and one does: there, a brief discussing a
+neighbouring defect is textually identical to one that owns it.
