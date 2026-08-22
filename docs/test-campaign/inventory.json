@@ -549,7 +549,7 @@
       "surfaces": [
         "SURF-012"
       ],
-      "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change. PRO-0098: witnessed at effect-witness by CASE-0270..0272 with CASE-0273 guarding the reader, closing DEF-110. NARROWED by PRO-0098's gap-fix, 2026-08-22. Until then this requirement read \"Running the test suite does not read or write any state belonging to the operator of the machine it runs on\", and that sentence certified more than the witness does: reads are not watched, the whole 1,992-test run is not watched (two calls are), and the operator's Proctor state outside the application-support root is not watched. The zero is now reported against a stated population \u2014 changed / len(files) over the swept root \u2014 and the unwitnessed remainder is recorded as DEF-141 rather than left standing under the old sentence. The narrowing paid for itself in one run: the first clean ./scripts/test.sh after it went red on captures/win-1-zoom-1787361639249.full.png, a real write the suite had been making into the operator's captures directory since PRO-0089 and catching only on a race. DEF-142, fixed by carrying PolicyStore.live's interlock onto the capture path, with CASE-0285 asserting the resolved paths so the guarantee no longer depends on that race.",
+      "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change. PRO-0098: witnessed at effect-witness by CASE-0270..0272 with CASE-0273 guarding the reader, closing DEF-110. NARROWED by PRO-0098's gap-fix, 2026-08-22. Until then this requirement read \"Running the test suite does not read or write any state belonging to the operator of the machine it runs on\", and that sentence certified more than the witness does: reads are not watched, the whole 1,992-test run is not watched (two calls are), and the operator's Proctor state outside the application-support root is not watched. The zero is now reported against a stated population \u2014 changed / len(files) over the swept root \u2014 and the unwitnessed remainder is recorded as DEF-141 rather than left standing under the old sentence. The narrowing paid for itself in one run: the first clean ./scripts/test.sh after it went red on captures/win-1-zoom-1787361639249.full.png, a real write the suite had been making into the operator's captures directory since PRO-0089 and catching only on a race. DEF-142, fixed by carrying PolicyStore.live's interlock onto the capture path, with CASE-0285 asserting the resolved paths so the guarantee no longer depends on that race. PRO-0099: the class behind DEF-142 and DEF-164 was SWEPT rather than met a fourth time by accident. Eleven files name a path under the operator's root; eight carried no interlock. Three of those eight are writers and are now seamed \u2014 SwitchStore.defaultURL (DEF-172, the operator's own saved switches), Session.maestroDebugDirectory (DEF-173) and Session.deviceFramePath (DEF-174) \u2014 witnessed by CASE-0330..0332. Four are socket paths (Wire.socketPath, GuestInventory's two, ProctorReflector.supportDirectory) and two are prose (TUISurface, ToolCatalogue); those are classed with a reason and deliberately NOT given an interlock, because adding one to a read or a rendezvous path buys nothing and adds a branch production takes on every call. The classification is now checked rather than remembered: REQ-085.",
       "effect": "filesystem-write",
       "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) \u2014 0 of the 3,290 regular files `find -type f` reports under that root on this machine \u2014 so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written."
     },
@@ -843,6 +843,32 @@
       ],
       "note": "PRO-0067's A5 has been true at the value level and false on the glass since the constant was written: the test asserted Copy.restartNote contained the word 'restart' and nothing asserted a window drew it. DEF-161.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-085",
+      "text": "Every declaration in Sources/ that names a path under the operator's Proctor application-support root is classed in scripts/campaign/operator_paths.json as one of operator-accessor, writer-seam, parameterised, socket or prose, with a reason; every writer among them carries a test-process interlock; and a new un-classed or un-seamed one fails scripts/campaign/operator_path_gate.py, which runs inside the suite",
+      "source": "docs/features-to-triage/91-eight-more-operator-paths-with-no-seam.md \u2014 \"Then close the class rather than the instances. A test that fails when a new static computes an operator path without a seam is worth more than eight fixes, because the ninth is what this brief is about.\"",
+      "class": "safety guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-012"
+      ],
+      "effect": "none",
+      "note": "PRO-0099. The class behind DEF-042/110, DEF-142, DEF-164 and DEF-172/173/174 is one shape \u2014 a static computing a path under ~/Library/Application Support/app.fledgeling.procter with nothing to inject \u2014 and not one of the first three was found by looking for it. This makes the ninth structural rather than accidental. Witnessed by CASE-0333 (census), CASE-0334 (seams) and CASE-0335 (the gate's own name resolution). NARROWED AND THEN WIDENED BACK by PRO-0099's gap-fix, 2026-08-22. The verifier built three shapes that cleared BOTH modes, so the sentence above did not hold as written: a bare manifest entry absorbed a second declaration of that name; the leak check skipped every reference in a file that declared the name at all, so a qualified reach around the seam passed; and a path COMPOSED as `url(home: FileManager.default.homeDirectoryForCurrentUser)` names no root literal, so the census never saw it \u2014 which is exactly how the real SwitchStore.operatorURL is written, and SwitchStore.url(home:) was itself unclassed. All three are closed and are fixtures in test_instruments.py. The ambiguity rule found a real collision on its first run: Wire.swift was classed on a bare `socketPath` that DoctorReport also declares, now Wire.socketPath. WHAT IT STILL DOES NOT CATCH, stated rather than implied: a path whose root literal is hidden behind a constant AND whose builder takes the home as an argument would be seen by neither sweep. That needs a new indirection rather than a new caller \u2014 the constant's own declaration is still a census site \u2014 but it is not refused by construction. On this tree: 12 literal + 1 composed = 13 sites in Sources/, 15 classed, exit 0 in both modes. The gate is armed in both directions in scripts/campaign/test_instruments.py, which Tests/ProctorCoreTests/CampaignInstrumentTests.swift runs \u2014 so a check here that stopped being able to fire is a red suite rather than a quiet one. Arming it caught DEF-170 and DEF-171 before it had ever been trusted.",
+      "provider": "scripts/campaign/operator_path_gate.py over Sources/, read against scripts/campaign/operator_paths.json; run in both modes and armed on fixture trees in scripts/campaign/test_instruments.py (62 checks, 0 failed). Evidence: docs/test-campaign/evidence/PRO-0099/gate-arming.txt"
+    },
+    {
+      "id": "REQ-086",
+      "text": "Adding a test-process interlock to an operator path does not change what that path resolves to in production: with the predicate forced false, each seam resolves character for character to the literal the pre-change code resolved",
+      "source": "docs/features-to-triage/91-eight-more-operator-paths-with-no-seam.md \u2014 \"Prove production is unchanged the way DEF-164 was proved. Its verifier forced the else branch with a `guard false` sabotage and read the resolved path back character for character against the pre-change literal. That is stronger than reading the diff, and it is the standard here.\"",
+      "class": "safety guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-012"
+      ],
+      "effect": "none",
+      "note": "PRO-0099. Reading the diff proves the literal was MOVED into an operator accessor; it does not prove production still REACHES that accessor. Proved for all three writers converted here by replacing the predicate with `false` and printing the resolved path. The assertion that makes the rest mean anything is that TestProcess.isActive was TRUE on that run while the paths resolved to the operator's own, which rules out the reading where the sabotage appeared to work only because the predicate happened to be false. Permanently witnessed by CASE-0330..0332, which each compare their operator accessor with an independently reconstructed pre-change literal on every run, so the guarantee does not depend on anybody repeating the sabotage.",
+      "provider": "./scripts/test.sh --filter pro0099SabotageResolvedPaths against a tree with all three interlocks replaced by `guard false`, printing resolved and pre-change paths side by side; the probe was temporary and the sources restored from a byte copy. Evidence: docs/test-campaign/evidence/PRO-0099/sabotage-production-unchanged.txt"
     }
   ],
   "surface": [
@@ -2714,6 +2740,114 @@
       "detail": "'doctor reports both tools, the lane's state, and never lets either touch ready' calls session.doctor() eight times across the obscura x browserUse x laneSet matrix, collects report.ready and report.blockers.count into two Sets, and asserts each Set has one element. The claim is sound \u2014 Proctor drives native applications without a browser tool, so ready must not move with either \u2014 but the harness at BrowserLaneWiringTests.swift:62 injects screenRecordingProbe: .fake() and leaves the other two inputs to `ready` live: accessibilityProbe() defaults to the real TCC probe and secureInputProbe() to Grants.secureEventInputActive(). Both feed `blockers`, and `ready` is `blockers.isEmpty`. So either flipping between two of the eight calls \u2014 a password field taking focus anywhere on this Mac, or a TCC probe not coming back on one iteration \u2014 reds the case with the browser lane behaving perfectly. MEASURED: four full runs on one unchanged tree, exit 0 / 1 / 0 with the same 2,028 tests. The red run was 'Expectation failed: (readies.count -> 2) == 1' and '(blockerCounts.count -> 2) == 1' at BrowserLaneWiringTests.swift:218-219, the only two issues in it; the suite run in isolation immediately afterwards passed 10 tests in 0.230 seconds. NOT FIXED HERE: it is outside PRO-0098's brief, which was the flow writes and the gate's exit code. The repair is to inject both probes in the harness the way screenRecordingProbe already is, so the invariant is asserted over the matrix the case names rather than over the machine's mood.",
       "surface": "SURF-004",
       "req": "REQ-024"
+    },
+    {
+      "id": "DEF-170",
+      "title": "The operator-path gate attributed a literal to a nested type that had already closed above it",
+      "surface": "SURF-012",
+      "req": "REQ-085",
+      "severity": "minor",
+      "status": "fixed",
+      "found": "PRO-0099, by arming the gate rather than by reading it",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0099/gate-arming.txt",
+        "scripts/campaign/test_instruments.py"
+      ],
+      "fixedBy": "PRO-0099",
+      "resolution": "fixed",
+      "detail": "operator_path_gate.py's enclosing_type() scanned backwards for the nearest type declaration indented less than the site and took it, without asking whether that type still CONTAINED the site. PolicyStore.swift declares 'final class Seams' at the same depth as AuditLog's own members and closes it 19 lines above the operator literal in AuditLog.directory, so the census reported that literal as 'Seams.directory', matched no manifest entry, and reported a correctly classed writer as an unclassed one. A nested type's declaration line always sits between the site and its enclosing type's line, so the nearest match is wrong exactly when a nested type is present.",
+      "fix": "Containment measured with a brace scan (scope_end) instead of inferred from indentation: enclosing_type now skips any candidate whose scope closes at or before the site, returning the innermost type that genuinely contains it.",
+      "note": "A FALSE RED, which is the direction that gets argued away rather than fixed. Guarded by CASE-0335 on a fixture reproducing the shape."
+    },
+    {
+      "id": "DEF-171",
+      "title": "The operator-path gate resolved a dotted name to a nested type's member and reported the audit interlock as unseamed",
+      "surface": "SURF-012",
+      "req": "REQ-085",
+      "severity": "minor",
+      "status": "fixed",
+      "found": "PRO-0099, by arming the gate rather than by reading it",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0099/gate-arming.txt",
+        "scripts/campaign/test_instruments.py"
+      ],
+      "fixedBy": "PRO-0099",
+      "resolution": "fixed",
+      "detail": "declaration_body() resolved 'AuditLog.directory' to the FIRST declaration named 'directory' inside AuditLog rather than to AuditLog's own member. That first declaration is Seams.directory, a lock-guarded stored property one level in whose body holds no test-process predicate, so the seams check reported the audit trail's own interlock \u2014 the oldest and most load-bearing one in the tree \u2014 as a writer with no test-process branch.",
+      "fix": "The SHALLOWEST declaration of the name in range is taken rather than the first: a type's own member is the shallowest occurrence inside it, and anything deeper belongs to a nested type.",
+      "note": "The second of two false reds arming found in the same gate, both in PolicyStore.swift, both bare-name collisions between AuditLog's 'directory' and Seams' 'directory'. Guarded by CASE-0335."
+    },
+    {
+      "id": "DEF-172",
+      "title": "The test suite could write the operator's own saved switches",
+      "surface": "SURF-012",
+      "req": "REQ-055",
+      "severity": "serious",
+      "status": "fixed",
+      "found": "PRO-0099, by sweeping the class rather than by accident",
+      "evidence": [
+        "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+        "docs/test-campaign/evidence/PRO-0099/witness-arming.txt",
+        "docs/test-campaign/evidence/PRO-0099/diversion-positive.txt"
+      ],
+      "fixedBy": "PRO-0099",
+      "resolution": "fixed",
+      "detail": "SwitchStore.defaultURL was a static computing ~/Library/Application Support/app.fledgeling.procter/settings/settings.json with no injection seam \u2014 the FOURTH of that shape after PolicyStore (DEF-042/110), the capture directory (DEF-142) and FlowStore (DEF-164). AgentModel saves through it whenever a switch is toggled, and Session.doctor and the agent's main.swift load through it, so a suite that reached that path changed what the agent is allowed to do on the machine of whoever ran the tests, and the suite's own doctor report depended on the switches that person happened to have saved.",
+      "fix": "PolicyStore.live's interlock applied: defaultURL guards on TestProcess.isActive and diverts to $TMPDIR/proctor-test-settings-<pid>, with the pre-change body moved verbatim to a truthful operatorURL. url(home:) and directory(home:) are untouched \u2014 they already take the root as a parameter. The predicate itself moved to ProctorCore.TestProcess because SwitchStore lives in ProctorCore and cannot see ProctorAgent's AuditLog; AuditLog.isTestProcess now forwards to it, so every existing caller and its regression test are unchanged.",
+      "note": "Latent rather than firing at the time it was found: the operator's settings/ directory exists and is EMPTY on this machine, so the interlock prevented a creation rather than an overwrite. CASE-0330."
+    },
+    {
+      "id": "DEF-173",
+      "title": "The test suite could create run directories in the operator's maestro debug root",
+      "surface": "SURF-012",
+      "req": "REQ-055",
+      "severity": "serious",
+      "status": "fixed",
+      "found": "PRO-0099, by sweeping the class rather than by accident",
+      "evidence": [
+        "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+        "docs/test-campaign/evidence/PRO-0099/witness-arming.txt",
+        "docs/test-campaign/evidence/PRO-0099/diversion-positive.txt"
+      ],
+      "fixedBy": "PRO-0099",
+      "resolution": "fixed",
+      "detail": "Session.maestroDebugDirectory(run:) computed ~/Library/Application Support/app.fledgeling.procter/maestro with no seam and creates its directory unconditionally on every call; runFlow calls it once per run, so a suite reaching a maestro run left a run-<stamp>-<n>-<salt> directory in the operator's own tree and Maestro wrote its per-command records into it.",
+      "fix": "Guarded on AuditLog.isTestProcess, diverting to $TMPDIR/proctor-test-maestro-<pid>, with the pre-change literal moved verbatim to operatorMaestroDirectory.",
+      "note": "The whole-root census could not have caught this alone \u2014 it counts `find -type f` and an empty run- directory is invisible to it \u2014 so the operator's maestro root was read directly. 17 stray run- directories from before the interlock remain, newest 2026-08-20; they are left where they are because deleting them is the act REQ-055 forbids. CASE-0331."
+    },
+    {
+      "id": "DEF-174",
+      "title": "The iOS device-frame lane wrote into the operator's captures directory, the half DEF-142 left open",
+      "surface": "SURF-012",
+      "req": "REQ-055",
+      "severity": "serious",
+      "status": "fixed",
+      "found": "PRO-0099, by sweeping the class rather than by accident",
+      "evidence": [
+        "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+        "docs/test-campaign/evidence/PRO-0099/witness-arming.txt",
+        "docs/test-campaign/evidence/PRO-0099/diversion-positive.txt"
+      ],
+      "fixedBy": "PRO-0099",
+      "resolution": "fixed",
+      "detail": "DEF-142 closed CaptureEngineImpl.defaultCaptureDirectory and left Session.deviceFramePath(udid:label:) computing the SAME directory (~/Library/Application Support/app.fledgeling.procter/captures) with no seam. It creates that directory unconditionally and returns a name inside it, and three callers \u2014 a screenshot with no path, a settle sample and a maestro before/after frame \u2014 write a PNG to that name.",
+      "fix": "Guarded on AuditLog.isTestProcess, diverting to CaptureEngineImpl.testFallbackCaptureRoot rather than to a root of its own, because in production the two lanes land in the same directory and a diverted pair that did not would be a difference the test process invented. The pre-change literal moved verbatim to operatorDeviceFrameDirectory.",
+      "note": "Two paths into one directory, closed one wave apart. CASE-0332."
+    },
+    {
+      "id": "DEF-175",
+      "title": "HoldAttributionWiringTests reads the scheduler's ticket before the hold has reached it",
+      "surface": "SURF-012",
+      "req": "REQ-030",
+      "severity": "minor",
+      "status": "open",
+      "found": "PRO-0099, on the fourth of five full runs of one unchanged tree",
+      "evidence": [
+        "Tests/ProctorAgentTests/HoldAttributionWiringTests.swift"
+      ],
+      "detail": "'a yield reaches the ticket, and every way it can end clears it' awaits the hold through awaitHold(control), which returns as soon as RunControl reports the run held, then IMMEDIATELY reads h.scheduler.snapshot() and asserts duringHold.active.contains { $0.held != nil }. Those are two different objects: the control latches the hold, and the scheduler's ticket is updated separately, so there is a window in which the run is genuinely held and the ticket does not yet say so. Under load the read lands in that window and the case reds at HoldAttributionWiringTests.swift:372 with 'Expectation failed: duringHold.active.contains { $0.held != nil }', which is the scheduler being slightly behind rather than the hold failing to reach a ticket. MEASURED: five full runs of one unchanged tree during PRO-0099 read exit 0 (2,028 tests, pre-change), 0, 0, 1, 0 with the same 2,031 tests in 246 suites; the red run carried this as its ONLY issue and the next full run was clean with zero issues.",
+      "fix": "Not attempted. The repair is to wait on the ticket rather than on the control before reading it \u2014 poll scheduler.snapshot() for the held ticket with the same bounded wait awaitHold already uses, so the case asserts the hold reached the ticket rather than asserting it reached it within one scheduling quantum.",
+      "note": "OPENED, NOT FIXED, and outside this item's brief, which is the operator-path class. Same handling as DEF-165, the BrowserLaneWiringTests flake PRO-0098 recorded rather than repaired: that commit measured four full runs of its own unchanged tree at exit 1, 0, 1, 0, so a red that is not the item's own is a known property of this suite rather than a new signal. This is a DIFFERENT test from DEF-165 and is recorded separately. It is not in spec-PRO-0099's Defects table, because that table is what defect_gate.py claims reads and a newly opened defect is not a claim that anything is closed."
     }
   ]
 }

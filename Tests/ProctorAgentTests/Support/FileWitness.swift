@@ -51,14 +51,22 @@ struct FileWitness: Equatable, CustomStringConvertible {
 struct DirectoryWitness: Equatable {
     let rootExists: Bool
     let files: [String: FileWitness]
+    /// Every DIRECTORY under the root, by relative path. PRO-0099 gap-fix: the
+    /// file sweep cannot see what `maestroDebugDirectory(run:)` and
+    /// `deviceFramePath` actually do, which is create an empty directory and hand
+    /// back a name inside it. A sweep that cannot see the effect of the call it
+    /// brackets reports zero whatever happens, and that is the one result this
+    /// instrument may not produce.
+    let directories: Set<String>
 
     static func read(_ root: URL) -> DirectoryWitness {
         var found: [String: FileWitness] = [:]
+        var directories: Set<String> = []
         let fm = FileManager.default
         var isDirectory: ObjCBool = false
         let present = fm.fileExists(atPath: root.path, isDirectory: &isDirectory)
         guard present, isDirectory.boolValue else {
-            return DirectoryWitness(rootExists: present, files: [:])
+            return DirectoryWitness(rootExists: present, files: [:], directories: [])
         }
         // `skipsHiddenFiles` is deliberately NOT set: a suite that wrote a dotfile
         // into the operator's directory would be invisible to a reader that skipped
@@ -74,15 +82,18 @@ struct DirectoryWitness: Equatable {
         let walker = fm.enumerator(at: root, includingPropertiesForKeys: [.isRegularFileKey],
                                    options: [])
         while let next = walker?.nextObject() as? URL {
-            let isRegular = (try? next.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile
-            guard isRegular == true else { continue }
             let resolved = next.resolvingSymlinksInPath().path
             let relative = resolved.hasPrefix(base + "/")
                 ? String(resolved.dropFirst(base.count + 1))
                 : resolved
-            found[relative] = FileWitness.read(next)
+            let values = try? next.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey])
+            if values?.isRegularFile == true {
+                found[relative] = FileWitness.read(next)
+            } else if values?.isDirectory == true {
+                directories.insert(relative)
+            }
         }
-        return DirectoryWitness(rootExists: present, files: found)
+        return DirectoryWitness(rootExists: present, files: found, directories: directories)
     }
 
     /// Paths whose reading differs between two sweeps — created, deleted, or
@@ -93,5 +104,18 @@ struct DirectoryWitness: Equatable {
         var paths = Set(before.files.keys)
         paths.formUnion(after.files.keys)
         return paths.filter { before.files[$0] != after.files[$0] }.sorted()
+    }
+
+    /// `changed`, plus every directory that appeared or vanished, spelled with a
+    /// trailing `/` so the two are told apart in a failure message.
+    ///
+    /// PRO-0099 gap-fix. `changed` alone reports zero over a call whose whole
+    /// effect is `mkdir`, so a case bracketing `maestroDebugDirectory(run:)` with
+    /// it was asserting a number that could not have come out otherwise. This is
+    /// the reading those cases claim on, and the one their arming arms.
+    static func changedEntries(from before: DirectoryWitness,
+                               to after: DirectoryWitness) -> [String] {
+        let directories = before.directories.symmetricDifference(after.directories)
+        return (changed(from: before, to: after) + directories.map { $0 + "/" }).sorted()
     }
 }

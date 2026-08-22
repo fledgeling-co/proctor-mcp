@@ -203,9 +203,37 @@ extension Session {
 
     // MARK: - Device frames
 
-    static func deviceFramePath(udid: String, label: String) throws -> String {
-        let directory = NSHomeDirectory()
+    /// The operator's own captures directory, always — where a device frame
+    /// lands on a real Mac. Truthful in a test process so a test can name the
+    /// directory it must not touch. It is the same directory
+    /// `CaptureEngineImpl.defaultCaptureDirectory` names, spelled here because
+    /// this lane composes a path rather than constructing an engine.
+    static var operatorDeviceFrameDirectory: String {
+        NSHomeDirectory()
             + "/Library/Application Support/app.fledgeling.procter/captures"
+    }
+
+    /// The captures directory this lane uses, and the interlock that keeps a test
+    /// process out of the operator's own.
+    ///
+    /// PRO-0099, REQ-055. `CaptureEngineImpl.defaultCaptureDirectory`'s interlock
+    /// applied to the other path that writes into the same directory. DEF-142
+    /// closed the Mac lane and left this one open: `deviceFramePath` creates the
+    /// directory unconditionally and returns a name inside it, and three callers
+    /// — a screenshot with no path, a settle sample and a maestro before/after
+    /// frame — write a PNG there.
+    ///
+    /// It diverts to `CaptureEngineImpl.testFallbackCaptureRoot` rather than to a
+    /// root of its own, because in production the two land in the same directory
+    /// and a diverted pair that did not would be a difference the test process
+    /// invented.
+    static var deviceFrameDirectory: String {
+        guard AuditLog.isTestProcess else { return operatorDeviceFrameDirectory }
+        return CaptureEngineImpl.testFallbackCaptureRoot.path
+    }
+
+    static func deviceFramePath(udid: String, label: String) throws -> String {
+        let directory = deviceFrameDirectory
         try? FileManager.default.createDirectory(atPath: directory, withIntermediateDirectories: true)
         let stamp = Int(Date().timeIntervalSince1970 * 1000)
         // A millisecond stamp alone collides when two samples land in the same

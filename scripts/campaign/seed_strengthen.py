@@ -78,11 +78,14 @@ def census(v, d: Path) -> tuple[int, list[str], int, list[str]]:
     ability to say what it found.
     """
     reqs = v.requirements(d)
-    unclassed_examined, unclassed = v.pass_unclassed(reqs)
-    # test-campaign 0.9.6 widened pass_uncensused to a 4-tuple (examined, hits,
-    # and two counts this control does not read). Slicing keeps the control
-    # working across both signatures; nothing here is weakened, because the
-    # two values taken are the same two the narrower signature returned.
+    unclassed_examined, unclassed = v.pass_unclassed(reqs)[:2]
+    # `[:2]` rather than a two-name unpack because the skill this borrows lives
+    # outside the repo and its signature moves. test-campaign 0.9.6 widened
+    # `pass_uncensused` to `(declared, findings, named, resolved)`, and the stale
+    # two-value unpack raised `ValueError: too many values to unpack` — which
+    # `seed_strengthen` reported as exit 1, which the suite reported as a red
+    # tree, for a reason that had nothing to do with the tree. The population and
+    # the findings are the first two in every version, so those are what is taken.
     uncensused_examined, uncensused = v.pass_uncensused(reqs)[:2]
     return unclassed_examined, unclassed, uncensused_examined, uncensused
 

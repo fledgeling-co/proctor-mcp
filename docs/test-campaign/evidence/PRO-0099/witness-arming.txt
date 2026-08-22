@@ -1,0 +1,134 @@
+PRO-0099 — CASE-0330..0332 watched failing
+==========================================
+
+WHAT WAS ARMED, AND WHAT WAS NOT. Each of the three cases has two arms: a CLAIM
+(the resolved path is not under the operator's root, and is under the diverted
+one) and a POSITIVE arm (the write actually lands in the diverted root).
+
+The claim arms are armed below, by disabling the interlock at source — the same
+mutation DEF-164's CASE-0320 used — so the tree is in exactly the state it was in
+before this item.
+
+The positive arms are deliberately NOT armed this way, and that is a limit rather
+than an oversight. Under the sabotage the write arms would write the operator's
+real settings.json, create a run directory in the operator's maestro root and
+create the operator's captures directory — the act REQ-055 forbids. So the write
+arms stand on their own readback (the diverted settings.json is loaded back by
+the product's own loader) plus CASE-0272, which proves the same reader can see a
+file written one directory down and so is not a reader that reports "unchanged"
+whatever happens.
+
+THE MUTATION (all three, simultaneously):
+
+  SwitchStore.swift:126        guard TestProcess.isActive  → guard false
+  SessionMaestro.swift:443     guard AuditLog.isTestProcess → guard false
+  SessionIOSProcess.swift:231  guard AuditLog.isTestProcess → guard false
+
+RUN: ./scripts/test.sh --filter pro0099ArmingClaims               2026-08-22 14:1x
+     exit 1, read from the script into /tmp/pro0099-arm-exit.txt
+     Test run with 1 test in 1 suite failed after 0.025 seconds with 6 issues.
+
+SIX ISSUES, each naming the operator's real path:
+
+  CASE-0330  Expectation failed: !((SwitchStore.defaultURL.path →
+             ".../app.fledgeling.procter/settings/settings.json")
+             .hasPrefix(operatorRoot.path → ".../app.fledgeling.procter") → true)
+  CASE-0330  Expectation failed: (SwitchStore.defaultURL.path →
+             ".../app.fledgeling.procter/settings/settings.json")
+             .hasPrefix(SwitchStore.testFallbackRoot.path →
+             "$TMPDIR/proctor-test-settings-95487")
+  CASE-0331  Expectation failed: !((Session.maestroDebugRoot →
+             ".../app.fledgeling.procter/maestro")
+             .hasPrefix(operatorRoot.path → ".../app.fledgeling.procter") → true)
+  CASE-0331  Expectation failed: (Session.maestroDebugRoot →
+             ".../app.fledgeling.procter/maestro")
+             .hasPrefix(Session.testFallbackMaestroRoot →
+             "$TMPDIR/proctor-test-maestro-95487")
+  CASE-0332  Expectation failed: !((Session.deviceFrameDirectory →
+             ".../app.fledgeling.procter/captures")
+             .hasPrefix(operatorRoot.path → ".../app.fledgeling.procter") → true)
+  CASE-0332  Expectation failed: (Session.deviceFrameDirectory →
+             ".../app.fledgeling.procter/captures") ==
+             (CaptureEngineImpl.testFallbackCaptureRoot.path →
+             "$TMPDIR/proctor-test-captures-95487")
+
+The probe (Tests/ProctorAgentTests/PRO0099ArmingProbe.swift) held the claim
+assertions copied verbatim from the three cases and nothing else. It was deleted
+after this run and the three sources restored from a byte copy; `grep -rn
+"guard false else" Sources/` reports nothing.
+
+A SEVENTH FAILURE, FOUND WITHOUT SABOTAGE, is worth recording because it is the
+instrument reporting on itself. The first full run of CASE-0332 went red on
+`(URL(fileURLWithPath: frame).lastPathComponent → "ios-pro-0099-before-...png")
+.contains("PRO-0099-witness")` — the assertion was wrong, not the product:
+`deviceFramePath` names a frame `ios-<first 8 of the udid, lowercased>-<label>-
+<stamp>-<salt>`. The assertion now asserts that spelling. So CASE-0332 has been
+watched failing twice, once by sabotage and once by its own first draft.
+
+
+================================================================================
+THE WRITE ARMS, ARMED — PRO-0099 gap-fix, 2026-08-22
+================================================================================
+
+The section above armed the PATH arms and recorded the WRITE arms as deliberately
+unarmed, on the grounds that arming them by sabotage would write the operator's
+real settings.json, create a run directory in the operator's maestro root and
+create the operator's captures directory. The verifier found the reading that
+makes them armable and it was not sabotaging the predicate at all: SABOTAGE THE
+DIVERT TARGET. Name a decoy root under $TMPDIR, drive the product's own write into
+it, and show the same reader that reports zero for the operator's root reporting a
+change over a root shaped exactly like it. The interlock stays fully intact and
+the operator's root is never named by the arm.
+
+Each of the three now carries one, over the SAME call as its claim:
+
+  CASE-0330  `SwitchStore.save(saved, to: SwitchStore.url(home: decoyHome))`,
+             swept over `<decoy>/Library/Application Support/<bundle-id>`.
+             The product's own path builder lays the operator's layout out under
+             a temporary home. Denominator: 1 changed file.
+  CASE-0331  `Session.maestroDebugDirectory(run: 1)`, swept over
+             `Session.testFallbackMaestroRoot` — the root the interlock diverts
+             to, which is to say the decoy the product itself chose.
+             Denominator: 1 changed entry, the `run-<stamp>-1-<salt>/` directory.
+  CASE-0332  The captures directory and this call's own returned frame name,
+             composed the way production composes them, under a decoy home.
+             Denominator: 2 changed entries.
+
+AND ONE THING THE ARMING FOUND. `DirectoryWitness` recorded regular files only,
+and the whole effect of `maestroDebugDirectory(run:)` and `deviceFramePath` is a
+`mkdir`. So the two `touched.isEmpty` claims over the operator's root could not
+have come out any other way, armed or not — an empty directory appearing in the
+operator's own tree was invisible to the reader asserting nothing appeared. The
+witness now records directories as well, `changedEntries` reads both, and those
+two claims are read through it. The claims got stronger in the same change that
+armed them.
+
+WATCHED FAILING. `DirectoryWitness.read` was made to go blind — same walk, same
+stat calls, then `files: [:], directories: []` returned — with no other change to
+the tree and the interlock untouched. `./scripts/test.sh --filter
+OperatorFilesWitnessTests`, exit read into a file:
+
+  FAIL: swift test exited 1
+  Test run with 9 tests in 1 suite failed after 5.319 seconds with 17 issues.
+
+The three new arms, verbatim:
+
+  CASE-0330  OperatorFilesWitnessTests.swift:372: Expectation failed:
+             (decoyChanged → []) == ["settings/settings.json"]
+  CASE-0331  OperatorFilesWitnessTests.swift:426: Expectation failed:
+             (divertedChanged → []).contains(URL(fileURLWithPath: run)
+             .lastPathComponent + "/" → "run-1787376776385-1-ca19/")
+  CASE-0332  OperatorFilesWitnessTests.swift:513: Expectation failed:
+             (decoyChanged → []).contains("captures/")
+  CASE-0332  OperatorFilesWitnessTests.swift:515: Expectation failed:
+             decoyChanged.contains { $0.hasPrefix("captures/ios-pro-0099-before-") }
+
+The other 13 issues in that run are the arms PRO-0098 already had, failing for the
+same reason, which is the sabotage landing where it was aimed. The same filter on
+the restored tree reads `Test run with 9 tests in 1 suite passed after 4.058
+seconds`, exit 0. `grep -c SABOTAGE Tests/ProctorAgentTests/Support/FileWitness.swift`
+reports 0.
+
+Each arm also asserts `TestProcess.isActive`, so an arming that happened to run
+with the interlock inactive fails rather than reporting a diversion it did not
+witness.

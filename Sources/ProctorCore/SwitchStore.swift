@@ -93,9 +93,46 @@ public enum SwitchStore {
         directory(home: home).appendingPathComponent("settings.json", isDirectory: false)
     }
 
-    public static var defaultURL: URL {
+    /// The operator's own settings file, always — the path the status window
+    /// writes and the agent reads on a real Mac. It stays truthful in a test
+    /// process so a test can name the file it must not touch.
+    public static var operatorURL: URL {
         url(home: FileManager.default.homeDirectoryForCurrentUser)
     }
+
+    /// The settings file this process uses, and the interlock that keeps a test
+    /// process out of the operator's own.
+    ///
+    /// PRO-0099, REQ-055. `PolicyStore.live`'s interlock applied to the FOURTH
+    /// static computing a path under the operator's Application Support directory
+    /// with no injection seam, after the policy store (DEF-042/110), the capture
+    /// directory (DEF-142) and the flow store (DEF-164). This one was found by
+    /// sweeping the class rather than by an accident, which is the whole argument
+    /// for the sweep: the other three were each found weeks after they started
+    /// writing.
+    ///
+    /// It carries the most operator state of the four. `AgentModel` saves through
+    /// it whenever a switch is toggled, so a suite that reached that path would
+    /// change what the agent is allowed to do on the machine of whoever ran the
+    /// tests. And `Session.doctor` LOADS through it, so before this the suite's
+    /// own doctor report depended on the switches that person happened to have
+    /// saved — the second half of the policy-store defect, where "it looked fine
+    /// only because an empty policy allows everything".
+    ///
+    /// `url(home:)` and `directory(home:)` are untouched: they already take the
+    /// root as a parameter, which is the seam a test that names its own root
+    /// uses. This is the floor under the callers that name nothing.
+    public static var defaultURL: URL {
+        guard TestProcess.isActive else { return operatorURL }
+        return testFallbackRoot.appendingPathComponent("settings.json", isDirectory: false)
+    }
+
+    /// Where an un-pathed settings read or write lands in a test process. Named
+    /// for what it is, so a stray directory in `/tmp` explains itself.
+    public static let testFallbackRoot = URL(fileURLWithPath: NSTemporaryDirectory(),
+                                             isDirectory: true)
+        .appendingPathComponent("proctor-test-settings-\(ProcessInfo.processInfo.processIdentifier)",
+                                isDirectory: true)
 
     /// Read, tolerating everything.
     ///

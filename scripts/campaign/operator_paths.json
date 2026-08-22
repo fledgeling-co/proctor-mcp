@@ -1,0 +1,121 @@
+{
+  "_": "PRO-0099. Every declaration in Sources/ that names a path under the operator's Proctor Application Support root, classed. `operator_path_gate.py` reads this; the classes and the reason each entry must carry are documented in that file's header. Add an entry when you add a path, and pick its class from what the declaration DOES with the path rather than from what it is called.",
+  "root_literal": "Library/Application Support/",
+  "predicates": [
+    "AuditLog.isTestProcess",
+    "TestProcess.isActive",
+    "isTestProcess"
+  ],
+  "home_expressions": [
+    "FileManager.default.homeDirectoryForCurrentUser",
+    "NSHomeDirectory()"
+  ],
+  "_home_expressions": "PRO-0099 gap-fix. The two spellings of the operator's real home in this tree. The census uses them for its second sweep: a line handing one of these to a `parameterised` builder is an operator path even though it names no root literal, which is exactly how `SwitchStore.operatorURL` is written.",
+  "entries": [
+    {
+      "file": "Sources/ProctorAgent/Session/PolicyStore.swift",
+      "declaration": "operatorDirectory",
+      "class": "operator-accessor",
+      "seamed_by": "live",
+      "reason": "The operator's own policy directory. Truthful on purpose so a test can name the file it must not touch; DEF-042/110. `PolicyStore.live` is the seam that keeps a test process off it."
+    },
+    {
+      "file": "Sources/ProctorAgent/Session/PolicyStore.swift",
+      "declaration": "AuditLog.directory",
+      "class": "writer-seam",
+      "reason": "`AuditLog.directory`, the sealed trail. Writer. The operator literal sits inside the declaration's own `guard !isTestProcess` branch, so the seam and the path are the same declaration. A test that drove a real Session without redirecting its sink once wrote 17 entries into a live trail."
+    },
+    {
+      "file": "Sources/ProctorAgent/Capture/CaptureEngineImpl.swift",
+      "declaration": "defaultCaptureDirectory",
+      "class": "writer-seam",
+      "reason": "Where a capture lands when the caller names no path. Writer. DEF-142: four PNGs per run went into the operator's own captures from PRO-0089 until the REQ-055 witness caught it. The operator literal is inside this declaration's own guard."
+    },
+    {
+      "file": "Sources/ProctorAgent/Session/FlowStore.swift",
+      "declaration": "operatorDirectory",
+      "class": "operator-accessor",
+      "seamed_by": "directory",
+      "reason": "The operator's own recorded flows. Truthful on purpose; DEF-164, where `login-flow.json` and `sweep.json` were rewritten on every run. `FlowStore.directory` is the seam."
+    },
+    {
+      "file": "Sources/ProctorCore/SwitchStore.swift",
+      "declaration": "directory",
+      "class": "parameterised",
+      "parameter": "home",
+      "reason": "A pure path builder: the root arrives as an argument, so this declaration cannot reach the operator by itself. Its two un-argued callers, `operatorURL` and `defaultURL`, carry the classification."
+    },
+    {
+      "file": "Sources/ProctorCore/SwitchStore.swift",
+      "declaration": "url",
+      "class": "parameterised",
+      "parameter": "home",
+      "reason": "PRO-0099 gap-fix. `directory(home:)` plus the filename, and the builder every un-argued caller actually goes through. It was unclassed because it names no root literal of its own, which also meant the census could not see its callers: listing it here is what makes `url(home: FileManager.default.homeDirectoryForCurrentUser)` a census site rather than a hole."
+    },
+    {
+      "file": "Sources/ProctorCore/SwitchStore.swift",
+      "declaration": "operatorURL",
+      "class": "operator-accessor",
+      "seamed_by": "defaultURL",
+      "reason": "PRO-0099. The operator's own saved switches. Truthful on purpose so a test can name the file it must not touch; `defaultURL` is the seam. The sharpest of the four writers in this sweep: the status window saves through it, so a suite that reached it would change what the agent is allowed to do on the machine of whoever ran the tests."
+    },
+    {
+      "file": "Sources/ProctorAgent/Session/SessionMaestro.swift",
+      "declaration": "operatorMaestroDirectory",
+      "class": "operator-accessor",
+      "seamed_by": "maestroDebugRoot",
+      "reason": "PRO-0099. The operator's own maestro debug root. `maestroDebugDirectory(run:)` creates a `run-<stamp>-<n>-<salt>` directory unconditionally on every call and Maestro writes its per-command records into it, so this is a writer. `maestroDebugRoot` is the seam."
+    },
+    {
+      "file": "Sources/ProctorAgent/Session/SessionIOSProcess.swift",
+      "declaration": "operatorDeviceFrameDirectory",
+      "class": "operator-accessor",
+      "seamed_by": "deviceFrameDirectory",
+      "reason": "PRO-0099. The operator's own captures directory, reached by the iOS lane. `deviceFramePath(udid:label:)` creates it unconditionally and three callers write a PNG to the name it returns. DEF-142 closed the Mac lane into this same directory and left this one open. `deviceFrameDirectory` is the seam."
+    },
+    {
+      "file": "Sources/ProctorCore/Wire.swift",
+      "declaration": "Wire.socketPath",
+      "class": "socket",
+      "reason": "PRO-0099. A rendezvous address, not stored state: the agent binds it and the shim connects, and it holds no operator data. Already seamed, and by the mechanism both ends can use — the PROCTOR_SOCKET environment override, documented here as how a test binds a throwaway socket. Diverting it under a test-process predicate would seam only one of the two processes and break the property that both derive it identically without configuration. Spelled qualified because `socketPath` is ambiguous in this file: `DoctorReport` declares a field of the same name 1,286 lines down, and the gap-fix's ambiguity rule refuses a bare entry that two declarations answer to."
+    },
+    {
+      "file": "Sources/ProctorCore/GuestInventory.swift",
+      "declaration": "defaultRemoteSocket",
+      "class": "socket",
+      "reason": "PRO-0099. A path on ANOTHER machine, handed to ssh as a string. Nothing local is created, so there is nothing here for an interlock to divert."
+    },
+    {
+      "file": "Sources/ProctorCore/GuestInventory.swift",
+      "declaration": "defaultLocalSocket",
+      "class": "socket",
+      "reason": "PRO-0099. The host end of a forwarded guest socket. Connected to, never created: `Proctor never opens the tunnel: a socket nothing is listening on is a refusal, not an attempt to create one`. It also already takes `home` as an argument, so a caller that names its own root has a seam."
+    },
+    {
+      "file": "Sources/ProctorReflector/ProctorReflector.swift",
+      "declaration": "supportDirectory",
+      "class": "socket",
+      "reason": "PRO-0099. The reflector's bind path — `reflector-<pid>.sock`, pid-named, unlinked, carrying no operator data. Classed socket over the out-of-family verdict, which called it a writer because bind(2) creates an inode; the deciding facts are that the only caller of the bare `start()` is ProctorUIApp, the suite's ReflectorWitnessTests already passes an explicit path, and ProctorReflector is a zero-dependency library PRODUCT that other packages embed, so reaching a test-process predicate would mean either a new dependency edge for every consumer or a second copy of the predicate. `operator_path_gate.py` guard `no_bare_reflector_start` is what keeps the parameter seam load-bearing instead of remembered."
+    },
+    {
+      "file": "Sources/ProctorCore/TUISurface.swift",
+      "declaration": "connecting",
+      "class": "prose",
+      "reason": "PRO-0099. Three lines of copy on the TUI's `Reaching the agent` screen — a string a person reads, telling them where the socket is. Nothing resolves it."
+    },
+    {
+      "file": "Sources/ProctorCore/ToolCatalogue.swift",
+      "declaration": "guest",
+      "class": "prose",
+      "reason": "PRO-0099. Two JSON-schema `description` strings for the guest tool's `remoteSocket` and `localSocket` arguments, saying where each default lives. Prose in a tool description, read by a model, resolved by nothing."
+    }
+  ],
+  "guards": {
+    "no_bare_reflector_start": {
+      "reason": "PRO-0099. ProctorReflector.supportDirectory is classed `socket` partly because the suite always passes an explicit path. That is a fact about the tests rather than about the code, so it is checked rather than trusted: a bare `ProctorReflector.start()` anywhere under Tests/ would bind `reflector-<pid>.sock` into the operator's own root, and this refuses it.",
+      "tree": "Tests",
+      "forbidden": "ProctorReflector.start()"
+    }
+  },
+  "_predicates": "The bare spelling is here because AuditLog.directory writes  from inside AuditLog itself. A predicate is only counted on a line of code — code_only() drops comments — so a doc comment naming one cannot satisfy a seam."
+}

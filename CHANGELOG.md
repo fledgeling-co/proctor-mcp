@@ -130,6 +130,16 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **Running the test suite could also change your saved switches.** Three more paths worked out their own location under `~/Library/Application Support/app.fledgeling.procter` and gave you no way to point them somewhere else, so a test run wrote into your own Proctor directory. Your switches at `settings/settings.json` were the sharp one: the status window saves through that path, and the agent and `proctor_doctor` read it back, so running the tests could change what the agent is allowed to do on your Mac. It cut both ways; the doctor report the suite produced depended on whichever switches you happened to have saved.
+
+  The other two are quieter. Maestro made a run directory under `maestro/` on every run and wrote its per-command records into it. The iOS device-frame lane wrote PNGs into `captures/`, which is the same directory the Mac lane was writing to until last release; that one got fixed and this one was missed.
+
+  All three now resolve to a per-process temporary directory when they're running under test. Production is unchanged, and that's checked rather than assumed: with the test-process branch forced off, each path still resolves character for character to the location it did before.
+
+  We went looking for the whole class this time instead of waiting to trip over a fourth. The shape is "a static that works out a path under your Application Support directory with nothing to inject", and the three found before this were each spotted weeks after they'd started writing. There's a check now that refuses a new one, and arming that check turned up two bugs in the check itself.
+
+  Note: anything earlier runs already wrote under your Proctor directory is left exactly where it is. Deleting your files is the thing this is meant to prevent.
+
 - **The Status window no longer says the agent is down while it's busy bringing the agent back.** Grant Screen Recording through Proctor and it restarts the background agent for you, because a running agent can't be told about a permission it already cached as denied. The window held an "applying" state across that restart, then cleared it 1.2 seconds later on a fixed timer. If the restart took longer than 1.2 seconds, and on a loaded machine that's exactly what happens, the window went straight to the red "The background agent is not answering" block; at a person who had just done what the window asked them to do.
 
   The state now ends on the thing that actually ends a restart: the first check that finds the agent answering. However long that takes. If enough checks come back with nothing, Proctor stops claiming a restart is in flight and reports the outage, which by that point is a measurement rather than a guess.

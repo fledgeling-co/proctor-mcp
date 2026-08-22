@@ -1,0 +1,160 @@
+PRO-0099 — operator_path_gate.py, armed in both directions
+==========================================================
+
+The gate's healthy state is silence, which is the state a check that cannot fire
+is also in. So both of its modes are armed on fixture trees in
+`scripts/campaign/test_instruments.py`, which runs inside the suite through
+`Tests/ProctorCoreTests/CampaignInstrumentTests.swift` — so a dead check here is
+a red suite rather than a quiet one.
+
+ARMING FOUND TWO REAL BUGS, both bare-name collisions in PolicyStore.swift, and
+both FALSE REDS — the direction that gets argued away rather than fixed:
+
+  DEF-170  `enclosing_type` took the nearest type indented less than the site
+           without asking whether that type still CONTAINED it. `final class
+           Seams` closes 19 lines above the operator literal in
+           `AuditLog.directory`, so the census attributed that literal to
+           `Seams.directory`, matched no manifest entry, and reported a classed
+           writer as an unclassed one.
+           Fixed by measuring containment with a brace scan (`scope_end`).
+
+  DEF-171  `declaration_body` resolved a dotted name to the FIRST declaration of
+           that name inside the owning type rather than to the owner's own
+           member. `Seams.directory` — a lock-guarded stored property one level
+           in — comes first, and its body holds no test-process predicate, so the
+           gate reported the audit trail's own interlock as a writer with no
+           branch.
+           Fixed by taking the SHALLOWEST declaration in range: a type's own
+           member is the shallowest occurrence inside it, and anything deeper
+           belongs to a nested type.
+
+Both are recorded as fixtures in test_instruments.py so they cannot come back.
+
+THE CHECKS, each with the fixture that trips it and the fixture that clears it:
+
+  the census refuses a new operator path that is classed nowhere
+  the census clears the same path once it carries an entry
+  the census attributes an operator literal to the type that contains it, not to
+    a nested type that closed above it                                  (DEF-170)
+  the census clears a nested-type file classed on its containing type
+  the census still refuses that file when the entry names the wrong owner
+  a dotted name resolves to the owning type's own member rather than the first
+    declaration of that name inside it                                  (DEF-171)
+  the seam check clears a writer whose own body carries the predicate
+  the seam check refuses a writer with no test-process branch
+  a seamed operator-accessor clears
+  an operator-accessor whose seam does not branch on the test process is refused
+  a seam that branches but drops the operator path is refused
+  a caller reaching the truthful operator path around its seam is refused
+  a bare ProctorReflector.start() under Tests/ is refused
+  the same call with an explicit path clears
+  operator_path_gate `census` is clean on this tree
+  operator_path_gate `seams` is clean on this tree
+
+RUN: python3 scripts/campaign/test_instruments.py -v
+     campaign instruments: 54 passed, 0 failed
+
+THE GATE ON THIS TREE:
+
+  $ python3 scripts/campaign/operator_path_gate.py
+  operator_path_gate: no findings (12 operator-path site(s) in Sources/, 14 classed)
+  exit 0
+
+  $ python3 scripts/campaign/operator_path_gate.py census
+  operator_path_gate: no findings (12 operator-path site(s) in Sources/, 14 classed)
+  exit 0
+
+  $ python3 scripts/campaign/operator_path_gate.py seams
+  operator_path_gate: no findings (12 operator-path site(s) in Sources/, 14 classed)
+  exit 0
+
+
+================================================================================
+THREE SHAPES THAT CLEARED BOTH MODES — PRO-0099 gap-fix, 2026-08-22
+================================================================================
+
+REQ-085 said a new un-classed or un-seamed operator path fails the gate. The
+verifier built three fixtures that did not, and all three are the same failure:
+the gate resolving a site correctly and then throwing the resolution away.
+
+  1  BARE-NAME COLLISION IN THE CENSUS. `run_census` accepted a site when either
+     spelling matched an entry, with no test that the bare one was unambiguous.
+     A `Legacy.operatorURL` added beside a `SwitchStore.operatorURL` the manifest
+     classes bare gave `census=[] seams=[]`.
+  2  THE LEAK CHECK SKIPPED A WHOLE FILE. `if declaration_body(other_lines, bare):
+     continue` excused every reference in any file declaring that name — so a
+     `Bypass.swift` with a member called `operatorURL` could call
+     `SwitchStore.operatorURL` around its seam and pass. Without the colliding
+     declaration the same call was caught, which is what made it look armed.
+  3  A COMPOSED PATH PRODUCED NO CENSUS SITE AT ALL, and this is the sharpest,
+     because it is exactly how the real `SwitchStore.operatorURL` is written:
+     `url(home: FileManager.default.homeDirectoryForCurrentUser)` names no root
+     literal, so the literal sweep never sees it. A new un-seamed twin needed no
+     manifest entry.
+
+BEFORE, on this gate, all three fixtures:
+
+  === F1: bare-name collision in the census ===
+   census: [] <- NO FINDING
+   seams : [] <- NO FINDING
+  === F2: leak check skips a whole file ===
+   seams : [] <- NO FINDING
+   control (no colliding decl): ['Sources/ProctorAgent/Bypass.swift:2: reaches
+     `operatorURL`, the truthful operator path declared in
+     Sources/ProctorCore/SwitchStore.swift, around its seam `defaultURL`']
+  === F3: composed path produces no census site ===
+   census: [] <- NO FINDING
+   seams : [] <- NO FINDING
+
+AFTER, the same three, unchanged:
+
+  === F1 ===
+   census: Sources/ProctorCore/SwitchStore.swift:6: `Legacy.operatorURL` names a
+     path under the operator's root and is not classed in
+     scripts/campaign/operator_paths.json
+   census: Sources/ProctorCore/SwitchStore.swift:18: `SwitchStore.operatorURL`
+     names a path under the operator's root and is not classed ...
+  === F2 ===
+   seams : Sources/ProctorAgent/Bypass.swift:2: reaches `SwitchStore.operatorURL`,
+     the truthful operator path declared in Sources/ProctorCore/SwitchStore.swift,
+     around its seam `defaultURL`
+   clear (its OWN bare member, no qualified reach): no finding
+  === F3 ===
+   census: Sources/ProctorAgent/Bypass.swift:3: `Bypass.settingsURL` hands the
+     operator's own home to a path builder and is not classed in
+     scripts/campaign/operator_paths.json
+   clear once classed: no finding
+
+WHAT CHANGED IN THE GATE
+
+  A bare entry now carries a site only where that bare name has ONE qualified
+  spelling in its file (`qualified_declarations`). Where two declarations answer
+  to it, both sites are refused until the manifest says which is which.
+
+  The leak rule reads two ways round. A qualified reach — `SwitchStore.operatorURL`
+  — is refused from any other file, always. A bare reach is excused only in a file
+  that declares that name itself, which is why the excuse exists:
+  `PolicyStore.operatorDirectory` and `FlowStore.operatorDirectory` are different
+  paths spelled alike.
+
+  The census gained a second sweep, `composed_sites`. A `parameterised` entry is
+  classed safe BECAUSE the root arrives as an argument, so the caller handing it
+  one of `home_expressions` is the operator path — and that caller names no
+  literal. `SwitchStore.url(home:)` was itself unclassed, which is what made its
+  callers invisible; it now carries an entry, and `SwitchStore.operatorURL` has a
+  census site for the first time.
+
+AND THE AMBIGUITY RULE FOUND ONE ON ITS FIRST RUN. `Wire.swift` was classed on a
+bare `socketPath`, and `DoctorReport` declares a field of the same name 1,286
+lines further down. The gate went red on the real tree until the entry was spelled
+`Wire.socketPath`:
+
+  operator_path_gate: 1 finding(s)
+    Sources/ProctorCore/Wire.swift:22: `Wire.socketPath` names a path under the
+    operator's root and is not classed in scripts/campaign/operator_paths.json
+    — return "\(home)/Library/Application Support/app.fledgeling.procter/agent.sock"
+
+All three shapes are now fixtures in `scripts/campaign/test_instruments.py`
+(`test_operator_path_gate_bare_name_is_not_a_wildcard`,
+`..._qualified_reach_is_never_excused`, `..._composed_path`), each armed in both
+directions, so the gate cannot lose them again quietly.
