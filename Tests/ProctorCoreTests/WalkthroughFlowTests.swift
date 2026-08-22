@@ -250,7 +250,19 @@ struct WalkthroughFlowTests {
             encoding: .utf8)
     }
 
-    /// The `wt-foot` of one `data-state` pane of the walkthrough surface.
+    /// The `wt-foot` of one `data-state` pane of the walkthrough surface, ending
+    /// at that footer's OWN close.
+    ///
+    /// The first draft of this ran on to `"</div>\\n        </div>"`, which matched
+    /// 2,218 characters later — inside the following pane — so the slice carried
+    /// the caption prose and the whole of the next pane's body. `Skip setup`
+    /// appears in that caption, so the presence clause below was satisfied by
+    /// text that cannot go away, and removing the button from the footer left the
+    /// case green on that clause. Found by arming it, not by reading it, which is
+    /// this campaign's own repeated lesson.
+    ///
+    /// The footer's children are indented ten spaces and its closing tag eight,
+    /// so the first eight-space close after the opening tag is the footer's own.
     private static func footer(ofState state: String, in design: String) throws -> String {
         let pane = try #require(design.range(of: "data-state=\"\(state)\""),
                                 "no walkthrough pane with data-state=\(state)")
@@ -258,10 +270,19 @@ struct WalkthroughFlowTests {
         let foot = try #require(rest.range(of: "<div class=\"wt-foot\">"),
                                 "the \(state) pane draws no footer")
         let after = rest[foot.upperBound...]
-        let end = try #require(after.range(of: "</div>\n        </div>")
-                               ?? after.range(of: "</div>"),
-                               "the \(state) footer never closes")
-        return String(after[..<end.lowerBound])
+        let end = try #require(after.range(of: "\n        </div>"),
+                               "the \(state) footer never closes at its own indent")
+        let slice = String(after[..<end.lowerBound])
+        // A footer is a handful of controls. A slice that has run into the next
+        // pane is a measurement of the wrong thing, and it fails here rather
+        // than passing on whatever it swept up.
+        let length = slice.count
+        let carriesCaption = slice.contains("<p class=\"caption\">")
+        #expect(length < 600,
+                "the \(state) footer slice is \(length) characters; it has run past the footer")
+        #expect(!carriesCaption,
+                "the \(state) footer slice carries the caption, so prose can satisfy a claim about a control")
+        return slice
     }
 
     /// DEF-162. The design gains the way out; the build is unchanged.
@@ -280,8 +301,12 @@ struct WalkthroughFlowTests {
     func theDesignDrawsSkipOnThePermissionsPane() throws {
         let design = try Self.designSource()
         let foot = try Self.footer(ofState: "permissions", in: design)
-        #expect(foot.contains(WalkthroughFlow.Copy.skip),
-                "the permissions pane's footer draws no \(WalkthroughFlow.Copy.skip); the app draws one and the two records disagree")
+        // The BUTTON, not the word. A caption naming Skip setup is prose about a
+        // control and satisfied the first version of this clause on its own.
+        let drawsSkipButton = foot.contains(
+            "<button type=\"button\" class=\"btn\">\(WalkthroughFlow.Copy.skip)</button>")
+        #expect(drawsSkipButton,
+                "the permissions pane's footer draws no \(WalkthroughFlow.Copy.skip) button; the app draws one and the two records disagree")
         let back = try #require(foot.range(of: WalkthroughFlow.Copy.back))
         let skip = try #require(foot.range(of: WalkthroughFlow.Copy.skip))
         let primary = try #require(foot.range(of: WalkthroughFlow.primaryAction(for: .permissions)))
@@ -312,8 +337,25 @@ struct WalkthroughFlowTests {
         // The unconditional form must not appear on the primary at all. Every
         // `.borderedProminent` in this file now sits inside a branch: one in
         // `PrimaryProminence`, one in `HeroPermRow`.
-        #expect(!source.contains(".buttonStyle(.borderedProminent)\n                        .disabled("),
-                "the primary still takes .borderedProminent unconditionally")
+        //
+        // Computed into a Bool first, and every clause below does the same. An
+        // `#expect` over `source.contains(…)` captures `source` into its failure
+        // message, and swift-testing then writes 14 KB of Swift into the log —
+        // measured: the first arming of this case produced the failure and NO
+        // verdict line at all, which is DEF-140's own failure mode arriving
+        // through a test this item wrote. A gate that cannot report its verdict
+        // is the thing this whole item is about.
+        // Stated as "nowhere outside a branch" rather than as an exact
+        // arrangement of modifier lines. The first version matched the pre-fix
+        // whitespace, so re-ordering the modifiers while keeping the
+        // unconditional fill would have satisfied it — a clause about a defect
+        // that only recognises the defect's original formatting.
+        let beforeTheBranches = String(source[..<(source.range(
+            of: "private struct PrimaryProminence")?.lowerBound ?? source.endIndex)])
+        let unbranchedFills = beforeTheBranches
+            .components(separatedBy: ".borderedProminent").count - 1
+        #expect(unbranchedFills == 0,
+                "the walkthrough body draws .borderedProminent \(unbranchedFills) times outside a branch; the primary's fill must be chosen by PrimaryProminence")
 
         let modifier = try #require(source.range(of: "private struct PrimaryProminence"),
                                     "the prominence branch does not exist")
@@ -325,10 +367,12 @@ struct WalkthroughFlowTests {
                 "PrimaryProminence is declared after HeroPermRow, inside the span that case measures")
 
         let branch = String(source[modifier.lowerBound..<row.lowerBound])
-        #expect(branch.components(separatedBy: ".borderedProminent").count - 1 == 1,
-                "the prominence branch draws the filled style \(branch.components(separatedBy: ".borderedProminent").count - 1) times; one is the rule")
-        #expect(branch.components(separatedBy: ".buttonStyle(.bordered)").count - 1 == 1,
-                "the prominence branch has no plain style, so a refusing primary is still drawn filled")
+        let fills = branch.components(separatedBy: ".borderedProminent").count - 1
+        let plains = branch.components(separatedBy: ".buttonStyle(.bordered)").count - 1
+        #expect(fills == 1,
+                "the prominence branch draws the filled style \(fills) times; one is the rule")
+        #expect(plains == 1,
+                "the prominence branch draws the plain style \(plains) times; a refusing primary needs exactly one")
         let ifEnabled = try #require(branch.range(of: "if enabled {"))
         let filled = try #require(branch.range(of: ".borderedProminent"))
         let plain = try #require(branch.range(of: ".buttonStyle(.bordered)"))
@@ -338,7 +382,9 @@ struct WalkthroughFlowTests {
         // And the branch takes the SAME rule the `.disabled` takes, so the fill
         // and the refusal can never nominate different states. This is the
         // clause that would catch a second predicate drifting from the first.
-        #expect(source.contains("PrimaryProminence(\n                            enabled: WalkthroughFlow.primaryEnabled("),
+        let takesTheCoreRule = source.contains(
+            "PrimaryProminence(\n                            enabled: WalkthroughFlow.primaryEnabled(")
+        #expect(takesTheCoreRule,
                 "the prominence branch does not read WalkthroughFlow.primaryEnabled")
     }
 
@@ -352,7 +398,8 @@ struct WalkthroughFlowTests {
             foot.range(of: "<button type=\"button\" class=\"btn\" disabled>"),
             "the design's refusing primary is no longer drawn plain-and-disabled")
         #expect(foot[primary.upperBound...].hasPrefix(WalkthroughFlow.primaryAction(for: .permissions)))
-        #expect(!foot.contains("class=\"btn prominent\" disabled"),
+        let drawsProminentDisabled = foot.contains("class=\"btn prominent\" disabled")
+        #expect(!drawsProminentDisabled,
                 "the design draws a disabled control in the accent fill, which is the defect")
     }
 

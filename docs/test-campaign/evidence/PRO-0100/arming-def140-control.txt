@@ -1,0 +1,28 @@
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Emitting module ProctorCoreTests
+[6/7] Compiling ProctorCoreTests ConsentSurfaceTests.swift
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (16.96s)
+Test Suite 'Selected tests' started at 2026-08-22 21:40:48.647.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 21:40:48.648.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 21:40:48.648.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 21:40:48.648.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Consent surface" started.
+􀟈  Test "A5 · watching input to notice a person sooner does not confirm" started.
+􀢄  Test "A5 · watching input to notice a person sooner does not confirm" recorded an issue at ConsentSurfaceTests.swift:30:30: Expectation failed: SwitchCatalogue.named("PROCTOR_YIELD_INPUT_ARMING") → nil
+􀄵  PROCTOR_YIELD_INPUT is no longer in the catalogue
+􀢄  Test "A5 · watching input to notice a person sooner does not confirm" failed after 0.001 seconds with 1 issue.
+􀢄  Suite "Consent surface" failed after 0.001 seconds with 1 issue.
+􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.
+EXIT=1

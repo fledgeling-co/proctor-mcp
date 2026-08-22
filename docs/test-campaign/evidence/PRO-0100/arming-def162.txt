@@ -1,0 +1,60 @@
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/8] Emitting module ProctorUI
+[6/8] Compiling ProctorUI Walkthrough.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0100/Sources/ProctorUI/Walkthrough.swift:472:46: warning: main actor-isolated property 'reduceMotion' can not be referenced from a Sendable closure
+459 |     let current: Int
+460 |     let count: Int
+461 |     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    |                                                           `- note: property declared here
+462 | 
+463 |     var body: some View {
+    :
+470 |                     .keyframeAnimator(initialValue: 1.0, trigger: current) { view, scaleY in
+471 |                         view.scaleEffect(x: 1,
+472 |                                          y: (reduceMotion || i != current) ? 1 : scaleY,
+    |                                              `- warning: main actor-isolated property 'reduceMotion' can not be referenced from a Sendable closure
+473 |                                          anchor: .center)
+474 |                     } keyframes: { _ in
+[6/9] Write Objects.LinkFileList
+[7/9] Linking Proctor
+[8/9] Applying Proctor
+Build complete! (4.16s)
+Test Suite 'Selected tests' started at 2026-08-22 21:44:38.746.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 21:44:38.747.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 21:44:38.747.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 21:44:38.747.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Walkthrough flow" started.
+􀟈  Test "DEF-162 · the design of record draws the way out on the pane that refuses" started.
+􀢄  Test "DEF-162 · the design of record draws the way out on the pane that refuses" recorded an issue at WalkthroughFlowTests.swift:308:9: Expectation failed: drawsSkipButton
+􀄵  the permissions pane's footer draws no Skip setup button; the app draws one and the two records disagree
+􀢄  Test "DEF-162 · the design of record draws the way out on the pane that refuses" recorded an issue at WalkthroughFlowTests.swift:311:24: Expectation failed: (foot → "
+          <div class="dots"><i></i><i class="on"></i><i></i></div>
+          <div class="spacer"></div>
+          <button type="button" class="btn">Back</button>
+          <button type="button" class="btn" disabled>Connect a model</button>").range(of: WalkthroughFlow.Copy.skip → "Skip setup") → nil
+􀢄  Test "DEF-162 · the design of record draws the way out on the pane that refuses" failed after 0.001 seconds with 2 issues.
+􀄵  /// DEF-162. The design gains the way out; the build is unchanged.
+􀄵  ///
+􀄵  /// The two records disagreed and the referral settled which one yields. The
+􀄵  /// build is right: `Skip setup` postdates this design page, it is gated by
+􀄵  /// `WalkthroughFlow.showsSkip` and by nothing else, and a verifier proved
+􀄵  /// that removing it strands a person macOS will not grant to while the whole
+􀄵  /// suite stays green. So the drawing that was never revised is the one that
+􀄵  /// changed.
+􀄵  ///
+􀄵  /// Asserted on the pane that refuses, because that is the pane where the way
+􀄵  /// out matters — and in the order the app draws it, so the two records agree
+􀄵  /// on sequence and not only on presence.
+􀢄  Suite "Walkthrough flow" failed after 0.001 seconds with 2 issues.
+􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.
+EXIT=1

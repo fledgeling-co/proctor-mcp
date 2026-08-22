@@ -136,3 +136,79 @@ force-unwraps are total over a closed input space and are kept with the reason b
 PRO-0098's own recorded classification method. The assumption is read as being about the two
 shapes as classes rather than about every individual site. If that reading is wrong, the three
 sites convert in about ten lines — say so and they will.
+
+---
+
+## Defects
+
+| Defect | Was | Now | Cases |
+|---|---|---|---|
+| DEF-140 | open | fixed | CASE-0395, CASE-0396 |
+| DEF-162 | open | fixed | CASE-0390 |
+| DEF-163 | open | fixed | CASE-0391, CASE-0392 |
+| DEF-165 | open | fixed | CASE-0393 |
+| DEF-175 | open | fixed | CASE-0394 |
+| DEF-193 | open | fixed | CASE-0397, CASE-0398, CASE-0399 |
+
+**Defects:** DEF-140, DEF-162, DEF-163, DEF-165, DEF-175, DEF-193
+
+**Requirements:** REQ-094, REQ-095, REQ-096
+
+**Cases:** CASE-0390 through CASE-0400
+
+**Unused from this item's allocation:** DEF-200..209 in full, and CASE-0401..0409. Nothing new was
+opened, so the defect range is reported unused rather than filled. Eleven cases were needed rather
+than twenty.
+
+## Progress — 2026-08-22
+
+Built on `ai/pro-0100`, stopped before verify. Gate **2,064 tests in 251 suites, exit 0**, twice.
+
+**The two walkthrough repairs resolved in opposite directions, as triaged.** The design of record
+gained the way out; the build stopped drawing a refusing control in the accent fill. The build's
+shape was chosen the long way round, through a `ViewModifier` rather than the obvious two-branch
+`if/else`, because the obvious shape duplicates the single `.disabled(` modifier that
+`skipIsNeverClosed` counts. All three existing walkthrough source guards pass **unedited**, which
+was the constraint that picked the shape.
+
+**Arming found a blind pass in this item's own first test, and it is the finding worth carrying.**
+CASE-0390's footer slice ended on a marker that matched 2,218 characters later, inside the following
+pane, so the slice carried the pane's caption — and the caption names "Skip setup" in prose, which
+satisfied a claim about a control. Removing the button left the case green on that clause. The slice
+is now bounded to the footer's own eight-space close (304 characters, measured) with two guards of
+its own, and the clause asserts the button element rather than the words. Found by arming, not by
+reading, which is this campaign's own repeated lesson arriving from the inside.
+
+**A second self-inflicted fault, and it is DEF-140's failure mode:** the first version of DEF-163's
+test wrote `#expect(!source.contains(…))`, so swift-testing captured the whole 14 KB of
+`Walkthrough.swift` into its failure message and the run produced **no verdict line at all**. Every
+source-reading clause in the new tests now computes a Bool into a local first. A test written to
+close the no-verdict class had reopened it.
+
+**One clause was rewritten because its arming showed it recognised only the defect's formatting.**
+DEF-163's first clause matched the pre-fix arrangement of modifier lines, so re-ordering them while
+keeping the unconditional fill survived it. It now reads "no `.borderedProminent` anywhere before
+the branch", and is armed twice: once with the exact pre-fix shape and once with the re-ordering
+that beat the old version.
+
+**Eight of eleven cases are `armed: true`, each watched failing with its `armedBy` naming the
+mutation, the failure text and the exit code.** The three that are not say why, in the row, rather
+than claiming an arming that did not happen. DEF-140's arming is the class's own contrast rather
+than an exit code: the unsafe form gave signal 5, `Executed 0 tests, with 0 failures`, and zero
+verdict lines, while the converted form gave one verdict line and a named failing test. Reading exit
+codes alone would have called those two runs identical.
+
+**DEF-193's repair widened its own denominator.** The one-word fix is committed in
+`~/Dev/fledgeling-plugins` at `82ebe7d`, one explicit path, tree measured clean before and after.
+`skill_doc_measure.py` now reads every `*.md` under the skill rather than the two it was pointed at,
+on both stated counts and named tools, and it immediately found two files no check had ever opened.
+27 of 27 checks armed.
+
+**Out-of-family lanes:** codex is OFF for this repository and grok returns
+`402 — usage balance exhausted`, so **gemini** (`agy --model gemini-3.7-flash-high`) took the plan
+review gate, named as a substitution under ORCHESTRATOR.md's rule as amended today. Four material
+findings, all four accepted; one of them corrected a reason this item had given for keeping a force
+unwrap, by opening the file and finding the reason was true of the neighbouring site and not of that
+one.
+
+**Stopped before verify and before merge.** Nothing pushed.

@@ -2718,12 +2718,13 @@
     {
       "id": "DEF-140",
       "severity": "low",
-      "status": "open",
+      "status": "fixed",
       "title": "Two force-unwrap shapes sit outside `grep -rn ')!' Tests` and carry DEF-136's hazard unswept",
       "found": "PRO-0098, while classing the 28 sites that grep does return",
       "detail": "DEF-136's denominator is `grep -rn ')!' Tests`, and PRO-0098 closed all of it. Two shapes cannot match that pattern and abort the runner identically. (1) `try!` — e.g. `try! key.signature(for: material)` in AuditChainTests, `try! String(contentsOf:)` in AuditChainWiringTests: a throw takes the runner down rather than failing the test, which is DEF-135's failure mode exactly. (2) `!` applied to a property or a subscript rather than a call — e.g. `args.last!` at MenuBarReadinessTests.swift:355. NOT FIXED HERE because neither is in this item's contract and the brief scopes the sweep to `)!` explicitly; recorded so the next sweep starts from a true denominator rather than from this one's boundary. The classification method in evidence/PRO-0098/unwrap-census.md applies unchanged: name the input space, show the failing branch is not in it, convert what is left.",
       "surface": "SURF-022",
-      "req": "REQ-077"
+      "req": "REQ-077",
+      "fix": "FIXED by PRO-0100 at a68d60c. Both shapes swept: 86 try! sites converted (55 test functions gained throws) and 11 live bare unwraps converted. Three sites in ExternalWitnessTests.swift are total over a closed input space and are KEPT with the input space written out beside each, on PRO-0098's own method; the reason given for :1126 was wrong in the first draft and was corrected by the out-of-family plan review, which opened the file and found its frame comes from FrameCodec.encode rather than from a local append. The true denominator is now three greps, all recorded before and after in docs/test-campaign/evidence/PRO-0100/unwrap-census.md. Armed by the contrast that matters: the unsafe form gave signal 5, 'Executed 0 tests' and NO verdict line; the converted form gave one verdict line and a named failing test. CASE-0395, CASE-0396."
     },
     {
       "id": "DEF-141",
@@ -2812,25 +2813,26 @@
     },
     {
       "id": "DEF-162",
-      "status": "open",
+      "status": "fixed",
       "severity": "low",
       "req": "REQ-083",
       "surface": "SURF-009",
       "title": "The design of record's permissions pane draws no Skip setup, and the build draws one on every step but connect",
       "found": "PRO-0086, reading design/surfaces/proctor-surfaces.html for the disabled-primary caption",
       "detail": "The walkthrough's permissions pane in the design of record has a footer of dots, spacer, Back and a disabled 'Connect a model'. Walkthrough.swift:77-81 draws 'Skip setup' there too, borderless and never disabled. The build is the side brief 79 protects — skipping is completing and a person macOS will not grant to must be able to leave — so the record that is wrong is the design, not the window. Left open rather than fixed: changing the design of record is a reader's call and this item is not licensed to edit it, and the intro pane of the same design does draw Skip setup, so the omission may be a drawing that was never updated rather than a decision.",
-      "detailNote": "Not a code defect. Recorded so the divergence is a row somebody decides rather than a thing two documents disagree about quietly."
+      "detailNote": "Not a code defect. Recorded so the divergence is a row somebody decides rather than a thing two documents disagree about quietly.",
+      "fix": "FIXED by PRO-0100 at a68d60c. The DESIGN yielded, not the build: design/surfaces/proctor-surfaces.html's permissions pane now draws Skip setup between Back and the primary, in the order the app draws it, and its caption records why the way out sits beside a refusal. The build is unchanged because Skip is a tested escape hatch that postdates the design page and removing it was measured to strand a person while the whole suite stayed green. CASE-0390, whose first draft was a blind pass that arming caught."
     },
     {
       "id": "DEF-163",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "req": "REQ-082",
       "surface": "SURF-009",
       "title": "The disabled primary still draws filled accent while the design of record draws it plain, so a control that cannot be pressed looks pressable",
       "found": "PRO-0086, from its own glass capture: the coherence check on PRO-0090's prominence rule showed the refusing button in accent blue once the window was key",
       "detail": "Walkthrough.swift gives the primary .borderedProminent unconditionally. On an inactive window macOS greys it and the refusal is legible; on a key window it draws in the accent fill with only the label dimmed, which is what a person actually sees while working the flow. The design of record draws the intro's enabled primary as `class=\"btn prominent large\"` and the permissions pane's disabled one as `class=\"btn\" disabled` — plain — so the record already settles the rule and the build diverges from it. Evidence: docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason-key.png against walkthrough-permissions-reason.png, the same window one activation apart.",
-      "fix": "Unfixed. The shape is PRO-0090's own two-branch buttonStyle in HeroPermRow — a filled branch and a plain one chosen by primaryEnabled — and it does not touch the prominence rule that neighbours it.",
+      "fix": "FIXED by PRO-0100 at a68d60c. The BUILD yielded, the opposite direction to DEF-162, and a referral is what kept the two apart. The primary's fill is chosen by a PrimaryProminence ViewModifier from the same WalkthroughFlow.primaryEnabled call the .disabled reads. A ViewModifier rather than a two-branch if/else because two Buttons mean two .disabled( modifiers and exactly one in that file is a rule skipIsNeverClosed counts; moving that count to 2 would have been editing a guard to pass. All three existing walkthrough source guards pass unedited. CASE-0391, CASE-0392.",
       "detailNote": "Left open deliberately: spec-PRO-0086 commits to revisiting no wave-9 composition decision, and changing how a shipped control is drawn is that. It is recorded with the capture that found it so the reader can take it as its own item."
     },
     {
@@ -2846,12 +2848,13 @@
     {
       "id": "DEF-165",
       "severity": "low",
-      "status": "open",
+      "status": "fixed",
       "title": "BrowserLaneWiringTests asserts doctor's `ready` is invariant while reading two live machine probes",
       "found": "PRO-0098 re-verification, on the third of four full ./scripts/test.sh runs on one unchanged tree",
       "detail": "'doctor reports both tools, the lane's state, and never lets either touch ready' calls session.doctor() eight times across the obscura x browserUse x laneSet matrix, collects report.ready and report.blockers.count into two Sets, and asserts each Set has one element. The claim is sound — Proctor drives native applications without a browser tool, so ready must not move with either — but the harness at BrowserLaneWiringTests.swift:62 injects screenRecordingProbe: .fake() and leaves the other two inputs to `ready` live: accessibilityProbe() defaults to the real TCC probe and secureInputProbe() to Grants.secureEventInputActive(). Both feed `blockers`, and `ready` is `blockers.isEmpty`. So either flipping between two of the eight calls — a password field taking focus anywhere on this Mac, or a TCC probe not coming back on one iteration — reds the case with the browser lane behaving perfectly. MEASURED: four full runs on one unchanged tree, exit 0 / 1 / 0 with the same 2,028 tests. The red run was 'Expectation failed: (readies.count -> 2) == 1' and '(blockerCounts.count -> 2) == 1' at BrowserLaneWiringTests.swift:218-219, the only two issues in it; the suite run in isolation immediately afterwards passed 10 tests in 0.230 seconds. NOT FIXED HERE: it is outside PRO-0098's brief, which was the flow writes and the gate's exit code. The repair is to inject both probes in the harness the way screenRecordingProbe already is, so the invariant is asserted over the matrix the case names rather than over the machine's mood.",
       "surface": "SURF-004",
-      "req": "REQ-024"
+      "req": "REQ-024",
+      "fix": "FIXED by PRO-0100 at a68d60c. BrowserLaneWiringTests.harness injects accessibilityProbe and secureInputProbe beside the screenRecordingProbe it already faked, so the invariant is asserted over the eight-cell matrix the case names rather than over the machine. The assertion was not touched. Confirmed while fixing that those two are the complete live set: shortcutsProbe stopped feeding blockers at PRO-0082 and Input Monitoring is required:false. CASE-0393."
     },
     {
       "id": "DEF-170",
@@ -2952,13 +2955,13 @@
       "surface": "SURF-012",
       "req": "REQ-030",
       "severity": "minor",
-      "status": "open",
+      "status": "fixed",
       "found": "PRO-0099, on the fourth of five full runs of one unchanged tree",
       "evidence": [
         "Tests/ProctorAgentTests/HoldAttributionWiringTests.swift"
       ],
       "detail": "'a yield reaches the ticket, and every way it can end clears it' awaits the hold through awaitHold(control), which returns as soon as RunControl reports the run held, then IMMEDIATELY reads h.scheduler.snapshot() and asserts duringHold.active.contains { $0.held != nil }. Those are two different objects: the control latches the hold, and the scheduler's ticket is updated separately, so there is a window in which the run is genuinely held and the ticket does not yet say so. Under load the read lands in that window and the case reds at HoldAttributionWiringTests.swift:372 with 'Expectation failed: duringHold.active.contains { $0.held != nil }', which is the scheduler being slightly behind rather than the hold failing to reach a ticket. MEASURED: five full runs of one unchanged tree during PRO-0099 read exit 0 (2,028 tests, pre-change), 0, 0, 1, 0 with the same 2,031 tests in 246 suites; the red run carried this as its ONLY issue and the next full run was clean with zero issues.",
-      "fix": "Not attempted. The repair is to wait on the ticket rather than on the control before reading it — poll scheduler.snapshot() for the held ticket with the same bounded wait awaitHold already uses, so the case asserts the hold reached the ticket rather than asserting it reached it within one scheduling quantum.",
+      "fix": "FIXED by PRO-0100 at a68d60c. HoldAttributionWiringTests waits on the scheduler's ticket with awaitHold's own bound and turn length, then asserts on the snapshot that wait returned. The assertion is unchanged; the accidental claim that the ticket catches up within one scheduling quantum is gone. Armed by a PRODUCT mutation rather than a test one, because the hazard in adding a wait is a wait that succeeds regardless: with RunScheduler.hold made a no-op the case still reds, on all four endings, after the full bounded wait. CASE-0394.",
       "note": "OPENED, NOT FIXED, and outside this item's brief, which is the operator-path class. Same handling as DEF-165, the BrowserLaneWiringTests flake PRO-0098 recorded rather than repaired: that commit measured four full runs of its own unchanged tree at exit 1, 0, 1, 0, so a red that is not the item's own is a known property of this suite rather than a new signal. This is a DIFFERENT test from DEF-165 and is recorded separately. It is not in spec-PRO-0099's Defects table, because that table is what defect_gate.py claims reads and a newly opened defect is not a claim that anything is closed."
     },
     {
@@ -3048,13 +3051,13 @@
     {
       "id": "DEF-193",
       "severity": "low",
-      "status": "open",
+      "status": "fixed",
       "title": "A fifth stale tool count survives in the proctor skill's gemini.md",
       "found": "PRO-0085 count sweep, 2026-08-22",
       "detail": "gemini.md:21 in ~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor reads 'seven stages, seventeen assertion kinds, twenty tools, five stability runs by default, a fan-out capped at four', citing those counts as an example of the objective numbers Google's prompting guidance asks for. The catalogue ships 21. DEF-192 named four count sites and all four are corrected; this is a fifth that DEF-192 did not name.",
       "surface": "SURF-002",
       "req": "REQ-091",
-      "fix": "NOT FIXED HERE. spec-PRO-0085.md scopes the deliverable to SKILL.md and references/tools.md and plan-PRO-0085.md states that nothing else in either tree is touched, so widening the diff to a third file in a repository another session is working in was not worth the count. gemini.md is notes on adapting the skill for Gemini rather than routing text an agent reads to pick a tool, which is why it is low rather than the medium DEF-192 carried. The repair is the one word.",
+      "fix": "FIXED by PRO-0100. The one word is corrected in the shared repository at 82ebe7d, committed by explicit path only with the tree measured clean before and after. The repair that matters is the denominator: skill_doc_measure.py read SKILL.md and references/tools.md and never opened gemini.md, which is why all five stale counts were found by a person reading. It now reads every *.md under the skill on both dimensions, stated counts and named tools, with subset counts allowlisted with their reason; skill_doc_arm.py copies the whole tree rather than two files, which was the same mistake one layer down. 27 of 27 checks armed. It also found two files no check had ever opened. CASE-0397, CASE-0398, CASE-0399.",
       "evidence": "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt"
     }
   ]

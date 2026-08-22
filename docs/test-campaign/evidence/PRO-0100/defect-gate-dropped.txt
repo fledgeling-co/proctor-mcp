@@ -1,0 +1,3 @@
+registry drift: 2 file(s), 108 merge(s), 39060 id/field pair(s) examined
+
+PASS: no merge on this history discarded a registry value that is still missing.

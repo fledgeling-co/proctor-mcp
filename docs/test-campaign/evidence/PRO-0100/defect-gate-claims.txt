@@ -1,0 +1,4 @@
+spec-PRO-0100.md: claims 6 defect(s) — DEF-140, DEF-162, DEF-163, DEF-165, DEF-175, DEF-193
+  registry: docs/test-campaign/inventory.json, 110 defect record(s)
+
+PASS: every claimed defect reads `fixed`.

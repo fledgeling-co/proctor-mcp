@@ -1,0 +1,49 @@
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/14] Write sources
+[4/14] Write swift-version--58304C5D6DBC2206.txt
+[6/12] Emitting module ProctorUI
+[7/12] Compiling ProctorUI Walkthrough.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0100/Sources/ProctorUI/Walkthrough.swift:472:46: warning: main actor-isolated property 'reduceMotion' can not be referenced from a Sendable closure
+459 |     let current: Int
+460 |     let count: Int
+461 |     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    |                                                           `- note: property declared here
+462 | 
+463 |     var body: some View {
+    :
+470 |                     .keyframeAnimator(initialValue: 1.0, trigger: current) { view, scaleY in
+471 |                         view.scaleEffect(x: 1,
+472 |                                          y: (reduceMotion || i != current) ? 1 : scaleY,
+    |                                              `- warning: main actor-isolated property 'reduceMotion' can not be referenced from a Sendable closure
+473 |                                          anchor: .center)
+474 |                     } keyframes: { _ in
+[7/13] Write Objects.LinkFileList
+[8/13] Linking Proctor
+[9/13] Applying Proctor
+[11/13] Compiling ProctorAgentTests BrowserLaneWiringTests.swift
+[12/13] Emitting module ProctorAgentTests
+[12/14] Write Objects.LinkFileList
+[13/14] Linking proctor-mcpPackageTests
+Build complete! (40.31s)
+Test Suite 'Selected tests' started at 2026-08-22 21:34:51.299.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 21:34:51.300.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 21:34:51.300.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 21:34:51.300.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Second lane wiring" started.
+􀟈  Test "doctor reports both tools, the lane's state, and never lets either touch ready" started.
+􀢄  Test "doctor reports both tools, the lane's state, and never lets either touch ready" recorded an issue at BrowserLaneWiringTests.swift:249:9: Expectation failed: (readies.count → 2) == 1
+􀄵  // `ready` means Proctor can do its own job, and Proctor drives native
+􀄵  // applications without any browser tool at all.
+􀢄  Test "doctor reports both tools, the lane's state, and never lets either touch ready" recorded an issue at BrowserLaneWiringTests.swift:250:9: Expectation failed: (blockerCounts.count → 2) == 1
+􀢄  Test "doctor reports both tools, the lane's state, and never lets either touch ready" failed after 0.512 seconds with 2 issues.
+􀢄  Suite "Second lane wiring" failed after 0.512 seconds with 2 issues.
+􀢄  Test run with 1 test in 1 suite failed after 0.512 seconds with 2 issues.
+EXIT=1
