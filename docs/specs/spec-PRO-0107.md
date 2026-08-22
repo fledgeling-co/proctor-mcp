@@ -174,3 +174,79 @@ on the raster rungs and CASE-0100 stands at effect-witness, and `capture-lineage
 ## Registry
 
 REQ-111, REQ-112, REQ-113 · CASE-0472 to CASE-0480 · SURF-027 · DEF-218 to DEF-225.
+
+## Verification — 2026-08-23, `Needs More Work` on one claim, then corrected
+
+Every gate reads as claimed and the disposition work is sound. The verdict turned on the item's
+**mechanism** finding, which was false in the direction that matters, and it is corrected above.
+
+`capture-lineage.py --gate` **0** on head against **2** at merge base, same 43 files / 8 published /
+judged 6 of 8 / ratchet 6. `shot_disposition.py` **0** over 43 images with 4 byte-identical groups.
+`defect_gate.py` claims **0** and dropped **0** (120 merges, 55,908 pairs), **2** bare.
+`test_instruments.py` **0**. `spec_citation_measure.py` **0**. `campaign.py check` **1** on head and
+base with identical blocker sets, the diff five count lines. `./scripts/test.sh` **0** at 2,074 tests in
+252 suites — the baseline exactly. `capture-lineage.py` is md5-identical across test-campaign 0.9.6 and
+0.9.9, so no further tool movement is pending on this gate. Five mutations re-applied, each confirmed
+landed before its verdict was read, each restored.
+
+### The mechanism was dead code, and that is worse than no row
+
+`build_test_campaign.py` **will not do it again.** Line 26 is a module-level `sys.exit()`, and lines
+282-296 sit inside a retired-original raw string; an AST parse finds no `src_assets` assignment and no
+loop over one. This spec, DEF-218's note and `ORCHESTRATOR.md` all stated the mechanism in the present
+tense and named removal of the copy list as the repair — **directing future work at dead code**, so
+somebody would have deleted a retired docstring and recorded a fix.
+
+The live falsehood is one line up, in that retirement docstring: *"Every one of those files has been
+replaced by the output of a real tool call."* Nine were not. That sentence is what a check could read,
+and it is why the mechanism looked live: the file says the problem was already fixed.
+
+### Two judgements upheld
+
+**Publishing nothing was right.** `target` is a claim about what the capture channel was pointed at,
+not a caption. Inspection settles the *subject* and cannot settle the *target* —
+`overlay-capture-lifted.json` records bounds, layer 25, `sharingState 1`, 704x460 and 2,517 colours,
+and no window id. So even for `surf-004-run-hud.png`, confirmed by eye to be the Run HUD, a target
+written now would be invention. The accepted cost is that raster coverage reads lower than the disk
+supports, and the proper route (`capture_with_manifest.py`) is named and rowed.
+
+**No verdict is void.** The concern was that `raster-visual` passes were standing on pictures of the
+wrong thing. They are not: the three cited pictures each depict their named subject on inspection, and
+each carries `capture.method` and `frameStatus: complete`. CASE-0028 and CASE-0029 are `outcome` cases
+resting on sweep JSON that exists, with CASE-0028's Ready frame as its own control; CASE-0100 is
+`effect-witness` on two JSONs that exist. Every case's oracle rung is intact — **the faults are
+citations, and citation repair is not a status change.** DEF-224 and DEF-225 were the right disposition.
+
+### A control the item lacked, which strengthens DEF-221
+
+`sweepK-theme-before` against `-restored` — the same appearance, re-taken — differ in **1,046 pixels**.
+So this pipeline does not emit byte-identical re-takes, and three identical frames across two unrelated
+sweeps is **reuse rather than determinism**. That closes the one benign reading the finding had.
+
+### The lane failed, so this item has no out-of-family verdict
+
+Gemini refused twice — from `/tmp` with a fresh project and from an empty directory — with
+`user denied permission` on its own `git branch -a` and `find` probes, returning 0 bytes. grok is at
+402; codex is off. The fallback to `claude-fable-5` is same-family and, worse, **it read the merge base
+rather than the branch**, describing `captures.json` as 405 lines with no `unpublishedReason`, which is
+exactly the base — so its verdict was off-tree and discarded. Two tree-independent readings in it were
+worth keeping: it overturned the verifier's own first reading of the retirement, and its
+translucent-shield rebuttal was wrong, conflating the empty frames with the real shield.
+
+**So this item is verified in-family only, and that is a logged downgrade rather than a pass.** It is a
+direct consequence of leaving the lane's permissions flag unsettled, which is the reader's call and is
+recorded rather than worked around.
+
+### Four smaller findings, routed
+
+- **DEF-226**, opened here: `shot_disposition.py --write` adopts any new content as the baseline. A flat
+  magenta frame written over `surf-007-zoom.png` took the check to 1, and `--write` returned it to 0
+  with the row keeping `publishedAs: SURF-007` and recording `distinctRGBA: 1` — a single-colour frame
+  among the six judged. DEF-207's shape one level on.
+- **DEF-225's repair is one line** and the row now says so:
+  `step-a3-walkthrough-primary-disabled.png` exists and is published.
+- The eight published files carry `depicts: null`; the read-by-eye record covers only the 35, and the
+  eight are exactly what the ratchet pins.
+- `sweepL-halfopen.json` cites a `statusShot` under `/tmp/campaign-run/` with no counterpart in
+  `evidence/`, which no gate reads. CASE-0479 and CASE-0480 carry `armed: false` without the in-note
+  declaration the other unarmed new cases have.
