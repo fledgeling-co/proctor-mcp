@@ -5863,5 +5863,36 @@
     "armed": true,
     "armedBy": "Both runners driven from one fixture, which is the arming rather than a description of it. `main`'s runner and this one were each given a suite runner returning green for the baseline and a timeout for the mutant, over the same real tracked file. Before: `verdict=killed scored=1 survivalRate=0.0`. After: `verdict=TIMEOUT scored=0 timedOut=1 survivalRate=None`. A genuine failure is unchanged in both, so the change is not simply relabelling every red run. The pre-change source is matched by a marker string before it is trusted, and both runs left the tree clean.",
     "note": "The instrument fault DEF-033 was measured through. A run that reached the bound was scored KILLED, which is the direction that flatters the suite: starvation can turn a survivor into a false kill and can never turn a kill into a false survivor. PRO-0080's first ProctorAgent sample carried two at exactly 600.0s under a load average of 271, and the reported rate was 79.2% where the honest one was 86.4% — a reader of the summary alone had no way to tell them from the three real kills. TIMEOUT is now its own verdict, counted apart and left out of the survival-rate denominator, and every scored mutant within 2% of the bound is named in the summary."
+  },
+  {
+    "id": "CASE-0468",
+    "req": "REQ-110",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0092/mutation-agent-pro0092.json",
+      "docs/test-campaign/evidence/PRO-0092/mutation-agent-pro0092.txt",
+      "docs/test-campaign/evidence/PRO-0092/machine-readings.json"
+    ],
+    "armed": true,
+    "armedBy": "The runner's own three safety rules are the arming for the measurement's integrity rather than for its value: it refused to start until `git status` was clean, ran a green baseline before mutating anything, and reported `tree clean after: True` at the end. The instrument's new verdict is armed separately at CASE-0467. What makes THIS reading trustworthy in the direction that matters is that no mutant reached the bound and none came near it — the longest was 31.9s of a 600s bound, `nearBound` is empty, and `timedOut` is 0 — so no verdict here is a starved run wearing a kill.",
+    "note": "The re-measurement DEF-033 asked for. 24 mutants over 3,158 sites across the same 84 ProctorAgent files, seed 20260823 against PRO-0080's 20260821, so the two mutant sets are disjoint and this measures the package rather than the tests written for the first sample. 20 SURVIVED, 4 killed, 0 unbuildable, 0 TIMEOUT. Survival 20/24 = 83.3% against DEF-033's 19/22 = 86.4%.\n\nTHE TWO ARE WITHIN ONE MUTANT OF EACH OTHER. One mutant is 4.2 points at n=24, so a 3.1-point move is smaller than the resolution of either sample, and the package-level rate has not been shown to move. That is the arithmetic rather than a hedge: ten survivors killed out of a pool of 3,158 sites is 0.3% of the surface, and killing ten named sites cannot move a rate sampled at random from the other 3,148.\n\nThe pool moved from 3,189 to 3,158 sites over the same 84 files, which is the package changing between the two waves rather than a different target set — the file lists are identical.\n\nSurvivors spread over 17 distinct files with no file carrying more than three, so 'no seam' is a property of the package rather than of the seven files PRO-0080's seed happened to hit.\n\nMACHINE, both ends and every 45 seconds between. Before: load per core 4.681, 3.373, 2.566 with pressure critical then tight then tight, and thermal limited (held 1,611s and 1,643s) then not_limited (held 0s). After: 0.677, 0.819, 1.136, pressure healthy then busy, thermal limited throughout. During: 14 samples, load per core 0.542 to 1.894, thermal flipping five times — limited, not_limited, limited, not_limited, limited — while load never moved more than 1.4 per core. Every one of the 24 was scored inside that window, and none of them near the bound, so no mutant needs reporting apart."
+  },
+  {
+    "id": "CASE-0469",
+    "req": "REQ-108",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0092/fresh-sample-attribution.txt",
+      "docs/test-campaign/evidence/PRO-0092/mutation-agent-pro0092.json"
+    ],
+    "armed": true,
+    "armedBy": "The fresh seed armed it rather than this item. `Dispatch.swift:244`, `args.bool(\"normalize\", true)` mutated to `false`, was chosen by seed 20260823 out of 3,158 sites and scored `killed` in the sample. Re-applied afterwards to attribute the kill: `dispatchDefaultsAgreeWithTheCatalogue` exits 1 with `[\"proctor_capture.normalize decodes false, the schema says true\"]`, and the mutation was confirmed landed before the verdict was read.",
+    "note": "The case for closing a class rather than nine instances. The agreement check was written for two named survivors of the FIRST sample and it killed a third mutant in the SECOND, at a decode site nobody had looked at, under a seed the item never saw. 34 decode sites in Dispatch.swift are now defended by one check where a per-site test would have defended two.\n\nWhat it does not say: 34 of 3,158 sites is 1.1% of the pool, so this is a class closed rather than the package covered."
   }
 ]
