@@ -3996,5 +3996,122 @@
     "defects": [
       "DEF-164"
     ]
+  },
+  {
+    "id": "CASE-0330",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "defects": [
+      "DEF-172"
+    ],
+    "evidence": [
+      "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0099/witness-arming.txt",
+      "docs/test-campaign/evidence/PRO-0099/diversion-positive.txt",
+      "docs/test-campaign/evidence/PRO-0099/sabotage-production-unchanged.txt",
+      "docs/test-campaign/evidence/PRO-0099/operator-census-after.tsv"
+    ],
+    "armed": true,
+    "armedBy": "The interlock disabled at source \u2014 'guard TestProcess.isActive else {' and 'guard AuditLog.isTestProcess else {' replaced with 'guard false else {' in all three writers at once, which is exactly the state the tree was in before this item. The claim assertions, copied verbatim into a probe, then failed six times, each naming the operator's real path \u2014 recorded in docs/test-campaign/evidence/PRO-0099/witness-arming.txt. LIMIT, recorded rather than glossed: only the PATH half is armed this way. The positive arm (the switch save, the maestro run directory, the device-frame directory) is NOT run under sabotage, because under sabotage it would write the operator's real settings.json, create a run directory in the operator's maestro root and create the operator's captures directory \u2014 the act REQ-055 forbids. The positive arm stands on its own readback through the product's loader plus CASE-0272, which proves the same reader can see a file written one directory down.",
+    "note": "The sharpest of the four in this sweep. SwitchStore.defaultURL is the FOURTH static computing a path under the operator's application-support root with no injection seam, after PolicyStore (DEF-042/110), the capture directory (DEF-142) and FlowStore (DEF-164) \u2014 and the first found by sweeping the class rather than by accident. AgentModel saves through it whenever a switch is toggled and Session.doctor and the agent's main.swift LOAD through it, so before this a suite that reached it changed what the agent is allowed to do on the machine of whoever ran the tests. Both halves measured on one run: the operator's root byte-identical (0 of 3,330 files changed) and settings.json present in proctor-test-settings-<pid> under $TMPDIR. There is no settings.json under the operator's root on this machine at all \u2014 the settings/ directory exists and is empty \u2014 so the interlock prevented a CREATION rather than an overwrite, which would have handed the agent a saved switch set the operator never chose."
+  },
+  {
+    "id": "CASE-0331",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "defects": [
+      "DEF-173"
+    ],
+    "evidence": [
+      "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0099/witness-arming.txt",
+      "docs/test-campaign/evidence/PRO-0099/diversion-positive.txt",
+      "docs/test-campaign/evidence/PRO-0099/sabotage-production-unchanged.txt",
+      "docs/test-campaign/evidence/PRO-0099/operator-census-after.tsv"
+    ],
+    "armed": true,
+    "armedBy": "The interlock disabled at source \u2014 'guard TestProcess.isActive else {' and 'guard AuditLog.isTestProcess else {' replaced with 'guard false else {' in all three writers at once, which is exactly the state the tree was in before this item. The claim assertions, copied verbatim into a probe, then failed six times, each naming the operator's real path \u2014 recorded in docs/test-campaign/evidence/PRO-0099/witness-arming.txt. LIMIT, recorded rather than glossed: only the PATH half is armed this way. The positive arm (the switch save, the maestro run directory, the device-frame directory) is NOT run under sabotage, because under sabotage it would write the operator's real settings.json, create a run directory in the operator's maestro root and create the operator's captures directory \u2014 the act REQ-055 forbids. The positive arm stands on its own readback through the product's loader plus CASE-0272, which proves the same reader can see a file written one directory down.",
+    "note": "maestroDebugDirectory(run:) creates its directory unconditionally on every call and runFlow calls it once per run, so a suite that reached a maestro run left a run-<stamp>-<n>-<salt> directory in the operator's own tree and Maestro then wrote its per-command records into it. The whole-root census could NOT have caught this on its own: it counts `find -type f`, and an empty run- directory is invisible to it. So the operator's maestro root was read directly \u2014 17 stray run- directories, newest 2026-08-20 12:31, and `find -maxdepth 1 -type d -newermt \"2026-08-22 13:00\"` returns nothing across both full runs. The 17 strays are left where they are; deleting them is the act REQ-055 forbids."
+  },
+  {
+    "id": "CASE-0332",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "defects": [
+      "DEF-174"
+    ],
+    "evidence": [
+      "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0099/witness-arming.txt",
+      "docs/test-campaign/evidence/PRO-0099/diversion-positive.txt",
+      "docs/test-campaign/evidence/PRO-0099/sabotage-production-unchanged.txt",
+      "docs/test-campaign/evidence/PRO-0099/operator-census-after.tsv"
+    ],
+    "armed": true,
+    "armedBy": "The interlock disabled at source \u2014 'guard TestProcess.isActive else {' and 'guard AuditLog.isTestProcess else {' replaced with 'guard false else {' in all three writers at once, which is exactly the state the tree was in before this item. The claim assertions, copied verbatim into a probe, then failed six times, each naming the operator's real path \u2014 recorded in docs/test-campaign/evidence/PRO-0099/witness-arming.txt. LIMIT, recorded rather than glossed: only the PATH half is armed this way. The positive arm (the switch save, the maestro run directory, the device-frame directory) is NOT run under sabotage, because under sabotage it would write the operator's real settings.json, create a run directory in the operator's maestro root and create the operator's captures directory \u2014 the act REQ-055 forbids. The positive arm stands on its own readback through the product's loader plus CASE-0272, which proves the same reader can see a file written one directory down. AND WATCHED FAILING A SECOND TIME WITHOUT SABOTAGE: this case's first draft asserted the frame name contained the udid verbatim and went red on 'ios-pro-0099-before-...png'. That was the assertion being wrong, not the product \u2014 deviceFramePath names a frame ios-<first 8 of the udid, lowercased>-<label>-<stamp>-<salt> \u2014 and the assertion now asserts that spelling.",
+    "note": "The half of DEF-142 left open. DEF-142 closed CaptureEngineImpl.defaultCaptureDirectory, the Mac lane into the operator's captures directory, and left the iOS lane writing into the SAME directory: deviceFramePath creates it unconditionally and three callers \u2014 a screenshot with no path, a settle sample and a maestro before/after frame \u2014 write a PNG to the name it returns. It diverts to CaptureEngineImpl.testFallbackCaptureRoot rather than to a root of its own, because in production the two land in the same directory and a diverted pair that did not would be a difference the test process invented."
+  },
+  {
+    "id": "CASE-0333",
+    "req": "REQ-085",
+    "surface": "SURF-012",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/operator_path_gate.py",
+      "scripts/campaign/operator_paths.json",
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0099/gate-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Both directions on fixture trees in test_instruments.py, in one run: a Sources/ file declaring NewStore.defaultURL under the operator root with NO manifest entry produces exactly one finding naming 'NewStore.defaultURL', and the same tree with an entry produces none. This is the check the class exists for \u2014 a NINTH un-seamed operator path fails here rather than being found weeks later by accident.",
+    "note": "The census half of operator_path_gate.py. Every non-comment line in Sources/ naming a path under the operator's application-support root must map to an entry in operator_paths.json. On this tree: 12 sites, 14 classed, exit 0."
+  },
+  {
+    "id": "CASE-0334",
+    "req": "REQ-085",
+    "surface": "SURF-012",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/operator_path_gate.py",
+      "scripts/campaign/operator_paths.json",
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0099/gate-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Five trip/clear fixture pairs in test_instruments.py, all in one run: a writer-seam whose body carries no test-process predicate is refused and the same body carrying one clears; an operator-accessor whose seam does not branch is refused; a seam that branches but never returns the truthful accessor is refused; another file reaching the truthful accessor around its seam is refused; and a bare ProctorReflector.start() under Tests/ is refused while the same call with an explicit path clears. A predicate named only in a doc comment cannot satisfy a seam \u2014 code_only() drops comment lines before matching.",
+    "note": "The seams half. Each manifest entry's own requirement by class: operator-accessor needs a seam that branches, returns it, and is not bypassed elsewhere in Sources/; writer-seam needs the predicate in its own body; parameterised needs the named parameter really in its signature; socket and prose need a reason and no seam."
+  },
+  {
+    "id": "CASE-0335",
+    "req": "REQ-085",
+    "surface": "SURF-012",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "defects": [
+      "DEF-170",
+      "DEF-171"
+    ],
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "scripts/campaign/operator_path_gate.py",
+      "docs/test-campaign/evidence/PRO-0099/gate-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The regression fixture IS the arming, and it reproduces the shape both bugs came from: an outer type declaring a member, and a nested type that CLOSES above the site declaring a member of the same name. Watched in both directions \u2014 census_sites resolves the operator literal to 'AuditLog.directory' (with the bug it resolved to 'Seams.directory'); the manifest entry naming the containing type clears while the entry naming the closed nested type is refused; declaration_body('AuditLog.directory') returns a body containing the predicate (with the bug it returned Seams' unguarded stored property); and the same fixture with the predicate stripped from the writer goes red.",
+    "note": "The gate's own name resolution, which arming found broken in two places before the gate had ever been trusted. Both bugs were FALSE REDS \u2014 the direction that gets argued away rather than fixed \u2014 and both were in PolicyStore.swift, whose AuditLog encloses a 'final class Seams' declaring 'directory' alongside AuditLog's own 'directory'."
   }
 ]

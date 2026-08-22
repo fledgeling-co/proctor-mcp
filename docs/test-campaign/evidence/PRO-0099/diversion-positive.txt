@@ -1,0 +1,64 @@
+PRO-0099 — the diversion proved positively, not only as an absence
+==================================================================
+
+WHY THE ABSENCE IS NOT ENOUGH. A sweep of the operator's root reporting zero
+changed cannot tell a diverted write from a write that never happened. DEF-164's
+verifier settled that by showing the same filenames appearing under
+`proctor-test-flows-*`, and this does the same for the three writers converted
+here: absence under the operator's root, presence under the diverted one, from
+the same run.
+
+RUN: ./scripts/test.sh  (whole suite, the finished tree)         2026-08-22 14:1x
+     PASS: Test run with 2031 tests in 246 suites passed after 32.868 seconds.
+     exit 0, read from the script into a file rather than through a pipe
+
+THE ABSENCE. Census of ~/Library/Application Support/app.fledgeling.procter
+either side of that run — sha256, size, mtime per file:
+
+     files swept: 3330      files changed: 0
+
+The population is stated rather than implied: 3,330 regular files, and the diff
+of the before/after censuses is empty.
+
+THE PRESENCE. The diverted roots this run created, named for the suite's own pid
+(28728), under NSTemporaryDirectory() — which on macOS is $TMPDIR
+(/var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/), NOT /tmp. The brief asked for
+`proctor-test-*` in /tmp; that is where they would be on a platform whose
+temporary directory is /tmp, and the paths below are the same names in the place
+this platform actually puts them:
+
+  proctor-test-settings-28728/settings.json            the operator's settings
+                                                       FILENAME, diverted
+  proctor-test-maestro-28728/run-1787371900355-1-7063  the per-run debug directory
+  proctor-test-captures-28728/                         the captures directory the
+                                                       iOS device-frame lane makes
+
+Reproduced across all three full runs of this work, each with its own pid:
+
+  pid 62249  proctor-test-settings-62249/settings.json
+             proctor-test-maestro-62249/run-1787371082481-1-1ace
+             proctor-test-captures-62249/win-1-zoom-*.png
+  pid 77933  the same three
+  pid 28728  the same three, listed above
+
+WHAT THE OPERATOR'S OWN ROOT HOLDS INSTEAD, checked directly because the census
+counts `find -type f` and an EMPTY directory is invisible to it — so a stray
+`run-` directory in the operator's maestro root would not have shown in the zero
+above:
+
+  settings/            exists, EMPTY. There is no settings.json on this machine at
+                       all, so the interlock prevented a CREATION rather than an
+                       overwrite: without it the suite would have handed the agent
+                       a saved switch set the operator never chose. (The directory
+                       itself is created by scripts/install.sh's mkdir -p.)
+  maestro/             17 `run-*` directories, newest 2026-08-20 12:31. None
+                       created on 2026-08-22 — checked with
+                       `find -maxdepth 1 -type d -newermt "2026-08-22 13:00"`,
+                       which returns nothing.
+  captures/            newest file 2026-08-22 11:55, from a run before this work.
+
+THE STRAYS STAY. The 17 maestro run directories, the four zoom PNGs and the two
+flow files already under the operator's root were written by earlier runs, before
+these interlocks existed. They are left exactly where they are: deleting them is
+the act REQ-055 forbids, and PRO-0098 and DEF-164 recorded the same reasoning
+rather than tidying.

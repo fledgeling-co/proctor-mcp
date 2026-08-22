@@ -1,0 +1,70 @@
+PRO-0099 — production path resolution proved unchanged by forcing the else branch
+=================================================================================
+
+THE METHOD, AND WHY IT IS NOT A DIFF. Reading the diff proves the literal was
+moved into an `operator…` accessor. It does not prove that production still
+REACHES that accessor. DEF-164's verifier established the standard used here:
+disable the predicate at source so the else branch — the production branch — is
+the one that executes inside a test process, then read the resolved path back and
+compare it character for character with the literal the pre-change code resolved.
+
+THE SABOTAGE. The three interlocks added by this item, each rewritten in place:
+
+  Sources/ProctorCore/SwitchStore.swift:126
+    guard TestProcess.isActive else { return operatorURL }
+    → guard false else { return operatorURL }
+
+  Sources/ProctorAgent/Session/SessionMaestro.swift:443
+    guard AuditLog.isTestProcess else { return operatorMaestroDirectory }
+    → guard false else { return operatorMaestroDirectory }
+
+  Sources/ProctorAgent/Session/SessionIOSProcess.swift:231
+    guard AuditLog.isTestProcess else { return operatorDeviceFrameDirectory }
+    → guard false else { return operatorDeviceFrameDirectory }
+
+The probe (Tests/ProctorAgentTests/PRO0099SabotageProbe.swift) was temporary and
+was deleted after this run; the three sources were restored from a byte copy
+taken before the edit and re-checked with `grep -rn "guard false else" Sources/`,
+which reports nothing.
+
+THE ASSERTION THAT MAKES THE REST MEAN ANYTHING is the first line of output.
+`TestProcess.isActive` is TRUE — the process really is a test runner — and the
+paths below still resolve to the operator's own. That rules out the reading where
+the sabotage appeared to work only because the predicate happened to be false.
+
+RUN: ./scripts/test.sh --filter pro0099SabotageResolvedPaths     2026-08-22 13:49
+
+PRO0099-PROBE predicate.isTestProcess = true
+PRO0099-PROBE switch.resolved   = /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/settings/settings.json
+PRO0099-PROBE switch.prechange  = /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/settings/settings.json
+PRO0099-PROBE maestro.resolved  = /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/maestro
+PRO0099-PROBE maestro.prechange = /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/maestro
+PRO0099-PROBE frames.resolved   = /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures
+PRO0099-PROBE frames.prechange  = /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures
+
+PASS: Test run with 1 test in 1 suite passed after 0.080 seconds.
+
+Each `resolved` line is byte-equal to the `prechange` line beside it. The
+pre-change literals were reconstructed independently in the probe rather than
+read from the new accessors: `SwitchStore` from `Wire.bundleIdentifier` under
+`homeDirectoryForCurrentUser`, exactly as the pre-change `url(home:)` composed it;
+`maestro` and `captures` as the hardcoded strings the pre-change bodies held.
+
+THE RUN WROTE NOTHING. A census of the operator's root either side of the
+sabotaged run reports one file changed, `audit/audit.jsonl`, and it is NOT this
+suite's:
+
+  - the append is stamped 13:49:59, six seconds AFTER this run's verdict at
+    13:49:53;
+  - the installed agent (pid 52976, /Applications/Proctor.app/Contents/MacOS/
+    proctor-agent) is live on this machine and is what appends sealed records to
+    that trail;
+  - the audit interlock was NOT among the three sabotaged, and `AuditLog.append`
+    carries a second guard (`!isTestProcess || seams.directory != nil`) that was
+    untouched;
+  - the predecessor's full 2,028-test baseline run left the same file
+    byte-identical, so a 1-test probe that reads three strings did not write 2KB
+    of sealed records to it.
+
+Recorded rather than tidied away: a whole-root census cannot attribute a change
+to the suite while the operator's own agent is running against the same trail.
