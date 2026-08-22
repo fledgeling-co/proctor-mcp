@@ -284,6 +284,171 @@ struct OperatorFilesWitnessTests {
         #expect(recorded.lastPathComponent == "login-flow.json")
     }
 
+    // MARK: CASE-0330 — the operator's own settings, the sharpest of the sweep
+
+    @Test("an un-pathed switch save lands outside the operator's root, and the settings file appears in the diverted one")
+    func anUnpathedSwitchSaveIsRedirected() throws {
+        // PRO-0099, DEF-172. FOUND BY SWEEPING THE CLASS rather than by the
+        // witness above, which is the whole argument for the sweep: the policy
+        // store, the captures and the flows were each found weeks after they
+        // started writing, and this one carries more of the operator's state than
+        // any of them. `AgentModel` saves through `SwitchStore.defaultURL`
+        // whenever a switch is toggled, and `Session.doctor` and the agent's own
+        // `main.swift` LOAD through it — so before this, a suite that reached that
+        // path changed what the agent is allowed to do on the machine of whoever
+        // ran the tests, and the suite's doctor report depended on the switches
+        // that person happened to have saved.
+        //
+        // `url(home:)` and `directory(home:)` are untouched and still take the
+        // root as a parameter. This is the floor under the callers that name
+        // nothing.
+        #expect(!SwitchStore.defaultURL.path.hasPrefix(operatorRoot.path),
+                "an un-pathed switch save lands under the operator's root: \(SwitchStore.defaultURL.path)")
+        #expect(SwitchStore.defaultURL.path.hasPrefix(SwitchStore.testFallbackRoot.path))
+        #expect(SwitchStore.defaultURL.lastPathComponent == "settings.json")
+
+        // PRODUCTION UNCHANGED, read back rather than diffed. The truthful
+        // accessor is the pre-change body verbatim, so it is compared character
+        // for character with the literal the pre-change `defaultURL` resolved to.
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        let preChange = home
+            .appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)/settings",
+                                    isDirectory: true)
+            .appendingPathComponent("settings.json", isDirectory: false)
+        #expect(SwitchStore.operatorURL.path == preChange.path,
+                "the operator path moved: \(SwitchStore.operatorURL.path) != \(preChange.path)")
+        #expect(SwitchStore.operatorURL.path.hasPrefix(operatorRoot.path + "/"))
+
+        // THE POSITIVE ARM. Absence under the operator's root cannot tell a
+        // diverted write from a write that never happened, so the same call
+        // `AgentModel` makes is made here and the file is found in the diverted
+        // root — with the operator's own swept either side of it.
+        let operatorBefore = DirectoryWitness.read(operatorRoot)
+        #expect(operatorBefore.rootExists,
+                "the operator's root is not there, so its zero is structural rather than measured")
+        #expect(operatorBefore.files.count >= 1,
+                "the sweep found 0 files under the operator's root: a zero out of nothing")
+
+        var saved = SavedSwitches()
+        saved.set(SwitchCatalogue.hud, on: true)
+        try SwitchStore.save(saved, to: SwitchStore.defaultURL)
+
+        // The diverted root holds a `settings.json`, by the same reader that
+        // reports zero for the operator's. What is asserted about it is that it
+        // is a real settings file the product's own loader can read back — not
+        // that it holds the value written, which would be the test agreeing with
+        // itself. Whether the write LANDED is the claim, and the operator's root
+        // is swept for the same filename below.
+        let diverted = DirectoryWitness.read(SwitchStore.testFallbackRoot)
+        #expect(diverted.files.keys.contains("settings.json"),
+                "the save reached neither root, so the operator's zero is a no-op rather than a diversion")
+        #expect(SwitchStore.load(from: SwitchStore.defaultURL).values.isEmpty == false,
+                "the diverted file is not a settings file the agent could load")
+
+        let touched = DirectoryWitness.changed(from: operatorBefore,
+                                               to: DirectoryWitness.read(operatorRoot))
+        #expect(touched.isEmpty,
+                "an un-pathed switch save changed \(touched.count) file(s) under the operator's root: \(touched)")
+    }
+
+    // MARK: CASE-0331 — the maestro debug root, which creates a directory per run
+
+    @Test("an un-pathed maestro run lands outside the operator's root, and its run directory appears in the diverted one")
+    func anUnpathedMaestroRunIsRedirected() throws {
+        // PRO-0099, DEF-173. `maestroDebugDirectory(run:)` creates its directory
+        // unconditionally on every call and `runFlow` calls it once per run, so a
+        // suite that reached a maestro run left a `run-<stamp>-<n>-<salt>`
+        // directory in the operator's own tree and Maestro then wrote its
+        // per-command records into it.
+        #expect(!Session.maestroDebugRoot.hasPrefix(operatorRoot.path),
+                "an un-pathed maestro run lands under the operator's root: \(Session.maestroDebugRoot)")
+        #expect(Session.maestroDebugRoot.hasPrefix(Session.testFallbackMaestroRoot))
+
+        // PRODUCTION UNCHANGED. The pre-change body was a literal, so it is
+        // spelled here as a literal and compared character for character.
+        let preChange = NSHomeDirectory()
+            + "/Library/Application Support/app.fledgeling.procter/maestro"
+        #expect(Session.operatorMaestroDirectory == preChange,
+                "the operator path moved: \(Session.operatorMaestroDirectory) != \(preChange)")
+        #expect(Session.operatorMaestroDirectory.hasPrefix(operatorRoot.path + "/"))
+
+        // THE POSITIVE ARM: the call creates a run directory, and it is in the
+        // diverted root rather than the operator's.
+        let operatorBefore = DirectoryWitness.read(operatorRoot)
+        #expect(operatorBefore.files.count >= 1,
+                "the sweep found 0 files under the operator's root: a zero out of nothing")
+
+        let run = Session.maestroDebugDirectory(run: 1)
+        #expect(run.hasPrefix(Session.testFallbackMaestroRoot + "/"))
+        var isDirectory: ObjCBool = false
+        #expect(FileManager.default.fileExists(atPath: run, isDirectory: &isDirectory),
+                "the run directory was not created anywhere, so the operator's zero is a no-op")
+        #expect(isDirectory.boolValue)
+        #expect(URL(fileURLWithPath: run).lastPathComponent.hasPrefix("run-"))
+
+        let touched = DirectoryWitness.changed(from: operatorBefore,
+                                               to: DirectoryWitness.read(operatorRoot))
+        #expect(touched.isEmpty,
+                "an un-pathed maestro run changed \(touched.count) file(s) under the operator's root: \(touched)")
+    }
+
+    // MARK: CASE-0332 — the iOS device frame, the half of DEF-142 left open
+
+    @Test("an un-pathed device frame lands outside the operator's root, and its directory appears in the diverted one")
+    func anUnpathedDeviceFrameIsRedirected() throws {
+        // PRO-0099, DEF-174. DEF-142 closed the Mac lane into the operator's
+        // captures directory and left this one open: `deviceFramePath` creates
+        // that same directory unconditionally and returns a name inside it, and
+        // three callers — a screenshot with no path, a settle sample and a maestro
+        // before/after frame — write a PNG to that name.
+        //
+        // It diverts to `CaptureEngineImpl.testFallbackCaptureRoot` rather than to
+        // a root of its own, because in production the two land in the same
+        // directory and a diverted pair that did not would be a difference the
+        // test process invented.
+        #expect(!Session.deviceFrameDirectory.hasPrefix(operatorRoot.path),
+                "an un-pathed device frame lands under the operator's root: \(Session.deviceFrameDirectory)")
+        #expect(Session.deviceFrameDirectory == CaptureEngineImpl.testFallbackCaptureRoot.path)
+
+        // PRODUCTION UNCHANGED, and the same directory the Mac lane names.
+        let preChange = NSHomeDirectory()
+            + "/Library/Application Support/app.fledgeling.procter/captures"
+        #expect(Session.operatorDeviceFrameDirectory == preChange,
+                "the operator path moved: \(Session.operatorDeviceFrameDirectory) != \(preChange)")
+        #expect(Session.operatorDeviceFrameDirectory.hasPrefix(operatorRoot.path + "/"))
+
+        // THE POSITIVE ARM.
+        let operatorBefore = DirectoryWitness.read(operatorRoot)
+        #expect(operatorBefore.files.count >= 1,
+                "the sweep found 0 files under the operator's root: a zero out of nothing")
+
+        let frame = try Session.deviceFramePath(udid: "PRO-0099-witness", label: "before")
+        #expect(frame.hasPrefix(CaptureEngineImpl.testFallbackCaptureRoot.path + "/"))
+        #expect(frame.hasSuffix(".png"))
+        var isDirectory: ObjCBool = false
+        #expect(FileManager.default.fileExists(
+                    atPath: URL(fileURLWithPath: frame).deletingLastPathComponent().path,
+                    isDirectory: &isDirectory),
+                "the captures directory was not created anywhere, so the operator's zero is a no-op")
+        #expect(isDirectory.boolValue)
+
+        // The name a real caller writes, proved to resolve outside the operator's
+        // root — the assertion that would have caught the four zoom PNGs. The
+        // name is `ios-<first 8 of the udid, lowercased>-<label>-<stamp>-<salt>`,
+        // so it is asserted in that spelling rather than in the one the caller
+        // passed: the first draft looked for the udid verbatim and went red on
+        // `ios-pro-0099-before-…`, which is the naming working rather than
+        // failing.
+        #expect(URL(fileURLWithPath: frame).lastPathComponent
+            .hasPrefix("ios-pro-0099-before-"),
+                "the device frame is not named after the udid and label it was given: \(frame)")
+
+        let touched = DirectoryWitness.changed(from: operatorBefore,
+                                               to: DirectoryWitness.read(operatorRoot))
+        #expect(touched.isEmpty,
+                "an un-pathed device frame changed \(touched.count) file(s) under the operator's root: \(touched)")
+    }
+
     // MARK: CASE-0273 — the digest catches what size and mtime miss
 
     @Test("a rewrite of the same length is reported as a change")

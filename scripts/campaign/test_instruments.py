@@ -3,12 +3,16 @@
 
 The instruments that measure this project are measured here, because each of the
 defects below was found by somebody checking a tool rather than reading its
-output. All 15 checks here are watched in both directions — the fixture that
-trips it and the fixture that clears it, in one session, recorded in
+output. Every check here is watched in both directions — the fixture that trips
+it and the fixture that clears it, in one session — so a check that cannot fire
+is distinguishable from a check that found nothing. `main()` prints how many ran,
+so a check that quietly stopped being called shows up in the count rather than in
+nothing at all. The first fifteen were armed at PRO-0091 and recorded in
 `docs/test-campaign/evidence/PRO-0091/instrument-arming.txt` with the mutation
-that armed each one — so a check that cannot fire is distinguishable from a check
-that found nothing. Arming the last seven caught one of them asserting over a
-population of zero, which is the same finding the file was written to close.
+that armed each one; the ones added since carry both fixtures inline. Arming has
+now caught three: one check asserting over a population of zero (PRO-0091) and
+two bare-name collisions in the operator-path gate (PRO-0099, DEF-170/171), and
+all three were found by arming rather than by reading.
 
 `Tests/ProctorCoreTests/CampaignInstrumentTests.swift` runs this file, so
 `./scripts/test.sh` owns the verdict and a red here is a red suite.
@@ -511,13 +515,280 @@ def test_defect_gate_on_this_repository() -> None:
           out.stdout[-800:])
 
 
+# ── PRO-0099: the operator-path gate, and the two bugs arming it found ──────
+#
+# `operator_path_gate.py` refuses a new static that computes a path under the
+# operator's application-support root with no injection seam — the shape behind
+# DEF-042, DEF-142, DEF-164 and the three writers this item converted. It is a
+# gate whose healthy state is silence, so it is exactly the kind that rots into a
+# check that cannot fire.
+#
+# Arming it found two, both bare-name collisions in `PolicyStore.swift`, and both
+# recorded as fixtures below so they cannot come back:
+#
+#   DEF-170  `enclosing_type` took the nearest type indented less than the site
+#            without asking whether that type still CONTAINED it. `final class
+#            Seams` closes 19 lines above the operator literal in
+#            `AuditLog.directory`, so the census attributed the literal to
+#            `Seams.directory`, matched no entry, and reported a classed writer
+#            as an unclassed one. A false RED.
+#   DEF-171  `declaration_body` resolved a dotted name to the FIRST declaration of
+#            that name inside the owning type rather than the owner's own member.
+#            `Seams.directory` — a lock-guarded stored property one level in —
+#            comes first, and its body holds no test-process predicate, so the
+#            gate reported the audit trail's own interlock as a writer with no
+#            branch. Also a false RED, and the direction that gets argued away
+#            rather than fixed.
+#
+# The gate's two modes take `root` and `manifest` as arguments, so both are armed
+# on fixture trees here rather than on this repository, and then run once against
+# the real one.
+
+_OPERATOR_LITERAL = "Library/Application Support/"
+
+
+def _operator_gate():
+    return load(ROOT / "scripts/campaign/operator_path_gate.py", "operator_path_gate")
+
+
+def _operator_tree(tmp: str, files: dict[str, str]) -> Path:
+    root = Path(tmp)
+    for rel, text in files.items():
+        path = root / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text)
+    return root
+
+
+def _operator_manifest(entries: list[dict], guards: dict | None = None) -> dict:
+    return {"root_literal": _OPERATOR_LITERAL,
+            "predicates": ["TestProcess.isActive", "isTestProcess"],
+            "entries": entries,
+            "guards": guards or {}}
+
+
+# The `PolicyStore.swift` shape both bugs came from, reduced to what causes them:
+# a nested type that closes ABOVE the site, declaring a member of the same name as
+# the outer type's own.
+_NESTED_COLLISION = """import Foundation
+
+enum AuditLog {
+
+    final class Seams {
+        private var _directory: URL?
+        var directory: URL? {
+            get { _directory }
+            set { _directory = newValue }
+        }
+    }
+
+    static let seams = Seams()
+
+    static var directory: URL {
+%s        return FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Application Support/example/audit",
+                                    isDirectory: true)
+    }
+}
+"""
+_GUARDED = "        guard !TestProcess.isActive else { return fallback }\n"
+
+
+def test_operator_path_gate_census() -> None:
+    """A new operator path with no entry fails; the same path classed clears."""
+    gate = _operator_gate()
+    source = (
+        "import Foundation\n\n"
+        "public enum NewStore {\n"
+        "    public static var defaultURL: URL {\n"
+        "        home.appendingPathComponent(\n"
+        '            "Library/Application Support/example/settings", isDirectory: true)\n'
+        "    }\n"
+        "}\n"
+    )
+    file = "Sources/ProctorCore/NewStore.swift"
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _operator_tree(tmp, {file: source})
+
+        armed = gate.run_census(root, _operator_manifest([]))
+        check(len(armed) == 1 and "NewStore.defaultURL" in armed[0],
+              "the census refuses a new operator path that is classed nowhere",
+              "\n".join(armed) or "no finding: the census cannot report one")
+
+        entry = [{"file": file, "declaration": "defaultURL", "class": "prose",
+                  "reason": "fixture"}]
+        cleared = gate.run_census(root, _operator_manifest(entry))
+        check(not cleared,
+              "the census clears the same path once it carries an entry",
+              "\n".join(cleared))
+
+
+def test_operator_path_gate_nested_type_collision() -> None:
+    """DEF-170: a type that closed above the site is not the site's owner."""
+    gate = _operator_gate()
+    file = "Sources/ProctorAgent/PolicyStore.swift"
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _operator_tree(tmp, {file: _NESTED_COLLISION % _GUARDED})
+
+        sites = gate.census_sites(root, _OPERATOR_LITERAL)
+        qualified = [q for _, _, _, q, _ in sites]
+        check(qualified == ["AuditLog.directory"],
+              "the census attributes an operator literal to the type that contains it, "
+              "not to a nested type that closed above it",
+              f"resolved to {qualified}")
+
+        # Both directions over one fixture: the entry naming the containing type
+        # clears, and the entry naming the closed nested type does not.
+        right = [{"file": file, "declaration": "AuditLog.directory",
+                  "class": "writer-seam", "reason": "fixture"}]
+        wrong = [{"file": file, "declaration": "Seams.directory",
+                  "class": "writer-seam", "reason": "fixture"}]
+        check(not gate.run_census(root, _operator_manifest(right)),
+              "the census clears a nested-type file classed on its containing type")
+        check(len(gate.run_census(root, _operator_manifest(wrong))) == 1,
+              "the census still refuses that file when the entry names the wrong owner")
+
+
+def test_operator_path_gate_seam_resolution() -> None:
+    """DEF-171: a dotted name resolves to the owner's member, not a nested one."""
+    gate = _operator_gate()
+    file = "Sources/ProctorAgent/PolicyStore.swift"
+    entry = [{"file": file, "declaration": "AuditLog.directory",
+              "class": "writer-seam", "reason": "fixture"}]
+
+    with tempfile.TemporaryDirectory() as tmp:
+        # `Seams.directory` is declared first and carries no predicate. The seam
+        # check must read `AuditLog.directory`, which carries one.
+        root = _operator_tree(tmp, {file: _NESTED_COLLISION % _GUARDED})
+        lines = (root / file).read_text().splitlines()
+        found = gate.declaration_body(lines, "AuditLog.directory")
+        body = "\n".join(found[1]) if found else ""
+        check(found is not None and "TestProcess.isActive" in body,
+              "a dotted name resolves to the owning type's own member rather than "
+              "the first declaration of that name inside it",
+              f"resolved to: {body[:200]}")
+
+        cleared = gate.run_seams(root, _operator_manifest(entry))
+        check(not cleared,
+              "the seam check clears a writer whose own body carries the predicate",
+              "\n".join(cleared))
+
+    with tempfile.TemporaryDirectory() as tmp:
+        # THE ARMING. The same fixture with the predicate removed from the writer,
+        # leaving the nested property untouched, must go red.
+        root = _operator_tree(tmp, {file: _NESTED_COLLISION % ""})
+        armed = gate.run_seams(root, _operator_manifest(entry))
+        check(len(armed) == 1 and "no test-process branch" in armed[0],
+              "the seam check refuses a writer with no test-process branch",
+              "\n".join(armed) or "no finding: the seam check cannot report one")
+
+
+def test_operator_path_gate_accessor_and_guard() -> None:
+    """An operator-accessor needs a seam that branches, returns it, and is not bypassed."""
+    gate = _operator_gate()
+    file = "Sources/ProctorCore/SwitchStore.swift"
+
+    def source(guard: str) -> str:
+        return (
+            "import Foundation\n\n"
+            "public enum SwitchStore {\n"
+            "    public static var operatorURL: URL {\n"
+            "        home.appendingPathComponent(\n"
+            '            "Library/Application Support/example/settings", isDirectory: true)\n'
+            "    }\n\n"
+            "    public static var defaultURL: URL {\n"
+            f"{guard}"
+            "        return testFallbackRoot\n"
+            "    }\n"
+            "}\n"
+        )
+
+    entry = [{"file": file, "declaration": "operatorURL", "class": "operator-accessor",
+              "seamed_by": "defaultURL", "reason": "fixture"}]
+    seamed = "        guard TestProcess.isActive else { return operatorURL }\n"
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _operator_tree(tmp, {file: source(seamed)})
+        cleared = gate.run_seams(root, _operator_manifest(entry))
+        check(not cleared, "a seamed operator-accessor clears", "\n".join(cleared))
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _operator_tree(tmp, {file: source("")})
+        armed = gate.run_seams(root, _operator_manifest(entry))
+        check(len(armed) == 1 and "no test-process branch" in armed[0],
+              "an operator-accessor whose seam does not branch on the test process is refused",
+              "\n".join(armed) or "no finding")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        # The seam branches but never returns the truthful path, so production
+        # would resolve somewhere else.
+        root = _operator_tree(
+            tmp, {file: source("        guard TestProcess.isActive else { return elsewhere }\n")})
+        armed = gate.run_seams(root, _operator_manifest(entry))
+        check(any("never returns" in f for f in armed),
+              "a seam that branches but drops the operator path is refused",
+              "\n".join(armed) or "no finding")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        # And another file reaching the truthful accessor around its seam.
+        root = _operator_tree(tmp, {
+            file: source(seamed),
+            "Sources/ProctorAgent/Bypass.swift":
+                "func save() { try? write(to: SwitchStore.operatorURL) }\n",
+        })
+        armed = gate.run_seams(root, _operator_manifest(entry))
+        check(any("around its seam" in f for f in armed),
+              "a caller reaching the truthful operator path around its seam is refused",
+              "\n".join(armed) or "no finding")
+
+
+def test_operator_path_gate_reflector_guard() -> None:
+    """The `guards` block refuses a bare reflector start under Tests/."""
+    gate = _operator_gate()
+    guards = {"no_bare_reflector_start": {
+        "reason": "fixture", "tree": "Tests", "forbidden": "ProctorReflector.start()"}}
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _operator_tree(tmp, {
+            "Tests/ProctorCoreTests/ReflectorTests.swift":
+                "func test() { ProctorReflector.start() }\n"})
+        armed = gate.run_seams(root, _operator_manifest([], guards))
+        check(len(armed) == 1 and "no_bare_reflector_start" in armed[0],
+              "a bare ProctorReflector.start() under Tests/ is refused",
+              "\n".join(armed) or "no finding")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _operator_tree(tmp, {
+            "Tests/ProctorCoreTests/ReflectorTests.swift":
+                'func test() { ProctorReflector.start(supportDirectory: tmp) }\n'})
+        check(not gate.run_seams(root, _operator_manifest([], guards)),
+              "the same call with an explicit path clears")
+
+
+def test_operator_path_gate_on_this_repository() -> None:
+    """The real thing, both modes, on this tree."""
+    for mode in ("census", "seams"):
+        out = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/campaign/operator_path_gate.py"), mode],
+            capture_output=True, text=True, cwd=ROOT)
+        check(out.returncode == 0,
+              f"operator_path_gate `{mode}` is clean on this tree",
+              (out.stdout + out.stderr)[-800:])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
                test_case_0074_load_matches_its_evidence, test_source_analysis_rung,
                test_seed_strengthen_refuses_a_red_baseline,
                test_defect_gate_claims, test_defect_gate_dropped,
-               test_defect_gate_on_this_repository):
+               test_defect_gate_on_this_repository,
+               test_operator_path_gate_census,
+               test_operator_path_gate_nested_type_collision,
+               test_operator_path_gate_seam_resolution,
+               test_operator_path_gate_accessor_and_guard,
+               test_operator_path_gate_reflector_guard,
+               test_operator_path_gate_on_this_repository):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

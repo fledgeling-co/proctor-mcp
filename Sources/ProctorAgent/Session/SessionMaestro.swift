@@ -421,9 +421,36 @@ extension Session {
         return (canonical, text)
     }
 
-    static func maestroDebugDirectory(run: Int) -> String {
-        let base = NSHomeDirectory()
+    /// The operator's own maestro debug root, always — where a real run's
+    /// artefacts land on a real Mac. Truthful in a test process so a test can
+    /// name the directory it must not touch.
+    static var operatorMaestroDirectory: String {
+        NSHomeDirectory()
             + "/Library/Application Support/app.fledgeling.procter/maestro"
+    }
+
+    /// The maestro debug root this process uses, and the interlock that keeps a
+    /// test process out of the operator's own.
+    ///
+    /// PRO-0099, REQ-055. `PolicyStore.live`'s interlock applied to the fifth
+    /// static computing a path under the operator's Application Support directory
+    /// with no seam. `maestroDebugDirectory` below creates its directory
+    /// unconditionally on every call, and `runFlow` calls it once per run, so a
+    /// suite that reached a maestro run left a `run-<stamp>-<n>-<salt>` directory
+    /// in the operator's own tree — and Maestro then wrote its per-command records
+    /// into it.
+    static var maestroDebugRoot: String {
+        guard AuditLog.isTestProcess else { return operatorMaestroDirectory }
+        return testFallbackMaestroRoot
+    }
+
+    /// Where an un-pathed maestro run lands in a test process. Named for what it
+    /// is, so a stray directory in `/tmp` explains itself.
+    static let testFallbackMaestroRoot = (NSTemporaryDirectory() as NSString)
+        .appendingPathComponent("proctor-test-maestro-\(ProcessInfo.processInfo.processIdentifier)")
+
+    static func maestroDebugDirectory(run: Int) -> String {
+        let base = maestroDebugRoot
         let stamp = Int(Date().timeIntervalSince1970 * 1000)
         let salt = String(UInt32.random(in: 0..<0xFFFF), radix: 16)
         let directory = "\(base)/run-\(stamp)-\(run)-\(salt)"

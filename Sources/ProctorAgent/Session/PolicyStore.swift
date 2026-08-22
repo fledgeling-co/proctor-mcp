@@ -303,24 +303,12 @@ enum AuditLog {
     /// deliberately irreversible and is supposed to be a decision somebody makes.
     /// Relying on every future test remembering `setAuditSink` puts real data one
     /// forgotten line away from a destructive migration, so the floor is here.
-    static var isTestProcess: Bool {
-        let env = ProcessInfo.processInfo.environment
-        // Xcode's XCTest host announces itself in the environment; `swift test`
-        // does not, and runs the suite inside `swiftpm-testing-helper`, so the
-        // host executable is the only thing that identifies it. Checked rather
-        // than assumed: the first version of this looked only for the XCTest
-        // variables, was inert under `swift test`, and the regression test below
-        // is what caught it. The agent's own executable is `proctor-agent` and
-        // matches none of these.
-        let host = (ProcessInfo.processInfo.arguments.first as NSString?)?
-            .lastPathComponent ?? ""
-        return env["XCTestConfigurationFilePath"] != nil
-            || env["XCTestBundlePath"] != nil
-            || host == "swiftpm-testing-helper"
-            || host.hasSuffix(".xctest")
-            || ProcessInfo.processInfo.arguments.contains { $0.hasSuffix(".xctest") }
-            || Bundle.main.bundlePath.hasSuffix(".xctest")
-    }
+    /// PRO-0099: the body moved verbatim to `TestProcess.isActive` in
+    /// `ProctorCore`, and this forwards to it. It moved because `SwitchStore` —
+    /// the fourth static computing an operator path without a seam — lives in
+    /// `ProctorCore` and cannot see `ProctorAgent`. Every caller here, and the
+    /// regression test that guards this name, are unchanged.
+    static var isTestProcess: Bool { TestProcess.isActive }
 
     static var directory: URL {
         if let injected = seams.directory { return injected }
