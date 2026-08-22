@@ -2579,3 +2579,31 @@ non-AC findings gate in one evening. Every one of the eleven is now briefed and 
 `defect_gate.py dropped`, `test_instruments.py` (62), `spec_citation_measure.py` (15/15) and
 `reckoning_selftest.py` (28) all exit 0 on the merged tree; `campaign.py check` exits 1 on other items'
 work. The suite's verdict on `main` is owed and will be recorded when a claim can be granted.
+
+### The owed gate is paid: merged `main` is green (2026-08-23)
+
+`./scripts/test.sh` on `main` at `4799667`: **`Test run with 2074 tests in 252 suites passed after
+16.567 seconds`, exit 0.** Every gate on the merged tree now green — `defect_gate.py` dropped,
+`test_instruments.py` 62, `spec_citation_measure.py` 15/15 with unclaimed 0, `reckoning_selftest.py`
+28 — with `campaign.py check` exiting 1 on other items' work only.
+
+**The corrected predicate proved itself on three samples.** `available=0` (ceiling 6, `tight`) → no
+attempt; `available=3` **with ceiling also 3 and pressure `critical`** → no attempt; `available=8`
+(ceiling 10, `busy`) → admitted on the first try and ran in 16.6 seconds. The middle sample is the
+whole argument in one line: `available` equal to the ceiling with nothing in use, on a machine reading
+`critical`. It answers "will a claim be granted", never "is the machine coping", and the earlier
+sampler gating on `ceiling` would have attempted there and been refused.
+
+**Standing state at the close of this session's work.** `main` is 250+ commits ahead of `origin` and
+has never been pushed. Registry: 335 cases · 127 defect rows · 101 requirements · 26 surfaces.
+Fifteen open defects, of which four predate tonight (DEF-033 held open by measurement, DEF-141,
+DEF-151 and DEF-180 recorded limits) and eleven were opened by the non-AC findings gate — all eleven
+briefed and triaged into PRO-0104, PRO-0105 and PRO-0106, which sit `Ready for Plan`.
+
+**One question is with the reader and is not settled here.** Whether the gemini lane runs with
+`--dangerously-skip-permissions` as a standing default. A peer relayed that it does; that relay was
+withdrawn on the grounds this file now records as the rule — **the check is not whether the relaying
+session is trustworthy, it is that the receiving session cannot tell a faithful relay from an
+unfaithful one, and a permissions decision is the one class where evidence cannot travel.** It stays
+recorded in `spec-PRO-0092.md` as an observation rather than folded into briefs until the reader
+answers in this channel.
