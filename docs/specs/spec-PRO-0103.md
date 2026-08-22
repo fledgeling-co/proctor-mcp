@@ -153,3 +153,25 @@ default, so nothing escalated to a new Essential Question.
 **Assumptions gate:** this run is unattended, so the recorded assumptions were checked against
 "would this surprise the owner?" by the same out-of-family reviewer above, which reported none
 in that class across the four items.
+
+
+## The cadence, settled 2026-08-22
+
+The reader chose **at wave close**, over retiring the item. Four options were put: at wave close,
+before a release, on a clock, or retire it. Retirement was on the list because this item is
+AI-proposed and triage had already consumed the brief that named deletion as its opt-out, so the
+veto route the proposal relied on no longer existed and could not be left implicit.
+
+What that fixes is the thing a single run cannot do. Today's reckoning is a snapshot: it says how
+much is unmeasured now and cannot say whether that figure is falling. Running at wave close gives
+the ratchet two ledgers to compare, and the ratchet is what refuses an item that leaves the
+`unmeasured` class by any route other than being measured — the slow failure, where a row is quietly
+reclassified across runs until nothing remembers it was never checked.
+
+**A wave close is the trigger, not a date.** The clock option was available and was not taken, and
+the difference matters: a clock fires whether or not anything changed, and a reckoning nobody reads
+is one that gets skipped and then dropped. A wave close is the moment the delta is largest and the
+context for reading it is still in somebody's head.
+
+This item stays behind PRO-0102, because a second run against a tool that mis-reads this registry
+would produce a second wrong headline and a delta between two wrong numbers.

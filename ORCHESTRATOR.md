@@ -46,9 +46,16 @@ Superseded 2026-08-14 by the reader's explicit choice. The 2026-08-13 line
   ```
 
   `grok 1.0.3`, logged in to grok.com, `grok-4.6` is the default model. `-p` is single-turn and
-  prints to stdout. An **empty or absent response is a LANE FAILURE, not a pass** — on any failure
-  the gate falls back **in-family with a logged downgrade in the artifact**, never to Codex and
-  never silently skipped.
+  prints to stdout. An **empty or absent response is a LANE FAILURE, not a pass**.
+
+  **Amended 2026-08-22 at the reader's instruction: when grok fails, substitute GEMINI**
+  (`agy --model gemini-3.7-flash-high`) rather than falling back in-family. Grok has been returning
+  `402 Payment Required — Grok Build usage balance exhausted` since 22 Aug, so the in-family
+  fallback had become the normal path and the gate had stopped being out-of-family at all, which is
+  the one property it exists for. The egress widens to a second vendor knowingly: a review packet
+  carries spec prose and whatever files the lane opens, and the audit and key-store seams are still
+  described rather than opened. Codex stays OFF. A substitution is named in the artifact like any
+  downgrade, and never silently skipped.
 - **Executor slices stay in-family.** Grok is seated as the independent *reviewer* only; there is no
   cheap-executor lane on this run.
 - **Egress warning, and it is load-bearing for two items in this wave.** A grok call transmits the
@@ -1881,3 +1888,36 @@ regenerated it.
 **`main`'s working tree is redundant with this branch and was deliberately not committed.** Every
 untracked file there — briefs 58 to 69, `design/surfaces/`, `docs/goals/` — is already here, and the
 staged submodule is here too. Committing it would have duplicated history that then conflicts.
+
+### Wave 16 opened — four items triaged, two reader decisions taken (2026-08-22)
+
+| ID | Item | Status | Lands in |
+|----|------|--------|----------|
+| PRO-0100 | Six repairs whose diagnosis is done | Ready for Plan | this repo |
+| PRO-0101 | A spec says which brief it came from | Ready for Plan | this repo + `fledgeling-plugins` |
+| PRO-0102 | The reckoning tool mis-read this registry | Ready for Plan | `fledgeling-plugins` |
+| PRO-0103 | A reckoning worth comparing against | Ready for Plan | this repo |
+
+**Two corrections triage made to this file's own account.** The registry carries **ten** non-fixed
+defect rows, not the eleven recorded through wave 15 — DEF-033, 140, 141, 151, 162, 163, 165, 175,
+180, 193. And PRO-0102 is **two faults plus a delivery problem**, not three faults: the `tokens()`
+crash is already fixed in the shared source at `81ad488`, and the installed copy at `reckon/1.0.0`
+still carries it because the version never moved.
+
+**PRO-0092 is held, and the reason is the machine rather than the priority.** Its mutation runner
+compiles the whole package per mutant and scores a timeout as a kill, so it needs a quiet host. The
+errand plane — the right berth for exactly this shape — refuses with
+`errand_ticket_unavailable`: the daemon has no `errand.toml` to mint a job-scoped ticket against.
+Local pressure read `tight` on all three axes at dispatch (load 57 at one minute against 299 at
+fifteen, memory 29% free, swap 70.7%, disk 73 GiB but 3.94% of the volume). Starting it here would
+manufacture the same untrustworthy timeout-kills it already carries.
+
+**The egress rule is amended above at the reader's instruction.** Grok has returned
+`402 — usage balance exhausted` since 22 Aug, so the in-family fallback had become the normal path
+and the out-of-family gate had quietly stopped being out-of-family. Gemini substitutes. Codex stays
+OFF.
+
+**PRO-0103's cadence is settled: at wave close.** The clock option was available and was not taken —
+a clock fires whether or not anything changed, and a reckoning nobody reads is one that gets skipped
+and then dropped. Retirement was on the ballot because triage had already consumed the brief that
+named deletion as the proposal's opt-out.

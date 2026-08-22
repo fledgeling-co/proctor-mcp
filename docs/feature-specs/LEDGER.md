@@ -109,4 +109,4 @@
 | PRO-0100 | Six repairs whose diagnosis is done | 2026-08-22 | Ready for Plan |
 | PRO-0101 | A spec says which brief it came from | 2026-08-22 | Ready for Plan |
 | PRO-0102 | The reckoning tool mis-read this registry | 2026-08-22 | Ready for Plan |
-| PRO-0103 | A reckoning worth comparing against | 2026-08-22 | Needs More Info |
+| PRO-0103 | A reckoning worth comparing against | 2026-08-22 | Ready for Plan |
