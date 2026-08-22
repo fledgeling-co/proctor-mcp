@@ -1,0 +1,144 @@
+# ──────────────────────────────────────────────────────────────────────────
+# .warrant/warrant.toml — the only human-signed artifact in this system.
+#
+# What you are signing:
+#
+#   1. For every class below at a tier above 0, a machine may close items in
+#      that class and no person will look at the item.
+#   2. The tolerable error rate in [lot] is the risk you are choosing to run on
+#      the queue, and the sample size it implies is the human time it costs.
+#   3. You are the escalation route. An `inconclusive` verdict, a census class
+#      and every revocation arrive at you by name.
+#   4. You re-sign on the renewal date. A warrant past renewal is not a
+#      warrant, and charter_validate.py exits 2 on one.
+#
+# What signing does not mean: this is not per-item approval, and it is not a
+# claim that the machine has been measured against a human. The tier ladder is
+# climbed on absence of escapes, which grows more convincing with volume and
+# time and never becomes a rate.
+#
+# The signature is the commit. This file is signed when a named person commits
+# it; an agent committing it is not a signature.
+#
+# Drafted by charter_init.py on 2026-08-22T06:55:32.277254+00:00
+# from 24924 file(s) under /Users/lukerhodes/Dev/proctor-mcp, 34 surface(s).
+# Every class starts at tier 0 — advisory. Raising one is a separate evidenced
+# act; see [tiers] and warrant:ratchet.
+# ──────────────────────────────────────────────────────────────────────────
+
+version = "1"
+signed = "2026-08-22"
+renewal = "2027-02-18"
+
+# The named person answerable for every machine-closed item under this warrant.
+# A role with no current holder is a warrant with no signature: name a person.
+[owner]
+name = "Luke Rhodes"
+email = "luke@rhodes.gg"
+
+# One block per defect class. `tier` is the authority the machine holds over the
+# class; `escalation` is where an inconclusive or failed item goes.
+
+# a rendered figure with no provenance token back to its source record
+# a check that cannot fail, a count with no denominator, a gate green over a
+# population it never examined, or an instrument whose zero is structural.
+# Thirty-one of the 110 records on file, the largest class by a wide margin,
+# and the one this project has re-found in nine different disguises.
+[[classes]]
+name = "evidence-integrity"
+tier = 0
+escalation = "owner"
+
+# what a surface draws disagrees with its design of record, or with the value
+# the code says it renders. Includes a branch nothing can reach and a control
+# whose absence nothing catches.
+[[classes]]
+name = "surface-conformance"
+tier = 0
+escalation = "owner"
+
+# the capture path making a claim about a frame it does not have: a transparent
+# frame called complete and trustworthy, an overlay counted excluded against a
+# population nobody counted, a reply a caller cannot read an empty frame out of.
+[[classes]]
+name = "capture-trust"
+tier = 0
+escalation = "owner"
+
+# the product or its own suite touching the state of the machine it runs on —
+# the operator's policy, settings, captures or flows. Found three separate
+# times, each by a different accident rather than by looking.
+[[classes]]
+name = "operator-state"
+tier = 0
+escalation = "owner"
+
+# the queue, the yield and the contention path: a slot held by a dead peer,
+# swallowed input that reports nothing, a cooperative pool starved by work that
+# should not have been on it.
+[[classes]]
+name = "run-lifecycle"
+tier = 0
+escalation = "owner"
+
+# the campaign's own bookkeeping losing or contradicting itself — a merge
+# dropping a value, a note disagreeing with its evidence, a pinned plugin path
+# one update removes.
+[[classes]]
+name = "registry-drift"
+tier = 0
+escalation = "owner"
+
+# how the app is signed, notarised, stapled and packaged. A release that skips
+# notarisation reaches a user as a Gatekeeper block, and ad-hoc signing throws
+# the TCC grants away on the next rebuild.
+[[classes]]
+name = "release-integrity"
+tier = 0
+escalation = "owner"
+
+[lot]
+tolerable_error_rate = 0.05
+risk_limit = 0.05
+# A census class is sampled at 100% whatever tier it holds. evidence-integrity
+# is here because thirty-one of the 110 records on file are that class and it
+# has recurred in nine disguises; operator-state because its failures write to
+# the machine of whoever ran the suite.
+census_classes = ["evidence-integrity", "operator-state", "inconclusive"]
+
+# Entry conditions for the ladder. Counts and windows are risk appetite, not
+# technical facts: too low and the ladder is decoration, too high and nothing
+# ever reaches tier 3.
+[tiers]
+tier1_oracle_coverage_min = 0.95
+tier2_requires_assay_green = true
+tier2_regression_recatch_min = 1.0
+# 200 was the draft default. This project has closed 99 items in fifteen waves,
+# so 200 would put tier 3 out of reach for years and make the ladder decoration.
+# 40 over 90 days is roughly two waves of sustained zero-escape closing.
+tier3_items_closed_min = 40
+tier3_window_days = 90
+tier4_reachable = false
+
+# How old evidence may be before the authority resting on it lapses.
+[staleness]
+calibration_max_days = 30
+snapshot_max_hours = 24
+renewal_window_days = 180
+
+# What the walk found. Informational: no gate reads this section.
+[survey]
+drafted = "2026-08-22T06:56:30.108223+00:00"
+files_seen = 0
+truncated = false
+surface_count = 0
+skipped_dirs = [".cache", ".coverage", ".expo", ".git", ".gradle", ".hg", ".mypy_cache", ".next", ".nuxt", ".nx", ".parcel-cache", ".pnpm-store", ".pytest_cache", ".ruff_cache", ".serverless", ".svn", ".turbo", ".venv", ".vercel", ".warrant", ".yarn", "__pycache__", "android", "build", "coverage", "dist", "env", "ios", "node_modules", "out", "target", "vendor", "venv"]
+count_capture = 0
+count_html_mock = 0
+count_next_page = 0
+count_schema = 0
+count_screen = 0
+count_spec_doc = 0
+count_story = 0
+count_template = 0
+count_test = 0

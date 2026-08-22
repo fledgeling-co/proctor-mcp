@@ -2412,13 +2412,14 @@
     },
     {
       "id": "DEF-099",
-      "status": "open",
+      "status": "fixed",
       "title": "REQ-028 cites a source file the branch under test does not contain",
       "found": "PRO-0088, grounding the brief against the tree",
       "detail": "REQ-028's source field reads 'Sources/ProctorCore/OverlayCapture.swift; RunHUDPanel, TakeoverOverlay and CursorOverlay'. That file does not exist on ai/wave-9. It arrives with commit 15f86ea, which is on main and is not an ancestor of this lineage: git merge-base --is-ancestor 15f86ea HEAD returns non-zero, and main holds 8 commits this branch lacks.\n\nSo the registry described a fix present on one lineage while the lineage under test lacked it, which is how DEF-028 came to be recorded as an unexplained window rather than as a known missing exclusion.\n\nNOT FIXED HERE. It is a registry-wide provenance question about which tree a requirement was written against, and correcting one row would leave the practice in place. Recorded so the eventual merge of main into this lineage resolves CursorOverlay.swift knowingly: main's version wraps the same fix in a PROCTOR_OVERLAY_CAPTURE switch and should win.",
       "surface": "SURF-004",
       "req": "REQ-028",
-      "note": "STILL OPEN BY THIS ITEM'S SCOPE, with what was measured recorded so the next reader does not have to re-measure it (PRO-0097). The condition the row states no longer holds on this branch: `git merge-base --is-ancestor 15f86ea HEAD` returns 0 and Sources/ProctorCore/OverlayCapture.swift is present, arriving with the b49b5a1 merge of main into ai/wave-9. Brief 89 excludes DEF-099 from this item explicitly ('It does not close DEF-099'), so the row is left as it stands rather than flipped on an instruction this item is not the one to reverse. Whoever owns it has the measurement."
+      "note": "STILL OPEN BY THIS ITEM'S SCOPE, with what was measured recorded so the next reader does not have to re-measure it (PRO-0097). The condition the row states no longer holds on this branch: `git merge-base --is-ancestor 15f86ea HEAD` returns 0 and Sources/ProctorCore/OverlayCapture.swift is present, arriving with the b49b5a1 merge of main into ai/wave-9. Brief 89 excludes DEF-099 from this item explicitly ('It does not close DEF-099'), so the row is left as it stands rather than flipped on an instruction this item is not the one to reverse. Whoever owns it has the measurement.",
+      "resolution": "Closed by measurement rather than by work. The premise was that Sources/ProctorCore/OverlayCapture.swift is absent from this lineage because it arrives with 15f86ea on main, which was not an ancestor. main was merged into ai/wave-9 on 2026-08-22 and the file is present; REQ-028's source field now resolves."
     },
     {
       "id": "DEF-100",
@@ -2726,7 +2727,8 @@
       "detail": "PersonInput.isAPerson requires sourcePid == 0, and nothing in this repo can post at pid 0, so the PASSIVE monitor path (ContentionMonitor.considerInput, used when PROCTOR_YIELD_INPUT is on) has no instrument that can exercise it. PRO-0093 changed the block's swallow path and did not touch this one, so REQ-007's inconclusive ceiling stands exactly where it stood. WHAT WOULD SETTLE IT: a physical keypress witnessed by the monitor, or a driver posting at the HID layer rather than through CGEvent - an IOHIDUserDevice virtual keyboard is the candidate that does not need a person in the room. NOT FIXED HERE: this is a measurement Proctor cannot make of itself, not a defect in the yield.",
       "surface": "SURF-005",
       "req": "REQ-007",
-      "note": "Recorded rather than claimed. spec-PRO-0093.md lists it under 'Found and left open'."
+      "note": "Recorded rather than claimed. spec-PRO-0093.md lists it under 'Found and left open'.",
+      "resolution": "Ceiling accepted by the reader, 2026-08-22. PersonInput.isAPerson requires sourcePid == 0 and nothing in this process can post it, so the passive monitor path has no instrument here. The active path is proved. A referral surfaced a third shape neither option carried \u2014 an external USB microcontroller enumerating as a real keyboard, which would give sourcePid == 0 with no driver signing \u2014 and it was weighed and declined against the residual risk. Stays open as a recorded limit, not as work."
     },
     {
       "id": "DEF-152",
