@@ -2135,3 +2135,56 @@ repo, and the detail that decides where an assertion goes is this: **`git init` 
 silent about being ineffective** — exit 0, no output, no `.git` — so a fixture's non-repo-ness is
 undetectable at creation, and any check made after the *next* command is checking a repo that has
 already been written to. PRO-0092's mutation runner is the highest-risk thing here for that shape.
+
+### PRO-0100 merged, verified Done, and the non-AC gate caught two on its first run (2026-08-22)
+
+`main` is at the merge of `ai/pro-0100`. Nothing pushed.
+
+| Gate on the merged tree | Exit |
+|---|---|
+| `./scripts/test.sh` | **0** — *Test run with 2064 tests in 251 suites passed* |
+| `defect_gate.py claims` | **0** — six claimed defects all read `fixed` |
+| `defect_gate.py dropped` | **0** — run after the merge, per the rule three bad registry merges bought |
+| `campaign.py check` | 1, on REQ-007, REQ-024, REQ-086, CASE-0318, CASE-0333–0335 — all other items' |
+
+**Open defects fall from ten to five, and only two of the five are work.** DEF-140, 162, 163, 165, 175
+and 193 are closed. What remains is DEF-033 (PRO-0092's), DEF-141, DEF-151 and DEF-180 (recorded
+limits rather than work), and DEF-200, opened by this merge.
+
+**The verifier re-applied every recorded arming and every one bit**, which is the first item in this
+campaign where that is true of the whole set. CASE-0395 reproduced the contrast DEF-140 exists for: a
+bare unwrap fed a nil printed `Fatal error: Unexpectedly found nil`, `Executed 0 tests, with 0
+failures`, **zero verdict lines** and `FAIL: no swift-testing verdict line`, while the same nil through
+`try #require` produced one verdict line naming the failing test at 30:30. CASE-0394's no-op ticket
+raised four issues over 256 seconds, so the wait does not report success regardless.
+
+**Two findings sat outside the acceptance set, and this is the gate's first real use.** Both were
+given destinations before the merge was recorded rather than after — after is when the ones that
+prompted this gate evaporated:
+
+- **DEF-200**, opened before the merge. CASE-0392 records `armed: false` on the grounds that arming it
+  would mean breaking the design of record; the verifier broke it on a scratch basis anyway and the
+  check reds at line 397. The case is armable and the registry understates its own strength. The flag
+  stays as it is, because the probe left no evidence file and no artifact means no verdict.
+- **A limit on REQ-094.** The three prominence guards partition `Walkthrough.swift` into
+  `[0, PrimaryProminence)` = 0 fills, the branch span = 1, and `[HeroPermRow, EOF)` = 1, so no
+  unbranched `.borderedProminent` can hide anywhere in the file — and they read that one spelling. An
+  accent fill through `.tint` or a `.background` would satisfy all three while destroying the treatment
+  the requirement protects. Nothing draws one today, which is what makes it a limit.
+
+**The three kept unwraps stand, on a narrower reason than "they are safe".** All three stated input
+spaces were verified true in source. What settles it is the clause's own wording: no force-unwrap
+shape may end a run with no verdict line, and a total unwrap cannot. Converting sites 2 and 3 would
+hand a pointer out of `withUnsafeBytes`, trading a proven-total unwrap for a pointer-lifetime hazard,
+and would leave DEF-136's four surviving group-1 sites inconsistent with them.
+
+**One lane artifact worth carrying forward, because it manufactured a finding.** Gemini marked the
+first unwrap site `UNPROVEN` while accepting the other two, and the cause was the packet rather than
+the code: the excerpt began one line below the `do`/`catch` that makes the site total. An out-of-family
+reviewer reading an excerpt is only as right as its boundaries, and the boundary is invisible in the
+reply. The lane itself held — it cited `WalkthroughFlowTests`, `PrimaryProminence` and
+`Transport.swift:10-22`, so it answered about PRO-0100, and returned `OVERALL: ACCEPT`.
+
+**A correction to this file's own briefing.** `defect_gate.py` takes positional arguments, so bare
+`claims` and `dropped` exit **2** on usage rather than running. Two runner briefs told them to invoke
+it bare; both worked it out, and the wording is wrong in this file wherever it appears.

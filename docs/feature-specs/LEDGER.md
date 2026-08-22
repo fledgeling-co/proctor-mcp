@@ -106,7 +106,7 @@
 | PRO-0097 | The registry says open where the code says fixed | 2026-08-22 | Merged |
 | PRO-0098 | The four nobody owns | 2026-08-22 | Merged |
 | PRO-0099 | Eight more operator paths with no seam | 2026-08-22 | Merged |
-| PRO-0100 | Six repairs whose diagnosis is done | 2026-08-22 | Ready for Plan |
+| PRO-0100 | Six repairs whose diagnosis is done | 2026-08-22 | Merged |
 | PRO-0101 | A spec says which brief it came from | 2026-08-22 | Ready for Plan |
 | PRO-0102 | The reckoning tool mis-read this registry | 2026-08-22 | Ready for Plan |
 | PRO-0103 | A reckoning worth comparing against | 2026-08-22 | Ready for Plan |
