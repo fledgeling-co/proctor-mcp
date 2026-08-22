@@ -330,8 +330,18 @@ struct WalkthroughFlowTests {
 
     /// A2. What the sentence says, in each of the three states, and the
     /// coherence clause: the caption and the filled Allow button nominate the
-    /// same first move. Asserted as agreement with `prominentGrant` rather than
-    /// as a second copy of the answer, so the two cannot drift apart quietly.
+    /// same first move.
+    ///
+    /// WHICH ASSERTION CARRIES THE COHERENCE CLAUSE: the verbatim sentences at
+    /// the foot of this test, not the `prominentGrant` agreement above them.
+    /// The agreement check cannot fail — the reason names every missing grant,
+    /// and `prominentGrant` returns one of the missing grants, so
+    /// `reason.contains(prominent.title)` is true by construction whichever
+    /// missing grant the caption nominates. A mutation taking the first move
+    /// from `missing.last` instead of from `prominentGrant` passes it and is
+    /// caught by the literal `"… Start with Accessibility."` alone. The
+    /// agreement clause is kept as a statement of the rule; the literal is the
+    /// guard.
     @Test("DEF-160 · the reason names every missing grant and agrees with the prominent one")
     func theReasonNamesTheMissingGrantAndTheNextAction() {
         typealias G = WalkthroughFlow.Grant
@@ -395,9 +405,16 @@ struct WalkthroughFlowTests {
             let reason = WalkthroughFlow.primaryDisabledReason(on: .permissions,
                                                                accessibility: ax, screenRecording: sr)
             #expect(reason != nil, "ax=\(ax) sr=\(sr) refuses with no reason, which is the lockout")
-            // The way out is unconditional on either grant.
+            // The way out, asked at this state. `!Copy.skip.isEmpty` stood here
+            // and was an instrument reading itself: a non-empty string constant
+            // is false in no tree anyone could write, so it counted nothing
+            // towards the clause it was listed under. `showsSkip` is the rule
+            // the view's condition reads, and it is false in a tree where the
+            // revocation closes the door.
+            #expect(WalkthroughFlow.showsSkip(on: .permissions,
+                                              accessibility: ax, screenRecording: sr),
+                    "ax=\(ax) sr=\(sr) refuses the primary and draws no way out, which is the lockout")
             #expect(WalkthroughFlow.completes(.skipped))
-            #expect(!WalkthroughFlow.Copy.skip.isEmpty)
         }
     }
 
@@ -457,6 +474,59 @@ struct WalkthroughFlowTests {
         // removed.
         let disabled = try #require(source.range(of: ".disabled(!WalkthroughFlow.primaryEnabled("))
         #expect(primary.lowerBound < disabled.lowerBound)
+    }
+
+    /// A4, the presence half — the half the count clause above cannot reach.
+    ///
+    /// `skipIsNeverClosed` counts `.disabled(` over the whole file, and a
+    /// verifier closed the door out without adding one: wrapping the button in
+    /// `if step != .connect, WalkthroughFlow.primaryEnabled(…)` removes Skip in
+    /// exactly the three refusing states, and the count, the ordering and the
+    /// rest of the suite all stayed green. A file-level `#require(range(of:
+    /// "WalkthroughFlow.ID.skip"))` stood in for a per-state claim, and a
+    /// substring in a file says nothing about a state.
+    ///
+    /// So the claim is asked in two halves, each of which the other cannot
+    /// cover. The rule is asked at all sixteen states in Core, where a lockout
+    /// written into the rule fails at the states it closes. The view's
+    /// condition is then read verbatim, whitespace collapsed, and must be that
+    /// rule and nothing else — a second clause on this `if` is how the door
+    /// closes with no `.disabled` anywhere, and it lands here.
+    @Test("DEF-160 · the way out is drawn in every refusing state, and its condition reads one rule")
+    func skipIsOfferedInEveryRefusingState() throws {
+        var offered: [String] = []
+        for step in WalkthroughFlow.Step.allCases {
+            for ax in [false, true] {
+                for sr in [false, true] {
+                    let shows = WalkthroughFlow.showsSkip(
+                        on: step, accessibility: ax, screenRecording: sr)
+                    #expect(shows == (step != .connect),
+                            "\(step.rawValue) ax=\(ax) sr=\(sr): showsSkip \(shows)")
+                    if shows { offered.append("\(step.rawValue)/\(ax)/\(sr)") }
+                }
+            }
+        }
+        // A3's population, named state by state rather than counted. These are
+        // the three the design of record draws with the primary disabled, and
+        // they are the three a lockout removes.
+        for refusing in ["permissions/false/false",
+                         "permissions/false/true",
+                         "permissions/true/false"] {
+            #expect(offered.contains(refusing),
+                    "\(refusing) refuses the primary and offers no way out; the offered set is \(offered.sorted())")
+        }
+
+        // And the view asks that rule, with nothing else on the condition.
+        let source = Self.withoutComments(try Self.walkthroughSource())
+        let button = try #require(source.range(of: "Button(WalkthroughFlow.Copy.skip)"))
+        let head = String(source[..<button.lowerBound])
+        let start = try #require(head.range(of: "if ", options: .backwards))
+        let condition = String(head[start.lowerBound...])
+            .components(separatedBy: .whitespacesAndNewlines)
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+        #expect(condition == "if WalkthroughFlow.showsSkip(on: step.flow, accessibility: granted(.accessibility), screenRecording: granted(.screenRecording)) {",
+                "Skip setup is drawn under “\(condition)”; A4 requires the Core rule and no second clause, because a clause here closes the way out in the states that need it")
     }
 
     /// Whole-line comments removed, so a source guard counts code.

@@ -90,7 +90,16 @@ struct Walkthrough: View {
                     // is completing (`WalkthroughFlow.completes`), so this is the
                     // way out for somebody macOS will not grant to, and the
                     // refusal above must not close it.
-                    if step != .connect {
+                    //
+                    // PRO-0086's A4, the presence half. The condition is
+                    // `WalkthroughFlow.showsSkip` and nothing else, decided in
+                    // Core where it is asked at all sixteen states, because a
+                    // condition written here is one this repo cannot prove — and
+                    // an extra clause added to this `if` is exactly how the door
+                    // out gets closed without a `.disabled` anywhere.
+                    if WalkthroughFlow.showsSkip(on: step.flow,
+                                                 accessibility: granted(.accessibility),
+                                                 screenRecording: granted(.screenRecording)) {
                         Button(WalkthroughFlow.Copy.skip) { complete() }
                             .accessibilityIdentifier(WalkthroughFlow.ID.skip)
                             .buttonStyle(.borderless)

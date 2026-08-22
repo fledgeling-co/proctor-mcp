@@ -95,5 +95,45 @@
     "filters": [
       "skipIsNeverClosed"
     ]
+  },
+  {
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 3 tests in 1 suite failed after 0.001 seconds with 1 issue.",
+    "failures": [
+      "(condition \u2192 \"if WalkthroughFlow.showsSkip(on: step.flow, accessibility: granted(.accessibility), screenRecording: granted(.screenRecording)), WalkthroughFlow.primaryEnabled(on: step.flow, accessibility: granted(.accessibility), screenRecording: granted(.screenRecording)) {\") == \"if WalkthroughFlow.showsSkip(on: step.flow, accessibility: granted(.accessibility), screenRecording: granted(.screenRec"
+    ],
+    "failureCount": 1,
+    "id": "ARM-7",
+    "clause": "DEF-160 A4 \u00b7 the way out is drawn in every state where the primary refuses",
+    "mutation": "Skip wrapped in the primary's own rule \u2014 `if WalkthroughFlow.showsSkip(\u2026), WalkthroughFlow.primaryEnabled(\u2026)` \u2014 which takes the door out of the tree in exactly the three refusing states and adds no `.disabled` anywhere. The verifier's own mutation, applied here in the shape the rewired condition takes. `skipIsNeverClosed` PASSED under it in this same run: the `.disabled(` count stayed 1 and the ordering held, which is why the presence half needed a guard of its own.",
+    "file": "Sources/ProctorUI/Walkthrough.swift",
+    "filters": [
+      "skipIsOfferedInEveryRefusingState",
+      "skipIsNeverClosed",
+      "aRevocationIsNotALockout"
+    ]
+  },
+  {
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 2 tests in 1 suite failed after 0.001 seconds with 8 issues.",
+    "failures": [
+      "(shows \u2192 false) == ((step != .connect) \u2192 true)",
+      "(shows \u2192 false) == ((step != .connect) \u2192 true)",
+      "(shows \u2192 false) == ((step != .connect) \u2192 true)",
+      "WalkthroughFlow.showsSkip(on: .permissions, accessibility: (ax \u2192 false), screenRecording: (sr \u2192 true))",
+      "WalkthroughFlow.showsSkip(on: .permissions, accessibility: (ax \u2192 true), screenRecording: (sr \u2192 false))",
+      "(offered \u2192 [\"intro/false/false\", \"intro/false/true\", \"intro/true/false\", \"intro/true/true\", \"permissions/true/true\", \"granted/false/false\", \"granted/false/true\", \"granted/true/false\", \"granted/true/true\"]).contains(refusing \u2192 \"permissions/false/false\")",
+      "(offered \u2192 [\"intro/false/false\", \"intro/false/true\", \"intro/true/false\", \"intro/true/true\", \"permissions/true/true\", \"granted/false/false\", \"granted/false/true\", \"granted/true/false\", \"granted/true/true\"]).contains(refusing \u2192 \"permissions/false/true\")",
+      "(offered \u2192 [\"intro/false/false\", \"intro/false/true\", \"intro/true/false\", \"intro/true/true\", \"permissions/true/true\", \"granted/false/false\", \"granted/false/true\", \"granted/true/false\", \"granted/true/true\"]).contains(refusing \u2192 \"permissions/true/false\")"
+    ],
+    "failureCount": 8,
+    "id": "ARM-8",
+    "clause": "DEF-160 A4/A5 \u00b7 the presence rule cannot be gated on a grant, and a revocation does not close it",
+    "mutation": "`showsSkip` made to read the grants it takes \u2014 `step != .connect && primaryEnabled(\u2026)` \u2014 which is the lockout written into the rule itself rather than into the view. This is the mutation A5's revocation test fails on: with it applied, `showsSkip` is false in both revoked directions.",
+    "file": "Sources/ProctorCore/WalkthroughFlow.swift",
+    "filters": [
+      "aRevocationIsNotALockout",
+      "skipIsOfferedInEveryRefusingState"
+    ]
   }
 ]

@@ -769,7 +769,7 @@
       "surfaces": [
         "SURF-009"
       ],
-      "note": "Guarded as a count rather than a reading: one `.disabled(` in Walkthrough.swift and it is the primary's. A second one \u2014 on Skip or on Back \u2014 is the lockout, and ARM-6 watched that assertion fail with the count at 2.",
+      "note": "Guarded in two halves. Absence of a gate: one `.disabled(` in Walkthrough.swift and it is the primary's; a second \u2014 on Skip or on Back \u2014 is the lockout, and ARM-6 watched that assertion fail with the count at 2. Presence: `WalkthroughFlow.showsSkip` asked at all sixteen states with the view's condition read verbatim, because the count clause passes on a tree where Skip has been conditioned out of the three refusing states \u2014 ARM-7 did exactly that and only the presence guard failed.",
       "effect": "none"
     },
     {

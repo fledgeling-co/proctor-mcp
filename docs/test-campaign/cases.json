@@ -3323,7 +3323,7 @@
     ],
     "armed": true,
     "armedBy": "ARM-2: the first move taken from `missing.last` instead of from prominentGrant, so the caption nominated Screen Recording while the filled Allow button stayed on Accessibility. One expectation failed on the exact sentence. Restored, green.",
-    "note": "DEF-160, and the coherence clause PRO-0090 makes necessary. The sentence names every grant still missing, names none that is already held, names Copy.allow \u2014 the row button's own word, so the instruction points at a control on screen \u2014 and nominates the grant prominentGrant draws filled. Agreement is asserted against prominentGrant rather than against a second copy of the answer, so the caption and the one prominent Grant cannot drift into offering different first moves. The three sentences are also written out verbatim, so a reword is a decision somebody makes."
+    "note": "DEF-160, and the coherence clause PRO-0090 makes necessary. The sentence names every grant still missing, names none that is already held, names Copy.allow \u2014 the row button's own word, so the instruction points at a control on screen \u2014 and nominates the grant prominentGrant draws filled. WHICH ASSERTION ACTUALLY FIRES: the three sentences written out verbatim, and only those. The `reason.contains(prominent.title)` agreement clause reads as the coherence guard and is tautological \u2014 the reason names every missing grant, and prominentGrant returns one of the missing grants, so the containment holds whichever missing grant the caption nominates. ARM-2's mutation (the first move taken from `missing.last`) passes it, and the one issue that run recorded was the verbatim `\u201c\u2026 Start with Accessibility.\u201d` expectation. The agreement clause is kept as a statement of the rule; the literal is the guard, and a reword is a decision somebody makes."
   },
   {
     "id": "CASE-0312",
@@ -3343,7 +3343,7 @@
     "note": "DEF-160's rendered half, on the rung it actually stands on. The drawing site is read from disk with comments stripped and asserted to reference WalkthroughFlow.primaryDisabledReason, to carry ID.reason so a glass lane can find the sentence, and to hand the same string to the disabled button as an accessibility hint. THIS IS source-analysis AND CLAIMS NOTHING ABOVE IT: it says the view is bound to the Core rule, not that a window drew the sentence. There is no ProctorUI test target and no window server inside swift test; the rendered claim is CASE-0316.",
     "source": {
       "analyzer": "WalkthroughFlowTests.theFooterDrawsTheReason, reading Sources/ProctorUI/Walkthrough.swift with whole-line comments stripped by the suite's own withoutComments",
-      "examined": 352
+      "examined": 354
     }
   },
   {
@@ -3361,10 +3361,32 @@
     ],
     "armed": true,
     "armedBy": "ARM-6 put the primary's own rule onto Skip setup \u2014 the lockout in its exact shape. `./scripts/test.sh --filter skipIsNeverClosed` exited 1 with two issues: (disables -> 2) == 1, and the ordering clause (primary.lowerBound -> 3014[utf8]) < (disabled.lowerBound -> 2713[utf8]). Restored, green.",
-    "note": "DEF-160 A4, REQ-083. The door out, read as a count rather than as a reading: exactly one `.disabled(` in Walkthrough.swift and it is the primary's, established by ordering against the identifier rather than by trusting the count alone. A `.disabled` on Skip or on Back would make the refusal a trap and lands here. No code changed for this clause \u2014 Skip was already ungated \u2014 so what this case records is a guard placed under behaviour that was correct and unprotected.",
+    "note": "DEF-160 A4, REQ-083. The door out, read as a count rather than as a reading: exactly one `.disabled(` in Walkthrough.swift and it is the primary's, established by ordering against the identifier rather than by trusting the count alone. A `.disabled` on Skip or on Back would make the refusal a trap and lands here. No code changed for this clause \u2014 Skip was already ungated \u2014 so what this case records is a guard placed under behaviour that was correct and unprotected. THIS IS THE ABSENCE-OF-`.disabled` HALF ONLY. Presence is CASE-0319: a verifier removed Skip in exactly the three refusing states by wrapping it in the primary's rule, and this case's count, ordering and file-level `#require(range(of: \"WalkthroughFlow.ID.skip\"))` all stayed green, because a substring in a file says nothing about a state.",
     "source": {
       "analyzer": "WalkthroughFlowTests.skipIsNeverClosed, counting `.disabled(` over the comment-stripped Walkthrough.swift and ordering it against WalkthroughFlow.ID.primary",
-      "examined": 352
+      "examined": 354
+    }
+  },
+  {
+    "id": "CASE-0319",
+    "req": "REQ-083",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorCore/WalkthroughFlow.swift",
+      "Sources/ProctorUI/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-7 wrapped Skip in the primary's own rule \u2014 `if showsSkip(\u2026), primaryEnabled(\u2026)`, the door out removed in exactly the three refusing states with no `.disabled` added anywhere, which is the verifier's own mutation. `./scripts/test.sh --filter skipIsOfferedInEveryRefusingState|skipIsNeverClosed|aRevocationIsNotALockout` exited 1 with 1 issue, on the condition literal; `skipIsNeverClosed` passed in that same run. ARM-8 then put the lockout into the Core rule instead and this test recorded 6 issues \u2014 three on `(shows \u2192 false) == ((step != .connect) \u2192 true)` and three naming the missing refusing states in the offered set. Both restored, green.",
+    "note": "DEF-160 A4, REQ-083 \u2014 the presence half, which had no guard until this. The clause is 'Skip is present in every refusing state' and it was asserted by a whole-file `#require(range(of: \"WalkthroughFlow.ID.skip\"))`, a file-level existence check standing in for a per-state claim. Asked here in two halves neither of which covers the other: the rule is `WalkthroughFlow.showsSkip`, asked at all sixteen states with the three refusing ones named rather than counted, and the view's condition is then read verbatim with whitespace collapsed and must be that rule with no second clause. A grant-gated lockout lands in the first half; a clause added to the view's `if` lands in the second. THIS IS source-analysis AND CLAIMS NOTHING ABOVE IT: it says the view's condition is the Core rule, not that a window drew the button. There is no ProctorUI test target and no window server inside swift test; the rendered claim is CASE-0316.",
+    "source": {
+      "analyzer": "WalkthroughFlowTests.skipIsOfferedInEveryRefusingState, enumerating WalkthroughFlow.showsSkip at all sixteen states and reading the condition immediately above Button(WalkthroughFlow.Copy.skip) from the comment-stripped Walkthrough.swift",
+      "examined": 354
     }
   },
   {
@@ -3380,8 +3402,8 @@
       "docs/test-campaign/evidence/PRO-0086/arming.json"
     ],
     "armed": true,
-    "armedBy": "Shares ARM-1's mutation: with the biconditional's guard removed the both-granted state returned a reason, and this test's `reason == nil` expectation on that state is one of the ten issues that run reported. The refusal half is armed by the same run's enabled-state failures.",
-    "note": "DEF-160 A5. A grant taken away while the walkthrough is open refuses the primary again \u2014 and the person is told why and can still leave. Asked from both-granted in both directions, with completes(.skipped) and a non-empty Copy.skip asserted in each. WHAT THIS DOES NOT ASK: whether the agent re-probes a revoked permission at all, which is brief 75's question and needs a measurement first (PRO-0036 child item 6). This case is about what the flow does once the grant reads false, not about how soon it reads false."
+    "armedBy": "ARM-8: `showsSkip` made to read the grants it takes \u2014 `step != .connect && primaryEnabled(\u2026)`, the lockout written into the rule rather than into the view. `./scripts/test.sh --filter aRevocationIsNotALockout|skipIsOfferedInEveryRefusingState` exited 1; this test recorded 2 issues, one per revoked direction: `WalkthroughFlow.showsSkip(on: .permissions, accessibility: (ax \u2192 false), screenRecording: (sr \u2192 true))` and the same with the grants swapped. Restored, green. ARM-1 IS NOT THIS CASE'S ARMING AND THE PREVIOUS RECORD SAYING SO WAS WRONG: with the biconditional's guard removed, `primaryDisabledReason(.permissions, true, true)` still returns nil through the empty-missing path, so this test's `== nil` expectation holds either way \u2014 and this test was not in ARM-1's own filters, so it never ran in that session. A verifier applied ARM-1 with this test in the filter and watched it pass.",
+    "note": "DEF-160 A5. A grant taken away while the walkthrough is open refuses the primary again \u2014 and the person is told why and can still leave. Asked from both-granted in both directions, with `completes(.skipped)` and `showsSkip` asserted at each revoked state. `!Copy.skip.isEmpty` stood where `showsSkip` now does and was a dead predicate: a non-empty string constant is false in no tree anybody could write, so it read pass under every mutation and counted nothing towards the clause it was listed under. Replaced rather than dropped, because the claim it was standing in for \u2014 the way out is still offered in this state \u2014 is real and is now asked of the rule the view's condition reads. WHAT THIS DOES NOT ASK: whether the agent re-probes a revoked permission at all, which is brief 75's question and needs a measurement first (PRO-0036 child item 6). This case is about what the flow does once the grant reads false, not about how soon it reads false."
   },
   {
     "id": "CASE-0315",
@@ -3401,7 +3423,7 @@
     "note": "DEF-161, REQ-084. statesRestartNote is true while Screen Recording is missing and false once it is held, which is the pane the design of record draws and the pane it omits. The drawing site is bound to Copy.restartNote by name. PRO-0067's A5 asserted only that the constant contained the word 'restart'; that assertion could not have failed on a build that rendered the sentence nowhere, which is how DEF-161 survived from PRO-0067 to here. The rendered claim is CASE-0316.",
     "source": {
       "analyzer": "WalkthroughFlowTests.theSheetDrawsTheRestartNote, reading the comment-stripped Walkthrough.swift for Copy.restartNote and statesRestartNote at the drawing site",
-      "examined": 352
+      "examined": 354
     }
   },
   {

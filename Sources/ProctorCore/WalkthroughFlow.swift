@@ -140,6 +140,28 @@ public enum WalkthroughFlow {
         return accessibility && screenRecording
     }
 
+    /// Whether `Skip setup` is drawn, in a given state.
+    ///
+    /// PRO-0086's A4, the presence half — the half that had no guard. The count
+    /// clause asks that nothing carries a `.disabled` modifier but the primary,
+    /// and that is a claim about a file; whether the way out is *there* in the
+    /// three states that need it is a claim about a state, and a whole-file
+    /// substring check knows nothing about states. A verifier proved the gap by
+    /// wrapping the button in the primary's own rule — the door out removed in
+    /// exactly the three refusing states, no `.disabled` added anywhere — and
+    /// the suite stayed green.
+    ///
+    /// So the rule becomes a value, on the same footing as `primaryEnabled`:
+    /// only the step decides, and the two grants are taken and never read. The
+    /// signature is the clause — the way out cannot be closed by the state that
+    /// makes it necessary — and taking the grants is what gives the claim a
+    /// population to be asked over: sixteen states rather than four steps.
+    public static func showsSkip(on step: Step,
+                                 accessibility: Bool,
+                                 screenRecording: Bool) -> Bool {
+        step != .connect
+    }
+
     /// Why the primary refuses, or nil when it does not.
     ///
     /// PRO-0086, closing DEF-160. PRO-0081 built the refusal and left the
