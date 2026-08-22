@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Proctor — onboarding & menu mock</title>
+<title>Proctor — onboarding &amp; menu mock (superseded 2026-08-22)</title>
 <style>
 /* ============================================================
    Proctor UI mock — native macOS 27 grammar, Proctor brand.
@@ -595,6 +595,44 @@ svg.sym{display:block; flex:0 0 auto}
 </style>
 </head>
 <body>
+
+<!-- =====================================================================
+     SUPERSEDED. This file is a dated record of a past state, not a design
+     of record. PRO-0082 made that call on 2026-08-22; PRO-0036 recorded the
+     drift and left the decision open.
+
+     The design of record for these surfaces is
+     design/surfaces/proctor-surfaces.html, and it is the one the build is
+     measured against: SurfaceFidelity names it as the reference
+     (Sources/ProctorCore/SurfaceFidelity.swift:5) and nothing in the
+     repository reads mocks/. Two drawings of the same surfaces where only
+     one is read is how this file drifted, so it is retired rather than
+     re-synchronised.
+
+     Known to disagree with the shipped build, and left disagreeing:
+       - it draws a "Re-check now" menu row that PRO-0028 deleted, and
+         replaced with a restart, because the grant answer is cached per
+         agent process;
+       - it predates the toolchain report entirely, so its status window has
+         no tools card, no lanes card and no policy card;
+       - it predates the switches card and the walkthrough's disabled
+         primary.
+
+     Keep it for what it is good for: the first-run narrative and the motion
+     study. Do not read a measurement off it.
+     ===================================================================== -->
+
+<div style="position:relative;z-index:9999;margin:0;padding:12px 18px;
+            background:#7a2f12;color:#ffe9df;
+            font:13px/1.5 -apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;">
+  <strong>Superseded &mdash; a dated record of a past state, not a design of record.</strong>
+  Retired 2026-08-22 by PRO-0082. The design of record for these surfaces is
+  <code style="background:rgba(255,255,255,.16);padding:1px 5px;border-radius:3px;">design/surfaces/proctor-surfaces.html</code>,
+  which is what <code style="background:rgba(255,255,255,.16);padding:1px 5px;border-radius:3px;">SurfaceFidelity</code>
+  measures the build against. This file still draws a <em>Re-check now</em> menu row that
+  PRO-0028 deleted, and predates the tools, lanes, switches and policy cards entirely.
+  Read it for the first-run narrative and the motion study; do not take a measurement off it.
+</div>
 
 <!-- ===================== MOCK HARNESS ===================== -->
 <div class="harness" role="toolbar" aria-label="Mock controls">
