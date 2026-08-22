@@ -3517,6 +3517,19 @@
         "REQ-108"
       ],
       "note": "The arm records `armed = code != 0`, so a run that aborts on a signal counts as red. CASE-0461's mutant kills by trapping: signal 5, zero verdict lines, and the suite's own `FAIL: no swift-testing verdict line`. That case is correct — its log proves the named test was running when the process trapped — but the rule that scored it cannot distinguish a test that failed from a process that died in setup, and the second is the shape that has already cost this campaign a false arming. The repair is the same predicate the suite already applies to itself: an arming owes a verdict line naming the test that failed, and an exit with no verdict line is `inconclusive` rather than armed."
+    },
+    {
+      "id": "DEF-209",
+      "title": "Thirty-five images in the shots directory that nothing publishes and no manifest names",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "requirements": [
+        "REQ-046"
+      ],
+      "note": "capture-lineage.py --gate exits 2 on main: `published captures: 8 · distinct images: 8 · files in shots dir: 43`, with 35 UNACCOUNTED images — a file in the shots directory that no subject publishes and no manifest entry names. The tool's remedy is publish it, delete it, or record an `unpublishedReason` on its captures.json entry.\n\nTHIS IS TOOL MOVEMENT REVEALING A PRE-EXISTING CONDITION, NOT A REGRESSION, and it was established by holding the tool constant across three trees rather than argued: the current capture-lineage gives the identical reading — exit 2, judged 6 of 8, ratchet 6, 35 hard failures — at dd1a443 (now), at eed148f (wave-16 close) and at 3d6fb15 (the wave-15 merge, before any of tonight's work). ORCHESTRATOR.md records this gate at exit 0 with judged 6 of 8 and ratchet 6 held, which was true of the version that ran it. test-campaign moved to 0.9.6 mid-session and the gate got stricter. The ratchet still holds at 6, so nothing has got worse by the tool's own measure.\n\nWHY IT MATTERS RATHER THAN BEING TIDINESS: the gate's own words are that every finding it makes is derived from published captures, so a file nobody publishes is a capture the gate cannot see — and it cites a campaign that read `published captures: 0 · files in shots dir: 11` and exited 0. Thirty-five unpublished images are thirty-five pictures a reader will take as evidence and the instrument cannot speak for. Most carry surface-shaped names (surf-001 through surf-016) from earlier waves, so they are probably real captures that were taken and never published, which is the recoverable case.\n\nDELETION IS NOT THE DEFAULT REMEDY HERE even though the tool offers it: each image needs a per-file disposition, and discarding evidence to clear a gate is the move this campaign refuses. Found by auditing every gate's exit code and denominator across main and a clean `worktree add --detach` tree, prompted by a sibling project finding a step that exited 0 on its own machine and 1 on a clean tree while printing `failures=0` in both."
     }
   ]
 }

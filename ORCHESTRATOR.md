@@ -2607,3 +2607,57 @@ session is trustworthy, it is that the receiving session cannot tell a faithful 
 unfaithful one, and a permissions decision is the one class where evidence cannot travel.** It stays
 recorded in `spec-PRO-0092.md` as an observation rather than folded into briefs until the reader
 answers in this channel.
+
+### Correction: "every gate green" was wrong, and the audit that found it (2026-08-23)
+
+**This file recorded "Every gate on the merged tree now green" after wave 16 closed. That was false.**
+`capture-lineage.py --gate` exits **2** on `main` and had been red before this session started:
+`published captures: 8 · distinct images: 8 · files in shots dir: 43`, **35 unaccounted images** that
+no subject publishes and no manifest entry names. DEF-209, brief 100, PRO-0107.
+
+**Two reasons the sweep missed it, and both are worth keeping.** The sweep ran the gates it knew about,
+and this one is a once-per-repo gate rather than a per-item one — so it sat outside the per-merge list.
+And in an earlier pass it was invoked against `docs/test-campaign/evidence` rather than
+`docs/test-campaign`, where it exits 2 with `no inventory at …/evidence/inventory.json`. **An
+exit-code-only reading logs that as a failing gate; a message-only reading logs it as noise.** It is
+neither: it is the tool refusing an invocation, and only reading both together tells you which.
+
+**It is tool movement, established rather than assumed.** The current capture-lineage gives the
+identical reading — exit 2, judged 6 of 8, ratchet 6, 35 hard failures — at `dd1a443`, at `eed148f`
+(wave-16 close) and at `3d6fb15` (the wave-15 merge, before any of this session's work). This file
+records the gate at exit 0 with the same judged figure, and that was true of the version which ran it;
+`test-campaign` moved to 0.9.6 mid-session and the gate got stricter. **The ratchet holds at 6, so
+nothing has got worse by the tool's own measure.** Second use in a day of the distinction PRO-0103 was
+built for.
+
+### The gate audit that prompted it, and its result
+
+A sibling project found a gate step that **exits 0 on its own machine and 1 on a clean tree**, printing
+`5 of 5 capture(s) measured … failures=0` in one and `0 of 5 … failures=0` in the other — the same
+`failures=0` while having measured nothing, with the exit code swallowed in an `&&` chain. It is found
+by diffing exit codes across two trees and never by reading output.
+
+So every gate here was run against `main` and against a clean `git worktree add --detach` tree, with
+**exit code and printed denominators** compared:
+
+| Gate | repo | clean tree |
+|---|---|---|
+| `defect_gate.py dropped` | 0 — 2 files, 120 merges, 55,908 pairs | **identical** |
+| `test_instruments.py` | 0 — 62 passed | **identical** |
+| `operator_path_gate.py` | 0 — 15 entries | **identical** |
+| `spec_citation_measure.py` | 0 — 15/15 | **identical** |
+| `spec_citation_arm.py` | 0 — 23/23 mutations, 15/15 checks | **identical** |
+| `reckoning_selftest.py` | 0 — 28 checks | **identical** |
+| `skill_doc_measure.py` | 0 — 27/27 | **identical** |
+| `campaign.py check` | 1 — 331/335, 327/331 | **identical** |
+| `capture-lineage.py --gate` | **2 — 35 hard failures** | **identical** |
+
+**Eight of nine behave identically and the ninth is red on both**, so the sibling's failure mode does
+not reproduce here — checked in the way that finds it rather than by reading output. The audit's own
+first attempt produced a uniform `exit=1` on every gate in both trees from a shell parameter-expansion
+bug of mine, which is the same lesson one level down: **agreement is the least suspicious result there
+is, and a harness that fails uniformly looks exactly like a fleet of passing gates that agree.**
+
+The 20 gitignored paths in the working repo (`.build/`, `.worktrees/`, `.claude/settings.local.json`,
+a `.DS_Store`) are the visible form of the same risk, and `evidence/` is **not** among them — 0 of 176
+cited evidence paths are untracked on `main`.
