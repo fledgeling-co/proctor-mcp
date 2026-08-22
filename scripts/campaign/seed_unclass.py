@@ -99,7 +99,7 @@ def main() -> int:
         sys.exit(f"No requirement {req_id}.")
 
     # Refusal one: the pass is already red, so a red after proves nothing.
-    examined, before = v.pass_unclassed(v.requirements(d))
+    examined, before = v.pass_unclassed(v.requirements(d))[:2]
     if before:
         print(f"REFUSING: unclassed is already red ({len(before)} findings over "
               f"{examined} requirements). A red after the mutation would be red "
@@ -112,7 +112,7 @@ def main() -> int:
     ph = next(r for r in probe["requirement"] if r["id"] == req_id)
     ph.pop("effect", None)
     ph.pop("provider", None)
-    _, hits = v.pass_unclassed(probe["requirement"])
+    _, hits = v.pass_unclassed(probe["requirement"])[:2]
     if not any(f.startswith(req_id + " ") for f in hits):
         print(f"REFUSING: {req_id}'s text names no effect the vocabulary matches, "
               f"so removing its `effect` field correctly produces no finding. "
@@ -124,7 +124,7 @@ def main() -> int:
         hit.pop("effect", None)
         hit.pop("provider", None)
         inv_path.write_text(json.dumps(inv, indent=2) + "\n")
-        after_examined, after = v.pass_unclassed(v.requirements(d))
+        after_examined, after = v.pass_unclassed(v.requirements(d))[:2]
     finally:
         inv_path.write_bytes(original)
 

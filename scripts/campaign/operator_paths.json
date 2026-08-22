@@ -6,6 +6,11 @@
     "TestProcess.isActive",
     "isTestProcess"
   ],
+  "home_expressions": [
+    "FileManager.default.homeDirectoryForCurrentUser",
+    "NSHomeDirectory()"
+  ],
+  "_home_expressions": "PRO-0099 gap-fix. The two spellings of the operator's real home in this tree. The census uses them for its second sweep: a line handing one of these to a `parameterised` builder is an operator path even though it names no root literal, which is exactly how `SwitchStore.operatorURL` is written.",
   "entries": [
     {
       "file": "Sources/ProctorAgent/Session/PolicyStore.swift",
@@ -42,6 +47,13 @@
     },
     {
       "file": "Sources/ProctorCore/SwitchStore.swift",
+      "declaration": "url",
+      "class": "parameterised",
+      "parameter": "home",
+      "reason": "PRO-0099 gap-fix. `directory(home:)` plus the filename, and the builder every un-argued caller actually goes through. It was unclassed because it names no root literal of its own, which also meant the census could not see its callers: listing it here is what makes `url(home: FileManager.default.homeDirectoryForCurrentUser)` a census site rather than a hole."
+    },
+    {
+      "file": "Sources/ProctorCore/SwitchStore.swift",
       "declaration": "operatorURL",
       "class": "operator-accessor",
       "seamed_by": "defaultURL",
@@ -63,9 +75,9 @@
     },
     {
       "file": "Sources/ProctorCore/Wire.swift",
-      "declaration": "socketPath",
+      "declaration": "Wire.socketPath",
       "class": "socket",
-      "reason": "PRO-0099. A rendezvous address, not stored state: the agent binds it and the shim connects, and it holds no operator data. Already seamed, and by the mechanism both ends can use — the PROCTOR_SOCKET environment override, documented here as how a test binds a throwaway socket. Diverting it under a test-process predicate would seam only one of the two processes and break the property that both derive it identically without configuration."
+      "reason": "PRO-0099. A rendezvous address, not stored state: the agent binds it and the shim connects, and it holds no operator data. Already seamed, and by the mechanism both ends can use — the PROCTOR_SOCKET environment override, documented here as how a test binds a throwaway socket. Diverting it under a test-process predicate would seam only one of the two processes and break the property that both derive it identically without configuration. Spelled qualified because `socketPath` is ambiguous in this file: `DoctorReport` declares a field of the same name 1,286 lines down, and the gap-fix's ambiguity rule refuses a bare entry that two declarations answer to."
     },
     {
       "file": "Sources/ProctorCore/GuestInventory.swift",

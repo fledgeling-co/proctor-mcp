@@ -79,7 +79,11 @@ A sweep reporting zero cannot tell a diverted write from a write that never happ
 halves come off one run of the full suite:
 
 - **absence** — the operator's root byte-identical: **0 of 3,330 files changed**, sha256,
-  size and mtime per file either side.
+  size and mtime per file either side. The gap-fix regenerated both census files from one
+  run of `scripts/campaign/operator_census.py` either side of one full suite run, because
+  the pair the first pass committed was not a pair: it differed on `audit/audit.jsonl`
+  while the README beside it said the diff was empty. The denominator is stated with the
+  number in `evidence/PRO-0099/README.txt`.
 - **presence** — `proctor-test-settings-<pid>/settings.json`,
   `proctor-test-maestro-<pid>/run-<stamp>-1-<salt>` and `proctor-test-captures-<pid>/`
   under `$TMPDIR`.
@@ -96,6 +100,25 @@ REQ-085. `scripts/campaign/operator_path_gate.py` refuses a new operator path th
 classed nowhere (`census`) and a classed writer with no test-process branch (`seams`). It
 runs inside the suite through `test_instruments.py`, so a check here that stopped being
 able to fire is a red suite rather than a quiet one.
+
+**The first version did not close the class, and the verifier proved it with three
+fixtures that cleared both modes.** All three were the same failure — the gate resolving a
+site and then discarding the resolution — and the third was the sharpest, because it is
+exactly how the real `SwitchStore.operatorURL` is written. A bare manifest entry absorbed
+any second declaration of that name; the leak check excused every reference in a file that
+declared the name at all, so a qualified reach around the seam passed; and a path composed
+by handing the operator's own home to a `parameterised` builder names no root literal, so
+the census never saw it. All three are closed and are now fixtures. The census gained a
+second sweep over `home_expressions`, the bare spelling is accepted only where it is
+unambiguous in its file, and a qualified reach is refused from any other file whatever it
+declares. The ambiguity rule found a real collision on its first run against this tree:
+`Wire.swift` was classed on a bare `socketPath` that `DoctorReport` also declares, and the
+entry is now `Wire.socketPath`.
+
+**What the gate still does not catch, stated rather than implied.** A path whose root
+literal lives behind a constant AND whose builder takes the home as an argument would be
+seen by neither sweep — the literal's own declaration would still be a census site, so this
+needs a new indirection rather than a new caller, but it is not refused by construction.
 
 **Arming it found two bugs before it had ever been trusted**, both bare-name collisions in
 `PolicyStore.swift` and both **false reds** — the direction that gets argued away rather
@@ -140,11 +163,30 @@ production, and does not touch the socket paths' behaviour. REQ-087 of the alloc
 is unused: two requirements cover this item's guarantees and a third would be invented to
 fill a quota.
 
-## What is not armed, and why
+## The write arms, armed — and what arming them found
 
-The positive arm of CASE-0330..0332 is deliberately not armed by sabotage. Under sabotage
-those arms would write the operator's real `settings.json`, create a run directory in the
-operator's maestro root and create the operator's captures directory — the act REQ-055
-forbids. Their path arms are armed; the write arms stand on their own readback through the
-product's loader plus CASE-0272, which proves the same reader can see a file written one
-directory down. Recorded rather than glossed.
+This section previously said the positive arm of CASE-0330..0332 could not be armed,
+because sabotage would write the operator's own state. That was the wrong sabotage. The
+verifier named the right one: **sabotage the divert target, not the predicate.** With the
+interlock fully intact, a decoy root under `$TMPDIR` and the product's own write into it
+show the same reader that reports zero for the operator's root reporting a change over a
+root shaped exactly like it — and the operator's root is never named by the arm.
+
+| Case | The arming | Denominator |
+|---|---|---|
+| CASE-0330 | `SwitchStore.save(saved, to: SwitchStore.url(home: decoyHome))`, swept over `<decoy>/Library/Application Support/<bundle-id>` | 1 changed file |
+| CASE-0331 | `Session.maestroDebugDirectory(run: 1)`, swept over `Session.testFallbackMaestroRoot` | 1 changed entry |
+| CASE-0332 | the captures directory and this call's own returned frame name, composed as production composes them, under a decoy home | 2 changed entries |
+
+**Arming them found a dead assertion.** `DirectoryWitness` recorded regular files only, and
+the whole effect of `maestroDebugDirectory(run:)` and `deviceFramePath` is a `mkdir` — so
+CASE-0331's and CASE-0332's `touched.isEmpty` over the operator's root could not have come
+out any other way. An empty run directory appearing in the operator's own tree was
+invisible to the reader asserting nothing appeared. The witness now records directories,
+`changedEntries` reads both, and those two claims are read through it: they got stronger in
+the same change that armed them.
+
+Watched failing with `DirectoryWitness.read` blinded and nothing else touched — exit 1,
+`Test run with 9 tests in 1 suite failed ... with 17 issues`, the three new arms red at
+`OperatorFilesWitnessTests.swift:372`, `:426` and `:513`/`:515`. Verbatim in
+`evidence/PRO-0099/witness-arming.txt`.

@@ -33,15 +33,41 @@ declaration in `Sources/` that names a path under that root. The classes:
 
 **The two checks.**
 
-  `census`  Every line in Sources/ naming the root literal must map to an entry.
-            A NEW path with no entry fails here, which is the check the class
-            exists for. Comment lines are skipped: a comment describing a path is
-            prose about it, and the shipped-prose cases are string literals that
-            carry their own entries.
+  `census`  Two sweeps, both of which must map every site to an entry.
+
+            *The literal.* Every non-comment line in Sources/ naming the root
+            literal. A NEW path with no entry fails here. Comment lines are
+            skipped: a comment describing a path is prose about it, and the
+            shipped-prose cases are string literals that carry their own entries.
+
+            *The composition.* A `parameterised` declaration is safe BECAUSE the
+            root arrives as an argument — so the caller that hands it the
+            operator's real home is the operator path, and that caller names no
+            literal at all. `SwitchStore.operatorURL` is written exactly that way
+            (`url(home: FileManager.default.homeDirectoryForCurrentUser)`), so
+            before this sweep existed a new un-seamed twin of it needed no entry
+            and both modes stayed green. Every line calling a `parameterised`
+            entry's declaration with one of `home_expressions` on it is a site.
+
+            An entry spelled bare satisfies a site only where that bare name is
+            UNAMBIGUOUS in its file — one distinct qualified name. A second
+            `Legacy.operatorURL` beside `SwitchStore.operatorURL` used to be
+            absorbed by the bare `operatorURL` entry, so the gate resolved the new
+            site to its qualified name and then threw the qualification away. Both
+            sites are now refused until the manifest says which is which.
 
   `seams`   Every entry's own requirement, per the classes above, plus the
             `guards` block — presently one, refusing a bare
             `ProctorReflector.start()` under Tests/.
+
+            The leak half of `operator-accessor` reads two ways round. A
+            QUALIFIED reach — `SwitchStore.operatorURL` — is refused from any
+            other file, always. A bare reach is refused only from a file that does
+            not declare that name itself, because `PolicyStore.operatorDirectory`
+            and `FlowStore.operatorDirectory` are different paths spelled alike.
+            The first version skipped the whole file on the second rule, so a
+            `Bypass.swift` declaring any member named `operatorURL` could call
+            `SwitchStore.operatorURL` around its seam and be waved through.
 
 Both run by default. Exit 1 on a finding, 0 on none.
 
@@ -142,6 +168,37 @@ def enclosing_type(lines: list[str], index: int) -> str | None:
     return None
 
 
+def qualified_declarations(lines: list[str]) -> dict[str, set[str]]:
+    """Every declaration in a file, bare name to the qualified spellings it has.
+
+    A bare manifest entry may only carry a site whose bare name maps to exactly
+    one qualified spelling here. The local `let directory` inside
+    `SwitchStore.save` and the `static func directory(home:)` beside it are both
+    `SwitchStore.directory`, so they collapse to one and the bare entry still
+    reads; `Seams.directory` and `AuditLog.directory` do not, and neither would a
+    `Legacy.operatorURL` added beside `SwitchStore.operatorURL`.
+    """
+    names: dict[str, set[str]] = {}
+    for i, line in enumerate(lines):
+        m = DECL.match(line)
+        if not m:
+            continue
+        bare = m.group("name")
+        owner = enclosing_type(lines, i)
+        names.setdefault(bare, set()).add(f"{owner}.{bare}" if owner else bare)
+    return names
+
+
+def accessor_owner(lines: list[str], decl: str) -> str | None:
+    """The type a manifest declaration belongs to, however the entry spells it."""
+    if "." in decl:
+        return decl.split(".", 1)[0]
+    found = declaration_body(lines, decl)
+    if not found:
+        return None
+    return enclosing_type(lines, found[0] - 1)
+
+
 def census_sites(root: Path, literal: str) -> list[tuple[str, int, str, str, str]]:
     """Every non-comment line in Sources/ naming the operator root literal."""
     found = []
@@ -151,6 +208,37 @@ def census_sites(root: Path, literal: str) -> list[tuple[str, int, str, str, str
             if literal not in line:
                 continue
             if line.lstrip().startswith("//"):
+                continue
+            decl = enclosing_declaration(lines, i)
+            owner = enclosing_type(lines, i)
+            qualified = f"{owner}.{decl}" if owner and decl else decl
+            found.append((str(path.relative_to(root)), i + 1, decl or "<none>",
+                          qualified or "<none>", line.strip()))
+    return found
+
+
+def composed_sites(root: Path, manifest: dict) -> list[tuple[str, int, str, str, str]]:
+    """Every line handing the operator's real home to a `parameterised` builder.
+
+    A `parameterised` declaration is classed safe precisely because the root
+    arrives as an argument. That makes its CALLER the operator path when the
+    argument is the operator's own home — and that caller names no root literal,
+    so the literal census cannot see it. `SwitchStore.operatorURL` is written that
+    way, which is why a new un-seamed twin of it used to need no entry at all.
+    """
+    builders = {e["declaration"].split(".")[-1] for e in manifest["entries"]
+                if e.get("class") == "parameterised"}
+    homes = manifest.get("home_expressions", [])
+    if not builders or not homes:
+        return []
+    call = re.compile("|".join(rf"\b{re.escape(b)}\s*\(" for b in sorted(builders)))
+    found = []
+    for path in swift_sources(root):
+        lines = path.read_text().splitlines()
+        for i, line in enumerate(lines):
+            if line.lstrip().startswith("//"):
+                continue
+            if not any(h in line for h in homes) or not call.search(line):
                 continue
             decl = enclosing_declaration(lines, i)
             owner = enclosing_type(lines, i)
@@ -238,19 +326,36 @@ def declaration_body(lines: list[str], name: str) -> tuple[int, list[str]] | Non
 
 
 def run_census(root: Path, manifest: dict) -> list[str]:
-    literal = manifest["root_literal"]
     known = {(e["file"], e["declaration"]) for e in manifest["entries"]}
+    spellings: dict[str, dict[str, set[str]]] = {}
+
+    def unclassed(file: str, decl: str, qualified: str) -> bool:
+        # Either spelling satisfies the entry, but a BARE entry only where the
+        # bare name is unambiguous in its file. `PolicyStore.swift` declares
+        # `directory` three times, so that one is classed as `AuditLog.directory`;
+        # and a second declaration of a name a bare entry already covers refuses
+        # both sites rather than being absorbed by the entry.
+        if (file, qualified) in known:
+            return False
+        if (file, decl) not in known:
+            return True
+        if file not in spellings:
+            spellings[file] = qualified_declarations((root / file).read_text().splitlines())
+        return len(spellings[file].get(decl, {decl})) > 1
+
     findings = []
-    for file, line, decl, qualified, text in census_sites(root, literal):
-        # Either spelling satisfies the entry. A bare name is enough where it is
-        # unambiguous in its file; `PolicyStore.swift` declares `directory` three
-        # times, so that one is classed as `AuditLog.directory`.
-        if (file, decl) in known or (file, qualified) in known:
-            continue
-        findings.append(
-            f"{file}:{line}: `{qualified}` names a path under the operator's root and is not "
-            f"classed in scripts/campaign/operator_paths.json — {text}"
-        )
+    for file, line, decl, qualified, text in census_sites(root, manifest["root_literal"]):
+        if unclassed(file, decl, qualified):
+            findings.append(
+                f"{file}:{line}: `{qualified}` names a path under the operator's root and is not "
+                f"classed in scripts/campaign/operator_paths.json — {text}"
+            )
+    for file, line, decl, qualified, text in composed_sites(root, manifest):
+        if unclassed(file, decl, qualified):
+            findings.append(
+                f"{file}:{line}: `{qualified}` hands the operator's own home to a path builder "
+                f"and is not classed in scripts/campaign/operator_paths.json — {text}"
+            )
     return findings
 
 
@@ -290,23 +395,34 @@ def run_seams(root: Path, manifest: dict) -> list[str]:
                     f"{file}: `{seam}` guards a test process but never returns `{decl}`, "
                     f"so production no longer resolves the operator's own path"
                 )
-            # Nothing else in Sources/ may reach the truthful accessor directly.
+            # Nothing else in Sources/ may reach the truthful accessor directly,
+            # and the rule reads two ways round.
             bare = decl.split(".")[-1]
+            owner = accessor_owner(lines, decl)
+            qualified_reach = (re.compile(rf"\b{re.escape(owner)}\s*\.\s*{re.escape(bare)}\b")
+                               if owner else None)
             for other, text in source_text.items():
                 rel = str(other.relative_to(root))
                 if rel == file:
                     continue
                 other_lines = text.splitlines()
-                # A file that declares the same name has its own, and this tree
-                # has two: `PolicyStore.operatorDirectory` and
-                # `FlowStore.operatorDirectory` are different paths that happen to
-                # be spelled alike. Each is checked against its own file.
-                if declaration_body(other_lines, bare):
-                    continue
+                # A file that declares the same name may mean its OWN, and this
+                # tree has two: `PolicyStore.operatorDirectory` and
+                # `FlowStore.operatorDirectory` are different paths spelled alike.
+                # So a bare reach is excused there — but only a bare one. Skipping
+                # the whole file, which is what this did first, let a
+                # `Bypass.swift` declaring any member named `operatorURL` call
+                # `SwitchStore.operatorURL` around its seam and pass.
+                declares_bare = declaration_body(other_lines, bare) is not None
                 for i, line in enumerate(other_lines):
                     if line.lstrip().startswith("//"):
                         continue
-                    if re.search(rf"\b{re.escape(bare)}\b", line):
+                    if qualified_reach and qualified_reach.search(line):
+                        findings.append(
+                            f"{rel}:{i + 1}: reaches `{owner}.{bare}`, the truthful operator "
+                            f"path declared in {file}, around its seam `{seam}`"
+                        )
+                    elif not declares_bare and re.search(rf"\b{re.escape(bare)}\b", line):
                         findings.append(
                             f"{rel}:{i + 1}: reaches `{bare}`, the truthful operator path "
                             f"declared in {file}, around its seam `{seam}`"
@@ -375,10 +491,12 @@ def main(argv: list[str]) -> int:
             print(f"  {f}")
         return 1
 
-    sites = len(census_sites(root, manifest["root_literal"]))
+    literal = len(census_sites(root, manifest["root_literal"]))
+    composed = len(composed_sites(root, manifest))
     print(
         f"operator_path_gate: no findings "
-        f"({sites} operator-path site(s) in Sources/, {len(manifest['entries'])} classed)"
+        f"({literal} literal + {composed} composed = {literal + composed} operator-path "
+        f"site(s) in Sources/, {len(manifest['entries'])} entries classed)"
     )
     return 0
 

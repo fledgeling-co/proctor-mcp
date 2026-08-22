@@ -560,11 +560,155 @@ def _operator_tree(tmp: str, files: dict[str, str]) -> Path:
     return root
 
 
+_OPERATOR_HOMES = ["FileManager.default.homeDirectoryForCurrentUser", "NSHomeDirectory()"]
+
+
 def _operator_manifest(entries: list[dict], guards: dict | None = None) -> dict:
     return {"root_literal": _OPERATOR_LITERAL,
             "predicates": ["TestProcess.isActive", "isTestProcess"],
+            "home_expressions": _OPERATOR_HOMES,
             "entries": entries,
             "guards": guards or {}}
+
+
+# The three shapes the PRO-0099 verifier built that cleared BOTH modes, each now a
+# fixture. All three are the same failure — the gate resolving a site correctly and
+# then losing the resolution — and the third is the sharpest, because it is exactly
+# how `SwitchStore.operatorURL` is written.
+_SWITCH_STORE = """import Foundation
+
+public enum SwitchStore {
+    public static func url(home: URL) -> URL {
+        home.appendingPathComponent(
+            "Library/Application Support/example/settings", isDirectory: true)
+    }
+
+    public static var operatorURL: URL {
+%s    }
+
+    public static var defaultURL: URL {
+        guard TestProcess.isActive else { return operatorURL }
+        return testFallbackRoot
+    }
+}
+"""
+_COMPOSED = "        url(home: FileManager.default.homeDirectoryForCurrentUser)\n"
+_SPELT_OUT = ('        FileManager.default.homeDirectoryForCurrentUser\n'
+              '            .appendingPathComponent("Library/Application Support/example/settings")\n')
+_SWITCH_ENTRIES = [
+    {"file": "Sources/ProctorCore/SwitchStore.swift", "declaration": "url",
+     "class": "parameterised", "parameter": "home", "reason": "fixture"},
+    {"file": "Sources/ProctorCore/SwitchStore.swift", "declaration": "operatorURL",
+     "class": "operator-accessor", "seamed_by": "defaultURL", "reason": "fixture"},
+]
+
+
+def test_operator_path_gate_bare_name_is_not_a_wildcard() -> None:
+    """A second declaration of a classed bare name is not absorbed by its entry."""
+    gate = _operator_gate()
+    file = "Sources/ProctorCore/SwitchStore.swift"
+    legacy = (_SWITCH_STORE % _SPELT_OUT).replace(
+        "public enum SwitchStore {",
+        'public enum Legacy {\n'
+        '    public static var operatorURL: URL {\n'
+        '        FileManager.default.homeDirectoryForCurrentUser\n'
+        '            .appendingPathComponent("Library/Application Support/example/legacy")\n'
+        '    }\n'
+        '}\n\n'
+        'public enum SwitchStore {')
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _operator_tree(tmp, {file: legacy})
+        armed = gate.run_census(root, _operator_manifest(_SWITCH_ENTRIES))
+        check(len(armed) == 2
+              and any("Legacy.operatorURL" in f for f in armed)
+              and any("SwitchStore.operatorURL" in f for f in armed),
+              "a new operator path sharing a classed bare name is refused, and so is the "
+              "site the bare entry used to cover, until the manifest says which is which",
+              "\n".join(armed) or "no finding: the bare entry absorbed the new declaration")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        # Both spelled qualified, and both clear.
+        root = _operator_tree(tmp, {file: legacy})
+        qualified = [dict(_SWITCH_ENTRIES[0]),
+                     {"file": file, "declaration": "SwitchStore.operatorURL",
+                      "class": "operator-accessor", "seamed_by": "defaultURL",
+                      "reason": "fixture"},
+                     {"file": file, "declaration": "Legacy.operatorURL",
+                      "class": "prose", "reason": "fixture"}]
+        cleared = gate.run_census(root, _operator_manifest(qualified))
+        check(not cleared, "the same tree clears once each site is classed by its "
+                           "qualified name", "\n".join(cleared))
+
+
+def test_operator_path_gate_qualified_reach_is_never_excused() -> None:
+    """A file declaring the same name may not reach the accessor by its owner."""
+    gate = _operator_gate()
+    file = "Sources/ProctorCore/SwitchStore.swift"
+    bypass = "Sources/ProctorAgent/Bypass.swift"
+
+    with tempfile.TemporaryDirectory() as tmp:
+        # The shape that used to pass: a colliding declaration in the file, and a
+        # QUALIFIED reach around the seam beside it.
+        root = _operator_tree(tmp, {
+            file: _SWITCH_STORE % _SPELT_OUT,
+            bypass: "enum Bypass {\n    static var operatorURL: URL { SwitchStore.operatorURL }\n}\n"})
+        armed = gate.run_seams(root, _operator_manifest(_SWITCH_ENTRIES))
+        check(any("SwitchStore.operatorURL" in f and "around its seam" in f for f in armed),
+              "a qualified reach around the seam is refused even from a file that "
+              "declares the same bare name",
+              "\n".join(armed) or "no finding: the whole file was skipped")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        # And the reason the excuse exists at all still holds: a file using its OWN
+        # member of that name, and never the owner's, clears.
+        root = _operator_tree(tmp, {
+            file: _SWITCH_STORE % _SPELT_OUT,
+            bypass: "enum Bypass {\n    static var operatorURL: URL { operatorURL }\n}\n"})
+        cleared = gate.run_seams(root, _operator_manifest(_SWITCH_ENTRIES))
+        check(not cleared,
+              "a file reaching only its own declaration of that name still clears",
+              "\n".join(cleared))
+
+
+def test_operator_path_gate_composed_path() -> None:
+    """A path composed from the operator's home names no literal, and is still a site."""
+    gate = _operator_gate()
+    file = "Sources/ProctorCore/SwitchStore.swift"
+    bypass = "Sources/ProctorAgent/Bypass.swift"
+    composed = ("enum Bypass {\n"
+                "    static var settingsURL: URL {\n"
+                "        SwitchStore.url(home: FileManager.default.homeDirectoryForCurrentUser)\n"
+                "    }\n}\n")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _operator_tree(tmp, {file: _SWITCH_STORE % _COMPOSED, bypass: composed})
+
+        # The literal sweep on its own sees nothing here, which is the hole.
+        literal = gate.census_sites(root, _OPERATOR_LITERAL)
+        check(all(bypass not in site[0] for site in literal),
+              "the literal sweep genuinely cannot see a composed path, so the second "
+              "sweep is doing the work rather than duplicating it",
+              f"literal sites: {[s[0] for s in literal]}")
+
+        armed = gate.run_census(root, _operator_manifest(_SWITCH_ENTRIES))
+        check(len(armed) == 1 and "Bypass.settingsURL" in armed[0],
+              "a new un-seamed path built by handing the operator's own home to a "
+              "parameterised builder is refused",
+              "\n".join(armed) or "no finding: the composed path needed no entry")
+
+        entry = _SWITCH_ENTRIES + [{"file": bypass, "declaration": "settingsURL",
+                                    "class": "prose", "reason": "fixture"}]
+        cleared = gate.run_census(root, _operator_manifest(entry))
+        check(not cleared, "the same composed path clears once it carries an entry",
+              "\n".join(cleared))
+
+        # And the tree's own `operatorURL`, written the same way, is a site rather
+        # than an entry with nothing behind it.
+        sites = [q for _, _, _, q, _ in gate.composed_sites(root, _operator_manifest(_SWITCH_ENTRIES))]
+        check("SwitchStore.operatorURL" in sites,
+              "the accessor written as a composition is itself a census site",
+              f"composed sites: {sites}")
 
 
 # The `PolicyStore.swift` shape both bugs came from, reduced to what causes them:
@@ -787,6 +931,9 @@ def main() -> int:
                test_operator_path_gate_nested_type_collision,
                test_operator_path_gate_seam_resolution,
                test_operator_path_gate_accessor_and_guard,
+               test_operator_path_gate_bare_name_is_not_a_wildcard,
+               test_operator_path_gate_qualified_reach_is_never_excused,
+               test_operator_path_gate_composed_path,
                test_operator_path_gate_reflector_guard,
                test_operator_path_gate_on_this_repository):
         try:

@@ -349,6 +349,30 @@ struct OperatorFilesWitnessTests {
                                                to: DirectoryWitness.read(operatorRoot))
         #expect(touched.isEmpty,
                 "an un-pathed switch save changed \(touched.count) file(s) under the operator's root: \(touched)")
+
+        // THE WRITE ARM'S ARMING. PRO-0099 gap-fix. `touched.isEmpty` is a zero,
+        // and the whole argument of this file is that a zero from an unarmed
+        // instrument measures nothing. Until now it stood on CASE-0272, which
+        // arms the reader with a `Data.write` of its own; this arms it with the
+        // PRODUCT'S OWN WRITE, over a root laid out exactly the way the operator's
+        // is, and it does so with the interlock fully intact — the DIVERT TARGET
+        // is what is sabotaged, by naming a decoy home, rather than the predicate.
+        // The operator's root is never named here.
+        let decoyHome = temporaryRoot()
+        #expect(!decoyHome.path.hasPrefix(
+                    FileManager.default.homeDirectoryForCurrentUser.path + "/"),
+                "the decoy home is inside the operator's own: \(decoyHome.path)")
+        let decoyRoot = decoyHome
+            .appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)",
+                                    isDirectory: true)
+        let decoyBefore = DirectoryWitness.read(decoyRoot)
+        try SwitchStore.save(saved, to: SwitchStore.url(home: decoyHome))
+        let decoyChanged = DirectoryWitness.changed(from: decoyBefore,
+                                                    to: DirectoryWitness.read(decoyRoot))
+        #expect(decoyChanged == ["settings/settings.json"],
+                "the same reader over an operator-shaped root the same call DOES write reported \(decoyChanged), so the zero above is a reader that cannot report a write")
+        #expect(TestProcess.isActive,
+                "the arming ran with the interlock disabled, so it proves nothing about the live one")
     }
 
     // MARK: CASE-0331 — the maestro debug root, which creates a directory per run
@@ -378,6 +402,17 @@ struct OperatorFilesWitnessTests {
         #expect(operatorBefore.files.count >= 1,
                 "the sweep found 0 files under the operator's root: a zero out of nothing")
 
+        // THE WRITE ARM'S ARMING, over the SAME call. PRO-0099 gap-fix. The whole
+        // effect of `maestroDebugDirectory(run:)` is a `mkdir`, so a file-only
+        // sweep either side of it reports zero whatever it does — the claim below
+        // could not have come out any other way. Two things follow: the claim is
+        // read through `changedEntries`, which sees a directory appear, and the
+        // arming sweeps the root this call DOES write with the same reader. The
+        // divert target is the decoy; the predicate is untouched.
+        let diverted = URL(fileURLWithPath: Session.testFallbackMaestroRoot, isDirectory: true)
+        #expect(!diverted.path.hasPrefix(operatorRoot.path))
+        let divertedBefore = DirectoryWitness.read(diverted)
+
         let run = Session.maestroDebugDirectory(run: 1)
         #expect(run.hasPrefix(Session.testFallbackMaestroRoot + "/"))
         var isDirectory: ObjCBool = false
@@ -386,10 +421,17 @@ struct OperatorFilesWitnessTests {
         #expect(isDirectory.boolValue)
         #expect(URL(fileURLWithPath: run).lastPathComponent.hasPrefix("run-"))
 
-        let touched = DirectoryWitness.changed(from: operatorBefore,
-                                               to: DirectoryWitness.read(operatorRoot))
+        let divertedChanged = DirectoryWitness.changedEntries(
+            from: divertedBefore, to: DirectoryWitness.read(diverted))
+        #expect(divertedChanged.contains(URL(fileURLWithPath: run).lastPathComponent + "/"),
+                "the same reader over the root this call DOES write reported \(divertedChanged), so the zero below is a reader that cannot report a run directory")
+        #expect(TestProcess.isActive,
+                "the arming ran with the interlock disabled, so it proves nothing about the live one")
+
+        let touched = DirectoryWitness.changedEntries(from: operatorBefore,
+                                                      to: DirectoryWitness.read(operatorRoot))
         #expect(touched.isEmpty,
-                "an un-pathed maestro run changed \(touched.count) file(s) under the operator's root: \(touched)")
+                "an un-pathed maestro run changed \(touched.count) entr(ies) under the operator's root: \(touched)")
     }
 
     // MARK: CASE-0332 — the iOS device frame, the half of DEF-142 left open
@@ -443,10 +485,42 @@ struct OperatorFilesWitnessTests {
             .hasPrefix("ios-pro-0099-before-"),
                 "the device frame is not named after the udid and label it was given: \(frame)")
 
-        let touched = DirectoryWitness.changed(from: operatorBefore,
-                                               to: DirectoryWitness.read(operatorRoot))
+        // THE WRITE ARM'S ARMING. PRO-0099 gap-fix, and the same reasoning as
+        // CASE-0331: `deviceFramePath` creates a directory and hands back a name,
+        // so the claim is read through `changedEntries` and the reader is shown
+        // reporting both halves — the `captures/` directory appearing and a PNG
+        // under it — over a root laid out exactly like the operator's, built from
+        // the product's own composition and the product's own returned filename.
+        // The interlock is untouched; the decoy is the divert target. The bytes
+        // are the test's, because the capture backend needs a screen: what is
+        // armed here is the SWEEP, which is what the claim below rests on.
+        let decoyHome = temporaryRoot()
+        #expect(!decoyHome.path.hasPrefix(
+                    FileManager.default.homeDirectoryForCurrentUser.path + "/"),
+                "the decoy home is inside the operator's own: \(decoyHome.path)")
+        let decoyRoot = decoyHome
+            .appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)",
+                                    isDirectory: true)
+        let decoyCaptures = decoyRoot.appendingPathComponent("captures", isDirectory: true)
+        let decoyBefore = DirectoryWitness.read(decoyRoot)
+        try FileManager.default.createDirectory(at: decoyCaptures,
+                                                withIntermediateDirectories: true)
+        try Data("png".utf8).write(
+            to: decoyCaptures.appendingPathComponent(
+                URL(fileURLWithPath: frame).lastPathComponent))
+        let decoyChanged = DirectoryWitness.changedEntries(
+            from: decoyBefore, to: DirectoryWitness.read(decoyRoot))
+        #expect(decoyChanged.contains("captures/"),
+                "the same reader could not see a captures directory appear under an operator-shaped root: \(decoyChanged)")
+        #expect(decoyChanged.contains { $0.hasPrefix("captures/ios-pro-0099-before-") },
+                "the same reader could not see this call's own frame name land under an operator-shaped root: \(decoyChanged)")
+        #expect(TestProcess.isActive,
+                "the arming ran with the interlock disabled, so it proves nothing about the live one")
+
+        let touched = DirectoryWitness.changedEntries(from: operatorBefore,
+                                                      to: DirectoryWitness.read(operatorRoot))
         #expect(touched.isEmpty,
-                "an un-pathed device frame changed \(touched.count) file(s) under the operator's root: \(touched)")
+                "an un-pathed device frame changed \(touched.count) entr(ies) under the operator's root: \(touched)")
     }
 
     // MARK: CASE-0273 — the digest catches what size and mtime miss
