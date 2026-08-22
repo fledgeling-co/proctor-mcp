@@ -1,0 +1,62 @@
+{
+ "what": "reckon 1.1.0 and 1.2.0 over the same tree: docs/features-to-triage (100 briefs) and docs/test-campaign (335 cases, 128 defect rows, 101 requirements, 26 surfaces)",
+ "tree": "a987f12",
+ "build_exit": {
+  "1.1.0": 0,
+  "1.2.0": 4
+ },
+ "class_counts": {
+  "1.1.0": {
+   "verified-done": 543,
+   "unmeasured": 37,
+   "undecided": 8,
+   "broken": 23,
+   "unjoined": 79
+  },
+  "1.2.0": {
+   "verified-done": 543,
+   "unmeasured": 37,
+   "undecided": 8,
+   "broken": 23,
+   "unjoined": 79
+  }
+ },
+ "work_items": {
+  "1.1.0": 147,
+  "1.2.0": 147
+ },
+ "rows_reclassified": {},
+ "cited_edges_removed": [
+  [
+   "BRIEF-97-an-input-the-check-cannot-classify",
+   "CASE-9999",
+   "cited"
+  ]
+ ],
+ "cited_edges_added": [],
+ "join_pct": {
+  "1.1.0": 21.0,
+  "1.2.0": 21.0
+ },
+ "findings_raised": [
+  {
+   "field": "id-shaped token",
+   "value": "CASE-9999",
+   "count": 1,
+   "ids": [
+    "BRIEF-97-an-input-the-check-cannot-classify"
+   ],
+   "placed_in": "broken"
+  },
+  {
+   "field": "requirement evidence",
+   "value": "inconclusive",
+   "count": 1,
+   "ids": [
+    "REQ-072"
+   ],
+   "placed_in": "unmeasured"
+  }
+ ],
+ "reading": "No row moved class and no count moved. What changed is that one confidence-1.0 citation built out of a placeholder inside an example command is gone, and two inputs that were resolved by a default are now findings naming the input and its row count. REQ-072's `inconclusive` is outside test-campaign's own REQ_EVIDENCE and was explained to every reader as the project's own account of itself."
+}

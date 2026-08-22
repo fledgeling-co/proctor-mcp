@@ -1,0 +1,14 @@
+# Two-way control on reckon check's vocabulary verdict (PRO-0104, DEF-202).
+# The same ledger twice, differing in one field: a defect row at a word the tool
+# classifies, and the same row at a word it does not.
+
+$ reckon check <ledger with defect status "open">
+2 rows · broken 1 · verified-done 1
+gate: clean
+exit=0
+
+$ reckon check <ledger with defect status "characterised">
+VIOLATION [vocabulary] defect status 'characterised' is not a word this tool classifies — 1 row(s) carry it (DEF-1), and each was placed in 'broken' by this tool's fail-closed default rather than by the registry. Give the word a rule or correct the rows; a longer list would only move the edge.
+2 rows · broken 1 · verified-done 1
+gate: FAILED (exit 4)
+exit=4
