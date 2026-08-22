@@ -163,7 +163,7 @@ closed — 34 argument-decode sites checked against their own published schema �
 
 ## Progress — 2026-08-22
 
-Built on `ai/pro-0092`, stopped before verify. Gate **2,073 tests in 252 suites, exit 0**, against a
+Built on `ai/pro-0092`, stopped before verify. Gate **2,074 tests in 252 suites, exit 0**, against a
 baseline of 2,064 in 251 on `main`.
 
 **Ten of the thirteen survivors now die; three are recorded with an argument each.** Six seams were
@@ -205,7 +205,7 @@ both.
 
 | Gate | Exit | Reading |
 |---|---|---|
-| `./scripts/test.sh` via `governor-run --weight 6` | **0** | *Test run with 2073 tests in 252 suites passed*. Refused three times first with `no berth available` — the governor's ceiling drops to 3 under critical CPU pressure, so a weight-6 claim cannot be granted at all until it lifts. |
+| `./scripts/test.sh` via `governor-run --weight 6` | **0** | *Test run with 2074 tests in 252 suites passed*. Refused nine times first with `no berth available` — the governor's ceiling drops to 3 under critical CPU pressure, so a weight-6 claim cannot be granted at all until it lifts. |
 | `defect_gate.py claims` | **0** | One claimed defect, DEF-217, reads `fixed`. |
 | `defect_gate.py dropped` | **0** | 2 files, 118 merges, 52,828 id/field pairs examined; no dropped value. |
 | `test_instruments.py` | **0** | 62 passed, 0 failed. |
