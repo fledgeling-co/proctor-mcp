@@ -1931,23 +1931,23 @@
     },
     {
       "id": "DEF-026",
-      "status": "open",
+      "status": "fixed",
       "title": "A run whose MCP peer dies keeps the agent queue past the 900-second pause backstop",
       "found": "PRO-0078 phase 6, driving the glass lane: three separate runs stranded this way and each one had to be cleared by restarting the agent",
       "detail": "When the shim process driving a run exits while a run is in flight, the run stays in the agent's queue holding the slot. Every subsequent proctor_act returns queueBusy with 'another session was driving this Mac ... gave up without running any step', so the lane is unusable until the agent is restarted.\n\nMEASURED: docs/test-campaign/evidence/witness/a4-stranded-run-queue.json reads heldForSeconds 552 with reason frontmostChanged; docs/test-campaign/evidence/witness/a4-stranded-run-queue-2.json reads the same run at 932 seconds, still held. The documented pause backstop is 900 seconds, so the second reading is past it and the run is still there.\n\nHappened three times in one session, each time after the driving process died rather than after any product action. NOT FIXED HERE: the repair is in run lifecycle and belongs to whoever owns the queue, not to a witness item.",
       "surface": "SURF-004",
       "req": "REQ-009",
-      "note": "STILL OPEN, checked rather than assumed (PRO-0097). The fixing item is PRO-0093 ('A dead peer holds the queue', brief 86), which reads `Ready for AI` in docs/feature-specs/LEDGER.md and has no branch merged into this lineage. Nothing on this branch clears the queue when the driving shim exits."
+      "note": "FIXED by PRO-0093. RunScheduler.acquire sweeps its active runs through PeerLiveness before deciding anything, so a slot held by a pid that no longer exists is released by the very call that would otherwise be refused. Liveness comes from the pid and start time already in RunSessionIdentity.key - no heartbeat, no new wire field. Proved against a real child process in Tests/ProctorAgentTests/PeerReclaimWiringTests.swift, with the scheduler's own snapshot as the recorder. Armed: sabotage S1 removes the sweep and the test fails with the original refusal verbatim - 'another session was driving this Mac ... gave up without running any step'. docs/test-campaign/evidence/PRO-0093/sabotages.txt"
     },
     {
       "id": "DEF-027",
-      "status": "open",
+      "status": "fixed",
       "title": "Forty events swallowed by the takeover block produced no yield and no held reason",
       "found": "PRO-0078 phase 6, building the REQ-007 effect witness across three runs",
       "detail": "The takeover block's tap calls onPersonInput for every event it declines to deliver, and SessionTakeover.swift:137 wires that to ContentionMonitor.noteUserInput, which sets the field ContentionWatch reads to decide the userInput condition.\n\nMEASURED across three runs driven with a helper process posting into the session while the run held the foreground: the agent reported swallowing 6, 24 and 10 events (docs/test-campaign/evidence/witness/a45b-act.json, a4-act.json, a4c-burst.json). No run recorded a yield: yields is null in all three act results. Six consecutive proctor_doctor reads of the live queue during the third run report the active run with held reason null (docs/test-campaign/evidence/witness/a4-poll.json).\n\nThe path is not dead in general: a yield on a different reason was captured in the same session, at docs/test-campaign/evidence/witness/a4-stranded-run-queue.json, reason frontmostChanged.\n\nThis may be correct by design. PersonInput.isAPerson requires sourcePid == 0, so a helper's events are correctly not a person, and the swallow count rising without a yield may be exactly the intended asymmetry. What is not established either way is whether the userInput yield fires for a real hand on a real keyboard, because nothing in this session could post at pid 0. Recorded as the open half of CASE-0062.",
       "surface": "SURF-005",
       "req": "REQ-007",
-      "note": "STILL OPEN, checked rather than assumed (PRO-0097). Same fixing item as DEF-026: PRO-0093 is `Ready for AI`, not merged. The takeover tap still wires onPersonInput to ContentionMonitor.noteUserInput with nothing recording a yield or a held reason."
+      "note": "FIXED by PRO-0093, and settled as a defect rather than an instrument limit. The isAPerson ceiling governs ContentionMonitor.considerInput, the passive NSEvent path; the block's swallow path calls noteUserInput, which applies no filter at all because the caller has already applied a stricter one. The helper's events were therefore admissible. What failed is when the field is read: contentionProbe runs only from the checkpoint before each step. a45b-act.json is a ONE-step batch of 74.7s with 6 swallowed events, so its only probe ran before the block was ever armed - no timing or load could have made it fire. a4-act.json's three steps of 18.6/20.2/17.7s all outlive the 10-second inputWindow, so a swallow was stale at the next boundary. Fixed by carrying the arrival as an edge (ContentionSample.userInputSince) and by probing once after the last step. Armed: S4, S5 and S7 each redden the one-step test. docs/test-campaign/evidence/PRO-0093/sabotages.txt"
     },
     {
       "id": "DEF-028",
