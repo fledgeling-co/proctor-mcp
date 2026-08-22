@@ -549,8 +549,9 @@
       "surfaces": [
         "SURF-012"
       ],
-      "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change",
-      "effect": "filesystem-write"
+      "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change PRO-0098: witnessed at effect-witness by CASE-0270..0272 with CASE-0273 guarding the reader, closing DEF-110.",
+      "effect": "filesystem-write",
+      "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The claim is a negative, so each case carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written."
     },
     {
       "id": "REQ-056",
@@ -747,6 +748,30 @@
       "class": "contract guarantee",
       "text": "Every key in the payload Proctor's window reads and Proctor's agent writes has one definition that both ends reach. This is not a style rule: the reader takes a default for a key it cannot find, so a rename that parts the two ends does not fail \u2014 it reports a wrong answer quietly.",
       "source": "DEF-039 one layer down; AgentModel read value[\"canShow\"] while RunHUDFeed.wire wrote \"canShow\" and nothing bound them; the same shape HistorySurface.Wire closed for the history window"
+    },
+    {
+      "id": "REQ-076",
+      "class": "behaviour",
+      "text": "The status window's applying state ends on the event that ends the agent restart \u2014 the first probe that finds the agent answering, or enough probes that have not \u2014 and never on elapsed time, so a restart that runs long is not drawn as the agent having failed",
+      "source": "docs/features-to-triage/90-the-four-nobody-owns.md; spec-PRO-0098.md A3; DEF-132, recorded by PRO-0090 while settling DEF-037",
+      "surfaces": [
+        "SURF-008"
+      ],
+      "effect": "none",
+      "evidence": "observed",
+      "note": "The lifecycle is RestartWatch in ProctorCore, fed probe results and holding no clock, so a restart of any duration is the same sequence to a test. AgentModel keeps the 1.2 s beat before the FIRST probe \u2014 polling immediately races launchd \u2014 and no longer clears anything on it."
+    },
+    {
+      "id": "REQ-077",
+      "class": "test-oracle guarantee",
+      "text": "A failure inside a test fails that test rather than aborting the runner: the suite always reaches a swift-testing verdict line, so a run that died and a run that found something are distinguishable from outside",
+      "source": "docs/features-to-triage/90-the-four-nobody-owns.md; spec-PRO-0098.md A1-A2; DEF-135 measured by PRO-0090, DEF-136 swept by PRO-0098",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "effect": "none",
+      "evidence": "observed",
+      "note": "Every force-unwrap in Tests is classed: 24 live sites converted to try #require or restructured away, 4 unfailable by construction left with the reason recorded. The claim is proved by breaking one converted site and showing the same sabotage report 0 tests and no verdict line before, and 1,992 tests with four named failures after."
     }
   ],
   "surface": [
@@ -2335,22 +2360,24 @@
     {
       "id": "DEF-110",
       "severity": "medium",
-      "status": "open",
+      "status": "fixed",
       "title": "REQ-055 declares a filesystem-write effect and no case backing it stands at effect-witness",
       "found": "PRO-0097, reading campaign.py check rather than the brief's summary of it",
       "detail": "REQ-055 ('Running the test suite does not read or write any state belonging to the operator of the machine it runs on') records effect `filesystem-write`, evidence `observed`, and no provider. Its five cases CASE-0130..CASE-0134 are all `outcome`. campaign.py's external-effect pass therefore names it under 'External-effect claims with no witness', and has since the census closed \u2014 the wave-13 note recorded unwitnessed=0 from the header line while the blocker list named it. NOT FIXED HERE: the requirement is a negative guarantee, so the honest witness is a recorder watching the suite run and reporting zero writes under the operator's home, and building it is an item's work rather than a line in this one. The alternative disposition is `vacuous`, and it should not be taken without the recorder that would establish it.",
       "surface": "SURF-022",
-      "req": "REQ-055"
+      "req": "REQ-055",
+      "resolution": "Fixed by PRO-0098. REQ-055 now carries a provider and four cases, three at `effect-witness`: CASE-0270..0273. The recorder is `DirectoryWitness` \u2014 a recursive sweep over a root recording existence, size, mtime and sha256 \u2014 reused from PRO-0089's already-armed `FileWitness` rather than built a second time, and lifted to Tests/ProctorAgentTests/Support/FileWitness.swift so both requirements stand on one instrument. Because the claim is a NEGATIVE, every case carries a control arm over the same call: the operator's root reports zero changed while an injected or decoy root reports non-zero, and the recorded count is the control arm's, stated as such. Armed four ways, including the dead-predicate shape (changed() forced to []) under which the claim arm stays green and only the control arm fires."
     },
     {
       "id": "DEF-111",
       "severity": "medium",
-      "status": "open",
+      "status": "fixed",
       "title": "REQ-063 declares a filesystem-write effect with no effect-witness case, over a path that really does write",
       "found": "PRO-0097, the same read",
       "detail": "REQ-063 ('The policy file is created with mode 0600 by the write that creates it') names PolicyStore.write as its provider, which opens a temporary with Darwin.open(O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0o600) and replaces. Its five cases CASE-0190..CASE-0193 and CASE-0198 are all `outcome` \u2014 they stat the result, which is the outcome of the write rather than a recording of it. Unlike DEF-110 this one does perform the effect, so the witness is available: a recorder over the write with the count of files created. NOT FIXED HERE for scope; brief 89 does not name it and building the witness is an item's work.",
       "surface": "SURF-022",
-      "req": "REQ-063"
+      "req": "REQ-063",
+      "resolution": "Fixed by PRO-0098. REQ-063 gains CASE-0274 and CASE-0275 at `effect-witness`: a recorder over the DIRECTORY across the write, naming every path the call created and taking each one's mode off disk through a fresh `attributesOfItem` after the call returned \u2014 rather than statting the one path a test was handed. That is the difference between the effect and its outcome, and it is what catches a save that created a second file or left a temporary behind. Both cover the create path and the replace path separately, and both are armed by restoring DEF-068's pre-fix `Data.write(to:options:.atomic)` and reading 0o644 where 0o600 is required."
     },
     {
       "id": "DEF-112",
@@ -2437,11 +2464,12 @@
     },
     {
       "id": "DEF-132",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "title": "isApplying is cleared by a fixed 1.2-second timer rather than by the agent's restart finishing, so a slow restart still reads as the agent failing",
       "found": "PRO-0090, while settling DEF-037; named in the spec as a defect rather than fixed there",
-      "detail": "AgentModel.swift:460-471. reprobeAfterGrant() sets isApplying, restarts the agent and clears the flag from a DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) \u2014 a fixed delay, not the restart's lifecycle. A restart that outlives 1.2 s leaves the window unreachable with isApplying false, which draws the red \"The background agent is not answering.\" block about a restart Proctor itself asked for. DEF-037's fix moves the applying treatment into the block that is on screen in that state, which closes the case where the timer is long enough and does not make the state trustworthy. gemini-3.7-flash-high raised the same hazard against its own recommendation when the fix was referred out of family."
+      "detail": "AgentModel.swift:460-471. reprobeAfterGrant() sets isApplying, restarts the agent and clears the flag from a DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) \u2014 a fixed delay, not the restart's lifecycle. A restart that outlives 1.2 s leaves the window unreachable with isApplying false, which draws the red \"The background agent is not answering.\" block about a restart Proctor itself asked for. DEF-037's fix moves the applying treatment into the block that is on screen in that state, which closes the case where the timer is long enough and does not make the state trustworthy. gemini-3.7-flash-high raised the same hazard against its own recommendation when the fix was referred out of family.",
+      "resolution": "Fixed by PRO-0098. `isApplying` is now computed over `RestartWatch` (Sources/ProctorCore/RestartWatch.swift), a clockless lifecycle fed the reachability of every doctor probe: it ends on the probe that finds the agent, or on a COUNT of probes that have not, never on elapsed time. The 1.2 is NOT raised and keeps its one correct job, the beat before the first probe, because polling immediately races launchd; it no longer clears anything. Cases CASE-0276..0282, seven behavioural and one source guard, armed by putting the whole defect back. The fix is also structural: the stored `isApplying` is gone, so the regression cannot return one line at a time."
     },
     {
       "id": "DEF-133",
@@ -2472,11 +2500,22 @@
     },
     {
       "id": "DEF-136",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "title": "Twenty-seven more force-unwrap sites across nine test files carry DEF-135's shape, each able to abort the runner rather than fail its own test",
       "found": "PRO-0090, sweeping for the shape once DEF-135 was measured",
-      "detail": "`grep -rn ')!' Tests` outside the file this item fixed: AuditChainTests 11, AuditChainWiringTests 4, ProctorCoreTests 3, TUIHistoryPaneTests 2, ToolchainTests 2, SwitchSettingsTests 2, MenuBarReadinessTests 1, GuestInventoryTests 1, RunHUDCharacterAssetTests 1. Not all are equally live \u2014 TimeZone(identifier: \"UTC\")! cannot fail on a Mac. But Toolchain.entry(for:)!, AuditSeal.decode(...)! and script.range(of: \"kill -0\")! each unwrap a lookup against production data, which is DEF-135's shape exactly: the regression the test exists for is the input that kills the runner. Left open rather than fixed here because a sweep across nine unrelated suites is a different item from this one's four surfaces, and each site needs a reading of whether #require or a restructure is right."
+      "detail": "`grep -rn ')!' Tests` outside the file this item fixed: AuditChainTests 11, AuditChainWiringTests 4, ProctorCoreTests 3, TUIHistoryPaneTests 2, ToolchainTests 2, SwitchSettingsTests 2, MenuBarReadinessTests 1, GuestInventoryTests 1, RunHUDCharacterAssetTests 1. Not all are equally live \u2014 TimeZone(identifier: \"UTC\")! cannot fail on a Mac. But Toolchain.entry(for:)!, AuditSeal.decode(...)! and script.range(of: \"kill -0\")! each unwrap a lookup against production data, which is DEF-135's shape exactly: the regression the test exists for is the input that kills the runner. Left open rather than fixed here because a sweep across nine unrelated suites is a different item from this one's four surfaces, and each site needs a reading of whether #require or a restructure is right.",
+      "resolution": "Fixed by PRO-0098. All 28 real sites classed (29 grep lines, one a comment): 24 live sites converted to `try #require` or restructured to a total expression, 4 unfailable by construction left in place with the reason beside them and in evidence/PRO-0098/unwrap-census.md. Proved worth doing rather than assumed: one converted site broken at what it unwraps reports 0 tests and no verdict line before, and 1,992 tests in 244 suites with four named failures after (evidence/PRO-0098/def136-arming.txt). Cases CASE-0283, CASE-0284. The brief's 27 was 28 \u2014 ProctorCoreTests gained a site \u2014 and the drift is recorded rather than smoothed. Two shapes outside the `)!` denominator carried as DEF-140."
+    },
+    {
+      "id": "DEF-140",
+      "severity": "low",
+      "status": "open",
+      "title": "Two force-unwrap shapes sit outside `grep -rn ')!' Tests` and carry DEF-136's hazard unswept",
+      "found": "PRO-0098, while classing the 28 sites that grep does return",
+      "detail": "DEF-136's denominator is `grep -rn ')!' Tests`, and PRO-0098 closed all of it. Two shapes cannot match that pattern and abort the runner identically. (1) `try!` \u2014 e.g. `try! key.signature(for: material)` in AuditChainTests, `try! String(contentsOf:)` in AuditChainWiringTests: a throw takes the runner down rather than failing the test, which is DEF-135's failure mode exactly. (2) `!` applied to a property or a subscript rather than a call \u2014 e.g. `args.last!` at MenuBarReadinessTests.swift:355. NOT FIXED HERE because neither is in this item's contract and the brief scopes the sweep to `)!` explicitly; recorded so the next sweep starts from a true denominator rather than from this one's boundary. The classification method in evidence/PRO-0098/unwrap-census.md applies unchanged: name the input space, show the failing branch is not in it, convert what is left.",
+      "surface": "SURF-022",
+      "req": "REQ-077"
     }
   ]
 }

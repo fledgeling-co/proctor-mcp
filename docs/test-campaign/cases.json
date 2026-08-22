@@ -3291,5 +3291,309 @@
     "armed": true,
     "armedBy": "Five files, two sentences planted in each, every one moving from exit 0 to exit 1 with display 2. Removed, all five back to exit 0.",
     "note": "The denominator guard the plan named as a risk. This conversion moves machinery out of the files it certifies, and the examined counts fall hard \u2014 Walkthrough 56 to 0, HistoryWindow 91 to 1, ProctorUIApp 69 to 2, AgentModel 47 to 7. A PASS at a denominator of 0 is a PASS over nothing, so the classifier is shown to still bite at each file's new size rather than at the size it had when the item started."
+  },
+  {
+    "id": "CASE-0270",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt",
+      "docs/test-campaign/evidence/PRO-0098/gate-after.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 4 in new-case-arming.txt: DirectoryWitness.changed() forced to return []. The CLAIM arm stays green \u2014 which is the point \u2014 and the CONTROL arm goes red: 'Expectation failed: (wrote.count -> 0) >= 1' and '(wrote -> []).contains(\"policy.json\")'. That is the dead-predicate shape for a negative guarantee, caught by the arm that exists to catch it. Restored, green.",
+    "witness": {
+      "recorder": "DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of a root recording existence, byte count, mtime and sha256 per file, run either side of one call. It is not PolicyStore and it is not the session under test.",
+      "effect": "filesystem-write",
+      "count": 1
+    },
+    "note": "PRO-0098, DEF-110. REQ-055 at the rung it declares, and the claim is a NEGATIVE, so the count needs saying plainly: the count of 1 is the CONTROL arm's, not the claim's. One call \u2014 Session.configurePolicy through an injected PolicyStore \u2014 is watched by one recorder over two roots. Over the operator's own application-support root (~/Library/Application Support/app.fledgeling.procter, swept whole rather than one file of it) the recorder reports ZERO changed files. Over the injected root the same recorder, on the same call, reports policy.json going absent to present. A zero from an instrument that has not been shown reporting non-zero is structural, and this is what stops it being one. Not a write-and-restore: nothing is restored because nothing is written, so a run killed mid-test leaves the operator's state as it found it. Test: OperatorFilesWitnessTests.aConfigureLeavesTheOperatorsRootAlone.",
+    "defects": [
+      "DEF-110"
+    ]
+  },
+  {
+    "id": "CASE-0271",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 4, the same run: with changed() dead the fallback-root assertion is the arm that fires. PRO-0089's own arming (evidence/PRO-0089/arming.txt) is the second: with the interlock disabled and operatorDirectory redirected to a decoy, the equivalent assertion reports the operator path being reached.",
+    "witness": {
+      "recorder": "DirectoryWitness over the operator's application-support root, plus a sweep of PolicyStore.testFallbackRoot for where the write actually landed",
+      "effect": "filesystem-write",
+      "count": 1
+    },
+    "note": "PRO-0098, DEF-110, the floor under the injection. A Session with NO setPolicyStore at all \u2014 the case that used to write the operator's file and the case a future test will forget \u2014 configures a policy. The operator's root is unchanged across it, and the control arm proves the call was not simply a no-op: the interlock's fallback root holds a policy.json, and that root is not under the operator's. Without the control arm 'unchanged' would also be the reading for a configure that did nothing. Test: OperatorFilesWitnessTests.anUninjectedSessionIsAlsoWatched.",
+    "defects": [
+      "DEF-110"
+    ]
+  },
+  {
+    "id": "CASE-0272",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 3: the sweep stops descending, options [.skipsSubdirectoryDescendants]. 'Expectation failed: (changed -> []) == [\"policy/policy.json\"]'. That is exactly how a recursive reader fails silently \u2014 it keeps reporting zero for the operator's root for ever because it never looks inside policy/ or audit/ \u2014 and it is why this case exists. Sabotage 4 (changed() dead) reds it too. Restored, green.",
+    "witness": {
+      "recorder": "DirectoryWitness over a decoy laid out like the operator's root, driven by two real filesystem writes",
+      "effect": "filesystem-write",
+      "count": 2
+    },
+    "note": "PRO-0098, DEF-110, the anti-vacuity case: the two above are worth nothing if the reader is pointed at a path nobody uses or cannot see into one. Half of it fixes the PATH \u2014 the swept root is derived the way the product derives it, from Wire.bundleIdentifier under this user's home, and it is asserted to be the parent of both PolicyStore.operatorDirectory and SwitchStore.url(home:). The other half arms the READER on a decoy with the same shape: a file written one directory down is reported as 'policy/policy.json' (count 1), and an in-place rewrite of that file is reported again (count 2), so the reader is shown catching both a creation and a modification. Test: OperatorFilesWitnessTests.theSweepIsPointedAtTheRealThing.",
+    "defects": [
+      "DEF-110"
+    ]
+  },
+  {
+    "id": "CASE-0273",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 5: the sha256 dropped from FileWitness, leaving existence, size and mtime \u2014 PRO-0089's original three. 'Expectation failed: (before.digest -> nil) != (after.digest -> nil)'. Restored, green.",
+    "note": "PRO-0098. An instrument property rather than a product one, recorded at outcome for that reason. A reader comparing only the two attributes a stat gives you reports 'unchanged' across an in-place overwrite of equal length inside one filesystem timestamp tick \u2014 which is a write, and is precisely the write a suite quietly rewriting the operator's settings would perform. The lift added a sha256 for it. The fixture asserts the two writes ARE equal-length before asserting the digests differ, so a fixture that failed to set up cannot pass this. Test: OperatorFilesWitnessTests.theDigestClosesTheSameLengthHole.",
+    "defects": [
+      "DEF-110"
+    ]
+  },
+  {
+    "id": "CASE-0274",
+    "req": "REQ-063",
+    "surface": "SURF-012",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 6: the pre-fix write put back \u2014 try data.write(to: url, options: .atomic), DEF-068's original defect. 'Expectation failed: (mode(url) -> 420) == (0o600 -> 384)'; 420 is 0o644. Restored, green.",
+    "witness": {
+      "recorder": "DirectoryWitness over the store's directory, before and after the call, with each created path's mode taken off disk afterwards through a fresh FileManager.attributesOfItem \u2014 a reader that is not PolicyStore and was not told what the write intended",
+      "effect": "filesystem-write",
+      "count": 1
+    },
+    "note": "PRO-0098, DEF-111. REQ-063's five existing cases stat the file the save left behind, which is the OUTCOME of the write; the effect is the write. The difference is not pedantry: a save that created three files and left two at 0644 passes every stat there, because a stat only looks at the path it was handed. This records the directory before and after, names every path the call produced (created == [\"policy.json\"], count 1, non-zero), and checks the mode of EVERY one of them rather than of one expected name. Test: PolicyFileModeTests.theWriteItselfIsWitnessed.",
+    "defects": [
+      "DEF-111"
+    ]
+  },
+  {
+    "id": "CASE-0275",
+    "req": "REQ-063",
+    "surface": "SURF-012",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 6, the same run: 'Expectation failed: (mode(store.url) -> 420) == (0o600 -> 384)' at the replace. Restored, green.",
+    "witness": {
+      "recorder": "the same DirectoryWitness, across the second save \u2014 the replace path rather than the create path",
+      "effect": "filesystem-write",
+      "count": 1
+    },
+    "note": "PRO-0098, DEF-111. The create path (Darwin.open with O_EXCL) and the replace path (replaceItemAt with .usingNewMetadataOnly) are different code, and only a recorder over the DIRECTORY sees both. This one also reports what a stat of policy.json structurally cannot: that no temporary outlived the call \u2014 after.files.count == 1 \u2014 and that the file's digest actually moved, so a replace that silently did nothing would fail here rather than pass on an unchanged mode. Test: PolicyFileModeTests.theReplaceIsWitnessed.",
+    "defects": [
+      "DEF-111"
+    ]
+  },
+  {
+    "id": "CASE-0276",
+    "req": "REQ-076",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/RestartWatchTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 1: RestartWatch.observed settles on the first probe whether or not the agent answered \u2014 the defect itself. 'Expectation failed: (watch -> RestartWatch(state: .settled, probes: 1, giveUpAfterProbes: 30)).isApplying -> false' at probe 1, and '(drawn(watch, reachable: false) -> .startAgent) == nil'. Restored, green.",
+    "note": "PRO-0098, DEF-132, the defect itself. Eight probes on the 2.0 s doctor cadence is sixteen seconds \u2014 an order of magnitude past the old 1.2 s clearing and an ordinary duration for a launchctl kickstart on a loaded machine. Through all eight the window draws no offer, and on the ninth probe, the one that finds the agent, the state ends. Asserted through AgentRecovery.decide rather than on a boolean, so the claim is about what the window DRAWS: ProctorUI is an executable target with no test target, and a decision living only inside AgentModel is one no test can reach. Test: RestartWatchTests.aSlowRestartIsNotAnOutage.",
+    "defects": [
+      "DEF-132"
+    ]
+  },
+  {
+    "id": "CASE-0277",
+    "req": "REQ-076",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/RestartWatchTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 1: 'Expectation failed: (drawn(watch, reachable: false) -> .startAgent) == nil'. Restored, green.",
+    "note": "PRO-0098, DEF-132, and the arming for CASE-0276 rather than a second claim. AgentRecovery.decide returns nil for several reasons, so a loop asserting nil could pass over a model that had lost the applying state altogether. This is the same call, the same unreachable agent, with the applying state gone, and it MUST draw the red \u2014 which is exactly what the fixed 1.2 s timer produced. Test: RestartWatchTests.theInstrumentReportsTheStateItIsWatchingFor.",
+    "defects": [
+      "DEF-132"
+    ]
+  },
+  {
+    "id": "CASE-0278",
+    "req": "REQ-076",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/RestartWatchTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 1: 'Expectation failed: (watch.state -> .settled) == .abandoned'. Restored, green.",
+    "note": "PRO-0098, DEF-132. The wait still ends. A restart that never comes back is abandoned after its probe budget and the window reports the agent down \u2014 which by then is a true statement rather than a guess, and is the half a naive 'clear it on the event' fix would leave hanging for ever. Test: RestartWatchTests.aRestartThatNeverLandsStopsClaimingToBeInFlight.",
+    "defects": [
+      "DEF-132"
+    ]
+  },
+  {
+    "id": "CASE-0279",
+    "req": "REQ-076",
+    "surface": "SURF-008",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/RestartWatchTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 1: '(busy.state -> .settled) == .abandoned' and '(quiet.state -> .settled) == .applying'. Restored, green.",
+    "note": "PRO-0098, DEF-132. The case that discriminates a count from a deadline, and the reason the brief's 'do not raise 1.2' is honoured in shape and not only in the literal. Two watches, the same wall clock, different amounts of evidence: five probes abandons, one probe does not. A deadline could not tell them apart, which is what makes swapping one stopwatch for a longer one a non-fix. Test: RestartWatchTests.theGiveUpIsEvidenceNotDuration.",
+    "defects": [
+      "DEF-132"
+    ]
+  },
+  {
+    "id": "CASE-0280",
+    "req": "REQ-076",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/RestartWatchTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 1: '(watch -> RestartWatch(state: .settled, probes: 1, giveUpAfterProbes: 2)).isApplying -> false'. Restored, green.",
+    "note": "PRO-0098, DEF-132. The edge the polling timer creates: the doctor poll runs for the app's whole life, so a watch that counted every tick would arrive at a restart already out of patience. Fifty idle probes leave it at idle with probes 0, and the restart afterwards still has its full budget. Test: RestartWatchTests.anIdleWatchIsNotAdvancedByThePoll.",
+    "defects": [
+      "DEF-132"
+    ]
+  },
+  {
+    "id": "CASE-0281",
+    "req": "REQ-076",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/RestartWatchTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage 1: '(watch.probes -> 1) == 2' and the second restart's isApplying inverting. Restored, green.",
+    "note": "PRO-0098, DEF-132. Three remaining edges in one row: a second restart is not judged on the first one's probes (begin resets the count); a settled watch is not reopened by a later probe, because an agent going away afterwards is an outage rather than a continuation of a restart Proctor asked for; and a give-up count below one is floored at one rather than making every restart instant. Tests: RestartWatchTests.beginResetsTheEvidence, .theRestartEndsOnce, .theCountHasAFloor.",
+    "defects": [
+      "DEF-132"
+    ]
+  },
+  {
+    "id": "CASE-0282",
+    "req": "REQ-076",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/RestartWatchTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/delay-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Three sabotages, each watched red, in delay-arming.txt. 2a \u2014 1.2 raised to 5.0: the first assertion fires. 2b \u2014 the restartWatch.observed call removed from apply(): the third fires. 2c \u2014 the whole defect back, a stored isApplying cleared inside the 1.2 s block: the middle one fires. Recorded rather than dropped: a FOURTH attempt, putting only `self?.isApplying = false` back in the block, does not compile, because isApplying is now computed over RestartWatch. That is not a failed arming, it is the structural half of the fix \u2014 the regression cannot come back one line at a time \u2014 and 2c is what it looks like when it comes back properly.",
+    "source": {
+      "analyzer": "String(contentsOf:) over Sources/ProctorUI/AgentModel.swift with three literal checks",
+      "examined": 1
+    },
+    "note": "PRO-0098, DEF-132. The brief's explicit prohibition, checked against the source rather than trusted from the diff: 1.2 is NOT raised. It keeps the one job it always did correctly \u2014 the beat before the first probe, because polling immediately races launchd \u2014 and no longer clears anything. Off-ladder by construction: this reads text and runs nothing, which is why the six cases above carry the behavioural claim. Test: RestartWatchTests.theDelayIsUnchanged.",
+    "defects": [
+      "DEF-132"
+    ]
+  },
+  {
+    "id": "CASE-0283",
+    "req": "REQ-077",
+    "surface": "SURF-022",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0098/unwrap-census.md",
+      "docs/test-campaign/evidence/PRO-0098/unwrap-census-raw.txt"
+    ],
+    "armed": true,
+    "armedBy": "The denominator is armed by having moved: the same grep returns 29 lines before the change and 5 after, and the 5 are the 4 recorded unfailable plus one comment. A census that could not tell those apart would have reported the same number twice.",
+    "source": {
+      "analyzer": "grep -rn ')!' Tests, recorded verbatim before any edit",
+      "examined": 29
+    },
+    "note": "PRO-0098, DEF-136. All 28 real sites classed (29 grep lines, one of them prose in a comment): 24 live and converted, 4 unfailable by construction and left with the reason beside them and in the census. THE COUNT DRIFTED AND IT IS RECORDED: the brief counted 27, and ProctorCoreTests.swift has gained a site since. Classing is the deliverable \u2014 converting all 28 blind would have been faster and said nothing, because TimeZone(identifier: \"UTC\")! cannot fail while Toolchain.entry(for: \"cua-driver\")! can, and the second is the shape that bit. The test for unfailable is not 'it has never failed' but 'name the input space and show the failing branch is not in it'. Two shapes outside this denominator \u2014 try! and a bare ! on a property \u2014 are named in the census and carried as DEF-140 rather than swept here.",
+    "defects": [
+      "DEF-136"
+    ]
+  },
+  {
+    "id": "CASE-0284",
+    "req": "REQ-077",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0098/def136-arming.txt",
+      "docs/test-campaign/evidence/PRO-0098/def136-arming-summary.md"
+    ],
+    "armed": true,
+    "armedBy": "This case IS the arming. Two runs of the whole suite over the same sabotage, differing only in the one converted site.",
+    "note": "PRO-0098, DEF-136, the brief's proof obligation: show the conversion buys something rather than assuming it. One real regression \u2014 Toolchain.entry(for:) made to miss on the literal id \"obscura\", an entry dropped from the production catalogue \u2014 applied to Sources, then the whole suite run twice. RUN A, the site as it was (Toolchain.entry(for: tool)!): 'Fatal error: Unexpectedly found nil', 'exited with unexpected signal code 5', 'FAIL: no swift-testing verdict line in the output', and the string 'Test run with' appears ZERO times in the entire run. RUN B, the site converted to try #require: 'Test run with 1992 tests in 244 suites failed after 36.027 seconds with 4 issues', and four named failures each reporting 'Toolchain.entry(for: tool -> \"obscura\") -> nil' with the test that hit it. Both exit 1; that is not the difference and never was. The difference is 0 tests and no verdict against 1,992 and four names. Restored afterwards, git status 0 modified files.",
+    "defects": [
+      "DEF-136"
+    ]
   }
 ]

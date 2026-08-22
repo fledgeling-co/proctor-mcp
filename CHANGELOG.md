@@ -130,6 +130,12 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **The Status window no longer says the agent is down while it's busy bringing the agent back.** Grant Screen Recording through Proctor and it restarts the background agent for you, because a running agent can't be told about a permission it already cached as denied. The window held an "applying" state across that restart, then cleared it 1.2 seconds later on a fixed timer. If the restart took longer than 1.2 seconds, and on a loaded machine that's exactly what happens, the window went straight to the red "The background agent is not answering" block; at a person who had just done what the window asked them to do.
+
+  The state now ends on the thing that actually ends a restart: the first check that finds the agent answering. However long that takes. If enough checks come back with nothing, Proctor stops claiming a restart is in flight and reports the outage, which by that point is a measurement rather than a guess.
+
+  Note: the 1.2 second wait is still there and it hasn't been lengthened. It's the beat before the *first* check, because checking the instant you ask launchd for a restart just races it and reports a healthy agent as down. The wait was never the problem; clearing the state on a clock was.
+
 - **When another program is driving your Mac, the run panel now says so properly.** Run Proctor with `PROCTOR_ACTUATION=cua` and cua-driver performs the steps instead of Proctor's own planes. Two things about that used to reach the run record and never reach the screen, which is where you're actually looking.
 
   The first is an escalation nobody asked for. cua-driver tries an accessibility action, then an event routed to one process, and only brings the app to the front when neither works. It decides that per element, so it can happen partway through a batch that never requested the foreground. The panel used to say the batch needed the front, which is a different claim. It now says the front was taken and the batch didn't ask for it.

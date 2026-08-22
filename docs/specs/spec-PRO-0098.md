@@ -120,3 +120,20 @@ registry value dropped by a merge.
 DEF-033 (a survival-rate measurement), DEF-099, and every ratchet are out of scope, as the brief
 states. `docs/feature-specs/LEDGER.md` is not touched. No gate, bound or threshold is edited to
 make anything green.
+
+## Defects
+
+| Defect | Was | Now | Cases |
+|---|---|---|---|
+| DEF-136 | open | fixed | CASE-0283, CASE-0284 |
+| DEF-132 | open | fixed | CASE-0276..CASE-0282 |
+| DEF-110 | open | fixed | CASE-0270..CASE-0273 |
+| DEF-111 | open | fixed | CASE-0274, CASE-0275 |
+
+**Defects:** DEF-136, DEF-132, DEF-110, DEF-111
+
+One defect was *opened* by this item and is deliberately not in the table above, because that table
+is what `defect_gate.py claims` reads and a newly opened defect is not a claim that anything is
+closed. The two force-unwrap shapes `grep -rn ')!' Tests` cannot match — `try!`, and a bare `!` on a
+property or subscript — carry DEF-136's hazard identically and are outside this brief's denominator.
+They are recorded in the census and in the registry, unswept, with the reason.
