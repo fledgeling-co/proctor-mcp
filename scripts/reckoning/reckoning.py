@@ -369,10 +369,20 @@ def axis_rows(prev_den, ctrl_den, cur_den):
 
 
 def classify_move(control, current, lower_is_better=False):
+    """Direction on one axis, decided by the share where there is one.
+
+    Where both sides carry a percentage, the share decides and the raw count
+    does not: 22/22 becoming 23/23 is a wider denominator fully covered, not
+    coverage improving, and calling it `better` would let the campaign grow its
+    way to an improvement it never measured. The count decides only where the
+    axis has no denominator at all, which is where `unmeasured` rows live.
+    """
     (cn, cof, cpct), (nn, nof, npct) = control, current
     if cn is None or nn is None:
         return "unknown"
-    if cpct is not None and npct is not None and abs(npct - cpct) >= 0.05:
+    if cpct is not None and npct is not None:
+        if abs(npct - cpct) < 0.05:
+            return "flat"
         better = npct < cpct if lower_is_better else npct > cpct
         return "improved" if better else "worsened"
     if nn != cn:
@@ -447,6 +457,12 @@ def compare(prev_dir, cur_dir, reckon=None, repo=None, out_name="delta"):
 
     prev_ver = (prev_run.get("tool") or {}).get("version")
     cur_ver = (cur_run.get("tool") or {}).get("version")
+    if cur_ver != tool["version"]:
+        return refuse("the current reading was taken with reckon %s and this comparison would build "
+                      "its control with reckon %s. A control built by a third tool belongs to "
+                      "neither side, and the delta would carry the difference between those two as "
+                      "project movement. Re-take the reading, or compare with the tool that took it."
+                      % (cur_ver, tool["version"]))
     same_tool = parse_version(prev_ver) == parse_version(cur_ver) and prev_ver == cur_ver
 
     workdir = tempfile.mkdtemp(prefix="reckoning-control-")
@@ -537,9 +553,9 @@ def assemble(prev_run, cur_run, prev_ledger, control, cur_ledger, attribution, r
     improved = [a["label"] for a in axes if a["direction"] == "improved"]
     worsened = [a["label"] for a in axes if a["direction"] == "worsened"]
     flat = [a["label"] for a in axes if a["direction"] == "flat"]
-    verdict = ("%d axis/axes improved, %d flat, %d worsened; evidence work %s at %s and the "
+    verdict = ("%d of %d axes improved, %d flat, %d worsened; evidence work %s at %s and the "
                "unmeasured class %s at %d rows."
-               % (len(improved), len(flat), len(worsened),
+               % (len(improved), len(axes), len(flat), len(worsened),
                   {"flat": "flat", "improved": "down", "worsened": "up", "unknown": "unknown"}[evidence_dir],
                   cur_w["evidence"],
                   {"flat": "flat", "improved": "smaller", "worsened": "larger", "unknown": "unknown"}[unmeasured["direction"]],
@@ -608,10 +624,13 @@ def render_delta(d):
         A("| %s | %s | %s | %s | %s |" % (a["label"], cell(ctrl), cell(cur), move, note))
     A("")
     u = d["unmeasured"]
-    A("**The class this exists for.** `unmeasured` went %d → %d rows (%s). %d row(s) left it, "
-      "%d entered. The ratchet below is what says the ones that left were measured rather than "
-      "reclassified."
-      % (u["control_rows"], u["current_rows"], ARROW[u["direction"]], len(u["left"]), len(u["entered"])))
+    published_um = d["classes"]["previous"].get("unmeasured", 0)
+    A("**The class this exists for.** `unmeasured` went %d → %d rows under a constant tool (%s). "
+      "%d row(s) left it, %d entered. The published baseline recorded %d; the difference between "
+      "that and the control column is the tool, not the project. The ratchet below is what says the "
+      "rows that left were measured rather than reclassified."
+      % (u["control_rows"], u["current_rows"], ARROW[u["direction"]], len(u["left"]),
+         len(u["entered"]), published_um))
     A("")
 
     A("## Where the movement came from")
@@ -671,9 +690,16 @@ def render_delta(d):
             A("_…and %d more in delta.json_" % (len(rows["moved"]) - 40))
         A("")
     if rows["appeared"]:
-        A("**New rows (%d):** %s" % (len(rows["appeared"]),
-                                     ", ".join("`%s`→`%s`" % (r["id"], r["class"])
-                                               for r in rows["appeared"][:60])))
+        by_class = Counter(r["class"] for r in rows["appeared"])
+        A("**New rows (%d):** %s." % (len(rows["appeared"]),
+                                      ", ".join("%d `%s`" % (n, cls)
+                                                for cls, n in sorted(by_class.items()))))
+        work = [r for r in rows["appeared"] if r["class"] != "verified-done"]
+        if work:
+            A("")
+            A("New rows that are not already done — the ones a reader schedules: %s%s"
+              % (", ".join("`%s` (`%s`)" % (r["id"], r["class"]) for r in work[:30]),
+                 "" if len(work) <= 30 else ", …and %d more in delta.json" % (len(work) - 30)))
         A("")
     if rows["vanished"]:
         A("**Rows no longer present (%d):** %s — every one of these is an id the registry stopped "
