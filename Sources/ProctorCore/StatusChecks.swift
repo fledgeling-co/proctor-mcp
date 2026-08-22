@@ -105,9 +105,22 @@ public enum StatusChecks {
     }
 
     /// The entries the report files under grants that are really tools. Today
-    /// that is the Shortcuts CLI, and only on a Mac that is missing it.
+    /// that is the Shortcuts CLI, and only from an agent older than PRO-0082 on a
+    /// Mac that is missing it — this agent no longer sends one.
     public static func misfiledTools(in grants: [DoctorReport.Grant]) -> [DoctorReport.Grant] {
         grants.filter { resolvedKind(ofCheckNamed: $0.name) == .tool }
+    }
+
+    /// Whether a name from a report's grants list belongs in a permissions
+    /// surface, by name alone.
+    ///
+    /// PRO-0082. The two partitions above take `DoctorReport.Grant` values, which
+    /// the TUI does not have: it reads the report as `JSONValue` and never
+    /// decodes it. So the rule needs a spelling that takes the name, and it is
+    /// this one rather than a second table — both go through `resolvedKind`, so a
+    /// surface cannot hold an opinion the drift test does not check.
+    public static func kindIsPermission(_ name: String) -> Bool {
+        resolvedKind(ofCheckNamed: name) != .tool
     }
 
     // MARK: - What a permission row says

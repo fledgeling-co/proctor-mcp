@@ -418,12 +418,39 @@ struct StatusWindowSourceTests {
         // see it.
         #expect(emitted.count >= 4,
                 "the scan found only \(emitted.sorted()) — a partial scan passes set equality against a map that is short by the same names")
-        #expect(emitted == Set(StatusChecks.known.keys),
+        // PRO-0082 broke the set EQUALITY this used to assert, deliberately and in
+        // one direction only. The agent stopped emitting `Shortcuts CLI` — a
+        // program on a disk was never a decision macOS holds about Proctor — while
+        // the map KEEPS its `.tool` entry, because a report from an agent older
+        // than that change still carries the row and a newer shim still has to
+        // decode it and keep it out of the permissions pane.
+        //
+        // So the invariant is now two-way rather than weaker: nothing the agent
+        // emits may be unclassified, AND the names the map carries that the agent
+        // no longer emits must be exactly the retired set below. Adding a map
+        // entry for a name nothing emits still fails here; so does emitting a name
+        // the map has never heard of.
+        let retired: Set<String> = [StatusChecks.shortcutsCLI]
+        #expect(emitted.subtracting(StatusChecks.known.keys).isEmpty,
                 """
                 the agent emits \(emitted.sorted()) and StatusChecks carries \
                 \(StatusChecks.known.keys.sorted()). Classify the new name deliberately \
                 rather than letting it fall to the default.
                 """)
+        #expect(Set(StatusChecks.known.keys).subtracting(emitted) == retired,
+                """
+                the map carries \(Set(StatusChecks.known.keys).subtracting(emitted).sorted()) \
+                that this agent never emits, and the retired set names \(retired.sorted()). \
+                A map entry for a name nothing sends is dead unless it is the decode \
+                path for an older agent's report.
+                """)
+        // And the retired name is retired for the reason claimed: it is kept as a
+        // tool, so an old report's row is filtered out of the permissions surfaces
+        // rather than classified into them.
+        for name in retired {
+            #expect(StatusChecks.kind(ofCheckNamed: name) == .tool)
+            #expect(!StatusChecks.kindIsPermission(name))
+        }
     }
 
     @Test("the footer's Re-check is gone and the three that stay are the right three")

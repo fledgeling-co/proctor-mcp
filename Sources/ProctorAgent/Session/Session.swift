@@ -43,6 +43,17 @@ actor Session {
     /// terminal that launched `swift test` happens to hold the grant, which is
     /// ambient machine state the test neither controls nor declares.
     let accessibilityProbe: @Sendable () -> Bool
+    /// Whether `/usr/bin/shortcuts` is on this Mac, injectable for exactly the
+    /// reason the two probes either side of it are: it is a fact about the
+    /// machine running the suite rather than about the code under test.
+    ///
+    /// PRO-0082 added the seam because the clause it needed to prove — that the
+    /// health report never files a tool under `grants` — is only interesting on a
+    /// Mac that is MISSING the CLI, since that was the only condition under which
+    /// the old code appended it. Every Mac in this fleet has it, so without this
+    /// the test would pass on a case it never reached and its arming would be
+    /// vacuous.
+    let shortcutsProbe: @Sendable () -> Bool
     /// Reads Secure Event Input, injectable for exactly the reason above, and
     /// added because fixing only the Accessibility half left the same test
     /// failing on the other one. Secure input is on whenever anything anywhere
@@ -730,6 +741,9 @@ actor Session {
          tools: ToolProbes = ToolProbes(),
          screenRecordingProbe: ScreenRecordingProbe = .live,
          accessibilityProbe: @escaping @Sendable () -> Bool = { Grants.accessibility() },
+         shortcutsProbe: @escaping @Sendable () -> Bool = {
+             FileManager.default.isExecutableFile(atPath: "/usr/bin/shortcuts")
+         },
          secureInputProbe: @escaping @Sendable () -> Bool = { Grants.secureEventInputActive() },
          actuator: (any ActuationBackend)? = nil,
          runControl: RunControl = RunControl(),
@@ -744,6 +758,7 @@ actor Session {
         self.runControl = runControl
         self.contentionMonitor = contentionMonitor
         self.accessibilityProbe = accessibilityProbe
+        self.shortcutsProbe = shortcutsProbe
         self.secureInputProbe = secureInputProbe
         self.settler = Settler(capture: capture)
         // Defaulted to the native planes wrapping the same engine, so every
