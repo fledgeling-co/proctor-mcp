@@ -28,10 +28,11 @@ location named beside it.
 | 12 | `Overlay/TakeoverOverlay.swift:363` `if type == .tapDisabledByTimeout \|\| …` | `==`→`!=` | no seam | seam + kill |
 | 13 | `Session/AuditKeyStore.swift:47` `appendingPathComponent("audit.pub", isDirectory: false)` | `false`→`true` | no seam | seam + kill |
 
-Nine killed, four recorded. The four are argued in `REPORT.md` and in the spec's progress section,
+Ten killed, three recorded — count the table above: seven `seam + kill` plus three other kills. The
+three are argued in `REPORT.md` and in the spec's progress section,
 not asserted here.
 
-## Why three of the four are not chased
+## Why the three are not chased
 
 `3000`→`3001` is one millisecond on a capture timeout; `44`→`45` is one point of plate padding
 below a text run that both values still clear; `scale * 2`→`scale * 3` changes the badge padding at

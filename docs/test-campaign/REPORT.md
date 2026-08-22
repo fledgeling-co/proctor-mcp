@@ -372,7 +372,8 @@ average that reached 271, and the runner scored a timeout as a kill, so the hone
 
 PRO-0092 re-measured it the same way and got **20 SURVIVED of 24 scored — 83.3%** — over the same 84
 files, count 24, seed 20260823 against 20260821 so the two mutant sets are disjoint. 0 unbuildable,
-0 TIMEOUT, and nothing near the bound: the longest mutant ran 31.9s of 600s.
+0 TIMEOUT, and nothing near the bound: the longest mutant ran 36.0s of 600s
+(`SessionAssert.swift:63`). Corrected at verification from 31.9s, which is the third-longest.
 
 **One mutant is 4.2 points at n=24, so the 3.1-point move is smaller than the resolution of either
 sample.** The package-level rate has not been shown to move, and the arithmetic behind that is the

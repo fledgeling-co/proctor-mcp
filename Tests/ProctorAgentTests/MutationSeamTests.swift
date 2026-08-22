@@ -11,8 +11,8 @@ import Testing
 // PRO-0080 ran 24 mutants over a pool of 3,189 sites under seed 20260821 and 19
 // survived. Five were killed there, one was argued equivalent, and thirteen were
 // recorded as `no seam` or `uncovered-by-lane` — headless-testable in principle,
-// with no fake to test them through. Nine of those thirteen are killed here; the
-// other four are recorded in the spec with the argument for each, because the
+// with no fake to test them through. Ten of those thirteen are killed here; the
+// other three are recorded in the spec with the argument for each, because the
 // only oracle available to them is the literal the mutation changed, and a test
 // that writes a constant a second time raises the score while lowering what the
 // suite knows.
