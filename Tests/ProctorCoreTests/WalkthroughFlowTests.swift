@@ -292,6 +292,243 @@ struct WalkthroughFlowTests {
                 != WalkthroughFlow.Grant.accessibility.rowDescription)
     }
 
+    // MARK: - PRO-0086. The refusal says why, and the door out stays open.
+
+    /// A1. The biconditional, at all sixteen combinations.
+    ///
+    /// Asked as one clause rather than two lists because the failure this item
+    /// exists to remove is a refusing state with no reason, and its mirror — a
+    /// reason drawn beside a button a person can press — is the same defect
+    /// wearing the other face. Either one breaks this test at the state that
+    /// caused it.
+    @Test("DEF-160 · a reason exists exactly where the primary refuses, at all sixteen combinations")
+    func aReasonExistsExactlyWhereThePrimaryRefuses() {
+        var explained: [String] = []
+        for step in WalkthroughFlow.Step.allCases {
+            for ax in [false, true] {
+                for sr in [false, true] {
+                    let enabled = WalkthroughFlow.primaryEnabled(
+                        on: step, accessibility: ax, screenRecording: sr)
+                    let reason = WalkthroughFlow.primaryDisabledReason(
+                        on: step, accessibility: ax, screenRecording: sr)
+                    #expect((reason == nil) == enabled,
+                            "\(step.rawValue) ax=\(ax) sr=\(sr): enabled \(enabled), reason \(String(describing: reason))")
+                    if let reason {
+                        #expect(!reason.isEmpty)
+                        explained.append("\(step.rawValue)/\(ax)/\(sr)")
+                    }
+                }
+            }
+        }
+        // The population, printed as a set. It is A3's population — the three
+        // states PRO-0081 created — and every one of them now carries a sentence.
+        #expect(explained.sorted() == ["permissions/false/false",
+                                       "permissions/false/true",
+                                       "permissions/true/false"],
+                "the explained set is \(explained.sorted())")
+    }
+
+    /// A2. What the sentence says, in each of the three states, and the
+    /// coherence clause: the caption and the filled Allow button nominate the
+    /// same first move.
+    ///
+    /// WHICH ASSERTION CARRIES THE COHERENCE CLAUSE: the verbatim sentences at
+    /// the foot of this test, not the `prominentGrant` agreement above them.
+    /// The agreement check cannot fail — the reason names every missing grant,
+    /// and `prominentGrant` returns one of the missing grants, so
+    /// `reason.contains(prominent.title)` is true by construction whichever
+    /// missing grant the caption nominates. A mutation taking the first move
+    /// from `missing.last` instead of from `prominentGrant` passes it and is
+    /// caught by the literal `"… Start with Accessibility."` alone. The
+    /// agreement clause is kept as a statement of the rule; the literal is the
+    /// guard.
+    @Test("DEF-160 · the reason names every missing grant and agrees with the prominent one")
+    func theReasonNamesTheMissingGrantAndTheNextAction() {
+        typealias G = WalkthroughFlow.Grant
+        for ax in [false, true] {
+            for sr in [false, true] {
+                guard let reason = WalkthroughFlow.primaryDisabledReason(
+                    on: .permissions, accessibility: ax, screenRecording: sr) else { continue }
+                let missing = G.allCases.filter { $0 == .accessibility ? !ax : !sr }
+                for grant in missing {
+                    #expect(reason.contains(grant.title),
+                            "ax=\(ax) sr=\(sr): “\(reason)” does not name \(grant.title)")
+                }
+                for held in G.allCases where !missing.contains(held) {
+                    #expect(!reason.contains(held.title),
+                            "ax=\(ax) sr=\(sr): “\(reason)” names \(held.title), which is already granted")
+                }
+                // The next action names the row's own button word, so the
+                // instruction points at a control that is on screen.
+                #expect(reason.contains(WalkthroughFlow.Copy.allow),
+                        "“\(reason)” does not name the control to press")
+                let prominent = WalkthroughFlow.prominentGrant(accessibility: ax, screenRecording: sr)
+                #expect(prominent != nil)
+                if let prominent {
+                    #expect(reason.contains(prominent.title),
+                            "“\(reason)” does not nominate \(prominent.title), which is the Grant drawn prominent")
+                }
+            }
+        }
+        // The three sentences, written out, so a reword is a decision somebody
+        // makes rather than a silent one.
+        #expect(WalkthroughFlow.primaryDisabledReason(
+            on: .permissions, accessibility: false, screenRecording: false)
+                == "Allow Accessibility and Screen Recording above to continue. Start with Accessibility.")
+        #expect(WalkthroughFlow.primaryDisabledReason(
+            on: .permissions, accessibility: true, screenRecording: false)
+                == "Allow Screen Recording above to continue.")
+        #expect(WalkthroughFlow.primaryDisabledReason(
+            on: .permissions, accessibility: false, screenRecording: true)
+                == "Allow Accessibility above to continue.")
+        // Only the both-missing state names a first move; with one grant left
+        // there is nothing to order.
+        #expect(!(WalkthroughFlow.primaryDisabledReason(
+            on: .permissions, accessibility: true, screenRecording: false) ?? "")
+                .contains(WalkthroughFlow.Copy.reasonStart))
+    }
+
+    /// A5. A grant taken away mid-flow refuses the primary again — and the
+    /// person is told why and can still leave. The lockout this guards against
+    /// is the refusal arriving with no caption and no exit.
+    @Test("DEF-160 · a revocation refuses, explains, and does not trap")
+    func aRevocationIsNotALockout() {
+        // Both held: the primary is live and says nothing.
+        #expect(WalkthroughFlow.primaryEnabled(on: .permissions,
+                                               accessibility: true, screenRecording: true))
+        #expect(WalkthroughFlow.primaryDisabledReason(on: .permissions,
+                                                      accessibility: true, screenRecording: true) == nil)
+        // Either grant goes away.
+        for (ax, sr) in [(false, true), (true, false)] {
+            #expect(!WalkthroughFlow.primaryEnabled(on: .permissions,
+                                                    accessibility: ax, screenRecording: sr))
+            let reason = WalkthroughFlow.primaryDisabledReason(on: .permissions,
+                                                               accessibility: ax, screenRecording: sr)
+            #expect(reason != nil, "ax=\(ax) sr=\(sr) refuses with no reason, which is the lockout")
+            // The way out, asked at this state. `!Copy.skip.isEmpty` stood here
+            // and was an instrument reading itself: a non-empty string constant
+            // is false in no tree anyone could write, so it counted nothing
+            // towards the clause it was listed under. `showsSkip` is the rule
+            // the view's condition reads, and it is false in a tree where the
+            // revocation closes the door.
+            #expect(WalkthroughFlow.showsSkip(on: .permissions,
+                                              accessibility: ax, screenRecording: sr),
+                    "ax=\(ax) sr=\(sr) refuses the primary and draws no way out, which is the lockout")
+            #expect(WalkthroughFlow.completes(.skipped))
+        }
+    }
+
+    /// A6. The restart requirement, as a rule about when it is stated. The
+    /// design of record draws it in the pane where the grant is missing and
+    /// omits it where it is held.
+    @Test("DEF-161 · the restart requirement is stated while Screen Recording is missing")
+    func theRestartRequirementIsStatedWhileTheGrantIsMissing() {
+        #expect(WalkthroughFlow.statesRestartNote(screenRecording: false))
+        #expect(!WalkthroughFlow.statesRestartNote(screenRecording: true))
+        // PRO-0067's A5 stands: the fact is true whether or not a restart is
+        // offered, and it is the Screen Recording grant that carries it.
+        #expect(WalkthroughFlow.Grant.screenRecording.needsRestart)
+        #expect(WalkthroughFlow.Copy.restartNote.contains(WalkthroughFlow.Grant.screenRecording.title))
+    }
+
+    /// A3, A4, A6's rendered halves — read from the view's source, because there
+    /// is no `ProctorUI` test target and no window server here. This is
+    /// `source-analysis` and claims nothing above it: it says the drawing site
+    /// is bound to the Core rule, not that a window drew the sentence. The glass
+    /// lane asks that, and CASE-0316 records what it answered.
+    @Test("DEF-160 · the footer draws the reason and hands it to the button")
+    func theFooterDrawsTheReason() throws {
+        let source = Self.withoutComments(try Self.walkthroughSource())
+        #expect(source.contains("WalkthroughFlow.primaryDisabledReason("),
+                "the view does not read the Core rule")
+        #expect(source.contains("WalkthroughFlow.ID.reason"),
+                "the caption carries no identifier, so no glass lane can find it")
+        #expect(source.contains(".hint(disabledReason)"),
+                "the disabled button does not carry the reason as an accessibility hint")
+    }
+
+    @Test("DEF-161 · the permissions sheet draws the restart note")
+    func theSheetDrawsTheRestartNote() throws {
+        let source = Self.withoutComments(try Self.walkthroughSource())
+        #expect(source.contains("WalkthroughFlow.Copy.restartNote"),
+                "the constant is still rendered nowhere, which is DEF-161")
+        #expect(source.contains("WalkthroughFlow.statesRestartNote("),
+                "the view decides for itself when to draw the note")
+    }
+
+    /// A4. The door out, read as a count rather than as a reading. One
+    /// `.disabled(` in the whole file and it is the primary's: a `.disabled` on
+    /// Skip, or on Back, would make the refusal a trap and would land here.
+    @Test("DEF-160 · skip is drawn beside the refusal and nothing disables it")
+    func skipIsNeverClosed() throws {
+        let source = Self.withoutComments(try Self.walkthroughSource())
+        let disables = source.components(separatedBy: ".disabled(").count - 1
+        #expect(disables == 1,
+                "Walkthrough.swift carries \(disables) `.disabled(` modifiers; exactly one — the primary's — is the rule, and a second could close the way out")
+        let skip = try #require(source.range(of: "WalkthroughFlow.ID.skip"))
+        let primary = try #require(source.range(of: "WalkthroughFlow.ID.primary)"))
+        #expect(skip.lowerBound < primary.lowerBound,
+                "Skip setup is drawn after the primary; the one `.disabled(` can no longer be attributed by order")
+        // And the one that exists sits after Skip's declaration, so the count
+        // above cannot be satisfied by a `.disabled` on Skip with the primary's
+        // removed.
+        let disabled = try #require(source.range(of: ".disabled(!WalkthroughFlow.primaryEnabled("))
+        #expect(primary.lowerBound < disabled.lowerBound)
+    }
+
+    /// A4, the presence half — the half the count clause above cannot reach.
+    ///
+    /// `skipIsNeverClosed` counts `.disabled(` over the whole file, and a
+    /// verifier closed the door out without adding one: wrapping the button in
+    /// `if step != .connect, WalkthroughFlow.primaryEnabled(…)` removes Skip in
+    /// exactly the three refusing states, and the count, the ordering and the
+    /// rest of the suite all stayed green. A file-level `#require(range(of:
+    /// "WalkthroughFlow.ID.skip"))` stood in for a per-state claim, and a
+    /// substring in a file says nothing about a state.
+    ///
+    /// So the claim is asked in two halves, each of which the other cannot
+    /// cover. The rule is asked at all sixteen states in Core, where a lockout
+    /// written into the rule fails at the states it closes. The view's
+    /// condition is then read verbatim, whitespace collapsed, and must be that
+    /// rule and nothing else — a second clause on this `if` is how the door
+    /// closes with no `.disabled` anywhere, and it lands here.
+    @Test("DEF-160 · the way out is drawn in every refusing state, and its condition reads one rule")
+    func skipIsOfferedInEveryRefusingState() throws {
+        var offered: [String] = []
+        for step in WalkthroughFlow.Step.allCases {
+            for ax in [false, true] {
+                for sr in [false, true] {
+                    let shows = WalkthroughFlow.showsSkip(
+                        on: step, accessibility: ax, screenRecording: sr)
+                    #expect(shows == (step != .connect),
+                            "\(step.rawValue) ax=\(ax) sr=\(sr): showsSkip \(shows)")
+                    if shows { offered.append("\(step.rawValue)/\(ax)/\(sr)") }
+                }
+            }
+        }
+        // A3's population, named state by state rather than counted. These are
+        // the three the design of record draws with the primary disabled, and
+        // they are the three a lockout removes.
+        for refusing in ["permissions/false/false",
+                         "permissions/false/true",
+                         "permissions/true/false"] {
+            #expect(offered.contains(refusing),
+                    "\(refusing) refuses the primary and offers no way out; the offered set is \(offered.sorted())")
+        }
+
+        // And the view asks that rule, with nothing else on the condition.
+        let source = Self.withoutComments(try Self.walkthroughSource())
+        let button = try #require(source.range(of: "Button(WalkthroughFlow.Copy.skip)"))
+        let head = String(source[..<button.lowerBound])
+        let start = try #require(head.range(of: "if ", options: .backwards))
+        let condition = String(head[start.lowerBound...])
+            .components(separatedBy: .whitespacesAndNewlines)
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+        #expect(condition == "if WalkthroughFlow.showsSkip(on: step.flow, accessibility: granted(.accessibility), screenRecording: granted(.screenRecording)) {",
+                "Skip setup is drawn under “\(condition)”; A4 requires the Core rule and no second clause, because a clause here closes the way out in the states that need it")
+    }
+
     /// Whole-line comments removed, so a source guard counts code.
     ///
     /// Line-based and deliberately crude: it does not understand a trailing
