@@ -1,6 +1,7 @@
 # PRO-0008: MCP surface modernization
 
 **ID:** PRO-0008
+**Brief:** `docs/features-to-triage/08-mcp-surface-modernization.md`
 **Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13

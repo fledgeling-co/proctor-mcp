@@ -1,6 +1,7 @@
 # PRO-0001: CUA schema façade
 
 **ID:** PRO-0001
+**Brief:** `docs/features-to-triage/01-cua-schema-facade.md`
 **Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13

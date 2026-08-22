@@ -2264,3 +2264,174 @@ it does not print a literal `EXIT=0` line, and three runner briefs have said it 
 `fledgeling-plugins` is no longer clean — `plugins/flagship/` untracked and `.claude-plugin/marketplace.json`
 modified at 22:26 by a peer authoring a new plugin. PRO-0101's two commits there went in by explicit
 path over two files under `plugins/shipyard/skills/triage/`; nothing of the peer's was staged.
+
+### PRO-0101 built and ready to verify — provenance, both directions (2026-08-22)
+
+`ai/pro-0101` at `bea418b`, fast-forwarded onto `main` at `656d9b2` rather than rebased, because
+the branch held no commits of its own past `8378138`. Ids: **REQ-100, REQ-101 · CASE-0430..0438 ·
+DEF-215 · SURF-024.** Gates: suite **2,061 in 251, exit 0, twice**, baseline unchanged with no
+Swift touched; `spec_citation_measure.py` 14/14 exit 0; `spec_citation_arm.py` 18/18 pinned and
+14/14 checks watched to fail, exit 0; `test_instruments.py` 62/62; `operator_path_gate.py` and
+`defect_gate.py` both modes exit 0. `campaign.py check` exits 1 here **and on the merge base with
+an identical blocker set** — CASE-0001, CASE-0318, CASE-0333..0335, REQ-007, REQ-024, REQ-086 —
+naming none of this item's ids.
+
+**All 24 uncited specs now say where they came from**, and 4 of them came from somewhere other
+than a brief: PRO-0063 the screenshot-encoding research as a follow-on to PRO-0006, PRO-0075 the
+campaign's own report when 0.8.0 brought a plane wave 9 had never run, PRO-0076 a direct request
+against PRD §9 and §10, and PRO-0096, which already carried the form.
+
+**The number would have been wrong on seven of the twenty.** PRO-0014 through PRO-0017 sit one
+behind briefs 15 to 18, and PRO-0034 is brief 35 — whose own retirement banner names PRO-0034,
+while the number points at PRO-0035, "The browser catalogue stops guessing". Every mapping was
+made by reading, and the seven say so on the line.
+
+**The fallback was already gone**, removed by PRO-0102 at `224a696` with the reasoning in
+`project_id_in`'s docstring. This item verified it rather than editing the same place twice, which
+is what this spec's assumption asked of whichever item reached it second — so the ledger should
+read one fix and one verification, not two fixes.
+
+**The reverse direction does not close by citation alone, and DEF-215 is why.** The ledger carries
+103 ids against 99 spec files. Briefs 23 and 40 are PRO-0022 and PRO-0039, each named in the
+brief's own retirement banner, and neither id has a spec to carry a citation. Recorded open, in
+`docs/feature-specs/UNCLAIMED-BRIEFS.md` with a reason, rather than fixed: writing retrospective
+specs for two retired items and one merged one is a separate decision about whether a retired item
+earns a spec at all.
+
+**The added clause has the only exerciser of the form it introduced.** No spec uses `path @ sha`
+yet — the shared stage will write it when it consumes a brief — so CASE-0432 is armed two-way on
+immutable shas rather than one: `@ 3fb7681` must PASS because that commit holds the brief, and
+`@ 400808d` must FAIL because that is the commit which deleted it. Both were read with
+`git cat-file -e` before being written in, because this campaign has already had an arming resolve
+its reference with `git merge-base` and report `caught 0 of the 2 known offenders` once the fix
+merged.
+
+**Three of the arming's own mutations reported NOT ARMED against checks that worked**, and all
+three were the mutation's fault: a partial line replacement left the tail of the sentence attached
+so the shortened reason stayed long enough to pass; two regex mutations emitted a doubled backslash
+into the mutated source so the pattern matched nothing; and a scaffold quoted with its newlines
+intact broke the verdict parser and read as MISSING. An unarmed report is a claim about the
+instrument, and here it was a claim about the arming.
+
+**The shared repo was clean at the shipyard edit and is not clean now.** `plugins/flagship/`
+appeared untracked at 22:26 — a peer authoring a new plugin. Both commits went in by explicit path
+over two files under `plugins/shipyard/skills/triage/`, so nothing of theirs was swept in, and
+nothing of theirs was touched. `364c785` is the forward half.
+
+**The thermal flip was measured again, a third shape.** `not_limited` held 1,091s →
+`limited` held 0 → `not_limited` held 0, across 63 seconds, with load per core *falling* 0.498 →
+0.441 → 0.359. `dwell_required_sec` is 60 and `held_for_sec` counts only the current state, so a
+single quiet minute flips the verdict in either direction. Three samples remain the minimum.
+
+### PRO-0101 merged — wave 16 is three-quarters closed (2026-08-22)
+
+`main` carries PRO-0100, PRO-0101 and PRO-0102. PRO-0103 is still building. Nothing pushed.
+
+| Gate on merged `main` | Exit |
+|---|---|
+| `./scripts/test.sh` | **0** — 2,064 tests in 251 suites |
+| `spec_citation_measure.py` | **0** — 15/15; specs 99, briefs 96 (claimed 92 · registered 4 · **unclaimed 0**) |
+| `spec_citation_arm.py` | **0** — 23/23 mutations as pinned, 15/15 checks watched to fail |
+| `defect_gate.py dropped` | **0** |
+| `test_instruments.py` | **0** — 62 passed |
+| `campaign.py check` | 1, unmoved from its merge base |
+
+**The registry merge conflicted a fifth time and the per-row rule held a third time.** Again `main`
+won as corrector on exactly DEF-140, 162, 163, 165, 175 and 193 — the branch forked before PRO-0100
+landed and still recorded them `open`. Nothing was changed on both sides in any merge tonight, which
+is worth stating: **the rule that took three bad merges to learn costs nothing to apply.**
+`ORCHESTRATOR.md` also conflicted and both sides were kept, because the branch's account of its own
+build carries detail this file's summary does not.
+
+**Open defects: nine.** DEF-033 (PRO-0092's), DEF-141/151/180 (recorded limits), DEF-215 (four ledger
+rows with no spec, deliberately left open), and four opened by the findings gate in one evening —
+DEF-200, 201, 202, 203.
+
+### One class of defect showed up in two instruments in two repositories within a day
+
+DEF-201: reckon's `ID_RE` reads a brief's whole body, so a quoted example id becomes a citation at
+confidence 1.0. DEF-203: `spec_citation_measure.py`'s legacy fallback accepts a brief path from a
+fenced block, an HTML comment or a struck-through line, its `none.` floor accepts an unresolvable
+reference and any backtick pair padded to twenty characters, and reverse totality is satisfied by an
+incidental mention in an unrelated spec.
+
+**A scanner that reads a whole document for a token, with no exclusion for fences, comments or
+struck-through text, cannot tell a citation from a mention of one.** Two tools written independently
+grew that blind spot within a day of each other, which makes it a shape to check for rather than a
+mistake either author made.
+
+**And DEF-202 has been retitled, because the list was the smaller half of it.** The word list was
+wrong as first filed — `partially-fixed` was grouped with the words meaning *not* remaining work, and
+it does owe a reproduction for the half still broken, so retiring it would make the tool under-report
+for the first time. The correction came from the project that owns those rows. What the correction
+exposed is larger: **an unrecognised status word fails in two directions and only one is visible.**
+reckon over-reports on an unknown word — annoying, self-announcing, somebody looks. A gate that
+selects its population by a single status string does the opposite: a register growing a word meaning
+*still broken* drops those rows out of the obligation entirely while the gate prints a clean count
+over a quietly smaller population. **A clean green is a worse failure than an inflated backlog,
+because nothing about it asks to be checked.**
+
+So the repair is not a longer list. Classify every status as owing or not owing, and make an
+unclassified word **a finding that names the word and its row count** rather than a default in either
+direction — which is DEF-201's and DEF-203's repair too, one level up: an input a check cannot
+classify should be a finding, never a silent pass and never a silent fail.
+
+**DEF-201's zero is a fact about this repo's idiom, not about the risk.** All 24 legacy citations here
+sit in real prose at fence depth 0. A repository whose briefs cite by convention — "the brief names
+the defects it closes" — has the opposite prior, and one does: there, a brief discussing a
+neighbouring defect is textually identical to one that owns it.
+
+### PRO-0102's delivery fault survived PRO-0102's delivery fix (2026-08-22)
+
+The item moved `plugin.json` to 1.1.0 and brought the marketplace entry with it, both verified, and
+**neither is the artifact that runs.** Measured directly:
+
+| Probe | Cached copy | Source |
+|---|---|---|
+| Directory | `~/.claude/plugins/cache/fledgeling-plugins/reckon/**1.0.0**/` — no 1.1.0 dir exists | `~/Dev/fledgeling-plugins/plugins/reckon` |
+| `grep -c unjoined reckon.py` | **0** | **14** |
+| `tokens()` on a string | 3 tokens | 3 tokens |
+| `tokens()` on a list | `AttributeError: 'list' object has no attribute 'lower'` | 3 tokens, via `flatten_text` |
+
+The cached copy is the pre-fix classifier rather than fixed code wearing a stale label. A versioned
+cache directory only appears on a plugin refresh, and none has happened.
+
+**Why it matters more elsewhere than here.** 304 of 304 cases in this registry carry a list-valued
+`evidence` field, so this project gets the crash — loud, and impossible to mistake for an answer. A
+registry whose evidence is all strings gets the silent version instead: the pre-fix classifier, every
+defect row hardcoded to `broken`, and the fabricated backlog this evening spent characterising.
+
+**And the check cannot be a version string, because a version string is what is wrong.**
+`grep -c unjoined <the reckon.py that will actually run>` settles it: 14 is the repair, 0 is the old
+classifier. Refreshing the plugin cache is the reader's action; nothing here edits another session's
+cache. DEF-216 records it.
+
+### PRO-0103 built, and it produced the result the item existed for (2026-08-22)
+
+`ai/pro-0103` at `97a00fd`, nine commits, tree clean. Suite 2,064 in 251 suites, `TEST_EXIT=0`, a
+control since no Swift changed. `reckoning_selftest.py` 28 checks, 0 failed, exit 0. `defect_gate`
+claims and dropped both 0 (112 merges, 44,283 pairs). `campaign.py check` exits 1 on head and on merge
+base, differing by one line — `External-effect claims with no witness (27 of 29)` → `(28 of 30)` — and
+naming none of its ids. Allocated REQ-102–107, CASE-0441–0456, SURF-025, DEF-216.
+
+**The finding.** Differencing the two published reckonings says this project shed **84** items.
+Holding the tool constant — rebuilding the earlier run's own inputs at its own commit with the current
+tool — says **−88 tool, +4 project**. Nearly the whole improvement was the tool being repaired; the
+project moved by four, and `unmeasured` is flat at 36 rows with nothing entering or leaving. A
+comparison unable to separate the two would have reported an 84-item triumph and it would have been
+believed, which is precisely the thing this item was built to prevent on its second run rather than
+its tenth.
+
+**Its arming found a hole its design lacked**, which is the pattern worth keeping: a control built by a
+third tool version belongs to neither side, so `compare` now refuses when the tool on disk is not the
+one that took the current reading. Same shape as DEF-202's repair — an input the instrument cannot
+classify becomes a refusal that names itself rather than a number.
+
+**Two corrections to brief 96, measured against the fixed tool.** Its first finding does not reproduce
+here: there are **four** blockers with one case each contributing +0.3 points, not one `BLOCK-0001`
+grouping four cells, and the 16.7% is the **join** percentage rather than a block's weight. Its second
+finding — `source` joins and grades — is untested here and undisputed.
+
+**DEF-202 does not bite on this registry**, confirmed rather than assumed: 118 defect rows carry only
+`fixed` (111) and `open` (7). **DEF-201 has no live instance here**: 0 of 176 cited ids sit in a code
+fence, which is the idiom caveat already on that row.

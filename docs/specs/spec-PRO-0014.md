@@ -1,6 +1,7 @@
 # PRO-0014: Human-readable step descriptions, derived not supplied
 
 **ID:** PRO-0014
+**Brief:** `docs/features-to-triage/15-step-descriptions.md` (brief 15 — the numbering drifts from here, so this is matched by title and content, never by number)
 **Status:** Merged
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14

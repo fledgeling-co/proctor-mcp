@@ -1,6 +1,7 @@
 # PRO-0002: Set-of-marks captures
 
 **ID:** PRO-0002
+**Brief:** `docs/features-to-triage/02-set-of-marks-captures.md`
 **Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13

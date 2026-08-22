@@ -1,6 +1,7 @@
 # PRO-0009: Process kill + filesystem jail
 
 **ID:** PRO-0009
+**Brief:** `docs/features-to-triage/09-process-kill-fs-jail.md`
 **Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13

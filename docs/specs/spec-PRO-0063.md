@@ -1,6 +1,7 @@
 # PRO-0063: Captures are sized by what they are for
 
 **ID:** PRO-0063
+**Brief:** none. Cut from `docs/research/2026-08-14-screenshot-encoding-for-vision-models.md` as a follow-on to PRO-0006, whose brief asked only for one ceiling; recorded in `ORCHESTRATOR.md` under the 2026-08-17 backlog-complete entry.
 **Status:** Merged
 **Created:** 2026-08-16
 **Last updated:** 2026-08-16

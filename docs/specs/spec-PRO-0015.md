@@ -1,6 +1,7 @@
 # PRO-0015: Run HUD panel
 
 **ID:** PRO-0015
+**Brief:** `docs/features-to-triage/16-run-hud-panel.md` (brief 16)
 **Status:** Merged
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14

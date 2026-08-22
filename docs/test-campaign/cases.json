@@ -5485,5 +5485,199 @@
       "effect": "filesystem-write",
       "count": 4
     }
+  },
+  {
+    "id": "CASE-0430",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two mutations on a scratch copy of docs/specs, both watched red. Dropping the **Brief:** line from spec-PRO-0001.md reds it. Rewriting the value to the unbacktick-ed prose '**Brief:** the cua brief' also reds it, which is the arming that matters: a header that looks present and parses to nothing is the failure a presence check written as a substring search would pass.",
+    "note": "Presence. All 99 specs in docs/specs carry a citation the grammar can parse: 71 by brief path, 4 declaring no brief, 24 in legacy prose. Before this item 24 carried nothing at all — PRO-0001..0017, 0034, 0045, 0047, 0063, 0075, 0076, 0096. The header form is anchored to the start of a line so a sentence mentioning **Brief:** in the body cannot satisfy it, and a header whose value the grammar cannot parse counts as uncited rather than falling through to the body."
+  },
+  {
+    "id": "CASE-0431",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two mutations, both watched red on scratch copies. Rewriting PRO-0001's citation to docs/features-to-triage/99-no-such-brief.md reds it. Deleting 01-cua-schema-facade.md from the scratch queue while its citation stands also reds it — the citation-names-a-deleted-path case the spec's added clause asks for, arrived at from the queue's side rather than the spec's.",
+    "note": "Resolution in the working tree, proved in the same pass as presence. Every path-form and legacy-prose citation names a file that exists in docs/features-to-triage. The lookup runs against whichever brief directory is in play rather than against the repository root, so a scratch queue answers for itself; the first version fell back to the real tree and a deleted scratch brief could not have reddened it."
+  },
+  {
+    "id": "CASE-0432",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt",
+      "docs/test-campaign/evidence/PRO-0101/pinned-shas.txt"
+    ],
+    "armed": true,
+    "armedBy": "Pinned to immutable shas, both read with `git cat-file -e` before being written into the instrument, because this campaign has already had an arming resolve its reference with `git merge-base` and report 'caught 0 of the 2 known offenders' once the fix merged. PRO-0001's citation rewritten to `docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md @ 400808d` reds the check: 400808d is the triage commit that deleted that brief. The same citation `@ 3fb7681` stays PASS: 3fb7681 holds it. Both verdicts were pinned in the arming table and both were observed. Recorded in pinned-shas.txt with 8de8804 (the restore, HOLDS) and 9f99a0f (the tree the spec measured, ABSENT).",
+    "note": "The consumed-brief form. A citation written `path @ sha` resolves against git rather than the working tree, so a brief triage deleted is still recoverable from the commit that holds it. No spec on this tree uses the form yet — the shared triage stage will write it when it consumes a brief — so this case is the only thing exercising that code path, and it is armed two-way rather than one."
+  },
+  {
+    "id": "CASE-0433",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Replacing the whole of PRO-0075's citation line with '**Brief:** none. See above' reds it. The mutation had to replace the line rather than its opening: a first version replaced only the prefix, the rest of the sentence stayed attached, and the reason it was shortening remained long enough to pass — a NOT ARMED report against a check that worked.",
+    "note": "A spec that came from something other than a brief says so, in at least 20 characters that name an artifact a reader can open — a backticked file or tool, a PRD section, or a sha. A length floor alone is cleared by boilerplate: 'none. not applicable here' is 25 characters and names nothing. Four specs declare it: PRO-0063 (the screenshot-encoding research, as a follow-on to PRO-0006), PRO-0075 (the campaign's own report, when test-campaign 0.8.0 brought a plane wave 9 had never run), PRO-0076 (asked for directly, against PRD §9 and §10) and PRO-0096, which already carried the form. Silence and 'unlinked' must not look alike, which is what the bare word 'none' would make them."
+  },
+  {
+    "id": "CASE-0434",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Pointing spec-PRO-0002.md's citation at 01-cua-schema-facade.md, which PRO-0001 already claims, reds it. The same mutation also reds the reverse-direction check, because brief 02 becomes unclaimed — collateral reported alongside each mutation rather than judged.",
+    "note": "The header citation is one-to-one: no brief is claimed by two specs. Uniqueness is asserted over the header form only, deliberately. 00-WAVE-7-DIRECTION.md is mentioned in the body of eleven specs because it is the direction document all eleven were cut from, and three more briefs are shared the same way, so requiring uniqueness over every path mention would fail on a convention that is correct."
+  },
+  {
+    "id": "CASE-0435",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Three mutations, each watched red. Adding 97-arming.md to the scratch queue reds the claimed-or-registered check. Adding a register row for 98-not-a-brief.md, which the queue does not hold, reds the stale-register check. Blanking the reason column of brief 96's row reds the reason check — without that one the register would have decayed into a list of exemptions nobody justified, which is the absence it exists to replace.",
+    "note": "The reverse direction is total: each of the 96 briefs in the queue is claimed by a spec (92) or carries a row in docs/feature-specs/UNCLAIMED-BRIEFS.md with a reason (4). The four registered are brief 23 and brief 40, whose ledger rows PRO-0022 and PRO-0039 have no spec file at all (DEF-215); brief 85, which is PRO-0092, held for a quiet machine and unspecced; and brief 96, filed 2026-08-22 and untriaged. A register row is only a row if it carries 20 characters of reason.",
+    "defects": [
+      "DEF-215"
+    ]
+  },
+  {
+    "id": "CASE-0436",
+    "req": "REQ-101",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two mutations to the regex on a scratch copy of reckon.py, one per direction. Loosening it to the pre-fix shape \\A([^-]+-[^-]+)\\b makes '03-menu' score as an id and reds the refusal check alone. Tightening it to \\A([A-Za-z]{4,}-\\d{2,})\\b makes SCR-0075 unreadable and reds the reads-a-real-id check alone. Neither mutation reds the other check, so the two directions are separately watched rather than one predicate reported twice.",
+    "note": "The shared join refuses to turn a brief's position in a directory listing into a citation. project_id_in in the reckon tool is executed rather than read: '03-menu-bar-key-equivalents.md' must score no id, and 'SCR-0075-dead-credential.md' must still score SCR-0075. PRO-0102 had already removed the fallback at 224a696, so this case verifies rather than re-edits, per spec-PRO-0101's assumption that whichever item reaches it second does not edit it twice. The counterexample is in this repo: brief 35 is PRO-0034 and its own retirement banner says so, while the number points at PRO-0035, 'The browser catalogue stops guessing'."
+  },
+  {
+    "id": "CASE-0437",
+    "req": "REQ-101",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Four mutations on a scratch copy of the skill, never the live files. Dropping the scaffold's **Brief:** line reds the scaffold check; rewriting its value to '<the brief>' reds the path-form check; rewording 'records the commit that still holds it' reds the consumed-form check; retitling the table row 'The feature was never a brief' reds the no-brief check; and rewording SKILL.md's 'write the citation into the spec's' reds the procedure check. The arming runs on copies because a predecessor on another item mutated the live shared skill, was killed between mutation and revert, and left every project on this machine reading a skill with an arming mutation in its heading for about an hour.",
+    "note": "The shipyard triage stage records the citation at id allocation. Four checks over the shared skill: the spec scaffold carries a **Brief:** line, that line's example is a docs/features-to-triage path, references/spec-format.md documents the consumed form and the no-brief form, and SKILL.md step 1 tells triage to write it. Read from the source tree at ~/Dev/fledgeling-plugins rather than the installed plugin cache, because the cache lags a version — wave 16 found reckon 1.0.0 still carrying a fault fixed in source at 81ad488."
+  },
+  {
+    "id": "CASE-0438",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt",
+      "docs/test-campaign/evidence/PRO-0101/pinned-shas.txt"
+    ],
+    "armed": true,
+    "armedBy": "spec_citation_arm.py itself. It refuses to report anything unless an unmutated scratch copy is green first, it asserts that each mutation matched something before measuring, it pins the expected verdict per mutation rather than assuming FAIL, and it exits 1 on any check no mutation covers. Three of its own mutations reported NOT ARMED against checks that worked and each was the mutation's fault — a partial line replacement, two regexes emitting a doubled backslash into the mutated source, and a scaffold quoted with newlines that broke the verdict parser and read as MISSING.",
+    "note": "Every check in spec_citation_measure.py has been watched to fail. 23 mutations, each pinned in the table to the verdict it must produce, 15 of 15 checks covered, exit 0. This case exists because two instruments in this campaign have reported a clean zero they could not have earned: one detector's regex could not cross a parenthesis and missed the line it was written for, and one census resolved its arming with git merge-base and read the fixed tree."
+  },
+  {
+    "id": "CASE-0439",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt",
+      "docs/test-campaign/evidence/PRO-0101/gemini-review.md"
+    ],
+    "armed": true,
+    "armedBy": "Changing 57-vm-targets.md's count in the register from 7 specs to 6 reds it. The mutation is the count rather than the row, because a check that only asked whether the brief was listed would pass while the number it publishes was wrong.",
+    "note": "Uniqueness holds over the header form only, and the four briefs that make that necessary are now enumerated with their counts instead of being silently exempt: 00-WAVE-7-DIRECTION.md over 11 specs, 57-vm-targets.md over 7, 55-three-tests-still-redden-the-gate.md and 58-swiftui-conversion-direction.md over 2 each. Each is a direction document several items were cut from at once. Raised by the out-of-family review, which was right that a prose-claimed brief sat outside the uniqueness check. Its other proposal — normalise all 24 prose citations to headers — was measured against this tree and rejected: it would put brief 55 on two headers and brief 57 on seven, breaking the invariant it was meant to strengthen. A brief one spec owns by header is not a shared parent whatever else mentions it, which is why brief 35 (PRO-0034's, referred to by PRO-0051) is not in the table."
+  },
+  {
+    "id": "CASE-0440",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt",
+      "docs/test-campaign/evidence/PRO-0101/gemini-review.md"
+    ],
+    "armed": true,
+    "armedBy": "Three shapes against a purpose-built git fixture the arming builds and throws away, because the real history holds no commit where a cited brief path is a tree or an empty file, and a branch no mutation can reach is a branch nobody has watched. A citation naming a blob with bytes PASSes; one naming a zero-byte blob FAILs; one naming a path that is a directory FAILs. All three verdicts were pinned in the table before the run and all three were observed.",
+    "note": "A commit-form citation asserts the brief is readable at that commit, and `git cat-file -e` does not say that: it is satisfied by a tree entry and by a zero-byte blob. The check now reads the object type and its size. Raised by the out-of-family review of this item, which named the same two shapes."
   }
 ]

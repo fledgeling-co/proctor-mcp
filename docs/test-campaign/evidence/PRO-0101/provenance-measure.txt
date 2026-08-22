@@ -1,0 +1,20 @@
+PASS  every spec carries a parseable citation
+PASS  every cited brief path resolves
+PASS  every `none` citation names its origin
+PASS  no brief is claimed by two specs
+PASS  every brief is claimed or registered
+PASS  the register names only briefs that exist
+PASS  every register row carries a reason
+PASS  every shared-parent brief is recorded with its count
+PASS  the shared join refuses a listing position
+PASS  the shared join still reads a real id
+PASS  the triage scaffold carries the citation line
+PASS  the scaffold's citation form is the path
+PASS  spec-format documents the consumed-brief form
+PASS  spec-format documents the no-brief form
+PASS  triage is told to write the citation
+
+specs 99: legacy 24 · none 4 · path 71
+briefs 96: claimed 92 · registered 4 · unclaimed 0
+15/15 checks passed
+EXIT=0

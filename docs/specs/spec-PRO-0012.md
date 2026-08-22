@@ -1,6 +1,7 @@
 # PRO-0012: Gate flow-replay + stability through policy + audit
 
 **ID:** PRO-0012
+**Brief:** `docs/features-to-triage/12-gate-flow-replay-stability.md`
 **Status:** Merged
 **Plan:** docs/plans/plan-PRO-0012.md
 **Created:** 2026-08-13

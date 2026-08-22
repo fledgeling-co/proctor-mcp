@@ -1,6 +1,7 @@
 # PRO-0005: Audit trail + policy gate
 
 **ID:** PRO-0005
+**Brief:** `docs/features-to-triage/05-audit-trail-policy-gate.md`
 **Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13

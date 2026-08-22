@@ -1,7 +1,7 @@
 # PRO-0101: A spec says which brief it came from
 
 **ID:** PRO-0101
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-22
 **Last updated:** 2026-08-22
 **Brief:** `docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md`
@@ -131,3 +131,137 @@ brief anywhere, which is exactly the population the reckoning could not speak fo
   and PRO-0100/0101/0102/0103 were minted with it. The forward half is making that automatic,
   not inventing it.
 - Out-of-family spec review: see the shared record at the foot of `spec-PRO-0103.md`.
+
+---
+
+## Progress — 2026-08-22 (`ai/pro-0101`)
+
+**Ids allocated:** REQ-100, REQ-101 · CASE-0430..0440 · DEF-215 · SURF-024. Started at
+CASE-0430 / REQ-100 / DEF-215 / SURF-024 because `ai/pro-0100` reserved DEF-200..209 and
+CASE-0401..0409 unused and `ai/pro-0102` reaches CASE-0429 / REQ-099 / DEF-214 / SURF-023.
+
+**Backward half.** The 24 uncited specs now carry a citation. Twenty name a brief; four say they
+never had one and name what they had instead — PRO-0063 the screenshot-encoding research as a
+follow-on to PRO-0006, PRO-0075 the campaign's own report, PRO-0076 a direct request against PRD
+§9 and §10, and PRO-0096, which already carried the form. Every citation was established by
+reading the brief against the spec. The seven where brief number and id disagree say so on the
+line, because they are the counterexample to the fallback this item removes: PRO-0014 through
+PRO-0017 sit one behind briefs 15 to 18, and PRO-0034 is brief 35, whose own retirement banner
+names PRO-0034 while the number points at PRO-0035, a different feature.
+
+**The reverse direction** needed somewhere to put a brief that is accounted for and still
+uncitable, so `docs/feature-specs/UNCLAIMED-BRIEFS.md` records four with their reasons. Two of
+them are DEF-215: briefs 23 and 40 belong to PRO-0022 and PRO-0039, ledger rows with no spec file,
+so there is no artifact to carry a citation. That defect is recorded rather than fixed — writing
+retrospective specs for two retired items and one merged one is a separate decision.
+
+**Forward half**, in `~/Dev/fledgeling-plugins` at `364c785`, committed by explicit path over two
+files under `plugins/shipyard/skills/triage/`. The spec scaffold gains a `**Brief:**` line, the
+id-allocation step is told to fill it, `references/spec-format.md` documents the three forms, and
+SKILL.md step 1 tells triage to write the citation. Nothing there changes whether triage consumes
+a brief; the consumed case is handled by the citation form instead.
+
+**The added clause.** `scripts/campaign/spec_citation_measure.py` proves presence and resolution in
+one pass: a path-form citation must resolve in the brief queue, and a consumed-brief citation
+`path @ sha` must resolve at the commit it names. No spec uses the commit form yet, so CASE-0432 is
+the only thing exercising that path and it is armed both ways on immutable shas — `@ 3fb7681` PASS
+because that commit holds the brief, `@ 400808d` FAIL because that is the commit which deleted it.
+
+**The number fallback was already gone**, removed by PRO-0102 at `224a696`, so this item verifies
+rather than re-edits, which is what this spec's own assumption asked of whichever item reached it
+second. CASE-0436 executes `project_id_in` rather than reading it, and is armed in both directions.
+
+**Gates.** `./scripts/test.sh` 2,061 tests in 251 suites, exit 0, twice — the baseline unchanged,
+and no Swift was touched. `spec_citation_measure.py` 15/15, exit 0. `spec_citation_arm.py` 23/23
+mutations pinned, 15/15 checks watched to fail, exit 0. `test_instruments.py` 62/62 exit 0.
+`operator_path_gate.py` exit 0. `defect_gate.py dropped` exit 0.
+
+## Out-of-family review — gemini-3.7-flash-high, 2026-08-22
+
+`Needs More Work`, and three of its five points were taken. Full reply at
+`docs/test-campaign/evidence/PRO-0101/gemini-review.md`; the lane verified its own subject before
+answering.
+
+**Taken.** A consumed-brief citation took its sha from `git rev-parse --short HEAD`, which names a
+commit on the branch doing the triage: squash-merge or rebase that branch and the citation points
+at an object no clone has. It now reads `git log -1 --format=%h -- <path>`, the commit that filed
+the brief, and says what to do when that commit is on the same unmerged branch. `git cat-file -e`
+is satisfied by a tree entry and by a zero-byte blob, so the check now reads the object's type and
+size — armed against a purpose-built git fixture, because the real history holds no commit where a
+cited brief path is either shape. And a `none.` reason has to name an artifact rather than reach a
+character count, since "none. not applicable here" clears twenty characters and names nothing.
+
+**Taken in a different form.** The review was right that a brief claimed only in prose sits outside
+the uniqueness check. Its remedy — normalise all 24 prose citations to the header form — was
+measured against this tree and rejected: brief 55 would then be claimed by two headers and brief 57
+by seven, because those are direction documents several items were cut from at once. The four
+many-to-one briefs are enumerated in the register with their counts instead, and the count is what
+CASE-0439 watches, so a designed exception is recorded rather than silent.
+
+**Not taken.** Moving a consumed brief to an archive directory instead of deleting it changes how
+triage handles briefs, which this spec's own scope note rules out as a separate decision with its
+own record.
+
+## Defects
+
+| ID | Title | Disposition |
+|----|-------|-------------|
+| DEF-215 | Four ledger rows have no spec file, so two briefs have no artifact that could cite them | (recorded) — accounted for in `docs/feature-specs/UNCLAIMED-BRIEFS.md`; the fix is a separate decision about whether a retired item earns a spec |
+
+
+### Its own record had gone stale before the branch was verified
+
+This section recorded `CASE-0430..0438`, `14/14` checks and `18/18` mutations. The instrument grew
+during the build to eleven cases, fifteen checks and twenty-three mutations, and the commit that
+raised it did not raise its own account. Corrected above. It is the failure CASE-0139 records and
+CASE-0427 repeated tonight: a count copied into prose has no gate watching it, so it goes stale at
+the next commit and reads as current to everyone afterwards. The live figures come from running the
+two instruments rather than from re-reading this file.
+
+## Verification — 2026-08-22, `Done`
+
+Verified fresh-context on `f600731` by an agent that did not build the work.
+
+| Gate | Reading | Exit |
+|---|---|---|
+| `./scripts/test.sh` via `governor-run` | 2,061 tests in 251 suites, `PASS:` | **0** |
+| `spec_citation_measure.py` | 15/15; specs 99 (path 71 · legacy 24 · none 4); briefs 96 (claimed 92 · registered 4 · unclaimed 0) | **0** |
+| `spec_citation_arm.py` | 23/23 mutations as pinned, 15/15 checks watched to fail | **0** |
+| `defect_gate.py claims` / `dropped` | 0 claimed; 108 merges, 39,060 pairs | **0** / **0** |
+| `test_instruments.py` · `operator_path_gate.py` | 62/62 · 13 sites, 15 classed | **0** / **0** |
+| `campaign.py check` @ head and @ `656d9b2` | identical sets, `comm` empty both ways | 1 / 1 |
+
+2,061 is the right figure for this tree: the branch changes 27 markdown, 2 python, 2 JSON and 3 text
+files and **zero** Swift, so it carries its merge base's count. `main`'s 2,064 is PRO-0100's and
+PRO-0102's three tests, which arrive on rebase.
+
+**Every mutation landed, and landing is structural rather than assumed.** `edit`, `replace_line`,
+`drop_line`, `delete_brief` and `add_register_row` each assert their target matched exactly once, so a
+mutation that does not apply raises instead of reporting a false green. That matters here because
+three of this item's own mutations first came back NOT ARMED against checks that were working, and all
+three were the mutation's fault. The pinned pair behaved: `@ 3fb7681` PASS, `@ 400808d` FAIL.
+
+### The four recorded decisions all stand
+
+Archiving briefs instead of deleting them is ruled out by the spec's own scope note and would change
+triage's brief handling for every project. Brief 55 maps to two specs and brief 57 to seven, both
+confirmed, so registering the four shared-parent briefs with counts is right and normalising to
+headers would have been wrong. DEF-215 stays `open` rather than fixed, and `defect_gate.py claims`
+sanctions that disposition itself. And the number fallback is genuinely gone rather than unexercised:
+`PROJECT_ID_RE = \A([A-Za-z]{2,}-\d{2,})\b` cannot match `03-menu`, it is executed rather than read,
+and it is armed in both directions.
+
+### DEF-203, opened before this merge
+
+Nine evasions were built against scratch copies and the delivered tree exploits none of them — all 24
+legacy citations are real prose at fence depth 0. Three checks are nonetheless looser than their
+names: the legacy fallback accepts a brief path from a fenced block, an HTML comment or a
+struck-through line; the `none.` floor accepts an unresolvable reference and any backtick pair padded
+to twenty characters; and reverse totality is satisfied by an incidental mention in an unrelated spec.
+
+**It is the same class as DEF-201 in a different instrument.** A scanner that reads a whole document
+for a token, with no exclusion for fences, comments or struck-through text, cannot tell a citation from
+a mention of one. Two tools in two repositories grew that blind spot independently within a day, which
+makes it a shape to check for rather than a mistake either author made. The repair is not a longer
+floor: **an input a check cannot classify should be a finding that names it, rather than a pass or a
+fail by default.**

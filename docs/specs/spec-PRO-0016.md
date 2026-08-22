@@ -1,6 +1,7 @@
 # PRO-0016: Multi-session queue
 
 **ID:** PRO-0016
+**Brief:** `docs/features-to-triage/17-multi-session-queue.md` (brief 17)
 **Status:** Merged
 **Plan:** `docs/plans/plan-PRO-0016.md`
 **Created:** 2026-08-14
