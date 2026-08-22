@@ -232,3 +232,27 @@ Evidence: `flow-write-caught.txt` and `flow-interlock-arming.txt`.
 
 The four stray PNGs already sitting in the operator's captures directory are left where they are.
 Deleting them is the act REQ-055 forbids.
+
+## The gate's own timing, and one flake it exposed
+
+Four full `./scripts/test.sh` runs on this tree, exit read off the script into a file:
+
+| Run | Exit | Result |
+|---|---|---|
+| before this change | 1 | 2,027 tests, 246 suites, 32.972s — the merge-lost registry values |
+| after this change | 0 | 2,028 tests, 246 suites, 23.918s |
+| on the commit | 1 | 2,028 tests, 246 suites, 27.464s — DEF-165, below |
+| again | 0 | 2,028 tests, 246 suites, 23.818s |
+
+PRO-0093's yield fix is in this tree, so the 904-second run the re-verifier saw is gone: the
+`YieldWiringTests` backstop is no longer waited out and the whole suite finishes in under half a
+minute.
+
+The third run's two issues were **not** this item's. `BrowserLaneWiringTests` asserts that doctor's
+`ready` does not move across the browser-lane matrix, and it reads two live machine probes while
+doing it — `accessibilityProbe()` and `secureInputProbe()` are not injected the way
+`screenRecordingProbe: .fake()` is, and both feed `blockers`, of which `ready` is `blockers.isEmpty`.
+Either flipping between two of the eight `doctor()` calls reds the case with the lane behaving
+correctly. Recorded as **DEF-165**, open, with the repair named and deliberately not taken here: it
+is outside this brief, and it is absent from the table above because an opened defect is not a claim
+that anything is closed.
