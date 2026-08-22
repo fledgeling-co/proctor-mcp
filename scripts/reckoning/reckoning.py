@@ -168,7 +168,9 @@ def resolve_tool(script):
     """
     script = Path(script)
     if not script.is_file():
-        return None, "no reckon script at %s" % script
+        return None, ("no reckon script at %s. Point at one with --reckon, or set RECKON_SCRIPT; "
+                      "the default is this machine's checkout of the shared plugin and it is not "
+                      "portable." % script)
 
     manifest = None
     for parent in script.parents:

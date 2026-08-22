@@ -28,4 +28,4 @@ gate · a ledger failing reckon's own gate is not reported clean PASS
 gate · the cadence note states this file's own check count PASS
 
 reckoning selftest: 28 checks, 0 failed
-restored exit=0
+selftest exit=0

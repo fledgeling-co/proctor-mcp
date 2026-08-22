@@ -5269,10 +5269,11 @@
     "status": "pass",
     "evidence": [
       "docs/reckoning/2026-08-22-2bdc808/run.json",
-      "docs/test-campaign/evidence/PRO-0103/published-take.txt"
+      "docs/test-campaign/evidence/PRO-0103/published-take.txt",
+      "docs/test-campaign/evidence/PRO-0103/reading-reproduces.txt"
     ],
     "armed": true,
-    "armedBy": "Two-way control rather than a mutation: the same command over an uncommitted tree produces no run directory at all (CASE-0441), so the artifact's existence and its commit field cannot both be satisfied by a tree that was never named.",
+    "armedBy": "Two-way control rather than a mutation: the same command over an uncommitted tree produces no run directory at all (CASE-0441), so the artifact's existence and its commit field cannot both be satisfied by a tree that was never named. Strengthened after the fact: the named commit was checked out into a scratch tree with git archive and rebuilt with the same tool, and the ledger came back byte-identical at sha256 ca5f76ff27daf95d04a4ab6d1329529bb6904143a77fdd77899138c48c7fe25e over 582,690 bytes, so the commit field names the tree that actually produced these numbers rather than merely being present.",
     "note": "The published reading names its own tree. run.json for the 2026-08-22-2bdc808 run records commit 2bdc808eb... on branch ai/pro-0103 with dirty_inputs empty, and the directory name carries the same short sha. Checked against git rev-parse HEAD at the moment of the take."
   },
   {
