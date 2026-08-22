@@ -1,0 +1,25 @@
+PASS  every spec carries a parseable citation
+PASS  every cited brief path resolves
+PASS  every `none` citation names its origin
+PASS  every `none` citation resolves to something here
+PASS  no brief is claimed by two specs
+PASS  every brief is claimed or registered
+PASS  no brief's only trace is a shown-not-used mention
+PASS  no brief is claimed only by an incidental mention
+PASS  no brief is accounted for by an unrecognised relation
+PASS  the register names only briefs that exist
+PASS  every register row carries a reason
+PASS  every shared-parent brief is recorded with its count
+PASS  the shared join refuses a listing position
+PASS  the shared join still reads a real id
+PASS  the triage scaffold carries the citation line
+PASS  the scaffold's citation form is the path
+PASS  spec-format documents the consumed-brief form
+PASS  spec-format documents the no-brief form
+PASS  triage is told to write the citation
+
+specs 104: legacy 24 · none 4 · path 76
+none-citations 4: 0 resolving nothing · 1 naming something this check cannot resolve (spec-PRO-0096.md `campaign.py`)
+briefs 100: claimed 96 · registered 4 · unclaimed 0
+19/19 checks passed
+exit=0

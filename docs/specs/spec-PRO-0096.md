@@ -1,6 +1,7 @@
 # PRO-0096 — Three registry findings, of which one was reported inside out
 
-**Brief:** none. The three findings on `campaign.py check` are the specification.
+**Brief:** none. The three findings `campaign.py check` reported over `docs/test-campaign` are
+the specification, and each is quoted under its own `## Finding` heading below.
 **Status:** ready to verify
 **Registry ranges:** CASE-0200..0209 · DEF-105..109 · REQ-065..066
 

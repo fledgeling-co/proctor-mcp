@@ -1147,6 +1147,55 @@
       ],
       "note": "PRO-0080's sample finished under a load average of 271 and the number it produced needed reconstructing afterwards from an evidence file's first two lines. The readings are published with the sample instead.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-120",
+      "class": "honesty-guardrail",
+      "text": "Every status word, evidence word and id-shaped token the reckoning tool reads is placed by a rule that is written down, and an input no rule covers is a finding naming the input and the rows carrying it rather than a default in either direction: the row is still placed, because the partition has to be total, but the placement is disclosed as this tool's decision and the gate exits 4 on it",
+      "source": "spec-PRO-0104.md acceptance A1, A2; ~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py FIELD_VOCABULARY, unclassified_inputs(), gate() and verdict() @ a2d4db1",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-023"
+      ],
+      "note": "The direction is the whole finding. reckon over-reports on an unknown word, which is annoying and self-announcing and gets looked at; a gate selecting its population by a single status string drops rows meaning still-broken out of the obligation and prints a clean count over a quietly smaller population. A clean green is the worse failure because nothing about it asks to be checked. CASE-0505 through CASE-0513.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-121",
+      "class": "honesty-guardrail",
+      "text": "Both document scanners exclude fenced blocks, HTML comments and struck-through text before matching, and each exclusion is proved by its own fixture with its own two-way control, because a document carrying all three at once proves whichever exclusion runs first and nothing about the other two",
+      "source": "spec-PRO-0104.md acceptance A3; reckon.py citable_text() and scan_ids() @ a2d4db1; scripts/campaign/spec_citation_measure.py citable(); scripts/campaign/spec_citation_arm.py FENCED, COMMENTED and STRUCK mutations",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-023",
+        "SURF-024"
+      ],
+      "note": "Two tools in two repositories grew the same blind spot within a day of each other, which makes it a shape to check for rather than a mistake either author made: a scanner that reads a whole document for a token cannot tell a citation from a mention of one. CASE-0500 through CASE-0504, CASE-0514 through CASE-0519.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-122",
+      "class": "honesty-guardrail",
+      "text": "A brief is accounted for by a decision somebody wrote down — a Brief, Supersedes or Direction header segment, a citation of record, or a register row — and never by an incidental mention in an unrelated spec; and a `none.` citation resolves to something this repository can open rather than merely naming something",
+      "source": "spec-PRO-0104.md acceptance A4, A5; scripts/campaign/spec_citation_measure.py header_segments(), ACCOUNT_RELATIONS, references() and the four checks added at 19",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-024"
+      ],
+      "note": "Brief 32 is why the account grammar has three relations rather than one: spec-PRO-0050 supersedes it in a header line, which is a decision, while the same path in body prose is a reference. Under the strict rule unclaimed stays 0 on this tree and spec-PRO-0096 was the one real red — its citation named `campaign.py`, a name this repository cannot open. CASE-0520 through CASE-0526.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-123",
+      "class": "honesty-guardrail",
+      "text": "`partially-fixed` stays in the set of defect statuses that owe remaining work, and the reason is recorded beside it: a half still broken owes a reproduction for that half, so retiring the word would make the tool under-report for the first time",
+      "source": "spec-PRO-0104.md acceptance A6; reckon.py DEFECT_PARTIAL and DEFECT_LEGAL_CLASS @ a2d4db1; references/partition.md legality table",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-023"
+      ],
+      "note": "The word list DEF-202 was first filed with grouped `partially-fixed` with the not-owing words, and the project owning those rows corrected it: none of its three partially-fixed rows had a reproduction for the broken half. This is the one place in reckon where the fail-closed direction is chosen against a word that sounds like a closure. CASE-0506, CASE-0513.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -3380,7 +3429,10 @@
     {
       "id": "DEF-201",
       "title": "A quoted placeholder id is read as a citation at confidence 1.0",
-      "status": "open",
+      "status": "fixed",
+      "fixedBy": "PRO-0104",
+      "fix": "FIXED by PRO-0104 in ~/Dev/fledgeling-plugins at a2d4db1, reckon 1.2.0. `ID_RE` no longer reads a whole brief: `citable_text` blanks fenced blocks, HTML comments and struck-through spans before anything is matched, and `scan_ids` places every id-shaped token in exactly one of cited, shown or unclassifiable. A placeholder-shaped id in prose is the third outcome rather than a second exclusion — it builds no edge, it cannot carry `unbuilt`, and it is reported as a finding naming the token and its row count, because dropping it silently is the same guess in the other direction. Each exclusion has its own fixture with its own two-way control: a document carrying all three proves whichever runs first and nothing about the other two. Measured over this repository, the only real effect is that BRIEF-97's confidence-1.0 edge to CASE-9999 — a placeholder inside an example command — is gone, and no row moved class.",
+      "evidence": ["docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt", "docs/test-campaign/evidence/PRO-0104/vocabulary-delta.json"],
       "severity": "low",
       "surfaces": [
         "SURF-023"
@@ -3393,7 +3445,10 @@
     {
       "id": "DEF-202",
       "title": "An unrecognised status word decides the headline, and it can fail in either direction",
-      "status": "open",
+      "status": "fixed",
+      "fixedBy": "PRO-0104",
+      "fix": "FIXED by PRO-0104 in ~/Dev/fledgeling-plugins at a2d4db1, reckon 1.2.0. Not a longer list: a longer list extends the set of words the tool guesses correctly about and leaves it guessing one word past the end. `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce`, `not-a-defect` and `vacuous` now class `waived` — owing nothing without anybody having repaired them — and `resolved` stays a repair. `partially-fixed` stays in the owing set, deliberately and with the reason recorded: a half still broken owes a reproduction for that half. A word outside all five sets still lands `broken`, and is now a finding naming the word and its row count at exit 4. The same treatment reaches case statuses and requirement evidence, which is how DEF-230 was found.",
+      "evidence": ["docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt", "docs/test-campaign/evidence/PRO-0104/reckon-check-two-way.txt"],
       "severity": "low",
       "surfaces": [
         "SURF-023"
@@ -3472,7 +3527,10 @@
     {
       "id": "DEF-203",
       "title": "Three citation checks accept inputs their names imply they reject",
-      "status": "open",
+      "status": "fixed",
+      "fixedBy": "PRO-0104",
+      "fix": "FIXED by PRO-0104. All three clauses, and none of them by a longer floor. (1) The header window and the legacy fallback both read `citable` text, so a `**Brief:**` line or a brief path inside a fence, an HTML comment or a struck-through span is a mention of a citation rather than one; three mutations, one per kind. (2) A `none.` reason must resolve rather than name: a token holding a `/` or resolving repo-relative is a path and must exist, a `§N` must be a heading in the PRD, a 7-40-hex token must resolve in git, and anything else is a name that never satisfies the requirement — which closes both the dangling reference and the backtick pair padded past twenty characters. spec-PRO-0096 was the one real red and its citation now names `docs/test-campaign`. (3) Reverse totality is satisfied by an account rather than a mention: a `**Brief:**`, `**Supersedes:**` or `**Direction:**` header segment, a citation of record, or a register row. Brief 32 keeps its account through spec-PRO-0050's `**Supersedes:**` line, so unclaimed stays 0 under the strict rule. 19 checks, 34 mutations, every check watched failing.",
+      "evidence": ["docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt", "docs/test-campaign/evidence/PRO-0104/spec-citation-measure.txt"],
       "severity": "low",
       "surfaces": [
         "SURF-024"
@@ -3530,6 +3588,22 @@
         "REQ-046"
       ],
       "note": "capture-lineage.py --gate exits 2 on main: `published captures: 8 · distinct images: 8 · files in shots dir: 43`, with 35 UNACCOUNTED images — a file in the shots directory that no subject publishes and no manifest entry names. The tool's remedy is publish it, delete it, or record an `unpublishedReason` on its captures.json entry.\n\nTHIS IS TOOL MOVEMENT REVEALING A PRE-EXISTING CONDITION, NOT A REGRESSION, and it was established by holding the tool constant across three trees rather than argued: the current capture-lineage gives the identical reading — exit 2, judged 6 of 8, ratchet 6, 35 hard failures — at dd1a443 (now), at eed148f (wave-16 close) and at 3d6fb15 (the wave-15 merge, before any of tonight's work). ORCHESTRATOR.md records this gate at exit 0 with judged 6 of 8 and ratchet 6 held, which was true of the version that ran it. test-campaign moved to 0.9.6 mid-session and the gate got stricter. The ratchet still holds at 6, so nothing has got worse by the tool's own measure.\n\nWHY IT MATTERS RATHER THAN BEING TIDINESS: the gate's own words are that every finding it makes is derived from published captures, so a file nobody publishes is a capture the gate cannot see — and it cites a campaign that read `published captures: 0 · files in shots dir: 11` and exited 0. Thirty-five unpublished images are thirty-five pictures a reader will take as evidence and the instrument cannot speak for. Most carry surface-shaped names (surf-001 through surf-016) from earlier waves, so they are probably real captures that were taken and never published, which is the recoverable case.\n\nDELETION IS NOT THE DEFAULT REMEDY HERE even though the tool offers it: each image needs a per-file disposition, and discarding evidence to clear a gate is the move this campaign refuses. Found by auditing every gate's exit code and denominator across main and a clean `worktree add --detach` tree, prompted by a sibling project finding a step that exited 0 on its own machine and 1 on a clean tree while printing `failures=0` in both."
+    },
+    {
+      "id": "DEF-230",
+      "severity": "low",
+      "status": "open",
+      "title": "A requirement carries an evidence word its own schema rejects, and the tool explained it as a self-report",
+      "found": "PRO-0104, by the vocabulary finding it added, 2026-08-23",
+      "detail": "REQ-072 carries `evidence: \"inconclusive\"`. test-campaign 0.9.6's REQ_EVIDENCE is (observed, reported, contradicted, unknown, vacuous) and validates against it on `set`, so the value is one this registry's own schema rejects; `campaign.py check` does not re-validate the field, so it has stood. reckon's requirement branch had no rule for it either: the word fell through to the self-reported branch, where the row was classed `unmeasured` — which happens to be right — and the reader was told the reason was that `inconclusive` is \"the project's own account of itself, not an observation\". It is nothing of the kind. REQ-072 is a stated ceiling, recorded inconclusive deliberately by PRO-0084 against a limit that cannot be worked around, and the note says so. So the placement was right by accident and the explanation was false, which is the DEF-202 shape in a second vocabulary.",
+      "surfaces": [
+        "SURF-023"
+      ],
+      "req": "REQ-120",
+      "note": "RECORDED, NOT CLAIMED by PRO-0104. reckon 1.2.0 now names it: `requirement evidence 'inconclusive' is not a word this tool classifies — 1 row(s) carry it (REQ-072)`, and `reckon build` over this registry exits 4 on it. What is left is a decision about the row rather than about the instrument, and it is not this item's to take: test-campaign's vocabulary has no word for a ceiling recorded inconclusive, so the choice is between recording the row as `vacuous`, recording it as `unknown`, and adding a sixth word to REQ_EVIDENCE — and each of those says something different about a requirement another item owns. Flipping it to silence a gate this item added would be the exact failure the item is about.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0104/vocabulary-delta.json"
+      ]
     }
   ]
 }

@@ -1,0 +1,88 @@
+warning: only 0.0% of briefs could be joined to the registry at all. The join is the inferential step in this pipeline; below half, retirement claims are withheld and every brief stays in its documentary class.
+clean ledger passes                            exit=0 ok
+duplicate id caught                            exit=1 ok
+row with no id caught                          exit=1 ok
+blocked case presenting as done                exit=1 ok
+inconclusive case presenting as broken         exit=1 ok
+carried case presenting as done                exit=1 ok
+self-reported requirement retiring itself      exit=1 ok
+unknown-evidence requirement retiring itself   exit=1 ok
+class outside the partition                    exit=1 ok
+retirement on a token-overlap guess            exit=1 ok
+n/a presenting as verified-done                exit=1 ok
+waiver with no recorded reason                 exit=1 ok
+absent denominator caught                      exit=2 ok
+summary disagreeing with rows                  exit=2 ok
+weak join warns without blocking               exit=0 ok
+ratchet catches a silent reclassification      ok
+ratchet catches an item that vanished          ok
+ratchet allows an earned transition            ok
+orphan surface -> unnamed; reported -> unmeasured ok
+contradicted evidence -> undecided             ok
+a list-valued registry field yields tokens     ok
+None, str, dict and scalar all flatten         ok
+a fixed defect is not remaining work           ok
+an open defect is still remaining work         ok
+an unrecognised defect status stays broken     ok
+a defect with no status stays broken           ok
+a wontfix defect is a waiver with its reason   ok
+defect claiming done on an unknown status      exit=1 ok
+defect classed against its own status          exit=1 ok
+a brief nothing joined is unjoined, not unbuilt ok
+a brief citing ids the registry lacks is unbuilt ok
+an unjoined row carries its nearest candidate  ok
+a brief joined only to a fixed defect is not broken ok
+a brief joined to an open defect is still broken ok
+unjoined is inside the partition               exit=0 ok
+with no campaign, a citation is not evidence   ok
+a dangling citation keeps a usable overlap edge ok
+a file number is not a citation                ok
+a project id in a note is still a citation     ok
+the report gives unjoined its own section      ok
+every class is produced by a real fixture      ok
+the manifest and the marketplace agree         ok
+the published version carries these repairs    ok
+a weak join withholds retirement, and says why ok
+fixture · 6 rows · 2 piece(s) of work remain — 1 product, 0 evidence, 1 decision — across 6 ledger rows. This reckoning speaks for 100% of the campaign's designed cases and 100% of its stated requirements; the rest is not known to be done, it is simply not known. 1 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.
+wrote /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/reckon-selftest-q1t5ktw1/out/ledger.json
+the headline counts what is actually left      ok
+a repaired defect is absent from what remains  ok
+'by design' owes nothing and is not work       ok
+'invalid' owes nothing and is not work         ok
+'obsolete' owes nothing and is not work        ok
+'superseded' owes nothing and is not work      ok
+'cannot reproduce' owes nothing and is not work ok
+'not-a-defect' owes nothing and is not work    ok
+'vacuous' owes nothing and is not work         ok
+'resolved' is still read as a repair           ok
+'partially-fixed' still owes work              ok
+'partially fixed' still owes work              ok
+a partially-fixed defect classed done          exit=1 ok
+a not-owing defect classed broken              exit=1 ok
+an unclassifiable defect status is a finding   exit=4 ok
+an unclassifiable case status is a finding     exit=4 ok
+an unclassifiable evidence word is a finding   exit=4 ok
+an unknown evidence word is not called a self-report ok
+one unknown word on three rows is one finding  ok
+a structural fault outranks a vocabulary one   ok
+the report names the input it could not place  ok
+an id shown in a fenced region is not cited    ok
+  and the same id in prose still is            ok
+an id shown in a comment region is not cited   ok
+  and the same id in prose still is            ok
+an id shown in a struck region is not cited    ok
+  and the same id in prose still is            ok
+a fenced example id cannot make a brief unbuilt ok
+a placeholder id in prose is a named finding   ok
+'REQ-9' is not a placeholder shape             ok
+'DEF-0' is not a placeholder shape             ok
+'CASE-99' is not a placeholder shape           ok
+'CASE-999' is a placeholder shape              ok
+'CASE-9999' is a placeholder shape             ok
+'REQ-000' is a placeholder shape               ok
+'SURF-0000' is a placeholder shape             ok
+an unpadded real id still cites                ok
+  and a real id in prose still cites           ok
+
+all gates demonstrated failing on a bad fixture, and silent on a good one
+exit=0

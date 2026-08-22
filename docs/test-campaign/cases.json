@@ -5926,5 +5926,454 @@
     "armed": true,
     "armedBy": "The mutant applied inside the decoder the extraction created, confirmed landed by re-reading the file, and `decodedArgumentsResolveToThePublishedDefaults` watched going red: `presentation = args.bool(\"presentation\", true)  ->  presentation = args.bool(\"presentation\", false)`, exit 1, Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.. Reverted, tree clean after.",
     "note": "Survivor 8, the same at runtime through `Dispatcher.InspectArguments`. Armed separately from CASE-0470 because one test covering two mutants proves nothing about the second unless the second is watched.\n\nMoving the decode found a fault in the class check on the way: `InspectArguments` was first declared in the stability section, so the source parser attributed `presentation` to proctor_stability and the (tool, argument) join went nil. Each struct now sits under its own tool MARK. A parser sectioned by comment markers is only as right as where the code sits relative to them, and that failure was visible because CASE-0458 asserts the two pairs it must find by name."
+  },
+  {
+    "id": "CASE-0500",
+    "req": "REQ-121",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17d, `fenced`: PRE_FIX_SCAN over the same document returns ['DEF-0404'] while scan_ids returns cited [] and shown {'fenced': ['DEF-0404']}. Two-way control in the same fixture: the identical id written into prose instead returns cited ['DEF-0404'] and no shown region, so the exclusion is distinguishable from a scanner that stopped finding ids.",
+    "note": "One exclusion kind, on its own. A fixture carrying a fence, a comment and a strikethrough together proves whichever region is stripped first and nothing about the other two. The pre-fix expression is restated verbatim in the fixture and asserted to give the wrong answer first, so a green here cannot come from an input that never exercised the defect."
+  },
+  {
+    "id": "CASE-0501",
+    "req": "REQ-121",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17d, `comment`: `<!-- DEF-0404 was the example -->` yields cited [] and shown {'comment': ['DEF-0404']}, against PRE_FIX_SCAN's ['DEF-0404']; the prose control in the same fixture still cites it.",
+    "note": "The second of the three exclusions, armed separately from CASE-0500. The pre-fix expression is restated verbatim in the fixture and asserted to give the wrong answer first, so a green here cannot come from an input that never exercised the defect."
+  },
+  {
+    "id": "CASE-0502",
+    "req": "REQ-121",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17d, `struck`: `~~DEF-0404~~ was the example.` yields cited [] and shown {'struck': ['DEF-0404']}, against PRE_FIX_SCAN's ['DEF-0404']; the prose control still cites.",
+    "note": "The third exclusion, armed separately. The pre-fix expression is restated verbatim in the fixture and asserted to give the wrong answer first, so a green here cannot come from an input that never exercised the defect."
+  },
+  {
+    "id": "CASE-0503",
+    "req": "REQ-121",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17e control: a brief reading 'This is about REQ-1 and nothing else.' still produces a cited edge to REQ-1 at confidence 1.0 after the placeholder rule lands.",
+    "note": "The two-way control on the placeholder rule rather than on the exclusions. A rule that refused every id would pass CASE-0504 alone; this is the half that says it did not."
+  },
+  {
+    "id": "CASE-0504",
+    "req": "REQ-121",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17e: `CASE-9999` in plain prose builds no cited edge, the brief row comes out `unjoined` rather than `unbuilt`, the row carries unclassifiable_ids ['CASE-9999'], and unclassified_inputs returns exactly [('id-shaped token', 'CASE-9999', 1)].",
+    "note": "The third outcome rather than a second exclusion. Dropping a placeholder silently would be the same guess in the other direction, so it is named with its count and cannot carry `unbuilt`. The pre-fix expression is restated verbatim in the fixture and asserted to give the wrong answer first, so a green here cannot come from an input that never exercised the defect."
+  },
+  {
+    "id": "CASE-0505",
+    "req": "REQ-120",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17a asserts each of `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce`, `not-a-defect` and `vacuous` on its own: class `waived`, is_work_item False, and the word named in the row's `why`. PRE_FIX_WORD is restated and returns `broken` for every one of them. A loop that stopped at the first word would leave six unmeasured, so each prints its own line.",
+    "note": "Seven words that mean the row owes nothing without meaning anybody repaired it. `resolved` is asserted separately and stays `verified-done` — it is the one word in DEF-202's sentence that does record a repair."
+  },
+  {
+    "id": "CASE-0506",
+    "req": "REQ-123",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17b: `partially-fixed` and `partially fixed` both class `broken` with is_work_item True, and the row's `why` names the word and the word 'owes'.",
+    "note": "The deliberate exception, and the one place in reckon where the fail-closed direction is chosen against a word that sounds like a closure. Retiring it would make the tool under-report for the first time."
+  },
+  {
+    "id": "CASE-0507",
+    "req": "REQ-120",
+    "surface": "SURF-023",
+    "state": "reporting",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",
+      "docs/test-campaign/evidence/PRO-0104/reckon-check-two-way.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17c: a defect row at `characterised` produces a `vocabulary` violation reading \"defect status 'characterised' is not a word this tool classifies\" and R.verdict returns 4.",
+    "note": "The row is still placed, because the partition has to be total. What the gate refuses is a placement this tool chose being presented as a reading of the registry."
+  },
+  {
+    "id": "CASE-0508",
+    "req": "REQ-120",
+    "surface": "SURF-023",
+    "state": "reporting",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17c: a case row at `marinated` produces a `vocabulary` violation naming the word, at exit 4, and the classifier's own `why` for it says the word is not one this tool classifies rather than quoting a legality rule that does not exist.",
+    "note": "The case vocabulary fails in the safe direction — an unknown case status is held `unmeasured` — and it was still a silent default before this."
+  },
+  {
+    "id": "CASE-0509",
+    "req": "REQ-120",
+    "surface": "SURF-023",
+    "state": "reporting",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",
+      "docs/test-campaign/evidence/PRO-0104/vocabulary-delta.json"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17c: a requirement at `inconclusive` produces a `vocabulary` violation at exit 4, and the classified row's `why` contains 'not a word this tool classifies' and does NOT contain 'own account of itself'.",
+    "note": "REQ-072 in this registry is the real instance, and the second assertion is the one that matters: the pre-fix branch classed it correctly by accident and explained it to every reader as a self-report. DEF-230 records what is left, which is a decision about the row."
+  },
+  {
+    "id": "CASE-0510",
+    "req": "REQ-120",
+    "surface": "SURF-023",
+    "state": "reporting",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17c: three defect rows carrying the same unknown word return one finding with count 3 and ids ['DEF-X1', 'DEF-X2', 'DEF-X3'], not three findings and not one naming one row.",
+    "note": "The count is half of what makes it a finding. 'a word I do not know' sends nobody anywhere; 'this word, on these three rows' is a work order."
+  },
+  {
+    "id": "CASE-0511",
+    "req": "REQ-120",
+    "surface": "SURF-023",
+    "state": "reporting",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17c: a ledger carrying both a duplicated id and an unknown case status reports both kinds and R.verdict returns 1, not 4.",
+    "note": "Exit 4 must not mask a structural fault. The ordering is asserted rather than assumed, because a new code inserted at the top of verdict() would swallow conservation violations while every other row here stayed green."
+  },
+  {
+    "id": "CASE-0512",
+    "req": "REQ-120",
+    "surface": "SURF-023",
+    "state": "reporting",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17c executes R.render over a ledger holding an unclassifiable defect status and asserts the output carries 'could not classify', the word 'characterised' and the row id DEF-R.",
+    "note": "The exit code says only that something is wrong. A reader acts on the report, so the finding has to appear there, and render is executed rather than inspected."
+  },
+  {
+    "id": "CASE-0513",
+    "req": "REQ-123",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17b: a defect row at `partially-fixed` classed `verified-done` is a placement violation reading 'may only be broken' at exit 1, and a row at `invalid` classed `broken` is a placement violation reading 'may only be waived'.",
+    "note": "Legality rather than preference, in both directions: the two new sets are in DEFECT_LEGAL_CLASS, so a ledger whose class contradicts its own status is refused the same way cases have been since the first version."
+  },
+  {
+    "id": "CASE-0514",
+    "req": "REQ-121",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17d, the reproduction DEF-201 was filed on: a brief whose only id-shaped token is `CASE-9999` inside a fenced example command builds no cited edge and classes `unjoined`, with the token and its count named in the row's `why`. Before the repair the same brief produced a confidence-1.0 citation and classed `unbuilt` — product work, on a token nobody cited.",
+    "note": "`unbuilt` is the one class PRO-0102 narrowed to a positive claim: the registry was asked and said no. A fenced example must not be able to reach it."
+  },
+  {
+    "id": "CASE-0515",
+    "req": "REQ-120",
+    "surface": "SURF-023",
+    "state": "reporting",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-check-two-way.txt"
+    ],
+    "armed": true,
+    "armedBy": "The two-way control on the gate itself, run through the CLI rather than the module: the same two-row ledger with defect status `open` gives 'gate: clean', exit 0; with `characterised` it gives the vocabulary violation naming the word and DEF-1, 'gate: FAILED (exit 4)', exit 4. Both readings are in the artifact.",
+    "note": "One command, one field changed, two exits. It separates 'this gate fires' from 'this command always refuses', which a one-sided arming cannot."
+  },
+  {
+    "id": "CASE-0516",
+    "req": "REQ-120",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/vocabulary-delta.json"
+    ],
+    "armed": true,
+    "armedBy": "reckon 1.1.0 and 1.2.0 built over the identical tree (100 briefs, 335 cases, 129 defect rows, 105 requirements): class counts identical, work_items 147 both, rows reclassified 0, one cited edge removed (BRIEF-97 -> CASE-9999), join 21.0% both, build exit 0 -> 4 on two findings.",
+    "note": "The blast radius, measured rather than asserted. The repair changes no classification on this corpus; what it changes is that two inputs previously resolved by a default are now named. The zero here is a fact about this repository's idiom — all 24 legacy citations sit in real prose at fence depth 0 — and not about the risk."
+  },
+  {
+    "id": "CASE-0517",
+    "req": "REQ-121",
+    "surface": "SURF-024",
+    "state": "cited by path",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "scripts/campaign/spec_citation_measure.py"
+    ],
+    "armed": true,
+    "armedBy": "spec_citation_arm.py mutation: PRO-0001's `**Brief:**` line wrapped in a ```text fence. `every spec carries a parseable citation` moves PASS -> FAIL, and the run records the reds it moved. Baseline on the unmutated scratch copy is 19/19 PASS.",
+    "note": "A `**Brief:**` header inside a fence in the first 20 lines used to satisfy the check, because the header was read out of the raw text. One exclusion kind per mutation."
+  },
+  {
+    "id": "CASE-0518",
+    "req": "REQ-121",
+    "surface": "SURF-024",
+    "state": "cited by path",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "scripts/campaign/spec_citation_measure.py"
+    ],
+    "armed": true,
+    "armedBy": "spec_citation_arm.py mutation: the same citation wrapped in `<!-- ... -->`. Same check moves PASS -> FAIL, armed separately from CASE-0517.",
+    "note": "The second kind. Proving the fence case and the comment case together would prove neither individually."
+  },
+  {
+    "id": "CASE-0519",
+    "req": "REQ-121",
+    "surface": "SURF-024",
+    "state": "cited by path",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "scripts/campaign/spec_citation_measure.py"
+    ],
+    "armed": true,
+    "armedBy": "spec_citation_arm.py mutation: the same citation wrapped in `~~ ... ~~`. Same check moves PASS -> FAIL, armed separately.",
+    "note": "The third kind."
+  },
+  {
+    "id": "CASE-0520",
+    "req": "REQ-121",
+    "surface": "SURF-024",
+    "state": "registered as unclaimed",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "scripts/campaign/spec_citation_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "spec_citation_arm.py mutation `add_brief_shown_as(FENCED)`: a new brief `97-arming.md` whose only trace anywhere is a fenced mention in spec-PRO-0003. `no brief's only trace is a shown-not-used mention` moves PASS -> FAIL and names the brief with its count.",
+    "note": "Before the repair the same mutation left the check green: any body path counted as a claim, so a brief nobody built from read as claimed."
+  },
+  {
+    "id": "CASE-0521",
+    "req": "REQ-121",
+    "surface": "SURF-024",
+    "state": "registered as unclaimed",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "scripts/campaign/spec_citation_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The same mutation with `COMMENTED`: the only trace is inside an HTML comment. Same check moves PASS -> FAIL, armed separately.",
+    "note": "One fixture per kind, in the reverse-totality direction as well as the citation-of-record one."
+  },
+  {
+    "id": "CASE-0522",
+    "req": "REQ-121",
+    "surface": "SURF-024",
+    "state": "registered as unclaimed",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "scripts/campaign/spec_citation_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The same mutation with `STRUCK`. Same check moves PASS -> FAIL, armed separately.",
+    "note": "The third kind in this direction."
+  },
+  {
+    "id": "CASE-0523",
+    "req": "REQ-122",
+    "surface": "SURF-024",
+    "state": "registered as unclaimed",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "scripts/campaign/spec_citation_measure.py"
+    ],
+    "armed": true,
+    "armedBy": "spec_citation_arm.py mutation `add_brief_shown_as(PROSE)`: the brief is mentioned in plain body prose and claimed nowhere. `no brief is claimed only by an incidental mention` moves PASS -> FAIL, naming the brief, the count and the specs mentioning it.",
+    "note": "DEF-203's third clause. A mention is a reference; an account is a decision somebody wrote down."
+  },
+  {
+    "id": "CASE-0524",
+    "req": "REQ-122",
+    "surface": "SURF-024",
+    "state": "cited by path",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "scripts/campaign/spec_citation_measure.py"
+    ],
+    "armed": true,
+    "armedBy": "spec_citation_arm.py appends `**Cut from:** `docs/features-to-triage/01-cua-schema-facade.md`` to a spec. `no brief is accounted for by an unrecognised relation` moves PASS -> FAIL naming the spec, the relation and the brief.",
+    "note": "The vocabulary half of the same shape, in the citation instrument rather than the reckoning one: a header relation this check has no rule for is a finding rather than read either way. The three accepted relations are derived from the corpus — Brief 76, Direction 12, Supersedes 1 across 104 specs."
+  },
+  {
+    "id": "CASE-0525",
+    "req": "REQ-122",
+    "surface": "SURF-024",
+    "state": "declared no brief",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "scripts/campaign/spec_citation_measure.py"
+    ],
+    "armed": true,
+    "armedBy": "Three mutations on PRO-0075's `none.` citation, each moving `every `none` citation resolves to something here` PASS -> FAIL: a path that does not resolve (`docs/nowhere/imaginary-source.md`), a PRD section that does not exist (§99), and a backtick pair padded past the twenty-character floor (`whatever.md`).",
+    "note": "The third is why a longer floor is not the repair: it clears the length floor and the names-an-artifact floor and resolves nothing. A name never satisfies the requirement, and it never breaks a reason that also carries something resolvable — naming the tool a finding came off, beside an artifact a reader can open, is honest description."
+  },
+  {
+    "id": "CASE-0526",
+    "req": "REQ-122",
+    "surface": "SURF-024",
+    "state": "registered as unclaimed",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-measure.txt",
+      "scripts/campaign/spec_citation_measure.py"
+    ],
+    "armed": true,
+    "armedBy": "spec_citation_measure.py on this tree after the strict rule: 19/19 checks, specs 104 (legacy 24, none 4, path 76), briefs 100, claimed 96, registered 4, unclaimed 0, and the new disclosure line 'none-citations 4: 0 resolving nothing · 1 naming something this check cannot resolve (spec-PRO-0096.md `campaign.py`)'.",
+    "note": "Reverse totality holds at 0 under the tighter rule, which was the risk in tightening it. Brief 32 keeps its account through spec-PRO-0050's `**Supersedes:**` line — retired, not built, both halves absorbed there — which is why the account grammar has three relations rather than one. spec-PRO-0096 was the one real red and its citation now names `docs/test-campaign`."
+  },
+  {
+    "id": "CASE-0527",
+    "req": "REQ-121",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",
+      "docs/test-campaign/evidence/PRO-0104/gemini-review.md"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17e: seven tokens asserted against PLACEHOLDER_ID_RE one at a time — REQ-9, DEF-0 and CASE-99 are not placeholder shapes, CASE-999, CASE-9999, REQ-000 and SURF-0000 are — and a scan over 'about REQ-9 and DEF-0, and CASE-9999 is the example' returns cited ['DEF-0', 'REQ-9'] with unclassifiable ['CASE-9999']. The pre-fix pattern `(?:9+|0+)` matched REQ-9, which the assertions catch.",
+    "note": "Found by the gemini out-of-family review of this item's own diff, not by a fixture. A repository numbering its brief queue without padding has a real ninth item, and the first version of the placeholder rule would have reported a citation to it as a worked example. Three digits is now the floor, and a repository large enough to hold a real CASE-999 gets a finding rather than a lost citation, which is the direction this mechanism fails in on purpose."
+  },
+  {
+    "id": "CASE-0528",
+    "req": "REQ-122",
+    "surface": "SURF-024",
+    "state": "declared no brief",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "docs/test-campaign/evidence/PRO-0104/gemini-review.md"
+    ],
+    "armed": true,
+    "armedBy": "Two mutations on PRO-0075's `none.` citation, each moving `every `none` citation resolves to something here` PASS -> FAIL: a reason naming `/bin/sh` as its origin, and one naming `../../../etc/passwd`. Before `inside_repo`, `REPO / '/bin/sh'` is `/bin/sh` in pathlib, so the first resolved against the machine and passed as a repository path.",
+    "note": "Found by the gemini out-of-family review of this item's own diff. The same helper also makes a backticked path holding a space resolve as itself rather than as its first word, since the whole token is tried before the split."
   }
 ]
