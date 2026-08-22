@@ -18,21 +18,26 @@ import ProctorCore
 // rail glowing, and light against dark. `swift test` has no window server.
 
 @MainActor
-private func pixels(_ image: CGImage) -> (w: Int, h: Int, rgba: [UInt8]) {
+private func pixels(_ image: CGImage) throws -> (w: Int, h: Int, rgba: [UInt8]) {
     let w = image.width, h = image.height
     var buffer = [UInt8](repeating: 0, count: w * h * 4)
     let space = CGColorSpaceCreateDeviceRGB()
-    let context = CGContext(data: &buffer, width: w, height: h, bitsPerComponent: 8,
-                            bytesPerRow: w * 4, space: space,
-                            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+    // PRO-0098, DEF-136. `w` and `h` come off a real CGImage decoded from the
+    // bundled asset. A zero-dimension image — the shape a missing or truncated
+    // asset produces — makes this initializer return nil, which is precisely the
+    // regression these tests exist to catch.
+    let context = try #require(CGContext(data: &buffer, width: w, height: h, bitsPerComponent: 8,
+                                         bytesPerRow: w * 4, space: space,
+                                         bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+                               "no CGContext for a \(w)x\(h) image")
     context.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h))
     return (w, h, buffer)
 }
 
 /// The opaque bounding box, in image rows and columns from the top-left.
 @MainActor
-private func inkBox(_ image: CGImage) -> (top: Int, bottom: Int, left: Int, right: Int)? {
-    let (w, h, rgba) = pixels(image)
+private func inkBox(_ image: CGImage) throws -> (top: Int, bottom: Int, left: Int, right: Int)? {
+    let (w, h, rgba) = try pixels(image)
     var top = h, bottom = -1, left = w, right = -1
     for y in 0..<h {
         for x in 0..<w where rgba[(y * w + x) * 4 + 3] > 8 {
@@ -72,7 +77,7 @@ struct RunHUDCharacterAssetTests {
     func realAlpha() throws {
         let set = try #require(RunHUDSprites.images(scale: 1))
         for (name, image) in set {
-            let (w, h, rgba) = pixels(image)
+            let (w, h, rgba) = try pixels(image)
             var transparent = 0
             for index in stride(from: 0, to: w * h * 4, by: 4) {
                 let alpha = rgba[index + 3]
@@ -99,7 +104,7 @@ struct RunHUDCharacterAssetTests {
         for phase in RunHUDPhase.allCases {
             let asset = RunHUDCharacter.frames(for: phase)[0].asset
             let image = try #require(set[asset], "\(asset) is not in the bundle")
-            let box = try #require(inkBox(image), "\(asset) is blank")
+            let box = try #require(try inkBox(image), "\(asset) is blank")
             baselines[asset] = box.bottom
             tops[asset] = box.top
         }
@@ -120,7 +125,7 @@ struct RunHUDCharacterAssetTests {
         for phase in RunHUDCharacter.moving {
             let boxes = try RunHUDCharacter.frames(for: phase).map { frame -> (top: Int, bottom: Int, left: Int, right: Int) in
                 let image = try #require(set[frame.asset], "\(frame.asset) is not in the bundle")
-                return try #require(inkBox(image), "\(frame.asset) is blank")
+                return try #require(try inkBox(image), "\(frame.asset) is blank")
             }
             let bottoms = Set(boxes.map(\.bottom))
             let lift = phase == .idle ? 1 : 0
@@ -134,8 +139,8 @@ struct RunHUDCharacterAssetTests {
         let set = try #require(RunHUDSprites.images(scale: 1))
         let downImage = try #require(set["idle-0"])
         let upImage = try #require(set["idle-1"])
-        let down = try #require(inkBox(downImage))
-        let up = try #require(inkBox(upImage))
+        let down = try #require(try inkBox(downImage))
+        let up = try #require(try inkBox(upImage))
         #expect(down.bottom - up.bottom == 1)
         #expect(down.left == up.left && down.right == up.right)
     }
@@ -148,8 +153,8 @@ struct RunHUDCharacterAssetTests {
             for asset in RunHUDCharacter.assets {
                 let base = try #require(one[asset])
                 let dense = try #require(scaled[asset])
-                let a = try #require(inkBox(base))
-                let b = try #require(inkBox(dense))
+                let a = try #require(try inkBox(base))
+                let b = try #require(try inkBox(dense))
                 #expect(b.bottom / density == a.bottom && b.left / density == a.left,
                         "\(asset)@\(density)x does not line up with @1x")
             }
@@ -160,7 +165,7 @@ struct RunHUDCharacterAssetTests {
     func greyIsReservedForPaused() throws {
         let set = try #require(RunHUDSprites.images(scale: 1))
         for (name, image) in set {
-            let (w, h, rgba) = pixels(image)
+            let (w, h, rgba) = try pixels(image)
             var grey = 0
             for index in stride(from: 0, to: w * h * 4, by: 4) where rgba[index + 3] > 200 {
                 let r = Int(rgba[index]), g = Int(rgba[index + 1]), b = Int(rgba[index + 2])
@@ -185,7 +190,7 @@ struct RunHUDCharacterAssetTests {
         let side = Double(RunHUDCharacter.bay)
         let radius = 9.0
         for (name, image) in set {
-            let (w, h, rgba) = pixels(image)
+            let (w, h, rgba) = try pixels(image)
             var clippedLow = 0, clipped = 0
             for y in 0..<h {
                 for x in 0..<w where rgba[(y * w + x) * 4 + 3] > 8 {

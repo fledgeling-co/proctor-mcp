@@ -231,10 +231,10 @@ struct GuestLaneTests {
     }
 
     @Test("presence is enough for both CLIs — a health check does not run them")
-    func presenceSettlesTheCLIs() {
+    func presenceSettlesTheCLIs() throws {
         for tool in ["lume", "prlctl"] {
-            let row = Toolchain.row(entry: Toolchain.entry(for: tool)!,
-                                    facts: ToolFacts(located: ToolPresence(
+            let row = try Toolchain.row(entry: #require(Toolchain.entry(for: tool)),
+                                        facts: ToolFacts(located: ToolPresence(
                                         tool: tool, available: true, path: "/x/\(tool)")))
             #expect(row.usability == .usable)
             #expect(row.evidence == .presence)

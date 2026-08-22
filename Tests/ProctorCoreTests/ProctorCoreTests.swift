@@ -1228,6 +1228,10 @@ struct MenuKeyEquivalentTests {
         // AppKit reports arrow/function equivalents with a private-use scalar in
         // cmdChar; treating it as printable would emit a garbage shortcut, so it is
         // rejected and the virtual key is used instead.
+        // PRO-0098, DEF-136: classed UNFAILABLE. `UnicodeScalar(_: UInt32)` returns
+        // nil only for a surrogate (D800-DFFF) or a value above 10FFFF. 0xF702 is a
+        // literal in the BMP private-use area, so no input reaches the failing
+        // branch. Left as it is; census in evidence/PRO-0098/unwrap-census.md.
         let functionKeyChar = String(UnicodeScalar(0xF702)!)   // NSLeftArrowFunctionKey
         #expect(MenuKeyEquivalent.normalisedChar(functionKeyChar) == nil)
         #expect(MenuKeyEquivalent.shortcut(char: functionKeyChar, virtualKey: 123, glyph: nil,
@@ -2729,7 +2733,7 @@ struct AuditSealTests {
     }
 
     @Test("a tampered ciphertext or header fails to open rather than decoding to something else")
-    func tamperingFailsToOpen() {
+    func tamperingFailsToOpen() throws {
         let key = Curve25519.KeyAgreement.PrivateKey()
         guard let sealed = AuditSeal.seal(line: record().jsonLine(), to: key.publicKey),
               let data = sealed.data(using: .utf8),
@@ -2738,11 +2742,14 @@ struct AuditSealTests {
         }
 
         // Flip one byte of the ciphertext: GCM's tag catches it.
-        var raw = Data(base64Encoded: box.ct)!
+        // PRO-0098, DEF-136. `box.ct` is a field the product produced; a seal that
+        // started emitting something that is not base64 is the defect, not a reason
+        // to abort the run.
+        var raw = try #require(Data(base64Encoded: box.ct))
         raw[raw.count - 1] ^= 0x01
         let mangled = AuditSeal.SealedLine(v: box.v, kid: box.kid, epk: box.epk,
                                            ct: raw.base64EncodedString())
-        #expect(AuditSeal.open(encode(mangled), with: key) == nil)
+        #expect(try AuditSeal.open(encode(mangled), with: key) == nil)
 
         // Swap the ephemeral public key from a different sealing of the same line.
         // The header is bound as authenticated data, so this is detected instead of
@@ -2753,11 +2760,11 @@ struct AuditSealTests {
             Issue.record("second sealing failed"); return
         }
         let swapped = AuditSeal.SealedLine(v: box.v, kid: box.kid, epk: otherBox.epk, ct: box.ct)
-        #expect(AuditSeal.open(encode(swapped), with: key) == nil)
+        #expect(try AuditSeal.open(encode(swapped), with: key) == nil)
 
         // An unknown format version is refused rather than guessed at.
         let futureVersion = AuditSeal.SealedLine(v: box.v + 1, kid: box.kid, epk: box.epk, ct: box.ct)
-        #expect(AuditSeal.open(encode(futureVersion), with: key) == nil)
+        #expect(try AuditSeal.open(encode(futureVersion), with: key) == nil)
     }
 
     @Test("a sealed entry is still exactly one JSONL line")
@@ -2836,7 +2843,7 @@ struct AuditSealTests {
     }
 
     @Test("a trail of entries opens back in the same shape and the same order")
-    func trailRoundTripsInOrder() {
+    func trailRoundTripsInOrder() throws {
         // Callers need no change: the read path hands back the same records, in the
         // order they were written, with a bad entry costing one entry rather than
         // the whole trail.
@@ -2850,8 +2857,10 @@ struct AuditSealTests {
 
         // One entry sealed to a key this Mac does not hold, dropped in the middle.
         var stored = sealed
-        stored[2] = AuditSeal.seal(line: trail[2],
-                                   to: Curve25519.KeyAgreement.PrivateKey().publicKey)!
+        // PRO-0098, DEF-136. A seal that returned nil is the defect this suite is
+        // for; unwrapped, it took the runner instead of this test.
+        stored[2] = try #require(AuditSeal.seal(line: trail[2],
+                                                to: Curve25519.KeyAgreement.PrivateKey().publicKey))
 
         let opened = stored.map { AuditSeal.open($0, with: key) }
         #expect(opened[0] == trail[0])
@@ -2864,10 +2873,13 @@ struct AuditSealTests {
 
     // MARK: helpers
 
-    private func encode(_ box: AuditSeal.SealedLine) -> String {
+    private func encode(_ box: AuditSeal.SealedLine) throws -> String {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
-        return String(data: try! encoder.encode(box), encoding: .utf8)!
+        // PRO-0098, DEF-136. Restructured rather than `#require`d: decoding UTF-8
+        // bytes through `String(decoding:as:)` is total, so the unwrap is gone
+        // rather than deferred.
+        return String(decoding: try encoder.encode(box), as: UTF8.self)
     }
 
     private func decode(_ line: String) -> AuditSeal.SealedLine? {

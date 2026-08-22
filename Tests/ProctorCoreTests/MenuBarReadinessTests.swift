@@ -339,14 +339,20 @@ struct BuildStampTests {
 struct RelaunchCommandTests {
 
     @Test("it waits for this process to go before opening the bundle")
-    func waitsThenOpens() {
+    func waitsThenOpens() throws {
         let args = RelaunchCommand.arguments(pid: 4321, bundlePath: "/Applications/Proctor.app")
         #expect(args.first == "-c")
         let script = args.last ?? ""
         // `open` on a running single-instance menu bar app activates the instance
         // already there, so the wait is the whole mechanism, not politeness.
         #expect(script.contains("kill -0 4321"))
-        #expect(script.range(of: "kill -0")!.lowerBound < script.range(of: "open ")!.lowerBound)
+        // PRO-0098, DEF-136. Both ranges are searches over a script the product
+        // generated. A relaunch command that stopped emitting either token is the
+        // regression this line exists to catch, and force-unwrapping it made that
+        // regression abort the runner rather than fail this test.
+        let waitAt = try #require(script.range(of: "kill -0"), "no `kill -0` in the relaunch script")
+        let openAt = try #require(script.range(of: "open "), "no `open ` in the relaunch script")
+        #expect(waitAt.lowerBound < openAt.lowerBound)
         #expect(script.contains("open '/Applications/Proctor.app'"))
     }
 
