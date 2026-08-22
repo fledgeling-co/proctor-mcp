@@ -140,3 +140,50 @@ item owns.
 - `scripts/campaign/defect_gate.py` in both `claims` and `dropped` modes before reporting.
 - `./scripts/test.sh` through the governor — this item changes no Swift, so it is a regression
   control rather than a proof of the work.
+
+## Adjustments during the build, disclosed
+
+Four changes the plan above did not name. Each is recorded here rather than left to be found in
+the diff.
+
+**8 — The reverse-citation scan requires a project-id shape.** Triage assumption A8 ("dropping the
+guess-by-number fallback is done once across this item and the brief-citation item, whichever
+builds first") turned out to name something the plan had not located. It is not a separate
+fallback: it is `build_join`'s reverse-citation scan taking the first two hyphen-separated fields
+of a brief's filename. On `SCR-0075-dead-credential.md` that is the project id the mechanism was
+built for; on this repo's `NN-slug` queue it produces `03-menu` — a position in a directory
+listing, matched against free prose and labelled `method: "cited"` at confidence 1.0, which is the
+only edge kind allowed to retire stated intent. Measured before the change: the scan contributed
+**0 of 92** cited edges here, so requiring letters-then-digits costs nothing. PRO-0102 built
+first, so PRO-0101 verifies rather than re-edits. Recorded as `DEF-214`.
+
+**A defect row's note falls back through `evidence` → `note` → `fix`.** Pre-fix it read `evidence`
+only, and a repaired or waived defect frequently has none. One line, and it is why a waived defect
+reaches the gate with a reason.
+
+**Five findings from the out-of-family critic, applied.** The gate could not fire on a defect whose
+status it did not recognise; a dangling citation was classed `unbuilt` even in a run with no
+campaign at all (contradicting `references/no-campaign.md`, which this item had just rewritten); a
+dangling citation discarded a usable overlap edge; a registry row with no id could be inserted as a
+reverse citation and suppress the overlap search; and three assertions were weak — one tautological
+on its own fixture, one asserting `!= "broken"` rather than a class, one agreeing with the pre-fix
+code. Two whole checks were missing: `cmd_build` was never executed by the suite, and the weak-join
+degrade had no behavioural test. All applied; the critic's remaining finding is dispositioned below.
+
+**One critic finding not taken.** It reported that a waived defect bypasses the gate's
+"a waiver names a reason" rule because `status` is truthy. That rule has always accepted a case's
+`n/a` status as its own reason, and a defect's `wontfix` is the same shape — the decision word *is*
+the record. Changing it would fire on every waived case in every existing ledger, which is a
+separate item rather than this one.
+
+## Gate results
+
+| Gate | Result |
+|---|---|
+| `selftest.py` (the tool's own suite) | 46 checks, exit 0. 26 before this item. |
+| Arming, whole suite vs `31697a9` | 17 red — `evidence/PRO-0102/arming/arming-D-full-prefix.txt` |
+| Arming, the two controls, by mutation | 2 red — `arming-E-controls.txt` |
+| Arming, the delivery pair, both directions | 2 red — `arming-B-delivery.txt` |
+| End to end vs this registry | 232 work items → 132; product 197 → 13; 569 rows conserved |
+| Out-of-family design review | gemini, both calls upheld, one finding taken as work item 2 |
+| Out-of-family completeness critic | gemini, 11 findings, 10 taken, 1 dispositioned above |

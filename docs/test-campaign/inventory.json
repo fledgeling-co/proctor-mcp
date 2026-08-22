@@ -943,6 +943,42 @@
       ],
       "note": "AgentVerbs.swift asserted this boundary in prose and nothing tested it. Adding proctor_hud to the catalogue would hand an MCP client a person's Pause, Resume and Stop while the comment kept reading as true. CASE-0372, CASE-0373.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-097",
+      "text": "A defect record's own status decides whether it counts as remaining work: fixed, resolved, closed, done or verified is not remaining; open, new, confirmed, reopened or regressed is; wontfix, deferred, declined or duplicate is a waiver; an unrecognised status or none at all stays broken",
+      "source": "spec-PRO-0102.md; plan-PRO-0102.md work item 1; ~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py classify() defect loop @ 224a696",
+      "class": "reporting correctness",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "The pre-fix classifier hardcoded every defect row to broken. Measured against this repo's own inventory.json: 110 defect rows, 100 fixed, and all 110 reported as remaining product work. After the change the ten it reports broken are exactly the ten this file records as non-fixed — DEF-033, 140, 141, 151, 162, 163, 165, 175, 180, 193. CASE-0410 through CASE-0415, CASE-0429. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-098",
+      "text": "A brief the join cannot tie to any registry entity is classed unjoined — its own visible outcome, counted as decision work rather than product work, carrying the nearest candidates the join scored and rejected — and unbuilt is reserved for a brief that cites registry ids the registry does not hold, and only where a registry exists",
+      "source": "spec-PRO-0102.md; plan-PRO-0102.md work items 3 and 4; ~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py CLASSES and classify() brief loop @ 224a696",
+      "class": "reporting correctness",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "unbuilt claims the registry answered and said no; a join returning nothing is a different fact with the opposite conclusion. 75 of 91 briefs here landed in unbuilt on a 17.6% join and every one named a merged item. The two are now separate classes and unbuilt stays a live predicate rather than a dead one. CASE-0416 through CASE-0423, CASE-0425, CASE-0426. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-099",
+      "text": "The reckon plugin's published version rises with a repair, and its manifest and the marketplace entry declare the same version, so a fix in the shared source reaches installed copies",
+      "source": "spec-PRO-0102.md; plan-PRO-0102.md work item 7; ~/Dev/fledgeling-plugins/plugins/reckon/.claude-plugin/plugin.json and .claude-plugin/marketplace.json @ 224a696",
+      "class": "delivery",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "The delivery half, and the reason it is a requirement rather than a chore: the flatten_text crash repair at 81ad488 was correct, committed, and stranded at 1.0.0, so every other repository kept crashing. selftest.py now fails on version drift between the two files and on a version predating the behaviour it asserts. CASE-0427, CASE-0428. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -3020,6 +3056,86 @@
       "req": "REQ-091",
       "fix": "NOT FIXED HERE. spec-PRO-0085.md scopes the deliverable to SKILL.md and references/tools.md and plan-PRO-0085.md states that nothing else in either tree is touched, so widening the diff to a third file in a repository another session is working in was not worth the count. gemini.md is notes on adapting the skill for Gemini rather than routing text an agent reads to pick a tool, which is why it is low rather than the medium DEF-192 carried. The repair is the one word.",
       "evidence": "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt"
+    },
+    {
+      "id": "DEF-210",
+      "severity": "serious",
+      "status": "fixed",
+      "title": "The reckoning classed every defect record broken without reading its status",
+      "found": "PRO-0102, 2026-08-22, first reckoning run against this repo",
+      "detail": "reckon.py's classify() emitted a hardcoded {\"class\": \"broken\", \"kind\": \"product-work\", \"is_work_item\": True} for every row in campaign['defects']. Measured against docs/test-campaign/inventory.json: 110 defect rows, 100 of them status fixed, all 110 counted as remaining product work. This is the tool's own target failure inverted — an entity absent from the failing set treated as one that failed — and because it over-reported, no gate in its design could catch it.",
+      "req": "REQ-097",
+      "fix": "A defect's status now decides its class, through DEFECT_FIXED / DEFECT_OPEN / DEFECT_WAIVED, with an unrecognised or absent status falling through to broken. The gate gained DEFECT_LEGAL_CLASS so the mapping is legality rather than preference. Fixed in ~/Dev/fledgeling-plugins at 224a696, shipped as reckon 1.1.0.",
+      "fixedBy": "PRO-0102",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0102/baseline/ledger.json",
+        "docs/test-campaign/evidence/PRO-0102/after/ledger.json",
+        "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt"
+      ],
+      "note": "Product work 197 to 13 end to end; the ten defects now reported broken match this file's ten non-fixed rows exactly. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
+    },
+    {
+      "id": "DEF-211",
+      "severity": "serious",
+      "status": "fixed",
+      "title": "The reckoning classed a brief it could not join as unbuilt, so 75 shipped items read as never built",
+      "found": "PRO-0102, 2026-08-22, first reckoning run against this repo",
+      "detail": "classify()'s brief loop opened with best_cls = 'unbuilt' and fell into it whenever the join produced no supporting edge. On a 17.6% join that put 75 of 91 briefs into product work, and every one of the 75 names an item that has shipped. unbuilt asserts the registry was asked and had no answer; the join returning nothing asserts only that the one inferential step in the pipeline failed, and the two carry opposite conclusions.",
+      "req": "REQ-098",
+      "fix": "unjoined is now the ninth class, kind decision-work, carrying the three nearest candidates the join scored and rejected. unbuilt is reserved for a brief citing registry ids the registry does not hold, and only where a campaign is present. Fixed in ~/Dev/fledgeling-plugins at 224a696, shipped as reckon 1.1.0.",
+      "fixedBy": "PRO-0102",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0102/baseline/ledger.json",
+        "docs/test-campaign/evidence/PRO-0102/after/ledger.json",
+        "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt"
+      ],
+      "note": "references/joining.md and references/no-campaign.md had both described this behaviour as correct; both are corrected in the same commit. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
+    },
+    {
+      "id": "DEF-212",
+      "severity": "serious",
+      "status": "fixed",
+      "title": "A correct repair to the reckoning never reached any installed copy, because the version never moved",
+      "found": "PRO-0102 triage, 2026-08-22",
+      "detail": "The tokens() crash on a list-valued evidence field was repaired in the shared source at 81ad488 on 2026-08-22. Both plugins/reckon/.claude-plugin/plugin.json and the reckon entry in .claude-plugin/marketplace.json still read 1.0.0, so no installed copy could receive it and every other repository on this machine kept getting a traceback instead of a report. The brief called this one of three faults; it is not a fault in the code at all, it is a repair that was never delivered.",
+      "req": "REQ-099",
+      "fix": "Both version strings raised to 1.1.0 in the same commit as the two classification repairs, so one release carries all three. selftest.py section 14 now fails on drift between the two files and on a version below 1.1.0. Fixed in ~/Dev/fledgeling-plugins at 224a696.",
+      "fixedBy": "PRO-0102",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0102/arming/arming-B-delivery.txt"
+      ],
+      "note": "Armed in both directions: with the two files disagreeing, and with both sitting at 1.0.0 — the exact state that stranded 81ad488. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
+    },
+    {
+      "id": "DEF-213",
+      "severity": "minor",
+      "status": "fixed",
+      "title": "A brief joined only to a repaired defect would still have read broken",
+      "found": "PRO-0102, 2026-08-22, out-of-family design review (gemini)",
+      "detail": "classify()'s hit_defect test was any(t.startswith('DEF-') for t in targets), which fires on a defect id regardless of that defect's state. Latent while every defect was broken; the moment DEF-210 was fixed it would have reported repaired work as remaining under the brief's id instead of the defect's — the same fault one hop out. Found by the gemini lane reviewing the design, not by reading the code.",
+      "req": "REQ-097",
+      "fix": "hit_defect now tests defect_class.get(t) == 'broken', so only a defect that is still a measured negative makes the brief one. Fixed in ~/Dev/fledgeling-plugins at 224a696.",
+      "fixedBy": "PRO-0102",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+        "docs/test-campaign/evidence/PRO-0102/arming/arming-E-controls.txt"
+      ],
+      "note": "Armed in both directions: a brief on a fixed defect must leave broken, and a brief on an open defect must stay in it. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
+    },
+    {
+      "id": "DEF-214",
+      "severity": "minor",
+      "status": "fixed",
+      "title": "The reverse-citation scan turned a brief's file number into a confidence-1.0 citation",
+      "found": "PRO-0102, 2026-08-22",
+      "detail": "build_join built its reverse-citation token from the first two hyphen-separated fields of a brief's filename. On a queue named SCR-0075-dead-credential.md that is the project id the mechanism was designed for; on a queue named NN-slug it produces tokens like 03-menu — a position in a directory listing, matched against free registry prose and then labelled method 'cited' at confidence 1.0. A cited edge is the only kind that may carry a retirement, so a positional guess could delete stated intent. This is the guess-by-number fallback assumption A8 of spec-PRO-0102 and spec-PRO-0101 both name.",
+      "req": "REQ-098",
+      "fix": "project_id_in() requires letters then digits before the token is used. Measured on this repo before the change: the scan contributed 0 of 92 cited edges, so the shape costs nothing here. Fixed in ~/Dev/fledgeling-plugins at 224a696.",
+      "fixedBy": "PRO-0102",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt"
+      ],
+      "note": "Assumption A8 says this is dropped once across PRO-0102 and PRO-0101, whichever builds first, and the second verifies rather than re-edits. PRO-0102 built first, so PRO-0101 verifies. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
     }
   ]
 }

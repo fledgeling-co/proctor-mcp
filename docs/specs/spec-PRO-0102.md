@@ -123,3 +123,23 @@ Measured 2026-08-22 against both copies of `skills/reckon/scripts/reckon.py`:
 Implementation plan: `docs/plans/plan-PRO-0102.md` (tier: Small). The shared work lands in
 `~/Dev/fledgeling-plugins/plugins/reckon`; this repository carries the plan, this trailer and the
 campaign registry rows only.
+
+## Progress — PRO-0102
+
+**Defects:** DEF-210..DEF-214
+**Requirements:** REQ-097..REQ-099
+**Cases:** CASE-0410..CASE-0429
+
+Built in `~/Dev/fledgeling-plugins` at `224a696`, shipped as `reckon` **1.1.0**. This repository
+carries the spec, the plan, the campaign rows and the evidence only; no Swift changed, so
+`CHANGELOG.md` gains nothing — the user-facing change belongs to the other repository's plugin.
+
+### Defects
+
+| ID | Title | Status |
+|---|---|---|
+| DEF-210 | The reckoning classed every defect record broken without reading its status | fixed |
+| DEF-211 | The reckoning classed a brief it could not join as unbuilt | fixed |
+| DEF-212 | A correct repair never reached any installed copy, because the version never moved | fixed |
+| DEF-213 | A brief joined only to a repaired defect would still have read broken | fixed |
+| DEF-214 | The reverse-citation scan turned a brief's file number into a confidence-1.0 citation | fixed |

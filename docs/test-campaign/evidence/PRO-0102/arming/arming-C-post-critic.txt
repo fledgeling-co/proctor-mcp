@@ -1,0 +1,28 @@
+# Arming the checks added after the out-of-family critic, PRO-0102
+# Each mutation reverts one production behaviour and shows which check reds.
+
+## revert: the defect gate ignores an unrecognised status
+defect claiming done on an unknown status      exit=0 FAILED
+
+## revert: a dangling citation is unbuilt even with no campaign
+with no campaign, a citation is not evidence   FAILED
+
+## revert: a dangling citation discards a usable overlap edge
+a dangling citation keeps a usable overlap edge FAILED
+
+## revert: the headline stops naming what it could not tie
+
+## revert: every defect counts as remaining work again
+a fixed defect is not remaining work           FAILED
+a repaired defect is absent from what remains  FAILED
+
+## restored
+
+all gates demonstrated failing on a bad fixture, and silent on a good one
+## revert (corrected): the headline drops the unjoined clause entirely
+#  the first attempt trimmed only the tail of the sentence, which no check
+#  rested on — a weak mutation, and re-run rather than reported as armed.
+the headline counts what is actually left      FAILED
+  - headline: code=0 kinds={'product-work': 1, 'decision-work': 1, 'evidence-work': 0} headline="2 piece(s) of work remain — 1 product, 0 evidence, 1 decision — across 6 ledger rows. This reckoning speaks for 100% of the campaign's designed cases and 100% of its stated requirements; the rest is not known to be done, it is simply not known."
+
+## restored
