@@ -1,0 +1,79 @@
+==> swift test --filter AgentVerbBoundaryTests (output: /tmp/pro0085-armA.log)
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/15] Emitting module ProctorCore
+[6/15] Compiling ProctorCore ToolCatalogue.swift
+[7/18] Compiling ProctorCore ToolProfiles.swift
+[8/18] Compiling ProctorCore ToolOutputSchemas.swift
+[9/18] Compiling ProctorCore CLISurface.swift
+[9/23] Write Objects.LinkFileList
+[12/34] Compiling ProctorShim MCPServer.swift
+[13/34] Emitting module ProctorShim
+[13/34] Write Objects.LinkFileList
+[14/34] Linking proctor-cli
+[15/34] Applying proctor-cli
+[16/34] Linking Proctor
+[17/34] Applying Proctor
+[18/34] Linking proctor-shim
+[19/34] Applying proctor-shim
+[21/34] Emitting module ProctorAgent
+[22/34] Compiling ProctorAgent Dispatch.swift
+[22/35] Write Objects.LinkFileList
+[24/35] Compiling ProctorCoreTests StabilityDisclosureTests.swift
+[24/35] Linking proctor-agent
+[26/35] Compiling ProctorCoreTests CLISurfaceTests.swift
+[27/35] Compiling ProctorCoreTests AgentVerbBoundaryTests.swift
+[27/35] Applying proctor-agent
+[29/47] Compiling ProctorCoreTests IOSLaneTests.swift
+[30/47] Compiling ProctorCoreTests RunQueueTests.swift
+[31/47] Compiling ProctorAgentTests GuestDispatchWiringTests.swift
+[32/47] Compiling ProctorAgentTests ScreenRecordingProbeWiringTests.swift
+[33/47] Compiling ProctorAgentTests RunHistoryWiringTests.swift
+[34/47] Compiling ProctorAgentTests AgentVerbsWiringTests.swift
+[35/47] Compiling ProctorAgentTests ObscuraPresenceWiringTests.swift
+[36/47] Compiling ProctorAgentTests GuestToolTests.swift
+[37/47] Compiling ProctorAgentTests GuestAttachWiringTests.swift
+[38/47] Compiling ProctorAgentTests RunHUDMenuBarWiringTests.swift
+[39/47] Compiling ProctorAgentTests MaestroSeamTests.swift
+[40/47] Compiling ProctorAgentTests BrowserLaneWiringTests.swift
+[41/47] Compiling ProctorAgentTests ExternalWitnessTests.swift
+[42/47] Emitting module ProctorAgentTests
+[43/48] Emitting module ProctorCoreTests
+[44/48] Compiling ProctorCoreTests CLIArgumentsTests.swift
+[45/48] Compiling ProctorCoreTests GuestNoteSourceTests.swift
+[46/48] Compiling ProctorCoreTests ProctorCoreTests.swift
+[46/48] Write Objects.LinkFileList
+[47/48] Linking proctor-mcpPackageTests
+Build complete! (28.15s)
+Test Suite 'Selected tests' started at 2026-08-22 12:43:58.537.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 12:43:58.538.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 12:43:58.539.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 12:43:58.539.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Agent verb boundary" started.
+􀟈  Test "the catalogue ships 21 tools, each named once" started.
+􀟈  Test "proctor_doctor is the one agent verb that is also a catalogue tool" started.
+􀟈  Test "no internal agent verb has a catalogue spec, so tools/call refuses it" started.
+􁁛  Test "proctor_doctor is the one agent verb that is also a catalogue tool" passed after 0.001 seconds.
+􀢄  Test "the catalogue ships 21 tools, each named once" recorded an issue at AgentVerbBoundaryTests.swift:58:9: Expectation failed: (names.count → 22) == 21
+􀄵  ToolCatalogue.all holds 22 specs; references/tools.md in the proctor skill documents 21 and needs the same edit
+􀢄  Test "no internal agent verb has a catalogue spec, so tools/call refuses it" recorded an issue at AgentVerbBoundaryTests.swift:40:13: Expectation failed: (ToolCatalogue.spec(named: verb) → ToolSpec(name: "proctor_hud", title: "arming", description: "arming", inputSchema: ProctorCore.JSONValue.object(["type": ProctorCore.JSONValue.string("object")]), readOnly: true, destructive: false, idempotent: true)) == nil
+􀄵  AgentVerbs.hud is proctor_hud, which has a catalogue spec — the shim's tools/call gate would forward it to the agent
+􀢄  Test "the catalogue ships 21 tools, each named once" failed after 0.001 seconds with 1 issue.
+􀄵  // CASE-0374
+􀢄  Test "no internal agent verb has a catalogue spec, so tools/call refuses it" failed after 0.001 seconds with 1 issue.
+􀄵  // CASE-0372
+􀢄  Suite "Agent verb boundary" failed after 0.001 seconds with 2 issues.
+􀢄  Test run with 3 tests in 1 suite failed after 0.001 seconds with 2 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 3 tests in 1 suite failed after 0.001 seconds with 2 issues.
+EXIT=1

@@ -843,6 +843,42 @@
       ],
       "note": "PRO-0067's A5 has been true at the value level and false on the glass since the constant was written: the test asserted Copy.restartNote contained the word 'restart' and nothing asserted a window drew it. DEF-161.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-091",
+      "text": "The proctor skill's tool documentation names exactly the tools ToolCatalogue.all ships (21) and no other proctor_* identifier, states the count with the file it is read from, and says why the four internal agent verbs are absent rather than omitting them silently",
+      "source": "spec-PRO-0085.md REQ-091; brief 78-the-skill-and-the-guest-lane.md; Sources/ProctorCore/ToolCatalogue.swift ToolCatalogue.all; Sources/ProctorCore/ToolProfiles.swift:33-38",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-002"
+      ],
+      "note": "The deliverable is ~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor/references/tools.md, outside this repository. The brief measured 20 advertised against 27 shipped and named seven missing; re-measured 2026-08-22 the gap is one tool, proctor_guest, and six of the brief's seven are internal agent verbs that belong in no tool list. DEF-190, DEF-192.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-092",
+      "text": "The proctor skill routes an agent to the guest lane on isolation grounds (a machine in a known state, a pinned macOS version, a run that does not touch the person's session), keeps the two-guest cap under the scale question it answers, states the native-versus-delegated tier split, and states that nothing provisions a guest with the reason why",
+      "source": "spec-PRO-0085.md REQ-092; brief 78-the-skill-and-the-guest-lane.md; ToolCatalogue.swift proctor_guest description; spec-PRO-0076.md; spec-PRO-0094.md",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-013"
+      ],
+      "note": "SKILL.md:802 was the only VM sentence in the skill and reads as a prohibition; the cap is a throughput fact and the reasons to use a guest are isolation. No provision action is documented: that is a safety-posture change and is recorded as the reader's open question. DEF-190, DEF-191.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-093",
+      "text": "No verb declared in AgentVerbs other than proctor_doctor has a ToolCatalogue spec, so the shim's tools/call gate refuses it with 'no such tool' rather than forwarding it to the agent",
+      "source": "spec-PRO-0085.md REQ-093; Sources/ProctorCore/AgentVerbs.swift:20-24; Sources/ProctorShim/MCPServer.swift:224",
+      "class": "safety guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-002"
+      ],
+      "note": "AgentVerbs.swift asserted this boundary in prose and nothing tested it. Adding proctor_hud to the catalogue would hand an MCP client a person's Pause, Resume and Stop while the comment kept reading as true. CASE-0372, CASE-0373.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -2714,6 +2750,57 @@
       "detail": "'doctor reports both tools, the lane's state, and never lets either touch ready' calls session.doctor() eight times across the obscura x browserUse x laneSet matrix, collects report.ready and report.blockers.count into two Sets, and asserts each Set has one element. The claim is sound \u2014 Proctor drives native applications without a browser tool, so ready must not move with either \u2014 but the harness at BrowserLaneWiringTests.swift:62 injects screenRecordingProbe: .fake() and leaves the other two inputs to `ready` live: accessibilityProbe() defaults to the real TCC probe and secureInputProbe() to Grants.secureEventInputActive(). Both feed `blockers`, and `ready` is `blockers.isEmpty`. So either flipping between two of the eight calls \u2014 a password field taking focus anywhere on this Mac, or a TCC probe not coming back on one iteration \u2014 reds the case with the browser lane behaving perfectly. MEASURED: four full runs on one unchanged tree, exit 0 / 1 / 0 with the same 2,028 tests. The red run was 'Expectation failed: (readies.count -> 2) == 1' and '(blockerCounts.count -> 2) == 1' at BrowserLaneWiringTests.swift:218-219, the only two issues in it; the suite run in isolation immediately afterwards passed 10 tests in 0.230 seconds. NOT FIXED HERE: it is outside PRO-0098's brief, which was the flow writes and the gate's exit code. The repair is to inject both probes in the harness the way screenRecordingProbe already is, so the invariant is asserted over the matrix the case names rather than over the machine's mood.",
       "surface": "SURF-004",
       "req": "REQ-024"
+    },
+    {
+      "id": "DEF-190",
+      "severity": "medium",
+      "status": "fixed",
+      "title": "The proctor skill never mentions the guest lane it routes agents to",
+      "found": "PRO-0085 re-measurement, 2026-08-22",
+      "detail": "proctor_guest shipped in wave 10 with eight actions (list, status, start, stop, clone, reach, attach, detach) and was proved against a provisioned macOS guest (spec-PRO-0076.md). A search for guest, lume, prlctl or tart across SKILL.md, references/tools.md, references/methodology.md and references/evidence.md in ~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor returned no description of the lane. The skill's description frontmatter, which is the routing text a host matches against, offered a native macOS lane and an iOS Simulator lane and nothing else, so an agent reading the skill could not reach a working lane.",
+      "surface": "SURF-013",
+      "req": "REQ-092",
+      "fix": "A '## The guest lane' section in SKILL.md placed beside the iOS lane, a specified '## `proctor_guest`' section in references/tools.md, and the description extended to name the lane and distinguish native macOS guests from delegated Linux/Windows guests.",
+      "fixedBy": "PRO-0085",
+      "evidence": "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt"
+    },
+    {
+      "id": "DEF-191",
+      "severity": "medium",
+      "status": "fixed",
+      "title": "The skill's only VM sentence answers a scale question and reads as a prohibition",
+      "found": "PRO-0085, from brief 78; the sentence dates to before wave 10",
+      "detail": "SKILL.md:802, under '## Scale': 'Apple silicon caps concurrent macOS guests at two, so a VM fleet is not the answer, and more real parallelism past that is a hardware purchase rather than a configuration change. Do not design a campaign that assumes otherwise.' Every clause is true and the paragraph is a correct answer about throughput. The reasons to reach for a guest are isolation (a machine in a known state, a pinned OS version, a discardable state, and not commandeering the desktop somebody is working on) and the cap speaks to none of them. As the skill's only word on virtual machines it reads as a closed door.",
+      "surface": "SURF-013",
+      "req": "REQ-092",
+      "fix": "The cap kept verbatim with its citation, reframed as the answer to 'How many guests at once? Two.' under '## Scale', with the pool-and-queue behaviour added and a pointer to '## The guest lane' for the question it does not answer.",
+      "fixedBy": "PRO-0085",
+      "evidence": "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt"
+    },
+    {
+      "id": "DEF-192",
+      "severity": "low",
+      "status": "fixed",
+      "title": "references/tools.md states four tool counts and all four were wrong",
+      "found": "PRO-0085 re-measurement, 2026-08-22",
+      "detail": "Line 11 read 'The server ships 20 tools' against 21 in ToolCatalogue.all. Line 31 read 'Five more exist and are named here rather than specified' and then named six: proctor_policy, proctor_kill, proctor_dictionary, proctor_unlock, proctor_computer, proctor_openai_computer. The profile table's full row read 20, where ToolProfiles.swift:36 defines full as all.map(name), which is 21. SKILL.md's Depth section read 'all twenty tools'. Brief 53 found a smaller version of the same drift on 2026-08-15 and it was still open.",
+      "surface": "SURF-002",
+      "req": "REQ-091",
+      "fix": "All four counts corrected, the count stated with ToolCatalogue.swift as where to re-read it, guest added to the full profile row, and a subsection added naming the four internal verbs that are not tools and why calling one returns 'no such tool'.",
+      "fixedBy": "PRO-0085",
+      "evidence": "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt"
+    },
+    {
+      "id": "DEF-193",
+      "severity": "low",
+      "status": "open",
+      "title": "A fifth stale tool count survives in the proctor skill's gemini.md",
+      "found": "PRO-0085 count sweep, 2026-08-22",
+      "detail": "gemini.md:21 in ~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor reads 'seven stages, seventeen assertion kinds, twenty tools, five stability runs by default, a fan-out capped at four', citing those counts as an example of the objective numbers Google's prompting guidance asks for. The catalogue ships 21. DEF-192 named four count sites and all four are corrected; this is a fifth that DEF-192 did not name.",
+      "surface": "SURF-002",
+      "req": "REQ-091",
+      "fix": "NOT FIXED HERE. spec-PRO-0085.md scopes the deliverable to SKILL.md and references/tools.md and plan-PRO-0085.md states that nothing else in either tree is touched, so widening the diff to a third file in a repository another session is working in was not worth the count. gemini.md is notes on adapting the skill for Gemini rather than routing text an agent reads to pick a tool, which is why it is low rather than the medium DEF-192 carried. The repair is the one word.",
+      "evidence": "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt"
     }
   ]
 }

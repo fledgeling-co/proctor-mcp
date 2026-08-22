@@ -1,0 +1,941 @@
+==> swift test --filter AgentVerbBoundaryTests (output: /tmp/pro0085-baseline.log)
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/35] /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/.build/arm64-apple-macosx/debug/proctor-mcpPackageTests.derived/runner.swift
+[3/35] Write sources
+[3/35] Write proctor-cli-entitlement.plist
+[4/35] Write sources
+[9/35] Write proctor-shim-entitlement.plist
+[10/35] Write Proctor-entitlement.plist
+[13/35] Write proctor-agent-entitlement.plist
+[16/35] Copying Fixtures
+[17/35] Copying character-menubar
+[18/35] Copying character
+[19/35] Write swift-version--58304C5D6DBC2206.txt
+[20/130] Compiling ProctorCatch ProctorCatch.m
+[22/130] Compiling ProctorCore StepDescription.swift
+[23/130] Compiling ProctorCore SupervisionFrame.swift
+[24/130] Compiling ProctorCore SurfaceFidelity.swift
+[25/130] Compiling ProctorCore SwitchCatalogue.swift
+[26/130] Compiling ProctorCore SwitchResolution.swift
+[27/135] Compiling ProctorCore CuaDriverTool.swift
+[28/135] Compiling ProctorCore CuaVersion.swift
+[29/135] Compiling ProctorCore ElementMatch.swift
+[30/135] Compiling ProctorCore FSJail.swift
+[31/135] Compiling ProctorCore ForegroundDemand.swift
+[32/135] Compiling ProctorCore FrameContent.swift
+[33/135] Compiling ProctorCore ReplayGate.swift
+[34/135] Compiling ProctorCore ResourceBundles.swift
+[35/135] Compiling ProctorCore ResourceCatalogue.swift
+[36/135] Compiling ProctorCore RestartWatch.swift
+[37/135] Compiling ProctorCore RunHUD.swift
+[38/135] Compiling ProctorCore RunHUDCharacter.swift
+[39/135] Compiling ProctorCore CUAFacade.swift
+[40/135] Compiling ProctorCore Canonical.swift
+[41/135] Compiling ProctorCore CaptureTrust.swift
+[42/135] Compiling ProctorCore CommandSurface.swift
+[43/135] Compiling ProctorCore ConsentSurface.swift
+[44/135] Compiling ProctorCore Contention.swift
+[45/135] Compiling ProctorCore BrowserTarget.swift
+[46/135] Compiling ProctorCore BrowserUseTool.swift
+[47/135] Compiling ProctorCore BuildInfo.swift
+[48/135] Compiling ProctorCore BuildStamp.swift
+[49/135] Compiling ProctorCore CLIArguments.swift
+[50/135] Compiling ProctorCore CLISurface.swift
+[51/135] Compiling ProctorCore MenuKeyEquivalent.swift
+[52/135] Compiling ProctorCore ObscuraTool.swift
+[53/135] Compiling ProctorCore OverlayCapture.swift
+[54/135] Compiling ProctorCore OverlaySwitch.swift
+[55/135] Compiling ProctorCore PeerLiveness.swift
+[56/135] Compiling ProctorCore PointerMarker.swift
+[57/135] Compiling ProctorCore ScriptingDictionary.swift
+[58/135] Compiling ProctorCore SetOfMarks.swift
+[59/135] Compiling ProctorCore SimctlLocator.swift
+[60/135] Compiling ProctorCore StabilityCaptures.swift
+[61/135] Compiling ProctorCore StatusChecks.swift
+[62/135] Compiling ProctorCore StatusSurface.swift
+[63/135] Compiling ProctorCore Toolchain.swift
+[64/135] Compiling ProctorCore ToolchainLanes.swift
+[65/135] Compiling ProctorCore Transport.swift
+[66/135] Compiling ProctorCore VisionCapture.swift
+[67/135] Compiling ProctorCore WalkthroughFlow.swift
+[68/135] Compiling ProctorCore HistorySurface.swift
+[69/135] Compiling ProctorCore HoldAttribution.swift
+[70/135] Compiling ProctorCore HorizontalPlacement.swift
+[71/135] Compiling ProctorCore IOSDevice.swift
+[72/135] Compiling ProctorCore ImageEncoding.swift
+[73/135] Compiling ProctorCore MaestroRun.swift
+[74/135] Compiling ProctorCore TakeoverSurface.swift
+[75/135] Compiling ProctorCore ToolCatalogue.swift
+[76/135] Compiling ProctorCore ToolOutputSchemas.swift
+[77/135] Compiling ProctorCore ToolPresence.swift
+[78/135] Compiling ProctorCore ToolProfiles.swift
+[79/135] Compiling ProctorCore AccessibilityNames.swift
+[80/135] Compiling ProctorCore AgentRecovery.swift
+[81/135] Compiling ProctorCore AgentVerbs.swift
+[82/135] Compiling ProctorCore AppLog.swift
+[83/135] Compiling ProctorCore AuditChain.swift
+[84/135] Compiling ProctorCore AuditSeal.swift
+[85/135] Compiling ProctorCore Geometry.swift
+[86/135] Compiling ProctorCore GrantProbe.swift
+[87/135] Compiling ProctorCore GuestAttachment.swift
+[88/135] Compiling ProctorCore GuestInventory.swift
+[89/135] Compiling ProctorCore GuestRoute.swift
+[90/135] Compiling ProctorCore HistoryRetention.swift
+[91/135] Compiling ProctorCore PointerOwner.swift
+[92/135] Compiling ProctorCore PointerPlane.swift
+[93/135] Compiling ProctorCore Policy.swift
+[94/135] Compiling ProctorCore ProcessControl.swift
+[95/135] Compiling ProctorCore ProctorEnvironment.swift
+[96/135] Compiling ProctorCore RelaunchCommand.swift
+[97/135] Compiling ProctorCore SwitchStore.swift
+[98/135] Compiling ProctorCore TUIGrid.swift
+[99/135] Compiling ProctorCore TUILayout.swift
+[100/135] Compiling ProctorCore TUISurface.swift
+[101/135] Compiling ProctorCore Takeover.swift
+[102/135] Compiling ProctorCore RunHUDGate.swift
+[103/135] Compiling ProctorCore RunHUDMenuBar.swift
+[104/135] Compiling ProctorCore RunHUDPlacement.swift
+[105/135] Compiling ProctorCore RunHUDSurface.swift
+[106/135] Compiling ProctorCore RunHistory.swift
+[107/135] Compiling ProctorCore RunQueue.swift
+[108/135] Emitting module ProctorCore
+[109/135] Compiling ProctorReflector SocketServer.swift
+[110/135] Compiling ProctorReflector MainState.swift
+[111/135] Compiling ProctorReflector ProctorReflector.swift
+[112/135] Compiling ProctorReflector Framing.swift
+[113/135] Emitting module ProctorReflector
+[114/135] Compiling ProctorReflector Walker.swift
+[115/135] Compiling ProctorReflector Style.swift
+[116/135] Compiling ProctorReflector Runtime.swift
+[117/135] Compiling ProctorCore WindowPresentation.swift
+[118/135] Compiling ProctorCore Wire.swift
+[119/135] Compiling ProctorCore resource_bundle_accessor.swift
+[120/135] Compiling ProctorCore BuildIdentityGenerated.swift
+[121/135] Compiling ProctorCore ProctorTokens.swift
+[122/309] Compiling ProctorCLI main.swift
+[123/309] Compiling ProctorShim main.swift
+[124/309] Compiling ProctorCLI TUIApp.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorCLI/TUI/TUIApp.swift:32:25: warning: capture of 'client' with non-Sendable type 'SocketClient' in a '@Sendable' closure [#SendableClosureCaptures]
+ 30 |             while !state.isFinished {
+ 31 |                 do {
+ 32 |                     try client.watch { frame in
+    |                         `- warning: capture of 'client' with non-Sendable type 'SocketClient' in a '@Sendable' closure [#SendableClosureCaptures]
+ 33 |                         state.received(frame)
+ 34 |                         return state.isFinished
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorCore/Transport.swift:53:20: note: class 'SocketClient' does not conform to the 'Sendable' protocol
+ 51 | /// Blocking client used by the shim. Deliberately simple: the shim holds no
+ 52 | /// permissions, keeps no state, and does nothing but forward.
+ 53 | public final class SocketClient {
+    |                    `- note: class 'SocketClient' does not conform to the 'Sendable' protocol
+ 54 |     private var fd: Int32 = -1
+ 55 |     private let reader = FrameCodec.Reader()
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[125/309] Compiling ProctorCLI Renderer.swift
+[126/309] Compiling ProctorCLI CLI.swift
+[127/309] Compiling ProctorCLI Client.swift
+[128/309] Emitting module ProctorCLI
+[129/309] Compiling ProctorCLI Terminal.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorCLI/TUI/Terminal.swift:77:13: warning: variable 'bytes' was never mutated; consider changing to 'let' constant
+ 75 | 
+ 76 |     static func write(_ text: String) {
+ 77 |         var bytes = Array(text.utf8)
+    |             `- warning: variable 'bytes' was never mutated; consider changing to 'let' constant
+ 78 |         var sent = 0
+ 79 |         while sent < bytes.count {
+[129/309] Write Objects.LinkFileList
+[131/309] Compiling ProctorShim MCPServer.swift
+[132/309] Compiling ProctorShim Install.swift
+[133/309] Emitting module ProctorShim
+[134/309] Compiling ProctorShim RemoteServer.swift
+[134/309] Write Objects.LinkFileList
+[135/309] Linking proctor-cli
+[136/309] Applying proctor-cli
+[137/309] Linking proctor-shim
+[138/309] Applying proctor-shim
+[140/309] Compiling ProctorUI Motion.swift
+[141/309] Compiling ProctorUI MenuBarCharacter.swift
+[142/309] Compiling ProctorUI HistoryModel.swift
+[143/309] Compiling ProctorUI AgentModel.swift
+[144/309] Compiling ProctorUI Walkthrough.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/Walkthrough.swift:411:46: warning: main actor-isolated property 'reduceMotion' can not be referenced from a Sendable closure
+398 |     let current: Int
+399 |     let count: Int
+400 |     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    |                                                           `- note: property declared here
+401 | 
+402 |     var body: some View {
+    :
+409 |                     .keyframeAnimator(initialValue: 1.0, trigger: current) { view, scaleY in
+410 |                         view.scaleEffect(x: 1,
+411 |                                          y: (reduceMotion || i != current) ? 1 : scaleY,
+    |                                              `- warning: main actor-isolated property 'reduceMotion' can not be referenced from a Sendable closure
+412 |                                          anchor: .center)
+413 |                     } keyframes: { _ in
+[145/309] Emitting module ProctorUI
+[146/309] Compiling ProctorUI HistoryWindow.swift
+[147/309] Compiling ProctorUI ProctorUIApp.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:82:29: warning: main actor-isolated property 'windows' can not be referenced from a nonisolated context
+ 79 |     }
+ 80 | 
+ 81 |     static func presentMainWindow() {
+    |                 `- note: add '@MainActor' to make static method 'presentMainWindow()' part of global actor 'MainActor'
+ 82 |         let windows = NSApp.windows
+    |                             `- warning: main actor-isolated property 'windows' can not be referenced from a nonisolated context
+ 83 |         if WindowPresentation.shouldPresentMain(
+ 84 |             titles: windows.map { $0.title },
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSApplication.h:282:49: note: property declared here
+280 | 
+281 | - (void)preventWindowOrdering;
+282 | @property (readonly, copy) NSArray<NSWindow *> *windows;
+    |                                                 `- note: property declared here
+283 | - (void)setWindowsNeedUpdate:(BOOL)needUpdate;
+284 | - (void)updateWindows;
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:82:23: warning: main actor-isolated var 'NSApp' can not be referenced from a nonisolated context
+ 79 |     }
+ 80 | 
+ 81 |     static func presentMainWindow() {
+    |                 `- note: add '@MainActor' to make static method 'presentMainWindow()' part of global actor 'MainActor'
+ 82 |         let windows = NSApp.windows
+    |                       `- warning: main actor-isolated var 'NSApp' can not be referenced from a nonisolated context
+ 83 |         if WindowPresentation.shouldPresentMain(
+ 84 |             titles: windows.map { $0.title },
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSApplication.h:191:58: note: var declared here
+189 | @interface NSApplication : NSResponder <NSUserInterfaceValidations, NSMenuItemValidation, NSAccessibilityElement, NSAccessibility>
+190 | 
+191 | APPKIT_EXTERN __kindof NSApplication * _Null_unspecified NSApp NS_SWIFT_UI_ACTOR;
+    |                                                          `- note: var declared here
+192 | 
+193 | @property (class, readonly, strong) __kindof NSApplication *sharedApplication;
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:84:38: warning: main actor-isolated property 'title' can not be referenced from a nonisolated context
+ 82 |         let windows = NSApp.windows
+ 83 |         if WindowPresentation.shouldPresentMain(
+ 84 |             titles: windows.map { $0.title },
+    |                                      `- warning: main actor-isolated property 'title' can not be referenced from a nonisolated context
+ 85 |             visible: windows.map { $0.isVisible }) {
+ 86 |             if let window = windows.first(where: { WindowPresentation.isMainWindow(title: $0.title) }) {
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSWindow.h:297:28: note: property declared here
+ 295 | - (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE; // Use initWithContentRect:. This method will throw an exception for coders that support allowsKeyedCoding, and is only available for compatibility with non keyed coding.
+ 296 | 
+ 297 | @property (copy) NSString *title;
+     |                            `- note: property declared here
+ 298 | 
+ 299 | /*!
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:85:39: warning: main actor-isolated property 'isVisible' can not be referenced from a nonisolated context
+ 83 |         if WindowPresentation.shouldPresentMain(
+ 84 |             titles: windows.map { $0.title },
+ 85 |             visible: windows.map { $0.isVisible }) {
+    |                                       `- warning: main actor-isolated property 'isVisible' can not be referenced from a nonisolated context
+ 86 |             if let window = windows.first(where: { WindowPresentation.isMainWindow(title: $0.title) }) {
+ 87 |                 window.makeKeyAndOrderFront(nil)
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSWindow.h:435:45: note: property declared here
+ 433 | 
+ 434 | @property (getter=isDocumentEdited) BOOL documentEdited;
+ 435 | @property (getter=isVisible, readonly) BOOL visible;
+     |                                             `- note: property declared here
+ 436 | @property (getter=isKeyWindow, readonly) BOOL keyWindow;
+ 437 | @property (getter=isMainWindow, readonly) BOOL mainWindow;
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:86:94: warning: main actor-isolated property 'title' can not be referenced from a nonisolated context
+ 84 |             titles: windows.map { $0.title },
+ 85 |             visible: windows.map { $0.isVisible }) {
+ 86 |             if let window = windows.first(where: { WindowPresentation.isMainWindow(title: $0.title) }) {
+    |                                                                                              `- warning: main actor-isolated property 'title' can not be referenced from a nonisolated context
+ 87 |                 window.makeKeyAndOrderFront(nil)
+ 88 |             } else {
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSWindow.h:297:28: note: property declared here
+ 295 | - (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE; // Use initWithContentRect:. This method will throw an exception for coders that support allowsKeyedCoding, and is only available for compatibility with non keyed coding.
+ 296 | 
+ 297 | @property (copy) NSString *title;
+     |                            `- note: property declared here
+ 298 | 
+ 299 | /*!
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:87:24: warning: call to main actor-isolated instance method 'makeKeyAndOrderFront' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 79 |     }
+ 80 | 
+ 81 |     static func presentMainWindow() {
+    |                 `- note: add '@MainActor' to make static method 'presentMainWindow()' part of global actor 'MainActor'
+ 82 |         let windows = NSApp.windows
+ 83 |         if WindowPresentation.shouldPresentMain(
+    :
+ 85 |             visible: windows.map { $0.isVisible }) {
+ 86 |             if let window = windows.first(where: { WindowPresentation.isMainWindow(title: $0.title) }) {
+ 87 |                 window.makeKeyAndOrderFront(nil)
+    |                        `- warning: call to main actor-isolated instance method 'makeKeyAndOrderFront' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 88 |             } else {
+ 89 |                 NotificationCenter.default.post(
+
+AppKit.NSWindow.makeKeyAndOrderFront:2:22: note: calls to instance method 'makeKeyAndOrderFront' from outside of its actor context are implicitly asynchronous
+1 | class NSWindow {
+2 | @MainActor open func makeKeyAndOrderFront(_ sender: Any?)}
+  |                      |- note: calls to instance method 'makeKeyAndOrderFront' from outside of its actor context are implicitly asynchronous
+  |                      `- note: main actor isolation inferred from inheritance from class 'NSResponder'
+3 | 
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:94:15: warning: call to main actor-isolated instance method 'activate(ignoringOtherApps:)' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 79 |     }
+ 80 | 
+ 81 |     static func presentMainWindow() {
+    |                 `- note: add '@MainActor' to make static method 'presentMainWindow()' part of global actor 'MainActor'
+ 82 |         let windows = NSApp.windows
+ 83 |         if WindowPresentation.shouldPresentMain(
+    :
+ 92 |             }
+ 93 |         }
+ 94 |         NSApp.activate(ignoringOtherApps: true)
+    |               `- warning: call to main actor-isolated instance method 'activate(ignoringOtherApps:)' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 95 |     }
+ 96 | 
+
+AppKit.NSApplication.activate:3:24: note: calls to instance method 'activate(ignoringOtherApps:)' from outside of its actor context are implicitly asynchronous
+1 | class NSApplication {
+2 | @available(macOS, introduced: 10.0, deprecated: 100000, message: "This method will be deprecated in a future release. Use NSApp.activate instead.")
+3 |   @MainActor open func activate(ignoringOtherApps ignoreOtherApps: Bool)}
+  |                        |- note: calls to instance method 'activate(ignoringOtherApps:)' from outside of its actor context are implicitly asynchronous
+  |                        `- note: main actor isolation inferred from inheritance from class 'NSResponder'
+4 | 
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:94:9: warning: main actor-isolated var 'NSApp' can not be referenced from a nonisolated context
+ 79 |     }
+ 80 | 
+ 81 |     static func presentMainWindow() {
+    |                 `- note: add '@MainActor' to make static method 'presentMainWindow()' part of global actor 'MainActor'
+ 82 |         let windows = NSApp.windows
+ 83 |         if WindowPresentation.shouldPresentMain(
+    :
+ 92 |             }
+ 93 |         }
+ 94 |         NSApp.activate(ignoringOtherApps: true)
+    |         `- warning: main actor-isolated var 'NSApp' can not be referenced from a nonisolated context
+ 95 |     }
+ 96 | 
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSApplication.h:191:58: note: var declared here
+189 | @interface NSApplication : NSResponder <NSUserInterfaceValidations, NSMenuItemValidation, NSAccessibilityElement, NSAccessibility>
+190 | 
+191 | APPKIT_EXTERN __kindof NSApplication * _Null_unspecified NSApp NS_SWIFT_UI_ACTOR;
+    |                                                          `- note: var declared here
+192 | 
+193 | @property (class, readonly, strong) __kindof NSApplication *sharedApplication;
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:99:15: warning: call to main actor-isolated instance method 'setActivationPolicy' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 95 |     }
+ 96 | 
+ 97 |     static func applyPolicy() {
+    |                 `- note: add '@MainActor' to make static method 'applyPolicy()' part of global actor 'MainActor'
+ 98 |         let configured = UserDefaults.standard.bool(forKey: WalkthroughFlow.completionDefaultsKey)
+ 99 |         NSApp.setActivationPolicy(configured ? .accessory : .regular)
+    |               `- warning: call to main actor-isolated instance method 'setActivationPolicy' in a synchronous nonisolated context [#ActorIsolatedCall]
+100 |     }
+101 | 
+
+AppKit.NSApplication.setActivationPolicy:3:24: note: calls to instance method 'setActivationPolicy' from outside of its actor context are implicitly asynchronous
+1 | class NSApplication {
+2 | @available(macOS 10.6, *)
+3 |   @MainActor open func setActivationPolicy(_ activationPolicy: NSApplication.ActivationPolicy) -> Bool}
+  |                        |- note: calls to instance method 'setActivationPolicy' from outside of its actor context are implicitly asynchronous
+  |                        `- note: main actor isolation inferred from inheritance from class 'NSResponder'
+4 | 
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorUI/ProctorUIApp.swift:99:9: warning: main actor-isolated var 'NSApp' can not be referenced from a nonisolated context
+ 95 |     }
+ 96 | 
+ 97 |     static func applyPolicy() {
+    |                 `- note: add '@MainActor' to make static method 'applyPolicy()' part of global actor 'MainActor'
+ 98 |         let configured = UserDefaults.standard.bool(forKey: WalkthroughFlow.completionDefaultsKey)
+ 99 |         NSApp.setActivationPolicy(configured ? .accessory : .regular)
+    |         `- warning: main actor-isolated var 'NSApp' can not be referenced from a nonisolated context
+100 |     }
+101 | 
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSApplication.h:191:58: note: var declared here
+189 | @interface NSApplication : NSResponder <NSUserInterfaceValidations, NSMenuItemValidation, NSAccessibilityElement, NSAccessibility>
+190 | 
+191 | APPKIT_EXTERN __kindof NSApplication * _Null_unspecified NSApp NS_SWIFT_UI_ACTOR;
+    |                                                          `- note: var declared here
+192 | 
+193 | @property (class, readonly, strong) __kindof NSApplication *sharedApplication;
+
+[#ActorIsolatedCall]: <https://docs.swift.org/compiler/documentation/diagnostics/actor-isolated-call>
+[148/309] Emitting module ProctorAgent
+[149/314] Compiling ProctorAgent SessionKill.swift
+[150/314] Compiling ProctorAgent SessionMaestro.swift
+[151/314] Compiling ProctorAgent SessionMenu.swift
+[152/314] Compiling ProctorAgent SessionPointer.swift
+[153/314] Compiling ProctorAgent SessionPolicy.swift
+[154/314] Compiling ProctorAgent SessionCursor.swift
+[155/314] Compiling ProctorAgent SessionDictionary.swift
+[156/314] Compiling ProctorAgent SessionDoctor.swift
+[157/314] Compiling ProctorAgent SessionFSJail.swift
+[158/314] Compiling ProctorAgent SessionFlow.swift
+[159/314] Compiling ProctorAgent CuaLineReader.swift
+[160/314] Compiling ProctorAgent CuaPreflight.swift
+[161/314] Compiling ProctorAgent CuaProcessCheck.swift
+[162/314] Compiling ProctorAgent CuaTransport.swift
+[163/314] Compiling ProctorAgent DelegatedPost.swift
+[164/314] Compiling ProctorAgent AgentProcess.swift
+[165/314] Compiling ProctorUI MainWindow.swift
+[165/314] Write Objects.LinkFileList
+[167/314] Compiling ProctorAgent MenuBarReader.swift
+[168/314] Compiling ProctorAgent Observers.swift
+[169/314] Compiling ProctorAgent TreeWalker.swift
+[170/314] Compiling ProctorAgent ActuationBackend.swift
+[171/314] Compiling ProctorAgent CuaActuationBackend.swift
+[172/314] Compiling ProctorAgent CuaClients.swift
+[173/314] Compiling ProctorAgent AXEngineImpl.swift
+[174/314] Compiling ProctorAgent AXValue+Convert.swift
+[175/314] Compiling ProctorAgent Actuator.swift
+[176/314] Compiling ProctorAgent AppSession.swift
+[177/314] Compiling ProctorAgent CGWindowCorrelation.swift
+[178/314] Compiling ProctorAgent KeyCodes.swift
+[179/314] Compiling ProctorCoreTests RunHUDSurfaceTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Server.swift:197:27: warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+195 |         let registration = SupervisionBroadcast.shared.add { [weak self] frame in
+196 |             queue.async {
+197 |                 guard let self, !closed.isClosed else { return }
+    |                           `- warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+198 |                 guard let payload = try? JSONEncoder().encode(frame),
+199 |                       let value = try? JSONDecoder().decode(JSONValue.self, from: payload) else {
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[180/314] Compiling ProctorCoreTests MaestroGateTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Server.swift:197:27: warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+195 |         let registration = SupervisionBroadcast.shared.add { [weak self] frame in
+196 |             queue.async {
+197 |                 guard let self, !closed.isClosed else { return }
+    |                           `- warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+198 |                 guard let payload = try? JSONEncoder().encode(frame),
+199 |                       let value = try? JSONDecoder().decode(JSONValue.self, from: payload) else {
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[181/314] Compiling ProctorCoreTests MaestroRunTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Server.swift:197:27: warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+195 |         let registration = SupervisionBroadcast.shared.add { [weak self] frame in
+196 |             queue.async {
+197 |                 guard let self, !closed.isClosed else { return }
+    |                           `- warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+198 |                 guard let payload = try? JSONEncoder().encode(frame),
+199 |                       let value = try? JSONDecoder().decode(JSONValue.self, from: payload) else {
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[182/314] Compiling ProctorCoreTests MenuBarReadinessTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Server.swift:197:27: warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+195 |         let registration = SupervisionBroadcast.shared.add { [weak self] frame in
+196 |             queue.async {
+197 |                 guard let self, !closed.isClosed else { return }
+    |                           `- warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+198 |                 guard let payload = try? JSONEncoder().encode(frame),
+199 |                       let value = try? JSONDecoder().decode(JSONValue.self, from: payload) else {
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[183/314] Compiling ProctorCoreTests NativePlaneRecordTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Server.swift:197:27: warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+195 |         let registration = SupervisionBroadcast.shared.add { [weak self] frame in
+196 |             queue.async {
+197 |                 guard let self, !closed.isClosed else { return }
+    |                           `- warning: reference to captured var 'self' in concurrently-executing code [#SendableClosureCaptures]
+198 |                 guard let payload = try? JSONEncoder().encode(frame),
+199 |                       let value = try? JSONDecoder().decode(JSONValue.self, from: payload) else {
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[183/314] Linking Proctor
+[184/314] Applying Proctor
+[186/314] Compiling ProctorAgent SupervisionControl.swift
+[187/314] Compiling ProctorAgent UnlockBroker.swift
+[188/314] Compiling ProctorAgent UnlockCoordinator.swift
+[189/314] Compiling ProctorAgent main.swift
+[190/314] Compiling ProctorAgent resource_bundle_accessor.swift
+[191/314] Compiling ProctorAgent SessionGuest.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:31: warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                               `- warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:57: warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                                                         `- warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:17: warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                 `- warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:30: warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                              `- warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[192/314] Compiling ProctorAgent SessionHUD.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:31: warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                               `- warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:57: warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                                                         `- warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:17: warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                 `- warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:30: warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                              `- warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[193/314] Compiling ProctorAgent SessionHistory.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:31: warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                               `- warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:57: warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                                                         `- warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:17: warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                 `- warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:30: warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                              `- warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[194/314] Compiling ProctorAgent SessionIOS.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:31: warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                               `- warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:57: warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                                                         `- warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:17: warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                 `- warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:30: warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                              `- warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[195/314] Compiling ProctorAgent SessionIOSProcess.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:31: warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                               `- warning: mutation of captured var 'outData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:92:57: warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 90 |                 }
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+    |                                                         `- warning: mutation of captured var 'errData' in concurrently-executing code [#SendableClosureCaptures]
+ 93 |                 overflowed = overflowed || over
+ 94 |                 lock.unlock()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:17: warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                 `- warning: mutation of captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Session/SessionIOSProcess.swift:93:30: warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 91 |                 lock.lock()
+ 92 |                 if isStdout { outData = buffer } else { errData = buffer }
+ 93 |                 overflowed = overflowed || over
+    |                              `- warning: reference to captured var 'overflowed' in concurrently-executing code [#SendableClosureCaptures]
+ 94 |                 lock.unlock()
+ 95 |                 group.leave()
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+[196/314] Compiling ProctorAgent CaptureEngineImpl.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Capture/Settler.swift:52:13: warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 50 |         var reflectorAvailable = firstReflector != nil
+ 51 | 
+ 52 |         var signals = SettleSignals.available(capture: captureAvailable, ax: axAvailable,
+    |             `- warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 53 |                                               reflector: reflectorAvailable)
+ 54 | 
+[197/314] Compiling ProctorAgent ImageWriter.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Capture/Settler.swift:52:13: warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 50 |         var reflectorAvailable = firstReflector != nil
+ 51 | 
+ 52 |         var signals = SettleSignals.available(capture: captureAvailable, ax: axAvailable,
+    |             `- warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 53 |                                               reflector: reflectorAvailable)
+ 54 | 
+[198/314] Compiling ProctorAgent MarkRenderer.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Capture/Settler.swift:52:13: warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 50 |         var reflectorAvailable = firstReflector != nil
+ 51 | 
+ 52 |         var signals = SettleSignals.available(capture: captureAvailable, ax: axAvailable,
+    |             `- warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 53 |                                               reflector: reflectorAvailable)
+ 54 | 
+[199/314] Compiling ProctorAgent PixelProbe.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Capture/Settler.swift:52:13: warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 50 |         var reflectorAvailable = firstReflector != nil
+ 51 | 
+ 52 |         var signals = SettleSignals.available(capture: captureAvailable, ax: axAvailable,
+    |             `- warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 53 |                                               reflector: reflectorAvailable)
+ 54 | 
+[200/314] Compiling ProctorAgent Settler.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Capture/Settler.swift:52:13: warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 50 |         var reflectorAvailable = firstReflector != nil
+ 51 | 
+ 52 |         var signals = SettleSignals.available(capture: captureAvailable, ax: axAvailable,
+    |             `- warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 53 |                                               reflector: reflectorAvailable)
+ 54 | 
+[201/314] Compiling ProctorAgent StreamCapture.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/Capture/Settler.swift:52:13: warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 50 |         var reflectorAvailable = firstReflector != nil
+ 51 | 
+ 52 |         var signals = SettleSignals.available(capture: captureAvailable, ax: axAvailable,
+    |             `- warning: variable 'signals' was never mutated; consider changing to 'let' constant
+ 53 |                                               reflector: reflectorAvailable)
+ 54 | 
+[202/314] Compiling ProctorAgent PolicyStore.swift
+[203/314] Compiling ProctorAgent Predicates.swift
+[204/314] Compiling ProctorAgent RunControl.swift
+[205/314] Compiling ProctorAgent RunScheduler.swift
+[206/314] Compiling ProctorAgent ScreenRecordingProbe.swift
+[207/314] Compiling ProctorAgent AuditSigningKeyStore.swift
+[208/314] Compiling ProctorAgent ContentionMonitor.swift
+[209/314] Compiling ProctorAgent FlowStore.swift
+[210/314] Compiling ProctorAgent NullReflectorBridge.swift
+[211/314] Compiling ProctorAgent PixelCompare.swift
+[212/314] Compiling ProctorAgent RunHUDCharacterView.swift
+[213/314] Compiling ProctorAgent RunHUDContentView.swift
+[214/314] Compiling ProctorAgent RunHUDFeed.swift
+[215/314] Compiling ProctorAgent RunHUDGeometry.swift
+[216/314] Compiling ProctorAgent RunHUDPanel.swift
+[217/314] Compiling ProctorAgent TriObserver.swift
+[218/314] Compiling ProctorAgent Contracts.swift
+[219/314] Compiling ProctorCoreTests RestartWatchTests.swift
+[220/314] Compiling ProctorCoreTests RunHUDCharacterTests.swift
+[221/314] Compiling ProctorCoreTests RunHUDGateTests.swift
+[222/314] Compiling ProctorCoreTests RunHUDMenuBarTests.swift
+[223/314] Compiling ProctorCoreTests AuditChainTests.swift
+[224/314] Compiling ProctorAgent SessionAct.swift
+[225/314] Compiling ProctorAgent SessionActivate.swift
+[226/314] Compiling ProctorAgent SessionAssert.swift
+[227/314] Compiling ProctorAgent SessionCUA.swift
+[228/314] Compiling ProctorCoreTests OverlayCaptureTests.swift
+[229/314] Compiling ProctorCoreTests AccessibilityNameTests.swift
+[230/314] Compiling ProctorCoreTests ActuationWireTests.swift
+[231/314] Compiling ProctorCoreTests AgentRecoveryTests.swift
+[232/314] Compiling ProctorCoreTests AgentVerbBoundaryTests.swift
+[233/314] Compiling ProctorAgent ToolProbe.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/SessionIdentity.swift:105:20: warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+103 |         let read = proc_pidpath(pid, &buffer, UInt32(buffer.count))
+104 |         guard read > 0 else { return nil }
+105 |         let path = String(cString: buffer)
+    |                    `- warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+106 |         let component = (path as NSString).lastPathComponent
+107 |         return component.isEmpty ? nil : component
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[234/314] Compiling ProctorAgent TriObserverAdapter.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/SessionIdentity.swift:105:20: warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+103 |         let read = proc_pidpath(pid, &buffer, UInt32(buffer.count))
+104 |         guard read > 0 else { return nil }
+105 |         let path = String(cString: buffer)
+    |                    `- warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+106 |         let component = (path as NSString).lastPathComponent
+107 |         return component.isEmpty ? nil : component
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[235/314] Compiling ProctorAgent TriObserving.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/SessionIdentity.swift:105:20: warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+103 |         let read = proc_pidpath(pid, &buffer, UInt32(buffer.count))
+104 |         guard read > 0 else { return nil }
+105 |         let path = String(cString: buffer)
+    |                    `- warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+106 |         let component = (path as NSString).lastPathComponent
+107 |         return component.isEmpty ? nil : component
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[236/314] Compiling ProctorAgent SessionIdentity.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/SessionIdentity.swift:105:20: warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+103 |         let read = proc_pidpath(pid, &buffer, UInt32(buffer.count))
+104 |         guard read > 0 else { return nil }
+105 |         let path = String(cString: buffer)
+    |                    `- warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+106 |         let component = (path as NSString).lastPathComponent
+107 |         return component.isEmpty ? nil : component
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[237/314] Compiling ProctorAgent SupervisionBroadcast.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorAgent/SessionIdentity.swift:105:20: warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+103 |         let read = proc_pidpath(pid, &buffer, UInt32(buffer.count))
+104 |         guard read > 0 else { return nil }
+105 |         let path = String(cString: buffer)
+    |                    `- warning: 'init(cString:)' is deprecated: Use String(decoding: array, as: UTF8.self) instead, after truncating the null termination. [#DeprecatedDeclaration]
+106 |         let component = (path as NSString).lastPathComponent
+107 |         return component.isEmpty ? nil : component
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[237/314] Write Objects.LinkFileList
+[238/314] Linking proctor-agent
+[239/314] Applying proctor-agent
+[241/375] Compiling ProctorAgentTests ForegroundWiringTests.swift
+[242/375] Compiling ProctorAgentTests FrontEndAttributionTests.swift
+[243/375] Compiling ProctorAgentTests GuestAttachWiringTests.swift
+[244/375] Compiling ProctorAgentTests IOSLaneWiringTests.swift
+[245/375] Compiling ProctorAgentTests LiveSurfaceEntitlementTests.swift
+[246/379] Compiling ProctorAgentTests ReflectorWitnessTests.swift
+[247/379] Compiling ProctorAgentTests ReplayGateWiringTests.swift
+[248/379] Compiling ProctorAgentTests RunHUDCharacterAssetTests.swift
+[249/379] Compiling ProctorAgentTests RunHUDMenuBarWiringTests.swift
+[251/379] Compiling ProctorAgentTests DoctorReplyWiringTests.swift
+[252/379] Compiling ProctorAgentTests GuestDispatchWiringTests.swift
+[253/379] Compiling ProctorAgentTests GuestOSVersionWiringTests.swift
+[254/379] Compiling ProctorAgentTests GuestPoolWiringTests.swift
+[255/379] Compiling ProctorAgentTests GuestProviderTests.swift
+[266/379] Compiling ProctorAgentTests MachineDisclosureWiringTests.swift
+[267/379] Compiling ProctorAgentTests MaestroLiveTests.swift
+[268/379] Compiling ProctorAgentTests DelegatedAuditTests.swift
+[269/379] Compiling ProctorAgentTests DelegatedPlaneVisibilityTests.swift
+[270/379] Compiling ProctorAgentTests DelegatedSupervisionWiringTests.swift
+[271/379] Compiling ProctorAgentTests MutationSurvivorTests.swift
+[272/379] Compiling ProctorAgentTests NativePlaneLaneTests.swift
+[273/379] Compiling ProctorAgentTests ObscuraPresenceWiringTests.swift
+[274/379] Compiling ProctorAgentTests FileWitness.swift
+[275/379] Compiling ProctorAgentTests SwitchYieldDriftTests.swift
+[276/379] Compiling ProctorCoreTests WalkthroughFlowTests.swift
+[277/379] Compiling ProctorCoreTests WindowPresentationTests.swift
+[278/379] Compiling ProctorCoreTests WireIdentityTests.swift
+[279/379] Compiling ProctorCoreTests resource_bundle_accessor.swift
+[284/383] Compiling ProctorAgentTests AuditRotationTests.swift
+[285/383] Compiling ProctorAgentTests BackgroundRouteTests.swift
+[286/383] Compiling ProctorAgentTests BrowserLaneWiringTests.swift
+[287/383] Compiling ProctorAgentTests BrowserRoutingTests.swift
+[288/383] Emitting module ProctorCoreTests
+[289/383] Compiling ProctorAgentTests OperatorFilesWitnessTests.swift
+[290/383] Compiling ProctorAgentTests PeerReclaimWiringTests.swift
+[291/383] Compiling ProctorAgentTests PolicyStoreSeamTests.swift
+[292/383] Compiling ProctorAgentTests ReflectorRefusalTests.swift
+[293/383] Compiling ProctorAgentTests MaestroSeamTests.swift
+[297/383] Compiling ProctorAgentTests BrowserSurfaceWiringTests.swift
+[298/383] Compiling ProctorAgentTests CaptureContentWiringTests.swift
+[299/383] Compiling ProctorAgentTests CuaBackendTests.swift
+[300/383] Compiling ProctorAgentTests CuaLineReaderTests.swift
+[301/383] Compiling ProctorAgentTests Fakes.swift
+[307/383] Compiling ProctorAgentTests TakeoverWiringTests.swift
+[308/383] Compiling ProctorAgentTests TartProviderTests.swift
+[309/383] Compiling ProctorAgentTests SessionIsolationWiringTests.swift
+[310/383] Compiling ProctorAgentTests StabilityPageContentTests.swift
+[311/383] Compiling ProctorAgentTests StopReachabilityWiringTests.swift
+[312/383] Compiling ProctorAgentTests SupervisionWiringTests.swift
+[313/383] Emitting module ProctorAgentTests
+[314/383] Compiling ProctorAgentTests DrawingFaultBarrierTests.swift
+[315/383] Compiling ProctorAgentTests EffectWitnessTests.swift
+[316/383] Compiling ProctorAgentTests ExternalWitnessTests.swift
+[317/383] Compiling ProctorAgentTests FakeCuaTransport.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/GuestOSVersionWiringTests.swift:252:20: warning: no 'async' operations occur within 'await' expression
+250 |     @Test("every guest listing carries the one Tahoe note")
+251 |     func theCapabilitiesNoteIsTheConstant() async {
+252 |         let note = await Session.guestCapabilities.objectValue?["note"]?.stringValue
+    |                    `- warning: no 'async' operations occur within 'await' expression
+253 |         #expect(note != nil, "the guest capabilities must carry a note")
+254 |         #expect(note?.contains(GuestNotes.tahoeRendering) == true,
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/GuestOSVersionWiringTests.swift:252:20: warning: no 'async' operations occur within 'await' expression
+250 |     @Test("every guest listing carries the one Tahoe note")
+251 |     func theCapabilitiesNoteIsTheConstant() async {
+252 |         let note = await Session.guestCapabilities.objectValue?["note"]?.stringValue
+    |                    `- warning: no 'async' operations occur within 'await' expression
+253 |         #expect(note != nil, "the guest capabilities must carry a note")
+254 |         #expect(note?.contains(GuestNotes.tahoeRendering) == true,
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/GuestOSVersionWiringTests.swift:252:20: warning: no 'async' operations occur within 'await' expression
+250 |     @Test("every guest listing carries the one Tahoe note")
+251 |     func theCapabilitiesNoteIsTheConstant() async {
+252 |         let note = await Session.guestCapabilities.objectValue?["note"]?.stringValue
+    |                    `- warning: no 'async' operations occur within 'await' expression
+253 |         #expect(note != nil, "the guest capabilities must carry a note")
+254 |         #expect(note?.contains(GuestNotes.tahoeRendering) == true,
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/GuestOSVersionWiringTests.swift:252:20: warning: no 'async' operations occur within 'await' expression
+250 |     @Test("every guest listing carries the one Tahoe note")
+251 |     func theCapabilitiesNoteIsTheConstant() async {
+252 |         let note = await Session.guestCapabilities.objectValue?["note"]?.stringValue
+    |                    `- warning: no 'async' operations occur within 'await' expression
+253 |         #expect(note != nil, "the guest capabilities must carry a note")
+254 |         #expect(note?.contains(GuestNotes.tahoeRendering) == true,
+[330/383] Compiling ProctorAgentTests AcceptanceE2ETests.swift
+[331/383] Compiling ProctorAgentTests ActuationSeamTests.swift
+[332/383] Compiling ProctorAgentTests AgentVerbsWiringTests.swift
+[333/383] Compiling ProctorAgentTests AuditChainWiringTests.swift
+[335/383] Compiling ProctorAgentTests GuestRouteWiringTests.swift
+[336/383] Compiling ProctorAgentTests GuestToolTests.swift
+[337/383] Compiling ProctorAgentTests HoldAttributionWiringTests.swift
+[338/383] Compiling ProctorAgentTests HorizontalAlignmentAssertionTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/AcceptanceE2ETests.swift:401:29: warning: comparing non-optional value of type 'JSONValue' to 'nil' always returns true
+399 |                                                 pixelEvidence: false, changeThreshold: nil, path: nil,
+400 |                                                 timeoutMs: 15_000, settleMs: 500)
+401 |             #expect(listing != nil, "simctl is present, so a listing is the expected outcome")
+    |                             `- warning: comparing non-optional value of type 'JSONValue' to 'nil' always returns true
+402 |         } catch let error as AgentError {
+403 |             #expect(error.code == .notImplemented || error.code == .actionFailed,
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/AcceptanceE2ETests.swift:401:29: warning: comparing non-optional value of type 'JSONValue' to 'nil' always returns true
+399 |                                                 pixelEvidence: false, changeThreshold: nil, path: nil,
+400 |                                                 timeoutMs: 15_000, settleMs: 500)
+401 |             #expect(listing != nil, "simctl is present, so a listing is the expected outcome")
+    |                             `- warning: comparing non-optional value of type 'JSONValue' to 'nil' always returns true
+402 |         } catch let error as AgentError {
+403 |             #expect(error.code == .notImplemented || error.code == .actionFailed,
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/AcceptanceE2ETests.swift:401:29: warning: comparing non-optional value of type 'JSONValue' to 'nil' always returns true
+399 |                                                 pixelEvidence: false, changeThreshold: nil, path: nil,
+400 |                                                 timeoutMs: 15_000, settleMs: 500)
+401 |             #expect(listing != nil, "simctl is present, so a listing is the expected outcome")
+    |                             `- warning: comparing non-optional value of type 'JSONValue' to 'nil' always returns true
+402 |         } catch let error as AgentError {
+403 |             #expect(error.code == .notImplemented || error.code == .actionFailed,
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/AcceptanceE2ETests.swift:401:29: warning: comparing non-optional value of type 'JSONValue' to 'nil' always returns true
+399 |                                                 pixelEvidence: false, changeThreshold: nil, path: nil,
+400 |                                                 timeoutMs: 15_000, settleMs: 500)
+401 |             #expect(listing != nil, "simctl is present, so a listing is the expected outcome")
+    |                             `- warning: comparing non-optional value of type 'JSONValue' to 'nil' always returns true
+402 |         } catch let error as AgentError {
+403 |             #expect(error.code == .notImplemented || error.code == .actionFailed,
+[343/383] Compiling ProctorAgentTests RunHUDWiringTests.swift
+[344/383] Compiling ProctorAgentTests RunHistoryWiringTests.swift
+[345/383] Compiling ProctorAgentTests RunQueueWiringTests.swift
+[346/383] Compiling ProctorAgentTests ScreenRecordingProbeWiringTests.swift
+[351/383] Compiling ProctorAgentTests ToolchainDoctorTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/ToolchainDoctorTests.swift:717:38: warning: '#require(_:_:)' is redundant because 'version' never equals 'nil' (from macro 'require')
+715 |         guard presence.available else { return }
+716 |         let version = ToolProbe.xcodeVersion(simctlPath: presence.path)
+717 |         let resolved = try? #require(version)
+    |                                      `- warning: '#require(_:_:)' is redundant because 'version' never equals 'nil' (from macro 'require')
+718 |         #expect(resolved?.first?.isNumber == true)
+719 |     }
+[352/383] Compiling ProctorAgentTests TrailIsolation.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/ToolchainDoctorTests.swift:717:38: warning: '#require(_:_:)' is redundant because 'version' never equals 'nil' (from macro 'require')
+715 |         guard presence.available else { return }
+716 |         let version = ToolProbe.xcodeVersion(simctlPath: presence.path)
+717 |         let resolved = try? #require(version)
+    |                                      `- warning: '#require(_:_:)' is redundant because 'version' never equals 'nil' (from macro 'require')
+718 |         #expect(resolved?.first?.isNumber == true)
+719 |     }
+[353/383] Compiling ProctorAgentTests WitnessTierTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/ToolchainDoctorTests.swift:717:38: warning: '#require(_:_:)' is redundant because 'version' never equals 'nil' (from macro 'require')
+715 |         guard presence.available else { return }
+716 |         let version = ToolProbe.xcodeVersion(simctlPath: presence.path)
+717 |         let resolved = try? #require(version)
+    |                                      `- warning: '#require(_:_:)' is redundant because 'version' never equals 'nil' (from macro 'require')
+718 |         #expect(resolved?.first?.isNumber == true)
+719 |     }
+[354/383] Compiling ProctorAgentTests YieldWiringTests.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Tests/ProctorAgentTests/ToolchainDoctorTests.swift:717:38: warning: '#require(_:_:)' is redundant because 'version' never equals 'nil' (from macro 'require')
+715 |         guard presence.available else { return }
+716 |         let version = ToolProbe.xcodeVersion(simctlPath: presence.path)
+717 |         let resolved = try? #require(version)
+    |                                      `- warning: '#require(_:_:)' is redundant because 'version' never equals 'nil' (from macro 'require')
+718 |         #expect(resolved?.first?.isNumber == true)
+719 |     }
+[382/385] Emitting module proctor_mcpPackageTests
+[383/385] Compiling proctor_mcpPackageTests runner.swift
+[383/385] Write Objects.LinkFileList
+[384/385] Linking proctor-mcpPackageTests
+Build complete! (162.41s)
+Test Suite 'Selected tests' started at 2026-08-22 12:43:04.307.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 12:43:04.308.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 12:43:04.309.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 12:43:04.309.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Agent verb boundary" started.
+􀟈  Test "the catalogue ships 21 tools, each named once" started.
+􀟈  Test "no internal agent verb has a catalogue spec, so tools/call refuses it" started.
+􀟈  Test "proctor_doctor is the one agent verb that is also a catalogue tool" started.
+􁁛  Test "proctor_doctor is the one agent verb that is also a catalogue tool" passed after 0.001 seconds.
+􁁛  Test "no internal agent verb has a catalogue spec, so tools/call refuses it" passed after 0.001 seconds.
+􁁛  Test "the catalogue ships 21 tools, each named once" passed after 0.001 seconds.
+􁁛  Suite "Agent verb boundary" passed after 0.003 seconds.
+􁁛  Test run with 3 tests in 1 suite passed after 0.003 seconds.
+
+PASS: 􁁛  Test run with 3 tests in 1 suite passed after 0.003 seconds.
+EXIT=0
