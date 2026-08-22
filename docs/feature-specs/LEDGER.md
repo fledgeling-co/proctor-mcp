@@ -110,7 +110,7 @@
 | PRO-0101 | A spec says which brief it came from | 2026-08-22 | Merged |
 | PRO-0102 | The reckoning tool mis-read this registry | 2026-08-22 | Merged |
 | PRO-0103 | A reckoning worth comparing against | 2026-08-22 | Merged |
-| PRO-0104 | An input the check cannot classify | 2026-08-23 | Ready for Plan |
+| PRO-0104 | An input the check cannot classify | 2026-08-23 | Merged |
 | PRO-0105 | A version string is not the artifact | 2026-08-23 | Ready for Plan |
 | PRO-0106 | Instruments that do not prove their own step | 2026-08-23 | Ready for Plan |
-| PRO-0107 | Thirty-five pictures the gate cannot see | 2026-08-23 | Ready for Plan |
+| PRO-0107 | Thirty-five pictures the gate cannot see | 2026-08-23 | Merged |

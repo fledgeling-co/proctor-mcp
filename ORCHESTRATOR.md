@@ -2752,3 +2752,74 @@ alive, while load per core read **0.63** and pressure read `healthy`. `governor-
 `no berth available` and advised against looping on it. Admitted on the fifth at `available 6`. So the
 corrected predicate holds in the other direction too: an idle machine that can grant nothing looks
 exactly like a busy one, and only `available` tells you which.
+
+### Wave 17a merged, and the per-row merge rule fired both ways in one merge (2026-08-23)
+
+`main` carries PRO-0104 and PRO-0107. Nothing pushed. Registry: **373 cases · 138 defect rows · 108
+requirements · 27 surfaces**, 22 open defects.
+
+Gates on merged `main`: `defect_gate.py dropped` **0**, `capture-lineage.py --gate` **0**
+(`COUNTED APART (35)`, judged 6 of 8, ratchet 6), `spec_citation_measure.py` **0** at **19/19**,
+`test_instruments.py` **0**, `shot_disposition.py` **0**, `reckoning_selftest.py` **0**,
+`campaign.py check` 1 on other items' work.
+
+**The registry merge conflicted a sixth time, and for the first time the corrector differed per row
+*within a single merge*.** `main` won on DEF-201, DEF-202 and DEF-203 — PRO-0104 had flipped them
+`fixed` and PRO-0107's branch still held them open — while **PRO-0107's branch won on DEF-209**, which
+it had flipped itself. Neither blanket rule could have been right here: "keep ours" would have lost
+DEF-209's closure and "take theirs" would have reopened three defects that were fixed. That is the
+cleanest demonstration this campaign has of why the rule is per row and why which side is the corrector
+is a question about the row.
+
+### What PRO-0107 found, and what verification took back
+
+Nine images named for engine surfaces are **1024×1024 app-icon renders**, one
+sha256-identical to `design/icon/icon-proctor-1024.png`. `sweepL-status-agent-down.png` shows a **Ready**
+window. One image carries **three captions across two unrelated sweeps**, so a recovery recorded as true
+is shown by pre-recovery bytes — and the verifier closed the benign reading by measuring a genuine
+re-take of the same appearance at **1,046 differing pixels**, so this pipeline does not emit
+byte-identical frames and three identical ones are reuse. Three takeover frames contain **no image**:
+zero opaque pixels.
+
+**And the mechanism claim was wrong, in the present tense, in three places including this file.**
+`build_test_campaign.py` will not do it again: a module-level `sys.exit()` and a retired raw string, no
+live copy loop, confirmed by AST parse. Naming removal of that copy list as the repair **pointed future
+work at dead code**, so somebody would have deleted a retired docstring and recorded a fix. The
+checkable falsehood is the retirement docstring's own sentence — *every one of those files has been
+replaced by the output of a real tool call* — and nine were not. That is why it read as live: the file
+says the problem was already fixed.
+
+**Two judgements upheld rather than waved through.** Publishing nothing was right, because `target`
+records what the capture channel was pointed at and inspection settles only the subject; even for a
+frame confirmed by eye to be the Run HUD, a target written now would be invention. And **no verdict is
+void** — every cited picture depicts its named subject, the two cases feared to be pixel-rung are
+`outcome`, and the third is `effect-witness` on JSONs that exist. The faults are citations, and citation
+repair is not a status change.
+
+### PRO-0107 is verified in-family only, and that is the cost of an unsettled decision
+
+Gemini refused twice — from `/tmp` with a fresh project and from an empty directory — with
+`user denied permission` on its own `git branch -a` and `find` probes, returning 0 bytes. grok is at
+402, codex is off. The fallback to `claude-fable-5` is same-family and **read the merge base rather than
+the branch**, describing `captures.json` exactly as the base holds it, so its verdict was discarded.
+
+**So this item carries no out-of-family verdict, recorded as a downgrade rather than a pass.** It is the
+direct cost of leaving `--dangerously-skip-permissions` unsettled, which is the reader's call. The
+decision is not being worked around and the cost is not being hidden.
+
+### Two delivery findings that compound DEF-216
+
+**reckon is now 1.2.0 in source and the installed cache holds none of it.** Counted by content rather
+than version: the newest cache directory is 1.1.0 and its `reckon.py` is **byte-identical to
+`a2d4db1~1`**, the commit before PRO-0104's work — `DEFECT_NOT_OWING` 0, `DEFECT_PARTIAL` 0,
+`citable_text` 0, `PLACEHOLDER_ID_RE` 0, `unclassified_inputs` 0, `EVIDENCE_VOCABULARY` 0, against
+4/4/2/2/5/3 in source. Nothing running from the installed plugin has exit 4, the scanner or the
+partition. And reckon's own new selftest check for whether the published version carries its repairs
+reads `plugin.json` — the manifest rather than the content, which is DEF-204's shape inside the item
+that closed DEF-204's class.
+
+**DEF-226**, opened before the merge: `shot_disposition.py --write` adopts any new content as the
+baseline. A flat magenta frame written over `surf-007-zoom.png` took the check to 1, and `--write`
+returned it to 0 with the row still recording `publishedAs: SURF-007` and `distinctRGBA: 1` — a
+single-colour frame among the six judged captures. DEF-207's shape one level on: a step that performs an
+action and then treats its own result as the standard, with nothing able to disagree.
