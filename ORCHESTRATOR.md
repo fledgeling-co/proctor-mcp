@@ -1921,3 +1921,23 @@ OFF.
 a clock fires whether or not anything changed, and a reckoning nobody reads is one that gets skipped
 and then dropped. Retirement was on the ballot because triage had already consumed the brief that
 named deletion as the proposal's opt-out.
+
+### Wave 16 dispatched for real (2026-08-22, second attempt)
+
+The first attempt opened the wave in the ledger at 08:07Z and never launched a worker; the terminal
+died and git confirms it — no `ai/pro-010*` branches, no worktrees, no commits past `6c2409b`.
+Nothing was lost because nothing started.
+
+Slot count is **measured, not fixed**: harbourmaster reports ceiling 6, in use 4, available 2, with
+cpu `tight` and memory and disk `healthy` after a reboot. Two slots, re-read on every refill.
+
+| Wave | Items | Why this order |
+|---|---|---|
+| 16a | PRO-0100, PRO-0102 | 0100 is entirely in this repo; 0102 is entirely in `fledgeling-plugins`. Disjoint trees, so they cannot collide. |
+| 16b | PRO-0101 | Touches both repos, so it follows 0102 rather than racing it for the shared one. |
+| 16c | PRO-0103 | Behind PRO-0102 by its own spec: a reckoning run against a tool that mis-reads this registry gives a second wrong headline and a delta between two wrong numbers. |
+
+**PRO-0092 stays held.** Its mutation runner scores a timeout as a kill, the errand plane still
+refuses with `errand_ticket_unavailable`, and cpu still reads `tight` with four berths held by other
+projects. Two routes unblock it: write `errand.toml` on the anvil daemon and restart it, or run it
+locally when the machine is genuinely idle. Neither is this fleet's to take.
