@@ -103,6 +103,34 @@ def add_brief(name):
     return apply
 
 
+def append_to_spec(rel, text):
+    """Add text to the end of a spec. Used to plant a mention of a brief.
+
+    Appended rather than spliced because the position is the point: the mutations
+    below plant the same path in a fence, in an HTML comment, struck through and
+    in plain prose, and a splice into a specific paragraph would make the four
+    differ in more than the one thing being measured.
+    """
+    def apply(root):
+        p = root / rel
+        p.write_text(p.read_text().rstrip("\n") + "\n\n" + text + "\n")
+    return apply
+
+
+def add_brief_shown_as(wrapper, name="97-arming.md", spec="specs/spec-PRO-0003.md"):
+    """A new brief whose only trace anywhere is one shown-not-used mention.
+
+    One wrapper per call, never several in one fixture: a spec carrying a fenced
+    mention, a commented one and a struck-through one at once proves whichever
+    exclusion runs first and nothing about the other two.
+    """
+    path = "docs/features-to-triage/" + name
+    def apply(root):
+        add_brief(name)(root)
+        append_to_spec(spec, wrapper % path)(root)
+    return apply
+
+
 def add_register_row(row):
     """Append to the unclaimed table, which ends where the shared-parent one starts.
 
@@ -127,9 +155,24 @@ def reckon_regex(new):
 
 CITE_0001 = "**Brief:** `docs/features-to-triage/01-cua-schema-facade.md`"
 
+FENCED = "```text\n%s\n```"
+COMMENTED = "<!-- %s -->"
+STRUCK = "~~%s~~"
+PROSE = "The origin of this item is %s, mentioned here and claimed nowhere."
+
 MUTATIONS = [
     ("every spec carries a parseable citation", FAIL,
      drop_line("specs/spec-PRO-0001.md", "**Brief:**")),
+    # The citation of record, one exclusion kind at a time. A `**Brief:**` line
+    # inside a fence in the first 20 lines used to satisfy the check, because the
+    # header was read out of the raw text and the legacy fallback searched the
+    # whole document.
+    ("every spec carries a parseable citation", FAIL,
+     edit("specs/spec-PRO-0001.md", CITE_0001, FENCED % CITE_0001)),
+    ("every spec carries a parseable citation", FAIL,
+     edit("specs/spec-PRO-0001.md", CITE_0001, COMMENTED % CITE_0001)),
+    ("every spec carries a parseable citation", FAIL,
+     edit("specs/spec-PRO-0001.md", CITE_0001, STRUCK % CITE_0001)),
     ("every spec carries a parseable citation", FAIL,
      edit("specs/spec-PRO-0001.md", CITE_0001, "**Brief:** the cua brief")),
     ("every cited brief path resolves", FAIL,
@@ -149,6 +192,29 @@ MUTATIONS = [
      edit("specs/spec-PRO-0002.md",
           "**Brief:** `docs/features-to-triage/02-set-of-marks-captures.md`", CITE_0001)),
     ("every brief is claimed or registered", FAIL, add_brief("97-arming.md")),
+    # A mention is not a claim, proved separately for each of the three regions
+    # that show a path rather than use one, and once for plain prose.
+    ("no brief's only trace is a shown-not-used mention", FAIL, add_brief_shown_as(FENCED)),
+    ("no brief's only trace is a shown-not-used mention", FAIL, add_brief_shown_as(COMMENTED)),
+    ("no brief's only trace is a shown-not-used mention", FAIL, add_brief_shown_as(STRUCK)),
+    ("no brief is claimed only by an incidental mention", FAIL, add_brief_shown_as(PROSE)),
+    # A header relation this check has no rule for. It names a brief in the shape
+    # an account takes, and the check refuses to read it either way.
+    ("no brief is accounted for by an unrecognised relation", FAIL,
+     append_to_spec("specs/spec-PRO-0003.md",
+                    "**Cut from:** `docs/features-to-triage/01-cua-schema-facade.md`")),
+    # DEF-203's second clause, three ways: a path that does not resolve, a PRD
+    # section that does not exist, and a backtick pair padded past the length
+    # floor. The last one is why a longer floor is not the repair.
+    ("every `none` citation resolves to something here", FAIL,
+     replace_line("specs/spec-PRO-0075.md", "**Brief:** none.",
+                  "**Brief:** none. See `docs/nowhere/imaginary-source.md` for where this came from")),
+    ("every `none` citation resolves to something here", FAIL,
+     replace_line("specs/spec-PRO-0075.md", "**Brief:** none.",
+                  "**Brief:** none. Cut directly from PRD §99, the section on all of this")),
+    ("every `none` citation resolves to something here", FAIL,
+     replace_line("specs/spec-PRO-0075.md", "**Brief:** none.",
+                  "**Brief:** none. The specification is `whatever.md` and that is all there is")),
     ("the register names only briefs that exist", FAIL,
      add_register_row("| `98-not-a-brief.md` | nowhere | This row names a file the queue does not hold. |")),
     ("every register row carries a reason", FAIL,
