@@ -747,6 +747,41 @@
       "class": "contract guarantee",
       "text": "Every key in the payload Proctor's window reads and Proctor's agent writes has one definition that both ends reach. This is not a style rule: the reader takes a default for a key it cannot find, so a rename that parts the two ends does not fail \u2014 it reports a wrong answer quietly.",
       "source": "DEF-039 one layer down; AgentModel read value[\"canShow\"] while RunHUDFeed.wire wrote \"canShow\" and nothing bound them; the same shape HistorySurface.Wire closed for the history window"
+    },
+    {
+      "id": "REQ-079",
+      "class": "honesty-guardrail",
+      "text": "A lane held by a run whose peer process no longer exists is released, so the next caller gets the lane rather than queueBusy. Liveness is derived from the pid and start time already in RunSessionIdentity.key, with no heartbeat and no new wire field.",
+      "source": "DEF-026; docs/test-campaign/evidence/witness/a4-stranded-run-queue-2.json reads the stranded run still active at heldForSeconds 932, past the 900-second pause backstop",
+      "surfaces": [
+        "SURF-004"
+      ],
+      "effect": "subprocess",
+      "provider": "PeerLiveness in Sources/ProctorCore/PeerLiveness.swift; SessionIdentity.probe (kill(pid,0) and proc_pidinfo) in Sources/ProctorAgent/SessionIdentity.swift; RunScheduler.reclaimDeadPeers",
+      "evidence": "observed"
+    },
+    {
+      "id": "REQ-080",
+      "class": "honesty-guardrail",
+      "text": "A peer that is alive but silent keeps its lane. Only positive proof of death reclaims: a pid the kernel no longer knows, or a pid whose start time no longer matches the one the identity was minted from. An unreadable probe and an unparseable identity key both leave the lane alone.",
+      "source": "The brief's constraint on DEF-026: reclaiming a slow, blocked or breakpointed peer's lane would cut off a live run",
+      "surfaces": [
+        "SURF-004"
+      ],
+      "effect": "subprocess",
+      "provider": "PeerLiveness.verdict in Sources/ProctorCore/PeerLiveness.swift",
+      "evidence": "observed"
+    },
+    {
+      "id": "REQ-081",
+      "class": "honesty-guardrail",
+      "text": "Input the takeover block swallows during a run is reported as a yield record with a held reason, whatever the shape of the batch. A batch is probed only at step boundaries, so the arrival is carried as an edge until something reads it, and a reading happens after the last step as well as before each one.",
+      "source": "DEF-027; docs/test-campaign/evidence/witness/a45b-act.json is one 74.7-second step with six events swallowed and no yields key",
+      "surfaces": [
+        "SURF-005",
+        "SURF-004"
+      ],
+      "provider": "ContentionSample.userInputSince and ContentionWatch.conditions in Sources/ProctorCore/Contention.swift; ContentionMonitor.sample; the probe after the last step in Sources/ProctorAgent/Session/SessionAct.swift"
     }
   ],
   "surface": [
@@ -1860,23 +1895,23 @@
     },
     {
       "id": "DEF-026",
-      "status": "open",
+      "status": "fixed",
       "title": "A run whose MCP peer dies keeps the agent queue past the 900-second pause backstop",
       "found": "PRO-0078 phase 6, driving the glass lane: three separate runs stranded this way and each one had to be cleared by restarting the agent",
       "detail": "When the shim process driving a run exits while a run is in flight, the run stays in the agent's queue holding the slot. Every subsequent proctor_act returns queueBusy with 'another session was driving this Mac ... gave up without running any step', so the lane is unusable until the agent is restarted.\n\nMEASURED: docs/test-campaign/evidence/witness/a4-stranded-run-queue.json reads heldForSeconds 552 with reason frontmostChanged; docs/test-campaign/evidence/witness/a4-stranded-run-queue-2.json reads the same run at 932 seconds, still held. The documented pause backstop is 900 seconds, so the second reading is past it and the run is still there.\n\nHappened three times in one session, each time after the driving process died rather than after any product action. NOT FIXED HERE: the repair is in run lifecycle and belongs to whoever owns the queue, not to a witness item.",
       "surface": "SURF-004",
       "req": "REQ-009",
-      "note": "STILL OPEN, checked rather than assumed (PRO-0097). The fixing item is PRO-0093 ('A dead peer holds the queue', brief 86), which reads `Ready for AI` in docs/feature-specs/LEDGER.md and has no branch merged into this lineage. Nothing on this branch clears the queue when the driving shim exits."
+      "note": "FIXED by PRO-0093. RunScheduler.acquire sweeps its active runs through PeerLiveness before deciding anything, so a slot held by a pid that no longer exists is released by the very call that would otherwise be refused. Liveness comes from the pid and start time already in RunSessionIdentity.key - no heartbeat, no new wire field. Proved against a real child process in Tests/ProctorAgentTests/PeerReclaimWiringTests.swift, with the scheduler's own snapshot as the recorder. Armed: sabotage S1 removes the sweep and the test fails with the original refusal verbatim - 'another session was driving this Mac ... gave up without running any step'. docs/test-campaign/evidence/PRO-0093/sabotages.txt"
     },
     {
       "id": "DEF-027",
-      "status": "open",
+      "status": "fixed",
       "title": "Forty events swallowed by the takeover block produced no yield and no held reason",
       "found": "PRO-0078 phase 6, building the REQ-007 effect witness across three runs",
       "detail": "The takeover block's tap calls onPersonInput for every event it declines to deliver, and SessionTakeover.swift:137 wires that to ContentionMonitor.noteUserInput, which sets the field ContentionWatch reads to decide the userInput condition.\n\nMEASURED across three runs driven with a helper process posting into the session while the run held the foreground: the agent reported swallowing 6, 24 and 10 events (docs/test-campaign/evidence/witness/a45b-act.json, a4-act.json, a4c-burst.json). No run recorded a yield: yields is null in all three act results. Six consecutive proctor_doctor reads of the live queue during the third run report the active run with held reason null (docs/test-campaign/evidence/witness/a4-poll.json).\n\nThe path is not dead in general: a yield on a different reason was captured in the same session, at docs/test-campaign/evidence/witness/a4-stranded-run-queue.json, reason frontmostChanged.\n\nThis may be correct by design. PersonInput.isAPerson requires sourcePid == 0, so a helper's events are correctly not a person, and the swallow count rising without a yield may be exactly the intended asymmetry. What is not established either way is whether the userInput yield fires for a real hand on a real keyboard, because nothing in this session could post at pid 0. Recorded as the open half of CASE-0062.",
       "surface": "SURF-005",
       "req": "REQ-007",
-      "note": "STILL OPEN, checked rather than assumed (PRO-0097). Same fixing item as DEF-026: PRO-0093 is `Ready for AI`, not merged. The takeover tap still wires onPersonInput to ContentionMonitor.noteUserInput with nothing recording a yield or a held reason."
+      "note": "FIXED by PRO-0093, and settled as a defect rather than an instrument limit. The isAPerson ceiling governs ContentionMonitor.considerInput, the passive NSEvent path; the block's swallow path calls noteUserInput, which applies no filter at all because the caller has already applied a stricter one. The helper's events were therefore admissible. What failed is when the field is read: contentionProbe runs only from the checkpoint before each step. a45b-act.json is a ONE-step batch of 74.7s with 6 swallowed events, so its only probe ran before the block was ever armed - no timing or load could have made it fire. a4-act.json's three steps of 18.6/20.2/17.7s all outlive the 10-second inputWindow, so a swallow was stale at the next boundary. Fixed by carrying the arrival as an edge (ContentionSample.userInputSince) and by probing once after the last step. Armed: S4, S5 and S7 each redden the one-step test. docs/test-campaign/evidence/PRO-0093/sabotages.txt"
     },
     {
       "id": "DEF-028",
@@ -2477,6 +2512,36 @@
       "title": "Twenty-seven more force-unwrap sites across nine test files carry DEF-135's shape, each able to abort the runner rather than fail its own test",
       "found": "PRO-0090, sweeping for the shape once DEF-135 was measured",
       "detail": "`grep -rn ')!' Tests` outside the file this item fixed: AuditChainTests 11, AuditChainWiringTests 4, ProctorCoreTests 3, TUIHistoryPaneTests 2, ToolchainTests 2, SwitchSettingsTests 2, MenuBarReadinessTests 1, GuestInventoryTests 1, RunHUDCharacterAssetTests 1. Not all are equally live \u2014 TimeZone(identifier: \"UTC\")! cannot fail on a Mac. But Toolchain.entry(for:)!, AuditSeal.decode(...)! and script.range(of: \"kill -0\")! each unwrap a lookup against production data, which is DEF-135's shape exactly: the regression the test exists for is the input that kills the runner. Left open rather than fixed here because a sweep across nine unrelated suites is a different item from this one's four surfaces, and each site needs a reading of whether #require or a restructure is right."
+    },
+    {
+      "id": "DEF-150",
+      "status": "fixed",
+      "title": "A run that ended while yielded left its automatic hold latched forever",
+      "found": "PRO-0093, while adding the reading after the last step",
+      "detail": "Session.disarmContention closed the yield RECORD and never the LATCH. RunControl.yields kept an entry for a run that had finished, so paused stayed true, pausedAt was never cleared and heldBy went on naming a finished run. RunControl.begin clears the beginning run's own key and deliberately not anybody else's, so nothing was ever going to clear it. Reachable before this item and made common by the new probe, so it is closed here: disarmContention now releases the ending run's hold. Armed: sabotage S6 removes the release and TakeoverWiringTests 'a run that ends while yielded leaves the latch clear' reports isYielded true and heldBy naming the finished run.",
+      "surface": "SURF-004",
+      "req": "REQ-081",
+      "note": "docs/test-campaign/evidence/PRO-0093/sabotages.txt"
+    },
+    {
+      "id": "DEF-151",
+      "status": "open",
+      "title": "Whether the userInput yield fires for a real hand on a real keyboard is still unproved",
+      "found": "PRO-0093, separating DEF-027's two paths",
+      "detail": "PersonInput.isAPerson requires sourcePid == 0, and nothing in this repo can post at pid 0, so the PASSIVE monitor path (ContentionMonitor.considerInput, used when PROCTOR_YIELD_INPUT is on) has no instrument that can exercise it. PRO-0093 changed the block's swallow path and did not touch this one, so REQ-007's inconclusive ceiling stands exactly where it stood. WHAT WOULD SETTLE IT: a physical keypress witnessed by the monitor, or a driver posting at the HID layer rather than through CGEvent - an IOHIDUserDevice virtual keyboard is the candidate that does not need a person in the room. NOT FIXED HERE: this is a measurement Proctor cannot make of itself, not a defect in the yield.",
+      "surface": "SURF-005",
+      "req": "REQ-007",
+      "note": "Recorded rather than claimed. spec-PRO-0093.md lists it under 'Found and left open'."
+    },
+    {
+      "id": "DEF-152",
+      "status": "fixed",
+      "title": "The contention test double could not carry a swallowed event, so nothing downstream of the counter was checked",
+      "found": "PRO-0093, reading why the suite had a passing test named for a yield that asserted a counter",
+      "detail": "FakeContention.noteUserInput incremented a counter and returned; sample() served a fixed script. So TakeoverWiringTests 'a swallowed event feeds the yield, so the two features compose' could assert only that the counter moved - the yield record and the held reason its name claims were unreachable through the instrument. HoldAttributionWiringTests documents the same hole from the other side, in a comment explaining why its harness uses three steps: 'a single-step run has exactly one probe ... and finishes before the sample that would hold it is ever read'. The double now stamps lastUserInputAt and reports the arrival on the next sample, as the real monitor does, and the test asserts the record.",
+      "surface": "SURF-005",
+      "req": "REQ-081",
+      "note": "docs/test-campaign/evidence/PRO-0093/sabotages.txt"
     }
   ]
 }

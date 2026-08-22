@@ -1,0 +1,65 @@
+PRO-0093 gates, run 2026-08-22 on ai/pro-0093
+
+=== ./scripts/test.sh (full suite) ===
+􁁛  Test run with 2003 tests in 244 suites passed after 42.799 seconds.
+PASS: 􁁛  Test run with 2003 tests in 244 suites passed after 42.799 seconds.
+exit: 0
+baseline on the same branch before any change: Test run with 1977 tests in 242 suites passed
+
+=== python3 scripts/campaign/defect_gate.py claims docs/specs/spec-PRO-0093.md docs/test-campaign ===
+spec-PRO-0093.md: claims 4 defect(s) — DEF-026, DEF-027, DEF-150, DEF-152
+  registry: docs/test-campaign/inventory.json, 87 defect record(s)
+  recorded rather than claimed, and not checked here: DEF-151
+
+PASS: every claimed defect reads `fixed`.
+exit: 0
+
+=== python3 scripts/campaign/defect_gate.py dropped docs/test-campaign ===
+registry drift: 2 file(s), 94 merge(s), 23903 id/field pair(s) examined
+
+PASS: no merge on this history discarded a registry value that is still missing.
+exit: 0
+
+=== campaign.py check docs/test-campaign ===
+proctor-mcp · lanes: macos, mcp-stdio, cli
+Requirements: 71 inventoried, 0 with no case
+Surfaces:   22 enumerated, 0 with no case
+External effects: examined=29 witnessed=25 vacuous=1 unwitnessed=0 — armed proves the suite bites, and only a witness proves the product acted.
+  Vacuous (the capability the claim constrains never runs): REQ-024
+Cases:      200 pass · 0 fail · 0 skip · 0 n/a · 0 carried · 4 inconclusive · 0 unoracled · 0 blocked · 0 open  (of 204)
+Observed:   200/204 cases produced a measurement · 4 could not be measured · 0 not attempted
+On glass:   guest-glass → .build/Proctor.app (Guest proctor-guest (lume, macOS 26.6.2 Tahoe), provisioned with lume create --unattended so it holds a real Aqua session: stat -f %Su /dev/console reads lume, not root, which is what the earlier proctor-mac-node clone could not offer. launchctl print gui/501/app.fledgeling.procter.agent reads state = running, pid = 1322. That agent's own proctor_doctor answers ready true with Accessibility and Screen Recording both granted, and lists attachedApps app:1085:1 Calculator windows 1 — the guest's accessibility API reading a window the guest's own window server owns. Reached from this Mac over an SSH StreamLocal forward between the two agents' unix sockets, with the host agent relaying.)
+On glass:   macos-glass → .build/Proctor.app (pid 88463 owns CG windows 43384 'History' and 43385 'Proctor' (640x572); glass_probe read it from CGWindowListCopyWindowInfo, the window server's own list. Launched with open -n because the installed build holds the same bundle id and LaunchServices activates it instead of starting a second instance — which is also why every capture names a CG window id rather than a title.)
+Oracles:    outcome 133 · metamorphic 16 · effect-witness 28 · raster-visual 9 · interactive-glass 1
+Off-ladder: source-analysis 17 — reads source, runs nothing, buys no effect credit
+Armed:      199/200 passing cases have been watched to fail
+Scope:      FULL — every case in the campaign was run
+Sample:     full multi-witness coverage across all 21 MCP tools, status/walkthrough/overlay UI surfaces, and guest/takeover controls
+
+Not ready to report:
+  · 4 case(s) inconclusive — attempted, and the instrument could not measure. Not a pass and not an n/a: 'we do not know' is a weaker claim than 'no difference found' and a different one from 'does not apply'
+  · 3 requirement(s) claiming an effect outside the product and recorded `observed` with no effect-witness case behind them — the shape that passed 230 cases over a product that performed no external I/O
+
+  External-effect claims with no witness (25 of 29 witnessed):
+    · REQ-007 claims a device effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-055 claims a filesystem-write effect and is recorded `observed`, and no case backing it stands at effect-witness
+    · REQ-063 claims a filesystem-write effect and is recorded `observed`, and no case backing it stands at effect-witness
+    (showing 3 of 3)
+  Drive the effect from a production entry point with a recorder attached and
+  record it:
+    campaign.py set <dir> --case CASE-0001 --status pass --oracle effect-witness \
+      --recorder 'strace -f -e trace=network' --effect-class outbound-socket \
+      --effect-count 3
+  Where the product does not perform the effect at all, the requirement is
+  `vacuous`, not `observed` — a guarantee that holds because nothing does the
+  thing is a finding, and recording it clears this blocker honestly.
+Wall:       8 published shot(s) · 8 distinct image(s)
+
+Finish them, resolve each to skip:/n-a: with a reason, or declare the stop with its resume point — in the reply, the verdict line and the report. Never silently.
+exit: 1
+
+=== the same check against the registries at HEAD, for comparison ===
+It exits 1 on this branch and exits 1 at HEAD, on the same findings:
+  HEAD:  examined=27 witnessed=23 vacuous=1 unwitnessed=0 · 4 inconclusive · REQ-007, REQ-055, REQ-063 observed with no effect-witness
+  after: examined=29 witnessed=25 vacuous=1 unwitnessed=0 · 4 inconclusive · REQ-007, REQ-055, REQ-063 observed with no effect-witness
+PRO-0093 adds two witnessed external-effect requirements and no new finding.
