@@ -1,6 +1,7 @@
 # PRO-0004: App scripting-dictionary introspection
 
 **ID:** PRO-0004
+**Brief:** `docs/features-to-triage/04-app-scripting-dictionary.md`
 **Status:** Merged
 **Plan:** docs/plans/plan-PRO-0004.md
 **Created:** 2026-08-13

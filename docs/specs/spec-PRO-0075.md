@@ -1,6 +1,7 @@
 # PRO-0075: what the 0.8.0 campaign found
 
 **ID:** PRO-0075 · **Status:** Merged · **Created:** 2026-08-20
+**Brief:** none. The campaign's own report, `docs/test-campaign/REPORT.md`, is the specification. The item exists because test-campaign 0.8.0 brought a plane wave 9 had never run, not because anybody asked for it.
 **Branch:** `ai/wave-9` · **Report:** `docs/test-campaign/REPORT.md`
 
 ## The problem

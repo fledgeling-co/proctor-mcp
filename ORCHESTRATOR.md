@@ -2264,3 +2264,61 @@ it does not print a literal `EXIT=0` line, and three runner briefs have said it 
 `fledgeling-plugins` is no longer clean — `plugins/flagship/` untracked and `.claude-plugin/marketplace.json`
 modified at 22:26 by a peer authoring a new plugin. PRO-0101's two commits there went in by explicit
 path over two files under `plugins/shipyard/skills/triage/`; nothing of the peer's was staged.
+
+### PRO-0101 built and ready to verify — provenance, both directions (2026-08-22)
+
+`ai/pro-0101` at `bea418b`, fast-forwarded onto `main` at `656d9b2` rather than rebased, because
+the branch held no commits of its own past `8378138`. Ids: **REQ-100, REQ-101 · CASE-0430..0438 ·
+DEF-215 · SURF-024.** Gates: suite **2,061 in 251, exit 0, twice**, baseline unchanged with no
+Swift touched; `spec_citation_measure.py` 14/14 exit 0; `spec_citation_arm.py` 18/18 pinned and
+14/14 checks watched to fail, exit 0; `test_instruments.py` 62/62; `operator_path_gate.py` and
+`defect_gate.py` both modes exit 0. `campaign.py check` exits 1 here **and on the merge base with
+an identical blocker set** — CASE-0001, CASE-0318, CASE-0333..0335, REQ-007, REQ-024, REQ-086 —
+naming none of this item's ids.
+
+**All 24 uncited specs now say where they came from**, and 4 of them came from somewhere other
+than a brief: PRO-0063 the screenshot-encoding research as a follow-on to PRO-0006, PRO-0075 the
+campaign's own report when 0.8.0 brought a plane wave 9 had never run, PRO-0076 a direct request
+against PRD §9 and §10, and PRO-0096, which already carried the form.
+
+**The number would have been wrong on seven of the twenty.** PRO-0014 through PRO-0017 sit one
+behind briefs 15 to 18, and PRO-0034 is brief 35 — whose own retirement banner names PRO-0034,
+while the number points at PRO-0035, "The browser catalogue stops guessing". Every mapping was
+made by reading, and the seven say so on the line.
+
+**The fallback was already gone**, removed by PRO-0102 at `224a696` with the reasoning in
+`project_id_in`'s docstring. This item verified it rather than editing the same place twice, which
+is what this spec's assumption asked of whichever item reached it second — so the ledger should
+read one fix and one verification, not two fixes.
+
+**The reverse direction does not close by citation alone, and DEF-215 is why.** The ledger carries
+103 ids against 99 spec files. Briefs 23 and 40 are PRO-0022 and PRO-0039, each named in the
+brief's own retirement banner, and neither id has a spec to carry a citation. Recorded open, in
+`docs/feature-specs/UNCLAIMED-BRIEFS.md` with a reason, rather than fixed: writing retrospective
+specs for two retired items and one merged one is a separate decision about whether a retired item
+earns a spec at all.
+
+**The added clause has the only exerciser of the form it introduced.** No spec uses `path @ sha`
+yet — the shared stage will write it when it consumes a brief — so CASE-0432 is armed two-way on
+immutable shas rather than one: `@ 3fb7681` must PASS because that commit holds the brief, and
+`@ 400808d` must FAIL because that is the commit which deleted it. Both were read with
+`git cat-file -e` before being written in, because this campaign has already had an arming resolve
+its reference with `git merge-base` and report `caught 0 of the 2 known offenders` once the fix
+merged.
+
+**Three of the arming's own mutations reported NOT ARMED against checks that worked**, and all
+three were the mutation's fault: a partial line replacement left the tail of the sentence attached
+so the shortened reason stayed long enough to pass; two regex mutations emitted a doubled backslash
+into the mutated source so the pattern matched nothing; and a scaffold quoted with its newlines
+intact broke the verdict parser and read as MISSING. An unarmed report is a claim about the
+instrument, and here it was a claim about the arming.
+
+**The shared repo was clean at the shipyard edit and is not clean now.** `plugins/flagship/`
+appeared untracked at 22:26 — a peer authoring a new plugin. Both commits went in by explicit path
+over two files under `plugins/shipyard/skills/triage/`, so nothing of theirs was swept in, and
+nothing of theirs was touched. `364c785` is the forward half.
+
+**The thermal flip was measured again, a third shape.** `not_limited` held 1,091s →
+`limited` held 0 → `not_limited` held 0, across 63 seconds, with load per core *falling* 0.498 →
+0.441 → 0.359. `dwell_required_sec` is 60 and `held_for_sec` counts only the current state, so a
+single quiet minute flips the verdict in either direction. Three samples remain the minimum.

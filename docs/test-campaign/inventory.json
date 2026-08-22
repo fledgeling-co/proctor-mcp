@@ -1015,6 +1015,30 @@
       ],
       "note": "The delivery half, and the reason it is a requirement rather than a chore: the flatten_text crash repair at 81ad488 was correct, committed, and stranded at 1.0.0, so every other repository kept crashing. selftest.py now fails on version drift between the two files and on a version predating the behaviour it asserts. CASE-0427, CASE-0428. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-100",
+      "text": "Every one of the 99 files in docs/specs carries a citation saying where it came from — a brief path, a brief path plus the commit that still holds it, or an explicit statement that it was never a brief and what it was instead — and the check that proves the citation is present proves it resolves in the same pass",
+      "source": "spec-PRO-0101.md, section 'A citation has to resolve, and this repo has already proved that is a separate claim'; docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md; scripts/campaign/spec_citation_measure.py",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-024"
+      ],
+      "note": "Presence and resolution are two claims, and this repo has had them diverge: at 9f99a0f four specs cited briefs that 400808d had deleted, so a presence-only check would have reported 75 citations of which 71 resolved. A brief deliberately consumed is cited by the commit that holds it, which is a recoverable reference rather than a dangling one. CASE-0430..0435, CASE-0438.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-101",
+      "text": "The shipyard triage stage records the citation when it allocates an id, and neither it nor the reckon join derives a citation from a brief's file number",
+      "source": "~/Dev/fledgeling-plugins/plugins/shipyard/skills/triage/references/spec-format.md section 'The brief citation'; the same skill's SKILL.md step 1; plugins/reckon/skills/reckon/scripts/reckon.py project_id_in",
+      "class": "maintainability guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-024"
+      ],
+      "note": "The forward half lands outside this repository, so nothing in ./scripts/test.sh can hold it; spec_citation_measure.py reads the shared source tree by hand, as skill_doc_measure.py does for the proctor skill. The number fallback was already removed by PRO-0102 at 224a696, so this requirement verifies rather than re-edits, per spec-PRO-0101's assumption that the second item to reach it verifies. CASE-0436, CASE-0437, CASE-0438.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1357,6 +1381,21 @@
         "selftested"
       ],
       "description": "reckon's classifier, packaged in ~/Dev/fledgeling-plugins/plugins/reckon and run against this repo's registry. It is a shared portfolio instrument rather than a Proctor surface, and it is given a surface of its own because SURF-022 is scoped by its own route to an in-repo script: a case about a tool in another repository filed there would name a denominator that instrument never examined. Its verdict decides which rows appear as unbuilt, broken, unmeasured, unnamed, undecided, retirable, waived or unjoined, so a misclassification here becomes a wrong headline about the whole campaign."
+    },
+    {
+      "id": "SURF-024",
+      "name": "Spec provenance record",
+      "title": "The line in every spec that says which brief it came from, and the brief queue it points into",
+      "route": "tool://spec-citation/measure",
+      "status": "reachable",
+      "states": [
+        "cited by path",
+        "cited by commit",
+        "declared no brief",
+        "legacy prose citation",
+        "registered as unclaimed"
+      ],
+      "description": "Not a product surface: it is the written record this project keeps of where each of its 99 specs came from, plus the 96-file brief queue in docs/features-to-triage and the docs/feature-specs/UNCLAIMED-BRIEFS.md register that accounts for briefs no spec can claim. Read by scripts/campaign/spec_citation_measure.py, which also reads the shipyard triage stage and the reckon join in ~/Dev/fledgeling-plugins because the forward half of PRO-0101 lands there. Given a surface of its own rather than filed on SURF-002 (the proctor skill) or SURF-022, because a measurement over specs and briefs examines neither of those."
     }
   ],
   "flow": [
@@ -3226,7 +3265,31 @@
       "requirements": [
         "REQ-098"
       ],
-      "note": "reckon classifies a defect as broken and as remaining work on any status word other than fixed, and the fail-closed set includes words that mean the opposite of remaining work: `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce` and `fixed (partial)` all come out as work. This registry uses only `fixed` and `open`, so the behaviour is correct here and PRO-0102's own acceptance is unaffected. It is recorded because reckon 1.1.0 has been announced to nine projects as the version to run, and a registry using any of those words will have its remaining-work headline over-reported by a tool whose whole purpose is to state what is left. Fail-closed is the right default for an unknown word; these six are not unknown. Found by the non-AC findings sweep at PRO-0102's verification. FIRST LIVE INSTANCE, confirmed in another project the same evening rather than predicted: a sibling repository's register reads fixed 55, open 11, partially-fixed 3, characterised 2, resolved 1, not-a-defect 1, inconclusive 1, vacuous 1. Four of those words are in the over-reporting set, so six rows land in broken and are counted as work owed against an adjudicated true queue of nine briefs. That is a large proportional error on a small true number, which is the shape that gets believed \u2014 a headline of fifteen where nine is the truth reads as a backlog rather than as a bug."
+      "note": "reckon classifies a defect as broken and as remaining work on any status word other than fixed, and the fail-closed set includes words that mean the opposite of remaining work: `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce` and `fixed (partial)` all come out as work. This registry uses only `fixed` and `open`, so the behaviour is correct here and PRO-0102's own acceptance is unaffected. It is recorded because reckon 1.1.0 has been announced to nine projects as the version to run, and a registry using any of those words will have its remaining-work headline over-reported by a tool whose whole purpose is to state what is left. Fail-closed is the right default for an unknown word; these six are not unknown. Found by the non-AC findings sweep at PRO-0102's verification. FIRST LIVE INSTANCE, confirmed in another project the same evening rather than predicted: a sibling repository's register reads fixed 55, open 11, partially-fixed 3, characterised 2, resolved 1, not-a-defect 1, inconclusive 1, vacuous 1. Four of those words are in the over-reporting set, so six rows land in broken and are counted as work owed against an adjudicated true queue of nine briefs. That is a large proportional error on a small true number, which is the shape that gets believed — a headline of fifteen where nine is the truth reads as a backlog rather than as a bug."
+    },
+    {
+      "id": "DEF-215",
+      "severity": "low",
+      "status": "open",
+      "title": "Four ledger rows have no spec file, so two briefs have no artifact that could cite them",
+      "found": "PRO-0101 provenance sweep, 2026-08-22",
+      "detail": "docs/feature-specs/LEDGER.md carries 103 ids against 99 files in docs/specs. The four with no spec are PRO-0022 (A drawing fault must not kill the agent, Merged 2026-08-14), PRO-0031 (The health report is complete, Retired), PRO-0039 (Page-scoped refusal, Retired) and PRO-0092 (ProctorAgent's mutants mostly survive, Ready for AI). Two of them are why the reverse direction cannot close by citation alone: docs/features-to-triage/23-drawing-fault-must-not-kill-the-agent.md is PRO-0022 and 40-page-scoped-refusal.md is PRO-0039 — each brief's own banner names its id — and neither has a spec to carry a **Brief:** line. No spec lacks a ledger row, so the gap is one-directional.",
+      "surface": "SURF-024",
+      "req": "REQ-100",
+      "fix": "NOT FIXED HERE. A spec citation needs a spec, and writing three retrospective specs for two retired items and one merged item is a different piece of work with its own decision about whether a retired item earns a spec at all. Recorded instead in docs/feature-specs/UNCLAIMED-BRIEFS.md, which is read by spec_citation_measure.py, so briefs 23 and 40 are accounted for with their reason rather than counted as unclaimed. PRO-0092 closes its own row when its spec is written at plan time."
+    },
+    {
+      "id": "DEF-203",
+      "title": "Three citation checks accept inputs their names imply they reject",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-024"
+      ],
+      "requirements": [
+        "REQ-100"
+      ],
+      "note": "Three checks in spec_citation_measure.py accept inputs their names imply they reject, each found by building the evasion against a scratch copy at PRO-0101's verification. (1) `every spec carries a parseable citation` passes when the only brief path sits in a fenced code block, an HTML comment or a struck-through line, because the legacy fallback is a bare BODY_PATH.search over the whole text; a **Brief:** header inside a fence in the first 20 lines counts too. (2) `every none citation names its origin` passes on `none. See docs/nowhere/imaginary-source.md` and on any backtick pair padded to 20 characters — the floor makes a citation name something, not resolve to it. (3) `every brief is claimed or registered` is satisfied by an incidental mention in an unrelated spec, so a brief nobody built from reads as claimed. None of the three is dead: each is armed and bites on the case it was written for, and the delivered tree exploits none of them because all 24 legacy citations are real prose at fence depth 0. SAME CLASS AS DEF-201 IN A DIFFERENT INSTRUMENT: a scanner reading a whole document for a token, with no exclusion for fences, comments or struck-through text, cannot tell a citation from a mention of one. Two tools in two repositories grew the same blind spot independently, which makes it a shape to check for rather than a bug either author made. The repair is not a longer floor: an input a check cannot classify should be a finding that names it, not a pass or a fail by default."
     }
   ]
 }

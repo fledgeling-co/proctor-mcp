@@ -1,6 +1,7 @@
 # PRO-0003: Menu-bar key-equivalents
 
 **ID:** PRO-0003
+**Brief:** `docs/features-to-triage/03-menu-bar-key-equivalents.md`
 **Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13

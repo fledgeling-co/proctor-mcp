@@ -1,6 +1,7 @@
 # PRO-0010: Pointer overlay in captures
 
 **ID:** PRO-0010
+**Brief:** `docs/features-to-triage/10-pointer-overlay-captures.md`
 **Status:** Merged
 **Plan:** docs/plans/plan-PRO-0010.md
 **Created:** 2026-08-13

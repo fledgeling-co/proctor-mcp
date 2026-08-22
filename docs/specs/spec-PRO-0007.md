@@ -1,6 +1,7 @@
 # PRO-0007: Zoom region crop
 
 **ID:** PRO-0007
+**Brief:** `docs/features-to-triage/07-zoom-region-crop.md`
 **Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13
