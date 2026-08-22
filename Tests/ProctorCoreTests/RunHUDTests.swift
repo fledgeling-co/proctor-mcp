@@ -543,11 +543,13 @@ struct OverlaySwitchTests {
 struct RunHUDWordingTests {
 
     @Test("every kind has a past form, so no trail row can fall back to a raw kind name")
-    func everyKindHasAPastForm() {
+    func everyKindHasAPastForm() throws {
         for kind in ActionStep.Kind.allCases {
             let named = StepDescription.completedLine(for: step(kind), node: el())
-            #expect(!named.isEmpty)
-            #expect(named.first!.isUppercase, "\(kind): \(named)")
+            // PRO-0100, DEF-140. The emptiness #expect above records and returns
+            // rather than stopping, so an empty line reached the unwrap.
+            let lead = try #require(named.first, "\(kind) produced an empty completed line")
+            #expect(lead.isUppercase, "\(kind): \(named)")
             // A kind with no hand-written past form would print itself —
             // "SetValue Amount", "DragPath", "WaitFor". Every real one is
             // inflected, so none of them is its own raw value.

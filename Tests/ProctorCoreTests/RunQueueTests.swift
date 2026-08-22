@@ -338,7 +338,7 @@ struct RunQueueModelTests {
 struct RunQueueSnapshotTests {
 
     @Test("occupancy is answerable per lane, so a wedged lane is not invisible")
-    func laneReport() {
+    func laneReport() throws {
         let identity = RunSessionIdentity(project: "p", connection: "0000", key: "k")
         let snapshot = RunQueueSnapshot(
             active: [RunTicketInfo(id: 1, identity: identity, summary: "s",
@@ -347,10 +347,10 @@ struct RunQueueSnapshotTests {
                                     lanes: [.app("a")], since: 0)])
         let report = snapshot.laneReport
         #expect(report.count == 2)
-        let app = try! #require(report.first { $0.lane == "app:a" })
+        let app = try #require(report.first { $0.lane == "app:a" })
         #expect(app.active == 1)
         #expect(app.waiting == 1)
-        let global = try! #require(report.first { $0.lane == "global" })
+        let global = try #require(report.first { $0.lane == "global" })
         #expect(global.active == 1)
         #expect(global.waiting == 0)
     }

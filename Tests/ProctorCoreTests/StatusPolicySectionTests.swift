@@ -127,8 +127,8 @@ struct StatusPolicySectionTests {
 
     @Test("a live approval token is drawn as the louder of the two states")
     func approvalSaysWhatWouldHappenNext() throws {
-        let live = try try Self.row(.approval, in: Self.posture(approvalTokenLive: true))
-        let dead = try try Self.row(.approval, in: Self.posture(approvalTokenLive: false))
+        let live = try Self.row(.approval, in: Self.posture(approvalTokenLive: true))
+        let dead = try Self.row(.approval, in: Self.posture(approvalTokenLive: false))
         #expect(live.value.contains("allowed"))
         #expect(dead.value.contains("refused"))
         #expect(live.tone == .warn && dead.tone == .plain,

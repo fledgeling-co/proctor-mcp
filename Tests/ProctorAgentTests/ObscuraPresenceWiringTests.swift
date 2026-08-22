@@ -219,7 +219,7 @@ struct ObscuraPresenceWiringTests {
     // MARK: - The rule the whole feature is built on
 
     @Test("nothing on the tool surface installs anything")
-    func theToolSurfaceGainsNoVerb() {
+    func theToolSurfaceGainsNoVerb() throws {
         #expect(ToolCatalogue.all.count == 21)
         for tool in ToolCatalogue.all {
             #expect(!tool.name.contains("install"))
@@ -228,7 +228,7 @@ struct ObscuraPresenceWiringTests {
         // window, and never enter a result: nothing encoded on the wire mentions
         // them.
         let schema = ToolCatalogue.outputSchema(for: "proctor_doctor")
-        let properties = try! #require(schema.objectValue?["properties"]?.objectValue)
+        let properties = try #require(schema.objectValue?["properties"]?.objectValue)
         #expect(properties["obscuraAvailable"] != nil)
         #expect(properties["obscura"] != nil)
         #expect(properties["obscuraUnavailable"] != nil)

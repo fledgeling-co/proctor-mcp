@@ -130,6 +130,16 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **The setup walkthrough drew a refusing button as though you could press it.** On the permissions step, "Connect a model" stays disabled until Accessibility and Screen Recording are both granted, which is right. It was still drawn filled in your accent colour the whole time, with only the label dimmed. On an inactive window macOS greys the whole thing and the refusal reads clearly; on the window you're actually working in, it read as a live button that did nothing when clicked.
+
+  It's drawn plain now while it refuses, and filled once it doesn't. That's what the design of record specified all along; the build was the record that had drifted. The rule is the same `WalkthroughFlow.primaryEnabled` the disabling already reads, taken once and used twice, so the fill and the refusal can't end up disagreeing about which state you're in.
+
+  Nothing else about the step moved. The wording, the position, the reason line above the buttons and "Skip setup" beside it are all where they were.
+
+- **The design record for the permissions step now draws "Skip setup", which the app has always drawn there.** The two records disagreed, and this one is a documentation fix rather than a behaviour change: the way out of setup is exactly where it was, enabled, on every step but the last. The design page had been drawn before that escape hatch existed and was never revised afterwards.
+
+  Note: these two came in as a pair and resolved opposite ways. The build was right about the way out and wrong about the fill. Taken as one question they'd have had one wrong answer.
+
 - **Running the test suite could also change your saved switches.** Three more paths worked out their own location under `~/Library/Application Support/app.fledgeling.procter` and gave you no way to point them somewhere else, so a test run wrote into your own Proctor directory. Your switches at `settings/settings.json` were the sharp one: the status window saves through that path, and the agent and `proctor_doctor` read it back, so running the tests could change what the agent is allowed to do on your Mac. It cut both ways; the doctor report the suite produced depended on whichever switches you happened to have saved.
 
   The other two are quieter. Maestro made a run directory under `maestro/` on every run and wrote its per-command records into it. The iOS device-frame lane wrote PNGs into `captures/`, which is the same directory the Mac lane was writing to until last release; that one got fixed and this one was missed.

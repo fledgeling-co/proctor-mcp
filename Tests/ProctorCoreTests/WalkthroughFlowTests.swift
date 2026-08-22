@@ -237,6 +237,125 @@ struct WalkthroughFlowTests {
                 ".borderedProminent is not inside the prominent branch")
     }
 
+    // MARK: - PRO-0100, DEF-162 and DEF-163. The two records, made to agree.
+
+    /// The design of record, read as text — the same footing every clause above
+    /// stands on, and it claims nothing above it.
+    private static func designSource() throws -> String {
+        try String(
+            contentsOf: URL(fileURLWithPath: #filePath)
+                .deletingLastPathComponent().deletingLastPathComponent()
+                .deletingLastPathComponent()
+                .appendingPathComponent("design/surfaces/proctor-surfaces.html"),
+            encoding: .utf8)
+    }
+
+    /// The `wt-foot` of one `data-state` pane of the walkthrough surface.
+    private static func footer(ofState state: String, in design: String) throws -> String {
+        let pane = try #require(design.range(of: "data-state=\"\(state)\""),
+                                "no walkthrough pane with data-state=\(state)")
+        let rest = design[pane.upperBound...]
+        let foot = try #require(rest.range(of: "<div class=\"wt-foot\">"),
+                                "the \(state) pane draws no footer")
+        let after = rest[foot.upperBound...]
+        let end = try #require(after.range(of: "</div>\n        </div>")
+                               ?? after.range(of: "</div>"),
+                               "the \(state) footer never closes")
+        return String(after[..<end.lowerBound])
+    }
+
+    /// DEF-162. The design gains the way out; the build is unchanged.
+    ///
+    /// The two records disagreed and the referral settled which one yields. The
+    /// build is right: `Skip setup` postdates this design page, it is gated by
+    /// `WalkthroughFlow.showsSkip` and by nothing else, and a verifier proved
+    /// that removing it strands a person macOS will not grant to while the whole
+    /// suite stays green. So the drawing that was never revised is the one that
+    /// changed.
+    ///
+    /// Asserted on the pane that refuses, because that is the pane where the way
+    /// out matters — and in the order the app draws it, so the two records agree
+    /// on sequence and not only on presence.
+    @Test("DEF-162 · the design of record draws the way out on the pane that refuses")
+    func theDesignDrawsSkipOnThePermissionsPane() throws {
+        let design = try Self.designSource()
+        let foot = try Self.footer(ofState: "permissions", in: design)
+        #expect(foot.contains(WalkthroughFlow.Copy.skip),
+                "the permissions pane's footer draws no \(WalkthroughFlow.Copy.skip); the app draws one and the two records disagree")
+        let back = try #require(foot.range(of: WalkthroughFlow.Copy.back))
+        let skip = try #require(foot.range(of: WalkthroughFlow.Copy.skip))
+        let primary = try #require(foot.range(of: WalkthroughFlow.primaryAction(for: .permissions)))
+        #expect(back.lowerBound < skip.lowerBound && skip.lowerBound < primary.lowerBound,
+                "the design draws Back, Skip and the primary in a different order from the app")
+        // The build's own rule, asserted here too so this case fails if the two
+        // are ever made to agree by changing the app instead.
+        #expect(WalkthroughFlow.showsSkip(on: .permissions,
+                                          accessibility: false, screenRecording: false))
+    }
+
+    /// DEF-163. The build stops drawing a refusing control as an invitation.
+    ///
+    /// The other direction, and a referral is what separated them: taken as one
+    /// question these two would have had one wrong answer. `.borderedProminent`
+    /// was applied unconditionally, so on a KEY window the refusal drew in the
+    /// accent fill with only the label dimmed — an inactive window being the
+    /// only state in which macOS greyed it enough to read as refusing, and not
+    /// the state a person is in while working the flow. The design of record
+    /// already settles the rule and the build diverged from it.
+    ///
+    /// Read from the view's source: `source-analysis`, and it says the drawing
+    /// site is bound to the Core rule, not that a window drew a plain button.
+    @Test("DEF-163 · the primary is filled only where it can be pressed")
+    func thePrimaryIsProminentOnlyWhenEnabled() throws {
+        let source = Self.withoutComments(try Self.walkthroughSource())
+
+        // The unconditional form must not appear on the primary at all. Every
+        // `.borderedProminent` in this file now sits inside a branch: one in
+        // `PrimaryProminence`, one in `HeroPermRow`.
+        #expect(!source.contains(".buttonStyle(.borderedProminent)\n                        .disabled("),
+                "the primary still takes .borderedProminent unconditionally")
+
+        let modifier = try #require(source.range(of: "private struct PrimaryProminence"),
+                                    "the prominence branch does not exist")
+        let row = try #require(source.range(of: "private struct HeroPermRow"),
+                               "HeroPermRow moved; this case reads the span between the two")
+        // Declared before HeroPermRow, or `theRowDoesNotDecideItsOwnProminence`
+        // starts counting this modifier's fill as one of the row's.
+        #expect(modifier.lowerBound < row.lowerBound,
+                "PrimaryProminence is declared after HeroPermRow, inside the span that case measures")
+
+        let branch = String(source[modifier.lowerBound..<row.lowerBound])
+        #expect(branch.components(separatedBy: ".borderedProminent").count - 1 == 1,
+                "the prominence branch draws the filled style \(branch.components(separatedBy: ".borderedProminent").count - 1) times; one is the rule")
+        #expect(branch.components(separatedBy: ".buttonStyle(.bordered)").count - 1 == 1,
+                "the prominence branch has no plain style, so a refusing primary is still drawn filled")
+        let ifEnabled = try #require(branch.range(of: "if enabled {"))
+        let filled = try #require(branch.range(of: ".borderedProminent"))
+        let plain = try #require(branch.range(of: ".buttonStyle(.bordered)"))
+        #expect(ifEnabled.lowerBound < filled.lowerBound && filled.lowerBound < plain.lowerBound,
+                "the filled style is not the enabled branch")
+
+        // And the branch takes the SAME rule the `.disabled` takes, so the fill
+        // and the refusal can never nominate different states. This is the
+        // clause that would catch a second predicate drifting from the first.
+        #expect(source.contains("PrimaryProminence(\n                            enabled: WalkthroughFlow.primaryEnabled("),
+                "the prominence branch does not read WalkthroughFlow.primaryEnabled")
+    }
+
+    /// The design of record and the build now agree on the refusing primary's
+    /// treatment too, which is the half DEF-163 changed the app for.
+    @Test("DEF-163 · the design draws the refusing primary plain, and says why")
+    func theDesignDrawsTheRefusingPrimaryPlain() throws {
+        let design = try Self.designSource()
+        let foot = try Self.footer(ofState: "permissions", in: design)
+        let primary = try #require(
+            foot.range(of: "<button type=\"button\" class=\"btn\" disabled>"),
+            "the design's refusing primary is no longer drawn plain-and-disabled")
+        #expect(foot[primary.upperBound...].hasPrefix(WalkthroughFlow.primaryAction(for: .permissions)))
+        #expect(!foot.contains("class=\"btn prominent\" disabled"),
+                "the design draws a disabled control in the accent fill, which is the defect")
+    }
+
     // MARK: - PRO-0090, DEF-039. The strings left the view.
 
     /// The clause `status_literals.py` measures, asked here so the gate owns it

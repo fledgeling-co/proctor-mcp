@@ -28,12 +28,15 @@ struct StepDescriptionTests {
     // MARK: - Every kind, both timings
 
     @Test("every kind produces a present-tense line naming the element, with no caller input")
-    func everyKindPresent() {
+    func everyKindPresent() throws {
         let button = el(title: "Send invoice")
         for kind in ActionStep.Kind.allCases {
             let line = StepDescription.line(for: step(kind), node: button, timing: .present)
             #expect(!line.isEmpty, "\(kind) produced an empty line")
-            #expect(line.first!.isUppercase, "\(kind) is not sentence case: \(line)")
+            // PRO-0100, DEF-140. The #expect above records and returns; only a
+            // require stops before the unwrap.
+            let lead = try #require(line.first, "\(kind) produced an empty line")
+            #expect(lead.isUppercase, "\(kind) is not sentence case: \(line)")
             #expect(!line.hasSuffix(" "), "\(kind) left a dangling space: \(line)")
             // appleScript and dragPath name no element by design; everything else does.
             if kind != .appleScript && kind != .dragPath && kind != .key {
@@ -405,7 +408,7 @@ struct StepDescriptionTests {
     }
 
     @Test("every kind has an outcome line, in both outcomes, that never prints its raw value")
-    func everyKindHasOutcomes() {
+    func everyKindHasOutcomes() throws {
         let button = el(title: "Send invoice")
         for kind in ActionStep.Kind.allCases {
             for outcome in [StepDescription.Outcome.refused, .failed] {
@@ -413,7 +416,8 @@ struct StepDescriptionTests {
                 #expect(line.hasSuffix(outcome.rawValue), "\(kind): \(line)")
                 #expect(line != "\(kind.rawValue) Send invoice \(outcome.rawValue)",
                         "\(kind) rendered an enum name: \(line)")
-                #expect(line.first!.isUppercase, "\(kind) is not sentence case: \(line)")
+                let lead = try #require(line.first, "\(kind) produced an empty line")
+                #expect(lead.isUppercase, "\(kind) is not sentence case: \(line)")
             }
         }
     }

@@ -174,7 +174,7 @@ struct BrowserHandoffTests {
     }
 
     @Test("a hostile URL never reaches a command or a sentence")
-    func urlIsNeverInterpolated() {
+    func urlIsNeverInterpolated() throws {
         // A page URL is attacker-controlled text. It travels in its own field, and
         // the command templates keep their literal placeholder, so nothing a page
         // can name ends up inside a string a model may paste into a shell.
@@ -182,7 +182,7 @@ struct BrowserHandoffTests {
         let handoff = BrowserTarget.handoff(for: chrome, probe: probe(hostile), detail: .full, lanes: .obscuraOnly)
         #expect(handoff.url == hostile)
 
-        let commands = try! #require(handoff.commands)
+        let commands = try #require(handoff.commands)
         // Every command that takes a URL takes the placeholder, and no command
         // anywhere carries a character the page chose.
         #expect(commands.contains { $0.contains(BrowserTarget.urlPlaceholder) })

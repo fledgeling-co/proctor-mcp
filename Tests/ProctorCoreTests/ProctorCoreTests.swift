@@ -335,16 +335,16 @@ struct CatalogueTests {
     }
 
     @Test("the tools that change state are not marked read-only")
-    func readOnlyFlags() {
+    func readOnlyFlags() throws {
         let mutating = ["proctor_act", "proctor_apps", "proctor_flow", "proctor_stability",
                         "proctor_computer", "proctor_openai_computer", "proctor_kill"]
         for name in mutating {
-            let tool = try! #require(ToolCatalogue.spec(named: name))
+            let tool = try #require(ToolCatalogue.spec(named: name))
             #expect(tool.readOnly == false, "\(name) should not be read-only")
         }
         for name in ["proctor_snapshot", "proctor_find", "proctor_capture",
                      "proctor_zoom", "proctor_doctor"] {
-            let tool = try! #require(ToolCatalogue.spec(named: name))
+            let tool = try #require(ToolCatalogue.spec(named: name))
             #expect(tool.readOnly == true, "\(name) should be read-only")
         }
     }
@@ -372,23 +372,23 @@ struct AnnotationTests {
     }
 
     @Test("apps mutates session state but is non-destructive and idempotent")
-    func appsIsIdempotent() {
-        let apps = try! #require(ToolCatalogue.spec(named: "proctor_apps"))
+    func appsIsIdempotent() throws {
+        let apps = try #require(ToolCatalogue.spec(named: "proctor_apps"))
         #expect(apps.readOnly == false)
         #expect(apps.destructive == false)
         #expect(apps.idempotent == true)
     }
 
     @Test("act is not idempotent, because typing twice types twice")
-    func actNotIdempotent() {
-        let act = try! #require(ToolCatalogue.spec(named: "proctor_act"))
+    func actNotIdempotent() throws {
+        let act = try #require(ToolCatalogue.spec(named: "proctor_act"))
         #expect(act.destructive == true)
         #expect(act.idempotent == false)
     }
 
     @Test("kill is destructive and not idempotent, because a killed process cannot be killed again")
-    func killIsDestructive() {
-        let kill = try! #require(ToolCatalogue.spec(named: "proctor_kill"))
+    func killIsDestructive() throws {
+        let kill = try #require(ToolCatalogue.spec(named: "proctor_kill"))
         #expect(kill.readOnly == false)
         #expect(kill.destructive == true)
         #expect(kill.idempotent == false)
@@ -494,9 +494,9 @@ struct ResourceCatalogueTests {
     }
 
     @Test("a URI resolves to its spec and back to the same URI")
-    func uriRoundTrips() {
+    func uriRoundTrips() throws {
         for spec in ResourceCatalogue.all {
-            let resolved = try! #require(ResourceCatalogue.spec(uri: spec.uri))
+            let resolved = try #require(ResourceCatalogue.spec(uri: spec.uri))
             #expect(resolved.uri == spec.uri)
             #expect(resolved.key == spec.key)
         }
@@ -984,24 +984,24 @@ struct SetOfMarksTests {
     }
 
     @Test("every mark carries its source node, role and label for the map back")
-    func mapBack() {
+    func mapBack() throws {
         let plan = SetOfMarks.plan(
             elements: [element("btn", 10, 10, role: "AXButton", label: "Save")],
             window: Rect(x: 0, y: 0, w: 800, h: 600),
             imageWidth: 800, imageHeight: 600, scale: 1)
-        let m = try! #require(plan.marks.first)
+        let m = try #require(plan.marks.first)
         #expect(m.node == "btn")
         #expect(m.role == "AXButton")
         #expect(m.label == "Save")
     }
 
     @Test("a grid places interior lines every spacing*scale pixels")
-    func gridLines() {
+    func gridLines() throws {
         let plan = SetOfMarks.plan(
             elements: [], window: Rect(x: 0, y: 0, w: 400, h: 300),
             imageWidth: 800, imageHeight: 600, scale: 2,
             grid: SetOfMarks.GridOptions(enabled: true, spacingPoints: 100))
-        let grid = try! #require(plan.grid)
+        let grid = try #require(plan.grid)
         #expect(grid.verticals == [200, 400, 600])     // step 200px, under 800
         #expect(grid.horizontals == [200, 400])        // under 600
         #expect(grid.spacingPoints == 100)
@@ -1017,8 +1017,8 @@ struct SetOfMarksTests {
     }
 
     @Test("proctor_capture advertises the annotate flag and stays read-only")
-    func captureSchema() {
-        let cap = try! #require(ToolCatalogue.spec(named: "proctor_capture"))
+    func captureSchema() throws {
+        let cap = try #require(ToolCatalogue.spec(named: "proctor_capture"))
         let props = cap.inputSchema["properties"]?.objectValue
         #expect(props?["annotate"] != nil)
         #expect(props?["grid"] != nil)
@@ -1038,8 +1038,8 @@ struct PointerOverlayTests {
     // MARK: AC1-3 — resolving the point a step acted on
 
     @Test("an explicit point is the target, tagged as a point")
-    func targetFromPoint() {
-        let t = try! #require(PointerMarker.targetPoint(
+    func targetFromPoint() throws {
+        let t = try #require(PointerMarker.targetPoint(
             for: step(kind: .click, point: [110, 70]), elementFrame: nil))
         #expect(t.x == 110)
         #expect(t.y == 70)
@@ -1047,9 +1047,9 @@ struct PointerOverlayTests {
     }
 
     @Test("with no point, the acted element's frame centre is the target")
-    func targetFromElementCentre() {
+    func targetFromElementCentre() throws {
         // Element at screen (100,200,50,20) -> centre (125, 210).
-        let t = try! #require(PointerMarker.targetPoint(
+        let t = try #require(PointerMarker.targetPoint(
             for: step(kind: .press, node: "n7"),
             elementFrame: Rect(x: 100, y: 200, w: 50, h: 20)))
         #expect(t.x == 125)
@@ -1058,8 +1058,8 @@ struct PointerOverlayTests {
     }
 
     @Test("an explicit point wins over the element frame, matching the actuator")
-    func pointWinsOverElement() {
-        let t = try! #require(PointerMarker.targetPoint(
+    func pointWinsOverElement() throws {
+        let t = try #require(PointerMarker.targetPoint(
             for: step(kind: .click, point: [5, 6], node: "n7"),
             elementFrame: Rect(x: 100, y: 200, w: 50, h: 20)))
         #expect(t.x == 5)
@@ -1082,11 +1082,11 @@ struct PointerOverlayTests {
     // MARK: AC4 — screen point to frame pixel, the load-bearing transform
 
     @Test("a screen point maps to the expected pixel: origin subtracted then scaled")
-    func placeTransform() {
+    func placeTransform() throws {
         // Window origin (100,200), scale 2. A target at screen (150,260) is
         // (50,60) window points -> (100,120) frame pixels. Same transform as
         // SetOfMarks.toPixels, pinned exactly because a wrong one marks the wrong spot.
-        let p = try! #require(PointerMarker.place(
+        let p = try #require(PointerMarker.place(
             x: 150, y: 260, window: Rect(x: 100, y: 200, w: 400, h: 300),
             imageWidth: 800, imageHeight: 600, scale: 2))
         #expect(p.pixelX == 100)
@@ -1095,9 +1095,9 @@ struct PointerOverlayTests {
     }
 
     @Test("an off-frame target clamps to the nearest edge and is flagged")
-    func placeOffFrameClamps() {
+    func placeOffFrameClamps() throws {
         // Target well to the right and below a 800x600 frame at scale 1.
-        let p = try! #require(PointerMarker.place(
+        let p = try #require(PointerMarker.place(
             x: 5000, y: 5000, window: Rect(x: 0, y: 0, w: 400, h: 300),
             imageWidth: 800, imageHeight: 600, scale: 1))
         #expect(p.pixelX == 799)   // clamped to width-1
@@ -1142,8 +1142,8 @@ struct PointerOverlayTests {
     // MARK: AC6 — the tools that produce per-step artifacts advertise the opt-in
 
     @Test("proctor_act advertises pointerMarks and stays a non-idempotent actuator")
-    func actAdvertisesPointerMarks() {
-        let act = try! #require(ToolCatalogue.spec(named: "proctor_act"))
+    func actAdvertisesPointerMarks() throws {
+        let act = try #require(ToolCatalogue.spec(named: "proctor_act"))
         #expect(act.inputSchema["properties"]?["pointerMarks"] != nil)
         #expect(act.readOnly == false)
         #expect(act.destructive == true)
@@ -1151,8 +1151,8 @@ struct PointerOverlayTests {
     }
 
     @Test("proctor_flow advertises pointerMarks for replay")
-    func flowAdvertisesPointerMarks() {
-        let flow = try! #require(ToolCatalogue.spec(named: "proctor_flow"))
+    func flowAdvertisesPointerMarks() throws {
+        let flow = try #require(ToolCatalogue.spec(named: "proctor_flow"))
         #expect(flow.inputSchema["properties"]?["pointerMarks"] != nil)
     }
 
@@ -1275,24 +1275,24 @@ struct MenuKeyEquivalentTests {
     }
 
     @Test("a leaf carries its shortcut decomposed for the act key step")
-    func flattenLeafShortcut() {
+    func flattenLeafShortcut() throws {
         let rows = MenuKeyEquivalent.flatten(bar: tree())
-        let new = try! #require(rows.first { $0.path == ["File", "New"] })
+        let new = try #require(rows.first { $0.path == ["File", "New"] })
         #expect(new.shortcut == "cmd+n")
         #expect(new.key == "n")
         #expect(new.modifiers == ["cmd"])
         #expect(new.enabled == true)
         #expect(new.hasSubmenu == false)
 
-        let shifted = try! #require(rows.first { $0.path == ["File", "New from Clipboard"] })
+        let shifted = try #require(rows.first { $0.path == ["File", "New from Clipboard"] })
         #expect(shifted.shortcut == "cmd+shift+n")
         #expect(shifted.enabled == false)
     }
 
     @Test("a parent menu is a row with a submenu and no shortcut")
-    func flattenParentRow() {
+    func flattenParentRow() throws {
         let rows = MenuKeyEquivalent.flatten(bar: tree())
-        let file = try! #require(rows.first { $0.path == ["File"] })
+        let file = try #require(rows.first { $0.path == ["File"] })
         #expect(file.hasSubmenu == true)
         #expect(file.submenuPopulated == true)
         #expect(file.shortcut == nil)
@@ -1300,9 +1300,9 @@ struct MenuKeyEquivalentTests {
     }
 
     @Test("a lazily-populated submenu is one row and its contents are not fabricated")
-    func flattenLazySubmenu() {
+    func flattenLazySubmenu() throws {
         let rows = MenuKeyEquivalent.flatten(bar: tree())
-        let recent = try! #require(rows.first { $0.path == ["File", "Open Recent"] })
+        let recent = try #require(rows.first { $0.path == ["File", "Open Recent"] })
         #expect(recent.hasSubmenu == true)
         #expect(recent.submenuPopulated == false)
         // Nothing was invented beneath a submenu that had not been read.
@@ -1313,8 +1313,8 @@ struct MenuKeyEquivalentTests {
     // MARK: AC4 — catalogue
 
     @Test("proctor_menu is advertised, read-only, non-destructive and idempotent")
-    func catalogueEntry() {
-        let menu = try! #require(ToolCatalogue.spec(named: "proctor_menu"))
+    func catalogueEntry() throws {
+        let menu = try #require(ToolCatalogue.spec(named: "proctor_menu"))
         #expect(menu.readOnly == true)
         #expect(menu.destructive == false)
         #expect(menu.idempotent == true)
@@ -1374,29 +1374,29 @@ struct ScriptingDictionaryTests {
     }
 
     @Test("a realistic sdef parses into suites, commands, classes and enumerations")
-    func parsesSdefIntoStructure() {
+    func parsesSdefIntoStructure() throws {
         let dict = parsed()
         #expect(dict.appName == "Editor")
         #expect(dict.scriptable == true)
         #expect(dict.suites.count == 2)
 
-        let standard = try! #require(dict.suites.first { $0.name == "Standard Suite" })
+        let standard = try #require(dict.suites.first { $0.name == "Standard Suite" })
         #expect(standard.code == "????")
         #expect(standard.commands.map(\.name) == ["open", "save"])
 
-        let open = try! #require(standard.commands.first { $0.name == "open" })
+        let open = try #require(standard.commands.first { $0.name == "open" })
         #expect(open.code == "aevtodoc")
         #expect(open.resultType == "document")
         #expect(open.parameters.first?.direct == true)
 
-        let save = try! #require(standard.commands.first { $0.name == "save" })
+        let save = try #require(standard.commands.first { $0.name == "save" })
         // A named optional parameter carries its code and its optional flag.
-        let inParam = try! #require(save.parameters.first { $0.name == "in" })
+        let inParam = try #require(save.parameters.first { $0.name == "in" })
         #expect(inParam.code == "kfil")
         #expect(inParam.optional == true)
         #expect(inParam.direct == false)
 
-        let document = try! #require(standard.classes.first { $0.name == "document" })
+        let document = try #require(standard.classes.first { $0.name == "document" })
         #expect(document.code == "docu")
         #expect(document.inherits == "item")
         #expect(document.plural == "documents")
@@ -1406,7 +1406,7 @@ struct ScriptingDictionaryTests {
         #expect(document.properties.first { $0.name == "name" }?.access == "rw")
         #expect(document.properties.first { $0.name == "modified" }?.access == "r")
 
-        let savo = try! #require(standard.enumerations.first { $0.name == "savo" })
+        let savo = try #require(standard.enumerations.first { $0.name == "savo" })
         #expect(savo.enumerators.map(\.name) == ["yes", "no"])
     }
 
@@ -1421,10 +1421,10 @@ struct ScriptingDictionaryTests {
     }
 
     @Test("a class-extension is captured, named by what it extends, and its properties count")
-    func classExtensionCaptured() {
+    func classExtensionCaptured() throws {
         let dict = parsed()
-        let appSuite = try! #require(dict.suites.first { $0.name == "App Suite" })
-        let ext = try! #require(appSuite.classes.first)
+        let appSuite = try #require(dict.suites.first { $0.name == "App Suite" })
+        let ext = try #require(appSuite.classes.first)
         #expect(ext.isExtension == true)
         #expect(ext.name == "application")     // the class it extends, not a new name
         #expect(ext.properties.map(\.name) == ["frontDocument"])
@@ -1492,8 +1492,8 @@ struct ScriptingDictionaryTests {
     }
 
     @Test("proctor_dictionary is advertised, read-only, non-destructive and object-schema'd")
-    func dictionaryToolAdvertised() {
-        let spec = try! #require(ToolCatalogue.spec(named: "proctor_dictionary"))
+    func dictionaryToolAdvertised() throws {
+        let spec = try #require(ToolCatalogue.spec(named: "proctor_dictionary"))
         #expect(spec.readOnly == true)
         #expect(spec.destructive == false)
         #expect(spec.idempotent == true)
@@ -1802,9 +1802,9 @@ struct VisionCaptureTests {
     // MARK: AC6 — normalisation is an option on capture, not a new tool
 
     @Test("proctor_capture advertises normalize without adding a new tool")
-    func captureAdvertisesNormalizeWithoutANewTool() {
+    func captureAdvertisesNormalizeWithoutANewTool() throws {
         #expect(ToolCatalogue.spec(named: "proctor_normalize") == nil)   // extended capture, not a new tool
-        let cap = try! #require(ToolCatalogue.spec(named: "proctor_capture"))
+        let cap = try #require(ToolCatalogue.spec(named: "proctor_capture"))
         let props = cap.inputSchema["properties"]?.objectValue
         #expect(props?["normalize"] != nil)
         #expect(props?["normalizeMaxLongEdge"] != nil)
@@ -1821,23 +1821,23 @@ struct ZoomRegionCropTests {
     // MARK: AC1 — the tool exists and is shaped like a read-only capture
 
     @Test("proctor_zoom is advertised, read-only, and exposes region and node")
-    func toolShape() {
-        let zoom = try! #require(ToolCatalogue.spec(named: "proctor_zoom"))
+    func toolShape() throws {
+        let zoom = try #require(ToolCatalogue.spec(named: "proctor_zoom"))
         #expect(zoom.readOnly == true)          // a crop reads, it does not act on the app
         #expect(zoom.destructive == false)
         #expect(zoom.idempotent == true)
         #expect(zoom.description.count > 200, "proctor_zoom is under-described")
-        let props = try! #require(zoom.inputSchema["properties"]?.objectValue)
+        let props = try #require(zoom.inputSchema["properties"]?.objectValue)
         #expect(props["window"] != nil)
         #expect(props["region"] != nil)
         #expect(props["node"] != nil)
     }
 
     @Test("proctor_zoom advertises a bespoke output schema with freshness and crop fields")
-    func outputSchema() {
+    func outputSchema() throws {
         let schema = ToolCatalogue.outputSchema(for: "proctor_zoom")
         #expect(schema["type"]?.stringValue == "object")
-        let props = try! #require(schema["properties"]?.objectValue)
+        let props = try #require(schema["properties"]?.objectValue)
         // The freshness metadata that makes a crop as trustworthy as a capture.
         #expect(props["trustworthy"] != nil)
         #expect(props["contentRect"] != nil)
@@ -1857,32 +1857,32 @@ struct ZoomRegionCropTests {
     // MARK: AC2 — points map to native pixels exactly
 
     @Test("at 1x a region is its own pixel rect")
-    func placeIdentity() {
+    func placeIdentity() throws {
         let out = RegionCrop.place(regionPoints: Rect(x: 10, y: 20, w: 30, h: 40),
                                    imageWidth: 800, imageHeight: 600, scale: 1)
-        let p = try! out.get()
+        let p = try out.get()
         #expect(p.pixelRect == Rect(x: 10, y: 20, w: 30, h: 40))
         #expect(p.clamped == false)
     }
 
     @Test("at 2x a region doubles into native pixels")
-    func placeRetina() {
+    func placeRetina() throws {
         // A window captured at native 2x: 30x40 points of a small label become an
         // 60x80 native crop, which is the detail a downscaled full capture loses.
         let out = RegionCrop.place(regionPoints: Rect(x: 10, y: 20, w: 30, h: 40),
                                    imageWidth: 1600, imageHeight: 1200, scale: 2)
-        let p = try! out.get()
+        let p = try out.get()
         #expect(p.pixelRect == Rect(x: 20, y: 40, w: 60, h: 80))
         #expect(p.clamped == false)
     }
 
     @Test("a sub-pixel region rounds outward so the whole region is inside the crop")
-    func placeRoundsOutward() {
+    func placeRoundsOutward() throws {
         // origin floors, far edge ceils: (10.4,20.6) .. (10.4+5.3, 20.6+5.1)=(15.7,25.7)
         // -> x0=10, y0=20, x1=16, y1=26 -> 6x6.
         let out = RegionCrop.place(regionPoints: Rect(x: 10.4, y: 20.6, w: 5.3, h: 5.1),
                                    imageWidth: 100, imageHeight: 100, scale: 1)
-        let p = try! out.get()
+        let p = try out.get()
         #expect(p.pixelRect == Rect(x: 10, y: 20, w: 6, h: 6))
     }
 
@@ -1937,20 +1937,20 @@ struct ZoomRegionCropTests {
     }
 
     @Test("a region straddling the edge clamps to the visible pixels and says so")
-    func straddlingClamps() {
+    func straddlingClamps() throws {
         // 60 wide starting 20 before the right edge of a 100px-wide image -> keeps 40.
         let out = RegionCrop.place(regionPoints: Rect(x: 60, y: 10, w: 60, h: 20),
                                    imageWidth: 100, imageHeight: 100, scale: 1)
-        let p = try! out.get()
+        let p = try out.get()
         #expect(p.pixelRect == Rect(x: 60, y: 10, w: 40, h: 20))
         #expect(p.clamped == true)
     }
 
     @Test("a negative-origin region (element near the window edge) clamps to zero")
-    func negativeOriginClamps() {
+    func negativeOriginClamps() throws {
         let out = RegionCrop.place(regionPoints: Rect(x: -10, y: -5, w: 30, h: 25),
                                    imageWidth: 100, imageHeight: 100, scale: 1)
-        let p = try! out.get()
+        let p = try out.get()
         #expect(p.pixelRect == Rect(x: 0, y: 0, w: 20, h: 20))
         #expect(p.clamped == true)
     }
@@ -2282,7 +2282,7 @@ struct StabilityCaptureTests {
         #expect(!json.contains("captures"))
         // And through the encoder the dispatcher actually returns the report with,
         // since an encoder that wrote an explicit null would change today's payload.
-        let wire = try! #require(try JSONValue.encode(report(captures: nil)).objectValue)
+        let wire = try #require(try JSONValue.encode(report(captures: nil)).objectValue)
         #expect(wire["captures"] == nil)
     }
 
@@ -2303,11 +2303,11 @@ struct StabilityCaptureTests {
     // MARK: AC3 — a capturing run reports that its timings moved
 
     @Test("a capturing run warns that its timings are not comparable with one captured off")
-    func capturingRunWarnsAboutTimings() {
+    func capturingRunWarnsAboutTimings() throws {
         let resolved = StabilityCaptureOptions.resolve(captureEach: true, pointerMarks: false)
         #expect(resolved.captureEach == true)
         #expect(resolved.pointerMarks == false)
-        let timing = try! #require(resolved.notes.first { $0.contains("timings") })
+        let timing = try #require(resolved.notes.first { $0.contains("timings") })
         #expect(timing.contains("not comparable"))
         // Both routes into capturing carry it, including the forced one.
         let forcedResolved = StabilityCaptureOptions.resolve(captureEach: false, pointerMarks: true)
@@ -2349,13 +2349,13 @@ struct StabilityCaptureTests {
     // MARK: AC5 — a step that produced no frame, or no marker, says so and costs nothing
 
     @Test("a step whose capture failed is reported as producing nothing, without touching the run")
-    func failedCaptureIsReportedNotFatal() {
+    func failedCaptureIsReportedNotFatal() throws {
         let entry = StabilityCaptureOptions.entry(run: 0, step: 3, capture: nil,
                                                   failure: "the window went away",
                                                   pointerMarksRequested: true)
         #expect(entry.path == nil)
         #expect(entry.markedPath == nil)
-        let note = try! #require(entry.note)
+        let note = try #require(entry.note)
         #expect(note.contains("the window went away"))
         #expect(note.contains("score are unaffected"))
     }
@@ -2448,17 +2448,17 @@ struct StabilityCaptureTests {
     // MARK: AC7 / AC8 — the switches and the ledger are advertised
 
     @Test("proctor_stability advertises both switches, with the cost and the honesty caveat on them")
-    func stabilityAdvertisesTheSwitches() {
-        let spec = try! #require(ToolCatalogue.spec(named: "proctor_stability"))
-        let props = try! #require(spec.inputSchema["properties"]?.objectValue)
+    func stabilityAdvertisesTheSwitches() throws {
+        let spec = try #require(ToolCatalogue.spec(named: "proctor_stability"))
+        let props = try #require(spec.inputSchema["properties"]?.objectValue)
 
-        let capture = try! #require(props["captureEach"]?["description"]?.stringValue)
+        let capture = try #require(props["captureEach"]?["description"]?.stringValue)
         // The volume is a named cost rather than a solved problem, so the switch
         // has to say what an opt-in run writes before anyone turns it on.
         #expect(capture.contains("runs × steps"))
         #expect(capture.contains("nothing cleans them up"))
 
-        let marks = try! #require(props["pointerMarks"]?["description"]?.stringValue)
+        let marks = try #require(props["pointerMarks"]?["description"]?.stringValue)
         #expect(marks.contains("where the step acted"))
         #expect(marks.contains("not a live cursor"))
         #expect(marks.contains("captureEach"))   // says it turns capture on
@@ -2468,22 +2468,22 @@ struct StabilityCaptureTests {
     }
 
     @Test("the stability output schema describes a ledger entry, not just an array")
-    func outputSchemaAdvertisesCaptures() {
+    func outputSchemaAdvertisesCaptures() throws {
         let schema = ToolCatalogue.outputSchema(for: "proctor_stability")
-        let captures = try! #require(schema["properties"]?["captures"])
+        let captures = try #require(schema["properties"]?["captures"])
         #expect(captures["type"] == .string("array"))
         // A bare array tells a host nothing it can check. The entry's identity
         // fields are the part a caller has to read.
-        let item = try! #require(captures["items"]?["properties"]?.objectValue)
+        let item = try #require(captures["items"]?["properties"]?.objectValue)
         for field in ["run", "step", "path", "markedPath", "note"] {
             #expect(item[field] != nil)
         }
     }
 
     @Test("the advertised switch names are the same constants the dispatcher reads")
-    func argumentNamesAreShared() {
-        let spec = try! #require(ToolCatalogue.spec(named: "proctor_stability"))
-        let props = try! #require(spec.inputSchema["properties"]?.objectValue)
+    func argumentNamesAreShared() throws {
+        let spec = try #require(ToolCatalogue.spec(named: "proctor_stability"))
+        let props = try #require(spec.inputSchema["properties"]?.objectValue)
         // A rename that touched only one side would leave a tool advertising a
         // switch its handler never reads, which is invisible from either file.
         #expect(props[StabilityCaptureOptions.captureEachArg] != nil)
@@ -2571,20 +2571,20 @@ struct StabilityCaptureTests {
 struct ReplayGateTests {
 
     @Test("a refusal reads identically whichever tool asked")
-    func refusalTextIsShared() {
+    func refusalTextIsShared() throws {
         // The spec's rule: a replay refused is refused in the same words a live
         // drive is, so there is one behaviour to learn rather than one per tool.
         // Sharing the text is what makes that structural instead of a duplicate
         // string somebody edits on one path only.
         let blocked = AppPolicy(block: ["com.apple.keychainaccess"])
             .decide(bundleId: "com.apple.keychainaccess", hasValidToken: false)
-        let refusal = try! #require(blocked.refusal)
+        let refusal = try #require(blocked.refusal)
         #expect(refusal.reason.contains("block list"))
         #expect(refusal.remedy.contains("proctor_policy action \"configure\""))
 
         let sensitive = AppPolicy(sensitive: ["com.apple.Passwords"])
             .decide(bundleId: "com.apple.Passwords", hasValidToken: false)
-        let needsApproval = try! #require(sensitive.refusal)
+        let needsApproval = try #require(sensitive.refusal)
         #expect(needsApproval.remedy.contains("proctor_policy action \"approve\""))
         #expect(needsApproval.remedy.contains("TTL"))
 
@@ -2593,22 +2593,22 @@ struct ReplayGateTests {
     }
 
     @Test("an unidentifiable replay target fails closed under an allow list")
-    func unidentifiableTargetIsRefused() {
+    func unidentifiableTargetIsRefused() throws {
         // A recording can be pointed at a window whose app has no bundle id. That
         // is the case a shared tool must not wave through.
         let policy = AppPolicy(allow: ["com.example.allowed"])
-        let refusal = try! #require(policy.decide(bundleId: nil, hasValidToken: false).refusal)
+        let refusal = try #require(policy.decide(bundleId: nil, hasValidToken: false).refusal)
         #expect(refusal.reason.contains("no bundle identifier"))
     }
 
     @Test("refused before the first repeat fails the call; refused later stops it")
-    func verdictDependsOnWhatAlreadyRan() {
+    func verdictDependsOnWhatAlreadyRan() throws {
         // The split that keeps a report honest: nothing measured yet means there
         // is nothing to report, so the call fails. Something measured means the
         // run stops and keeps it.
         let blocked = AppPolicy(block: ["com.example.app"])
             .decide(bundleId: "com.example.app", hasValidToken: false)
-        let refusal = try! #require(blocked.refusal)
+        let refusal = try #require(blocked.refusal)
 
         #expect(ReplayGate.verdict(for: blocked, completedRuns: 0) == .refuseRun(refusal))
         #expect(ReplayGate.verdict(for: blocked, completedRuns: 1) == .stopRun(refusal))

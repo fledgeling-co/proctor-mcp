@@ -357,8 +357,13 @@ struct RelaunchCommandTests {
     }
 
     @Test("a quote in the path is escaped rather than ending the command")
-    func quotesAreEscaped() {
-        let script = RelaunchCommand.arguments(pid: 1, bundlePath: "/Users/luke's/Proctor.app").last!
+    func quotesAreEscaped() throws {
+        // PRO-0100, DEF-140. The same treatment the two `range(of:)` unwraps
+        // eight lines up already got under DEF-136: a shorter argument list is a
+        // regression this test should report, not one that ends the run.
+        let script = try #require(
+            RelaunchCommand.arguments(pid: 1, bundlePath: "/Users/luke's/Proctor.app").last,
+            "the relaunch command carries no script argument")
         #expect(script.hasSuffix("open '/Users/luke'\\''s/Proctor.app'"))
         #expect(RelaunchCommand.quoted("plain") == "'plain'")
     }

@@ -186,13 +186,13 @@ struct ForegroundNoticeTests {
     }
 
     @Test("the app name goes through the same sanitiser every drawn name does")
-    func appNameIsSanitised() {
+    func appNameIsSanitised() throws {
         // Markup and newlines are stripped and the name is capped, the way every
         // other name Proctor reads off the screen is. It is NOT quoted, because
         // `RunHUDState.exceptionLine` does not quote it on this same row and two
         // conventions on one line is worse than either — see the note in
         // `notice(app:known:)`.
-        let notice = try! #require(demand([.click]).notice(app: "Acme\n<b>Console</b>"))
+        let notice = try #require(demand([.click]).notice(app: "Acme\n<b>Console</b>"))
         #expect(!notice.contains("<b>"))
         #expect(!notice.contains("\n"))
         #expect(notice.contains("Acme"))
@@ -241,22 +241,22 @@ struct ForegroundReportTests {
     }
 
     @Test("a run that took the front says the result is not a background-safe one")
-    func saysWhatItCost() {
+    func saysWhatItCost() throws {
         let report = ForegroundReport.from(demand([.click, .press]),
                                            planes: [.syntheticEvent, .accessibility])
-        let note = try! #require(report.note)
+        let note = try #require(report.note)
         #expect(note.contains("1 of 2 steps"))
         #expect(note.contains("not a background-safe one"))
         #expect(note.contains("cannot be repeated unattended"))
     }
 
     @Test("a run that only raised the app still says it is not background-safe")
-    func raiseAloneIsDisclosed() {
+    func raiseAloneIsDisclosed() throws {
         let report = ForegroundReport.from(demand([.raise, .press]),
                                            planes: [.accessibility, .accessibility])
         #expect(report.measured == 0)
         #expect(report.ranInForeground)
-        let note = try! #require(report.note)
+        let note = try #require(report.note)
         #expect(note.contains("brought the application to the front"))
     }
 

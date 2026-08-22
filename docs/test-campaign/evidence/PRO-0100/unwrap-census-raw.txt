@@ -1,0 +1,113 @@
+# PRO-0100 / DEF-140 — the raw census, taken before any edit
+# base commit: 6ec836f  (worktree clean of slice-5 edits)
+
+## grep -rn 'try!' Tests
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:215:            var lines = (try! String(contentsOf: file, encoding: .utf8))
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:219:            try! (lines.joined(separator: "\n") + "\n").write(to: file, atomically: true,
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:240:            let handle = try! FileHandle(forWritingTo: file)
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:243:            try! handle.close()
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:255:            let lines = (try! String(contentsOf: file, encoding: .utf8))
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:257:            try! (lines.prefix(2).joined(separator: "\n") + "\n")
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:380:            var lines = (try! String(contentsOf: file, encoding: .utf8))
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:383:            try! (lines.joined(separator: "\n") + "\n").write(to: file, atomically: true,
+Tests/ProctorAgentTests/ObscuraPresenceWiringTests.swift:231:        let properties = try! #require(schema.objectValue?["properties"]?.objectValue)
+Tests/ProctorCoreTests/ToolLocatorTests.swift:160:        let move = try! #require(silicon.last)
+Tests/ProctorCoreTests/RunQueueTests.swift:350:        let app = try! #require(report.first { $0.lane == "app:a" })
+Tests/ProctorCoreTests/RunQueueTests.swift:353:        let global = try! #require(report.first { $0.lane == "global" })
+Tests/ProctorCoreTests/ForegroundDisclosureTests.swift:195:        let notice = try! #require(demand([.click]).notice(app: "Acme\n<b>Console</b>"))
+Tests/ProctorCoreTests/ForegroundDisclosureTests.swift:247:        let note = try! #require(report.note)
+Tests/ProctorCoreTests/ForegroundDisclosureTests.swift:259:        let note = try! #require(report.note)
+Tests/ProctorCoreTests/BrowserTargetTests.swift:185:        let commands = try! #require(handoff.commands)
+Tests/ProctorCoreTests/HistorySurfaceTests.swift:75:        let encoded = try! JSONEncoder().encode(run)
+Tests/ProctorCoreTests/AgentRecoveryTests.swift:67:        let reason = try! #require(healthy(agentSees: .denied, windowSees: true)?.reason)
+Tests/ProctorCoreTests/AgentRecoveryTests.swift:87:        let unconfirmed = try! #require(healthy(agentSees: .unconfirmed, windowSees: true)?.reason)
+Tests/ProctorCoreTests/AgentRecoveryTests.swift:88:        let denied = try! #require(healthy(agentSees: .denied, windowSees: true)?.reason)
+Tests/ProctorCoreTests/AgentRecoveryTests.swift:109:        let running = try! #require(
+Tests/ProctorCoreTests/AgentRecoveryTests.swift:111:        let idle = try! #require(
+Tests/ProctorCoreTests/AgentRecoveryTests.swift:182:            try! #require(healthy(reachable: false)?.reason),
+Tests/ProctorCoreTests/AgentRecoveryTests.swift:183:            try! #require(healthy(agentSees: .denied, windowSees: true)?.reason),
+Tests/ProctorCoreTests/AgentRecoveryTests.swift:184:            try! #require(healthy(agentSees: .denied, windowSees: true, running: true)?.reason)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:342:            let tool = try! #require(ToolCatalogue.spec(named: name))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:347:            let tool = try! #require(ToolCatalogue.spec(named: name))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:376:        let apps = try! #require(ToolCatalogue.spec(named: "proctor_apps"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:384:        let act = try! #require(ToolCatalogue.spec(named: "proctor_act"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:391:        let kill = try! #require(ToolCatalogue.spec(named: "proctor_kill"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:499:            let resolved = try! #require(ResourceCatalogue.spec(uri: spec.uri))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:992:        let m = try! #require(plan.marks.first)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1004:        let grid = try! #require(plan.grid)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1021:        let cap = try! #require(ToolCatalogue.spec(named: "proctor_capture"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1042:        let t = try! #require(PointerMarker.targetPoint(
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1052:        let t = try! #require(PointerMarker.targetPoint(
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1062:        let t = try! #require(PointerMarker.targetPoint(
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1089:        let p = try! #require(PointerMarker.place(
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1100:        let p = try! #require(PointerMarker.place(
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1146:        let act = try! #require(ToolCatalogue.spec(named: "proctor_act"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1155:        let flow = try! #require(ToolCatalogue.spec(named: "proctor_flow"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1280:        let new = try! #require(rows.first { $0.path == ["File", "New"] })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1287:        let shifted = try! #require(rows.first { $0.path == ["File", "New from Clipboard"] })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1295:        let file = try! #require(rows.first { $0.path == ["File"] })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1305:        let recent = try! #require(rows.first { $0.path == ["File", "Open Recent"] })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1317:        let menu = try! #require(ToolCatalogue.spec(named: "proctor_menu"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1383:        let standard = try! #require(dict.suites.first { $0.name == "Standard Suite" })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1387:        let open = try! #require(standard.commands.first { $0.name == "open" })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1392:        let save = try! #require(standard.commands.first { $0.name == "save" })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1394:        let inParam = try! #require(save.parameters.first { $0.name == "in" })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1399:        let document = try! #require(standard.classes.first { $0.name == "document" })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1409:        let savo = try! #require(standard.enumerations.first { $0.name == "savo" })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1426:        let appSuite = try! #require(dict.suites.first { $0.name == "App Suite" })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1427:        let ext = try! #require(appSuite.classes.first)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1496:        let spec = try! #require(ToolCatalogue.spec(named: "proctor_dictionary"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1807:        let cap = try! #require(ToolCatalogue.spec(named: "proctor_capture"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1825:        let zoom = try! #require(ToolCatalogue.spec(named: "proctor_zoom"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1830:        let props = try! #require(zoom.inputSchema["properties"]?.objectValue)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1840:        let props = try! #require(schema["properties"]?.objectValue)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1863:        let p = try! out.get()
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1874:        let p = try! out.get()
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1885:        let p = try! out.get()
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1944:        let p = try! out.get()
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1953:        let p = try! out.get()
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2285:        let wire = try! #require(try JSONValue.encode(report(captures: nil)).objectValue)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2310:        let timing = try! #require(resolved.notes.first { $0.contains("timings") })
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2358:        let note = try! #require(entry.note)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2452:        let spec = try! #require(ToolCatalogue.spec(named: "proctor_stability"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2453:        let props = try! #require(spec.inputSchema["properties"]?.objectValue)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2455:        let capture = try! #require(props["captureEach"]?["description"]?.stringValue)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2461:        let marks = try! #require(props["pointerMarks"]?["description"]?.stringValue)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2473:        let captures = try! #require(schema["properties"]?["captures"])
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2477:        let item = try! #require(captures["items"]?["properties"]?.objectValue)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2485:        let spec = try! #require(ToolCatalogue.spec(named: "proctor_stability"))
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2486:        let props = try! #require(spec.inputSchema["properties"]?.objectValue)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2581:        let refusal = try! #require(blocked.refusal)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2587:        let needsApproval = try! #require(sensitive.refusal)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2600:        let refusal = try! #require(policy.decide(bundleId: nil, hasValidToken: false).refusal)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2611:        let refusal = try! #require(blocked.refusal)
+Tests/ProctorCoreTests/AuditChainTests.swift:65:            let sig = try! key.signature(for: material)
+Tests/ProctorCoreTests/AuditChainTests.swift:417:        let sig = try! other.signingKey.signature(for: material)
+Tests/ProctorCoreTests/AuditChainTests.swift:463:        let sig = try! t.signingKey.signature(for: material)
+Tests/ProctorCoreTests/GuestAttachmentTests.swift:74:        let message = try! #require(refusal).message
+Tests/ProctorCoreTests/GuestAttachmentTests.swift:85:        let message = try! #require(refusal).message
+Tests/ProctorCoreTests/GuestAttachmentTests.swift:100:        let message = try! #require(refusal).message
+Tests/ProctorCoreTests/GuestAttachmentTests.swift:132:            let refusal = try! #require(GuestHandleScope.refusal(
+
+## bare ! on a property or subscript:  grep -rnE '[A-Za-z0-9_]!([^=]|$)' Tests
+Tests/ProctorAgentTests/GuestPoolWiringTests.swift:416:        #expect(after! >= before!, "a host-only call from an attached session is a sign of life")
+Tests/ProctorAgentTests/ExternalWitnessTests.swift:102:        return try box.value!.get()
+Tests/ProctorAgentTests/ExternalWitnessTests.swift:498:        let sent = frame.withUnsafeBytes { raw in write(fd, raw.baseAddress!, raw.count) }
+Tests/ProctorAgentTests/ExternalWitnessTests.swift:1106:        let sent = frame.withUnsafeBytes { raw in write(fd, raw.baseAddress!, raw.count) }
+Tests/ProctorCoreTests/SwitchSettingsTests.swift:183:            #expect(SwitchResolver.isOn(lane.onValue!, for: lane))
+Tests/ProctorCoreTests/SwitchSettingsTests.swift:184:            #expect(SwitchResolver.isOn(lane.onValue!.uppercased(), for: lane))
+Tests/ProctorCoreTests/ConsentSurfaceTests.swift:29:        #expect(ConsentSurface.raisesSheet(yieldInput!, turningOn: true) == false)
+Tests/ProctorCoreTests/GrantProbeTests.swift:104:        let cap = GrantProbe.backoff.last!
+Tests/ProctorCoreTests/RunHUDTests.swift:550:            #expect(named.first!.isUppercase, "\(kind): \(named)")
+Tests/ProctorCoreTests/StepDescriptionTests.swift:36:            #expect(line.first!.isUppercase, "\(kind) is not sentence case: \(line)")
+Tests/ProctorCoreTests/StepDescriptionTests.swift:416:                #expect(line.first!.isUppercase, "\(kind) is not sentence case: \(line)")
+Tests/ProctorCoreTests/MenuBarReadinessTests.swift:361:        let script = RelaunchCommand.arguments(pid: 1, bundlePath: "/Users/luke's/Proctor.app").last!
+Tests/ProctorCoreTests/BuildInfoTests.swift:132:    // commands at all — measured: `swift build` prints "Build complete! (0.11s)" and the
+
+## grep -rn ')!' Tests   (DEF-136's own denominator, for reference)
+Tests/ProctorCoreTests/TUIHistoryPaneTests.swift:44:    // `)!` in Tests does not re-litigate it. Census:
+Tests/ProctorCoreTests/TUIHistoryPaneTests.swift:46:    static let utc = TimeZone(identifier: "UTC")!
+Tests/ProctorCoreTests/SwitchSettingsTests.swift:504:            try bad.data(using: .utf8)!.write(to: url)
+Tests/ProctorCoreTests/SwitchSettingsTests.swift:527:            .data(using: .utf8)!.write(to: url)
+Tests/ProctorCoreTests/CommandSurfaceTests.swift:47:        // PRO-0090. `command(id)!` on a literal id used to be here, and it fails
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1235:        let functionKeyChar = String(UnicodeScalar(0xF702)!)   // NSLeftArrowFunctionKey

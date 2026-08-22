@@ -412,8 +412,12 @@ struct GuestPoolWiringTests {
             _ = try? await h.session.forwardToGuestIfAttached(request)
         }
         let after = await h.session.guestAttachments["sessA"]?.lastUsedAt
-        #expect(before != nil && after != nil)
-        #expect(after! >= before!, "a host-only call from an attached session is a sign of life")
+        // PRO-0100, DEF-140. `#expect` records and returns — it does not stop
+        // the test — so a nil here used to reach the unwrap and abort the runner
+        // with no verdict line, which is the failure this class is about.
+        let first = try #require(before, "no lastUsedAt before the host-only call")
+        let second = try #require(after, "no lastUsedAt after the host-only call")
+        #expect(second >= first, "a host-only call from an attached session is a sign of life")
     }
 
     @Test("a provider that is gone is a vanish, not an all-clear")

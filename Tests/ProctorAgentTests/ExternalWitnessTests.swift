@@ -99,6 +99,13 @@ struct ExternalWitnessTests {
             worker.stackSize = 1024 * 1024
             worker.start()
         }
+        // PRO-0100, DEF-140, GROUP 1 — unfailable by construction, kept.
+        // Input space: the states in which this line is reached. The
+        // continuation resumes only from inside the worker's `do`/`catch`, and
+        // both arms call `box.set` before `resume`. There is no path that
+        // reaches here with the box unwritten — a worker that never started
+        // would hang rather than trap. Reason recorded in
+        // docs/test-campaign/evidence/PRO-0100/unwrap-census.md.
         return try box.value!.get()
     }
 
@@ -495,6 +502,10 @@ struct ExternalWitnessTests {
         var declared = UInt32(payload.count).bigEndian
         withUnsafeBytes(of: &declared) { frame.append(contentsOf: $0) }
         frame.append(payload)
+        // PRO-0100, DEF-140, GROUP 1 — unfailable by construction, kept.
+        // Input space: every value `frame` can hold here. The four length-prefix
+        // bytes are appended unconditionally two lines up, so `frame` is never
+        // empty, and `baseAddress` is nil only for an empty buffer.
         let sent = frame.withUnsafeBytes { raw in write(fd, raw.baseAddress!, raw.count) }
         guard sent == frame.count else {
             call.stage = "write(\(sent) of \(frame.count), errno \(Darwin.errno))"
@@ -1103,6 +1114,15 @@ struct ExternalWitnessTests {
         guard let frame = try? FrameCodec.encode(
             AgentRequest(id: "w5", tool: "proctor_doctor", arguments: .object([:])))
         else { return (true, false) }
+        // PRO-0100, DEF-140, GROUP 1 — unfailable by construction, kept, and for
+        // a DIFFERENT reason from the site above, which is why it is written out
+        // rather than cross-referenced. `frame` here comes from
+        // `FrameCodec.encode` (Sources/ProctorCore/Transport.swift:10-22) behind
+        // a `try?`/`else return`, not from a local append. The guarantee is the
+        // encoder's: it prepends four length bytes before appending the body, so
+        // every Data it returns is at least four bytes and `baseAddress` is
+        // never nil. The first draft of this census claimed "same construction"
+        // and an out-of-family review caught it.
         let sent = frame.withUnsafeBytes { raw in write(fd, raw.baseAddress!, raw.count) }
         guard sent > 0 else { return (true, false) }
         var chunk = [UInt8](repeating: 0, count: 4096)
