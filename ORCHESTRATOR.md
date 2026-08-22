@@ -2084,3 +2084,54 @@ explicitly does not.
 moved.** This session saw `not_limited` → `not_limited` → `limited`; a peer saw
 `limited` → `not_limited` → `not_limited`. Load and thermal are independent signals and thermal is
 the binding one.
+
+### PRO-0101 died on a transport error and was relaunched with its own survey (2026-08-22)
+
+**The runner produced nothing and the cause was not in its report.** `API Error: Connection lost
+mid-response` after 45 tool uses over 430 seconds. Swept the channels the fleet skill names rather
+than reading the report first, and each one said something:
+
+| Channel | Reading |
+|---|---|
+| Worktree on disk | `.worktrees/PRO-0101` on `ai/pro-0101` at `8378138`, **zero uncommitted files** — nothing lost |
+| Workflow journal | one `started` line, no `result` — it died without returning |
+| Token counts | input 55,103, output 44,618, **ratio 0.81** — not the artifact-as-output failure, which reads 33.8:1 |
+| Tool mix | 45 calls, **all `Bash`**, no `Write` or `Edit` — it was still surveying |
+
+So the diagnosis is transport, not task, and a relaunch is correct rather than a sharper retry.
+
+**The survey was recovered from the transcript rather than repeated.** Its 45 commands had established
+the whole population, and re-deriving it would have cost the same 45 calls: 99 specs, 75 citing, 24
+not (PRO-0001–0017, 0034, 0045, 0047, 0063, 0075, 0076, 0096), 0 dangling after `8de8804`; 23 briefs
+with no citing spec; 61 specs carrying `**Brief:**` in their first 20 lines over 58 distinct briefs
+with no brief claimed twice; the ledger holding 103 ids against 99 files with PRO-0022, 0031, 0039 and
+0092 having no spec.
+
+**And it found the evidence the spec's number-fallback clause was missing.** Scoring candidate
+brief→spec pairs by text overlap, PRO-0001–0013 match their same-numbered briefs at 0.24–0.41 with
+common runs of 262–381 characters, PRO-0014–0017 fall to 0.09–0.12 because the numbering offsets by
+one from brief 15, and **`35-scroll-moves-by-what-was-asked` → PRO-0034 scores a longest common run of
+five characters.** The number-based guess is not merely risky there; it is wrong. That is a measured
+case rather than an argument.
+
+**Id ranges, because two unmerged branches hold them.** `main` is at CASE-0374 / REQ-093 / DEF-193 /
+SURF-022; `ai/pro-0100` reaches CASE-0400 / REQ-096 with DEF-200–209 and CASE-0401–0409 reserved
+unused; `ai/pro-0102` reaches CASE-0429 / REQ-099 / DEF-214 / SURF-023. PRO-0101 starts at CASE-0430,
+REQ-100, DEF-215, SURF-024.
+
+**Two measurement traps recorded, both from peer sessions and both of the reassuring kind.**
+`df -h /` on this machine reports **5% used** — that is the read-only APFS system volume. The data
+volume is at 13.65% free, so a casual disk check is wrong by an order of magnitude in the direction
+that invites more work. Use `pressure.py` or `df -h /System/Volumes/Data`. And thermal is now measured
+flipping both ways with load flat — this session saw `not_limited` → `not_limited` → `limited`, a peer
+saw the reverse — so thermal is not a proxy for load and cannot be inferred from it.
+
+**A fourth caution for PRO-0092, and it is the sharpest yet.** The `GIT_DIR` predicate is not
+`git init`; it is **any git write the harness invokes**, and those calls live in dependencies rather
+than first-party code — `@sentry/nextjs/buildTime.js:54` runs `execSync("git rev-parse HEAD")` at
+build time, `husky/index.js:14` does `spawnSync('git', ['config', …])` as a write, and playwright uses
+the argv-array spelling a literal grep does not catch. The mechanism was confirmed on a sacrificial
+repo, and the detail that decides where an assertion goes is this: **`git init` under `GIT_DIR` is
+silent about being ineffective** — exit 0, no output, no `.git` — so a fixture's non-repo-ness is
+undetectable at creation, and any check made after the *next* command is checking a repo that has
+already been written to. PRO-0092's mutation runner is the highest-risk thing here for that shape.
