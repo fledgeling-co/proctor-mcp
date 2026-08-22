@@ -1,7 +1,7 @@
 # PRO-0101: A spec says which brief it came from
 
 **ID:** PRO-0101
-**Status:** Ready for Plan
+**Status:** In Review
 **Created:** 2026-08-22
 **Last updated:** 2026-08-22
 **Brief:** `docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md`
@@ -131,3 +131,53 @@ brief anywhere, which is exactly the population the reckoning could not speak fo
   and PRO-0100/0101/0102/0103 were minted with it. The forward half is making that automatic,
   not inventing it.
 - Out-of-family spec review: see the shared record at the foot of `spec-PRO-0103.md`.
+
+---
+
+## Progress — 2026-08-22 (`ai/pro-0101`)
+
+**Ids allocated:** REQ-100, REQ-101 · CASE-0430..0438 · DEF-215 · SURF-024. Started at
+CASE-0430 / REQ-100 / DEF-215 / SURF-024 because `ai/pro-0100` reserved DEF-200..209 and
+CASE-0401..0409 unused and `ai/pro-0102` reaches CASE-0429 / REQ-099 / DEF-214 / SURF-023.
+
+**Backward half.** The 24 uncited specs now carry a citation. Twenty name a brief; four say they
+never had one and name what they had instead — PRO-0063 the screenshot-encoding research as a
+follow-on to PRO-0006, PRO-0075 the campaign's own report, PRO-0076 a direct request against PRD
+§9 and §10, and PRO-0096, which already carried the form. Every citation was established by
+reading the brief against the spec. The seven where brief number and id disagree say so on the
+line, because they are the counterexample to the fallback this item removes: PRO-0014 through
+PRO-0017 sit one behind briefs 15 to 18, and PRO-0034 is brief 35, whose own retirement banner
+names PRO-0034 while the number points at PRO-0035, a different feature.
+
+**The reverse direction** needed somewhere to put a brief that is accounted for and still
+uncitable, so `docs/feature-specs/UNCLAIMED-BRIEFS.md` records four with their reasons. Two of
+them are DEF-215: briefs 23 and 40 belong to PRO-0022 and PRO-0039, ledger rows with no spec file,
+so there is no artifact to carry a citation. That defect is recorded rather than fixed — writing
+retrospective specs for two retired items and one merged one is a separate decision.
+
+**Forward half**, in `~/Dev/fledgeling-plugins` at `364c785`, committed by explicit path over two
+files under `plugins/shipyard/skills/triage/`. The spec scaffold gains a `**Brief:**` line, the
+id-allocation step is told to fill it, `references/spec-format.md` documents the three forms, and
+SKILL.md step 1 tells triage to write the citation. Nothing there changes whether triage consumes
+a brief; the consumed case is handled by the citation form instead.
+
+**The added clause.** `scripts/campaign/spec_citation_measure.py` proves presence and resolution in
+one pass: a path-form citation must resolve in the brief queue, and a consumed-brief citation
+`path @ sha` must resolve at the commit it names. No spec uses the commit form yet, so CASE-0432 is
+the only thing exercising that path and it is armed both ways on immutable shas — `@ 3fb7681` PASS
+because that commit holds the brief, `@ 400808d` FAIL because that is the commit which deleted it.
+
+**The number fallback was already gone**, removed by PRO-0102 at `224a696`, so this item verifies
+rather than re-edits, which is what this spec's own assumption asked of whichever item reached it
+second. CASE-0436 executes `project_id_in` rather than reading it, and is armed in both directions.
+
+**Gates.** `./scripts/test.sh` 2,061 tests in 251 suites, exit 0, twice — the baseline unchanged,
+and no Swift was touched. `spec_citation_measure.py` 14/14, exit 0. `spec_citation_arm.py` 18/18
+mutations pinned, 14/14 checks watched to fail, exit 0. `test_instruments.py` 62/62 exit 0.
+`operator_path_gate.py` exit 0. `defect_gate.py dropped` exit 0.
+
+## Defects
+
+| ID | Title | Disposition |
+|----|-------|-------------|
+| DEF-215 | Four ledger rows have no spec file, so two briefs have no artifact that could cite them | (recorded) — accounted for in `docs/feature-specs/UNCLAIMED-BRIEFS.md`; the fix is a separate decision about whether a retired item earns a spec |
