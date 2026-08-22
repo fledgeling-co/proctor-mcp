@@ -3302,18 +3302,21 @@
     "evidence": [
       "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt",
+      "docs/test-campaign/evidence/PRO-0098/structural-zero-arming.txt",
+      "docs/test-campaign/evidence/PRO-0098/capture-write-caught.txt",
       "docs/test-campaign/evidence/PRO-0098/gate-after.txt"
     ],
     "armed": true,
-    "armedBy": "Sabotage 4 in new-case-arming.txt: DirectoryWitness.changed() forced to return []. The CLAIM arm stays green \u2014 which is the point \u2014 and the CONTROL arm goes red: 'Expectation failed: (wrote.count -> 0) >= 1' and '(wrote -> []).contains(\"policy.json\")'. That is the dead-predicate shape for a negative guarantee, caught by the arm that exists to catch it. Restored, green.",
+    "armedBy": "Armed twice over, and the second is the one that matters for a negative claim. Sabotage 4 in new-case-arming.txt: DirectoryWitness.changed() forced to return []. The CLAIM arm stays green \u2014 which is the point \u2014 and the CONTROL arm goes red: 'Expectation failed: (wrote.count \u2192 0) >= 1' and '(wrote \u2192 []).contains(\"policy.json\")'. Sabotage 6 in structural-zero-arming.txt, added by the gap-fix: operatorRoot pointed one component off the real path, at <bundle>-absent-sabotage, which does not exist. RUN A, the witness as it was: this case PASSED \u2014 'a policy configure changes nothing under the operator's root, and the sweep can tell' passed after 0.084 seconds over a root that is not there, which is the structural zero in the flesh. RUN B, with the denominator guard: 'Expectation failed: (operatorBefore \u2192 DirectoryWitness(rootExists: false, files: [:])).rootExists \u2192 false' and 'Expectation failed: (operatorBefore.files.count \u2192 0) >= 1'. Restored, green. A SECOND ARMING, and the only kind that cannot be argued with: on 2026-08-22 this case went red on a real write, with no sabotage applied at all. './scripts/test.sh' on the clean tree: 'Expectation failed: (touched \u2192 [\"captures/win-1-zoom-1787361639249.full.png\"]).isEmpty \u2192 false'. AcceptanceE2ETests' Journey 5 calls session.zoom(path: nil) twice and Session.defaultZoomPath hard-coded the operator's captures directory, so four PNGs landed there 0.5s into every run \u2014 caught only when a write fell between the sweep's two readings, which is why this case read green for as long as it did. DEF-142, fixed by the interlock. Evidence: capture-write-caught.txt.",
     "witness": {
       "recorder": "DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of a root recording existence, byte count, mtime and sha256 per file, run either side of one call. It is not PolicyStore and it is not the session under test.",
       "effect": "filesystem-write",
       "count": 1
     },
-    "note": "PRO-0098, DEF-110. REQ-055 at the rung it declares, and the claim is a NEGATIVE, so the count needs saying plainly: the count of 1 is the CONTROL arm's, not the claim's. One call \u2014 Session.configurePolicy through an injected PolicyStore \u2014 is watched by one recorder over two roots. Over the operator's own application-support root (~/Library/Application Support/app.fledgeling.procter, swept whole rather than one file of it) the recorder reports ZERO changed files. Over the injected root the same recorder, on the same call, reports policy.json going absent to present. A zero from an instrument that has not been shown reporting non-zero is structural, and this is what stops it being one. Not a write-and-restore: nothing is restored because nothing is written, so a run killed mid-test leaves the operator's state as it found it. Test: OperatorFilesWitnessTests.aConfigureLeavesTheOperatorsRootAlone.",
+    "note": "PRO-0098, DEF-110. REQ-055 at the rung it declares, and the claim is a NEGATIVE, so two numbers need saying plainly. The witness count of 1 is the CONTROL arm's, not the claim's. The claim's own number is a ratio with its population stated: 0 changed of len(files) = 3,290 regular files (find -type f, this machine, 2026-08-22) swept under ~/Library/Application Support/app.fledgeling.procter, and the case asserts that root exists and that len(files) >= 1 BEFORE it reads the zero, so a zero out of an absent or empty root fails instead of passing. One call \u2014 Session.configurePolicy through an injected PolicyStore \u2014 is watched by one recorder over two roots: the operator's reports zero changed, the injected root reports policy.json going absent to present. Not a write-and-restore: nothing is restored because nothing is written, so a run killed mid-test leaves the operator's state as it found it. WHAT THIS DOES NOT CERTIFY, since REQ-055's original sentence claimed it: reads are not watched, the whole run is not watched, and the operator's Proctor state outside this root is not watched \u2014 DEF-141. Test: OperatorFilesWitnessTests.aConfigureLeavesTheOperatorsRootAlone.",
     "defects": [
-      "DEF-110"
+      "DEF-110",
+      "DEF-142"
     ]
   },
   {
@@ -3325,18 +3328,21 @@
     "status": "pass",
     "evidence": [
       "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
-      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt"
+      "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt",
+      "docs/test-campaign/evidence/PRO-0098/structural-zero-arming.txt",
+      "docs/test-campaign/evidence/PRO-0098/capture-write-caught.txt"
     ],
     "armed": true,
-    "armedBy": "Sabotage 4, the same run: with changed() dead the fallback-root assertion is the arm that fires. PRO-0089's own arming (evidence/PRO-0089/arming.txt) is the second: with the interlock disabled and operatorDirectory redirected to a decoy, the equivalent assertion reports the operator path being reached.",
+    "armedBy": "Sabotage 4, the same run: with changed() dead the fallback-root assertion is the arm that fires. Sabotage 6 in structural-zero-arming.txt is the second and covers the denominator: with operatorRoot pointed at <bundle>-absent-sabotage, RUN A shows this case PASSING \u2014 'an un-injected session writes somewhere, and that somewhere is not the operator's' passed after 0.089 seconds over an absent root \u2014 and RUN B shows it red on '(operatorBefore \u2192 DirectoryWitness(rootExists: false, files: [:])).rootExists \u2192 false' and '(operatorBefore.files.count \u2192 0) >= 1'. PRO-0089's own arming (evidence/PRO-0089/arming.txt) is the third: with the interlock disabled and operatorDirectory redirected to a decoy, the equivalent assertion reports the operator path being reached. A SECOND ARMING, and the only kind that cannot be argued with: on 2026-08-22 this case went red on a real write, with no sabotage applied at all. './scripts/test.sh' on the clean tree: 'Expectation failed: (touched \u2192 [\"captures/win-1-zoom-1787361639249.full.png\"]).isEmpty \u2192 false'. AcceptanceE2ETests' Journey 5 calls session.zoom(path: nil) twice and Session.defaultZoomPath hard-coded the operator's captures directory, so four PNGs landed there 0.5s into every run \u2014 caught only when a write fell between the sweep's two readings, which is why this case read green for as long as it did. DEF-142, fixed by the interlock. Evidence: capture-write-caught.txt.",
     "witness": {
       "recorder": "DirectoryWitness over the operator's application-support root, plus a sweep of PolicyStore.testFallbackRoot for where the write actually landed",
       "effect": "filesystem-write",
       "count": 1
     },
-    "note": "PRO-0098, DEF-110, the floor under the injection. A Session with NO setPolicyStore at all \u2014 the case that used to write the operator's file and the case a future test will forget \u2014 configures a policy. The operator's root is unchanged across it, and the control arm proves the call was not simply a no-op: the interlock's fallback root holds a policy.json, and that root is not under the operator's. Without the control arm 'unchanged' would also be the reading for a configure that did nothing. Test: OperatorFilesWitnessTests.anUninjectedSessionIsAlsoWatched.",
+    "note": "PRO-0098, DEF-110, the floor under the injection. A Session with NO setPolicyStore at all \u2014 the case that used to write the operator's file and the case a future test will forget \u2014 configures a policy. The operator's root is unchanged across it, reported as 0 of the len(files) = 3,290 regular files (find -type f, this machine, 2026-08-22) swept and gated on that population being non-empty, and the control arm proves the call was not simply a no-op: the interlock's fallback root holds a policy.json, and that root is not under the operator's. Without the control arm 'unchanged' would also be the reading for a configure that did nothing; without the denominator it would also be the reading for a root that is not there. Test: OperatorFilesWitnessTests.anUninjectedSessionIsAlsoWatched.",
     "defects": [
-      "DEF-110"
+      "DEF-110",
+      "DEF-142"
     ]
   },
   {
@@ -3587,13 +3593,35 @@
     "status": "pass",
     "evidence": [
       "docs/test-campaign/evidence/PRO-0098/def136-arming.txt",
-      "docs/test-campaign/evidence/PRO-0098/def136-arming-summary.md"
+      "docs/test-campaign/evidence/PRO-0098/def136-arming-summary.md",
+      "docs/test-campaign/evidence/PRO-0098/def136-count-reconcile.md",
+      "docs/test-campaign/evidence/PRO-0098/def136-arming-rerun.txt",
+      "docs/test-campaign/evidence/PRO-0098/def136-rerun-crash.txt"
     ],
     "armed": true,
     "armedBy": "This case IS the arming. Two runs of the whole suite over the same sabotage, differing only in the one converted site.",
-    "note": "PRO-0098, DEF-136, the brief's proof obligation: show the conversion buys something rather than assuming it. One real regression \u2014 Toolchain.entry(for:) made to miss on the literal id \"obscura\", an entry dropped from the production catalogue \u2014 applied to Sources, then the whole suite run twice. RUN A, the site as it was (Toolchain.entry(for: tool)!): 'Fatal error: Unexpectedly found nil', 'exited with unexpected signal code 5', 'FAIL: no swift-testing verdict line in the output', and the string 'Test run with' appears ZERO times in the entire run. RUN B, the site converted to try #require: 'Test run with 1992 tests in 244 suites failed after 36.027 seconds with 4 issues', and four named failures each reporting 'Toolchain.entry(for: tool -> \"obscura\") -> nil' with the test that hit it. Both exit 1; that is not the difference and never was. The difference is 0 tests and no verdict against 1,992 and four names. Restored afterwards, git status 0 modified files.",
+    "note": "PRO-0098, DEF-136, the brief's proof obligation: show the conversion buys something rather than assuming it. One real regression \u2014 Toolchain.entry(for:) made to miss on the literal id \"obscura\", an entry dropped from the production catalogue \u2014 applied to Sources, then the whole suite run twice. RUN A, the site as it was (Toolchain.entry(for: tool)!): 'Fatal error: Unexpectedly found nil', 'exited with unexpected signal code 5', 'FAIL: no swift-testing verdict line in the output', and the string 'Test run with' appears ZERO times in the entire run. RUN B, the site converted to try #require: 'Test run with 1992 tests in 244 suites failed after 36.027 seconds with 4 issues', and four named failures each reporting 'Toolchain.entry(for: tool -> \"obscura\") -> nil' with the test that hit it. Both exit 1; that is not the difference and never was. The difference is 0 tests and no verdict against 1,992 and four names. Restored afterwards, git status 0 modified files. RECONCILED 2026-08-22, after a verifier reproducing this arming measured 6 issues where this row records 4. The sabotage was re-applied and the whole suite run twice more: one run gave the same verdict line, '1992 tests in 244 suites failed after 17.778 seconds with 4 issues', with the same four named tests; the other died at SIGTRAP roughly 1,850 tests in and produced no verdict at all, and did not reproduce. The 4 is structural rather than incidental - grep -n 'entry(\"obscura\")' returns exactly four call sites, #require throws so each contributes one issue, and no other caller of Toolchain.entry(for:) can reach this sabotage - so the count stands at 4. Working in def136-count-reconcile.md, both runs kept.",
     "defects": [
       "DEF-136"
+    ]
+  },
+  {
+    "id": "CASE-0285",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/capture-write-caught.txt",
+      "docs/test-campaign/evidence/PRO-0098/capture-interlock-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The interlock disabled at source: 'guard AuditLog.isTestProcess else {' replaced with 'guard false else {', which is exactly the state the tree was in when the sweep caught the write. Four issues, each naming the operator path it resolved to: 'Expectation failed: !((directory \u2192 \"/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures\").hasPrefix(operatorRoot.path \u2192 \"/Users/lukerhodes/Library/Application Support/app.fledgeling.procter\") \u2192 true)' and the same for the zoom crop path '.../captures/win-1-zoom-1787361866561.png'. Restored, green. Full output in capture-interlock-arming.txt.",
+    "note": "PRO-0098 gap-fix, DEF-142. The deterministic half of REQ-055's guarantee for the second path that writes without being told where. CASE-0270's sweep is a race: it catches an un-pathed capture only when the write lands between its two readings, and for weeks it did not. This case reads the resolved directory instead, so it holds on every run: in a test process CaptureEngineImpl.defaultCaptureDirectory and Session.defaultZoomPath both resolve outside the operator's root and inside CaptureEngineImpl.testFallbackCaptureRoot, and an engine handed an explicit directory still uses it \u2014 the interlock is a floor under an absent path, not an override of a present one. Recorded at outcome rather than effect-witness: it reads a path the product resolves, and no recorder watches a write. Test: OperatorFilesWitnessTests.anUnpathedCaptureIsRedirectedToo.",
+    "defects": [
+      "DEF-142"
     ]
   }
 ]

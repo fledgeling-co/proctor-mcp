@@ -150,8 +150,10 @@ extension Session {
     /// Where a zoom crop lands when the caller names no path. Distinct prefix from
     /// a plain capture so the two are not confused on disk.
     static func defaultZoomPath(for window: WindowHandle) -> String {
-        let home = FileManager.default.homeDirectoryForCurrentUser.path
-        let dir = "\(home)/Library/Application Support/app.fledgeling.procter/captures"
+        // One source for the directory, so the REQ-055 interlock cannot hold on
+        // one of the two paths that write without being told where. See
+        // `CaptureEngineImpl.defaultCaptureDirectory`.
+        let dir = CaptureEngineImpl.defaultCaptureDirectory
         try? FileManager.default.createDirectory(atPath: dir, withIntermediateDirectories: true)
         let stamp = Int(Date().timeIntervalSince1970 * 1000)
         let safe = window.id.replacingOccurrences(of: ":", with: "-")

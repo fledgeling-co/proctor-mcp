@@ -53,3 +53,8 @@ cannot tell "the run died" from "the run found something" is one where every oth
 the machine is unreadable, which is why this defect was taken before the other three.
 
 **Restored afterwards**, and checked: `git status` reports 0 modified files at the end of the script.
+
+**The count was re-measured** after a verifier reported 6 issues here. Two further runs of the
+same sabotage: one repeated `1992 tests in 244 suites failed ... with 4 issues` exactly, the other
+died at SIGTRAP with no verdict and did not reproduce. The 4 is the number of `entry("obscura")`
+call sites, so it is structural. Working in `def136-count-reconcile.md`.

@@ -1,0 +1,90 @@
+=== DEF-136 arming, re-run to reconcile the issue count ===
+Repo: 814a6ac   2026-08-22T01:14:58Z
+
+Same sabotage as the first arming: Toolchain.entry(for:) misses on the literal
+id "obscura". Same converted site: ToolchainTests.swift:19, try #require.
+applied: 189:        entries.first { $0.tool == tool && tool != "obscura" }
+
+==> swift test  (output: /tmp/pro0098-def136.log)
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/14] Write sources
+[4/14] Write swift-version--58304C5D6DBC2206.txt
+[6/16] Emitting module ProctorCore
+[7/16] Compiling ProctorCore Toolchain.swift
+[7/19] Write Objects.LinkFileList
+[11/20] Linking proctor-cli
+[12/20] Applying proctor-cli
+[13/20] Linking proctor-shim
+[14/20] Applying proctor-shim
+[15/20] Linking Proctor
+[16/20] Applying Proctor
+[17/20] Linking proctor-agent
+[18/20] Applying proctor-agent
+[20/22] Compiling ProctorAgentTests OperatorFilesWitnessTests.swift
+[21/22] Emitting module ProctorAgentTests
+[21/23] Write Objects.LinkFileList
+[22/23] Linking proctor-mcpPackageTests
+Build complete! (24.25s)
+Test Suite 'All tests' started at 2026-08-22 11:15:24.583.
+Test Suite 'All tests' passed at 2026-08-22 11:15:24.595.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.012) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Supervision surface" started.
+􀟈  Suite "PRO-0058 · platform and power" started.
+􀟈  Suite "Run HUD foreground disclosure" started.
+􀟈  Suite "Hold attribution" started.
+􀟈  Suite "Run HUD gate in the model" started.
+􀟈  Suite "Entitlement to draw on this Mac" started.
+􀟈  Suite "Pointer plane over a covered target" started.
+􀟈  Suite "PRO-0060 · reaching a guest" started.
+􀟈  Suite "TUI render fidelity" started.
+􀟈  Suite "Audit chain" started.
+􀟈  Suite "Foreground report" started.
+􀟈  Suite "Run HUD chip equality" started.
+􀟈  Suite "Takeover dwell" started.
+􀟈  Suite "Tool locator" started.
+􀟈  Suite "PRO-0029 switch catalogue" started.
+􀟈  Suite "Policy posture" started.
+􀟈  Suite "TUI history pane" started.
+􀟈  Suite "Supervision under delegation" started.
+􀟈  Suite "Simctl listings that are not listings" started.
+􀟈  Suite "PRO-0029 report states" started.
+􀟈  Suite "PRO-0049 · Maestro flow gate" started.
+􀟈  Suite "The simulator lane names simctl" started.
+􀟈  Suite "Surface literals" started.
+􀟈  Suite "Replay gate" started.
+􁁛  Suite "Tool profiles" passed after 0.778 seconds.
+􁁛  Suite "PRO-0063 · a capture is sized by what it is for" passed after 0.782 seconds.
+􁁛  Test "a guest handle is refused by name wherever a window handle is expected" passed after 0.218 seconds.
+􁁛  Test "an ordinary unknown window still reports as an unknown window" passed after 0.216 seconds.
+􁁛  Suite "PRO-0049 · Maestro flow lane" passed after 0.777 seconds.
+􁁛  Suite "Region dirty area" passed after 0.781 seconds.
+􁁛  Suite "Installed web apps and the flag set" passed after 0.781 seconds.
+􁁛  Suite "Run history" passed after 0.783 seconds.
+􁁛  Suite "Run HUD placement" passed after 0.776 seconds.
+􁁛  Suite "PRO-0061 · placing a takeover batch" passed after 0.775 seconds.
+􁁛  Suite "Run HUD character" passed after 0.782 seconds.
+􁁛  Suite "Overlay off-switches" passed after 0.776 seconds.
+􁁛  Test "the verification runs off the cooperative pool, on a thread the pool cannot refuse" passed after 0.234 seconds.
+􁁛  Test "an unchanged file is verified once, however often it is asked about" passed after 0.234 seconds.
+􁁛  Suite "Browser routing baseline" passed after 0.922 seconds.
+
+FAIL: no swift-testing verdict line in the output.
+      Either the run died before reporting, or a --filter matched no
+      tests. --filter matches the Swift function name, not the @Test
+      display string. An absent verdict is not a pass.
+EXIT=1
+
+restored: 0 sabotage line(s) left
+git status: 0 modified file(s) at Sources/ProctorCore/Toolchain.swift
+
+--- every issue the run recorded, one line each ---
+􀢄  Test "a tool that is not there is unusable, and the evidence says absent" recorded an issue at ToolchainTests.swift:19:13: Expectation failed: Toolchain.entry(for: tool → "obscura") → nil
+􀢄  Test "checkedAt travels with the verdict" recorded an issue at ToolchainTests.swift:19:13: Expectation failed: Toolchain.entry(for: tool → "obscura") → nil
+􀢄  Test "a half install is unusable and names the missing companion" recorded an issue at ToolchainTests.swift:19:13: Expectation failed: Toolchain.entry(for: tool → "obscura") → nil
+􀢄  Test "presence settles the tools Proctor only ever calls as a one-shot" recorded an issue at ToolchainTests.swift:19:13: Expectation failed: Toolchain.entry(for: tool → "obscura") → nil

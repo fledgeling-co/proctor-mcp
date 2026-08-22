@@ -542,16 +542,16 @@
     },
     {
       "id": "REQ-055",
-      "text": "Running the test suite does not read or write any state belonging to the operator of the machine it runs on: the policy store is reached through a root the caller supplies, and a caller that supplies none is redirected to a fresh directory of its own rather than allowed through to the operator's",
+      "text": "Running the test suite writes nothing under the operator's Proctor state root: a policy configure leaves every file under ~/Library/Application Support/app.fledgeling.procter byte-identical, because the policy store is reached through a root the caller supplies, and a caller that supplies none is redirected to a fresh directory of its own rather than allowed through to the operator's",
       "source": "docs/features-to-triage/82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md; spec-PRO-0089.md A1-A2; the interlock precedent at PolicyStore.swift AuditLog.isTestProcess",
       "class": "safety guarantee",
       "evidence": "observed",
       "surfaces": [
         "SURF-012"
       ],
-      "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change PRO-0098: witnessed at effect-witness by CASE-0270..0272 with CASE-0273 guarding the reader, closing DEF-110.",
+      "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change. PRO-0098: witnessed at effect-witness by CASE-0270..0272 with CASE-0273 guarding the reader, closing DEF-110. NARROWED by PRO-0098's gap-fix, 2026-08-22. Until then this requirement read \"Running the test suite does not read or write any state belonging to the operator of the machine it runs on\", and that sentence certified more than the witness does: reads are not watched, the whole 1,992-test run is not watched (two calls are), and the operator's Proctor state outside the application-support root is not watched. The zero is now reported against a stated population \u2014 changed / len(files) over the swept root \u2014 and the unwitnessed remainder is recorded as DEF-141 rather than left standing under the old sentence. The narrowing paid for itself in one run: the first clean ./scripts/test.sh after it went red on captures/win-1-zoom-1787361639249.full.png, a real write the suite had been making into the operator's captures directory since PRO-0089 and catching only on a race. DEF-142, fixed by carrying PolicyStore.live's interlock onto the capture path, with CASE-0285 asserting the resolved paths so the guarantee no longer depends on that race.",
       "effect": "filesystem-write",
-      "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The claim is a negative, so each case carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written."
+      "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) \u2014 0 of the 3,290 regular files `find -type f` reports under that root on this machine \u2014 so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written."
     },
     {
       "id": "REQ-056",
@@ -2516,6 +2516,26 @@
       "detail": "DEF-136's denominator is `grep -rn ')!' Tests`, and PRO-0098 closed all of it. Two shapes cannot match that pattern and abort the runner identically. (1) `try!` \u2014 e.g. `try! key.signature(for: material)` in AuditChainTests, `try! String(contentsOf:)` in AuditChainWiringTests: a throw takes the runner down rather than failing the test, which is DEF-135's failure mode exactly. (2) `!` applied to a property or a subscript rather than a call \u2014 e.g. `args.last!` at MenuBarReadinessTests.swift:355. NOT FIXED HERE because neither is in this item's contract and the brief scopes the sweep to `)!` explicitly; recorded so the next sweep starts from a true denominator rather than from this one's boundary. The classification method in evidence/PRO-0098/unwrap-census.md applies unchanged: name the input space, show the failing branch is not in it, convert what is left.",
       "surface": "SURF-022",
       "req": "REQ-077"
+    },
+    {
+      "id": "DEF-141",
+      "severity": "low",
+      "status": "open",
+      "title": "REQ-055's original sentence certified reads, the whole run and every operator path; the witness watches writes, two calls and one root",
+      "found": "PRO-0098 gap-fix, reconciling REQ-055's text with what CASE-0270..0273 actually measure",
+      "detail": "REQ-055 read \"Running the test suite does not read or write any state belonging to the operator of the machine it runs on\". The witness built for it is sound \u2014 armed four ways, control arm on every case, denominator stated \u2014 and narrower than that sentence in three named ways. (1) READS are not watched: only writes are. atime cannot settle it either, because this reader opens every file to digest it and so perturbs the one attribute a read would show. (2) The WHOLE SUITE is not watched: two Session.configurePolicy calls are, not the 1,992 tests, because a sweep either side of the whole run measures the machine \u2014 the installed agent, Spotlight, the window server \u2014 rather than the suite. (3) The operator's Proctor state OUTSIDE ~/Library/Application Support/app.fledgeling.procter is not watched: ~/Library/Logs/Proctor/agent.log, ~/Library/LaunchAgents/app.fledgeling.procter.agent.plist, and the UserDefaults domain ProctorUIApp reads at WalkthroughFlow.completionDefaultsKey. The log is the reason this one is not simply swept as well: the installed agent appends to it throughout a run, so a sweep of it reports that agent and reds the case without a suite having written anything. FIXED HERE only by narrowing the requirement's text to what is witnessed and recording the difference; the three gaps are open work. The honest instrument for (2) and (3) is an out-of-process recorder \u2014 fs_usage or an ES client filtered to this pid tree \u2014 which is an item's work, not a line in this one.",
+      "surface": "SURF-022",
+      "req": "REQ-055"
+    },
+    {
+      "id": "DEF-142",
+      "severity": "medium",
+      "status": "fixed",
+      "title": "The suite wrote four PNGs into the operator's own captures directory on every run, and REQ-055 read green",
+      "found": "PRO-0098 gap-fix, by the REQ-055 witness itself \u2014 a clean ./scripts/test.sh run, no sabotage",
+      "detail": "REQ-055's sweep went red on 'touched \u2192 [\"captures/win-1-zoom-1787361639249.full.png\"]' with nothing sabotaged. AcceptanceE2ETests' Journey 5 calls session.zoom(path: nil) twice; Session.defaultZoomPath hard-coded '~/Library/Application Support/app.fledgeling.procter/captures' with no injection seam, so two crops and two .full.png files landed in the operator's own captures directory 0.5 seconds into every run of the suite. The guarantee had been false the whole time and the witness only caught it when a write happened to fall between its before and after readings \u2014 a race, which is the honest reading of why this sat green: PRO-0089 and PRO-0098 both built the instrument correctly and both got lucky. Fixed by applying PolicyStore.live's interlock to the capture path: CaptureEngineImpl.defaultCaptureDirectory redirects a test process to testFallbackCaptureRoot in NSTemporaryDirectory, Session.defaultZoomPath reads that one source rather than building its own, and production behaviour is untouched. CASE-0285 asserts the resolved paths so the guarantee no longer depends on a race, and it was watched to fail with the interlock disabled.",
+      "surface": "SURF-012",
+      "req": "REQ-055"
     }
   ]
 }

@@ -30,6 +30,32 @@ import ProctorCore
 //
 // PRO-0089's `FileWitness` is the reader, reused rather than rebuilt (it is now in
 // Support/FileWitness.swift), because it is already the armed one.
+//
+// WHAT THIS CERTIFIES, AND WHAT IT DOES NOT. REQ-055 was written as "does not read
+// or write any state belonging to the operator", and that sentence is wider than
+// anything on this machine can measure. It has been narrowed to what is watched
+// here, and the remainder recorded as DEF-141 rather than left standing:
+//
+//   watched   — WRITES, under the operator's Proctor application-support root
+//               (`~/Library/Application Support/app.fledgeling.procter`), swept
+//               whole and reported as `changed / len(files)`, across a policy
+//               configure with a caller-supplied root and with none.
+//   not       — READS. `atime` is not compared, and this reader could not compare
+//               it honestly if it wanted to: it opens every file to digest it, so
+//               the instrument perturbs the one attribute a read would show.
+//   not       — the WHOLE suite. Two calls are watched, not 1,992 tests; a sweep
+//               either side of the whole run would be measuring the machine.
+//   not       — the operator's Proctor state OUTSIDE that root:
+//               `~/Library/Logs/Proctor/agent.log`, the LaunchAgent plist at
+//               `~/Library/LaunchAgents/app.fledgeling.procter.agent.plist`, and
+//               the `UserDefaults` domain `ProctorUIApp` reads. The log is
+//               appended to by the installed agent while the suite runs, so a
+//               sweep of it reports that agent rather than this suite.
+//
+// The narrowing found something within one run. The sweep went red on a real
+// write — `captures/win-1-zoom-1787361639249.full.png` — which the suite had been
+// making since PRO-0089 and catching only when it fell between two readings.
+// DEF-142, and CASE-0285 below is the deterministic guard that replaced the race.
 
 @Suite("PRO-0098 · the suite writes nothing of the operator's")
 struct OperatorFilesWitnessTests {
@@ -75,10 +101,19 @@ struct OperatorFilesWitnessTests {
         let operatorAfter = DirectoryWitness.read(operatorRoot)
         let injectedAfter = DirectoryWitness.read(injected)
 
+        // THE DENOMINATOR, BEFORE THE CLAIM. A zero is only worth the size of the
+        // population it is a zero out of, and a sweep of an absent or empty root
+        // reports zero for ever. So the population is asserted and then reported
+        // beside the count, as `changed / len(files)`.
+        #expect(operatorBefore.rootExists,
+                "the operator's root is not there, so its zero is structural rather than measured")
+        #expect(operatorBefore.files.count >= 1,
+                "the sweep found 0 files under the operator's root: a zero out of nothing")
+
         // THE CLAIM.
         let touched = DirectoryWitness.changed(from: operatorBefore, to: operatorAfter)
         #expect(touched.isEmpty,
-                "the suite changed \(touched.count) file(s) under the operator's root: \(touched)")
+                "the suite changed \(touched.count) of the \(operatorBefore.files.count) file(s) swept under the operator's root: \(touched)")
 
         // THE CONTROL ARM. Same reader, same call, a root that IS written. Without
         // this the assertion above is a reader that reports "unchanged" whatever
@@ -108,9 +143,13 @@ struct OperatorFilesWitnessTests {
                                               block: nil, sensitive: nil)
 
         let operatorAfter = DirectoryWitness.read(operatorRoot)
+        #expect(operatorBefore.rootExists,
+                "the operator's root is not there, so its zero is structural rather than measured")
+        #expect(operatorBefore.files.count >= 1,
+                "the sweep found 0 files under the operator's root: a zero out of nothing")
         let touched = DirectoryWitness.changed(from: operatorBefore, to: operatorAfter)
         #expect(touched.isEmpty,
-                "an un-injected session reached the operator's root: \(touched)")
+                "an un-injected session reached \(touched.count) of the \(operatorBefore.files.count) file(s) swept under the operator's root: \(touched)")
 
         // The control arm, and here it also proves the interlock is doing something
         // rather than the configure being a no-op: the fallback root the interlock
@@ -160,6 +199,41 @@ struct OperatorFilesWitnessTests {
         #expect(DirectoryWitness.changed(from: rewritten,
                                          to: DirectoryWitness.read(decoy)) == ["policy/policy.json"])
         try? FileManager.default.removeItem(at: decoy)
+    }
+
+    // MARK: CASE-0285 — the other path that writes without being told where
+
+    @Test("an un-pathed capture lands outside the operator's root, like an un-injected policy store")
+    func anUnpathedCaptureIsRedirectedToo() throws {
+        // FOUND BY THE WITNESS ABOVE, not by reading. CASE-0270 and CASE-0271 went
+        // red on `touched → ["captures/win-1-zoom-1787361639249.full.png"]`:
+        // AcceptanceE2ETests' Journey 5 calls session.zoom(path: nil) twice, and
+        // Session.defaultZoomPath hard-coded the operator's captures directory, so
+        // every run wrote four PNGs there. The sweep only caught it when a write
+        // happened to land between its two readings, which is why REQ-055 read
+        // green for as long as it did.
+        //
+        // The path assertion is here as well as the sweep because the sweep is a
+        // race and this is not: it holds on every run whether or not a zoom happens
+        // to overlap the window.
+        let directory = CaptureEngineImpl.defaultCaptureDirectory
+        #expect(!directory.hasPrefix(operatorRoot.path),
+                "an un-pathed capture lands in the operator's own captures: \(directory)")
+        #expect(directory.hasPrefix(CaptureEngineImpl.testFallbackCaptureRoot.path))
+
+        // And the zoom path, which is the caller that actually did it.
+        let handle = WindowHandle(id: "win-1", app: "app:1:1", title: nil,
+                                  frame: Rect(x: 0, y: 0, w: 10, h: 10), isMain: true,
+                                  isMinimized: false, isOnActiveSpace: true, cgWindowID: nil)
+        let zoom = Session.defaultZoomPath(for: handle)
+        #expect(!zoom.hasPrefix(operatorRoot.path),
+                "an un-pathed zoom crop lands in the operator's own captures: \(zoom)")
+        #expect(zoom.hasPrefix(CaptureEngineImpl.testFallbackCaptureRoot.path))
+
+        // The engine still honours a path it is given — the interlock is a floor
+        // under an absent path, not an override of a present one.
+        let named = temporaryRoot().appendingPathComponent("named").path
+        #expect(CaptureEngineImpl(captureDirectory: named).captureDirectory == named)
     }
 
     // MARK: CASE-0273 — the digest catches what size and mtime miss

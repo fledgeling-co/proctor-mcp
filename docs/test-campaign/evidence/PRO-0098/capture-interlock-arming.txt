@@ -1,0 +1,76 @@
+=== PRO-0098 gap-fix — the capture interlock, watched to fail ===
+Repo: 814a6ac   2026-08-22T01:24:13Z
+
+SABOTAGE: the interlock in CaptureEngineImpl.defaultCaptureDirectory is disabled
+  by replacing 'guard AuditLog.isTestProcess else {' with 'guard false else {',
+  which is the state the tree was in when the REQ-055 sweep caught it.
+applied: 35:        guard false else {
+
+==> swift test --filter OperatorFilesWitnessTests (output: /tmp/cap-arm.log)
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/9] Emitting module ProctorAgent
+[6/9] Compiling ProctorAgent CaptureEngineImpl.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking proctor-agent
+[8/11] Applying proctor-agent
+[10/12] Emitting module ProctorAgentTests
+[10/12] Write Objects.LinkFileList
+[11/12] Linking proctor-mcpPackageTests
+Build complete! (10.58s)
+Test Suite 'Selected tests' started at 2026-08-22 11:24:26.477.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 11:24:26.478.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 11:24:26.478.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 11:24:26.478.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "PRO-0098 · the suite writes nothing of the operator's" started.
+􀟈  Test "an un-pathed capture lands outside the operator's root, like an un-injected policy store" started.
+􀟈  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" started.
+􀟈  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" started.
+􀟈  Test "the swept root is the operator's own, and the reader reports a write into it" started.
+􀟈  Test "a rewrite of the same length is reported as a change" started.
+􀢄  Test "an un-pathed capture lands outside the operator's root, like an un-injected policy store" recorded an issue at OperatorFilesWitnessTests.swift:215:9: Expectation failed: !((directory → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures").hasPrefix(operatorRoot.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter") → true)
+􀄵  an un-pathed capture lands in the operator's own captures: /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures
+􀢄  Test "an un-pathed capture lands outside the operator's root, like an un-injected policy store" recorded an issue at OperatorFilesWitnessTests.swift:217:9: Expectation failed: (directory → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures").hasPrefix(CaptureEngineImpl.testFallbackCaptureRoot.path → "/var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test-captures-30922")
+􀢄  Test "an un-pathed capture lands outside the operator's root, like an un-injected policy store" recorded an issue at OperatorFilesWitnessTests.swift:224:9: Expectation failed: !((zoom → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-zoom-1787361866561.png").hasPrefix(operatorRoot.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter") → true)
+􀄵  an un-pathed zoom crop lands in the operator's own captures: /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-zoom-1787361866561.png
+􀢄  Test "an un-pathed capture lands outside the operator's root, like an un-injected policy store" recorded an issue at OperatorFilesWitnessTests.swift:226:9: Expectation failed: (zoom → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-zoom-1787361866561.png").hasPrefix(CaptureEngineImpl.testFallbackCaptureRoot.path → "/var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test-captures-30922")
+􀢄  Test "an un-pathed capture lands outside the operator's root, like an un-injected policy store" failed after 0.002 seconds with 4 issues.
+􁁛  Test "a rewrite of the same length is reported as a change" passed after 0.004 seconds.
+􁁛  Test "the swept root is the operator's own, and the reader reports a write into it" passed after 0.005 seconds.
+􁁛  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" passed after 2.560 seconds.
+􁁛  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" passed after 2.560 seconds.
+􀢄  Suite "PRO-0098 · the suite writes nothing of the operator's" failed after 2.560 seconds with 4 issues.
+􀢄  Test run with 5 tests in 1 suite failed after 2.560 seconds with 4 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 5 tests in 1 suite failed after 2.560 seconds with 4 issues.
+EXIT=1
+
+restored: 0 sabotage line(s) left
+git status: 1 modified file(s) at Sources/ProctorAgent/Capture/CaptureEngineImpl.swift
+
+--- the fix, measured on disk rather than argued ---
+After the interlock, ./scripts/test.sh (1993 tests in 244 suites passed):
+
+  newest file in ~/Library/Application Support/app.fledgeling.procter/captures
+      win-1-zoom-1787361639256.full.png   22 Aug 11:20   — the run that CAUGHT it
+
+  the same four files from the run after the fix
+      /var/folders/b3/.../T/proctor-test-captures-91748/win-1-zoom-1787361981936.png
+      /var/folders/b3/.../T/proctor-test-captures-91748/win-1-zoom-1787361981936.full.png
+      /var/folders/b3/.../T/proctor-test-captures-91748/win-1-zoom-1787361981948.full.png
+      ...
+
+The operator's directory gained nothing. NOTE: the four PNGs the suite wrote there
+before the fix are still in place. They were not deleted — removing files from the
+operator's own captures directory is exactly the action REQ-055 exists to prevent,
+and they are indistinguishable from a real capture from outside.

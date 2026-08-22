@@ -125,15 +125,72 @@ make anything green.
 
 | Defect | Was | Now | Cases |
 |---|---|---|---|
+| DEF-142 | (opened here) | fixed | CASE-0285, CASE-0270, CASE-0271 |
 | DEF-136 | open | fixed | CASE-0283, CASE-0284 |
 | DEF-132 | open | fixed | CASE-0276..CASE-0282 |
 | DEF-110 | open | fixed | CASE-0270..CASE-0273 |
 | DEF-111 | open | fixed | CASE-0274, CASE-0275 |
 
-**Defects:** DEF-136, DEF-132, DEF-110, DEF-111
+**Defects:** DEF-142, DEF-136, DEF-132, DEF-110, DEF-111
 
 One defect was *opened* by this item and is deliberately not in the table above, because that table
 is what `defect_gate.py claims` reads and a newly opened defect is not a claim that anything is
 closed. The two force-unwrap shapes `grep -rn ')!' Tests` cannot match — `try!`, and a bare `!` on a
 property or subscript — carry DEF-136's hazard identically and are outside this brief's denominator.
 They are recorded in the census and in the registry, unswept, with the reason.
+
+## REQ-055, narrowed to what its witness certifies
+
+A verifier read REQ-055's sentence against the witness built for it and found the sentence wider.
+The instrument is sound — armed four ways, a control arm on every case, the swept root populated —
+but "does not read or write **any** state belonging to the operator of the machine it runs on" is
+not what it measures.
+
+Of the two honest settlements, this item takes the second: **REQ-055's text is narrowed to exactly
+what is witnessed, and the difference is recorded rather than dropped.** The requirement now reads
+"writes nothing under the operator's Proctor state root", names the root, and the zero is reported
+against a stated population — `changed / len(files)`, 0 of 3,290 files on this machine. Widening
+instead was considered and rejected on measurement grounds rather than on effort: reads cannot be
+settled by `atime` when the reader opens every file to digest it and so perturbs the one attribute a
+read would show, and the two operator paths outside that root include `~/Library/Logs/Proctor/agent.log`, which the installed agent appends to
+throughout a run — so sweeping it would report that agent and red the case with no suite write
+having happened.
+
+The old sentence is preserved verbatim in REQ-055's note and in **DEF-141**, which carries the three
+gaps as open work: reads, the whole 1,992-test run rather than two calls, and the operator's Proctor
+state outside the application-support root. DEF-141 is opened, not claimed closed, so it is
+deliberately absent from the table above.
+
+Two assertions were added to CASE-0270 and CASE-0271 to make the population a measurement rather
+than an assumption: the swept root exists, and `len(files) >= 1`. Both were watched to fail — the
+sabotage points `operatorRoot` one component off the real path, and the evidence in
+`docs/test-campaign/evidence/PRO-0098/structural-zero-arming.txt` shows both cases passing under it
+before the guard and failing after.
+
+## What the narrowed sentence turned out to cost, and DEF-142
+
+Narrowing REQ-055 to "writes nothing under the operator's Proctor state root" made the sentence
+checkable, and the first clean run after it went **red**:
+
+```
+Expectation failed: (touched -> ["captures/win-1-zoom-1787361639249.full.png"]).isEmpty -> false
+```
+
+No sabotage. `AcceptanceE2ETests`' Journey 5 calls `session.zoom(path: nil)` twice, and
+`Session.defaultZoomPath` hard-coded `~/Library/Application Support/app.fledgeling.procter/captures`
+with no injection seam, so two crops and two `.full.png` files landed in the operator's own captures
+directory 0.5 seconds into every run of the suite. REQ-055 was false, and had been; the sweep caught
+it only when a write fell between its two readings, which is a race it had been losing quietly since
+PRO-0089.
+
+Fixed the way the requirement's own second clause prescribes, by the precedent it names:
+`CaptureEngineImpl.defaultCaptureDirectory` carries `PolicyStore.live`'s interlock, redirecting a
+test process to `testFallbackCaptureRoot` under `NSTemporaryDirectory()`, and `defaultZoomPath` reads
+that one source instead of building its own. Production behaviour is unchanged — the guard is
+`AuditLog.isTestProcess`. **CASE-0285** then asserts the resolved paths rather than sweeping for the
+write, so the guarantee holds on every run instead of on a race, and it was watched to fail with the
+interlock disabled: four issues each naming the operator path it resolved to.
+
+That the finding arrived this way is the argument for the settlement. A wide sentence nobody could
+check had sat over a witness for two items; a narrow one that could be checked was false within one
+run.

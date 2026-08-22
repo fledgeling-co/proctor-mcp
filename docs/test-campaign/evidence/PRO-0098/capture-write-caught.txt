@@ -1,0 +1,32 @@
+=== PRO-0098 gap-fix — the REQ-055 sweep catching a real write ===
+Repo: 814a6ac   2026-08-22T01:20Z
+
+No sabotage. This is ./scripts/test.sh on the clean tree, before the capture
+interlock existed. The sweep caught the suite writing into the operator's own
+captures directory — which is what REQ-055 says it never does.
+
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+12:Test Suite 'All tests' started at 2026-08-22 11:20:38.781.
+
+􀢄  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" recorded an issue at OperatorFilesWitnessTests.swift:110:9: Expectation failed: (touched → ["captures/win-1-zoom-1787361639249.full.png"]).isEmpty → false
+􀢄  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" failed after 2.929 seconds with 1 issue.
+􀢄  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" recorded an issue at OperatorFilesWitnessTests.swift:146:9: Expectation failed: (touched → ["captures/win-1-zoom-1787361639249.full.png"]).isEmpty → false
+􀢄  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" failed after 2.935 seconds with 1 issue.
+􀢄  Test run with 1992 tests in 244 suites failed after 19.970 seconds with 2 issues.
+
+--- the four files, timestamped against the run ---
+run started            2026-08-22 11:20:38.781
+-rw-r--r--@ 1 lukerhodes  staff  8536 22 Aug 11:20 /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-zoom-1787361639249.full.png
+-rw-r--r--@ 1 lukerhodes  staff  2017 22 Aug 11:20 /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-zoom-1787361639249.png
+-rw-r--r--@ 1 lukerhodes  staff  8536 22 Aug 11:20 /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-zoom-1787361639256.full.png
+-rw-r--r--@ 1 lukerhodes  staff  1431 22 Aug 11:20 /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-zoom-1787361639256.png
+
+--- the caller ---
+Tests/ProctorAgentTests/AcceptanceE2ETests.swift:312 and :329, Journey 5:
+  session.zoom(..., path: nil, ...) twice -> Session.defaultZoomPath ->
+  a hard-coded ~/Library/Application Support/app.fledgeling.procter/captures.
+  Two zooms, one crop and one .full.png each, four files, every run.
+
+EXIT=1 (FAIL: swift test exited 1)
