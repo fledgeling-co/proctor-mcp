@@ -101,6 +101,56 @@ struct MutationSeamTests {
         #expect(compared >= 12, "compared only \(compared) declared defaults")
     }
 
+    // The runtime half of the same two survivors, and it is the one that reads
+    // the decoder rather than the file the decoder lives in. Raised by this
+    // item's out-of-family review, which was right about it twice: a check that
+    // parses `args.bool("includeTiles", false)` out of the source registers a
+    // kill without ever asking what an omitted argument resolves to. The seam is
+    // a value the decode produces, so the question can be asked directly.
+    //
+    // The oracle stays the published schema. Two clauses per argument, because a
+    // decoder that ignored its input entirely and returned a constant would
+    // satisfy the first on its own.
+    @Test("An omitted boolean argument resolves at runtime to its published default")
+    func decodedArgumentsResolveToThePublishedDefaults() throws {
+        let declared = Self.declaredBooleanDefaults()
+
+        let noArguments = Args(tool: "proctor_stability", raw: .object([:]))
+        let stability = Dispatcher.StabilityArguments(noArguments)
+        #expect(stability.includeTiles == declared[Pair("proctor_stability", "includeTiles")])
+        #expect(stability.captureEach
+                == declared[Pair("proctor_stability", StabilityCaptureOptions.captureEachArg)])
+        #expect(stability.pointerMarks
+                == declared[Pair("proctor_stability", StabilityCaptureOptions.pointerMarksArg)])
+
+        let inspectDefaults = Dispatcher.InspectArguments(
+            Args(tool: "proctor_inspect", raw: .object([:])))
+        #expect(inspectDefaults.includeConstraints
+                == declared[Pair("proctor_inspect", "includeConstraints")])
+        #expect(inspectDefaults.presentation == declared[Pair("proctor_inspect", "presentation")])
+
+        // Supplied values are read, so none of the above is a constant.
+        let supplied = Dispatcher.StabilityArguments(
+            Args(tool: "proctor_stability", raw: .object([
+                "includeTiles": .bool(true),
+                StabilityCaptureOptions.captureEachArg: .bool(true),
+                StabilityCaptureOptions.pointerMarksArg: .bool(true)])))
+        #expect(supplied == Dispatcher.StabilityArguments.init(
+            Args(tool: "proctor_stability", raw: .object([
+                "includeTiles": .bool(true),
+                StabilityCaptureOptions.captureEachArg: .bool(true),
+                StabilityCaptureOptions.pointerMarksArg: .bool(true)]))))
+        #expect(supplied.includeTiles && supplied.captureEach && supplied.pointerMarks)
+        #expect(supplied != stability, "the decoder returned the same value for both inputs")
+
+        let inspectSupplied = Dispatcher.InspectArguments(
+            Args(tool: "proctor_inspect", raw: .object([
+                "includeConstraints": .bool(true), "presentation": .bool(false)])))
+        #expect(inspectSupplied.includeConstraints)
+        #expect(inspectSupplied.presentation == false)
+        #expect(inspectSupplied != inspectDefaults)
+    }
+
     // MARK: - Survivor 4 — Session.swift, a snapshot option's default
 
     // `var includeInvisible: Bool = false` became `true`. The default decides
