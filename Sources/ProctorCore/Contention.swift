@@ -106,16 +106,31 @@ public struct ContentionSample: Sendable, Equatable {
     /// When a person's own input last arrived, on the same monotonic clock as
     /// `now`. Nil when the input monitor is off, which is the default.
     public var lastUserInputAt: Double?
+    /// A person's input arrived since the PREVIOUS sample, however long ago that
+    /// was. An edge rather than an age, and the two are not the same reading.
+    ///
+    /// The decay below asks how old the last input is, which is the right
+    /// question for deciding when a hold ends and the wrong one for deciding
+    /// whether it ever begins. Nothing samples while a step is in flight, and a
+    /// step here routinely outlives the window: measured at
+    /// `docs/test-campaign/evidence/witness/a4-act.json`, three drag steps of
+    /// 18.6s, 20.2s and 17.7s against a 10-second window, with 24 events
+    /// swallowed by the takeover block and no yield recorded for any of them.
+    /// An age that expires unread is a signal that was never delivered, so the
+    /// arrival is carried as a flag until something reads it.
+    public var userInputSince: Bool
     public var now: Double
 
     public init(expectedPid: Int32? = nil, frontmostPid: Int32? = nil,
                 proctorPids: Set<Int32> = [], secureInput: Bool = false,
-                lastUserInputAt: Double? = nil, now: Double = 0) {
+                lastUserInputAt: Double? = nil, userInputSince: Bool = false,
+                now: Double = 0) {
         self.expectedPid = expectedPid
         self.frontmostPid = frontmostPid
         self.proctorPids = proctorPids
         self.secureInput = secureInput
         self.lastUserInputAt = lastUserInputAt
+        self.userInputSince = userInputSince
         self.now = now
     }
 }
@@ -180,6 +195,12 @@ public struct ContentionWatch: Sendable, Equatable {
                                   confirmedFront: Int32?) -> Set<YieldReason> {
         var out: Set<YieldReason> = []
         if s.secureInput { out.insert(.secureInput) }
+        // Two readings of the same fact, and the run needs both. The flag is the
+        // arrival, which must not be missed; the window is the age, which is what
+        // lets the hold end. A swallow from a minute ago opens a hold here and is
+        // released on the next sample after `releaseDelay`, so it is recorded
+        // without parking the run on evidence that has gone cold.
+        if s.userInputSince { out.insert(.userInput) }
         if let last = s.lastUserInputAt, s.now - last < inputWindow { out.insert(.userInput) }
         // Four things must all be true, and each removes a way for Proctor to
         // pause itself. There has to be an app Proctor demonstrably put in

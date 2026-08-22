@@ -298,4 +298,55 @@ struct ContentionTests {
         let encoded = try JSONValue.encode(result)
         #expect(encoded["yields"] == nil || encoded["yields"] == .null)
     }
+
+    // MARK: - DEF-027: an arrival is not an age
+
+    @Test("an arrival since the last look holds, however old the timestamp is")
+    func anArrivalHoldsWhateverItsAge() {
+        // The window asks how old the last input is, which decides when a hold
+        // ENDS. Whether one ever begins is a different question, and nothing
+        // samples while a step is in flight: measured at
+        // `docs/test-campaign/evidence/witness/a4-act.json`, three steps of 18.6s,
+        // 20.2s and 17.7s against a 10-second window, 24 events swallowed, no
+        // yield recorded for any of them.
+        let stale = ContentionSample(lastUserInputAt: 10, userInputSince: true, now: 900)
+        #expect(ContentionWatch.conditions(stale, inputWindow: 10, confirmedFront: nil)
+                .contains(.userInput))
+    }
+
+    @Test("the same sample without the arrival does not hold, so the flag is what fires")
+    func withoutTheArrivalNothingHolds() {
+        // The control. Same timestamp, same clock, flag off: if this held too,
+        // the assertion above would be measuring the window rather than the flag.
+        let stale = ContentionSample(lastUserInputAt: 10, now: 900)
+        #expect(!ContentionWatch.conditions(stale, inputWindow: 10, confirmedFront: nil)
+                .contains(.userInput))
+    }
+
+    @Test("the window still ends the hold, so a stale arrival does not park the run")
+    func theWindowStillEndsIt() {
+        var watch = ContentionWatch(inputWindow: 10, releaseDelay: 2)
+        #expect(watch.sample(ContentionSample(lastUserInputAt: 10, userInputSince: true, now: 900))
+                == .yielded(.userInput))
+        #expect(watch.sample(ContentionSample(lastUserInputAt: 10, now: 901)) == .none)
+        #expect(watch.sample(ContentionSample(lastUserInputAt: 10, now: 903))
+                == .released(.userInput))
+        #expect(!watch.isYielded)
+    }
+
+    @Test("a fresh keystroke still holds on the window alone, with no arrival flag")
+    func aFreshKeystrokeStillHoldsOnTheWindow() {
+        // The path that worked before this existed is untouched: a sample whose
+        // timestamp is inside the window holds whether or not anything set the
+        // flag.
+        let fresh = ContentionSample(lastUserInputAt: 100, now: 103)
+        #expect(ContentionWatch.conditions(fresh, inputWindow: 10, confirmedFront: nil)
+                .contains(.userInput))
+    }
+
+    @Test("a sample with neither an arrival nor a timestamp holds nothing")
+    func aQuietMachineHoldsNothing() {
+        #expect(ContentionWatch.conditions(ContentionSample(now: 5), inputWindow: 10,
+                                           confirmedFront: nil).isEmpty)
+    }
 }
