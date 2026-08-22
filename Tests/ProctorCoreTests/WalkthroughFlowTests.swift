@@ -262,7 +262,11 @@ struct WalkthroughFlowTests {
         #expect(WalkthroughFlow.Copy.allow == "Allow")
         #expect(WalkthroughFlow.Copy.allowed == "Allowed")
         #expect(WalkthroughFlow.Copy.copyConfig == "Copy config")
-        #expect(WalkthroughFlow.Copy.openSettings == "Already allowed? Open System Settings")
+        // PRO-0082 changed this one deliberately, and it is the only string in
+        // this list that has moved since PRO-0090 recorded them. It read
+        // "Already allowed? Open System Settings"; the question was the
+        // misdirection, and `WalkthroughSettingsLineTests` holds the clause.
+        #expect(WalkthroughFlow.Copy.openSettings == "Open Settings")
         #expect(WalkthroughFlow.Copy.connectReadyTitle == "You're all set")
         #expect(WalkthroughFlow.Copy.introCalloutTitle == "Two permissions, asked once")
         #expect(WalkthroughFlow.stepTitle(for: .intro) == "What Proctor does")
