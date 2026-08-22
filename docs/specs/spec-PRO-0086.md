@@ -2,7 +2,7 @@
 
 **Status:** To Do → Ready for AI · **Brief:**
 `docs/features-to-triage/79-the-walkthrough-will-not-advance-without-its-grants.md`
-· **Defects:** DEF-160, DEF-161, DEF-162 · **Lane:** headless `./scripts/test.sh`, with a glass
+· **Defects:** DEF-160, DEF-161, DEF-162, DEF-163 · **Lane:** headless `./scripts/test.sh`, with a glass
 attempt for the rendered half · **Branch:** `ai/pro-0086` off `ai/wave-9`
 · **Ids:** CASE-0310..0329, DEF-160..169, REQ-082..084.
 
@@ -109,6 +109,15 @@ reading the design of record for this item and **not fixed here**: the design's 
 pane draws `Back` and a disabled primary with no `Skip setup`, while the build draws Skip on
 every step but `connect`. The build is the one the brief protects, so the design of record is
 the record that is wrong; which to change is a reader's call and the row says so.
+
+## Defects
+
+| Defect | What it is | Disposition |
+|---|---|---|
+| DEF-160 | The primary refuses in three states and none of them said why | fixed here |
+| DEF-161 | `Copy.restartNote` written by PRO-0067 and rendered by nothing since | fixed here |
+| DEF-162 | The design of record's permissions pane draws no `Skip setup` while the build draws one (recorded) | recorded, not fixed — the build is the side the brief protects, so the record that is wrong is the design, and changing the design of record is a reader's call |
+| DEF-163 | The disabled primary draws filled accent while the design of record draws it plain, so a control that cannot be pressed looks pressable (recorded) | recorded, not fixed — found by this item's own glass capture; changing how a shipped control is drawn is a wave-9 composition decision this spec commits to leaving alone |
 
 ## Acceptance
 

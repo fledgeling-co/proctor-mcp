@@ -3291,5 +3291,173 @@
     "armed": true,
     "armedBy": "Five files, two sentences planted in each, every one moving from exit 0 to exit 1 with display 2. Removed, all five back to exit 0.",
     "note": "The denominator guard the plan named as a risk. This conversion moves machinery out of the files it certifies, and the examined counts fall hard \u2014 Walkthrough 56 to 0, HistoryWindow 91 to 1, ProctorUIApp 69 to 2, AgentModel 47 to 7. A PASS at a denominator of 0 is a PASS over nothing, so the classifier is shown to still bite at each file's new size rather than at the size it had when the item started."
+  },
+  {
+    "id": "CASE-0310",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorCore/WalkthroughFlow.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-1: the biconditional's own guard removed from primaryDisabledReason, so a reason came back in every state. `./scripts/test.sh --filter aReasonExistsExactlyWhereThePrimaryRefuses --filter theReasonNamesTheMissingGrantAndTheNextAction` exited 1 with 'Test run with 2 tests in 1 suite failed ... with 10 issues', the first six reading ((reason == nil) -> false) == (enabled -> true). Restored, green.",
+    "note": "DEF-160. A reason exists exactly where the primary refuses, asked at all sixteen combinations of step x accessibility x screenRecording. Written as one biconditional rather than two lists because both directions are defects: a refusing state with no sentence is the failure the item exists to remove, and a sentence beside a button a person can press is the same defect wearing the other face. THE POPULATION IS PRINTED AS A SET and it is A3's population \u2014 permissions/false/false, permissions/false/true, permissions/true/false \u2014 the three states PRO-0081 created. Every one now carries a sentence. Value-level: this says the rule answers correctly, not that a window drew the answer. CASE-0312 binds the drawing site and CASE-0316 is the rendered claim."
+  },
+  {
+    "id": "CASE-0311",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-2: the first move taken from `missing.last` instead of from prominentGrant, so the caption nominated Screen Recording while the filled Allow button stayed on Accessibility. One expectation failed on the exact sentence. Restored, green.",
+    "note": "DEF-160, and the coherence clause PRO-0090 makes necessary. The sentence names every grant still missing, names none that is already held, names Copy.allow \u2014 the row button's own word, so the instruction points at a control on screen \u2014 and nominates the grant prominentGrant draws filled. Agreement is asserted against prominentGrant rather than against a second copy of the answer, so the caption and the one prominent Grant cannot drift into offering different first moves. The three sentences are also written out verbatim, so a reword is a decision somebody makes."
+  },
+  {
+    "id": "CASE-0312",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorUI/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-3 removed the caption's accessibilityIdentifier and ARM-4 removed the hint on the disabled button; each ran `./scripts/test.sh --filter theFooterDrawsTheReason` and each exited 1 with one issue. Two separate mutations because one assertion passing does not arm the other.",
+    "note": "DEF-160's rendered half, on the rung it actually stands on. The drawing site is read from disk with comments stripped and asserted to reference WalkthroughFlow.primaryDisabledReason, to carry ID.reason so a glass lane can find the sentence, and to hand the same string to the disabled button as an accessibility hint. THIS IS source-analysis AND CLAIMS NOTHING ABOVE IT: it says the view is bound to the Core rule, not that a window drew the sentence. There is no ProctorUI test target and no window server inside swift test; the rendered claim is CASE-0316.",
+    "source": {
+      "analyzer": "WalkthroughFlowTests.theFooterDrawsTheReason, reading Sources/ProctorUI/Walkthrough.swift with whole-line comments stripped by the suite's own withoutComments",
+      "examined": 352
+    }
+  },
+  {
+    "id": "CASE-0313",
+    "req": "REQ-083",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorUI/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-6 put the primary's own rule onto Skip setup \u2014 the lockout in its exact shape. `./scripts/test.sh --filter skipIsNeverClosed` exited 1 with two issues: (disables -> 2) == 1, and the ordering clause (primary.lowerBound -> 3014[utf8]) < (disabled.lowerBound -> 2713[utf8]). Restored, green.",
+    "note": "DEF-160 A4, REQ-083. The door out, read as a count rather than as a reading: exactly one `.disabled(` in Walkthrough.swift and it is the primary's, established by ordering against the identifier rather than by trusting the count alone. A `.disabled` on Skip or on Back would make the refusal a trap and lands here. No code changed for this clause \u2014 Skip was already ungated \u2014 so what this case records is a guard placed under behaviour that was correct and unprotected.",
+    "source": {
+      "analyzer": "WalkthroughFlowTests.skipIsNeverClosed, counting `.disabled(` over the comment-stripped Walkthrough.swift and ordering it against WalkthroughFlow.ID.primary",
+      "examined": 352
+    }
+  },
+  {
+    "id": "CASE-0314",
+    "req": "REQ-083",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "Shares ARM-1's mutation: with the biconditional's guard removed the both-granted state returned a reason, and this test's `reason == nil` expectation on that state is one of the ten issues that run reported. The refusal half is armed by the same run's enabled-state failures.",
+    "note": "DEF-160 A5. A grant taken away while the walkthrough is open refuses the primary again \u2014 and the person is told why and can still leave. Asked from both-granted in both directions, with completes(.skipped) and a non-empty Copy.skip asserted in each. WHAT THIS DOES NOT ASK: whether the agent re-probes a revoked permission at all, which is brief 75's question and needs a measurement first (PRO-0036 child item 6). This case is about what the flow does once the grant reads false, not about how soon it reads false."
+  },
+  {
+    "id": "CASE-0315",
+    "req": "REQ-084",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorUI/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-5 repointed the Text at Copy.heroLede \u2014 DEF-161's exact shape, a constant that exists while the window draws something else. `./scripts/test.sh --filter theSheetDrawsTheRestartNote` exited 1 with one issue. Restored, green.",
+    "note": "DEF-161, REQ-084. statesRestartNote is true while Screen Recording is missing and false once it is held, which is the pane the design of record draws and the pane it omits. The drawing site is bound to Copy.restartNote by name. PRO-0067's A5 asserted only that the constant contained the word 'restart'; that assertion could not have failed on a build that rendered the sentence nowhere, which is how DEF-161 survived from PRO-0067 to here. The rendered claim is CASE-0316.",
+    "source": {
+      "analyzer": "WalkthroughFlowTests.theSheetDrawsTheRestartNote, reading the comment-stripped Walkthrough.swift for Copy.restartNote and statesRestartNote at the drawing site",
+      "examined": 352
+    }
+  },
+  {
+    "id": "CASE-0317",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/cases.json",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-1, which is the same run: with the guard removed the printed population read all sixteen states rather than three, so the set assertion this case rests on failed naming them.",
+    "note": "A3 RE-DERIVED, WITH ITS PROVENANCE ON THE ROW. PRO-0067's A3 reads 'the disabled next button is present in the tree in every state where it is disabled'. WHEN IT WAS WRITTEN THAT CLAUSE WAS VACUOUS: no `.disabled(` modifier existed anywhere in Walkthrough.swift, the set of states in which the primary was disabled was empty, and the clause asked as written would have read green having measured nothing. PRO-0081 BUILT THE POPULATION AND THEN WITNESSED THE CLAUSE OVER IT \u2014 the verifier named that a widening, and CASE-0100 records it in its own words. CASE-0100 is not edited by this item and its status is not changed. What is added here is the honest re-derivation: the population now genuinely exists, it is exactly three states, they are printed as a set rather than implied, and each of them now carries a stated reason. A READER SIX MONTHS OUT SHOULD TAKE THIS ROW AS: the guarantee held, and it was arranged before it held. Those are different facts and the campaign carries both."
+  },
+  {
+    "id": "CASE-0316",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0086/glass-tree-read.json",
+      "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason.png",
+      "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason-key.png"
+    ],
+    "armed": true,
+    "armedBy": "TWO-WAY ON ONE BUILD, one AXPress apart. On the intro step the same reader read the same identifier as enabled TRUE, label 'Set up permissions', frame 140x24, with NO node carrying proctor.walkthrough.action.primary.reason anywhere in the tree. On the permissions step: enabled FALSE, label 'Connect a model', frame 127x24, reason node present at 441x14. A pinned field or an unconditional caption could not have produced that pair.",
+    "note": "DEF-160 and DEF-161 on the glass, which is the rung CASE-0312 and CASE-0315 explicitly do not claim. A release .build/Proctor.app ran as pid 491 with PROCTOR_SOCKET naming nothing, so its report is nil and every grant reads false \u2014 the state the design draws disabled, on a machine that holds the real grants. The walkthrough was forced open with -walkthroughCompleted NO in NSArgumentDomain, which is PROCESS-SCOPED AND WRITES NOTHING: the shared defaults key read 1 before the launch and 1 after it, and /Applications/Proctor.app was neither modified nor launched. THE READER IS THE INSTALLED proctor-agent, pid 52976, a different process sharing no memory with the target, resolving by AXIdentifier over AXUIElement. It read: primary AXButton 'Connect a model' ENABLED FALSE at 127x24 carrying help 'Allow Accessibility and Screen Recording above to continue. Start with Accessibility.'; the same sentence as an AXStaticText at proctor.walkthrough.action.primary.reason, 441x14, drawn above the control it explains; proctor.walkthrough.permissions.restart carrying Copy.restartNote verbatim at 403x28; and proctor.walkthrough.action.skip ENABLED TRUE at 64x16 beside the refusal, which is REQ-083 measured rather than reasoned. AXEnabled is what the app publishes about itself over the plane Proctor's own tools act on; it is not a kernel-level witness and is not claimed as one.",
+    "witness": {
+      "recorder": "the installed proctor-agent (pid 52976) reading pid 491's accessibility tree by AXIdentifier with its own AX client",
+      "effect": "ipc",
+      "count": 4
+    }
+  },
+  {
+    "id": "CASE-0318",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "raster-visual",
+    "lane": "macos-glass",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason.png",
+      "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason-key.png",
+      "docs/test-campaign/evidence/PRO-0086/glass-tree-read.json"
+    ],
+    "armed": true,
+    "armedBy": "The two frames differ in the one property being asked about and agree on everything else: inactive, both Allow buttons draw the same grey; key, Accessibility's draws filled accent and Screen Recording's stays plain. A capture that could not tell the two treatments apart would have shown the same pair twice.",
+    "note": "THE COHERENCE CLAUSE, IN PIXELS. Brief 79 asks whether this item's caption and PRO-0090's one-prominent-Grant rule say something coherent about what to do first. They do: the caption reads 'Start with Accessibility' and the filled Allow button is Accessibility's row, with Screen Recording's plain beside it. Both frames are ScreenCaptureKit, window-scoped on cgWindowID 152808, status complete, trustworthy true, dirtyArea 0, framesWaited 3 and 12 \u2014 the window's own pixels rather than a screen crop. WHAT THE PICTURES ALSO SHOW, and it is not this item's fix: with the window key, the DISABLED primary still draws filled accent with a dimmed label, while the design of record draws that same control as a plain button (class=\"btn\" disabled, against class=\"btn prominent large\" on the intro's enabled one). A filled accent button that cannot be pressed reads as pressable. Recorded as DEF-163 and left open."
   }
 ]

@@ -1,0 +1,79 @@
+{
+  "what": "The walkthrough's permissions step, read out of a different process than the one drawing it.",
+  "target": {
+    "app": ".build/Proctor.app (release, ad-hoc signed, built by scripts/build-app.sh)",
+    "pid": 491,
+    "launchedAs": "PROCTOR_SOCKET=/tmp/pro0086-nonexistent.sock ./.build/Proctor.app/Contents/MacOS/Proctor -walkthroughCompleted NO",
+    "whyThatLaunch": "PROCTOR_SOCKET names nothing, so AgentModel's report is nil and every grant reads false — which is the state the design draws disabled, on a machine that holds the real grants. -walkthroughCompleted NO rides in NSArgumentDomain, which is process-scoped and writes nothing: `defaults read app.fledgeling.procter walkthroughCompleted` read 1 before the launch and 1 after it, so the installed build's own setting was never touched.",
+    "installedAppUntouched": "/Applications/Proctor.app was neither modified nor launched"
+  },
+  "reader": {
+    "who": "the INSTALLED proctor-agent, pid 52976, reached over MCP",
+    "how": "AXUIElement by AXIdentifier, from a process sharing no memory with the target",
+    "appHandle": "app:491:7",
+    "window": "win:7:0, cgWindowID 152808, 640x572"
+  },
+  "readOnThePermissionsStep": [
+    {
+      "identifier": "proctor.walkthrough.action.primary",
+      "role": "AXButton",
+      "label": "Connect a model",
+      "enabled": false,
+      "frame": "127x24 at (1017,678)",
+      "help": "Allow Accessibility and Screen Recording above to continue. Start with Accessibility.",
+      "reading": "DEF-160. The refusing control carries the reason as its accessibility hint, so VoiceOver landing on the button hears why without finding the caption first."
+    },
+    {
+      "identifier": "proctor.walkthrough.action.primary.reason",
+      "role": "AXStaticText",
+      "value": "Allow Accessibility and Screen Recording above to continue. Start with Accessibility.",
+      "frame": "441x14 at (703,658)",
+      "reading": "DEF-160. Drawn, sized and in the tree — the sentence a sighted person reads, directly above the control it explains."
+    },
+    {
+      "identifier": "proctor.walkthrough.permissions.restart",
+      "role": "AXStaticText",
+      "value": "Screen Recording needs Proctor to restart before it takes effect. Proctor will say so when it lands.",
+      "frame": "403x28 at (662.5,561)",
+      "reading": "DEF-161. Copy.restartNote rendered by a window for the first time since PRO-0067 wrote it."
+    },
+    {
+      "identifier": "proctor.walkthrough.action.skip",
+      "role": "AXButton",
+      "label": "Skip setup",
+      "enabled": true,
+      "frame": "64x16 at (945,682)",
+      "reading": "REQ-083. The way out is present and enabled in the same state that refuses the primary. Not a lockout."
+    },
+    {
+      "identifier": "proctor.walkthrough.action.back",
+      "role": "AXButton",
+      "label": "Back",
+      "enabled": true,
+      "reading": "A second way out of the refusing step."
+    },
+    {
+      "identifier": "proctor.walkthrough.grant.accessibility.action",
+      "role": "AXButton",
+      "label": "Allow Accessibility",
+      "enabled": true
+    },
+    {
+      "identifier": "proctor.walkthrough.grant.screenRecording.action",
+      "role": "AXButton",
+      "label": "Allow Screen Recording",
+      "enabled": true
+    }
+  ],
+  "twoWayOnOneBuild": {
+    "before": "One AXPress earlier, on the intro step, the same reader read the same identifier proctor.walkthrough.action.primary as role AXButton, label 'Set up permissions', ENABLED TRUE, frame 140x24, and NO node with identifier proctor.walkthrough.action.primary.reason existed anywhere in the tree.",
+    "after": "On the permissions step: ENABLED FALSE, label 'Connect a model', frame 127x24, and the reason node present with a 441x14 frame.",
+    "why": "A field pinned to false, or a caption drawn unconditionally, could not have produced that pair. The negative arm and the positive one are the same build, the same process and the same reader, one press apart."
+  },
+  "pictures": {
+    "walkthrough-permissions-reason.png": "The window inactive: 'Connect a model' greyed beside an undimmed 'Skip setup', the caption above both, the restart note under the rows.",
+    "walkthrough-permissions-reason-key.png": "The same window key: Accessibility's Allow filled accent and Screen Recording's plain, which is PRO-0090's rule agreeing with this item's caption — the caption says 'Start with Accessibility' and the filled button is Accessibility's.",
+    "capture": "ScreenCaptureKit, window-scoped, status complete, trustworthy true, dirtyArea 0, framesWaited 3 and 12"
+  },
+  "whatThisIsNot": "AXEnabled is what the app publishes about itself, read by a separate process over the accessibility API — the same plane Proctor's own tools act on. It is not a kernel-level witness and is not claimed as one."
+}

@@ -1,0 +1,99 @@
+[
+  {
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 2 tests in 1 suite failed after 0.001 seconds with 10 issues.",
+    "failures": [
+      "((reason == nil) \u2192 false) == (enabled \u2192 true)",
+      "((reason == nil) \u2192 false) == (enabled \u2192 true)",
+      "((reason == nil) \u2192 false) == (enabled \u2192 true)",
+      "((reason == nil) \u2192 false) == (enabled \u2192 true)",
+      "((reason == nil) \u2192 false) == (enabled \u2192 true)",
+      "((reason == nil) \u2192 false) == (enabled \u2192 true)"
+    ],
+    "failureCount": 10,
+    "id": "ARM-1",
+    "clause": "DEF-160 A1/A2 \u00b7 a reason exists exactly where the primary refuses",
+    "mutation": "the biconditional's guard removed, so a reason is returned in every state including the twelve where the primary is live",
+    "file": "Sources/ProctorCore/WalkthroughFlow.swift",
+    "filters": [
+      "aReasonExistsExactlyWhereThePrimaryRefuses",
+      "theReasonNamesTheMissingGrantAndTheNextAction"
+    ]
+  },
+  {
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "failures": [
+      "(WalkthroughFlow.primaryDisabledReason("
+    ],
+    "failureCount": 1,
+    "id": "ARM-2",
+    "clause": "DEF-160 A2 \u00b7 the reason nominates the grant drawn prominent",
+    "mutation": "the first move taken from the last missing grant instead of from prominentGrant, so the caption and the filled Allow button nominate different rows",
+    "file": "Sources/ProctorCore/WalkthroughFlow.swift",
+    "filters": [
+      "theReasonNamesTheMissingGrantAndTheNextAction"
+    ]
+  },
+  {
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "failures": [
+      "(source \u2192 \"import SwiftUI"
+    ],
+    "failureCount": 1,
+    "id": "ARM-3",
+    "clause": "DEF-160 A3 \u00b7 the footer draws the reason and hands it to the button",
+    "mutation": "the caption's identifier removed, so no glass lane could find the sentence",
+    "file": "Sources/ProctorUI/Walkthrough.swift",
+    "filters": [
+      "theFooterDrawsTheReason"
+    ]
+  },
+  {
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "failures": [
+      "(source \u2192 \"import SwiftUI"
+    ],
+    "failureCount": 1,
+    "id": "ARM-4",
+    "clause": "DEF-160 A3 \u00b7 the disabled button carries the reason as a hint",
+    "mutation": "the accessibility hint removed, so VoiceOver on the refusing button hears nothing",
+    "file": "Sources/ProctorUI/Walkthrough.swift",
+    "filters": [
+      "theFooterDrawsTheReason"
+    ]
+  },
+  {
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.006 seconds with 1 issue.",
+    "failures": [
+      "(source \u2192 \"import SwiftUI"
+    ],
+    "failureCount": 1,
+    "id": "ARM-5",
+    "clause": "DEF-161 \u00b7 the permissions sheet draws the restart note",
+    "mutation": "the note repointed at another constant, which is DEF-161's exact shape: the constant exists and the window draws something else",
+    "file": "Sources/ProctorUI/Walkthrough.swift",
+    "filters": [
+      "theSheetDrawsTheRestartNote"
+    ]
+  },
+  {
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.",
+    "failures": [
+      "(disables \u2192 2) == 1",
+      "(primary.lowerBound \u2192 3014[utf8]) < (disabled.lowerBound \u2192 2713[utf8])"
+    ],
+    "failureCount": 2,
+    "id": "ARM-6",
+    "clause": "DEF-160 A4 \u00b7 nothing else disables a control in this file",
+    "mutation": "Skip setup disabled by the same rule as the primary, which is the lockout this clause exists to catch",
+    "file": "Sources/ProctorUI/Walkthrough.swift",
+    "filters": [
+      "skipIsNeverClosed"
+    ]
+  }
+]

@@ -747,6 +747,42 @@
       "class": "contract guarantee",
       "text": "Every key in the payload Proctor's window reads and Proctor's agent writes has one definition that both ends reach. This is not a style rule: the reader takes a default for a key it cannot find, so a rename that parts the two ends does not fail \u2014 it reports a wrong answer quietly.",
       "source": "DEF-039 one layer down; AgentModel read value[\"canShow\"] while RunHUDFeed.wire wrote \"canShow\" and nothing bound them; the same shape HistorySurface.Wire closed for the history window"
+    },
+    {
+      "id": "REQ-082",
+      "text": "A control the flow refuses to let a person use states, on the surface that refused, which grant is still missing and which control to press next \u2014 because a disabled control with no stated reason is worse than an enabled one that fails honestly: a person who cannot see why the button is dead clicks it, concludes the app is broken, and quits",
+      "source": "spec-PRO-0086.md A1-A3; brief 79 'What this item owes'; design/surfaces/proctor-surfaces.html walkthrough/permissions",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "The sentence is non-nil exactly where primaryEnabled is false, and nominates the same grant prominentGrant draws filled, so the caption and the one prominent Allow button cannot offer different first moves. Value-level at outcome rung; the rendered half is CASE-0316.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-083",
+      "text": "The way out of the walkthrough stays reachable and ungated in every state where the primary refuses, including after a grant is revoked while the window is open, because skipping is completing and a flow that refuses to advance must not also refuse to end",
+      "source": "spec-PRO-0086.md A4-A5; brief 79 'The skip path stays open'; WalkthroughFlow.completes, established wave 9",
+      "class": "safety guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "Guarded as a count rather than a reading: one `.disabled(` in Walkthrough.swift and it is the primary's. A second one \u2014 on Skip or on Back \u2014 is the lockout, and ARM-6 watched that assertion fail with the count at 2.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-084",
+      "text": "The permissions surface states the Screen Recording restart requirement while that grant is missing, whether or not a restart is offered, because the fact is true either way and the offer is gated on evidence that may not arrive",
+      "source": "spec-PRO-0086.md A6; spec-PRO-0067.md A5; design/surfaces/proctor-surfaces.html walkthrough data-state=permissions, which draws the paragraph under the two grant rows",
+      "class": "disclosure guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "PRO-0067's A5 has been true at the value level and false on the glass since the constant was written: the test asserted Copy.restartNote contained the word 'restart' and nothing asserted a window drew it. DEF-161.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -2477,6 +2513,63 @@
       "title": "Twenty-seven more force-unwrap sites across nine test files carry DEF-135's shape, each able to abort the runner rather than fail its own test",
       "found": "PRO-0090, sweeping for the shape once DEF-135 was measured",
       "detail": "`grep -rn ')!' Tests` outside the file this item fixed: AuditChainTests 11, AuditChainWiringTests 4, ProctorCoreTests 3, TUIHistoryPaneTests 2, ToolchainTests 2, SwitchSettingsTests 2, MenuBarReadinessTests 1, GuestInventoryTests 1, RunHUDCharacterAssetTests 1. Not all are equally live \u2014 TimeZone(identifier: \"UTC\")! cannot fail on a Mac. But Toolchain.entry(for:)!, AuditSeal.decode(...)! and script.range(of: \"kill -0\")! each unwrap a lookup against production data, which is DEF-135's shape exactly: the regression the test exists for is the input that kills the runner. Left open rather than fixed here because a sweep across nine unrelated suites is a different item from this one's four surfaces, and each site needs a reading of whether #require or a restructure is right."
+    },
+    {
+      "id": "DEF-160",
+      "status": "fixed",
+      "severity": "high",
+      "req": "REQ-082",
+      "surface": "SURF-009",
+      "title": "The walkthrough's primary refuses in three states and none of them said why",
+      "found": "PRO-0086, reading the behaviour PRO-0081 shipped against the argument brief 79 makes against it",
+      "detail": "WalkthroughFlow.primaryEnabled returns false in 3 of 16 input combinations, all on the permissions step, and Walkthrough.swift drew the button disabled with no accompanying text in any of them. Grep for `reason`, `disabledReason` or any use of a Copy constant explaining the refusal across Sources/ProctorUI returned nothing. The person is left to infer the rule from two grant rows 200px above the control that will not respond.",
+      "fix": "WalkthroughFlow.primaryDisabledReason(on:accessibility:screenRecording:), non-nil exactly where primaryEnabled is false, drawn as a caption directly above the footer buttons and handed to the disabled button as an accessibility hint. It names every grant still missing and nominates the grant prominentGrant draws filled.",
+      "fixedBy": "PRO-0086 commit 582540d",
+      "evidence": [
+        "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+        "Sources/ProctorCore/WalkthroughFlow.swift",
+        "docs/test-campaign/evidence/PRO-0086/arming.json"
+      ]
+    },
+    {
+      "id": "DEF-161",
+      "status": "fixed",
+      "severity": "medium",
+      "req": "REQ-084",
+      "surface": "SURF-009",
+      "title": "Copy.restartNote was written by PRO-0067 and rendered by nothing since",
+      "found": "PRO-0086, checking brief 79's clause that the restart requirement is stated whether or not the restart is offered",
+      "detail": "WalkthroughFlow.Copy.restartNote is defined at WalkthroughFlow.swift:237 and its only other reference in the repository was its own A5 test, which asserted the constant contained the word 'restart'. The design of record draws that paragraph under the two grant rows in the pane where neither grant is held. The build drew it nowhere, so A5 was true at the value level and false on the glass for as long as the constant existed \u2014 DEF-035's shape on a different surface.",
+      "fix": "HeroPermissions draws Copy.restartNote under the rows while statesRestartNote(screenRecording:) is true, carrying ID.restartNote so a glass lane can find it.",
+      "fixedBy": "PRO-0086 commit 582540d",
+      "evidence": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+        "docs/test-campaign/evidence/PRO-0086/arming.json"
+      ]
+    },
+    {
+      "id": "DEF-162",
+      "status": "open",
+      "severity": "low",
+      "req": "REQ-083",
+      "surface": "SURF-009",
+      "title": "The design of record's permissions pane draws no Skip setup, and the build draws one on every step but connect",
+      "found": "PRO-0086, reading design/surfaces/proctor-surfaces.html for the disabled-primary caption",
+      "detail": "The walkthrough's permissions pane in the design of record has a footer of dots, spacer, Back and a disabled 'Connect a model'. Walkthrough.swift:77-81 draws 'Skip setup' there too, borderless and never disabled. The build is the side brief 79 protects \u2014 skipping is completing and a person macOS will not grant to must be able to leave \u2014 so the record that is wrong is the design, not the window. Left open rather than fixed: changing the design of record is a reader's call and this item is not licensed to edit it, and the intro pane of the same design does draw Skip setup, so the omission may be a drawing that was never updated rather than a decision.",
+      "detailNote": "Not a code defect. Recorded so the divergence is a row somebody decides rather than a thing two documents disagree about quietly."
+    },
+    {
+      "id": "DEF-163",
+      "status": "open",
+      "severity": "medium",
+      "req": "REQ-082",
+      "surface": "SURF-009",
+      "title": "The disabled primary still draws filled accent while the design of record draws it plain, so a control that cannot be pressed looks pressable",
+      "found": "PRO-0086, from its own glass capture: the coherence check on PRO-0090's prominence rule showed the refusing button in accent blue once the window was key",
+      "detail": "Walkthrough.swift gives the primary .borderedProminent unconditionally. On an inactive window macOS greys it and the refusal is legible; on a key window it draws in the accent fill with only the label dimmed, which is what a person actually sees while working the flow. The design of record draws the intro's enabled primary as `class=\"btn prominent large\"` and the permissions pane's disabled one as `class=\"btn\" disabled` \u2014 plain \u2014 so the record already settles the rule and the build diverges from it. Evidence: docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason-key.png against walkthrough-permissions-reason.png, the same window one activation apart.",
+      "fix": "Unfixed. The shape is PRO-0090's own two-branch buttonStyle in HeroPermRow \u2014 a filled branch and a plain one chosen by primaryEnabled \u2014 and it does not touch the prominence rule that neighbours it.",
+      "detailNote": "Left open deliberately: spec-PRO-0086 commits to revisiting no wave-9 composition decision, and changing how a shipped control is drawn is that. It is recorded with the capture that found it so the reader can take it as its own item."
     }
   ]
 }

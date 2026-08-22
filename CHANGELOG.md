@@ -130,6 +130,20 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **The setup window now tells you why it won't move on.** Proctor's walkthrough keeps `Connect a model` switched off until both Accessibility and Screen Recording are granted, and until now nothing on screen said so. You'd press a dead button and be left to work out the rule yourself.
+
+  There's a line above the buttons now, and it names what's missing and what to press: "Allow Accessibility and Screen Recording above to continue. Start with Accessibility." With one permission already in, it names only the one you still owe. The permission it tells you to start with is the same one drawn as the filled **Allow**, so the sentence and the button agree about your next move rather than offering two.
+
+  VoiceOver gets the same sentence. It's the button's accessibility hint, so landing on the control tells you why it's refusing without having to find the caption first.
+
+- **Skipping setup still works when a permission is missing, and it always will.** `Skip setup` is never switched off, in any state, including after a permission is taken away while the window is open. Skipping is completing here; that's deliberate, because the alternative is a window that reappears at every launch for somebody who's already decided against it.
+
+  A flow that won't advance mustn't also refuse to end. The way that's held down is a test that counts the switched-off controls in the file rather than reading it: there's one, it's the primary, and a second one anywhere would fail the build.
+
+- **The Screen Recording restart note is finally on screen.** macOS caches that answer per process for the life of the process, so granting Screen Recording doesn't reach a running Proctor until it restarts. The sentence saying so was written into the app in an earlier release and no window ever drew it, which meant the fact was true in the code and invisible to you.
+
+  It sits under the two permission rows while that grant is missing, which is where the design always put it.
+
 - **When another program is driving your Mac, the run panel now says so properly.** Run Proctor with `PROCTOR_ACTUATION=cua` and cua-driver performs the steps instead of Proctor's own planes. Two things about that used to reach the run record and never reach the screen, which is where you're actually looking.
 
   The first is an escalation nobody asked for. cua-driver tries an accessibility action, then an event routed to one process, and only brings the app to the front when neither works. It decides that per element, so it can happen partway through a batch that never requested the foreground. The panel used to say the batch needed the front, which is a different claim. It now says the front was taken and the batch didn't ask for it.
