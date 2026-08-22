@@ -160,3 +160,69 @@ Ten survivors killed is 0.3% of a 3,158-site pool. Killing ten named sites canno
 sampled at random from the other 3,148, however well those ten are killed. A per-survivor test
 closes a survivor; only a class-closing seam can move a package rate, and the one class this item
 closed — 34 argument-decode sites checked against their own published schema — is 1.1% of the pool.
+
+## Progress — 2026-08-22
+
+Built on `ai/pro-0092`, stopped before verify. Gate **2,073 tests in 252 suites, exit 0**, against a
+baseline of 2,064 in 251 on `main`.
+
+**Ten of the thirteen survivors now die; three are recorded with an argument each.** Six seams were
+built, each an extraction with the production call site rewritten in the same change. Three of the
+thirteen needed no seam at all and were only untested, which is worth separating from the seven the
+brief counted: `SnapshotOptions` was always constructible, `CGWindowIndex.correlate` already took
+its records as a parameter, and `RunHUDPalette.light` is a static a test can read.
+
+**The re-measured rate is 83.3% and the honest reading is that nothing moved.** 20 SURVIVED of 24
+scored over the same 84 files, count 24, seed 20260823 against PRO-0080's 20260821. One mutant is
+4.2 points at n=24. Ten killed sites are 0.3% of a 3,158-site pool, and a rate sampled at random
+from the other 3,148 cannot notice them. A per-survivor test closes a survivor; only a class-closing
+seam can move a package rate.
+
+**The one class closed did move a mutant it was never pointed at.** The schema-versus-decoder
+agreement check covers 34 argument-decode sites, and the fresh seed picked one of them —
+`Dispatch.swift:244`, `proctor_capture.normalize` — out of 3,158 sites. Re-applied afterwards to
+attribute the kill: `["proctor_capture.normalize decodes false, the schema says true"]`.
+
+**The out-of-family review found the one thing worth changing and it was accepted.** Gemini named
+`dispatchDefaultsAgreeWithTheCatalogue` twice — under "asserting an implementation detail" and again
+under "raising the measured number without raising what the suite knows" — because it reads
+`Dispatch.swift` as text and so registers a kill without asking what an omitted argument resolves to.
+`Dispatcher.StabilityArguments` and `Dispatcher.InspectArguments` are the answer: survivors 2 and 8
+now die to a decoded value, and the source check stays as the class check over the other 32 sites,
+registered as `source-analysis` with its denominator rather than dressed as a behavioural one.
+
+**Moving that decode found a fault in the class check on the way out.** `InspectArguments` was first
+declared in the stability section, so the parser attributed `presentation` to `proctor_stability` and
+the (tool, argument) join went nil. Each struct now sits under its own tool MARK. It was visible only
+because CASE-0458 asserts by name the two pairs it must find — a check that had simply compared
+whatever it happened to parse would have passed over zero comparisons.
+
+**The runner no longer scores a timeout as a kill**, armed by driving both versions from one fixture:
+`killed` under the runner `main` has, `TIMEOUT` under this one, with a genuine failure unchanged in
+both.
+
+### Gates, with their real exit codes
+
+| Gate | Exit | Reading |
+|---|---|---|
+| `./scripts/test.sh` via `governor-run --weight 6` | **0** | *Test run with 2073 tests in 252 suites passed*. Refused three times first with `no berth available` — the governor's ceiling drops to 3 under critical CPU pressure, so a weight-6 claim cannot be granted at all until it lifts. |
+| `defect_gate.py claims` | **0** | One claimed defect, DEF-217, reads `fixed`. |
+| `defect_gate.py dropped` | **0** | 2 files, 118 merges, 52,828 id/field pairs examined; no dropped value. |
+| `test_instruments.py` | **0** | 62 passed, 0 failed. |
+| `operator_path_gate.py` | **0** | 13 operator-path sites, 15 entries classed. |
+| `mutation_seam_arm.py` | **0** | 12 of 12 armed, each mutation confirmed landed before its verdict was read; tree clean after. |
+| `mutation_timeout_arm.py` | **0** | Both runners driven from one fixture; the decision and the end-to-end summary both differ, and a genuine failure does not. |
+| `campaign.py check` (test-campaign 0.9.6) | **1** | **Pre-existing.** The same gate against this branch's merge base `eed148f` also exits 1, and the blocker id sets `diff` identical: REQ-007, REQ-024, REQ-086, CASE-0001, CASE-0318, CASE-0333–0335. None of this item's ids appear. |
+
+### Judged and left alone
+
+- **The equivalent mutant.** `SessionMaestro.swift:242`, a comparator over unique dictionary keys.
+  Argued against source in PRO-0080; chasing it produces a test that asserts an implementation detail.
+- **`CGWindowIndex.correlate`'s array subscript.** Total under its own `count == 1` guard, so it is
+  not a live hazard. Converting it to `matches.first` would make the mutant die as a failing
+  assertion rather than as an abort, which is a nicer arming and not a reason to change production.
+  Recorded on CASE-0461 with the captured output.
+- **DEF-033.** Not flipped. It is a survival-rate measurement and the rate moved by less than one
+  mutant. Flipping it on this evidence is the move PRO-0097 wrote the rule against.
+- **The four `no-independent-oracle` survivors' constants.** Not hoisted into named constants either:
+  a named constant asserted in a test is the same second copy with a better name.
