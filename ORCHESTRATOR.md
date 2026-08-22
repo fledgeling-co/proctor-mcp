@@ -2188,3 +2188,79 @@ reply. The lane itself held — it cited `WalkthroughFlowTests`, `PrimaryPromine
 **A correction to this file's own briefing.** `defect_gate.py` takes positional arguments, so bare
 `claims` and `dropped` exit **2** on usage rather than running. Two runner briefs told them to invoke
 it bare; both worked it out, and the wording is wrong in this file wherever it appears.
+
+### PRO-0102 merged, verified Done — and the registry merge went the right way this time (2026-08-22)
+
+`main` is at the merge of `ai/pro-0102`. Nothing pushed. `reckon` **1.1.0** is now verified, which is
+the thing nine other projects were holding on.
+
+| Gate on merged `main` | Exit |
+|---|---|
+| `./scripts/test.sh` | **0** — 2,064 tests in 251 suites |
+| `defect_gate.py claims` (both specs) | **0** / **0** |
+| `defect_gate.py dropped` | **0** — 112 merges, **44,283** id/field pairs |
+| `test_instruments.py` | **0** — 62 passed |
+| `campaign.py check` | 1, naming no wave-16 id |
+
+**Both registry files conflicted, and this is the fourth time that has happened and the first time it
+cost nothing.** The two blanket rules are both wrong and both were tried here before: "keep ours"
+silently dropped five rows at PRO-0091, and "take theirs" reverted sixteen defect flips at PRO-0090
+and two more at PRO-0086. The rule that holds is **per row, the side that changed it wins, and which
+side that is a question about the row rather than about the branch.** Resolved by a three-way merge
+keyed on id against `:1`, `:2` and `:3`: 20 cases and 11 rows came from the branch, 11 cases and 1 row
+from `main`, and **`main` won as corrector on exactly six rows — DEF-140, 162, 163, 165, 175 and
+193** — the six PRO-0100 had just closed and the branch still recorded `open`, which is precisely what
+a blanket "take theirs" would have reverted. No row was changed on both sides, so no judgement call
+was needed. `defect_gate.py dropped` then passed over 44,283 pairs, which is the instrument built for
+this failure confirming the resolution.
+
+**Open defects: seven.** DEF-033 (PRO-0092's), DEF-141, DEF-151 and DEF-180 (recorded limits), and
+three opened by the findings gate — DEF-200, DEF-201, DEF-202.
+
+**20 of 20 armings bit, and two bit harder than the record claims.** Reverting `reckon.py` to
+`31697a9` reds **18** checks where the record says 17, and the version-drift mutation reds the floor
+assertion as well as the drift assertion. The record understates itself in both places.
+
+**A claim was retired rather than corrected.** The item recorded that the ten defects the classifier
+calls broken are exactly the ten this registry records as non-fixed. That form goes stale whenever a
+defect closes, and PRO-0100's merge closed six of them inside the hour. The invariant that does not
+decay is registry-relative: **the classifier's `broken` set equals the registry's own non-fixed set**,
+verified at 115 rows giving 10 and at 111 rows giving 5.
+
+**Four findings outside the acceptance set, all with destinations before the merge was recorded.**
+DEF-201: `ID_RE` reads a brief's whole body with no code-fence or placeholder exclusion, so a quoted
+example id becomes a citation at confidence 1.0 and routes the brief to `unbuilt` — zero occurrences
+across 91 real briefs, so latent, and gemini raised it independently. **DEF-202, and this one leaves
+the repository:** six status words that mean *not* remaining work — `by design`, `invalid`,
+`obsolete`, `superseded`, `cannot reproduce`, `fixed (partial)` — all classify as work. Harmless here
+because this registry uses only `fixed` and `open`; not harmless in a registry that uses any of them,
+and 1.1.0 has been announced to nine projects as the version to run. Plus the plan's dangling
+`Cases`-table reference, corrected in place, and CASE-0427's copied count of 46 marketplace entries,
+removed rather than refreshed now the live figure is 47.
+
+### PRO-0101 is built and at Developer Review (2026-08-22)
+
+`ai/pro-0101` at `f600731`, eight commits, tree clean. `main` came in as a fast-forward. Suite 2,061
+tests in 251 suites over three runs, no Swift touched. `spec_citation_measure.py` 15/15;
+`spec_citation_arm.py` 23/23 mutations pinned with 15/15 checks watched to fail. `campaign.py check`
+exits 1 with an **identical blocker set** to its merge base, naming none of its ids. Allocated
+REQ-100/101, CASE-0430–0440, DEF-215, SURF-024.
+
+**Its arming caught three of its own mutations lying.** Three reported NOT ARMED against checks that
+worked, and all three were the mutation's fault — a partial line replacement, two regexes emitting a
+doubled backslash, and a scaffold whose newlines broke the verdict parser. A mutation that fails to
+apply looks exactly like a check that cannot fail.
+
+**Gemini returned `Needs More Work` and the runner took three points and refused one**, which is the
+shape an out-of-family lane is for. Taken: the consumed-brief sha came from `rev-parse HEAD` and dies
+on a squash, now `git log -1 --format=%h -- <path>`; `cat-file -e` accepts a tree and an empty blob,
+now type-and-size checked; a 20-character `none.` floor is boilerplate-satisfiable, now must name an
+artifact. Refused: archiving briefs instead of deleting them, because that changes how triage handles
+briefs and the spec's scope note rules it out. Its uniqueness finding was real and taken differently —
+normalising the 24 prose citations to headers would put brief 55 on two headers and brief 57 on seven.
+
+**A correction to this file's briefing, twice over.** `./scripts/test.sh` prints `PASS:` and exits 0;
+it does not print a literal `EXIT=0` line, and three runner briefs have said it does. And
+`fledgeling-plugins` is no longer clean — `plugins/flagship/` untracked and `.claude-plugin/marketplace.json`
+modified at 22:26 by a peer authoring a new plugin. PRO-0101's two commits there went in by explicit
+path over two files under `plugins/shipyard/skills/triage/`; nothing of the peer's was staged.
