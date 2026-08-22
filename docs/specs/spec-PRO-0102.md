@@ -134,6 +134,18 @@ Built in `~/Dev/fledgeling-plugins` at `224a696`, shipped as `reckon` **1.1.0**.
 carries the spec, the plan, the campaign rows and the evidence only; no Swift changed, so
 `CHANGELOG.md` gains nothing — the user-facing change belongs to the other repository's plugin.
 
+### Validation
+
+| Gate | Family | Outcome |
+|---|---|---|
+| Design review, before the plan | gemini (`agy --model gemini-3.7-flash-high`) | Both classification calls upheld. Raised DEF-213, which nothing in the code review would have found because it is latent until DEF-210 is fixed. |
+| Completeness critic, on the diff | gemini | 11 findings. 10 taken — 5 in the tool, 3 weak assertions, 2 whole checks that did not exist. 1 dispositioned with a reason in the plan. |
+| Same-family validation, fresh context | `claude-fable-5`, `--effort high` | Re-derived all five acceptance criteria independently and found each satisfied, citing `file:line`. Two findings taken: one negative assertion strengthened, and this file's case range reconciled against the plan's table. |
+
+Codex is OFF for this repo and grok returns `402 — balance exhausted`, so gemini substitutes on
+both out-of-family gates under the egress rule amended in ORCHESTRATOR.md on 2026-08-22. Named
+here as a downgrade rather than passed over.
+
 ### Defects
 
 | ID | Title | Status |

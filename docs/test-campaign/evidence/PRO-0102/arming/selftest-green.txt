@@ -44,7 +44,7 @@ the manifest and the marketplace agree         ok
 the published version carries these repairs    ok
 a weak join withholds retirement, and says why ok
 fixture · 6 rows · 2 piece(s) of work remain — 1 product, 0 evidence, 1 decision — across 6 ledger rows. This reckoning speaks for 100% of the campaign's designed cases and 100% of its stated requirements; the rest is not known to be done, it is simply not known. 1 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.
-wrote /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/reckon-selftest-k67sgjy7/out/ledger.json
+wrote /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/reckon-selftest-zicu7xih/out/ledger.json
 the headline counts what is actually left      ok
 a repaired defect is absent from what remains  ok
 

@@ -187,3 +187,14 @@ separate item rather than this one.
 | End to end vs this registry | 232 work items → 132; product 197 → 13; 569 rows conserved |
 | Out-of-family design review | gemini, both calls upheld, one finding taken as work item 2 |
 | Out-of-family completeness critic | gemini, 11 findings, 10 taken, 1 dispositioned above |
+
+**The case allocation grew from 16 to 20 during the build**, so the sixteen rows in the test
+strategy table above are not the final mapping. The suite ended at 24 assertions and the registry
+groups them into the twenty ids allocated, CASE-0410..CASE-0429; the reconciliation is the `Cases`
+table in `docs/specs/spec-PRO-0102.md`. Four of the extra rows are the critic's and the
+validation's findings, which did not exist when the table was written.
+
+**One more assertion strengthened after the same-family validation.** `CASE-0423` asserted
+`class not in ("unbuilt", "unjoined")`, which goes green under one of the two regressions it
+exists to catch. It now names the class, and both reverts red it —
+`evidence/PRO-0102/arming/arming-F-dprime.txt`, landed at `fc86fe7`.

@@ -1,0 +1,8 @@
+{"status": "REFUSED", "reason": "no berth available", "weight_wanted": 6, "available": 0, "ceiling": 10, "in_use": 10, "pressure": {"cpu": "busy", "memory": "busy", "disk": "healthy", "overall": "busy"}, "retry_after_sec": 38.9, "advice": "Reduce concurrency or lower --weight. Do not loop on this call; return to your own scheduler."}
+EXIT=75
+
+# Four attempts, 2026-08-22, weight 6, project proctor-mcp.
+# available went 4 -> 4 -> 0 -> 0 while ceiling fell from 10 to 6 and back.
+# This is a gate that COULD NOT RUN, not a gate that passed. The branch
+# changes no Swift (git diff --name-only main...HEAD: 21 files, all under
+# docs/), so the suite is a regression control with nothing to regress.
