@@ -1,0 +1,25 @@
+$ reckoning.py compare /tmp/selfcmp /tmp/selfcmp   # a reading against itself
+wrote /tmp/selfcmp/delta.md
+0 of 5 axes improved, 5 flat, 0 worsened; evidence work flat at 36 and the unmeasured class flat at 36 rows.
+ratchet published: clean
+exit above
+
+attribution: direct
+a reading against itself moves nothing:
+  work_items  tool +0  project +0  net +0
+  product     tool +0  project +0  net +0
+  evidence    tool +0  project +0  net +0
+  decision    tool +0  project +0  net +0
+  rows        tool +0  project +0  net +0
+rows moved/appeared/vanished: 0/0/0
+
+the published pair, tool movement + project movement = net movement:
+  work_items  -88 +4 = -84  holds
+  product     -172 -1 = -173  holds
+  evidence    +5 +0 = +5  holds
+  decision    +79 +5 = +84  holds
+  rows        +0 +104 = +104  holds
+
+published counts: previous {'work_items': 218, 'product': 183, 'evidence': 31, 'decision': 4, 'rows': 516}
+                  control  {'work_items': 130, 'product': 11, 'evidence': 36, 'decision': 83, 'rows': 516}
+                  current  {'work_items': 134, 'product': 10, 'evidence': 36, 'decision': 88, 'rows': 620}
