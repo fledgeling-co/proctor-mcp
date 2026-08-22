@@ -3070,6 +3070,19 @@
       "surface": "SURF-024",
       "req": "REQ-100",
       "fix": "NOT FIXED HERE. A spec citation needs a spec, and writing three retrospective specs for two retired items and one merged item is a different piece of work with its own decision about whether a retired item earns a spec at all. Recorded instead in docs/feature-specs/UNCLAIMED-BRIEFS.md, which is read by spec_citation_measure.py, so briefs 23 and 40 are accounted for with their reason rather than counted as unclaimed. PRO-0092 closes its own row when its spec is written at plan time."
+    },
+    {
+      "id": "DEF-203",
+      "title": "Three citation checks accept inputs their names imply they reject",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-024"
+      ],
+      "requirements": [
+        "REQ-100"
+      ],
+      "note": "Three checks in spec_citation_measure.py accept inputs their names imply they reject, each found by building the evasion against a scratch copy at PRO-0101's verification. (1) `every spec carries a parseable citation` passes when the only brief path sits in a fenced code block, an HTML comment or a struck-through line, because the legacy fallback is a bare BODY_PATH.search over the whole text; a **Brief:** header inside a fence in the first 20 lines counts too. (2) `every none citation names its origin` passes on `none. See docs/nowhere/imaginary-source.md` and on any backtick pair padded to 20 characters \u2014 the floor makes a citation name something, not resolve to it. (3) `every brief is claimed or registered` is satisfied by an incidental mention in an unrelated spec, so a brief nobody built from reads as claimed. None of the three is dead: each is armed and bites on the case it was written for, and the delivered tree exploits none of them because all 24 legacy citations are real prose at fence depth 0. SAME CLASS AS DEF-201 IN A DIFFERENT INSTRUMENT: a scanner reading a whole document for a token, with no exclusion for fences, comments or struck-through text, cannot tell a citation from a mention of one. Two tools in two repositories grew the same blind spot independently, which makes it a shape to check for rather than a bug either author made. The repair is not a longer floor: an input a check cannot classify should be a finding that names it, not a pass or a fail by default."
     }
   ]
 }
