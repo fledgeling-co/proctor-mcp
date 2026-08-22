@@ -83,13 +83,13 @@ The violation is written into `delta.md` as well as printed, so it survives the 
 These are limits of the instrument rather than findings about the project, and they sit beside
 the numbers rather than being worked around:
 
-- **The join is mechanical and weak.** 16 of 96 briefs joined at the 2026-08-22 reading. Below
+- **The join is mechanical and weak.** 16 of 96 briefs joined at the `2bdc808` reading. Below
   50% the tool withholds retirement claims and every brief stays in its documentary class, so
   `unjoined` is large by construction. The first reckoning's published figure of 78/91 was
   adjudicated by hand; the ledgers are mechanical on both sides, and the deltas are computed
   from the ledgers.
 - **All four unmeasured cells share one remedy line.** Brief 96 records this as a grouping the
-  tool still does. On this registry at `71b1a92` it presents differently: four blockers,
+  tool still does. On this registry at `2bdc808` it presents differently: four blockers,
   `BLOCK-0001` to `BLOCK-0004`, one case each at +0.3 points of coverage. The 16.7% that brief
   quotes is the join percentage, which `reckon` prints as a warning on the same run.
 - **`source` neither joins nor is refused as evidence** (brief 96, finding 2). A requirement
@@ -97,7 +97,7 @@ the numbers rather than being worked around:
 - **DEF-201** — a quoted placeholder id in a brief reads as a citation at confidence 1.0. Zero
   occurrences across this repository's briefs, so latent here.
 - **DEF-202** — six status words meaning *not* remaining work classify as work. This registry
-  uses only `fixed` and `open`, confirmed at `71b1a92` over 118 defect rows, so it does not
+  uses only `fixed` and `open`, confirmed at `2bdc808` over 118 defect rows, so it does not
   bite here.
 - **The installed plugin cache lags the shared source.** On 2026-08-22 the cache held `reckon`
   1.0.0 while the source read 1.1.0, and 1.0.0 crashes on this registry's list-valued evidence
