@@ -1,0 +1,4 @@
+warning: only 17.6% of briefs could be joined to the registry at all. The join is the inferential step in this pipeline; below half, retirement claims are withheld and every brief stays in its documentary class.
+proctor-mcp · 569 rows · 232 piece(s) of work remain — 197 product, 31 evidence, 4 decision — across 569 ledger rows. This reckoning speaks for 98% of the campaign's designed cases and 68% of its stated requirements; the rest is not known to be done, it is simply not known.
+wrote /tmp/pro0102/baseline/ledger.json
+exit=0

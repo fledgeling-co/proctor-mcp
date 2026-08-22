@@ -115,3 +115,11 @@ Measured 2026-08-22 against both copies of `skills/reckon/scripts/reckon.py`:
   never `.`, stop and report if files appear entangled. Shared repo measured clean at
   `a15febf` while this triage ran.
 - Out-of-family spec review: see the shared record at the foot of `spec-PRO-0103.md`.
+
+---
+
+## Implementation plan — 2026-08-22
+
+Implementation plan: `docs/plans/plan-PRO-0102.md` (tier: Small). The shared work lands in
+`~/Dev/fledgeling-plugins/plugins/reckon`; this repository carries the plan, this trailer and the
+campaign registry rows only.
