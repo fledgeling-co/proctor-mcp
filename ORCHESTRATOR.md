@@ -1941,3 +1941,56 @@ cpu `tight` and memory and disk `healthy` after a reboot. Two slots, re-read on 
 refuses with `errand_ticket_unavailable`, and cpu still reads `tight` with four berths held by other
 projects. Two routes unblock it: write `errand.toml` on the anvil daemon and restart it, or run it
 locally when the machine is genuinely idle. Neither is this fleet's to take.
+
+### Wave 16a returned — one item to verify, one back for gap-fix (2026-08-22)
+
+| ID | Head | Gate state | Next |
+|---|---|---|---|
+| PRO-0100 | `a33ac1c` on `ai/pro-0100` | `./scripts/test.sh` **2,064 tests in 251 suites, EXIT=0** (baseline 2,061), four runs. `defect_gate.py` claims 0 / dropped 0; `test_instruments.py` 0 (62/62); `operator_path_gate.py` 0/0; `skill_doc_measure.py` 0 (was 1, the arming); `campaign.py check` exit 1 and **names none of CASE-0390–0400 or REQ-094–096** — re-run here, blocker set is other items' | Verify |
+| PRO-0102 | `c1132ea` on `ai/pro-0102`; `reckon` **1.1.0** at `224a696`+`fc86fe7` upstream | `selftest.py` 46 checks EXIT=0 (26 before); `defect_gate.py` claims/dropped both EXIT=0. **`campaign.py check` was not run by the runner, and run here it names three of this item's own cases** — CASE-0426/0427/0428 claim `source-analysis` with no `source.analyzer` and no `source.examined` | Gap-fix |
+
+**PRO-0100's six defects are closed and its walkthrough guards were not touched.** DEF-162 gave the
+design record the `Skip setup` the build already had; DEF-163 stopped the refusing primary drawing
+accent-filled through a `PrimaryProminence` modifier rather than a second Button, because two
+Buttons duplicate the single `.disabled(` that `skipIsNeverClosed` counts; `git diff` shows zero
+deleted lines in that test file. DEF-140 took `try!` from 86 to 0. Two faults were found by arming
+the item's *own* new tests: CASE-0390's footer slice ran 2,218 characters into the next pane, so a
+caption satisfied a claim about a control, and DEF-163's first test interpolated 14 KB of source
+into its failure message and produced no verdict line — DEF-140's own failure mode, reopened by a
+test written to close it.
+
+**PRO-0102 goes back rather than forward, and the reason is a gate it did not run.** The three
+cases are the class the campaign has already been through: `campaign.py:772-781` reads
+`c["source"]["analyzer"]` and `c["source"]["examined"]` **as an int**, and DEF-108 is the record of
+the last case that put them elsewhere. The rung stays `source-analysis`; relabelling to clear the
+guard would be the label over the evidence.
+
+**SURF-023 is minted, because that call was the orchestrator's and the runner escalated it.**
+PRO-0102's twenty cases sat on SURF-022, whose route is `tool://vacuity-check/blind` — an in-repo
+script — and whose own description says it exists so a suite-wide measurement is not filed against
+a surface it never examined. `SURF-023 · Reckoning reconciler` holds them; SURF-022 keeps its 33.
+Open finding, not this item's: SURF-022 is still *named* "Campaign blind-mutation pass" while
+holding cases about `test_instruments.py`, `defect_gate.py`, `campaign.py check` and
+`status_literals.py`.
+
+**The verify lane, settled by what is installed rather than by preference.** `glm` is not on this
+machine, so the lane raised as the alternative was never reachable. Grok re-probed at 21:56 local:
+`402 Payment Required — Grok Build usage balance exhausted`. Codex stays OFF. Gemini is therefore
+the only out-of-family lane, and it carries a measured cross-project contamination mode, so every
+call runs `--new-project` from a neutral cwd and the reply is read for its own subject before it is
+believed — an off-topic answer is a lane failure, not a verdict.
+
+**That forces a split verify stage, and the downgrade is logged rather than passed over.** A gemini
+one-shot from a neutral cwd cannot execute `./scripts/test.sh` or walk a Swift diff. So the
+mechanical verification — re-running the gates, re-applying each recorded mutation, re-deriving
+every count — is done by a **fresh-context Opus verifier that did not build the work**, and the
+out-of-family judgement runs on gemini over the artifacts. The structural rule the fleet cares
+about (a runner cannot verify its own build) holds; the family rule holds for the judgement and is
+downgraded for the execution, and this line is that record.
+
+**The machine has gone quiet, which changes PRO-0092's status from held to startable.**
+Harbourmaster at 11:56Z: cpu, memory and disk all `healthy`, ceiling 12, in use 0, available 12,
+load 0.504 per core (8.07 / 12.52 / 19.06 falling). Its stated unblock condition was "run it
+locally when the machine is genuinely idle", and that is now met. It stays queued behind 16a
+because its mutation runner compiles the whole package per mutant and would poison the verifier's
+own timing gate — the same contention that makes it score a timeout as a kill.
