@@ -126,3 +126,37 @@ the argument per site.
 CASE-0457, REQ-108, DEF-217, SURF-026.
 
 ---
+
+## Implementation plan
+
+Implementation plan: `docs/plans/plan-PRO-0092.md` (committed: `eb28a5b`, tier: Standard).
+
+---
+
+## Defects
+
+| Defect | Was | Now | Cases |
+|---|---|---|---|
+| DEF-217 | new | fixed | CASE-0458, CASE-0459, CASE-0469 |
+
+**Defects:** DEF-217
+
+**Requirements:** REQ-108, REQ-109, REQ-110
+
+**Cases:** CASE-0457 through CASE-0471
+
+**Unused from this item's allocation:** DEF-218 onward, SURF-027 onward, and CASE-0472 onward. One
+defect was opened rather than a range, and fifteen cases were needed.
+
+## The row this item was written for, and why it is still open
+
+DEF-033 is not claimed above, and that is the result rather than a shortfall. It is a survival-rate
+measurement, not a bug: it closes when the number moves. The re-measured rate is **20 of 24 = 83.3%**
+against its recorded **19 of 22 = 86.4%**, and one mutant is 4.2 points at n=24 — so the move is
+smaller than the resolution of either sample and the package-level rate has not been shown to move.
+
+The arithmetic behind that is worth stating plainly, because it is the item's most useful finding.
+Ten survivors killed is 0.3% of a 3,158-site pool. Killing ten named sites cannot move a rate
+sampled at random from the other 3,148, however well those ten are killed. A per-survivor test
+closes a survivor; only a class-closing seam can move a package rate, and the one class this item
+closed — 34 argument-decode sites checked against their own published schema — is 1.1% of the pool.

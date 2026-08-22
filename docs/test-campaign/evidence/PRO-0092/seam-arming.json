@@ -1,7 +1,7 @@
 {
  "summary": {
-  "run": 10,
-  "armed": 10,
+  "run": 12,
+  "armed": 12,
   "notArmed": 0,
   "treeCleanAfter": true
  },
@@ -16,7 +16,7 @@
    "armed": true,
    "exit": 1,
    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 3 issues.",
-   "seconds": 11.1,
+   "seconds": 6.0,
    "why": "the includeWindowless flag inverts meaning"
   },
   {
@@ -29,8 +29,34 @@
    "armed": true,
    "exit": 1,
    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.",
-   "seconds": 6.8,
+   "seconds": 5.8,
    "why": "every stability run compares pixel tiles nobody asked for"
+  },
+  {
+   "case": "CASE-0470",
+   "survivor": "2 \u00b7 Dispatch.swift:381, at runtime",
+   "file": "Sources/ProctorAgent/Dispatch.swift",
+   "function": "decodedArgumentsResolveToThePublishedDefaults",
+   "mutation": "includeTiles = args.bool(\"includeTiles\", false)  ->  includeTiles = args.bool(\"includeTiles\", true)",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "armed": true,
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+   "seconds": 1.8,
+   "why": "the same survivor asked of the decoder rather than of the source"
+  },
+  {
+   "case": "CASE-0471",
+   "survivor": "8 \u00b7 Dispatch.swift:394, at runtime",
+   "file": "Sources/ProctorAgent/Dispatch.swift",
+   "function": "decodedArgumentsResolveToThePublishedDefaults",
+   "mutation": "presentation = args.bool(\"presentation\", true)  ->  presentation = args.bool(\"presentation\", false)",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "armed": true,
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+   "seconds": 6.0,
+   "why": "the same survivor asked of the decoder rather than of the source"
   },
   {
    "case": "CASE-0459",
@@ -42,7 +68,7 @@
    "armed": true,
    "exit": 1,
    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.",
-   "seconds": 8.3,
+   "seconds": 1.6,
    "why": "inspect stops returning presentation values it publishes by default"
   },
   {
@@ -55,7 +81,7 @@
    "armed": true,
    "exit": 1,
    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
-   "seconds": 11.2,
+   "seconds": 7.7,
    "why": "an unasked-for snapshot carries zero-area and offscreen nodes"
   },
   {
@@ -68,7 +94,7 @@
    "armed": true,
    "exit": 1,
    "verdict": "",
-   "seconds": 10.1,
+   "seconds": 6.3,
    "why": "the single fitting window resolves to a number that is not its own"
   },
   {
@@ -81,7 +107,7 @@
    "armed": true,
    "exit": 1,
    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.",
-   "seconds": 10.8,
+   "seconds": 5.6,
    "why": "a bare pid stops being selectable while any other process runs"
   },
   {
@@ -93,8 +119,8 @@
    "mutationLanded": "mutation landed, confirmed by re-reading the file",
    "armed": true,
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.967 seconds with 1 issue.",
-   "seconds": 7.3,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.074 seconds with 1 issue.",
+   "seconds": 5.7,
    "why": "the HUD takes the main window from the app under test"
   },
   {
@@ -107,7 +133,7 @@
    "armed": true,
    "exit": 1,
    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
-   "seconds": 7.7,
+   "seconds": 6.6,
    "why": "one ink tone drifts off the palette's single graphite"
   },
   {
@@ -120,7 +146,7 @@
    "armed": true,
    "exit": 1,
    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.",
-   "seconds": 5.7,
+   "seconds": 6.1,
    "why": "every keystroke reads as macOS switching the tap off"
   },
   {
@@ -133,7 +159,7 @@
    "armed": true,
    "exit": 1,
    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.002 seconds with 1 issue.",
-   "seconds": 5.7,
+   "seconds": 6.4,
    "why": "the cached public key's URL claims to be a directory"
   }
  ]

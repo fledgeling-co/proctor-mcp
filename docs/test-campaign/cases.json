@@ -5894,5 +5894,37 @@
     "armed": true,
     "armedBy": "The fresh seed armed it rather than this item. `Dispatch.swift:244`, `args.bool(\"normalize\", true)` mutated to `false`, was chosen by seed 20260823 out of 3,158 sites and scored `killed` in the sample. Re-applied afterwards to attribute the kill: `dispatchDefaultsAgreeWithTheCatalogue` exits 1 with `[\"proctor_capture.normalize decodes false, the schema says true\"]`, and the mutation was confirmed landed before the verdict was read.",
     "note": "The case for closing a class rather than nine instances. The agreement check was written for two named survivors of the FIRST sample and it killed a third mutant in the SECOND, at a decode site nobody had looked at, under a seed the item never saw. 34 decode sites in Dispatch.swift are now defended by one check where a per-site test would have defended two.\n\nWhat it does not say: 34 of 3,158 sites is 1.1% of the pool, so this is a class closed rather than the package covered."
+  },
+  {
+    "id": "CASE-0470",
+    "req": "REQ-108",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "Sources/ProctorAgent/Dispatch.swift"
+    ],
+    "armed": true,
+    "armedBy": "The mutant applied inside the decoder the extraction created, confirmed landed by re-reading the file, and `decodedArgumentsResolveToThePublishedDefaults` watched going red: `includeTiles = args.bool(\"includeTiles\", false)  ->  includeTiles = args.bool(\"includeTiles\", true)`, exit 1, Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.. Reverted, tree clean after.",
+    "note": "Survivor 2, asked of the decoder rather than of the source. CASE-0458 kills the same mutant by reading Dispatch.swift as text, and this item's out-of-family review named that twice as a kill registered without ever asking what an omitted argument resolves to. `Dispatcher.StabilityArguments` is the seam: an `Args` with no keys decodes to the defaults the schema publishes, and an `Args` carrying all three decodes to the supplied values, so a decoder returning a constant satisfies neither. The two decoded values are compared for inequality as well, which is what stops both clauses being satisfied by one answer.\n\nBoth cases are kept. This one is the behavioural kill; CASE-0458 is the class check over the other 32 decode sites, and it is registered as source-analysis because that is what it is."
+  },
+  {
+    "id": "CASE-0471",
+    "req": "REQ-108",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "Sources/ProctorAgent/Dispatch.swift"
+    ],
+    "armed": true,
+    "armedBy": "The mutant applied inside the decoder the extraction created, confirmed landed by re-reading the file, and `decodedArgumentsResolveToThePublishedDefaults` watched going red: `presentation = args.bool(\"presentation\", true)  ->  presentation = args.bool(\"presentation\", false)`, exit 1, Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.. Reverted, tree clean after.",
+    "note": "Survivor 8, the same at runtime through `Dispatcher.InspectArguments`. Armed separately from CASE-0470 because one test covering two mutants proves nothing about the second unless the second is watched.\n\nMoving the decode found a fault in the class check on the way: `InspectArguments` was first declared in the stability section, so the source parser attributed `presentation` to proctor_stability and the (tool, argument) join went nil. Each struct now sits under its own tool MARK. A parser sectioned by comment markers is only as right as where the code sits relative to them, and that failure was visible because CASE-0458 asserts the two pairs it must find by name."
   }
 ]
