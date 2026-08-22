@@ -161,8 +161,12 @@ uncited = sorted(n for n, (k, *_) in specs.items() if k in ("uncited", "malforme
 unresolved = []
 for name, (kind, path, sha, _) in specs.items():
     if kind in ("path", "legacy"):
-        if not (BRIEFS.parent.parent / path).exists() and not (REPO / path).exists():
-            unresolved.append(f"{name} -> {path} (not in the working tree)")
+        # Resolved against the brief directory in play rather than against REPO,
+        # so a scratch queue is measured as the queue and the real one cannot
+        # answer for it. The `docs/features-to-triage/` prefix is fixed by the
+        # grammar, so the basename is the whole of the lookup.
+        if not (BRIEFS / os.path.basename(path)).exists():
+            unresolved.append(f"{name} -> {path} (not in the brief queue)")
     elif kind == "commit":
         if git("cat-file", "-e", f"{sha}:{path}").returncode != 0:
             unresolved.append(f"{name} -> {path} @ {sha} (not at that commit)")
@@ -245,7 +249,11 @@ checks = [
 
 bad = 0
 for name, ok, detail in checks:
-    print(f"{'PASS' if ok else 'FAIL'}  {name}" + (f"   [{detail}]" if not ok and detail else ""))
+    # The detail is flattened because `spec_citation_arm.py` reads these lines one
+    # per check: a scaffold quoted with its newlines intact turned an ARMED check
+    # into a MISSING one, which reads as an unarmed check rather than a parse fault.
+    shown = " ".join(str(detail).split()) if detail else ""
+    print(f"{'PASS' if ok else 'FAIL'}  {name}" + (f"   [{shown}]" if not ok and shown else ""))
     bad += not ok
 
 kinds = {}
