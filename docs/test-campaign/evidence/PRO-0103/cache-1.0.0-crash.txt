@@ -1,0 +1,20 @@
+$ python3 ~/.claude/plugins/cache/fledgeling-plugins/reckon/1.0.0/skills/reckon/scripts/reckon.py build --briefs docs/features-to-triage --campaign docs/test-campaign --out /tmp/pro0103-v100
+  File "/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/reckon/1.0.0/skills/reckon/scripts/reckon.py", line 976, in main
+    return args.fn(args)
+           ~~~~~~~^^^^^^
+  File "/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/reckon/1.0.0/skills/reckon/scripts/reckon.py", line 852, in cmd_build
+    edges = build_join(briefs, campaign, threshold=args.join_threshold)
+  File "/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/reckon/1.0.0/skills/reckon/scripts/reckon.py", line 267, in build_join
+    registry.append((d.get("id"), "defect", tokens(d.get("title", "")) | tokens(d.get("evidence", ""))))
+                                                                         ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/reckon/1.0.0/skills/reckon/scripts/reckon.py", line 245, in tokens
+    return {w for w in re.findall(r"[a-z0-9]+", (text or "").lower())
+                                                ^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'lower'
+installed cache:
+/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/reckon/1.0.0
+  plugin.json version: 1.0.0
+shared source:
+  plugin.json version: 1.1.0
+  'unjoined' in cached reckon.py:
+0

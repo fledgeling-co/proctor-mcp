@@ -338,6 +338,17 @@ def main():
         report("gate · a ledger failing reckon's own gate is not reported clean",
                code != 0 and "did not come back clean" in out, "exit %d: %s" % (code, out[-200:]))
 
+        # --- 11. the cadence note's count of this file ----------------------
+        # DEF-193 was the fifth stale count in a document nothing read. A number
+        # a document states about an instrument is a number the instrument can
+        # read back.
+        cadence = HERE.parents[1] / "docs/reckoning/CADENCE.md"
+        stated = re.search(r"(\d+) checks", cadence.read_text(encoding="utf-8")) if cadence.is_file() else None
+        expected = CHECKS + 1
+        report("gate · the cadence note states this file's own check count",
+               bool(stated) and int(stated.group(1)) == expected,
+               "CADENCE.md says %s, this run has %d" % (stated.group(1) if stated else "nothing", expected))
+
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 

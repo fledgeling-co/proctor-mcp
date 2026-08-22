@@ -40,6 +40,7 @@ Each run is a directory named `<date>-<commit>` under `docs/reckoning/`, holding
 | `reckoning.md` | `reckon`'s own report on this run alone. |
 | `run.json` | The provenance: the commit, the branch, the tool and its version, the gate exits, and any caveat this reading carries. |
 | `delta.md` / `delta.json` | What moved since the previous reading, and where the movement came from. |
+| `notes.md` | The human read of the run: what the movement means and what is worth doing first. Written by hand, and the only file in the directory that is. |
 
 `run.json` is the file that makes the next run possible. A reading whose tree is not named by a
 commit cannot be compared to anything, so `take` refuses to publish one: uncommitted inputs are
@@ -106,5 +107,6 @@ the numbers rather than being worked around:
 ## Keeping it honest
 
 `python3 scripts/reckoning/reckoning_selftest.py` proves every refusal above can fire, and that
-the refusal came from the check rather than from the input. 27 checks; exit 0 means all armed.
-Run it after changing `reckoning.py`.
+the refusal came from the check rather than from the input. 28 checks; exit 0 means all armed.
+Run it after changing `reckoning.py`. The last of the 28 reads the count this paragraph states
+and compares it to the run, so this sentence cannot go stale unwatched.
