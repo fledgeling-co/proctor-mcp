@@ -56,6 +56,15 @@ import ProctorCore
 // write — `captures/win-1-zoom-1787361639249.full.png` — which the suite had been
 // making since PRO-0089 and catching only when it fell between two readings.
 // DEF-142, and CASE-0285 below is the deterministic guard that replaced the race.
+//
+// AND IT FOUND A SECOND ONE, on the next clean run after the merge: two of the
+// operator's own recorded flows, `login-flow.json` and `sweep.json`, rewritten by
+// `AcceptanceE2ETests`, `NativePlaneLaneTests` and `StabilityPageContentTests`
+// through a `FlowStore.directory` that had no injection seam either. DEF-164, and
+// CASE-0320 is its deterministic guard. Three paths wrote the operator's state
+// without being told where — the policy, the captures, the flows — and each was
+// found by this witness rather than by reading, which is the argument for the
+// witness and against trusting the sweep's zero on its own.
 
 @Suite("PRO-0098 · the suite writes nothing of the operator's")
 struct OperatorFilesWitnessTests {
@@ -234,6 +243,45 @@ struct OperatorFilesWitnessTests {
         // under an absent path, not an override of a present one.
         let named = temporaryRoot().appendingPathComponent("named").path
         #expect(CaptureEngineImpl(captureDirectory: named).captureDirectory == named)
+    }
+
+    // MARK: CASE-0320 — the third path that writes without being told where
+
+    @Test("a recorded flow lands outside the operator's root, like an un-pathed capture")
+    func aRecordedFlowIsRedirectedToo() throws {
+        // FOUND BY THE WITNESS ABOVE, the same way CASE-0285 was, and one wave
+        // later. A clean `./scripts/test.sh` on the merged tree rewrote
+        // `login-flow.json` and `sweep.json` under the operator's own flows
+        // directory: AcceptanceE2ETests records a flow called `login-flow`,
+        // NativePlaneLaneTests and StabilityPageContentTests record one called
+        // `sweep`, and `FlowStore.directory` was a static computing the operator's
+        // path with no seam to inject. So an operator with a flow of either name
+        // had it overwritten by running the tests. DEF-164.
+        //
+        // Asserted on the resolved path rather than on the sweep, for the reason
+        // CASE-0285 gives: CASE-0270's sweep catches this only when a write happens
+        // to fall between its two readings, and on the run that motivated this case
+        // it did not — the write landed at 11:57:28 and the sweep read either side
+        // of it. A path assertion holds on every run.
+        #expect(!FlowStore.directory.path.hasPrefix(FlowStore.operatorDirectory.path),
+                "a recorded flow lands in the operator's own flows: \(FlowStore.directory.path)")
+        #expect(FlowStore.directory.path.hasPrefix(FlowStore.testFallbackFlowRoot.path))
+        #expect(!FlowStore.directory.path.hasPrefix(operatorRoot.path),
+                "a recorded flow lands under the operator's root: \(FlowStore.directory.path)")
+
+        // The operator's own path stays truthful, so this case can name what it is
+        // asserting the absence of rather than comparing two redirected paths and
+        // agreeing with itself.
+        #expect(FlowStore.operatorDirectory.path.hasPrefix(operatorRoot.path + "/"))
+        #expect(FlowStore.operatorDirectory.lastPathComponent == "flows")
+
+        // And the write itself, not only the directory: the name a suite actually
+        // records resolves outside the operator's root too, which is the assertion
+        // that would have caught `login-flow.json` the moment it was written.
+        let recorded = try FlowStore.url(for: "login-flow")
+        #expect(!recorded.path.hasPrefix(operatorRoot.path),
+                "a flow named login-flow is written into the operator's root: \(recorded.path)")
+        #expect(recorded.lastPathComponent == "login-flow.json")
     }
 
     // MARK: CASE-0273 — the digest catches what size and mtime miss

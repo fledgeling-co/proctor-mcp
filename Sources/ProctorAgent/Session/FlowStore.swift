@@ -56,11 +56,43 @@ struct RecordedStep: Codable, Sendable {
 /// Flows live on disk so a campaign survives the MCP host restarting.
 enum FlowStore {
 
-    static var directory: URL {
+    /// The operator's own flow directory, always — the path the agent reads and
+    /// writes on a real Mac. It stays truthful in a test process so a test can name
+    /// the directory it must not touch.
+    static var operatorDirectory: URL {
         let home = FileManager.default.homeDirectoryForCurrentUser
         return home.appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)/flows",
                                            isDirectory: true)
     }
+
+    /// Where flows live for this process. `PolicyStore.live`'s interlock and
+    /// `CaptureEngineImpl.defaultCaptureDirectory`'s, applied to the third path that
+    /// writes the operator's state without being told where.
+    ///
+    /// FOUND BY THE REQ-055 WITNESS, not by reading: a clean `./scripts/test.sh` run
+    /// rewrote `login-flow.json` and `sweep.json` under the operator's own root.
+    /// `AcceptanceE2ETests` records a flow named `login-flow`, and
+    /// `NativePlaneLaneTests` and `StabilityPageContentTests` record one named
+    /// `sweep`; every one of them reached this static, which had no injection seam
+    /// at all. Two names, so a person with a real flow of either name had it
+    /// overwritten by running the tests. DEF-164.
+    ///
+    /// Unlike `PolicyStore.live` this is one directory per process rather than one
+    /// per read: `save` and `loadAll` have to agree about where they are looking,
+    /// and a fresh UUID per access would make a saved flow unfindable. That leaves
+    /// suites in one process sharing a flow directory — which is exactly the sharing
+    /// they had before, minus the operator.
+    static var directory: URL {
+        guard AuditLog.isTestProcess else { return operatorDirectory }
+        return testFallbackFlowRoot
+    }
+
+    /// Where an un-pathed flow lands in a test process. Named for what it is, so a
+    /// stray directory in `/tmp` explains itself.
+    static let testFallbackFlowRoot = URL(fileURLWithPath: NSTemporaryDirectory(),
+                                          isDirectory: true)
+        .appendingPathComponent("proctor-test-flows-\(ProcessInfo.processInfo.processIdentifier)",
+                                isDirectory: true)
 
     /// A flow name becomes a filename, so it is validated rather than escaped.
     /// Escaping invites two names collapsing onto one file.

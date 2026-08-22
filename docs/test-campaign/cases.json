@@ -3304,7 +3304,8 @@
       "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt",
       "docs/test-campaign/evidence/PRO-0098/structural-zero-arming.txt",
       "docs/test-campaign/evidence/PRO-0098/capture-write-caught.txt",
-      "docs/test-campaign/evidence/PRO-0098/gate-after.txt"
+      "docs/test-campaign/evidence/PRO-0098/gate-after.txt",
+      "docs/test-campaign/evidence/PRO-0098/flow-write-caught.txt"
     ],
     "armed": true,
     "armedBy": "Armed twice over, and the second is the one that matters for a negative claim. Sabotage 4 in new-case-arming.txt: DirectoryWitness.changed() forced to return []. The CLAIM arm stays green \u2014 which is the point \u2014 and the CONTROL arm goes red: 'Expectation failed: (wrote.count \u2192 0) >= 1' and '(wrote \u2192 []).contains(\"policy.json\")'. Sabotage 6 in structural-zero-arming.txt, added by the gap-fix: operatorRoot pointed one component off the real path, at <bundle>-absent-sabotage, which does not exist. RUN A, the witness as it was: this case PASSED \u2014 'a policy configure changes nothing under the operator's root, and the sweep can tell' passed after 0.084 seconds over a root that is not there, which is the structural zero in the flesh. RUN B, with the denominator guard: 'Expectation failed: (operatorBefore \u2192 DirectoryWitness(rootExists: false, files: [:])).rootExists \u2192 false' and 'Expectation failed: (operatorBefore.files.count \u2192 0) >= 1'. Restored, green. A SECOND ARMING, and the only kind that cannot be argued with: on 2026-08-22 this case went red on a real write, with no sabotage applied at all. './scripts/test.sh' on the clean tree: 'Expectation failed: (touched \u2192 [\"captures/win-1-zoom-1787361639249.full.png\"]).isEmpty \u2192 false'. AcceptanceE2ETests' Journey 5 calls session.zoom(path: nil) twice and Session.defaultZoomPath hard-coded the operator's captures directory, so four PNGs landed there 0.5s into every run \u2014 caught only when a write fell between the sweep's two readings, which is why this case read green for as long as it did. DEF-142, fixed by the interlock. Evidence: capture-write-caught.txt.",
@@ -3313,10 +3314,11 @@
       "effect": "filesystem-write",
       "count": 1
     },
-    "note": "PRO-0098, DEF-110. REQ-055 at the rung it declares, and the claim is a NEGATIVE, so two numbers need saying plainly. The witness count of 1 is the CONTROL arm's, not the claim's. The claim's own number is a ratio with its population stated: 0 changed of len(files) = 3,290 regular files (find -type f, this machine, 2026-08-22) swept under ~/Library/Application Support/app.fledgeling.procter, and the case asserts that root exists and that len(files) >= 1 BEFORE it reads the zero, so a zero out of an absent or empty root fails instead of passing. One call \u2014 Session.configurePolicy through an injected PolicyStore \u2014 is watched by one recorder over two roots: the operator's reports zero changed, the injected root reports policy.json going absent to present. Not a write-and-restore: nothing is restored because nothing is written, so a run killed mid-test leaves the operator's state as it found it. WHAT THIS DOES NOT CERTIFY, since REQ-055's original sentence claimed it: reads are not watched, the whole run is not watched, and the operator's Proctor state outside this root is not watched \u2014 DEF-141. Test: OperatorFilesWitnessTests.aConfigureLeavesTheOperatorsRootAlone.",
+    "note": "PRO-0098, DEF-110. REQ-055 at the rung it declares, and the claim is a NEGATIVE, so two numbers need saying plainly. The witness count of 1 is the CONTROL arm's, not the claim's. The claim's own number is a ratio with its population stated: 0 changed of len(files) = 3,290 regular files (find -type f, this machine, 2026-08-22) swept under ~/Library/Application Support/app.fledgeling.procter, and the case asserts that root exists and that len(files) >= 1 BEFORE it reads the zero, so a zero out of an absent or empty root fails instead of passing. One call \u2014 Session.configurePolicy through an injected PolicyStore \u2014 is watched by one recorder over two roots: the operator's reports zero changed, the injected root reports policy.json going absent to present. Not a write-and-restore: nothing is restored because nothing is written, so a run killed mid-test leaves the operator's state as it found it. WHAT THIS DOES NOT CERTIFY, since REQ-055's original sentence claimed it: reads are not watched, the whole run is not watched, and the operator's Proctor state outside this root is not watched \u2014 DEF-141. Test: OperatorFilesWitnessTests.aConfigureLeavesTheOperatorsRootAlone. SECOND FINDING, one wave later and not by this session: the PRO-0098 re-verifier's own clean './scripts/test.sh' run reported this case red again, this time on flow writes into the operator's root beyond DEF-142's four PNGs. Those were login-flow.json and sweep.json, the suite's own recorded flows \u2014 DEF-164, fixed by the same interlock and guarded deterministically by CASE-0320, because this sweep is a race that had already lost it once. Evidence: flow-write-caught.txt.",
     "defects": [
       "DEF-110",
-      "DEF-142"
+      "DEF-142",
+      "DEF-164"
     ]
   },
   {
@@ -3330,7 +3332,8 @@
       "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
       "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt",
       "docs/test-campaign/evidence/PRO-0098/structural-zero-arming.txt",
-      "docs/test-campaign/evidence/PRO-0098/capture-write-caught.txt"
+      "docs/test-campaign/evidence/PRO-0098/capture-write-caught.txt",
+      "docs/test-campaign/evidence/PRO-0098/flow-write-caught.txt"
     ],
     "armed": true,
     "armedBy": "Sabotage 4, the same run: with changed() dead the fallback-root assertion is the arm that fires. Sabotage 6 in structural-zero-arming.txt is the second and covers the denominator: with operatorRoot pointed at <bundle>-absent-sabotage, RUN A shows this case PASSING \u2014 'an un-injected session writes somewhere, and that somewhere is not the operator's' passed after 0.089 seconds over an absent root \u2014 and RUN B shows it red on '(operatorBefore \u2192 DirectoryWitness(rootExists: false, files: [:])).rootExists \u2192 false' and '(operatorBefore.files.count \u2192 0) >= 1'. PRO-0089's own arming (evidence/PRO-0089/arming.txt) is the third: with the interlock disabled and operatorDirectory redirected to a decoy, the equivalent assertion reports the operator path being reached. A SECOND ARMING, and the only kind that cannot be argued with: on 2026-08-22 this case went red on a real write, with no sabotage applied at all. './scripts/test.sh' on the clean tree: 'Expectation failed: (touched \u2192 [\"captures/win-1-zoom-1787361639249.full.png\"]).isEmpty \u2192 false'. AcceptanceE2ETests' Journey 5 calls session.zoom(path: nil) twice and Session.defaultZoomPath hard-coded the operator's captures directory, so four PNGs landed there 0.5s into every run \u2014 caught only when a write fell between the sweep's two readings, which is why this case read green for as long as it did. DEF-142, fixed by the interlock. Evidence: capture-write-caught.txt.",
@@ -3339,10 +3342,11 @@
       "effect": "filesystem-write",
       "count": 1
     },
-    "note": "PRO-0098, DEF-110, the floor under the injection. A Session with NO setPolicyStore at all \u2014 the case that used to write the operator's file and the case a future test will forget \u2014 configures a policy. The operator's root is unchanged across it, reported as 0 of the len(files) = 3,290 regular files (find -type f, this machine, 2026-08-22) swept and gated on that population being non-empty, and the control arm proves the call was not simply a no-op: the interlock's fallback root holds a policy.json, and that root is not under the operator's. Without the control arm 'unchanged' would also be the reading for a configure that did nothing; without the denominator it would also be the reading for a root that is not there. Test: OperatorFilesWitnessTests.anUninjectedSessionIsAlsoWatched.",
+    "note": "PRO-0098, DEF-110, the floor under the injection. A Session with NO setPolicyStore at all \u2014 the case that used to write the operator's file and the case a future test will forget \u2014 configures a policy. The operator's root is unchanged across it, reported as 0 of the len(files) = 3,290 regular files (find -type f, this machine, 2026-08-22) swept and gated on that population being non-empty, and the control arm proves the call was not simply a no-op: the interlock's fallback root holds a policy.json, and that root is not under the operator's. Without the control arm 'unchanged' would also be the reading for a configure that did nothing; without the denominator it would also be the reading for a root that is not there. Test: OperatorFilesWitnessTests.anUninjectedSessionIsAlsoWatched. SECOND FINDING, one wave later and not by this session: the PRO-0098 re-verifier's own clean './scripts/test.sh' run reported this case red again, this time on flow writes into the operator's root beyond DEF-142's four PNGs. Those were login-flow.json and sweep.json, the suite's own recorded flows \u2014 DEF-164, fixed by the same interlock and guarded deterministically by CASE-0320, because this sweep is a race that had already lost it once. Evidence: flow-write-caught.txt.",
     "defects": [
       "DEF-110",
-      "DEF-142"
+      "DEF-142",
+      "DEF-164"
     ]
   },
   {
@@ -3973,5 +3977,24 @@
     "armed": true,
     "armedBy": "The two frames differ in the one property being asked about and agree on everything else: inactive, both Allow buttons draw the same grey; key, Accessibility's draws filled accent and Screen Recording's stays plain. A capture that could not tell the two treatments apart would have shown the same pair twice.",
     "note": "THE COHERENCE CLAUSE, IN PIXELS. Brief 79 asks whether this item's caption and PRO-0090's one-prominent-Grant rule say something coherent about what to do first. They do: the caption reads 'Start with Accessibility' and the filled Allow button is Accessibility's row, with Screen Recording's plain beside it. Both frames are ScreenCaptureKit, window-scoped on cgWindowID 152808, status complete, trustworthy true, dirtyArea 0, framesWaited 3 and 12 \u2014 the window's own pixels rather than a screen crop. WHAT THE PICTURES ALSO SHOW, and it is not this item's fix: with the window key, the DISABLED primary still draws filled accent with a dimmed label, while the design of record draws that same control as a plain button (class=\"btn\" disabled, against class=\"btn prominent large\" on the intro's enabled one). A filled accent button that cannot be pressed reads as pressable. Recorded as DEF-163 and left open."
+  },
+  {
+    "id": "CASE-0320",
+    "req": "REQ-055",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0098/flow-write-caught.txt",
+      "docs/test-campaign/evidence/PRO-0098/flow-interlock-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The interlock disabled at source: 'guard AuditLog.isTestProcess else {' replaced with 'guard false else {', which is exactly the state the tree was in when the sweep caught the write \u00e2\u0080\u0094 FlowStore.directory had no seam at all. Four issues, each naming the operator's real path: 'Expectation failed: !((FlowStore.directory.path \u2192 \"/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/flows\").hasPrefix(FlowStore.operatorDirectory.path \u2192 \"/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/flows\") \u2192 true)'; '(FlowStore.directory.path \u2192 \".../app.fledgeling.procter/flows\").hasPrefix(FlowStore.testFallbackFlowRoot.path \u2192 \"/var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test-flows-94858\")'; the same against operatorRoot; and the write itself, '!((recorded.path \u2192 \".../app.fledgeling.procter/flows/login-flow.json\").hasPrefix(operatorRoot.path \u2192 \".../app.fledgeling.procter\") \u2192 true)'. 'Test run with 6 tests in 1 suite failed after 4.368 seconds with 4 issues', exit 1. Restored, green: 'Test run with 6 tests in 1 suite passed after 5.414 seconds', exit 0. Full output in flow-interlock-arming.txt.",
+    "note": "PRO-0098 re-verification, DEF-164. The deterministic half of REQ-055's guarantee for the THIRD path that writes without being told where, after PolicyStore (DEF-110) and the capture directory (DEF-142). CASE-0270's sweep is a race and on the run that motivated this case it lost: the flows were written at 11:57:28 and the sweep read either side of that, so the witness reported zero while two of the operator's files were being overwritten. This case reads the resolved path instead, so it holds on every run: in a test process FlowStore.directory resolves outside FlowStore.operatorDirectory and outside the operator's root, inside FlowStore.testFallbackFlowRoot, and the file a suite actually records \u2014 login-flow.json \u2014 resolves outside the operator's root too. FlowStore.operatorDirectory stays truthful so the case names what it asserts the absence of rather than comparing two redirected paths and agreeing with itself. Recorded at outcome rather than effect-witness: it reads a path the product resolves, and no recorder watches a write. Test: OperatorFilesWitnessTests.aRecordedFlowIsRedirectedToo.",
+    "defects": [
+      "DEF-164"
+    ]
   }
 ]

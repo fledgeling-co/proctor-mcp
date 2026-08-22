@@ -2,7 +2,7 @@
 
 **Status:** In Progress
 **Brief:** `docs/features-to-triage/90-the-four-nobody-owns.md`
-**Defects closed:** DEF-136, DEF-132, DEF-110, DEF-111
+**Defects closed:** DEF-164, DEF-142, DEF-136, DEF-132, DEF-110, DEF-111
 **Ids allocated:** CASE-0270..0289, DEF-140..149, REQ-076..078
 **Branch:** `ai/pro-0098` off `ai/wave-9`
 
@@ -125,13 +125,14 @@ make anything green.
 
 | Defect | Was | Now | Cases |
 |---|---|---|---|
+| DEF-164 | (opened here) | fixed | CASE-0320, CASE-0270, CASE-0271 |
 | DEF-142 | (opened here) | fixed | CASE-0285, CASE-0270, CASE-0271 |
 | DEF-136 | open | fixed | CASE-0283, CASE-0284 |
 | DEF-132 | open | fixed | CASE-0276..CASE-0282 |
 | DEF-110 | open | fixed | CASE-0270..CASE-0273 |
 | DEF-111 | open | fixed | CASE-0274, CASE-0275 |
 
-**Defects:** DEF-142, DEF-136, DEF-132, DEF-110, DEF-111
+**Defects:** DEF-164, DEF-142, DEF-136, DEF-132, DEF-110, DEF-111
 
 One defect was *opened* by this item and is deliberately not in the table above, because that table
 is what `defect_gate.py claims` reads and a newly opened defect is not a claim that anything is
@@ -194,3 +195,40 @@ interlock disabled: four issues each naming the operator path it resolved to.
 That the finding arrived this way is the argument for the settlement. A wide sentence nobody could
 check had sat over a witness for two items; a narrow one that could be checked was false within one
 run.
+
+
+## And a third path, found the same way: DEF-164
+
+The re-verifier's run reported CASE-0270 and CASE-0271 red again, on writes beyond the four PNGs
+above. Those writes were the operator's own recorded flows. `FlowStore.directory` was a static
+computing `~/Library/Application Support/app.fledgeling.procter/flows` from the home directory with
+no injection seam — the third instance of the shape, after `PolicyStore` (DEF-110) and the capture
+directory (DEF-142).
+
+Measured rather than inferred. A full `./scripts/test.sh` finished at 11:57 on 2026-08-22, and
+`ls -laT` on the operator's flows directory immediately afterwards read `login-flow.json` and
+`sweep.json` both stamped `22 Aug 11:57:28 2026`, against six neighbours last written on 16, 19 and
+21 August. Both names are literals in test files — `AcceptanceE2ETests.swift:155` records
+`login-flow`, and `NativePlaneLaneTests` and `StabilityPageContentTests` record `sweep` — so this is
+**the suite's write and not the live agent's**, and it sits inside REQ-055's narrowed sentence
+rather than in DEF-141's gap list. An operator with a flow of either name had it overwritten by
+running the tests, and `FlowStore.loadAll` meant the suite's own behaviour depended on which flows
+that person happened to have recorded.
+
+Fixed by the same interlock, with one difference from `PolicyStore.live` that is worth stating:
+`FlowStore.directory` redirects to one directory per process rather than a fresh one per read,
+because `save` and `loadAll` have to agree about where they are looking and a UUID per access would
+make a saved flow unfindable. That leaves suites in one process sharing a flow directory, which is
+the sharing they already had, minus the operator. `FlowStore.operatorDirectory` stays truthful so a
+test can name the path it must not touch.
+
+**CASE-0320** is the deterministic guard, for the reason CASE-0285 exists: on the very run that
+found this, the sweep lost its race — the flows were written at 11:57:28 and the sweep read either
+side of that, reporting zero while two of the operator's files were being overwritten. The case
+reads resolved paths instead. Watched to fail with `guard AuditLog.isTestProcess` replaced by
+`guard false`: four issues, each naming the operator's real path, `Test run with 6 tests in 1 suite
+failed after 4.368 seconds with 4 issues`, exit 1. Restored, green at 5.414 seconds, exit 0.
+Evidence: `flow-write-caught.txt` and `flow-interlock-arming.txt`.
+
+The four stray PNGs already sitting in the operator's captures directory are left where they are.
+Deleting them is the act REQ-055 forbids.
