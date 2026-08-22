@@ -2661,3 +2661,67 @@ is, and a harness that fails uniformly looks exactly like a fleet of passing gat
 The 20 gitignored paths in the working repo (`.build/`, `.worktrees/`, `.claude/settings.local.json`,
 a `.DS_Store`) are the visible form of the same risk, and `evidence/` is **not** among them — 0 of 176
 cited evidence paths are untracked on `main`.
+
+### PRO-0107: the 35 pictures got read, and nine of them were the app icon (2026-08-23)
+
+`ai/pro-0107`, three commits, tree clean. **`capture-lineage.py --gate` exits 0 because the population
+is accounted for, not because it shrank**: 43 files in the shots directory before and 43 after, 8
+published before and 8 after, **0 deleted**, 35 moved from UNACCOUNTED to `COUNTED APART (35) —
+admissible, not judged`. Every gate green, and `campaign.py check` exits 1 on head and on merge base
+with the blocker sets identical — the diff is four count lines and names none of this item's ids.
+
+**The ratchet stays at 6, and that is what the change earned.** A ratchet pins judged captures. Nothing
+became judgeable and nothing was judged, so a raise would have recorded a bar nothing new passed under.
+Judged 6 of 8 on both sides.
+
+**The brief's assumption was wrong, and that is the finding.** It read the surface-shaped names as "real
+captures taken in earlier waves and never published, which is the recoverable case rather than the
+worrying one". Nine of them are **app-icon renders** — `surf-001-mcp-stdio` through
+`surf-016-install-notarize`, every one the Proctor icon's dark window dissolving into orange squares at
+exactly 1024x1024. The mechanism is a copy statement rather than a misfiling:
+`scripts/build_test_campaign.py:282-296` copies `design/icon/audit-renders/*` and
+`design/icon/runs/*/candidate-1024.png` into the shots directory under surface-shaped destination names,
+and `surf-016-install-notarize.png` is byte-identical to `design/icon/icon-proctor-1024.png`. Four other
+destinations in that same list were later replaced by real window captures with manifests written at the
+shutter, which is exactly why those four are published and these nine are not.
+
+| What the filename says | What the picture is | |
+|---|---|---|
+| nine engine surfaces, SURF-001 to SURF-016 | the app icon, nine icon-run treatments | DEF-218 |
+| `sweepL-status-agent-down` | a **Ready** window; the two agent-down frames are `-t0.6` and `-t3.5`, byte-identical to each other | DEF-222 |
+| `sweepK-theme-before` / `sweepL-wedged-t1` / `sweepL-wedged-recovered` | one file, three captions, two unrelated sweeps | DEF-221 |
+| three takeover-shield frames | nothing: 0 non-transparent pixels of 14,745,600 / 7,720,704 / 677,888 | DEF-219 |
+| four display-scaling frames | two of them 900x833, a size the sweep's own mode table never captured | DEF-220 |
+| `surf-004-drawn-pointer`, `surf-008-about` | a pointer glyph with no HUD; the About panel, not the status window | DEF-223 |
+
+**Nothing was deleted, and the two tests that would have licensed it were applied rather than asserted.**
+No file is zero bytes — the smallest is 10,680. No byte-identical group contains a published file, so no
+member is an exact duplicate of something already shown. Three of the four groups are themselves the
+evidence for DEF-221 and DEF-222, so deleting a member would have deleted the finding.
+
+**Nothing was published either, and that is the call worth recording.** Publishing needs a `shot` on the
+subject and a `captures.json` row whose `target` was recorded at the shutter. None of the 35 has one.
+Several have a sibling JSON record written at capture time — `overlay-capture-lifted.json` carries the
+Run HUD frame's bounds, layer, sharingState, size and distinct-colour count — and none of those records
+a target. Writing one now is a manifest written after the fact, which the gate's own text calls "what
+somebody believed, not what the channel did", and it would leave the filename as the only thing binding
+the picture to the subject. `surf-004-run-hud.png` and `surf-005-takeover-shield.png` are honest
+pictures of the surfaces they name and they stay unpublished on that ground; the route to publishing
+them is a re-capture through `capture_with_manifest.py`.
+
+**Both new checks were watched to fail, each mutation confirmed landed before its verdict was read.**
+Removing one `unpublishedReason` returned the gate to exit 2 naming that file; replacing one sha256 in
+`shot-audit.json` returned `shot_disposition.py` to exit 1 naming that file. Both restored, both
+reproducing the passing reading — the gate's diffed identically.
+
+`scripts/campaign/shot_disposition.py` is where the readings live, split in two on purpose: `depicts` is
+a person's sentence from opening the file, and the dimensions, byte counts, sha256, opaque-pixel counts
+and distinct-RGBA counts re-derive on every run. It fails on an image with no disposition, a disposition
+whose file is gone, and a file whose bytes moved under a disposition written for the old ones — which is
+what stops 35 sentences about pictures becoming a stale opinion about a directory.
+
+Registry after this item: **342 cases · 134 defect rows · 104 requirements · 27 surfaces.** Open defects
+rise by five: DEF-209 closes and DEF-218 to DEF-223 open, all six `(recorded)` rather than claimed,
+because each repair — a re-capture per engine surface, removing the copy list from
+`build_test_campaign.py`, renaming evidence files every citation resolves through, re-running two sweeps,
+an inventory surface for the About panel — is new work rather than this item's.
