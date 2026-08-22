@@ -1,0 +1,208 @@
+[
+  {
+    "case": "CASE-0352",
+    "claim": "a Mac that is missing the Shortcuts CLI has its tools row drawn as healthy",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusChecks.swift",
+      "from": ": ToolRow(tool: shortcutsCLI, status: \"Not on this Mac\", tone: .bad,",
+      "to": ": ToolRow(tool: shortcutsCLI, status: \"Not on this Mac\", tone: .good,"
+    },
+    "filter": "theBooleanStillCarriesTheFact",
+    "command": "scripts/test.sh --filter theBooleanStillCarriesTheFact",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.284 seconds with 1 issue.",
+    "issues": [
+      "StatusWindowDebtWiringTests.swift:70:9: Expectation failed: (shortcuts?.tone → .good) == .bad"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0354",
+    "claim": "permissions(in:) stops going through resolvedKind and keeps every grant, so the value spelling of the partition disagrees with the name spelling",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusChecks.swift",
+      "from": "        grants.filter { resolvedKind(ofCheckNamed: $0.name) != .tool }",
+      "to": "        grants.filter { _ in true }"
+    },
+    "filter": "thePaneAndTheWindowAgreeNameByName",
+    "command": "scripts/test.sh --filter thePaneAndTheWindowAgreeNameByName",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "issues": [
+      "TUIReadinessPartitionTests.swift:77:13: Expectation failed: (byName → false) == (byValue → true)"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0355",
+    "claim": "the map gains an entry for a name the agent never emits",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusChecks.swift",
+      "from": "        shortcutsCLI: .tool\n    ]",
+      "to": "        shortcutsCLI: .tool,\n        \"Bluetooth\": .permissionReadLive\n    ]"
+    },
+    "filter": "grantNamesMatchTheMap",
+    "command": "scripts/test.sh --filter grantNamesMatchTheMap",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.012 seconds with 1 issue.",
+    "issues": [
+      "StatusChecksTests.swift:440:9: Expectation failed: (Set(StatusChecks.known.keys).subtracting(emitted) → [\"Shortcuts CLI\", \"Bluetooth\"]) == (retired → [\"Shortcuts CLI\"])"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0356",
+    "claim": "the policy card is drawn in the agent-down state, from a report nobody could fetch",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusSurface.swift",
+      "from": "        case .down:\n            return [.agentDown]",
+      "to": "        case .down:\n            return [.agentDown, .policy]"
+    },
+    "filter": "theSectionIsPlaced",
+    "command": "scripts/test.sh --filter theSectionIsPlaced",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "issues": [
+      "StatusPolicySectionTests.swift:53:9: Expectation failed: !((StatusSurface.sections(for: .down) → [ProctorCore.StatusSurface.Section.agentDown, ProctorCore.StatusSurface.Section.policy]).contains(.policy) → true)"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0357",
+    "claim": "an absent posture draws a row saying the gate is open rather than drawing nothing",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusSurface.swift",
+      "from": "        guard let p = posture else { return [] }",
+      "to": "        guard let p = posture else {\n            return [PolicyRow(kind: .mode, label: Copy.policyModeLabel,\n                              value: Copy.policyMode(\"open\", allow: 0, block: 0), tone: .plain)]\n        }"
+    },
+    "filter": "anAbsentPostureDrawsNothing",
+    "command": "scripts/test.sh --filter anAbsentPostureDrawsNothing",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "issues": [
+      "StatusPolicySectionTests.swift:61:9: Expectation failed: (StatusSurface.policyRows(from: nil) → [ProctorCore.StatusSurface.PolicyRow(kind: ProctorCore.StatusSurface.PolicyRow.Kind.mode, label: \"Gate\", value: \"Open — every app on this Mac may be driven\", detail: nil, tone: ProctorCore.StatusSurface.PolicyRow.Tone.plain)]).isEmpty → false"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0359",
+    "claim": "a row assembles its label as a literal in the card instead of naming a Copy constant",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusSurface.swift",
+      "from": "                      label: Copy.policyEntriesLabel,",
+      "to": "                      label: \"Entries recorded\","
+    },
+    "filter": "everyRowStringIsEnumerable",
+    "command": "scripts/test.sh --filter everyRowStringIsEnumerable",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "issues": [
+      "StatusPolicySectionTests.swift:92:13: Expectation failed: (labels → [\"Add this to your MCP host\\'s config. The command below holds no permissions of its own — it forwards to Proctor, which does.\", \"Proctor was updated\", \"Ad-hoc — grants are tied to these exact bytes\", \"No activity to report.\", \"Obscura is not installed\", \"Running\", \"What you see, then what Proctor may take, then which path a run takes. Drawing switches start on; a capability starts off and stays off if either source says so.\", \"Open the project page\", \"Approval\", \"Agent\", \"Copy install commands\", \"The agent did not report a policy posture. Nothing is known here rather than nothing being enforced.\", \"Copy command path only\", \"This window\", \"Socket\", \"Decisions macOS holds about Proctor. You change these in System Settings, and Proctor can only read them.\", \"Copy\", \"Proctor hands browser pages to Obscura rather than driving them through the accessibility tree, so without it that advice names a command this Mac does not have. Proctor does not install it: these commands download a binary from the internet, and this process holds Accessibility and Screen Recording.\", \"Idle — no model is driving Proctor right now.\", \"Derived from the grants and the tools found, never reported separately, so a lane cannot claim to be ready while the thing it needs is missing.\", \"Start the agent\", \"Proctor names browser-use for pages Obscura cannot open. It is an autonomous agent driving a real browser with real credentials, and nothing it does reaches Proctor\\'s audit trail. Set by PROCTOR_SECOND_LANE in the agent\\'s launchd environment.\", \"Open log\", \"Whether a step is likely to be refused, and whether it will be recorded. The rules themselves are not here — this is the gate\\'s shape, not its contents.\", \"Tools\", \"Trail\", \"Gate\", \"Show history\", \"Policy and the trail\", \"Saved. The running agent still has the old value — restart it to apply.\", \"How Proctor behaves while it runs. These are read by the background agent, so all but the run panel take effect when it next starts.\", \"Until it is running, permissions cannot be read and no test can run. Nothing below is live, so nothing below is shown.\", \"Lanes\", \"Copy config\", \"No agent to report on.\", \"Something on this Mac — usually a password field — is holding secure input. Reading the accessibility tree and driving controls still work; synthesised keystrokes do not.\", \"Live observers\", \"Restart agent\", \"Switches\", \"Attached apps\", \"Restart the agent\", \"Quit Proctor\", \"Checking…\", \"Cancel\", \"Checking\", \"Needs permission\", \"macOS ties these grants to the exact bytes of this build, so rebuilding Proctor silently revokes them — and a revoked grant shows up as \\\"element not found\\\", not as a permission error. A Developer ID signed and notarised build keeps its grants across upgrades.\", \"Turn it on\", \"Agent down\", \"Activity\", \"Ready. Every permission Proctor needs is granted.\", \"Ready\", \"Recorded\", \"Hide\", \"macOS\", \"none\", \"Nothing on screen will say this is happening\", \"Permissions\", \"Re-check\", \"Unsigned\", \"The background agent is not answering.\", \"It runs in the background as its own process. That is deliberate — macOS attributes a permission to the process responsible for asking, so the grants below belong to Proctor and keep working when you change or upgrade the tool driving it.\", \"Proctor\", \"Before you turn this on\", \"the agent refused the request\", \"Idle — last actions below.\", \"That setting was not saved\", \"What is on this Mac. Proctor finds these by reading the filesystem and never runs them to check. It installs nothing — the commands are here for you to run.\", \"Saved in Proctor\\'s own support folder, not in the launchd job, so reinstalling does not lose them. Any program running as you can change that file — it is a convenience, not a lock.\", \"Not yet known — waiting for the agent\", \"Background agent\", \"Quit stops the background agent too. Both come back at the next login.\", \"Signature\", \"The agent is holding an out-of-date answer\", \"Relaunch Proctor\", \"This build is ad-hoc signed\", \"Programs on this Mac that Proctor uses but does not ship. None of them is a permission, and Proctor drives Mac apps without any of them.\", \"Proctor lets a model test a Mac app: read what is actually on screen, drive the controls, and check what the app rendered.\", \"Applying\", \"Version\", \"Filesystem\", \"Open Settings\", \"Connect a model to it\", \"Restart agent to apply\", \"Secure Event Input is active\", \"Details\", \"Applying the new permission…\", \"How\"]).contains(row.label → \"Entries recorded\")"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0361",
+    "claim": "an unwritable or unverifiable trail is drawn as good",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusSurface.swift",
+      "from": "                      tone: (p.auditWritable && p.auditClean) ? .good : .bad),",
+      "to": "                      tone: .good),"
+    },
+    "filter": "anUnwritableTrailOutranksTheRest|aBrokenTrailIsBad",
+    "command": "scripts/test.sh --filter anUnwritableTrailOutranksTheRest|aBrokenTrailIsBad",
+    "exit": 1,
+    "verdict": "Test run with 2 tests in 1 suite failed after 0.001 seconds with 2 issues.",
+    "issues": [
+      "StatusPolicySectionTests.swift:166:9: Expectation failed: (broken.tone → .good) == .bad",
+      "StatusPolicySectionTests.swift:159:9: Expectation failed: (row.tone → .good) == .bad"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0362",
+    "claim": "a dropped entry is folded into the trail's clean verdict and drawn plain",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusSurface.swift",
+      "from": "                      tone: (p.auditDroppedThisRun ?? 0) > 0 ? .bad : .plain)",
+      "to": "                      tone: .plain)"
+    },
+    "filter": "droppedEntriesAreNotFoldedIntoTheVerdict",
+    "command": "scripts/test.sh --filter droppedEntriesAreNotFoldedIntoTheVerdict",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "issues": [
+      "StatusPolicySectionTests.swift:196:9: Expectation failed: (entries.tone → .plain) == .bad"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0363",
+    "claim": "the approval row says the same words in two tones, so tone becomes the only carrier",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusSurface.swift",
+      "from": "                      value: Copy.policyApproval(live: p.approvalTokenLive),",
+      "to": "                      value: Copy.policyApproval(live: false),"
+    },
+    "filter": "toneIsNeverTheOnlyCarrier",
+    "command": "scripts/test.sh --filter toneIsNeverTheOnlyCarrier",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "issues": [
+      "StatusPolicySectionTests.swift:237:13: Expectation failed: (a.value → \"No token is live, so a sensitive step would be refused\") != (b.value → \"No token is live, so a sensitive step would be refused\")"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0364",
+    "claim": "the filesystem row invents a path the wire never sent",
+    "mutation": {
+      "file": "Sources/ProctorCore/StatusSurface.swift",
+      "from": "                      value: Copy.policyJail(declared: p.fsJailDeclared, roots: p.fsRootCount),",
+      "to": "                      value: Copy.policyJail(declared: p.fsJailDeclared, roots: p.fsRootCount) + \" under /Users\","
+    },
+    "filter": "theCardCarriesNoRuleContents",
+    "command": "scripts/test.sh --filter theCardCarriesNoRuleContents",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "issues": [
+      "StatusPolicySectionTests.swift:217:13: Expectation failed: !((text → \"Gate Open — every app on this Mac may be driven 4 marked sensitive, so a step against one needs an approval first Approval A token is live now, so a sensitive step would be allowed  Filesystem Confined to 2 roots; a path outside them is refused under /Users  Trail Verifies clean  Recorded 12 entries — 2 could not be written this run, so the trail is incomplete whatever it verifies \").contains(leak → \"/Users\") → true)"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0367",
+    "claim": "the sentence that replaced the question stops naming the restart",
+    "mutation": {
+      "file": "Sources/ProctorCore/WalkthroughFlow.swift",
+      "from": "        public static let restartNote =\n            \"Screen Recording needs Proctor to restart before it takes effect. Proctor will say \"\n            + \"so when it lands.\"",
+      "to": "        public static let restartNote =\n            \"Screen Recording takes effect once macOS has applied the change.\""
+    },
+    "filter": "theRestartNoteStillCarriesTheRealAnswer",
+    "command": "scripts/test.sh --filter theRestartNoteStillCarriesTheRealAnswer",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "issues": [
+      "WalkthroughSettingsLineTests.swift:43:9: Expectation failed: (note.lowercased().contains(\"restart\") → false) || (note.lowercased().contains(\"quit\") → false)"
+    ],
+    "red": true
+  },
+  {
+    "case": "CASE-0369",
+    "claim": "the definite answer stops being cached, so doctor re-reads the platform and the freeze disappears",
+    "mutation": {
+      "file": "Sources/ProctorAgent/Session/ScreenRecordingProbe.swift",
+      "from": "        case .cached(let known):\n            return known",
+      "to": "        case .cached:\n            return await platform()"
+    },
+    "filter": "doctorReportsTheFrozenValue",
+    "command": "scripts/test.sh --filter doctorReportsTheFrozenValue",
+    "exit": 1,
+    "verdict": "Test run with 1 test in 1 suite failed after 0.244 seconds with 2 issues.",
+    "issues": [
+      "StatusWindowDebtWiringTests.swift:151:9: Expectation failed: (row?.resolvedState → .denied) == .granted",
+      "StatusWindowDebtWiringTests.swift:153:9: Expectation failed: (row?.granted → false) == true"
+    ],
+    "red": true
+  }
+]

@@ -1,0 +1,6 @@
+PRO-0082 — full suite, scripts/test.sh, Sat 22 Aug 2026 13:55:36 AEST
+
+􁁛  Test run with 2055 tests in 250 suites passed after 18.557 seconds.
+
+script exit: TESTSH_EXIT=0
+baseline before this item (predecessor's run): 2028 tests in 246 suites, exit 0

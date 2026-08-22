@@ -470,6 +470,13 @@ public enum TUISurface {
         var grants: [Row4] = []
         for grant in report["grants"]?.arrayValue ?? [] {
             guard let name = grant["name"]?.stringValue else { continue }
+            // PRO-0082, DEF-181. An agent from before that item files the
+            // Shortcuts CLI under `grants`, so this pane drew a program on a disk
+            // as a decision macOS holds about Proctor. The agent no longer sends
+            // it; this partition is what stops an OLDER agent's report putting it
+            // back, and it is the same rule the status window has used since
+            // PRO-0036 rather than a second opinion about which is which.
+            guard StatusChecks.kindIsPermission(name) else { continue }
             grants.append(Row4([name,
                                 grant["state"]?.stringValue ?? "unknown",
                                 gates(name)]))

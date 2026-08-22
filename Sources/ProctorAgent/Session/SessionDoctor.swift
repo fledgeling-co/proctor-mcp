@@ -24,7 +24,7 @@ extension Session {
 
         let accessibilityGranted = accessibilityProbe()
         let screenRecording = await screenRecordingProbe.state()
-        let shortcutsAvailable = FileManager.default.isExecutableFile(atPath: "/usr/bin/shortcuts")
+        let shortcutsAvailable = shortcutsProbe()
         let secureInput = secureInputProbe()
         let (attached, observers) = healthSnapshot()
         // Re-probed rather than read from the cache, and written back through it:
@@ -100,11 +100,28 @@ extension Session {
                 : "\(grant.name) is not granted."
             blockers.append("\(lead) \(grant.howToFix)")
         }
-        if !shortcutsAvailable {
-            grants.append(.init(name: "Shortcuts CLI", granted: false, required: false,
-                                howToFix: "/usr/bin/shortcuts is missing, so `shortcut` steps cannot "
-                                        + "run. Every other actuation plane is unaffected."))
-        }
+        // PRO-0082, closing DEF-181. The Shortcuts CLI used to be appended here,
+        // as a `grant`, and only on a Mac that is missing it — so the health
+        // report called a program on a disk a decision macOS holds about
+        // Proctor, and every reader of that report inherited the mistake.
+        // PRO-0036 corrected it at the status window by partitioning the list on
+        // arrival; the TUI and anything else reading `grants` still drew a tool
+        // in the permissions pane, which is why the fix belongs to the report's
+        // shape rather than to each reader.
+        //
+        // The fact is not lost. `shortcutsCLIAvailable` carries it on the wire as
+        // the boolean it always was, and the status window composes its Shortcuts
+        // row from that boolean through `StatusChecks.toolRows(tools:
+        // shortcutsCLIAvailable:)` — a tool row, in the tools card, which is
+        // where a program on a disk belongs. The wire's `tools` array stays out
+        // of it for the reason its own documentation gives below: a
+        // `ToolPresence` for an OS component at a fixed absolute path is a shape
+        // with three empty fields.
+        //
+        // `StatusChecks.known` keeps its `.tool` entry and `misfiledTools(in:)`
+        // stays. An agent older than this change still sends the grant and a
+        // newer shim still has to decode one, so the partition is the decode path
+        // for an old report rather than dead code.
         if secureInput {
             blockers.append("Secure Event Input is active, so synthetic-event steps — dragPath, "
                           + "hover, click, key — cannot be delivered. The accessibility plane is "

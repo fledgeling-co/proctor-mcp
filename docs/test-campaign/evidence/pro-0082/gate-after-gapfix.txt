@@ -1,0 +1,39 @@
+PRO-0082 gap-fix — gates, Sat 22 Aug 2026, read off the scripts rather than through a pipe.
+
+./scripts/test.sh
+  Test run with 2055 tests in 250 suites failed after 15.077 seconds with 1 issue.
+  TESTSH_EXIT=1
+
+The single issue is CampaignInstrumentTests.swift:78 — `campaign instruments: 32 passed,
+6 failed`, every failure inside seed_strengthen.py:
+
+  ValueError: too many values to unpack (expected 2, got 4)
+  scripts/campaign/seed_strengthen.py:82, calling v.pass_uncensused(reqs)
+
+It predates this gap-fix and is not registry state. The same run on the untouched tree at
+d9c785d, before any edit in this session, produced the same verdict line and the same single
+issue. The cause is a plugin upgrade: test-campaign 0.9.6 was installed at 15:19 today —
+after this item's own green run at 13:55 (suite-verdict.txt, 2055 tests, exit 0) — and it
+widened vacuity-check.py's pass_uncensused() from a 2-tuple to a 4-tuple. seed_strengthen.py
+still unpacks two. Nothing here touches Swift sources, and this gap-fix left them byte-identical.
+
+scripts/campaign/defect_gate.py claims docs/specs/spec-PRO-0082.md docs/test-campaign
+  spec-PRO-0082.md: claims 3 defect(s) — DEF-181, DEF-182, DEF-183
+  registry: docs/test-campaign/inventory.json, 100 defect record(s)
+  PASS: every claimed defect reads `fixed`.
+  exit 0
+
+scripts/campaign/defect_gate.py dropped docs/test-campaign
+  registry drift: 2 file(s), 102 merge(s), 32078 id/field pair(s) examined
+  PASS: no merge on this history discarded a registry value that is still missing.
+  exit 0
+
+campaign.py check (0.9.6), docs/test-campaign — exit 1 before and after, and the
+source-analysis blocker is what changed:
+
+  before: 6 source-analysis claim(s) with no analyzer or no examined count
+  after:  gone
+
+The four blockers either side of it are byte-identical: 4 inconclusive cases, 3 raster-visual
+claims whose artifact is not a usable capture, 1 pixel claim with no stated origin, and 1
+requirement recorded `observed` with no effect-witness case. None is this item's.

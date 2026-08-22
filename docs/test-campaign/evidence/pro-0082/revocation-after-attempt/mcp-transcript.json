@@ -1,0 +1,2264 @@
+{
+  "shim": ".build/debug/proctor-shim",
+  "profile": "full",
+  "env": {},
+  "toolsAdvertised": [
+    "proctor_act",
+    "proctor_apps",
+    "proctor_assert",
+    "proctor_capture",
+    "proctor_computer",
+    "proctor_dictionary",
+    "proctor_doctor",
+    "proctor_find",
+    "proctor_flow",
+    "proctor_guest",
+    "proctor_inspect",
+    "proctor_ios",
+    "proctor_kill",
+    "proctor_menu",
+    "proctor_openai_computer",
+    "proctor_policy",
+    "proctor_snapshot",
+    "proctor_stability",
+    "proctor_unlock",
+    "proctor_wait",
+    "proctor_zoom"
+  ],
+  "transcript": [
+    {
+      "request": "initialize",
+      "response": {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "result": {
+          "capabilities": {
+            "resources": {},
+            "tools": {
+              "listChanged": false
+            }
+          },
+          "protocolVersion": "2025-06-18",
+          "serverInfo": {
+            "name": "proctor",
+            "version": "0.1.0+2bd01beb2c9a.dirty.debug"
+          }
+        }
+      }
+    },
+    {
+      "request": "tools/list",
+      "response": {
+        "id": 2,
+        "jsonrpc": "2.0",
+        "result": {
+          "tools": [
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "readOnlyHint": false
+              },
+              "description": "Enumerate running applications and their windows, attach to the ones under test, and bring one to the front.\n\nAttaching is what makes everything else work. It warms the accessibility tree, applies AXManualAccessibility where the app is Chromium- or Electron-based, starts long-lived observers, and begins retaining element references. A retained reference keeps resolving when its window moves to another Space or behind other windows; a fresh enumeration will not find it. Attach once per app at the start of a campaign and reuse the handles.\n\nUse activate when an app is running but reports no windows, or is not running at all. Every actuating tool resolves a window handle first, so an app whose windows are all closed cannot be driven, and the menu item that would reopen one cannot be reached without the window it creates. activate launches or reopens the app the way a Dock click does, waits for a window to appear, attaches, and returns the handles. It goes through the same policy gate and audit trail as driving the app.\n\nactivate also takes its turn now, because bringing an app to the front changes where every other session's clicks land. If another run holds the machine it waits, and if it is still waiting when the queue's ceiling fires, or a person drops it from the run HUD, it comes back saying so rather than activating. Nothing is brought to the front on either of those paths, so a busy-machine refusal is safe to send again while a person's is a reason to ask first.\n\nApplying AXManualAccessibility is detectable by the target app and changes its performance. The response reports whether it was applied so any methodology written on this data can disclose it. For Google Chrome and Chromium, if an attach returns an empty web tree or manualAccessibilityApplied is false, launch or restart Chrome with --force-renderer-accessibility so all web DOM inputs, buttons, and links populate the tree. For navigation these planes cannot express against a real signed-in browser, browser-use is the second lane, and it is off unless PROCTOR_SECOND_LANE names it - doctor's secondLane field says which. Obscura, the default lane, runs its own engine and cookie jar and therefore sees no session and no password manager.\n\nWhen driving login forms, 1Password autofill items are native accessibility elements and their role differs by browser: measured on 2026-08-16, one entry was an AXButton in Chrome and an AXMenuItem in Safari, and only the Chrome button honoured press. An accepted action is not an effective one, so compare stateHash across the step rather than trusting ok.\n\nProctor ships no mail tool and reads no mail. When a mail MCP server is connected to the same host, an emailed code or magic link can be read from it and fed back with setValue or a navigation - discover that server's tool names from its own catalogue, since they are not Proctor's and doctor does not report them.\n\nReturns app handles, window handles with frames and Space membership, and the tree provenance for each attachment.",
+              "inputSchema": {
+                "properties": {
+                  "action": {
+                    "description": "list enumerates without touching anything; attach begins a stateful session; activate brings the app to the front, launching or reopening it so it has a window, then attaches; detach releases refs and observers.",
+                    "enum": [
+                      "list",
+                      "attach",
+                      "activate",
+                      "detach"
+                    ],
+                    "type": "string"
+                  },
+                  "app": {
+                    "description": "An existing app handle, for detach or activate.",
+                    "type": "string"
+                  },
+                  "bundleId": {
+                    "description": "Bundle identifier to attach or activate, e.g. com.apple.TextEdit.",
+                    "type": "string"
+                  },
+                  "includeWindowless": {
+                    "description": "Include background applications with no windows. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "description": "Localised application name, matched case-insensitively.",
+                    "type": "string"
+                  },
+                  "pid": {
+                    "description": "Process id, when the bundle identifier is ambiguous or absent.",
+                    "type": "integer"
+                  },
+                  "timeoutMs": {
+                    "description": "activate only: how long to wait for a window to appear. Defaults to 5000.",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "action"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_apps",
+              "outputSchema": {
+                "description": "Enumeration (apps/attached/note), an attach (app/windows/provenance), or a detach (detached/windowsReleased). `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not. Its `toolUnavailable` says Obscura is not installed here, and then no command is recommended. `surface` is `browserWindow` or `installedWebApp` \u2014 an installed web app is one site opened as an application, which Proctor drives itself rather than handing to a browser tool, so `use == null` there means Proctor drives it rather than that nothing should. `flags` is present whenever the handoff points at an instrument and carries five booleans where true means the fact is present: `actsOutsideThisWindow`, `autonomous`, `canActAsThisPerson`, `outsideTheAuditTrail`, `billed`. They describe what Proctor recommends, not everything a caller could do \u2014 the handoff is advisory, so a policy that nothing may act in a live browser session gates on the presence of `browser`, not on a flag. The flag that answers may this act with the user own session is `canActAsThisPerson`; a rule built from `autonomous` and `billed` being false does not answer it, because Proctor driving an installed web app is neither autonomous nor billed and is that person session.",
+                "properties": {
+                  "app": {
+                    "type": "object"
+                  },
+                  "apps": {
+                    "type": "array"
+                  },
+                  "attached": {
+                    "type": "array"
+                  },
+                  "browser": {
+                    "type": "object"
+                  },
+                  "detached": {
+                    "type": "string"
+                  },
+                  "note": {
+                    "type": "string"
+                  },
+                  "provenance": {
+                    "type": "object"
+                  },
+                  "windows": {
+                    "type": "array"
+                  },
+                  "windowsReleased": {
+                    "type": "number"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "List and attach applications"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Return the pruned semantic accessibility tree for a window: role, subrole, title, label, value, identifier, frame, enabled/focused/selected state, available actions and writable attributes, with a stable node id on every node.\n\nPass sinceRevision to get a diff instead of a full tree \u2014 added, removed and changed nodes only. Repeated reads during a flow then cost tokens proportional to what actually changed rather than to the size of the window.\n\nThe response carries a canonical stateHash over the normalised tree with volatile fields masked. Two snapshots with the same hash are the same state; that is the basis of determinism measurement.",
+              "inputSchema": {
+                "properties": {
+                  "includeInvisible": {
+                    "description": "Keep zero-area and offscreen nodes. Defaults to false for reading, true when auditing.",
+                    "type": "boolean"
+                  },
+                  "maxDepth": {
+                    "description": "Depth limit. Defaults to 24; truncation is reported in provenance.",
+                    "type": "integer"
+                  },
+                  "maxNodes": {
+                    "description": "Node budget. Defaults to 600. A walk is also bounded by wall clock, because some applications answer each element more slowly the deeper into a large list you go \u2014 a wide icon-view list can cost tens of seconds where an ordinary window costs milliseconds. Both kinds of truncation are reported in provenance rather than passed off as a whole tree.",
+                    "type": "integer"
+                  },
+                  "root": {
+                    "description": "Walk from this node id instead of the window root.",
+                    "type": "string"
+                  },
+                  "sinceRevision": {
+                    "description": "Return a diff from this revision instead of the whole tree.",
+                    "type": "integer"
+                  },
+                  "window": {
+                    "description": "Window handle from proctor_apps.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_snapshot",
+              "outputSchema": {
+                "description": "A pruned accessibility tree, or a diff when sinceRevision was supplied. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not. Its `toolUnavailable` says Obscura is not installed here, and then no command is recommended. `surface` is `browserWindow` or `installedWebApp` \u2014 an installed web app is one site opened as an application, which Proctor drives itself rather than handing to a browser tool, so `use == null` there means Proctor drives it rather than that nothing should. `flags` is present whenever the handoff points at an instrument and carries five booleans where true means the fact is present: `actsOutsideThisWindow`, `autonomous`, `canActAsThisPerson`, `outsideTheAuditTrail`, `billed`. They describe what Proctor recommends, not everything a caller could do \u2014 the handoff is advisory, so a policy that nothing may act in a live browser session gates on the presence of `browser`, not on a flag. The flag that answers may this act with the user own session is `canActAsThisPerson`; a rule built from `autonomous` and `billed` being false does not answer it, because Proctor driving an installed web app is neither autonomous nor billed and is that person session.",
+                "properties": {
+                  "browser": {
+                    "type": "object"
+                  },
+                  "diff": {
+                    "type": "object"
+                  },
+                  "provenance": {
+                    "type": "object"
+                  },
+                  "revision": {
+                    "type": "number"
+                  },
+                  "root": {
+                    "type": "object"
+                  },
+                  "stateHash": {
+                    "type": "string"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Read the accessibility tree of a window"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Return only the nodes matching a predicate, so locating one button does not cost a whole tree. Match on role, subrole, title, label, identifier, value substring, enabled state, focus state, or any combination \u2014 all supplied conditions must hold.\n\nPrefer identifier when the app sets accessibilityIdentifier: it is the only selector a developer controls deliberately, so it survives copy changes and localisation where a title match does not.",
+              "inputSchema": {
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "focused": {
+                    "type": "boolean"
+                  },
+                  "hasAction": {
+                    "description": "Only nodes offering this AX action, e.g. AXPress.",
+                    "type": "string"
+                  },
+                  "identifier": {
+                    "description": "AXIdentifier. The most durable selector available.",
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "limit": {
+                    "description": "Defaults to 25.",
+                    "type": "integer"
+                  },
+                  "match": {
+                    "description": "Defaults to substring.",
+                    "enum": [
+                      "substring",
+                      "exact",
+                      "regex"
+                    ],
+                    "type": "string"
+                  },
+                  "role": {
+                    "description": "AX role, e.g. AXButton, AXTextField.",
+                    "type": "string"
+                  },
+                  "subrole": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "description": "Exact or substring title match, per `match`.",
+                    "type": "string"
+                  },
+                  "valueContains": {
+                    "type": "string"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_find",
+              "outputSchema": {
+                "description": "The nodes matching a predicate. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not. Its `toolUnavailable` says Obscura is not installed here, and then no command is recommended. `surface` is `browserWindow` or `installedWebApp` \u2014 an installed web app is one site opened as an application, which Proctor drives itself rather than handing to a browser tool, so `use == null` there means Proctor drives it rather than that nothing should. `flags` is present whenever the handoff points at an instrument and carries five booleans where true means the fact is present: `actsOutsideThisWindow`, `autonomous`, `canActAsThisPerson`, `outsideTheAuditTrail`, `billed`. They describe what Proctor recommends, not everything a caller could do \u2014 the handoff is advisory, so a policy that nothing may act in a live browser session gates on the presence of `browser`, not on a flag. The flag that answers may this act with the user own session is `canActAsThisPerson`; a rule built from `autonomous` and `billed` being false does not answer it, because Proctor driving an installed web app is neither autonomous nor billed and is that person session.",
+                "properties": {
+                  "browser": {
+                    "type": "object"
+                  },
+                  "count": {
+                    "type": "number"
+                  },
+                  "nodes": {
+                    "type": "array"
+                  },
+                  "predicate": {
+                    "type": "string"
+                  },
+                  "truncated": {
+                    "type": "boolean"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Query the accessibility tree by predicate"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false
+              },
+              "description": "Run a sequence of steps against a window, settling after each and returning per-step outcome, the plane the action travelled, a post-state hash and a tree diff. A six-step flow is one call.\n\nSteps use the process-directed plane by default (accessibility actions and Apple Events), which reaches non-frontmost, occluded and other-Space windows without stealing focus and survives Secure Event Input. The kinds dragPath, hover, click and key inject synthetic events instead: they need the window foreground and report plane=syntheticEvent, so a background-safe result is never faked. Reserve them for what accessibility cannot express \u2014 drags, canvas surfaces, hover states, keyboard-focus behaviour itself. A refused accessibility route fails rather than falling back silently.\n\nThe result carries a foreground block: how many steps were known before the run to need the app in front, how many might have, and how many actually travelled as synthetic events. Read measured rather than re-deriving it from the kinds, because a type or scroll into an element the accessibility plane cannot write falls back to the event stream and no count made from the step list would show it. A run whose measured count is above zero cannot be repeated unattended.\n\nSettling is a conjunction of quiet capture frames, quiet accessibility notifications and the app's own idle signal where a reflector is embedded, bounded by a timeout \u2014 never a sleep. On a step failure the batch stops and reports failedAt.",
+              "inputSchema": {
+                "properties": {
+                  "captureEach": {
+                    "description": "Capture a frame after every step. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "diffEach": {
+                    "description": "Return a tree diff after every step. Defaults to true.",
+                    "type": "boolean"
+                  },
+                  "foreground": {
+                    "description": "Activate the app first. Required for synthetic-event step kinds; defaults to false so background windows stay in the background.",
+                    "type": "boolean"
+                  },
+                  "pointerMarks": {
+                    "description": "With captureEach, composite a marker at each step's target point \u2014 where the step acted \u2014 onto that step's frame, written as a marked sibling PNG. It annotates the intended target, not a live cursor; Proctor does not move the system pointer. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "record": {
+                    "description": "Append these steps to the named flow as they run.",
+                    "type": "string"
+                  },
+                  "settle": {
+                    "description": "Default settle policy for every step: quietFrames, dirtyThreshold, axQuietMs, timeoutMs, requireReflectorIdle.",
+                    "type": "object"
+                  },
+                  "steps": {
+                    "description": "Ordered steps. Each has a kind and the fields that kind needs.",
+                    "items": {
+                      "properties": {
+                        "delta": {
+                          "items": {
+                            "type": "number"
+                          },
+                          "type": "array"
+                        },
+                        "durationMs": {
+                          "description": "For dragPath: how long the whole gesture should take, clamped to 30s. Defaults to 300. Events are spaced evenly across it with a 2ms floor per event, so a long path can take longer than asked; raise it for an application that drops fast drags.",
+                          "type": "integer"
+                        },
+                        "key": {
+                          "description": "Key name, e.g. return, tab, escape, a.",
+                          "type": "string"
+                        },
+                        "kind": {
+                          "enum": [
+                            "press",
+                            "setValue",
+                            "focus",
+                            "menu",
+                            "type",
+                            "key",
+                            "scroll",
+                            "increment",
+                            "decrement",
+                            "pick",
+                            "confirm",
+                            "cancel",
+                            "raise",
+                            "close",
+                            "resize",
+                            "move",
+                            "dragPath",
+                            "hover",
+                            "click",
+                            "shortcut",
+                            "appleScript",
+                            "waitFor"
+                          ],
+                          "type": "string"
+                        },
+                        "label": {
+                          "description": "Human name for this step, carried into reports.",
+                          "type": "string"
+                        },
+                        "menuPath": {
+                          "description": "Menu bar path, e.g. [\"File\",\"Save\"].",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "modifiers": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "node": {
+                          "type": "string"
+                        },
+                        "path": {
+                          "description": "For dragPath: the route to drag along, as [[x,y], ...] in window coordinates. A press and a release at two positions is a click, so the gesture is interpolated to intermediate movements no more than 10 points apart and capped at 240 events. Omit it and the drag runs from point (or the node's centre) to point + delta.",
+                          "items": {
+                            "items": {
+                              "type": "number"
+                            },
+                            "type": "array"
+                          },
+                          "type": "array"
+                        },
+                        "point": {
+                          "items": {
+                            "type": "number"
+                          },
+                          "type": "array"
+                        },
+                        "settle": {
+                          "description": "Per-step settle override.",
+                          "type": "object"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "description": "New value for setValue."
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window",
+                  "steps"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_act",
+              "outputSchema": {
+                "description": "Per-step outcome for a batch of actions. `browser` is present when the target is a browser showing a page: the page belongs to Obscura, the native chrome around it does not. Its `toolUnavailable` says Obscura is not installed here, and then no command is recommended. `surface` is `browserWindow` or `installedWebApp` \u2014 an installed web app is one site opened as an application, which Proctor drives itself rather than handing to a browser tool, so `use == null` there means Proctor drives it rather than that nothing should. `flags` is present whenever the handoff points at an instrument and carries five booleans where true means the fact is present: `actsOutsideThisWindow`, `autonomous`, `canActAsThisPerson`, `outsideTheAuditTrail`, `billed`. They describe what Proctor recommends, not everything a caller could do \u2014 the handoff is advisory, so a policy that nothing may act in a live browser session gates on the presence of `browser`, not on a flag. The flag that answers may this act with the user own session is `canActAsThisPerson`; a rule built from `autonomous` and `billed` being false does not answer it, because Proctor driving an installed web app is neither autonomous nor billed and is that person session.",
+                "properties": {
+                  "browser": {
+                    "type": "object"
+                  },
+                  "completed": {
+                    "type": "number"
+                  },
+                  "failedAt": {
+                    "type": "number"
+                  },
+                  "finalHash": {
+                    "type": "string"
+                  },
+                  "foreground": {
+                    "type": "object"
+                  },
+                  "steps": {
+                    "type": "array"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Perform a batch of actions, settling after each"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Screenshot one window with ScreenCaptureKit, window-scoped, so the result contains that window alone rather than whatever is on top of it. The image is written to disk and the path returned; bytes are never returned inline.\n\nCheck trustworthy before believing the frame. A stale frame looks identical to a correct one, so the freshness fields \u2014 status, contentRect, dirty-rectangle coverage, framesWaited \u2014 are the only thing separating them, and caveat names the reason when one cannot be confirmed. Off-screen windows may only emit complete frames when the pointer moves on their display.\n\n**Before capturing at all, check whether pixels are the cheapest answer, because usually they are not.** To find something to act on, proctor_find returns the matching nodes as text for a fraction of an image's tokens, and the node id it gives you is a more durable target than a coordinate. To check whether a step changed anything, every proctor_act step already carries a stateHash \u2014 two identical hashes mean the tree did not move, which is a stronger and cheaper answer than looking at two screenshots. Capture when the question is genuinely visual: what it looks like, whether it rendered, where something is on screen.\n\npurpose decides how many pixels the frame gets, because the vision API's ceiling is what it tolerates rather than what a task needs, and a model is billed on dimensions \u2014 roughly width x height / 750 tokens. targeting (768px) is for deciding what to press and where; nothing is being read, and 768 is also exactly Gemini's tile boundary, where 769 pixels costs double. verify (1024px, the default) is XGA, what Anthropic's own computer-use reference implementation targets for reliability. detail (1568px) is the API ceiling, for reading dense text. Setting annotate implies targeting on its own: a numbered mark survives a downscale that body text would not.\n\n**Start small and escalate with proctor_zoom rather than capturing large.** A low-resolution overview plus an on-demand native crop is measured to lift grounding accuracy on dense professional interfaces from under 20% to over 70% \u2014 it reads better than one big frame as well as costing less. normalization reports purpose and estimatedVisionTokens so the cost is visible where the capture is.\n\nnormalization.scale reports the exact factor. Map a model coordinate back with native = normalised / scale. Pass normalize false for native pixels when asserting against native geometry; normalizeMaxLongEdge/normalizeMaxPixels override the tier outright.\n\nannotate burns numbered marks over interactable elements and returns a mark\u2192node map, so \"click mark 7\" resolves to a real element id; annotateAll marks everything with a frame, grid overlays reference lines. The un-annotated image stays at path, the marked one at annotation.annotatedPath.\n\nformat defaults to png. jpeg is available for archiving many frames, and costs UI text: measured against a native-resolution baseline, OCR recall fell from 94% (png) to 91% at q85 and 78% at q50, with misread-as-different-word errors rising sixfold.",
+              "inputSchema": {
+                "properties": {
+                  "annotate": {
+                    "description": "Burn numbered marks over interactable elements and return the mark\u2192node map. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "annotateAll": {
+                    "description": "Mark every element carrying a frame. Implies annotate. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "format": {
+                    "description": "Container. Defaults to png; jpeg costs UI-text accuracy.",
+                    "enum": [
+                      "png",
+                      "jpeg"
+                    ],
+                    "type": "string"
+                  },
+                  "grid": {
+                    "description": "Overlay reference grid lines. Independent of annotate. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "gridSpacing": {
+                    "description": "Points between grid lines. Defaults to 100.",
+                    "type": "number"
+                  },
+                  "includeCursor": {
+                    "description": "Defaults to false, since a cursor in the frame is a source of false diffs.",
+                    "type": "boolean"
+                  },
+                  "maxMarks": {
+                    "description": "Ceiling on marks drawn; the overflow is dropped in reading order and reported as truncated. Defaults to 150.",
+                    "type": "integer"
+                  },
+                  "normalize": {
+                    "description": "Fit the frame to the vision ceiling and report the exact scale. Defaults to true; pass false for native pixels.",
+                    "type": "boolean"
+                  },
+                  "normalizeMaxLongEdge": {
+                    "description": "Long-edge ceiling in pixels. Overrides purpose. Defaults to the tier's own ceiling.",
+                    "type": "integer"
+                  },
+                  "normalizeMaxPixels": {
+                    "description": "Total-pixel ceiling. Overrides purpose. Defaults to the tier's own ceiling.",
+                    "type": "integer"
+                  },
+                  "path": {
+                    "description": "Where to write the image. Defaults to a session temp directory.",
+                    "type": "string"
+                  },
+                  "purpose": {
+                    "description": "How many pixels the frame needs. targeting 768px (pressing, not reading; also Gemini's tile boundary), verify 1024px (default, XGA), detail 1568px (reading dense text). annotate implies targeting.",
+                    "enum": [
+                      "targeting",
+                      "verify",
+                      "detail"
+                    ],
+                    "type": "string"
+                  },
+                  "quality": {
+                    "description": "Lossy quality 60-100. Defaults to 90. Ignored for png.",
+                    "type": "integer"
+                  },
+                  "scale": {
+                    "description": "Output scale. Defaults to the display's backing scale.",
+                    "type": "number"
+                  },
+                  "tileHashes": {
+                    "description": "Also return per-tile perceptual hashes, for determinism comparison.",
+                    "type": "boolean"
+                  },
+                  "timeoutMs": {
+                    "description": "Defaults to 3000.",
+                    "type": "integer"
+                  },
+                  "waitForComplete": {
+                    "description": "Keep pulling frames until one is .complete or the timeout expires. Defaults to true.",
+                    "type": "boolean"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_capture",
+              "outputSchema": {
+                "description": "A window capture with its freshness metadata; the PNG is on disk at `path`, never inline.",
+                "properties": {
+                  "capturedAt": {
+                    "type": "number"
+                  },
+                  "caveat": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "object"
+                  },
+                  "contentRect": {
+                    "type": "object"
+                  },
+                  "contentVerdict": {
+                    "type": "string"
+                  },
+                  "dirtyArea": {
+                    "type": "number"
+                  },
+                  "dirtyRectCount": {
+                    "type": "number"
+                  },
+                  "framesWaited": {
+                    "type": "number"
+                  },
+                  "height": {
+                    "type": "number"
+                  },
+                  "normalization": {
+                    "type": "object"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "scale": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "tileHashes": {
+                    "type": "array"
+                  },
+                  "trustworthy": {
+                    "type": "boolean"
+                  },
+                  "width": {
+                    "type": "number"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Screenshot a window, with freshness metadata"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Return a native-resolution crop of one region or one accessibility element, for reading small text or fine detail a whole-window capture loses. proctor_capture normalises to the vision ceiling by default, and the pixels a label, glyph or numeric field is written in do not survive that downscale; this restores them without shipping a full 2x screenshot. Published benchmarks put the gain large: iterative crop-and-zoom lifts GUI grounding accuracy on high-resolution desktop software from roughly 19% to 48-73%.\n\nGive either region \u2014 [x, y, w, h] in points from the window's top-left, the space proctor_wait uses \u2014 or node, an id from proctor_find whose frame is resolved for you. padding adds context points on every side. Aim for a region around 1000px on its long edge: much smaller and the model loses the surrounding context that disambiguates the target. The compose path is find \u2192 zoom \u2192 assert.\n\nThe crop is cut from a native-scale window capture, so it carries that capture's freshness metadata unchanged \u2014 check trustworthy and caveat as with proctor_capture. The descriptor names the pixel rect actually cut, whether it was clamped to the window, and the path to the un-cropped full-window image. A region with no area, or one outside the frame, is an error naming the reason rather than an empty image. Reading the text is left to the caller; this restores the pixels, it does not OCR them.",
+              "inputSchema": {
+                "properties": {
+                  "format": {
+                    "description": "Container for the crop. Defaults to png, which is what makes small text readable.",
+                    "enum": [
+                      "png",
+                      "jpeg"
+                    ],
+                    "type": "string"
+                  },
+                  "includeCursor": {
+                    "description": "Defaults to false, since a cursor in the frame is a source of false diffs.",
+                    "type": "boolean"
+                  },
+                  "node": {
+                    "description": "A node id from proctor_find; its frame is resolved and cropped. Supply this or region.",
+                    "type": "string"
+                  },
+                  "padding": {
+                    "description": "Context points added on every side. Defaults to 0.",
+                    "type": "number"
+                  },
+                  "path": {
+                    "description": "Where to write the crop. Defaults to a session temp directory.",
+                    "type": "string"
+                  },
+                  "quality": {
+                    "description": "Lossy quality 60-100. Defaults to 90. Ignored for png.",
+                    "type": "integer"
+                  },
+                  "region": {
+                    "description": "[x, y, w, h] in points from the window's top-left. Supply this or node.",
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
+                  "scale": {
+                    "description": "Capture scale. Defaults to the display's backing scale, which is what makes the crop native-resolution.",
+                    "type": "number"
+                  },
+                  "timeoutMs": {
+                    "description": "Defaults to 3000.",
+                    "type": "integer"
+                  },
+                  "waitForComplete": {
+                    "description": "Keep pulling frames until one is .complete or the timeout expires. Defaults to true.",
+                    "type": "boolean"
+                  },
+                  "window": {
+                    "description": "Window handle from proctor_apps to capture and crop.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_zoom",
+              "outputSchema": {
+                "description": "A native-resolution crop of a region or element, with the same freshness metadata as a capture; the crop PNG is on disk at `path`, never inline, and `crop` names what was cut.",
+                "properties": {
+                  "capturedAt": {
+                    "type": "number"
+                  },
+                  "caveat": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "object"
+                  },
+                  "contentRect": {
+                    "type": "object"
+                  },
+                  "contentVerdict": {
+                    "type": "string"
+                  },
+                  "crop": {
+                    "type": "object"
+                  },
+                  "dirtyArea": {
+                    "type": "number"
+                  },
+                  "dirtyRectCount": {
+                    "type": "number"
+                  },
+                  "framesWaited": {
+                    "type": "number"
+                  },
+                  "height": {
+                    "type": "number"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "scale": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "trustworthy": {
+                    "type": "boolean"
+                  },
+                  "width": {
+                    "type": "number"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Crop a region or element at native resolution"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Block until a specific condition holds, bounded by a timeout. Use this when the thing being waited for is not \"the UI stopped moving\" \u2014 settling already covers that after every action \u2014 but something nameable: an element appearing or disappearing, a value reaching a target, a region going quiet, or the app's own idle endpoint reporting done.\n\nReturns whether the condition held, how long it took, and the state when it resolved.",
+              "inputSchema": {
+                "properties": {
+                  "condition": {
+                    "enum": [
+                      "nodeExists",
+                      "nodeGone",
+                      "valueEquals",
+                      "valueContains",
+                      "enabled",
+                      "focused",
+                      "regionQuiet",
+                      "reflectorIdle"
+                    ],
+                    "type": "string"
+                  },
+                  "find": {
+                    "description": "A find predicate, when the node does not exist yet and so has no id.",
+                    "type": "object"
+                  },
+                  "node": {
+                    "type": "string"
+                  },
+                  "pollMs": {
+                    "description": "Defaults to 100.",
+                    "type": "integer"
+                  },
+                  "region": {
+                    "description": "[x,y,w,h] for regionQuiet, in points relative to the window's top-left corner. Subtract the window frame's origin from a node frame to get one. The dirty rectangles the compositor reports are intersected with this rectangle, so the answer is the fraction of the region that changed, not of the window. A region that maps outside the captured frame, or that cannot be placed because the frame reports no geometry, comes back as an error naming the reason rather than as a quiet region. Omit it to wait on the whole window.",
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
+                  "timeoutMs": {
+                    "description": "Defaults to 10000.",
+                    "type": "integer"
+                  },
+                  "value": {
+                    "description": "Target value for valueEquals / valueContains."
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window",
+                  "condition"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_wait",
+              "outputSchema": {
+                "description": "Whether a named condition held, and the state when it resolved.",
+                "properties": {
+                  "condition": {
+                    "type": "string"
+                  },
+                  "elapsedMs": {
+                    "type": "number"
+                  },
+                  "observed": {},
+                  "ok": {
+                    "type": "boolean"
+                  },
+                  "polls": {
+                    "type": "number"
+                  },
+                  "timedOut": {
+                    "type": "boolean"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Wait for a named condition"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Evaluate a list of assertions against the current state and return pass/fail per assertion with the observed value alongside the expected one. Separate from waiting because a test needs a verdict, not a timeout.\n\nAssertion kinds cover the accessibility tree (a node exists, has a value, is enabled, is focused, has a label), geometry (a node's frame, its containment in another, its alignment against another, its placement inside its container), pixels (a region matches a reference within tolerance), and accessibility auditing (every interactive node has a label, contrast meets a threshold, hit targets meet a minimum size, focus order follows visual order).\n\nThe two alignment kinds answer different questions. kind=alignedWith measures between two things you name: it returns the deltas on left, right, top, bottom, centerX and centerY, and given expected={node, edge} it tests one of them. kind=horizontalAlignment classifies one element inside its container \u2014 expected is left, center or right (leading, trailing and centre are accepted) \u2014 and it rejects the other two placements rather than passing on any single small delta. Give it `container` as a node id or [x,y,w,h]; with none it uses the window frame, which usually carries content margins, so a left-aligned element inside an inset area reads as custom until you name the content view. Its terms are physical rather than layout-direction-aware: it compares screen x, so in a right-to-left app the element you would call leading is reported right.\n\nEvery geometry kind takes `tolerance` in points and defaults it to 1.0 \u2014 the distance at which two coordinates count as the same. It means the same thing on all of them, so a value you set on one assertion carries the same strictness to the next.\n\nAn assertion that could not be evaluated comes back skipped with a reason, never as a pass, and ok is false while anything is skipped. horizontalAlignment skips rather than guesses when the container is too close in width to the element to tell its placements apart, when a container you asked for has no readable frame, and when no expected is given \u2014 the last still reports the placement it observed, so it doubles as a probe.\n\nThe tri-observer check is available here as kind=agree: where the accessibility tree, the geometry source and the captured pixels disagree about the same instant, the delta is returned as a finding \u2014 an unexposed control, a ghost node, an invisible-but-focusable element, a stale frame or a wrong hit target \u2014 rather than smoothed away.",
+              "inputSchema": {
+                "properties": {
+                  "assertions": {
+                    "items": {
+                      "properties": {
+                        "container": {
+                          "description": "The rectangle horizontalAlignment classifies against: a node id, or [x,y,w,h]. Defaults to the window frame."
+                        },
+                        "expected": {},
+                        "find": {
+                          "type": "object"
+                        },
+                        "kind": {
+                          "enum": [
+                            "exists",
+                            "absent",
+                            "valueEquals",
+                            "valueContains",
+                            "enabled",
+                            "disabled",
+                            "focused",
+                            "hasLabel",
+                            "frameEquals",
+                            "containedIn",
+                            "alignedWith",
+                            "horizontalAlignment",
+                            "minHitSize",
+                            "contrast",
+                            "focusOrder",
+                            "regionMatches",
+                            "agree"
+                          ],
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "node": {
+                          "type": "string"
+                        },
+                        "reference": {
+                          "description": "Path to a reference PNG, for regionMatches.",
+                          "type": "string"
+                        },
+                        "tolerance": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "captureEvidence": {
+                    "description": "Attach a capture to each failure. Defaults to true.",
+                    "type": "boolean"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window",
+                  "assertions"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_assert",
+              "outputSchema": {
+                "description": "Per-assertion verdicts with observed values.",
+                "properties": {
+                  "assertions": {
+                    "type": "array"
+                  },
+                  "failed": {
+                    "type": "number"
+                  },
+                  "passed": {
+                    "type": "number"
+                  },
+                  "revision": {
+                    "type": "number"
+                  },
+                  "skipped": {
+                    "type": "number"
+                  },
+                  "stateHash": {
+                    "type": "string"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Check assertions and return a machine-readable verdict"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false
+              },
+              "description": "Manage named flows \u2014 the reusable unit of an end-to-end campaign. Record captures a step sequence as it is performed; replay runs it again with per-step canonical hashing; list and show read what is stored; delete removes one.\n\nA recorded flow stores the step list, the selector each step resolved through, and the per-step state hashes from the recording run. Replay compares against those hashes, so a replay that diverges says where and how, rather than only that it failed.\n\nFlows persist under the session directory, so a campaign survives the MCP host restarting.\n\nReplay drives an application, so it passes the same policy gate and writes to the same redacting audit trail as proctor_act: a blocked app, or a sensitive one with no current approval token, is refused before the first step. The decision is made on the application behind the window being driven now, not the one the recording names. Recording, listing, showing and deleting drive nothing and are not gated.",
+              "inputSchema": {
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "start",
+                      "stop",
+                      "replay",
+                      "list",
+                      "show",
+                      "delete"
+                    ],
+                    "type": "string"
+                  },
+                  "captureEach": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "description": "What this flow covers, carried into the report.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "pointerMarks": {
+                    "description": "With captureEach on a replay, composite a marker at each step's target point \u2014 where the step acted \u2014 onto that step's frame. Annotates the intended target, not a live cursor. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "settle": {
+                    "type": "object"
+                  },
+                  "window": {
+                    "description": "Target window for replay; the flow's recorded window otherwise.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_flow",
+              "outputSchema": {
+                "description": "A flow list (flows/directory), a show, a replay (flow/completed/steps/comparison), a start, or a delete.",
+                "properties": {
+                  "comparison": {
+                    "type": "array"
+                  },
+                  "completed": {
+                    "type": "number"
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "directory": {
+                    "type": "string"
+                  },
+                  "flow": {
+                    "type": "string"
+                  },
+                  "flows": {
+                    "type": "array"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "steps": {},
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Record, list and replay named step sequences"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false
+              },
+              "description": "Replay a flow repeatedly and report where the runs stopped agreeing. Returns firstDivergence \u2014 the step index where the canonical state hashes first differed across runs \u2014 and stepInstability, a 0-to-1 score per step measuring how many distinct states that step produced.\n\nThis is the instrument that separates a real defect from a flaky test. A step with instability above zero is nondeterministic before anyone argues about whether it is correct, and a flow whose firstDivergence is step 3 does not need its step 9 assertion investigated.\n\nThree runs detects gross nondeterminism; five to ten is the useful range for a flow about to be trusted as a gate.\n\nEvery repeat replays the flow, so each one passes the policy gate and is written to the redacting audit trail, resets included. Permission is re-checked before each repeat: an approval token that expires part-way through stops the run there, and the report says how many repeats it managed \u2014 a truncated run is never reported deterministic.\n\nA state hash is a walk of the window's accessibility tree, and inside a browser's web area that tree is the page's render tree rather than the application's view hierarchy \u2014 so a score taken there measures the page's own churn as much as the app's. stepBasis says, per step, which side of that boundary the step fell on, measured while it ran rather than guessed beforehand, and pageContent names the browser and the steps concerned. The score is still reported: a page-content flow that agreed across every repeat agreed, and the disclosure names what the number is about rather than withholding it.\n\nstepBasis also says how many repeats each step's score was folded from, and omits the score entirely below two \u2014 a step measured once would otherwise read as perfectly stable. A step whose outcome the backend could not establish contributes no hash at all: its post-state is kept on the step as evidence and refused by the score, because a reading taken after an action nobody can vouch happened is not a sample of that step.",
+              "inputSchema": {
+                "properties": {
+                  "captureEach": {
+                    "description": "Write a PNG after every step that runs, in every replay, so a divergent step can be looked at rather than only scored. A replay that breaks mid-flow photographs the steps before the break and reports the rest as not attempted. Off by default: an opt-in run writes roughly runs \u00d7 steps images (doubled where a marker is drawn), nothing cleans them up, and capturing after each step shifts the run's timings, which the report says so a score is never quietly compared against a run captured off.",
+                    "type": "boolean"
+                  },
+                  "flow": {
+                    "type": "string"
+                  },
+                  "includeTiles": {
+                    "description": "Compare pixel tile hashes as well as the tree. Slower, catches rendering nondeterminism the tree cannot see.",
+                    "type": "boolean"
+                  },
+                  "pointerMarks": {
+                    "description": "Composite a marker at each step's target point onto that step's frame, written as a marked sibling PNG. It annotates where the step acted, not a live cursor; Proctor does not move the system pointer. Turns captureEach on when it is off, and says so in the report, because a marker needs a frame to be drawn on. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "resetBetween": {
+                    "description": "Steps to run between replays to return the app to its start state.",
+                    "type": "object"
+                  },
+                  "runs": {
+                    "description": "Defaults to 5.",
+                    "type": "integer"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "flow"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_stability",
+              "outputSchema": {
+                "description": "firstDivergence and a per-step instability score across N replays.",
+                "properties": {
+                  "captures": {
+                    "items": {
+                      "description": "One saved per-step frame, identified by which replay and which step produced it.",
+                      "properties": {
+                        "markedPath": {
+                          "type": "string"
+                        },
+                        "note": {
+                          "type": "string"
+                        },
+                        "path": {
+                          "type": "string"
+                        },
+                        "run": {
+                          "type": "number"
+                        },
+                        "step": {
+                          "type": "number"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "deterministic": {
+                    "type": "boolean"
+                  },
+                  "divergenceDetail": {
+                    "type": "object"
+                  },
+                  "firstDivergence": {
+                    "type": "number"
+                  },
+                  "flow": {
+                    "type": "string"
+                  },
+                  "notes": {
+                    "type": "array"
+                  },
+                  "runs": {
+                    "type": "number"
+                  },
+                  "stepCount": {
+                    "type": "number"
+                  },
+                  "stepInstability": {
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Replay a flow N times and measure determinism"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Read the view and layer hierarchy of an app that embeds the ProctorReflector package: resolved colours, fonts, corner radii, opacity, constraints, and both the CALayer model values and the presentation values, with a monotonic render revision.\n\nThis is the only route to anything resembling computed styles on macOS. There is no cross-process equivalent of getComputedStyle: for an app you do not own, the ceiling is the accessibility tree plus pixels, and this tool reports reflectorUnavailable rather than approximating. Embedding the reflector behind #if DEBUG in your own app is what turns fidelity checking from eyeballing into measurement.\n\nThe model-versus-presentation split matters during animation: they differ exactly while something is in flight, which is a settle signal in its own right.",
+              "inputSchema": {
+                "properties": {
+                  "includeConstraints": {
+                    "description": "Defaults to false; layout constraint dumps are large.",
+                    "type": "boolean"
+                  },
+                  "maxDepth": {
+                    "type": "integer"
+                  },
+                  "node": {
+                    "description": "Accessibility node id to correlate; omit for the whole hierarchy.",
+                    "type": "string"
+                  },
+                  "presentation": {
+                    "description": "Include CALayer presentation values alongside model values. Defaults to true.",
+                    "type": "boolean"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_inspect",
+              "outputSchema": {
+                "description": "Resolved styles and layer geometry from an instrumented app.",
+                "properties": {
+                  "hierarchy": {},
+                  "renderRevision": {
+                    "type": "number"
+                  },
+                  "window": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Read resolved styles and layer geometry from an instrumented app"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Report whether the agent is running, which TCC grants are in place, what is attached, whether observers are alive, whether Secure Event Input is active, and whether the shortcuts CLI is available.\n\nAlso reports the toolchain Proctor depends on but does not ship \u2014 Obscura, simctl and Xcode, cua-driver, Maestro \u2014 with where each was found, whether it is usable, and what established that; and which lanes this machine actually has, so a caller learns that there is no iOS lane here before it tries to use one rather than after. **This call runs none of those tools.** A usability of `unconfirmed` is a fact about what Proctor has established, not a fault, and calling doctor again will not change it.\n\nThe `policy` block is the gate's posture \u2014 its mode, the sizes of its lists, whether an approval token is live, and whether the audit trail is writable and verifying clean. The rules themselves are not here; proctor_policy answers those.\n\nEach missing grant comes with the exact fix for the running OS version. Accessibility can be granted by profile on macOS 26 but that path is removed in 27 in favour of declarative App Settings; Screen Recording can never be granted silently on any version. Getting this wrong presents as elements not being found, which a model will retry indefinitely, so running doctor first is the cheapest step in any campaign.",
+              "inputSchema": {
+                "properties": {
+                  "requestAccessibility": {
+                    "description": "Ask macOS to show its Accessibility consent dialog if the grant is missing. The dialog appears once per app identity; if the user has already answered it, macOS shows nothing and the grant must be changed in System Settings instead. Report the result from a fresh doctor call rather than assuming the prompt was seen.",
+                    "type": "boolean"
+                  },
+                  "requestScreenRecording": {
+                    "description": "Ask macOS for the Screen Recording consent dialog. Shown once per app identity; afterwards it returns the recorded answer silently, so pair it with the System Settings route in any UI.",
+                    "type": "boolean"
+                  },
+                  "verbose": {
+                    "description": "Include per-app observer and cache detail.",
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
+              "name": "proctor_doctor",
+              "outputSchema": {
+                "description": "Agent liveness, grants, attachments and observer health. Each entry in `grants` carries `state` \u2014 `granted`, `denied` or `unconfirmed` \u2014 alongside the older `granted` boolean, which means *confirmed granted* and is false for both `denied` and `unconfirmed`. `unconfirmed` means the probe was bounded at 1.5s and macOS did not answer inside it: it is a fact about what Proctor established, not about the permission, so the grant may be in place and System Settings is probably not where the answer is. Call this tool again \u2014 a definite answer is cached for the life of the agent as soon as it arrives \u2014 or restart the agent to probe from a fresh process. `ready` is false while a required grant is unconfirmed, because `ready` means established-good. `agentVersion` identifies the build the agent actually is \u2014 `version+commit`, plus `.dirty` for uncommitted changes and `.debug` for a debug build \u2014 and `agentBuild` carries the same thing in parts, with `builtAt` for when that executable was written. `tools` lists every command-line tool Proctor looks for, with where it was found and everywhere it looked; `obscuraAvailable` and `obscura` are the grandfathered spelling of its first entry. `secondLane` is `off`, `enabled` or `unavailable` \u2014 the second browser lane is named only when PROCTOR_SECOND_LANE names it, and usable only when that tool is also installed. None of that affects `ready`, because Proctor drives native applications without any browser tool. Each tool row also carries `usability` \u2014 `usable`, `unusable` or `unconfirmed` \u2014 with `evidence` saying what backs it: `presence` (a file of that name is there, and that is all), `installPath` (the install layout was read), `signature` (the binary's code signature was checked), or `laneReport` (a lane that was actually used established it). **proctor_doctor runs none of these tools**, so `unconfirmed` is not fixed by calling this again \u2014 it is fixed by using the lane, which is what establishes the rest. `lanes` says what this machine can do \u2014 `mac`, `browser`, `ios`, `cua` \u2014 each with a three-state `state`, a fail-closed `ready`, what it requires and why it is not ready; a lane is derived from the grants and the tool rows rather than reported beside them. `policy` is the gate's posture: its mode and the sizes of its lists, whether an approval token is live, and whether the trail is writable, sealed, signed and clean. It deliberately carries no bundle id, path, key or token \u2014 for the rules themselves call proctor_policy.",
+                "properties": {
+                  "agentBuild": {
+                    "type": "object"
+                  },
+                  "agentRunning": {
+                    "type": "boolean"
+                  },
+                  "agentVersion": {
+                    "type": "string"
+                  },
+                  "attachedApps": {
+                    "type": "array"
+                  },
+                  "blockers": {
+                    "type": "array"
+                  },
+                  "grants": {
+                    "type": "array"
+                  },
+                  "lanes": {
+                    "type": "array"
+                  },
+                  "obscura": {
+                    "type": "object"
+                  },
+                  "obscuraAvailable": {
+                    "type": "boolean"
+                  },
+                  "obscuraUnavailable": {
+                    "type": "object"
+                  },
+                  "observersLive": {
+                    "type": "number"
+                  },
+                  "osVersion": {
+                    "type": "string"
+                  },
+                  "policy": {
+                    "type": "object"
+                  },
+                  "protocolVersion": {
+                    "type": "number"
+                  },
+                  "ready": {
+                    "type": "boolean"
+                  },
+                  "secondLane": {
+                    "type": "string"
+                  },
+                  "secureEventInputActive": {
+                    "type": "boolean"
+                  },
+                  "shortcutsCLIAvailable": {
+                    "type": "boolean"
+                  },
+                  "socketPath": {
+                    "type": "string"
+                  },
+                  "tools": {
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Report readiness, grants and session health"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false
+              },
+              "description": "Control the screen-unlock capability. This works only when the login-path authorization plugin is installed and armed; without it the actions are inert and `status` says so.\n\nActions: `status` reports lock state, whether a turn is authorized right now, and whether the plugin is installed. `open` opens a short turn without touching the screen, which proves the mechanism-to-broker handshake in isolation. `unlock` opens a turn and asks macOS to evaluate the unlock right; the result states plainly whether the right was granted and whether the lock screen actually dismissed, because the latter depends on loginwindow behaviour that is not contractual. `relock` relocks immediately and ends the turn. `close` ends a turn without relocking.\n\nThe turn always carries a TTL, so a crashed caller cannot leave the screen unlockable, and the authorization rule keeps the normal password prompt as a fallback so a person is never locked out. Disclose in any test methodology that a run operated the machine while locked.",
+              "inputSchema": {
+                "properties": {
+                  "action": {
+                    "description": "Defaults to status.",
+                    "enum": [
+                      "status",
+                      "open",
+                      "close",
+                      "unlock",
+                      "relock",
+                      "lock"
+                    ],
+                    "type": "string"
+                  },
+                  "ttlMs": {
+                    "description": "How long the turn stays authorized. Defaults to 15000.",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "name": "proctor_unlock",
+              "outputSchema": {
+                "description": "Lock/turn state (status), or the outcome of open/close/unlock/relock/lock.",
+                "properties": {
+                  "brokerSocket": {
+                    "type": "string"
+                  },
+                  "closed": {
+                    "type": "boolean"
+                  },
+                  "locked": {
+                    "type": "boolean"
+                  },
+                  "opened": {
+                    "type": "boolean"
+                  },
+                  "pluginInstalled": {
+                    "type": "boolean"
+                  },
+                  "relocked": {
+                    "type": "boolean"
+                  },
+                  "screenLocked": {
+                    "type": "boolean"
+                  },
+                  "ttlMs": {
+                    "type": "number"
+                  },
+                  "turnAuthorized": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Open, evaluate and end a screen-unlock turn"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "readOnlyHint": false
+              },
+              "description": "Accept a single Anthropic `computer` action in its stock schema and run it against a window, so a model trained on that tool drives Proctor unchanged. Additive: the native tools are unaffected.\n\nMaps: screenshot, left_click / double_click / triple_click, mouse_move, type, key (an xdotool combo such as \"cmd+s\"), scroll (scroll_direction plus scroll_amount), left_click_drag (needs start_coordinate, since the fa\u00e7ade tracks no cursor), and wait. Coordinates are read in the screenshot's own space, origin at the window's top-left, and mapped to the global screen point; pass scale for a non-1x screenshot.\n\nThese are synthetic events, so they need the window frontmost and report plane=syntheticEvent; foreground defaults to true. right_click, middle_click and cursor_position are refused with a reason rather than mis-actuated. Each step returns the original action, its translation, the plane travelled and the post-state hash.",
+              "inputSchema": {
+                "properties": {
+                  "action": {
+                    "description": "One Anthropic computer action in its stock schema, e.g. {\"action\":\"left_click\",\"coordinate\":[x,y]}.",
+                    "type": "object"
+                  },
+                  "foreground": {
+                    "description": "Activate the app first. Defaults to true, because computer-use actions are synthetic events that need the window frontmost.",
+                    "type": "boolean"
+                  },
+                  "scale": {
+                    "description": "Coordinate scale of the screenshot the model was shown. Defaults to 1 (point space); pass 2 for a 2x retina capture.",
+                    "type": "number"
+                  },
+                  "window": {
+                    "description": "Window handle from proctor_apps to drive and observe.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window",
+                  "action"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_computer",
+              "outputSchema": {
+                "type": "object"
+              },
+              "title": "Drive a window with the stock Anthropic computer-use schema"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "readOnlyHint": false
+              },
+              "description": "Accept OpenAI `openai_computer` actions in their stock schema \u2014 a single action or a batch array \u2014 and run them against a window in order, stopping at the first failure and reporting failedAt. Additive and opt-in; the native surface is unchanged.\n\nMaps: screenshot, click (left button only), double_click, move, type, keypress (a keys array such as [\"ctrl\",\"c\"]), scroll (scroll_x / scroll_y at a point), drag (a path of points), and wait. Coordinates are read in the screenshot's own space, origin at the window's top-left; pass scale for a non-1x screenshot.\n\nMapped actions are synthetic events: they need the window frontmost, report plane=syntheticEvent, and foreground defaults to true. A non-left mouse button is refused rather than turned into a left click. Each step carries the original action, its translation and the post-state hash.",
+              "inputSchema": {
+                "properties": {
+                  "actions": {
+                    "description": "An ordered batch of OpenAI computer actions in the stock schema, e.g. [{\"type\":\"click\",\"button\":\"left\",\"x\":..,\"y\":..}]. A single action object is also accepted.",
+                    "items": {
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "foreground": {
+                    "description": "Activate the app first. Defaults to true, because computer-use actions are synthetic events that need the window frontmost.",
+                    "type": "boolean"
+                  },
+                  "scale": {
+                    "description": "Coordinate scale of the screenshot the model was shown. Defaults to 1; pass 2 for a 2x retina capture.",
+                    "type": "number"
+                  },
+                  "window": {
+                    "description": "Window handle from proctor_apps to drive and observe.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "window",
+                  "actions"
+                ],
+                "type": "object"
+              },
+              "name": "proctor_openai_computer",
+              "outputSchema": {
+                "type": "object"
+              },
+              "title": "Drive a window with the stock OpenAI computer-use schema"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Walk the attached application's menu bar and return every item with its menu path, title, enabled state, and its keyboard shortcut \u2014 the key-equivalent reconstructed from the accessibility attributes, e.g. cmd+shift+n. Pressing a known shortcut is faster and more robust than walking AXMenuBar to a submenu item, which is slow, focus-sensitive and brittle across localisations, so surfacing the shortcut lets a model choose the keystroke path when one exists.\n\nEach item carries the shortcut two ways: the normalised string, and a key plus modifiers pair in the exact shape the proctor_act `key` step reads \u2014 so an item can be invoked by its shortcut straight from this enumeration. That `key` step is a synthetic event and needs the app frontmost; for a background-safe invocation use the `menu` step with the menuPath this tool returns, which actuates the same command through the accessibility plane without stealing focus. Both routes come from the one walk.\n\nThis is a pure accessibility read: no synthetic events, no new permission beyond the Accessibility grant attach already required, and it reaches a background or other-Space app. macOS builds some submenus only when they are opened; such a submenu is reported as a single item with submenuPopulated false and is not descended into, rather than fabricating contents that were never read. Open it with a menu or press step and re-read to see inside.\n\nTakes an app handle, or a window handle whose owning app is used.",
+              "inputSchema": {
+                "properties": {
+                  "app": {
+                    "description": "App handle from proctor_apps to read the menu bar of.",
+                    "type": "string"
+                  },
+                  "window": {
+                    "description": "A window handle, as an alternative to app; its owning application's menu bar is read.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "name": "proctor_menu",
+              "outputSchema": {
+                "description": "The menu bar flattened to rows, each with its path, enabled state and reconstructed key-equivalent.",
+                "properties": {
+                  "app": {
+                    "type": "string"
+                  },
+                  "itemCount": {
+                    "type": "number"
+                  },
+                  "items": {
+                    "type": "array"
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Enumerate the menu bar with key-equivalents"
+            },
+            {
+              "annotations": {
+                "readOnlyHint": true
+              },
+              "description": "Read an attached application's scripting definition \u2014 suites, commands, classes, properties and enumerations \u2014 as structured data plus a one-line capability summary. This makes the Apple-Events plane self-describing, so a caller picks the cheapest reliable route per task: scripting where a command is exact, accessibility where it is not.\n\nResolved from the running app's bundle with the standard suite already merged, and cached per app handle; the cache invalidates on relaunch on its own, and refresh re-reads regardless. An app exposing no scripting commands returns scriptable=false with a route hint rather than an error \u2014 that is the signal to use proctor_snapshot and proctor_act.\n\nRead-only; actuation stays in proctor_act. summaryOnly returns the summary and counts without the full suite listing.",
+              "inputSchema": {
+                "properties": {
+                  "app": {
+                    "description": "App handle from proctor_apps. Supply this or window.",
+                    "type": "string"
+                  },
+                  "refresh": {
+                    "description": "Re-read the sdef even if a cached dictionary exists for this app handle. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "summaryOnly": {
+                    "description": "Return the capability summary and counts without the full suite listing. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "window": {
+                    "description": "Window handle from proctor_apps; its owning app is used. Supply this or app.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "name": "proctor_dictionary",
+              "outputSchema": {
+                "description": "An app's parsed scripting dictionary: scriptability, a capability summary, per-suite structure and counts.",
+                "properties": {
+                  "app": {
+                    "type": "string"
+                  },
+                  "bundleId": {
+                    "type": "string"
+                  },
+                  "cached": {
+                    "type": "boolean"
+                  },
+                  "caveat": {
+                    "type": "string"
+                  },
+                  "counts": {
+                    "type": "object"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "pid": {
+                    "type": "number"
+                  },
+                  "scriptable": {
+                    "type": "boolean"
+                  },
+                  "suites": {
+                    "type": "array"
+                  },
+                  "summary": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Read an app's scripting dictionary (sdef)"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "readOnlyHint": false
+              },
+              "description": "Operator-facing safety plumbing: a policy gate deciding which applications Proctor may drive, and a redacting audit trail recording every action without storing what was typed.\n\nThe gate is keyed by bundle identifier and fails closed. block is always refused. allow, when non-empty, is an allow list \u2014 anything not on it, including an app whose bundle id cannot be resolved, is refused. sensitive applications may be driven only while a short-lived approval token is held, so a crashed caller leaves no standing authority.\n\nActions: status reports the lists, whether a token is live and where the audit log lives; configure replaces any of the sets you supply; approve mints a token, optionally scoped to one bundle id, with a TTL; revoke drops it; audit returns recent JSONL lines. Typed values and script bodies are stored as length plus SHA-256, never in the clear.\n\nThe trail is encrypted at rest. Each entry is sealed on its own to a key held in this Mac's login keychain, so the file is unreadable if it is copied off the machine, restored from a backup, or opened by another account; reading it back through audit needs that keychain. There is no recovery copy of that key and no export: if it is lost, so is the history. A readable trail left by an earlier version is converted in place on first use, which removes the last readable copy of it. status reports auditWritable, and an entry that cannot be sealed is dropped rather than written readable, so a trail that has stopped is visible rather than silent.",
+              "inputSchema": {
+                "properties": {
+                  "action": {
+                    "description": "Defaults to status.",
+                    "enum": [
+                      "status",
+                      "configure",
+                      "approve",
+                      "revoke",
+                      "audit"
+                    ],
+                    "type": "string"
+                  },
+                  "allow": {
+                    "description": "For configure: bundle ids that may be driven. Non-empty turns on allow-list mode (everything else is refused). Supplying the key replaces the whole set.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "block": {
+                    "description": "For configure: bundle ids that are always refused. Wins over allow. Supplying the key replaces the whole set.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "bundleId": {
+                    "description": "For approve: scope the token to one bundle id. Omit to authorize any sensitive app.",
+                    "type": "string"
+                  },
+                  "limit": {
+                    "description": "For audit: how many of the most recent lines to return. Defaults to 50.",
+                    "type": "integer"
+                  },
+                  "sensitive": {
+                    "description": "For configure: bundle ids that require a current approval token before actuation. Supplying the key replaces the whole set.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "ttlMs": {
+                    "description": "For approve: how long the token stays valid. Defaults to 15000, like the unlock turn.",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "name": "proctor_policy",
+              "outputSchema": {
+                "description": "Policy gate state (status), a configure result, an approve (token/expiresAt), a revoke, or recent audit lines. The trail is encrypted at rest; an entry that cannot be unsealed comes back marked unreadable. It is also signed and chained, so auditVerdict says whether it is the trail Proctor wrote: clean, entries, verified, preChain, completeness and the first fault if there is one. Entries written before signing existed are reported as preChain rather than as faults, and droppedThisRun says how many entries could not be written at all, which leaves no hole in the chain to find. An audit line whose outcome is \"recommended\" carries a recommendation object (lane, rule, scheme): it records that Proctor named a browser tool for a page, and deliberately records no address, host, path or query.",
+                "properties": {
+                  "allow": {
+                    "type": "array"
+                  },
+                  "auditConverted": {
+                    "type": "number"
+                  },
+                  "auditConvertedNote": {
+                    "type": "string"
+                  },
+                  "auditCount": {
+                    "type": "number"
+                  },
+                  "auditDropped": {
+                    "type": "number"
+                  },
+                  "auditEncrypted": {
+                    "type": "boolean"
+                  },
+                  "auditError": {
+                    "type": "string"
+                  },
+                  "auditKeyId": {
+                    "type": "string"
+                  },
+                  "auditKeyMismatch": {
+                    "type": "boolean"
+                  },
+                  "auditKeyMismatchNote": {
+                    "type": "string"
+                  },
+                  "auditPath": {
+                    "type": "string"
+                  },
+                  "auditSigned": {
+                    "type": "boolean"
+                  },
+                  "auditVerdict": {
+                    "type": "object"
+                  },
+                  "auditWritable": {
+                    "type": "boolean"
+                  },
+                  "block": {
+                    "type": "array"
+                  },
+                  "expiresAt": {
+                    "type": "number"
+                  },
+                  "lines": {
+                    "type": "array"
+                  },
+                  "revoked": {
+                    "type": "boolean"
+                  },
+                  "sensitive": {
+                    "type": "array"
+                  },
+                  "token": {
+                    "type": "string"
+                  },
+                  "tokenBundleId": {
+                    "type": "string"
+                  },
+                  "tokenExpiresAt": {
+                    "type": "number"
+                  },
+                  "tokenLive": {
+                    "type": "boolean"
+                  },
+                  "ttlMs": {
+                    "type": "number"
+                  },
+                  "unreadableCount": {
+                    "type": "number"
+                  }
+                },
+                "type": "object"
+              },
+              "title": "Configure the app policy gate and read the redacting audit trail"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false
+              },
+              "description": "List running processes and terminate the ones a query names, so a campaign can reset state between runs. Match by bundle identifier, localised name, or process id; all supplied conditions must hold, so name plus bundle id narrows rather than widens.\n\nTerminating is destructive and goes through the proctor_policy gate: a blocked application is never killed, an allow list in force refuses anything it does not name \u2014 including a bare pid with no resolvable bundle id \u2014 and a sensitive application requires a current approval token. Every attempt, allowed or refused, is audited. The kernel, launchd and the agent's own process are never signalled.\n\nlist enumerates matches without touching anything; kill delivers a graceful terminate, or a forced one when force is set, reporting per-target outcome so a partial teardown is visible rather than reported as a whole success.",
+              "inputSchema": {
+                "properties": {
+                  "action": {
+                    "description": "list enumerates matching processes and touches nothing; kill terminates them. Defaults to list.",
+                    "enum": [
+                      "list",
+                      "kill"
+                    ],
+                    "type": "string"
+                  },
+                  "bundleId": {
+                    "description": "Bundle identifier to match, e.g. com.apple.TextEdit. Case-insensitive exact match.",
+                    "type": "string"
+                  },
+                  "force": {
+                    "description": "Send a forced termination (SIGKILL / forceTerminate) instead of a graceful one, for a hung target. Defaults to false.",
+                    "type": "boolean"
+                  },
+                  "match": {
+                    "description": "How `name` is matched. Defaults to substring.",
+                    "enum": [
+                      "substring",
+                      "exact"
+                    ],
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "Localised application name to match, case-insensitively, per `match`.",
+                    "type": "string"
+                  },
+                  "pid": {
+                    "description": "Process id to match exactly. A pid with no resolvable bundle id is refused whenever an allow list is in force.",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "name": "proctor_kill",
+              "outputSchema": {
+                "type": "object"
+              },
+              "title": "List and terminate processes for test setup and teardown"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "readOnlyHint": false
+              },
+              "description": "Put an iOS app into a named state by opening a URL on a booted Simulator, and read back what actually happened.\n\n**This is a device lane, not a window lane, and the difference is not cosmetic.** A device handle looks like `dev-29fea02e` and is not a window handle: proctor_snapshot, proctor_find, proctor_assert, proctor_act and proctor_capture do not work against one and refuse it by name. The Mac's accessibility API does not cross into a simulated device, so for an iOS app there is no tree, no elements, no geometry and no actuation steps. What exists instead is three channels \u2014 whether the app's process is running, what the device screen looks like, and what simctl said \u2014 and this tool reports each separately rather than blending them into a single claim.\n\n**A zero exit means the URL was delivered, not that the app went anywhere.** Measured: the same open, run twice, exits zero both times, and only the first one changes anything. So `open` returns an evidence block and a verdict that says exactly what is supported: `targetChanged` (delivered, the resolved app is running, and the screen changed \u2014 the strongest claim available), `screenChanged` (the screen moved but the change cannot be attributed to the app the URL named, which is where a universal link Safari swallowed or a system sheet lands), `deliveredOnly` (nothing observable changed \u2014 inconclusive rather than failed, because a deep link to the screen the app is already on looks exactly like one the app ignored), and `refused`. None of them claims the app reached a particular screen: the frontmost app on the device is not observable through this lane.\n\nA device screenshot carries no ScreenCaptureKit frame status, so unlike a window capture its freshness cannot be established and it comes back marked untrustworthy with that reason. The pixels are real; the guarantee that comes with a window capture is not.\n\n`open` never boots anything \u2014 it refuses a device that is not booted, because folding a stateful minute-long side effect into a call whose result is \"did this navigate\" would make both meaningless. `boot` is explicit, gated and audited. Nothing here ever shuts a device down or reboots one; a device this session booted is marked in `list` so a person can decide about it.\n\nDriving an app goes through the proctor_policy gate on the app the URL actually resolves to on the device, never on a bundle id the caller supplied \u2014 that name is used only as a consistency check. iOS targets are named `ios:<bundleId>` in an allow list or the sensitive set, so a Mac app on the allow list does not silently authorise the iOS app of the same identifier; a block on either spelling blocks both. The audit trail records the scheme and host of the URL in the clear and reduces its path and query to a length and a hash, because a deep link routinely carries a token.\n\nAction `flow` runs a **Maestro** flow file against the device and scores repeats of it. Maestro is a separate binary that executes a whole file and reports at the end, so what this proves is coarser than a Mac replay and the result says so rather than borrowing the stronger words: `flowPassed` means the driver executed the sequence and reported success, not that Proctor observed the app reach any state. Proctor did not run these commands and has no independent observation of any of them; the only observer of the steps is Maestro. Individual Maestro commands are never routed through proctor_act \u2014 a tool driving its own engine is not driving what Proctor is attached to \u2014 so the unit here is the file.\n\nWith `runs` above 1 the repeats are scored against **each other**: `firstDivergence` is where two repeats stopped agreeing, indexed by Maestro's own sequence number, and it is never a comparison against a recording because there is none. Maestro prepends two commands that are in no flow file, and they are marked `injected` so an index is not mistaken for a line of your YAML. The comparison is over each command's identity and whether it completed; durations are reported beside the score and never folded into it, because one unchanged command measured 634, 91, 88, 96 and 91 ms across five repeats. A repeat that failed in the driver rather than the app \u2014 no per-command record, a failed launch, a device that went away \u2014 is excluded from the score and makes the sweep truncated, so driver flake is never published as the app's non-determinism. A five-run sweep takes roughly 70 to 90 seconds, most of it driver start-up.\n\nThe gate for a flow judges the apps the flow **declares**, which is weaker than the device-resolved judgement `open` makes, and the result says `declared` for that reason. Any construct Proctor cannot resolve \u2014 a script, an interpolated app id, an unreadable include \u2014 is refused whenever an application policy is in force, and reported when none is. An `openLink` inside a flow is gated on what the device resolves it to, not on the file. The trail records the flow's path and a hash of its contents, so an entry attests to the bytes that ran.\n\nRequires Xcode, which is where simctl lives. proctor_doctor carries a `simctl` row saying whether this machine has a lane at all, and a `maestro` row for the flow action.",
+              "inputSchema": {
+                "properties": {
+                  "action": {
+                    "description": "list enumerates simulators and touches nothing; boot starts a named one and waits for it; open delivers a URL to a booted one and reports the evidence; screenshot writes the device surface to disk; flow runs a Maestro flow file and, with runs above 1, scores the repeats against each other. Defaults to list.",
+                    "enum": [
+                      "list",
+                      "boot",
+                      "open",
+                      "screenshot",
+                      "flow"
+                    ],
+                    "type": "string"
+                  },
+                  "bundleId": {
+                    "description": "The app you expect to receive the URL. A consistency check, not the gate key: a disagreement with what the device resolved is reported. It also enables the process-liveness channel for an https URL, which has no resolvable handler.",
+                    "type": "string"
+                  },
+                  "changeThreshold": {
+                    "description": "Fraction of changed pixels before the screen counts as changed. Defaults to 0.0005, calibrated against an idle floor measured at exactly 0 and a smallest real navigation at 0.002.",
+                    "type": "number"
+                  },
+                  "device": {
+                    "description": "Which simulator: a device handle from action \"list\", a udid, or a name like \"iPhone 16 Pro\". Omit for the single booted device when there is exactly one; ambiguity is an error naming the candidates rather than a guess.",
+                    "type": "string"
+                  },
+                  "path": {
+                    "description": "For screenshot, where to write it; defaults to a session temp directory. For flow, the absolute path of the Maestro flow file to run. A flow file is content Proctor executes, so it passes the filesystem jail and is scanned for the apps it declares before anything runs.",
+                    "type": "string"
+                  },
+                  "pixelEvidence": {
+                    "description": "Capture the device screen before and after the open and compare them. Defaults to true; this is the only channel that separates a deep link that moved the app from one that did nothing.",
+                    "type": "boolean"
+                  },
+                  "runs": {
+                    "description": "How many times to run the flow, for action flow. Defaults to 1, which executes and reports without a determinism claim \u2014 a single run cannot measure divergence. Above 1 the repeats are scored against each other. Each repeat costs roughly 8 seconds of driver start-up on top of the flow's own time.",
+                    "type": "integer"
+                  },
+                  "timeoutMs": {
+                    "description": "Bound on the simctl call, and on boot's wait for the device to come up. Defaults to 15000, and 120000 for boot.",
+                    "type": "integer"
+                  },
+                  "url": {
+                    "description": "The deep link to open. A custom scheme resolves to its handler on the device and is gated on that app. An https universal link cannot be resolved to a handler from a scheme claim, so it is refused whenever an allow list is in force.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "name": "proctor_ios",
+              "outputSchema": {
+                "type": "object"
+              },
+              "title": "Target an iOS Simulator and drive an app by deep link"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false
+              },
+              "description": "List, start, stop and clone the virtual machines this Mac can reach through lume, prlctl or tart.\n\n**This is a guest lane, not a window lane, and the difference is not cosmetic.** A guest handle looks like `gst-` plus a short hash and is not a window handle: proctor_snapshot, proctor_find, proctor_assert, proctor_act and proctor_capture do not work against one and refuse it by name. A guest is a different machine. Observation and actuation against it go through the Proctor (or Cua) running inside it, not through a window handle on this Mac.\n\n**Nothing here provisions a guest.** list / status / start / stop / clone operate on a virtual machine that already exists. Creating one, granting Accessibility and Screen Recording inside its GUI session, and cloning that granted image are things a person does with the provider's own CLI. An install must never happen as a side effect of a tool call, and the same rule binds provisioning. The grant-once-then-clone recipe is the whole of the TCC story: agent and daemon calls cannot raise macOS permission UI, and SSH is not the foreground Aqua session that owns the visible desktop.\n\nlist enumerates every guest both providers can see and touches nothing. status reads one. start and stop change its power state and then re-read it. clone copies a named guest to a new name; that is the reproduction step of the grant-once recipe, not a way to mint a fresh ungranted machine. Each mutating action is audited under proctor_guest.start / .stop / .clone.\n\nreach describes how a host-side session talks to a Proctor already running on another Mac: an SSH StreamLocal forward onto that agent's unix socket, then PROCTOR_SOCKET pointed at the local end. There is no new network transport. The result is a recipe \u2014 localSocket, remoteSocket, host \u2014 never a shell command, because a tool result that carried ssh -L would be an instruction a model with a shell would run. Proctor does not open the tunnel. Delegated (Linux / Windows) guests have no Proctor socket and are refused here; they go through Cua. The same recipe reaches a remote Mac over Tailscale: the host is that Mac's name and there is no guest in between.\n\nattach points this session at a macOS guest: every later tool call from it runs INSIDE that guest, forwarded over the socket reach describes, and the Proctor there holds that machine's Accessibility and Screen Recording grants and talks to its window server. This Mac actuates nothing on a guest session's behalf, and a session whose link is down is refused with the guest named rather than quietly run here -- a verdict about the wrong machine is the one outcome this must not produce. proctor_guest, proctor_doctor, proctor_policy and the history and queue verbs keep answering about this Mac. detach points the session back at this Mac and stops the guest only if Proctor started it.\n\n**Two macOS guests may run at once, and that is Apple's number rather than a setting.** Attaching takes a slot in a counted pool; a third waits in the queue with its position and depth, exactly as a busy Mac lane does, and is never granted by stopping somebody else's guest. One session drives one named guest: a second naming the same guest waits for it even when a slot is free. proctor_doctor's guest lane reports the pool.\n\nA macOS guest is a native witness: a full Proctor inside it has frame status, the accessibility tree and the tri-observer check. A Linux or Windows guest is delegated: actuation and screenshots only, and every tree-reading assertion is skipped with a reason rather than passed. Tahoe guests were reported to render no application windows \u2014 trycua/cua #870 and Apple FB21748086, both still open \u2014 but on 2026-08-21 Proctor drove a macOS 26.6.2 guest in which Calculator, System Settings and Setup Assistant all rendered normally (docs/specs/spec-PRO-0076.md), so treat it as an open report upstream rather than a settled property of every Tahoe guest.\n\nstatus reports which macOS a guest is running where that can be established, and `unknown` with the reason where it cannot. The version comes from the Proctor inside the guest answering over an attach link this session already holds; no provider records one in its listing, and it is never guessed from the image name.\n\nRequires lume, prlctl or tart \u2014 any one of the three is enough. proctor_doctor carries a guest lane saying which of them this machine has.",
+              "inputSchema": {
+                "properties": {
+                  "action": {
+                    "description": "list enumerates guests and touches nothing; status reads one; start and stop change its power state and re-read it; clone copies a named guest to newName; reach describes the SSH StreamLocal tunnel onto a native guest's Proctor socket. attach points this session at a macOS guest so every later call runs inside it; detach points it back at this Mac. Defaults to list. Nothing provisions a guest that does not already exist, and nothing opens a tunnel.",
+                    "enum": [
+                      "list",
+                      "status",
+                      "start",
+                      "stop",
+                      "clone",
+                      "reach",
+                      "attach",
+                      "detach"
+                    ],
+                    "type": "string"
+                  },
+                  "guest": {
+                    "description": "Which guest: a gst- handle from action \"list\", or the name you type at lume, prlctl or tart. Required for status, start, stop and clone. Ambiguity across providers is an error naming the candidates rather than a guess.",
+                    "type": "string"
+                  },
+                  "host": {
+                    "description": "Where SSH should land, for action reach. A hostname, a Tailscale MagicDNS name, or the guest's IP. Required for reach.",
+                    "type": "string"
+                  },
+                  "localSocket": {
+                    "description": "Where the host-side shim should connect, for reach; and for attach, the already-forwarded socket to attach through. Defaults to a per-guest path under Application Support. Proctor never opens the tunnel: a socket nothing is listening on is a refusal, not an attempt to create one.",
+                    "type": "string"
+                  },
+                  "newName": {
+                    "description": "The name of the copy, for action clone. Required there. The source is untouched.",
+                    "type": "string"
+                  },
+                  "provider": {
+                    "description": "Which adapter to use when a name is held by both. Omit when the handle already names one, or when only one provider has that name.",
+                    "enum": [
+                      "lume",
+                      "prlctl",
+                      "tart"
+                    ],
+                    "type": "string"
+                  },
+                  "remoteSocket": {
+                    "description": "The guest agent's unix socket, as it appears on that machine. Defaults to the standard install path under Application Support.",
+                    "type": "string"
+                  },
+                  "user": {
+                    "description": "SSH user, for action reach. Omit to use the local account's default.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "name": "proctor_guest",
+              "outputSchema": {
+                "type": "object"
+              },
+              "title": "List and manage virtual-machine guests"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "method": "tools/call",
+        "params": {
+          "name": "proctor_doctor",
+          "arguments": {}
+        }
+      },
+      "response": {
+        "id": 3,
+        "jsonrpc": "2.0",
+        "result": {
+          "content": [
+            {
+              "text": "{\n  \"agentBuild\" : {\n    \"builtAt\" : \"2026-08-19T22:53:30Z\",\n    \"commit\" : \"ab53c5e5a47b\",\n    \"configuration\" : \"release\",\n    \"dirty\" : true,\n    \"version\" : \"0.1.0\"\n  },\n  \"agentRunning\" : true,\n  \"agentVersion\" : \"0.1.0+ab53c5e5a47b.dirty\",\n  \"attachedApps\" : [\n    {\n      \"app\" : \"app:34867:6\",\n      \"cachedRefs\" : 0,\n      \"manualAccessibility\" : false,\n      \"name\" : \"Activity Monitor\",\n      \"observerAlive\" : false,\n      \"reflectorConnected\" : false,\n      \"windows\" : 0\n    },\n    {\n      \"app\" : \"app:43131:5\",\n      \"cachedRefs\" : 0,\n      \"manualAccessibility\" : false,\n      \"name\" : \"Graft\",\n      \"observerAlive\" : true,\n      \"reflectorConnected\" : false,\n      \"windows\" : 1\n    },\n    {\n      \"app\" : \"app:58437:2\",\n      \"cachedRefs\" : 0,\n      \"manualAccessibility\" : false,\n      \"name\" : \"Sidetone\",\n      \"observerAlive\" : false,\n      \"reflectorConnected\" : false,\n      \"windows\" : 0\n    },\n    {\n      \"app\" : \"app:45619:1\",\n      \"cachedRefs\" : 0,\n      \"manualAccessibility\" : false,\n      \"name\" : \"Sidetone\",\n      \"observerAlive\" : false,\n      \"reflectorConnected\" : false,\n      \"windows\" : 0\n    },\n    {\n      \"app\" : \"app:33953:8\",\n      \"cachedRefs\" : 0,\n      \"manualAccessibility\" : false,\n      \"name\" : \"Google Chrome\",\n      \"observerAlive\" : true,\n      \"reflectorConnected\" : false,\n      \"windows\" : 2\n    },\n    {\n      \"app\" : \"app:6808:9\",\n      \"cachedRefs\" : 0,\n      \"manualAccessibility\" : false,\n      \"name\" : \"System Settings\",\n      \"observerAlive\" : true,\n      \"reflectorConnected\" : false,\n      \"windows\" : 1\n    },\n    {\n      \"app\" : \"app:491:7\",\n      \"cachedRefs\" : 0,\n      \"manualAccessibility\" : false,\n      \"name\" : \"Proctor\",\n      \"observerAlive\" : false,\n      \"reflectorConnected\" : false,\n      \"windows\" : 0\n    },\n    {\n      \"app\" : \"app:97636:4\",\n      \"cachedRefs\" : 0,\n      \"manualAccessibility\" : false,\n      \"name\" : \"Graft\",\n      \"observerAlive\" : false,\n      \"reflectorConnected\" : false,\n      \"windows\" : 0\n    }\n  ],\n  \"blockers\" : [\n    \"Secure Event Input is active, so synthetic-event steps \u2014 dragPath, hover, click, key \u2014 cannot be delivered. The accessibility plane is unaffected: press, setValue, focus, menu and type all still work.\"\n  ],\n  \"grants\" : [\n    {\n      \"granted\" : true,\n      \"howToFix\" : \"System Settings \u25b8 Privacy & Security \u25b8 Accessibility, enable Proctor. On macOS 26 a managed fleet can also grant this by PPPC profile.\",\n      \"name\" : \"Accessibility\",\n      \"required\" : true,\n      \"state\" : \"granted\"\n    },\n    {\n      \"granted\" : true,\n      \"howToFix\" : \"System Settings \u25b8 Privacy & Security \u25b8 Screen & System Audio Recording, enable Proctor. This grant can never be applied silently or by profile on any macOS version \u2014 a person has to click it.\",\n      \"name\" : \"Screen Recording\",\n      \"required\" : true,\n      \"state\" : \"granted\"\n    },\n    {\n      \"granted\" : false,\n      \"howToFix\" : \"Granted per target application the first time an Apple Event is sent, and not probeable in advance. If a declared-contract step fails with permissionAutomation, approve the prompt or enable the app under System Settings \u25b8 Privacy & Security \u25b8 Automation \u25b8 Proctor.\",\n      \"name\" : \"Automation\",\n      \"required\" : false,\n      \"state\" : \"denied\"\n    }\n  ],\n  \"hud\" : {\n    \"available\" : true,\n    \"canShow\" : true,\n    \"enabled\" : true,\n    \"onScreen\" : false,\n    \"pauseLimitSeconds\" : 900\n  },\n  \"lanes\" : [\n    {\n      \"blockers\" : [\n\n      ],\n      \"lane\" : \"mac\",\n      \"ready\" : true,\n      \"requires\" : [\n\n      ],\n      \"state\" : \"ready\"\n    },\n    {\n      \"blockers\" : [\n\n      ],\n      \"lane\" : \"browser\",\n      \"ready\" : true,\n      \"requires\" : [\n        \"obscura\"\n      ],\n      \"state\" : \"ready\"\n    },\n    {\n      \"blockers\" : [\n\n      ],\n      \"lane\" : \"ios\",\n      \"note\" : \"Maestro is installed, so flow files can run beside the deep-link actions.\",\n      \"ready\" : true,\n      \"requires\" : [\n        \"simctl\"\n      ],\n      \"state\" : \"ready\"\n    },\n    {\n      \"blockers\" : [\n\n      ],\n      \"lane\" : \"cua\",\n      \"note\" : \"Not the actuation lane in force: Proctor's own planes are performing steps. This row reports whether the machine is ready for the delegated lane, not that anything is using it.\",\n      \"ready\" : false,\n      \"requires\" : [\n        \"cua-driver\"\n      ],\n      \"state\" : \"unconfirmed\"\n    },\n    {\n      \"blockers\" : [\n\n      ],\n      \"lane\" : \"guest\",\n      \"note\" : \"Either provider is enough. A person grants Accessibility and Screen Recording once inside the guest's GUI session, then clone reproduces the grants; nothing here provisions a guest as a side effect of a tool call. Tahoe guests currently render no application windows (trycua/cua #870, Apple FB21748086); verify against Sequoia.\",\n      \"ready\" : true,\n      \"requires\" : [\n        \"lume\",\n        \"prlctl\"\n      ],\n      \"state\" : \"ready\"\n    }\n  ],\n  \"machine\" : {\n    \"kind\" : \"host\",\n    \"platform\" : \"macos\",\n    \"tier\" : \"native\"\n  },\n  \"obscura\" : {\n    \"available\" : true,\n    \"checkedAt\" : 1787370618.286854,\n    \"detail\" : \"Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.\",\n    \"evidence\" : \"presence\",\n    \"missingCompanions\" : [\n\n    ],\n    \"path\" : \"/Users/lukerhodes/.local/bin/obscura\",\n    \"searched\" : [\n      \"/usr/bin/obscura\",\n      \"/bin/obscura\",\n      \"/usr/sbin/obscura\",\n      \"/sbin/obscura\",\n      \"/opt/homebrew/bin/obscura\",\n      \"/usr/local/bin/obscura\",\n      \"/Users/lukerhodes/.local/bin/obscura\",\n      \"/Users/lukerhodes/.cargo/bin/obscura\",\n      \"/opt/local/bin/obscura\"\n    ],\n    \"tool\" : \"obscura\",\n    \"usability\" : \"usable\"\n  },\n  \"obscuraAvailable\" : true,\n  \"observersLive\" : 3,\n  \"osVersion\" : \"26.6.0\",\n  \"policy\" : {\n    \"allowCount\" : 0,\n    \"approvalTokenLive\" : false,\n    \"auditClean\" : true,\n    \"auditEntries\" : 1354,\n    \"auditKeyConfirmed\" : true,\n    \"auditSealed\" : true,\n    \"auditSigned\" : true,\n    \"auditWritable\" : true,\n    \"blockCount\" : 0,\n    \"fsJailDeclared\" : false,\n    \"fsRootCount\" : 0,\n    \"mode\" : \"open\",\n    \"note\" : \"Shape and posture only. The lists themselves, the filesystem roots, the trail's path and any key or token are deliberately not reported here: proctor_doctor is called before anything is established, and a health check is the wrong place to hand out configuration. This is a convention rather than a boundary \u2014 proctor_policy action \\\"status\\\" answers in full.\",\n    \"sensitiveCount\" : 0\n  },\n  \"protocolVersion\" : 1,\n  \"queue\" : {\n    \"active\" : 0,\n    \"activeRuns\" : [\n\n    ],\n    \"held\" : false,\n    \"lanes\" : [\n\n    ],\n    \"perSessionWaitingCap\" : 3,\n    \"waitLimitSeconds\" : 45,\n    \"waiting\" : 0\n  },\n  \"ready\" : false,\n  \"secondLane\" : \"off\",\n  \"secureEventInputActive\" : true,\n  \"shortcutsCLIAvailable\" : true,\n  \"socketPath\" : \"/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/agent.sock\",\n  \"switches\" : [\n    {\n      \"locked\" : false,\n      \"on\" : true,\n      \"source\" : \"builtInDefault\",\n      \"timing\" : \"live\",\n      \"variable\" : \"PROCTOR_HUD\"\n    },\n    {\n      \"locked\" : false,\n      \"on\" : true,\n      \"source\" : \"builtInDefault\",\n      \"timing\" : \"nextStart\",\n      \"variable\" : \"PROCTOR_CURSOR\"\n    },\n    {\n      \"locked\" : false,\n      \"on\" : true,\n      \"source\" : \"builtInDefault\",\n      \"timing\" : \"nextStart\",\n      \"variable\" : \"PROCTOR_TAKEOVER\"\n    },\n    {\n      \"locked\" : false,\n      \"on\" : true,\n      \"source\" : \"builtInDefault\",\n      \"timing\" : \"nextStart\",\n      \"variable\" : \"PROCTOR_YIELD\"\n    },\n    {\n      \"locked\" : false,\n      \"on\" : false,\n      \"source\" : \"builtInDefault\",\n      \"timing\" : \"nextStart\",\n      \"variable\" : \"PROCTOR_YIELD_INPUT\"\n    },\n    {\n      \"locked\" : false,\n      \"on\" : false,\n      \"source\" : \"builtInDefault\",\n      \"timing\" : \"nextStart\",\n      \"variable\" : \"PROCTOR_TAKEOVER_INPUT\"\n    },\n    {\n      \"locked\" : false,\n      \"on\" : false,\n      \"source\" : \"builtInDefault\",\n      \"timing\" : \"nextStart\",\n      \"variable\" : \"PROCTOR_OVERLAY_CAPTURE\"\n    },\n    {\n      \"locked\" : false,\n      \"on\" : false,\n      \"source\" : \"builtInDefault\",\n      \"timing\" : \"nextStart\",\n      \"variable\" : \"PROCTOR_SECOND_LANE\"\n    },\n    {\n      \"locked\" : false,\n      \"on\" : false,\n      \"source\" : \"builtInDefault\",\n      \"timing\" : \"nextStart\",\n      \"variable\" : \"PROCTOR_ACTUATION\"\n    }\n  ],\n  \"takeover\" : {\n    \"cursorOverlay\" : true,\n    \"inputBlockAvailable\" : false,\n    \"inputBlockRequested\" : false,\n    \"inputMonitoring\" : \"granted\",\n    \"note\" : \"A foreground step says so on every display and leaves input alone. Set PROCTOR_TAKEOVER_INPUT=1 to have Proctor also hold the keyboard and mouse for the moments it is posting events; Esc stops a run while it does.\",\n    \"overlay\" : true\n  },\n  \"tools\" : [\n    {\n      \"available\" : true,\n      \"checkedAt\" : 1787370618.286854,\n      \"detail\" : \"Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.\",\n      \"evidence\" : \"presence\",\n      \"missingCompanions\" : [\n\n      ],\n      \"path\" : \"/Users/lukerhodes/.local/bin/obscura\",\n      \"searched\" : [\n        \"/usr/bin/obscura\",\n        \"/bin/obscura\",\n        \"/usr/sbin/obscura\",\n        \"/sbin/obscura\",\n        \"/opt/homebrew/bin/obscura\",\n        \"/usr/local/bin/obscura\",\n        \"/Users/lukerhodes/.local/bin/obscura\",\n        \"/Users/lukerhodes/.cargo/bin/obscura\",\n        \"/opt/local/bin/obscura\"\n      ],\n      \"tool\" : \"obscura\",\n      \"usability\" : \"usable\"\n    },\n    {\n      \"available\" : true,\n      \"checkedAt\" : 1787370618.286854,\n      \"detail\" : \"Found, and the install layout names this version. Proctor did not run it: reading is free and running one of these costs seconds.\",\n      \"evidence\" : \"installPath\",\n      \"missingCompanions\" : [\n\n      ],\n      \"path\" : \"/Applications/Xcode.app/Contents/Developer/usr/bin/simctl\",\n      \"searched\" : [\n        \"/Applications/Xcode.app/Contents/Developer/usr/bin/simctl\"\n      ],\n      \"tool\" : \"simctl\",\n      \"usability\" : \"usable\",\n      \"version\" : \"26.6 (17F113)\"\n    },\n    {\n      \"available\" : true,\n      \"checkedAt\" : 1787370618.286854,\n      \"detail\" : \"Found, and signed by the identity its own documentation names. Its version, its daemon and its own permissions are not established \u2014 a health check does not run it, so those are settled the first time the lane is used.\",\n      \"evidence\" : \"signature\",\n      \"missingCompanions\" : [\n\n      ],\n      \"path\" : \"/Users/lukerhodes/.local/bin/cua-driver\",\n      \"searched\" : [\n        \"/usr/bin/cua-driver\",\n        \"/bin/cua-driver\",\n        \"/usr/sbin/cua-driver\",\n        \"/sbin/cua-driver\",\n        \"/opt/homebrew/bin/cua-driver\",\n        \"/usr/local/bin/cua-driver\",\n        \"/Users/lukerhodes/.local/bin/cua-driver\",\n        \"/Users/lukerhodes/.cargo/bin/cua-driver\",\n        \"/opt/local/bin/cua-driver\"\n      ],\n      \"tool\" : \"cua-driver\",\n      \"usability\" : \"unconfirmed\"\n    },\n    {\n      \"available\" : true,\n      \"checkedAt\" : 1787370618.286854,\n      \"detail\" : \"Found, and the install layout names this version. Proctor did not run it: reading is free and running one of these costs seconds.\",\n      \"evidence\" : \"installPath\",\n      \"missingCompanions\" : [\n\n      ],\n      \"path\" : \"/opt/homebrew/bin/maestro\",\n      \"searched\" : [\n        \"/usr/bin/maestro\",\n        \"/bin/maestro\",\n        \"/usr/sbin/maestro\",\n        \"/sbin/maestro\",\n        \"/opt/homebrew/bin/maestro\",\n        \"/usr/local/bin/maestro\",\n        \"/Users/lukerhodes/.local/bin/maestro\",\n        \"/Users/lukerhodes/.cargo/bin/maestro\",\n        \"/opt/local/bin/maestro\"\n      ],\n      \"tool\" : \"maestro\",\n      \"usability\" : \"usable\",\n      \"version\" : \"2.4.0\"\n    },\n    {\n      \"available\" : true,\n      \"checkedAt\" : 1787370618.286854,\n      \"detail\" : \"Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.\",\n      \"evidence\" : \"presence\",\n      \"missingCompanions\" : [\n\n      ],\n      \"path\" : \"/opt/homebrew/bin/lume\",\n      \"searched\" : [\n        \"/usr/bin/lume\",\n        \"/bin/lume\",\n        \"/usr/sbin/lume\",\n        \"/sbin/lume\",\n        \"/opt/homebrew/bin/lume\",\n        \"/usr/local/bin/lume\",\n        \"/Users/lukerhodes/.local/bin/lume\",\n        \"/Users/lukerhodes/.cargo/bin/lume\",\n        \"/opt/local/bin/lume\",\n        \"/Users/lukerhodes/.lume/bin/lume\"\n      ],\n      \"tool\" : \"lume\",\n      \"usability\" : \"usable\"\n    },\n    {\n      \"available\" : true,\n      \"checkedAt\" : 1787370618.286854,\n      \"detail\" : \"Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.\",\n      \"evidence\" : \"presence\",\n      \"missingCompanions\" : [\n\n      ],\n      \"path\" : \"/usr/local/bin/prlctl\",\n      \"searched\" : [\n        \"/usr/bin/prlctl\",\n        \"/bin/prlctl\",\n        \"/usr/sbin/prlctl\",\n        \"/sbin/prlctl\",\n        \"/opt/homebrew/bin/prlctl\",\n        \"/usr/local/bin/prlctl\",\n        \"/Users/lukerhodes/.local/bin/prlctl\",\n        \"/Users/lukerhodes/.cargo/bin/prlctl\",\n        \"/opt/local/bin/prlctl\"\n      ],\n      \"tool\" : \"prlctl\",\n      \"usability\" : \"usable\"\n    }\n  ]\n}",
+              "type": "text"
+            }
+          ],
+          "isError": false,
+          "structuredContent": {
+            "agentBuild": {
+              "builtAt": "2026-08-19T22:53:30Z",
+              "commit": "ab53c5e5a47b",
+              "configuration": "release",
+              "dirty": true,
+              "version": "0.1.0"
+            },
+            "agentRunning": true,
+            "agentVersion": "0.1.0+ab53c5e5a47b.dirty",
+            "attachedApps": [
+              {
+                "app": "app:34867:6",
+                "cachedRefs": 0,
+                "manualAccessibility": false,
+                "name": "Activity Monitor",
+                "observerAlive": false,
+                "reflectorConnected": false,
+                "windows": 0
+              },
+              {
+                "app": "app:43131:5",
+                "cachedRefs": 0,
+                "manualAccessibility": false,
+                "name": "Graft",
+                "observerAlive": true,
+                "reflectorConnected": false,
+                "windows": 1
+              },
+              {
+                "app": "app:58437:2",
+                "cachedRefs": 0,
+                "manualAccessibility": false,
+                "name": "Sidetone",
+                "observerAlive": false,
+                "reflectorConnected": false,
+                "windows": 0
+              },
+              {
+                "app": "app:45619:1",
+                "cachedRefs": 0,
+                "manualAccessibility": false,
+                "name": "Sidetone",
+                "observerAlive": false,
+                "reflectorConnected": false,
+                "windows": 0
+              },
+              {
+                "app": "app:33953:8",
+                "cachedRefs": 0,
+                "manualAccessibility": false,
+                "name": "Google Chrome",
+                "observerAlive": true,
+                "reflectorConnected": false,
+                "windows": 2
+              },
+              {
+                "app": "app:6808:9",
+                "cachedRefs": 0,
+                "manualAccessibility": false,
+                "name": "System Settings",
+                "observerAlive": true,
+                "reflectorConnected": false,
+                "windows": 1
+              },
+              {
+                "app": "app:491:7",
+                "cachedRefs": 0,
+                "manualAccessibility": false,
+                "name": "Proctor",
+                "observerAlive": false,
+                "reflectorConnected": false,
+                "windows": 0
+              },
+              {
+                "app": "app:97636:4",
+                "cachedRefs": 0,
+                "manualAccessibility": false,
+                "name": "Graft",
+                "observerAlive": false,
+                "reflectorConnected": false,
+                "windows": 0
+              }
+            ],
+            "blockers": [
+              "Secure Event Input is active, so synthetic-event steps \u2014 dragPath, hover, click, key \u2014 cannot be delivered. The accessibility plane is unaffected: press, setValue, focus, menu and type all still work."
+            ],
+            "grants": [
+              {
+                "granted": true,
+                "howToFix": "System Settings \u25b8 Privacy & Security \u25b8 Accessibility, enable Proctor. On macOS 26 a managed fleet can also grant this by PPPC profile.",
+                "name": "Accessibility",
+                "required": true,
+                "state": "granted"
+              },
+              {
+                "granted": true,
+                "howToFix": "System Settings \u25b8 Privacy & Security \u25b8 Screen & System Audio Recording, enable Proctor. This grant can never be applied silently or by profile on any macOS version \u2014 a person has to click it.",
+                "name": "Screen Recording",
+                "required": true,
+                "state": "granted"
+              },
+              {
+                "granted": false,
+                "howToFix": "Granted per target application the first time an Apple Event is sent, and not probeable in advance. If a declared-contract step fails with permissionAutomation, approve the prompt or enable the app under System Settings \u25b8 Privacy & Security \u25b8 Automation \u25b8 Proctor.",
+                "name": "Automation",
+                "required": false,
+                "state": "denied"
+              }
+            ],
+            "hud": {
+              "available": true,
+              "canShow": true,
+              "enabled": true,
+              "onScreen": false,
+              "pauseLimitSeconds": 900
+            },
+            "lanes": [
+              {
+                "blockers": [],
+                "lane": "mac",
+                "ready": true,
+                "requires": [],
+                "state": "ready"
+              },
+              {
+                "blockers": [],
+                "lane": "browser",
+                "ready": true,
+                "requires": [
+                  "obscura"
+                ],
+                "state": "ready"
+              },
+              {
+                "blockers": [],
+                "lane": "ios",
+                "note": "Maestro is installed, so flow files can run beside the deep-link actions.",
+                "ready": true,
+                "requires": [
+                  "simctl"
+                ],
+                "state": "ready"
+              },
+              {
+                "blockers": [],
+                "lane": "cua",
+                "note": "Not the actuation lane in force: Proctor's own planes are performing steps. This row reports whether the machine is ready for the delegated lane, not that anything is using it.",
+                "ready": false,
+                "requires": [
+                  "cua-driver"
+                ],
+                "state": "unconfirmed"
+              },
+              {
+                "blockers": [],
+                "lane": "guest",
+                "note": "Either provider is enough. A person grants Accessibility and Screen Recording once inside the guest's GUI session, then clone reproduces the grants; nothing here provisions a guest as a side effect of a tool call. Tahoe guests currently render no application windows (trycua/cua #870, Apple FB21748086); verify against Sequoia.",
+                "ready": true,
+                "requires": [
+                  "lume",
+                  "prlctl"
+                ],
+                "state": "ready"
+              }
+            ],
+            "machine": {
+              "kind": "host",
+              "platform": "macos",
+              "tier": "native"
+            },
+            "obscura": {
+              "available": true,
+              "checkedAt": 1787370618.286854,
+              "detail": "Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.",
+              "evidence": "presence",
+              "missingCompanions": [],
+              "path": "/Users/lukerhodes/.local/bin/obscura",
+              "searched": [
+                "/usr/bin/obscura",
+                "/bin/obscura",
+                "/usr/sbin/obscura",
+                "/sbin/obscura",
+                "/opt/homebrew/bin/obscura",
+                "/usr/local/bin/obscura",
+                "/Users/lukerhodes/.local/bin/obscura",
+                "/Users/lukerhodes/.cargo/bin/obscura",
+                "/opt/local/bin/obscura"
+              ],
+              "tool": "obscura",
+              "usability": "usable"
+            },
+            "obscuraAvailable": true,
+            "observersLive": 3,
+            "osVersion": "26.6.0",
+            "policy": {
+              "allowCount": 0,
+              "approvalTokenLive": false,
+              "auditClean": true,
+              "auditEntries": 1354,
+              "auditKeyConfirmed": true,
+              "auditSealed": true,
+              "auditSigned": true,
+              "auditWritable": true,
+              "blockCount": 0,
+              "fsJailDeclared": false,
+              "fsRootCount": 0,
+              "mode": "open",
+              "note": "Shape and posture only. The lists themselves, the filesystem roots, the trail's path and any key or token are deliberately not reported here: proctor_doctor is called before anything is established, and a health check is the wrong place to hand out configuration. This is a convention rather than a boundary \u2014 proctor_policy action \"status\" answers in full.",
+              "sensitiveCount": 0
+            },
+            "protocolVersion": 1,
+            "queue": {
+              "active": 0,
+              "activeRuns": [],
+              "held": false,
+              "lanes": [],
+              "perSessionWaitingCap": 3,
+              "waitLimitSeconds": 45,
+              "waiting": 0
+            },
+            "ready": false,
+            "secondLane": "off",
+            "secureEventInputActive": true,
+            "shortcutsCLIAvailable": true,
+            "socketPath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/agent.sock",
+            "switches": [
+              {
+                "locked": false,
+                "on": true,
+                "source": "builtInDefault",
+                "timing": "live",
+                "variable": "PROCTOR_HUD"
+              },
+              {
+                "locked": false,
+                "on": true,
+                "source": "builtInDefault",
+                "timing": "nextStart",
+                "variable": "PROCTOR_CURSOR"
+              },
+              {
+                "locked": false,
+                "on": true,
+                "source": "builtInDefault",
+                "timing": "nextStart",
+                "variable": "PROCTOR_TAKEOVER"
+              },
+              {
+                "locked": false,
+                "on": true,
+                "source": "builtInDefault",
+                "timing": "nextStart",
+                "variable": "PROCTOR_YIELD"
+              },
+              {
+                "locked": false,
+                "on": false,
+                "source": "builtInDefault",
+                "timing": "nextStart",
+                "variable": "PROCTOR_YIELD_INPUT"
+              },
+              {
+                "locked": false,
+                "on": false,
+                "source": "builtInDefault",
+                "timing": "nextStart",
+                "variable": "PROCTOR_TAKEOVER_INPUT"
+              },
+              {
+                "locked": false,
+                "on": false,
+                "source": "builtInDefault",
+                "timing": "nextStart",
+                "variable": "PROCTOR_OVERLAY_CAPTURE"
+              },
+              {
+                "locked": false,
+                "on": false,
+                "source": "builtInDefault",
+                "timing": "nextStart",
+                "variable": "PROCTOR_SECOND_LANE"
+              },
+              {
+                "locked": false,
+                "on": false,
+                "source": "builtInDefault",
+                "timing": "nextStart",
+                "variable": "PROCTOR_ACTUATION"
+              }
+            ],
+            "takeover": {
+              "cursorOverlay": true,
+              "inputBlockAvailable": false,
+              "inputBlockRequested": false,
+              "inputMonitoring": "granted",
+              "note": "A foreground step says so on every display and leaves input alone. Set PROCTOR_TAKEOVER_INPUT=1 to have Proctor also hold the keyboard and mouse for the moments it is posting events; Esc stops a run while it does.",
+              "overlay": true
+            },
+            "tools": [
+              {
+                "available": true,
+                "checkedAt": 1787370618.286854,
+                "detail": "Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.",
+                "evidence": "presence",
+                "missingCompanions": [],
+                "path": "/Users/lukerhodes/.local/bin/obscura",
+                "searched": [
+                  "/usr/bin/obscura",
+                  "/bin/obscura",
+                  "/usr/sbin/obscura",
+                  "/sbin/obscura",
+                  "/opt/homebrew/bin/obscura",
+                  "/usr/local/bin/obscura",
+                  "/Users/lukerhodes/.local/bin/obscura",
+                  "/Users/lukerhodes/.cargo/bin/obscura",
+                  "/opt/local/bin/obscura"
+                ],
+                "tool": "obscura",
+                "usability": "usable"
+              },
+              {
+                "available": true,
+                "checkedAt": 1787370618.286854,
+                "detail": "Found, and the install layout names this version. Proctor did not run it: reading is free and running one of these costs seconds.",
+                "evidence": "installPath",
+                "missingCompanions": [],
+                "path": "/Applications/Xcode.app/Contents/Developer/usr/bin/simctl",
+                "searched": [
+                  "/Applications/Xcode.app/Contents/Developer/usr/bin/simctl"
+                ],
+                "tool": "simctl",
+                "usability": "usable",
+                "version": "26.6 (17F113)"
+              },
+              {
+                "available": true,
+                "checkedAt": 1787370618.286854,
+                "detail": "Found, and signed by the identity its own documentation names. Its version, its daemon and its own permissions are not established \u2014 a health check does not run it, so those are settled the first time the lane is used.",
+                "evidence": "signature",
+                "missingCompanions": [],
+                "path": "/Users/lukerhodes/.local/bin/cua-driver",
+                "searched": [
+                  "/usr/bin/cua-driver",
+                  "/bin/cua-driver",
+                  "/usr/sbin/cua-driver",
+                  "/sbin/cua-driver",
+                  "/opt/homebrew/bin/cua-driver",
+                  "/usr/local/bin/cua-driver",
+                  "/Users/lukerhodes/.local/bin/cua-driver",
+                  "/Users/lukerhodes/.cargo/bin/cua-driver",
+                  "/opt/local/bin/cua-driver"
+                ],
+                "tool": "cua-driver",
+                "usability": "unconfirmed"
+              },
+              {
+                "available": true,
+                "checkedAt": 1787370618.286854,
+                "detail": "Found, and the install layout names this version. Proctor did not run it: reading is free and running one of these costs seconds.",
+                "evidence": "installPath",
+                "missingCompanions": [],
+                "path": "/opt/homebrew/bin/maestro",
+                "searched": [
+                  "/usr/bin/maestro",
+                  "/bin/maestro",
+                  "/usr/sbin/maestro",
+                  "/sbin/maestro",
+                  "/opt/homebrew/bin/maestro",
+                  "/usr/local/bin/maestro",
+                  "/Users/lukerhodes/.local/bin/maestro",
+                  "/Users/lukerhodes/.cargo/bin/maestro",
+                  "/opt/local/bin/maestro"
+                ],
+                "tool": "maestro",
+                "usability": "usable",
+                "version": "2.4.0"
+              },
+              {
+                "available": true,
+                "checkedAt": 1787370618.286854,
+                "detail": "Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.",
+                "evidence": "presence",
+                "missingCompanions": [],
+                "path": "/opt/homebrew/bin/lume",
+                "searched": [
+                  "/usr/bin/lume",
+                  "/bin/lume",
+                  "/usr/sbin/lume",
+                  "/sbin/lume",
+                  "/opt/homebrew/bin/lume",
+                  "/usr/local/bin/lume",
+                  "/Users/lukerhodes/.local/bin/lume",
+                  "/Users/lukerhodes/.cargo/bin/lume",
+                  "/opt/local/bin/lume",
+                  "/Users/lukerhodes/.lume/bin/lume"
+                ],
+                "tool": "lume",
+                "usability": "usable"
+              },
+              {
+                "available": true,
+                "checkedAt": 1787370618.286854,
+                "detail": "Found. Proctor does not run a located binary to learn more about it, so this is the presence of a name at a path rather than a verified tool.",
+                "evidence": "presence",
+                "missingCompanions": [],
+                "path": "/usr/local/bin/prlctl",
+                "searched": [
+                  "/usr/bin/prlctl",
+                  "/bin/prlctl",
+                  "/usr/sbin/prlctl",
+                  "/sbin/prlctl",
+                  "/opt/homebrew/bin/prlctl",
+                  "/usr/local/bin/prlctl",
+                  "/Users/lukerhodes/.local/bin/prlctl",
+                  "/Users/lukerhodes/.cargo/bin/prlctl",
+                  "/opt/local/bin/prlctl"
+                ],
+                "tool": "prlctl",
+                "usability": "usable"
+              }
+            ]
+          }
+        }
+      },
+      "elapsedSeconds": 0.232
+    }
+  ],
+  "shimStderr": "proctor-shim: serving MCP on stdio; profile full; agent socket /Users/lukerhodes/Library/Application Support/app.fledgeling.procter/agent.sock\nproctor-shim: stdin closed; exiting\n",
+  "wallSeconds": 0.278,
+  "exitCode": 0
+}

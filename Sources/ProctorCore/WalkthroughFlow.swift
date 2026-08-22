@@ -373,7 +373,22 @@ public enum WalkthroughFlow {
             "Proctor needs two macOS permissions to read and drive your apps. They go to "
             + "Proctor itself, asked once, and are used only when a model you connect asks "
             + "it to run a test."
-        public static let openSettings = "Already allowed? Open System Settings"
+        /// PRO-0082, closing DEF-182 and the child item PRO-0041 left open.
+        ///
+        /// This read *"Already allowed? Open System Settings"*, and the question
+        /// was the misdirection. A person who has already allowed it and is still
+        /// looking at an ungranted row is not helped by a pane that will show
+        /// them a switch already turned on — the answer for them is a restart,
+        /// which `restartNote` says a few lines above this button. PRO-0041 took
+        /// the same misdirection off the status window's grant row and recorded
+        /// this line as the one it had deliberately left.
+        ///
+        /// The value is `StatusSurface.Copy.openSettings`'s, and it is a constant
+        /// of its own rather than a read of that one for the reason
+        /// `introCalloutTitle` gives: two surfaces saying the same thing today is
+        /// not a reason for an edit to one to change the other silently.
+        /// `WalkthroughFlowTests` binds them, so they part company loudly.
+        public static let openSettings = "Open Settings"
         public static let allowed = "Allowed"
         /// The build's label on an ungranted row's button. `grant` above is the
         /// design of record's word for the same control and the window has never

@@ -4113,5 +4113,381 @@
     "armed": true,
     "armedBy": "The regression fixture IS the arming, and it reproduces the shape both bugs came from: an outer type declaring a member, and a nested type that CLOSES above the site declaring a member of the same name. Watched in both directions \u2014 census_sites resolves the operator literal to 'AuditLog.directory' (with the bug it resolved to 'Seams.directory'); the manifest entry naming the containing type clears while the entry naming the closed nested type is refused; declaration_body('AuditLog.directory') returns a body containing the predicate (with the bug it returned Seams' unguarded stored property); and the same fixture with the predicate stripped from the writer goes red.",
     "note": "The gate's own name resolution, which arming found broken in two places before the gate had ever been trusted. Both bugs were FALSE REDS \u2014 the direction that gets argued away rather than fixed \u2014 and both were in PolicyStore.swift, whose AuditLog encloses a 'final class Seams' declaring 'directory' alongside AuditLog's own 'directory'."
+  },
+  {
+    "id": "CASE-0350",
+    "req": "REQ-088",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming.json"
+    ],
+    "armed": true,
+    "note": "A1. A real session.doctor() on a fake machine that is MISSING /usr/bin/shortcuts \u2014 the only condition the old append fired under \u2014 carries no Shortcuts CLI in grants, misfiledTools is empty, and permissions(in:) covers the whole list. The fixture asserts !shortcutsCLIAvailable first, so a report that never reached the case cannot pass it. Tests/ProctorAgentTests/StatusWindowDebtWiringTests.swift",
+    "armedBy": "Restored the deleted `grants.append(.init(name: \"Shortcuts CLI\" \u2026))` in SessionDoctor.swift and watched this test fail with 3 issues, exit 1. docs/test-campaign/evidence/pro-0082/arming.json",
+    "defects": [
+      "DEF-181"
+    ]
+  },
+  {
+    "id": "CASE-0351",
+    "req": "REQ-088",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming.json"
+    ],
+    "armed": true,
+    "note": "A1. Every grant a built report carries classifies as a permission, walked on BOTH kinds of Mac \u2014 CLI present and CLI absent \u2014 so the clause is a property of the report rather than of this machine. Tests/ProctorAgentTests/StatusWindowDebtWiringTests.swift",
+    "armedBy": "Same mutation as CASE-0350; the restored append reddens this test on the absent-CLI branch. docs/test-campaign/evidence/pro-0082/arming.json",
+    "defects": [
+      "DEF-181"
+    ]
+  },
+  {
+    "id": "CASE-0352",
+    "req": "REQ-088",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A1. Removing the row did not remove the knowledge: shortcutsCLIAvailable still reports false on the absent Mac and true on the present one, and StatusChecks.toolRows composes a Shortcuts row with tone .bad from it \u2014 a tool row in the tools card, where a program on a disk belongs. Tests/ProctorAgentTests/StatusWindowDebtWiringTests.swift",
+    "defects": [
+      "DEF-181"
+    ],
+    "armedBy": "Set the missing-CLI tools row to `tone: .good` in StatusChecks.shortcutsRow and watched theBooleanStillCarriesTheFact fail \u2014 (shortcuts?.tone \u2192 .good) == .bad \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0353",
+    "req": "REQ-088",
+    "surface": "SURF-017",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming.json"
+    ],
+    "armed": true,
+    "note": "A2. A report in the shape an agent OLDER than PRO-0082 sends \u2014 five grants including Shortcuts CLI \u2014 reaches TUISurface.readiness and the pane draws the four permissions in the report's order with their states intact and no tool. The fixture is re-read and asserted to still carry the row, so a fixture that lost it cannot pass this. The lanes list is asserted unchanged in the same suite, because a guard written one line too high would empty both loops and every other assertion would still hold. Tests/ProctorCoreTests/TUIReadinessPartitionTests.swift",
+    "armedBy": "Deleted `guard StatusChecks.kindIsPermission(name) else { continue }` from TUISurface.readiness and watched this test fail with 3 issues, exit 1. docs/test-campaign/evidence/pro-0082/arming.json",
+    "defects": [
+      "DEF-181"
+    ]
+  },
+  {
+    "id": "CASE-0354",
+    "req": "REQ-088",
+    "surface": "SURF-017",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A2. Every name in StatusChecks.known is put through all three spellings of the partition \u2014 kindIsPermission(name), permissions(in:) over a Grant value, and a real readiness() render \u2014 and the three answers must agree. A surface holding its own list is how PRO-0036's fix covered one reader and not the others. Tests/ProctorCoreTests/TUIReadinessPartitionTests.swift",
+    "defects": [
+      "DEF-181"
+    ],
+    "armedBy": "Replaced StatusChecks.permissions(in:)'s `resolvedKind(ofCheckNamed:) != .tool` filter with one that keeps every grant, so the value spelling of the partition parts company with the name spelling, and watched thePaneAndTheWindowAgreeNameByName fail \u2014 (byName \u2192 false) == (byValue \u2192 true) \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0355",
+    "req": "REQ-088",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A2. The drift guard, rewritten rather than relaxed. It used to assert set equality between the grant names SessionDoctor emits and StatusChecks.known; the agent deliberately stopped emitting one. It now asserts BOTH directions: nothing emitted may be unclassified, AND the map's names that the agent no longer emits are exactly {Shortcuts CLI}, which must classify as .tool. A map entry for a name nothing sends still fails, and so does a new name the map has not heard of. Tests/ProctorCoreTests/StatusChecksTests.swift",
+    "defects": [
+      "DEF-181"
+    ],
+    "armedBy": "Added a `\"Bluetooth\": .permissionReadLive` entry to StatusChecks.known \u2014 a name the agent never emits \u2014 and watched grantNamesMatchTheMap fail on the direction PRO-0082 added: (Set(StatusChecks.known.keys).subtracting(emitted) \u2192 [\"Shortcuts CLI\", \"Bluetooth\"]) == (retired \u2192 [\"Shortcuts CLI\"]), 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json",
+    "source": {
+      "analyzer": "Tests/ProctorCoreTests/StatusChecksTests.swift, grantNamesMatchTheMap, matching `.init(\\s*name: \"\u2026\"` over the whole of Sources/ProctorAgent/Session/SessionDoctor.swift and comparing the 4 names it found against StatusChecks.known in both directions",
+      "examined": 264
+    }
+  },
+  {
+    "id": "CASE-0356",
+    "req": "REQ-089",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A3. The policy section appears in ready and partial, between .switches and .activity, and in neither .down nor .checking \u2014 a card drawn from a report nobody could fetch would be a statement about a gate that was never read. Tests/ProctorCoreTests/StatusPolicySectionTests.swift",
+    "defects": [
+      "DEF-183"
+    ],
+    "armedBy": "Added `.policy` to the sections StatusSurface draws in `.down` and watched theSectionIsPlaced fail \u2014 sections(for: .down) contains .policy \u2192 true \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0357",
+    "req": "REQ-089",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A3. A nil posture draws zero rows and the view says Copy.policyAbsent instead; a reported posture draws rows. Both halves asserted, so the empty case cannot pass by the card being empty for everyone. Tests/ProctorCoreTests/StatusPolicySectionTests.swift",
+    "defects": [
+      "DEF-183"
+    ],
+    "armedBy": "Made policyRows(from: nil) return a Gate row reading \u201cOpen \u2014 every app on this Mac may be driven\u201d instead of nothing, and watched anAbsentPostureDrawsNothing fail \u2014 .isEmpty \u2192 false \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0358",
+    "req": "REQ-089",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming.json"
+    ],
+    "armed": true,
+    "note": "A3. One row per PolicyRow.Kind, in the kind's own order, each with a non-empty label and value, no empty-string detail masquerading as a fact, and an identifier present in StatusSurface.ID.all keyed on the kind rather than the position. Tests/ProctorCoreTests/StatusPolicySectionTests.swift",
+    "armedBy": "Changed `PolicyRow(kind: .entries` to `.trail` so the card drew four kinds and a duplicate; watched this test fail with 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming.json",
+    "defects": [
+      "DEF-183"
+    ]
+  },
+  {
+    "id": "CASE-0359",
+    "req": "REQ-089",
+    "surface": "SURF-008",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A3. Every label a policy row draws is a member of StatusSurface.Copy.all. A row assembling a literal in the card would render correctly and be invisible to the copy inventory, which is the defect PRO-0090 removed from the view. Tests/ProctorCoreTests/StatusPolicySectionTests.swift",
+    "defects": [
+      "DEF-183"
+    ],
+    "armedBy": "Replaced the entries row's `label: Copy.policyEntriesLabel` with the literal \"Entries recorded\" and watched everyRowStringIsEnumerable fail: the label is absent from the 88 constants Copy.all enumerates, 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json",
+    "source": {
+      "analyzer": "Tests/ProctorCoreTests/StatusPolicySectionTests.swift, everyRowStringIsEnumerable, checking every label the policy card draws against the constants StatusSurface.Copy.all enumerates",
+      "examined": 88
+    }
+  },
+  {
+    "id": "CASE-0360",
+    "req": "REQ-089",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming.json"
+    ],
+    "armed": true,
+    "note": "A3. Each gate mode states a consequence for the next call rather than a mode name, with correct pluralisation at one app; the approval row says whether a sensitive step would be allowed or refused; the filesystem row names its root count or says no jail is declared. `open` \u2014 the most permissive posture and also the default \u2014 draws .warn, so the window cannot agree with a machine that has no gate. Tests/ProctorCoreTests/StatusPolicySectionTests.swift",
+    "armedBy": "Replaced `tone: p.mode == \"open\" ? .warn : .good` with `tone: .good` and watched this test fail with 2 issues, exit 1. docs/test-campaign/evidence/pro-0082/arming.json",
+    "defects": [
+      "DEF-183"
+    ]
+  },
+  {
+    "id": "CASE-0361",
+    "req": "REQ-089",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A3. Trail honesty in the order a person needs it. An unwritable trail says steps are running unrecorded and suppresses every other verdict, even with clean/sealed/signed all true \u2014 the trail that verifies because it holds nothing. A trail that does not verify is .bad, and the .good case is asserted reachable in the same test so the check is not always-red. Signing states whether the key was confirmed, and an unsigned trail claims neither. Tests/ProctorCoreTests/StatusPolicySectionTests.swift",
+    "defects": [
+      "DEF-183"
+    ],
+    "armedBy": "Replaced the trail row's `tone: (p.auditWritable && p.auditClean) ? .good : .bad` with a flat `.good` and watched both halves fail \u2014 (row.tone \u2192 .good) == .bad on the unwritable trail and (broken.tone \u2192 .good) == .bad on the unverifiable one \u2014 2 issues over 2 tests, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0362",
+    "req": "REQ-089",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A3. auditDroppedThisRun > 0 reds the entries row while the trail row still reads Verifies clean and .good. The wire's own note is the reason: an action never recorded leaves no broken link to find, so clean and complete are two claims, and a card that let the first imply the second would draw a hole in the trail as health. Zero dropped and nil dropped are both .plain. Tests/ProctorCoreTests/StatusPolicySectionTests.swift",
+    "defects": [
+      "DEF-183"
+    ],
+    "armedBy": "Replaced the entries row's `tone: (p.auditDroppedThisRun ?? 0) > 0 ? .bad : .plain` with a flat `.plain` and watched droppedEntriesAreNotFoldedIntoTheVerdict fail \u2014 (entries.tone \u2192 .plain) == .bad \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0363",
+    "req": "REQ-089",
+    "surface": "SURF-008",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A3. Five posture pairs that differ in tone are asserted to differ in WORDS as well, so tone is never the only carrier of a fact \u2014 the rule LanePill already carries, applied to the new card. Tests/ProctorCoreTests/StatusPolicySectionTests.swift",
+    "defects": [
+      "DEF-183"
+    ],
+    "armedBy": "Pinned the approval row's value to `Copy.policyApproval(live: false)` so the two token states differ in tone and not in words, and watched toneIsNeverTheOnlyCarrier fail \u2014 the two values compared equal at \u201cNo token is live, so a sensitive step would be refused\u201d \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0364",
+    "req": "REQ-089",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A3. No row's label, value or detail contains a bundle prefix, a filesystem path, a key header or a token. The wire withholds rule contents on purpose \u2014 a scope is a rule \u2014 so this asserts the card did not invent one to draw. Tests/ProctorCoreTests/StatusPolicySectionTests.swift",
+    "defects": [
+      "DEF-183"
+    ],
+    "armedBy": "Appended \" under /Users\" to the filesystem row's value and watched theCardCarriesNoRuleContents fail \u2014 the drawn text contains the leak \u201c/Users\u201d \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0365",
+    "req": "REQ-090",
+    "surface": "SURF-009",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming.json"
+    ],
+    "armed": true,
+    "note": "A4. WalkthroughFlow.Copy.openSettings equals StatusSurface.Copy.openSettings and equals \"Open Settings\": two constants with one value bound by a test, rather than one constant read from two files, so the surfaces part company loudly. The label carries no question mark and still names the destination. Tests/ProctorCoreTests/WalkthroughSettingsLineTests.swift",
+    "armedBy": "Reverted the constant to \"Already allowed? Open System Settings\" and watched this test fail, exit 1. docs/test-campaign/evidence/pro-0082/arming.json",
+    "defects": [
+      "DEF-182"
+    ]
+  },
+  {
+    "id": "CASE-0366",
+    "req": "REQ-090",
+    "surface": "SURF-009",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming.json"
+    ],
+    "armed": true,
+    "note": "A4. Every .swift file under Sources is read with whole-line comments dropped and none contains \"Already allowed\". The scan asserts it walked more than 50 files first, so a scan that found nothing because it read nothing is not reported as clean. The value check alone would pass if the sentence had merely moved. Tests/ProctorCoreTests/WalkthroughSettingsLineTests.swift",
+    "armedBy": "Same reversion; the retired question reappears in WalkthroughFlow.swift and the scan reddens, exit 1. docs/test-campaign/evidence/pro-0082/arming.json",
+    "defects": [
+      "DEF-182"
+    ],
+    "source": {
+      "analyzer": "Tests/ProctorCoreTests/WalkthroughSettingsLineTests.swift, theOldWordingIsGoneFromEverySource, reading every .swift file under Sources with whole-line comments dropped and searching each for \"Already allowed\"",
+      "examined": 197
+    }
+  },
+  {
+    "id": "CASE-0367",
+    "req": "REQ-090",
+    "surface": "SURF-009",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "A4. Removing the question did not remove the information: Copy.restartNote is non-empty and still names the restart, which is the actual answer for the person the question was addressed to \u2014 already granted, still looking at an ungranted row. Tests/ProctorCoreTests/WalkthroughSettingsLineTests.swift",
+    "defects": [
+      "DEF-182"
+    ],
+    "armedBy": "Rewrote WalkthroughFlow.Copy.restartNote as \u201cScreen Recording takes effect once macOS has applied the change.\u201d, which names neither the restart nor the quit, and watched theRestartNoteStillCarriesTheRealAnswer fail \u2014 contains(\"restart\") \u2192 false || contains(\"quit\") \u2192 false \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0368",
+    "req": "REQ-032",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/revocation-measurement.md"
+    ],
+    "armed": true,
+    "note": "Item 6, at the layer that owns it. ScreenRecordingProbe is driven with a platform that answers .granted and then .denied \u2014 the revocation, with nothing restarted \u2014 and the probe reads .granted back, having asked the platform exactly once. Its two-way control is the same probe answering .unconfirmed, which is never cached: there the platform IS asked again and the answer does change, so the freeze is a property of caching a definite answer rather than of the harness. Tests/ProctorAgentTests/StatusWindowDebtWiringTests.swift",
+    "armedBy": "The control is the arming and it is inside the suite: `anUnconfirmedAnswerIsReProbed` shows the same instrument reporting the OTHER outcome on the same code path. Without it the freeze test would prove only that a stub returned a stub.",
+    "defects": [
+      "DEF-180"
+    ]
+  },
+  {
+    "id": "CASE-0369",
+    "req": "REQ-032",
+    "surface": "SURF-008",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "docs/test-campaign/evidence/pro-0082/revocation-measurement.md",
+      "docs/test-campaign/evidence/pro-0082/revocation-before/doctor.json",
+      "docs/test-campaign/evidence/pro-0082/revocation-after-attempt/doctor.json",
+      "docs/test-campaign/evidence/pro-0082/agent-identity.txt",
+      "docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+    ],
+    "armed": true,
+    "note": "Item 6 end-to-end through Session.doctor(): the Screen Recording grant reads resolvedState .granted and granted true from a report taken AFTER the injected platform flipped to .denied. NOT the glass rung \u2014 the brief's own procedure (revoke in System Settings, re-read doctor) was attempted on this machine and could not be completed: macOS 26.6 gates the pane's write behind Touch ID or a password, and the toggle's flip to 0 was a proposal that Cancel reverted. The before-reading and the after-attempt reading are both real MCP responses from the unrestarted agent pid 52976 and are recorded as such rather than as the after-shot the brief asked for. Tests/ProctorAgentTests/StatusWindowDebtWiringTests.swift",
+    "defects": [
+      "DEF-180"
+    ],
+    "armedBy": "Removed the freeze: changed ScreenRecordingProbe.state()'s `case .cached(let known): return known` to re-read the platform, and watched doctorReportsTheFrozenValue fail \u2014 (row?.resolvedState \u2192 .denied) == .granted and (row?.granted \u2192 false) == true \u2014 2 issues, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
   }
 ]

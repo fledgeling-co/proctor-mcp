@@ -549,7 +549,7 @@
       "surfaces": [
         "SURF-012"
       ],
-      "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change. PRO-0098: witnessed at effect-witness by CASE-0270..0272 with CASE-0273 guarding the reader, closing DEF-110. NARROWED by PRO-0098's gap-fix, 2026-08-22. Until then this requirement read \"Running the test suite does not read or write any state belonging to the operator of the machine it runs on\", and that sentence certified more than the witness does: reads are not watched, the whole 1,992-test run is not watched (two calls are), and the operator's Proctor state outside the application-support root is not watched. The zero is now reported against a stated population \u2014 changed / len(files) over the swept root \u2014 and the unwitnessed remainder is recorded as DEF-141 rather than left standing under the old sentence. The narrowing paid for itself in one run: the first clean ./scripts/test.sh after it went red on captures/win-1-zoom-1787361639249.full.png, a real write the suite had been making into the operator's captures directory since PRO-0089 and catching only on a race. DEF-142, fixed by carrying PolicyStore.live's interlock onto the capture path, with CASE-0285 asserting the resolved paths so the guarantee no longer depends on that race. PRO-0099: the class behind DEF-142 and DEF-164 was SWEPT rather than met a fourth time by accident. Eleven files name a path under the operator's root; eight carried no interlock. Three of those eight are writers and are now seamed \u2014 SwitchStore.defaultURL (DEF-172, the operator's own saved switches), Session.maestroDebugDirectory (DEF-173) and Session.deviceFramePath (DEF-174) \u2014 witnessed by CASE-0330..0332. Four are socket paths (Wire.socketPath, GuestInventory's two, ProctorReflector.supportDirectory) and two are prose (TUISurface, ToolCatalogue); those are classed with a reason and deliberately NOT given an interlock, because adding one to a read or a rendezvous path buys nothing and adds a branch production takes on every call. The classification is now checked rather than remembered: REQ-085.",
+      "note": "proved by reading the operator's real policy.json \u2014 its bytes and its modification time \u2014 before and after a configure, with the reader armed on a file the same call does change. PRO-0098: witnessed at effect-witness by CASE-0270..0272 with CASE-0273 guarding the reader, closing DEF-110. NARROWED by PRO-0098's gap-fix, 2026-08-22. Until then this requirement read \"Running the test suite does not read or write any state belonging to the operator of the machine it runs on\", and that sentence certified more than the witness does: reads are not watched, the whole 1,992-test run is not watched (two calls are), and the operator's Proctor state outside the application-support root is not watched. The zero is now reported against a stated population \u2014 changed / len(files) over the swept root \u2014 and the unwitnessed remainder is recorded as DEF-141 rather than left standing under the old sentence. The narrowing paid for itself in one run: the first clean ./scripts/test.sh after it went red on captures/win-1-zoom-1787361639249.full.png, a real write the suite had been making into the operator's captures directory since PRO-0089 and catching only on a race. DEF-142, fixed by carrying PolicyStore.live's interlock onto the capture path, with CASE-0285 asserting the resolved paths so the guarantee no longer depends on that race.",
       "effect": "filesystem-write",
       "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) \u2014 0 of the 3,290 regular files `find -type f` reports under that root on this machine \u2014 so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written."
     },
@@ -869,6 +869,44 @@
       "effect": "none",
       "note": "PRO-0099. Reading the diff proves the literal was MOVED into an operator accessor; it does not prove production still REACHES that accessor. Proved for all three writers converted here by replacing the predicate with `false` and printing the resolved path. The assertion that makes the rest mean anything is that TestProcess.isActive was TRUE on that run while the paths resolved to the operator's own, which rules out the reading where the sabotage appeared to work only because the predicate happened to be false. Permanently witnessed by CASE-0330..0332, which each compare their operator accessor with an independently reconstructed pre-change literal on every run, so the guarantee does not depend on anybody repeating the sabotage.",
       "provider": "./scripts/test.sh --filter pro0099SabotageResolvedPaths against a tree with all three interlocks replaced by `guard false`, printing resolved and pre-change paths side by side; the probe was temporary and the sources restored from a byte copy. Evidence: docs/test-campaign/evidence/PRO-0099/sabotage-production-unchanged.txt"
+    },
+    {
+      "id": "REQ-088",
+      "text": "The health report's permissions list carries only decisions macOS holds about Proctor, on every surface that reads it \u2014 because a correction applied by one reader is not a corrected report, and a program on a disk listed beside Accessibility teaches a person that Proctor's permissions are something other than what macOS shows them",
+      "source": "spec-PRO-0082.md A1-A2; brief 75 items 1; spec-PRO-0036.md child work",
+      "class": "correctness",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008",
+        "SURF-017"
+      ],
+      "note": "The agent no longer emits the row; the readers keep the partition as the decode path for an older agent's report, and the drift guard now asserts that retired set explicitly rather than by set equality.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-089",
+      "text": "The status window states the gate's posture and the trail's honesty \u2014 whether a step is likely to be refused, and whether it will be recorded \u2014 without ever letting a clean verdict imply a complete trail, and without naming a rule's contents",
+      "source": "spec-PRO-0082.md A3; brief 75 item 3; PolicyPosture documentation on the wire",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008",
+        "SURF-012"
+      ],
+      "note": "Value-level at outcome rung: the rows are derived in StatusSurface and judged without a window, with status_literals.py as the gate on the drawing half. The rendered card is not claimed here.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-090",
+      "text": "A control that offers a person a trip to System Settings names where it goes rather than asking a question whose real answer is somewhere else, because a person who has already granted the permission and is still seeing it ungranted needs the restart and not the pane",
+      "source": "spec-PRO-0082.md A4; brief 75 item 4; spec-PRO-0041.md child work",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "Both surfaces' constants are bound by a test and the retired question form is scanned for across the whole of Sources, so the string cannot survive by moving.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -2848,6 +2886,51 @@
       "detail": "'a yield reaches the ticket, and every way it can end clears it' awaits the hold through awaitHold(control), which returns as soon as RunControl reports the run held, then IMMEDIATELY reads h.scheduler.snapshot() and asserts duringHold.active.contains { $0.held != nil }. Those are two different objects: the control latches the hold, and the scheduler's ticket is updated separately, so there is a window in which the run is genuinely held and the ticket does not yet say so. Under load the read lands in that window and the case reds at HoldAttributionWiringTests.swift:372 with 'Expectation failed: duringHold.active.contains { $0.held != nil }', which is the scheduler being slightly behind rather than the hold failing to reach a ticket. MEASURED: five full runs of one unchanged tree during PRO-0099 read exit 0 (2,028 tests, pre-change), 0, 0, 1, 0 with the same 2,031 tests in 246 suites; the red run carried this as its ONLY issue and the next full run was clean with zero issues.",
       "fix": "Not attempted. The repair is to wait on the ticket rather than on the control before reading it \u2014 poll scheduler.snapshot() for the held ticket with the same bounded wait awaitHold already uses, so the case asserts the hold reached the ticket rather than asserting it reached it within one scheduling quantum.",
       "note": "OPENED, NOT FIXED, and outside this item's brief, which is the operator-path class. Same handling as DEF-165, the BrowserLaneWiringTests flake PRO-0098 recorded rather than repaired: that commit measured four full runs of its own unchanged tree at exit 1, 0, 1, 0, so a red that is not the item's own is a known property of this suite rather than a new signal. This is a DIFFERENT test from DEF-165 and is recorded separately. It is not in spec-PRO-0099's Defects table, because that table is what defect_gate.py claims reads and a newly opened defect is not a claim that anything is closed."
+    },
+    {
+      "id": "DEF-180",
+      "status": "open",
+      "severity": "medium",
+      "req": "REQ-032",
+      "surface": "SURF-008",
+      "title": "A Screen Recording answer is frozen for the life of the agent process, so a revoked grant is reported as granted until it restarts",
+      "found": "PRO-0082, measured at the probe rather than read from the code: ScreenRecordingProbe answers granted, the platform flips to denied, and the probe still answers granted having asked the platform once.",
+      "detail": "GrantProbeKeeper.definite is assigned in exactly one place (GrantProbe.swift record(_:token:now:)) and cleared in none \u2014 no reset, no expiry, no second writer \u2014 and claim(now:) returns .cached(definite) as its first branch, so after a definite answer no probe is ever started again for that process's life. Session holds one ScreenRecordingProbe for the life of the process and SessionDoctor reads it. CASE-0368 arms this two ways: the same probe answering .unconfirmed is never cached and DOES re-ask, so the freeze is a property of caching a definite answer and not of the test harness. CASE-0369 shows it reaching a person through Session.doctor().",
+      "fix": "Unfixed, deliberately. Whether the agent re-probes on a revocation signal changes what the AGENT does rather than what a window draws; PRO-0036 declined that decision and spec-PRO-0082 declines it for the same reason. Taking it means choosing a re-probe trigger and an expiry policy, which is its own item.",
+      "detailNote": "The glass rung is missing and the reason is measured rather than assumed: on macOS 26.6 the Screen & System Audio Recording pane gates its write behind Touch ID or a password, so the revocation the brief specifies cannot be performed by any background runner. The attempt, the sheet's verbatim words and the toggle's revert are at docs/test-campaign/evidence/pro-0082/revocation-measurement.md, with the before and after-attempt doctor replies beside it. One authenticated toggle by a person would close it."
+    },
+    {
+      "id": "DEF-181",
+      "status": "fixed",
+      "severity": "medium",
+      "req": "REQ-088",
+      "surface": "SURF-008",
+      "title": "The health report filed the Shortcuts CLI under grants, so every reader but the status window drew a program on a disk as a permission macOS holds",
+      "found": "PRO-0036 recorded it as child work after correcting the window alone; PRO-0082 took it at the report.",
+      "detail": "SessionDoctor appended a Grant named Shortcuts CLI, and only when /usr/bin/shortcuts was missing \u2014 the condition no Mac in this fleet meets, which is why no runtime test had ever reached it. PRO-0036 partitioned the list on arrival in the window; the TUI's readiness pane and anything else reading grants kept drawing it.",
+      "fix": "The append is deleted. shortcutsCLIAvailable already carried the fact on the wire and the status window composes its Shortcuts row from that boolean through StatusChecks.toolRows, so the knowledge survives as a tool row in the tools card. StatusChecks.known keeps its .tool entry and misfiledTools stays, as the decode path for an older agent's report, and TUISurface.readiness now routes grants through the same rule the window uses. CASE-0350, CASE-0353."
+    },
+    {
+      "id": "DEF-182",
+      "status": "fixed",
+      "severity": "low",
+      "req": "REQ-090",
+      "surface": "SURF-009",
+      "title": "The walkthrough's Settings button asked \"Already allowed?\", the misdirection PRO-0041 removed from the status window's grant row and deliberately left here",
+      "found": "PRO-0041 child work; brief 75 item 4.",
+      "detail": "A person who has already allowed the permission and is still looking at an ungranted row is not helped by a pane that will show them a switch already turned on. Their answer is a restart, which Copy.restartNote states a few lines above the button. The walkthrough is also the surface a person meets FIRST.",
+      "fix": "WalkthroughFlow.Copy.openSettings now holds StatusSurface.Copy.openSettings's value, \"Open Settings\", as its own constant with a test binding the two. The question form is scanned for across all of Sources. CASE-0365, CASE-0366."
+    },
+    {
+      "id": "DEF-183",
+      "status": "fixed",
+      "severity": "medium",
+      "req": "REQ-089",
+      "surface": "SURF-008",
+      "title": "The policy posture has been on the wire since PRO-0050 and no surface read it, so the gate's shape and the audit trail's health were invisible to the operator",
+      "found": "PRO-0036 child work; brief 75 item 3.",
+      "detail": "No reader of report.policy existed in any surface \u2014 grepping ProctorUI for policy returned the activation policy only. An operator could not see from the window whether a call was likely to be refused, whether it would be recorded, or whether the recording verified.",
+      "fix": "A policy section between switches and activity, with the deciding half as StatusSurface.policyRows over PolicyPosture so it is testable without a window. It renders what the block's own documentation says it exists to answer rather than everything on the wire, draws `open` as a warning because it is both the most permissive posture and the default, and keeps a dropped-entry count out of the trail's clean verdict. CASE-0356 to CASE-0364."
     }
   ]
 }

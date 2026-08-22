@@ -50,6 +50,7 @@ struct MainWindow: View {
         case .tools: ToolsSection(model: model)
         case .lanes: LanesSection(model: model)
         case .switches: SwitchesSection(model: model)
+        case .policy: PolicySection(model: model)
         case .activity: ActivitySection(model: model)
         case .connect: ConnectSection(model: model)
         case .agent: AgentSection(model: model)
@@ -1095,6 +1096,75 @@ private struct AgentDownSection: View {
 /// differently because they are different answers: one is a fact about what
 /// Proctor established, the other is something to go and fix, and sending
 /// somebody to fix the first is the defect PRO-0041 closed.
+/// The gate's posture and the trail's health.
+///
+/// PRO-0082, closing DEF-183. `DoctorReport.PolicyPosture` has been on the wire
+/// since PRO-0050 and no surface read it, so a person could not learn from
+/// Proctor whether Proctor would refuse a step or record one.
+///
+/// Every row comes from `StatusSurface.policyRows(from:)` — this file decides
+/// nothing. That is the same split `LanesSection` has and it is what lets the
+/// rules be tested without a window.
+private struct PolicySection: View {
+    let model: AgentModel
+
+    private var rows: [StatusSurface.PolicyRow] {
+        StatusSurface.policyRows(from: model.report?.policy)
+    }
+
+    var body: some View {
+        Card {
+            SectionTitle(StatusSurface.Copy.policyHeading)
+            Text(StatusSurface.Copy.policyNote)
+                .font(.system(size: 12)).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            if rows.isEmpty {
+                // An agent that sent no posture and an agent reporting an open
+                // gate are different facts, and the second must not be drawn for
+                // the first.
+                Text(StatusSurface.Copy.policyAbsent)
+                    .font(.system(size: 12)).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            ForEach(rows, id: \.kind) { row in
+                HStack(alignment: .top, spacing: 12) {
+                    Text(row.label)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 78, alignment: .leading)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(row.value)
+                            .font(.system(size: 13))
+                            .foregroundStyle(tint(row.tone))
+                            .fixedSize(horizontal: false, vertical: true)
+                        if let detail = row.detail {
+                            Text(detail)
+                                .font(.system(size: 11)).foregroundStyle(.tertiary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    Spacer(minLength: 0)
+                }
+                .padding(.vertical, 5)
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier(StatusSurface.ID.policyRow(row.kind))
+            }
+        }
+    }
+
+    /// Colour is a second carrier here and never the only one: every row says
+    /// its fact in words. `plain` takes the primary tier rather than a hue, so a
+    /// card with nothing wrong in it is quiet.
+    private func tint(_ tone: StatusSurface.PolicyRow.Tone) -> Color {
+        switch tone {
+        case .good: return .primary
+        case .warn: return .orange
+        case .bad: return .red
+        case .plain: return .primary
+        }
+    }
+}
+
 private struct LanesSection: View {
     let model: AgentModel
 
