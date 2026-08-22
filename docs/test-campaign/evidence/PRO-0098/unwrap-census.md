@@ -52,6 +52,12 @@ the unwrap nil, so the trap fires instead of the assertion, and the runner dies 
 
 24 converted + 4 unfailable = 28.
 
+**After the change the same grep returns 6 lines**, and none of them is a live site: the 4 recorded
+above, plus 2 comment lines. One is PRO-0090's note in `CommandSurfaceTests.swift`; the other is a
+comment this item added, which quotes `)!` while explaining why the site beside it is unfailable.
+Recorded exactly rather than rounded to the 5 a first count gave, because a census whose own
+arithmetic drifts is the failure this file exists to prevent.
+
 ## Named, and deliberately not swept here
 
 `grep -rn ')!' Tests` is the brief's denominator and it is not the whole hazard. Two shapes sit

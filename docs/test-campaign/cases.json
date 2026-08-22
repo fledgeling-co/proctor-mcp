@@ -3568,7 +3568,7 @@
       "docs/test-campaign/evidence/PRO-0098/unwrap-census-raw.txt"
     ],
     "armed": true,
-    "armedBy": "The denominator is armed by having moved: the same grep returns 29 lines before the change and 5 after, and the 5 are the 4 recorded unfailable plus one comment. A census that could not tell those apart would have reported the same number twice.",
+    "armedBy": "The denominator is armed by having moved: the same grep returns 29 lines before the change and 6 after. The 6 are the 4 sites recorded unfailable plus TWO comment lines \u2014 PRO-0090's, and one this item added, which quotes `)!` while explaining why the site beside it is unfailable. Recorded exactly rather than rounded to the 5 a first count gave, because a census whose own arithmetic drifts is the thing this case exists to rule out. A census that could not tell a site from a comment would have reported the same number twice.",
     "source": {
       "analyzer": "grep -rn ')!' Tests, recorded verbatim before any edit",
       "examined": 29
