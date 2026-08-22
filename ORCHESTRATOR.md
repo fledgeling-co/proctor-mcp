@@ -1791,3 +1791,43 @@ flipping CASE-0067 to `pass` and watching the flagged count move 3 → 4.
 **Still open, all recorded:** CASE-0126 and CASE-0127 carry empty `source` blocks (2 cases, 4
 findings); two `raster-visual` claims lack a usable capture and two lack pixel provenance; DEF-106;
 DEF-099. One passing case remains unarmed.
+
+### Wave 14 closed (2026-08-22)
+
+PRO-0084, 0086, 0090, 0093, 0097 and 0098 all verified **Done** and merged. Gate **2,028 tests in
+246 suites, exit 0**, twice. `campaign.py check`: examined=29, witnessed=27, unwitnessed=0,
+vacuous=1. Armed 226 of 227. Strict ratchet 203, held. Drift gate exit 0.
+
+**Open defects: 8, from 96 records.** DEF-033 (the ProctorAgent survival rate, a measurement that
+closes when the number moves), DEF-099, DEF-140, DEF-141 (REQ-055's three named gaps), DEF-151
+(nothing can post at pid 0), DEF-162, DEF-163, DEF-165. Four cases stand `inconclusive` against
+ceilings checked in source. One passing case is unarmed.
+
+**The suite was writing into the operator's own state, in three places, and each was found by a
+different accident.** `PolicyStore` (DEF-042/110) came from a brief. The capture path (DEF-142) came
+from narrowing REQ-055's sentence to match its witness, which made the witness able to bite. The
+flow store (DEF-164) came from that narrowed claim continuing to bite. All three are the same shape:
+**a static computing an operator path with no injection seam.** None was found by looking for the
+class; a fourth would be found the same way, by accident, so the class is worth a sweep rather than
+a third fix.
+
+The forensics on DEF-164 are the model for this: two files stamped `22 Aug 11:57:28` against six
+neighbours dated 16-21 August, and a verifier that took sha256, mtime and size of all eight flows
+plus a 3,241-entry count of captures, ran three full suites and nine filtered ones, and found them
+byte-identical — while demonstrating the redirect positively, with the same filenames appearing under
+`proctor-test-flows-*` in `/tmp`. Absence of a write and presence of the write elsewhere, both shown.
+
+**A false arming was found and closed.** CASE-0314 carried `armed: true` citing a mutation it could
+not fail on and was not in that mutation's filter set. It is the first case in this campaign where
+the armed flag itself was false, and it was found by a verifier applying the named mutation rather
+than reading the record. Every verification since checks `armed` rows that way.
+
+**The registry merge rule cost three mistakes before it was right.** Keeping ours dropped five rows
+at the PRO-0091 merge; taking theirs reverted sixteen defect flips at the PRO-0090 merge and two more
+at PRO-0086's. The rule that holds: **the corrector wins per row, and which side is the corrector is
+a question about the row rather than about the branch.** What caught all three was running
+`defect_gate.py dropped` after every merge, which is now the practice.
+
+**Two unreproduced SIGTRAPs** remain unexplained, each a run reporting no verdict line at all. Both
+are recorded rather than diagnosed. DEF-136's conversion removed the class that causes them from 24
+sites, which is why they should now be rare rather than why they are gone.
