@@ -1111,6 +1111,42 @@
       ],
       "note": "The forward half lands outside this repository, so nothing in ./scripts/test.sh can hold it; spec_citation_measure.py reads the shared source tree by hand, as skill_doc_measure.py does for the proctor skill. The number fallback was already removed by PRO-0102 at 224a696, so this requirement verifies rather than re-edits, per spec-PRO-0101's assumption that the second item to reach it verifies. CASE-0436, CASE-0437, CASE-0438.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-108",
+      "class": "contract guardrail",
+      "text": "Every optional boolean argument a tool publishes decodes to the default that tool's own schema states, and no boolean argument is published without stating one",
+      "source": "Sources/ProctorAgent/Dispatch.swift header — 'The schemas in ToolCatalogue are the source of truth for names and defaults; this file is where they are read'; Sources/ProctorCore/ToolCatalogue.swift",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-002"
+      ],
+      "note": "Two statements of one fact, checked against each other rather than either against itself. 28 boolean properties across 21 tools; 25 stated a default and 3 did not — includeTiles, tileHashes and verbose, measured, now stated (DEF-217). Sixteen (tool, argument) pairs are comparable between the schema and the decoder and all sixteen agree. The pair is (tool, argument) rather than argument alone because act.foreground defaults to false and computer.foreground to true, and a join on the name would have called that a disagreement. CASE-0458, CASE-0459, CASE-0460.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-109",
+      "class": "honesty guardrail",
+      "text": "A mutation run reports a mutant that reached its time bound apart from one the suite killed, and leaves it out of the survival-rate denominator",
+      "source": "scripts/campaign/mutate_swift.py; docs/features-to-triage/85-proctoragents-mutants-mostly-survive.md — 'the runner scores a timeout as a kill'; DEF-033",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "note": "A timeout is the absence of a measurement rather than a measurement, and scoring one as a kill is the only direction the error runs: starvation can turn a survivor into a false kill and can never turn a kill into a false survivor. CASE-0467.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-110",
+      "class": "honesty guardrail",
+      "text": "A ProctorAgent mutation sample states its pool, its seed, its unrun count and the machine's load and thermal state at both ends of the run",
+      "source": "docs/features-to-triage/85-proctoragents-mutants-mostly-survive.md — 'Run under low load and say what it was'; docs/specs/spec-PRO-0092.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "note": "PRO-0080's sample finished under a load average of 271 and the number it produced needed reconstructing afterwards from an evidence file's first two lines. The readings are published with the sample instead.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1481,6 +1517,22 @@
         "registered as unclaimed"
       ],
       "description": "Not a product surface: it is the written record this project keeps of where each of its 99 specs came from, plus the 96-file brief queue in docs/features-to-triage and the docs/feature-specs/UNCLAIMED-BRIEFS.md register that accounts for briefs no spec can claim. Read by scripts/campaign/spec_citation_measure.py, which also reads the shipyard triage stage and the reckon join in ~/Dev/fledgeling-plugins because the forward half of PRO-0101 lands there. Given a surface of its own rather than filed on SURF-002 (the proctor skill) or SURF-022, because a measurement over specs and briefs examines neither of those."
+    }
+,
+    {
+      "id": "SURF-026",
+      "name": "ProctorAgent mutation sample",
+      "title": "The mutation runner pointed at the agent package, and the verdicts it reports",
+      "route": "tool://mutate-swift/agent",
+      "status": "reachable",
+      "states": [
+        "killed",
+        "SURVIVED",
+        "unbuildable",
+        "TIMEOUT",
+        "near the bound"
+      ],
+      "description": "Not a product surface: it is the instrument that measures how much this suite knows about the package that touches the machine. SURF-022 is the campaign's blind-mutation pass over the campaign's own assertions and is a different instrument; this one applies one source mutation at a time to ProctorAgent, builds, runs ./scripts/test.sh and reverts. Its verdict vocabulary is the surface's states, and TIMEOUT is the one PRO-0092 added because the runner had been scoring a starved run as a kill."
     }
   ],
   "flow": [
@@ -3430,6 +3482,16 @@
         "REQ-100"
       ],
       "note": "Three checks in spec_citation_measure.py accept inputs their names imply they reject, each found by building the evasion against a scratch copy at PRO-0101's verification. (1) `every spec carries a parseable citation` passes when the only brief path sits in a fenced code block, an HTML comment or a struck-through line, because the legacy fallback is a bare BODY_PATH.search over the whole text; a **Brief:** header inside a fence in the first 20 lines counts too. (2) `every none citation names its origin` passes on `none. See docs/nowhere/imaginary-source.md` and on any backtick pair padded to 20 characters — the floor makes a citation name something, not resolve to it. (3) `every brief is claimed or registered` is satisfied by an incidental mention in an unrelated spec, so a brief nobody built from reads as claimed. None of the three is dead: each is armed and bites on the case it was written for, and the delivered tree exploits none of them because all 24 legacy citations are real prose at fence depth 0. SAME CLASS AS DEF-201 IN A DIFFERENT INSTRUMENT: a scanner reading a whole document for a token, with no exclusion for fences, comments or struck-through text, cannot tell a citation from a mention of one. Two tools in two repositories grew the same blind spot independently, which makes it a shape to check for rather than a bug either author made. The repair is not a longer floor: an input a check cannot classify should be a finding that names it, not a pass or a fail by default."
+    },
+    {
+      "id": "DEF-217",
+      "status": "fixed",
+      "title": "Three boolean arguments are published with no stated default while the decoder has one",
+      "found": "PRO-0092, building the schema-versus-decoder agreement check for survivors 2 and 8",
+      "detail": "28 boolean properties across the 21 tools in ToolCatalogue. 25 state their default in their own description; 3 did not — proctor_stability.includeTiles, proctor_capture.tileHashes and proctor_doctor.verbose. Each has a default in Dispatch.swift, false in all three cases, so a caller omitting the argument gets a behaviour the published schema does not describe. Found by the check going looking for stability.includeTiles and finding nothing to compare against, which is the failure mode of a two-source check whose second source is silent: it passes by comparing nothing.",
+      "surface": "SURF-002",
+      "req": "REQ-108",
+      "note": "FIXED. The three descriptions now state their defaults, which is a documentation repair with its own value and is also what lets REQ-108's check reach survivor 2 of PRO-0080's sample. The decoder was not changed; the schema was the half that was silent."
     }
   ]
 }

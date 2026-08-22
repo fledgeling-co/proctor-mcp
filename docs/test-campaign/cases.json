@@ -5679,5 +5679,189 @@
     "armed": true,
     "armedBy": "Three shapes against a purpose-built git fixture the arming builds and throws away, because the real history holds no commit where a cited brief path is a tree or an empty file, and a branch no mutation can reach is a branch nobody has watched. A citation naming a blob with bytes PASSes; one naming a zero-byte blob FAILs; one naming a path that is a directory FAILs. All three verdicts were pinned in the table before the run and all three were observed.",
     "note": "A commit-form citation asserts the brief is readable at that commit, and `git cat-file -e` does not say that: it is satisfied by a tree entry and by a zero-byte blob. The check now reads the object type and its size. Raised by the out-of-family review of this item, which named the same two shapes."
+  },
+  {
+    "id": "CASE-0457",
+    "req": "REQ-047",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "scripts/campaign/mutation_seam_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `listAppsHonoursIncludeWindowless` watched going red: `guard includeWindowless || app.isRegular else { return nil }  ->  guard includeWindowless && app.isRegular else { return nil }`, exit 1, Test run with 1 test in 1 suite failed after 0.001 seconds with 3 issues.. Reverted, and the tree measured clean after.",
+    "note": "Survivor 1 of PRO-0080's sample. `AXEngineImpl.listApps` read `NSWorkspace.shared.runningApplications` directly, so no test could state a population and the `||` that reads `includeWindowless` was unwatched. The seam is a parameter with the live reader as its default, in `GuestProvider.init(executable:timeoutMs:run:)`'s shape. With `&&` the flag inverts: asking for windowless apps returns only the ones with a Dock icon and asking for the ordinary list returns nothing at all. Three clauses, and the accessory app is named directly rather than left to a count."
+  },
+  {
+    "id": "CASE-0458",
+    "req": "REQ-108",
+    "surface": "SURF-002",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "scripts/campaign/mutation_seam_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `dispatchDefaultsAgreeWithTheCatalogue` watched going red: `args.bool(\"includeTiles\", false)  ->  args.bool(\"includeTiles\", true)`, exit 1, Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.. Reverted, and the tree measured clean after.",
+    "note": "Survivor 2. `includeTiles` decoded to `false` and the mutant made it `true`, so every stability run would compare pixel tiles nobody asked for. The oracle is the published schema rather than the source: `Dispatch.swift`'s own header says ToolCatalogue is the source of truth for names and defaults, and this checks the second copy against the first. Sixteen (tool, argument) pairs are comparable and the join is floored at twelve, so a parser that stopped finding sites cannot pass by comparing nothing.",
+    "source": {
+      "analyzer": "NSRegularExpression over Sources/ProctorAgent/Dispatch.swift, sectioned by `// MARK: - proctor_<tool>`, joined per (tool, argument) against the prose default parsed from each boolean property's description in ToolCatalogue.all",
+      "examined": 34
+    }
+  },
+  {
+    "id": "CASE-0459",
+    "req": "REQ-108",
+    "surface": "SURF-002",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "scripts/campaign/mutation_seam_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `dispatchDefaultsAgreeWithTheCatalogue` watched going red: `args.bool(\"presentation\", true)  ->  args.bool(\"presentation\", false)`, exit 1, Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.. Reverted, and the tree measured clean after.",
+    "note": "Survivor 8, the same check from the other direction. `presentation` decoded to `true` and the mutant made it `false`, so `proctor_inspect` would stop returning the CALayer presentation values its schema says it returns by default. Armed separately from CASE-0458 because one test covering two mutants proves nothing about the second unless the second is watched.",
+    "source": {
+      "analyzer": "as CASE-0458",
+      "examined": 34
+    }
+  },
+  {
+    "id": "CASE-0460",
+    "req": "REQ-108",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "scripts/campaign/mutation_seam_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `snapshotOptionDefaultsMatchTheSchema` watched going red: `var includeInvisible: Bool = false  ->  var includeInvisible: Bool = true`, exit 1, Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.. Reverted, and the tree measured clean after.",
+    "note": "Survivor 4. `SnapshotOptions.includeInvisible` defaulted to `false` and the mutant made it `true`, so an unasked-for snapshot would carry zero-area and offscreen nodes. Never `no seam` — the struct was always constructible — only untested. The oracle is `proctor_snapshot`'s own schema prose rather than the literal, so the test does not restate the value it checks."
+  },
+  {
+    "id": "CASE-0461",
+    "req": "REQ-047",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "docs/test-campaign/evidence/PRO-0092/correlate-crash-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `correlateReturnsTheMatchingWindowsNumber` watched going red: `return matches.count == 1 ? matches[0].number : nil  ->  return matches.count == 1 ? matches[1].number : nil`, exit 1. Reverted, and the tree measured clean after. THE KILL ARRIVES AS AN ABORT RATHER THAN A FAILING ASSERTION, and that is a property of the site rather than of the test: `matches[1]` on a one-element array traps, so the run printed `Fatal error: Index out of range`, `Executed 0 tests, with 0 failures`, ZERO verdict lines and `FAIL: no swift-testing verdict line`, at signal 5. That is DEF-140's class arriving from production rather than from a test. The subscript is total under its own `count == 1` guard, so it is recorded rather than converted. Full output in correlate-crash-arming.txt.",
+    "note": "Survivor 10. `CGWindowIndex.correlate(frame:title:in:)` already took its records as a parameter and nothing had ever called it. A wrong window number captures the wrong window and nothing downstream can tell, which is why the function refuses to guess when more than one candidate fits — and that refusal was unwatched too. Four clauses: the number, order-independence, two fitting candidates reported absent, and a non-zero-layer window not a candidate at all."
+  },
+  {
+    "id": "CASE-0462",
+    "req": "REQ-047",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "scripts/campaign/mutation_seam_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `barePidIsSynthesisedExactlyOnce` watched going red: `!candidates.contains(where: { $0.pid == pid }) else { return candidates }  ->  !candidates.contains(where: { $0.pid != pid }) else { return candidates }`, exit 1, Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.. Reverted, and the tree measured clean after.",
+    "note": "Survivor 7. The bare-pid rule was inline in `killProcesses`, which enumerates `NSWorkspace` first, so the rule could not be stated on its own. `KillCandidates.includingBarePid` is that rule as a pure function. With `!=` it appends nothing whenever any other process is running and duplicates the target whenever none is, so `proctor_kill` on a bare pid that is not a GUI application would report nothing matched. Both directions are asserted, and the synthesised candidate's absent bundle id is asserted with them because that is the fail-closed half."
+  },
+  {
+    "id": "CASE-0463",
+    "req": "REQ-047",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "scripts/campaign/mutation_seam_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `hudPanelTakesKeyAndRefusesMain` watched going red: `override var canBecomeMain: Bool { false }  ->  override var canBecomeMain: Bool { true }`, exit 1, Test run with 1 test in 1 suite failed after 0.967 seconds with 1 issue.. Reverted, and the tree measured clean after.",
+    "note": "Survivor 9. `HUDPanel` was `private`, so nothing could ask it either of the two answers the class exists for. Made internal, both overrides unchanged. A HUD that can become main takes the main window from the application the run is driving while still taking key so its Stop control stays clickable, and the pair is what the test asserts."
+  },
+  {
+    "id": "CASE-0464",
+    "req": "REQ-047",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "scripts/campaign/mutation_seam_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `lightPaletteTonesShareOneBase` watched going red: `ink3: hex(17, 18, 21, 0.36), ink4: hex(17, 18, 21, 0.16),  ->  ink3: hex(18, 18, 21, 0.36), ink4: hex(17, 18, 21, 0.16),`, exit 1, Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.. Reverted, and the tree measured clean after.",
+    "note": "Survivor 11. The oracle is not the number. The light palette's ink and fill tones are one graphite at several opacities, and `hex(17, 18, 21, …)` drifting to `hex(18, …)` in one tone is a different colour wearing the same name. The invariant holds whatever the base is, so the check does not restate the value it checks. The opacity floor is five distinct values of seven tones, measured: `fill2` and `separator` are both 0.09, which is the palette agreeing with itself."
+  },
+  {
+    "id": "CASE-0465",
+    "req": "REQ-047",
+    "surface": "SURF-005",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "scripts/campaign/mutation_seam_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `tapDisableNoticesAreTheOnlyDisableNotices` watched going red: `type == .tapDisabledByTimeout || type == .tapDisabledByUserInput  ->  type != .tapDisabledByTimeout || type == .tapDisabledByUserInput`, exit 1, Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.. Reverted, and the tree measured clean after.",
+    "note": "Survivor 12. The predicate was inline in a handler that cannot be called from a test — it needs a live `CGEvent` and a tap this process has been granted — while the question it asks first is pure. With `!=` every ordinary keystroke reads as macOS switching the tap off, so the second key a person pressed would release the hold, and a real disable notice would fall through as if it were input. Nine ordinary event types are checked alongside the two notices."
+  },
+  {
+    "id": "CASE-0466",
+    "req": "REQ-047",
+    "surface": "SURF-012",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "scripts/campaign/mutation_seam_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `publicKeyURLNamesAFileThatRoundTrips` watched going red: `directory.appendingPathComponent(\"audit.pub\", isDirectory: false)  ->  directory.appendingPathComponent(\"audit.pub\", isDirectory: true)`, exit 1, Test run with 1 test in 1 suite failed after 0.002 seconds with 1 issue.. Reverted, and the tree measured clean after.",
+    "note": "Survivor 13. `isDirectory:` is load-bearing rather than cosmetic: with `true` the URL carries a trailing slash and claims to be a directory, and the cached public key is what keeps the audit write path out of the Keychain entirely — no unlock and no prompt while the agent works alone. The seam is a function of the directory. Both halves are asserted: the URL does not claim to be a directory, and bytes written at it come back through it as a regular file."
+  },
+  {
+    "id": "CASE-0467",
+    "req": "REQ-109",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/mutate_swift.py",
+      "scripts/campaign/mutation_timeout_arm.py",
+      "docs/test-campaign/evidence/PRO-0092/timeout-arming.json"
+    ],
+    "armed": true,
+    "armedBy": "Both runners driven from one fixture, which is the arming rather than a description of it. `main`'s runner and this one were each given a suite runner returning green for the baseline and a timeout for the mutant, over the same real tracked file. Before: `verdict=killed scored=1 survivalRate=0.0`. After: `verdict=TIMEOUT scored=0 timedOut=1 survivalRate=None`. A genuine failure is unchanged in both, so the change is not simply relabelling every red run. The pre-change source is matched by a marker string before it is trusted, and both runs left the tree clean.",
+    "note": "The instrument fault DEF-033 was measured through. A run that reached the bound was scored KILLED, which is the direction that flatters the suite: starvation can turn a survivor into a false kill and can never turn a kill into a false survivor. PRO-0080's first ProctorAgent sample carried two at exactly 600.0s under a load average of 271, and the reported rate was 79.2% where the honest one was 86.4% — a reader of the summary alone had no way to tell them from the three real kills. TIMEOUT is now its own verdict, counted apart and left out of the survival-rate denominator, and every scored mutant within 2% of the bound is named in the summary."
   }
 ]
