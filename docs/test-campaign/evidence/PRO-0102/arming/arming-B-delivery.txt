@@ -1,0 +1,14 @@
+# Arming the two delivery predicates, PRO-0102
+# 1 — manifest and marketplace disagree (plugin.json forced to 1.0.9)
+the manifest and the marketplace agree         FAILED
+the published version carries these repairs    FAILED
+  - version drift: plugin.json 1.0.9, marketplace 1.1.0
+  - published version 1.0.9 predates the behaviour this file asserts
+exit=0
+
+# 2 — both at 1.0.0: the exact state that stranded 81ad488
+the manifest and the marketplace agree         ok
+the published version carries these repairs    FAILED
+  - published version 1.0.0 predates the behaviour this file asserts
+
+# restored

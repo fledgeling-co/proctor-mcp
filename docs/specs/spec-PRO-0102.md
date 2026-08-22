@@ -1,7 +1,7 @@
 # PRO-0102: The reckoning tool mis-read this registry
 
 **ID:** PRO-0102
-**Status:** Ready for Plan
+**Status:** Developer Review
 **Created:** 2026-08-22
 **Last updated:** 2026-08-22
 **Brief:** `docs/features-to-triage/93-the-reckoning-tool-mis-read-this-registry.md`
@@ -108,10 +108,190 @@ Measured 2026-08-22 against both copies of `skills/reckon/scripts/reckon.py`:
 - The brief's third assumption ("a local patch already exists here") is stale in this repo's
   direction too: no patched copy of `reckon.py` exists under `proctor-mcp`.
 - This project's own numbers, for the acceptance check: `docs/test-campaign/inventory.json`
-  carries 110 defect rows, **10** non-fixed. The reckoning's "108 defect records, 88 fixed,
+  carried 110 defect rows with **10** non-fixed **when this triage ran**; the branch reached 115
+  rows and `main` reads 111 rows with **5** non-fixed after PRO-0100 closed six. The figure is
+  stamped rather than updated because it is a measurement with a date, not a live count. The reckoning's "108 defect records, 88 fixed,
   eight open" is a snapshot from `2bd01be` and has since moved; the plan should re-read the
   registry rather than reuse those figures.
 - Discipline: touch only the `reckon` plugin, commit with an explicit path, never `-a` and
   never `.`, stop and report if files appear entangled. Shared repo measured clean at
   `a15febf` while this triage ran.
 - Out-of-family spec review: see the shared record at the foot of `spec-PRO-0103.md`.
+
+---
+
+## Implementation plan — 2026-08-22
+
+Implementation plan: `docs/plans/plan-PRO-0102.md` (tier: Small). The shared work lands in
+`~/Dev/fledgeling-plugins/plugins/reckon`; this repository carries the plan, this trailer and the
+campaign registry rows only.
+
+## Progress — PRO-0102
+
+**Defects:** DEF-210..DEF-214
+**Requirements:** REQ-097..REQ-099
+**Cases:** CASE-0410..CASE-0429
+
+Built in `~/Dev/fledgeling-plugins` at `224a696`, shipped as `reckon` **1.1.0**. This repository
+carries the spec, the plan, the campaign rows and the evidence only; no Swift changed, so
+`CHANGELOG.md` gains nothing — the user-facing change belongs to the other repository's plugin.
+
+### Validation
+
+| Gate | Family | Outcome |
+|---|---|---|
+| Design review, before the plan | gemini (`agy --model gemini-3.7-flash-high`) | Both classification calls upheld. Raised DEF-213, which nothing in the code review would have found because it is latent until DEF-210 is fixed. |
+| Completeness critic, on the diff | gemini | 11 findings. 10 taken — 5 in the tool, 3 weak assertions, 2 whole checks that did not exist. 1 dispositioned with a reason in the plan. |
+| Same-family validation, fresh context | `claude-fable-5`, `--effort high` | Re-derived all five acceptance criteria independently and found each satisfied, citing `file:line`. Two findings taken: one negative assertion strengthened, and this file's case range reconciled against the plan's table. |
+
+Codex is OFF for this repo and grok returns `402 — balance exhausted`, so gemini substitutes on
+both out-of-family gates under the egress rule amended in ORCHESTRATOR.md on 2026-08-22. Named
+here as a downgrade rather than passed over.
+
+### Defects
+
+| ID | Title | Status |
+|---|---|---|
+| DEF-210 | The reckoning classed every defect record broken without reading its status | fixed |
+| DEF-211 | The reckoning classed a brief it could not join as unbuilt | fixed |
+| DEF-212 | A correct repair never reached any installed copy, because the version never moved | fixed |
+| DEF-213 | A brief joined only to a repaired defect would still have read broken | fixed |
+| DEF-214 | The reverse-citation scan turned a brief's file number into a confidence-1.0 citation | fixed |
+
+### Gap-fix — 2026-08-22
+
+One gate had not been run: `campaign.py check`. Run here it named three of this item's own cases,
+six findings, and closing them is the whole of this stage.
+
+`CASE-0426`, `CASE-0427` and `CASE-0428` stand on `source-analysis` and carried no `source` block, so
+the guard at `campaign.py:772-781` had nothing to read. Each now carries the analyzer and the
+denominator, both off a live run rather than off the prose already in the record — `CASE-0139`'s own
+history is a case whose copied count had gone stale by a merge, and the count is the claim.
+
+| Case | Analyzer | Population judged | Finding |
+|---|---|---|---|
+| CASE-0426 | `selftest.py` check 13, *every class is produced by a real fixture* | 9 classes in `reckon.CLASSES` | 0 unreachable |
+| CASE-0427 | `selftest.py` check 14, first assertion | 2 version declarations reckon publishes | 0 disagreements |
+| CASE-0428 | `selftest.py` check 14, second assertion | 1 published version string | 0 below the 1.1.0 floor |
+
+The denominator is what was judged rather than what was opened. For CASE-0427 that means 2 rather
+than the 46 plugin entries `marketplace.json` holds, because the check reads one of them. For
+CASE-0428 it means 1, which is thin and is the honest count: that assertion reads a single value, and
+CASE-0427 is the row that judges the pair. Probe and its output at
+`evidence/PRO-0102/source-denominators.py` and `source-denominators.txt`.
+
+All three stay `source-analysis`. Nothing here runs the product or witnesses an effect; relabelling
+one to clear the guard would be the label over the evidence.
+
+**The surface prose was stale in 28 places, not 23**, and one of them was structural. `SURF-023`
+was minted at `c1132ea` and all twenty cases moved onto it, but 20 case notes and 8 inventory notes
+still read "Filed under SURF-022" and "no SURF id was allocated to PRO-0102", and `REQ-097`,
+`REQ-098` and `REQ-099` still carried `surfaces: ["SURF-022"]` — the same stale claim in a field the
+tooling reads. All 28 strings and all three arrays now name `SURF-023`, with each note's own
+reasoning kept and `SURF-022`'s route recorded as why it was the wrong home.
+
+| Gate | Verbatim exit | Result |
+|---|---|---|
+| `campaign.py check docs/test-campaign` (0.9.9) | `EXIT=1` | Blocker set identical to the merge base's: CASE-0318, CASE-0333, CASE-0334, CASE-0335, REQ-007, REQ-024, REQ-086. Nothing in CASE-0410..0429, REQ-097..099 or DEF-210..214. source-analysis findings 12 → 6. |
+| `campaign.py check`, merge base `9f99a0f` | `EXIT=1` | The control. Same seven ids, same six other categories. |
+| `selftest.py` (reckon 1.1.0 at `fc86fe7`) | `EXIT=0` | 46 checks, all green. |
+| `defect_gate.py claims spec-PRO-0102.md docs/test-campaign` | `exit=0` | 5 claimed defects, every one reads `fixed`. |
+| `defect_gate.py dropped docs/test-campaign` | `exit=0` | 108 merges, 39,060 id/field pairs, no discarded value still missing. |
+| `./scripts/test.sh` through `governor-run --weight 6`, run 1 | `EXIT=1` | `Test run with 2061 tests in 251 suites failed after 130.721 seconds with 1 issue.` One issue, and see below. |
+| `./scripts/test.sh --filter planeFollowsTheWindowList` | `EXIT=0` | `Test run with 1 test in 1 suite passed after 0.071 seconds.` |
+| `./scripts/test.sh` through `governor-run --weight 6`, run 2 | `EXIT=0` | `Test run with 2061 tests in 251 suites passed after 13.491 seconds.` |
+
+Exit 1 on `campaign.py check` is the campaign's standing state on this history and is not this
+item's failure. The diff is at `evidence/PRO-0102/check-blocker-diff.txt`, with both runs beside it.
+
+**The Swift suite went red once, and it is not this branch's.** Run 1 lost
+`planeFollowsTheWindowList` at `BackgroundRouteTests.swift:163`. `Session.cursorPlane`
+(`SessionCursor.swift:87`) asks the live window server whether any on-screen window's number equals
+the handle's `cgWindowID`; the fake claims id 7 and the test's premise is a comment asserting no such
+window is on this machine's screen. That is a fact about the host at the moment of the run rather than
+a fixture. The test passes in isolation, passes in run 2, and has passed in every run recorded in
+`evidence/PRO-0088` and `evidence/PRO-0093`. Nothing outside `docs/` changed on this branch and no
+Swift test reads any of the four changed files, so the code under it is byte-identical to the merge
+base. Left alone: giving that path an injectable window list is a change to product test seams and is
+not this item's work. Both runs are at `evidence/PRO-0102/swift-suite.txt`.
+
+**One rung judgement, reported and not acted on.** `CASE-0426` sits on `source-analysis` while its
+sixteen `outcome` siblings in the same range assert on the output of the same suite, and check 13
+does *run* `reckon.classify()` on two fixtures rather than only reading source. By the vocabulary in
+`campaign.py`'s own summary — *source-analysis: reads source, runs nothing, buys no effect credit* —
+that reads like an under-claim, and `outcome` would be the closer rung. It stays where it is for two
+reasons. Moving it would remove the denominator obligation that this stage exists to satisfy, which is
+the label over the evidence. And under-claiming is the safe direction: `source-analysis` buys less
+credit than `outcome`, so nothing rests on a rung it has not earned. `CASE-0427` and `CASE-0428` read
+two JSON files and compare strings, which is `source-analysis` exactly.
+
+## Verification — 2026-08-22, `Done`
+
+Verified fresh-context on `76c77b1` by an agent that did not build the work, with every arming
+re-applied on a scratch tree at `/tmp/v0102-scratch` — the live shared plugin was read-only
+throughout and `git status` there was unchanged after.
+
+| Gate | Exit |
+|---|---|
+| `campaign.py check` @ `76c77b1` | 1 |
+| `campaign.py check` @ merge base `9f99a0f` | 1 |
+| `selftest.py`, reckon at live HEAD | **0**, 46 `ok`, 0 `FAILED` |
+| `defect_gate.py claims` | **0** — 5 claimed, all `fixed` |
+| `defect_gate.py dropped` | **0** — 108 merges, 39,060 pairs |
+| `defect_gate.py` bare, as a positional control | 2 |
+| `./scripts/test.sh` via `governor-run --weight 6` | **0** — 2,061 tests, 251 suites, 11.869s |
+| `reckon build` end to end against this registry | **0** — 598 rows, 132 work items, 13 product |
+
+Both blocker sets are the same seven — CASE-0318, CASE-0333–0335, REQ-007, REQ-024, REQ-086 — and
+the category lines diff empty. `reckon.py` is byte-identical between `fc86fe7` and fledgeling HEAD
+`364c785`, so the selftest run is the 1.1.0 run rather than a run of something adjacent to it.
+
+**20 of 20 armings bit, and two bit harder than recorded.** Reverting `reckon.py` to `31697a9` reds
+**18** checks where the record says 17: *a dangling citation keeps a usable overlap edge* also reds
+under the full revert, which the record attributes only to a mutation. And the `plugin.json 1.0.9`
+mutation reds the floor assertion as well as the drift assertion. Both are the record understating
+itself, which is the safe direction and still worth naming.
+
+### The claim about "the ten broken defects" is retired rather than updated
+
+The item recorded that the ten defects the classifier calls broken are exactly the ten this registry
+records as non-fixed. That form goes stale the moment any defect closes, and PRO-0100's merge closed
+six of them within the hour. The invariant that actually holds is registry-relative and does not
+decay: **the classifier's `broken` set equals the registry's own non-fixed set, exactly.** Verified on
+both trees — this branch at 115 rows gives 10, and `main` at 111 rows after PRO-0100 gives 5.
+
+### CASE-0426's rung, settled
+
+It keeps `source-analysis` though check 13 executes `classify()` on two fixtures, which makes
+`outcome` the truer rung. The verifier's reading is accepted: the runner's stated reason inverted the
+guard's purpose, because moving *up* the ladder is the more demanding act rather than the
+guard-clearing one. The rung stands anyway — it under-claims, nothing rests on it, and the
+orchestrator had already ruled it. Recorded here so the decision is not re-derived.
+
+### `unbuilt` has no live instance
+
+The narrowed `unbuilt` predicate is proved by fixtures only; it fires zero times on this repo's real
+briefs. That is not a defect and it is worth knowing, because a predicate with no live instance has
+never been checked against anything but its own fixture.
+
+### Four findings outside the acceptance set, and where each went
+
+- **DEF-201, opened before the merge.** `ID_RE` reads a brief's whole body with no code-fence or
+  placeholder exclusion, so a quoted example id becomes a citation at confidence 1.0 and routes the
+  brief to `unbuilt`. Zero occurrences across 91 real briefs, so latent. Gemini raised it
+  independently.
+- **DEF-202, opened before the merge, and it reaches outside this repository.** Six status words that
+  mean *not* remaining work — `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce`,
+  `fixed (partial)` — all classify as work. Correct here, because this registry uses only `fixed` and
+  `open`. It matters because 1.1.0 has been announced to nine projects as the version to run.
+- **`plan-PRO-0102.md:193` cited a `Cases` table this spec does not contain.** Corrected in place to
+  name `cases.json` itself.
+- **CASE-0427's note carried a copied count of 46 marketplace entries; the live figure is 47.** It was
+  explicitly labelled *not the denominator*, so it was never a claim about the population — but a
+  copied count going stale is precisely CASE-0139's recorded failure, so the number is removed rather
+  than refreshed.
+
+One thread the runner raised falls, with a cause worth keeping: it reported that ORCHESTRATOR.md did
+not say why this item came back. It does, on `main`. The branch's copy is 1,943 lines and predates
+that section, so the runner read a tree where it genuinely was absent — a stale-file reading rather
+than a wrong one.

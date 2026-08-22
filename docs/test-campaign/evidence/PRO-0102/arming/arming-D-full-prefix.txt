@@ -1,0 +1,73 @@
+# PRO-0102 — the whole suite, current selftest.py against reckon.py as it stood at 31697a9
+# This is the authoritative arming record: every new check watched failing
+# against the real pre-fix source, not a restatement of it.
+
+warning: only 0.0% of briefs could be joined to the registry at all. The join is the inferential step in this pipeline; below half, retirement claims are withheld and every brief stays in its documentary class.
+clean ledger passes                            exit=0 ok
+duplicate id caught                            exit=1 ok
+row with no id caught                          exit=1 ok
+blocked case presenting as done                exit=1 ok
+inconclusive case presenting as broken         exit=1 ok
+carried case presenting as done                exit=1 ok
+self-reported requirement retiring itself      exit=1 ok
+unknown-evidence requirement retiring itself   exit=1 ok
+class outside the partition                    exit=1 ok
+retirement on a token-overlap guess            exit=1 ok
+n/a presenting as verified-done                exit=1 ok
+waiver with no recorded reason                 exit=1 ok
+absent denominator caught                      exit=2 ok
+summary disagreeing with rows                  exit=2 ok
+weak join warns without blocking               exit=0 ok
+ratchet catches a silent reclassification      ok
+ratchet catches an item that vanished          ok
+ratchet allows an earned transition            ok
+orphan surface -> unnamed; reported -> unmeasured ok
+contradicted evidence -> undecided             ok
+a list-valued registry field yields tokens     ok
+None, str, dict and scalar all flatten         ok
+a fixed defect is not remaining work           FAILED
+an open defect is still remaining work         ok
+an unrecognised defect status stays broken     FAILED
+a defect with no status stays broken           FAILED
+a wontfix defect is a waiver with its reason   FAILED
+defect claiming done on an unknown status      exit=0 FAILED
+defect classed against its own status          exit=0 FAILED
+a brief nothing joined is unjoined, not unbuilt FAILED
+a brief citing ids the registry lacks is unbuilt FAILED
+an unjoined row carries its nearest candidate  FAILED
+a brief joined only to a fixed defect is not broken FAILED
+a brief joined to an open defect is still broken ok
+unjoined is inside the partition               exit=1 FAILED
+with no campaign, a citation is not evidence   FAILED
+a dangling citation keeps a usable overlap edge ok
+a file number is not a citation                FAILED
+a project id in a note is still a citation     ok
+the report gives unjoined its own section      FAILED
+every class is produced by a real fixture      FAILED ['waived']
+the manifest and the marketplace agree         ok
+the published version carries these repairs    ok
+a weak join withholds retirement, and says why ok
+fixture · 6 rows · 3 piece(s) of work remain — 3 product, 0 evidence, 0 decision — across 6 ledger rows. This reckoning speaks for 100% of the campaign's designed cases and 100% of its stated requirements; the rest is not known to be done, it is simply not known.
+wrote /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/reckon-selftest-owdhvsw7/out/ledger.json
+the headline counts what is actually left      FAILED
+a repaired defect is absent from what remains  FAILED
+
+17 self-test failure(s):
+  - fixed defect: pre-fix='broken' now='broken' work=True
+  - unrecognised defect status: 'broken' / 'a defect is a measured negative result — the unit of product work behind every failing case that cites it'
+  - statusless defect: 'broken' / 'a defect is a measured negative result — the unit of product work behind every failing case that cites it'
+  - wontfix defect: 'broken' why='a defect is a measured negative result — the unit of product work behind every failing case that cites it' gate=[]
+  - defect claiming done on an unknown status: exit 0 (wanted 1); saw:  
+  - defect classed against its own status: exit 0 (wanted 1); saw:  
+  - unjoined brief: class='unbuilt' kind='product-work'
+  - dangling-citation brief: 'broken' / "the registry records a defect or a failing case against this brief's subject"
+  - near_misses: []
+  - brief on a fixed defect: 'broken'
+  - unjoined is inside the partition: exit 1 (wanted 0); saw: BRIEF-u has class 'unjoined', which is not one of the partition 
+  - no-campaign dangling citation: 'unmeasured' / 'this brief maps to the registry only through self-reported evidence; nothing observed it'
+  - number-shaped reverse citation still fires: [{'brief': 'BRIEF-03-menu-bar', 'target': 'REQ-1', 'method': 'cited', 'confidence': 1.0}]
+  - render omits unjoined
+  - classes no fixture produces: ['waived']
+  - headline: code=0 kinds={'product-work': 3, 'evidence-work': 0} headline="3 piece(s) of work remain — 3 product, 0 evidence, 0 decision — across 6 ledger rows. This reckoning speaks for 100% of the campaign's designed cases and 100% of its stated requirements; the rest is not known to be done, it is simply not known."
+  - repaired defect: DEF-2='broken' remaining=['BRIEF-01-nothing-answers-to-this', 'DEF-1', 'DEF-2']
+exit=1

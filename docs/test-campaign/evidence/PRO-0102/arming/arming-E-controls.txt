@@ -1,0 +1,18 @@
+# PRO-0102 — arming the two controls that pass on both sides of the change.
+# Neither could be armed by reverting to 31697a9, because both assert
+# behaviour the change preserves. A mutation is the only instrument.
+
+## mutate: an open defect no longer counts as remaining work
+an open defect is still remaining work         FAILED
+a brief joined to an open defect is still broken ok
+the headline counts what is actually left      FAILED
+a repaired defect is absent from what remains  FAILED
+  - repaired defect: DEF-2='verified-done' remaining=['BRIEF-01-nothing-answers-to-this']
+
+## mutate: a brief joined to an OPEN defect stops being broken (hit_defect always false)
+a brief joined only to a fixed defect is not broken ok
+a brief joined to an open defect is still broken FAILED
+
+## restored
+
+all gates demonstrated failing on a bad fixture, and silent on a good one

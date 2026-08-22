@@ -1,0 +1,11 @@
+􀟈  Test "a trail whose signed entries were all removed reports it as a fault" started.
+􀟈  Test "one flipped byte inside the sealed part is detected as forged, not as unreadable" started.
+􀟈  Test "a trail one entry behind its anchor is a lost final entry, not an accusation" started.
+􀟈  Test "a trail signed by another key, presented with its own key, is never clean" started.
+􀟈  Test "a reordered pair is detected" started.
+􀟈  Test "no anchor means completeness cannot be proved, and never means clean" started.
+􀟈  Test "an empty pre-chain prefix hashes as the hash of no bytes" started.
+􀢄  Test "the plane comes from the window list, not from the handle's beliefs" recorded an issue at BackgroundRouteTests.swift:163:9: Expectation failed: await session.cursorPlane(for: ax.window) == .hidden
+􀟈  Test "the browsers people actually run are recognised, channels included" started.
+􀟈  Test "a prefix rule matches the product and its channels, not a lookalike" started.
+􀟈  Test "an app that merely hosts web content is not a browser" started.

@@ -4829,5 +4829,404 @@
       "analyzer": "scripts/campaign/skill_doc_measure.py run end to end after repointing its catalogue default, counting the checks that executed at all",
       "examined": 27
     }
+  },
+  {
+    "id": "CASE-0410",
+    "req": "REQ-097",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "Current selftest.py against reckon.py as it stood at 31697a9: 'a fixed defect is not remaining work FAILED — pre-fix='broken' now='broken' work=True'. arming-D line 1.",
+    "note": "The row must come out verified-done with is_work_item False. The pre-fix expression is also restated verbatim in the file (PRE_FIX_DEFECT) and asserted to say 'broken' first, so this stays armed on any registry whose defects all happen to be open. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-210"
+    ]
+  },
+  {
+    "id": "CASE-0411",
+    "req": "REQ-097",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-E-controls.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "Not armable by reverting to 31697a9 — pre-fix said broken about everything, so it passed on both sides. Armed by mutation instead: forcing is_work_item False on every defect reds this line. arming-E-controls.txt, first mutation.",
+    "note": "The control that stops CASE-0410's repair becoming a blanket retirement. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-210"
+    ]
+  },
+  {
+    "id": "CASE-0412",
+    "req": "REQ-097",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'an unrecognised defect status stays broken FAILED — 'broken' / 'a defect is a measured negative result...'' — the pre-fix class was right by accident and the reason was wrong, which is what the assertion reads.",
+    "note": "Fixture status 'marinated'. Asserting the class alone would pass on pre-fix code that said broken about everything; the assertion requires the word to appear in the row's why, which only reading the status can produce. Guessing done is the one error in this direction nothing recovers from. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-210"
+    ]
+  },
+  {
+    "id": "CASE-0413",
+    "req": "REQ-097",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'a defect with no status stays broken FAILED'. This line passed against pre-fix code until the assertion was tightened to require 'no status' in the row's why; it was re-armed against 31697a9 after tightening rather than left on the earlier capture.",
+    "note": "A registry that does not track defect status is unaffected by this item — it behaves exactly as it did. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-210"
+    ]
+  },
+  {
+    "id": "CASE-0414",
+    "req": "REQ-097",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'a wontfix defect is a waiver with its reason FAILED'. The assertion also runs R.gate() over a ledger containing the row and requires zero violations.",
+    "note": "The first version of this assertion was 'bool(row.get(\"note\") or row.get(\"status\"))', which the fixture made true whatever the code did — a hollow check, found by the out-of-family critic and replaced with one requiring the status word in the row's why plus a clean gate. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-210"
+    ]
+  },
+  {
+    "id": "CASE-0415",
+    "req": "REQ-097",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D, two lines: 'defect classed against its own status exit=0 FAILED' and 'defect claiming done on an unknown status exit=0 FAILED'. Both wanted exit 1 and got a clean gate.",
+    "note": "Two fixtures: an open defect classed verified-done, and a defect with status 'marinated' classed verified-done. The second exists because the first version of DEFECT_LEGAL_CLASS.get() returned None for an unrecognised status and the gate skipped it, leaving the rows with the weakest evidence the only ones the gate could not fire on. Found by the critic. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-210"
+    ]
+  },
+  {
+    "id": "CASE-0416",
+    "req": "REQ-098",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'a brief nothing joined is unjoined, not unbuilt FAILED — class='unbuilt' kind='product-work''.",
+    "note": "The 75-of-91 fault in one assertion. PRE_FIX_BRIEF is restated verbatim in the file so the row keeps discriminating. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-211"
+    ]
+  },
+  {
+    "id": "CASE-0417",
+    "req": "REQ-098",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'a brief citing ids the registry lacks is unbuilt FAILED — 'broken' / 'the registry records a defect or a failing case against this brief's subject''.",
+    "note": "This is what keeps unbuilt a live predicate. Without it every brief would route to unjoined and the partition would carry a class nothing could produce — the eleventh dead predicate this campaign has found, and it would have been introduced by the repair for the tenth. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-211"
+    ]
+  },
+  {
+    "id": "CASE-0418",
+    "req": "REQ-098",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'an unjoined row carries its nearest candidate FAILED — near_misses: []'.",
+    "note": "Without it, unjoined is a second kind of silence: a reader is told the tool could not tell and sent to grep. The candidates come from the same registry_tokens() the join used, so the reader sees what the join saw rather than a second opinion computed differently. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-211"
+    ]
+  },
+  {
+    "id": "CASE-0419",
+    "req": "REQ-097",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'a brief joined only to a fixed defect is not broken FAILED — 'broken''.",
+    "note": "Raised by the gemini design lane rather than found by reading. The assertion names the exact expected class (unmeasured) rather than merely not-broken, after the critic pointed out that '!= broken' would also accept unjoined or unbuilt, which would mean the defect branch had stopped running. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-213"
+    ]
+  },
+  {
+    "id": "CASE-0420",
+    "req": "REQ-097",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-E-controls.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "Not armable by reverting to 31697a9 — pre-fix classed it broken for the wrong reason and the line passed. Armed by mutation: forcing hit_defect False reds it. arming-E-controls.txt, second mutation.",
+    "note": "The control on CASE-0419. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-213"
+    ]
+  },
+  {
+    "id": "CASE-0421",
+    "req": "REQ-098",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'unjoined is inside the partition exit=1 FAILED — BRIEF-u has class 'unjoined', which is not one of the partition'.",
+    "note": "A new class that the conservation gate rejects would make every real run exit 1. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-211"
+    ]
+  },
+  {
+    "id": "CASE-0422",
+    "req": "REQ-098",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'with no campaign, a citation is not evidence FAILED'.",
+    "note": "Found by the out-of-family critic against the first implementation, which would have classed a citing brief unbuilt in a campaign-less run — a claim that the registry was asked, when there is no registry. references/no-campaign.md states every brief lands in unjoined or waived, and this holds the code to the document rather than the other way round. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-211"
+    ]
+  },
+  {
+    "id": "CASE-0423",
+    "req": "REQ-098",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-C-post-critic.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "Armed by mutation, since build_join never produces this combination itself: reverting support to '(cited or my_edges) filtered' reds it. arming-C-post-critic.txt, third mutation.",
+    "note": "Defensive against a caller passing hand-built edges; raised by the critic. Recorded honestly as unreachable from build_join today. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-211"
+    ]
+  },
+  {
+    "id": "CASE-0424",
+    "req": "REQ-098",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'a file number is not a citation FAILED — number-shaped reverse citation still fires: [{'method': 'cited', 'confidence': 1.0}]'. The companion line, 'a project id in a note is still a citation', passes on both sides and is the control that the documented mechanism survived.",
+    "note": "Assumption A8's guess-by-number fallback. Measured before the change: the scan contributed 0 of 92 cited edges on this repo, so nothing here is lost. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-214"
+    ]
+  },
+  {
+    "id": "CASE-0425",
+    "req": "REQ-098",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'the report gives unjoined its own section FAILED'.",
+    "note": "The ledger distinguishing the two classes is not enough — the reckoning's own report is what a person reads, and the spec asks for the outcome to be visible there. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-211"
+    ]
+  },
+  {
+    "id": "CASE-0426",
+    "req": "REQ-098",
+    "surface": "SURF-023",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0102/source-denominators.txt",
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D: 'every class is produced by a real fixture FAILED ['waived']'.",
+    "source": {
+      "analyzer": "plugins/reckon/skills/reckon/scripts/selftest.py check 13, 'every class is produced by a real fixture' — two fixtures are put through reckon.classify() and the classes they actually emit are collected, then subtracted from reckon.CLASSES. Denominator taken from a live run on 2026-08-22 against reckon 1.1.0 at fc86fe7, recorded in docs/test-campaign/evidence/PRO-0102/source-denominators.txt: 9 classes judged for reachability (unbuilt, unjoined, broken, unmeasured, unnamed, undecided, retirable, waived, verified-done), 0 unreachable. The population is the classes judged rather than the two fixtures opened, because a class is what this check finds an answer about.",
+      "examined": 9
+    },
+    "note": "This replaces the previous reachability check, which unioned a hand-written set against CLASSES and so would have called unjoined reachable while nothing could produce it — an instrument that could not tell a live predicate from a dead one, which was the only thing it existed to do. Two fixtures are run through classify() and the classes they actually emit are collected. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-211"
+    ]
+  },
+  {
+    "id": "CASE-0427",
+    "req": "REQ-099",
+    "surface": "SURF-023",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0102/source-denominators.txt",
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-B-delivery.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "Armed by forcing plugin.json to 1.0.9 against a marketplace entry at 1.1.0: 'the manifest and the marketplace agree FAILED — version drift: plugin.json 1.0.9, marketplace 1.1.0'. arming-B-delivery.txt, first mutation.",
+    "source": {
+      "analyzer": "plugins/reckon/skills/reckon/scripts/selftest.py check 14, first assertion 'the manifest and the marketplace agree' — the two version declarations reckon publishes are read and compared. Denominator taken from a live run on 2026-08-22 against reckon 1.1.0 at fc86fe7, recorded in docs/test-campaign/evidence/PRO-0102/source-denominators.txt: 2 declarations judged (plugins/reckon/.claude-plugin/plugin.json:version = 1.1.0 and .claude-plugin/marketplace.json:plugins[reckon].version = 1.1.0), 0 disagreements. The entries marketplace.json carries are deliberately not the denominator: this check reads one of them, and claiming 46 would name a population it never examined.",
+      "examined": 2
+    },
+    "note": "Drift between these two files is a repeat failure in that repository — commit a15febf exists to make two other plugins' marketplace entries catch up with their plugin.json. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-212"
+    ]
+  },
+  {
+    "id": "CASE-0428",
+    "req": "REQ-099",
+    "surface": "SURF-023",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0102/source-denominators.txt",
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-B-delivery.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "Armed by setting both files back to 1.0.0 — the exact state that stranded 81ad488: 'the published version carries these repairs FAILED — published version 1.0.0 predates the behaviour this file asserts'. arming-B-delivery.txt, second mutation.",
+    "source": {
+      "analyzer": "plugins/reckon/skills/reckon/scripts/selftest.py check 14, second assertion 'the published version carries these repairs' — plugin.json's version is split and compared against the (1, 1, 0) floor. Denominator taken from a live run on 2026-08-22 against reckon 1.1.0 at fc86fe7, recorded in docs/test-campaign/evidence/PRO-0102/source-denominators.txt: 1 published version string judged (plugin.json:version = 1.1.0), 0 below the floor. One is the honest count rather than a convenient one — this assertion reads exactly one value, and CASE-0427 is the row that judges the pair. The 46 checks in the suite this version would strand are what the failure message names, not what this check ranged over.",
+      "examined": 1
+    },
+    "note": "The two files agreeing is not enough; agreeing at 1.0.0 is precisely how a correct repair reached nobody. This is the check the delivery problem would have had to pass. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-212"
+    ]
+  },
+  {
+    "id": "CASE-0429",
+    "req": "REQ-097",
+    "surface": "SURF-023",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/arming-C-post-critic.txt",
+      "docs/test-campaign/evidence/PRO-0102/after/run.txt",
+      "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt"
+    ],
+    "armed": true,
+    "armedBy": "arming-D, two lines: 'the headline counts what is actually left FAILED' and 'a repaired defect is absent from what remains FAILED'. Also armed against the current source by disabling the headline's unjoined clause, which reds the first line — a first attempt at that mutation only trimmed the sentence's tail, no check rested on it, and it was re-run rather than reported as armed. arming-C-post-critic.txt.",
+    "note": "Nothing below classify() was executed by this suite before: cmd_build, the headline, the work arithmetic and both written artifacts could have been deleted and every other row would still have passed. Found by the out-of-family critic. The fixture's true answer is known by construction — one open defect is the only product work, one repaired defect and one unjoinable brief are not — and both defects carry a list-valued evidence field, so this is also the 81ad488 crash exercised on the real build path. The subject is reckon.py in ~/Dev/fledgeling-plugins/plugins/reckon, shipped as 1.1.0 at 224a696. Filed under SURF-023 · Reckoning reconciler, minted for this item because no surface here covered shared tooling outside the app: SURF-022's route is tool://vacuity-check/blind, an in-repo script, so a case about a tool in another repository filed there would name a denominator that instrument never examined.",
+    "defects": [
+      "DEF-210",
+      "DEF-211",
+      "DEF-212"
+    ]
   }
 ]

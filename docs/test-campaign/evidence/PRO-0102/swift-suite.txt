@@ -1,0 +1,49 @@
+# ./scripts/test.sh through governor-run --weight 6, PRO-0102 gap-fix stage,
+# 2026-08-22. The branch changes no Swift — `git diff --name-only <merge-base>...HEAD`
+# is 23 files, every one under docs/ — so this suite is a regression control with
+# nothing to regress. Recorded because the build stage could not run it at all
+# (four refusals at exit 75, see swift-suite-refused.txt).
+
+RUN 1  22:12 -> 22:17, admitted on the second governor attempt (first EXIT=75, 4 of 12 berths)
+  Test run with 2061 tests in 251 suites failed after 130.721 seconds with 1 issue.
+  FAIL: swift test exited 1
+  EXIT=1
+
+  The one issue:
+    Test "the plane comes from the window list, not from the handle's beliefs"
+    recorded an issue at BackgroundRouteTests.swift:163:9:
+    Expectation failed: await session.cursorPlane(for: ax.window) == .hidden
+
+RUN 2  22:23 -> 22:27, admitted on the first governor attempt
+  Test run with 2061 tests in 251 suites passed after 13.491 seconds.
+  PASS
+  EXIT=0
+
+FILTERED RUN, between the two, 22:20 -> 22:22 (second governor attempt)
+  ./scripts/test.sh --filter planeFollowsTheWindowList
+  Test run with 1 test in 1 suite passed after 0.071 seconds.
+  EXIT=0
+
+WHY RUN 1's RED IS NOT THIS BRANCH'S, and what it probably is.
+
+Not this branch's, by construction: nothing outside docs/ changed, no Swift test
+reads any of the four changed files (the only matches for `test-campaign`,
+`cases.json` or `inventory.json` under Tests/ are three comments citing witness
+JSON), so the code this test exercises is byte-identical to the merge base.
+
+What it is: `Session.cursorPlane` at Sources/ProctorAgent/Session/SessionCursor.swift:87
+asks the live window server — `CGWindowIndex.records(option: .optionOnScreenOnly)`
+— whether any on-screen window's number equals the handle's `cgWindowID`. The
+fake window claims id 7, and the test's premise is the comment at
+BackgroundRouteTests.swift:158: "No such window is on this machine's screen".
+That is an uncontrolled fact about the host at the moment of the run, not a
+fixture. Run 1 happened while the PRO-0100 worktree was building and ten of
+twelve berths were held; run 2 and the filtered run happened as that cleared.
+The test has passed in every run recorded in this bundle's neighbours
+(PRO-0088 gate-before, gate-after, gate-final, gate-sabotage; PRO-0093 gate),
+so this is the first observation of it going red.
+
+Left alone deliberately. Making the window list injectable here is a change to
+product test seams, it is not this item's work, and nothing about it was caused
+by this item. Reported rather than fixed, and reported rather than dropped: the
+suite went red once on this tree and both readings are in this file.

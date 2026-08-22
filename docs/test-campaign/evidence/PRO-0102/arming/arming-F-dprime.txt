@@ -1,0 +1,17 @@
+# PRO-0102 — CASE-0423 re-armed against both plausible regressions.
+# The fresh-context same-family validation (claude-fable-5) pointed out that
+# 'class not in (unbuilt, unjoined)' goes green when support reverts to the
+# UNFILTERED 'cited or my_edges', which yields unmeasured. The assertion now
+# names the exact class, and both reverts red it.
+
+## revert to the FILTERED single-branch support
+a dangling citation keeps a usable overlap edge FAILED
+  - dangling citation discarded an overlap edge: 'unbuilt'
+
+## revert to the UNFILTERED single-branch support
+a dangling citation keeps a usable overlap edge FAILED
+  - dangling citation discarded an overlap edge: 'unmeasured'
+
+## restored
+
+all gates demonstrated failing on a bad fixture, and silent on a good one
