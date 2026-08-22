@@ -843,6 +843,44 @@
       ],
       "note": "PRO-0067's A5 has been true at the value level and false on the glass since the constant was written: the test asserted Copy.restartNote contained the word 'restart' and nothing asserted a window drew it. DEF-161.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-088",
+      "text": "The health report's permissions list carries only decisions macOS holds about Proctor, on every surface that reads it \u2014 because a correction applied by one reader is not a corrected report, and a program on a disk listed beside Accessibility teaches a person that Proctor's permissions are something other than what macOS shows them",
+      "source": "spec-PRO-0082.md A1-A2; brief 75 items 1; spec-PRO-0036.md child work",
+      "class": "correctness",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008",
+        "SURF-017"
+      ],
+      "note": "The agent no longer emits the row; the readers keep the partition as the decode path for an older agent's report, and the drift guard now asserts that retired set explicitly rather than by set equality.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-089",
+      "text": "The status window states the gate's posture and the trail's honesty \u2014 whether a step is likely to be refused, and whether it will be recorded \u2014 without ever letting a clean verdict imply a complete trail, and without naming a rule's contents",
+      "source": "spec-PRO-0082.md A3; brief 75 item 3; PolicyPosture documentation on the wire",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008",
+        "SURF-012"
+      ],
+      "note": "Value-level at outcome rung: the rows are derived in StatusSurface and judged without a window, with status_literals.py as the gate on the drawing half. The rendered card is not claimed here.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-090",
+      "text": "A control that offers a person a trip to System Settings names where it goes rather than asking a question whose real answer is somewhere else, because a person who has already granted the permission and is still seeing it ungranted needs the restart and not the pane",
+      "source": "spec-PRO-0082.md A4; brief 75 item 4; spec-PRO-0041.md child work",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "Both surfaces' constants are bound by a test and the retired question form is scanned for across the whole of Sources, so the string cannot survive by moving.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -2714,6 +2752,51 @@
       "detail": "'doctor reports both tools, the lane's state, and never lets either touch ready' calls session.doctor() eight times across the obscura x browserUse x laneSet matrix, collects report.ready and report.blockers.count into two Sets, and asserts each Set has one element. The claim is sound \u2014 Proctor drives native applications without a browser tool, so ready must not move with either \u2014 but the harness at BrowserLaneWiringTests.swift:62 injects screenRecordingProbe: .fake() and leaves the other two inputs to `ready` live: accessibilityProbe() defaults to the real TCC probe and secureInputProbe() to Grants.secureEventInputActive(). Both feed `blockers`, and `ready` is `blockers.isEmpty`. So either flipping between two of the eight calls \u2014 a password field taking focus anywhere on this Mac, or a TCC probe not coming back on one iteration \u2014 reds the case with the browser lane behaving perfectly. MEASURED: four full runs on one unchanged tree, exit 0 / 1 / 0 with the same 2,028 tests. The red run was 'Expectation failed: (readies.count -> 2) == 1' and '(blockerCounts.count -> 2) == 1' at BrowserLaneWiringTests.swift:218-219, the only two issues in it; the suite run in isolation immediately afterwards passed 10 tests in 0.230 seconds. NOT FIXED HERE: it is outside PRO-0098's brief, which was the flow writes and the gate's exit code. The repair is to inject both probes in the harness the way screenRecordingProbe already is, so the invariant is asserted over the matrix the case names rather than over the machine's mood.",
       "surface": "SURF-004",
       "req": "REQ-024"
+    },
+    {
+      "id": "DEF-180",
+      "status": "open",
+      "severity": "medium",
+      "req": "REQ-032",
+      "surface": "SURF-008",
+      "title": "A Screen Recording answer is frozen for the life of the agent process, so a revoked grant is reported as granted until it restarts",
+      "found": "PRO-0082, measured at the probe rather than read from the code: ScreenRecordingProbe answers granted, the platform flips to denied, and the probe still answers granted having asked the platform once.",
+      "detail": "GrantProbeKeeper.definite is assigned in exactly one place (GrantProbe.swift record(_:token:now:)) and cleared in none \u2014 no reset, no expiry, no second writer \u2014 and claim(now:) returns .cached(definite) as its first branch, so after a definite answer no probe is ever started again for that process's life. Session holds one ScreenRecordingProbe for the life of the process and SessionDoctor reads it. CASE-0368 arms this two ways: the same probe answering .unconfirmed is never cached and DOES re-ask, so the freeze is a property of caching a definite answer and not of the test harness. CASE-0369 shows it reaching a person through Session.doctor().",
+      "fix": "Unfixed, deliberately. Whether the agent re-probes on a revocation signal changes what the AGENT does rather than what a window draws; PRO-0036 declined that decision and spec-PRO-0082 declines it for the same reason. Taking it means choosing a re-probe trigger and an expiry policy, which is its own item.",
+      "detailNote": "The glass rung is missing and the reason is measured rather than assumed: on macOS 26.6 the Screen & System Audio Recording pane gates its write behind Touch ID or a password, so the revocation the brief specifies cannot be performed by any background runner. The attempt, the sheet's verbatim words and the toggle's revert are at docs/test-campaign/evidence/pro-0082/revocation-measurement.md, with the before and after-attempt doctor replies beside it. One authenticated toggle by a person would close it."
+    },
+    {
+      "id": "DEF-181",
+      "status": "fixed",
+      "severity": "medium",
+      "req": "REQ-088",
+      "surface": "SURF-008",
+      "title": "The health report filed the Shortcuts CLI under grants, so every reader but the status window drew a program on a disk as a permission macOS holds",
+      "found": "PRO-0036 recorded it as child work after correcting the window alone; PRO-0082 took it at the report.",
+      "detail": "SessionDoctor appended a Grant named Shortcuts CLI, and only when /usr/bin/shortcuts was missing \u2014 the condition no Mac in this fleet meets, which is why no runtime test had ever reached it. PRO-0036 partitioned the list on arrival in the window; the TUI's readiness pane and anything else reading grants kept drawing it.",
+      "fix": "The append is deleted. shortcutsCLIAvailable already carried the fact on the wire and the status window composes its Shortcuts row from that boolean through StatusChecks.toolRows, so the knowledge survives as a tool row in the tools card. StatusChecks.known keeps its .tool entry and misfiledTools stays, as the decode path for an older agent's report, and TUISurface.readiness now routes grants through the same rule the window uses. CASE-0350, CASE-0353."
+    },
+    {
+      "id": "DEF-182",
+      "status": "fixed",
+      "severity": "low",
+      "req": "REQ-090",
+      "surface": "SURF-009",
+      "title": "The walkthrough's Settings button asked \"Already allowed?\", the misdirection PRO-0041 removed from the status window's grant row and deliberately left here",
+      "found": "PRO-0041 child work; brief 75 item 4.",
+      "detail": "A person who has already allowed the permission and is still looking at an ungranted row is not helped by a pane that will show them a switch already turned on. Their answer is a restart, which Copy.restartNote states a few lines above the button. The walkthrough is also the surface a person meets FIRST.",
+      "fix": "WalkthroughFlow.Copy.openSettings now holds StatusSurface.Copy.openSettings's value, \"Open Settings\", as its own constant with a test binding the two. The question form is scanned for across all of Sources. CASE-0365, CASE-0366."
+    },
+    {
+      "id": "DEF-183",
+      "status": "fixed",
+      "severity": "medium",
+      "req": "REQ-089",
+      "surface": "SURF-008",
+      "title": "The policy posture has been on the wire since PRO-0050 and no surface read it, so the gate's shape and the audit trail's health were invisible to the operator",
+      "found": "PRO-0036 child work; brief 75 item 3.",
+      "detail": "No reader of report.policy existed in any surface \u2014 grepping ProctorUI for policy returned the activation policy only. An operator could not see from the window whether a call was likely to be refused, whether it would be recorded, or whether the recording verified.",
+      "fix": "A policy section between switches and activity, with the deciding half as StatusSurface.policyRows over PolicyPosture so it is testable without a window. It renders what the block's own documentation says it exists to answer rather than everything on the wire, draws `open` as a warning because it is both the most permissive posture and the default, and keeps a dropped-entry count out of the trail's clean verdict. CASE-0356 to CASE-0364."
     }
   ]
 }

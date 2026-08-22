@@ -1,0 +1,50 @@
+[
+  {
+    "id": "A1",
+    "claim": "the agent files the Shortcuts CLI under grants again",
+    "filter": "theMissingShortcutsCLIIsNotAGrant",
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.211 seconds with 3 issues.",
+    "red": true
+  },
+  {
+    "id": "A2",
+    "claim": "the TUI readiness pane stops partitioning an older agent's grants",
+    "filter": "theMisfiledToolIsFilteredOut",
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 3 issues.",
+    "red": true
+  },
+  {
+    "id": "A3-row",
+    "claim": "the policy card stops drawing one of its five kinds",
+    "filter": "everyKindIsDrawnOnce",
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+    "red": true
+  },
+  {
+    "id": "A3-tone",
+    "claim": "an open gate is drawn as quietly as a closed one",
+    "filter": "modeReadsAsAConsequence",
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.",
+    "red": true
+  },
+  {
+    "id": "A4",
+    "claim": "the walkthrough's button carries the retired question again",
+    "filter": "theTwoConstantsAgree",
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.",
+    "red": true
+  },
+  {
+    "id": "A4-scan",
+    "claim": "the retired question form returns to a shipped source file",
+    "filter": "theOldWordingIsGoneFromEverySource",
+    "exit": 1,
+    "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.173 seconds with 1 issue.",
+    "red": true
+  }
+]

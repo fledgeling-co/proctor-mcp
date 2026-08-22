@@ -1,0 +1,4 @@
+agent pid: 52976
+  PID STARTED                       ELAPSED COMM
+52976 Fri 21 Aug 17:37:20 2026     20:12:06 /Applications/Proctor.app/Contents/MacOS/proctor-agent
+Sat 22 Aug 2026 13:49:26 AEST

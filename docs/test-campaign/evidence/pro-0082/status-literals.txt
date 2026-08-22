@@ -1,0 +1,10 @@
+Sources/ProctorUI/MainWindow.swift: 45 string literals examined
+  display         0
+  symbol         16
+  system         16
+  key             1
+  punctuation    11
+  interpolated    1
+
+PASS: 0 user-facing literals of 45 examined; 45 are identifiers, symbols, system strings or punctuation.
+exit: 0
