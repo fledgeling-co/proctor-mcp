@@ -2435,3 +2435,54 @@ finding — `source` joins and grades — is untested here and undisputed.
 **DEF-202 does not bite on this registry**, confirmed rather than assumed: 118 defect rows carry only
 `fixed` (111) and `open` (7). **DEF-201 has no live instance here**: 0 of 176 cited ids sit in a code
 fence, which is the idiom caveat already on that row.
+
+### Wave 16 closed — four items merged, and the gate that did not exist this morning opened seven rows (2026-08-22)
+
+`main` carries PRO-0100, PRO-0101, PRO-0102 and PRO-0103. Nothing pushed.
+
+| Gate on closed `main` | Exit |
+|---|---|
+| `./scripts/test.sh` | **0** — 2,064 tests in 251 suites |
+| `defect_gate.py dropped` | **0** |
+| `test_instruments.py` | **0** — 62 passed |
+| `spec_citation_measure.py` | **0** — 15/15, unclaimed briefs 0 |
+| `reckoning_selftest.py` | **0** — 28 checks |
+| `campaign.py check` | 1, on other items' work only |
+
+Registry: **320 cases · 124 defect rows · 98 requirements · 25 surfaces.**
+
+**Open defects: thirteen, and the arithmetic is the story.** The wave opened with ten, of which six
+were PRO-0100's and are closed. Four survive from before — DEF-033 (PRO-0092's) and DEF-141, DEF-151,
+DEF-180 (recorded limits rather than work). **Nine are new, and seven of those were opened by the
+non-AC findings gate**: DEF-200 through DEF-206. Under the shape this fleet ran for fifteen waves,
+every one of them would have been a paragraph in a verdict nobody re-read.
+
+### Two corrections owed, one of them to a claim this file made
+
+**Brief 96's `BLOCK-0001` finding does reproduce — on the ledger it was measured on.** PRO-0103
+measured it here, found four blockers at one case each and a 16.7% that is the *briefs joined* line,
+and I passed that on as a correction to the finding. It was not one. On the originating ledger,
+`cases=[CASE-0020, CASE-0021, CASE-0022, CASE-0024] unblocks=4 coverage_gain_pct=16.7` with a join
+percentage of 2.0% — and four of twenty-four **is** 16.7%. Two correct measurements of two different
+registries produced the same number for different reasons, and the coincidence made each look like a
+refutation of the other. **Print the denominator beside every percentage**; two right numbers that
+disagree cost more to reconcile than either cost to produce.
+
+**The reckon crash-versus-silence split is per row, not per project.** This file said a registry of
+all-string evidence gets the silent version and one with list-valued evidence gets the crash. The
+sharper statement: a project is loud if **at least one** row is list-valued, and silent only if
+**none** is. A reproduction asserting at project granularity therefore passes on a project that is
+half broken — the crash announces the first list-valued row it reaches and says nothing about the
+string-valued rows already misclassified behind it.
+
+### PRO-0092 is next, and it has the empty machine it was held for
+
+It is the last open defect that is work rather than a recorded limit or a findings-gate row. It
+carries four cautions above: commit by explicit path and never `git add -A`; check for a harness copy
+orphaned to PID 1 before starting; run no review lane against its worktree while the harness is live;
+and treat a kill it reports under contention as untrustworthy in that direction, since a starved run
+can turn a survivor into a false kill but never a kill into a false survivor. The fourth caution is
+the `GIT_DIR` one: the predicate is any git write the harness invokes, those calls live in
+dependencies rather than first-party code, and **`git init` under `GIT_DIR` exits 0 with no output and
+no `.git` while being ineffective** — so a fixture's non-repo-ness cannot be detected at creation, and
+a check placed after the next command is checking a tree already written to.

@@ -61,3 +61,21 @@ Upstream briefs holding the detail: `docs/upstream-briefs/` in the `graft` proje
 Not a claim that 1.1.0 is wrong. The version bump was the delivery half of PRO-0102 and it reached
 nine projects; the two findings here are about what the tool still does, measured on a tree that
 already carries the fix.
+
+
+## Correction — 2026-08-22: both measurements were right, and the disagreement was a denominator
+
+PRO-0103 measured finding 1 against this repository and reported that it did not reproduce: four
+blockers with one case each contributing +0.3 points, and the 16.7% being the *briefs joined*
+percentage rather than a block's weight. I passed that on as a correction to the finding. It was not
+one.
+
+The finding does reproduce on the ledger it was taken from:
+`cases=[CASE-0020, CASE-0021, CASE-0022, CASE-0024] unblocks=4 coverage_gain_pct=16.7`, with a join
+percentage of 2.0%. Four of twenty-four cases **is** 16.7%. Two correct measurements of two different
+registries produced the same number for two different reasons, and the coincidence is what made each
+look like a refutation of the other.
+
+**So finding 1 stands for the registry it was measured on, and does not describe this one.** The
+practice that would have prevented the whole exchange is cheap: **print the denominator beside every
+percentage.** Two right numbers that disagree cost more to reconcile than either cost to produce.
