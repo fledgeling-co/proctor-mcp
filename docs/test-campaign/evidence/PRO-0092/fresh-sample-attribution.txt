@@ -1,0 +1,7 @@
+mutation landed: True
+-- which of this item's tests kills Dispatch.swift:244, the mutant the fresh seed chose --
+EXIT= 1
+􀢄  Test "Every decoded boolean default matches the default its schema states" recorded an issue at MutationSeamTests.swift:97:9: Expectation failed: (disagreements → ["proctor_capture.normalize decodes false, the schema says true"]).isEmpty → false
+􀢄  Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.
+      􀢄  Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.
+restored: True
