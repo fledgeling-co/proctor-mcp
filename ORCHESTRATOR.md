@@ -2725,3 +2725,21 @@ rise by five: DEF-209 closes and DEF-218 to DEF-223 open, all six `(recorded)` r
 because each repair — a re-capture per engine surface, removing the copy list from
 `build_test_campaign.py`, renaming evidence files every citation resolves through, re-running two sweeps,
 an inventory surface for the About panel — is new work rather than this item's.
+
+**The out-of-family lane earned its place on this one.** `gemini-3.7-flash-high` agreed with all four
+calls and then found what the item had produced and not recorded: `capture-lineage` reads only the
+`shot` field on subjects, `cases.json` cites shots directly in `evidence`, and the two registries now
+disagree about **five files**. CASE-0008, CASE-0010 and CASE-0011 are raster-visual passes citing
+captures this item declares unpublished; CASE-0028 and CASE-0029 cite frames DEF-221 and DEF-222 show
+misnamed or byte-duplicated. One correction to the review's phrasing, made by checking rather than
+accepting: all three raster cases do carry a case-level `capture.method`, so the channel is named and
+the shutter-recorded target is what is missing. DEF-224.
+
+Confirming it found one more. **CASE-0100 cites `evidence/shots/a3-walkthrough-permissions-disabled.png`
+and no such file exists**, and both instruments pass over it — `campaign.py` resolves an evidence path
+only on the raster rungs and that case stands at effect-witness, while `capture-lineage` never reads
+`cases.json` at all. A dangling picture on a passing case is invisible to both gates and visible to
+anyone who clicks it. DEF-225.
+
+Registry with those two: **344 cases · 136 defect rows · 104 requirements · 27 surfaces**, and open
+defects rise by seven rather than five.

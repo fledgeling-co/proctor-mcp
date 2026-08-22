@@ -3657,6 +3657,32 @@
         "REQ-112"
       ],
       "note": "Two instances, both found by opening the file. surf-004-drawn-pointer.png is prefixed for SURF-004, the Run HUD, and shows no HUD: it is the drawn pointer glyph alone on an otherwise empty 3456x2234 frame, 3,739 non-transparent pixels of 7,720,704 and 173 distinct RGBA — the pointer belongs to SURF-003's actuation overlay. surf-008-about.png is prefixed for SURF-008, the Status & Diagnostics Window, and is the About Proctor panel: app icon, `Proctor`, `Version 0.1.0 (1)`, `Proctor is released under the MIT licence.` at 704x518. No surface in this inventory is the About panel, so there is no subject it could be published under.\n\nBoth are real pictures of real Proctor surfaces, which is why neither was deleted. RECORDED: the repair for the first is a re-capture under SURF-003 with a manifest, and for the second an inventory surface for the About panel; both are new work rather than PRO-0107's."
+    },
+    {
+      "id": "DEF-224",
+      "title": "Case evidence and the lineage manifest disagree about the same five files (recorded)",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-111"
+      ],
+      "note": "capture-lineage reads only the `shot` field on surfaces and flow steps. cases.json cites shots directly in `evidence`, and the two registries now disagree about five files.\n\nTHREE RASTER-VISUAL PASSES STAND ON CAPTURES THE MANIFEST DECLARES UNPUBLISHED: CASE-0008 → surf-004-run-hud.png, CASE-0010 → surf-005-takeover-shield.png, CASE-0011 → surf-008-tools.png. Stated precisely, because the halves differ: each of the three DOES carry a case-level `capture.method` (`screencapture -l on the panel window number, exclusion lifted by PROCTOR_OVERLAY_CAPTURE` twice, `ScreenCaptureKit window-scoped` once), so the channel is named. What none of them has is a captures.json row with a target recorded at the shutter, which is what publishing requires and what PRO-0107 declined to write after the fact. So a reader of the evidence page sees three passing pixel claims whose pictures the lineage record says nothing speaks for.\n\nTWO OUTCOME PASSES CITE FRAMES THIS ITEM SHOWED MISNAMED OR DUPLICATED: CASE-0028 cites sweepL-status-agent-down.png, which depicts a Ready window (DEF-222), together with the byte-identical t0.6 and t3.5 pair; CASE-0029 cites sweepL-wedged-recovered.png, which is byte-identical to the earliest wedged frame (DEF-221). Both cases' verdicts rest on their sweep JSON rather than on the frames, so neither verdict is wrong — the frames beside them are.\n\nFound by an out-of-family review of PRO-0107 (gemini-3.7-flash-high) and confirmed against cases.json rather than taken on the review's word. RECORDED: the repair is a re-capture through capture_with_manifest.py for the three, and a re-run for the two, both new work."
+    },
+    {
+      "id": "DEF-225",
+      "title": "A passing case cites a shots file that does not exist, and no gate looks (recorded)",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-111"
+      ],
+      "note": "CASE-0100 is an effect-witness pass whose evidence names `evidence/shots/a3-walkthrough-permissions-disabled.png`, and no such file exists in the shots directory — the file that does exist is step-a3-walkthrough-primary-disabled.png, published under STEP-A3-PRIMARY-DISABLED and cited by CASE-0106.\n\nWHY EVERY GATE PASSES OVER IT. campaign.py checks that a pass names at least one evidence artifact and never that the artifact exists, except on the raster rungs, where `inspect_raster` resolves the path and reports `no file at that path` — which is exactly how CASE-0318's three missing files became a standing blocker. CASE-0100 stands at effect-witness, so its path is never resolved. capture-lineage never reads cases.json at all. So a dangling picture link on a passing case is invisible to both instruments that could see it, and visible to a reader who clicks it.\n\nRECORDED: the fix is one line in cases.json if the intended file is the step-a3 capture, and a re-capture if it is not, and establishing which is not something this item can do from the filename — which is the whole lesson of PRO-0107. Found while confirming DEF-224."
     }
   ]
 }

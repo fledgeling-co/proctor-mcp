@@ -5,7 +5,7 @@
 **Created:** 2026-08-23
 **Last updated:** 2026-08-23
 **Brief:** `docs/features-to-triage/100-a-screenshot-gallery-the-gate-cannot-see.md`
-**Defects:** DEF-209, DEF-218..DEF-223
+**Defects:** DEF-209, DEF-218..DEF-225
 
 ## Feature description
 
@@ -125,7 +125,32 @@ reproducing the passing reading.
 | DEF-221 | One image carries three captions across two unrelated sweeps (recorded) | open |
 | DEF-222 | sweepL-status-agent-down.png depicts a Ready window (recorded) | open |
 | DEF-223 | A file's surface prefix binds it to a surface the picture does not show (recorded) | open |
+| DEF-224 | Case evidence and the lineage manifest disagree about the same five files (recorded) | open |
+| DEF-225 | A passing case cites a shots file that does not exist, and no gate looks (recorded) | open |
+
+## Out-of-family review — 2026-08-23
+
+`gemini-3.7-flash-high` via `agy --new-project` from `/tmp`, answering about PRO-0107 by name and
+citing this worktree's own paths, so the lane was on subject. It agreed with all four calls — the
+declaration is the only disposition consistent with the instrument's rules, refusing to publish was
+right, the ratchet earned no raise, and none of the six findings is overclaimed — and on the fifth
+question it found something this item had produced and not recorded.
+
+**Its finding, confirmed against `cases.json` rather than taken on its word.** `capture-lineage` reads
+only the `shot` field on subjects; `cases.json` cites shots directly in `evidence`, and the two
+registries now disagree about five files. CASE-0008, CASE-0010 and CASE-0011 are **raster-visual passes
+citing captures this item declares unpublished** — `surf-004-run-hud.png`,
+`surf-005-takeover-shield.png`, `surf-008-tools.png`. The review's phrasing needs one correction:
+each of those three does carry a case-level `capture.method`, so the channel is named and what is
+missing is the shutter-recorded target. CASE-0028 and CASE-0029 cite frames DEF-222 and DEF-221 show
+misnamed or byte-duplicated, and both verdicts rest on their sweep JSON rather than on the frames.
+DEF-224.
+
+Confirming it turned up one more. **CASE-0100 cites `evidence/shots/a3-walkthrough-permissions-disabled.png`
+and no such file exists.** Both instruments pass over it: `campaign.py` resolves an evidence path only
+on the raster rungs and CASE-0100 stands at effect-witness, and `capture-lineage` never reads
+`cases.json`. DEF-225.
 
 ## Registry
 
-REQ-111, REQ-112, REQ-113 · CASE-0472 to CASE-0478 · SURF-027 · DEF-218 to DEF-223.
+REQ-111, REQ-112, REQ-113 · CASE-0472 to CASE-0480 · SURF-027 · DEF-218 to DEF-225.
