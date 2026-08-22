@@ -1,0 +1,41 @@
+baseline: 14/14 PASS on an unmutated scratch copy
+
+ARMED     every spec carries a parseable citation  (wanted FAIL, got FAIL)
+          reds under this mutation: every brief is claimed or registered, every spec carries a parseable citation
+ARMED     every spec carries a parseable citation  (wanted FAIL, got FAIL)
+          reds under this mutation: every brief is claimed or registered, every spec carries a parseable citation
+ARMED     every cited brief path resolves  (wanted FAIL, got FAIL)
+          reds under this mutation: every brief is claimed or registered, every cited brief path resolves
+ARMED     every cited brief path resolves  (wanted FAIL, got FAIL)
+          reds under this mutation: every cited brief path resolves
+ARMED     every cited brief path resolves  (wanted FAIL, got FAIL)
+          reds under this mutation: every brief is claimed or registered, every cited brief path resolves, no brief is claimed by two specs
+ARMED     every cited brief path resolves  (wanted PASS, got PASS)
+          reds under this mutation: every brief is claimed or registered, no brief is claimed by two specs
+ARMED     every `none` citation names its origin  (wanted FAIL, got FAIL)
+          reds under this mutation: every `none` citation names its origin
+ARMED     no brief is claimed by two specs  (wanted FAIL, got FAIL)
+          reds under this mutation: every brief is claimed or registered, no brief is claimed by two specs
+ARMED     every brief is claimed or registered  (wanted FAIL, got FAIL)
+          reds under this mutation: every brief is claimed or registered
+ARMED     the register names only briefs that exist  (wanted FAIL, got FAIL)
+          reds under this mutation: the register names only briefs that exist
+ARMED     every register row carries a reason  (wanted FAIL, got FAIL)
+          reds under this mutation: every register row carries a reason
+ARMED     the shared join refuses a listing position  (wanted FAIL, got FAIL)
+          reds under this mutation: the shared join refuses a listing position
+ARMED     the shared join still reads a real id  (wanted FAIL, got FAIL)
+          reds under this mutation: the shared join still reads a real id
+ARMED     the triage scaffold carries the citation line  (wanted FAIL, got FAIL)
+          reds under this mutation: the scaffold's citation form is the path, the triage scaffold carries the citation line
+ARMED     the scaffold's citation form is the path  (wanted FAIL, got FAIL)
+          reds under this mutation: the scaffold's citation form is the path
+ARMED     spec-format documents the consumed-brief form  (wanted FAIL, got FAIL)
+          reds under this mutation: spec-format documents the consumed-brief form
+ARMED     spec-format documents the no-brief form  (wanted FAIL, got FAIL)
+          reds under this mutation: spec-format documents the no-brief form
+ARMED     triage is told to write the citation  (wanted FAIL, got FAIL)
+          reds under this mutation: triage is told to write the citation
+
+18/18 mutations behaved as pinned; 14/14 checks watched to fail
+EXIT=0

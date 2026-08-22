@@ -943,6 +943,30 @@
       ],
       "note": "AgentVerbs.swift asserted this boundary in prose and nothing tested it. Adding proctor_hud to the catalogue would hand an MCP client a person's Pause, Resume and Stop while the comment kept reading as true. CASE-0372, CASE-0373.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-100",
+      "text": "Every one of the 99 files in docs/specs carries a citation saying where it came from \u2014 a brief path, a brief path plus the commit that still holds it, or an explicit statement that it was never a brief and what it was instead \u2014 and the check that proves the citation is present proves it resolves in the same pass",
+      "source": "spec-PRO-0101.md, section 'A citation has to resolve, and this repo has already proved that is a separate claim'; docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md; scripts/campaign/spec_citation_measure.py",
+      "class": "honesty-guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-024"
+      ],
+      "note": "Presence and resolution are two claims, and this repo has had them diverge: at 9f99a0f four specs cited briefs that 400808d had deleted, so a presence-only check would have reported 75 citations of which 71 resolved. A brief deliberately consumed is cited by the commit that holds it, which is a recoverable reference rather than a dangling one. CASE-0430..0435, CASE-0438.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-101",
+      "text": "The shipyard triage stage records the citation when it allocates an id, and neither it nor the reckon join derives a citation from a brief's file number",
+      "source": "~/Dev/fledgeling-plugins/plugins/shipyard/skills/triage/references/spec-format.md section 'The brief citation'; the same skill's SKILL.md step 1; plugins/reckon/skills/reckon/scripts/reckon.py project_id_in",
+      "class": "maintainability guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-024"
+      ],
+      "note": "The forward half lands outside this repository, so nothing in ./scripts/test.sh can hold it; spec_citation_measure.py reads the shared source tree by hand, as skill_doc_measure.py does for the proctor skill. The number fallback was already removed by PRO-0102 at 224a696, so this requirement verifies rather than re-edits, per spec-PRO-0101's assumption that the second item to reach it verifies. CASE-0436, CASE-0437, CASE-0438.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1272,6 +1296,21 @@
         "gated"
       ],
       "description": "vacuity-check.py's third pass over Tests/, configured by campaign.json blindVocabulary. Not a product surface: it is the campaign's own instrument, given a surface of its own so that a suite-wide measurement is not filed against a product surface it did not examine. Its count is a reading and not a verdict \u2014 PRO-0079 measured a false-positive rate of at least 96.2%, dominated by causes no vocabulary can reach, so the pass is not gate-worthy until its matcher ends a body at the next declaration of any visibility, stops matching the func line that opens the body, and reads any-read-after-any-mutation rather than after the last one."
+    },
+    {
+      "id": "SURF-024",
+      "name": "Spec provenance record",
+      "title": "The line in every spec that says which brief it came from, and the brief queue it points into",
+      "route": "tool://spec-citation/measure",
+      "status": "reachable",
+      "states": [
+        "cited by path",
+        "cited by commit",
+        "declared no brief",
+        "legacy prose citation",
+        "registered as unclaimed"
+      ],
+      "description": "Not a product surface: it is the written record this project keeps of where each of its 99 specs came from, plus the 96-file brief queue in docs/features-to-triage and the docs/feature-specs/UNCLAIMED-BRIEFS.md register that accounts for briefs no spec can claim. Read by scripts/campaign/spec_citation_measure.py, which also reads the shipyard triage stage and the reckon join in ~/Dev/fledgeling-plugins because the forward half of PRO-0101 lands there. Given a surface of its own rather than filed on SURF-002 (the proctor skill) or SURF-022, because a measurement over specs and briefs examines neither of those."
     }
   ],
   "flow": [
@@ -3020,6 +3059,17 @@
       "req": "REQ-091",
       "fix": "NOT FIXED HERE. spec-PRO-0085.md scopes the deliverable to SKILL.md and references/tools.md and plan-PRO-0085.md states that nothing else in either tree is touched, so widening the diff to a third file in a repository another session is working in was not worth the count. gemini.md is notes on adapting the skill for Gemini rather than routing text an agent reads to pick a tool, which is why it is low rather than the medium DEF-192 carried. The repair is the one word.",
       "evidence": "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt"
+    },
+    {
+      "id": "DEF-215",
+      "severity": "low",
+      "status": "open",
+      "title": "Four ledger rows have no spec file, so two briefs have no artifact that could cite them",
+      "found": "PRO-0101 provenance sweep, 2026-08-22",
+      "detail": "docs/feature-specs/LEDGER.md carries 103 ids against 99 files in docs/specs. The four with no spec are PRO-0022 (A drawing fault must not kill the agent, Merged 2026-08-14), PRO-0031 (The health report is complete, Retired), PRO-0039 (Page-scoped refusal, Retired) and PRO-0092 (ProctorAgent's mutants mostly survive, Ready for AI). Two of them are why the reverse direction cannot close by citation alone: docs/features-to-triage/23-drawing-fault-must-not-kill-the-agent.md is PRO-0022 and 40-page-scoped-refusal.md is PRO-0039 \u2014 each brief's own banner names its id \u2014 and neither has a spec to carry a **Brief:** line. No spec lacks a ledger row, so the gap is one-directional.",
+      "surface": "SURF-024",
+      "req": "REQ-100",
+      "fix": "NOT FIXED HERE. A spec citation needs a spec, and writing three retrospective specs for two retired items and one merged item is a different piece of work with its own decision about whether a retired item earns a spec at all. Recorded instead in docs/feature-specs/UNCLAIMED-BRIEFS.md, which is read by spec_citation_measure.py, so briefs 23 and 40 are accounted for with their reason rather than counted as unclaimed. PRO-0092 closes its own row when its spec is written at plan time."
     }
   ]
 }

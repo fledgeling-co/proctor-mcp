@@ -1,0 +1,7 @@
+# Pinned arming references, read 2026-08-22
+3fb7681 HOLDS docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md
+400808d ABSENT docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md
+8de8804 HOLDS docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md
+9f99a0f ABSENT docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md
+
+400808d is the triage commit that deleted the four wave-16 briefs; 8de8804 restored them.
