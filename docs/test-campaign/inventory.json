@@ -1196,6 +1196,42 @@
       ],
       "note": "The word list DEF-202 was first filed with grouped `partially-fixed` with the not-owing words, and the project owning those rows corrected it: none of its three partially-fixed rows had a reproduction for the broken half. This is the one place in reckon where the fail-closed direction is chosen against a word that sounds like a closure. CASE-0506, CASE-0513.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-111",
+      "text": "Every image in the shots directory has a disposition: published under the subject it depicts, or an `unpublishedReason` on its captures.json entry saying what the picture is",
+      "source": "docs/features-to-triage/100-a-screenshot-gallery-the-gate-cannot-see.md; docs/specs/spec-PRO-0107.md; capture-lineage.py's UNACCOUNTED pass",
+      "class": "honesty guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "note": "The gate's own reasoning: every finding it makes is derived from published captures, so a file nobody publishes is a capture it cannot see. It cites a campaign that read `published captures: 0 · files in shots dir: 11` and exited 0 — clean over nothing. The requirement is that the population is accounted for, not that it is small: the count of files may not fall to satisfy it.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-112",
+      "text": "A capture's disposition is written from the picture rather than from its filename, and the machine-checkable half of it re-measures on demand",
+      "source": "docs/specs/spec-PRO-0107.md; capture-lineage.py's own preamble on the twenty-capture failure",
+      "class": "honesty guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "note": "The campaign this gate was built for published twenty surface captures filed by filename: twenty files held six distinct images, and a step captioned \"Open pairing QR code sheet\" showed a questionnaire about Apple developer credentials. So a disposition is split in two — `depicts`, read by opening the file, and dimensions, byte counts, sha256, opaque-pixel counts and distinct-RGBA counts, which `shot_disposition.py --verify` re-derives and fails on when the bytes move under a disposition written for the old ones.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-113",
+      "text": "Two files holding one image are not two pieces of evidence, and a byte-identical group is declared rather than counted twice",
+      "source": "docs/specs/spec-PRO-0107.md; DEF-221, DEF-222",
+      "class": "honesty guardrail",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "note": "capture-lineage's SHARED pass enforces this for published captures and says nothing about unpublished ones, which is where every instance in this directory sits: four byte-identical groups among the 35, six redundant files, one of them a single image carrying three captions across two unrelated sweeps.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1581,6 +1617,19 @@
         "near the bound"
       ],
       "description": "Not a product surface: it is the instrument that measures how much this suite knows about the package that touches the machine. SURF-022 is the campaign's blind-mutation pass over the campaign's own assertions and is a different instrument; this one applies one source mutation at a time to ProctorAgent, builds, runs ./scripts/test.sh and reverts. Its verdict vocabulary is the surface's states, and TIMEOUT is the one PRO-0092 added because the runner had been scoring a starved run as a kill."
+    },
+    {
+      "id": "SURF-027",
+      "name": "Shots-directory population",
+      "title": "Every image in the campaign's shots directory, as the capture-lineage gate reads it",
+      "route": "tool://capture-lineage/unaccounted",
+      "status": "reachable",
+      "states": [
+        "published",
+        "declared unpublished",
+        "unaccounted"
+      ],
+      "description": "Not a product surface: it is the set of files a reader sees as evidence, and the instrument's fourth pass over them. A file here is in exactly one of three states — a subject's `shot`, an entry carrying an `unpublishedReason`, or unaccounted, which is the state 35 of 43 files were in before PRO-0107. SURF-022 is the campaign's blind-mutation pass over its own assertions; this one is the population its gallery draws from."
     }
   ],
   "flow": [
@@ -3432,7 +3481,10 @@
       "status": "fixed",
       "fixedBy": "PRO-0104",
       "fix": "FIXED by PRO-0104 in ~/Dev/fledgeling-plugins at a2d4db1, reckon 1.2.0. `ID_RE` no longer reads a whole brief: `citable_text` blanks fenced blocks, HTML comments and struck-through spans before anything is matched, and `scan_ids` places every id-shaped token in exactly one of cited, shown or unclassifiable. A placeholder-shaped id in prose is the third outcome rather than a second exclusion — it builds no edge, it cannot carry `unbuilt`, and it is reported as a finding naming the token and its row count, because dropping it silently is the same guess in the other direction. Each exclusion has its own fixture with its own two-way control: a document carrying all three proves whichever runs first and nothing about the other two. Measured over this repository, the only real effect is that BRIEF-97's confidence-1.0 edge to CASE-9999 — a placeholder inside an example command — is gone, and no row moved class.",
-      "evidence": ["docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt", "docs/test-campaign/evidence/PRO-0104/vocabulary-delta.json"],
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",
+        "docs/test-campaign/evidence/PRO-0104/vocabulary-delta.json"
+      ],
       "severity": "low",
       "surfaces": [
         "SURF-023"
@@ -3448,7 +3500,10 @@
       "status": "fixed",
       "fixedBy": "PRO-0104",
       "fix": "FIXED by PRO-0104 in ~/Dev/fledgeling-plugins at a2d4db1, reckon 1.2.0. Not a longer list: a longer list extends the set of words the tool guesses correctly about and leaves it guessing one word past the end. `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce`, `not-a-defect` and `vacuous` now class `waived` — owing nothing without anybody having repaired them — and `resolved` stays a repair. `partially-fixed` stays in the owing set, deliberately and with the reason recorded: a half still broken owes a reproduction for that half. A word outside all five sets still lands `broken`, and is now a finding naming the word and its row count at exit 4. The same treatment reaches case statuses and requirement evidence, which is how DEF-230 was found.",
-      "evidence": ["docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt", "docs/test-campaign/evidence/PRO-0104/reckon-check-two-way.txt"],
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",
+        "docs/test-campaign/evidence/PRO-0104/reckon-check-two-way.txt"
+      ],
       "severity": "low",
       "surfaces": [
         "SURF-023"
@@ -3530,7 +3585,10 @@
       "status": "fixed",
       "fixedBy": "PRO-0104",
       "fix": "FIXED by PRO-0104. All three clauses, and none of them by a longer floor. (1) The header window and the legacy fallback both read `citable` text, so a `**Brief:**` line or a brief path inside a fence, an HTML comment or a struck-through span is a mention of a citation rather than one; three mutations, one per kind. (2) A `none.` reason must resolve rather than name: a token holding a `/` or resolving repo-relative is a path and must exist, a `§N` must be a heading in the PRD, a 7-40-hex token must resolve in git, and anything else is a name that never satisfies the requirement — which closes both the dangling reference and the backtick pair padded past twenty characters. spec-PRO-0096 was the one real red and its citation now names `docs/test-campaign`. (3) Reverse totality is satisfied by an account rather than a mention: a `**Brief:**`, `**Supersedes:**` or `**Direction:**` header segment, a citation of record, or a register row. Brief 32 keeps its account through spec-PRO-0050's `**Supersedes:**` line, so unclaimed stays 0 under the strict rule. 19 checks, 34 mutations, every check watched failing.",
-      "evidence": ["docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt", "docs/test-campaign/evidence/PRO-0104/spec-citation-measure.txt"],
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+        "docs/test-campaign/evidence/PRO-0104/spec-citation-measure.txt"
+      ],
       "severity": "low",
       "surfaces": [
         "SURF-024"
@@ -3579,7 +3637,7 @@
     {
       "id": "DEF-209",
       "title": "Thirty-five images in the shots directory that nothing publishes and no manifest names",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "surfaces": [
         "SURF-022"
@@ -3587,7 +3645,7 @@
       "requirements": [
         "REQ-046"
       ],
-      "note": "capture-lineage.py --gate exits 2 on main: `published captures: 8 · distinct images: 8 · files in shots dir: 43`, with 35 UNACCOUNTED images — a file in the shots directory that no subject publishes and no manifest entry names. The tool's remedy is publish it, delete it, or record an `unpublishedReason` on its captures.json entry.\n\nTHIS IS TOOL MOVEMENT REVEALING A PRE-EXISTING CONDITION, NOT A REGRESSION, and it was established by holding the tool constant across three trees rather than argued: the current capture-lineage gives the identical reading — exit 2, judged 6 of 8, ratchet 6, 35 hard failures — at dd1a443 (now), at eed148f (wave-16 close) and at 3d6fb15 (the wave-15 merge, before any of tonight's work). ORCHESTRATOR.md records this gate at exit 0 with judged 6 of 8 and ratchet 6 held, which was true of the version that ran it. test-campaign moved to 0.9.6 mid-session and the gate got stricter. The ratchet still holds at 6, so nothing has got worse by the tool's own measure.\n\nWHY IT MATTERS RATHER THAN BEING TIDINESS: the gate's own words are that every finding it makes is derived from published captures, so a file nobody publishes is a capture the gate cannot see — and it cites a campaign that read `published captures: 0 · files in shots dir: 11` and exited 0. Thirty-five unpublished images are thirty-five pictures a reader will take as evidence and the instrument cannot speak for. Most carry surface-shaped names (surf-001 through surf-016) from earlier waves, so they are probably real captures that were taken and never published, which is the recoverable case.\n\nDELETION IS NOT THE DEFAULT REMEDY HERE even though the tool offers it: each image needs a per-file disposition, and discarding evidence to clear a gate is the move this campaign refuses. Found by auditing every gate's exit code and denominator across main and a clean `worktree add --detach` tree, prompted by a sibling project finding a step that exited 0 on its own machine and 1 on a clean tree while printing `failures=0` in both."
+      "note": "capture-lineage.py --gate exits 2 on main: `published captures: 8 · distinct images: 8 · files in shots dir: 43`, with 35 UNACCOUNTED images — a file in the shots directory that no subject publishes and no manifest entry names. The tool's remedy is publish it, delete it, or record an `unpublishedReason` on its captures.json entry.\n\nTHIS IS TOOL MOVEMENT REVEALING A PRE-EXISTING CONDITION, NOT A REGRESSION, and it was established by holding the tool constant across three trees rather than argued: the current capture-lineage gives the identical reading — exit 2, judged 6 of 8, ratchet 6, 35 hard failures — at dd1a443 (now), at eed148f (wave-16 close) and at 3d6fb15 (the wave-15 merge, before any of tonight's work). ORCHESTRATOR.md records this gate at exit 0 with judged 6 of 8 and ratchet 6 held, which was true of the version that ran it. test-campaign moved to 0.9.6 mid-session and the gate got stricter. The ratchet still holds at 6, so nothing has got worse by the tool's own measure.\n\nWHY IT MATTERS RATHER THAN BEING TIDINESS: the gate's own words are that every finding it makes is derived from published captures, so a file nobody publishes is a capture the gate cannot see — and it cites a campaign that read `published captures: 0 · files in shots dir: 11` and exited 0. Thirty-five unpublished images are thirty-five pictures a reader will take as evidence and the instrument cannot speak for. Most carry surface-shaped names (surf-001 through surf-016) from earlier waves, so they are probably real captures that were taken and never published, which is the recoverable case.\n\nDELETION IS NOT THE DEFAULT REMEDY HERE even though the tool offers it: each image needs a per-file disposition, and discarding evidence to clear a gate is the move this campaign refuses. Found by auditing every gate's exit code and denominator across main and a clean `worktree add --detach` tree, prompted by a sibling project finding a step that exited 0 on its own machine and 1 on a clean tree \n\nCLOSED BY PRO-0107, and by accounting rather than by shrinking: 43 files before and 43 after, 8 published before and 8 after, 0 deleted. Each of the 35 was opened and looked at, and each carries an `unpublishedReason` on its captures.json entry naming what the picture shows. `capture-lineage.py docs/test-campaign --gate` exits 0 with `COUNTED APART (35) — admissible, not judged`, judged 6 of 8, ratchet 6 held. The gate was watched to fail first: removing one `unpublishedReason` returned exit 2 with that file named, and restoring it reproduced the passing reading byte for byte. What the reading found is in DEF-218 through DEF-223 — nine app-icon renders under engine-surface names, three frames with no image in them, one image under three captions across two sweeps, and a file named agent-down showing a Ready window. The brief's assumption that the surface-shaped names meant real captures from earlier waves was wrong for nine of them, which is the more valuable half of the answer."
     },
     {
       "id": "DEF-230",
@@ -3604,6 +3662,123 @@
       "evidence": [
         "docs/test-campaign/evidence/PRO-0104/vocabulary-delta.json"
       ]
+    },
+    {
+      "id": "DEF-218",
+      "title": "Nine files named for nine engine surfaces are app-icon renders (recorded)",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-112"
+      ],
+      "note": "surf-001-mcp-stdio, surf-002-tool-catalogue, surf-003-process-directed, surf-011-stability, surf-012-audit-policy, surf-013-guest-provider, surf-014-ios-maestro, surf-015-reflector and surf-016-install-notarize are every one of them a Proctor app-icon render — the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not one is a picture of the engine its filename names.\n\nTHE MECHANISM IS A SCRIPT, NOT A MISFILING: scripts/build_test_campaign.py lines 282-296 copy design/icon/audit-renders/* and design/icon/runs/*/candidate-1024.png into evidence/shots/ under surface-shaped destination names, so a filename claiming SURF-001 was manufactured by a copy statement. surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png (sha256 a67cf67af07e…), which settles the mechanism rather than inferring it. Four other destinations in that same list — surf-006, surf-007, surf-008-status-window and surf-009-walkthrough — were later replaced by real window captures with manifests written at the shutter, which is why they are published and these nine are not.\n\nRECORDED RATHER THAN FIXED: the repair is either a real capture per engine surface through capture_with_manifest.py or the removal of the copy list from build_test_campaign.py, and neither is PRO-0107's scope. Each of the nine now carries an `unpublishedReason` saying what the picture actually is, so a reader is told rather than left to read the name. Found by opening all 35 unaccounted files, which is the only way it is findable.\n\nMECHANISM CORRECTED AT VERIFICATION, AND THE ORIGINAL CLAIM WAS FALSE IN THE PRESENT TENSE. This row, the spec and ORCHESTRATOR.md all said `build_test_campaign.py:282-296` copies design/icon renders in under surface-shaped names, and named removal of that copy list as the repair. It does not: line 26 is a module-level sys.exit(), and lines 282-296 sit inside a `_RETIRED_ORIGINAL = r\\\"\\\"\\\"` string. An AST parse finds no src_assets assignment and no loop over one. So the row was directing future work at dead code, which is worse than no row: somebody would have deleted a retired docstring and recorded a fix.\n\nTHE LIVE, CHECKABLE FALSEHOOD IS ONE LINE UP, in that retirement docstring: \\\"Every one of those files has been replaced by the output of a real tool call.\\\" Nine were not — they are the icon renders. That sentence is the thing to correct and the thing a check could read, and it is why the mechanism reads as live: the file says the problem was already fixed.\n\nThe symptom stands unchanged and was confirmed by opening every image: nine 1024x1024 icon renders under surface names, with surf-016-install-notarize.png sha256-identical to design/icon/icon-proctor-1024.png. What changed is the tense and the target of the repair."
+    },
+    {
+      "id": "DEF-219",
+      "title": "Three files named for the takeover shield contain no image at all (recorded)",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-112"
+      ],
+      "note": "surf-005-takeover-sck-external.png, surf-005-takeover-sck-laptop.png and surf-005-takeover-sck-window.png are entirely transparent: 0 non-transparent pixels of 14,745,600, 7,720,704 and 677,888 respectively, and exactly 1 distinct RGBA value each, measured off the files with Pillow.\n\nevidence/hud-capture-channels.json already lists all three under `framesThatWereNotEvidence` and keeps them as the record of the false raster pass this campaign corrected — SCFrameStatus `complete` over a frame with nothing in it, the same instrument fault CASE-0059 carries. So the files are deliberately kept and the record for them is right; what was wrong is that three names claiming the takeover shield sat in the gallery with nothing declaring them. Now declared. RECORDED rather than fixed because the underlying fault is the capture channel's, not this directory's."
+    },
+    {
+      "id": "DEF-220",
+      "title": "sweepK-scaling.json lists two frames its own mode table has no capture of (recorded)",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-112"
+      ],
+      "note": "evidence/sweepK-scaling.json names four files in its `shots` array and records four modes whose capture sizes are 970x773, 820x654, 970x773 and 781x961. sweepK-scale-small.png is 970x773 and sweepK-scale-1x.png is 820x654, so two of the four tie. sweepK-external.png and sweepK-laptop.png are both 900x833, which matches no mode in the table, and no file in the directory is 781x961, so the sweep's own baseline frame is absent while two frames it lists came from outside its measurements.\n\nBoth pictures are the status window with letter-spaced capital section headers — the pre-sentence-case build, an earlier wave than the published SURF-008 frame — so they are real captures of a real surface rather than debris. RECORDED: what the sweep measured is unaffected (examined=4 failures=0 stands on the mode table, not on the files), and the finding is that a `shots` list is not tied to the measurements beside it."
+    },
+    {
+      "id": "DEF-221",
+      "title": "One image carries three captions across two unrelated sweeps, and two wedged timestamps share one frame (recorded)",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-113"
+      ],
+      "note": "sweepK-theme-before.png, sweepL-wedged-t1.png and sweepL-wedged-recovered.png are byte-identical (sha256 670a93988315…), and the picture is a dark Ready status window. So sweep K's dark theme baseline, sweep L's earliest wedged frame and sweep L's recovery frame are one file under three captions, across two sweeps that share no measurement.\n\nTWO CONSEQUENCES, ONE OF THEM WORSE THAN THE OTHER. A Ready window at t+1 is defensible on its own terms, because the window's timeout is 5s and at t+1 it has nothing to report yet. The recovery frame is not: evidence/sweepL-halfopen.json records recoveredAfterSIGCONT true, and a recovery shown by the same bytes as the pre-recovery frame witnesses no transition.\n\nAND THE SAME SHAPE ONE STEP LATER: sweepL-wedged-t7.png and sweepL-wedged-t14.png are byte-identical to each other (5c7d4535e70c…), both showing `Agent down — the Proctor agent did not answer within 5s`, so the wedge is witnessed once rather than at two times. RECORDED rather than fixed: the sweeps' verdicts rest on their JSON records and their timings, not on the frames, and re-running them is not this item's scope."
+    },
+    {
+      "id": "DEF-222",
+      "title": "sweepL-status-agent-down.png depicts a Ready window, and the two agent-down frames are one image (recorded)",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-113"
+      ],
+      "note": "The sharpest name-versus-content mismatch in the directory. sweepL-status-agent-down.png shows a green Ready pill, Accessibility and Screen Recording both Granted, and `Ready. Every permission Proctor needs is granted.` — no agent-down state anywhere in the frame.\n\nIts own record explains the picture while the filename inverts it: evidence/sweeps-kl.json says `Agent down at t+0.71s and t+3.63s after bootout+SIGKILL … The earlier Ready frame was captured inside one 2s doctor tick. DEF-002 retracted.` So this file is that earlier Ready frame, and the frames that do show `Agent down` are sweepL-status-t0.6.png and sweepL-status-t3.5.png — which are byte-identical to each other (4f8c11912bbd…), so the two sampled times are one picture and the second is not independently witnessed.\n\nRECORDED: renaming an evidence file changes what every existing citation of it resolves to, and the honest cheap repair is the declaration, which is done. A reader following the filename would have concluded the opposite of what the sweep found."
+    },
+    {
+      "id": "DEF-223",
+      "title": "A file's surface prefix binds it to a surface the picture does not show (recorded)",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-112"
+      ],
+      "note": "Two instances, both found by opening the file. surf-004-drawn-pointer.png is prefixed for SURF-004, the Run HUD, and shows no HUD: it is the drawn pointer glyph alone on an otherwise empty 3456x2234 frame, 3,739 non-transparent pixels of 7,720,704 and 173 distinct RGBA — the pointer belongs to SURF-003's actuation overlay. surf-008-about.png is prefixed for SURF-008, the Status & Diagnostics Window, and is the About Proctor panel: app icon, `Proctor`, `Version 0.1.0 (1)`, `Proctor is released under the MIT licence.` at 704x518. No surface in this inventory is the About panel, so there is no subject it could be published under.\n\nBoth are real pictures of real Proctor surfaces, which is why neither was deleted. RECORDED: the repair for the first is a re-capture under SURF-003 with a manifest, and for the second an inventory surface for the About panel; both are new work rather than PRO-0107's."
+    },
+    {
+      "id": "DEF-224",
+      "title": "Case evidence and the lineage manifest disagree about the same five files (recorded)",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-111"
+      ],
+      "note": "capture-lineage reads only the `shot` field on surfaces and flow steps. cases.json cites shots directly in `evidence`, and the two registries now disagree about five files.\n\nTHREE RASTER-VISUAL PASSES STAND ON CAPTURES THE MANIFEST DECLARES UNPUBLISHED: CASE-0008 → surf-004-run-hud.png, CASE-0010 → surf-005-takeover-shield.png, CASE-0011 → surf-008-tools.png. Stated precisely, because the halves differ: each of the three DOES carry a case-level `capture.method` (`screencapture -l on the panel window number, exclusion lifted by PROCTOR_OVERLAY_CAPTURE` twice, `ScreenCaptureKit window-scoped` once), so the channel is named. What none of them has is a captures.json row with a target recorded at the shutter, which is what publishing requires and what PRO-0107 declined to write after the fact. So a reader of the evidence page sees three passing pixel claims whose pictures the lineage record says nothing speaks for.\n\nTWO OUTCOME PASSES CITE FRAMES THIS ITEM SHOWED MISNAMED OR DUPLICATED: CASE-0028 cites sweepL-status-agent-down.png, which depicts a Ready window (DEF-222), together with the byte-identical t0.6 and t3.5 pair; CASE-0029 cites sweepL-wedged-recovered.png, which is byte-identical to the earliest wedged frame (DEF-221). Both cases' verdicts rest on their sweep JSON rather than on the frames, so neither verdict is wrong — the frames beside them are.\n\nFound by an out-of-family review of PRO-0107 (gemini-3.7-flash-high) and confirmed against cases.json rather than taken on the review's word. RECORDED: the repair is a re-capture through capture_with_manifest.py for the three, and a re-run for the two, both new work."
+    },
+    {
+      "id": "DEF-225",
+      "title": "A passing case cites a shots file that does not exist, and no gate looks (recorded)",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-111"
+      ],
+      "note": "CASE-0100 is an effect-witness pass whose evidence names `evidence/shots/a3-walkthrough-permissions-disabled.png`, and no such file exists in the shots directory — the file that does exist is step-a3-walkthrough-primary-disabled.png, published under STEP-A3-PRIMARY-DISABLED and cited by CASE-0106.\n\nWHY EVERY GATE PASSES OVER IT. campaign.py checks that a pass names at least one evidence artifact and never that the artifact exists, except on the raster rungs, where `inspect_raster` resolves the path and reports `no file at that path` — which is exactly how CASE-0318's three missing files became a standing blocker. CASE-0100 stands at effect-witness, so its path is never resolved. capture-lineage never reads cases.json at all. So a dangling picture link on a passing case is invisible to both instruments that could see it, and visible to a reader who clicks it.\n\nRECORDED: the fix is one line in cases.json if the intended file is the step-a3 capture, and a re-capture if it is not, and establishing which is not something this item can do from the filename — which is the whole lesson of PRO-0107. Found while confirming DEF-224.\n\nTHE REPAIR IS ONE LINE AND THIS ROW DID NOT SAY SO, found at verification: step-a3-walkthrough-primary-disabled.png exists and is published, at proctor://win:11:0/walkthrough/permissions/primary-disabled. CASE-0100's citation should name it. A row that states a fault without stating the available repair invites a re-investigation somebody has already done."
+    },
+    {
+      "id": "DEF-226",
+      "title": "shot_disposition.py --write adopts any new content as the baseline",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-111"
+      ],
+      "note": "shot_disposition.py's --write re-baselines the check it exists to keep honest. Demonstrated at verification: surf-007-zoom.png was replaced with a flat magenta frame, the check went to exit 1, and --write returned it to exit 0 with capture-lineage still at 0 — the row keeping publishedAs: SURF-007 and recording distinctRGBA: 1, a single-colour frame sitting among the six judged captures. So the instrument's repair path accepts any content as the new truth, and its own \\\"How it is kept honest\\\" section does not name that. This is the same shape as DEF-207 and DEF-208 one level on: a step that performs an action and then treats the result as the standard, with nothing able to disagree. The repair is that --write refuses a file whose recorded digest changed, or records the change as a finding naming the old and new digests, rather than adopting it silently."
     }
   ]
 }

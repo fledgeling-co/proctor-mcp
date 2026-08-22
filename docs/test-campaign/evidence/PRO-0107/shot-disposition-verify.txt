@@ -1,0 +1,5 @@
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0107/scripts/campaign/shot_disposition.py:453: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(im.getdata())
+43 image(s) · 43 disposed · 4 byte-identical group(s)
+
+Every image carries a disposition, and every disposition is about the bytes on disk.

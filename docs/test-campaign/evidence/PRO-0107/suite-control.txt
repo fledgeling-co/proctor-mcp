@@ -1,0 +1,14 @@
+./scripts/test.sh on ai/pro-0107, run under governor-run --weight 6. Build warnings elided;
+the verdict line, the exit status and every admission attempt are kept verbatim.
+
+==> swift test  (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.XXyhv8AjmE)
+􀟈  Test run started.
+􁁛  Test run with 2074 tests in 252 suites passed after 18.008 seconds.
+PASS: 􁁛  Test run with 2074 tests in 252 suites passed after 18.008 seconds.
+TEST_EXIT=0
+attempt 1: available=0 1.844 busy ceiling 10 in_use 12
+attempt 2: available=0 1.654 busy ceiling 10 in_use 12
+attempt 3: available=0 1.206 busy ceiling 10 in_use 12
+attempt 4: available=0 0.826 busy ceiling 10 in_use 12
+attempt 5: available=6 0.482 healthy ceiling 12 in_use 6
+attempt 5: governor-run rc=0

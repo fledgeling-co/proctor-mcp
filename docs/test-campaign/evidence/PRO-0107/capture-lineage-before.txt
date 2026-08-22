@@ -1,0 +1,32 @@
+published captures: 8  ·  distinct images: 8  ·  files in shots dir: 43
+
+UNACCOUNTED — an image in the shots directory that nothing shows or explains:
+   evidence/shots/overlay-exclusion-armed.png: no subject publishes it and no manifest entry names it
+   evidence/shots/overlay-exclusion-baseA.png: no subject publishes it and no manifest entry names it
+   evidence/shots/overlay-exclusion-baseB.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-001-mcp-stdio.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-002-tool-catalogue.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-003-process-directed.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-004-drawn-pointer.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-004-run-hud.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-005-takeover-sck-external.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-005-takeover-sck-laptop.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-005-takeover-sck-window.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-005-takeover-shield.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-008-about.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-008-tools.png: the manifest names it and no subject publishes it, and it records no `unpublishedReason`
+   evidence/shots/surf-011-stability.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-012-audit-policy.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-013-guest-provider.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-014-ios-maestro.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-015-reflector.png: no subject publishes it and no manifest entry names it
+   evidence/shots/surf-016-install-notarize.png: no subject publishes it and no manifest entry names it
+   … and 15 more
+   → Publish it, delete it, or record `unpublishedReason` on its captures.json entry. Every finding this gate makes is derived from published captures, so a file nobody publishes is a capture the gate cannot see: one campaign read `published captures: 0 · files in shots dir: 11` and exited 0.
+
+JUDGED 6 of 8 judgeable capture(s) (75%)
+   An unjudged capture is an uncompared one. It is not a pass.
+
+ratchet: 6 — held
+
+35 hard failure(s). A wall of captures whose subjects are unproved is a screenshot gallery, and a reader cannot tell one from evidence.

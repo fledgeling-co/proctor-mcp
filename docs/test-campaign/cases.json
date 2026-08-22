@@ -6375,5 +6375,137 @@
     "armed": true,
     "armedBy": "Two mutations on PRO-0075's `none.` citation, each moving `every `none` citation resolves to something here` PASS -> FAIL: a reason naming `/bin/sh` as its origin, and one naming `../../../etc/passwd`. Before `inside_repo`, `REPO / '/bin/sh'` is `/bin/sh` in pathlib, so the first resolved against the machine and passed as a repository path.",
     "note": "Found by the gemini out-of-family review of this item's own diff. The same helper also makes a backticked path holding a space resolve as itself rather than as its first word, since the whole token is tried before the split."
+  },
+  {
+    "id": "CASE-0472",
+    "req": "REQ-111",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0107/capture-lineage-before.txt",
+      "docs/test-campaign/evidence/PRO-0107/capture-lineage-after.txt",
+      "docs/test-campaign/evidence/shots/captures.json"
+    ],
+    "armed": true,
+    "armedBy": "The unpublishedReason was removed from evidence/shots/sweepL-status-agent-down.png's entry, the removal confirmed landed by re-reading the file before any verdict was read, and the gate watched going red: exit 2, `evidence/shots/sweepL-status-agent-down.png: the manifest names it and no subject publishes it, and it records no unpublishedReason`, 1 hard failure. Restored, and the restored reading diffs identically against the pre-arming one. docs/test-campaign/evidence/PRO-0107/capture-lineage-armed.txt.",
+    "note": "`capture-lineage.py docs/test-campaign --gate` exits 0 BECAUSE THE POPULATION IS ACCOUNTED FOR, not because it shrank: 43 files in the shots directory before and 43 after, 8 published before and 8 after, 0 deleted, 35 moved from UNACCOUNTED to `COUNTED APART (35) — admissible, not judged`. Judged 6 of 8 and ratchet 6, both unchanged, which is the honest reading — no capture became judgeable, so the change earned no raise."
+  },
+  {
+    "id": "CASE-0473",
+    "req": "REQ-112",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "scripts/build_test_campaign.py",
+      "design/icon/icon-proctor-1024.png"
+    ],
+    "armed": false,
+    "note": "Nine of nine files named for engine surfaces are app-icon renders, established by opening every one: surf-001, surf-002, surf-003, surf-011, surf-012, surf-013, surf-014, surf-015 and surf-016 all show the Proctor icon's dark window dissolving into orange squares at exactly 1024x1024. The mechanism is in the repository rather than inferred — scripts/build_test_campaign.py:282-296 copies design/icon audit renders and icon-run candidates into evidence/shots/ under surface-shaped names — and surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png (sha256 a67cf67af07e…), which is the machine-checkable half. Unarmed deliberately: it is a census with a denominator of 9, re-derived by shot_disposition.py on every run, and there is no assertion here to watch fail. DEF-218."
+  },
+  {
+    "id": "CASE-0474",
+    "req": "REQ-112",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/shot_disposition.py",
+      "docs/test-campaign/evidence/PRO-0107/shot-disposition-verify.txt",
+      "docs/test-campaign/evidence/PRO-0107/shot-audit.json"
+    ],
+    "armed": true,
+    "armedBy": "surf-016-install-notarize.png's sha256 in shot-audit.json was replaced with 64 zeroes, the replacement confirmed landed by re-reading the file, and the check watched going red: exit 1, `surf-016-install-notarize.png: bytes changed under a disposition written for the old ones (000000000000 → a67cf67af07e)`. Restored from the pre-mutation copy and exit 0 reproduced. docs/test-campaign/evidence/PRO-0107/shot-disposition-armed.txt.",
+    "note": "43 of 43 images carry a disposition — 8 published under a subject, 35 declared unpublished with a reason — and `shot_disposition.py` with no flags re-measures every file and fails on three conditions: an image with no disposition, a disposition whose file is gone, and a file whose bytes moved under a disposition written for the old ones. That last one is what keeps 35 sentences about pictures from becoming a stale opinion about a directory."
+  },
+  {
+    "id": "CASE-0475",
+    "req": "REQ-113",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0107/shot-audit.json"
+    ],
+    "armed": false,
+    "note": "Four byte-identical groups among the 43 files, six redundant files: the three overlay-exclusion frames (ee7807db110e), sweepK-theme-before with sweepL-wedged-t1 and sweepL-wedged-recovered (670a93988315), sweepL-status-t0.6 with t3.5 (4f8c11912bbd), and sweepL-wedged-t7 with t14 (5c7d4535e70c). NOTHING WAS DELETED, and the two tests that would have licensed it were applied and came back empty: no file in the directory is zero bytes (the smallest is 10,680), and no byte-identical group contains a published file, so none of the eleven members is an exact duplicate of something already shown. The overlay trio's identity is the measurement rather than a fault — evidence/overlay-exclusion.json carries a positive control proving the capture path was live — and the other three groups are the evidence for DEF-221 and DEF-222, so deleting a member would delete the finding. Unarmed: a census, denominator 43."
+  },
+  {
+    "id": "CASE-0476",
+    "req": "REQ-113",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "docs/test-campaign/evidence/sweeps-kl.json",
+      "docs/test-campaign/evidence/sweepL-halfopen.json"
+    ],
+    "armed": false,
+    "note": "sweepL-status-agent-down.png depicts a READY status window — green Ready pill, both grants Granted, `Ready. Every permission Proctor needs is granted.` — and no agent-down state, while sweepL-status-t0.6.png and sweepL-status-t3.5.png show `Agent down` and are byte-identical to each other. evidence/sweeps-kl.json accounts for the picture and not the name: `Agent down at t+0.71s and t+3.63s … The earlier Ready frame was captured inside one 2s doctor tick`. One step further, sweepL-wedged-recovered.png is byte-identical to sweepL-wedged-t1.png, so a recovery the sweep records as true is shown by the same bytes as the frame before it. DEF-221, DEF-222. Unarmed: the finding is a reading of files that exist, not an assertion."
+  },
+  {
+    "id": "CASE-0477",
+    "req": "REQ-112",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "docs/test-campaign/evidence/hud-capture-channels.json"
+    ],
+    "armed": false,
+    "note": "The three files named for the takeover shield contain no image: 0 non-transparent pixels of 14,745,600 (external), 7,720,704 (laptop) and 677,888 (window), and exactly 1 distinct RGBA value each, measured off the files with Pillow rather than read back from a capture reply. evidence/hud-capture-channels.json already lists all three under `framesThatWereNotEvidence` — SCFrameStatus `complete` over an entirely transparent frame, the same instrument fault CASE-0059 carries — so the files were deliberately kept and what was missing was the declaration. DEF-219. Unarmed: a measurement over a fixed denominator of 3."
+  },
+  {
+    "id": "CASE-0478",
+    "req": "REQ-112",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "docs/test-campaign/evidence/sweepK-scaling.json"
+    ],
+    "armed": false,
+    "note": "evidence/sweepK-scaling.json names four files in `shots` and records four modes whose capture sizes are 970x773, 820x654, 970x773 and 781x961. Two tie: sweepK-scale-small.png is 970x773, sweepK-scale-1x.png is 820x654. Two do not: sweepK-external.png and sweepK-laptop.png are both 900x833, a size no mode in the table captured, and no file in the directory is 781x961, so the sweep's baseline frame is absent while two frames it lists came from outside its measurements. The sweep's own verdict (examined=4 failures=0) rests on the mode table and is unaffected. DEF-220. Unarmed: a dimension comparison over a denominator of 4."
+  },
+  {
+    "id": "CASE-0479",
+    "req": "REQ-111",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/cases.json",
+      "docs/test-campaign/evidence/shots/captures.json",
+      "docs/test-campaign/evidence/PRO-0107/gemini-review.md"
+    ],
+    "armed": false,
+    "note": "The two registries disagree about five files, measured by joining every `evidence/shots/*.png` path in cases.json against the published set and the unpublished declarations. Three raster-visual passes cite captures the manifest declares unpublished — CASE-0008, CASE-0010, CASE-0011 — and each of the three does carry a case-level capture method, so what is missing is the shutter-recorded target rather than the channel. Two outcome passes, CASE-0028 and CASE-0029, cite frames DEF-222 and DEF-221 show to be misnamed or byte-duplicated; their verdicts rest on their sweep JSON, so the frames are what is wrong. Denominator: 17 shots cited across cases.json. DEF-224."
+  },
+  {
+    "id": "CASE-0480",
+    "req": "REQ-111",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/cases.json",
+      "docs/test-campaign/evidence/PRO-0107/shot-audit.json"
+    ],
+    "armed": false,
+    "note": "Of the 17 `evidence/shots/*.png` paths cited across cases.json, one does not resolve: CASE-0100 names `evidence/shots/a3-walkthrough-permissions-disabled.png` and no such file exists. It is invisible to both instruments — campaign.py resolves an evidence path only on the raster rungs and CASE-0100 stands at effect-witness, and capture-lineage never reads cases.json. DEF-225."
   }
 ]
