@@ -140,6 +140,64 @@ public enum WalkthroughFlow {
         return accessibility && screenRecording
     }
 
+    /// Why the primary refuses, or nil when it does not.
+    ///
+    /// PRO-0086, closing DEF-160. PRO-0081 built the refusal and left the
+    /// person no way to see it: three of sixteen states disable the control and
+    /// none of them said so. A disabled control with no stated reason is worse
+    /// than an enabled one that fails honestly — somebody who cannot see why the
+    /// button is dead clicks it, decides the app is broken, and quits.
+    ///
+    /// Non-nil **exactly** where `primaryEnabled` is false, and the guard below
+    /// is what makes that a biconditional rather than two rules that agree
+    /// today. A refusing state with no reason is the defect this exists to
+    /// remove; a reason drawn beside an enabled button is the same defect
+    /// wearing the other face.
+    ///
+    /// The sentence names the grants still missing and, when both are, which one
+    /// to press first — and it takes that from `prominentGrant`, so the caption
+    /// and the filled Allow button can never nominate different first moves.
+    /// `Copy.allow` is the row button's own word, so the instruction names a
+    /// control the person can see rather than one the design of record calls
+    /// something else.
+    public static func primaryDisabledReason(on step: Step,
+                                             accessibility: Bool,
+                                             screenRecording: Bool) -> String? {
+        guard !primaryEnabled(on: step,
+                              accessibility: accessibility,
+                              screenRecording: screenRecording) else { return nil }
+        let held: [Grant: Bool] = [.accessibility: accessibility,
+                                   .screenRecording: screenRecording]
+        let missing = Grant.allCases.filter { held[$0] == false }
+        guard !missing.isEmpty else { return nil }
+        let names = missing.map(\.title).joined(separator: Copy.reasonJoin)
+        var out = "\(Copy.allow) \(names)\(Copy.reasonTail)"
+        if missing.count > 1,
+           let first = prominentGrant(accessibility: accessibility,
+                                      screenRecording: screenRecording) {
+            out += "\(Copy.reasonStart)\(first.title)\(Copy.reasonStop)"
+        }
+        return out
+    }
+
+    /// Whether the permissions surface states the Screen Recording restart
+    /// requirement.
+    ///
+    /// PRO-0086, closing DEF-161. `Copy.restartNote` was written by PRO-0067 and
+    /// rendered nowhere: A5 asserted the constant contained the word `restart`
+    /// and nothing asserted a window drew it, so the clause was true at the
+    /// value level and false on the glass for as long as the constant existed.
+    /// The design of record draws the note under the two grant rows in the pane
+    /// where neither grant is held, and omits it in the pane where both are —
+    /// which is this rule.
+    ///
+    /// The fact is stated whether or not a restart is offered, because the fact
+    /// is true either way and the offer is gated on evidence that may not
+    /// arrive. PRO-0067's A5.
+    public static func statesRestartNote(screenRecording: Bool) -> Bool {
+        !screenRecording
+    }
+
     /// Which grant's button is drawn prominent, or nil when none should be.
     ///
     /// PRO-0090, closing DEF-056. The design of record states the rule in the
@@ -300,6 +358,17 @@ public enum WalkthroughFlow {
         /// rendered it; both kept and both named, as with `toolsNote`. DEF-035.
         public static let allow = "Allow"
         public static let grantedCheckSymbol = "checkmark.circle.fill"
+
+        // MARK: - PRO-0086. The sentence the disabled primary shows.
+        //
+        // Fragments rather than three finished sentences, so the caption is
+        // assembled from `Grant.title` and `Copy.allow` — the words the rows
+        // themselves draw — and a test can bind the rendered text to the same
+        // constants instead of to a copy of them.
+        public static let reasonJoin = " and "
+        public static let reasonTail = " above to continue."
+        public static let reasonStart = " Start with "
+        public static let reasonStop = "."
     }
 
     // MARK: - Identifiers
@@ -314,9 +383,18 @@ public enum WalkthroughFlow {
         public static let skip = "proctor.walkthrough.action.skip"
         public static let back = "proctor.walkthrough.action.back"
         public static let copySnippet = "proctor.walkthrough.action.copy"
+        /// PRO-0086. The caption above the footer that says why the primary
+        /// refuses. Named `reason` rather than `primaryReason` on purpose:
+        /// `WalkthroughFlowTests` locates the primary button by the substring
+        /// `WalkthroughFlow.ID.primary`, and a symbol carrying that prefix
+        /// earlier in the view would move that test's reading window without
+        /// anybody editing it.
+        public static let reason = "proctor.walkthrough.action.primary.reason"
+        /// PRO-0086. The Screen Recording restart note under the grant rows.
+        public static let restartNote = "proctor.walkthrough.permissions.restart"
 
         public static var all: [String] {
-            var out = [primary, skip, back, copySnippet]
+            var out = [primary, skip, back, copySnippet, reason, restartNote]
             out += Step.allCases.map(step)
             out += Grant.allCases.map(grantRow)
             out += Grant.allCases.map(grantButton)
