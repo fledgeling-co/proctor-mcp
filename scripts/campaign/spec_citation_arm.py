@@ -28,7 +28,6 @@ Both are immutable and both were read with `git cat-file -e` before being writte
 here. The `400808d` half is the arming the spec's added clause asks for: a
 citation naming a path that does not resolve.
 """
-import json
 import re
 import shutil
 import subprocess
@@ -105,9 +104,19 @@ def add_brief(name):
 
 
 def add_register_row(row):
+    """Append to the unclaimed table, which ends where the shared-parent one starts.
+
+    Appending to the end of the file put the row in the second table, where the
+    measurement does not look for it, and the mutation reported NOT ARMED against
+    a check that works.
+    """
+    HEAD = "## Briefs several specs share"
     def apply(root):
         p = root / "register.md"
-        p.write_text(p.read_text().rstrip("\n") + "\n" + row + "\n")
+        text = p.read_text()
+        assert HEAD in text, "the register has no shared-parent section to stop at"
+        first, rest = text.split(HEAD, 1)
+        p.write_text(first.rstrip("\n") + "\n" + row + "\n\n" + HEAD + rest)
     return apply
 
 
@@ -145,6 +154,11 @@ MUTATIONS = [
     ("every register row carries a reason", FAIL,
      replace_line("register.md", "| `96-what-1-1-0-still-groups-and-still-grades.md`",
                   "| `96-what-1-1-0-still-groups-and-still-grades.md` | untriaged |  |")),
+    ("every `none` citation names its origin", FAIL,
+     replace_line("specs/spec-PRO-0075.md", "**Brief:** none.",
+                  "**Brief:** none. This one came from somewhere else entirely, honestly")),
+    ("every shared-parent brief is recorded with its count", FAIL,
+     edit("register.md", "| `57-vm-targets.md` | 7 specs |", "| `57-vm-targets.md` | 6 specs |")),
     ("the shared join refuses a listing position", FAIL,
      reckon_regex("\\A([^-]+-[^-]+)\\b")),
     ("the shared join still reads a real id", FAIL,
@@ -166,6 +180,34 @@ MUTATIONS = [
 ]
 
 
+def fixture_repo(root):
+    """A throwaway repository whose history holds the three shapes a citation can name.
+
+    `git cat-file -e` is satisfied by a tree entry and by a zero-byte blob, and
+    an out-of-family review of this item said so. Nothing in the real history
+    cites a brief path that is either, so the two failing shapes are built here
+    rather than left as branches no mutation can reach.
+
+    Returns (sha, path-that-is-a-file, path-that-is-empty, path-that-is-a-tree).
+    """
+    repo = root / "fixture"
+    briefs = repo / "docs/features-to-triage"
+    (briefs / "tree.md").mkdir(parents=True)
+    (briefs / "full.md").write_text("# A brief with bytes in it\n")
+    (briefs / "empty.md").write_text("")
+    (briefs / "tree.md" / "inner.txt").write_text("this makes tree.md a directory\n")
+    env = {"GIT_AUTHOR_NAME": "arm", "GIT_AUTHOR_EMAIL": "arm@example.invalid",
+           "GIT_COMMITTER_NAME": "arm", "GIT_COMMITTER_EMAIL": "arm@example.invalid",
+           "PATH": "/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin", "HOME": str(root)}
+    run = lambda *a: subprocess.run(("git", "-C", str(repo)) + a, capture_output=True,
+                                    text=True, env=env, check=True)
+    subprocess.run(("git", "init", "-q", str(repo)), check=True, capture_output=True, env=env)
+    run("add", "docs")
+    run("commit", "-q", "-m", "fixture")
+    sha = run("rev-parse", "--short", "HEAD").stdout.strip()
+    return repo, sha
+
+
 def scratch(tmp):
     """A copy of every document the measurement reads, and nothing else."""
     root = Path(tmp)
@@ -179,15 +221,42 @@ def scratch(tmp):
     return root
 
 
-def measure(root):
+def measure(root, repo=REPO):
     r = subprocess.run(
         [sys.executable, str(MEASURE),
          "--specs", str(root / "specs"), "--briefs", str(root / "briefs"),
          "--register", str(root / "register.md"), "--triage", str(root / "triage"),
-         "--reckon", str(root / "reckon.py"), "--repo", str(REPO)],
+         "--reckon", str(root / "reckon.py"), "--repo", str(repo)],
         capture_output=True, text=True)
     pairs = re.findall(r"^(PASS|FAIL)  (.+?)(?:   \[.*\])?$", r.stdout, re.M)
     return {name: verdict for verdict, name in pairs}, r.stdout + r.stderr
+
+
+def fixture_cases():
+    """The three shapes a `path @ sha` citation can name, measured against a fixture.
+
+    Each returns the verdict of `every cited brief path resolves` with PRO-0001's
+    citation rewritten to that shape. A blob with bytes must PASS; an empty blob
+    and a tree must both FAIL.
+    """
+    want = [("a blob with bytes", "full.md", PASS),
+            ("an empty blob", "empty.md", FAIL),
+            ("a tree, not a file", "tree.md", FAIL)]
+    failures = []
+    for label, name, expect in want:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = scratch(tmp)
+            repo, sha = fixture_repo(Path(tmp))
+            edit("specs/spec-PRO-0001.md", CITE_0001,
+                 f"**Brief:** `docs/features-to-triage/{name}` @ `{sha}`")(root)
+            after, _ = measure(root, repo=repo)
+        got = after.get("every cited brief path resolves", "MISSING")
+        ok = got == expect
+        print(f"{'ARMED    ' if ok else 'NOT ARMED'} commit form names {label}"
+              f"  (wanted {expect}, got {got})")
+        if not ok:
+            failures.append(f"commit form names {label} (wanted {expect}, got {got})")
+    return failures
 
 
 def main():
@@ -215,8 +284,11 @@ def main():
         if not ok:
             failures.append(f"{name} (wanted {want}, got {got})")
 
+    failures += fixture_cases()
+
     unarmed = sorted(set(baseline) - covered)
-    print(f"\n{len(MUTATIONS) - len(failures)}/{len(MUTATIONS)} mutations behaved as pinned; "
+    total = len(MUTATIONS) + 3
+    print(f"\n{total - len(failures)}/{total} mutations behaved as pinned; "
           f"{len(covered)}/{len(baseline)} checks watched to fail")
     if unarmed:
         print("no mutation makes these fail: " + "; ".join(unarmed))

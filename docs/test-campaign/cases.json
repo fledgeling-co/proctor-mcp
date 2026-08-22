@@ -4656,7 +4656,7 @@
     ],
     "armed": true,
     "armedBy": "Replacing the whole of PRO-0075's citation line with '**Brief:** none. See above' reds it. The mutation had to replace the line rather than its opening: a first version replaced only the prefix, the rest of the sentence stayed attached, and the reason it was shortening remained long enough to pass \u2014 a NOT ARMED report against a check that worked.",
-    "note": "A spec that came from something other than a brief says so and names what it came from, in at least 20 characters. Four specs declare it: PRO-0063 (the screenshot-encoding research, as a follow-on to PRO-0006), PRO-0075 (the campaign's own report, when test-campaign 0.8.0 brought a plane wave 9 had never run), PRO-0076 (asked for directly, against PRD \u00a79 and \u00a710) and PRO-0096, which already carried the form. Silence and 'unlinked' must not look alike, which is what the bare word 'none' would make them."
+    "note": "A spec that came from something other than a brief says so, in at least 20 characters that name an artifact a reader can open \u2014 a backticked file or tool, a PRD section, or a sha. A length floor alone is cleared by boilerplate: 'none. not applicable here' is 25 characters and names nothing. Four specs declare it: PRO-0063 (the screenshot-encoding research, as a follow-on to PRO-0006), PRO-0075 (the campaign's own report, when test-campaign 0.8.0 brought a plane wave 9 had never run), PRO-0076 (asked for directly, against PRD \u00a79 and \u00a710) and PRO-0096, which already carried the form. Silence and 'unlinked' must not look alike, which is what the bare word 'none' would make them."
   },
   {
     "id": "CASE-0434",
@@ -4745,6 +4745,42 @@
     ],
     "armed": true,
     "armedBy": "spec_citation_arm.py itself. It refuses to report anything unless an unmutated scratch copy is green first, it asserts that each mutation matched something before measuring, it pins the expected verdict per mutation rather than assuming FAIL, and it exits 1 on any check no mutation covers. Three of its own mutations reported NOT ARMED against checks that worked and each was the mutation's fault \u2014 a partial line replacement, two regexes emitting a doubled backslash into the mutated source, and a scaffold quoted with newlines that broke the verdict parser and read as MISSING.",
-    "note": "Every check in spec_citation_measure.py has been watched to fail. 18 mutations, each pinned in the table to the verdict it must produce, 14 of 14 checks covered, exit 0. This case exists because two instruments in this campaign have reported a clean zero they could not have earned: one detector's regex could not cross a parenthesis and missed the line it was written for, and one census resolved its arming with git merge-base and read the fixed tree."
+    "note": "Every check in spec_citation_measure.py has been watched to fail. 23 mutations, each pinned in the table to the verdict it must produce, 15 of 15 checks covered, exit 0. This case exists because two instruments in this campaign have reported a clean zero they could not have earned: one detector's regex could not cross a parenthesis and missed the line it was written for, and one census resolved its arming with git merge-base and read the fixed tree."
+  },
+  {
+    "id": "CASE-0439",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt",
+      "docs/test-campaign/evidence/PRO-0101/gemini-review.md"
+    ],
+    "armed": true,
+    "armedBy": "Changing 57-vm-targets.md's count in the register from 7 specs to 6 reds it. The mutation is the count rather than the row, because a check that only asked whether the brief was listed would pass while the number it publishes was wrong.",
+    "note": "Uniqueness holds over the header form only, and the four briefs that make that necessary are now enumerated with their counts instead of being silently exempt: 00-WAVE-7-DIRECTION.md over 11 specs, 57-vm-targets.md over 7, 55-three-tests-still-redden-the-gate.md and 58-swiftui-conversion-direction.md over 2 each. Each is a direction document several items were cut from at once. Raised by the out-of-family review, which was right that a prose-claimed brief sat outside the uniqueness check. Its other proposal \u2014 normalise all 24 prose citations to headers \u2014 was measured against this tree and rejected: it would put brief 55 on two headers and brief 57 on seven, breaking the invariant it was meant to strengthen. A brief one spec owns by header is not a shared parent whatever else mentions it, which is why brief 35 (PRO-0034's, referred to by PRO-0051) is not in the table."
+  },
+  {
+    "id": "CASE-0440",
+    "req": "REQ-100",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/spec_citation_measure.py",
+      "scripts/campaign/spec_citation_arm.py",
+      "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt",
+      "docs/test-campaign/evidence/PRO-0101/gemini-review.md"
+    ],
+    "armed": true,
+    "armedBy": "Three shapes against a purpose-built git fixture the arming builds and throws away, because the real history holds no commit where a cited brief path is a tree or an empty file, and a branch no mutation can reach is a branch nobody has watched. A citation naming a blob with bytes PASSes; one naming a zero-byte blob FAILs; one naming a path that is a directory FAILs. All three verdicts were pinned in the table before the run and all three were observed.",
+    "note": "A commit-form citation asserts the brief is readable at that commit, and `git cat-file -e` does not say that: it is satisfied by a tree entry and by a zero-byte blob. The check now reads the object type and its size. Raised by the out-of-family review of this item, which named the same two shapes."
   }
 ]

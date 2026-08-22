@@ -176,6 +176,32 @@ and no Swift was touched. `spec_citation_measure.py` 14/14, exit 0. `spec_citati
 mutations pinned, 14/14 checks watched to fail, exit 0. `test_instruments.py` 62/62 exit 0.
 `operator_path_gate.py` exit 0. `defect_gate.py dropped` exit 0.
 
+## Out-of-family review — gemini-3.7-flash-high, 2026-08-22
+
+`Needs More Work`, and three of its five points were taken. Full reply at
+`docs/test-campaign/evidence/PRO-0101/gemini-review.md`; the lane verified its own subject before
+answering.
+
+**Taken.** A consumed-brief citation took its sha from `git rev-parse --short HEAD`, which names a
+commit on the branch doing the triage: squash-merge or rebase that branch and the citation points
+at an object no clone has. It now reads `git log -1 --format=%h -- <path>`, the commit that filed
+the brief, and says what to do when that commit is on the same unmerged branch. `git cat-file -e`
+is satisfied by a tree entry and by a zero-byte blob, so the check now reads the object's type and
+size — armed against a purpose-built git fixture, because the real history holds no commit where a
+cited brief path is either shape. And a `none.` reason has to name an artifact rather than reach a
+character count, since "none. not applicable here" clears twenty characters and names nothing.
+
+**Taken in a different form.** The review was right that a brief claimed only in prose sits outside
+the uniqueness check. Its remedy — normalise all 24 prose citations to the header form — was
+measured against this tree and rejected: brief 55 would then be claimed by two headers and brief 57
+by seven, because those are direction documents several items were cut from at once. The four
+many-to-one briefs are enumerated in the register with their counts instead, and the count is what
+CASE-0439 watches, so a designed exception is recorded rather than silent.
+
+**Not taken.** Moving a consumed brief to an archive directory instead of deleting it changes how
+triage handles briefs, which this spec's own scope note rules out as a separate decision with its
+own record.
+
 ## Defects
 
 | ID | Title | Disposition |

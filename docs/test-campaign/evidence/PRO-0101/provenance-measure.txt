@@ -5,6 +5,7 @@ PASS  no brief is claimed by two specs
 PASS  every brief is claimed or registered
 PASS  the register names only briefs that exist
 PASS  every register row carries a reason
+PASS  every shared-parent brief is recorded with its count
 PASS  the shared join refuses a listing position
 PASS  the shared join still reads a real id
 PASS  the triage scaffold carries the citation line
@@ -15,5 +16,5 @@ PASS  triage is told to write the citation
 
 specs 99: legacy 24 · none 4 · path 71
 briefs 96: claimed 92 · registered 4 · unclaimed 0
-14/14 checks passed
+15/15 checks passed
 EXIT=0

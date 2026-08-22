@@ -1,4 +1,4 @@
-baseline: 14/14 PASS on an unmutated scratch copy
+baseline: 15/15 PASS on an unmutated scratch copy
 
 ARMED     every spec carries a parseable citation  (wanted FAIL, got FAIL)
           reds under this mutation: every brief is claimed or registered, every spec carries a parseable citation
@@ -22,6 +22,10 @@ ARMED     the register names only briefs that exist  (wanted FAIL, got FAIL)
           reds under this mutation: the register names only briefs that exist
 ARMED     every register row carries a reason  (wanted FAIL, got FAIL)
           reds under this mutation: every register row carries a reason
+ARMED     every `none` citation names its origin  (wanted FAIL, got FAIL)
+          reds under this mutation: every `none` citation names its origin
+ARMED     every shared-parent brief is recorded with its count  (wanted FAIL, got FAIL)
+          reds under this mutation: every shared-parent brief is recorded with its count
 ARMED     the shared join refuses a listing position  (wanted FAIL, got FAIL)
           reds under this mutation: the shared join refuses a listing position
 ARMED     the shared join still reads a real id  (wanted FAIL, got FAIL)
@@ -36,6 +40,9 @@ ARMED     spec-format documents the no-brief form  (wanted FAIL, got FAIL)
           reds under this mutation: spec-format documents the no-brief form
 ARMED     triage is told to write the citation  (wanted FAIL, got FAIL)
           reds under this mutation: triage is told to write the citation
+ARMED     commit form names a blob with bytes  (wanted PASS, got PASS)
+ARMED     commit form names an empty blob  (wanted FAIL, got FAIL)
+ARMED     commit form names a tree, not a file  (wanted FAIL, got FAIL)
 
-18/18 mutations behaved as pinned; 14/14 checks watched to fail
+23/23 mutations behaved as pinned; 15/15 checks watched to fail
 EXIT=0

@@ -143,7 +143,11 @@ def register_rows():
     if not REGISTER.exists():
         return []
     rows = []
-    for line in read(REGISTER).splitlines():
+    # The register holds two tables and they mean different things: a brief no spec
+    # claims, and a brief several specs share. Reading past the second heading
+    # counted four shared parents as unclaimed and moved the claimed total.
+    body = read(REGISTER).split("## Briefs several specs share")[0]
+    for line in body.splitlines():
         m = re.match(r"^\|\s*`([A-Za-z0-9._+-]+\.md)`\s*\|([^|]*)\|(.*)\|\s*$", line)
         if m:
             rows.append((m.group(1), " ".join(m.group(3).split())))
@@ -168,11 +172,27 @@ for name, (kind, path, sha, _) in specs.items():
         if not (BRIEFS / os.path.basename(path)).exists():
             unresolved.append(f"{name} -> {path} (not in the brief queue)")
     elif kind == "commit":
-        if git("cat-file", "-e", f"{sha}:{path}").returncode != 0:
+        # `cat-file -e` answers "git can resolve this", which a tree entry and a
+        # zero-byte blob both satisfy. A citation is a promise that the brief is
+        # readable there, so the type and the size are both asserted.
+        kind_at = git("cat-file", "-t", f"{sha}:{path}")
+        size_at = git("cat-file", "-s", f"{sha}:{path}")
+        got = kind_at.stdout.strip()
+        size = int(size_at.stdout.strip()) if size_at.returncode == 0 and size_at.stdout.strip() else 0
+        if kind_at.returncode != 0:
             unresolved.append(f"{name} -> {path} @ {sha} (not at that commit)")
+        elif got != "blob":
+            unresolved.append(f"{name} -> {path} @ {sha} (a {got} there, not a file)")
+        elif size == 0:
+            unresolved.append(f"{name} -> {path} @ {sha} (an empty file there)")
 
-thin_reasons = sorted(f"{n} ({r!r})" for n, (k, _, _, r) in specs.items()
-                      if k == "none" and (r is None or len(r) < MIN_REASON))
+# A length floor is satisfiable with boilerplate — "none. not applicable here"
+# clears twenty characters and names nothing — so the reason also has to point at
+# something a reader can open: a backticked file or tool, a PRD section, or a sha.
+NAMES_ARTIFACT = re.compile(r"`[^`]+`|§\s*\d+|\b[0-9a-f]{7,40}\b")
+thin_reasons = sorted(
+    f"{n} ({r!r})" for n, (k, _, _, r) in specs.items()
+    if k == "none" and (r is None or len(r) < MIN_REASON or not NAMES_ARTIFACT.search(r)))
 
 # Uniqueness over the header forms only.
 claimed_by = {}
@@ -190,6 +210,26 @@ for p in sorted(SPECS.glob("spec-*.md")):
     all_claims |= {os.path.basename(m) for m in BODY_PATH.findall(read(p))}
 unclaimed = sorted(b for b in briefs if b not in all_claims and b not in registered)
 stale_register = sorted(n for n in registered if n not in briefs)
+
+# A brief several specs cite, with no spec owning it by header, is a shared parent:
+# 57-vm-targets.md is the direction document PRO-0056 through PRO-0062 were all cut
+# from. Uniqueness cannot apply to those, so they are enumerated in the register
+# with their count instead of being quietly exempt. Where one spec does own the
+# brief by header, further prose mentions are references rather than claims.
+prose_claims = {}
+for p in sorted(SPECS.glob("spec-*.md")):
+    for m in set(BODY_PATH.findall(read(p))):
+        prose_claims.setdefault(os.path.basename(m), []).append(p.name)
+shared = {b: v for b, v in prose_claims.items() if len(v) > 1 and b not in claimed_by}
+declared_shared = {}
+if REGISTER.exists():
+    for line in read(REGISTER).splitlines():
+        m = re.match(r"^\|\s*`([A-Za-z0-9._+-]+\.md)`\s*\|\s*(\d+) specs?\s*\|", line)
+        if m:
+            declared_shared[m.group(1)] = int(m.group(2))
+unrecorded_shared = sorted(
+    f"{b} ({len(v)} specs, register says {declared_shared.get(b, 'nothing')})"
+    for b, v in shared.items() if declared_shared.get(b) != len(v))
 
 
 def load(path, name):
@@ -234,6 +274,8 @@ checks = [
     ("every brief is claimed or registered", not unclaimed, unclaimed),
     ("the register names only briefs that exist", not stale_register, stale_register),
     ("every register row carries a reason", not unreasoned, unreasoned),
+    ("every shared-parent brief is recorded with its count",
+     not unrecorded_shared, unrecorded_shared),
     ("the shared join refuses a listing position", refuses_number, join_error or "03-menu… scored an id"),
     ("the shared join still reads a real id", accepts_id, join_error or "SCR-0075 was not read"),
     ("the triage scaffold carries the citation line",
