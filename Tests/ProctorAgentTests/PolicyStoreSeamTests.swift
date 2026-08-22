@@ -26,25 +26,9 @@ import ProctorCore
 @Suite("Policy store seam")
 struct PolicyStoreSeamTests {
 
-    /// What the operator's file looked like at a moment: whether it is there, its
-    /// bytes, and its modification time. Equality across a call is the claim.
-    private struct FileWitness: Equatable, CustomStringConvertible {
-        let exists: Bool
-        let bytes: Data?
-        let modified: Date?
-
-        static func read(_ url: URL) -> FileWitness {
-            let attributes = try? FileManager.default.attributesOfItem(atPath: url.path)
-            return FileWitness(exists: FileManager.default.fileExists(atPath: url.path),
-                               bytes: try? Data(contentsOf: url),
-                               modified: attributes?[.modificationDate] as? Date)
-        }
-
-        var description: String {
-            guard exists else { return "absent" }
-            return "\(bytes?.count ?? -1) bytes, modified \(modified.map(String.init(describing:)) ?? "unknown")"
-        }
-    }
+    // PRO-0098. `FileWitness` moved to Support/FileWitness.swift so REQ-055's own
+    // witness can stand on the same armed reader rather than on a second copy of
+    // it. Same type, same `==`, plus a sha256 these cases now also compare.
 
     private func temporaryRoot() -> URL {
         let root = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
@@ -248,6 +232,70 @@ struct PolicyFileModeTests {
         guard let attributes = try? FileManager.default.attributesOfItem(atPath: url.path)
         else { return nil }
         return (attributes[.posixPermissions] as? NSNumber)?.intValue
+    }
+
+    // MARK: CASE-0274, CASE-0275 — the WRITE watched, rather than its result stated
+    //
+    // PRO-0098, DEF-111. Every case below CASE-0190 stats the file the save left
+    // behind. That is the outcome of the write; the effect is the write. The
+    // difference is not pedantry — a `save` that created three files and left two
+    // of them at 0644 passes every stat below, because a stat only ever looks at
+    // the one path it was handed.
+    //
+    // So: a recorder that is not `PolicyStore`, over the directory rather than the
+    // file, reporting what the call created and the mode of each entry read back
+    // off disk through a fresh `attributesOfItem`.
+
+    @Test("the write is watched: every path it creates is recorded, and each is 0600")
+    func theWriteItselfIsWitnessed() throws {
+        let directory = temporaryRoot().appendingPathComponent("policy", isDirectory: true)
+        let store = PolicyStore(directory: directory)
+
+        let before = DirectoryWitness.read(directory)
+        #expect(before.files.isEmpty, "the fixture directory was not empty")
+
+        try store.save(AppPolicy(allow: ["com.example.a"], block: ["com.example.b"], sensitive: []))
+
+        let after = DirectoryWitness.read(directory)
+        let created = DirectoryWitness.changed(from: before, to: after)
+
+        // The witness count: what the effect actually produced, counted rather
+        // than assumed. Non-zero is the whole point — a recorder that saw nothing
+        // is the condition this rung exists to catch, not the proof.
+        #expect(created.count >= 1, "the recorder saw no write at all")
+        #expect(created == ["policy.json"],
+                "the save produced \(created), not policy.json alone")
+
+        // EVERY path it produced, not the one path a stat was pointed at.
+        for path in created {
+            let url = directory.appendingPathComponent(path)
+            #expect(mode(url) == 0o600,
+                    "\(path) is \(mode(url).map { String($0, radix: 8) } ?? "absent"), not 600")
+        }
+        #expect(after.files["policy.json"]?.digest != nil)
+    }
+
+    @Test("a second save is watched too: it rewrites the one file and leaves no other behind")
+    func theReplaceIsWitnessed() throws {
+        // The create path and the replace path are different code — `Darwin.open`
+        // with O_EXCL, then `replaceItemAt`. A recorder over the directory sees
+        // both, including a temporary that outlived the call, which is the failure
+        // a stat of `policy.json` cannot report.
+        let directory = temporaryRoot().appendingPathComponent("policy", isDirectory: true)
+        let store = PolicyStore(directory: directory)
+        try store.save(AppPolicy(allow: ["com.example.first"], block: [], sensitive: []))
+
+        let before = DirectoryWitness.read(directory)
+        try store.save(AppPolicy(allow: ["com.example.second"], block: [], sensitive: []))
+        let after = DirectoryWitness.read(directory)
+
+        let touched = DirectoryWitness.changed(from: before, to: after)
+        #expect(touched.count >= 1, "the recorder saw no second write")
+        #expect(touched == ["policy.json"],
+                "the replace left \(touched) rather than rewriting one file")
+        #expect(after.files.count == 1, "a temporary outlived the replace: \(after.files.keys.sorted())")
+        #expect(before.files["policy.json"]?.digest != after.files["policy.json"]?.digest)
+        #expect(mode(store.url) == 0o600)
     }
 
     // MARK: CASE-0190 — a fresh save lands 0600 inside a 0700 directory

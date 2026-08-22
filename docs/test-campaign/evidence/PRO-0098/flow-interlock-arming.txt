@@ -1,0 +1,23 @@
+PRO-0098 re-verification — DEF-164, CASE-0320: the flow-store interlock, armed.
+
+SABOTAGE: Sources/ProctorAgent/Session/FlowStore.swift
+  -        guard AuditLog.isTestProcess else { return operatorDirectory }
+  +        guard false else { return operatorDirectory }  // SABOTAGE
+
+That is exactly the state the tree was in when the sweep caught the write:
+FlowStore.directory had no seam at all, so every recorded flow resolved to
+the operator's own directory.
+
+RUN, sabotaged — ./scripts/test.sh --filter OperatorFilesWitnessTests, exit 1:
+
+􀢄  Test "a recorded flow lands outside the operator's root, like an un-pathed capture" recorded an issue at OperatorFilesWitnessTests.swift:257:9: Expectation failed: !((FlowStore.directory.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/flows").hasPrefix(FlowStore.operatorDirectory.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/flows") → true)
+􀢄  Test "a recorded flow lands outside the operator's root, like an un-pathed capture" recorded an issue at OperatorFilesWitnessTests.swift:259:9: Expectation failed: (FlowStore.directory.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/flows").hasPrefix(FlowStore.testFallbackFlowRoot.path → "/var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test-flows-94858")
+􀢄  Test "a recorded flow lands outside the operator's root, like an un-pathed capture" recorded an issue at OperatorFilesWitnessTests.swift:260:9: Expectation failed: !((FlowStore.directory.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/flows").hasPrefix(operatorRoot.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter") → true)
+􀢄  Test "a recorded flow lands outside the operator's root, like an un-pathed capture" recorded an issue at OperatorFilesWitnessTests.swift:273:9: Expectation failed: !((recorded.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/flows/login-flow.json").hasPrefix(operatorRoot.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter") → true)
+􀢄  Test run with 6 tests in 1 suite failed after 4.368 seconds with 4 issues.
+      􀢄  Test run with 6 tests in 1 suite failed after 4.368 seconds with 4 issues.
+
+RESTORED, green — ./scripts/test.sh --filter 'OperatorFilesWitnessTests|FlowStore|SessionFlow', exit 0:
+
+􁁛  Test run with 6 tests in 1 suite passed after 5.414 seconds.
+PASS: 􁁛  Test run with 6 tests in 1 suite passed after 5.414 seconds.

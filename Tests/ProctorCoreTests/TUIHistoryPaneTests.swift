@@ -37,6 +37,12 @@ struct TUIHistoryPaneTests {
         return .object(out)
     }
 
+    // PRO-0098, DEF-136: classed UNFAILABLE and deliberately left as it is.
+    // "UTC" is the one identifier Foundation guarantees on every Darwin platform
+    // — it is the fallback the framework itself falls back to — so this lookup has
+    // no input space in which it returns nil. Recorded here so a later sweep of
+    // `)!` in Tests does not re-litigate it. Census:
+    // docs/test-campaign/evidence/PRO-0098/unwrap-census.md
     static let utc = TimeZone(identifier: "UTC")!
 
     @Test("a row says what the reply said and nothing else")
@@ -69,11 +75,14 @@ struct TUIHistoryPaneTests {
     }
 
     @Test("the clock fits its eight-cell column at every hour of the day")
-    func clockWidth() {
+    func clockWidth() throws {
         // Every ten minutes across two days, in a zone with a half-hour offset,
         // because a formatter's 12-hour clock with a suffix is nine cells and
         // would truncate the seconds into a different time.
-        let zone = TimeZone(identifier: "Australia/Adelaide")!
+        // PRO-0098, DEF-136. Unlike "UTC" above, a regional identifier is a real
+        // catalogue lookup — a trimmed tzdata resolves it to nil, and that must
+        // fail this test rather than take the runner down.
+        let zone = try #require(TimeZone(identifier: "Australia/Adelaide"))
         for step in stride(from: 0.0, to: 172_800, by: 600) {
             let drawn = TUISurface.clock(step, in: zone)
             #expect(TUIWidth.cells(of: drawn) == 8, "\(drawn) is not eight cells")

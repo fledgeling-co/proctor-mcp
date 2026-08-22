@@ -1,0 +1,112 @@
+=== PRO-0098 gap-fix, A4 — the structural-zero guard, armed both ways ===
+Repo: 814a6ac   2026-08-22T01:14:18Z
+
+SABOTAGE (both runs): operatorRoot is pointed one component off the real root,
+  at ~/Library/Application Support/<bundle>-absent-sabotage, which does not exist.
+  This is the failure a negative claim invites: a sweep of a path nobody uses
+  reports zero changed files for ever, and 'zero changed' is the claim.
+
+--------------------------------------------------------------------
+RUN A — the witness AS IT WAS (no denominator, no root assertion)
+--------------------------------------------------------------------
+applied: 45:            .appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)-absent-sabotage",
+
+==> swift test --filter OperatorFilesWitnessTests (output: /tmp/pro0098-arm-a.log)
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Emitting module ProctorAgentTests
+[6/7] Compiling ProctorAgentTests OperatorFilesWitnessTests.swift
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (8.84s)
+Test Suite 'Selected tests' started at 2026-08-22 11:14:28.988.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 11:14:28.989.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 11:14:28.989.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 11:14:28.989.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "PRO-0098 · the suite writes nothing of the operator's" started.
+􀟈  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" started.
+􀟈  Test "the swept root is the operator's own, and the reader reports a write into it" started.
+􀟈  Test "a rewrite of the same length is reported as a change" started.
+􀟈  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" started.
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:135:9: Expectation failed: (operatorRoot.lastPathComponent → "app.fledgeling.procter-absent-sabotage") == (Wire.bundleIdentifier → "app.fledgeling.procter")
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:136:9: Expectation failed: (PolicyStore.operatorDirectory.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/policy").hasPrefix(operatorRoot.path + "/" → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter-absent-sabotage/")
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:137:9: Expectation failed: (SwitchStore.url(home: home).path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/settings/settings.json").hasPrefix(operatorRoot.path + "/" → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter-absent-sabotage/")
+􁁛  Test "a rewrite of the same length is reported as a change" passed after 0.016 seconds.
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" failed after 0.016 seconds with 3 issues.
+􁁛  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" passed after 0.017 seconds.
+􁁛  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" passed after 0.018 seconds.
+􀢄  Suite "PRO-0098 · the suite writes nothing of the operator's" failed after 0.018 seconds with 3 issues.
+􀢄  Test run with 4 tests in 1 suite failed after 0.018 seconds with 3 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 4 tests in 1 suite failed after 0.018 seconds with 3 issues.
+EXIT=1
+
+--------------------------------------------------------------------
+RUN B — the witness WITH the guard: rootExists, len(files) >= 1, changed/len reported
+--------------------------------------------------------------------
+applied: 65:            .appendingPathComponent("Library/Application Support/\(Wire.bundleIdentifier)-absent-sabotage",
+
+==> swift test --filter OperatorFilesWitnessTests (output: /tmp/pro0098-arm-b.log)
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Emitting module ProctorAgentTests
+[6/7] Compiling ProctorAgentTests OperatorFilesWitnessTests.swift
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (7.88s)
+Test Suite 'Selected tests' started at 2026-08-22 11:14:38.309.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 11:14:38.310.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 11:14:38.310.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 11:14:38.310.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "PRO-0098 · the suite writes nothing of the operator's" started.
+􀟈  Test "the swept root is the operator's own, and the reader reports a write into it" started.
+􀟈  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" started.
+􀟈  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" started.
+􀟈  Test "a rewrite of the same length is reported as a change" started.
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:168:9: Expectation failed: (operatorRoot.lastPathComponent → "app.fledgeling.procter-absent-sabotage") == (Wire.bundleIdentifier → "app.fledgeling.procter")
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:169:9: Expectation failed: (PolicyStore.operatorDirectory.path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/policy").hasPrefix(operatorRoot.path + "/" → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter-absent-sabotage/")
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:170:9: Expectation failed: (SwitchStore.url(home: home).path → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/settings/settings.json").hasPrefix(operatorRoot.path + "/" → "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter-absent-sabotage/")
+􀢄  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" recorded an issue at OperatorFilesWitnessTests.swift:140:9: Expectation failed: (operatorBefore → DirectoryWitness(rootExists: false, files: [:])).rootExists → false
+􀄵  the operator's root is not there, so its zero is structural rather than measured
+􀢄  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" recorded an issue at OperatorFilesWitnessTests.swift:142:9: Expectation failed: (operatorBefore.files.count → 0) >= 1
+􀄵  the sweep found 0 files under the operator's root: a zero out of nothing
+􀢄  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" recorded an issue at OperatorFilesWitnessTests.swift:102:9: Expectation failed: (operatorBefore → DirectoryWitness(rootExists: false, files: [:])).rootExists → false
+􀄵  // THE DENOMINATOR, BEFORE THE CLAIM. A zero is only worth the size of the
+􀄵  // population it is a zero out of, and a sweep of an absent or empty root
+􀄵  // reports zero for ever. So the population is asserted and then reported
+􀄵  // beside the count, as `changed / len(files)`.
+􀄵  the operator's root is not there, so its zero is structural rather than measured
+􀢄  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" recorded an issue at OperatorFilesWitnessTests.swift:104:9: Expectation failed: (operatorBefore.files.count → 0) >= 1
+􀄵  the sweep found 0 files under the operator's root: a zero out of nothing
+􀢄  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" failed after 0.007 seconds with 2 issues.
+􀢄  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" failed after 0.007 seconds with 2 issues.
+􁁛  Test "a rewrite of the same length is reported as a change" passed after 0.014 seconds.
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" failed after 0.015 seconds with 3 issues.
+􀢄  Suite "PRO-0098 · the suite writes nothing of the operator's" failed after 0.015 seconds with 7 issues.
+􀢄  Test run with 4 tests in 1 suite failed after 0.015 seconds with 7 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 4 tests in 1 suite failed after 0.015 seconds with 7 issues.
+EXIT=1
+
+restored: 0 sabotage line(s) left in the tree
+git status: 1 modified file(s) at path Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift

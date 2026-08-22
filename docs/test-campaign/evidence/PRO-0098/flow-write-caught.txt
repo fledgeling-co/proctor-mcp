@@ -1,0 +1,55 @@
+PRO-0098 re-verification — DEF-164: the suite's write into the operator's flows,
+measured rather than inferred.
+
+The re-verifier reported CASE-0270 and CASE-0271 red on writes under the
+operator's root beyond DEF-142's four zoom PNGs. This is what they were.
+
+1. A full './scripts/test.sh' on the merged tree finished at 11:57 on 2026-08-22.
+   'ls -laT ~/Library/Application Support/app.fledgeling.procter/flows'
+   immediately afterwards:
+
+   -rw-r--r--@  1 lukerhodes  staff   581 19 Aug 17:13:55 2026 campaign-setup-menu.json
+   -rw-r--r--@  1 lukerhodes  staff   190 21 Aug 18:34:38 2026 flow-e1.json
+   -rw-r--r--@  1 lukerhodes  staff  1023 22 Aug 11:57:28 2026 login-flow.json
+   -rw-r--r--@  1 lukerhodes  staff   974 22 Aug 11:57:28 2026 sweep.json
+   -rw-r--r--@  1 lukerhodes  staff  3445 16 Aug 23:53:50 2026 web-4751-owg-nav.json
+   -rw-r--r--@  1 lukerhodes  staff  1096 16 Aug 23:54:59 2026 web-4751-owg-switch.json
+   -rw-r--r--@  1 lukerhodes  staff  4125 16 Aug 21:46:42 2026 web-4751-proctor-retry.json
+   -rw-r--r--@  1 lukerhodes  staff  2093 16 Aug 20:41:16 2026 web-4751-staging-chrome.json
+
+   Two files stamped at the minute the run finished; the six neighbours last
+   written on 16, 19 and 21 August. The run wrote login-flow.json and sweep.json.
+
+2. THE SUITE'S WRITE, NOT THE LIVE AGENT'S. Both names are literals in test
+   files, so this sits inside REQ-055's narrowed sentence rather than in
+   DEF-141's gap list:
+
+Tests/ProctorAgentTests/AcceptanceE2ETests.swift:155:        let flowName = "login-flow"
+Tests/ProctorAgentTests/StabilityPageContentTests.swift:47:        _ = try await session.flowStart(name: "sweep", window: ax.window.id, description: nil)
+Tests/ProctorAgentTests/StabilityPageContentTests.swift:85:        _ = try await session.flowStart(name: "sweep", window: ax.window.id, description: nil)
+Tests/ProctorAgentTests/StabilityPageContentTests.swift:113:        _ = try await session.flowStart(name: "sweep", window: ax.window.id, description: nil)
+Tests/ProctorAgentTests/StabilityPageContentTests.swift:244:        _ = try await session.flowStart(name: "sweep", window: ax.window.id, description: nil)
+Tests/ProctorAgentTests/NativePlaneLaneTests.swift:196:        _ = try await session.flowStart(name: "sweep", window: ax.window.id,
+
+3. THE PATH THAT LET IT HAPPEN. FlowStore.directory was a static computing the
+   operator's path from the home directory, with no injection seam — the same
+   shape PolicyStore had before DEF-110 and CaptureEngineImpl before DEF-142.
+   Fixed by the same interlock; armed in flow-interlock-arming.txt.
+
+4. THE INTERLOCK, MEASURED END TO END. After the fix, './scripts/test.sh' exit 0,
+   'Test run with 2028 tests in 246 suites passed after 23.918 seconds'.
+
+   The operator's flows, unchanged — still the stamps the pre-fix run left:
+
+     -rw-r--r--@  1 lukerhodes  staff  1023 22 Aug 11:57:28 2026 login-flow.json
+     -rw-r--r--@  1 lukerhodes  staff   974 22 Aug 11:57:28 2026 sweep.json
+
+   And the same two files, written instead into the redirected root:
+
+     /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test-flows-14734/
+       login-flow.json
+       sweep.json
+
+   The two stray flows already in the operator's directory are left where they
+   are, as the four zoom PNGs of DEF-142 are: deleting an operator's recorded
+   flow is the act REQ-055 forbids, and it would be this suite doing it.

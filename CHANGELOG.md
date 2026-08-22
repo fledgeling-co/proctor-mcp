@@ -130,6 +130,11 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 
 ### Fixed
 
+- **The Status window no longer says the agent is down while it's busy bringing the agent back.** Grant Screen Recording through Proctor and it restarts the background agent for you, because a running agent can't be told about a permission it already cached as denied. The window held an "applying" state across that restart, then cleared it 1.2 seconds later on a fixed timer. If the restart took longer than 1.2 seconds, and on a loaded machine that's exactly what happens, the window went straight to the red "The background agent is not answering" block; at a person who had just done what the window asked them to do.
+
+  The state now ends on the thing that actually ends a restart: the first check that finds the agent answering. However long that takes. If enough checks come back with nothing, Proctor stops claiming a restart is in flight and reports the outage, which by that point is a measurement rather than a guess.
+
+  Note: the 1.2 second wait is still there and it hasn't been lengthened. It's the beat before the *first* check, because checking the instant you ask launchd for a restart just races it and reports a healthy agent as down. The wait was never the problem; clearing the state on a clock was.
 - **The setup window now tells you why it won't move on.** Proctor's walkthrough keeps `Connect a model` switched off until both Accessibility and Screen Recording are granted, and until now nothing on screen said so. You'd press a dead button and be left to work out the rule yourself.
 
   There's a line above the buttons now, and it names what's missing and what to press: "Allow Accessibility and Screen Recording above to continue. Start with Accessibility." With one permission already in, it names only the one you still owe. The permission it tells you to start with is the same one drawn as the filled **Allow**, so the sentence and the button agree about your next move rather than offering two.

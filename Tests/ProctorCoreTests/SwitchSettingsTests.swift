@@ -495,6 +495,12 @@ struct SwitchStoreTests {
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
                                                 withIntermediateDirectories: true)
         for bad in ["", "{", "not json at all", "[1,2,3]", "{\"PROCTOR_HUD\": 1}"] {
+            // PRO-0098, DEF-136: classed UNFAILABLE. A Swift `String` is always
+            // well-formed Unicode, and UTF-8 encodes every scalar, so
+            // `data(using: .utf8)` on one is total — there is no string literal in
+            // this array, or reachable into it, that makes it nil. Same for the
+            // literal in `unknownKeysIgnored` below. Left as they are; census in
+            // docs/test-campaign/evidence/PRO-0098/unwrap-census.md.
             try bad.data(using: .utf8)!.write(to: url)
             let loaded = SwitchStore.load(from: url)
             #expect(loaded.values.isEmpty, "\(bad) should yield nothing")

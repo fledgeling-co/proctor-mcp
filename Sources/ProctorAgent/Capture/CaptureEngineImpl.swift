@@ -16,13 +16,35 @@ final class CaptureEngineImpl: CaptureEngine {
     let captureDirectory: String
 
     init(captureDirectory: String? = nil) {
-        if let captureDirectory {
-            self.captureDirectory = captureDirectory
-        } else {
-            let home = FileManager.default.homeDirectoryForCurrentUser.path
-            self.captureDirectory = "\(home)/Library/Application Support/app.fledgeling.procter/captures"
-        }
+        self.captureDirectory = captureDirectory ?? Self.defaultCaptureDirectory
     }
+
+    /// Where a capture lands when nobody says where, and the interlock that keeps
+    /// a test process out of the operator's own captures.
+    ///
+    /// PRO-0098, REQ-055. This is `PolicyStore.live`'s interlock applied to the
+    /// other place the agent writes without being asked where. It is here because
+    /// the REQ-055 witness caught the suite doing it: `AcceptanceE2ETests`'
+    /// Journey 5 calls `session.zoom(path: nil)` twice, and the four PNGs that
+    /// produced landed in `~/Library/Application Support/app.fledgeling.procter/
+    /// captures` on every run — invisible until a sweep happened to close either
+    /// side of one. Relying on every future caller remembering to pass a path is
+    /// the same bet that put 17 entries into a live audit trail, so the floor is
+    /// here rather than in each test.
+    static var defaultCaptureDirectory: String {
+        guard AuditLog.isTestProcess else {
+            let home = FileManager.default.homeDirectoryForCurrentUser.path
+            return "\(home)/Library/Application Support/app.fledgeling.procter/captures"
+        }
+        return testFallbackCaptureRoot.path
+    }
+
+    /// Where an un-pathed capture lands in a test process. Named for what it is,
+    /// so a stray directory in `/tmp` explains itself.
+    static let testFallbackCaptureRoot = URL(fileURLWithPath: NSTemporaryDirectory(),
+                                             isDirectory: true)
+        .appendingPathComponent("proctor-test-captures-\(ProcessInfo.processInfo.processIdentifier)",
+                                isDirectory: true)
 
     // MARK: - Capture
 

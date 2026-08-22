@@ -182,11 +182,15 @@ struct AuditChainWiringTests {
     // MARK: - Clause 6, against a trail that predates signing
 
     @Test("a trail sealed before this feature keeps working and is pinned by the first new entry")
-    func anExistingSealedTrailIsPreChain() {
+    func anExistingSealedTrailIsPreChain() throws {
         // Exactly the reader's own machine: 467 entries sealed by PRO-0013 and
         // carrying no chain fields at all.
+        // PRO-0098, DEF-136: a nil seal here is a failure of the sealer, which is
+        // the thing under test — it must fail this test, not abort the runner.
         let sealKey = Curve25519.KeyAgreement.PrivateKey()
-        let old = (0..<3).map { AuditSeal.seal(line: "{\"old\":\($0)}", to: sealKey.publicKey)! }
+        let old = try (0..<3).map {
+            try #require(AuditSeal.seal(line: "{\"old\":\($0)}", to: sealKey.publicKey))
+        }
         withTrail(seed: old) { _, _ in
             #expect(AuditLog.append(record(0)))
             #expect(AuditLog.append(record(1)))
@@ -200,15 +204,18 @@ struct AuditChainWiringTests {
     }
 
     @Test("editing that older history after the fact is detected by the first signed entry")
-    func theGenesisLinkPinsHistoryThroughTheWritePath() {
+    func theGenesisLinkPinsHistoryThroughTheWritePath() throws {
         let sealKey = Curve25519.KeyAgreement.PrivateKey()
-        let old = (0..<3).map { AuditSeal.seal(line: "{\"old\":\($0)}", to: sealKey.publicKey)! }
-        withTrail(seed: old) { dir, _ in
+        let old = try (0..<3).map {
+            try #require(AuditSeal.seal(line: "{\"old\":\($0)}", to: sealKey.publicKey))
+        }
+        try withTrail(seed: old) { dir, _ in
             #expect(AuditLog.append(record(0)))
             let file = dir.appendingPathComponent("audit.jsonl")
             var lines = (try! String(contentsOf: file, encoding: .utf8))
                 .split(separator: "\n").map(String.init)
-            lines[1] = AuditSeal.seal(line: "{\"old\":\"rewritten\"}", to: sealKey.publicKey)!
+            lines[1] = try #require(AuditSeal.seal(line: "{\"old\":\"rewritten\"}",
+                                                  to: sealKey.publicKey))
             try! (lines.joined(separator: "\n") + "\n").write(to: file, atomically: true,
                                                               encoding: .utf8)
             let verdict = AuditLog.verify()
@@ -220,14 +227,15 @@ struct AuditChainWiringTests {
     // MARK: - Clause 2 and 5, through the real file
 
     @Test("an entry appended straight into the file is reported as forged")
-    func aForgedAppendThroughTheFileIsDetected() {
-        withTrail { dir, _ in
+    func aForgedAppendThroughTheFileIsDetected() throws {
+        try withTrail { dir, _ in
             for i in 0..<3 { #expect(AuditLog.append(record(i))) }
             // The forger holds what PRO-0013 hands out freely: a sealing key. That
             // was enough to produce an entry that opened cleanly, and nothing could
             // tell it from a real one.
-            let forged = AuditSeal.seal(line: "{\"tool\":\"forged\"}",
-                                        to: Curve25519.KeyAgreement.PrivateKey().publicKey)!
+            let forged = try #require(AuditSeal.seal(
+                line: "{\"tool\":\"forged\"}",
+                to: Curve25519.KeyAgreement.PrivateKey().publicKey))
             let file = dir.appendingPathComponent("audit.jsonl")
             let handle = try! FileHandle(forWritingTo: file)
             handle.seekToEndOfFile()

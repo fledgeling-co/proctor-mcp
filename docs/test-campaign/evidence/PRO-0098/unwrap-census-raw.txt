@@ -1,0 +1,32 @@
+# grep -rn ')!' Tests  — run at 4d62f33, 2026-08-21T23:57:22Z
+# lines: 29
+
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:189:        let old = (0..<3).map { AuditSeal.seal(line: "{\"old\":\($0)}", to: sealKey.publicKey)! }
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:205:        let old = (0..<3).map { AuditSeal.seal(line: "{\"old\":\($0)}", to: sealKey.publicKey)! }
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:211:            lines[1] = AuditSeal.seal(line: "{\"old\":\"rewritten\"}", to: sealKey.publicKey)!
+Tests/ProctorAgentTests/AuditChainWiringTests.swift:230:                                        to: Curve25519.KeyAgreement.PrivateKey().publicKey)!
+Tests/ProctorAgentTests/RunHUDCharacterAssetTests.swift:27:                            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+Tests/ProctorCoreTests/TUIHistoryPaneTests.swift:40:    static let utc = TimeZone(identifier: "UTC")!
+Tests/ProctorCoreTests/TUIHistoryPaneTests.swift:76:        let zone = TimeZone(identifier: "Australia/Adelaide")!
+Tests/ProctorCoreTests/SwitchSettingsTests.swift:498:            try bad.data(using: .utf8)!.write(to: url)
+Tests/ProctorCoreTests/SwitchSettingsTests.swift:521:            .data(using: .utf8)!.write(to: url)
+Tests/ProctorCoreTests/ToolchainTests.swift:15:        Toolchain.entry(for: tool)!
+Tests/ProctorCoreTests/ToolchainTests.swift:415:        let row = Toolchain.row(entry: Toolchain.entry(for: "cua-driver")!,
+Tests/ProctorCoreTests/CommandSurfaceTests.swift:47:        // PRO-0090. `command(id)!` on a literal id used to be here, and it fails
+Tests/ProctorCoreTests/GuestInventoryTests.swift:236:            let row = Toolchain.row(entry: Toolchain.entry(for: tool)!,
+Tests/ProctorCoreTests/MenuBarReadinessTests.swift:349:        #expect(script.range(of: "kill -0")!.lowerBound < script.range(of: "open ")!.lowerBound)
+Tests/ProctorCoreTests/ProctorCoreTests.swift:1231:        let functionKeyChar = String(UnicodeScalar(0xF702)!)   // NSLeftArrowFunctionKey
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2741:        var raw = Data(base64Encoded: box.ct)!
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2854:                                   to: Curve25519.KeyAgreement.PrivateKey().publicKey)!
+Tests/ProctorCoreTests/ProctorCoreTests.swift:2870:        return String(data: try! encoder.encode(box), encoding: .utf8)!
+Tests/ProctorCoreTests/AuditChainTests.swift:41:            AuditSeal.seal(line: text, to: sealKey.publicKey)!
+Tests/ProctorCoreTests/AuditChainTests.swift:47:            let sealed = AuditSeal.sealLine(line: text, to: sealKey.publicKey)!
+Tests/ProctorCoreTests/AuditChainTests.swift:63:            records.append(AuditSeal.encode(line)!)
+Tests/ProctorCoreTests/AuditChainTests.swift:221:        let line = AuditSeal.decode(records[1])!
+Tests/ProctorCoreTests/AuditChainTests.swift:226:            prev: line.prev, tid: line.tid, skid: line.skid, cls: line.cls, sig: line.sig))!
+Tests/ProctorCoreTests/AuditChainTests.swift:312:        let line = AuditSeal.decode(records[1])!
+Tests/ProctorCoreTests/AuditChainTests.swift:316:            sig: Data("far too short".utf8).base64EncodedString()))!
+Tests/ProctorCoreTests/AuditChainTests.swift:401:        let lifted = AuditSeal.decode(other.records[0])!
+Tests/ProctorCoreTests/AuditChainTests.swift:410:            sig: sig.rawRepresentation.base64EncodedString()))!)
+Tests/ProctorCoreTests/AuditChainTests.swift:447:        let sealed = AuditSeal.sealLine(line: "{\"tool\":\"after the tear\"}", to: t.sealKey.publicKey)!
+Tests/ProctorCoreTests/AuditChainTests.swift:455:            sig: sig.rawRepresentation.base64EncodedString()))!)

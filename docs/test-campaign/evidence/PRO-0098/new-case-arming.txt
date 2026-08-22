@@ -1,0 +1,383 @@
+=== PRO-0098 — every new case watched failing before it is recorded passing ===
+Repo: 15dab5c   2026-08-22T00:11:44Z
+Nothing here is left in the tree: git checkout restores after each sabotage.
+
+====================================================================
+SABOTAGE 1 — RestartWatch.observed settles on the FIRST probe, reachable
+or not. This IS the defect: a restart cleared by something other than the
+agent coming back.
+====================================================================
+
+--- CASE-0276..0281 under sabotage 1 ---
+==> swift test --filter RestartWatch (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.snuCmHXtxC)
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/17] Compiling ProctorCore Toolchain.swift
+[6/17] Compiling ProctorCore BuildIdentityGenerated.swift
+[7/17] Emitting module ProctorCore
+[8/17] Compiling ProctorCore RestartWatch.swift
+[9/18] Compiling ProctorCore BuildInfo.swift
+[9/23] Write Objects.LinkFileList
+[13/24] Emitting module ProctorUI
+[13/24] Write Objects.LinkFileList
+[14/24] Linking proctor-cli
+[15/24] Linking proctor-shim
+[16/24] Applying proctor-cli
+[17/24] Applying proctor-shim
+[18/24] Linking proctor-agent
+[19/24] Linking Proctor
+[20/24] Applying proctor-agent
+[21/24] Applying Proctor
+[23/25] Emitting module ProctorCoreTests
+[24/25] Emitting module ProctorAgentTests
+[24/26] Write Objects.LinkFileList
+[25/26] Linking proctor-mcpPackageTests
+Build complete! (34.67s)
+Test Suite 'Selected tests' started at 2026-08-22 10:12:20.836.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 10:12:20.839.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 10:12:20.839.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 10:12:20.839.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.004) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "PRO-0098 · a restart ends when the agent comes back" started.
+􀟈  Test "a restart that outlives 1.2 s never draws the agent-down state" started.
+􀟈  Test "a give-up count below one is refused rather than making every restart instant" started.
+􀟈  Test "a restart that never comes back is abandoned and the agent is reported down" started.
+􀟈  Test "probes arriving when no restart was asked for are not counted" started.
+􀟈  Test "a settled watch is not reopened by a later probe" started.
+􀟈  Test "the give-up counts probes rather than elapsed time" started.
+􀟈  Test "with the applying state gone, the same unreachable agent draws the red" started.
+􀟈  Test "the 1.2-second beat before the first probe is not raised" started.
+􀟈  Test "a second restart is not judged on the first one's probes" started.
+􀢄  Test "the give-up counts probes rather than elapsed time" recorded an issue at RestartWatchTests.swift:102:9: Expectation failed: (busy.state → .settled) == .abandoned
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:43:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 30)).isApplying → false
+􀄵  the watch gave up at probe 1
+􀢄  Test "a restart that never comes back is abandoned and the agent is reported down" recorded an issue at RestartWatchTests.swift:82:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 4)).isApplying → false
+􀢄  Test "a give-up count below one is refused rather than making every restart instant" recorded an issue at RestartWatchTests.swift:156:9: Expectation failed: (watch.state → .settled) == .abandoned
+􀢄  Test "the give-up counts probes rather than elapsed time" recorded an issue at RestartWatchTests.swift:103:9: Expectation failed: (quiet.state → .settled) == .applying
+􀢄  Test "with the applying state gone, the same unreachable agent draws the red" recorded an issue at RestartWatchTests.swift:69:9: Expectation failed: (drawn(watch, reachable: false) → .startAgent) == nil
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:44:13: Expectation failed: (drawn(watch, reachable: false) → .startAgent) == nil
+􀄵  the agent-down state was drawn at probe 1 of a restart in flight
+􁁛  Test "a settled watch is not reopened by a later probe" passed after 0.001 seconds.
+􀢄  Test "a second restart is not judged on the first one's probes" recorded an issue at RestartWatchTests.swift:129:9: Expectation failed: (watch.probes → 1) == 2
+􀢄  Test "a restart that never comes back is abandoned and the agent is reported down" recorded an issue at RestartWatchTests.swift:82:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 4)).isApplying → false
+􀢄  Test "a second restart is not judged on the first one's probes" recorded an issue at RestartWatchTests.swift:135:9: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 3)).isApplying → false
+􀢄  Test "with the applying state gone, the same unreachable agent draws the red" failed after 0.001 seconds with 1 issue.
+􀄵  /// The arming for the case above, and it is the whole reason that case can
+􀄵  /// fail. `decide` returns `nil` for a great many reasons; if it returned `nil`
+􀄵  /// with `applying` false as well, the loop above would pass over a model that
+􀄵  /// had lost the state entirely. This is the same call with the same
+􀄵  /// unreachable agent and the applying state gone, and it MUST draw the red.
+􀢄  Test "a second restart is not judged on the first one's probes" failed after 0.001 seconds with 2 issues.
+􀢄  Test "probes arriving when no restart was asked for are not counted" recorded an issue at RestartWatchTests.swift:120:9: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 2)).isApplying → false
+􀄵  an idle poll consumed this restart's budget
+􀢄  Test "the give-up counts probes rather than elapsed time" failed after 0.001 seconds with 2 issues.
+􀢄  Test "probes arriving when no restart was asked for are not counted" failed after 0.001 seconds with 1 issue.
+􀢄  Test "a restart that never comes back is abandoned and the agent is reported down" recorded an issue at RestartWatchTests.swift:82:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 4)).isApplying → false
+􀢄  Test "a give-up count below one is refused rather than making every restart instant" failed after 0.001 seconds with 1 issue.
+􀢄  Test "a restart that never comes back is abandoned and the agent is reported down" recorded an issue at RestartWatchTests.swift:85:9: Expectation failed: (watch.state → .settled) == .abandoned
+􀢄  Test "a restart that never comes back is abandoned and the agent is reported down" failed after 0.001 seconds with 4 issues.
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:43:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 30)).isApplying → false
+􀄵  the watch gave up at probe 2
+􁁛  Test "the 1.2-second beat before the first probe is not raised" passed after 0.002 seconds.
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:44:13: Expectation failed: (drawn(watch, reachable: false) → .startAgent) == nil
+􀄵  the agent-down state was drawn at probe 2 of a restart in flight
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:43:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 30)).isApplying → false
+􀄵  the watch gave up at probe 3
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:44:13: Expectation failed: (drawn(watch, reachable: false) → .startAgent) == nil
+􀄵  the agent-down state was drawn at probe 3 of a restart in flight
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:43:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 30)).isApplying → false
+􀄵  the watch gave up at probe 4
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:44:13: Expectation failed: (drawn(watch, reachable: false) → .startAgent) == nil
+􀄵  the agent-down state was drawn at probe 4 of a restart in flight
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:43:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 30)).isApplying → false
+􀄵  the watch gave up at probe 5
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:44:13: Expectation failed: (drawn(watch, reachable: false) → .startAgent) == nil
+􀄵  the agent-down state was drawn at probe 5 of a restart in flight
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:43:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 30)).isApplying → false
+􀄵  the watch gave up at probe 6
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:44:13: Expectation failed: (drawn(watch, reachable: false) → .startAgent) == nil
+􀄵  the agent-down state was drawn at probe 6 of a restart in flight
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:43:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 30)).isApplying → false
+􀄵  the watch gave up at probe 7
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:44:13: Expectation failed: (drawn(watch, reachable: false) → .startAgent) == nil
+􀄵  the agent-down state was drawn at probe 7 of a restart in flight
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:43:13: Expectation failed: (watch → RestartWatch(state: ProctorCore.RestartWatch.State.settled, probes: 1, giveUpAfterProbes: 30)).isApplying → false
+􀄵  the watch gave up at probe 8
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" recorded an issue at RestartWatchTests.swift:44:13: Expectation failed: (drawn(watch, reachable: false) → .startAgent) == nil
+􀄵  the agent-down state was drawn at probe 8 of a restart in flight
+􀢄  Test "a restart that outlives 1.2 s never draws the agent-down state" failed after 0.003 seconds with 16 issues.
+􀢄  Suite "PRO-0098 · a restart ends when the agent comes back" failed after 0.003 seconds with 27 issues.
+􀢄  Test run with 9 tests in 1 suite failed after 0.003 seconds with 27 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 9 tests in 1 suite failed after 0.003 seconds with 27 issues.
+EXIT=1
+
+====================================================================
+SABOTAGE 2 — the 1.2 s timer clears the applying state again, exactly as
+it did before this item. The source-reading case must catch it.
+====================================================================
+
+--- CASE-0282 under sabotage 2 ---
+==> swift test --filter theDelayIsUnchanged (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.g1BiKNcGZG)
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/14] Write sources
+[4/14] Write swift-version--58304C5D6DBC2206.txt
+[6/16] Compiling ProctorCore RestartWatch.swift
+[7/16] Emitting module ProctorCore
+[7/20] Write Objects.LinkFileList
+[10/22] Linking proctor-cli
+[11/22] Applying proctor-cli
+[12/22] Linking proctor-shim
+[13/22] Applying proctor-shim
+[14/22] Linking proctor-agent
+[15/22] Applying proctor-agent
+[17/22] Compiling ProctorUI AgentModel.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0098/Sources/ProctorUI/AgentModel.swift:486:19: error: cannot assign to property: 'isApplying' is a get-only property
+484 |         // thirty that did not.
+485 |         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
+486 |             self?.isApplying = false
+    |                   `- error: cannot assign to property: 'isApplying' is a get-only property
+487 |             self?.refresh()
+488 |         }
+[18/23] Emitting module ProctorUI
+error: fatalError
+
+FAIL: no swift-testing verdict line in the output.
+      Either the run died before reporting, or a --filter matched no
+      tests. --filter matches the Swift function name, not the @Test
+      display string. An absent verdict is not a pass.
+EXIT=1
+
+====================================================================
+SABOTAGE 3 — the sweep stops descending into subdirectories. The classic
+silent-instrument failure for a negative claim: it reports zero for the
+operator's root for ever, because it never looks inside policy/ or audit/.
+The operator's real file is NOT in the path of this sabotage — nothing is
+written anywhere it can reach.
+====================================================================
+
+--- CASE-0272 under sabotage 3 ---
+==> swift test --filter theSweepIsPointedAtTheRealThing (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.xHELHxszIN)
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/14] Write sources
+[4/14] Write swift-version--58304C5D6DBC2206.txt
+[6/13] Compiling ProctorAgentTests FileWitness.swift
+[7/13] Emitting module ProctorUI
+[8/13] Compiling ProctorUI AgentModel.swift
+[8/13] Write Objects.LinkFileList
+[9/13] Linking Proctor
+[10/13] Applying Proctor
+[12/13] Emitting module ProctorAgentTests
+[12/14] Write Objects.LinkFileList
+[13/14] Linking proctor-mcpPackageTests
+Build complete! (39.72s)
+Test Suite 'Selected tests' started at 2026-08-22 10:13:14.117.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 10:13:14.126.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 10:13:14.126.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 10:13:14.141.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.023) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "PRO-0098 · the suite writes nothing of the operator's" started.
+􀟈  Test "the swept root is the operator's own, and the reader reports a write into it" started.
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:152:9: Expectation failed: (changed → []) == ["policy/policy.json"]
+􀅺  removed ["policy/policy.json"]
+􀄵  the sweep did not see a file written one directory down
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:160:9: Expectation failed: (DirectoryWitness.changed(from: rewritten,
+                                         to: DirectoryWitness.read(decoy)) → []) == ["policy/policy.json"]
+􀅺  removed ["policy/policy.json"]
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" failed after 0.025 seconds with 2 issues.
+􀢄  Suite "PRO-0098 · the suite writes nothing of the operator's" failed after 0.026 seconds with 2 issues.
+􀢄  Test run with 1 test in 1 suite failed after 0.026 seconds with 2 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 1 test in 1 suite failed after 0.026 seconds with 2 issues.
+EXIT=1
+
+====================================================================
+SABOTAGE 4 — changed() always returns []. The dead-predicate shape: the
+claim arm passes for ever, and only the CONTROL arm can tell.
+====================================================================
+
+--- CASE-0270..0272 under sabotage 4 ---
+==> swift test --filter OperatorFilesWitnessTests (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.DbZs9oChB3)
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Compiling ProctorAgentTests FileWitness.swift
+[6/7] Emitting module ProctorAgentTests
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (11.57s)
+Test Suite 'Selected tests' started at 2026-08-22 10:13:27.515.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 10:13:27.516.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 10:13:27.516.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 10:13:27.516.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "PRO-0098 · the suite writes nothing of the operator's" started.
+􀟈  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" started.
+􀟈  Test "a rewrite of the same length is reported as a change" started.
+􀟈  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" started.
+􀟈  Test "the swept root is the operator's own, and the reader reports a write into it" started.
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:152:9: Expectation failed: (changed → []) == ["policy/policy.json"]
+􀅺  removed ["policy/policy.json"]
+􀄵  the sweep did not see a file written one directory down
+􁁛  Test "a rewrite of the same length is reported as a change" passed after 0.005 seconds.
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" recorded an issue at OperatorFilesWitnessTests.swift:160:9: Expectation failed: (DirectoryWitness.changed(from: rewritten,
+                                         to: DirectoryWitness.read(decoy)) → []) == ["policy/policy.json"]
+􀅺  removed ["policy/policy.json"]
+􀢄  Test "the swept root is the operator's own, and the reader reports a write into it" failed after 0.006 seconds with 2 issues.
+􁁛  Test "an un-injected session writes somewhere, and that somewhere is not the operator's" passed after 4.614 seconds.
+􀢄  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" recorded an issue at OperatorFilesWitnessTests.swift:88:9: Expectation failed: (wrote.count → 0) >= 1
+􀄵  the control arm saw no write at all, so the zero above measures nothing
+􀢄  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" recorded an issue at OperatorFilesWitnessTests.swift:90:9: Expectation failed: (wrote → []).contains("policy.json")
+􀢄  Test "a policy configure changes nothing under the operator's root, and the sweep can tell" failed after 4.745 seconds with 2 issues.
+􀢄  Suite "PRO-0098 · the suite writes nothing of the operator's" failed after 4.745 seconds with 4 issues.
+􀢄  Test run with 4 tests in 1 suite failed after 4.745 seconds with 4 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 4 tests in 1 suite failed after 4.745 seconds with 4 issues.
+EXIT=1
+
+====================================================================
+SABOTAGE 5 — the digest is dropped from FileWitness, leaving size and
+mtime. An equal-length rewrite inside one timestamp tick then reads as
+unchanged.
+====================================================================
+
+--- CASE-0273 under sabotage 5 ---
+==> swift test --filter theDigestClosesTheSameLengthHole (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.MUqUttsp4w)
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Emitting module ProctorAgentTests
+[6/7] Compiling ProctorAgentTests FileWitness.swift
+[7/9] Compiling ProctorAgentTests OperatorFilesWitnessTests.swift
+[8/9] Compiling ProctorAgentTests PolicyStoreSeamTests.swift
+[8/10] Write Objects.LinkFileList
+[9/10] Linking proctor-mcpPackageTests
+Build complete! (7.64s)
+Test Suite 'Selected tests' started at 2026-08-22 10:13:41.463.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 10:13:41.464.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 10:13:41.464.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 10:13:41.464.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "PRO-0098 · the suite writes nothing of the operator's" started.
+􀟈  Test "a rewrite of the same length is reported as a change" started.
+􀢄  Test "a rewrite of the same length is reported as a change" recorded an issue at OperatorFilesWitnessTests.swift:183:9: Expectation failed: (before.digest → nil) != (after.digest → nil)
+􀢄  Test "a rewrite of the same length is reported as a change" failed after 0.008 seconds with 1 issue.
+􀢄  Suite "PRO-0098 · the suite writes nothing of the operator's" failed after 0.009 seconds with 1 issue.
+􀢄  Test run with 1 test in 1 suite failed after 0.009 seconds with 1 issue.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 1 test in 1 suite failed after 0.009 seconds with 1 issue.
+EXIT=1
+
+====================================================================
+SABOTAGE 6 — the pre-fix write put back: Data.write(to:options:.atomic),
+which says nothing about the mode. This is DEF-068's original defect.
+====================================================================
+
+--- CASE-0274, CASE-0275 under sabotage 6 ---
+==> swift test --filter Witnessed (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.NEnJhD2NAB)
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/14] Write sources
+[4/14] Write swift-version--58304C5D6DBC2206.txt
+[6/10] Emitting module ProctorAgent
+[7/10] Compiling ProctorAgent PolicyStore.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0098/Sources/ProctorAgent/Session/PolicyStore.swift:92:13: warning: initialization of immutable value 'fm' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+ 90 |     /// DEF-068 and CASE-0191 is the case that fails without this option.
+ 91 |     private static func write(_ data: Data, to url: URL, in directory: URL) throws {
+ 92 |         let fm = FileManager.default
+    |             `- warning: initialization of immutable value 'fm' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+ 93 | 
+ 94 |         // A name of its own per call, because `O_EXCL` would otherwise turn two
+[7/12] Write Objects.LinkFileList
+[8/12] Linking proctor-agent
+[9/12] Applying proctor-agent
+[11/14] Emitting module ProctorAgentTests
+[12/14] Compiling ProctorAgentTests FileWitness.swift
+[13/16] Compiling ProctorAgentTests OperatorFilesWitnessTests.swift
+[14/16] Compiling ProctorAgentTests PolicyStoreSeamTests.swift
+[14/16] Write Objects.LinkFileList
+[15/16] Linking proctor-mcpPackageTests
+Build complete! (13.00s)
+Test Suite 'Selected tests' started at 2026-08-22 10:13:55.978.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 10:13:55.979.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 10:13:55.980.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 10:13:55.980.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Policy file mode" started.
+􀟈  Test "the write is watched: every path it creates is recorded, and each is 0600" started.
+􀢄  Test "the write is watched: every path it creates is recorded, and each is 0600" recorded an issue at PolicyStoreSeamTests.swift:272:13: Expectation failed: (mode(url) → 420) == (0o600 → 384)
+􀄵  policy.json is 644, not 600
+􀢄  Test "the write is watched: every path it creates is recorded, and each is 0600" failed after 0.076 seconds with 1 issue.
+􀟈  Test "a second save is watched too: it rewrites the one file and leaves no other behind" started.
+􀢄  Test "a second save is watched too: it rewrites the one file and leaves no other behind" recorded an issue at PolicyStoreSeamTests.swift:298:9: Expectation failed: (mode(store.url) → 420) == (0o600 → 384)
+􀢄  Test "a second save is watched too: it rewrites the one file and leaves no other behind" failed after 0.095 seconds with 1 issue.
+􀢄  Suite "Policy file mode" failed after 0.172 seconds with 2 issues.
+􀄵  // PRO-0095, DEF-068 — the policy file's mode, read off disk rather than trusted.
+􀄵  //
+􀄵  // `PolicyStore.save` created its directory `0o700` and then wrote the file with
+􀄵  // `Data.write(to:options:.atomic)`, which takes no mode and so takes the umask
+􀄵  // default: measured `-rw-r--r-- policy.json` inside `drwx------ policy/`, while
+􀄵  // `AuditLog` in the same file opens `audit.jsonl`, `audit.lock` and `audit.pub`
+􀄵  // explicitly `0o600`.
+􀄵  //
+􀄵  // **Not overstated.** The `0700` directory carries the protection today, so this
+􀄵  // was an inconsistency with the neighbouring code rather than an exposure. It
+􀄵  // becomes one when the file is copied, backed up, or the directory's mode is
+􀄵  // loosened, and the file records which applications an agent may drive.
+􀄵  //
+􀄵  // Every case here reads the mode back with `attributesOfItem`. Asserting the
+􀄵  // options passed to the write would be asserting the call rather than the file,
+􀄵  // and the defect was precisely a call whose options said nothing about the mode.
+􀄵  // `.serialized` because CASE-0192 changes the process umask, which is
+􀄵  // process-wide: run in parallel with CASE-0190 it decides which wide mode the
+􀄵  // pre-fix code produces there. Measured in the arming run below — CASE-0190 read
+􀄵  // 0o666 rather than the 0o644 its own umask would give. It changes no verdict
+􀄵  // under the fix, where every mode is explicit, but it makes an arming run's
+􀄵  // numbers describe the wrong case. The window against the rest of the suite is
+􀄵  // one `open` inside one test, and nothing outside this file asserts on a mode.
+􀢄  Test run with 2 tests in 1 suite failed after 0.172 seconds with 2 issues.
+
+FAIL: swift test exited 1
+      􀢄  Test run with 2 tests in 1 suite failed after 0.172 seconds with 2 issues.
+EXIT=1
+
+====================================================================
+RESTORED. git status: 0 modified file(s)
+====================================================================

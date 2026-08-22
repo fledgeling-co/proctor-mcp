@@ -11,8 +11,13 @@ import Foundation
 @Suite("Toolchain rows")
 struct ToolchainRowTests {
 
-    private func entry(_ tool: String) -> ToolchainEntry {
-        Toolchain.entry(for: tool)!
+    /// PRO-0098, DEF-136. A lookup into the production catalogue by a literal id
+    /// is the shape that aborts the runner: the regression this suite exists to
+    /// catch — an entry dropped from the catalogue — is exactly the input that
+    /// makes the unwrap nil, so the trap fires instead of the test.
+    private func entry(_ tool: String) throws -> ToolchainEntry {
+        try #require(Toolchain.entry(for: tool),
+                     "no toolchain catalogue entry for \(tool)")
     }
 
     private func located(_ tool: String, at path: String?, searched: [String] = ["/a", "/b"],
@@ -22,8 +27,8 @@ struct ToolchainRowTests {
     }
 
     @Test("a tool that is not there is unusable, and the evidence says absent")
-    func absentToolIsUnusable() {
-        let row = Toolchain.row(entry: entry("obscura"),
+    func absentToolIsUnusable() throws {
+        let row = try Toolchain.row(entry: entry("obscura"),
                                 facts: ToolFacts(located: located("obscura", at: nil)))
         #expect(row.available == false)
         #expect(row.usability == .unusable)
@@ -47,8 +52,8 @@ struct ToolchainRowTests {
     }
 
     @Test("presence settles the tools Proctor only ever calls as a one-shot")
-    func presenceIsEnoughForOneShotTools() {
-        let row = Toolchain.row(entry: entry("obscura"),
+    func presenceIsEnoughForOneShotTools() throws {
+        let row = try Toolchain.row(entry: entry("obscura"),
                                 facts: ToolFacts(located: located("obscura", at: "/x/obscura")))
         #expect(row.usability == .usable)
         #expect(row.evidence == .presence)
@@ -58,8 +63,8 @@ struct ToolchainRowTests {
     }
 
     @Test("a half install is unusable and names the missing companion")
-    func missingCompanionIsUnusable() {
-        let row = Toolchain.row(entry: entry("obscura"),
+    func missingCompanionIsUnusable() throws {
+        let row = try Toolchain.row(entry: entry("obscura"),
                                 facts: ToolFacts(located: located("obscura", at: "/x/obscura",
                                                                   missing: ["obscura-worker"])))
         #expect(row.usability == .unusable)
@@ -67,8 +72,8 @@ struct ToolchainRowTests {
     }
 
     @Test("a version off the install layout is reported as the layout's claim")
-    func installPathVersionIsEvidenced() {
-        let row = Toolchain.row(entry: entry("maestro"),
+    func installPathVersionIsEvidenced() throws {
+        let row = try Toolchain.row(entry: entry("maestro"),
                                 facts: ToolFacts(located: located("maestro", at: "/opt/homebrew/bin/maestro"),
                                                  installVersion: "2.4.0"))
         #expect(row.version == "2.4.0")
@@ -80,8 +85,8 @@ struct ToolchainRowTests {
     }
 
     @Test("presence is not enough for the driver, and an unchecked signature says so")
-    func driverWithoutASignatureIsUnconfirmed() {
-        let row = Toolchain.row(entry: entry("cua-driver"),
+    func driverWithoutASignatureIsUnconfirmed() throws {
+        let row = try Toolchain.row(entry: entry("cua-driver"),
                                 facts: ToolFacts(located: located("cua-driver", at: "/x/cua-driver")))
         #expect(row.available == true)
         #expect(row.usability == .unconfirmed)
@@ -89,8 +94,8 @@ struct ToolchainRowTests {
     }
 
     @Test("a correctly signed driver is unconfirmed, not usable, and says what is missing")
-    func signedDriverIsUnconfirmed() {
-        let row = Toolchain.row(entry: entry("cua-driver"),
+    func signedDriverIsUnconfirmed() throws {
+        let row = try Toolchain.row(entry: entry("cua-driver"),
                                 facts: ToolFacts(located: located("cua-driver", at: "/x/cua-driver"),
                                                  signature: .valid))
         // Signed proves it is the real thing. It does not prove the daemon is up,
@@ -102,10 +107,10 @@ struct ToolchainRowTests {
     }
 
     @Test("an ad-hoc or wrongly signed driver is unusable and will not be run")
-    func badlySignedDriverIsUnusable() {
+    func badlySignedDriverIsUnusable() throws {
         for signature: ToolSignature in [.adhoc, .unsigned, .wrongIdentity("com.someone.else"),
                                          .unreadable("no")] {
-            let row = Toolchain.row(entry: entry("cua-driver"),
+            let row = try Toolchain.row(entry: entry("cua-driver"),
                                     facts: ToolFacts(located: located("cua-driver", at: "/x/cua-driver"),
                                                      signature: signature))
             #expect(row.usability == .unusable)
@@ -115,8 +120,8 @@ struct ToolchainRowTests {
     }
 
     @Test("a completed preflight is the only thing that makes the driver confirmed usable")
-    func laneReportConfirmsTheDriver() {
-        let row = Toolchain.row(entry: entry("cua-driver"),
+    func laneReportConfirmsTheDriver() throws {
+        let row = try Toolchain.row(entry: entry("cua-driver"),
                                 facts: ToolFacts(located: located("cua-driver", at: "/x/cua-driver"),
                                                  signature: .valid,
                                                  laneReport: ToolLaneFacts(version: "0.13.2",
@@ -127,8 +132,8 @@ struct ToolchainRowTests {
     }
 
     @Test("a refused preflight reports the stage it refused at, and is not repeated")
-    func refusedLaneReportsItsStage() {
-        let row = Toolchain.row(entry: entry("cua-driver"),
+    func refusedLaneReportsItsStage() throws {
+        let row = try Toolchain.row(entry: entry("cua-driver"),
                                 facts: ToolFacts(located: located("cua-driver", at: "/x/cua-driver"),
                                                  signature: .valid,
                                                  laneReport: ToolLaneFacts(healthy: false,
@@ -139,8 +144,8 @@ struct ToolchainRowTests {
     }
 
     @Test("overrides an operator set are named in the row")
-    func overridesAreVisible() {
-        let row = Toolchain.row(entry: entry("cua-driver"),
+    func overridesAreVisible() throws {
+        let row = try Toolchain.row(entry: entry("cua-driver"),
                                 facts: ToolFacts(located: located("cua-driver", at: "/x/cua-driver"),
                                                  laneReport: ToolLaneFacts(version: "0.13.2",
                                                                            healthy: true,
@@ -149,8 +154,8 @@ struct ToolchainRowTests {
     }
 
     @Test("checkedAt travels with the verdict")
-    func checkedAtIsCarried() {
-        let row = Toolchain.row(entry: entry("obscura"),
+    func checkedAtIsCarried() throws {
+        let row = try Toolchain.row(entry: entry("obscura"),
                                 facts: ToolFacts(located: located("obscura", at: "/x/obscura"),
                                                  checkedAt: 1234))
         #expect(row.checkedAt == 1234)
@@ -412,7 +417,7 @@ struct DriverTextContainmentTests {
         let facts = ToolLaneFacts(version: "0.13.2", healthy: true,
                                   overrides: ["unsignedBinaryAccepted"],
                                   driverReportedGrants: ["Accessibility": true])
-        let row = Toolchain.row(entry: Toolchain.entry(for: "cua-driver")!,
+        let row = try Toolchain.row(entry: #require(Toolchain.entry(for: "cua-driver")),
                                 facts: ToolFacts(located: ToolPresence(tool: "cua-driver",
                                                                        available: true,
                                                                        path: "/x/cua-driver"),

@@ -79,10 +79,21 @@ final class AgentModel {
         let ok: Bool
     }
 
+    /// The restart in flight, if there is one. PRO-0098, DEF-132: this used to be
+    /// a `Bool` cleared by a 1.2-second timer, which is a guess that the restart
+    /// finished rather than a reading of whether it did. `RestartWatch` is fed the
+    /// reachability of every doctor probe and ends on the probe that finds the
+    /// agent, or on enough probes that have not.
+    ///
+    /// Thirty probes on the doctor cadence below (2.0 s) is a minute of a restart
+    /// not coming back, after which "the agent is not answering" is true and is
+    /// the right thing to say.
+    private var restartWatch = RestartWatch(giveUpAfterProbes: 30)
+
     /// True while the agent is being restarted to pick up a permission it had
     /// already cached as denied. The socket is briefly down during this, so the
     /// UI reads this rather than flashing "agent not answering".
-    private(set) var isApplying = false
+    var isApplying: Bool { restartWatch.isApplying }
 
     /// Ad-hoc signed builds lose their grants on every rebuild, which presents
     /// as elements not being found rather than as a permission error. Worth
@@ -458,29 +469,43 @@ final class AgentModel {
     /// told — and having the hand-driven route be the same code is what stops the
     /// two surfaces drifting into two answers.
     private func reprobeAfterGrant() {
-        isApplying = true
+        restartWatch.begin()
         recomputeRecovery()
         Actions.restartAgent()
         // launchd needs a beat to bring the agent back; polling immediately
-        // races the restart and reports it as down.
+        // races the restart and reports it as down. That is the whole job of this
+        // delay and it is unchanged: it defers the FIRST probe.
+        //
+        // PRO-0098, DEF-132. What it no longer does is CLEAR the applying state.
+        // A restart that outlives 1.2 s used to leave the window drawing "the
+        // background agent is not answering" at a person who did exactly what the
+        // window asked. The state now ends on `apply(_:)` feeding the watch a
+        // probe that found the agent — the event that ends the restart — or on
+        // thirty that did not.
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
-            self?.isApplying = false
-            self?.recomputeRecovery()
             self?.refresh()
         }
     }
 
     private func apply(_ outcome: Outcome) {
+        let reachable: Bool
         switch outcome {
         case .success(let r):
             report = r
             reachability = .reachable
+            reachable = true
         case .failure(let message):
             report = nil
             reachability = .unreachable(message)
+            reachable = false
         }
         lastChecked = Date()
         isChecking = false
+        // PRO-0098, DEF-132. Every doctor probe is evidence about a restart in
+        // flight, and this is the only place one lands. The watch ignores probes
+        // arriving when no restart was asked for, so the poll running for the
+        // app's whole life costs nothing here.
+        restartWatch.observed(reachable: reachable)
         recomputeRecovery()
     }
 
