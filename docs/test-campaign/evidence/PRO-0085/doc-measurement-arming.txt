@@ -1,0 +1,53 @@
+baseline: 24/24 PASS
+
+ARMED    tools.md names every shipped tool
+          mutation reds: tools.md names every shipped tool
+ARMED    tools.md names no tool the server lacks
+          mutation reds: tools.md names no tool the server lacks
+ARMED    catalogue ships 21
+          mutation reds: SKILL.md states the catalogue count in words, SKILL.md's depth line states the catalogue count, catalogue ships 21, full profile row totals the catalogue, tools.md names no tool the server lacks, tools.md restates the split as the catalogue count, tools.md states the count the catalogue ships, tools.md's specified-plus-named split is the catalogue
+ARMED    tools.md specifies 15 sections
+          mutation reds: tools.md specifies 15 sections
+ARMED    proctor_guest has a specified section
+          mutation reds: proctor_guest has a specified section, tools.md specifies 15 sections
+ARMED    tools.md states the count the catalogue ships
+          mutation reds: tools.md states the count the catalogue ships
+ARMED    full profile row totals the catalogue
+          mutation reds: every profile row totals the tools it names, full profile row totals the catalogue
+ARMED    every profile row totals the tools it names
+          mutation reds: every profile row totals the tools it names
+ARMED    tools.md's specified-plus-named split is the catalogue
+          mutation reds: tools.md's specified-plus-named split is the catalogue
+ARMED    tools.md restates the split as the catalogue count
+          mutation reds: tools.md restates the split as the catalogue count
+ARMED    SKILL.md states the catalogue count in words
+          mutation reds: SKILL.md states the catalogue count in words
+ARMED    SKILL.md's depth line states the catalogue count
+          mutation reds: SKILL.md's depth line states the catalogue count
+ARMED    both files state the core profile's size
+          mutation reds: both files state the core profile's size
+ARMED    guest listed in full profile adds
+          mutation reds: every profile row totals the tools it names, guest listed in full profile adds
+ARMED    all three providers named
+          mutation reds: all three providers named
+ARMED    SKILL.md has a guest lane section
+          mutation reds: SKILL.md has a guest lane section
+ARMED    description names the guest lane
+          mutation reds: description names the guest lane
+ARMED    description distinguishes delegated
+          mutation reds: description distinguishes delegated
+ARMED    nothing provisions, stated in both
+          mutation reds: nothing provisions, stated in both
+ARMED    no provision action documented
+          mutation reds: no provision action documented
+ARMED    two-guest cap survives in SKILL.md
+          mutation reds: two-guest cap survives in SKILL.md
+ARMED    cap sits under a scale question
+          mutation reds: cap sits under a scale question
+ARMED    tahoe stated as measurement
+          mutation reds: tahoe stated as measurement
+ARMED    status osVersion honesty stated
+          mutation reds: status osVersion honesty stated
+
+24/24 checks armed
+EXIT=0

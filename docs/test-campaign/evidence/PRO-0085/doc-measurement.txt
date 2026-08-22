@@ -1,0 +1,27 @@
+PASS  tools.md names every shipped tool
+PASS  tools.md names no tool the server lacks
+PASS  catalogue ships 21
+PASS  tools.md specifies 15 sections
+PASS  proctor_guest has a specified section
+PASS  tools.md states the count the catalogue ships
+PASS  full profile row totals the catalogue
+PASS  every profile row totals the tools it names
+PASS  tools.md's specified-plus-named split is the catalogue
+PASS  tools.md restates the split as the catalogue count
+PASS  SKILL.md states the catalogue count in words
+PASS  SKILL.md's depth line states the catalogue count
+PASS  both files state the core profile's size
+PASS  guest listed in full profile adds
+PASS  all three providers named
+PASS  SKILL.md has a guest lane section
+PASS  description names the guest lane
+PASS  description distinguishes delegated
+PASS  nothing provisions, stated in both
+PASS  no provision action documented
+PASS  two-guest cap survives in SKILL.md
+PASS  cap sits under a scale question
+PASS  tahoe stated as measurement
+PASS  status osVersion honesty stated
+
+24/24 checks passed
+EXIT=0

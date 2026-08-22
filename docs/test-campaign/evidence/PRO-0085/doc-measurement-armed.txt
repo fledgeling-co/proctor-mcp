@@ -1,0 +1,27 @@
+SUPERSEDED. This is the first attempt's arming run, kept because it is what
+found the problem. It armed 3 of 17 checks by editing the LIVE skill, and the run
+was killed between the mutation and the revert, so the three FAILs below were
+still the state of the shared skill an hour later. The instrument it was produced
+by no longer exists: three of its checks could not fail. Read
+doc-measurement-arming.txt instead, which arms 18 of 18 against scratch copies.
+
+PASS  tools.md names every shipped tool
+PASS  tools.md names no tool the server lacks
+PASS  catalogue ships 21
+PASS  tools.md specifies 15 sections
+FAIL  proctor_guest has a specified section
+PASS  full profile row reads 21
+PASS  guest listed in full profile adds
+PASS  all three providers named
+PASS  SKILL.md has a guest lane section
+PASS  description names the guest lane
+PASS  description distinguishes delegated
+PASS  nothing provisions, stated in both
+PASS  no provision action documented
+FAIL  two-guest cap survives in SKILL.md
+FAIL  cap sits under a scale question
+PASS  tahoe stated as measurement
+PASS  status osVersion honesty stated
+
+14/17 checks passed
+EXIT=1

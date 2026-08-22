@@ -4489,5 +4489,104 @@
       "DEF-180"
     ],
     "armedBy": "Removed the freeze: changed ScreenRecordingProbe.state()'s `case .cached(let known): return known` to re-read the platform, and watched doctorReportsTheFrozenValue fail \u2014 (row?.resolvedState \u2192 .denied) == .granted and (row?.granted \u2192 false) == true \u2014 2 issues, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json"
+  },
+  {
+    "id": "CASE-0370",
+    "req": "REQ-091",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/skill_doc_measure.py",
+      "scripts/campaign/skill_doc_arm.py",
+      "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt",
+      "docs/test-campaign/evidence/PRO-0085/doc-measurement-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "skill_doc_arm.py mutates a scratch copy of the skill and of ToolCatalogue.swift, one mutation per check, and asserts the named check flips to FAIL. The thirteen checks this case stands on were each watched red: dropping proctor_policy from tools.md reds 'names every shipped tool'; adding proctor_bogus reds 'names no tool the server lacks'; renaming name: \"proctor_zoom\" in the catalogue reds 'catalogue ships 21'; demoting one '## `proctor_wait`' to '###' reds 'specifies 15 sections'; retitling the guest heading reds 'proctor_guest has a specified section'; and deleting `guest` from the full row's adds column reds 'guest listed in full profile adds'. EVERY COUNT EITHER FILE STATES IS NOW READ, because the first instrument read two of six and a corrected site went unwatched: '21 tools' -> '20 tools' reds 'states the count the catalogue ships'; the full row's total 21 -> 20 reds 'full profile row totals the catalogue'; deleting `openai_computer` from that row's adds column reds 'every profile row totals the tools it names', which reads all four row totals against the names they nest over; 'Six more are named' -> 'Five more' reds the specified-plus-named split; 'Fifteen plus six is the 21 above' -> '20 above' reds its restatement; 'rather than all twenty-one' -> 'all twenty' reds SKILL.md's word-form count; 'the 21 tools the server ships' -> '20 tools' reds SKILL.md's depth line; and '`core` is the ten that' -> 'the eleven that' reds the core-profile size both files state. Full output in doc-measurement-arming.txt, 24/24 armed.",
+    "note": "PRO-0085, DEF-190 and DEF-192. The deliverable is in another repository (~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor), so this is a hand-run measurement rather than a suite predicate; that limit is stated in the instrument's own docstring and in spec-PRO-0085.md. THREE CHECKS IN THE FIRST VERSION OF THIS INSTRUMENT COULD NOT FAIL and its 17/17 was read as a pass over them: 'all three providers named' tested \"tart\" in tools, which the word 'start' satisfies; 'SKILL.md has a guest lane section' tested for '## The guest lane' anywhere in flattened text and was satisfied by a backticked cross-reference while the heading itself read '## `proctor_ARMING`'; and nothing read the count the page states about itself, so 'The server ships **20 tools**' survived a green run of the very instrument written to catch it. Providers are now matched on a word boundary, headings are anchored to the start of a line, and the stated count is compared to the catalogue.",
+    "defects": [
+      "DEF-190",
+      "DEF-192"
+    ]
+  },
+  {
+    "id": "CASE-0371",
+    "req": "REQ-092",
+    "surface": "SURF-013",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/skill_doc_measure.py",
+      "scripts/campaign/skill_doc_arm.py",
+      "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt",
+      "docs/test-campaign/evidence/PRO-0085/doc-measurement-arming.txt",
+      "docs/test-campaign/evidence/PRO-0085/doc-description-anchor-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Each of the ten checks this case stands on was watched red under its own mutation on a scratch copy: retitling '## The guest lane' reds the section check; 'Nothing here provisions a guest' -> 'Nothing provisions a guest' reds the both-files check; inserting a `provision` token into tools.md reds 'no provision action documented', which is a negative check and would otherwise never have been seen to fire; 'caps concurrent macOS guests at two' -> 'limits macOS guests to two' reds the cap check; 'How many guests at once? Two.' -> 'How many at once? Two.' reds the scale-question check; 'prlctl' -> 'parallels-cli' reds the provider check; 'both still open' -> 'both open' reds the Tahoe check; and shortening the osVersion sentence reds the honesty check. THE TWO DESCRIPTION CHECKS WERE DEAD and are re-armed: both tested membership against the whole of SKILL.md, so a phrase 800 lines into the body satisfied a claim about the frontmatter description a host reads to route. They now read the `description:` value alone, and each is armed against a mutation that rewrites the phrase in the description while planting it in the body, a file the old predicate still passes on. Watched red in doc-description-anchor-arming.txt, which records the whole-file membership as True beside each FAIL. Full arming output in doc-measurement-arming.txt, 24/24 armed.",
+    "note": "PRO-0085, DEF-190 and DEF-191. Checks that SKILL.md routes on isolation rather than throughput: a '## The guest lane' section, the description naming virtual-machine guests and distinguishing the delegated tier, 'Nothing here provisions a guest' with its reason in both files, no provision action documented, and the two-guest cap surviving verbatim under 'How many guests at once? Two.' rather than standing as the file's only word on virtual machines. THE LIVE SKILL WAS FOUND MID-MUTATION: the previous attempt armed three checks by editing the real files and was killed between the mutation and the revert, so every project on this machine spent roughly an hour reading a skill whose guest section was headed '## `proctor_ARMING`', whose guest-lane heading read '## The ARMING lane', and whose cap paragraph was a placeholder. Restored here, and skill_doc_arm.py now mutates scratch copies only so an interrupted run cannot leave the shared skill broken.",
+    "defects": [
+      "DEF-190",
+      "DEF-191"
+    ]
+  },
+  {
+    "id": "CASE-0372",
+    "req": "REQ-093",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/AgentVerbBoundaryTests.swift",
+      "docs/test-campaign/evidence/PRO-0085/arming-A-hud-in-catalogue.txt",
+      "docs/test-campaign/evidence/PRO-0085/baseline.txt",
+      "docs/test-campaign/evidence/PRO-0085/full-suite.txt"
+    ],
+    "armed": true,
+    "armedBy": "A ToolSpec named proctor_hud added to ToolCatalogue.all. 'Expectation failed: (ToolCatalogue.spec(named: verb) -> ToolSpec(name: \"proctor_hud\", title: \"arming\", ...)) == nil' at AgentVerbBoundaryTests.swift:40:13, the message naming the spec the shim's gate would have forwarded. Run failed with 2 issues, exit 1; reverted and green. Full output in arming-A-hud-in-catalogue.txt.",
+    "note": "PRO-0085. AgentVerbs.swift:20-24 states this boundary in prose and MCPServer.swift:224 is the gate that enforces it; nothing asserted it until here. Adding proctor_hud to the catalogue would hand an MCP client a person's Pause, Resume and Stop while both the comment and the proctor skill kept reading as true. The verbs are read from AgentVerbs rather than copied as strings, so a renamed constant moves the assertion with it.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0373",
+    "req": "REQ-093",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/AgentVerbBoundaryTests.swift",
+      "docs/test-campaign/evidence/PRO-0085/arming-B-doctor-renamed.txt",
+      "docs/test-campaign/evidence/PRO-0085/baseline.txt",
+      "docs/test-campaign/evidence/PRO-0085/full-suite.txt"
+    ],
+    "armed": true,
+    "armedBy": "AgentVerbs.doctor renamed so it no longer matches a catalogue entry. 'Expectation failed: (ToolCatalogue.spec(named: AgentVerbs.doctor) -> nil) != nil' at AgentVerbBoundaryTests.swift:50:9. Run failed with 1 issue, exit 1; reverted and green. Full output in arming-B-doctor-renamed.txt.",
+    "note": "PRO-0085. proctor_doctor is the one AgentVerbs member that is also a catalogue tool, named there because Proctor's own status window calls it by that name. Asserted positively rather than skipped, so an exclusion rule that swept up a real tool would red here instead of passing quietly.",
+    "defects": []
+  },
+  {
+    "id": "CASE-0374",
+    "req": "REQ-093",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/AgentVerbBoundaryTests.swift",
+      "docs/test-campaign/evidence/PRO-0085/arming-A-hud-in-catalogue.txt",
+      "docs/test-campaign/evidence/PRO-0085/baseline.txt",
+      "docs/test-campaign/evidence/PRO-0085/full-suite.txt"
+    ],
+    "armed": true,
+    "armedBy": "The same proctor_hud addition. 'Expectation failed: (names.count -> 22) == 21' at AgentVerbBoundaryTests.swift:58:9. Run failed, exit 1; reverted and green. Full output in arming-A-hud-in-catalogue.txt.",
+    "note": "PRO-0085, DEF-192. The count assertion the skill's documented 21 rests on, plus a uniqueness assertion on the names. WHAT THIS DOES NOT COVER, and it is the failure mode this item exists to close: nothing in this suite reads the skill file in the other repository, so references/tools.md drifting from the catalogue again is caught by CASE-0370's hand-run measurement, not by ./scripts/test.sh. The failure message names references/tools.md so the next reader who reds this case knows the document needs the same edit.",
+    "defects": [
+      "DEF-192"
+    ]
   }
 ]

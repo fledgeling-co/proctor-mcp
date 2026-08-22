@@ -1,0 +1,25 @@
+PRO-0085 CASE-0371 — why the two description checks needed re-anchoring.
+
+Both tested membership against the whole of SKILL.md, so a phrase anywhere in
+900 lines of body satisfied a claim about the ~300-word frontmatter description
+a host reads to route. The mutation below moves each phrase out of the
+description and plants it in the body: the file still contains the phrase, so
+the old whole-file predicate stays PASS, while the anchored one goes red. That
+is the mutation the checks are armed against.
+
+Scratch copies throughout; ~/Dev/fledgeling-plugins is never written.
+
+=== description names the guest lane ===
+scratch copy only; the live skill is never written
+whole-file membership of 'virtual-machine guests' after the mutation: True   <- the old predicate still PASSes on this file
+measure exit: 1
+FAIL  description names the guest lane
+23/24 checks passed
+
+=== description distinguishes delegated ===
+scratch copy only; the live skill is never written
+whole-file membership of 'delegated to coordinates' after the mutation: True   <- the old predicate still PASSes on this file
+measure exit: 1
+FAIL  description distinguishes delegated
+23/24 checks passed
+
