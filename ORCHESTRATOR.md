@@ -2380,3 +2380,58 @@ classify should be a finding, never a silent pass and never a silent fail.
 sit in real prose at fence depth 0. A repository whose briefs cite by convention — "the brief names
 the defects it closes" — has the opposite prior, and one does: there, a brief discussing a
 neighbouring defect is textually identical to one that owns it.
+
+### PRO-0102's delivery fault survived PRO-0102's delivery fix (2026-08-22)
+
+The item moved `plugin.json` to 1.1.0 and brought the marketplace entry with it, both verified, and
+**neither is the artifact that runs.** Measured directly:
+
+| Probe | Cached copy | Source |
+|---|---|---|
+| Directory | `~/.claude/plugins/cache/fledgeling-plugins/reckon/**1.0.0**/` — no 1.1.0 dir exists | `~/Dev/fledgeling-plugins/plugins/reckon` |
+| `grep -c unjoined reckon.py` | **0** | **14** |
+| `tokens()` on a string | 3 tokens | 3 tokens |
+| `tokens()` on a list | `AttributeError: 'list' object has no attribute 'lower'` | 3 tokens, via `flatten_text` |
+
+The cached copy is the pre-fix classifier rather than fixed code wearing a stale label. A versioned
+cache directory only appears on a plugin refresh, and none has happened.
+
+**Why it matters more elsewhere than here.** 304 of 304 cases in this registry carry a list-valued
+`evidence` field, so this project gets the crash — loud, and impossible to mistake for an answer. A
+registry whose evidence is all strings gets the silent version instead: the pre-fix classifier, every
+defect row hardcoded to `broken`, and the fabricated backlog this evening spent characterising.
+
+**And the check cannot be a version string, because a version string is what is wrong.**
+`grep -c unjoined <the reckon.py that will actually run>` settles it: 14 is the repair, 0 is the old
+classifier. Refreshing the plugin cache is the reader's action; nothing here edits another session's
+cache. DEF-216 records it.
+
+### PRO-0103 built, and it produced the result the item existed for (2026-08-22)
+
+`ai/pro-0103` at `97a00fd`, nine commits, tree clean. Suite 2,064 in 251 suites, `TEST_EXIT=0`, a
+control since no Swift changed. `reckoning_selftest.py` 28 checks, 0 failed, exit 0. `defect_gate`
+claims and dropped both 0 (112 merges, 44,283 pairs). `campaign.py check` exits 1 on head and on merge
+base, differing by one line — `External-effect claims with no witness (27 of 29)` → `(28 of 30)` — and
+naming none of its ids. Allocated REQ-102–107, CASE-0441–0456, SURF-025, DEF-216.
+
+**The finding.** Differencing the two published reckonings says this project shed **84** items.
+Holding the tool constant — rebuilding the earlier run's own inputs at its own commit with the current
+tool — says **−88 tool, +4 project**. Nearly the whole improvement was the tool being repaired; the
+project moved by four, and `unmeasured` is flat at 36 rows with nothing entering or leaving. A
+comparison unable to separate the two would have reported an 84-item triumph and it would have been
+believed, which is precisely the thing this item was built to prevent on its second run rather than
+its tenth.
+
+**Its arming found a hole its design lacked**, which is the pattern worth keeping: a control built by a
+third tool version belongs to neither side, so `compare` now refuses when the tool on disk is not the
+one that took the current reading. Same shape as DEF-202's repair — an input the instrument cannot
+classify becomes a refusal that names itself rather than a number.
+
+**Two corrections to brief 96, measured against the fixed tool.** Its first finding does not reproduce
+here: there are **four** blockers with one case each contributing +0.3 points, not one `BLOCK-0001`
+grouping four cells, and the 16.7% is the **join** percentage rather than a block's weight. Its second
+finding — `source` joins and grades — is untested here and undisputed.
+
+**DEF-202 does not bite on this registry**, confirmed rather than assumed: 118 defect rows carry only
+`fixed` (111) and `open` (7). **DEF-201 has no live instance here**: 0 of 176 cited ids sit in a code
+fence, which is the idiom caveat already on that row.
