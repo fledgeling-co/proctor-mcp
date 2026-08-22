@@ -1,6 +1,7 @@
 # PRO-0045: A delegated call is still gated and recorded
 
 **ID:** PRO-0045
+**Brief:** `docs/features-to-triage/46-a-delegated-call-is-still-gated-and-recorded.md` (brief 46)
 **Status:** Merged `1bff5c2`
 **Created:** 2026-08-15
 **Last updated:** 2026-08-15

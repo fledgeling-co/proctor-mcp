@@ -1,6 +1,7 @@
 # PRO-0017: HUD character sprite assets
 
 **ID:** PRO-0017
+**Brief:** `docs/features-to-triage/18-hud-character-assets.md` (brief 18)
 **Status:** Merged
 **Created:** 2026-08-14
 **Last updated:** 2026-08-14

@@ -1,6 +1,7 @@
 # PRO-0034: Scroll moves by what was asked
 
 **ID:** PRO-0034
+**Brief:** `docs/features-to-triage/35-scroll-moves-by-what-was-asked.md` (brief 35, which names PRO-0034 in its own retirement banner)
 **Status:** Merged
 **Created:** 2026-08-15
 **Last updated:** 2026-08-17

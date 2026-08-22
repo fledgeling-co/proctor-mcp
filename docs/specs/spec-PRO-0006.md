@@ -1,6 +1,7 @@
 # PRO-0006: Vision-capture normalisation
 
 **ID:** PRO-0006
+**Brief:** `docs/features-to-triage/06-vision-capture-normalisation.md`
 **Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-13

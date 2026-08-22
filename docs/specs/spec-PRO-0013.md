@@ -1,6 +1,7 @@
 # PRO-0013: Encryption-at-rest for the audit log
 
 **ID:** PRO-0013
+**Brief:** `docs/features-to-triage/13-audit-log-encryption-at-rest.md`
 **Status:** Merged
 **Created:** 2026-08-13
 **Last updated:** 2026-08-14
