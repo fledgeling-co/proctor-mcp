@@ -951,9 +951,9 @@
       "class": "reporting correctness",
       "evidence": "observed",
       "surfaces": [
-        "SURF-022"
+        "SURF-023"
       ],
-      "note": "The pre-fix classifier hardcoded every defect row to broken. Measured against this repo's own inventory.json: 110 defect rows, 100 fixed, and all 110 reported as remaining product work. After the change the ten it reports broken are exactly the ten this file records as non-fixed — DEF-033, 140, 141, 151, 162, 163, 165, 175, 180, 193. CASE-0410 through CASE-0415, CASE-0429. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted.",
+      "note": "The pre-fix classifier hardcoded every defect row to broken. Measured against this repo's own inventory.json: 110 defect rows, 100 fixed, and all 110 reported as remaining product work. After the change the ten it reports broken are exactly the ten this file records as non-fixed — DEF-033, 140, 141, 151, 162, 163, 165, 175, 180, 193. CASE-0410 through CASE-0415, CASE-0429. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine.",
       "effect": "none"
     },
     {
@@ -963,9 +963,9 @@
       "class": "reporting correctness",
       "evidence": "observed",
       "surfaces": [
-        "SURF-022"
+        "SURF-023"
       ],
-      "note": "unbuilt claims the registry answered and said no; a join returning nothing is a different fact with the opposite conclusion. 75 of 91 briefs here landed in unbuilt on a 17.6% join and every one named a merged item. The two are now separate classes and unbuilt stays a live predicate rather than a dead one. CASE-0416 through CASE-0423, CASE-0425, CASE-0426. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted.",
+      "note": "unbuilt claims the registry answered and said no; a join returning nothing is a different fact with the opposite conclusion. 75 of 91 briefs here landed in unbuilt on a 17.6% join and every one named a merged item. The two are now separate classes and unbuilt stays a live predicate rather than a dead one. CASE-0416 through CASE-0423, CASE-0425, CASE-0426. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine.",
       "effect": "none"
     },
     {
@@ -975,9 +975,9 @@
       "class": "delivery",
       "evidence": "observed",
       "surfaces": [
-        "SURF-022"
+        "SURF-023"
       ],
-      "note": "The delivery half, and the reason it is a requirement rather than a chore: the flatten_text crash repair at 81ad488 was correct, committed, and stranded at 1.0.0, so every other repository kept crashing. selftest.py now fails on version drift between the two files and on a version predating the behaviour it asserts. CASE-0427, CASE-0428. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted.",
+      "note": "The delivery half, and the reason it is a requirement rather than a chore: the flatten_text crash repair at 81ad488 was correct, committed, and stranded at 1.0.0, so every other repository kept crashing. selftest.py now fails on version drift between the two files and on a version predating the behaviour it asserts. CASE-0427, CASE-0428. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine.",
       "effect": "none"
     }
   ],
@@ -3085,7 +3085,7 @@
         "docs/test-campaign/evidence/PRO-0102/after/ledger.json",
         "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt"
       ],
-      "note": "Product work 197 to 13 end to end; the ten defects now reported broken match this file's ten non-fixed rows exactly. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
+      "note": "Product work 197 to 13 end to end; the ten defects now reported broken match this file's ten non-fixed rows exactly. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine."
     },
     {
       "id": "DEF-211",
@@ -3102,7 +3102,7 @@
         "docs/test-campaign/evidence/PRO-0102/after/ledger.json",
         "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt"
       ],
-      "note": "references/joining.md and references/no-campaign.md had both described this behaviour as correct; both are corrected in the same commit. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
+      "note": "references/joining.md and references/no-campaign.md had both described this behaviour as correct; both are corrected in the same commit. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine."
     },
     {
       "id": "DEF-212",
@@ -3117,7 +3117,7 @@
       "evidence": [
         "docs/test-campaign/evidence/PRO-0102/arming/arming-B-delivery.txt"
       ],
-      "note": "Armed in both directions: with the two files disagreeing, and with both sitting at 1.0.0 — the exact state that stranded 81ad488. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
+      "note": "Armed in both directions: with the two files disagreeing, and with both sitting at 1.0.0 — the exact state that stranded 81ad488. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine."
     },
     {
       "id": "DEF-213",
@@ -3133,7 +3133,7 @@
         "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
         "docs/test-campaign/evidence/PRO-0102/arming/arming-E-controls.txt"
       ],
-      "note": "Armed in both directions: a brief on a fixed defect must leave broken, and a brief on an open defect must stay in it. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
+      "note": "Armed in both directions: a brief on a fixed defect must leave broken, and a brief on an open defect must stay in it. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine."
     },
     {
       "id": "DEF-214",
@@ -3148,7 +3148,7 @@
       "evidence": [
         "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt"
       ],
-      "note": "Assumption A8 says this is dropped once across PRO-0102 and PRO-0101, whichever builds first, and the second verifies rather than re-edits. PRO-0102 built first, so PRO-0101 verifies. Filed under SURF-022 as the campaign-instrument surface: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covers shared tooling outside the app. No SURF id was allocated to PRO-0102, so none was minted."
+      "note": "Assumption A8 says this is dropped once across PRO-0102 and PRO-0101, whichever builds first, and the second verifies rather than re-edits. PRO-0102 built first, so PRO-0101 verifies. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine."
     }
   ]
 }
