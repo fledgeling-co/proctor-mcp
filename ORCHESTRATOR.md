@@ -1852,3 +1852,32 @@ Two asked-for and one proposed. No ids allocated; triage owns that write.
 
 **Nothing new was briefed for the nine old unjoined briefs.** Each was checked against the ledger
 individually and each names a merged item, so the join failure is bookkeeping rather than work.
+
+### Wave 15 merged (2026-08-22)
+
+PRO-0082, PRO-0085 and PRO-0099 merged. Gate **2,061 tests in 251 suites, exit 0**, twice.
+`campaign.py check`: examined=29, witnessed=27, unwitnessed=0, vacuous=1. Armed 257 of 258. Strict
+ratchet 208 → 228. Drift gate exit 0; the new `operator_path_gate.py` exits 0 in both modes.
+
+**Open defects: 11 of 110 records** — DEF-033, 099, 140, 141, 151, 162, 163, 165, 175, 180, 193.
+Four cases stand `inconclusive` against ceilings checked in source. One passing case is unarmed.
+
+**PRO-0092 is the only allocated item not merged**, and it wants a quiet machine: its mutation
+sample scores a timeout as a kill, and the last run finished at load 271.
+
+**An installed plugin upgraded mid-session and broke a repository gate.** test-campaign 0.9.6 widened
+`pass_uncensused` to a 4-tuple and `seed_strengthen.py` unpacked two, so a tree that had changed
+nothing went red. Two items measured it independently against the untouched base. PRO-0099's fix was
+taken over the orchestrator's because it slices both borrowed functions rather than only the one that
+broke — the signature lives outside the repository and will move again. Nothing in this repo's own
+history explains that red, which is the general risk for anything under `scripts/campaign/`.
+
+**Two pieces of orphaned bookkeeping were landed rather than left.** The four `.gitignore` lines for
+better-goal's artifacts existed only in `main`'s working tree. And PRO-0086's disabled-primary
+capture and its reference were both on this branch while the worklist entry binding them was on no
+branch at all — it existed only as an uncommitted change in PRO-0085's worktree, where a tool run had
+regenerated it.
+
+**`main`'s working tree is redundant with this branch and was deliberately not committed.** Every
+untracked file there — briefs 58 to 69, `design/surfaces/`, `docs/goals/` — is already here, and the
+staged submodule is here too. Committing it would have duplicated history that then conflicts.
