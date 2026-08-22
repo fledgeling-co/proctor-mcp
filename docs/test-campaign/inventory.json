@@ -1111,6 +1111,42 @@
       ],
       "note": "The forward half lands outside this repository, so nothing in ./scripts/test.sh can hold it; spec_citation_measure.py reads the shared source tree by hand, as skill_doc_measure.py does for the proctor skill. The number fallback was already removed by PRO-0102 at 224a696, so this requirement verifies rather than re-edits, per spec-PRO-0101's assumption that the second item to reach it verifies. CASE-0436, CASE-0437, CASE-0438.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-108",
+      "class": "contract guardrail",
+      "text": "Every optional boolean argument a tool publishes decodes to the default that tool's own schema states, and no boolean argument is published without stating one",
+      "source": "Sources/ProctorAgent/Dispatch.swift header — 'The schemas in ToolCatalogue are the source of truth for names and defaults; this file is where they are read'; Sources/ProctorCore/ToolCatalogue.swift",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-002"
+      ],
+      "note": "Two statements of one fact, checked against each other rather than either against itself. 28 boolean properties across 21 tools; 25 stated a default and 3 did not — includeTiles, tileHashes and verbose, measured, now stated (DEF-217). Sixteen (tool, argument) pairs are comparable between the schema and the decoder and all sixteen agree. The pair is (tool, argument) rather than argument alone because act.foreground defaults to false and computer.foreground to true, and a join on the name would have called that a disagreement. CASE-0458, CASE-0459, CASE-0460.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-109",
+      "class": "honesty guardrail",
+      "text": "A mutation run reports a mutant that reached its time bound apart from one the suite killed, and leaves it out of the survival-rate denominator",
+      "source": "scripts/campaign/mutate_swift.py; docs/features-to-triage/85-proctoragents-mutants-mostly-survive.md — 'the runner scores a timeout as a kill'; DEF-033",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "note": "A timeout is the absence of a measurement rather than a measurement, and scoring one as a kill is the only direction the error runs: starvation can turn a survivor into a false kill and can never turn a kill into a false survivor. CASE-0467.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-110",
+      "class": "honesty guardrail",
+      "text": "A ProctorAgent mutation sample states its pool, its seed, its unrun count and the machine's load and thermal state at both ends of the run",
+      "source": "docs/features-to-triage/85-proctoragents-mutants-mostly-survive.md — 'Run under low load and say what it was'; docs/specs/spec-PRO-0092.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "note": "PRO-0080's sample finished under a load average of 271 and the number it produced needed reconstructing afterwards from an evidence file's first two lines. The readings are published with the sample instead.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1481,6 +1517,21 @@
         "registered as unclaimed"
       ],
       "description": "Not a product surface: it is the written record this project keeps of where each of its 99 specs came from, plus the 96-file brief queue in docs/features-to-triage and the docs/feature-specs/UNCLAIMED-BRIEFS.md register that accounts for briefs no spec can claim. Read by scripts/campaign/spec_citation_measure.py, which also reads the shipyard triage stage and the reckon join in ~/Dev/fledgeling-plugins because the forward half of PRO-0101 lands there. Given a surface of its own rather than filed on SURF-002 (the proctor skill) or SURF-022, because a measurement over specs and briefs examines neither of those."
+    },
+    {
+      "id": "SURF-026",
+      "name": "ProctorAgent mutation sample",
+      "title": "The mutation runner pointed at the agent package, and the verdicts it reports",
+      "route": "tool://mutate-swift/agent",
+      "status": "reachable",
+      "states": [
+        "killed",
+        "SURVIVED",
+        "unbuildable",
+        "TIMEOUT",
+        "near the bound"
+      ],
+      "description": "Not a product surface: it is the instrument that measures how much this suite knows about the package that touches the machine. SURF-022 is the campaign's blind-mutation pass over the campaign's own assertions and is a different instrument; this one applies one source mutation at a time to ProctorAgent, builds, runs ./scripts/test.sh and reverts. Its verdict vocabulary is the surface's states, and TIMEOUT is the one PRO-0092 added because the runner had been scoring a starved run as a kill."
     }
   ],
   "flow": [
@@ -2399,10 +2450,10 @@
       "status": "open",
       "title": "Nineteen of twenty-two trustworthy-scored ProctorAgent mutants survived, against half in ProctorCore",
       "found": "PRO-0080 item 2: the first mutation sample ever generated in ProctorAgent, seed 20260821",
-      "detail": "24 mutants over a pool of 3,189 sites across all 84 files of ProctorAgent. 19 SURVIVED, 5 scored killed, 0 unbuildable. Two of the five kills are timeout-scored at exactly 600.0s under a load average that reached 271, and the runner scores a timeout as killed, so they are not trustworthy. The honest figure is 3 kills of 22 scored: A SURVIVAL RATE OF 86.4%.\n\nDEF-018 recorded half of ProctorCore's sampled mutants surviving and was found only because somebody sampled. ProctorAgent is worse, and it holds the session, the queue, the overlay, the actuation backend and every guest adapter.\n\nSurvivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor, so all 19 stand regardless of the load. The three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so none of them is a starved run.\n\nPARTIALLY CLOSED: 5 survivors are killed by new tests in Tests/ProctorAgentTests/MutationSurvivorTests.swift, each armed by re-applying its mutant and watching the named test go red. 1 is equivalent (SessionMaestro.swift:242, a sorted(by:) comparator over dictionary keys, which are unique, so < and <= order identically). 13 are recorded as uncovered-by-lane or unreachable from a headless seam, with a reason each in REPORT.md. Those two are different claims and are kept apart, because recording a coverage hole as a mathematical impossibility is how a suite stops looking for the test.\n\nOPEN because the sample is 0.75% of the package and the rate it measured is the rate over that sample, not over the package.",
+      "detail": "24 mutants over a pool of 3,189 sites across all 84 files of ProctorAgent. 19 SURVIVED, 5 scored killed, 0 unbuildable. Two of the five kills are timeout-scored at exactly 600.0s under a load average that reached 271, and the runner scores a timeout as killed, so they are not trustworthy. The honest figure is 3 kills of 22 scored: A SURVIVAL RATE OF 86.4%.\n\nDEF-018 recorded half of ProctorCore's sampled mutants surviving and was found only because somebody sampled. ProctorAgent is worse, and it holds the session, the queue, the overlay, the actuation backend and every guest adapter.\n\nSurvivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor, so all 19 stand regardless of the load. The three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so none of them is a starved run.\n\nPARTIALLY CLOSED: 5 survivors are killed by new tests in Tests/ProctorAgentTests/MutationSurvivorTests.swift, each armed by re-applying its mutant and watching the named test go red. 1 is equivalent (SessionMaestro.swift:242, a sorted(by:) comparator over dictionary keys, which are unique, so < and <= order identically). 13 are recorded as uncovered-by-lane or unreachable from a headless seam, with a reason each in REPORT.md. Those two are different claims and are kept apart, because recording a coverage hole as a mathematical impossibility is how a suite stops looking for the test.\n\nOPEN because the sample is 0.75% of the package and the rate it measured is the rate over that sample, not over the package.\n\nSECOND SAMPLE, PRO-0092, seed 20260823: 24 mutants over 3,158 sites across the same 84 files. 20 SURVIVED, 4 killed, 0 unbuildable, 0 TIMEOUT. Survival 20/24 = 83.3%. No mutant reached the bound and none came within 2% of it — the longest ran 36.0s of 600s (SessionAssert.swift:63; corrected at verification from 31.9s, the third-longest) — under 0.54 to 1.89 load per core, so no verdict in it is a starved run wearing a kill. Survivors spread over 17 distinct files with none carrying more than three, which answers the brief's question: no seam is a property of the package rather than of the seven files the first seed happened to hit.\n\nTHE THIRTEEN ARE DISPOSITIONED. Ten are killed by tests in Tests/ProctorAgentTests/MutationSeamTests.swift, each armed by re-applying its mutant with the mutation confirmed landed before the verdict was read. Three are recorded as no-independent-oracle, a third class alongside equivalent and uncovered-by-lane: their behaviour genuinely differs, so equivalent would be false, and the only oracle available is the literal the mutation changed — SessionFlow.swift:493 (a 1ms shift in a capture timeout), TakeoverOverlay.swift:771 (one point of plate padding below a text run that both values clear) and MarkRenderer.swift:141 (max(3, scale * 2) versus max(3, scale * 3), identical at scale 1). On the first sample's own 22 trustworthy-scored mutants the survival rate is now 4 of 22 = 18.2%, and that number measures the tests rather than the package, which is why the fresh seed is the one this row is graded on.",
       "surface": "SURF-002",
       "req": "REQ-047",
-      "note": "STILL OPEN, and it closes when the number moves rather than when an item lands (PRO-0097). This is a survival-rate measurement — 19 of 22 trustworthy-scored ProctorAgent mutants survived, 86.4% against ProctorCore's 50%. PRO-0092 is the item that would move it and reads `Ready for AI`. Flipping it because an item merged would raise the count and lower what the registry knows."
+      "note": "STILL OPEN AFTER PRO-0092, and the reason is the arithmetic rather than the work. PRO-0092 re-measured it the same way — 24 mutants over the same 84 files, seed 20260823 against 20260821, disjoint mutant sets — and got 20 SURVIVED of 24 scored, 83.3%, against this row's 86.4%. ONE MUTANT IS 4.2 POINTS AT n=24, so a 3.1-point move is smaller than the resolution of either sample and the package-level rate has not been shown to move. Ten of the thirteen undispositioned survivors now die (CASE-0457..0466, each armed), the runner no longer scores a timeout as a kill (CASE-0467), and neither of those can move a rate sampled at random from 3,158 sites: ten named sites are 0.3% of the surface. Closing this row on the strength of a 3.1-point move would be the thing PRO-0097 wrote the rule against — raising the count while lowering what the registry knows. It closes when a sample large enough to resolve the difference says the rate moved."
     },
     {
       "id": "DEF-035",
@@ -3430,6 +3481,42 @@
         "REQ-100"
       ],
       "note": "Three checks in spec_citation_measure.py accept inputs their names imply they reject, each found by building the evasion against a scratch copy at PRO-0101's verification. (1) `every spec carries a parseable citation` passes when the only brief path sits in a fenced code block, an HTML comment or a struck-through line, because the legacy fallback is a bare BODY_PATH.search over the whole text; a **Brief:** header inside a fence in the first 20 lines counts too. (2) `every none citation names its origin` passes on `none. See docs/nowhere/imaginary-source.md` and on any backtick pair padded to 20 characters — the floor makes a citation name something, not resolve to it. (3) `every brief is claimed or registered` is satisfied by an incidental mention in an unrelated spec, so a brief nobody built from reads as claimed. None of the three is dead: each is armed and bites on the case it was written for, and the delivered tree exploits none of them because all 24 legacy citations are real prose at fence depth 0. SAME CLASS AS DEF-201 IN A DIFFERENT INSTRUMENT: a scanner reading a whole document for a token, with no exclusion for fences, comments or struck-through text, cannot tell a citation from a mention of one. Two tools in two repositories grew the same blind spot independently, which makes it a shape to check for rather than a bug either author made. The repair is not a longer floor: an input a check cannot classify should be a finding that names it, not a pass or a fail by default."
+    },
+    {
+      "id": "DEF-217",
+      "status": "fixed",
+      "title": "Three boolean arguments are published with no stated default while the decoder has one",
+      "found": "PRO-0092, building the schema-versus-decoder agreement check for survivors 2 and 8",
+      "detail": "28 boolean properties across the 21 tools in ToolCatalogue. 25 state their default in their own description; 3 did not — proctor_stability.includeTiles, proctor_capture.tileHashes and proctor_doctor.verbose. Each has a default in Dispatch.swift, false in all three cases, so a caller omitting the argument gets a behaviour the published schema does not describe. Found by the check going looking for stability.includeTiles and finding nothing to compare against, which is the failure mode of a two-source check whose second source is silent: it passes by comparing nothing.",
+      "surface": "SURF-002",
+      "req": "REQ-108",
+      "note": "FIXED. The three descriptions now state their defaults, which is a documentation repair with its own value and is also what lets REQ-108's check reach survivor 2 of PRO-0080's sample. The decoder was not changed; the schema was the half that was silent."
+    },
+    {
+      "id": "DEF-207",
+      "title": "mutate_swift.py splices by byte offset and never reads back",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "requirements": [
+        "REQ-108"
+      ],
+      "note": "apply() writes the mutation by byte offset and does not re-read the file, so it cannot report that the substitution happened. Its sibling instrument does: mutation_seam_arm.py asserts an occurrence count of 1, then re-reads and requires the `after` text present and the `before` text gone. The runner cannot go INERT the way an anchor-string mutator can, because it splices unconditionally — its failure mode is worse in kind, because a wrong-offset write would be silent and would grade pristine or wrongly-edited code as a survivor. PRO-0092's verification reconstructed all 24 mutants against the tree the run used (6b3721c) and confirmed each recorded offset holds the recorded `before` text and that a simulated splice changes exactly one line at exactly the recorded line number, so all 20 survivors and all 4 kills in THIS sample demonstrably landed. That is a reconstruction by a verifier, not a proof by the instrument, and the distinction is the defect: the next sample gets no such reconstruction unless somebody does it by hand. Port the read-back. A survivor has two readings — the guard is decorative, or the mutation never happened — and only the instrument can tell them apart at the moment it matters."
+    },
+    {
+      "id": "DEF-208",
+      "title": "mutation_seam_arm.py scores any non-zero exit as armed, including a process that died",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "requirements": [
+        "REQ-108"
+      ],
+      "note": "The arm records `armed = code != 0`, so a run that aborts on a signal counts as red. CASE-0461's mutant kills by trapping: signal 5, zero verdict lines, and the suite's own `FAIL: no swift-testing verdict line`. That case is correct — its log proves the named test was running when the process trapped — but the rule that scored it cannot distinguish a test that failed from a process that died in setup, and the second is the shape that has already cost this campaign a false arming. The repair is the same predicate the suite already applies to itself: an arming owes a verdict line naming the test that failed, and an exit with no verdict line is `inconclusive` rather than armed."
     }
   ]
 }

@@ -1,0 +1,236 @@
+{
+ "runStartedUTC": "2026-08-22T14:09:12Z",
+ "runEndedUTC": "2026-08-22T14:20:34Z",
+ "before": [
+  {
+   "at": "2026-08-22T14:07:55Z",
+   "load_1m": 74.89,
+   "load_per_core": 4.681,
+   "ncpu": 16,
+   "runnable": 42,
+   "mem_free_pct": 42,
+   "swap_mb": 0.0,
+   "disk_free_gib": 239.7,
+   "pressure": {
+    "cpu": "critical",
+    "memory": "healthy",
+    "disk": "healthy",
+    "overall": "critical"
+   },
+   "thermal": "limited",
+   "thermal_held_sec": 1611,
+   "thermal_reason": "P0 busy at 100% but spent 0.1% of active time at or near its 4512 MHz ladder top"
+  },
+  {
+   "at": "2026-08-22T14:08:27Z",
+   "load_1m": 53.97,
+   "load_per_core": 3.373,
+   "ncpu": 16,
+   "runnable": 14,
+   "mem_free_pct": 45,
+   "swap_mb": 0.0,
+   "disk_free_gib": 239.7,
+   "pressure": {
+    "cpu": "tight",
+    "memory": "healthy",
+    "disk": "healthy",
+    "overall": "tight"
+   },
+   "thermal": "limited",
+   "thermal_held_sec": 1643,
+   "thermal_reason": "P0 busy at 100% but spent 0.8% of active time at or near its 4512 MHz ladder top"
+  },
+  {
+   "at": "2026-08-22T14:08:58Z",
+   "load_1m": 41.06,
+   "load_per_core": 2.566,
+   "ncpu": 16,
+   "runnable": 12,
+   "mem_free_pct": 44,
+   "swap_mb": 0.0,
+   "disk_free_gib": 239.4,
+   "pressure": {
+    "cpu": "tight",
+    "memory": "healthy",
+    "disk": "healthy",
+    "overall": "tight"
+   },
+   "thermal": "not_limited",
+   "thermal_held_sec": 0,
+   "thermal_reason": "every busy P-cluster is reaching the top of its ladder"
+  }
+ ],
+ "after": [
+  {
+   "at": "2026-08-22T14:20:45Z",
+   "load_1m": 10.83,
+   "load_per_core": 0.677,
+   "ncpu": 16,
+   "runnable": 14,
+   "mem_free_pct": 50,
+   "swap_mb": 0.0,
+   "disk_free_gib": 236.8,
+   "pressure": {
+    "cpu": "healthy",
+    "memory": "healthy",
+    "disk": "healthy",
+    "overall": "healthy"
+   },
+   "thermal": "limited",
+   "thermal_held_sec": 61,
+   "thermal_reason": "P0 busy at 97% but spent 0.0% of active time at or near its 4512 MHz ladder top"
+  },
+  {
+   "at": "2026-08-22T14:21:17Z",
+   "load_1m": 13.11,
+   "load_per_core": 0.819,
+   "ncpu": 16,
+   "runnable": 10,
+   "mem_free_pct": 51,
+   "swap_mb": 0.0,
+   "disk_free_gib": 236.7,
+   "pressure": {
+    "cpu": "busy",
+    "memory": "healthy",
+    "disk": "healthy",
+    "overall": "busy"
+   },
+   "thermal": "limited",
+   "thermal_held_sec": 93,
+   "thermal_reason": "P0 busy at 98% but spent 0.0% of active time at or near its 4512 MHz ladder top"
+  },
+  {
+   "at": "2026-08-22T14:21:48Z",
+   "load_1m": 18.17,
+   "load_per_core": 1.136,
+   "ncpu": 16,
+   "runnable": 10,
+   "mem_free_pct": 49,
+   "swap_mb": 0.0,
+   "disk_free_gib": 236.6,
+   "pressure": {
+    "cpu": "busy",
+    "memory": "healthy",
+    "disk": "healthy",
+    "overall": "busy"
+   },
+   "thermal": "limited",
+   "thermal_held_sec": 124,
+   "thermal_reason": "P0 busy at 100% but spent 0.0% of active time at or near its 4512 MHz ladder top"
+  }
+ ],
+ "duringEvery45s": [
+  {
+   "at": "2026-08-22T14:09:23Z",
+   "load_per_core": 1.871,
+   "mem_free_pct": 44,
+   "pressure": "busy",
+   "thermal": "limited",
+   "held": 0
+  },
+  {
+   "at": "2026-08-22T14:10:20Z",
+   "load_per_core": 1.894,
+   "mem_free_pct": 47,
+   "pressure": "busy",
+   "thermal": "limited",
+   "held": 56
+  },
+  {
+   "at": "2026-08-22T14:11:16Z",
+   "load_per_core": 1.243,
+   "mem_free_pct": 44,
+   "pressure": "busy",
+   "thermal": "limited",
+   "held": 113
+  },
+  {
+   "at": "2026-08-22T14:12:13Z",
+   "load_per_core": 1.615,
+   "mem_free_pct": 45,
+   "pressure": "busy",
+   "thermal": "limited",
+   "held": 169
+  },
+  {
+   "at": "2026-08-22T14:13:10Z",
+   "load_per_core": 1.146,
+   "mem_free_pct": 51,
+   "pressure": "busy",
+   "thermal": "limited",
+   "held": 226
+  },
+  {
+   "at": "2026-08-22T14:14:06Z",
+   "load_per_core": 1.512,
+   "mem_free_pct": 53,
+   "pressure": "busy",
+   "thermal": "not_limited",
+   "held": 0
+  },
+  {
+   "at": "2026-08-22T14:15:03Z",
+   "load_per_core": 0.901,
+   "mem_free_pct": 52,
+   "pressure": "busy",
+   "thermal": "not_limited",
+   "held": 56
+  },
+  {
+   "at": "2026-08-22T14:15:59Z",
+   "load_per_core": 0.936,
+   "mem_free_pct": 52,
+   "pressure": "busy",
+   "thermal": "limited",
+   "held": 0
+  },
+  {
+   "at": "2026-08-22T14:16:55Z",
+   "load_per_core": 0.887,
+   "mem_free_pct": 52,
+   "pressure": "busy",
+   "thermal": "limited",
+   "held": 56
+  },
+  {
+   "at": "2026-08-22T14:17:52Z",
+   "load_per_core": 0.865,
+   "mem_free_pct": 53,
+   "pressure": "busy",
+   "thermal": "limited",
+   "held": 113
+  },
+  {
+   "at": "2026-08-22T14:18:48Z",
+   "load_per_core": 0.542,
+   "mem_free_pct": 54,
+   "pressure": "healthy",
+   "thermal": "not_limited",
+   "held": 0
+  },
+  {
+   "at": "2026-08-22T14:19:44Z",
+   "load_per_core": 0.647,
+   "mem_free_pct": 53,
+   "pressure": "healthy",
+   "thermal": "limited",
+   "held": 0
+  },
+  {
+   "at": "2026-08-22T14:20:41Z",
+   "load_per_core": 0.677,
+   "mem_free_pct": 50,
+   "pressure": "healthy",
+   "thermal": "limited",
+   "held": 57
+  },
+  {
+   "at": "2026-08-22T14:21:37Z",
+   "load_per_core": 1.224,
+   "mem_free_pct": 49,
+   "pressure": "busy",
+   "thermal": "limited",
+   "held": 113
+  }
+ ]
+}

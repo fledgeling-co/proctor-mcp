@@ -374,26 +374,59 @@ struct Dispatcher: Sendable {
 
     // MARK: - proctor_stability
 
+    /// PRO-0092. The optional booleans of the two tools whose absent-argument
+    /// defaults nothing was watching, decoded into a value.
+    ///
+    /// They were written inline at the call site, so the only way to read what an
+    /// omitted argument resolves to was to read the source — and the two mutants
+    /// that survived here (`includeTiles` false to true, `presentation` true to
+    /// false) changed the behaviour of most calls, since most calls omit them.
+    /// A value that can be built from an `Args` and compared is what lets a test
+    /// ask the decoder rather than read the file it lives in.
+    struct StabilityArguments: Sendable, Equatable {
+        var includeTiles: Bool
+        var captureEach: Bool
+        var pointerMarks: Bool
+
+        init(_ args: Args) {
+            includeTiles = args.bool("includeTiles", false)
+            captureEach = args.bool(StabilityCaptureOptions.captureEachArg, false)
+            pointerMarks = args.bool(StabilityCaptureOptions.pointerMarksArg, false)
+        }
+    }
+
     private func stability(_ args: Args) async throws -> JSONValue {
+        let options = StabilityArguments(args)
         let report = try await session.stability(
             flow: try args.requiredString("flow"),
             runs: args.int("runs") ?? 5,
             window: args.string("window"),
             resetBetween: try Args.steps(args.value("resetBetween"), field: "resetBetween"),
-            includeTiles: args.bool("includeTiles", false),
-            captureEach: args.bool(StabilityCaptureOptions.captureEachArg, false),
-            pointerMarks: args.bool(StabilityCaptureOptions.pointerMarksArg, false))
+            includeTiles: options.includeTiles,
+            captureEach: options.captureEach,
+            pointerMarks: options.pointerMarks)
         return try JSONValue.encode(report)
     }
 
     // MARK: - proctor_inspect
 
+    struct InspectArguments: Sendable, Equatable {
+        var includeConstraints: Bool
+        var presentation: Bool
+
+        init(_ args: Args) {
+            includeConstraints = args.bool("includeConstraints", false)
+            presentation = args.bool("presentation", true)
+        }
+    }
+
     private func inspect(_ args: Args) async throws -> JSONValue {
-        try await session.inspect(window: try args.requiredString("window"),
-                                  node: args.string("node"),
-                                  maxDepth: args.int("maxDepth") ?? 24,
-                                  includeConstraints: args.bool("includeConstraints", false),
-                                  presentation: args.bool("presentation", true))
+        let options = InspectArguments(args)
+        return try await session.inspect(window: try args.requiredString("window"),
+                                         node: args.string("node"),
+                                         maxDepth: args.int("maxDepth") ?? 24,
+                                         includeConstraints: options.includeConstraints,
+                                         presentation: options.presentation)
     }
 
     // MARK: - proctor_doctor

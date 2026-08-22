@@ -1,0 +1,40 @@
+baseline: running the suite once before mutating anything…
+baseline: green
+sites 3158 in 84 file(s) · running 24
+[1/24] SURVIVED    SessionCursor.swift:64 == -> !=  (18.5s)
+[2/24] SURVIVED    PolicyStore.swift:546 <= -> <  (17.8s)
+[3/24] SURVIVED    UnlockBroker.swift:145 true -> false  (16.8s)
+[4/24] SURVIVED    TreeWalker.swift:171 != -> ==  (16.3s)
+[5/24] SURVIVED    UnlockCoordinator.swift:38 1 -> 2  (18.5s)
+[6/24] SURVIVED    GuestProvider.swift:202 15_000 -> 15_001  (21.5s)
+[7/24] SURVIVED    Actuator.swift:678 1 -> 2  (21.8s)
+[8/24] SURVIVED    CursorOverlay.swift:538 false -> true  (26.1s)
+[9/24] SURVIVED    SessionAssert.swift:63 false -> true  (36.0s)
+[10/24] SURVIVED    SessionAssert.swift:516 && -> ||  (32.5s)
+[11/24] SURVIVED    Predicates.swift:27 == -> !=  (17.0s)
+[12/24] SURVIVED    SignatureVerdictCache.swift:96 == -> !=  (31.5s)
+[13/24] killed      Dispatch.swift:244 true -> false  (17.8s)
+[14/24] SURVIVED    CursorOverlay.swift:329 false -> true  (16.6s)
+[15/24] SURVIVED    CaptureEngineImpl.swift:428 > -> >=  (17.8s)
+[16/24] SURVIVED    RunHUDContentView.swift:602 34 -> 35  (17.9s)
+[17/24] SURVIVED    SessionGuest.swift:1016 60 -> 61  (17.9s)
+[18/24] SURVIVED    CuaPreflight.swift:304 == -> !=  (17.2s)
+[19/24] killed      SessionAct.swift:385 0 -> 1  (6.5s)
+[20/24] killed      SessionGuest.swift:376 == -> !=  (16.7s)
+[21/24] SURVIVED    TakeoverOverlay.swift:343 0 -> 1  (16.4s)
+[22/24] SURVIVED    SessionFlow.swift:290 false -> true  (18.0s)
+[23/24] SURVIVED    CursorOverlay.swift:562 0 -> 1  (31.9s)
+[24/24] killed      CuaClients.swift:187 true -> false  (15.8s)
+
+scored 24 of 24 run (of 3158 sites) · killed 4 · SURVIVED 20 · unbuildable 0 · TIMEOUT 0
+survival rate 20/24 = 83.3% — a survivor is a behaviour nothing is watching
+
+  int-literal        killed   1  survived   7  unbuildable   0  timeout   0  survival 88%
+  == -> !=           killed   1  survived   4  unbuildable   0  timeout   0  survival 80%
+  false -> true      killed   0  survived   4  unbuildable   0  timeout   0  survival 100%
+  true -> false      killed   2  survived   1  unbuildable   0  timeout   0  survival 33%
+  <= -> <            killed   0  survived   1  unbuildable   0  timeout   0  survival 100%
+  != -> ==           killed   0  survived   1  unbuildable   0  timeout   0  survival 100%
+  && -> ||           killed   0  survived   1  unbuildable   0  timeout   0  survival 100%
+  > -> >=            killed   0  survived   1  unbuildable   0  timeout   0  survival 100%
+tree clean after: True

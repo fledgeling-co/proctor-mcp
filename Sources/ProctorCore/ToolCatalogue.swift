@@ -318,7 +318,7 @@ public enum ToolCatalogue {
                 "waitForComplete": .object(["type": .string("boolean"), "description": .string("Keep pulling frames until one is .complete or the timeout expires. Defaults to true.")]),
                 "timeoutMs": .object(["type": .string("integer"), "description": .string("Defaults to 3000.")]),
                 "scale": .object(["type": .string("number"), "description": .string("Output scale. Defaults to the display's backing scale.")]),
-                "tileHashes": .object(["type": .string("boolean"), "description": .string("Also return per-tile perceptual hashes, for determinism comparison.")]),
+                "tileHashes": .object(["type": .string("boolean"), "description": .string("Also return per-tile perceptual hashes, for determinism comparison. Defaults to false.")]),
                 "includeCursor": .object(["type": .string("boolean"), "description": .string("Defaults to false, since a cursor in the frame is a source of false diffs.")]),
                 "annotate": .object(["type": .string("boolean"), "description": .string("Burn numbered marks over interactable elements and return the mark→node map. Defaults to false.")]),
                 "annotateAll": .object(["type": .string("boolean"), "description": .string("Mark every element carrying a frame. Implies annotate. Defaults to false.")]),
@@ -580,7 +580,7 @@ public enum ToolCatalogue {
                 "runs": .object(["type": .string("integer"), "description": .string("Defaults to 5.")]),
                 "window": .object(["type": .string("string")]),
                 "resetBetween": .object(["type": .string("object"), "description": .string("Steps to run between replays to return the app to its start state.")]),
-                "includeTiles": .object(["type": .string("boolean"), "description": .string("Compare pixel tile hashes as well as the tree. Slower, catches rendering nondeterminism the tree cannot see.")]),
+                "includeTiles": .object(["type": .string("boolean"), "description": .string("Compare pixel tile hashes as well as the tree. Slower, catches rendering nondeterminism the tree cannot see. Defaults to false.")]),
                 StabilityCaptureOptions.captureEachArg: .object(["type": .string("boolean"), "description": .string("Write a PNG after every step that runs, in every replay, so a divergent step can be looked at rather than only scored. A replay that breaks mid-flow photographs the steps before the break and reports the rest as not attempted. Off by default: an opt-in run writes roughly runs × steps images (doubled where a marker is drawn), nothing cleans them up, and capturing after each step shifts the run's timings, which the report says so a score is never quietly compared against a run captured off.")]),
                 StabilityCaptureOptions.pointerMarksArg: .object(["type": .string("boolean"), "description": .string("Composite a marker at each step's target point onto that step's frame, written as a marked sibling PNG. It annotates where the step acted, not a live cursor; Proctor does not move the system pointer. Turns captureEach on when it is off, and says so in the report, because a marker needs a frame to be drawn on. Defaults to false.")])
             ]),
@@ -653,7 +653,7 @@ public enum ToolCatalogue {
         inputSchema: .object([
             "type": .string("object"),
             "properties": .object([
-                "verbose": .object(["type": .string("boolean"), "description": .string("Include per-app observer and cache detail.")]),
+                "verbose": .object(["type": .string("boolean"), "description": .string("Include per-app observer and cache detail. Defaults to false.")]),
                 "requestAccessibility": .object([
                     "type": .string("boolean"),
                     "description": .string(

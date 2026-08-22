@@ -9,23 +9,40 @@ import ProctorCore
 // same `policy.decide` that gates driving an app gates killing it, and the same
 // `AuditLog` records every attempt.
 
+/// PRO-0092. The bare-pid rule, lifted out of `killProcesses` so it can be
+/// stated without enumerating the machine's running applications first.
+///
+/// A query naming a pid need not name a GUI application, and a pid that is not
+/// among the GUI candidates must still be selectable and signallable — with no
+/// bundle id, so an allow list in force refuses it and the path fails closed.
+/// The mutation this exists for turned `$0.pid == pid` into `$0.pid != pid`,
+/// which appends nothing whenever any other process is running, and 1,818 tests
+/// did not notice that a bare pid had stopped being reachable.
+enum KillCandidates {
+
+    static func includingBarePid(_ candidates: [ProcessInfoLite],
+                                 query: KillQuery) -> [ProcessInfoLite] {
+        guard let pid = query.pid,
+              !candidates.contains(where: { $0.pid == pid }) else { return candidates }
+        return candidates + [ProcessInfoLite(pid: pid, name: "", bundleId: nil)]
+    }
+}
+
 extension Session {
 
     func killProcesses(query: KillQuery, perform: Bool, force: Bool) throws -> JSONValue {
         let selfPid = ProcessInfo.processInfo.processIdentifier
 
         // GUI applications carry the identity a query and the policy gate need.
-        var candidates = NSWorkspace.shared.runningApplications.map {
+        let running = NSWorkspace.shared.runningApplications.map {
             ProcessInfoLite(pid: $0.processIdentifier,
                             name: $0.localizedName ?? "",
                             bundleId: $0.bundleIdentifier)
         }
         // A bare pid target need not be a GUI app; synthesise a candidate so it can
         // still be selected and signalled (with no bundle id, so an allow list in
-        // force refuses it — fail closed).
-        if let pid = query.pid, !candidates.contains(where: { $0.pid == pid }) {
-            candidates.append(ProcessInfoLite(pid: pid, name: "", bundleId: nil))
-        }
+        // force refuses it — fail closed). The rule itself is `KillCandidates`.
+        let candidates = KillCandidates.includingBarePid(running, query: query)
 
         let matched = ProcessMatcher.select(candidates, query: query)
             .filter { !ProcessMatcher.isProtected(pid: $0.pid, selfPid: selfPid) }

@@ -653,7 +653,12 @@ private final class RunHUDRootView: NSView {
     override func hitTest(_ point: NSPoint) -> NSView? { content?.hitTest(point) }
 }
 
-private final class HUDPanel: NSPanel {
+/// PRO-0092. Internal rather than private, so the two overrides can be asked
+/// about. They are the whole class: the HUD takes key so its Stop control can be
+/// clicked, and refuses main so that the app under test keeps it. A HUD that
+/// became main would move the main window out from under the run it is
+/// reporting on, and nothing was watching either answer.
+final class HUDPanel: NSPanel {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
 }

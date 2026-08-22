@@ -361,6 +361,103 @@ What this is not: a number for the whole suite. 24 of 52 sites in 4 of 103 files
 run, 48 of 1,991 in 77 for the second, both by a recorded seed. The armed ratio of 43 of 43 remains the hand-run equivalent over the campaign's
 own assertions, and neither number says anything about the other 5,017 assertion calls.
 
+### ProctorAgent: 86.4%, then 83.3%, and the difference is smaller than one mutant
+
+`ProctorCore` is the half of the product that decides; `ProctorAgent` is the half that touches the
+machine, and it holds the session, the queue, the overlay, the actuation backend and every guest
+adapter. PRO-0080 sampled it for the first time — 24 mutants over 3,189 sites across all 84 files,
+seed 20260821 — and **19 survived**. Two of the five scored kills ran to exactly 600.0s under a load
+average that reached 271, and the runner scored a timeout as a kill, so the honest figure was 3 of
+22 scored: **86.4% survival**, against `ProctorCore`'s 50%. DEF-033.
+
+PRO-0092 re-measured it the same way and got **20 SURVIVED of 24 scored — 83.3%** — over the same 84
+files, count 24, seed 20260823 against 20260821 so the two mutant sets are disjoint. 0 unbuildable,
+0 TIMEOUT, and nothing near the bound: the longest mutant ran 36.0s of 600s
+(`SessionAssert.swift:63`). Corrected at verification from 31.9s, which is the third-longest.
+
+**One mutant is 4.2 points at n=24, so the 3.1-point move is smaller than the resolution of either
+sample.** The package-level rate has not been shown to move, and the arithmetic behind that is the
+most useful thing this item measured. Ten survivors were killed — ten sites out of a pool of 3,158
+is 0.3% of the surface — and killing ten named sites cannot move a rate sampled at random from the
+other 3,148, however well those ten are killed. **A per-survivor test closes a survivor; only a
+class-closing seam can move a package rate.**
+
+The one class this item closed is the argument decoding in `Dispatch.swift`: 34 sites where an
+optional boolean's default is written as a literal beside a schema that states the same default in
+prose. The check compares the two per (tool, argument) — per pair rather than per name, because
+`act.foreground` defaults to false and `computer.foreground` to true, and a join on the name alone
+would have called that a disagreement. **It killed a mutant in the fresh sample it was never pointed
+at**: `Dispatch.swift:244`, `proctor_capture.normalize`, chosen by seed 20260823 out of 3,158 sites.
+That is 34 of 3,158 defended, which is 1.1% — a class closed rather than the package covered.
+
+Three boolean arguments published no default at all while the decoder had one — `includeTiles`,
+`tileHashes` and `verbose`, 3 of 28 measured. DEF-217, fixed: the schema was the half that was
+silent, and a two-source check whose second source says nothing passes by comparing nothing.
+
+**Survivors spread over 17 distinct files with none carrying more than three**, which answers the
+brief's question directly: `no seam` is a property of the package rather than of the seven files
+the first seed happened to hit.
+
+**The machine, published rather than summarised.** Before: 4.681, 3.373 and 2.566 load per core with
+pressure critical then tight then tight, and thermal `limited` (held 1,611s, then 1,643s) then
+`not_limited` at held 0s. During, sampled every 45 seconds: load per core between 0.542 and 1.894,
+and thermal flipping five times — `limited`, `not_limited`, `limited`, `not_limited`, `limited` —
+while load never moved by more than 1.4 per core. After: 0.677, 0.819, 1.136. A single thermal read
+is not a verdict, and this run watched it flip five times without the load agreeing.
+
+### The thirteen survivors PRO-0080 could not reach
+
+PRO-0080 killed five of its nineteen survivors, argued one equivalent, and recorded thirteen as
+`no seam` or `uncovered-by-lane`. Ten of the thirteen now die, each armed by re-applying its mutant
+with the mutation confirmed to have landed before the verdict was read. Six seams were built to
+reach them, each an extraction with the production call site rewritten in the same change: a
+running-app population for `listApps`, the bare-pid rule out of `killProcesses`, `HUDPanel` made
+internal so its two overrides can be asked about, the tap-disabled predicate out of a handler that
+needs a live `CGEvent`, the cached public key's path as a function of its directory, and the two
+argument decoders.
+
+Three of the thirteen were never `no seam` and were only untested: `SnapshotOptions` was always
+constructible, `CGWindowIndex.correlate(frame:title:in:)` already took its records as a parameter
+and nothing had ever called it, and `RunHUDPalette.light` is a static a test can read.
+
+**Three are recorded, and they need a third label.** `equivalent` and `uncovered-by-lane` were the
+vocabulary; neither fits a mutant whose behaviour genuinely differs but whose only available oracle
+is the literal it changed. `SessionFlow.swift:493` shifts a capture timeout by one millisecond;
+`TakeoverOverlay.swift:771` moves plate padding by one point below a text run that both values
+clear; `MarkRenderer.swift:141` changes badge padding at scale 2 and not at scale 1, where
+`max(3, …)` binds either way. Calling those equivalent would be false. Killing them means writing
+the constant a second time, and a second copy of a constant is the thing this repo's whole
+provenance thesis is against. They are **no-independent-oracle**, and the argument is per site
+rather than a blanket.
+
+Survivor 11 looks like the same shape and is not, which is why it is killed rather than recorded:
+the light palette's ink and fill tones are one graphite at several opacities, and one channel
+drifting breaks that invariant without the test ever naming the value.
+
+**One kill arrives as an abort rather than a failing assertion, and that is a property of the site.**
+`matches[1]` on a one-element array traps, so arming CASE-0461 printed `Fatal error: Index out of
+range`, `Executed 0 tests, with 0 failures`, zero verdict lines and `FAIL: no swift-testing verdict
+line`, at signal 5 — DEF-140's class arriving from production rather than from a test. The subscript
+is total under its own `count == 1` guard, so it is recorded rather than converted, on PRO-0098's
+own classification method.
+
+### The runner scored a timeout as a kill, and now does not
+
+The fault DEF-033 was measured through. A run that reached the bound was scored KILLED, which is the
+direction that flatters the suite: starvation can turn a survivor into a false kill and can never
+turn a kill into a false survivor. PRO-0080's sample carried two at exactly 600.0s and a reader of
+the summary had no way to tell them from the three real kills — 79.2% reported against 86.4% honest.
+
+`TIMEOUT` is now its own verdict, counted apart and left out of the survival-rate denominator,
+because it is the absence of a measurement rather than a measurement. Every scored mutant within 2%
+of the bound is named in the summary as well, since the next starved run need not land exactly on it.
+
+Armed by driving both runners from one fixture rather than by describing the change: `main`'s runner
+and this one were each given a suite runner returning green for the baseline and a timeout for the
+mutant, over the same real tracked file. Before: `verdict=killed scored=1 survivalRate=0.0`. After:
+`verdict=TIMEOUT scored=0 timedOut=1 survivalRate=None`. A genuine failure is unchanged in both, so
+the change is not simply relabelling every red run.
+
 ### The runner put a live mutation in the tree, once
 
 Worth recording because the fix is the interesting part. The first re-run was killed by a harness
