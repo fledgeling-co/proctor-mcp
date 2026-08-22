@@ -1,0 +1,344 @@
+# Plan — PRO-0100: Six repairs whose diagnosis is done
+
+**ID:** PRO-0100 · **Spec:** `docs/specs/spec-PRO-0100.md` · **Tier:** Standard
+**Branch:** `ai/pro-0100` · **Worktree:** `.worktrees/PRO-0100`
+**Written:** 2026-08-22
+
+Six already-diagnosed defects, grouped as one sitting. No diagnosis is reopened here; each is
+grounded against the tree and built. The item's own risk is not difficulty — it is that six small
+repairs in one branch make it easy to change a guard to keep a change green, and three of the six
+land inside guards this campaign built on purpose.
+
+**Ids allocated to this item:** CASE-0390..0409, DEF-200..209, REQ-094..096. No other id is taken,
+and `docs/feature-specs/LEDGER.md` is not touched.
+
+---
+
+## Slice 1 — DEF-162: the design of record gains the way out
+
+**Direction: the design changes, the build does not.** `Skip setup` postdates the design page, is
+gated by `WalkthroughFlow.showsSkip` (`Sources/ProctorCore/WalkthroughFlow.swift:159-163`,
+`step != .connect`), and removing it was measured to strand a person while the suite stayed green.
+The design page's permissions pane draws no Skip and its intro pane does, so the omission is a
+drawing that was never revised.
+
+**Change:** `design/surfaces/proctor-surfaces.html:1000-1005`, the `data-state="permissions"`
+`wt-foot`. Insert `<button type="button" class="btn">Skip setup</button>` between `Back` and the
+disabled `Connect a model`, matching the intro pane's own markup at line 972 (`class="btn"`,
+unfilled — one prominent action per view, and the primary is not prominent here either). The
+pane's caption gains one sentence recording why the way out is drawn beside a refusal.
+
+**Order matters and is asserted:** the app draws Back, Skip, primary in that order
+(`Walkthrough.swift:85-119`), and `skipIsNeverClosed` already asserts `ID.skip` precedes
+`ID.primary`. The design gets the same order so the two records agree on sequence as well as on
+presence.
+
+**Not done here:** the `granted` and `connect` panes. `showsSkip` is false on `connect`, and the
+`granted` pane's footer draws a self-advancing step with no Back either, so it is a different
+drawing rather than a missing control.
+
+## Slice 2 — DEF-163: the refusing primary is drawn plain
+
+**Direction: the build changes, the design does not.** `Walkthrough.swift:115` applies
+`.borderedProminent` unconditionally, so on a key window the refusing control draws accent-filled
+with only its label dimmed. The design's `class="btn" disabled` is the correct affordance.
+
+**Shape — and it is constrained by three existing clauses, none of which may be edited.**
+`WalkthroughFlowTests.swift` asserts (a) exactly one `.disabled(` in the whole file
+(`skipIsNeverClosed:468`), (b) `.disabled(!WalkthroughFlow.primaryEnabled(` within 400 characters
+of the first `WalkthroughFlow.ID.primary` (`theViewDisablesRatherThanHides:153-158`), and (c)
+exactly one `.borderedProminent` inside `HeroPermRow`, under its `if prominent` branch
+(`theRowDoesNotDecideItsOwnProminence:231-237`). A two-branch `if/else` around the whole Button —
+the obvious shape, and the one `HeroPermRow.allowButton` uses — duplicates `.disabled(` and reds
+(a); relaxing that count to 2 would be editing a guard to pass, which this item does not do.
+
+So the branch goes in a `ViewModifier` and the Button keeps its single identifier, its single
+`.disabled(` and its single `.hint(` exactly where they are:
+
+```swift
+private struct PrimaryProminence: ViewModifier {
+    let enabled: Bool
+    @ViewBuilder func body(content: Content) -> some View {
+        if enabled { content.buttonStyle(.borderedProminent) }
+        else { content.buttonStyle(.bordered) }
+    }
+}
+```
+
+applied at `Walkthrough.swift:115` in place of `.buttonStyle(.borderedProminent)`, taking
+`WalkthroughFlow.primaryEnabled(on:accessibility:screenRecording:)` — the same rule the
+`.disabled` reads, so the two can never nominate different states. `buttonStyle` propagates
+through the environment, so applying it to already-modified content still reaches the Button.
+
+**`PrimaryProminence` is declared before `private struct HeroPermRow`** in the file. Clause (c)
+counts `.borderedProminent` from `private struct HeroPermRow` to end of file, so a modifier
+placed after it would red a guard that is measuring something else.
+
+**No string literal is added** — `theWalkthroughViewHoldsNoLiterals` counts quote characters
+outside comments and requires zero.
+
+**No Core function is added.** Prominence is `primaryEnabled`; a second Core predicate returning
+the same value would be a duplicate rule that can drift, and the sixteen-state coverage
+`primaryEnabled` already carries transfers unchanged.
+
+## Slice 3 — DEF-165: the doctor invariant stops reading this Mac
+
+`BrowserLaneWiringTests.harness` (`Tests/ProctorAgentTests/BrowserLaneWiringTests.swift:62-80`)
+injects `screenRecordingProbe: .fake()` and leaves `accessibilityProbe` and `secureInputProbe` at
+their live defaults (`Session.swift:743,747` → `Grants.accessibility()`,
+`Grants.secureEventInputActive()`). Both feed `blockers`
+(`SessionDoctor.swift:25,28`), and `ready` is `blockers.isEmpty`, so a password field taking focus
+anywhere on this Mac between two of the eight `doctor()` calls reds `readies.count == 1` with the
+browser lane behaving perfectly.
+
+**Change:** the harness passes fixed closures for both, beside the screen-recording fake. The
+assertion is not touched — it is the requirement, and the repair is to ask it over the matrix the
+case names rather than over the machine.
+
+**Falsifiable at the base commit:** flipping one injected probe mid-matrix makes `readies.count`
+2 and reds the case. That is the arming, and it is what proves the injection reached `ready`
+rather than being accepted and ignored.
+
+## Slice 4 — DEF-175: the ticket is waited on rather than assumed
+
+`HoldAttributionWiringTests.everyEndingPathLeavesNothingHeld:372` reads `h.scheduler.snapshot()`
+immediately after `awaitHold(control)` returns. The control latches the hold; the scheduler's
+ticket is updated separately, so there is a window where the run is held and the ticket does not
+yet say so.
+
+**Change:** a second bounded wait with `awaitHold`'s own shape (4000 turns × 5ms) that polls
+`await h.scheduler.snapshot()` for `active.contains { $0.held != nil }`, then the existing
+`#expect` reads the snapshot that wait returned. The claim is unchanged — the hold reaches a
+ticket — and only the stronger timing claim it was accidentally making (within one scheduling
+quantum) is dropped.
+
+**Not done:** relaxing the assertion. The assertion is what REQ-030's promise actually is.
+
+## Slice 5 — DEF-140: the force-unwrap class, finished
+
+DEF-136's denominator was `grep -rn ')!' Tests`. Two shapes cannot match it and abort the runner
+identically, which is the failure where the suite reports **no verdict at all**. Census taken at
+`9f99a0f`, recorded verbatim before any edit in
+`docs/test-campaign/evidence/PRO-0100/unwrap-census-raw.txt`:
+
+| Shape | Sites | Files |
+|---|---|---|
+| `try!` | 86 | 11 |
+| `!` on a property/subscript rather than a call | 14 unwraps on 13 lines | 9 |
+
+**Classification, PRO-0098's method unchanged:** name the input space, show the failing branch is
+not in it, convert what is left. Recorded in
+`docs/test-campaign/evidence/PRO-0100/unwrap-census.md` with a reason per kept site and a comment
+beside each one in the source.
+
+**Group 1 — total over a closed input space, kept (3 unwraps):**
+
+| Site | Expression | Why the failing branch is unreachable |
+|---|---|---|
+| `ExternalWitnessTests.swift:102` | `box.value!.get()` | The continuation resumes only from inside the worker's `do`/`catch`, and both arms `set` the box first. Reaching this line means the box was written. |
+| `ExternalWitnessTests.swift:498` | `raw.baseAddress!` | `frame` always carries the 4-byte big-endian length prefix appended unconditionally two lines above, so the buffer is never empty and `baseAddress` is never nil. |
+| `ExternalWitnessTests.swift:1106` | `raw.baseAddress!` | A *different* construction from the one above, and the first draft of this row got that wrong: `frame` comes from `FrameCodec.encode` (`Sources/ProctorCore/Transport.swift:10-22`) behind a `try?`/`else return`, not from a local append. The reason still holds, by the encoder rather than by the caller — `encode` prepends four bytes unconditionally before appending the body, so every frame it returns is at least 4 bytes and `baseAddress` is never nil. |
+
+**Group 2 — live, converted (11 bare unwraps + all 86 `try!`).** Each unwraps a lookup, a parse, a
+crypto call or a production return value — DEF-135's shape, where the regression the test exists
+to catch is the input that makes the unwrap nil.
+
+The bare-`!` conversions, named because the grep will not find them again once they are gone:
+
+| Site | Expression | Conversion |
+|---|---|---|
+| `GuestPoolWiringTests.swift:416` | `after! >= before!` | `try #require` both; the `#expect(before != nil && after != nil)` above does not stop execution, so today a nil traps rather than fails |
+| `SwitchSettingsTests.swift:183,184` | `lane.onValue!` | `try #require`, once, reused by both expectations |
+| `ConsentSurfaceTests.swift:29` | `yieldInput!` | `try #require` — a catalogue lookup by literal id, DEF-135's named shape |
+| `RunHUDTests.swift:550` | `named.first!` | `try #require` |
+| `GrantProbeTests.swift:104` | `GrantProbe.backoff.last!` | `try #require` — a production array |
+| `MenuBarReadinessTests.swift:361` | `…arguments(…).last!` | `try #require` |
+| `StepDescriptionTests.swift:36,416` | `line.first!` | `try #require` |
+
+The `try!` conversions are `try!` → `try`, with `throws` added to the 50-odd enclosing test
+functions that lack it (76 of the 86 sites sit in a non-throwing function; measured, listed in the
+census file). `try! #require(x)` becomes `try #require(x)`: the trap becomes the failure the
+`#require` was written to be.
+
+**Closing statement, and it is the deliverable.** After the change the true denominator is
+`grep -rn ')!' Tests`, `grep -rn 'try!' Tests`, and the bare-`!` pattern
+`[A-Za-z0-9_\]]!([^=]|$)` together. Every one of the three is recorded with its post-change count
+in the census file, so the next sweep starts from a true statement rather than from this one's
+boundary.
+
+## Slice 6 — DEF-193: the fifth stale count, and its denominator
+
+`~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor/gemini.md:21` reads "twenty tools".
+`ToolCatalogue.all` ships **21** (measured: 21 `ToolSpec(` entries, 21 distinct `proctor_*`
+names). `SKILL.md` and `references/tools.md` already read 21 — PRO-0085 corrected those and did
+not name this file.
+
+**Change 1, the one word:** `twenty tools` → `twenty-one tools` in `gemini.md`.
+
+**Change 2, and this is the actual repair.** This is the fifth stale count in this skill, and each
+was found by a person reading rather than by the instrument. `scripts/campaign/skill_doc_measure.py`
+reads `SKILL.md` and `references/tools.md` and **does not open `gemini.md` at all**, so the
+denominator was the two files somebody thought of rather than the skill. The script gains a check
+that reads every count word in every `*.md` under the skill directory against the catalogue.
+`skill_doc_arm.py` mutates a scratch copy, so the new check is armed the same way — the live skill
+is never broken to prove a check fires.
+
+**Change 3, a correction to a row this item did not create, declared here:**
+`skill_doc_measure.py:36` defaults `CAT` to `…/.worktrees/PRO-0085/Sources/ProctorCore/ToolCatalogue.swift`.
+That worktree no longer exists, so the script cannot run without `--catalogue`. Repointed at the
+repository root. Named because the orchestrator's merge decides such rows per row.
+
+**Shared-repo discipline, from PRO-0101/PRO-0102 and binding here.** `~/Dev/fledgeling-plugins` is
+live for every project on this machine. Only `plugins/proctor/skills/proctor/gemini.md` is
+touched; the commit names that path explicitly, never `-a` and never `.`. Measured clean at
+`31697a9` before starting. If any file outside that path appears staged or modified by another
+session, stop and report rather than committing.
+
+---
+
+## Test strategy
+
+**Seam, per slice.** Slices 2, 3, 4 and 5 have existing seams and use them; nothing is tested at a
+seam invented here.
+
+| Slice | Seam | Oracle rung |
+|---|---|---|
+| 1 · DEF-162 | `design/surfaces/proctor-surfaces.html` read as text from `WalkthroughFlowTests` — the footing `theViewDisablesRatherThanHides` already stands on | source-analysis |
+| 2 · DEF-163 | `WalkthroughFlowTests.walkthroughSource()` + `withoutComments()`, the harness `theRowDoesNotDecideItsOwnProminence` uses | source-analysis |
+| 3 · DEF-165 | `BrowserLaneWiringTests.harness`, `Session.init`'s existing probe parameters | outcome |
+| 4 · DEF-175 | `HoldAttributionWiringTests.awaitHold`'s bounded-wait shape | outcome |
+| 5 · DEF-140 | `./scripts/test.sh`'s verdict line — the thing the class destroys | outcome |
+| 6 · DEF-193 | `scripts/campaign/skill_doc_measure.py`, armed by `skill_doc_arm.py` on a scratch copy | source-analysis |
+
+**Slice 1 and slice 2 are source-analysis and claim nothing above it.** Neither says a window drew
+anything; there is no `ProctorUI` test target and no window server on the headless lane. The glass
+lane is not run by this item and no case here claims a rendered pixel.
+
+**Acceptance criteria, each falsifiable at `9f99a0f`.**
+
+| # | Criterion | The observation that shows it false, at the base commit |
+|---|---|---|
+| A1 | The design's permissions pane draws `Skip setup`, between `Back` and the primary, **and its caption records why the way out is drawn beside a refusal** | grep the `data-state="permissions"` `wt-foot` for `Skip setup` → absent today; the caption at line 1008 names only the disabled primary and the one-prominent-Grant rule |
+| A2 | The walkthrough's primary is `.borderedProminent` only where `primaryEnabled` is true, and `.bordered` otherwise | `Walkthrough.swift` has one unconditional `.borderedProminent` at 115 and no `.bordered` for the primary today |
+| A3 | The three walkthrough source guards (one `.disabled(`, the ±400 window, HeroPermRow's single prominent) pass **unedited** | `git diff` on `WalkthroughFlowTests.swift` shows no change to those three tests |
+| A4 | `doctor`'s `ready` invariant holds over the 8-cell matrix with every input to `blockers` injected | flip one injected probe mid-matrix → `readies.count` 2, case reds |
+| A5 | The hold case waits for the ticket rather than for the control | remove the poll → the case reads the snapshot in the pre-publish window under load |
+| A6 | No `try!` and no unclassed bare `!` remains in `Tests` | the three greps return 86, 14 and 6 lines today; after, only the recorded group-1 sites and comments |
+| A7 | Every count the proctor skill states matches the catalogue, `gemini.md` included | `skill_doc_measure.py` today does not read `gemini.md`; the new check reds on `twenty tools` |
+| A8 | `./scripts/test.sh` exits 0 with a verdict line, twice | — |
+| A9 | `defect_gate.py claims` and `defect_gate.py dropped` both exit 0 | — |
+
+**Arming.** Every case this item records as `armed: true` is watched failing first, with an
+`armedBy` naming the mutation, the failure text and the exit code. A case that cannot be watched
+fail is recorded `armed: false` with the reason, not asserted. Slice 5's arming is the class's own
+shape: a converted site is reverted to its unsafe form, fed the nil, and the run is confirmed to
+produce **no verdict line** before the conversion and a named failing test after — that is the
+whole difference the class is about, and reading it off exit codes alone would miss it.
+
+**Before believing a zero:** `skill_doc_measure.py`'s new check is run against an unfixed copy of
+`gemini.md` first, so a check that would report clean over a file it never opened is
+distinguishable from one that read it.
+
+## Registry writes
+
+Append-only, own rows only, no reformat, no re-sort.
+
+- `docs/test-campaign/inventory.json` — `requirement`: REQ-094 (the refusing primary is drawn as
+  refusing, SURF-009), REQ-095 (no test's verdict moves with this machine's grant state or
+  scheduling, SURF-022, sibling to REQ-077), REQ-096 (every count the proctor skill states about
+  Proctor, in every file of it, matches `ToolCatalogue.all`, SURF-002).
+- `docs/test-campaign/inventory.json` — `defect`: the six flip `open` → `fixed` with the commit
+  that fixed each. DEF-200..209 are held and used only if this item opens something new; an
+  unused range is reported unused rather than filled.
+- `docs/test-campaign/cases.json` — CASE-0390 onward, one per acceptance criterion, each with its
+  `armed`/`armedBy` and its evidence paths.
+- `docs/specs/spec-PRO-0100.md` — the `**Defects:**` line and `## Defects` table that
+  `defect_gate.py claims` reads.
+- `CHANGELOG.md` — `## [Unreleased]`, prose through `/create-luke-content` format `marketing`.
+
+## A declared narrowing, surfaced rather than left silent
+
+The out-of-family review read Group 1 as narrowing triage assumption 5 — *"Both remaining unsafe
+shapes are converted, not exempted"* — because three sites are kept.
+
+**Kept, and here is the authority.** The assumption is about the two *shapes* being swept as
+classes rather than about every individual site, and PRO-0098's recorded method — which the
+assumption's own sentence points at — keeps a site that is total over a closed input space, with
+the reason beside it, and kept four that way. This item's dispatch brief repeats it in the same
+words: *"Class each site before converting: some are total over a closed input space and stay,
+with the reason recorded beside them."* Converting a total unwrap would be motion rather than
+repair, and a census that converts without classing is the thing PRO-0098 wrote its method to
+avoid.
+
+**What would change the call:** if the reader wants a zero-exemption sweep, the three sites in
+`ExternalWitnessTests.swift` convert in about ten lines and the two `baseAddress` ones need the
+`withUnsafeBytes` closure restructured to hand the pointer out. Recorded here so it is a decision
+somebody took rather than a boundary this plan drew quietly.
+
+## Out of scope
+
+- **The other four open defects** — DEF-033, DEF-141, DEF-151, DEF-180. Each still needs the
+  investigation this item does not do. Spec assumption 7.
+- **PRO-0092's mutation run.** Held by the fleet on machine grounds.
+- **The `granted` and `connect` panes of the design page** (slice 1) and any wave-9 composition
+  decision other than the one DEF-163 names.
+- **A `provision` action for `proctor_guest`** — PRO-0085 left it as the reader's open question
+  and it is a safety-posture change.
+- **Pushing, and merging.** This item stops before verify.
+
+**Scope-narrowing check.** Every "Out of scope" line above was compared against the spec's
+description and its seven triage assumptions. The four remaining defects are assumption 7's own
+words; the rest are named by no assumption and no clause. Nothing the spec asks for is excluded.
+
+## Risks
+
+1. **A guard reds and the cheap repair is to edit it.** Three of the six repairs land inside
+   guards this campaign built (slice 2's three clauses, slice 5's verdict line, slice 6's
+   measurement). The rule for this item: a guard that reds is either a real finding or a wrongly
+   shaped fix, never a threshold to move. Slice 2's plan above is written the long way round for
+   exactly this reason.
+2. **Slice 5 is 100 sites in one commit and the compiler is the only reviewer of most of them.**
+   Mitigation: convert file by file, build between files, and keep the census file as the ledger
+   of what was decided and why.
+3. **The shared repo is live.** Slice 6 commits one explicit path and checks the tree before and
+   after.
+4. **The suite has produced unreproduced SIGTRAPs reporting no verdict.** An absent verdict line
+   is read as a failure and re-run, never as a pass.
+5. **`throws` does not always reach the site — named by the out-of-family review.** Adding `throws`
+   to a `@Test` function fixes a `try!` in its body and not one inside a non-throwing closure
+   (`Thread { }`, `.map { }`, `withUnsafeBytes { }`) or inside a shared non-throwing helper. A
+   scan for the closure case at `9f99a0f` returned **0 of 86** sites, so the shape is not known to
+   be present — but the helper case has precedent in this repo: PRO-0098's own conversion made the
+   `Trail` fixture's `init`, `sealUnchained` and `append` throwing and 34 call sites gained `try`.
+   Mitigation: convert file by file and build between files, so a cascade is bounded by one file
+   rather than discovered at the end of a hundred edits; where a closure genuinely blocks `try`,
+   restructure the value out of the closure rather than wrapping it in `do`/`catch`, because a
+   `catch` that swallows is the same defect wearing a different face.
+
+---
+
+## Plan review gate
+
+**Mechanical path check:** every backtick-quoted path in this plan resolves in the worktree, plus
+the three in `~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor/`. One path is marked
+to-be-created (`docs/test-campaign/evidence/PRO-0100/unwrap-census.md`). No misses.
+
+**Out-of-family review:** **gemini** (`agy --model gemini-3.7-flash-high`), read-only, exit 0,
+8,645 bytes returned. **This is a substitution and it is named as one:** codex is OFF for this
+repository and grok returns `402 — Grok Build usage balance exhausted`, so ORCHESTRATOR.md's
+egress rule as amended 2026-08-22 seats gemini rather than falling back in-family. Packet and
+verdict: `docs/test-campaign/evidence/PRO-0100/plan-review-gemini.md`.
+
+**Verdict: 4 material findings, 4 accepted, 0 rejected.**
+
+| # | Finding | Disposition |
+|---|---|---|
+| 1 | A1 omitted the spec's *"with the reason recorded"* clause | **Accepted** — A1 now carries the caption |
+| 2 | Group 1 reads as a silent narrowing of triage assumption 5 | **Accepted as surfacing** — kept on PRO-0098's recorded method and this item's own brief, and declared in its own section above rather than left implicit |
+| 3 | The reason given for `ExternalWitnessTests.swift:1106` was false (a different construction from :498) | **Accepted** — verified independently at `Transport.swift:10-22`, row rewritten; the safety holds by the encoder rather than by the caller |
+| 4 | Largest unnamed risk: `throws` does not reach a `try!` inside a non-throwing closure or shared helper | **Accepted** — risk 5, with the closure scan (0 of 86) and the `Trail` precedent |
+
+The review also confirmed, against the files: the `.disabled(` count reasoning, that
+`.buttonStyle` propagates through the environment past `.disabled` and `.hint`, the
+`PrimaryProminence`-before-`HeroPermRow` ordering, sites 1 and 2 of Group 1, every cited analogue,
+and that the six slices touch disjoint files with no inter-slice ordering dependency.
