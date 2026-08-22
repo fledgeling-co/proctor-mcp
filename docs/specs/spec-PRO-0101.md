@@ -54,6 +54,29 @@ reason to skip it.
 - Assuming the forward half is a change to the shared pipeline stage rather than a convention in this
   repo's own docs, since a convention nobody enforces is what produced the twenty-four.
 
+## A citation has to resolve, and this repo has already proved that is a separate claim (added 2026-08-22, orchestrator)
+
+Measured at `9f99a0f`, across all 99 specs: **75 cite a brief path, 24 cite none, and of the 75, four
+cited paths did not exist.** The four were this wave's own — PRO-0100 through PRO-0103 — deleted by
+`400808d`, the triage commit that wrote their specs, in a message that describes everything else it
+did and never mentions the deletion. The other 71 keep their briefs, so consuming a brief at triage
+is not this pipeline's convention; those four were an exception nobody recorded.
+
+The four briefs are restored on `main`, so the count now reads 71 of 75 resolving and 0 dangling.
+What the episode establishes is that the join rate this item optimises and the usefulness of a
+citation are two different measurements. The join reads a path mention, so a spec citing a deleted
+brief joins at 100% while the reference resolves for nobody, and a scheme that only guarantees
+presence would have shipped 99 citations of which any number could be dead.
+
+So this item owes one more acceptance clause: **a cited brief path resolves in the working tree, and
+whatever check proves a spec carries a citation proves the citation resolves in the same pass.**
+Where a brief is deliberately consumed, the citation records the commit that holds it rather than a
+path that does not — a recoverable reference rather than a dangling one.
+
+Scope note: this widens the item by one clause and one check. It is not a licence to change how
+triage handles briefs; the four restored files match the majority convention, and any deliberate move
+to consuming them is a separate decision with its own record.
+
 ---
 
 <!-- Triage, plan link, and progress sections are appended below. -->
