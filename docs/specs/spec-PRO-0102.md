@@ -155,3 +155,70 @@ here as a downgrade rather than passed over.
 | DEF-212 | A correct repair never reached any installed copy, because the version never moved | fixed |
 | DEF-213 | A brief joined only to a repaired defect would still have read broken | fixed |
 | DEF-214 | The reverse-citation scan turned a brief's file number into a confidence-1.0 citation | fixed |
+
+### Gap-fix — 2026-08-22
+
+One gate had not been run: `campaign.py check`. Run here it named three of this item's own cases,
+six findings, and closing them is the whole of this stage.
+
+`CASE-0426`, `CASE-0427` and `CASE-0428` stand on `source-analysis` and carried no `source` block, so
+the guard at `campaign.py:772-781` had nothing to read. Each now carries the analyzer and the
+denominator, both off a live run rather than off the prose already in the record — `CASE-0139`'s own
+history is a case whose copied count had gone stale by a merge, and the count is the claim.
+
+| Case | Analyzer | Population judged | Finding |
+|---|---|---|---|
+| CASE-0426 | `selftest.py` check 13, *every class is produced by a real fixture* | 9 classes in `reckon.CLASSES` | 0 unreachable |
+| CASE-0427 | `selftest.py` check 14, first assertion | 2 version declarations reckon publishes | 0 disagreements |
+| CASE-0428 | `selftest.py` check 14, second assertion | 1 published version string | 0 below the 1.1.0 floor |
+
+The denominator is what was judged rather than what was opened. For CASE-0427 that means 2 rather
+than the 46 plugin entries `marketplace.json` holds, because the check reads one of them. For
+CASE-0428 it means 1, which is thin and is the honest count: that assertion reads a single value, and
+CASE-0427 is the row that judges the pair. Probe and its output at
+`evidence/PRO-0102/source-denominators.py` and `source-denominators.txt`.
+
+All three stay `source-analysis`. Nothing here runs the product or witnesses an effect; relabelling
+one to clear the guard would be the label over the evidence.
+
+**The surface prose was stale in 28 places, not 23**, and one of them was structural. `SURF-023`
+was minted at `c1132ea` and all twenty cases moved onto it, but 20 case notes and 8 inventory notes
+still read "Filed under SURF-022" and "no SURF id was allocated to PRO-0102", and `REQ-097`,
+`REQ-098` and `REQ-099` still carried `surfaces: ["SURF-022"]` — the same stale claim in a field the
+tooling reads. All 28 strings and all three arrays now name `SURF-023`, with each note's own
+reasoning kept and `SURF-022`'s route recorded as why it was the wrong home.
+
+| Gate | Verbatim exit | Result |
+|---|---|---|
+| `campaign.py check docs/test-campaign` (0.9.9) | `EXIT=1` | Blocker set identical to the merge base's: CASE-0318, CASE-0333, CASE-0334, CASE-0335, REQ-007, REQ-024, REQ-086. Nothing in CASE-0410..0429, REQ-097..099 or DEF-210..214. source-analysis findings 12 → 6. |
+| `campaign.py check`, merge base `9f99a0f` | `EXIT=1` | The control. Same seven ids, same six other categories. |
+| `selftest.py` (reckon 1.1.0 at `fc86fe7`) | `EXIT=0` | 46 checks, all green. |
+| `defect_gate.py claims spec-PRO-0102.md docs/test-campaign` | `exit=0` | 5 claimed defects, every one reads `fixed`. |
+| `defect_gate.py dropped docs/test-campaign` | `exit=0` | 108 merges, 39,060 id/field pairs, no discarded value still missing. |
+| `./scripts/test.sh` through `governor-run --weight 6`, run 1 | `EXIT=1` | `Test run with 2061 tests in 251 suites failed after 130.721 seconds with 1 issue.` One issue, and see below. |
+| `./scripts/test.sh --filter planeFollowsTheWindowList` | `EXIT=0` | `Test run with 1 test in 1 suite passed after 0.071 seconds.` |
+| `./scripts/test.sh` through `governor-run --weight 6`, run 2 | `EXIT=0` | `Test run with 2061 tests in 251 suites passed after 13.491 seconds.` |
+
+Exit 1 on `campaign.py check` is the campaign's standing state on this history and is not this
+item's failure. The diff is at `evidence/PRO-0102/check-blocker-diff.txt`, with both runs beside it.
+
+**The Swift suite went red once, and it is not this branch's.** Run 1 lost
+`planeFollowsTheWindowList` at `BackgroundRouteTests.swift:163`. `Session.cursorPlane`
+(`SessionCursor.swift:87`) asks the live window server whether any on-screen window's number equals
+the handle's `cgWindowID`; the fake claims id 7 and the test's premise is a comment asserting no such
+window is on this machine's screen. That is a fact about the host at the moment of the run rather than
+a fixture. The test passes in isolation, passes in run 2, and has passed in every run recorded in
+`evidence/PRO-0088` and `evidence/PRO-0093`. Nothing outside `docs/` changed on this branch and no
+Swift test reads any of the four changed files, so the code under it is byte-identical to the merge
+base. Left alone: giving that path an injectable window list is a change to product test seams and is
+not this item's work. Both runs are at `evidence/PRO-0102/swift-suite.txt`.
+
+**One rung judgement, reported and not acted on.** `CASE-0426` sits on `source-analysis` while its
+sixteen `outcome` siblings in the same range assert on the output of the same suite, and check 13
+does *run* `reckon.classify()` on two fixtures rather than only reading source. By the vocabulary in
+`campaign.py`'s own summary — *source-analysis: reads source, runs nothing, buys no effect credit* —
+that reads like an under-claim, and `outcome` would be the closer rung. It stays where it is for two
+reasons. Moving it would remove the denominator obligation that this stage exists to satisfy, which is
+the label over the evidence. And under-claiming is the safe direction: `source-analysis` buys less
+credit than `outcome`, so nothing rests on a rung it has not earned. `CASE-0427` and `CASE-0428` read
+two JSON files and compare strings, which is `source-analysis` exactly.

@@ -1,0 +1,26 @@
+# Live denominator probe for CASE-0426, CASE-0427 and CASE-0428.
+# Ran 2026-08-22 by the PRO-0102 gap-fix stage, from /tmp, against
+#   ~/Dev/fledgeling-plugins @ fc86fe7 (reckon 1.1.0).
+# Script: docs/test-campaign/evidence/PRO-0102/source-denominators.py
+# The counts below are read off this run, not copied from the case prose:
+# CASE-0139's own history is a case whose copied count went stale by a merge.
+
+CASE-0426  check 13 'every class is produced by a real fixture'
+  population judged : 9 class(es) in reckon.CLASSES -> unbuilt, unjoined, broken, unmeasured, unnamed, undecided, retirable, waived, verified-done
+  finding           : 0 unreachable -> none
+  examined          : 9
+
+CASE-0427  check 14 first assertion 'the manifest and the marketplace agree'
+  population judged : 2 version declaration(s) reckon publishes
+                      plugins/reckon/.claude-plugin/plugin.json:version = 1.1.0
+                      .claude-plugin/marketplace.json:plugins[reckon].version = 1.1.0
+  finding           : 0 disagreement(s)
+  examined          : 2
+  not the denominator: 46 plugin entries exist in marketplace.json; the check reads one.
+
+CASE-0428  check 14 second assertion 'the published version carries these repairs'
+  population judged : 1 published version string -> plugin.json:version = 1.1.0
+  finding           : 0 below the 1.1.0 floor
+  examined          : 1
+
+EXIT=0

@@ -1,0 +1,35 @@
+# campaign.py check — blocker sets, this branch against its merge base.
+# Instrument: test-campaign 0.9.9, skills/test-campaign/scripts/campaign.py.
+# Merge base: 9f99a0fbc6feac8dfbc6eb5371e07c7709ca3c4e (docs/test-campaign
+# extracted with `git archive` into a scratch tree, so the run is against that
+# registry rather than against a checkout with this branch's files in it).
+#
+# Both runs exit 1. Exit 1 is the campaign's standing state on this history and
+# is not this item's failure.
+#
+# ids named by the blocker text, merge base : CASE-0318, CASE-0333, CASE-0334,
+#                                            CASE-0335, REQ-007, REQ-024, REQ-086
+# ids named by the blocker text, this branch: CASE-0318, CASE-0333, CASE-0334,
+#                                            CASE-0335, REQ-007, REQ-024, REQ-086
+#
+# only at merge base : none
+# only at this branch: none
+#
+# (CASE-0001 also matches the id pattern in both, from the worked example in the
+#  remediation help text. It is not a blocker and is not in this registry.)
+#
+# Per-category counts are identical in both runs except the one this stage
+# closed: source-analysis claims with no analyzer or no denominator went
+# 12 -> 6. The six that remain are CASE-0333, CASE-0334 and CASE-0335, two
+# findings each, and all three predate this branch. The six that went were
+# CASE-0426, CASE-0427 and CASE-0428, two findings each.
+#
+#   4 case(s) inconclusive            4 -> 4
+#   3 raster-visual, no capture       3 -> 3
+#   1 pixel claim, no provenance      1 -> 1
+#   1 requirement no case traces to   1 -> 1  (REQ-086)
+#  12 source-analysis, no denominator 12 -> 6
+#   1 external effect, no witness     1 -> 1  (REQ-007)
+#
+# No id in CASE-0410..CASE-0429, REQ-097..REQ-099 or DEF-210..DEF-214 appears in
+# either blocker set.

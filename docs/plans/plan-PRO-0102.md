@@ -198,3 +198,12 @@ validation's findings, which did not exist when the table was written.
 `class not in ("unbuilt", "unjoined")`, which goes green under one of the two regressions it
 exists to catch. It now names the class, and both reverts red it —
 `evidence/PRO-0102/arming/arming-F-dprime.txt`, landed at `fc86fe7`.
+
+## The gate this plan did not name
+
+The Gates section above lists the out-of-family review, `defect_gate.py` in both modes and
+`./scripts/test.sh`. It does not list `campaign.py check`, which is why the build did not run it, and
+running it found six findings against three of this item's own cases. Every plan in this repository
+that touches the registry names it; this one omitted it while allocating twenty cases and three
+requirements. The gap-fix record, the analyzer and denominator for each case, and the blocker-set diff
+against the merge base are in `docs/specs/spec-PRO-0102.md` under *Gap-fix — 2026-08-22*.
