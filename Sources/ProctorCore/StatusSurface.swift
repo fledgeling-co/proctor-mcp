@@ -29,7 +29,7 @@ public enum StatusSurface {
     }
 
     public enum Section: String, Sendable, CaseIterable {
-        case permissions, tools, lanes, switches, activity, connect, agent, footer
+        case permissions, tools, lanes, switches, policy, activity, connect, agent, footer
         /// The block that replaces everything when the agent is unreachable.
         case agentDown
     }
@@ -46,7 +46,8 @@ public enum StatusSurface {
         case .checking:
             return [.permissions, .footer]
         case .ready, .partial:
-            return [.permissions, .tools, .lanes, .switches, .activity, .connect, .agent, .footer]
+            return [.permissions, .tools, .lanes, .switches, .policy, .activity, .connect,
+                    .agent, .footer]
         }
     }
 
@@ -177,6 +178,96 @@ public enum StatusSurface {
         public static let switchesNoteInDesign =
             "What you see, then what Proctor may take, then which path a run takes. Drawing "
             + "switches start on; a capability starts off and stays off if either source says so."
+
+        // MARK: The policy section
+        //
+        // PRO-0082, closing DEF-183. The posture block has been on the wire since
+        // PRO-0050 and no surface read it. What it renders is decided by the
+        // block's own documentation, which says what it exists to answer: whether
+        // a call is likely to be refused, and whether it will be recorded. So the
+        // card is those two questions and the second one's honesty check, and it
+        // is deliberately NOT everything on the wire.
+        //
+        // It carries no bundle id, no path, no key and no token, because the wire
+        // carries none — `PolicyPosture` withholds them on purpose. The four
+        // counts ARE drawn: the wire's caution is about a model calling
+        // `proctor_doctor` before anything is established, and this window is the
+        // operator's own surface on their own Mac. They are drawn as sizes, with
+        // no list and no name, which is all the wire has.
+
+        public static let policyHeading = "Policy and the trail"
+        public static let policyNote =
+            "Whether a step is likely to be refused, and whether it will be recorded. The "
+            + "rules themselves are not here — this is the gate's shape, not its contents."
+        public static let policyModeLabel = "Gate"
+        public static let policyApprovalLabel = "Approval"
+        public static let policyJailLabel = "Filesystem"
+        public static let policyTrailLabel = "Trail"
+        public static let policyEntriesLabel = "Recorded"
+
+        /// What each gate mode means for the next call, said as a consequence
+        /// rather than as a mode name. `open` is the one that has to be plain: a
+        /// gate that refuses nothing is a fact about this Mac's exposure and the
+        /// window is where an operator would find it.
+        public static func policyMode(_ mode: String, allow: Int, block: Int) -> String {
+            switch mode {
+            case "allowList":
+                return "Allow list — \(allow) app\(allow == 1 ? "" : "s") may be driven, "
+                     + "everything else is refused"
+            case "blockOnly":
+                return "Block list — \(block) app\(block == 1 ? "" : "s") refused, "
+                     + "everything else may be driven"
+            case "open":
+                return "Open — every app on this Mac may be driven"
+            default:
+                return mode
+            }
+        }
+
+        public static func policySensitive(_ count: Int) -> String? {
+            guard count > 0 else { return nil }
+            return "\(count) marked sensitive, so a step against one needs an approval first"
+        }
+
+        public static func policyApproval(live: Bool) -> String {
+            live ? "A token is live now, so a sensitive step would be allowed"
+                 : "No token is live, so a sensitive step would be refused"
+        }
+
+        public static func policyJail(declared: Bool, roots: Int) -> String {
+            declared
+                ? "Confined to \(roots) root\(roots == 1 ? "" : "s"); a path outside them is refused"
+                : "No jail declared, so file steps are not confined by Proctor"
+        }
+
+        /// The trail's honesty, in the order a person needs it: can it write, does
+        /// what it wrote verify, and is anything missing from it.
+        ///
+        /// `auditDroppedThisRun` is drawn beside a clean verdict rather than
+        /// folded into it, because the wire says why: an action that was never
+        /// recorded leaves no broken link to find, so "clean" and "complete" are
+        /// two claims and a surface that says one of them must not imply the
+        /// other.
+        public static func policyTrail(writable: Bool, clean: Bool,
+                                       sealed: Bool, signed: Bool,
+                                       keyConfirmed: Bool) -> String {
+            guard writable else { return "Not writable — steps are running unrecorded" }
+            var parts = [clean ? "Verifies clean" : "Does not verify"]
+            if sealed { parts.append("sealed") }
+            if signed { parts.append(keyConfirmed ? "signed, key confirmed" : "signed, key unconfirmed") }
+            return parts.joined(separator: ", ")
+        }
+
+        public static func policyEntries(_ count: Int, dropped: Int?) -> String {
+            let base = "\(count) entr\(count == 1 ? "y" : "ies")"
+            guard let dropped, dropped > 0 else { return base }
+            return base + " — \(dropped) could not be written this run, so the trail is "
+                        + "incomplete whatever it verifies"
+        }
+
+        public static let policyAbsent =
+            "The agent did not report a policy posture. Nothing is known here rather than "
+            + "nothing being enforced."
 
         public static let activityHeading = "Activity"
         public static let connectHeading = "Connect a model to it"
@@ -445,6 +536,14 @@ public enum StatusSurface {
              ("switchesHeading", switchesHeading),
              ("switchesNote", switchesNote),
              ("switchesNoteInDesign", switchesNoteInDesign),
+             ("policyHeading", policyHeading),
+             ("policyNote", policyNote),
+             ("policyModeLabel", policyModeLabel),
+             ("policyApprovalLabel", policyApprovalLabel),
+             ("policyJailLabel", policyJailLabel),
+             ("policyTrailLabel", policyTrailLabel),
+             ("policyEntriesLabel", policyEntriesLabel),
+             ("policyAbsent", policyAbsent),
              ("activityHeading", activityHeading),
              ("connectHeading", connectHeading),
              ("agentHeading", agentHeading),
@@ -545,6 +644,85 @@ public enum StatusSurface {
         public var isUsable: Bool { self == .ready }
     }
 
+    // MARK: - The policy card's rows
+    //
+    // PRO-0082. The deciding half lives here and not in the view for the reason
+    // every other decision on this surface does: a rule inside a `body` is one
+    // this repo cannot prove. The view walks these rows and draws them.
+
+    /// One line of the policy card.
+    public struct PolicyRow: Equatable, Sendable {
+
+        /// What a row is about, which is also its identifier and its order.
+        public enum Kind: String, Sendable, CaseIterable {
+            case mode, approval, filesystem, trail, entries
+        }
+
+        /// How loudly a row reads. **Never the only carrier** — every row states
+        /// its fact in words, for the reason `LanePill` gives.
+        public enum Tone: String, Sendable, CaseIterable {
+            case good, warn, bad, plain
+        }
+
+        public let kind: Kind
+        public let label: String
+        public let value: String
+        /// A second line, drawn only when there is one. `nil` rather than an
+        /// empty string so a view cannot draw a blank row and call it a fact.
+        public let detail: String?
+        public let tone: Tone
+
+        public init(kind: Kind, label: String, value: String,
+                    detail: String? = nil, tone: Tone) {
+            self.kind = kind; self.label = label; self.value = value
+            self.detail = detail; self.tone = tone
+        }
+    }
+
+    /// The rows the policy card draws for a posture, or an empty array when the
+    /// agent sent none.
+    ///
+    /// Empty rather than a row saying "unknown": an absent block and a reported
+    /// one are different facts, and the view says the first in a sentence of its
+    /// own (`Copy.policyAbsent`) rather than dressing it as a value.
+    ///
+    /// **`open` is `warn`, and that is the deliberate part.** A gate that refuses
+    /// nothing is the most permissive posture Proctor has, and it is also the
+    /// default — so it is the one an operator is most likely to be in without
+    /// having chosen it. Drawing it plain would make the window agree with a
+    /// machine that has no gate at all.
+    public static func policyRows(from posture: DoctorReport.PolicyPosture?) -> [PolicyRow] {
+        guard let p = posture else { return [] }
+        return [
+            PolicyRow(kind: .mode,
+                      label: Copy.policyModeLabel,
+                      value: Copy.policyMode(p.mode, allow: p.allowCount, block: p.blockCount),
+                      detail: Copy.policySensitive(p.sensitiveCount),
+                      tone: p.mode == "open" ? .warn : .good),
+            PolicyRow(kind: .approval,
+                      label: Copy.policyApprovalLabel,
+                      value: Copy.policyApproval(live: p.approvalTokenLive),
+                      tone: p.approvalTokenLive ? .warn : .plain),
+            PolicyRow(kind: .filesystem,
+                      label: Copy.policyJailLabel,
+                      value: Copy.policyJail(declared: p.fsJailDeclared, roots: p.fsRootCount),
+                      tone: p.fsJailDeclared ? .good : .warn),
+            PolicyRow(kind: .trail,
+                      label: Copy.policyTrailLabel,
+                      value: Copy.policyTrail(writable: p.auditWritable, clean: p.auditClean,
+                                              sealed: p.auditSealed, signed: p.auditSigned,
+                                              keyConfirmed: p.auditKeyConfirmed),
+                      tone: (p.auditWritable && p.auditClean) ? .good : .bad),
+            PolicyRow(kind: .entries,
+                      label: Copy.policyEntriesLabel,
+                      value: Copy.policyEntries(p.auditEntries, dropped: p.auditDroppedThisRun),
+                      // A dropped entry reds this row even beside a clean trail:
+                      // the wire's own note says a clean verdict beside a
+                      // non-zero count is not a complete trail.
+                      tone: (p.auditDroppedThisRun ?? 0) > 0 ? .bad : .plain)
+        ]
+    }
+
     // MARK: - Geometry
     //
     // The skeleton stands in for a permission row, so it is the same height. A
@@ -573,6 +751,12 @@ public enum StatusSurface {
             "proctor.status.grant." + name.lowercased().replacingOccurrences(of: " ", with: "-")
         }
         public static func laneRow(_ lane: String) -> String { "proctor.status.lane.\(lane)" }
+        /// PRO-0082. One per row the policy card can draw, keyed on the row's own
+        /// kind rather than on its position, so a card that draws four rows on one
+        /// machine and five on another still names each of them the same way.
+        public static func policyRow(_ row: PolicyRow.Kind) -> String {
+            "proctor.status.policy.\(row.rawValue)"
+        }
         public static func switchRow(_ variable: String) -> String {
             "proctor.status.switch." + variable.lowercased().replacingOccurrences(of: "_", with: "-")
         }
@@ -597,6 +781,7 @@ public enum StatusSurface {
                     "Input Monitoring", "Shortcuts CLI"].map(grantRow)
             out += ["mac", "browser", "ios", "cua", "guest"].map(laneRow)
             out += SwitchCatalogue.all.map { switchRow($0.variable) }
+            out += PolicyRow.Kind.allCases.map(policyRow)
             return out
         }
     }

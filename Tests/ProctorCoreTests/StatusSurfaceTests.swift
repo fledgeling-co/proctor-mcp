@@ -15,7 +15,7 @@ struct StatusSurfaceTests {
         let sections = StatusSurface.sections(for: .down)
         #expect(sections == [.agentDown])
         for forbidden in [StatusSurface.Section.permissions, .tools, .lanes,
-                          .switches, .activity, .connect, .agent, .footer] {
+                          .switches, .policy, .activity, .connect, .agent, .footer] {
             #expect(!sections.contains(forbidden),
                     "\(forbidden.rawValue) is reachable while the agent is unreachable")
         }
@@ -26,7 +26,10 @@ struct StatusSurfaceTests {
         for state in StatusSurface.State.allCases {
             #expect(!StatusSurface.sections(for: state).isEmpty)
         }
-        #expect(StatusSurface.sections(for: .ready).count == 8)
+        // Nine since PRO-0082 added the policy card. The count is asserted rather
+        // than the list so a section added without a decision about where it goes
+        // is a red test; StatusPolicySectionTests holds the placement.
+        #expect(StatusSurface.sections(for: .ready).count == 9)
         #expect(StatusSurface.sections(for: .partial) == StatusSurface.sections(for: .ready))
         // Checking shows the permissions frame it is filling, and no more: a
         // skeleton under a Connect section nobody can act on is noise.
