@@ -190,8 +190,9 @@ separate item rather than this one.
 
 **The case allocation grew from 16 to 20 during the build**, so the sixteen rows in the test
 strategy table above are not the final mapping. The suite ended at 24 assertions and the registry
-groups them into the twenty ids allocated, CASE-0410..CASE-0429; the reconciliation is the `Cases`
-table in `docs/specs/spec-PRO-0102.md`. Four of the extra rows are the critic's and the
+groups them into the twenty ids allocated, CASE-0410..CASE-0429; the reconciliation is `docs/test-campaign/cases.json` itself, read for
+CASE-0410..CASE-0429. There is no `Cases` table in `docs/specs/spec-PRO-0102.md`; an earlier
+draft of this line said there was, and PRO-0102's verification caught the dangling reference. Four of the extra rows are the critic's and the
 validation's findings, which did not exist when the table was written.
 
 **One more assertion strengthened after the same-family validation.** `CASE-0423` asserted

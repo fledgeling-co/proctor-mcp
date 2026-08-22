@@ -3149,6 +3149,32 @@
         "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt"
       ],
       "note": "Assumption A8 says this is dropped once across PRO-0102 and PRO-0101, whichever builds first, and the second verifies rather than re-edits. PRO-0102 built first, so PRO-0101 verifies. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine."
+    },
+    {
+      "id": "DEF-201",
+      "title": "A quoted placeholder id is read as a citation at confidence 1.0",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-023"
+      ],
+      "requirements": [
+        "REQ-098"
+      ],
+      "note": "reckon's ID_RE scans a brief's whole body for id-shaped tokens with no code-fence and no placeholder exclusion, so a quoted example id becomes a citation at confidence 1.0. PRO-0102's verifier built a brief whose only id-shaped token was CASE-9999 inside an example command; it classed unbuilt and product-work, on the reasoning that the registry holds none of the ids it cites. That is DEF-214's shape one hop out \u2014 a token that is not a citation, labelled cited at full confidence \u2014 and it routes a brief to the one class PRO-0102 narrowed unbuilt down to. It fires 0 times across the 91 real briefs in this repo, so it is latent rather than active, and the repair is one predicate in build_join plus a fixture. Gemini raised it independently in the same verification. Found by the non-AC findings sweep at PRO-0102's verification."
+    },
+    {
+      "id": "DEF-202",
+      "title": "Six status words that mean not-work are classified as remaining work",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-023"
+      ],
+      "requirements": [
+        "REQ-098"
+      ],
+      "note": "reckon classifies a defect as broken and as remaining work on any status word other than fixed, and the fail-closed set includes words that mean the opposite of remaining work: `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce` and `fixed (partial)` all come out as work. This registry uses only `fixed` and `open`, so the behaviour is correct here and PRO-0102's own acceptance is unaffected. It is recorded because reckon 1.1.0 has been announced to nine projects as the version to run, and a registry using any of those words will have its remaining-work headline over-reported by a tool whose whole purpose is to state what is left. Fail-closed is the right default for an unknown word; these six are not unknown. Found by the non-AC findings sweep at PRO-0102's verification."
     }
   ]
 }

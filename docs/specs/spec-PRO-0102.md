@@ -108,7 +108,9 @@ Measured 2026-08-22 against both copies of `skills/reckon/scripts/reckon.py`:
 - The brief's third assumption ("a local patch already exists here") is stale in this repo's
   direction too: no patched copy of `reckon.py` exists under `proctor-mcp`.
 - This project's own numbers, for the acceptance check: `docs/test-campaign/inventory.json`
-  carries 110 defect rows, **10** non-fixed. The reckoning's "108 defect records, 88 fixed,
+  carried 110 defect rows with **10** non-fixed **when this triage ran**; the branch reached 115
+  rows and `main` reads 111 rows with **5** non-fixed after PRO-0100 closed six. The figure is
+  stamped rather than updated because it is a measurement with a date, not a live count. The reckoning's "108 defect records, 88 fixed,
   eight open" is a snapshot from `2bd01be` and has since moved; the plan should re-read the
   registry rather than reuse those figures.
 - Discipline: touch only the `reckon` plugin, commit with an explicit path, never `-a` and
@@ -222,3 +224,74 @@ reasons. Moving it would remove the denominator obligation that this stage exist
 the label over the evidence. And under-claiming is the safe direction: `source-analysis` buys less
 credit than `outcome`, so nothing rests on a rung it has not earned. `CASE-0427` and `CASE-0428` read
 two JSON files and compare strings, which is `source-analysis` exactly.
+
+## Verification — 2026-08-22, `Done`
+
+Verified fresh-context on `76c77b1` by an agent that did not build the work, with every arming
+re-applied on a scratch tree at `/tmp/v0102-scratch` — the live shared plugin was read-only
+throughout and `git status` there was unchanged after.
+
+| Gate | Exit |
+|---|---|
+| `campaign.py check` @ `76c77b1` | 1 |
+| `campaign.py check` @ merge base `9f99a0f` | 1 |
+| `selftest.py`, reckon at live HEAD | **0**, 46 `ok`, 0 `FAILED` |
+| `defect_gate.py claims` | **0** — 5 claimed, all `fixed` |
+| `defect_gate.py dropped` | **0** — 108 merges, 39,060 pairs |
+| `defect_gate.py` bare, as a positional control | 2 |
+| `./scripts/test.sh` via `governor-run --weight 6` | **0** — 2,061 tests, 251 suites, 11.869s |
+| `reckon build` end to end against this registry | **0** — 598 rows, 132 work items, 13 product |
+
+Both blocker sets are the same seven — CASE-0318, CASE-0333–0335, REQ-007, REQ-024, REQ-086 — and
+the category lines diff empty. `reckon.py` is byte-identical between `fc86fe7` and fledgeling HEAD
+`364c785`, so the selftest run is the 1.1.0 run rather than a run of something adjacent to it.
+
+**20 of 20 armings bit, and two bit harder than recorded.** Reverting `reckon.py` to `31697a9` reds
+**18** checks where the record says 17: *a dangling citation keeps a usable overlap edge* also reds
+under the full revert, which the record attributes only to a mutation. And the `plugin.json 1.0.9`
+mutation reds the floor assertion as well as the drift assertion. Both are the record understating
+itself, which is the safe direction and still worth naming.
+
+### The claim about "the ten broken defects" is retired rather than updated
+
+The item recorded that the ten defects the classifier calls broken are exactly the ten this registry
+records as non-fixed. That form goes stale the moment any defect closes, and PRO-0100's merge closed
+six of them within the hour. The invariant that actually holds is registry-relative and does not
+decay: **the classifier's `broken` set equals the registry's own non-fixed set, exactly.** Verified on
+both trees — this branch at 115 rows gives 10, and `main` at 111 rows after PRO-0100 gives 5.
+
+### CASE-0426's rung, settled
+
+It keeps `source-analysis` though check 13 executes `classify()` on two fixtures, which makes
+`outcome` the truer rung. The verifier's reading is accepted: the runner's stated reason inverted the
+guard's purpose, because moving *up* the ladder is the more demanding act rather than the
+guard-clearing one. The rung stands anyway — it under-claims, nothing rests on it, and the
+orchestrator had already ruled it. Recorded here so the decision is not re-derived.
+
+### `unbuilt` has no live instance
+
+The narrowed `unbuilt` predicate is proved by fixtures only; it fires zero times on this repo's real
+briefs. That is not a defect and it is worth knowing, because a predicate with no live instance has
+never been checked against anything but its own fixture.
+
+### Four findings outside the acceptance set, and where each went
+
+- **DEF-201, opened before the merge.** `ID_RE` reads a brief's whole body with no code-fence or
+  placeholder exclusion, so a quoted example id becomes a citation at confidence 1.0 and routes the
+  brief to `unbuilt`. Zero occurrences across 91 real briefs, so latent. Gemini raised it
+  independently.
+- **DEF-202, opened before the merge, and it reaches outside this repository.** Six status words that
+  mean *not* remaining work — `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce`,
+  `fixed (partial)` — all classify as work. Correct here, because this registry uses only `fixed` and
+  `open`. It matters because 1.1.0 has been announced to nine projects as the version to run.
+- **`plan-PRO-0102.md:193` cited a `Cases` table this spec does not contain.** Corrected in place to
+  name `cases.json` itself.
+- **CASE-0427's note carried a copied count of 46 marketplace entries; the live figure is 47.** It was
+  explicitly labelled *not the denominator*, so it was never a claim about the population — but a
+  copied count going stale is precisely CASE-0139's recorded failure, so the number is removed rather
+  than refreshed.
+
+One thread the runner raised falls, with a cause worth keeping: it reported that ORCHESTRATOR.md did
+not say why this item came back. It does, on `main`. The branch's copy is 1,943 lines and predates
+that section, so the runner read a tree where it genuinely was absent — a stale-file reading rather
+than a wrong one.
