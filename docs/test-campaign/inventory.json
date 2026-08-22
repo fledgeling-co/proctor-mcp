@@ -1308,6 +1308,19 @@
         "gated"
       ],
       "description": "vacuity-check.py's third pass over Tests/, configured by campaign.json blindVocabulary. Not a product surface: it is the campaign's own instrument, given a surface of its own so that a suite-wide measurement is not filed against a product surface it did not examine. Its count is a reading and not a verdict \u2014 PRO-0079 measured a false-positive rate of at least 96.2%, dominated by causes no vocabulary can reach, so the pass is not gate-worthy until its matcher ends a body at the next declaration of any visibility, stops matching the func line that opens the body, and reads any-read-after-any-mutation rather than after the last one."
+    },
+    {
+      "id": "SURF-023",
+      "name": "Reckoning reconciler",
+      "title": "The shared tool that decides what in this repo counts as remaining work",
+      "route": "tool://reckon/build",
+      "status": "reachable",
+      "states": [
+        "classifying",
+        "reporting",
+        "selftested"
+      ],
+      "description": "reckon's classifier, packaged in ~/Dev/fledgeling-plugins/plugins/reckon and run against this repo's registry. It is a shared portfolio instrument rather than a Proctor surface, and it is given a surface of its own because SURF-022 is scoped by its own route to an in-repo script: a case about a tool in another repository filed there would name a denominator that instrument never examined. Its verdict decides which rows appear as unbuilt, broken, unmeasured, unnamed, undecided, retirable, waived or unjoined, so a misclassification here becomes a wrong headline about the whole campaign."
     }
   ],
   "flow": [
