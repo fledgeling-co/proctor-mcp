@@ -1,0 +1,119 @@
+# PRO-0100: Six repairs whose diagnosis is done
+
+**ID:** PRO-0100
+**Status:** Ready for Plan
+**Created:** 2026-08-22
+**Last updated:** 2026-08-22
+**Brief:** `docs/features-to-triage/95-six-named-repairs.md`
+
+## Feature description
+
+# Six repairs whose diagnosis is already done
+
+- origin: the open-defect sweep after wave 15, and today's clarify pass · 2026-08-22
+- audience: whoever runs the suite next, and whoever reads the walkthrough
+- platforms: mac
+- research: none; each has a measurement or a decision already on record
+
+## What and why
+
+Six of the eleven open defects need no investigation. Each carries either a measured diagnosis or a
+decision already taken, and each is small. They are grouped because they are one sitting, not
+because they are one subject.
+
+**Two are the walkthrough disagreeing with its design of record, and they resolve in opposite
+directions.** The design draws no Skip on the permissions pane; the build draws one. The build is
+right — Skip is a tested escape hatch that postdates the design page, and removing it was measured
+to strand a person with no way out while the whole suite stayed green. So the design changes. But
+the disabled primary is the other way round: the build draws it accent-filled with only the label
+dimmed, which reads as tappable-but-broken, and the design's plain treatment is the correct disabled
+affordance. So the build changes. A referral split these two apart; taken together they would have
+had one wrong answer.
+
+**Two are tests that read the machine rather than the product.** One asserts a doctor verdict is
+invariant while reading live grant state, so it fails on whichever machine happens to disagree. The
+other reads a scheduler's ticket before the hold has reached it — a stronger timing claim than the
+requirement makes, and the second known flake in a suite that gates every item.
+
+**One is the force-unwrap class, finished.** A previous item converted every site matching its own
+grep. Two shapes cannot match that pattern and abort the runner identically, which is the failure
+where the suite reports no verdict at all rather than one red test.
+
+**One is a stale count in a shared instruction file**, the fifth of its kind, in a document live for
+every project on this machine.
+
+## Acceptance sketch
+
+- The walkthrough's permissions pane and its design of record agree on what is drawn, in both
+  directions, with the reason recorded where they were made to differ.
+- A disabled primary action reads as refusing rather than as broken.
+- No test's verdict depends on the grant state or the timing of the machine it runs on.
+- No force-unwrap shape remains that can end a run with no verdict line.
+- The shared skill states one tool count and it matches the catalogue.
+
+## Assumptions made writing this
+
+- Assuming the design of record is the artifact that yields on Skip, because the build's behaviour
+  was tested and the design page was not revised after that test existed.
+- Assuming the scheduler race is fixed by polling rather than by relaxing the assertion, since the
+  assertion is what the requirement actually promises.
+- Assuming the two force-unwrap shapes are converted rather than exempted, because the hazard is
+  identical and only the grep differed.
+
+---
+
+<!-- Triage, plan link, and progress sections are appended below. -->
+
+## Triage — 2026-08-22
+
+**Ready for Implementation Plan**
+
+**Sentinel review:** S1 — Approve with assumptions. Six repairs, each already diagnosed,
+grouped as one sitting rather than one subject. Two of the six change what a person sees;
+the other four change only whether a test run can be believed.
+
+**UI & logic preview** *(rough sanity check — is this the surface area you expected?)*
+- **Where it shows up:** the setup walkthrough's permissions step *(customer-facing — an
+  existing surface, one control redrawn)*. The other four repairs are **behind the scenes —
+  nothing visible changes**, and one of them lands in a shared instruction file used by every
+  project on this machine rather than in Proctor itself.
+- **What users will see — per surface:**
+  - Setup walkthrough, permissions step: the continue action, while it is refusing, is drawn
+    plain instead of filled in the accent colour, so it reads as refusing rather than as
+    broken. Its wording, its position and the reason line above it are unchanged.
+- **Behaviour changes:** none. The way out of setup stays exactly where it is; what changes is
+  that the design record now draws it too, so the two agree.
+- **Design reference:** the surfaces page under `design/surfaces` is the record being brought
+  into agreement, and it is the artifact that changes on the way-out question.
+
+**Assumptions**
+- `[Layout]` The design record gains the way out of setup; the app is unchanged there. *(behaviour tested; record never revised after.)*
+- `[Layout]` The refusing continue action changes in the app; the design record already has it right. *(accent fill reads tappable-but-broken.)*
+- `[Operations]` The timing check waits for the record rather than loosening what it claims. *(the claim is what was promised.)*
+- `[Operations]` The permission check supplies fixed answers for every input it reads, not one. *(a verdict must not move with this Mac's mood.)*
+- `[Operations]` Both remaining unsafe shapes are converted, not exempted. *(same hazard; only the search pattern differed.)*
+- `[Data & scope]` The stale count is corrected in the shared repository it lives in, one file, committed by explicit path. *(that file is live for every project here.)*
+- `[Operations]` The other open defects stay open and unclaimed by this item. *(each still needs investigation this one does not do.)*
+
+*If any of these are wrong, edit it inline (or correct an assumption) in this file and re-run `/triage PRO-0100` before the planner picks this up.*
+
+---
+
+### Pipeline record — PRO-0100 *(machine trailer; not part of the review above)*
+
+- Grounded against `docs/test-campaign/inventory.json`: the six are DEF-162, DEF-163, DEF-165,
+  DEF-175, DEF-140, DEF-193. The registry currently carries **ten** non-fixed defect rows, not
+  the eleven the brief names; the remaining four (DEF-033, DEF-141, DEF-151, DEF-180) are the
+  ones the brief says still need investigation.
+- DEF-162 confirmed by reading both records: `design/surfaces/proctor-surfaces.html:1000-1004`
+  draws dots, spacer, `Back`, and a disabled `Connect a model` with no `Skip setup`;
+  `Sources/ProctorUI/Walkthrough.swift:100-105` draws `Skip setup` under
+  `WalkthroughFlow.showsSkip`. DEF-163 confirmed at `Walkthrough.swift:115`
+  (`.borderedProminent` unconditional) against `proctor-surfaces.html:1004` (`class="btn"
+  disabled`). Both are *(measured: source read on HEAD 3fb7681)*, not re-captured.
+- **The brief's premise that this item is entirely inside this repository does not hold.**
+  DEF-193's target is `~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor/gemini.md:21`.
+  The shared-repo discipline from PRO-0101/PRO-0102 applies to it: touch only the `proctor`
+  plugin, commit with an explicit path, never `-a` and never `.`, and stop and report if files
+  appear entangled. Shared repo measured clean at `a15febf` while this triage ran.
+- Out-of-family spec review: see the shared record at the foot of `spec-PRO-0103.md`.
