@@ -4607,7 +4607,11 @@
     "note": "PRO-0100, DEF-162. The design of record yields, not the build: Skip postdates this design page, WalkthroughFlow.showsSkip gates it and nothing else does, and a verifier proved removing it strands a person while the whole suite stays green. THE FIRST VERSION OF THIS CASE WAS A BLIND PASS AND ARMING IS WHAT FOUND IT: footer(ofState:in:) ended on a marker that matched 2,218 characters later, inside the next pane, so the slice carried this pane's caption and 'Skip setup' in that caption satisfied a claim about a control. The slice is now bounded to the footer's own eight-space close (304 characters, measured) with two guards of its own, and the clause asserts the button element rather than the words.",
     "defects": [
       "DEF-162"
-    ]
+    ],
+    "source": {
+      "analyzer": "WalkthroughFlowTests.theDesignDrawsSkipOnThePermissionsPane over the permissions pane's wt-foot in design/surfaces/proctor-surfaces.html, sliced to the footer's own eight-space close (304 characters, measured)",
+      "examined": 3
+    }
   },
   {
     "id": "CASE-0391",
@@ -4628,7 +4632,11 @@
     "note": "PRO-0100, DEF-163. The build yields here, the opposite direction to CASE-0390, and a referral is what kept the two apart. The fill is chosen by PrimaryProminence from WalkthroughFlow.primaryEnabled, the same call the .disabled reads, so the fill and the refusal cannot nominate different states. The modifier is declared before HeroPermRow because theRowDoesNotDecideItsOwnProminence counts .borderedProminent from that struct to end of file, and it is applied after .disabled and .hint so that theViewDisablesRatherThanHides still finds .disabled( 26 characters after the identifier (measured). All three of those guards pass UNEDITED, which was the constraint that chose this shape over a two-branch if/else.",
     "defects": [
       "DEF-163"
-    ]
+    ],
+    "source": {
+      "analyzer": "WalkthroughFlowTests.thePrimaryIsProminentOnlyWhenEnabled over Sources/ProctorUI/Walkthrough.swift with comments stripped, counting .borderedProminent and .buttonStyle(.bordered) before and inside the PrimaryProminence span",
+      "examined": 6
+    }
   },
   {
     "id": "CASE-0392",
@@ -4646,7 +4654,11 @@
     "note": "PRO-0100, DEF-163, the design half. Asserts the record still draws the refusing primary plain-and-disabled (class=\"btn\" disabled) and never in the accent fill. NOT ARMED, and recorded so rather than claimed: the design already draws it correctly and this case exists to stop the app and the record being reconciled in the wrong direction later. Arming it would mean breaking the design of record to watch a case fail, which is the mutation CASE-0390's arming already performs on the same file and pane. A case nobody has watched fail is a case whose green means less; that is the honest status here rather than a mutation invented to dress it up.",
     "defects": [
       "DEF-163"
-    ]
+    ],
+    "source": {
+      "analyzer": "WalkthroughFlowTests.theDesignDrawsTheRefusingPrimaryPlain over the same 304-character permissions footer slice",
+      "examined": 3
+    }
   },
   {
     "id": "CASE-0393",
@@ -4723,7 +4735,11 @@
     "note": "PRO-0100, DEF-140, the census as a count. Three greps, before and after, recorded verbatim at 9f99a0f: try! 86 -> 0; bare ! on a property or subscript 13 lines/14 unwraps -> 4 lines (3 group-1 sites and 1 comment); )! 6 -> 6, DEF-136's own four group-1 sites and two comments, untouched here. 55 test functions gained throws. NOT ARMED: it is a measurement recorded in a document rather than a predicate in the suite, so there is nothing to watch fail. Named as a hand-run count for exactly that reason, the same footing CASE-0370 stands on. The three sites kept carry their input space written out beside them, and one of those reasons was WRONG in the first draft and corrected by the out-of-family plan review, which opened the file and found that :1126's frame comes from FrameCodec.encode rather than from a local append.",
     "defects": [
       "DEF-140"
-    ]
+    ],
+    "source": {
+      "analyzer": "scripts/campaign greps recorded in docs/test-campaign/evidence/PRO-0100/unwrap-census-raw.txt: `grep -rn 'try!' Tests`, `grep -rnE '[A-Za-z0-9_\\]]!([^=]|$)' Tests` and `grep -rn ')!' Tests`, taken before any edit at 9f99a0f",
+      "examined": 105
+    }
   },
   {
     "id": "CASE-0397",
@@ -4743,7 +4759,11 @@
     "note": "PRO-0100, DEF-193. The catalogue ships 21, measured two ways (21 ToolSpec( entries, 21 distinct proctor_* names). SKILL.md and references/tools.md already read 21 because PRO-0085 corrected them; gemini.md was the fifth stale count and no check opened its file. Committed in the shared repository by explicit path only, at 82ebe7d, with the tree measured clean before and after.",
     "defects": [
       "DEF-193"
-    ]
+    ],
+    "source": {
+      "analyzer": "scripts/campaign/skill_doc_measure.py, the gemini.md count check, over every count word stated before the word `tools` in the proctor skill",
+      "examined": 5
+    }
   },
   {
     "id": "CASE-0398",
@@ -4762,7 +4782,11 @@
     "note": "PRO-0100, DEF-193, the denominator half and the actual repair. Every number stated immediately before the word 'tools', in every *.md under the skill, is read and compared to the catalogue. Subset counts are real and are allowlisted WITH their reason rather than silently tolerated: the core profile's ten, the fifteen sections tools.md specifies, and 'Recording is two tools together'. The instrument's own scratch copy now copies the whole tree, because copying the two files a check happened to read was the same mistake one layer down.",
     "defects": [
       "DEF-193"
-    ]
+    ],
+    "source": {
+      "analyzer": "scripts/campaign/skill_doc_measure.py stated_tool_counts() over every *.md under the proctor skill",
+      "examined": 5
+    }
   },
   {
     "id": "CASE-0399",
@@ -4781,7 +4805,11 @@
     "note": "PRO-0100, DEF-193, the name half of the same denominator. references/tools.md was checked against the catalogue and the other four *.md files were not, so a renamed tool could leave a stale mention in gemini.md or references/methodology.md with every check green. Measured at PRO-0100: those two files name ten proctor_* identifiers between them and all ten are shipped, so this check starts from a true statement rather than from a backlog. 27 of 27 checks in that instrument are now armed.",
     "defects": [
       "DEF-193"
-    ]
+    ],
+    "source": {
+      "analyzer": "scripts/campaign/skill_doc_measure.py named_tools_everywhere() over every proctor_* identifier in every *.md under the proctor skill",
+      "examined": 119
+    }
   },
   {
     "id": "CASE-0400",
@@ -4796,6 +4824,10 @@
     ],
     "armed": false,
     "note": "PRO-0100. A correction to a row this item did not create, declared as one: skill_doc_measure.py defaulted its catalogue path to .worktrees/PRO-0085/Sources/ProctorCore/ToolCatalogue.swift, and that worktree was removed when PRO-0085 merged, so the measurement could not run at all without --catalogue. Repointed repo-relative, which is how skill_doc_arm.py already resolved it — which is why the arming kept working while the measurement did not. NOT ARMED: a path that does not resolve makes the script exit before any check runs, so there is no predicate here to watch fail, and the evidence is that the script now runs at all (27/27, exit 0).",
-    "defects": []
+    "defects": [],
+    "source": {
+      "analyzer": "scripts/campaign/skill_doc_measure.py run end to end after repointing its catalogue default, counting the checks that executed at all",
+      "examined": 27
+    }
   }
 ]

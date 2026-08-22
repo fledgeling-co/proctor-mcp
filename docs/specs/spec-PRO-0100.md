@@ -212,3 +212,27 @@ unwrap, by opening the file and finding the reason was true of the neighbouring 
 one.
 
 **Stopped before verify and before merge.** Nothing pushed.
+
+### Gates, with their real exit codes
+
+| Gate | Exit | Reading |
+|---|---|---|
+| `./scripts/test.sh` | **0**, twice | 2,064 tests in 251 suites, verdict line present in both. Baseline before this item: 2,061 in 251. The three new tests are CASE-0390's, CASE-0391's and CASE-0392's. |
+| `scripts/campaign/defect_gate.py claims` | **0** | All six claimed defects read `fixed`. |
+| `scripts/campaign/defect_gate.py dropped` | **0** | 2 files, 108 merges, 39,060 id/field pairs examined; no dropped value. |
+| `scripts/campaign/test_instruments.py` | **0** | 62 passed, 0 failed. |
+| `scripts/campaign/operator_path_gate.py` (`census`, `seams`) | **0**, **0** | 13 operator-path sites, 15 entries classed. |
+| `scripts/campaign/skill_doc_measure.py` | **0** | 27 of 27 checks pass. Exited **1** against the unfixed `gemini.md`, which is the arming. |
+| `scripts/campaign/skill_doc_arm.py` | **0** | 27 of 27 checks armed, each watched failing under its own mutation on a scratch copy. |
+| `campaign.py check` (test-campaign 0.9.9) | **1** | **Pre-existing, and measured as such.** The same gate run against this branch's base registries at `9f99a0f` also exits 1, with a blocker set that `diff` reports **identical** to this one: REQ-086 checked by nothing, REQ-024 vacuous, CASE-0318's three missing capture files and its unstated pixel origin, and six source-analysis findings against CASE-0333, CASE-0334 and CASE-0335. All belong to PRO-0086 and PRO-0099 rather than to this item. Baseline and current output are both kept, at `campaign-check-baseline.txt` and `campaign-check.txt`. |
+
+**This item's own cases add zero findings to that gate**, and doing so needed a correction: the
+eight source-analysis cases first carried no `source` block, so `campaign.py check` reported 22
+findings where the baseline had 6. Every one now names its analyzer and a **measured** denominator,
+which is the whole point of the guard: a grep pointed at the wrong file and a grep that found
+nothing read the same without the count.
+
+**Left open deliberately, and not this item's to take:** CASE-0333..0335's missing `source` blocks
+are PRO-0099's rows. They are a small fix, and correcting another item's registry rows is exactly
+where the orchestrator's merge has dropped values three times, so they are reported rather than
+edited. REQ-086 and CASE-0318 are the same call.

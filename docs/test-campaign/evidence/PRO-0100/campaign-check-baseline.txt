@@ -1,0 +1,60 @@
+proctor-mcp · lanes: macos, mcp-stdio, cli
+Requirements: 84 inventoried, 1 with no case
+Surfaces:   22 enumerated, 0 with no case
+External effects: examined=29 witnessed=27 vacuous=1 unwitnessed=0 — armed proves the suite bites, and only a witness proves the product acted.
+  Vacuous (the capability the claim constrains never runs): REQ-024
+Cases:      258 pass · 0 fail · 0 skip · 0 n/a · 0 carried · 4 inconclusive · 0 unoracled · 0 blocked · 0 open  (of 262)
+Observed:   258/262 cases produced a measurement · 4 could not be measured · 0 not attempted
+On glass:   guest-glass → .build/Proctor.app (Guest proctor-guest (lume, macOS 26.6.2 Tahoe), provisioned with lume create --unattended so it holds a real Aqua session: stat -f %Su /dev/console reads lume, not root, which is what the earlier proctor-mac-node clone could not offer. launchctl print gui/501/app.fledgeling.procter.agent reads state = running, pid = 1322. That agent's own proctor_doctor answers ready true with Accessibility and Screen Recording both granted, and lists attachedApps app:1085:1 Calculator windows 1 — the guest's accessibility API reading a window the guest's own window server owns. Reached from this Mac over an SSH StreamLocal forward between the two agents' unix sockets, with the host agent relaying.)
+On glass:   macos-glass → .build/Proctor.app (pid 88463 owns CG windows 43384 'History' and 43385 'Proctor' (640x572); glass_probe read it from CGWindowListCopyWindowInfo, the window server's own list. Launched with open -n because the installed build holds the same bundle id and LaunchServices activates it instead of starting a second instance — which is also why every capture names a CG window id rather than a title.)
+Oracles:    outcome 168 · metamorphic 20 · effect-witness 34 · raster-visual 10 · interactive-glass 1
+Off-ladder: source-analysis 29 — reads source, runs nothing, buys no effect credit
+Armed:      257/258 passing cases have been watched to fail
+Scope:      FULL — every case in the campaign was run
+Sample:     full multi-witness coverage across all 21 MCP tools, status/walkthrough/overlay UI surfaces, and guest/takeover controls
+
+Not ready to report:
+  · 4 case(s) inconclusive — attempted, and the instrument could not measure. Not a pass and not an n/a: 'we do not know' is a weaker claim than 'no difference found' and a different one from 'does not apply'
+  · 13 raster-visual claim(s) whose artifact is not a usable capture — a visual claim without pixels is a structural assertion in disguise
+  · 1 pixel claim(s) with nothing saying where the pixels came from
+  · 8 published shot(s) that are not usable captures — the evidence page renders these as the product
+  · 1 requirement(s) no case traces to
+  · 6 source-analysis claim(s) with no analyzer or no examined count — a search with no denominator cannot tell an empty result from an empty search
+  · 1 requirement(s) claiming an effect outside the product and recorded `observed` with no effect-witness case behind them — the shape that passed 230 cases over a product that performed no external I/O
+
+  Requirements nothing checks: REQ-086 (showing 1 of 1)
+  Each is something the project says it does. Write the case, or mark the requirement `deferred` with its citation.
+
+  External-effect claims with no witness (27 of 29 witnessed):
+    · REQ-007 claims a device effect and is recorded `observed`, and no case backing it stands at effect-witness
+    (showing 1 of 1)
+  Drive the effect from a production entry point with a recorder attached and
+  record it:
+    campaign.py set <dir> --case CASE-0001 --status pass --oracle effect-witness \
+      --recorder 'strace -f -e trace=network' --effect-class outbound-socket \
+      --effect-count 3
+  Where the product does not perform the effect at all, the requirement is
+  `vacuous`, not `observed` — a guarantee that holds because nothing does the
+  thing is a finding, and recording it clears this blocker honestly.
+
+  Source-analysis claims with no analyzer or no denominator: CASE-0333 claims source-analysis and names no analyzer, CASE-0333 claims source-analysis over None unit(s) — a search with no denominator cannot tell an empty result from an empty search, CASE-0334 claims source-analysis and names no analyzer, CASE-0334 claims source-analysis over None unit(s) — a search with no denominator cannot tell an empty result from an empty search, CASE-0335 claims source-analysis and names no analyzer, CASE-0335 claims source-analysis over None unit(s) — a search with no denominator cannot tell an empty result from an empty search (showing 6 of 6)
+
+  Pixel claims with no usable pixels:
+    · CASE-0006 → evidence/shots/surf-006-screen-capture.png: no file at that path
+    · CASE-0007 → evidence/shots/surf-007-zoom.png: no file at that path
+    · CASE-0008 → evidence/shots/surf-004-run-hud.png: no file at that path
+    · CASE-0010 → evidence/shots/surf-005-takeover-shield.png: no file at that path
+    · CASE-0011 → evidence/shots/surf-008-tools.png: no file at that path
+    · CASE-0012 → evidence/shots/surf-009-walkthrough.png: no file at that path
+    · CASE-0013 → evidence/shots/surf-010-menubar.png: no file at that path
+    · CASE-0042 → evidence/shots/surf-008-status-window.png: no file at that path
+    · CASE-0106 → evidence/shots/step-a3-walkthrough-primary-disabled.png: no file at that path
+    · CASE-0106 → evidence/PRO-0081/a3-primary-disabled-crop.png: no file at that path
+    … (showing 10 of 13)
+Wall:       8 published shot(s) · 0 distinct image(s)
+
+  Pixels with no stated origin:
+    · CASE-0318 names no capture method, so nothing says these pixels came off a display server
+    (showing 1 of 1)
+
+Finish them, resolve each to skip:/n-a: with a reason, or declare the stop with its resume point — in the reply, the verdict line and the report. Never silently.
