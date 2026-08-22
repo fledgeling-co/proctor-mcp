@@ -1,7 +1,7 @@
 # PRO-0102: The reckoning tool mis-read this registry
 
 **ID:** PRO-0102
-**Status:** Ready for Plan
+**Status:** Developer Review
 **Created:** 2026-08-22
 **Last updated:** 2026-08-22
 **Brief:** `docs/features-to-triage/93-the-reckoning-tool-mis-read-this-registry.md`
