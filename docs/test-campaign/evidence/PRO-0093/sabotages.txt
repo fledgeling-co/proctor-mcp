@@ -1,0 +1,76 @@
+### S1 the reclaim call is removed from acquire
+cut: Sources/ProctorAgent/Session/RunScheduler.swift
+filter: PeerReclaimWiringTests
+exit: 1
+  􀢄  Test "a peer that exits mid-run gives its lane back to the next caller" recorded an issue at PeerReclaimWiringTests.swift:94:6: Caught error: AgentError(code: ProctorCore.AgentError.Code.queueBusy, message: "another session was driving this Mac, and this run was still waiting first of 1 after 0 seconds, so it gave up without running any step", remedy: Optional("Nothing was actuated, so this is safe to send again. Somebody else\'s run holds the same application, or holds the whole machine for a synthetic event. Wait for it, or drive a different application — runs against different apps do not contend."), detail: nil, indeterminate: false, lane: nil)
+  􀢄  Test "the reclaimed run's hold leaves the latch with its slot" recorded an issue at PeerReclaimWiringTests.swift:123:6: Caught error: AgentError(code: ProctorCore.AgentError.Code.queueBusy, message: "another session was driving this Mac, and this run was still waiting first of 1 after 0 seconds, so it gave up without running any step", remedy: Optional("Nothing was actuated, so this is safe to send again. Somebody else\'s run holds the same application, or holds the whole machine for a synthetic event. Wait for it, or drive a different application — runs against different apps do not contend."), detail: nil, indeterminate: false, lane: nil)
+  􀢄  Test run with 8 tests in 1 suite failed after 0.730 seconds with 2 issues.
+        􀢄  Test run with 8 tests in 1 suite failed after 0.730 seconds with 2 issues.
+
+### S2 an unreadable probe is treated as death
+cut: Sources/ProctorCore/PeerLiveness.swift
+filter: PeerLivenessTests|PeerReclaimWiringTests
+exit: 1
+  􀢄  Test "a process that cannot be described is unknown, so its lane is left alone" recorded an issue at PeerLivenessTests.swift:71:9: Expectation failed: (verdict → .gone) == .unknown
+  􀢄  Test run with 17 tests in 2 suites failed after 0.301 seconds with 1 issue.
+        􀢄  Test run with 17 tests in 2 suites failed after 0.301 seconds with 1 issue.
+
+### S3 a live peer is reclaimed too
+cut: Sources/ProctorAgent/Session/RunScheduler.swift
+filter: PeerReclaimWiringTests
+exit: 1
+  􀢄  Test "a live peer that says nothing keeps its lane, and the next caller waits" recorded an issue at PeerReclaimWiringTests.swift:82:15: Expectation failed: an error was expected but none was thrown
+  􀢄  Test "a live peer that says nothing keeps its lane, and the next caller waits" recorded an issue at PeerReclaimWiringTests.swift:88:9: Expectation failed: (snapshot.active.count → 0) == 1
+  􀢄  Test "a live peer that says nothing keeps its lane, and the next caller waits" recorded an issue at PeerReclaimWiringTests.swift:89:9: Expectation failed: (snapshot.active.first?.id → nil) == (held.id → 1)
+  􀢄  Test "a live peer that says nothing keeps its lane, and the next caller waits" recorded an issue at PeerReclaimWiringTests.swift:90:9: Expectation failed: (snapshot.active.first?.identity.key → nil) == (peer.identity.key → "49906:1787357725")
+  􀢄  Test "the sweep reclaims only the dead run, leaving the live one holding its own lane" recorded an issue at PeerReclaimWiringTests.swift:194:9: Expectation failed: await scheduler.snapshot().active.count == 2
+  􀢄  Test "the sweep reclaims only the dead run, leaving the live one holding its own lane" recorded an issue at PeerReclaimWiringTests.swift:197:9: Expectation failed: await scheduler.reclaimDeadPeers() == [one.id]
+  􀢄  Test "the sweep reclaims only the dead run, leaving the live one holding its own lane" recorded an issue at PeerReclaimWiringTests.swift:199:9: Expectation failed: (snapshot.active.map(\.id) → []) == ([two.id] → [2])
+  􀢄  Test "the sweep reclaims only the dead run, leaving the live one holding its own lane" recorded an issue at PeerReclaimWiringTests.swift:200:9: Expectation failed: (snapshot.active.first?.identity.key → nil) == (live.key → "2:2")
+  􀢄  Test "a run waiting behind a dead peer starts as soon as the lane is reclaimed" recorded an issue at PeerReclaimWiringTests.swift:219:9: Expectation failed: await scheduler.snapshot().waitingCount == 1
+  􀢄  Test "a run waiting behind a dead peer starts as soon as the lane is reclaimed" recorded an issue at PeerReclaimWiringTests.swift:222:9: Expectation failed: await scheduler.reclaimDeadPeers() == [stranded.id]
+  􀢄  Test "a run waiting behind a dead peer starts as soon as the lane is reclaimed" recorded an issue at PeerReclaimWiringTests.swift:225:9: Expectation failed: (snapshot.active.map(\.id) → []) == ([granted.id] → [2])
+  􀢄  Test run with 8 tests in 1 suite failed after 0.027 seconds with 11 issues.
+
+### S4 the arrival clause is cut from conditions
+cut: Sources/ProctorCore/Contention.swift
+filter: ContentionTests|TakeoverWiringTests
+exit: 1
+  􀢄  Test "the window still ends the hold, so a stale arrival does not park the run" recorded an issue at ContentionTests.swift:329:9: Expectation failed: (watch.sample(ContentionSample(lastUserInputAt: 10, userInputSince: true, now: 900)) → .none) == (.yielded(.userInput) → .yielded(ProctorCore.YieldReason.userInput))
+  􀢄  Test "the window still ends the hold, so a stale arrival does not park the run" recorded an issue at ContentionTests.swift:332:9: Expectation failed: (watch.sample(ContentionSample(lastUserInputAt: 10, now: 903)) → .none) == (.released(.userInput) → .released(ProctorCore.YieldReason.userInput))
+  􀢄  Test "an arrival since the last look holds, however old the timestamp is" recorded an issue at ContentionTests.swift:313:9: Expectation failed: (ContentionWatch.conditions(stale, inputWindow: 10, confirmedFront: nil) → []).contains(.userInput)
+  􀢄  Test "a swallow during a long step still holds, however stale it has gone" recorded an issue at TakeoverWiringTests.swift:391:9: Expectation failed: (w.sample(arrival) → .none) == (.yielded(.userInput) → .yielded(ProctorCore.YieldReason.userInput))
+  􀢄  Test "a swallow during a long step still holds, however stale it has gone" recorded an issue at TakeoverWiringTests.swift:392:9: Expectation failed: (w.reason → nil) == .userInput
+  􀢄  Test "a swallow during a long step still holds, however stale it has gone" recorded an issue at TakeoverWiringTests.swift:397:9: Expectation failed: (w.sample(ContentionSample(lastUserInputAt: 100, now: 163)) → .none) == (.released(.userInput) → .released(ProctorCore.YieldReason.userInput))
+  􀢄  Test run with 51 tests in 2 suites failed after 1.748 seconds with 6 issues.
+        􀢄  Test run with 51 tests in 2 suites failed after 1.748 seconds with 6 issues.
+
+### S5 the reading after the last step is removed
+cut: Sources/ProctorAgent/Session/SessionAct.swift
+filter: TakeoverWiringTests
+exit: 1
+  􀢄  Test "a one-step batch reports the input its block swallowed" recorded an issue at TakeoverWiringTests.swift:343:26: Expectation failed: (object["yields"] → nil).arrayValue → nil → nil
+  􀢄  Test run with 23 tests in 1 suite failed after 1.767 seconds with 1 issue.
+        􀢄  Test run with 23 tests in 1 suite failed after 1.767 seconds with 1 issue.
+
+### S6 the latch is not released when the run ends
+cut: Sources/ProctorAgent/Session/Session.swift
+filter: TakeoverWiringTests
+exit: 1
+  􀢄  Test "a run that ends while yielded leaves the latch clear" recorded an issue at TakeoverWiringTests.swift:375:9: Expectation failed: !((h.control → ProctorAgent.RunControl).isYielded → true → true)
+  􀢄  Test "a run that ends while yielded leaves the latch clear" recorded an issue at TakeoverWiringTests.swift:376:9: Expectation failed: (h.control.heldBy → HoldAttribution(reason: ProctorCore.YieldReason.userInput, session: "unknown session ----", app: Optional("Fake"), display: Optional(ProctorCore.HoldDisplay(index: 0, isMain: true, name: "the main display")))) == nil
+  􀢄  Test "a run that ends while yielded leaves the latch clear" recorded an issue at TakeoverWiringTests.swift:377:9: Expectation failed: !((h.control → ProctorAgent.RunControl).isPaused → true → true)
+  􀢄  Test run with 23 tests in 1 suite failed after 1.783 seconds with 3 issues.
+        􀢄  Test run with 23 tests in 1 suite failed after 1.783 seconds with 3 issues.
+
+### S7 the block is bound to nothing
+cut: Sources/ProctorAgent/Session/SessionTakeover.swift
+filter: TakeoverWiringTests
+exit: 1
+  􀢄  Test "the block is wired to this run's latch, not to a stale one" recorded an issue at TakeoverWiringTests.swift:302:9: Expectation failed: (h.contention.userInputs → 0) == (before + 1 → 1)
+  􀢄  Test "a swallowed event feeds the yield, so the two features compose" recorded an issue at TakeoverWiringTests.swift:315:9: Expectation failed: (h.contention.userInputs → 0) == 1
+  􀢄  Test "a one-step batch reports the input its block swallowed" recorded an issue at TakeoverWiringTests.swift:340:9: Expectation failed: (h.contention.userInputs → 0) == 3
+  􀢄  Test "a one-step batch reports the input its block swallowed" recorded an issue at TakeoverWiringTests.swift:343:26: Expectation failed: (object["yields"] → nil).arrayValue → nil → nil
+  􀢄  Test run with 23 tests in 1 suite failed after 1.717 seconds with 4 issues.
+        􀢄  Test run with 23 tests in 1 suite failed after 1.717 seconds with 4 issues.
+

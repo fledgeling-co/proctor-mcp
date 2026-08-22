@@ -135,6 +135,38 @@ enum SessionIdentity {
         return component
     }
 
+    /// Whether the process behind a session identity is still running, and if so
+    /// when it started.
+    ///
+    /// Existence comes from `kill(pid, 0)`, which sends nothing and answers only
+    /// whether the kernel still knows the pid. `ESRCH` is the one answer that
+    /// means gone; every other errno means the process is there and something
+    /// else stopped us describing it, which is not evidence of death and must
+    /// never reclaim a lane.
+    ///
+    /// A zombie — exited, not yet reaped — still answers `kill(pid, 0)` with 0,
+    /// so it reads as running. That is the conservative direction: a lane held a
+    /// little longer is a delay, and a lane taken from a live run is a cut-off
+    /// run.
+    static func probe(pid: pid_t) -> PeerProbe {
+        guard pid > 0 else { return .unreadable }
+        if kill(pid, 0) != 0 {
+            return errno == ESRCH ? .noSuchProcess : .unreadable
+        }
+        let started = startTime(of: pid)
+        // `startTime` returns 0 for a failed `proc_pidinfo` as well as for a
+        // start time it could not read, so 0 is "could not describe it" rather
+        // than a time. The process exists either way; what is missing is the
+        // half that separates it from a pid reused after it died.
+        guard started > 0 else { return .unreadable }
+        return .running(startedAt: UInt64(started))
+    }
+
+    /// The verdict on one session's peer, for the scheduler's reclaim.
+    static func liveness(ofKey key: String) -> PeerLiveness.Verdict {
+        PeerLiveness.verdict(key: key) { probe(pid: $0) }
+    }
+
     /// When the process started, so a reused pid is a different session.
     static func startTime(of pid: pid_t) -> Double {
         var info = proc_bsdinfo()

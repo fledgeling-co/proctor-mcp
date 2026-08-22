@@ -711,6 +711,16 @@ extension Session {
         // says and whether the run completed, broke or was stopped.
         run.takeover = takeoverEnd(stopped: ending == .stoppedByPerson)
         await hud(.runEnded(ending))
+        // One reading after the last step, because every other reading happens
+        // BEFORE a step. A single-step batch had exactly one checkpoint and it
+        // ran before the step, so nothing the block swallowed during that batch
+        // could ever reach a probe — measured at
+        // `docs/test-campaign/evidence/witness/a45b-act.json`: one 74.7-second
+        // drag, six events swallowed, no yield record and no held reason. The
+        // outcome did not depend on timing or load; there was no boundary at
+        // which to look. This is that boundary. `disarmContention` closes
+        // whatever it opens against the run's own ending.
+        await contentionProbe(run: foregroundRun, step: steps.count)
         await disarmContention(run: foregroundRun)
         run.yields = takeYieldRecords(run: foregroundRun)
         foregroundEnded(run: foregroundRun)

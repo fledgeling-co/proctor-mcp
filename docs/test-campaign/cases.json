@@ -3623,5 +3623,355 @@
     "defects": [
       "DEF-142"
     ]
+  },
+  {
+    "id": "CASE-0290",
+    "req": "REQ-079",
+    "surface": "SURF-004",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PeerReclaimWiringTests.swift",
+      "docs/test-campaign/evidence/PRO-0093/sabotages.txt",
+      "docs/test-campaign/evidence/PRO-0093/gate.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage S1 removes the reclaim call from RunScheduler.acquire. The test then fails by throwing the original defect's own refusal: AgentError code queueBusy, \u201canother session was driving this Mac, and this run was still waiting first of 1 after 0 seconds, so it gave up without running any step\u201d. That is DEF-026 reproduced from the failing side. docs/test-campaign/evidence/PRO-0093/sabotages.txt",
+    "note": "A REAL child process (/bin/sleep) takes the app lane under an identity whose key is minted the way SessionIdentity.fromPeer mints one \u2014 its pid and its proc_pidinfo start time. The child is terminated and reaped, then a second identity acquires the same lane and succeeds. The recorder is the scheduler's own snapshot: the stranded ticket is absent from active and the new one holds the lane. Nothing in the assertion is a value the test wrote into the queue.",
+    "witness": {
+      "recorder": "RunQueueSnapshot read back from the RunScheduler actor after the reclaim, plus SessionIdentity.liveness reading the real kernel process table through kill(2) and proc_pidinfo",
+      "effect": "subprocess",
+      "count": 1
+    }
+  },
+  {
+    "id": "CASE-0291",
+    "req": "REQ-080",
+    "surface": "SURF-004",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PeerReclaimWiringTests.swift",
+      "docs/test-campaign/evidence/PRO-0093/sabotages.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage S3 widens the sweep from `== .gone` to `!= .unknown`, so a live peer is reclaimed too. The test then reports four failures, the first being that the second caller was granted the lane instead of being refused; eleven issues across the suite in total.",
+    "note": "The twin that stops the fix cutting off a live run. The same real child process takes the lane and is left asleep for two minutes \u2014 silent, doing nothing, exactly the shape of a peer stopped at a breakpoint. The second caller is refused and the snapshot still shows the first run holding, with its own identity key.",
+    "witness": {
+      "recorder": "RunQueueSnapshot after a live child has held the lane through a full acquire cycle, plus the refusal the second caller actually received",
+      "effect": "subprocess",
+      "count": 1
+    }
+  },
+  {
+    "id": "CASE-0292",
+    "req": "REQ-080",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/PeerLivenessTests.swift",
+      "docs/test-campaign/evidence/PRO-0093/sabotages.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage S2 maps an unreadable probe to `.gone`. PeerLivenessTests \u201ca process that cannot be described is unknown, so its lane is left alone\u201d goes red: (verdict \u2192 .gone) == .unknown.",
+    "note": "The mapping from a probe to a verdict, proved without a process so the pid-reuse row can exist at all: a pid that is running with a DIFFERENT start time reads gone, which is the case a live-process test cannot construct. Seven rows, one per way the answer could be wrong, including the two zero-start-time rows where two failures agreeing must not read as a match."
+  },
+  {
+    "id": "CASE-0293",
+    "req": "REQ-080",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/PeerLivenessTests.swift"
+    ],
+    "armed": true,
+    "armedBy": "The probe is instrumented in the test itself: the unparseable-key row asserts the probe closure was called zero times, so a change that made `unattributed` parse would redden it rather than quietly cost a syscall per active run on every acquire.",
+    "note": "The identity every caller lands on when the kernel will not describe its process is `unattributed`, and it is also the identity every other test in this package acquires a lane under. If it parsed, this feature's population would be the suite itself. Asserted as no-parse, no-probe, no-reclaim."
+  },
+  {
+    "id": "CASE-0294",
+    "req": "REQ-081",
+    "surface": "SURF-005",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/TakeoverWiringTests.swift",
+      "docs/test-campaign/evidence/PRO-0093/sabotages.txt",
+      "docs/test-campaign/evidence/PRO-0093/gate.txt"
+    ],
+    "armed": true,
+    "armedBy": "Three independent sabotages redden the same test. S5 removes the reading after the last step and yields is nil. S7 binds the block to nothing: userInputs 0 and yields nil. S4 cuts the arrival clause from ContentionWatch.conditions. Each cut is a different link in the chain and each is proved load-bearing.",
+    "note": "The case DEF-027 measured and that could never have fired. A one-step batch whose block swallows three events during the step now reports a YieldRecord with reason userInput and the prose note beside it. The field measurement is docs/test-campaign/evidence/witness/a45b-act.json \u2014 one drag step of 74.7s, six swallowed, no yields key."
+  },
+  {
+    "id": "CASE-0295",
+    "req": "REQ-081",
+    "surface": "SURF-005",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/TakeoverWiringTests.swift"
+    ],
+    "armed": true,
+    "armedBy": "The control for CASE-0294, in the same suite: same batch, same probe, nothing swallowed, and the assertion is that yields is ABSENT. A fix that recorded a yield for every run would pass CASE-0294 and fail this.",
+    "note": "Separates the fix from the probe. The new reading after the last step has to report the person and not itself."
+  },
+  {
+    "id": "CASE-0296",
+    "req": "REQ-081",
+    "surface": "SURF-005",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/ContentionTests.swift",
+      "Tests/ProctorAgentTests/TakeoverWiringTests.swift",
+      "docs/test-campaign/evidence/PRO-0093/sabotages.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage S4 removes `if s.userInputSince { out.insert(.userInput) }`. Six issues across the two suites, including the paired control which asserts the SAME timestamp without the flag holds nothing \u2014 so the assertion is measuring the flag rather than the window.",
+    "note": "The staleness half. A swallow 890 seconds old holds when it is carried as an arrival, does not hold on the window alone, and is released two seconds later once the flag is spent. Three samples over one watch, which is a relation between readings rather than a single value. Field measurement: docs/test-campaign/evidence/witness/a4-act.json, three steps of 18.6/20.2/17.7s against a 10-second window with 24 events swallowed and no yield."
+  },
+  {
+    "id": "CASE-0297",
+    "req": "REQ-081",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/TakeoverWiringTests.swift",
+      "docs/test-campaign/evidence/PRO-0093/sabotages.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage S6 removes runControl.release from disarmContention. Three issues: isYielded true, isPaused true, and heldBy still naming the finished run with its full HoldAttribution.",
+    "note": "DEF-150. A run that ends while yielded leaves the latch clear, so heldBy stops naming a run that has finished and pausedAt is cleared. Reachable before this item; made common by the new reading after the last step, which is why it is closed in the same change."
+  },
+  {
+    "id": "CASE-0298",
+    "req": "REQ-079",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PeerReclaimWiringTests.swift",
+      "docs/test-campaign/evidence/PRO-0093/sabotages.txt"
+    ],
+    "armed": true,
+    "armedBy": "Sabotage S3 (reclaim anything that is not unknown) reddens the two-run sweep: the live run's lane is taken and the snapshot comes back empty where it should hold one.",
+    "note": "The sweep is selective. Two runs on two app lanes, one peer killed between the acquire and the sweep; reclaimDeadPeers returns exactly the dead ticket and the snapshot holds exactly the live one. The liveness is flipped AFTER both acquires because acquire itself sweeps \u2014 a test that started a peer dead would never reach the sweep it means to measure."
+  },
+  {
+    "id": "CASE-0299",
+    "req": "REQ-079",
+    "surface": "SURF-004",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorAgentTests/PeerReclaimWiringTests.swift"
+    ],
+    "armed": true,
+    "armedBy": "The same S3 cut: with the sweep widened, the waiter's acquire is granted for the wrong reason and the assertions on waitingCount and on the granted ticket both fail.",
+    "note": "A run already in the line is woken by the reclaim rather than left to time out. The reclaim goes through forceRelease, which publishes and promotes, so the waiter is granted the lane the dead peer was holding \u2014 asserted on waitingCount going 1 to 0 and on the snapshot naming the granted ticket."
+  },
+  {
+    "id": "CASE-0310",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorCore/WalkthroughFlow.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-1: the biconditional's own guard removed from primaryDisabledReason, so a reason came back in every state. `./scripts/test.sh --filter aReasonExistsExactlyWhereThePrimaryRefuses --filter theReasonNamesTheMissingGrantAndTheNextAction` exited 1 with 'Test run with 2 tests in 1 suite failed ... with 10 issues', the first six reading ((reason == nil) -> false) == (enabled -> true). Restored, green.",
+    "note": "DEF-160. A reason exists exactly where the primary refuses, asked at all sixteen combinations of step x accessibility x screenRecording. Written as one biconditional rather than two lists because both directions are defects: a refusing state with no sentence is the failure the item exists to remove, and a sentence beside a button a person can press is the same defect wearing the other face. THE POPULATION IS PRINTED AS A SET and it is A3's population \u2014 permissions/false/false, permissions/false/true, permissions/true/false \u2014 the three states PRO-0081 created. Every one now carries a sentence. Value-level: this says the rule answers correctly, not that a window drew the answer. CASE-0312 binds the drawing site and CASE-0316 is the rendered claim."
+  },
+  {
+    "id": "CASE-0311",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-2: the first move taken from `missing.last` instead of from prominentGrant, so the caption nominated Screen Recording while the filled Allow button stayed on Accessibility. One expectation failed on the exact sentence. Restored, green.",
+    "note": "DEF-160, and the coherence clause PRO-0090 makes necessary. The sentence names every grant still missing, names none that is already held, names Copy.allow \u2014 the row button's own word, so the instruction points at a control on screen \u2014 and nominates the grant prominentGrant draws filled. WHICH ASSERTION ACTUALLY FIRES: the three sentences written out verbatim, and only those. The `reason.contains(prominent.title)` agreement clause reads as the coherence guard and is tautological \u2014 the reason names every missing grant, and prominentGrant returns one of the missing grants, so the containment holds whichever missing grant the caption nominates. ARM-2's mutation (the first move taken from `missing.last`) passes it, and the one issue that run recorded was the verbatim `\u201c\u2026 Start with Accessibility.\u201d` expectation. The agreement clause is kept as a statement of the rule; the literal is the guard, and a reword is a decision somebody makes."
+  },
+  {
+    "id": "CASE-0312",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorUI/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-3 removed the caption's accessibilityIdentifier and ARM-4 removed the hint on the disabled button; each ran `./scripts/test.sh --filter theFooterDrawsTheReason` and each exited 1 with one issue. Two separate mutations because one assertion passing does not arm the other.",
+    "note": "DEF-160's rendered half, on the rung it actually stands on. The drawing site is read from disk with comments stripped and asserted to reference WalkthroughFlow.primaryDisabledReason, to carry ID.reason so a glass lane can find the sentence, and to hand the same string to the disabled button as an accessibility hint. THIS IS source-analysis AND CLAIMS NOTHING ABOVE IT: it says the view is bound to the Core rule, not that a window drew the sentence. There is no ProctorUI test target and no window server inside swift test; the rendered claim is CASE-0316.",
+    "source": {
+      "analyzer": "WalkthroughFlowTests.theFooterDrawsTheReason, reading Sources/ProctorUI/Walkthrough.swift with whole-line comments stripped by the suite's own withoutComments",
+      "examined": 354
+    }
+  },
+  {
+    "id": "CASE-0313",
+    "req": "REQ-083",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorUI/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-6 put the primary's own rule onto Skip setup \u2014 the lockout in its exact shape. `./scripts/test.sh --filter skipIsNeverClosed` exited 1 with two issues: (disables -> 2) == 1, and the ordering clause (primary.lowerBound -> 3014[utf8]) < (disabled.lowerBound -> 2713[utf8]). Restored, green.",
+    "note": "DEF-160 A4, REQ-083. The door out, read as a count rather than as a reading: exactly one `.disabled(` in Walkthrough.swift and it is the primary's, established by ordering against the identifier rather than by trusting the count alone. A `.disabled` on Skip or on Back would make the refusal a trap and lands here. No code changed for this clause \u2014 Skip was already ungated \u2014 so what this case records is a guard placed under behaviour that was correct and unprotected. THIS IS THE ABSENCE-OF-`.disabled` HALF ONLY. Presence is CASE-0319: a verifier removed Skip in exactly the three refusing states by wrapping it in the primary's rule, and this case's count, ordering and file-level `#require(range(of: \"WalkthroughFlow.ID.skip\"))` all stayed green, because a substring in a file says nothing about a state.",
+    "source": {
+      "analyzer": "WalkthroughFlowTests.skipIsNeverClosed, counting `.disabled(` over the comment-stripped Walkthrough.swift and ordering it against WalkthroughFlow.ID.primary",
+      "examined": 354
+    }
+  },
+  {
+    "id": "CASE-0319",
+    "req": "REQ-083",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorCore/WalkthroughFlow.swift",
+      "Sources/ProctorUI/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-7 wrapped Skip in the primary's own rule \u2014 `if showsSkip(\u2026), primaryEnabled(\u2026)`, the door out removed in exactly the three refusing states with no `.disabled` added anywhere, which is the verifier's own mutation. `./scripts/test.sh --filter skipIsOfferedInEveryRefusingState|skipIsNeverClosed|aRevocationIsNotALockout` exited 1 with 1 issue, on the condition literal; `skipIsNeverClosed` passed in that same run. ARM-8 then put the lockout into the Core rule instead and this test recorded 6 issues \u2014 three on `(shows \u2192 false) == ((step != .connect) \u2192 true)` and three naming the missing refusing states in the offered set. Both restored, green.",
+    "note": "DEF-160 A4, REQ-083 \u2014 the presence half, which had no guard until this. The clause is 'Skip is present in every refusing state' and it was asserted by a whole-file `#require(range(of: \"WalkthroughFlow.ID.skip\"))`, a file-level existence check standing in for a per-state claim. Asked here in two halves neither of which covers the other: the rule is `WalkthroughFlow.showsSkip`, asked at all sixteen states with the three refusing ones named rather than counted, and the view's condition is then read verbatim with whitespace collapsed and must be that rule with no second clause. A grant-gated lockout lands in the first half; a clause added to the view's `if` lands in the second. THIS IS source-analysis AND CLAIMS NOTHING ABOVE IT: it says the view's condition is the Core rule, not that a window drew the button. There is no ProctorUI test target and no window server inside swift test; the rendered claim is CASE-0316.",
+    "source": {
+      "analyzer": "WalkthroughFlowTests.skipIsOfferedInEveryRefusingState, enumerating WalkthroughFlow.showsSkip at all sixteen states and reading the condition immediately above Button(WalkthroughFlow.Copy.skip) from the comment-stripped Walkthrough.swift",
+      "examined": 354
+    }
+  },
+  {
+    "id": "CASE-0314",
+    "req": "REQ-083",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-8: `showsSkip` made to read the grants it takes \u2014 `step != .connect && primaryEnabled(\u2026)`, the lockout written into the rule rather than into the view. `./scripts/test.sh --filter aRevocationIsNotALockout|skipIsOfferedInEveryRefusingState` exited 1; this test recorded 2 issues, one per revoked direction: `WalkthroughFlow.showsSkip(on: .permissions, accessibility: (ax \u2192 false), screenRecording: (sr \u2192 true))` and the same with the grants swapped. Restored, green. ARM-1 IS NOT THIS CASE'S ARMING AND THE PREVIOUS RECORD SAYING SO WAS WRONG: with the biconditional's guard removed, `primaryDisabledReason(.permissions, true, true)` still returns nil through the empty-missing path, so this test's `== nil` expectation holds either way \u2014 and this test was not in ARM-1's own filters, so it never ran in that session. A verifier applied ARM-1 with this test in the filter and watched it pass.",
+    "note": "DEF-160 A5. A grant taken away while the walkthrough is open refuses the primary again \u2014 and the person is told why and can still leave. Asked from both-granted in both directions, with `completes(.skipped)` and `showsSkip` asserted at each revoked state. `!Copy.skip.isEmpty` stood where `showsSkip` now does and was a dead predicate: a non-empty string constant is false in no tree anybody could write, so it read pass under every mutation and counted nothing towards the clause it was listed under. Replaced rather than dropped, because the claim it was standing in for \u2014 the way out is still offered in this state \u2014 is real and is now asked of the rule the view's condition reads. WHAT THIS DOES NOT ASK: whether the agent re-probes a revoked permission at all, which is brief 75's question and needs a measurement first (PRO-0036 child item 6). This case is about what the flow does once the grant reads false, not about how soon it reads false."
+  },
+  {
+    "id": "CASE-0315",
+    "req": "REQ-084",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "source-analysis",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "Sources/ProctorUI/Walkthrough.swift",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-5 repointed the Text at Copy.heroLede \u2014 DEF-161's exact shape, a constant that exists while the window draws something else. `./scripts/test.sh --filter theSheetDrawsTheRestartNote` exited 1 with one issue. Restored, green.",
+    "note": "DEF-161, REQ-084. statesRestartNote is true while Screen Recording is missing and false once it is held, which is the pane the design of record draws and the pane it omits. The drawing site is bound to Copy.restartNote by name. PRO-0067's A5 asserted only that the constant contained the word 'restart'; that assertion could not have failed on a build that rendered the sentence nowhere, which is how DEF-161 survived from PRO-0067 to here. The rendered claim is CASE-0316.",
+    "source": {
+      "analyzer": "WalkthroughFlowTests.theSheetDrawsTheRestartNote, reading the comment-stripped Walkthrough.swift for Copy.restartNote and statesRestartNote at the drawing site",
+      "examined": 354
+    }
+  },
+  {
+    "id": "CASE-0317",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "docs/test-campaign/cases.json",
+      "docs/test-campaign/evidence/PRO-0086/arming.json"
+    ],
+    "armed": true,
+    "armedBy": "ARM-1, which is the same run: with the guard removed the printed population read all sixteen states rather than three, so the set assertion this case rests on failed naming them.",
+    "note": "A3 RE-DERIVED, WITH ITS PROVENANCE ON THE ROW. PRO-0067's A3 reads 'the disabled next button is present in the tree in every state where it is disabled'. WHEN IT WAS WRITTEN THAT CLAUSE WAS VACUOUS: no `.disabled(` modifier existed anywhere in Walkthrough.swift, the set of states in which the primary was disabled was empty, and the clause asked as written would have read green having measured nothing. PRO-0081 BUILT THE POPULATION AND THEN WITNESSED THE CLAUSE OVER IT \u2014 the verifier named that a widening, and CASE-0100 records it in its own words. CASE-0100 is not edited by this item and its status is not changed. What is added here is the honest re-derivation: the population now genuinely exists, it is exactly three states, they are printed as a set rather than implied, and each of them now carries a stated reason. A READER SIX MONTHS OUT SHOULD TAKE THIS ROW AS: the guarantee held, and it was arranged before it held. Those are different facts and the campaign carries both."
+  },
+  {
+    "id": "CASE-0316",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0086/glass-tree-read.json",
+      "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason.png",
+      "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason-key.png"
+    ],
+    "armed": true,
+    "armedBy": "TWO-WAY ON ONE BUILD, one AXPress apart. On the intro step the same reader read the same identifier as enabled TRUE, label 'Set up permissions', frame 140x24, with NO node carrying proctor.walkthrough.action.primary.reason anywhere in the tree. On the permissions step: enabled FALSE, label 'Connect a model', frame 127x24, reason node present at 441x14. A pinned field or an unconditional caption could not have produced that pair.",
+    "note": "DEF-160 and DEF-161 on the glass, which is the rung CASE-0312 and CASE-0315 explicitly do not claim. A release .build/Proctor.app ran as pid 491 with PROCTOR_SOCKET naming nothing, so its report is nil and every grant reads false \u2014 the state the design draws disabled, on a machine that holds the real grants. The walkthrough was forced open with -walkthroughCompleted NO in NSArgumentDomain, which is PROCESS-SCOPED AND WRITES NOTHING: the shared defaults key read 1 before the launch and 1 after it, and /Applications/Proctor.app was neither modified nor launched. THE READER IS THE INSTALLED proctor-agent, pid 52976, a different process sharing no memory with the target, resolving by AXIdentifier over AXUIElement. It read: primary AXButton 'Connect a model' ENABLED FALSE at 127x24 carrying help 'Allow Accessibility and Screen Recording above to continue. Start with Accessibility.'; the same sentence as an AXStaticText at proctor.walkthrough.action.primary.reason, 441x14, drawn above the control it explains; proctor.walkthrough.permissions.restart carrying Copy.restartNote verbatim at 403x28; and proctor.walkthrough.action.skip ENABLED TRUE at 64x16 beside the refusal, which is REQ-083 measured rather than reasoned. AXEnabled is what the app publishes about itself over the plane Proctor's own tools act on; it is not a kernel-level witness and is not claimed as one.",
+    "witness": {
+      "recorder": "the installed proctor-agent (pid 52976) reading pid 491's accessibility tree by AXIdentifier with its own AX client",
+      "effect": "ipc",
+      "count": 4
+    }
+  },
+  {
+    "id": "CASE-0318",
+    "req": "REQ-082",
+    "surface": "SURF-009",
+    "flow": "FLOW-010",
+    "oracle": "raster-visual",
+    "lane": "macos-glass",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason.png",
+      "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason-key.png",
+      "docs/test-campaign/evidence/PRO-0086/glass-tree-read.json"
+    ],
+    "armed": true,
+    "armedBy": "The two frames differ in the one property being asked about and agree on everything else: inactive, both Allow buttons draw the same grey; key, Accessibility's draws filled accent and Screen Recording's stays plain. A capture that could not tell the two treatments apart would have shown the same pair twice.",
+    "note": "THE COHERENCE CLAUSE, IN PIXELS. Brief 79 asks whether this item's caption and PRO-0090's one-prominent-Grant rule say something coherent about what to do first. They do: the caption reads 'Start with Accessibility' and the filled Allow button is Accessibility's row, with Screen Recording's plain beside it. Both frames are ScreenCaptureKit, window-scoped on cgWindowID 152808, status complete, trustworthy true, dirtyArea 0, framesWaited 3 and 12 \u2014 the window's own pixels rather than a screen crop. WHAT THE PICTURES ALSO SHOW, and it is not this item's fix: with the window key, the DISABLED primary still draws filled accent with a dimmed label, while the design of record draws that same control as a plain button (class=\"btn\" disabled, against class=\"btn prominent large\" on the intro's enabled one). A filled accent button that cannot be pressed reads as pressable. Recorded as DEF-163 and left open."
   }
 ]

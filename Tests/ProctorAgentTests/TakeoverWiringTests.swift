@@ -47,7 +47,22 @@ final class FakeTakeover: TakeoverDriving, @unchecked Sendable {
         if immediately { immediateHides += 1 }
         lock.unlock()
     }
-    func arm(seconds: Double) { lock.lock(); arms.append(seconds); lock.unlock() }
+    /// How many events the tap swallows while the block is armed for a step.
+    /// The real tap calls `onPersonInput` once per swallowed event
+    /// (`TakeoverOverlay.swift:451`), from inside the step rather than at a
+    /// boundary, which is the timing DEF-027 turns on.
+    var swallowsPerStep = 0
+
+    func arm(seconds: Double) {
+        lock.lock()
+        arms.append(seconds)
+        let times = swallowsPerStep
+        let swallowed = onPersonInput
+        lock.unlock()
+        // Outside the lock: the real callback runs on the tap's own thread and
+        // may not wait on anything this class holds.
+        for _ in 0..<times { swallowed?() }
+    }
     func release(_ reason: TakeoverRelease) { lock.lock(); releases.append(reason); lock.unlock() }
     func stopAll(_ reason: TakeoverRelease) { lock.lock(); stops.append(reason); lock.unlock() }
 
@@ -301,6 +316,86 @@ struct TakeoverWiringTests {
         // And it is recorded without the input monitor being on: the operator who
         // turned the block on granted strictly more than observation.
         #expect(!h.contention.observedInput)
+    }
+
+    // MARK: - DEF-027: the swallow reaches a record, not just a counter
+
+    @Test("a one-step batch reports the input its block swallowed")
+    func aSingleStepBatchReportsWhatItSwallowed() async throws {
+        // THE CASE THAT COULD NEVER FIRE. A batch is probed at the checkpoint
+        // before each step and nowhere else, so a single-step batch had exactly
+        // one reading and it happened before the block was ever armed. Measured
+        // in the field at
+        // `docs/test-campaign/evidence/witness/a45b-act.json`: one drag step of
+        // 74.7 seconds, six events swallowed, `yields` absent from the result.
+        // The outcome did not depend on timing or on what the helper posted —
+        // there was no boundary at which to look.
+        let h = try await harness()
+        h.takeover.swallowsPerStep = 3
+        let out = try await act(h, [step(.click)])
+
+        // The block did arm, so the swallows above are the ones a real tap would
+        // have handed over rather than a number this test made up.
+        #expect(h.takeover.arms.count == 1)
+        #expect(h.contention.userInputs == 3)
+
+        let object = try #require(out.objectValue)
+        let yields = try #require(object["yields"]?.arrayValue,
+                                  "a swallowed event must reach the run's record")
+        let record = try #require(yields.first?.objectValue)
+        #expect(record["reason"]?.stringValue == YieldReason.userInput.rawValue)
+        // And the prose beside it, which is what a caller reading the result
+        // rather than the fields actually sees.
+        #expect(object["yieldNote"]?.stringValue?.contains("userInput") == true)
+    }
+
+    @Test("the swallow is what produces the record, not the run merely ending")
+    func theSwallowIsWhatProducesTheRecord() async throws {
+        // The control for the case above. Same batch, same probe, nothing
+        // swallowed: a run that reports a yield here would be reporting the new
+        // probe rather than the person.
+        let h = try await harness()
+        h.takeover.swallowsPerStep = 0
+        let out = try await act(h, [step(.click)])
+        let object = try #require(out.objectValue)
+        #expect(object["yields"] == nil || object["yields"] == .null)
+        #expect(object["yieldNote"] == nil)
+    }
+
+    @Test("a run that ends while yielded leaves the latch clear")
+    func aRunEndingClearsItsOwnHold() async throws {
+        // DEF-150. The RECORD was closed when the run ended and the LATCH was
+        // not, so `RunControl.yields` kept an entry for a run that had finished:
+        // `paused` stayed true, `pausedAt` was never cleared, and `heldBy` went
+        // on naming it. The next run's `begin` clears its own key and cannot
+        // clear somebody else's, so nothing else was ever going to.
+        let h = try await harness()
+        h.takeover.swallowsPerStep = 2
+        _ = try await act(h, [step(.click)])
+        #expect(!h.control.isYielded)
+        #expect(h.control.heldBy == nil)
+        #expect(!h.control.isPaused)
+    }
+
+    @Test("a swallow during a long step still holds, however stale it has gone")
+    func aStaleSwallowStillHolds() async throws {
+        // The second half of DEF-027. `inputWindow` is 10 seconds and a real
+        // step here outlives it — measured at
+        // `docs/test-campaign/evidence/witness/a4-act.json`, three drags of
+        // 18.6s, 20.2s and 17.7s with 24 events swallowed and no yield. An age
+        // that expires before anything reads it is a signal that was never
+        // delivered, so the arrival is carried as an edge until it is read.
+        let watch = ContentionWatch(inputWindow: 10, releaseDelay: 2)
+        var w = watch
+        let arrival = ContentionSample(lastUserInputAt: 100, userInputSince: true, now: 160)
+        #expect(w.sample(arrival) == .yielded(.userInput))
+        #expect(w.reason == .userInput)
+        // And it lets go on its own, because the flag is the arrival and the
+        // window is still the age. A stale swallow is recorded without parking
+        // the run on evidence that has gone cold.
+        #expect(w.sample(ContentionSample(lastUserInputAt: 100, now: 161)) == .none)
+        #expect(w.sample(ContentionSample(lastUserInputAt: 100, now: 163))
+                == .released(.userInput))
     }
 
     // MARK: - A4: what doctor says

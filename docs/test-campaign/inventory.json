@@ -772,6 +772,77 @@
       "effect": "none",
       "evidence": "observed",
       "note": "Every force-unwrap in Tests is classed: 24 live sites converted to try #require or restructured away, 4 unfailable by construction left with the reason recorded. The claim is proved by breaking one converted site and showing the same sabotage report 0 tests and no verdict line before, and 1,992 tests with four named failures after."
+    },
+    {
+      "id": "REQ-079",
+      "class": "honesty-guardrail",
+      "text": "A lane held by a run whose peer process no longer exists is released, so the next caller gets the lane rather than queueBusy. Liveness is derived from the pid and start time already in RunSessionIdentity.key, with no heartbeat and no new wire field.",
+      "source": "DEF-026; docs/test-campaign/evidence/witness/a4-stranded-run-queue-2.json reads the stranded run still active at heldForSeconds 932, past the 900-second pause backstop",
+      "surfaces": [
+        "SURF-004"
+      ],
+      "effect": "subprocess",
+      "provider": "PeerLiveness in Sources/ProctorCore/PeerLiveness.swift; SessionIdentity.probe (kill(pid,0) and proc_pidinfo) in Sources/ProctorAgent/SessionIdentity.swift; RunScheduler.reclaimDeadPeers",
+      "evidence": "observed"
+    },
+    {
+      "id": "REQ-080",
+      "class": "honesty-guardrail",
+      "text": "A peer that is alive but silent keeps its lane. Only positive proof of death reclaims: a pid the kernel no longer knows, or a pid whose start time no longer matches the one the identity was minted from. An unreadable probe and an unparseable identity key both leave the lane alone.",
+      "source": "The brief's constraint on DEF-026: reclaiming a slow, blocked or breakpointed peer's lane would cut off a live run",
+      "surfaces": [
+        "SURF-004"
+      ],
+      "effect": "subprocess",
+      "provider": "PeerLiveness.verdict in Sources/ProctorCore/PeerLiveness.swift",
+      "evidence": "observed"
+    },
+    {
+      "id": "REQ-081",
+      "class": "honesty-guardrail",
+      "text": "Input the takeover block swallows during a run is reported as a yield record with a held reason, whatever the shape of the batch. A batch is probed only at step boundaries, so the arrival is carried as an edge until something reads it, and a reading happens after the last step as well as before each one.",
+      "source": "DEF-027; docs/test-campaign/evidence/witness/a45b-act.json is one 74.7-second step with six events swallowed and no yields key",
+      "surfaces": [
+        "SURF-005",
+        "SURF-004"
+      ],
+      "provider": "ContentionSample.userInputSince and ContentionWatch.conditions in Sources/ProctorCore/Contention.swift; ContentionMonitor.sample; the probe after the last step in Sources/ProctorAgent/Session/SessionAct.swift"
+    },
+    {
+      "id": "REQ-082",
+      "text": "A control the flow refuses to let a person use states, on the surface that refused, which grant is still missing and which control to press next \u2014 because a disabled control with no stated reason is worse than an enabled one that fails honestly: a person who cannot see why the button is dead clicks it, concludes the app is broken, and quits",
+      "source": "spec-PRO-0086.md A1-A3; brief 79 'What this item owes'; design/surfaces/proctor-surfaces.html walkthrough/permissions",
+      "class": "affordance",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "The sentence is non-nil exactly where primaryEnabled is false, and nominates the same grant prominentGrant draws filled, so the caption and the one prominent Allow button cannot offer different first moves. Value-level at outcome rung; the rendered half is CASE-0316.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-083",
+      "text": "The way out of the walkthrough stays reachable and ungated in every state where the primary refuses, including after a grant is revoked while the window is open, because skipping is completing and a flow that refuses to advance must not also refuse to end",
+      "source": "spec-PRO-0086.md A4-A5; brief 79 'The skip path stays open'; WalkthroughFlow.completes, established wave 9",
+      "class": "safety guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "Guarded in two halves. Absence of a gate: one `.disabled(` in Walkthrough.swift and it is the primary's; a second \u2014 on Skip or on Back \u2014 is the lockout, and ARM-6 watched that assertion fail with the count at 2. Presence: `WalkthroughFlow.showsSkip` asked at all sixteen states with the view's condition read verbatim, because the count clause passes on a tree where Skip has been conditioned out of the three refusing states \u2014 ARM-7 did exactly that and only the presence guard failed.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-084",
+      "text": "The permissions surface states the Screen Recording restart requirement while that grant is missing, whether or not a restart is offered, because the fact is true either way and the offer is gated on evidence that may not arrive",
+      "source": "spec-PRO-0086.md A6; spec-PRO-0067.md A5; design/surfaces/proctor-surfaces.html walkthrough data-state=permissions, which draws the paragraph under the two grant rows",
+      "class": "disclosure guarantee",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-009"
+      ],
+      "note": "PRO-0067's A5 has been true at the value level and false on the glass since the constant was written: the test asserted Copy.restartNote contained the word 'restart' and nothing asserted a window drew it. DEF-161.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -2536,6 +2607,93 @@
       "detail": "REQ-055's sweep went red on 'touched \u2192 [\"captures/win-1-zoom-1787361639249.full.png\"]' with nothing sabotaged. AcceptanceE2ETests' Journey 5 calls session.zoom(path: nil) twice; Session.defaultZoomPath hard-coded '~/Library/Application Support/app.fledgeling.procter/captures' with no injection seam, so two crops and two .full.png files landed in the operator's own captures directory 0.5 seconds into every run of the suite. The guarantee had been false the whole time and the witness only caught it when a write happened to fall between its before and after readings \u2014 a race, which is the honest reading of why this sat green: PRO-0089 and PRO-0098 both built the instrument correctly and both got lucky. Fixed by applying PolicyStore.live's interlock to the capture path: CaptureEngineImpl.defaultCaptureDirectory redirects a test process to testFallbackCaptureRoot in NSTemporaryDirectory, Session.defaultZoomPath reads that one source rather than building its own, and production behaviour is untouched. CASE-0285 asserts the resolved paths so the guarantee no longer depends on a race, and it was watched to fail with the interlock disabled.",
       "surface": "SURF-012",
       "req": "REQ-055"
+    },
+    {
+      "id": "DEF-150",
+      "status": "fixed",
+      "title": "A run that ended while yielded left its automatic hold latched forever",
+      "found": "PRO-0093, while adding the reading after the last step",
+      "detail": "Session.disarmContention closed the yield RECORD and never the LATCH. RunControl.yields kept an entry for a run that had finished, so paused stayed true, pausedAt was never cleared and heldBy went on naming a finished run. RunControl.begin clears the beginning run's own key and deliberately not anybody else's, so nothing was ever going to clear it. Reachable before this item and made common by the new probe, so it is closed here: disarmContention now releases the ending run's hold. Armed: sabotage S6 removes the release and TakeoverWiringTests 'a run that ends while yielded leaves the latch clear' reports isYielded true and heldBy naming the finished run.",
+      "surface": "SURF-004",
+      "req": "REQ-081",
+      "note": "docs/test-campaign/evidence/PRO-0093/sabotages.txt"
+    },
+    {
+      "id": "DEF-151",
+      "status": "open",
+      "title": "Whether the userInput yield fires for a real hand on a real keyboard is still unproved",
+      "found": "PRO-0093, separating DEF-027's two paths",
+      "detail": "PersonInput.isAPerson requires sourcePid == 0, and nothing in this repo can post at pid 0, so the PASSIVE monitor path (ContentionMonitor.considerInput, used when PROCTOR_YIELD_INPUT is on) has no instrument that can exercise it. PRO-0093 changed the block's swallow path and did not touch this one, so REQ-007's inconclusive ceiling stands exactly where it stood. WHAT WOULD SETTLE IT: a physical keypress witnessed by the monitor, or a driver posting at the HID layer rather than through CGEvent - an IOHIDUserDevice virtual keyboard is the candidate that does not need a person in the room. NOT FIXED HERE: this is a measurement Proctor cannot make of itself, not a defect in the yield.",
+      "surface": "SURF-005",
+      "req": "REQ-007",
+      "note": "Recorded rather than claimed. spec-PRO-0093.md lists it under 'Found and left open'."
+    },
+    {
+      "id": "DEF-152",
+      "status": "fixed",
+      "title": "The contention test double could not carry a swallowed event, so nothing downstream of the counter was checked",
+      "found": "PRO-0093, reading why the suite had a passing test named for a yield that asserted a counter",
+      "detail": "FakeContention.noteUserInput incremented a counter and returned; sample() served a fixed script. So TakeoverWiringTests 'a swallowed event feeds the yield, so the two features compose' could assert only that the counter moved - the yield record and the held reason its name claims were unreachable through the instrument. HoldAttributionWiringTests documents the same hole from the other side, in a comment explaining why its harness uses three steps: 'a single-step run has exactly one probe ... and finishes before the sample that would hold it is ever read'. The double now stamps lastUserInputAt and reports the arrival on the next sample, as the real monitor does, and the test asserts the record.",
+      "surface": "SURF-005",
+      "req": "REQ-081",
+      "note": "docs/test-campaign/evidence/PRO-0093/sabotages.txt"
+    },
+    {
+      "id": "DEF-160",
+      "status": "fixed",
+      "severity": "high",
+      "req": "REQ-082",
+      "surface": "SURF-009",
+      "title": "The walkthrough's primary refuses in three states and none of them said why",
+      "found": "PRO-0086, reading the behaviour PRO-0081 shipped against the argument brief 79 makes against it",
+      "detail": "WalkthroughFlow.primaryEnabled returns false in 3 of 16 input combinations, all on the permissions step, and Walkthrough.swift drew the button disabled with no accompanying text in any of them. Grep for `reason`, `disabledReason` or any use of a Copy constant explaining the refusal across Sources/ProctorUI returned nothing. The person is left to infer the rule from two grant rows 200px above the control that will not respond.",
+      "fix": "WalkthroughFlow.primaryDisabledReason(on:accessibility:screenRecording:), non-nil exactly where primaryEnabled is false, drawn as a caption directly above the footer buttons and handed to the disabled button as an accessibility hint. It names every grant still missing and nominates the grant prominentGrant draws filled.",
+      "fixedBy": "PRO-0086 commit 582540d",
+      "evidence": [
+        "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+        "Sources/ProctorCore/WalkthroughFlow.swift",
+        "docs/test-campaign/evidence/PRO-0086/arming.json"
+      ]
+    },
+    {
+      "id": "DEF-161",
+      "status": "fixed",
+      "severity": "medium",
+      "req": "REQ-084",
+      "surface": "SURF-009",
+      "title": "Copy.restartNote was written by PRO-0067 and rendered by nothing since",
+      "found": "PRO-0086, checking brief 79's clause that the restart requirement is stated whether or not the restart is offered",
+      "detail": "WalkthroughFlow.Copy.restartNote is defined at WalkthroughFlow.swift:237 and its only other reference in the repository was its own A5 test, which asserted the constant contained the word 'restart'. The design of record draws that paragraph under the two grant rows in the pane where neither grant is held. The build drew it nowhere, so A5 was true at the value level and false on the glass for as long as the constant existed \u2014 DEF-035's shape on a different surface.",
+      "fix": "HeroPermissions draws Copy.restartNote under the rows while statesRestartNote(screenRecording:) is true, carrying ID.restartNote so a glass lane can find it.",
+      "fixedBy": "PRO-0086 commit 582540d",
+      "evidence": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+        "docs/test-campaign/evidence/PRO-0086/arming.json"
+      ]
+    },
+    {
+      "id": "DEF-162",
+      "status": "open",
+      "severity": "low",
+      "req": "REQ-083",
+      "surface": "SURF-009",
+      "title": "The design of record's permissions pane draws no Skip setup, and the build draws one on every step but connect",
+      "found": "PRO-0086, reading design/surfaces/proctor-surfaces.html for the disabled-primary caption",
+      "detail": "The walkthrough's permissions pane in the design of record has a footer of dots, spacer, Back and a disabled 'Connect a model'. Walkthrough.swift:77-81 draws 'Skip setup' there too, borderless and never disabled. The build is the side brief 79 protects \u2014 skipping is completing and a person macOS will not grant to must be able to leave \u2014 so the record that is wrong is the design, not the window. Left open rather than fixed: changing the design of record is a reader's call and this item is not licensed to edit it, and the intro pane of the same design does draw Skip setup, so the omission may be a drawing that was never updated rather than a decision.",
+      "detailNote": "Not a code defect. Recorded so the divergence is a row somebody decides rather than a thing two documents disagree about quietly."
+    },
+    {
+      "id": "DEF-163",
+      "status": "open",
+      "severity": "medium",
+      "req": "REQ-082",
+      "surface": "SURF-009",
+      "title": "The disabled primary still draws filled accent while the design of record draws it plain, so a control that cannot be pressed looks pressable",
+      "found": "PRO-0086, from its own glass capture: the coherence check on PRO-0090's prominence rule showed the refusing button in accent blue once the window was key",
+      "detail": "Walkthrough.swift gives the primary .borderedProminent unconditionally. On an inactive window macOS greys it and the refusal is legible; on a key window it draws in the accent fill with only the label dimmed, which is what a person actually sees while working the flow. The design of record draws the intro's enabled primary as `class=\"btn prominent large\"` and the permissions pane's disabled one as `class=\"btn\" disabled` \u2014 plain \u2014 so the record already settles the rule and the build diverges from it. Evidence: docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason-key.png against walkthrough-permissions-reason.png, the same window one activation apart.",
+      "fix": "Unfixed. The shape is PRO-0090's own two-branch buttonStyle in HeroPermRow \u2014 a filled branch and a plain one chosen by primaryEnabled \u2014 and it does not touch the prominence rule that neighbours it.",
+      "detailNote": "Left open deliberately: spec-PRO-0086 commits to revisiting no wave-9 composition decision, and changing how a shipped control is drawn is that. It is recorded with the capture that found it so the reader can take it as its own item."
     }
   ]
 }

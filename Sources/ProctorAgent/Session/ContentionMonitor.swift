@@ -93,6 +93,12 @@ final class ContentionMonitor: ContentionSampling, @unchecked Sendable {
     private var expectedPid: Int32?
     private var frontmostPid: Int32?
     private var lastUserInputAt: Double?
+    /// When `sample()` last looked, so an arrival between two looks is reported
+    /// once rather than being judged on its age. Nil until the first sample,
+    /// which is why the first sample reports any input already recorded: a
+    /// swallow that landed before this run's first probe is still this run's to
+    /// notice.
+    private var lastSampledAt: Double?
     private var lastSyntheticPostAt: Double?
     private var armedCount = 0
     private var inputMonitor: Any?
@@ -143,6 +149,7 @@ final class ContentionMonitor: ContentionSampling, @unchecked Sendable {
         if last {
             expectedPid = nil
             lastUserInputAt = nil
+            lastSampledAt = nil
         }
         lock.unlock()
         guard last else { return }
@@ -233,12 +240,21 @@ final class ContentionMonitor: ContentionSampling, @unchecked Sendable {
         let expected = expectedPid
         let front = frontmostPid
         let input = lastUserInputAt
+        // Did anything arrive since the last look? The block swallows a person's
+        // input during a step and nothing samples until the step boundary, so an
+        // arrival judged only on its age is one that expires unread — which is
+        // what DEF-027 measured. Consumed in the asking, so one arrival opens one
+        // hold rather than re-opening it on every poll.
+        let arrived = input.map { at in at > (lastSampledAt ?? -.greatestFiniteMagnitude) } ?? false
+        let stamp = now()
+        lastSampledAt = stamp
         let mine = ourOwnPids()
         lock.unlock()
         return ContentionSample(expectedPid: expected, frontmostPid: front,
                                 proctorPids: mine,
                                 secureInput: Grants.secureEventInputActive(),
-                                lastUserInputAt: input, now: now())
+                                lastUserInputAt: input, userInputSince: arrived,
+                                now: stamp)
     }
 
     /// Proctor's own processes: this agent, and the menu-bar application that

@@ -135,6 +135,19 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
   The state now ends on the thing that actually ends a restart: the first check that finds the agent answering. However long that takes. If enough checks come back with nothing, Proctor stops claiming a restart is in flight and reports the outage, which by that point is a measurement rather than a guess.
 
   Note: the 1.2 second wait is still there and it hasn't been lengthened. It's the beat before the *first* check, because checking the instant you ask launchd for a restart just races it and reports a healthy agent as down. The wait was never the problem; clearing the state on a clock was.
+- **The setup window now tells you why it won't move on.** Proctor's walkthrough keeps `Connect a model` switched off until both Accessibility and Screen Recording are granted, and until now nothing on screen said so. You'd press a dead button and be left to work out the rule yourself.
+
+  There's a line above the buttons now, and it names what's missing and what to press: "Allow Accessibility and Screen Recording above to continue. Start with Accessibility." With one permission already in, it names only the one you still owe. The permission it tells you to start with is the same one drawn as the filled **Allow**, so the sentence and the button agree about your next move rather than offering two.
+
+  VoiceOver gets the same sentence. It's the button's accessibility hint, so landing on the control tells you why it's refusing without having to find the caption first.
+
+- **Skipping setup still works when a permission is missing, and it always will.** `Skip setup` is never switched off, in any state, including after a permission is taken away while the window is open. Skipping is completing here; that's deliberate, because the alternative is a window that reappears at every launch for somebody who's already decided against it.
+
+  A flow that won't advance mustn't also refuse to end. The way that's held down is a test that counts the switched-off controls in the file rather than reading it: there's one, it's the primary, and a second one anywhere would fail the build.
+
+- **The Screen Recording restart note is finally on screen.** macOS caches that answer per process for the life of the process, so granting Screen Recording doesn't reach a running Proctor until it restarts. The sentence saying so was written into the app in an earlier release and no window ever drew it, which meant the fact was true in the code and invisible to you.
+
+  It sits under the two permission rows while that grant is missing, which is where the design always put it.
 
 - **When another program is driving your Mac, the run panel now says so properly.** Run Proctor with `PROCTOR_ACTUATION=cua` and cua-driver performs the steps instead of Proctor's own planes. Two things about that used to reach the run record and never reach the screen, which is where you're actually looking.
 
@@ -209,6 +222,20 @@ The gate is now 1,814 tests in 214 suites, from 1,516 in 175 when this release s
 - **`PROCTOR_OVERLAY_CAPTURE` makes Proctor's overlays photographable, for testing them.** Off unless you set it, and worth understanding before you do. The exclusion above is absolute: with it in place there is no way at all to photograph the run panel or the takeover notice, which also means nothing can check what they draw. Setting this to `1` drops the exclusion on all three overlays for that run of the agent, so a test can capture them and compare. While it is on, anything recording your screen sees them too, so leave it off outside a test.
 
 ### Fixed
+
+- **A run whose driving process dies no longer holds the machine hostage.** When the shim behind an MCP session exits partway through a run, that run kept its place in Proctor's queue. Every `proctor_act` after it came back with `queueBusy` and "another session was driving this Mac", and the only way out was restarting the agent. It happened three times in one afternoon here; one stranded run was still holding the lane 932 seconds later, well past the 900-second pause limit, because that limit bounds a paused run rather than a dead one.
+
+  Proctor already knows who is on the other end of the socket. Every session is identified by the peer process's pid and start time, read from the kernel rather than claimed by the caller, so a lane held by a process that no longer exists is now something Proctor can simply notice. It checks on the next call in, which is exactly the call that used to be refused, so the lane comes back the moment you send another batch. No heartbeat, nothing new on the wire.
+
+  A peer that is merely quiet keeps its lane. Slow, blocked, sitting at a breakpoint: all three leave the process in the table with its original start time, and Proctor reads that as alive. Only a pid the kernel has forgotten, or a pid reused by a different process since, releases anything. Anything Proctor can't answer confidently is left alone, because taking a lane from a live run is worse than the wedge this fixes.
+
+- **A person typing into a run Proctor is holding is now reported, whatever the shape of the run.** With `PROCTOR_TAKEOVER_INPUT` on, Proctor blocks your keyboard and mouse while it posts events, so your keystrokes can't corrupt the step. Those swallowed events are meant to tell Proctor you want the machine back. Across three measured runs they didn't: 40 events swallowed, no yield recorded, no reason on the queue.
+
+  Proctor was reading for contention only at the boundary between steps, and both halves of that failed. A single-step batch has exactly one boundary and it comes before the step, so nothing swallowed during it could ever be seen; one of the measured runs was a single 74.7-second drag with six events eaten. And a person's input counts as fresh for ten seconds, while the steps in the other run took 18, 20 and 17 seconds each, so anything swallowed early had gone stale by the time anything looked.
+
+  Proctor now carries the arrival until something reads it rather than judging it on age, and takes one reading after the last step as well as before each one. A run reports the hold, its reason, and how long it lasted, the same way it already did for secure input and for you switching apps.
+
+  Note: this is the path where the block swallows your input. The separate passive monitor, which is off unless you set `PROCTOR_YIELD_INPUT`, needs an event carrying the hardware's own process id, and nothing in Proctor's own test suite can produce one. Whether that path fires for a real hand on a real keyboard is still unproven rather than proven working, and it's recorded that way.
 
 - **Proctor's own window can now be used by a screen reader.** A tool that reads other applications through the accessibility tree owes its own surface the same standard, and it was not meeting it. Every switch in the Switches card was built with an empty label, so all nine reached the accessibility tree as checkboxes with no name at all: VoiceOver announced nine identical unnamed controls in a column. The seven Details buttons in the Tools card were all called "Details", with nothing saying which tool each belonged to, and the permissions list repeated "Open Settings" and "How" once per grant. Each control now carries its own name: the switch says what it switches, the disclosure names its tool and whether it will show or hide, and the permission controls name their permission. Measured on the installed build: 9 named checkboxes, 21 buttons, no two alike.
 

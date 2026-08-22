@@ -68,30 +68,60 @@ struct Walkthrough: View {
             }
 
             Divider()
-            HStack {
-                if step != .intro {
-                    Button(WalkthroughFlow.Copy.back) { back() }
-                        .accessibilityIdentifier(WalkthroughFlow.ID.back)
+            // PRO-0086, closing DEF-160. The reason rides directly above the
+            // buttons rather than up in the hero sheet: somebody stuck on a dead
+            // control is looking at the control, and the sheet already carries
+            // the restart note and the Settings link.
+            VStack(alignment: .trailing, spacing: 6) {
+                if let reason = disabledReason {
+                    Text(reason)
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                        .multilineTextAlignment(.trailing)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier(WalkthroughFlow.ID.reason)
                 }
-                Spacer()
-                if step != .connect {
-                    Button(WalkthroughFlow.Copy.skip) { complete() }
-                        .accessibilityIdentifier(WalkthroughFlow.ID.skip)
-                        .buttonStyle(.borderless)
+                HStack {
+                    if step != .intro {
+                        Button(WalkthroughFlow.Copy.back) { back() }
+                            .accessibilityIdentifier(WalkthroughFlow.ID.back)
+                    }
+                    Spacer()
+                    // Never disabled and never conditional on a grant. Skipping
+                    // is completing (`WalkthroughFlow.completes`), so this is the
+                    // way out for somebody macOS will not grant to, and the
+                    // refusal above must not close it.
+                    //
+                    // PRO-0086's A4, the presence half. The condition is
+                    // `WalkthroughFlow.showsSkip` and nothing else, decided in
+                    // Core where it is asked at all sixteen states, because a
+                    // condition written here is one this repo cannot prove — and
+                    // an extra clause added to this `if` is exactly how the door
+                    // out gets closed without a `.disabled` anywhere.
+                    if WalkthroughFlow.showsSkip(on: step.flow,
+                                                 accessibility: granted(.accessibility),
+                                                 screenRecording: granted(.screenRecording)) {
+                        Button(WalkthroughFlow.Copy.skip) { complete() }
+                            .accessibilityIdentifier(WalkthroughFlow.ID.skip)
+                            .buttonStyle(.borderless)
+                    }
+                    // PRO-0081, closing PRO-0067's A3. Disabled and visible rather
+                    // than absent: a control that disappears makes the layout jump
+                    // and teaches the user the step does not exist. The rule is
+                    // `WalkthroughFlow.primaryEnabled`, decided in Core where it is
+                    // tested at every combination, because a decision made in a view
+                    // body is one this repo cannot prove.
+                    Button(WalkthroughFlow.primaryAction(for: step.flow)) { advance() }
+                        .accessibilityIdentifier(WalkthroughFlow.ID.primary)
+                        .buttonStyle(.borderedProminent)
+                        .disabled(!WalkthroughFlow.primaryEnabled(
+                            on: step.flow,
+                            accessibility: granted(.accessibility),
+                            screenRecording: granted(.screenRecording)))
+                        // The same sentence a sighted person reads above, so
+                        // VoiceOver landing on the button hears why it refuses
+                        // without having to find the caption first.
+                        .hint(disabledReason)
                 }
-                // PRO-0081, closing PRO-0067's A3. Disabled and visible rather
-                // than absent: a control that disappears makes the layout jump
-                // and teaches the user the step does not exist. The rule is
-                // `WalkthroughFlow.primaryEnabled`, decided in Core where it is
-                // tested at every combination, because a decision made in a view
-                // body is one this repo cannot prove.
-                Button(WalkthroughFlow.primaryAction(for: step.flow)) { advance() }
-                    .accessibilityIdentifier(WalkthroughFlow.ID.primary)
-                    .buttonStyle(.borderedProminent)
-                    .disabled(!WalkthroughFlow.primaryEnabled(
-                        on: step.flow,
-                        accessibility: granted(.accessibility),
-                        screenRecording: granted(.screenRecording)))
             }
             .padding(.horizontal, 30).padding(.vertical, 16)
         }
@@ -176,6 +206,17 @@ struct Walkthrough: View {
         }
     }
 
+    /// Why the primary refuses on this step, or nil when it does not.
+    /// `WalkthroughFlow.primaryDisabledReason`, which is non-nil exactly where
+    /// `primaryEnabled` is false — one rule, read twice, rather than a caption
+    /// with its own idea of when to appear.
+    private var disabledReason: String? {
+        WalkthroughFlow.primaryDisabledReason(
+            on: step.flow,
+            accessibility: granted(.accessibility),
+            screenRecording: granted(.screenRecording))
+    }
+
     private func granted(_ grant: WalkthroughFlow.Grant) -> Bool {
         model.report?.grants.first { $0.name == grant.title }?.granted ?? false
     }
@@ -230,6 +271,22 @@ private struct HeroPermissions: View {
                     justGranted: justGranted == .screenRecording,
                     prominent: prominent == .screenRecording,
                     reduceMotion: reduceMotion, onAllow: onAllowScreenRecording)
+            }
+
+            // PRO-0086, closing DEF-161. The design of record draws this
+            // paragraph under the two rows in the pane where the grant is
+            // missing and omits it where it is held; the build has rendered it
+            // nowhere since PRO-0067 wrote the constant. Visibility is
+            // `WalkthroughFlow.statesRestartNote` for the same reason the
+            // other two footer rules live in Core.
+            if WalkthroughFlow.statesRestartNote(screenRecording: screenRecordingGranted) {
+                Text(WalkthroughFlow.Copy.restartNote)
+                    .font(.system(size: 11)).foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: 420)
+                    .padding(.top, 14)
+                    .accessibilityIdentifier(WalkthroughFlow.ID.restartNote)
             }
 
             if !(accessibilityGranted && screenRecordingGranted) {
@@ -413,5 +470,20 @@ private struct Callout: View {
         .padding(11)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(tint.opacity(0.08), in: RoundedRectangle(cornerRadius: 7))
+    }
+}
+
+// MARK: - PRO-0086
+
+/// An accessibility hint that is not applied at all when there is nothing to
+/// say.
+///
+/// Written as a modifier taking `String?` rather than
+/// `.accessibilityHint(reason ?? "")` because `Walkthrough.swift` may hold no
+/// string literal of its own — DEF-039 counts quote characters outside comments
+/// and an empty fallback is two of them.
+private extension View {
+    @ViewBuilder func hint(_ text: String?) -> some View {
+        if let text { accessibilityHint(text) } else { self }
     }
 }
