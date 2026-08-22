@@ -2038,3 +2038,49 @@ the old one surfaced. What the fixed tool still does is two things: it groups al
 cells as one `BLOCK-0001` at 16.7%, and it neither joins on `source` nor refuses to let `source`
 grade, when that one field is both the citation tying a brief and the circular case that must not
 promote a requirement to `observed`.
+
+### A Done verdict's findings need a destination, and this fleet did not have one (2026-08-22)
+
+**The gap, measured by a peer session rather than reasoned here.** Gap-fix takes an item that failed
+verification; merge takes one that passed. A finding a verifier makes *while returning Done* belongs
+to neither stage, so it is captured by nothing. On the item that surfaced this, a genuine Done at
+10/10 carried five such findings in the same report and all five were lost — three of them holes in an
+integrity gate, including a silent deletion that passed all five of that gate's passes.
+
+This fleet has been running that shape for sixteen waves. Every `Done` verdict in the ledger above
+may have carried findings that went nowhere, and the ones that did are not recoverable from a status
+column.
+
+**So finalization gains a step, before the rebase and ahead of the merge.** Read the verdict in full
+and split its findings against the item's acceptance clauses. Every finding that is not an AC clause
+gets a destination named in the merge commit:
+
+| What the finding is | Where it goes |
+|---|---|
+| A defect in code that is about to merge | A `DEF-` row, `open`, before the merge — not after |
+| Work the item deliberately did not take | A brief in `docs/features-to-triage/`, numbered |
+| A limit of an instrument or a lane | The instrument's own record, or a `REQ-` note |
+| A judgement the verifier made and the item accepted | The spec's progress section, with the reason |
+| Nothing further owed | Say so explicitly, with the count of findings read |
+
+A verdict with findings and a merge commit that names no destination for them is the failure this
+step exists to stop, and "the verdict says Done" is not a disposition for the other five paragraphs
+in it.
+
+**PRO-0100 is the first item through the new step.** Its verifier already carries one escalated
+question that is not an AC clause — whether the three kept `try!`-adjacent unwrap sites are
+defensible as written or whether the item owes a zero-exemption sweep — so that one has a destination
+waiting whichever way it lands.
+
+**Disk, corrected.** Calling it the tightest axis was right relatively and wrong as a constraint:
+254.3 GiB free at 13.69% with the volume 87% used, and harbourmaster grades it `healthy` because its
+hard gate is 20 GiB, leaving 234 GiB of clearance. What makes it worth watching is that both disk
+axes are checked with the stricter winning, and APFS copy-on-write degrades before the bytes run out;
+it moved about 10 GiB in the last hour under sixteen concurrent sessions. If it ever becomes the
+closing gate the handover is to `mac-doctor`, which reclaims — harbourmaster decides placement and
+explicitly does not.
+
+**And the thermal verdict has now been measured flipping both ways on a machine whose load never
+moved.** This session saw `not_limited` → `not_limited` → `limited`; a peer saw
+`limited` → `not_limited` → `not_limited`. Load and thermal are independent signals and thermal is
+the binding one.
