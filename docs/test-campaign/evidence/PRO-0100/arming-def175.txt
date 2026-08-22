@@ -1,0 +1,40 @@
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/14] Write sources
+[4/14] Write swift-version--58304C5D6DBC2206.txt
+[6/10] Emitting module ProctorAgent
+[7/10] Compiling ProctorAgent RunScheduler.swift
+[7/12] Write Objects.LinkFileList
+[8/12] Linking proctor-agent
+[9/12] Applying proctor-agent
+[11/14] Compiling ProctorAgentTests BrowserLaneWiringTests.swift
+[12/14] Emitting module ProctorAgentTests
+[12/14] Write Objects.LinkFileList
+[13/14] Linking proctor-mcpPackageTests
+Build complete! (43.20s)
+Test Suite 'Selected tests' started at 2026-08-22 21:35:40.177.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 21:35:40.178.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 21:35:40.178.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 21:35:40.178.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Attributed holds" started.
+􀟈  Test "a yield reaches the ticket, and every way it can end clears it" started.
+proctor: run 1 has been held 20s by an automatic hold: frontmostChanged. It carries on when the hold lifts, or gives up at 20s.
+􀢄  Test "a yield reaches the ticket, and every way it can end clears it" recorded an issue at HoldAttributionWiringTests.swift:409:13: Expectation failed: duringHold.active.contains { $0.held != nil }
+􀄵  released: the hold never reached a ticket
+􀢄  Test "a yield reaches the ticket, and every way it can end clears it" recorded an issue at HoldAttributionWiringTests.swift:409:13: Expectation failed: duringHold.active.contains { $0.held != nil }
+􀄵  resumed: the hold never reached a ticket
+􀢄  Test "a yield reaches the ticket, and every way it can end clears it" recorded an issue at HoldAttributionWiringTests.swift:409:13: Expectation failed: duringHold.active.contains { $0.held != nil }
+􀄵  stopped: the hold never reached a ticket
+􀢄  Test "a yield reaches the ticket, and every way it can end clears it" recorded an issue at HoldAttributionWiringTests.swift:409:13: Expectation failed: duringHold.active.contains { $0.held != nil }
+􀄵  ended: the hold never reached a ticket
+􀢄  Test "a yield reaches the ticket, and every way it can end clears it" failed after 269.818 seconds with 4 issues.
+􀢄  Suite "Attributed holds" failed after 269.819 seconds with 4 issues.
+􀢄  Test run with 1 test in 1 suite failed after 269.819 seconds with 4 issues.
+EXIT=1

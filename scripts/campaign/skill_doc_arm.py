@@ -27,6 +27,9 @@ SKILL = Path("/Users/lukerhodes/Dev/fledgeling-plugins/plugins/proctor/skills/pr
 CAT = Path(__file__).resolve().parents[2] / "Sources/ProctorCore/ToolCatalogue.swift"
 
 TOOLS, SKILLMD, CATALOGUE = "tools", "skill", "catalogue"
+# PRO-0100: the count checks now read every *.md in the skill, so the arming has
+# to be able to mutate the files that were previously unreachable from here.
+GEMINI, METHODOLOGY = "gemini", "methodology"
 
 
 def sub(old, new, count=1):
@@ -104,6 +107,17 @@ MUTATIONS = [
     ("cap sits under a scale question", SKILLMD, sub("How many guests at once? Two.", "How many at once? Two.")),
     ("tahoe stated as measurement", TOOLS, sub("both still open", "both open", 1)),
     ("status osVersion honesty stated", TOOLS, sub("`unknown` with the reason where it cannot", "`unknown` otherwise", 1)),
+    # PRO-0100, DEF-193. The three whole-directory checks. Each is mutated in a
+    # file the measurement could not previously open at all, which is the point:
+    # the fifth stale count survived because nothing read its file.
+    ("every *.md in the skill names only tools the server ships", GEMINI,
+     sub("proctor_zoom", "proctor_zoomer", 1)),
+    ("gemini.md states the catalogue count", GEMINI,
+     sub("twenty-one tools", "twenty tools", 1)),
+    # Deliberately NOT gemini.md, so this check is armed independently of the one
+    # above rather than sharing its mutation and inheriting its red.
+    ("every stated tool count is one the catalogue justifies", METHODOLOGY,
+     sub("## ", "Arming: this page describes nineteen tools.\n\n## ", 1)),
 ]
 
 
@@ -127,13 +141,18 @@ def main():
     for name, target, mutate in MUTATIONS:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "skill"
-            (root / "references").mkdir(parents=True)
-            shutil.copy(SKILL / "SKILL.md", root / "SKILL.md")
-            shutil.copy(SKILL / "references" / "tools.md", root / "references" / "tools.md")
+            # PRO-0100: the whole tree. Copying the two files a check happened to
+            # read is the same mistake the measurement made, one layer down —
+            # `md_files()` would see a two-file skill and the directory-wide
+            # checks would be armed against a directory that does not exist.
+            shutil.copytree(SKILL, root)
             cat = Path(tmp) / "ToolCatalogue.swift"
             shutil.copy(CAT, cat)
             path = {TOOLS: root / "references" / "tools.md",
-                    SKILLMD: root / "SKILL.md", CATALOGUE: cat}[target]
+                    SKILLMD: root / "SKILL.md",
+                    GEMINI: root / "gemini.md",
+                    METHODOLOGY: root / "references" / "methodology.md",
+                    CATALOGUE: cat}[target]
             path.write_text(mutate(path.read_text()))
             after, _ = measure(root, cat)
             moved = sorted(n for n, ok in after.items() if ok == "FAIL")

@@ -63,8 +63,8 @@ struct AgentRecoveryTests {
     }
 
     @Test("the sentence claims staleness only where it is confirmed")
-    func theSentenceClaimsWhatItKnows() {
-        let reason = try! #require(healthy(agentSees: .denied, windowSees: true)?.reason)
+    func theSentenceClaimsWhatItKnows() throws {
+        let reason = try #require(healthy(agentSees: .denied, windowSees: true)?.reason)
         #expect(reason.contains("Screen Recording is granted"))
         #expect(reason.contains("earlier answer"))
     }
@@ -83,9 +83,9 @@ struct AgentRecoveryTests {
     }
 
     @Test("an unconfirmed grant does not claim the agent is holding an earlier answer")
-    func unconfirmedDoesNotClaimStaleness() {
-        let unconfirmed = try! #require(healthy(agentSees: .unconfirmed, windowSees: true)?.reason)
-        let denied = try! #require(healthy(agentSees: .denied, windowSees: true)?.reason)
+    func unconfirmedDoesNotClaimStaleness() throws {
+        let unconfirmed = try #require(healthy(agentSees: .unconfirmed, windowSees: true)?.reason)
+        let denied = try #require(healthy(agentSees: .denied, windowSees: true)?.reason)
         #expect(unconfirmed != denied)
         #expect(!unconfirmed.contains("earlier answer"))
         #expect(unconfirmed.contains("did not come back"))
@@ -105,10 +105,10 @@ struct AgentRecoveryTests {
     // MARK: A4 — a run in flight is named as the cost
 
     @Test("a run in flight is named as the cost")
-    func runInFlightIsNamed() {
-        let running = try! #require(
+    func runInFlightIsNamed() throws {
+        let running = try #require(
             healthy(agentSees: .denied, windowSees: true, running: true)?.reason)
-        let idle = try! #require(
+        let idle = try #require(
             healthy(agentSees: .denied, windowSees: true)?.reason)
         #expect(running.hasSuffix("Restarting stops the run in flight."))
         #expect(!idle.contains("stops the run"))
@@ -177,11 +177,11 @@ struct AgentRecoveryTests {
     // PRO-0027's neighbour — "Proctor was updated. Relaunch to use the new
     // version." — is the length this idiom is known to carry.
     @Test("the sentences stay near the length the menu already carries")
-    func sentencesStayShort() {
+    func sentencesStayShort() throws {
         let reasons = [
-            try! #require(healthy(reachable: false)?.reason),
-            try! #require(healthy(agentSees: .denied, windowSees: true)?.reason),
-            try! #require(healthy(agentSees: .denied, windowSees: true, running: true)?.reason)
+            try #require(healthy(reachable: false)?.reason),
+            try #require(healthy(agentSees: .denied, windowSees: true)?.reason),
+            try #require(healthy(agentSees: .denied, windowSees: true, running: true)?.reason)
         ]
         for reason in reasons { #expect(reason.count <= 120) }
     }

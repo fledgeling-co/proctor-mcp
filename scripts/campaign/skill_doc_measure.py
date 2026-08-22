@@ -27,18 +27,51 @@ differently here:
     so a phrase anywhere in 900 lines of body satisfied a claim about the 300
     words a host reads to route. Both are anchored to the frontmatter
     `description:` value.
+
+PRO-0100 adds a sixth, and it is about the denominator rather than about a
+predicate. DEF-193 was the FIFTH stale tool count in this skill, and it survived
+every check above for one reason: this script opened `SKILL.md` and
+`references/tools.md` and never opened `gemini.md` at all. Each of the five was
+found by a person reading. So the file list stops being the two files somebody
+thought of:
+
+  * `md_files()` enumerates every `*.md` under the skill directory, and
+    `COVERED` names the ones a check actually reads. A new file added to the
+    skill reds until somebody decides what to check in it, rather than joining
+    the set of places a count can go stale unwatched.
+  * every number stated immediately before the word `tools`, in every one of
+    those files, is read and compared. Subset counts are real — the `core`
+    profile's ten, the fifteen this page specifies, "recording is two tools
+    together" — so the rule is that each stated number is one the catalogue
+    justifies, and the allowlist carries the reason rather than the number
+    carrying nothing.
 """
 import re
 import sys
 from pathlib import Path
 
 SKILL = Path("/Users/lukerhodes/Dev/fledgeling-plugins/plugins/proctor/skills/proctor")
-CAT = Path("/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0085/Sources/ProctorCore/ToolCatalogue.swift")
+# Repo-relative. This defaulted to `.worktrees/PRO-0085/…` until PRO-0100:
+# that worktree was removed when PRO-0085 merged, so the script could not run
+# at all without `--catalogue`. `skill_doc_arm.py` already resolved it this
+# way, which is why the arming kept working while the measurement did not.
+CAT = Path(__file__).resolve().parents[2] / "Sources/ProctorCore/ToolCatalogue.swift"
 INTERNAL = {"proctor_hud", "proctor_queue", "proctor_recent_activity", "proctor_resource"}
 SPECIFIED_SECTIONS = 15
 # The counts these two files spell out in words rather than digits.
-NUM = {"six": 6, "eight": 8, "ten": 10, "thirteen": 13, "fifteen": 15,
-       "twenty": 20, "twenty-one": 21, "twenty-two": 22}
+NUM = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+       "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
+       "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18,
+       "nineteen": 19, "twenty": 20, "twenty-one": 21, "twenty-two": 22}
+
+# Counts of tools that are NOT the catalogue count and are right anyway, each
+# with the reason it is not drift. PRO-0100: the general scan below would
+# otherwise fire on English, and a check that fires on English gets switched off.
+SUBSET_COUNTS = {
+    10: "the `core` profile's size, checked against the profile table by its own check",
+    15: "the sections `references/tools.md` specifies, checked by its own two checks",
+    2: '"Recording is two tools together" — a sentence about two named tools, not a catalogue count',
+}
 
 argv = sys.argv[1:]
 while argv:
@@ -53,10 +86,58 @@ while argv:
 cat = set(re.findall(r'name: "(proctor_[a-z_]+)"', CAT.read_text()))
 tools_raw = (SKILL / "references" / "tools.md").read_text()
 skill_raw = (SKILL / "SKILL.md").read_text()
+gemini_path = SKILL / "gemini.md"
+gemini_raw = gemini_path.read_text() if gemini_path.exists() else ""
+
+def md_files():
+    return {str(p.relative_to(SKILL)) for p in SKILL.rglob("*.md")}
+
+
+# A count word or digit sitting immediately before the word `tools`. The
+# `(\*\*)?` lets the bolded `**21 tools**` in tools.md match the same way.
+COUNT_BEFORE_TOOLS = re.compile(r"(?:\*\*)?(\d+|[a-z]+(?:-[a-z]+)?)(?:\*\*)?\s+tools\b", re.I)
+
+
+def named_tools_everywhere():
+    """Every (file, proctor_* identifier) named anywhere in the skill.
+
+    The name half of the same denominator problem: `references/tools.md` is
+    checked against the catalogue and the other four `*.md` files are not, so a
+    renamed tool leaves a stale mention in `gemini.md` or `references/methodology.md`
+    and every check here stays green. Measured at PRO-0100: those two files name
+    ten identifiers between them and all ten are shipped, so this starts from a
+    true statement rather than from a backlog.
+    """
+    found = []
+    for rel in sorted(md_files()):
+        for name in sorted(set(re.findall(r"proctor_[a-z_]+", (SKILL / rel).read_text()))):
+            found.append((rel, name))
+    return found
+
+
+def stated_tool_counts():
+    """Every (file, token, number) where a *.md states a count of tools.
+
+    Tokens that name no number — "those tools", "the Mac tools" — are not counts
+    and are dropped rather than reported, because a check that fires on English
+    is one somebody switches off.
+    """
+    found = []
+    for rel in sorted(md_files()):
+        flat = flat_text((SKILL / rel).read_text())
+        for m in COUNT_BEFORE_TOOLS.finditer(flat):
+            token = m.group(1)
+            value = int(token) if token.isdigit() else NUM.get(token.lower())
+            if value is None:
+                continue
+            found.append((rel, token, value))
+    return found
 # Line wrapping is not content: normalise whitespace before matching prose, so a
 # claim does not read as absent because the sentence broke across two lines.
 flat = lambda s: " ".join(s.split())
+flat_text = flat
 tools, skill = flat(tools_raw), flat(skill_raw)
+gemini = flat(gemini_raw)
 doc = set(re.findall(r"proctor_[a-z_]+", tools_raw))
 
 
@@ -145,6 +226,16 @@ restated_triple = (num(restated.group(1)) if restated else None,
                    group(restated, 3))
 bad_rows = [(n, named, total) for n, named, total in rows if named != total]
 
+# PRO-0100, DEF-193. Every count of tools any *.md in the skill states, and the
+# ones the catalogue does not justify.
+all_counts = stated_tool_counts()
+stale_names = [f"{rel}: {name}" for rel, name in named_tools_everywhere()
+               if name not in cat and name not in INTERNAL]
+gemini_counts = [v for rel, _, v in all_counts if rel == "gemini.md"]
+unjustified_counts = [f"{rel}: {token!r} -> {v}"
+                      for rel, token, v in all_counts
+                      if v != len(cat) and v not in SUBSET_COUNTS]
+
 checks = [
     ("tools.md names every shipped tool", not (cat - doc), sorted(cat - doc)),
     ("tools.md names no tool the server lacks", (doc - cat) == INTERNAL, sorted(doc - cat)),
@@ -184,6 +275,15 @@ checks = [
     ("cap sits under a scale question", "How many guests at once? Two." in skill, None),
     ("tahoe stated as measurement", "both still open" in tools and "rendered normally" in tools, None),
     ("status osVersion honesty stated", "`unknown` with the reason where it cannot" in tools, None),
+    # PRO-0100, DEF-193. The three checks that make the DENOMINATOR the skill
+    # directory rather than the two files somebody thought of. DEF-193 was the
+    # fifth stale count and it survived because nothing here opened its file.
+    ("every *.md in the skill names only tools the server ships", not stale_names,
+     stale_names),
+    ("gemini.md states the catalogue count", gemini_counts == [len(cat)] if gemini_counts else False,
+     gemini_counts or "gemini.md states no tool count at all"),
+    ("every stated tool count is one the catalogue justifies", not unjustified_counts,
+     unjustified_counts),
 ]
 bad = 0
 for name, ok, detail in checks:

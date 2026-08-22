@@ -1,0 +1,61 @@
+[0/1] Planning build
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/14] Write sources
+[4/14] Write swift-version--58304C5D6DBC2206.txt
+[6/12] Emitting module ProctorUI
+[7/12] Compiling ProctorUI Walkthrough.swift
+/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0100/Sources/ProctorUI/Walkthrough.swift:469:46: warning: main actor-isolated property 'reduceMotion' can not be referenced from a Sendable closure
+456 |     let current: Int
+457 |     let count: Int
+458 |     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    |                                                           `- note: property declared here
+459 | 
+460 |     var body: some View {
+    :
+467 |                     .keyframeAnimator(initialValue: 1.0, trigger: current) { view, scaleY in
+468 |                         view.scaleEffect(x: 1,
+469 |                                          y: (reduceMotion || i != current) ? 1 : scaleY,
+    |                                              `- warning: main actor-isolated property 'reduceMotion' can not be referenced from a Sendable closure
+470 |                                          anchor: .center)
+471 |                     } keyframes: { _ in
+[7/13] Write Objects.LinkFileList
+[8/13] Linking Proctor
+[9/13] Applying Proctor
+[11/13] Compiling ProctorCoreTests WalkthroughFlowTests.swift
+[12/13] Emitting module ProctorCoreTests
+[12/14] Write Objects.LinkFileList
+[13/14] Linking proctor-mcpPackageTests
+Build complete! (7.64s)
+Test Suite 'Selected tests' started at 2026-08-22 21:45:16.558.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-22 21:45:16.559.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-22 21:45:16.559.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-22 21:45:16.559.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "Walkthrough flow" started.
+􀟈  Test "DEF-163 · the primary is filled only where it can be pressed" started.
+􀢄  Test "DEF-163 · the primary is filled only where it can be pressed" recorded an issue at WalkthroughFlowTests.swift:357:9: Expectation failed: (unbranchedFills → 1) == 0
+􀄵  the walkthrough body draws .borderedProminent 1 times outside a branch; the primary's fill must be chosen by PrimaryProminence
+􀢄  Test "DEF-163 · the primary is filled only where it can be pressed" recorded an issue at WalkthroughFlowTests.swift:387:9: Expectation failed: takesTheCoreRule
+􀄵  the prominence branch does not read WalkthroughFlow.primaryEnabled
+􀢄  Test "DEF-163 · the primary is filled only where it can be pressed" failed after 0.001 seconds with 2 issues.
+􀄵  /// DEF-163. The build stops drawing a refusing control as an invitation.
+􀄵  ///
+􀄵  /// The other direction, and a referral is what separated them: taken as one
+􀄵  /// question these two would have had one wrong answer. `.borderedProminent`
+􀄵  /// was applied unconditionally, so on a KEY window the refusal drew in the
+􀄵  /// accent fill with only the label dimmed — an inactive window being the
+􀄵  /// only state in which macOS greyed it enough to read as refusing, and not
+􀄵  /// the state a person is in while working the flow. The design of record
+􀄵  /// already settles the rule and the build diverged from it.
+􀄵  ///
+􀄵  /// Read from the view's source: `source-analysis`, and it says the drawing
+􀄵  /// site is bound to the Core rule, not that a window drew a plain button.
+􀢄  Suite "Walkthrough flow" failed after 0.002 seconds with 2 issues.
+􀢄  Test run with 1 test in 1 suite failed after 0.002 seconds with 2 issues.
+EXIT=1

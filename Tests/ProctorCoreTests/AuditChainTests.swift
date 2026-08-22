@@ -62,7 +62,7 @@ struct AuditChainTests {
                 version: sealed.v, trailId: override2 ?? trailId, previous: prev,
                 keyId: skid, keyClass: cls, sealKeyId: sealed.kid,
                 ephemeralKey: sealed.epk, ciphertext: sealed.ct)
-            let sig = try! key.signature(for: material)
+            let sig = try key.signature(for: material)
             let line = sealed.signed(prev: prev, tid: override2 ?? trailId, skid: skid,
                                      cls: cls.rawValue,
                                      sig: sig.rawRepresentation.base64EncodedString())
@@ -414,7 +414,7 @@ struct AuditChainTests {
             version: lifted.v, trailId: other.trailId, previous: prev, keyId: other.keyId,
             keyClass: .software, sealKeyId: lifted.kid, ephemeralKey: lifted.epk,
             ciphertext: lifted.ct)
-        let sig = try! other.signingKey.signature(for: material)
+        let sig = try other.signingKey.signature(for: material)
         t.records.append(try #require(AuditSeal.encode(lifted.signed(
             prev: prev, tid: other.trailId, skid: other.keyId, cls: "sw",
             sig: sig.rawRepresentation.base64EncodedString()))))
@@ -460,7 +460,7 @@ struct AuditChainTests {
             version: sealed.v, trailId: t.trailId, previous: prev, keyId: t.keyId,
             keyClass: .software, sealKeyId: sealed.kid, ephemeralKey: sealed.epk,
             ciphertext: sealed.ct)
-        let sig = try! t.signingKey.signature(for: material)
+        let sig = try t.signingKey.signature(for: material)
         next.records.append(try #require(AuditSeal.encode(sealed.signed(
             prev: prev, tid: t.trailId, skid: t.keyId, cls: "sw",
             sig: sig.rawRepresentation.base64EncodedString()))))

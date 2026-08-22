@@ -147,7 +147,7 @@ struct ToolLocatorTests {
     }
 
     @Test("install commands are architecture-specific and land both executables together")
-    func installCommandsAreArchitectureSpecific() {
+    func installCommandsAreArchitectureSpecific() throws {
         let silicon = ObscuraTool.installCommands(architecture: .appleSilicon)
         let intel = ObscuraTool.installCommands(architecture: .intel)
         #expect(silicon.contains { $0.contains("obscura-aarch64-macos.tar.gz") })
@@ -157,7 +157,7 @@ struct ToolLocatorTests {
         // Both executables, one directory, and that directory is one the locator
         // actually searches — otherwise the install succeeds and Proctor still
         // cannot see it.
-        let move = try! #require(silicon.last)
+        let move = try #require(silicon.last)
         #expect(move.contains("obscura obscura-worker"))
         #expect(move.contains(ObscuraTool.installDestination))
         #expect(ObscuraTool.extraDirectories.contains(ObscuraTool.installDestination))

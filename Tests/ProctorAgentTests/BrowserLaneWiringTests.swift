@@ -76,7 +76,33 @@ struct BrowserLaneWiringTests {
                                       absentTTL: ToolProbe.presentTTL),
                 cuaSignature: SignatureVerdictCache(verify: { _ in .valid }),
                 environment: laneSet ? [BrowserUseTool.laneVariable: BrowserUseTool.binary] : [:]),
-            screenRecordingProbe: .fake())
+            screenRecordingProbe: .fake(),
+            // PRO-0100, closing DEF-165. Every input to `ready` is injected, not
+            // just the one that already was.
+            //
+            // `ready` is `blockers.isEmpty` (`SessionDoctor.swift:206`), and
+            // `blockers` takes the required grants that are missing plus Secure
+            // Event Input (`SessionDoctor.swift:92-127`). Screen Recording was
+            // faked here from the start; Accessibility and Secure Event Input
+            // were left at `Session.init`'s live defaults — the real TCC probe
+            // and `Grants.secureEventInputActive()`. So a password field taking
+            // focus anywhere on this Mac, or a TCC probe not coming back, between
+            // two of the eight `doctor()` calls below reds the invariant with the
+            // browser lane behaving perfectly. MEASURED in PRO-0098: four full
+            // runs of one unchanged tree, exit 0 / 1 / 0, the red one carrying
+            // `(readies.count -> 2) == 1` as its only two issues, and this suite
+            // alone immediately afterwards green in 0.230 seconds.
+            //
+            // Fixed values rather than a relaxed assertion: the assertion is what
+            // the requirement promises — Proctor drives native applications
+            // without a browser tool, so `ready` must not move with either — and
+            // the repair is to ask it over the matrix the case names rather than
+            // over the machine's mood. Accessibility granted and Secure Event
+            // Input inactive is the state in which `ready` is true, so the
+            // invariant is asserted somewhere it could observe a change rather
+            // than over eight identical blockers.
+            accessibilityProbe: { true },
+            secureInputProbe: { false })
         await session.setAuditSink(AuditCollector().sink)
         _ = try await session.attachResolved(bundleId: bundleId, pid: nil as Int32?, name: nil as String?)
         return (session, o, b, clock)

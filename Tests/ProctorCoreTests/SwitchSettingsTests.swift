@@ -175,13 +175,16 @@ struct SwitchParseTests {
     /// Clause 6/7. The failure the brief warned a toggle can have: a control that
     /// writes `1` reads as enabled in a window and is off in the agent.
     @Test("A lane rejects every spelling but its own name")
-    func lanesRejectBooleans() {
+    func lanesRejectBooleans() throws {
         for lane in [SwitchCatalogue.secondLane, SwitchCatalogue.actuation] {
             for wrong in ["1", "true", "on", "yes", "enabled"] {
                 #expect(!SwitchResolver.isOn(wrong, for: lane), "\(lane.variable)=\(wrong)")
             }
-            #expect(SwitchResolver.isOn(lane.onValue!, for: lane))
-            #expect(SwitchResolver.isOn(lane.onValue!.uppercased(), for: lane))
+            // PRO-0100, DEF-140. `onValue` is read off the shipped catalogue;
+            // a lane that lost it would abort the runner here rather than fail.
+            let onValue = try #require(lane.onValue, "\(lane.variable) has no onValue")
+            #expect(SwitchResolver.isOn(onValue, for: lane))
+            #expect(SwitchResolver.isOn(onValue.uppercased(), for: lane))
         }
     }
 

@@ -152,7 +152,7 @@ struct AuditChainWiringTests {
     @Test("with the signing key unreachable, nothing is written at all")
     func thereIsNoUnsignedEntry() {
         let signer = TestSigner()
-        withTrail(signer: signer) { dir, _ in
+        try withTrail(signer: signer) { dir, _ in
             #expect(AuditLog.append(record(0)))
             signer.makeUnreachable()
             #expect(!AuditLog.append(record(1)))
@@ -212,11 +212,11 @@ struct AuditChainWiringTests {
         try withTrail(seed: old) { dir, _ in
             #expect(AuditLog.append(record(0)))
             let file = dir.appendingPathComponent("audit.jsonl")
-            var lines = (try! String(contentsOf: file, encoding: .utf8))
+            var lines = (try String(contentsOf: file, encoding: .utf8))
                 .split(separator: "\n").map(String.init)
             lines[1] = try #require(AuditSeal.seal(line: "{\"old\":\"rewritten\"}",
                                                   to: sealKey.publicKey))
-            try! (lines.joined(separator: "\n") + "\n").write(to: file, atomically: true,
+            try (lines.joined(separator: "\n") + "\n").write(to: file, atomically: true,
                                                               encoding: .utf8)
             let verdict = AuditLog.verify()
             #expect(!verdict.isClean)
@@ -237,10 +237,10 @@ struct AuditChainWiringTests {
                 line: "{\"tool\":\"forged\"}",
                 to: Curve25519.KeyAgreement.PrivateKey().publicKey))
             let file = dir.appendingPathComponent("audit.jsonl")
-            let handle = try! FileHandle(forWritingTo: file)
+            let handle = try FileHandle(forWritingTo: file)
             handle.seekToEndOfFile()
             handle.write(Data((forged + "\n").utf8))
-            try! handle.close()
+            try handle.close()
             let verdict = AuditLog.verify()
             #expect(!verdict.isClean)
             #expect(verdict.faults.contains { $0.kind == .unsigned && $0.position == 4 })
@@ -248,13 +248,13 @@ struct AuditChainWiringTests {
     }
 
     @Test("entries cut from the end are reported against the end-mark")
-    func truncationThroughTheFileIsDetected() {
-        withTrail { dir, _ in
+    func truncationThroughTheFileIsDetected() throws {
+        try withTrail { dir, _ in
             for i in 0..<5 { #expect(AuditLog.append(record(i))) }
             let file = dir.appendingPathComponent("audit.jsonl")
-            let lines = (try! String(contentsOf: file, encoding: .utf8))
+            let lines = (try String(contentsOf: file, encoding: .utf8))
                 .split(separator: "\n").map(String.init)
-            try! (lines.prefix(2).joined(separator: "\n") + "\n")
+            try (lines.prefix(2).joined(separator: "\n") + "\n")
                 .write(to: file, atomically: true, encoding: .utf8)
             let verdict = AuditLog.verify()
             #expect(verdict.completeness.state == .missingFromEnd)
@@ -377,10 +377,10 @@ struct AuditChainWiringTests {
         try await withTrailAsync { dir, _ in
             for i in 0..<4 { #expect(AuditLog.append(record(i))) }
             let file = dir.appendingPathComponent("audit.jsonl")
-            var lines = (try! String(contentsOf: file, encoding: .utf8))
+            var lines = (try String(contentsOf: file, encoding: .utf8))
                 .split(separator: "\n").map(String.init)
             lines.remove(at: 1)
-            try! (lines.joined(separator: "\n") + "\n").write(to: file, atomically: true,
+            try (lines.joined(separator: "\n") + "\n").write(to: file, atomically: true,
                                                               encoding: .utf8)
             let status = try #require(await plainSession().policyStatus().objectValue)
             let verdict = try #require(status["auditVerdict"]?.objectValue)

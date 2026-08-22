@@ -110,9 +110,33 @@ struct Walkthrough: View {
                     // `WalkthroughFlow.primaryEnabled`, decided in Core where it is
                     // tested at every combination, because a decision made in a view
                     // body is one this repo cannot prove.
+                    // PRO-0100, closing DEF-163. The fill is branched below in
+                    // `PrimaryProminence`: filled where the control can be
+                    // pressed, plain where it refuses. `.borderedProminent`
+                    // unconditionally left a KEY window drawing the refusal in
+                    // the accent fill with only the label dimmed — which is what
+                    // a person actually sees while working the flow, an inactive
+                    // window being the only state where macOS greyed it enough to
+                    // read. The design of record already settles the rule: the
+                    // intro's live primary is `class="btn prominent large"` and
+                    // the permissions pane's refusing one is `class="btn"`.
+                    //
+                    // The style rides in a modifier rather than an `if/else`
+                    // around the Button for two reasons. `buttonStyle` returns a
+                    // different opaque type per style, so it cannot be chosen at
+                    // the call site — the reason `HeroPermRow.allowButton` gives.
+                    // And two Buttons would mean two `.disabled(` modifiers,
+                    // where exactly one in this file is the rule `skipIsNeverClosed`
+                    // counts, so the door out cannot be closed by a second one
+                    // arriving unnoticed.
+                    //
+                    // The modifier is applied LAST, after `.disabled` and
+                    // `.hint`, so that `.disabled(` still sits immediately after
+                    // the identifier where `theViewDisablesRatherThanHides` reads
+                    // for it. `buttonStyle` writes to the environment, so it
+                    // reaches the Button through both wrappers.
                     Button(WalkthroughFlow.primaryAction(for: step.flow)) { advance() }
                         .accessibilityIdentifier(WalkthroughFlow.ID.primary)
-                        .buttonStyle(.borderedProminent)
                         .disabled(!WalkthroughFlow.primaryEnabled(
                             on: step.flow,
                             accessibility: granted(.accessibility),
@@ -121,6 +145,14 @@ struct Walkthrough: View {
                         // VoiceOver landing on the button hears why it refuses
                         // without having to find the caption first.
                         .hint(disabledReason)
+                        // One rule, read twice: the same `primaryEnabled` the
+                        // `.disabled` above reads, so the fill and the refusal
+                        // can never nominate different states.
+                        .modifier(PrimaryProminence(
+                            enabled: WalkthroughFlow.primaryEnabled(
+                                on: step.flow,
+                                accessibility: granted(.accessibility),
+                                screenRecording: granted(.screenRecording))))
                 }
             }
             .padding(.horizontal, 30).padding(.vertical, 16)
@@ -296,6 +328,35 @@ private struct HeroPermissions: View {
             }
         }
         .frame(maxWidth: .infinity)
+    }
+}
+
+/// The primary action's fill, branched on the rule that disables it.
+///
+/// PRO-0100, DEF-163. Two treatments, one rule: `.borderedProminent` where the
+/// control can be pressed and `.bordered` where it refuses, which is the
+/// affordance the design of record draws. `buttonStyle` returns a different
+/// opaque type per style, so the choice cannot be made at the call site.
+///
+/// `buttonStyle` writes to the environment, so applying it here — after
+/// `.disabled` and `.hint` have already wrapped the Button — still reaches the
+/// Button underneath.
+///
+/// DECLARED BEFORE `HeroPermRow` ON PURPOSE. `theRowDoesNotDecideItsOwnProminence`
+/// counts `.borderedProminent` from `private struct HeroPermRow` to the end of
+/// the file and requires exactly one, under that row's `prominent` branch. A
+/// modifier placed after it would red a guard that is measuring something else
+/// entirely — a passing guard turned red by a change it was never about is how
+/// a threshold gets edited.
+private struct PrimaryProminence: ViewModifier {
+    let enabled: Bool
+
+    @ViewBuilder func body(content: Content) -> some View {
+        if enabled {
+            content.buttonStyle(.borderedProminent)
+        } else {
+            content.buttonStyle(.bordered)
+        }
     }
 }
 

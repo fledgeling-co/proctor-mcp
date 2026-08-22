@@ -1001,11 +1001,12 @@ body[data-platform="tui"] #tui-size { display: inline-flex; }
           <div class="dots"><i></i><i class="on"></i><i></i></div>
           <div class="spacer"></div>
           <button type="button" class="btn">Back</button>
+          <button type="button" class="btn">Skip setup</button>
           <button type="button" class="btn" disabled>Connect a model</button>
         </div>
       </div>
     </div>
-    <p class="caption">Continue is <b>disabled and visible</b> rather than absent — a control that disappears makes the layout jump and teaches the user the step does not exist. Only one Grant is prominent at a time: the one to press next.</p>
+    <p class="caption">Continue is <b>disabled and visible</b> rather than absent — a control that disappears makes the layout jump and teaches the user the step does not exist. It is drawn <b>plain while it refuses</b>, not filled: an accent fill on a control that cannot be pressed reads as tappable-but-broken. <b>Skip setup</b> stays beside it and is never disabled, because macOS may simply decline to grant and a flow that refuses to advance must not also refuse to end — the refusal declines to pretend a grant landed, it does not hold the door shut. Only one Grant is prominent at a time: the one to press next.</p>
   </div>
 
   <div class="sub" data-state="granted" data-state-label="3 · Both granted">

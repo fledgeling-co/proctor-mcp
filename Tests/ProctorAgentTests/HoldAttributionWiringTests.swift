@@ -337,6 +337,26 @@ struct HoldAttributionWiringTests {
         return false
     }
 
+    /// The scheduler's snapshot once the hold has reached a ticket, or the last
+    /// one read if it never does.
+    ///
+    /// PRO-0100, DEF-175. `awaitHold` above waits on the control's latch; this
+    /// waits on the scheduler's copy of it, with the same bound and the same
+    /// turn length, because they are updated separately and a caller that waits
+    /// on the first and reads the second is asserting a timing claim nothing
+    /// promised. Returns the snapshot rather than a Bool so the caller asserts
+    /// on the value this wait actually observed rather than on a fresh read that
+    /// could have moved again.
+    private func awaitHeldTicket(_ scheduler: RunScheduler) async -> RunQueueSnapshot {
+        var last = await scheduler.snapshot()
+        for _ in 0..<4000 {
+            if last.active.contains(where: { $0.held != nil }) { return last }
+            try? await Task.sleep(nanoseconds: 5_000_000)
+            last = await scheduler.snapshot()
+        }
+        return last
+    }
+
     /// A backstop short enough to be a test and long enough not to expire a hold
     /// the test is still looking at.
     private static let testBackstop: TimeInterval = 20
@@ -368,7 +388,24 @@ struct HoldAttributionWiringTests {
 
             // The hold is published while it is held — the half that has to be
             // true before "it is cleared" means anything.
-            let duringHold = await h.scheduler.snapshot()
+            //
+            // PRO-0100, closing DEF-175. Waited for rather than read straight
+            // off `awaitHold`. `awaitHold` returns as soon as RunControl reports
+            // the run held, and the control and the scheduler are two different
+            // objects: the control latches the hold, the scheduler's ticket is
+            // updated separately, so there is a window in which the run is
+            // genuinely held and the ticket does not yet say so. Under load the
+            // read landed in that window and this line reddened — the scheduler
+            // being slightly behind, not the hold failing to reach a ticket.
+            // MEASURED in PRO-0099: five full runs of one unchanged tree at
+            // exit 0, 0, 0, 1, 0, the red one carrying this as its only issue.
+            //
+            // The assertion is unchanged and is still the requirement. What is
+            // dropped is the stronger claim it was making by accident — that the
+            // ticket catches up within one scheduling quantum — using the same
+            // bounded wait `awaitHold` already uses, so a hold that never
+            // reaches a ticket still fails here rather than hanging.
+            let duringHold = await awaitHeldTicket(h.scheduler)
             #expect(duringHold.active.contains { $0.held != nil },
                     "\(ending): the hold never reached a ticket")
 

@@ -20,13 +20,17 @@ struct ConsentSurfaceTests {
     }
 
     @Test("A5 · watching input to notice a person sooner does not confirm")
-    func yieldInputDoesNotAsk() {
+    func yieldInputDoesNotAsk() throws {
         // It intercepts nothing. A confirmation here would train people to click
         // through the two that matter.
-        let yieldInput = SwitchCatalogue.named("PROCTOR_YIELD_INPUT")
-        #expect(yieldInput != nil)
-        #expect(yieldInput?.requiresConsent == false)
-        #expect(ConsentSurface.raisesSheet(yieldInput!, turningOn: true) == false)
+        // PRO-0100, DEF-140. A catalogue lookup by literal id is DEF-135's own
+        // shape: the regression this test exists to catch — the switch being
+        // renamed or dropped — is exactly the input that makes the lookup nil,
+        // so the trap fired instead of the assertion.
+        let yieldInput = try #require(SwitchCatalogue.named("PROCTOR_YIELD_INPUT"),
+                                      "PROCTOR_YIELD_INPUT is no longer in the catalogue")
+        #expect(yieldInput.requiresConsent == false)
+        #expect(ConsentSurface.raisesSheet(yieldInput, turningOn: true) == false)
     }
 
     @Test("A1 · exactly the switches that hand something away ask")

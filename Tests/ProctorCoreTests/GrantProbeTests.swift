@@ -88,7 +88,7 @@ struct GrantProbeTests {
     }
 
     @Test("the retry backs off, and is capped")
-    func retriesBackOff() {
+    func retriesBackOff() throws {
         let keeper = GrantProbeKeeper(bound: 1.5)
         var now = 0.0
         for expected in GrantProbe.backoff {
@@ -101,7 +101,9 @@ struct GrantProbeTests {
         }
         // Capped rather than growing without bound: the agent keeps checking back
         // on a wedged platform for as long as it lives, just not busily.
-        let cap = GrantProbe.backoff.last!
+        // PRO-0100, DEF-140. `backoff` is production data; an empty one would
+        // abort the runner rather than fail the cap assertion below.
+        let cap = try #require(GrantProbe.backoff.last, "GrantProbe.backoff is empty")
         #expect(keeper.claim(now: now).startToken != nil)
         keeper.abandon(now: now)
         #expect(keeper.claim(now: now + cap - 0.001) == .unconfirmed)

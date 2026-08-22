@@ -62,7 +62,7 @@ struct HistorySurfaceTests {
     }
 
     @Test("A3 · the projection carries none of the fields this window may not show")
-    func projectionExcludesSecrets() {
+    func projectionExcludesSecrets() throws {
         // The guarantee is structural: a field not on the face of the window is
         // not in the type. This asserts it over the encoded shape, so a later
         // widening of RunHistory fails here rather than leaking.
@@ -72,7 +72,7 @@ struct HistorySurfaceTests {
         let run = RunHistory.Run(id: "run-1", tool: "proctor_act", bundleId: "com.apple.mail",
                                  startedAt: 0, endedAt: 1, outcome: .ok, steps: [step],
                                  lane: nil, unreadable: 0, reason: nil)
-        let encoded = try! JSONEncoder().encode(run)
+        let encoded = try JSONEncoder().encode(run)
         let json = String(decoding: encoded, as: UTF8.self)
         for field in HistorySurface.forbiddenFields {
             #expect(!json.contains("\"\(field)\":"),

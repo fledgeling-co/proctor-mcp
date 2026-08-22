@@ -66,29 +66,29 @@ struct GuestAttachmentTests {
                                      provider: "tart", platform: .macos, tier: .native)
 
     @Test("a host window id under a guest session is refused, naming both machines")
-    func hostHandleInGuestSession() {
+    func hostHandleInGuestSession() throws {
         let refusal = GuestHandleScope.refusal(handle: "win:12:0",
                                                callerMachine: guestMachine,
                                                callerSession: "s1",
                                                origin: .host)
-        let message = try! #require(refusal).message
+        let message = try #require(refusal).message
         #expect(message.contains("win:12:0"))
         #expect(message.contains("this Mac"), "the host must be named")
         #expect(message.contains("anvil-mac-node"), "the guest must be named")
     }
 
     @Test("a guest window id under a host session is refused, naming both machines")
-    func guestHandleInHostSession() {
+    func guestHandleInHostSession() throws {
         let refusal = GuestHandleScope.refusal(
             handle: "win:99:0", callerMachine: .host, callerSession: "s1",
             origin: .guest(session: "s1", machine: "anvil-mac-node · macos · tart"))
-        let message = try! #require(refusal).message
+        let message = try #require(refusal).message
         #expect(message.contains("anvil-mac-node"))
         #expect(message.contains("this Mac"))
     }
 
     @Test("one guest session cannot resolve another guest session's handle")
-    func crossSessionGuestHandle() {
+    func crossSessionGuestHandle() throws {
         // THE CASE A4 IS ACTUALLY ABOUT. Both sides are guests, so a check that
         // compared only machines would let this straight through and the lookup
         // would come back `windowNotFound` -- a miss that reads as "the window
@@ -97,7 +97,7 @@ struct GuestAttachmentTests {
         let refusal = GuestHandleScope.refusal(
             handle: "win:99:0", callerMachine: guestMachine, callerSession: "s2",
             origin: .guest(session: "s1", machine: "anvil-mac-node · macos · tart"))
-        let message = try! #require(refusal).message
+        let message = try #require(refusal).message
         #expect(message.contains("a different session"))
         #expect(message.contains("resolves only within the session that attached it"))
     }
@@ -122,14 +122,14 @@ struct GuestAttachmentTests {
     }
 
     @Test("every refusal names both machines and offers a route that works")
-    func refusalsCarryARemedy() {
+    func refusalsCarryARemedy() throws {
         let cases: [(Machine, String, GuestHandleScope.Origin)] = [
             (guestMachine, "s1", .host),
             (.host, "s1", .guest(session: "s1", machine: "anvil-mac-node")),
             (guestMachine, "s2", .guest(session: "s1", machine: "anvil-mac-node"))
         ]
         for (machine, session, origin) in cases {
-            let refusal = try! #require(GuestHandleScope.refusal(
+            let refusal = try #require(GuestHandleScope.refusal(
                 handle: "win:1:0", callerMachine: machine,
                 callerSession: session, origin: origin))
             #expect(!refusal.remedy.isEmpty)
