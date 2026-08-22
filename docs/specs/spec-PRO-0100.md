@@ -1,7 +1,7 @@
 # PRO-0100: Six repairs whose diagnosis is done
 
 **ID:** PRO-0100
-**Status:** Ready for Plan
+**Status:** Ready for AI
 **Created:** 2026-08-22
 **Last updated:** 2026-08-22
 **Brief:** `docs/features-to-triage/95-six-named-repairs.md`
@@ -117,3 +117,22 @@ the other four change only whether a test run can be believed.
   plugin, commit with an explicit path, never `-a` and never `.`, and stop and report if files
   appear entangled. Shared repo measured clean at `a15febf` while this triage ran.
 - Out-of-family spec review: see the shared record at the foot of `spec-PRO-0103.md`.
+
+---
+
+## Implementation plan
+
+Implementation plan: `docs/plans/plan-PRO-0100.md` (committed: `6982317`, tier: Standard).
+
+Plan review gate: mechanical path check clean; out-of-family review by **gemini**
+(`agy --model gemini-3.7-flash-high`) — a named substitution, because codex is OFF for this
+repository and grok returns `402 — usage balance exhausted`. Four material findings, all four
+accepted. Full verdict in the plan's gate note and in
+`docs/test-campaign/evidence/PRO-0100/plan-review-gemini.md`.
+
+**One narrowing surfaced by that review, and the plan keeps it deliberately.** Triage assumption 5
+reads *"Both remaining unsafe shapes are converted, not exempted."* Three of the fourteen bare
+force-unwraps are total over a closed input space and are kept with the reason beside them, on
+PRO-0098's own recorded classification method. The assumption is read as being about the two
+shapes as classes rather than about every individual site. If that reading is wrong, the three
+sites convert in about ten lines — say so and they will.
