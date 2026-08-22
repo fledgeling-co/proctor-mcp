@@ -40,6 +40,10 @@ ARMED     every `none` citation resolves to something here  (wanted FAIL, got FA
           reds under this mutation: every `none` citation resolves to something here
 ARMED     every `none` citation resolves to something here  (wanted FAIL, got FAIL)
           reds under this mutation: every `none` citation resolves to something here
+ARMED     every `none` citation resolves to something here  (wanted FAIL, got FAIL)
+          reds under this mutation: every `none` citation resolves to something here
+ARMED     every `none` citation resolves to something here  (wanted FAIL, got FAIL)
+          reds under this mutation: every `none` citation resolves to something here
 ARMED     the register names only briefs that exist  (wanted FAIL, got FAIL)
           reds under this mutation: the register names only briefs that exist
 ARMED     every register row carries a reason  (wanted FAIL, got FAIL)
@@ -66,5 +70,5 @@ ARMED     commit form names a blob with bytes  (wanted PASS, got PASS)
 ARMED     commit form names an empty blob  (wanted FAIL, got FAIL)
 ARMED     commit form names a tree, not a file  (wanted FAIL, got FAIL)
 
-34/34 mutations behaved as pinned; 19/19 checks watched to fail
+36/36 mutations behaved as pinned; 19/19 checks watched to fail
 exit=0

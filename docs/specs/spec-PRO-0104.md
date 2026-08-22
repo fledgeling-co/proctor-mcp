@@ -5,7 +5,7 @@
 **Created:** 2026-08-23
 **Last updated:** 2026-08-23
 **Defects:** DEF-201, DEF-202, DEF-203
-**Registry ranges:** CASE-0500..0526 · REQ-120..123 · DEF-230 (recorded)
+**Registry ranges:** CASE-0500..0528 · REQ-120..123 · DEF-230 (recorded)
 **Brief:** `docs/features-to-triage/97-an-input-the-check-cannot-classify.md`
 
 ## Feature description
@@ -158,6 +158,30 @@ the item is about.
 against a registry row on shell words. That is a guess already labelled a guess, and it cannot
 retire a brief; it is recorded here rather than changed, because narrowing it would move the join
 percentage on every project running this tool and this item measured nothing about that.
+
+## Out-of-family review — gemini-3.7-flash-high, 2026-08-23
+
+The lane answered about PRO-0104: it names the item, the three defects and the four files, and
+its reply is recorded at `docs/test-campaign/evidence/PRO-0104/gemini-review.md`. Q1 through Q5
+came back Yes with reasons that restate the mechanism rather than testing it, so they corroborate
+and prove nothing. Q6 found two defects in this item's own new code, and both are fixed and armed
+here.
+
+**`PLACEHOLDER_ID_RE` matched a real id.** `(?:9+|0+)` matches `REQ-9`, so a repository numbering
+its queue without padding would have had a citation to its ninth item reported as a worked
+example. The floor is now three digits, and CASE-0527 asserts seven tokens one at a time. A
+repository large enough to hold a real `CASE-999` still gets a finding rather than a lost
+citation, which is the direction this mechanism fails in on purpose.
+
+**An absolute path resolved against the machine.** `REPO / "/bin/sh"` is `/bin/sh` in pathlib, so
+a `none.` reason reading *the origin is `/bin/sh`* passed as a repository path. `inside_repo`
+refuses an absolute token and anything resolving outside the repository, and two mutations arm it
+— `/bin/sh` and `../../../etc/passwd` — taking the arm to 36 mutations. The same helper tries the
+whole backticked token before its first word, so a path holding a space resolves as itself.
+
+Its third Q6 point is not a defect. `ACCOUNT_RELATIONS` and `docs/PRD.md` are this repository's
+conventions in a script that lives in this repository and documents itself as measuring it, and
+the relations were derived from this corpus rather than assumed.
 
 ## Defects
 

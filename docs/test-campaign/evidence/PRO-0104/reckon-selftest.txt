@@ -44,7 +44,7 @@ the manifest and the marketplace agree         ok
 the published version carries these repairs    ok
 a weak join withholds retirement, and says why ok
 fixture · 6 rows · 2 piece(s) of work remain — 1 product, 0 evidence, 1 decision — across 6 ledger rows. This reckoning speaks for 100% of the campaign's designed cases and 100% of its stated requirements; the rest is not known to be done, it is simply not known. 1 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.
-wrote /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/reckon-selftest-ovf7ypue/out/ledger.json
+wrote /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/reckon-selftest-q1t5ktw1/out/ledger.json
 the headline counts what is actually left      ok
 a repaired defect is absent from what remains  ok
 'by design' owes nothing and is not work       ok
@@ -74,6 +74,14 @@ an id shown in a struck region is not cited    ok
   and the same id in prose still is            ok
 a fenced example id cannot make a brief unbuilt ok
 a placeholder id in prose is a named finding   ok
+'REQ-9' is not a placeholder shape             ok
+'DEF-0' is not a placeholder shape             ok
+'CASE-99' is not a placeholder shape           ok
+'CASE-999' is a placeholder shape              ok
+'CASE-9999' is a placeholder shape             ok
+'REQ-000' is a placeholder shape               ok
+'SURF-0000' is a placeholder shape             ok
+an unpadded real id still cites                ok
   and a real id in prose still cites           ok
 
 all gates demonstrated failing on a bad fixture, and silent on a good one

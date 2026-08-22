@@ -6343,5 +6343,37 @@
     "armed": true,
     "armedBy": "spec_citation_measure.py on this tree after the strict rule: 19/19 checks, specs 104 (legacy 24, none 4, path 76), briefs 100, claimed 96, registered 4, unclaimed 0, and the new disclosure line 'none-citations 4: 0 resolving nothing · 1 naming something this check cannot resolve (spec-PRO-0096.md `campaign.py`)'.",
     "note": "Reverse totality holds at 0 under the tighter rule, which was the risk in tightening it. Brief 32 keeps its account through spec-PRO-0050's `**Supersedes:**` line — retired, not built, both halves absorbed there — which is why the account grammar has three relations rather than one. spec-PRO-0096 was the one real red and its citation now names `docs/test-campaign`."
+  },
+  {
+    "id": "CASE-0527",
+    "req": "REQ-121",
+    "surface": "SURF-023",
+    "state": "classifying",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",
+      "docs/test-campaign/evidence/PRO-0104/gemini-review.md"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py section 17e: seven tokens asserted against PLACEHOLDER_ID_RE one at a time — REQ-9, DEF-0 and CASE-99 are not placeholder shapes, CASE-999, CASE-9999, REQ-000 and SURF-0000 are — and a scan over 'about REQ-9 and DEF-0, and CASE-9999 is the example' returns cited ['DEF-0', 'REQ-9'] with unclassifiable ['CASE-9999']. The pre-fix pattern `(?:9+|0+)` matched REQ-9, which the assertions catch.",
+    "note": "Found by the gemini out-of-family review of this item's own diff, not by a fixture. A repository numbering its brief queue without padding has a real ninth item, and the first version of the placeholder rule would have reported a citation to it as a worked example. Three digits is now the floor, and a repository large enough to hold a real CASE-999 gets a finding rather than a lost citation, which is the direction this mechanism fails in on purpose."
+  },
+  {
+    "id": "CASE-0528",
+    "req": "REQ-122",
+    "surface": "SURF-024",
+    "state": "declared no brief",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "docs/test-campaign/evidence/PRO-0104/gemini-review.md"
+    ],
+    "armed": true,
+    "armedBy": "Two mutations on PRO-0075's `none.` citation, each moving `every `none` citation resolves to something here` PASS -> FAIL: a reason naming `/bin/sh` as its origin, and one naming `../../../etc/passwd`. Before `inside_repo`, `REPO / '/bin/sh'` is `/bin/sh` in pathlib, so the first resolved against the machine and passed as a repository path.",
+    "note": "Found by the gemini out-of-family review of this item's own diff. The same helper also makes a backticked path holding a space resolve as itself rather than as its first word, since the whole token is tried before the split."
   }
 ]

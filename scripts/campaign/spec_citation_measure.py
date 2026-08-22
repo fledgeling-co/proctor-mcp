@@ -273,6 +273,25 @@ for name, (kind, path, sha, _) in specs.items():
             unresolved.append(f"{name} -> {path} @ {sha} (an empty file there)")
 
 PRD = REPO / "docs/PRD.md"
+
+
+def inside_repo(rel):
+    """True when `rel` names an existing file or directory *inside* this repository.
+
+    Absolute tokens and `..` escapes are refused rather than joined. `REPO / "/bin/sh"`
+    is `/bin/sh` in pathlib, so a reason reading ``none. Ran `/bin/sh` `` resolved
+    against the machine and passed as a repository path — found by an
+    out-of-family review of this change rather than by a fixture, which is why it
+    now has one.
+    """
+    if not rel or os.path.isabs(rel):
+        return False
+    candidate = REPO / rel
+    try:
+        candidate.resolve().relative_to(REPO.resolve())
+    except ValueError:
+        return False
+    return candidate.exists()
 SHA_TOKEN = re.compile(r"\A[0-9a-f]{7,40}\Z")
 REF_RE = re.compile(r"`([^`]+)`|§\s*(\d+[A-Za-z]?)")
 
@@ -294,19 +313,23 @@ def references(reason):
             out.append(("§" + n, "PRD section", ok, "no `## %s.` heading in docs/PRD.md" % n))
             continue
         tok = m.group(1).strip()
-        first = (tok.split() or [""])[0].strip("`.,;:")
+        # The whole token first, so a path holding a space resolves as itself
+        # rather than as its first word.
+        first = tok if inside_repo(tok) else (tok.split() or [""])[0].strip("`.,;:")
         if SHA_TOKEN.match(first):
             out.append((first, "commit",
                         git("cat-file", "-e", first + "^{commit}").returncode == 0,
                         "git cannot resolve it"))
-        elif first and (REPO / first).exists():
+        elif inside_repo(first):
             # Resolved against the repository root exactly, never searched for by
             # basename: an exact repo-relative path is unambiguous, and a
             # basename hunted through a tree is the same guess as reading a
             # listing position as a citation.
             out.append((first, "path", True, ""))
-        elif "/" in first:
-            out.append((first, "path", False, "nothing at that path in the tree"))
+        elif "/" in first or os.path.isabs(first):
+            out.append((first, "path", False,
+                        "not a path inside this repository" if os.path.isabs(first) or ".." in first
+                        else "nothing at that path in the tree"))
         else:
             out.append((first or tok, "name", False,
                         "a name rather than a path, a PRD section or a commit"))

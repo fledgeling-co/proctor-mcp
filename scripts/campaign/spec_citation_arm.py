@@ -215,6 +215,15 @@ MUTATIONS = [
     ("every `none` citation resolves to something here", FAIL,
      replace_line("specs/spec-PRO-0075.md", "**Brief:** none.",
                   "**Brief:** none. The specification is `whatever.md` and that is all there is")),
+    # An absolute path resolves on the machine rather than in the repository, and
+    # `REPO / "/bin/sh"` is `/bin/sh` in pathlib. Found by an out-of-family review
+    # of this change; armed here so the next reader does not have to find it again.
+    ("every `none` citation resolves to something here", FAIL,
+     replace_line("specs/spec-PRO-0075.md", "**Brief:** none.",
+                  "**Brief:** none. The origin is `/bin/sh` and there is nothing else to name")),
+    ("every `none` citation resolves to something here", FAIL,
+     replace_line("specs/spec-PRO-0075.md", "**Brief:** none.",
+                  "**Brief:** none. Cut from `../../../etc/passwd`, which is quite a long way up")),
     ("the register names only briefs that exist", FAIL,
      add_register_row("| `98-not-a-brief.md` | nowhere | This row names a file the queue does not hold. |")),
     ("every register row carries a reason", FAIL,
