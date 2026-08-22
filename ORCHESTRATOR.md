@@ -2528,3 +2528,54 @@ writing the verdict to `/tmp/pro0092-gate.out`. Nothing merges until that verdic
 
 **Wave 16 remains closed and correct at four items.** PRO-0092 is a wave-13 defect being closed late,
 not part of it.
+
+### PRO-0092 merged — the last wave-13 defect, closed on a negative result (2026-08-23)
+
+`main` carries it. Nothing pushed. **DEF-033 is not flipped**, and that is the item working rather
+than failing.
+
+**The gate took fifteen attempts.** The sampler ran nothing for fourteen of them and admitted on the
+fifteenth: *Test run with 2,074 tests in 252 suites passed after 48.811 seconds*, exit 0. What blocked
+it was never the ceiling — the refusal named itself, `"no berth available"`, `in_use 9`, `available 1`,
+`ceiling 10`, load per core **1.40**, pressure `busy`. Weight 3 was refused identically.
+
+**Which corrects the reading of `available` this file recorded earlier.** It is worthless as a load
+proxy — measured at 3 with zero occupants under 27 per core elsewhere, and at 0 under 1.67 while
+blocking a fleet — and it is **authoritative as an admission predicate**, because it is the same field
+`governor-run` reads to decide. Those are two different questions sharing one number. Gating a retry on
+`ceiling` is necessary and not sufficient; the `main` gate now armed reads `available`.
+
+**A partial arming record was reverted rather than committed.** An earlier `mutation_seam_arm.py`
+invocation timed out at two minutes and left `seam-arming.json` at `{"partial": true, "run": 5,
+"of": 12}` — the instrument marking its own truncation, which is the behaviour DEF-207 and DEF-208 say
+the others lack. Committing it would have replaced a complete 12-of-12 record with a 5-of-12 one. No
+Swift test reads that file, so the suite's verdict is unaffected by it either way.
+
+### Wave 17 opened, and the gate that opened it was my own red
+
+Filing briefs 97–99 turned `spec_citation_measure.py` red on `main` at **14/15**, three briefs
+unclaimed. Cleared by triaging them into **PRO-0104, PRO-0105 and PRO-0106** rather than by registering
+them or by touching the check. The register exists so that a brief no spec claims is a recorded
+decision rather than an absence, and *filed this evening, not yet triaged* is a transient state; a
+register row for it would make every new brief a row and the check would stop meaning anything. Back to
+**15/15, unclaimed 0**.
+
+**A workflow constraint nobody chose, discovered by hitting it:** the check makes intake and triage one
+change. A brief filed without a spec makes the integration branch red, so the queue cannot hold an
+untriaged brief across a gate run. Defensible as discipline; worth writing down because it was not
+written down.
+
+| Item | From | Covers |
+|---|---|---|
+| PRO-0104 | brief 97 | DEF-201, DEF-202, DEF-203 — an input the check cannot classify |
+| PRO-0105 | brief 98 | DEF-204, DEF-216 — a version string is not the artifact |
+| PRO-0106 | brief 99 | DEF-205, DEF-206, DEF-207, DEF-208, plus DEF-200 and DEF-215 |
+
+**Registry after the merge:** 335 cases · 127 defect rows · 101 requirements · 26 surfaces. Fifteen
+open defects: DEF-033, DEF-141, DEF-151 and DEF-180 predate tonight, and eleven were opened by the
+non-AC findings gate in one evening. Every one of the eleven is now briefed and triaged.
+
+**The suite gate on merged `main` is armed rather than run**, because `available` was 0 at the merge.
+`defect_gate.py dropped`, `test_instruments.py` (62), `spec_citation_measure.py` (15/15) and
+`reckoning_selftest.py` (28) all exit 0 on the merged tree; `campaign.py check` exits 1 on other items'
+work. The suite's verdict on `main` is owed and will be recorded when a claim can be granted.
