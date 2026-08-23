@@ -4,7 +4,7 @@
 **Status:** Developer Review
 **Created:** 2026-08-23
 **Last updated:** 2026-08-23
-**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240, DEF-241, DEF-242
+**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240, DEF-241, DEF-242, DEF-243
 **Brief:** `docs/features-to-triage/99-instruments-that-do-not-prove-their-own-step.md`
 
 ## Feature description
@@ -142,6 +142,47 @@ The open question `main` recorded is answered rather than left: byte-identity gr
 and DEF-222 rest on, and nothing would have failed if it silently stopped grouping. `verify()` now
 fails on a change to it.
 
+## The out-of-family review, and what survived checking
+
+`gemini-3.7-flash-high` via `agy --new-project --dangerously-skip-permissions` from `/tmp`. It answered
+about PRO-0106, citing this item's own files, so the lane held. **Six findings survived checking and
+are repaired; two did not and are recorded here rather than acted on.**
+
+Repaired:
+
+1. **`apply()` proved a valid splice, not the intended one.** An edit above can slide a different `==`
+   into exactly the recorded offset — the offset check agrees, the read-back agrees, and the verdict is
+   attributed to a line nothing touched. The recorded line number is a second coordinate on the same
+   site, and the two move independently. A no-op mutation is refused too.
+2. **`revert()` was `check=True` and nothing else** — a fact about the git command rather than about
+   the file, which is DEF-207's own distinction one call further down. It reads the span back, and the
+   run stops rather than grading later mutants against a tree nobody chose.
+3. **A trap needs exactly one started test.** swift-testing runs tests concurrently unless a suite is
+   serialized, so two started lines with no completions cannot say which died. A verdict line for a run
+   that never started the named test is inconclusive too.
+4. **`display_name` guessed `function()`** when an `@Test` did not open with a display string. A
+   guessed name never matches the log, so a real arming becomes a silent mismatch; it refuses instead.
+5. **`porcelain_paths` split on `" -> "` unconditionally**, re-creating DEF-206 on any path containing
+   the arrow. Gated on an `R`/`C` status and split from the right.
+6. **Three more routes into the baseline**: a new file whose stem already carried a disposition written
+   for other bytes, a file that left the directory, and deleting the audit outright. Plus `cite_paths`
+   reading `.png` alone, and a pinned baseline ref that does not resolve in a shallow clone.
+
+Did not survive:
+
+- **"`run_suite` classifies the DEF-240 fixture as `build-failed` before reaching the verdict-line
+  test."** The review quoted a `run_suite` body this file does not contain. The real guard is
+  `if "error:" in out and "Build complete" not in out`, and the fixture carries `Build complete!`, so
+  it reaches `no-verdict-line`. Checked against the file rather than the quotation.
+- **"Character offsets may diverge from UTF-8 byte offsets."** `candidates()` and `apply()` both index
+  the same `path.read_text()` string, so the two coordinate systems are one. The concern assumes an
+  external AST emitting byte offsets, which is not where these mutants come from.
+
+What it raised and this item is **not** closing: `sweep()` witnesses bytes and digests and not mode
+bits, and `cmd_take` sweeps only its own output directory, so a write elsewhere is unwitnessed. Both
+are scope decisions in the instrument's design rather than steps it failed to prove. And **DEF-243**,
+recorded rather than fixed.
+
 ## Where absence claims were checked
 
 **The `code != 0`-as-verdict pattern is not in these 27 files.** Every `.py` under `scripts/campaign/`
@@ -173,4 +214,5 @@ Searched: the four instruments this item names, plus every `git status --porcela
 | DEF-240 | fixed |
 | DEF-241 | fixed |
 | DEF-242 | fixed |
+| DEF-243 | (recorded) `evidence/shots/mock/` is excluded from capture-lineage and from this audit's glob, both correctly and for the same reason, and nothing checks that lane at all. A disposition standard for the design of record is a different piece of work.
 | DEF-215 | (recorded) four ledger rows carry no spec file. Writing retrospective specs for two retired items is a decision about those items and belongs to whoever takes it, so it is recorded open rather than closed here. |

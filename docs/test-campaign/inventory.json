@@ -3917,6 +3917,19 @@
         "REQ-130"
       ],
       "note": "--baseline-ref defaulted to `main`, and main absorbed PRO-0092's timeout fix the moment that branch merged. From then on the gate loaded the same file twice and reported `before=TIMEOUT after=TIMEOUT`, armed: False, exit 1. ESTABLISHED ON TWO TREES RATHER THAN ARGUED: it exits 1 with identical output on a clean `git worktree add --detach main` tree and on PRO-0106's branch, and `git log -S` puts the marker's disappearance at fc1b9a4, PRO-0092's own fix. So this gate has been red since that merge and nothing noticed, because it is not in the per-merge gate list — the same gap that let capture-lineage sit red across three trees before PRO-0107. The failure was loud rather than silent: OLD_SOURCE_MARKER stopped matching at the same moment, so the run says so. A baseline ref that will one day contain the change cannot hold the state before it. CLOSED BY PRO-0106: pinned to fc1b9a4~1, with the reason in the flag's own comment. Armed at exit 0 with before=killed scored=1 survivalRate=0.0 against after=TIMEOUT scored=0 survivalRate=None, which is the contrast the gate exists to show."
+    },
+    {
+      "id": "DEF-243",
+      "title": "evidence/shots/mock/ is excluded from every instrument that reads the shots directory",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-136"
+      ],
+      "note": "RECORDED, NOT FIXED. capture-lineage.py drops any path with a `mock` directory component from its population (`'mock' not in {q.lower() for q in p.relative_to(shots_dir).parts[:-1]}`), and shot_disposition.py's audit globs `SHOTS.glob('*.png')`, which never descends. So the five files under docs/test-campaign/evidence/shots/mock/ are in neither instrument's population: four PNGs and one HTML, one of them cited by CASE-0039 as the design of record beside the capture it is compared against. Both exclusions are correct on their own terms — a mock is what the surface should look like, not a picture of what it did, and PRO-0106's citation check follows capture-lineage's rule deliberately so CASE-0039's mock-versus-build comparison is not read as a fault. What is not established is that anything checks the mock lane at all: a mock file could be replaced, deleted, or renamed and no gate in this repository would say so, while a case citing it would go on passing. Found by PRO-0106's new citation check firing on that path before the exclusion was written, so the gap is measured rather than supposed. The repair is a disposition lane for the design of record with its own standard, which is a different piece of work from proving an instrument's own step."
     }
   ]
 }
