@@ -127,6 +127,44 @@ def unquote_path(entry):
     return entry
 
 
+def rename_destination(entry):
+    """The destination half of a porcelain `R`/`C` entry, read by its quoting.
+
+    DEF-206 again, one level in. A rename entry names both sides on one line
+    separated by ` -> `, and NEITHER naive split survives contact with git:
+
+        R  src.png -> "stage-1 -> stage-2.png"      split last  -> `stage-2.png"`
+        R  "a -> b.png" -> renamed.png              split first -> `b.png" -> renamed.png`
+
+    Both of those are names nobody can open, and `--allow-dirty` writes whichever
+    one it got permanently into `run.json.dirty_inputs`, which is the original
+    harm. The separator is findable only by reading the quoting, so that is what
+    this does: porcelain v1 quotes a path C-style whenever it holds a space, a
+    quote, a backslash or a non-ASCII byte (git's own QUOTE_PATH_QUOTE_SP, driven
+    against git 2.50.1 and recorded in the selftest), so an UNQUOTED side cannot
+    contain a space and therefore cannot contain the separator. Quoted side: scan
+    to the closing quote, honouring backslash escapes, and the separator is what
+    follows. Unquoted side: the first ` -> ` is the separator, and there is no
+    second candidate for it to be confused with.
+
+    Returns the entry unchanged when it carries no separator, so a status code
+    this misreads as a rename cannot silently truncate a plain path.
+    """
+    if entry.startswith('"'):
+        i = 1
+        while i < len(entry):
+            if entry[i] == "\\":
+                i += 2
+                continue
+            if entry[i] == '"':
+                rest = entry[i + 1:]
+                return rest[4:] if rest.startswith(" -> ") else entry
+            i += 1
+        return entry
+    head, sep, tail = entry.partition(" -> ")
+    return tail if sep else entry
+
+
 def porcelain_paths(repo, inputs):
     """(exit, paths) — the paths `git status --porcelain` names, parsed not sliced.
 
@@ -144,12 +182,14 @@ def porcelain_paths(repo, inputs):
             continue
         status, entry = line[:2], line[3:]
         # `R  old -> new` / `C  old -> new`. The working tree carries the
-        # destination. Gated on the status code and split from the RIGHT, because
-        # an unconditional split re-creates DEF-206 on any path containing the
-        # arrow: ` M docs/step-1 -> step-2.json` would be recorded as
-        # `step-2.json`, a name nobody can open. Out-of-family review, PRO-0106.
-        if status[0] in "RC" and " -> " in entry:
-            entry = entry.rsplit(" -> ", 1)[1]
+        # destination. Gated on the status code, and either column is read: git
+        # 2.50.1 reports an unstaged rename as ` D` plus `??` rather than ` R`,
+        # so column two is not observed to carry one here, and the guard is wide
+        # on purpose rather than on evidence. `rename_destination` returns the
+        # entry untouched when there is no separator, so a status code read
+        # wrongly costs nothing.
+        if "R" in status or "C" in status:
+            entry = rename_destination(entry)
         entry = unquote_path(entry)
         if entry:
             paths.append(entry)
