@@ -26,6 +26,16 @@ now counted apart and left out of the survival-rate denominator, because it is
 the absence of a measurement rather than a measurement, and the summary names
 every scored mutant that came within 2% of the bound without reaching it.
 
+A fifth, `inconclusive`, and it is the one that makes the other four mean
+something. Every verdict here is a statement about a mutated tree, so the edit is
+the measurement's first step and it used to go unwitnessed: `apply()` spliced by
+byte offset and returned nothing, so a wrong-offset write was silent and the
+harness graded pristine code without anything anywhere disagreeing. It now proves
+the splice — the bytes at the recorded offsets must be the recorded `before`, and
+the file re-read from disk must equal the spliced text exactly — and a mutant that
+fails either is `inconclusive`, out of the survival-rate denominator with the
+timeouts, because nothing was measured. DEF-207.
+
 The count is stated here because the first version of this file said six and
 listed an integer literal increment it did not implement. A docstring that
 describes a table it does not read is a second source, which is the defect this
@@ -172,11 +182,50 @@ def _on_signal(signum, _frame):
     raise SystemExit(130)
 
 
-def apply(mutant: dict) -> None:
+def apply(mutant: dict) -> tuple[bool, str]:
+    """Splice the mutant in and prove it landed. (landed, why).
+
+    DEF-207. THIS USED TO SPLICE BY BYTE OFFSET AND RETURN NOTHING, and that is
+    the direction with no witness at all. An anchor-string mutator that aborts
+    still reports INERT, so the log disagrees with the verdict; an unconditional
+    offset splice writes regardless, so a wrong-offset write is silent and the
+    harness grades pristine or wrongly-edited code with nothing anywhere
+    contradicting it. A survivor then has two readings — the guard is decorative,
+    or the mutation never happened — and the summary cannot tell them apart.
+
+    Its sibling `mutation_seam_arm.py` already carried the check: assert the
+    occurrence count, then re-read and require `after` present and `before` gone.
+    The offset form of the same standard is stronger and is what runs here. The
+    offsets came from `candidates()` reading this file, so between that read and
+    this write the text may have moved:
+
+      * before the write, the bytes at [start, end) must be exactly `before` —
+        an offset that has drifted names something else and is refused;
+      * after the write, the file re-read from disk must equal the spliced text
+        exactly — not "contains `after`", which a file already holding that token
+        elsewhere would satisfy while the splice went somewhere else entirely.
+
+    A mutant that fails either is `inconclusive`, never a kill and never a
+    survivor: nothing was measured, because the thing to measure was never made.
+    """
     path = Path(mutant["file"])
     text = path.read_text()
+    start, end = mutant["start"], mutant["end"]
+    if not (0 <= start < end <= len(text)):
+        return False, ("the recorded offsets %d-%d fall outside a file of %d characters"
+                       % (start, end, len(text)))
+    found = text[start:end]
+    if found != mutant["before"]:
+        return False, ("the text at offset %d-%d is %r, not the recorded %r — the file moved "
+                       "under the offsets" % (start, end, found, mutant["before"]))
+    expected = text[:start] + mutant["after"] + text[end:]
     _APPLIED.append(str(path))
-    path.write_text(text[:mutant["start"]] + mutant["after"] + text[mutant["end"]:])
+    path.write_text(expected)
+    reread = path.read_text()
+    if reread != expected:
+        return False, "the file re-read from disk is not the text that was written"
+    return True, ("mutation landed at offset %d: %r -> %r, confirmed by re-reading the file"
+                  % (start, mutant["before"], mutant["after"]))
 
 
 def revert(mutant: dict) -> None:
@@ -275,9 +324,29 @@ def main() -> int:
           flush=True)
 
     results = []
-    killed = survived = unbuildable = timed_out = 0
+    killed = survived = unbuildable = timed_out = inconclusive = 0
     for i, m in enumerate(chosen, 1):
-        apply(m)
+        short = Path(m["file"]).name
+        landed, how = apply(m)
+        if not landed:
+            # The step could not be proved, so there is no outcome to grade. Not a
+            # kill and not a survivor: `inconclusive`, naming why, and out of the
+            # survival-rate denominator with the timeouts.
+            restore_all()
+            inconclusive += 1
+            row = {**m, "verdict": "inconclusive", "why": "mutation-not-applied",
+                   "mutationLanded": how, "seconds": 0.0, "nearBound": False,
+                   "boundSeconds": args.timeout}
+            results.append(row)
+            print(f"[{i}/{len(chosen)}] {'inconclusive':<11} {short}:{m['line']} "
+                  f"{m['before']} -> {m['after']}  — {how}", flush=True)
+            Path(args.out).write_text(json.dumps(
+                {"summary": {"partial": True, "run": i, "of": len(chosen),
+                             "killed": killed, "survived": survived,
+                             "unbuildable": unbuildable, "timedOut": timed_out,
+                             "inconclusive": inconclusive},
+                 "mutants": results}, indent=1) + "\n")
+            continue
         started = time.time()
         passed, why = run_suite(args.timeout)
         revert(m)
@@ -291,10 +360,9 @@ def main() -> int:
             survived += 1
         else:
             killed += 1
-        row = {**m, "verdict": verdict, "why": why, "seconds": elapsed,
-               "nearBound": near_bound, "boundSeconds": args.timeout}
+        row = {**m, "verdict": verdict, "why": why, "mutationLanded": how,
+               "seconds": elapsed, "nearBound": near_bound, "boundSeconds": args.timeout}
         results.append(row)
-        short = Path(m["file"]).name
         near = f"  [at the {args.timeout}s bound]" if near_bound else ""
         print(f"[{i}/{len(chosen)}] {verdict:<11} {short}:{m['line']} "
               f"{m['before']} -> {m['after']}  ({elapsed}s){near}", flush=True)
@@ -304,7 +372,8 @@ def main() -> int:
         Path(args.out).write_text(json.dumps(
             {"summary": {"partial": True, "run": i, "of": len(chosen),
                          "killed": killed, "survived": survived,
-                         "unbuildable": unbuildable, "timedOut": timed_out},
+                         "unbuildable": unbuildable, "timedOut": timed_out,
+                         "inconclusive": inconclusive},
              "mutants": results}, indent=1) + "\n")
 
     # Its own artifact does not count as an unrestored mutation. Without this the
@@ -318,9 +387,10 @@ def main() -> int:
         key = ("int-literal" if r["before"].replace("_", "").isdigit()
                else f"{r['before']} -> {r['after']}")
         row = by_op.setdefault(key, {"killed": 0, "survived": 0, "unbuildable": 0,
-                                     "timedOut": 0})
+                                     "timedOut": 0, "inconclusive": 0})
         row[{"killed": "killed", "SURVIVED": "survived",
-             "unbuildable": "unbuildable", "TIMEOUT": "timedOut"}[r["verdict"]]] += 1
+             "unbuildable": "unbuildable", "TIMEOUT": "timedOut",
+             "inconclusive": "inconclusive"}[r["verdict"]]] += 1
 
     still_dirty = "\n".join(
         line for line in subprocess.run(["git", "status", "--porcelain"],
@@ -329,7 +399,8 @@ def main() -> int:
     scored = killed + survived
     summary = {
         "sites": len(pool), "run": len(chosen), "killed": killed, "survived": survived,
-        "unbuildable": unbuildable, "timedOut": timed_out, "scored": scored,
+        "unbuildable": unbuildable, "timedOut": timed_out,
+        "inconclusive": inconclusive, "scored": scored,
         "survivalRate": round(survived / scored, 4) if scored else None,
         "timeoutBoundSeconds": args.timeout,
         "nearBound": [f"{Path(r['file']).name}:{r['line']} {r['verdict']} at {r['seconds']}s"
@@ -343,10 +414,19 @@ def main() -> int:
     print()
     print(f"scored {scored} of {len(chosen)} run (of {len(pool)} sites) · "
           f"killed {killed} · SURVIVED {survived} · unbuildable {unbuildable} · "
-          f"TIMEOUT {timed_out}")
+          f"TIMEOUT {timed_out} · inconclusive {inconclusive}")
     if scored:
         print(f"survival rate {survived}/{scored} = {survived / scored:.1%} "
               f"— a survivor is a behaviour nothing is watching")
+    if inconclusive:
+        print(f"{inconclusive} mutant(s) could not be proved to have landed in the file and are "
+              f"scored `inconclusive`, NOT in that denominator. The edit is the measurement's "
+              f"first step, and a step that cannot be shown to have happened leaves no outcome "
+              f"to grade — a survivor that was never applied reads exactly like a guard nothing "
+              f"watches.")
+        for r in results:
+            if r["verdict"] == "inconclusive":
+                print(f"  inconclusive: {Path(r['file']).name}:{r['line']} — {r['mutationLanded']}")
     if timed_out:
         print(f"{timed_out} mutant(s) reached the {args.timeout}s bound and are NOT in that "
               f"denominator. A timeout is the absence of a measurement, and scoring one as a "
@@ -362,7 +442,7 @@ def main() -> int:
         rate = f"{row['survived'] / n:.0%}" if n else "n/a"
         print(f"  {key:<18} killed {row['killed']:>3}  survived {row['survived']:>3}  "
               f"unbuildable {row['unbuildable']:>3}  timeout {row['timedOut']:>3}  "
-              f"survival {rate}")
+              f"inconclusive {row['inconclusive']:>3}  survival {rate}")
     print(f"tree clean after: {not still_dirty}")
     return 0 if not still_dirty else 3
 
