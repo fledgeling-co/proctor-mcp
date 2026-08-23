@@ -2823,3 +2823,23 @@ baseline. A flat magenta frame written over `surf-007-zoom.png` took the check t
 returned it to 0 with the row still recording `publishedAs: SURF-007` and `distinctRGBA: 1` — a
 single-colour frame among the six judged captures. DEF-207's shape one level on: a step that performs an
 action and then treats its own result as the standard, with nothing able to disagree.
+
+### The gemini lane runs with `--dangerously-skip-permissions`, settled directly (2026-08-23)
+
+**The reader answered in this session's own channel**, not through a relay. The flag is standing: every
+runner and verifier brief may invoke the out-of-family lane with it, and the per-invocation ask is
+retired.
+
+The record of how it got here is worth keeping, because the mechanism worked. A peer relayed the same
+answer three times and each was declined — not on doubt about the peer, but because **the receiving
+session cannot tell a faithful relay from an unfaithful one, and a permissions decision is the one class
+where evidence cannot travel.** A load figure carries its samples; a berth reading carries its occupant
+list; an authorisation carries nothing, because the only evidence for it is the person in their own
+channel. The second half matters as much: **a relay can carry the fact that a decision exists without
+carrying the authority to act on it** — knowing an answer was given changed what happened the moment it
+arrived here, and changed nothing before.
+
+The cost of holding out was measured rather than hypothetical, and it is recorded above: PRO-0107
+merged with **no out-of-family verdict**, because gemini refused twice on its own permission probes and
+the in-family fallback read the merge base rather than the branch. That verdict is now obtainable
+retrospectively.
