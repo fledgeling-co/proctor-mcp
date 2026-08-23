@@ -14,6 +14,11 @@ empty is not a row: it fails the check the same way a missing row does.
 | `23-drawing-fault-must-not-kill-the-agent.md` | PRO-0022, Merged 2026-08-14 | The ledger row exists and the work shipped; `docs/specs/spec-PRO-0022.md` was never written, so there is no spec to carry the citation. DEF-215. |
 | `40-page-scoped-refusal.md` | PRO-0039, Retired 2026-08-15 | Retired unbuilt — the brief's own banner says so, and names PRO-0039. No spec was written, so nothing can cite it. DEF-215. |
 
+| `106-supervision-tui-and-menu-bar-glass-witness.md` | untriaged | Filed 2026-08-24 by shipyard:intake; awaiting triage and spec allocation. |
+| `107-subprocess-actuation-witness-for-cua-driver.md` | untriaged | Filed 2026-08-24 by shipyard:intake; awaiting triage and spec allocation. |
+| `108-native-ocr-and-high-dpi-zoom-inspector.md` | untriaged | Filed 2026-08-24 by shipyard:intake; awaiting triage and spec allocation. |
+| `109-guest-vm-lifecycle-and-attachment-oracle.md` | untriaged | Filed 2026-08-24 by shipyard:intake; awaiting triage and spec allocation. |
+
 ## Briefs several specs share
 
 One-to-one is the rule for the `**Brief:**` header, and these four briefs are why it is not the
