@@ -153,10 +153,94 @@ def _on_signal(signum, _frame):
     raise SystemExit(130)
 
 
+_C_ESCAPES = {ord("a"): 0x07, ord("b"): 0x08, ord("t"): 0x09, ord("n"): 0x0A,
+              ord("v"): 0x0B, ord("f"): 0x0C, ord("r"): 0x0D,
+              ord('"'): 0x22, ord("\\"): 0x5C}
+
+
+def unquote(entry: str) -> str:
+    """A path as git printed it, back to the path on disk, byte by byte.
+
+    The same rules `reckoning.py`'s `unquote_path` carries, which is where the
+    fuller commentary lives: git quotes for a space, a control character, a
+    quote, a backslash or a non-ASCII byte, and escapes the non-ASCII either in
+    octal or not at all depending on `core.quotePath`.
+    """
+    if not (len(entry) >= 2 and entry[0] == '"' and entry[-1] == '"'):
+        return entry
+    raw = entry[1:-1].encode("utf-8", "surrogateescape")
+    out = bytearray()
+    i = 0
+    while i < len(raw):
+        if raw[i] != 0x5C:
+            out.append(raw[i])
+            i += 1
+            continue
+        i += 1
+        if i >= len(raw):
+            out.append(0x5C)
+            break
+        if 0x30 <= raw[i] <= 0x37:
+            digits = ""
+            while i < len(raw) and len(digits) < 3 and 0x30 <= raw[i] <= 0x37:
+                digits += chr(raw[i])
+                i += 1
+            out.append(int(digits, 8) & 0xFF)
+            continue
+        out.append(_C_ESCAPES.get(raw[i], raw[i]))
+        i += 1
+    return out.decode("utf-8", "surrogateescape")
+
+
+def porcelain_line_paths(line: str) -> list[str]:
+    """Every path one porcelain v1 status line names, unquoted.
+
+    A rename names two. Out-of-family review, PRO-0106: this used to be
+    `line[3:].strip()`, the same slice DEF-206 was about, sitting in the file
+    whose own repair DEF-206's second round was. A quoted entry \u2014 any path with a
+    space or a non-ASCII byte in it \u2014 arrives as `"docs/...`, so the `docs/` test
+    below missed it and this arm refused to run over a docs-only change. Fail
+    closed rather than a wrong verdict, and still the same defect.
+    """
+    if len(line) < 4:
+        return []
+    status, entry = line[:2], line[3:]
+    sides = [entry]
+    if "R" in status or "C" in status:
+        if entry.startswith('"'):
+            i = 1
+            while i < len(entry):
+                if entry[i] == "\\":
+                    i += 2
+                    continue
+                if entry[i] == '"':
+                    rest = entry[i + 1:]
+                    if rest.startswith(" -> "):
+                        sides = [entry[:i + 1], rest[4:]]
+                    break
+                i += 1
+        else:
+            head, sep, tail = entry.partition(" -> ")
+            if sep:
+                sides = [head, tail]
+    return [unquote(s) for s in sides if s]
+
+
 def tree_dirty() -> str:
+    """The porcelain lines this arm refuses over: everything outside `docs/`.
+
+    A rename is kept unless BOTH the names it carries are under `docs/`, because
+    a file moving out of that directory is a change to the tree this edits.
+    """
     out = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
                          capture_output=True, text=True).stdout
-    return "\n".join(l for l in out.splitlines() if not l[3:].strip().startswith("docs/")).strip()
+    kept = []
+    for line in out.splitlines():
+        paths = porcelain_line_paths(line)
+        if paths and all(q.startswith("docs/") for q in paths):
+            continue
+        kept.append(line)
+    return "\n".join(kept).strip()
 
 
 def apply(rel: str, before: str, after: str) -> tuple[bool, str]:

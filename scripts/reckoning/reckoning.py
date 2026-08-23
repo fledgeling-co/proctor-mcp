@@ -111,20 +111,57 @@ def git_raw(repo, *args):
     return run(["git", "-C", str(repo)] + list(args))
 
 
+_C_ESCAPES = {ord("a"): 0x07, ord("b"): 0x08, ord("t"): 0x09, ord("n"): 0x0A,
+              ord("v"): 0x0B, ord("f"): 0x0C, ord("r"): 0x0D,
+              ord('"'): 0x22, ord("\\"): 0x5C}
+
+
 def unquote_path(entry):
     """A path as git printed it, back to the path on disk.
 
-    git quotes a path containing a control character, a quote, a backslash or a
-    non-ASCII byte, C-style with octal escapes. Left quoted, such a path is as
-    unfindable as the one DEF-206 chopped a character off.
+    git quotes a path containing a control character, a space, a quote, a
+    backslash or a non-ASCII byte. Left quoted, such a path is as unfindable as
+    the one DEF-206 chopped a character off.
+
+    UNQUOTED BYTE BY BYTE RATHER THAN THROUGH `unicode_escape`, because the two
+    quoting modes need the same answer and the round trip only handled one.
+    Under the default `core.quotePath=true` git escapes every non-ASCII byte in
+    octal (`"d/caf\\303\\251 latte.txt"`); under `core.quotePath=false`, which
+    is a common setting in a user's own gitconfig, it writes the UTF-8 through
+    literally (`"d/caf\u00e9 latte.txt"`) and quotes only for the space. The old
+    round trip decoded the first and raised `UnicodeDecodeError` on the second,
+    whose except branch returned the entry WITH ITS QUOTES ON \u2014 DEF-206's harm
+    again, reached by a git config rather than by a filename. Measured against
+    git 2.50.1 in both modes. Out-of-family review, PRO-0106.
+
+    A byte sequence that is not UTF-8 is decoded with `surrogateescape`, which is
+    what the filesystem calls accept, so an undecodable name is still openable
+    rather than mangled into one that is not.
     """
-    if len(entry) >= 2 and entry[0] == '"' and entry[-1] == '"':
-        try:
-            return (entry[1:-1].encode("ascii", "backslashreplace")
-                    .decode("unicode_escape").encode("latin-1").decode("utf-8"))
-        except (UnicodeDecodeError, UnicodeEncodeError):
-            return entry
-    return entry
+    if not (len(entry) >= 2 and entry[0] == '"' and entry[-1] == '"'):
+        return entry
+    raw = entry[1:-1].encode("utf-8", "surrogateescape")
+    out = bytearray()
+    i = 0
+    while i < len(raw):
+        if raw[i] != 0x5C:
+            out.append(raw[i])
+            i += 1
+            continue
+        i += 1
+        if i >= len(raw):
+            out.append(0x5C)
+            break
+        if 0x30 <= raw[i] <= 0x37:
+            digits = ""
+            while i < len(raw) and len(digits) < 3 and 0x30 <= raw[i] <= 0x37:
+                digits += chr(raw[i])
+                i += 1
+            out.append(int(digits, 8) & 0xFF)
+            continue
+        out.append(_C_ESCAPES.get(raw[i], raw[i]))
+        i += 1
+    return out.decode("utf-8", "surrogateescape")
 
 
 def rename_destination(entry):
