@@ -120,7 +120,7 @@
 
 | PRO-0111 | Audit of the three recorded limits | 2026-08-23 | Merged |
 | PRO-0112 | Warrant charter and release integrity | 2026-08-23 | Merged |
-| PRO-0113 | Brief join rate optimization | 2026-08-23 | Ready for Plan |
+| PRO-0113 | Brief join rate optimization | 2026-08-23 | Merged |
 
 ## Rows with no spec file
 
