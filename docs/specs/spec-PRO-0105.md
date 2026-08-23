@@ -1,10 +1,14 @@
 # PRO-0105: A version string is not the artifact
 
 **ID:** PRO-0105
-**Status:** Ready for Plan
+**Status:** Ready for Verification
 **Created:** 2026-08-23
 **Last updated:** 2026-08-23
 **Brief:** `docs/features-to-triage/98-a-version-string-is-not-the-artifact.md`
+**Defects:** DEF-204, DEF-216, DEF-270
+**Requirements:** REQ-150..REQ-151
+**Cases:** CASE-0600..CASE-0602
+**Surfaces:** SURF-030
 
 ## Feature description
 
@@ -39,6 +43,25 @@ reading a field the instrument already writes.
 - Assuming refreshing the plugin cache is the reader's action rather than this item's, since it is
   another session's installed state.
 
+## Progress — PRO-0105
+
+**Defects:** DEF-204, DEF-216, DEF-270
+**Requirements:** REQ-150..REQ-151
+**Cases:** CASE-0600..CASE-0602
+**Surfaces:** SURF-030
+
+Implemented tool identity resolution and comparison checks in `scripts/reckoning/reckoning.py` by
+content SHA-256 hash and `tool.source_commit`. Added standing test instruments in
+`scripts/campaign/test_instruments.py` and `scripts/reckoning/reckoning_selftest.py` covering altered
+code refusal at matching versions and plugin cache content verification.
+
 ## Defects
 
-DEF-204, DEF-216.
+*(Two hashes because `defect_gate.py claims` reads `^## Defects` and a `###`
+heading is invisible to it.)*
+
+| ID | Title | Status |
+|---|---|---|
+| DEF-204 | Two different tools with the same version string compare as the same tool | fixed |
+| DEF-216 | The installed reckon plugin is still 1.0.0, and 1.0.0 crashes on this registry | fixed |
+| DEF-270 | Tool comparison accepts altered code under matching version strings without checking content hashes or source commits | fixed |

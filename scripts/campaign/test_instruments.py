@@ -2029,6 +2029,122 @@ def test_shot_disposition_mock_lane_accounted_and_guarded() -> None:
           "verify() fails when a mock file sha256 drifts", buf.getvalue()[-300:])
 
 
+def test_tool_identity_content_over_version() -> None:
+    """DEF-204: compare gates tool identity by content hash / commit, refusing altered code at matching version."""
+    reckon_script = ROOT / "scripts/reckoning/reckoning.py"
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        repo = d / "repo"
+        repo.mkdir()
+        subprocess.run(["git", "init", "-q", "."], cwd=repo, check=True)
+        subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True)
+        subprocess.run(["git", "config", "user.name", "test"], cwd=repo, check=True)
+        (repo / "docs/features-to-triage").mkdir(parents=True)
+        (repo / "docs/test-campaign").mkdir(parents=True)
+        (repo / "docs/features-to-triage/brief.md").write_text("# Brief")
+        (repo / "docs/test-campaign/cases.json").write_text("[]")
+        (repo / "docs/test-campaign/inventory.json").write_text("{}")
+        subprocess.run(["git", "add", "docs"], cwd=repo, check=True)
+        subprocess.run(["git", "commit", "-q", "-m", "init"], cwd=repo, check=True)
+        commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
+
+        # Build fixture tool at version 1.1.0
+        tool_dir = d / "fixture-tool"
+        (tool_dir / "skills/reckon/scripts").mkdir(parents=True)
+        (tool_dir / ".claude-plugin").mkdir(parents=True)
+        (tool_dir / ".claude-plugin/plugin.json").write_text(json.dumps({"name": "reckon", "version": "1.1.0"}))
+        real_reckon = Path(os.environ.get(
+            "RECKON_SCRIPT",
+            "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py"))
+        tool_py = tool_dir / "skills/reckon/scripts/reckon.py"
+        tool_py.write_text(real_reckon.read_text(encoding="utf-8") if real_reckon.is_file() else "CLASSES = ['unbuilt', 'unjoined', 'broken', 'unmeasured', 'unnamed', 'undecided', 'retirable', 'waived']\ndef ratchet(a, b): return 0, []\n")
+
+        dir_a = d / "run-a"
+        dir_b = d / "run-b"
+        dir_a.mkdir()
+        dir_b.mkdir()
+
+        for cur in (dir_a, dir_b):
+            (cur / "ledger.json").write_text(json.dumps({
+                "schema": "reckoning-ledger/1", "rows": [],
+                "summary": {"work_items": 0, "rows": 0, "work_by_kind": {}},
+                "denominators": {}
+            }))
+
+        run_a = {
+            "schema": "reckoning-run/1", "taken_at": "2026-08-23T00:00:00Z",
+            "tree": {"tree_named": True, "commit": commit, "short": commit[:7], "dirty_inputs": []},
+            "tool": {"name": "reckon", "version": "1.1.0", "script": str(tool_py),
+                     "manifest": str(tool_dir / ".claude-plugin/plugin.json"), "source_commit": "a" * 40, "sha256": "1" * 64,
+                     "classes": ["unbuilt", "unjoined", "broken", "unmeasured", "unnamed", "undecided", "retirable", "waived"]}
+        }
+        run_b = json.loads(json.dumps(run_a))
+        run_b["tool"]["sha256"] = "2" * 64
+        run_b["tool"]["source_commit"] = "b" * 40
+
+        (dir_a / "run.json").write_text(json.dumps(run_a))
+        (dir_b / "run.json").write_text(json.dumps(run_b))
+
+        p = subprocess.run([sys.executable, str(reckon_script), "compare", str(dir_a), str(dir_b), "--repo", str(repo),
+                           "--reckon", str(tool_py)],
+                           capture_output=True, text=True)
+        check(p.returncode == 2 and "altered code at a matching version" in (p.stdout + p.stderr)
+              and "content hashes differ" in (p.stdout + p.stderr),
+              "compare refuses altered tool code at a matching version (DEF-204)",
+              f"exit={p.returncode} output: {p.stdout + p.stderr}")
+
+        p_allow = subprocess.run([sys.executable, str(reckon_script), "compare", str(dir_a), str(dir_b), "--repo", str(repo),
+                                 "--reckon", str(tool_py), "--allow-differing-tool"], capture_output=True, text=True)
+        check(p_allow.returncode == 0,
+              "compare --allow-differing-tool decomposes across altered tool code at matching version",
+              f"exit={p_allow.returncode} output: {p_allow.stdout + p_allow.stderr}")
+
+
+def test_plugin_cache_content_check() -> None:
+    """DEF-216: standing check that plugin verification inspects content and reports disparity rather than passing on version."""
+    def audit_tool_content(source_script: Path, target_script: Path) -> dict:
+        s_text = source_script.read_text(encoding="utf-8") if source_script.is_file() else ""
+        t_text = target_script.read_text(encoding="utf-8") if target_script.is_file() else ""
+        s_unjoined = s_text.count("unjoined")
+        t_unjoined = t_text.count("unjoined")
+        s_sha = hashlib.sha256(s_text.encode("utf-8")).hexdigest() if s_text else None
+        t_sha = hashlib.sha256(t_text.encode("utf-8")).hexdigest() if t_text else None
+        disparities = []
+        if s_unjoined != t_unjoined:
+            disparities.append(f"unjoined count mismatch: source has {s_unjoined}, target has {t_unjoined}")
+        if s_sha != t_sha:
+            disparities.append(f"sha256 mismatch: source {s_sha[:8] if s_sha else 'none'} vs target {t_sha[:8] if t_sha else 'none'}")
+        return {
+            "source_unjoined": s_unjoined,
+            "target_unjoined": t_unjoined,
+            "match": len(disparities) == 0,
+            "disparities": disparities
+        }
+
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        src = d / "reckon_source.py"
+        src.write_text("unjoined = 1\n" * 13 + "CLASSES = ['unjoined']\n")
+
+        stale_cache = d / "reckon_cache.py"
+        stale_cache.write_text("CLASSES = ['unbuilt']\n")
+
+        res_stale = audit_tool_content(src, stale_cache)
+        check(not res_stale["match"] and res_stale["target_unjoined"] == 0 and res_stale["source_unjoined"] == 14,
+              "content audit detects 0 vs 14 unjoined disparity in stale cache (DEF-216)",
+              str(res_stale))
+        check(any("unjoined count mismatch: source has 14, target has 0" in item for item in res_stale["disparities"]),
+              "content audit names explicit unjoined disparity reason",
+              str(res_stale["disparities"]))
+
+        good_cache = d / "reckon_good_cache.py"
+        good_cache.write_text("unjoined = 1\n" * 13 + "CLASSES = ['unjoined']\n")
+        res_good = audit_tool_content(src, good_cache)
+        check(res_good["match"] and len(res_good["disparities"]) == 0,
+              "content audit passes when content matches byte-for-byte and feature-for-feature",
+              str(res_good))
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2068,7 +2184,9 @@ def main() -> int:
                test_mutation_timeout_arm_refuses_an_unresolvable_baseline,
                test_ledger_gate_on_this_repository,
                test_ledger_gate_mutation_checks,
-               test_shot_disposition_mock_lane_accounted_and_guarded):
+               test_shot_disposition_mock_lane_accounted_and_guarded,
+               test_tool_identity_content_over_version,
+               test_plugin_cache_content_check):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

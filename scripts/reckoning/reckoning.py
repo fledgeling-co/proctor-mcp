@@ -346,6 +346,7 @@ def resolve_tool(script):
         "script": str(script),
         "manifest": str(manifest),
         "source_commit": commit if code == 0 else None,
+        "sha256": sha256_of(script),
         "classes": sorted(classes),
     }, None
 
@@ -588,7 +589,58 @@ def ratchet_pair(reckon, previous, current, repo):
     return code, lines
 
 
-def compare(prev_dir, cur_dir, reckon=None, repo=None, out_name="delta"):
+def tool_signature(tool):
+    """A short summary of tool identity: version, commit, sha256."""
+    if not isinstance(tool, dict):
+        return str(tool)
+    parts = []
+    ver = tool.get("version")
+    if ver:
+        parts.append("version %s" % ver)
+    commit = (tool.get("source_commit") or "")[:7]
+    if commit:
+        parts.append("commit %s" % commit)
+    sha = (tool.get("sha256") or "")[:8]
+    if sha:
+        parts.append("sha256 %s" % sha)
+    return " · ".join(parts) if parts else "unspecified"
+
+
+def tool_code_differs(t1, t2):
+    """Check if two tool records represent differing tool code.
+
+    Returns (differs: bool, reason: str or None).
+    """
+    if not isinstance(t1, dict) or not isinstance(t2, dict):
+        return False, None
+
+    # Check sha256 if recorded or computable from script on disk
+    s1 = t1.get("sha256")
+    if not s1 and t1.get("script") and Path(t1["script"]).is_file():
+        try:
+            s1 = sha256_of(t1["script"])
+        except Exception:
+            s1 = None
+
+    s2 = t2.get("sha256")
+    if not s2 and t2.get("script") and Path(t2["script"]).is_file():
+        try:
+            s2 = sha256_of(t2["script"])
+        except Exception:
+            s2 = None
+
+    if s1 and s2 and s1 != s2:
+        return True, "content hashes differ (%s vs %s)" % (s1[:8], s2[:8])
+
+    # Check source_commit if both are recorded and non-empty
+    c1, c2 = t1.get("source_commit"), t2.get("source_commit")
+    if c1 and c2 and c1 != c2:
+        return True, "source commits differ (%s vs %s)" % (c1[:7], c2[:7])
+
+    return False, None
+
+
+def compare(prev_dir, cur_dir, reckon=None, repo=None, out_name="delta", allow_differing_tool=False):
     prev_dir, cur_dir = Path(prev_dir), Path(cur_dir)
     repo = Path(repo or ".").resolve()
 
@@ -610,15 +662,39 @@ def compare(prev_dir, cur_dir, reckon=None, repo=None, out_name="delta"):
     prev_ledger = load_json(prev_dir / "ledger.json")
     cur_ledger = load_json(cur_dir / "ledger.json")
 
-    prev_ver = (prev_run.get("tool") or {}).get("version")
-    cur_ver = (cur_run.get("tool") or {}).get("version")
+    cur_tool = cur_run.get("tool") or {}
+    prev_tool = prev_run.get("tool") or {}
+
+    prev_ver = prev_tool.get("version")
+    cur_ver = cur_tool.get("version")
     if cur_ver != tool["version"]:
         return refuse("the current reading was taken with reckon %s and this comparison would build "
                       "its control with reckon %s. A control built by a third tool belongs to "
                       "neither side, and the delta would carry the difference between those two as "
                       "project movement. Re-take the reading, or compare with the tool that took it."
                       % (cur_ver, tool["version"]))
-    same_tool = parse_version(prev_ver) == parse_version(cur_ver) and prev_ver == cur_ver
+
+    differs_cur, why_cur = tool_code_differs(cur_tool, tool)
+    if differs_cur and not allow_differing_tool:
+        return refuse("the current reading was taken with reckon %s (%s) and this comparison would build "
+                      "its control with reckon at %s (%s). Both declare version %s, but their code differs (%s). "
+                      "A version string is not the artifact; altered code at a matching version cannot build a valid control. "
+                      "Re-take the reading, or pass --allow-differing-tool."
+                      % (cur_ver, tool_signature(cur_tool), tool["script"], tool_signature(tool), cur_ver, why_cur))
+
+    versions_match = parse_version(prev_ver) == parse_version(cur_ver) and prev_ver == cur_ver
+    differs_prev_cur, why_prev_cur = tool_code_differs(prev_tool, cur_tool)
+
+    if versions_match:
+        if differs_prev_cur and not allow_differing_tool:
+            return refuse("the previous reading was taken with reckon %s (%s) and the current reading with reckon %s (%s). "
+                          "Both declare version %s, but their code differs (%s). "
+                          "Differencing across altered code at a matching version would attribute tool alterations as project movement. "
+                          "Re-take with a distinct version or pass --allow-differing-tool."
+                          % (prev_ver, tool_signature(prev_tool), cur_ver, tool_signature(cur_tool), cur_ver, why_prev_cur))
+        same_tool = not differs_prev_cur
+    else:
+        same_tool = False
 
     workdir = tempfile.mkdtemp(prefix="reckoning-control-")
     try:
@@ -923,7 +999,9 @@ def cmd_stamp(args):
         "tree": {"repo": repo_name(repo), "commit": full, "short": full[:7], "branch": args.branch,
                  "tree_named": True, "dirty_inputs": []},
         "tool": {"name": "reckon", "version": args.tool_version, "script": args.tool_script,
-                 "manifest": None, "source_commit": args.tool_commit, "classes": None},
+                 "manifest": None, "source_commit": args.tool_commit,
+                 "sha256": sha256_of(args.tool_script) if args.tool_script and Path(args.tool_script).is_file() else None,
+                 "classes": None},
         "inputs": {"briefs": args.briefs, "campaign": args.campaign},
         "gate": {"build_exit": None, "check_exit": None},
         "headline": ledger.get("headline"),
@@ -942,7 +1020,7 @@ def cmd_stamp(args):
 
 def cmd_compare(args):
     return compare(args.previous, args.current, reckon=args.reckon, repo=args.repo,
-                   out_name=args.out_name)
+                   out_name=args.out_name, allow_differing_tool=args.allow_differing_tool)
 
 
 def main(argv=None):
@@ -970,6 +1048,8 @@ def main(argv=None):
     c.add_argument("--repo", default=".")
     c.add_argument("--reckon", default=str(DEFAULT_RECKON))
     c.add_argument("--out-name", default="delta")
+    c.add_argument("--allow-differing-tool", action="store_true",
+                   help="allow comparing readings taken with altered tool code under matching version strings")
     c.set_defaults(fn=cmd_compare)
 
     s = sub.add_parser("stamp", help="write provenance for a run taken before this script existed")
