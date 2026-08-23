@@ -94,6 +94,11 @@ struct ScreenRecordingProbe: Sendable {
         }
     }
 
+    /// Explicitly invalidates the cached definite grant state, enabling dynamic re-probing.
+    func invalidate() {
+        keeper.invalidateDefinite()
+    }
+
     /// Answers `granted`, `denied`, or `unconfirmed`, always within the bound.
     func state() async -> GrantState {
         switch keeper.claim(now: now()) {

@@ -197,4 +197,14 @@ public final class GrantProbeKeeper: @unchecked Sendable {
         lock.lock(); defer { lock.unlock() }
         return definite
     }
+
+    /// Explicitly clear any cached definite verdict and reset backoff state,
+    /// enabling dynamic re-probing on demand (DEF-180 / REQ-162).
+    public func invalidateDefinite() {
+        lock.lock(); defer { lock.unlock() }
+        definite = nil
+        startedAt = nil
+        attempts = 0
+        nextRetryAt = 0
+    }
 }

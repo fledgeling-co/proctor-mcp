@@ -2145,6 +2145,26 @@ def test_plugin_cache_content_check() -> None:
               str(res_good))
 
 
+def test_hardware_yield_probe_characterization() -> None:
+    """DEF-151 / REQ-161: Characterize hardware IOHIDEvent vs synthetic CGEvent injection."""
+    script = ROOT / "scripts/campaign/hardware_yield_probe.py"
+    res = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(res.returncode == 0, "hardware_yield_probe.py exits 0 on truth table verification", res.stderr or res.stdout)
+    mod = load(script, "hardware_yield_probe")
+    results = mod.verify_truth_table()
+    check(len(results) == 11 and all(ok for _, ok, _ in results), "hardware_yield_probe truth table passes all 11 assertions")
+
+
+def test_dynamic_grant_probe_characterization() -> None:
+    """DEF-180 / REQ-162: Characterize dynamic TCC grant re-probe lifecycle and invalidation."""
+    script = ROOT / "scripts/campaign/dynamic_grant_probe.py"
+    res = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(res.returncode == 0, "dynamic_grant_probe.py exits 0 on lifecycle verification", res.stderr or res.stdout)
+    mod = load(script, "dynamic_grant_probe")
+    results = mod.verify_grant_lifecycle()
+    check(len(results) == 9 and all(ok for _, ok, _ in results), "dynamic_grant_probe lifecycle passes all 9 assertions")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2186,7 +2206,9 @@ def main() -> int:
                test_ledger_gate_mutation_checks,
                test_shot_disposition_mock_lane_accounted_and_guarded,
                test_tool_identity_content_over_version,
-               test_plugin_cache_content_check):
+               test_plugin_cache_content_check,
+               test_hardware_yield_probe_characterization,
+               test_dynamic_grant_probe_characterization):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001
