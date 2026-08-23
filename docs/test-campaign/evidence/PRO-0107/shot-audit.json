@@ -2,11 +2,11 @@
  "item": "PRO-0107",
  "generatedBy": "scripts/campaign/shot_disposition.py",
  "shotsDir": "docs/test-campaign/evidence/shots",
- "howDepictsWasEstablished": "Every file was opened and looked at. `depicts` is what the picture shows, never what the filename claims \u2014 the rule the twenty-captures failure this gate was built for came from. Dimensions, byte counts, sha256, opaque-pixel counts and distinct-RGBA counts are re-measured by this script and are the half a reader can check without opening anything.",
- "files": 43,
+ "howDepictsWasEstablished": "Every file was opened and looked at. `depicts` is what the picture shows, never what the filename claims — the rule the twenty-captures failure this gate was built for came from. Dimensions, byte counts, sha256, opaque-pixel counts and distinct-RGBA counts are re-measured by this script and are the half a reader can check without opening anything.",
+ "files": 47,
  "published": 8,
  "unpublishedWithReason": 35,
- "disposed": 43,
+ "disposed": 47,
  "byteIdenticalGroups": {
   "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d": [
    "sweepL-status-agent-down.png",
@@ -31,7 +31,7 @@
  "deleted": 0,
  "deletionTests": {
   "zeroByte": "no file in the directory is zero bytes; the smallest is 10,680.",
-  "exactDuplicateOfAPublishedFile": "no byte-identical group contains a published file \u2014 the 4 groups cover 10 files (sweepL-status-agent-down.png, sweepL-status-t0.6.png, sweepL-status-t3.5.png; sweepL-wedged-t14.png, sweepL-wedged-t7.png; sweepK-theme-before.png, sweepL-wedged-t1.png; overlay-exclusion-armed.png, overlay-exclusion-baseA.png, overlay-exclusion-baseB.png), and none of them is any subject's `shot`. The duplication is itself the evidence for DEF-221 and DEF-222, so deleting a member would delete the finding."
+  "exactDuplicateOfAPublishedFile": "no byte-identical group contains a published file — the 4 groups cover 10 files (sweepL-status-agent-down.png, sweepL-status-t0.6.png, sweepL-status-t3.5.png; sweepL-wedged-t14.png, sweepL-wedged-t7.png; sweepK-theme-before.png, sweepL-wedged-t1.png; overlay-exclusion-armed.png, overlay-exclusion-baseA.png, overlay-exclusion-baseB.png), and none of them is any subject's `shot`. The duplication is itself the evidence for DEF-221 and DEF-222, so deleting a member would delete the finding."
  },
  "shots": [
   {
@@ -220,8 +220,8 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target \u2014 hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
-   "namedFor": "no surface \u2014 the overlay-exclusion measurement's own frame",
+   "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target — hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
+   "namedFor": "no surface — the overlay-exclusion measurement's own frame",
    "record": "evidence/overlay-exclusion.json",
    "defects": [],
    "bytes": 41268,
@@ -238,8 +238,8 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target \u2014 hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
-   "namedFor": "no surface \u2014 the overlay-exclusion measurement's own frame",
+   "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target — hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
+   "namedFor": "no surface — the overlay-exclusion measurement's own frame",
    "record": "evidence/overlay-exclusion.json",
    "defects": [],
    "bytes": 41268,
@@ -256,8 +256,8 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target \u2014 hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
-   "namedFor": "no surface \u2014 the overlay-exclusion measurement's own frame",
+   "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target — hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
+   "namedFor": "no surface — the overlay-exclusion measurement's own frame",
    "record": "evidence/overlay-exclusion.json",
    "defects": [],
    "bytes": 41268,
@@ -292,7 +292,7 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "An otherwise empty 3456x2234 frame carrying the drawn pointer glyph alone \u2014 3,739 non-transparent pixels of 7,720,704 and 173 distinct RGBA. The drawn pointer belongs to SURF-003 Process-Directed Actuation Subsystem.",
+   "depicts": "An otherwise empty 3456x2234 frame carrying the drawn pointer glyph alone — 3,739 non-transparent pixels of 7,720,704 and 173 distinct RGBA. The drawn pointer belongs to SURF-003 Process-Directed Actuation Subsystem.",
    "namedFor": "SURF-003 Process-Directed Actuation Subsystem",
    "record": "evidence/overlay-capture-lifted.json",
    "defects": [
@@ -312,7 +312,7 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The Run HUD: 'Hovering over \"l1\"' with step 1/16, an amber 'Synthetic event \u2014 TextEdit must stay in front' line, a completed 'Hovered over \"l0\"' row at 820ms, a 0:01 elapsed clock, and Pause and Stop controls.",
+   "depicts": "The Run HUD: 'Hovering over \"l1\"' with step 1/16, an amber 'Synthetic event — TextEdit must stay in front' line, a completed 'Hovered over \"l0\"' row at 820ms, a 0:01 elapsed clock, and Pause and Stop controls.",
    "namedFor": "SURF-004 Run HUD Floating Cocoa Overlay",
    "record": "evidence/overlay-capture-lifted.json",
    "defects": [],
@@ -330,7 +330,7 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The takeover shield at 5120x2880: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
+   "depicts": "The takeover shield at 5120x2880: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it — Pause and Stop are in Proctor's run panel'.",
    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
    "record": "evidence/overlay-capture-lifted.json",
    "defects": [
@@ -350,7 +350,7 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The takeover shield at 3456x2234: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
+   "depicts": "The takeover shield at 3456x2234: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it — Pause and Stop are in Proctor's run panel'.",
    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
    "record": "evidence/overlay-capture-lifted.json",
    "defects": [
@@ -370,7 +370,7 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The takeover shield at 1024x662: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
+   "depicts": "The takeover shield at 1024x662: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it — Pause and Stop are in Proctor's run panel'.",
    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
    "record": "evidence/overlay-capture-lifted.json",
    "defects": [
@@ -390,7 +390,7 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The takeover shield: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
+   "depicts": "The takeover shield: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it — Pause and Stop are in Proctor's run panel'.",
    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
    "record": "evidence/overlay-capture-lifted.json",
    "defects": [],
@@ -572,8 +572,8 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants \u2014 the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
-   "namedFor": "no surface \u2014 status window frame from an earlier wave",
+   "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants — the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
+   "namedFor": "no surface — status window frame from an earlier wave",
    "record": "evidence/sweepK-scaling.json",
    "defects": [
     "DEF-220"
@@ -592,7 +592,7 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The menu-bar extra's menu open over the desktop: 'Ready \u00b7 0 app(s) attached', 'Idle \u2014 no model connected', a ticked Show Run Panel, then Proctor Status\u2026, History\u2026, Run Setup Again\u2026 and Quit Proctor.",
+   "depicts": "The menu-bar extra's menu open over the desktop: 'Ready · 0 app(s) attached', 'Idle — no model connected', a ticked Show Run Panel, then Proctor Status…, History…, Run Setup Again… and Quit Proctor.",
    "namedFor": "SURF-010 Menu Bar Status Item Extra (the menu, not the item)",
    "record": "evidence/sweepK-popover.json",
    "defects": [],
@@ -610,8 +610,8 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants \u2014 the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
-   "namedFor": "no surface \u2014 status window frame from an earlier wave",
+   "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants — the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
+   "namedFor": "no surface — status window frame from an earlier wave",
    "record": "evidence/sweepK-scaling.json",
    "defects": [
     "DEF-220"
@@ -631,7 +631,7 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "The status window at 820x654 carrying the ad-hoc-signed warning, Ready, and three grants.",
-   "namedFor": "no surface \u2014 sweep K's display-scaling frames",
+   "namedFor": "no surface — sweep K's display-scaling frames",
    "record": "evidence/sweepK-scaling.json",
    "defects": [],
    "bytes": 86006,
@@ -649,7 +649,7 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "The status window at 970x773, ad-hoc-signed warning visible, Ready, three grants.",
-   "namedFor": "no surface \u2014 sweep K's display-scaling frames",
+   "namedFor": "no surface — sweep K's display-scaling frames",
    "record": "evidence/sweepK-scaling.json",
    "defects": [],
    "bytes": 165788,
@@ -666,8 +666,8 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The status window repainted light \u2014 white ground, dark text, Ready, three grants.",
-   "namedFor": "no surface \u2014 sweep K's runtime theme change",
+   "depicts": "The status window repainted light — white ground, dark text, Ready, three grants.",
+   "namedFor": "no surface — sweep K's runtime theme change",
    "record": "evidence/sweepK-theme.json",
    "defects": [],
    "bytes": 582784,
@@ -685,7 +685,7 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "The status window dark and Ready, with the ad-hoc-signed warning and the full Tools list.",
-   "namedFor": "no surface \u2014 sweep K's runtime theme change",
+   "namedFor": "no surface — sweep K's runtime theme change",
    "record": "evidence/sweepK-theme.json",
    "defects": [
     "DEF-221"
@@ -705,7 +705,7 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "The status window dark again after the appearance was toggled back, ad-hoc-signed warning visible, Ready.",
-   "namedFor": "no surface \u2014 sweep K's runtime theme change",
+   "namedFor": "no surface — sweep K's runtime theme change",
    "record": "evidence/sweepK-theme.json",
    "defects": [],
    "bytes": 590527,
@@ -723,7 +723,7 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the socket path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check. Depicts the Agent-down pill.",
-   "namedFor": "no surface \u2014 sweep L's status-window honesty check",
+   "namedFor": "no surface — sweep L's status-window honesty check",
    "record": "evidence/sweeps-kl.json",
    "defects": [
     "DEF-222"
@@ -743,7 +743,7 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the agent.sock path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check.",
-   "namedFor": "no surface \u2014 sweep L's status-window honesty check",
+   "namedFor": "no surface — sweep L's status-window honesty check",
    "record": "evidence/sweeps-kl.json",
    "defects": [
     "DEF-222"
@@ -763,7 +763,7 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the agent.sock path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check.",
-   "namedFor": "no surface \u2014 sweep L's status-window honesty check",
+   "namedFor": "no surface — sweep L's status-window honesty check",
    "record": "evidence/sweeps-kl.json",
    "defects": [
     "DEF-222"
@@ -783,7 +783,7 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "A dark Ready status window, taken as a genuine re-take differing by 1,046 pixels from the pre-recovery frame (sweepL-wedged-t1.png), witnessing the transition back to Ready after SIGCONT.",
-   "namedFor": "no surface \u2014 sweep L's half-open socket check",
+   "namedFor": "no surface — sweep L's half-open socket check",
    "record": "evidence/sweepL-halfopen.json",
    "defects": [
     "DEF-221"
@@ -803,7 +803,7 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "A dark Ready status window, identical bytes to sweepK-theme-before.png and to sweepL-wedged-recovered.png.",
-   "namedFor": "no surface \u2014 sweep L's half-open socket check",
+   "namedFor": "no surface — sweep L's half-open socket check",
    "record": "evidence/sweepL-halfopen.json",
    "defects": [
     "DEF-221"
@@ -822,8 +822,8 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The status window reading 'Agent down' with 'the Proctor agent did not answer within 5s', over the Switches section with every toggle 'Not yet known \u2014 waiting for the agent'.",
-   "namedFor": "no surface \u2014 sweep L's half-open socket check",
+   "depicts": "The status window reading 'Agent down' with 'the Proctor agent did not answer within 5s', over the Switches section with every toggle 'Not yet known — waiting for the agent'.",
+   "namedFor": "no surface — sweep L's half-open socket check",
    "record": "evidence/sweepL-halfopen.json",
    "defects": [
     "DEF-221"
@@ -842,8 +842,8 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "The status window reading 'Agent down' with 'the Proctor agent did not answer within 5s', over the Switches section with every toggle 'Not yet known \u2014 waiting for the agent'.",
-   "namedFor": "no surface \u2014 sweep L's half-open socket check",
+   "depicts": "The status window reading 'Agent down' with 'the Proctor agent did not answer within 5s', over the Switches section with every toggle 'Not yet known — waiting for the agent'.",
+   "namedFor": "no surface — sweep L's half-open socket check",
    "record": "evidence/sweepL-halfopen.json",
    "defects": [
     "DEF-221"
@@ -855,6 +855,91 @@
    "totalPixels": 3825504,
    "opaquePixels": 3744865,
    "distinctRGBA": 1035
+  },
+  {
+   "file": "mock/step-a3-walkthrough-primary-disabled.png",
+   "path": "evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
+   "disposition": "design-mock",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "Design mock of Step A3 (Walkthrough with permissions disabled): 1280x720 reference rendering of the disabled advance button state.",
+   "namedFor": "Step A3 disabled-button state design of record",
+   "record": "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.html",
+   "defects": [
+    "DEF-243"
+   ],
+   "isMock": true,
+   "bytes": 40057,
+   "sha256": "9c25ed38e92c0d2a37af0aeb6019f3689cff414efc0d2879a9ce7171c6bd0060",
+   "width": 1280,
+   "height": 720,
+   "totalPixels": 921600,
+   "opaquePixels": 921600,
+   "distinctRGBA": 740
+  },
+  {
+   "file": "mock/surf-008-status-window.png",
+   "path": "evidence/shots/mock/surf-008-status-window.png",
+   "disposition": "design-mock",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "Design mock of SURF-008 (Status Window): 640x552 reference mockup showing Permissions, Tools, and Agent status.",
+   "namedFor": "SURF-008 status window design of record",
+   "record": "docs/mockups/status-window.html",
+   "defects": [
+    "DEF-243"
+   ],
+   "isMock": true,
+   "bytes": 55777,
+   "sha256": "fc408b6c3e18c79f0356ea750afc9c49741e9dbea4e01974a012a561140474fb",
+   "width": 640,
+   "height": 552,
+   "totalPixels": 353280,
+   "opaquePixels": 353280,
+   "distinctRGBA": 711
+  },
+  {
+   "file": "mock/surf-009-walkthrough.png",
+   "path": "evidence/shots/mock/surf-009-walkthrough.png",
+   "disposition": "design-mock",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "Design mock of SURF-009 (Walkthrough): 560x437 reference mockup for the onboarding walkthrough window.",
+   "namedFor": "SURF-009 walkthrough design of record",
+   "record": "docs/mockups/walkthrough.html",
+   "defects": [
+    "DEF-243"
+   ],
+   "isMock": true,
+   "bytes": 36773,
+   "sha256": "f053f1e2284bbf493e670e4aeb28499c18c29bd99bd84722bd6eba31fa921a97",
+   "width": 560,
+   "height": 437,
+   "totalPixels": 244720,
+   "opaquePixels": 244720,
+   "distinctRGBA": 836
+  },
+  {
+   "file": "mock/surf-010-menubar.png",
+   "path": "evidence/shots/mock/surf-010-menubar.png",
+   "disposition": "design-mock",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "Design mock of SURF-010 (Menu Bar): 66x66 reference mockup for the Proctor menu bar status and command menu.",
+   "namedFor": "SURF-010 menu bar design of record",
+   "record": "docs/mockups/menubar.html",
+   "defects": [
+    "DEF-243"
+   ],
+   "isMock": true,
+   "bytes": 337,
+   "sha256": "ae4b315d49db16bddc3e8798cb51b10dc64cc7e36af930cf8b19230ba6831ec8",
+   "width": 66,
+   "height": 66,
+   "totalPixels": 4356,
+   "opaquePixels": 2322,
+   "distinctRGBA": 4
   }
- ]
+ ],
+ "designMock": 4
 }

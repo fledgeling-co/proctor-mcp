@@ -1898,6 +1898,137 @@ def test_mutation_timeout_arm_refuses_an_unresolvable_baseline() -> None:
           f"(exit {out.returncode})", (out.stdout + out.stderr)[-400:])
 
 
+
+def test_ledger_gate_on_this_repository() -> None:
+    """DEF-228: standing gate on docs/feature-specs/LEDGER.md and docs/specs/."""
+    lg = load(ROOT / "scripts/campaign/ledger_gate.py", "ledger_gate_mod")
+    res = lg.audit_ledger(
+        ROOT / "docs/feature-specs/LEDGER.md",
+        ROOT / "docs/specs",
+        ROOT,
+    )
+    check(not res.get("fatal"), "ledger_gate ran without fatal error", str(res.get("fatal")))
+    check(not res.get("failures"), "ledger_gate passes on this repository with zero failures",
+          "\n".join(res.get("failures", [])))
+    check(res.get("ledger_rows", 0) >= 110,
+          f"ledger_gate sees all ledger rows ({res.get('ledger_rows')})")
+    check(res.get("specs_on_disk", 0) >= 107,
+          f"ledger_gate sees all specs on disk ({res.get('specs_on_disk')})")
+    check(res.get("declared_no_spec") == 3,
+          f"ledger_gate accounts for the 3 declared no-spec rows ({res.get('declared_no_spec')})")
+    check(res.get("merged_in_git", 0) >= 50,
+          f"ledger_gate cross-checks merged features from git history ({res.get('merged_in_git')})")
+
+
+def test_ledger_gate_mutation_checks() -> None:
+    """DEF-228: drive each failure mode of ledger_gate in both directions."""
+    lg = load(ROOT / "scripts/campaign/ledger_gate.py", "ledger_gate_mutations")
+    
+    with tempfile.TemporaryDirectory() as tmp:
+        tmppath = Path(tmp)
+        specs_dir = tmppath / "docs/specs"
+        specs_dir.mkdir(parents=True)
+        (specs_dir / "spec-PRO-0001.md").write_text("# Spec 1\n")
+        (specs_dir / "spec-PRO-0002.md").write_text("# Spec 2\n")
+        
+        ledger_path = tmppath / "LEDGER.md"
+        valid_ledger = """# Feature Spec Ledger
+| ID | Title | Created | Status |
+|----|-------|---------|--------|
+| PRO-0001 | Item 1 | 2026-08-13 | Merged |
+| PRO-0002 | Item 2 | 2026-08-13 | Ready for Plan |
+| PRO-0003 | Item 3 | 2026-08-13 | Retired |
+
+## Rows with no spec file
+| ID | Title | Status | Why no spec file |
+|---|---|---|---|
+| PRO-0003 | Item 3 | Retired | Retired before spec convention was introduced; valid reason here. |
+"""
+        ledger_path.write_text(valid_ledger)
+        
+        # Valid run
+        res = lg.audit_ledger(ledger_path, specs_dir, tmppath)
+        check(not res.get("failures"), "valid scratch ledger passes cleanly", str(res.get("failures")))
+        
+        # Mode 1: spec on disk with no ledger row
+        (specs_dir / "spec-PRO-0004.md").write_text("# Spec 4\n")
+        res1 = lg.audit_ledger(ledger_path, specs_dir, tmppath)
+        check(any("spec-PRO-0004.md" in f for f in res1.get("failures", [])),
+              "spec on disk with no ledger row fails ledger_gate", str(res1.get("failures")))
+        (specs_dir / "spec-PRO-0004.md").unlink()
+        
+        # Mode 2: undeclared row with no spec file
+        bad_ledger_undeclared = valid_ledger.replace(
+            "| PRO-0002 | Item 2 | 2026-08-13 | Ready for Plan |",
+            "| PRO-0002 | Item 2 | 2026-08-13 | Ready for Plan |\n| PRO-0005 | Item 5 | 2026-08-13 | Ready for Plan |"
+        )
+        ledger_path.write_text(bad_ledger_undeclared)
+        res2 = lg.audit_ledger(ledger_path, specs_dir, tmppath)
+        check(any("PRO-0005" in f and "undeclared" in f for f in res2.get("failures", [])),
+              "undeclared row with no spec file fails ledger_gate", str(res2.get("failures")))
+        
+        # Mode 3: declared row with thin reason (<20 chars)
+        bad_ledger_thin = valid_ledger.replace(
+            "Retired before spec convention was introduced; valid reason here.",
+            "too short"
+        )
+        ledger_path.write_text(bad_ledger_thin)
+        res3 = lg.audit_ledger(ledger_path, specs_dir, tmppath)
+        check(any("thin reasons" in f and "PRO-0003" in f for f in res3.get("failures", [])),
+              "declared no-spec row with thin reason (<20 chars) fails ledger_gate", str(res3.get("failures")))
+        
+        # Mode 4: declared row that actually has a spec on disk (stale declaration)
+        (specs_dir / "spec-PRO-0003.md").write_text("# Spec 3\n")
+        ledger_path.write_text(valid_ledger)
+        res4 = lg.audit_ledger(ledger_path, specs_dir, tmppath)
+        check(any("actually have a spec on disk" in f and "PRO-0003" in f for f in res4.get("failures", [])),
+              "stale no-spec declaration for a spec that exists on disk fails ledger_gate", str(res4.get("failures")))
+        (specs_dir / "spec-PRO-0003.md").unlink()
+
+        # Mode 5: declared no-spec ID that does not exist in main ledger table (orphaned)
+        bad_ledger_orphaned = valid_ledger + "| PRO-0999 | Phantom | Retired | Reason for phantom item here. |\n"
+        ledger_path.write_text(bad_ledger_orphaned)
+        res5 = lg.audit_ledger(ledger_path, specs_dir, tmppath)
+        check(any("PRO-0999" in f and "absent from main ledger" in f for f in res5.get("failures", [])),
+              "orphaned no-spec declaration fails ledger_gate", str(res5.get("failures")))
+
+        # Mode 6: feature merged in git history but ledger status is Ready for Plan / In Progress
+        ledger_path.write_text(valid_ledger)
+        subprocess.run(["git", "-C", str(tmppath), "init"], capture_output=True, check=True)
+        subprocess.run(["git", "-C", str(tmppath), "config", "user.name", "Test"], capture_output=True, check=True)
+        subprocess.run(["git", "-C", str(tmppath), "config", "user.email", "test@example.com"], capture_output=True, check=True)
+        subprocess.run(["git", "-C", str(tmppath), "commit", "--allow-empty", "-m", "merge PRO-0002 — some feature"], capture_output=True, check=True)
+        res6 = lg.audit_ledger(ledger_path, specs_dir, tmppath)
+        check(any("PRO-0002" in f and "merged in git" in f for f in res6.get("failures", [])),
+              "merged feature in git with unmerged status in ledger fails ledger_gate", str(res6.get("failures")))
+
+
+def test_shot_disposition_mock_lane_accounted_and_guarded() -> None:
+    """DEF-243: all files in evidence/shots/mock/ carry dispositions and byte audits."""
+    sd = load(ROOT / "scripts/campaign/shot_disposition.py", "shot_disposition_mock")
+    a = sd.audit()
+    mock_shots = [r for r in a["shots"] if r.get("isMock")]
+    check(len(mock_shots) == 4,
+          f"audit() finds all 4 mock PNG files in evidence/shots/mock/ ({len(mock_shots)})",
+          str([r["file"] for r in mock_shots]))
+    check(all(r["disposed"] for r in mock_shots),
+          "every mock file carries an explicit disposition in DISPOSITIONS")
+    check(all(r["path"].startswith("evidence/shots/mock/") for r in mock_shots),
+          "every mock row path is correctly prefixed under evidence/shots/mock/")
+    
+    # Mutating a mock file in audit trips verify()
+    a_mutated = json.loads(json.dumps(a))
+    for r in a_mutated["shots"]:
+        if r["file"] == "mock/surf-008-status-window.png":
+            r["sha256"] = "0" * 64
+    
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        rc = sd.verify(a_mutated)
+    check(rc == 1 and "mock/surf-008-status-window.png: bytes changed" in buf.getvalue(),
+          "verify() fails when a mock file sha256 drifts", buf.getvalue()[-300:])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -1934,7 +2065,10 @@ def main() -> int:
                test_shot_disposition_reads_more_than_png_citations,
                test_shot_disposition_citations_read_the_audits_own_population,
                test_shot_disposition_cite_paths_reads_keys_and_resolvable_spaces,
-               test_mutation_timeout_arm_refuses_an_unresolvable_baseline):
+               test_mutation_timeout_arm_refuses_an_unresolvable_baseline,
+               test_ledger_gate_on_this_repository,
+               test_ledger_gate_mutation_checks,
+               test_shot_disposition_mock_lane_accounted_and_guarded):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001
