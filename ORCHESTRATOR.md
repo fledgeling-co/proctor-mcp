@@ -3117,3 +3117,17 @@ Open defects: **2** (`DEF-033` measured negative, `DEF-215` declared retired ite
 - **Broken product work:** 9 → **8** (-1)
 - **Requirements observed:** 78.4% → **79.9%** (107/134)
 - **Cases adjudicated:** 99.1% (438/442)
+
+### Wave 20 dispatched — pre-triage complete & Wave 20a in flight (2026-08-24)
+
+- **Pre-triage:** Briefs 106..109 triaged serially into specs PRO-0114..PRO-0117 (`spec_citation_measure.py` 19/19 passed, `ledger_gate.py` PASS).
+- **Wave 20a in flight:**
+  - **PRO-0114 (`ai/pro-0114`):** Supervision TUI and Menu Bar Status Extra On-Glass Witness (elevating REQ-030 and REQ-031 to `observed`).
+  - **PRO-0115 (`ai/pro-0115`):** Subprocess Actuation Witness for Cua Driver (unblocking BLOCK-0001 / REQ-024).
+- **Wave 20b queued:**
+  - **PRO-0116 (`spec-PRO-0116.md`):** Native OCR & High-DPI Visual Region Inspector.
+  - **PRO-0117 (`spec-PRO-0117.md`):** Guest VM Lifecycle & Multi-Session Attachment Oracle (REQ-037..040).
+
+Standing gates:
+- `ledger_gate.py`: PASS (117 rows, 114 specs, 3 declared without spec, 58 merged in git)
+- `spec_citation_measure.py`: 19/19 passed (109 briefs: 107 claimed, 2 registered, 0 unclaimed)
