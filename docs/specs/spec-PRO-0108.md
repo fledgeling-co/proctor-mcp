@@ -1,10 +1,14 @@
 # PRO-0108: Two findings reckon 1.2.0 still leaves open
 
 **ID:** PRO-0108
-**Status:** Ready for Plan
+**Status:** Developer Review
 **Created:** 2026-08-23
 **Last updated:** 2026-08-23
 **Brief:** `docs/features-to-triage/96-what-1-1-0-still-groups-and-still-grades.md`
+**Defects:** DEF-280..DEF-281
+**Requirements:** REQ-155..REQ-157
+**Cases:** CASE-0620..CASE-0626
+**Surfaces:** SURF-031
 
 ## Feature description
 
@@ -40,6 +44,29 @@ and the two findings compose rather than compete.
 - Assuming the repair lands in `fledgeling-plugins/plugins/reckon`, committed by explicit path.
 - Assuming the denominator requirement applies to all four reports (`build`, `check`, `take`, `compare`).
 
+---
+
+## Implementation plan — 2026-08-23
+
+Implementation plan: `docs/plans/plan-PRO-0108.md` (tier: Small). Work lands in
+`~/Dev/fledgeling-plugins/plugins/reckon` (`reckon.py`, `selftest.py`), committed by explicit file paths,
+with test-campaign tracking in `proctor-mcp`.
+
+## Progress — PRO-0108
+
+**Defects:** DEF-280..DEF-281
+**Requirements:** REQ-155..REQ-157
+**Cases:** CASE-0620..CASE-0626
+**Surfaces:** SURF-031
+
+Built in `~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/` (`reckon.py`, `selftest.py`).
+- Every percentage emitted across report modes carries its denominator beside it (`X/Y (Z%)`).
+- `source` is read to join briefs to registry entities at confidence 1.0 cited edges, but circular source evidence is refused for grading requirements and kept as `unmeasured` naming circular evidence.
+- Self-test suite expanded to prove denominator outputs and both source exits separately.
+
 ## Defects
 
-(None open; closes the remaining scope of brief 96.)
+| ID | Title | Status |
+|---|---|---|
+| DEF-280 | Reckon emitted percentages without denominators across reports | fixed |
+| DEF-281 | Reckon allowed circular source evidence to grade requirements to observed | fixed |
