@@ -488,8 +488,20 @@ def published_shots() -> dict[str, str]:
     return out
 
 
+# What `audit()` can measure, and therefore what it is a population of. `measure()`
+# reads a PNG IHDR out of bytes 16..24 and hands the file to PIL for the pixel
+# counts, so the audit is a raster audit rather than an inventory of the
+# directory. `cite_paths` accepts twelve suffixes, which is right — a case may
+# cite a screen recording — and the two sets differing is what made a cited `.mov`
+# under `evidence/shots` fail as *absent from this audit*. Out-of-family review,
+# PRO-0106: the population is named once here and `citations()` reads it, so a
+# file the audit cannot hold is reported as outside its population and not as
+# missing from it.
+AUDIT_SUFFIX = ".png"
+
+
 def audit() -> dict:
-    files = sorted(p for p in SHOTS.glob("*.png"))
+    files = sorted(p for p in SHOTS.glob("*" + AUDIT_SUFFIX))
     pub = published_shots()
     rows, by_hash = [], defaultdict(list)
     for p in files:
@@ -675,10 +687,22 @@ def cite_paths(node, cid, out):
         # Out-of-family review, PRO-0106: `.png` alone left every other image
         # format uncheckable, so a case citing a jpg or a pdf was invisible to
         # this gate for the same reason cases.json was.
-        if s.lower().endswith(IMAGE_SUFFIXES) and " " not in s and "/" in s:
+        # A space used to disqualify a string outright, which is a proxy for
+        # "this is prose about a file" and not the thing itself: a real capture
+        # whose name holds a space was invisible to this gate for the same reason
+        # `cases.json` was. A spaced string that RESOLVES on disk is a citation;
+        # one that does not stays prose, because a sentence naming a file and a
+        # citation of a missing file with a space in its name are not separable
+        # by any rule this has. Out-of-family review, PRO-0106.
+        if s.lower().endswith(IMAGE_SUFFIXES) and "/" in s and (
+                " " not in s or (REPO / s).is_file() or (CAMPAIGN / s).is_file()):
             out.setdefault(s, set()).add(cid)
     elif isinstance(node, dict):
-        for v in node.values():
+        # Keys as well as values. A path used as a key — a per-shot note keyed by
+        # the file it is about — was not scanned at all, which is DEF-227's own
+        # shape: a place citations live that the gate did not look in.
+        for k, v in node.items():
+            cite_paths(k, cid, out)
             cite_paths(v, cid, out)
     elif isinstance(node, list):
         for v in node:
@@ -746,6 +770,15 @@ def citations(a: dict) -> tuple[list[str], list[str]]:
     subject publishes. The third is the one that opens the class: an unpublished
     picture is by this campaign's own reckoning not bound to any subject, so a
     case resting on it rests on the filename.
+
+    WHAT THIS DOES NOT CHECK, stated rather than left to be discovered. Existence
+    is checked for every cited path wherever it lives; the disposition and the
+    publishing subject are checked only under `evidence/shots/`, because a
+    disposition is a fact about that directory and nowhere else holds one. A
+    citation of `design/surfaces/...` is therefore proved to resolve and no
+    further, and the mock lane under `evidence/shots/mock/` is existence-only for
+    the reason `is_mock` gives. DEF-243 is the row for the standard that lane
+    still has no gate for.
     """
     cases = json.loads((CAMPAIGN / "cases.json").read_text())
     cited: dict[str, set] = {}
@@ -767,7 +800,15 @@ def citations(a: dict) -> tuple[list[str], list[str]]:
                 reasons.append("cited as evidence while no subject publishes it "
                                f"({(row['depicts'] or '')[:80]}…)")
         elif on_disk and path.startswith("evidence/shots/") and not is_mock(path):
-            reasons.append("under evidence/shots and absent from this audit")
+            if Path(path).suffix.lower() == AUDIT_SUFFIX:
+                reasons.append("under evidence/shots and absent from this audit")
+            else:
+                notices.append(
+                    f"{who} cites {path}: under evidence/shots and outside this audit's "
+                    f"population — audit() measures PNG rasters, so a "
+                    f"{Path(path).suffix or 'suffixless file'} has no row here to be absent "
+                    f"from. It is checked for existence and no further.")
+                continue
         if not reasons:
             continue
         known = KNOWN_CITATION_FAULTS.get(path)
