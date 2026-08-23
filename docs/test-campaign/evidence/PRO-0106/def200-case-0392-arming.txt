@@ -1,0 +1,20 @@
+case      : CASE-0392 · REQ-094 · SURF-009 · oracle source-analysis
+subject   : design/surfaces/proctor-surfaces.html, the permissions footer
+check     : WalkthroughFlowTests.theDesignDrawsTheRefusingPrimaryPlain
+
+[control] the design of record as committed
+  exit 0 · PASS: 􁁛  Test run with 1 test in 1 suite passed after 0.001 seconds.
+
+[mutation] the refusing primary redrawn in the accent fill
+  <button type="button" class="btn" disabled>Connect a model</button>
+  -> <button type="button" class="btn prominent" disabled>Connect a model</button>
+  occurrences of the anchor: 1
+  mutation landed, confirmed by re-reading the file: True
+
+[the check reds] exit 1 · 􀢄  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.
+    􀢄  Test "DEF-163 · the design draws the refusing primary plain, and says why" recorded an issue at WalkthroughFlowTests.swift:397:27: Expectation failed: (foot → "
+    􀄵  the design's refusing primary is no longer drawn plain-and-disabled
+
+[restored]
+  exit 0 · PASS: 􁁛  Test run with 1 test in 1 suite passed after 0.001 seconds.
+  git status: clean

@@ -31,7 +31,7 @@
  "deleted": 0,
  "deletionTests": {
   "zeroByte": "no file in the directory is zero bytes; the smallest is 10,680.",
-  "exactDuplicateOfAPublishedFile": "no byte-identical group contains a published file \u2014 the four groups are three overlay-exclusion frames, sweepK-theme-before with two sweepL frames, the two sweepL-status frames and the two later sweepL-wedged frames, and none of those eleven files is any subject's `shot`. The duplication is itself the evidence for DEF-221 and DEF-222, so deleting a member would delete the finding."
+  "exactDuplicateOfAPublishedFile": "no byte-identical group contains a published file \u2014 the 4 groups cover 10 files (sweepL-status-t0.6.png, sweepL-status-t3.5.png; sweepL-wedged-t14.png, sweepL-wedged-t7.png; sweepK-theme-before.png, sweepL-wedged-recovered.png, sweepL-wedged-t1.png; overlay-exclusion-armed.png, overlay-exclusion-baseA.png, overlay-exclusion-baseB.png), and none of them is any subject's `shot`. The duplication is itself the evidence for DEF-221 and DEF-222, so deleting a member would delete the finding."
  },
  "shots": [
   {

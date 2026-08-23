@@ -1,0 +1,68 @@
+[control] test_instruments.py on the repaired tree
+  exit 0 · campaign instruments: 96 passed, 0 failed
+
+[DEF-207] mutate the offset check in mutate_swift.py
+  effect: apply() stops asserting the bytes at the recorded offsets are the recorded before-text
+  occurrences of the anchor: 1
+  mutation landed, confirmed by re-reading the file: True
+  exit 1 · campaign instruments: 87 passed, 9 failed
+    FAIL  a splice whose offsets have drifted is refused
+    FAIL  the refused splice left the file exactly as it was
+    FAIL  the refusal says what it found instead
+    FAIL  the drifted mutant is counted apart (0)
+    FAIL  only the mutant that landed is in the denominator (scored 2)
+    FAIL  the suite ran for the baseline and the one mutant that landed, and not for the one that did not (3 run(s))
+    FAIL  the summary tells the reader an unproved mutant was set aside, and why
+    FAIL  the verdict is `inconclusive` rather than a kill or a survivor: {'==@0': 'SURVIVED', '==@28': 'SURVIVED'}
+    FAIL  test_mutate_swift_unproved_mutation_is_inconclusive raised
+
+[DEF-207] mutate the read-back in mutate_swift.py
+  effect: apply() stops re-reading the file after writing it
+  occurrences of the anchor: 1
+  mutation landed, confirmed by re-reading the file: True
+  exit 1 · campaign instruments: 95 passed, 1 failed
+    FAIL  a write the disk did not take is refused on the re-read
+
+[DEF-207] mutate the inconclusive verdict in mutate_swift.py
+  effect: main() grades the outcome of a mutant it could not prove landed
+  occurrences of the anchor: 1
+  mutation landed, confirmed by re-reading the file: True
+  exit 1 · campaign instruments: 90 passed, 6 failed
+    FAIL  the drifted mutant is counted apart (0)
+    FAIL  only the mutant that landed is in the denominator (scored 2)
+    FAIL  the suite ran for the baseline and the one mutant that landed, and not for the one that did not (3 run(s))
+    FAIL  the summary tells the reader an unproved mutant was set aside, and why
+    FAIL  the verdict is `inconclusive` rather than a kill or a survivor: {'==@0': 'SURVIVED', '==@28': 'SURVIVED'}
+    FAIL  test_mutate_swift_unproved_mutation_is_inconclusive raised
+
+[DEF-208] mutate the trap evidence in mutation_seam_arm.py
+  effect: score_arming reverts to `armed = code != 0` for a run with no verdict line
+  occurrences of the anchor: 1
+  mutation landed, confirmed by re-reading the file: True
+  exit 1 · campaign instruments: 94 passed, 2 failed
+    FAIL  a non-zero exit with nothing showing the test ran is inconclusive
+    FAIL  and it says which reading it is refusing
+
+[DEF-208] mutate the verdict-line requirement in mutation_seam_arm.py
+  effect: score_arming stops requiring a verdict line before reading the exit code
+  occurrences of the anchor: 1
+  mutation landed, confirmed by re-reading the file: True
+  exit 1 · campaign instruments: 91 passed, 5 failed
+    FAIL  and the reason names the evidence rather than the exit code
+    FAIL  a non-zero exit with nothing showing the test ran is inconclusive
+    FAIL  and it says which reading it is refusing
+    FAIL  an unresolvable display name makes the arming inconclusive, not weaker
+    FAIL  and a trap it cannot attribute is inconclusive rather than armed
+
+[DEF-208] mutate the ambiguity refusal in mutation_seam_arm.py
+  effect: display_name picks one of two colliding declarations instead of refusing
+  occurrences of the anchor: 1
+  mutation landed, confirmed by re-reading the file: True
+  exit 1 · campaign instruments: 94 passed, 2 failed
+    FAIL  two declarations under different display names are refused, not picked between
+    FAIL  and a trap it cannot attribute is inconclusive rather than armed
+
+[restored] every mutation put back
+  exit 0 · campaign instruments: 96 passed, 0 failed
+  git status: clean
+  unarmed: none — all six mutations were seen to red the suite

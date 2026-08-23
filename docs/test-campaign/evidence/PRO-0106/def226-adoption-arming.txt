@@ -1,0 +1,29 @@
+subject       : docs/test-campaign/evidence/shots/surf-007-zoom.png
+sha256 before : f5686195906ee1ec
+audit row     : publishedAs SURF-007 · distinctRGBA 453
+
+[1 · control] --write over an unchanged directory
+  exit 0 · wrote docs/test-campaign/evidence/PRO-0107/shot-audit.json — 43 image(s), 43 disposed
+
+[2] a flat magenta frame written over it — sha256 c689fe0628e76f7f
+
+[3 · the check reds] verify over the replaced frame
+  exit 1
+     surf-007-zoom.png: bytes changed under a disposition written for the old ones (f5686195906e → c689fe0628e7)
+
+[4 · the repair] --write over the replaced frame
+  exit 1
+  REFUSING to write docs/test-campaign/evidence/PRO-0107/shot-audit.json — 1 row(s) would take new bytes as the standard:
+     surf-007-zoom.png: bytes changed under a disposition written for the old ones (f5686195906e → c689fe0628e7); the old bytes stood for: the picture SURF-007 publishes
+  
+  A disposition is a person's reading of specific bytes. Look at the file, update its entry here, then name it: --adopt <file>.
+  the audit on disk is byte-identical to before the refused write: True
+
+[5 · named adoption] --write --adopt surf-007-zoom.png
+  exit 0 · wrote docs/test-campaign/evidence/PRO-0107/shot-audit.json — 43 image(s), 43 disposed, 1 adopted by name
+  the audit now records sha256 c689fe0628e76f7f · distinctRGBA 1
+  adoption is per file and there is no blanket flag: the whole point is that
+  somebody looked at the picture, and a flag adopting everything is the hole.
+
+[6 · restored] png sha256 matches the original: True
+  gate after restore: exit 0 · Every image carries a disposition, every disposition is about the bytes on disk,

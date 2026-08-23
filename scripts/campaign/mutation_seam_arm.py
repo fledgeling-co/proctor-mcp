@@ -15,6 +15,27 @@ exactly once, and then re-reads the file and asserts the `after` text is present
 and the `before` text is gone. A mutation that fails to apply is indistinguishable
 from a check that cannot fail.
 
+THE VERDICT IS READ FROM THE OUTPUT RATHER THAN FROM THE EXIT CODE, which is
+DEF-208. The rule used to be `armed = code != 0`, and a non-zero exit is not a
+test result: a process dying in setup, a `--filter` matching nothing, and a check
+firing all produce one. CASE-0461's trapping mutant gave signal 5, **zero verdict
+lines** and the suite's own `FAIL: no swift-testing verdict line`, and it scored
+ARMED for a reason the rule could not see. It is armed — the log shows the named
+test running when the process died — so the repair is to make the rule able to
+tell, not to weaken the verdict. A trapping mutant now needs a
+`Test "<display>" started.` line with no completion beside it, and that display
+string is read out of the Swift source rather than hand-copied here. Anything
+that satisfies neither route is `inconclusive` naming why, and exits 3 rather
+than 1 so a thing nobody measured is not filed with a thing that failed.
+
+THE SECOND OF THOSE THREE EVENTS WAS SEPARATED FROM THE FIRST AND THEN GRADED A
+PASS, which is this repair. A `--filter` matching no test produces a real,
+well-formed `Test run with 0 tests in 0 suites passed` and an exit 1 from
+`scripts/test.sh`'s own refusal, and the rule above read the pair as the suite
+reporting a failure: CASE-0461's landing mutation with only its Swift function
+name changed scored ARMED with nothing having run. An arming that ran zero tests
+is `inconclusive` naming why, exactly as a setup death is.
+
 The tree is restored with `git checkout --` after every case and verified clean at
 the end, and an `atexit` hook plus signal handlers close the window in which a
 killed run leaves a live mutation behind — the same three rules `mutate_swift.py`
@@ -22,6 +43,9 @@ carries, for the same reason.
 
 Usage:
     scripts/campaign/mutation_seam_arm.py [--out <path>] [--only <function>]
+
+Exit 0 every case armed · 1 a case did not arm, or the tree is dirty afterwards ·
+3 nothing failed and something could not be measured.
 """
 
 from __future__ import annotations
@@ -129,10 +153,94 @@ def _on_signal(signum, _frame):
     raise SystemExit(130)
 
 
+_C_ESCAPES = {ord("a"): 0x07, ord("b"): 0x08, ord("t"): 0x09, ord("n"): 0x0A,
+              ord("v"): 0x0B, ord("f"): 0x0C, ord("r"): 0x0D,
+              ord('"'): 0x22, ord("\\"): 0x5C}
+
+
+def unquote(entry: str) -> str:
+    """A path as git printed it, back to the path on disk, byte by byte.
+
+    The same rules `reckoning.py`'s `unquote_path` carries, which is where the
+    fuller commentary lives: git quotes for a space, a control character, a
+    quote, a backslash or a non-ASCII byte, and escapes the non-ASCII either in
+    octal or not at all depending on `core.quotePath`.
+    """
+    if not (len(entry) >= 2 and entry[0] == '"' and entry[-1] == '"'):
+        return entry
+    raw = entry[1:-1].encode("utf-8", "surrogateescape")
+    out = bytearray()
+    i = 0
+    while i < len(raw):
+        if raw[i] != 0x5C:
+            out.append(raw[i])
+            i += 1
+            continue
+        i += 1
+        if i >= len(raw):
+            out.append(0x5C)
+            break
+        if 0x30 <= raw[i] <= 0x37:
+            digits = ""
+            while i < len(raw) and len(digits) < 3 and 0x30 <= raw[i] <= 0x37:
+                digits += chr(raw[i])
+                i += 1
+            out.append(int(digits, 8) & 0xFF)
+            continue
+        out.append(_C_ESCAPES.get(raw[i], raw[i]))
+        i += 1
+    return out.decode("utf-8", "surrogateescape")
+
+
+def porcelain_line_paths(line: str) -> list[str]:
+    """Every path one porcelain v1 status line names, unquoted.
+
+    A rename names two. Out-of-family review, PRO-0106: this used to be
+    `line[3:].strip()`, the same slice DEF-206 was about, sitting in the file
+    whose own repair DEF-206's second round was. A quoted entry \u2014 any path with a
+    space or a non-ASCII byte in it \u2014 arrives as `"docs/...`, so the `docs/` test
+    below missed it and this arm refused to run over a docs-only change. Fail
+    closed rather than a wrong verdict, and still the same defect.
+    """
+    if len(line) < 4:
+        return []
+    status, entry = line[:2], line[3:]
+    sides = [entry]
+    if "R" in status or "C" in status:
+        if entry.startswith('"'):
+            i = 1
+            while i < len(entry):
+                if entry[i] == "\\":
+                    i += 2
+                    continue
+                if entry[i] == '"':
+                    rest = entry[i + 1:]
+                    if rest.startswith(" -> "):
+                        sides = [entry[:i + 1], rest[4:]]
+                    break
+                i += 1
+        else:
+            head, sep, tail = entry.partition(" -> ")
+            if sep:
+                sides = [head, tail]
+    return [unquote(s) for s in sides if s]
+
+
 def tree_dirty() -> str:
+    """The porcelain lines this arm refuses over: everything outside `docs/`.
+
+    A rename is kept unless BOTH the names it carries are under `docs/`, because
+    a file moving out of that directory is a change to the tree this edits.
+    """
     out = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
                          capture_output=True, text=True).stdout
-    return "\n".join(l for l in out.splitlines() if not l[3:].strip().startswith("docs/")).strip()
+    kept = []
+    for line in out.splitlines():
+        paths = porcelain_line_paths(line)
+        if paths and all(q.startswith("docs/") for q in paths):
+            continue
+        kept.append(line)
+    return "\n".join(kept).strip()
 
 
 def apply(rel: str, before: str, after: str) -> tuple[bool, str]:
@@ -154,18 +262,192 @@ def apply(rel: str, before: str, after: str) -> tuple[bool, str]:
     return True, "mutation landed, confirmed by re-reading the file"
 
 
-def run_filtered(function: str, timeout: int) -> tuple[int, str]:
+# swift-testing's own lines. The verdict line is the report; the started/finished
+# lines are the only thing in the output that says which test was running, and
+# they carry the @Test display string rather than the Swift function name.
+VERDICT_RE = re.compile(r"Test run with (\d+) test")
+STARTED_RE = re.compile(r'Test "((?:[^"\\]|\\.)*)" started\.')
+FINISHED_RE = re.compile(r'Test "((?:[^"\\]|\\.)*)" (?:passed|failed|skipped)')
+TEST_ATTR_RE = re.compile(r'@Test\(\s*"((?:[^"\\]|\\.)*)"')
+
+
+def verdict_test_count(verdict: str) -> int | None:
+    """How many tests the verdict line says ran, or None if it does not say.
+
+    Read back out of the published line rather than carried beside it, so the
+    count this is graded on is the count a reader of the artifact sees.
+    """
+    m = VERDICT_RE.search(verdict or "")
+    return int(m.group(1)) if m else None
+
+
+def display_name(function: str, tests_root: Path | None = None) -> tuple[str | None, str]:
+    """The @Test display string for a Swift test function, read from the source.
+
+    Derived rather than hand-copied, so the table below cannot drift out of step
+    with the tests it names. Returns (display, why) and the display is None when
+    the source cannot settle it — which makes the arming `inconclusive` rather
+    than letting an unresolvable name quietly weaken the check that uses it.
+
+    `tests_root` exists so the ambiguity refusal has a fixture. No function under
+    this repository's Tests/ resolves two ways, so against the real tree that
+    branch cannot be watched to fire, and a check nobody has seen fire is the
+    defect this item is about.
+    """
+    hits: list[tuple[str, str]] = []
+    decl = re.compile(r"func\s+" + re.escape(function) + r"\s*\(")
+    for path in sorted((tests_root or ROOT / "Tests").rglob("*.swift")):
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for m in decl.finditer(text):
+            head = text[max(0, m.start() - 800):m.start()]
+            at = head.rfind("@Test")
+            if at < 0:
+                continue
+            attr = TEST_ATTR_RE.match(head[at:])
+            if attr:
+                hits.append((attr.group(1), str(path)))
+            elif re.match(r"@Test\s*(?:\n|func\b)", head[at:]):
+                # A bare `@Test` with no arguments: swift-testing shows the
+                # function signature.
+                hits.append((function + "()", str(path)))
+            else:
+                # `@Test(.tags(...), "Name")` or `@Test(arguments: …)`. The
+                # display string is not where this expects it, and guessing
+                # `function()` would put a name in the log comparison that the
+                # log will never print — turning a real arming into a silent
+                # mismatch. Refusing is the direction that stays honest.
+                hits.append((None, str(path)))
+    names = {h[0] for h in hits}
+    if not hits:
+        return None, "no @Test function named %s under %s" % (
+            function, tests_root or ROOT / "Tests")
+    if None in names:
+        return None, ("the @Test attribute on %s does not open with a display string, so the "
+                      "name swift-testing will print cannot be read from the source (%s)"
+                      % (function, hits[0][1]))
+    if len(names) != 1:
+        return None, ("%s resolves to %d different @Test display names (%s), so no started line "
+                      "can be attributed to it" % (function, len(names), ", ".join(sorted(names))))
+    return hits[0][0], "read from %s" % hits[0][1]
+
+
+def run_filtered(function: str, timeout: int) -> dict:
+    """Run the filtered suite and report what the output actually says.
+
+    The exit code alone cannot separate a check firing from a process dying in
+    setup, so this returns the verdict line, every test that swift-testing said
+    started, and every one it said finished. DEF-208.
+    """
     try:
         p = subprocess.run(["./scripts/test.sh", "--filter", function], cwd=ROOT,
                            capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
-        return 124, "timed out"
+        return {"exit": 124, "verdict": "", "started": [], "finished": [],
+                "timedOut": True, "tail": ""}
     out = p.stdout + p.stderr
     verdict = ""
     for line in out.splitlines():
-        if re.search(r"Test run with \d+ test", line):
+        if VERDICT_RE.search(line):
             verdict = line.strip()
-    return p.returncode, verdict
+    return {"exit": p.returncode, "verdict": verdict,
+            "started": STARTED_RE.findall(out), "finished": FINISHED_RE.findall(out),
+            "timedOut": False, "tail": out[-1200:]}
+
+
+def score_arming(display: str | None, why_display: str, r: dict, timeout: int) -> tuple[str, object, str]:
+    """(state, armed, why) for one filtered run. DEF-208.
+
+    THE RULE USED TO BE `armed = code != 0`, and a non-zero exit is not a test
+    result. CASE-0461's trapping mutant gave signal 5, **zero verdict lines** and
+    the suite's own `FAIL: no swift-testing verdict line`, and it was scored ARMED
+    — correctly, but for a reason the rule could not see. A process that dies in
+    setup, a --filter that matched nothing, and a check that fired all leave a
+    non-zero exit, so the rule was reading three different events as one.
+
+    A trap is still an arming when the log shows the named test was running as it
+    died, which is the distinction the brief's own sentence turns on. So the
+    evidence, not the exit code, decides:
+
+      * a verdict line over zero tests      — `inconclusive`, the filter matched
+                                              nothing and nothing was watched
+      * a verdict line and a non-zero exit  — ARMED, the suite reported
+      * a verdict line and exit 0           — NOT ARMED, the check did not fire
+      * no verdict line, the named test started and never finished, non-zero exit
+                                            — ARMED by trap, and it says so
+      * anything else                       — `inconclusive`, naming why
+
+    `inconclusive` is never a pass and never a fail: nothing was measured, because
+    the process that would have measured it did not report.
+    """
+    if r["timedOut"]:
+        return ("INCONCLUSIVE", None,
+                "the filtered run reached the %ds bound without reporting — a starved run is "
+                "the absence of a measurement, not a test that failed" % timeout)
+    started, finished = set(r["started"]), set(r["finished"])
+    if r["verdict"]:
+        # ZERO TESTS IS NOT AN ARMING, and this is the third of the three events
+        # `armed = code != 0` conflated — the one the first repair separated the
+        # other two from and then graded as a pass. `scripts/test.sh` refuses a
+        # zero-test run with an exit 1 of its own, in a block whose own comment
+        # says a filter matching nothing is not a pass, and the rule below read
+        # that refusal as the check firing: CASE-0461's real mutation with only
+        # its Swift function name changed scored ARMED over
+        # `Test run with 0 tests in 0 suites passed`, against a suite in which
+        # nothing had run. A filter that matched nothing has not watched anything
+        # fail, so this is `inconclusive` naming why, exactly as a setup death is.
+        # Recorded run: docs/test-campaign/evidence/PRO-0106/zero-tests-arming.txt.
+        if verdict_test_count(r["verdict"]) == 0:
+            return ("INCONCLUSIVE", None,
+                    "the suite reported a verdict line over ZERO tests (%s) and exited %d — "
+                    "`--filter` matches the Swift function name and this one matched nothing, "
+                    "so no check was watched. `scripts/test.sh` refuses a zero-test run itself, "
+                    "and that refusal is the non-zero exit; reading it as an arming credits a "
+                    "mutation with killing a test that never ran"
+                    % (r["verdict"], r["exit"]))
+        # A `--filter` selects by function name, so a reported failure is almost
+        # certainly the named test — and `almost certainly` is what this item
+        # refuses. If the filter matched nothing, or matched something else, the
+        # started lines say so and the exit code does not. Out-of-family review.
+        if display is not None and started and display not in started:
+            return ("INCONCLUSIVE", None,
+                    "the suite reported a verdict line and never started `%s` (it started %s), "
+                    "so the exit code is about some other test" % (display, sorted(started)))
+        if r["exit"] != 0:
+            return "ARMED", True, "the suite reported a verdict line and exited %d" % r["exit"]
+        return ("NOT ARMED", False,
+                "the suite reported a verdict line and exited 0 — the check did not fire under "
+                "this mutation")
+    if display is None:
+        return ("INCONCLUSIVE", None,
+                "no swift-testing verdict line, and the test's display name could not be "
+                "resolved to attribute the run: %s" % why_display)
+    if display in started and not finished and r["exit"] != 0:
+        if len(started) != 1:
+            # Swift Testing runs tests concurrently unless a suite is serialized,
+            # so two started lines and no completions cannot say which one died.
+            # Out-of-family review, PRO-0106.
+            return ("INCONCLUSIVE", None,
+                    "no verdict line and %d tests started with none finishing, so nothing "
+                    "attributes the death to `%s` rather than to one running beside it: %s"
+                    % (len(started), display, sorted(started)))
+        return ("ARMED", True,
+                'no verdict line, and the log shows the named test was running when the process '
+                'died: `Test "%s" started.` was the only test to start, none finished, exit %d. '
+                'A trap inside the mutated code is the check firing; a death before that line is '
+                'not. WHAT THIS DOES NOT ESTABLISH: a trap in the test\'s own setup, a '
+                '`try #require` before the subject is called, or a crash in teardown all land '
+                'after the started line and would read the same. The evidence separates a death '
+                'inside the named test from a death before any test ran, and no further.'
+                % (display, r["exit"]))
+    if display in started and r["exit"] == 0:
+        return ("INCONCLUSIVE", None,
+                'the named test started and the process exited 0 with no verdict line — nothing '
+                'in the output says whether the check ran to a result')
+    return ("INCONCLUSIVE", None,
+            'no swift-testing verdict line and nothing in the output shows `%s` running '
+            '(%d test(s) started, %d finished, exit %d). A process that died in setup, and a '
+            '--filter that matched no tests, are not tests that failed.'
+            % (display, len(r["started"]), len(r["finished"]), r["exit"]))
 
 
 def main() -> int:
@@ -185,47 +467,70 @@ def main() -> int:
         print(dirty[:400])
         return 2
 
-    rows, failures = [], 0
+    rows, failures, unresolved = [], 0, 0
     for case, survivor, rel, before, after, function, why in CASES:
         if args.only and args.only != function:
             continue
         landed, how = apply(rel, before, after)
         if not landed:
-            print(f"[{case}] NOT ARMED — {how}", flush=True)
+            # The mutation is the arming's own step, and a step that did not
+            # happen leaves nothing to grade — the same rule the run below is
+            # scored by, applied one level up.
+            print(f"[{case}] INCONCLUSIVE — {how}", flush=True)
             rows.append({"case": case, "survivor": survivor, "file": rel,
-                         "function": function, "armed": False, "reason": how})
-            failures += 1
+                         "function": function, "state": "INCONCLUSIVE", "armed": None,
+                         "reason": how})
+            unresolved += 1
             restore_all()
             continue
+        display, why_display = display_name(function)
         started = time.time()
-        code, verdict = run_filtered(function, args.timeout)
+        r = run_filtered(function, args.timeout)
         elapsed = round(time.time() - started, 1)
         subprocess.run(["git", "checkout", "--", rel], cwd=ROOT, check=True, capture_output=True)
         if rel in _APPLIED:
             _APPLIED.remove(rel)
-        armed = code != 0
+        state, armed, reason = score_arming(display, why_display, r, args.timeout)
         rows.append({
             "case": case, "survivor": survivor, "file": rel, "function": function,
+            "displayName": display, "displayNameFrom": why_display,
             "mutation": f"{before}  ->  {after}", "mutationLanded": how,
-            "armed": armed, "exit": code, "verdict": verdict, "seconds": elapsed,
-            "why": why,
+            "state": state, "armed": armed, "reason": reason,
+            "exit": r["exit"], "verdict": r["verdict"],
+            "testsStarted": r["started"], "testsFinished": r["finished"],
+            "seconds": elapsed, "why": why,
         })
-        state = "ARMED" if armed else "NOT ARMED"
-        print(f"[{case}] {state:<9} {function} exit {code} · {verdict} ({elapsed}s)", flush=True)
-        if not armed:
+        print(f"[{case}] {state:<12} {function} exit {r['exit']} · "
+              f"{r['verdict'] or reason} ({elapsed}s)", flush=True)
+        if state == "NOT ARMED":
             failures += 1
+        elif state == "INCONCLUSIVE":
+            unresolved += 1
         Path(ROOT / args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(ROOT / args.out).write_text(json.dumps(
             {"summary": {"partial": True, "run": len(rows), "of": len(CASES),
-                         "notArmed": failures}, "cases": rows}, indent=1) + "\n")
+                         "notArmed": failures, "inconclusive": unresolved},
+             "cases": rows}, indent=1) + "\n")
 
     still = tree_dirty()
-    summary = {"run": len(rows), "armed": len(rows) - failures, "notArmed": failures,
-               "treeCleanAfter": not still}
+    armed_n = len(rows) - failures - unresolved
+    summary = {"run": len(rows), "armed": armed_n, "notArmed": failures,
+               "inconclusive": unresolved, "treeCleanAfter": not still,
+               "armedByTrap": [r["case"] for r in rows
+                               if r.get("state") == "ARMED" and not r.get("verdict")]}
     Path(ROOT / args.out).write_text(json.dumps({"summary": summary, "cases": rows}, indent=1) + "\n")
     print()
-    print(f"armed {len(rows) - failures} of {len(rows)} · tree clean after: {not still}")
-    return 0 if failures == 0 and not still else 1
+    print(f"armed {armed_n} of {len(rows)} · not armed {failures} · "
+          f"inconclusive {unresolved} · tree clean after: {not still}")
+    for r in rows:
+        if r.get("state") == "INCONCLUSIVE":
+            print(f"  inconclusive: {r['case']} — {r['reason']}")
+    if failures or still:
+        return 1
+    # Distinct from 1 on purpose: an inconclusive arming is neither a pass nor a
+    # failure, and an exit code that says `1` for both makes the two unreadable
+    # from outside.
+    return 3 if unresolved else 0
 
 
 if __name__ == "__main__":

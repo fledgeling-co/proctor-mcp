@@ -4650,8 +4650,9 @@
       "design/surfaces/proctor-surfaces.html",
       "docs/test-campaign/evidence/PRO-0100/full-suite-run2.txt"
     ],
-    "armed": false,
-    "note": "PRO-0100, DEF-163, the design half. Asserts the record still draws the refusing primary plain-and-disabled (class=\"btn\" disabled) and never in the accent fill. NOT ARMED, and recorded so rather than claimed: the design already draws it correctly and this case exists to stop the app and the record being reconciled in the wrong direction later. Arming it would mean breaking the design of record to watch a case fail, which is the mutation CASE-0390's arming already performs on the same file and pane. A case nobody has watched fail is a case whose green means less; that is the honest status here rather than a mutation invented to dress it up.",
+    "armed": true,
+    "armedBy": "PRO-0106, DEF-200. Watched to fail on a scratch basis: the permissions footer's refusing primary redrawn from class=\"btn\" disabled to class=\"btn prominent\" disabled — the accent-fill treatment DEF-163 was about — and WalkthroughFlowTests.theDesignDrawsTheRefusingPrimaryPlain reds at WalkthroughFlowTests.swift:397 with `the design's refusing primary is no longer drawn plain-and-disabled`. The mutation was confirmed landed by re-reading the file before the verdict was read, restored immediately, and the tree checked clean afterwards. docs/test-campaign/evidence/PRO-0106/def200-case-0392-arming.txt.",
+    "note": "PRO-0100, DEF-163, the design half. Asserts the record still draws the refusing primary plain-and-disabled (class=\"btn\" disabled) and never in the accent fill. Recorded NOT ARMED at PRO-0100 on the grounds that arming it would mean breaking the design of record; a verifier broke it on a scratch basis anyway and the check red, so the case was armable all along and the registry understated its own strength. The flag stayed down because that probe left no evidence file, and no artifact means no verdict. PRO-0106 ran it again and kept the artifact, which is what closes DEF-200 — the repair was never a change to the check.",
     "defects": [
       "DEF-163"
     ],
@@ -5481,7 +5482,7 @@
     "armedBy": "Two-way control: the sweep runs on a directory that did not exist before the build, so an empty before-set and a two-file after-set are different readings of the same instrument. A take that wrote nothing would record count 0, and the refusal path (CASE-0441) writes no directory at all. Count corrected from four to two at verification; the two-way control is unaffected, because what it turns on is empty against non-empty.",
     "note": "The take command's filesystem effect, witnessed rather than inferred. run.json records the sweep the command took of its own output directory before and after the reckon build: an empty before-set and an after-set of TWO files, ledger.json and reckoning.md.\n\nCORRECTED AT PRO-0103'S VERIFICATION, and the correction is the point. This note previously said four files — adding delta.json and delta.md — and said each carried its byte count and sha256. run.json holds count 2, two filenames, and no digests at all. The delta files are written after the sweep, so they were never in the after-set; and cmd_take discards the digests sweep() computes, so they were never stored. The case was recording evidence it did not have, and campaign.py counted it witnessed without opening the artifact. The count that stands is 2, which is non-zero and is what the recorder actually saw. DEF-205 holds the repair.",
     "witness": {
-      "recorder": "sweep() in scripts/reckoning/reckoning.py: a recursive walk of the run directory taken before and after the reckon build and stored in run.json under effect. It computes a byte count and sha256 per file, and cmd_take stores only the names and the count — so the recorder is stronger than the record it leaves, which is DEF-205.",
+      "recorder": "sweep() in scripts/reckoning/reckoning.py: a recursive walk of the run directory taken before and after the reckon build and stored in run.json under effect. It computes a byte count and sha256 per file. When this case was written cmd_take stored only the names and the count, so the recorder was stronger than the record it left — DEF-205, closed by PRO-0106. The record now carries the digest of every file written, the before-and-after pair for any file rewritten between the sweeps, and any file the build stopped writing. The count of two is unchanged and so is this case's two-way control.",
       "effect": "filesystem-write",
       "count": 4
     }
@@ -6507,5 +6508,511 @@
     ],
     "armed": false,
     "note": "Of the 17 `evidence/shots/*.png` paths cited across cases.json, one does not resolve: CASE-0100 names `evidence/shots/a3-walkthrough-permissions-disabled.png` and no such file exists. It is invisible to both instruments — campaign.py resolves an evidence path only on the raster rungs and CASE-0100 stands at effect-witness, and capture-lineage never reads cases.json. DEF-225. NOT ARMED, and recorded so rather than claimed: same reason as CASE-0479 — the assertion is over the disposition record, so the available mutation edits the thing being read. Declaration added at out-of-family adjudication, where its absence was the finding."
+  },
+  {
+    "id": "CASE-0540",
+    "req": "REQ-131",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Three mutations, each alone and each confirmed landed by re-reading the file before the verdict was read. Removing the offset assertion reds 9 checks; removing the read-back reds 1; removing the inconclusive branch reds 6. All restored, control green at 106 before and after.",
+    "note": "DEF-207. apply() refuses a splice whose recorded offsets no longer hold the recorded before-text, and leaves the file exactly as it was. The fixture is the drift the offsets are actually exposed to — candidates() reads the file, and between that read and the write a line can be inserted above. The pre-repair form is reproduced inline on the same fixture and shown mangling the declaration to `fun!=f()` while `a == b`, the site it meant to mutate, stands untouched. That is the damage nothing in the log would have mentioned.",
+    "defects": [
+      "DEF-207"
+    ]
+  },
+  {
+    "id": "CASE-0541",
+    "req": "REQ-131",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Removing the `if not landed` branch from main() reds 6 checks, including the verdict map, the denominator and the count of suite runs.",
+    "note": "DEF-207, the verdict wiring rather than the check. main() is driven end to end over two mutants, one landing and one drifted: the drifted one is scored `inconclusive`, kept out of the survival-rate denominator, and the suite is not run for it at all — running it would have produced a verdict about pristine code. The summary line telling the reader an unproved mutant was set aside is asserted too, because a verdict nobody is told about is a verdict nobody can act on.",
+    "defects": [
+      "DEF-207"
+    ]
+  },
+  {
+    "id": "CASE-0542",
+    "req": "REQ-132",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0092/correlate-crash-arming.txt",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Reverting score_arming to `armed = code != 0` for a run with no verdict line reds 2 checks; removing the verdict-line requirement reds 5.",
+    "note": "DEF-208. The fixture is CASE-0461's own recorded trapping run — signal 5, zero verdict lines, the suite's own `FAIL: no swift-testing verdict line` — rather than a hand-written imitation. It scores ARMED because the log shows `Test \"A single fitting window is correlated to its own number\" started.` with no completion beside it, and that display string is read out of MutationSeamTests.swift rather than copied into the table. The same log with the started line removed is the setup death and scores INCONCLUSIVE, and the two differ in no way the pre-repair rule could see: both exit 1.",
+    "defects": [
+      "DEF-208"
+    ]
+  },
+  {
+    "id": "CASE-0543",
+    "req": "REQ-132",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Removing the ambiguity refusal reds 2 checks — but only after the check was given a fixture. On the first arming pass that mutation changed nothing at all, because no function under this repository's Tests/ resolves two ways, so the branch could not be made to fire against the real tree. display_name now takes a tests_root and the fixture is two files declaring one function under different @Test names. A check nobody has watched fire is the shape this whole item is about, and it turned up in this item's own work.",
+    "note": "DEF-208, the lookup the trap evidence rests on. Two declarations of one function under different display names are refused rather than picked between, a function with no declaration is refused, and a trap the instrument cannot attribute is INCONCLUSIVE rather than armed. Removing the second declaration resolves it again, which is the pass direction.",
+    "defects": [
+      "DEF-208"
+    ]
+  },
+  {
+    "id": "CASE-0544",
+    "req": "REQ-132",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def240-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two mutations, each alone and each confirmed landed. Removing the verdict-line test from run_suite reds 2 checks; removing the `no-verdict-line` branch from score() reds 1. Control green at 106 before and after.",
+    "note": "DEF-240. Four suite outputs are driven through run_suite and score together: a reported failure scores killed, a run that died after `Build complete` with no verdict line scores inconclusive, a pass scores SURVIVED, and a compile error scores unbuildable. The (passed, why) contract is asserted to still match the substitute mutation_timeout_arm.py installs, because widening it would break the arming that watches this file.",
+    "defects": [
+      "DEF-240"
+    ]
+  },
+  {
+    "id": "CASE-0545",
+    "req": "REQ-134",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "The mutation restores the pre-repair `git()`-then-`[3:]` pair verbatim on a scratch copy, and the phantom `ocs/test-campaign/cases.json` comes back in the refusal. This is a comparison across the repair rather than a check that merely passes now.",
+    "note": "DEF-206. The fixture asserts first that the status line is the one that fires it — a leading space in the status column, which is what git() stripped — then that the refusal names a path that exists on disk, and that --allow-dirty records a path the reader can open rather than a phantom.",
+    "defects": [
+      "DEF-206"
+    ]
+  },
+  {
+    "id": "CASE-0546",
+    "req": "REQ-133",
+    "surface": "SURF-022",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutating the effect block to write an empty `written` map leaves the witness naming files only, and the check reds.",
+    "witness": {
+      "recorder": "sweep() in scripts/reckoning/reckoning.py, taken by cmd_take before and after the reckon build and stored in run.json under effect. It walks the run directory and computes a byte count and sha256 per file, and since PRO-0106 the record keeps all of it: `written` per new file, `rewritten` for a file whose digest moved between the sweeps, and `removed` for one the build stopped writing.",
+      "effect": "filesystem-write",
+      "count": 2
+    },
+    "note": "DEF-205, the record half. Every file the take wrote carries a byte count and a sha256 in run.json, each re-derived from the file on disk by the selftest rather than read back from the record that is under test, and the digest map's keys are checked against files_written so the two halves cannot drift apart.",
+    "defects": [
+      "DEF-205"
+    ]
+  },
+  {
+    "id": "CASE-0547",
+    "req": "REQ-133",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "The two-way control is the arming: the same rewrite is invisible to the name diff and named by the digest diff, in one run, so a check that cannot fire is distinguishable from a check that found nothing.",
+    "note": "DEF-205, the half a name-only witness could not see at all. The subject's own sweep() is imported and run over a file rewritten to different content of equal length: `set(after) - set(before)` is empty, and the digest comparison names it. A reimplementation of sweep() here would have armed a copy rather than the tool.",
+    "defects": [
+      "DEF-205"
+    ]
+  },
+  {
+    "id": "CASE-0548",
+    "req": "REQ-135",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/def226-adoption-arming.txt",
+      "scripts/campaign/shot_disposition.py"
+    ],
+    "armed": true,
+    "armedBy": "The defect's own fixture, watched in both directions in one run: a flat magenta frame written over surf-007-zoom.png takes the check to exit 1, `--write` now stays at 1 with the audit byte-identical on disk, and `--write --adopt surf-007-zoom.png` writes it. Before the repair that middle step returned 0 with the row still recording publishedAs SURF-007 and distinctRGBA 1.",
+    "note": "DEF-226. The frame and the audit are both restored from bytes held in memory and the gate is re-run afterwards, so the fixture leaves nothing behind. Adoption is per file and there is no blanket flag, because the point is that somebody looked at the picture.",
+    "defects": [
+      "DEF-226"
+    ]
+  },
+  {
+    "id": "CASE-0549",
+    "req": "REQ-136",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/def227-citation-arming.txt",
+      "scripts/campaign/shot_disposition.py"
+    ],
+    "armed": true,
+    "armedBy": "Its own fixture, separate from DEF-226's — a fixture covering two repairs together proves neither individually. One spliced case citing a file that is not on disk and one citing a picture no subject publishes each take the gate to exit 1 naming the case; the merge-base instrument is run against the same two fixtures and exits 0 without mentioning either, which is the class it could not see. A third fixture citing a published capture clears.",
+    "note": "DEF-227. Each fixture is spliced into cases.json as text and restored with git checkout, with json.load run after every edit and the tree checked clean at the end. The nine rows DEF-224 and DEF-225 already record are printed as notes rather than failures, so this item does not claim repairs that belong to those rows.",
+    "defects": [
+      "DEF-227"
+    ]
+  },
+  {
+    "id": "CASE-0550",
+    "req": "REQ-134",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-repair slice is reintroduced against each of the six kinds in the same run, and the check asserts which four it gets wrong rather than that it gets any wrong. A control that changes on every input measures the harness.",
+    "note": "DEF-206, driven over every kind of status entry rather than the one the fixture happened to run — the failure mode this item was warned about by name. Modified-unstaged, untracked, staged addition, deleted, renamed and a quoted non-ASCII path all resolve to the path on disk. The pre-repair form is wrong on four of the six: an untracked entry and a staged addition survive a strip intact, which is why the defect went unnoticed and why the fixture had to be a modified tracked file.",
+    "defects": [
+      "DEF-206"
+    ]
+  },
+  {
+    "id": "CASE-0551",
+    "req": "REQ-131",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "Both halves driven to refuse in one run: an anchor occurring twice, an anchor occurring not at all, and a write the disk does not take. The passing direction is driven in the same run, so a check that cannot fire is distinguishable from a check that found nothing.",
+    "note": "The other write path. PRO-0106 rewrote mutate_swift.apply() and mutation_seam_arm.py has its own apply() with its own occurrence-count and read-back check, which nothing was driving. A repair proved on the exercised path while another stays undriven is this item's named failure mode, so the original defect is reintroduced on that path too. Each refusal leaves the file exactly as it was, which is asserted rather than assumed.",
+    "defects": [
+      "DEF-207"
+    ]
+  },
+  {
+    "id": "CASE-0552",
+    "req": "REQ-130",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "scripts/campaign/shot_disposition.py"
+    ],
+    "armed": true,
+    "armedBy": "The count assertion is what found the defect: the test asserted eleven files from the prose and the instrument computed ten. The grouping check compares the recomputed groups against the audit's, so a mutation that stops grouping reds it rather than printing zero.",
+    "note": "DEF-241, and the open question main recorded. The instrument detects byte-identity and that identity carries DEF-221 and DEF-222, but nothing would have failed if it silently stopped grouping — the count was printed and never checked. verify() now fails on a change to the grouping. And the sentence the instrument publishes about its own directory said eleven files where four groups cover ten, with the smallest-file byte count a literal beside it; both are derived from the rows now, and a check asserts the published sentence states the count that run computed.",
+    "defects": [
+      "DEF-241"
+    ]
+  },
+  {
+    "id": "CASE-0553",
+    "req": "REQ-135",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "scripts/campaign/shot_disposition.py"
+    ],
+    "armed": true,
+    "armedBy": "Every sha256 and byte count in the emitted manifest is re-derived from the file on disk by the check rather than read back from the record under test, so a manifest carrying stale bytes fails.",
+    "note": "The second output path, undriven until now. --manifest emits one entry per disposed-and-unpublished image with a digest and a byte count, and nothing was checking that those are the bytes on disk. 35 entries, all re-derived.",
+    "defects": [
+      "DEF-226"
+    ]
+  },
+  {
+    "id": "CASE-0554",
+    "req": "REQ-130",
+    "surface": "SURF-026",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/timeout-arming.json",
+      "scripts/campaign/mutation_timeout_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The gate is its own two-way control and it was found failing, not passing: on a clean detached worktree of main it exits 1 with before=TIMEOUT after=TIMEOUT, and with the baseline pinned it exits 0 with before=killed after=TIMEOUT. Both readings taken in the same session.",
+    "note": "DEF-242. The gate's --baseline-ref defaulted to `main`, which absorbed the fix the gate exists to demonstrate, so it loaded the same file twice and had been red since fc1b9a4 with nothing reading it. Pinned to fc1b9a4~1. A baseline ref that will one day contain the change cannot hold the state before it.",
+    "defects": [
+      "DEF-242"
+    ]
+  },
+  {
+    "id": "CASE-0555",
+    "req": "REQ-131",
+    "surface": "SURF-026",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "The test re-reads the mutated file off disk with Path.read_text and compares it against the text the splice should have produced, byte for byte — the same read-back apply() itself performs, done independently by the caller so the instrument's own claim is not the evidence for it. The refusal paths are witnessed the same way: the file is read back and compared against the bytes it held before the call.",
+      "effect": "filesystem-write",
+      "count": 1
+    },
+    "armedBy": "Two-way in one run: the landing splice is witnessed changing the file, and each refusal is witnessed leaving it byte-identical. Removing the offset check reds 9 checks and removing the read-back reds 1, both watched.",
+    "note": "DEF-207's effect, witnessed rather than inferred. apply() writes exactly one file per mutant and the point of the repair is that the write is established rather than assumed, so the effect and its absence are both read off the disk. A write the disk does not take is driven too, by intercepting Path.write_text so the file keeps its old bytes: the instrument refuses on the re-read, which is the case an offset check alone cannot cover.",
+    "defects": [
+      "DEF-207"
+    ]
+  },
+  {
+    "id": "CASE-0556",
+    "req": "REQ-132",
+    "surface": "SURF-026",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/seam-arming.json"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "subprocess.run(['./scripts/test.sh', '--filter', <function>]) with stdout and stderr captured, one process per case, and the captured output parsed for swift-testing's own verdict, started and finished lines. seam-arming.json records the exit code, the verdict line, the tests started and finished, and the elapsed seconds for every one.",
+      "effect": "subprocess",
+      "count": 12
+    },
+    "armedBy": "The population is its own control and it is not uniform: 11 of the 12 processes printed a verdict line and one did not. CASE-0461's trapping mutant produced zero verdict lines and is armed on its started line instead, which is the distinction the repair exists to make — under the pre-repair rule all 12 were one undifferentiated `exit != 0`.",
+    "note": "DEF-208's effect. Twelve filtered suite runs across 87.1 seconds, each spawned against a mutated tree and each reverted after. What the record carries is what the process said rather than only what it returned: exit code, verdict line, and the list of tests swift-testing reported starting and finishing.",
+    "defects": [
+      "DEF-208"
+    ]
+  },
+  {
+    "id": "CASE-0557",
+    "req": "REQ-135",
+    "surface": "SURF-027",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/def226-adoption-arming.txt",
+      "scripts/campaign/shot_disposition.py"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "The audit file's bytes are held in memory before the run and compared against the file on disk after it, so a refused --write is witnessed writing nothing rather than reported as having written nothing. The adopted write is witnessed by reading the row back and finding the new sha256 and distinctRGBA in it.",
+      "effect": "filesystem-write",
+      "count": 1
+    },
+    "armedBy": "Three writes driven in one run and the middle one is the arming: --write over an unchanged directory writes, --write over a replaced frame is refused and the audit on disk is byte-identical to before, and --write --adopt writes. Before the repair the middle step wrote and returned 0.",
+    "note": "DEF-226's effect. The instrument's one filesystem write is the audit, and the defect was that it performed that write while treating its own re-measurement as the standard. Both the refusal and the write are read off the disk rather than taken from the exit code.",
+    "defects": [
+      "DEF-226"
+    ]
+  },
+  {
+    "id": "CASE-0558",
+    "req": "REQ-137",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/zero-tests-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-repair rule `armed = code != 0` is reintroduced against this exact fixture and returns ARMED, which is the verdict the verifier drove end to end on CASE-0461. The same fixture at exit 0 is scored NOT ARMED by that rule, so the two-way control shows one non-measurement filed as a pass in one direction and a fail in the other, and inconclusive both ways after the repair. A verdict line over one test that failed still arms, so the guard is watched clearing as well as firing.",
+    "note": "DEF-244. The fixture is `scripts/test.sh --filter thisFunctionDoesNotExistAnywhere` recorded rather than a string written in the test: a well-formed `Test run with 0 tests in 0 suites passed`, scripts/test.sh's own zero-test refusal, exit 1, and no started line. The count is read back out of the published verdict line rather than carried beside it.",
+    "defects": [
+      "DEF-244"
+    ]
+  },
+  {
+    "id": "CASE-0559",
+    "req": "REQ-137",
+    "surface": "SURF-026",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "`armed = code != 0` is reintroduced against every one of the eleven routes and the check asserts WHICH three it agrees on rather than that it disagrees somewhere \u2014 a control that moves on every input is measuring the harness rather than the repair. The three it agrees on are a reported failure, a reported pass, and the trap; it differs on the other eight, both zero-test routes among them.",
+    "note": "DEF-244's own shape, refused: every route through score_arming enumerated from the code rather than from the tests, one fixture each, none standing for two. The zero-test route survived the first repair because the fixtures were written from the paths the harness happened to drive.",
+    "defects": [
+      "DEF-244"
+    ]
+  },
+  {
+    "id": "CASE-0560",
+    "req": "REQ-134",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "Three parses are computed against all thirteen kinds in one run: the pre-repair slice, the rsplit repair, and the code as it stands. The slice is wrong on nine and the rsplit on exactly the two whose last ` -> ` sits inside a quoted destination, and both sets are asserted by membership. End to end, a scratch copy carrying the rsplit writes `stage-2.md\"` into run.json.dirty_inputs under --allow-dirty and the real subject writes the path that opens.",
+    "note": "DEF-245. CASE-0550 drove six kinds with the tree carrying all six at once and an arrow only ever inside a ` M` path, so a rename DESTINATION holding one was undriven \u2014 and splitting from the right, the repair CASE-0550 was checking, is wrong on exactly that. Thirteen kinds are enumerated from porcelain_paths' branches and each is driven ALONE in a reset tree. Also driven: an unstaged rename arrives as ` D` plus `??` rather than the ` R` the out-of-family review claimed, so the guard that reads both status columns rests on a measurement rather than on the claim.",
+    "defects": [
+      "DEF-245",
+      "DEF-206"
+    ]
+  },
+  {
+    "id": "CASE-0561",
+    "req": "REQ-136",
+    "surface": "SURF-027",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "The population is moved rather than the branch: at a `.png` population the cited .mov is a notice and at a `.mov` population the same citation fails as absent while the .png becomes the notice, in the same run. So the branch is shown to read the declared population and to be able to fire in both directions, which a check pinned to the literal `.png` could not show.",
+    "note": "DEF-246. Reproduced before the repair by citing a real .mov under evidence/shots: `CASE-0001 cites evidence/shots/probe-clip.mov: under evidence/shots and absent from this audit`. audit() measures PNG rasters \u2014 an IHDR read out of bytes 16..24 and PIL for the pixel counts \u2014 so a .mov has no row there to be absent from, and the population is declared once and read by the citation branch.",
+    "defects": [
+      "DEF-246"
+    ]
+  },
+  {
+    "id": "CASE-0562",
+    "req": "REQ-136",
+    "surface": "SURF-027",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-repair walk is reimplemented verbatim beside the repaired one and run over the same two fixtures: it finds nothing under a dict key and nothing in a spaced path, while the repaired walk finds both. The spaced path is then deleted and the same string stops being a citation, which is the residual stated rather than hidden.",
+    "note": "DEF-247. Two places a citation could hide from cite_paths, each on its own fixture: a path used as a dict key was not walked at all, and any string holding a space was disqualified outright \u2014 a proxy for prose that also disqualifies a real capture whose name has a space in it. A spaced string that resolves on disk is a citation now; one that does not stays prose, because a sentence naming a file and a citation of a missing file with a space in its name are not separable by any rule this has.",
+    "defects": [
+      "DEF-247"
+    ]
+  },
+  {
+    "id": "CASE-0563",
+    "req": "REQ-134",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-repair `unicode_escape` round trip is reintroduced against both forms in one run: it decodes the octal one and returns the literal one with its quotes still attached, which is the unopenable name. End to end, the fixture repo is set to core.quotePath=false and porcelain_paths resolves a file whose name carries both a non-ASCII byte and a space to a path that opens.",
+    "note": "DEF-248. Not a filename this time but a git CONFIG: core.quotePath decides whether git escapes non-ASCII in octal or writes the UTF-8 through literally, and it is a setting a user commonly carries in their own gitconfig. Both modes were measured against git 2.50.1 and both are driven. The unquote works byte by byte now, and a sequence that is not UTF-8 decodes with surrogateescape so an undecodable name stays openable rather than being mangled into one that is not. A quote, a backslash and a tab escape are each driven back to one character.",
+    "defects": [
+      "DEF-248"
+    ]
+  },
+  {
+    "id": "CASE-0564",
+    "req": "REQ-134",
+    "surface": "SURF-026",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "Six porcelain lines are driven, and the pre-repair filter is run over the same set. It errs in both directions and the check asserts which: it refuses over three quoted docs paths it should tolerate, and it silently tolerates `R  docs/x.md -> Sources/y.swift` because the whole entry starts with `docs/` when nothing splits the rename.",
+    "note": "DEF-249. The same `line[3:]` slice DEF-206 was about, sitting in mutation_seam_arm.py \u2014 the file DEF-206's second round repaired. tree_dirty filtered on `line[3:].strip().startswith('docs/')`, so a quoted entry arrived as `\"docs/...` and this arm refused at exit 2 over a change it is meant to tolerate. Fail closed rather than a wrong verdict, and still the original defect on a sibling path. A rename is tolerated now only when BOTH names it carries are under docs/.",
+    "defects": [
+      "DEF-249"
+    ]
+  },
+  {
+    "id": "CASE-0565",
+    "req": "REQ-136",
+    "surface": "SURF-027",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "The same file is cited both ways in the same run against the same audit: campaign-relative and repo-relative reach the same branch and produce the same notice. Before the repair the repo-relative form produced neither a row nor a prefix match, so it resolved on disk and returned no reasons at all.",
+    "note": "DEF-250. cases.json may write a citation either way. `rows` is keyed campaign-relative and the branch tested `path.startswith('evidence/shots/')`, so a repo-relative citation missed both, resolved on disk, and skipped the disposition and publishing checks entirely \u2014 DEF-227's own class reached by writing the path the other way round. The prefix is derived from CAMPAIGN.relative_to(REPO) rather than written a second time.",
+    "defects": [
+      "DEF-250"
+    ]
+  },
+  {
+    "id": "CASE-0566",
+    "req": "REQ-130",
+    "surface": "SURF-027",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "verify() is called twice in one session: once over an audit dict whose byteIdenticalGroups have been emptied, where it exits 1 and prints `the byte-identical grouping moved`, and once over the grouping this run computes, where it exits 0 and does not. That is the branch watched firing and clearing, which reading the source for the sentence could not do.",
+    "note": "DEF-251. The check that the grouping guard exists read the instrument's SOURCE for the string literal it would print: `check(\"the byte-identical grouping moved\" in text, ...)`. It passes whether or not the branch runs, and it never called verify(). A check nobody has watched fire is indistinguishable from a check that cannot \u2014 the sentence this item opens with, in this item's own fixture file, found by an out-of-family reviewer rather than by the item.",
+    "defects": [
+      "DEF-251"
+    ]
   }
 ]

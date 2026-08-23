@@ -1232,6 +1232,104 @@
       ],
       "note": "capture-lineage's SHARED pass enforces this for published captures and says nothing about unpublished ones, which is where every instance in this directory sits: four byte-identical groups among the 35, six redundant files, one of them a single image carrying three captions across two unrelated sweeps.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-130",
+      "class": "honesty-guardrail",
+      "text": "An instrument proves its own step before grading the outcome, and where the step cannot be proved the result is `inconclusive` naming why rather than a pass or a fail",
+      "source": "docs/specs/spec-PRO-0106.md; docs/features-to-triage/99-instruments-that-do-not-prove-their-own-step.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022",
+        "SURF-026",
+        "SURF-027"
+      ],
+      "note": "The clause the whole item turns on: an instrument owes the same standard it applies to its subject. A mutation harness that demands a test prove itself, while not proving its own edit, is holding its subject to a rule it does not keep. Six rows shared one shape — the tool performed a step and published the result without establishing the step happened — across mutate_swift.py, mutation_seam_arm.py, reckoning.py and shot_disposition.py.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-131",
+      "class": "test-oracle guarantee",
+      "text": "A mutation is confirmed to have landed in the file before its verdict is read, and a mutant that cannot be shown to have landed is excluded from the survival-rate denominator",
+      "source": "DEF-207; scripts/campaign/mutate_swift.py apply()",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "note": "An anchor-string mutator that aborts still reports INERT, so something in the log disagrees with the verdict. An unconditional splice by byte offset writes regardless, so a wrong-offset write is silent and nothing anywhere contradicts it. A survivor then has two readings — the guard is decorative, or the mutation never happened — and only the instrument can tell them apart at the moment it matters.",
+      "effect": "filesystem-write"
+    },
+    {
+      "id": "REQ-132",
+      "class": "test-oracle guarantee",
+      "text": "An arming is scored from what the run reported rather than from its exit code, and a run with no verdict line is armed only when the log shows the named test was running as the process died",
+      "source": "DEF-208, DEF-240; scripts/campaign/mutation_seam_arm.py score_arming(), scripts/campaign/mutate_swift.py run_suite()",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "note": "`armed = code != 0` read three different events as one: a check firing, a process dying in setup, and a --filter matching nothing. CASE-0461's trapping mutant gave signal 5, zero verdict lines and the suite's own `FAIL: no swift-testing verdict line`, and scored ARMED for a reason the rule could not see. The repair makes the rule able to tell rather than weakening the verdict.",
+      "effect": "subprocess"
+    },
+    {
+      "id": "REQ-133",
+      "class": "reporting correctness",
+      "text": "A directory witness records what its sweep measured — a byte count and digest for every file written, and the before-and-after pair for any file rewritten between sweeps",
+      "source": "DEF-205; scripts/reckoning/reckoning.py sweep(), cmd_take()",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "sweep() computes bytes and sha256 per file and the record kept only the names, so the witness could say two files appeared and not what was in them. A file rewritten between the two sweeps is in neither `set(after) - set(before)` nor any other name-level difference, so a name-only witness could not see that case at all.",
+      "effect": "filesystem-write"
+    },
+    {
+      "id": "REQ-134",
+      "class": "reporting correctness",
+      "text": "An instrument's refusal names a path the reader can open, and a path it records is the path git named",
+      "source": "DEF-206; scripts/reckoning/reckoning.py porcelain_paths()",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "note": "git() strips its output, so the first porcelain line lost its leading status space and the [3:] slice ate the first character of the path: a modified docs/test-campaign/cases.json was refused as ocs/test-campaign/cases.json. The refusal was correct and its message named a file nobody could find, and with --allow-dirty that phantom was written permanently into run.json.dirty_inputs. An instrument's own error message is part of its output and carries a test.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-135",
+      "class": "honesty-guardrail",
+      "text": "A baseline is never adopted from an instrument's own re-measurement; new content becomes the standard only when somebody names the file it belongs to",
+      "source": "DEF-226; scripts/campaign/shot_disposition.py adoptable()",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "note": "--write re-measured the directory and wrote the result as the new baseline, so a flat magenta frame over surf-007-zoom.png went exit 1 -> --write -> exit 0 with the row still recording publishedAs SURF-007 and distinctRGBA 1. DEF-207's shape one level on: a step that performs an action and then treats its own result as the standard, with nothing able to disagree. There is no blanket adopt flag, because a flag that adopts everything is the hole this closes.",
+      "effect": "filesystem-write"
+    },
+    {
+      "id": "REQ-136",
+      "class": "honesty-guardrail",
+      "text": "Every image a case cites resolves to a picture this campaign accounts for, and a citation the campaign cannot stand behind is named rather than passed over",
+      "source": "DEF-227; scripts/campaign/shot_disposition.py citations()",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "note": "The instrument read the manifest and the disk and never cases.json, so a case citing an unpublished, misnamed or absent image was invisible to it. DEF-224 and DEF-225 are both instances of that class, and both were found by a person reading rather than by a gate running — which is the whole argument for the gate existing. The nine rows those two defects already record are named rather than failed, so the reading stays honest without this item claiming repairs that belong to them.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-137",
+      "class": "honesty-guardrail",
+      "text": "An arming that ran no tests is a measurement that did not happen, and is never filed as a check that fired or as a check that did not",
+      "source": "DEF-244; scripts/campaign/mutation_seam_arm.py score_arming()",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "note": "DEF-208's repair separated a setup death from a check firing and then graded the third event `armed = code != 0` conflated — a --filter matching no test — as a pass. scripts/test.sh refuses a zero-test run with an exit 1 of its own, in a block whose own comment says a filter matching nothing is not a pass, and the repaired rule read that refusal as the check firing. A repair can inherit the property it was repairing, which is this item's own subject turning on this item a second time.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -3385,7 +3483,7 @@
     {
       "id": "DEF-200",
       "title": "CASE-0392 records armed: false with a reason the verification disproved",
-      "status": "open",
+      "status": "fixed",
       "severity": "low",
       "surfaces": [
         "SURF-009"
@@ -3393,7 +3491,7 @@
       "requirements": [
         "REQ-094"
       ],
-      "note": "The case asserts the design of record still draws the refusing primary plain-and-disabled and never in the accent fill, and records `armed: false` on the grounds that arming it would mean breaking the design of record. PRO-0100's verifier broke it on a scratch basis anyway — giving the refusing primary class=\"btn prominent\" — and the check reds at WalkthroughDesignTests line 397. So the case is armable and the record understates its own strength. Understating is the safe direction and it is still wrong: this campaign counts armed and unarmed passes separately and forever, so an armable case recorded unarmed lowers a number that is supposed to mean something. The repair is to arm it properly with an artifact rather than to flip the flag on a verbal report — no artifact, no verdict, and the verifier's probe left no evidence file. Found by the non-AC findings sweep at PRO-0100's merge, the first item through that gate."
+      "note": "The case asserts the design of record still draws the refusing primary plain-and-disabled and never in the accent fill, and records `armed: false` on the grounds that arming it would mean breaking the design of record. PRO-0100's verifier broke it on a scratch basis anyway — giving the refusing primary class=\"btn prominent\" — and the check reds at WalkthroughDesignTests line 397. So the case is armable and the record understates its own strength. Understating is the safe direction and it is still wrong: this campaign counts armed and unarmed passes separately and forever, so an armable case recorded unarmed lowers a number that is supposed to mean something. The repair is to arm it properly with an artifact rather than to flip the flag on a verbal report — no artifact, no verdict, and the verifier's probe left no evidence file. Found by the non-AC findings sweep at PRO-0100's merge, the first item through that gate.\n\nCLOSED BY PRO-0106, and the repair was never a change to the check. CASE-0392 was armable all along; the flag stayed down because the probe that showed it left no evidence file, and no artifact means no verdict. This item ran it again and kept the artifact: the permissions footer's refusing primary redrawn from `class=\"btn\" disabled` to `class=\"btn prominent\" disabled` — the accent-fill treatment DEF-163 was about — and WalkthroughFlowTests.theDesignDrawsTheRefusingPrimaryPlain reds at WalkthroughFlowTests.swift:397 with `the design's refusing primary is no longer drawn plain-and-disabled`. Mutation confirmed landed by re-reading the file before the verdict was read, restored immediately, tree clean after. docs/test-campaign/evidence/PRO-0106/def200-case-0392-arming.txt."
     },
     {
       "id": "DEF-210",
@@ -3545,7 +3643,7 @@
     {
       "id": "DEF-205",
       "title": "cmd_take discards the digests sweep() computed, so the witness records names without content",
-      "status": "open",
+      "status": "fixed",
       "severity": "low",
       "surfaces": [
         "SURF-025"
@@ -3553,12 +3651,12 @@
       "requirements": [
         "REQ-102"
       ],
-      "note": "sweep() walks the run directory and computes a byte count and sha256 for every file; cmd_take stores only the filenames and the count. So the effect witness for REQ-102 can say two files appeared and cannot say what was in them, and a file replaced between the two sweeps would be invisible. It also let CASE-0456 record a claim nobody could check: the case said four files each with byte count and sha256, run.json holds two names and no digests, and campaign.py counted the case witnessed without opening the artifact. The case is corrected; this row is the instrument. Two repairs, and the second is the one that generalises: store what sweep() already computed, and have the witness check read the artifact rather than the case's description of it."
+      "note": "sweep() walks the run directory and computes a byte count and sha256 for every file; cmd_take stores only the filenames and the count. So the effect witness for REQ-102 can say two files appeared and cannot say what was in them, and a file replaced between the two sweeps would be invisible. It also let CASE-0456 record a claim nobody could check: the case said four files each with byte count and sha256, run.json holds two names and no digests, and campaign.py counted the case witnessed without opening the artifact. The case is corrected; this row is the instrument. Two repairs, and the second is the one that generalises: store what sweep() already computed, and have the witness check read the artifact rather than the case's description of it.\n\nCLOSED BY PRO-0106. The effect block now carries `written` — a byte count and sha256 for every file that appeared — and `rewritten`, the before-and-after pair for any file present in both sweeps whose digest moved, which is the case a name-only witness could not see at all. Armed both ways in reckoning_selftest.py: the record half is checked against the files on disk and then mutated to drop the digests, and the invisible half exercises the subject's own sweep() over a rewrite of equal length, absent from the name diff and named by the digest diff. REQ-133."
     },
     {
       "id": "DEF-206",
       "title": "resolve_tree prints a path that does not exist in its own refusal",
-      "status": "open",
+      "status": "fixed",
       "severity": "low",
       "surfaces": [
         "SURF-025"
@@ -3566,7 +3664,7 @@
       "requirements": [
         "REQ-102"
       ],
-      "note": "git() strips its output, so a porcelain status line arrives as `M docs/...` rather than ` M docs/...`, and the [3:] slice that was written to drop the two status characters and the space removes the first character of the path instead: `docs/test-campaign/cases.json` is refused as `ocs/test-campaign/cases.json`. Untracked entries are unaffected because `?? ` survives the strip intact. The refusal is correct and its message names a file nobody can find, which sends the reader looking for a phantom; and with --allow-dirty the mangled name is written into run.json.dirty_inputs, where it becomes a permanent record of a path that never existed. It fires on the commonest case, a modified tracked file."
+      "note": "git() strips its output, so a porcelain status line arrives as `M docs/...` rather than ` M docs/...`, and the [3:] slice that was written to drop the two status characters and the space removes the first character of the path instead: `docs/test-campaign/cases.json` is refused as `ocs/test-campaign/cases.json`. Untracked entries are unaffected because `?? ` survives the strip intact. The refusal is correct and its message names a file nobody can find, which sends the reader looking for a phantom; and with --allow-dirty the mangled name is written into run.json.dirty_inputs, where it becomes a permanent record of a path that never existed. It fires on the commonest case, a modified tracked file.\n\nCLOSED BY PRO-0106. Porcelain lines are parsed through a new `git_raw` that does not strip, with a rename entry resolved to its destination and a quoted non-ASCII path unquoted. Watched across the repair rather than merely passing now: the arming mutation restores the pre-repair strip-and-slice verbatim and `ocs/test-campaign/cases.json` comes back in the refusal, with the fixture first asserting the status line is the one that fires it. REQ-134."
     },
     {
       "id": "DEF-215",
@@ -3612,7 +3710,7 @@
     {
       "id": "DEF-207",
       "title": "mutate_swift.py splices by byte offset and never reads back",
-      "status": "open",
+      "status": "fixed",
       "severity": "low",
       "surfaces": [
         "SURF-026"
@@ -3620,12 +3718,12 @@
       "requirements": [
         "REQ-108"
       ],
-      "note": "apply() writes the mutation by byte offset and does not re-read the file, so it cannot report that the substitution happened. Its sibling instrument does: mutation_seam_arm.py asserts an occurrence count of 1, then re-reads and requires the `after` text present and the `before` text gone. The runner cannot go INERT the way an anchor-string mutator can, because it splices unconditionally — its failure mode is worse in kind, because a wrong-offset write would be silent and would grade pristine or wrongly-edited code as a survivor. PRO-0092's verification reconstructed all 24 mutants against the tree the run used (6b3721c) and confirmed each recorded offset holds the recorded `before` text and that a simulated splice changes exactly one line at exactly the recorded line number, so all 20 survivors and all 4 kills in THIS sample demonstrably landed. That is a reconstruction by a verifier, not a proof by the instrument, and the distinction is the defect: the next sample gets no such reconstruction unless somebody does it by hand. Port the read-back. A survivor has two readings — the guard is decorative, or the mutation never happened — and only the instrument can tell them apart at the moment it matters."
+      "note": "apply() writes the mutation by byte offset and does not re-read the file, so it cannot report that the substitution happened. Its sibling instrument does: mutation_seam_arm.py asserts an occurrence count of 1, then re-reads and requires the `after` text present and the `before` text gone. The runner cannot go INERT the way an anchor-string mutator can, because it splices unconditionally — its failure mode is worse in kind, because a wrong-offset write would be silent and would grade pristine or wrongly-edited code as a survivor. PRO-0092's verification reconstructed all 24 mutants against the tree the run used (6b3721c) and confirmed each recorded offset holds the recorded `before` text and that a simulated splice changes exactly one line at exactly the recorded line number, so all 20 survivors and all 4 kills in THIS sample demonstrably landed. That is a reconstruction by a verifier, not a proof by the instrument, and the distinction is the defect: the next sample gets no such reconstruction unless somebody does it by hand. Port the read-back. A survivor has two readings — the guard is decorative, or the mutation never happened — and only the instrument can tell them apart at the moment it matters.\n\nCLOSED BY PRO-0106, and the offset form of the check is stronger than the sibling's. apply() asserts the bytes at the recorded offsets are exactly the recorded `before` text, then re-reads the file and requires it to equal the spliced text exactly — not `after in reread`, which a file already holding that token elsewhere would satisfy while the splice went somewhere else entirely. A mutant that fails either is `inconclusive`, named in the summary and out of the survival-rate denominator with the timeouts, and the suite is not run for it at all. Watched across the repair: the pre-repair splice is reproduced inline on the same drifted fixture and shown mangling the declaration while the site it meant to mutate stands untouched. REQ-131."
     },
     {
       "id": "DEF-208",
       "title": "mutation_seam_arm.py scores any non-zero exit as armed, including a process that died",
-      "status": "open",
+      "status": "fixed",
       "severity": "low",
       "surfaces": [
         "SURF-026"
@@ -3633,7 +3731,7 @@
       "requirements": [
         "REQ-108"
       ],
-      "note": "The arm records `armed = code != 0`, so a run that aborts on a signal counts as red. CASE-0461's mutant kills by trapping: signal 5, zero verdict lines, and the suite's own `FAIL: no swift-testing verdict line`. That case is correct — its log proves the named test was running when the process trapped — but the rule that scored it cannot distinguish a test that failed from a process that died in setup, and the second is the shape that has already cost this campaign a false arming. The repair is the same predicate the suite already applies to itself: an arming owes a verdict line naming the test that failed, and an exit with no verdict line is `inconclusive` rather than armed."
+      "note": "The arm records `armed = code != 0`, so a run that aborts on a signal counts as red. CASE-0461's mutant kills by trapping: signal 5, zero verdict lines, and the suite's own `FAIL: no swift-testing verdict line`. That case is correct — its log proves the named test was running when the process trapped — but the rule that scored it cannot distinguish a test that failed from a process that died in setup, and the second is the shape that has already cost this campaign a false arming. The repair is the same predicate the suite already applies to itself: an arming owes a verdict line naming the test that failed, and an exit with no verdict line is `inconclusive` rather than armed.\n\nCLOSED BY PRO-0106, by making the rule able to tell rather than by weakening the verdict. A verdict line with a non-zero exit is armed; a verdict line with exit 0 is not; a run with no verdict line is armed only when the log shows the named test started and never finished, and the display string is read out of the Swift source rather than hand-copied. Everything else is `inconclusive` naming why, at exit 3 rather than 1 so an unmeasured arming is not filed with a failed one. CASE-0461 still scores ARMED, now for the reason the log actually gives. The fixture is that run's own recorded output; the same log with the started line removed is the setup death, and the two differ in no way the pre-repair rule could see. REQ-132."
     },
     {
       "id": "DEF-209",
@@ -3771,7 +3869,7 @@
     {
       "id": "DEF-226",
       "title": "shot_disposition.py --write adopts any new content as the baseline",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "surfaces": [
         "SURF-027"
@@ -3779,12 +3877,12 @@
       "requirements": [
         "REQ-111"
       ],
-      "note": "shot_disposition.py's --write re-baselines the check it exists to keep honest. Demonstrated at verification: surf-007-zoom.png was replaced with a flat magenta frame, the check went to exit 1, and --write returned it to exit 0 with capture-lineage still at 0 — the row keeping publishedAs: SURF-007 and recording distinctRGBA: 1, a single-colour frame sitting among the six judged captures. So the instrument's repair path accepts any content as the new truth, and its own \\\"How it is kept honest\\\" section does not name that. This is the same shape as DEF-207 and DEF-208 one level on: a step that performs an action and then treats the result as the standard, with nothing able to disagree. The repair is that --write refuses a file whose recorded digest changed, or records the change as a finding naming the old and new digests, rather than adopting it silently."
+      "note": "shot_disposition.py's --write re-baselines the check it exists to keep honest. Demonstrated at verification: surf-007-zoom.png was replaced with a flat magenta frame, the check went to exit 1, and --write returned it to exit 0 with capture-lineage still at 0 — the row keeping publishedAs: SURF-007 and recording distinctRGBA: 1, a single-colour frame sitting among the six judged captures. So the instrument's repair path accepts any content as the new truth, and its own \\\"How it is kept honest\\\" section does not name that. This is the same shape as DEF-207 and DEF-208 one level on: a step that performs an action and then treats the result as the standard, with nothing able to disagree. The repair is that --write refuses a file whose recorded digest changed, or records the change as a finding naming the old and new digests, rather than adopting it silently.\n\nCLOSED BY PRO-0106. `--write` refuses when any row's bytes have moved under a disposition written for the old ones, or when a new undisposed file would be recorded as the baseline, and names each. New content becomes the standard only through `--adopt <file>`, one file at a time; there is no blanket flag, because a flag that adopts everything is the hole. Armed on the defect's own fixture: the magenta frame takes the check to 1, `--write` now stays at 1 with the audit byte-identical on disk, and `--adopt surf-007-zoom.png` writes it. REQ-135."
     },
     {
       "id": "DEF-227",
       "title": "shot_disposition.py never reads cases.json, so a case citing an unpublished image is unflagged",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "surfaces": [
         "SURF-027"
@@ -3792,7 +3890,7 @@
       "requirements": [
         "REQ-111"
       ],
-      "note": "The instrument checks captures.json against the disk and stops there. It never reads cases.json, so a case citing an unpublished, misnamed or absent image is invisible to it. DEF-224 (five files where case evidence and the lineage manifest disagree) and DEF-225 (a passing case citing a shots file that does not exist) are both instances of a class this instrument cannot see, which is precisely why both were found by a person reading rather than by a gate running. Found at the retrospective out-of-family adjudication, by the only reviewer to ask what the instrument does NOT read. Related: the eight published captures carry depicts: null, so semantic inspection was enforced on the 35 unpublished and not on the 8 that the ratchet pins — the unexamined set is the one the gate's number rests on."
+      "note": "The instrument checks captures.json against the disk and stops there. It never reads cases.json, so a case citing an unpublished, misnamed or absent image is invisible to it. DEF-224 (five files where case evidence and the lineage manifest disagree) and DEF-225 (a passing case citing a shots file that does not exist) are both instances of a class this instrument cannot see, which is precisely why both were found by a person reading rather than by a gate running. Found at the retrospective out-of-family adjudication, by the only reviewer to ask what the instrument does NOT read. Related: the eight published captures carry depicts: null, so semantic inspection was enforced on the 35 unpublished and not on the 8 that the ratchet pins — the unexamined set is the one the gate's number rests on.\n\nCLOSED BY PRO-0106. `citations()` reads cases.json and checks every image a case cites three ways: the file resolves on disk, a shot in the directory carries a disposition, and a shot cited as evidence is one a subject publishes. The nine rows DEF-224 and DEF-225 already record are named rather than failed, and an entry that stops reproducing prints as resolved rather than reding on the fix. The `mock/` lane is checked for existence only, matching capture-lineage's own exclusion — CASE-0039 cites the mock and the capture side by side, which is the comparison rather than a fault. Armed on its own fixture, separate from DEF-226's, with the merge-base instrument run against the same fixture and silent. REQ-136."
     },
     {
       "id": "DEF-228",
@@ -3819,6 +3917,186 @@
         "REQ-046"
       ],
       "note": "DEF-227 recorded that shot_disposition.py checks captures.json against the disk and never reads cases.json. The same probe shows the **gate** shares the blindness: capture-lineage.py has zero references to cases.json — it reads inventory.json, captures.json and the shots directory. Its own line 16 comment mentions `RASTER_RUNGS` cases, so the concept is present and the register is not.\n\nThat widens the class from a new instrument to the gate this repository relies on for capture lineage. A case citing an unpublished, misnamed or absent image is invisible to both, which is why DEF-224 and DEF-225 were found by a person reading and not by anything running — and why the capture-lineage gate could exit 0 over a manifest that disagrees with every case citing it."
+    },
+    {
+      "id": "DEF-240",
+      "title": "mutate_swift.py scored a suite that never reported as a kill",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "requirements": [
+        "REQ-132"
+      ],
+      "note": "DEF-208's shape inside mutate_swift.py rather than beside it, and found by turning PRO-0106's own discipline on the instrument it was already repairing. run_suite() read `p.returncode == 0` as the whole verdict once a build error was ruled out, so a runner that died after linking and before printing anything scored `failed` and then `killed` — the direction that flatters the suite, because it credits the tests with catching a fault they were never run against. The existing `error:` check catches a compile failure; a runner death after `Build complete` is exactly the case it does not. WHERE THIS WAS LOOKED FOR, so an absence claim can be read: every .py under scripts/campaign/ and scripts/reckoning/ was grepped for a verdict taken from an exit code (`code != 0`, `returncode != 0`, `returncode == 0`), 27 files, and every hit read in place. mutation_timeout_arm.py compares scored verdicts rather than exit codes; skill_doc_arm.py and spec_citation_arm.py read named PASS/FAIL verdicts out of their subject's output; defect_gate.py and spec_citation_measure.py use returncode only to decide whether a git subprocess produced usable output, which is a different question. That is 'not in these 27 files', not 'not anywhere' — nothing outside scripts/ was searched, and the Swift suite was not. CLOSED BY PRO-0106: a non-zero exit with no `Test run with N tests` line is `no-verdict-line` and scores `inconclusive`, and the baseline refusal says a baseline that did not report is not a red baseline. The (passed, why) contract is held deliberately, because mutation_timeout_arm.py substitutes its own run_suite to drive this runner end to end and widening it would break the arming that watches this file; a check asserts the substitute still matches. Both mutations watched to red the suite: docs/test-campaign/evidence/PRO-0106/def240-arming.txt."
+    },
+    {
+      "id": "DEF-241",
+      "title": "shot_disposition.py published a count of its own directory that was wrong",
+      "status": "fixed",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-130"
+      ],
+      "note": "The audit's `deletionTests.exactDuplicateOfAPublishedFile` sentence read 'none of those eleven files is any subject's shot'. The four byte-identical groups cover TEN files — two sweepL-status, two sweepL-wedged, three around sweepK-theme-before, three overlay-exclusion — and the instrument's own `redundantFiles` field says 6, which is 10 minus 4 and agrees with the data rather than with the sentence. Both numbers were literals in a string that the instrument writes into the published audit, so the file carried a claim nothing re-derived, in the file whose whole argument is that a claim nothing re-derives is an opinion. The same sentence's companion, 'the smallest is 10,680', was a literal too. Found by asserting the count in a test rather than by reading the sentence. CLOSED BY PRO-0106: both sentences are built from the rows, and a check asserts the published sentence states the count that run computed, so the two cannot disagree again. This is the class DEF-193 opened — the fifth stale count in a document nothing read — arriving inside the instrument rather than beside it."
+    },
+    {
+      "id": "DEF-242",
+      "title": "mutation_timeout_arm.py compared the repaired runner against itself",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "requirements": [
+        "REQ-130"
+      ],
+      "note": "--baseline-ref defaulted to `main`, and main absorbed PRO-0092's timeout fix the moment that branch merged. From then on the gate loaded the same file twice and reported `before=TIMEOUT after=TIMEOUT`, armed: False, exit 1. ESTABLISHED ON TWO TREES RATHER THAN ARGUED: it exits 1 with identical output on a clean `git worktree add --detach main` tree and on PRO-0106's branch, and `git log -S` puts the marker's disappearance at fc1b9a4, PRO-0092's own fix. So this gate has been red since that merge and nothing noticed, because it is not in the per-merge gate list — the same gap that let capture-lineage sit red across three trees before PRO-0107. The failure was loud rather than silent: OLD_SOURCE_MARKER stopped matching at the same moment, so the run says so. A baseline ref that will one day contain the change cannot hold the state before it. CLOSED BY PRO-0106: pinned to fc1b9a4~1, with the reason in the flag's own comment. Armed at exit 0 with before=killed scored=1 survivalRate=0.0 against after=TIMEOUT scored=0 survivalRate=None, which is the contrast the gate exists to show."
+    },
+    {
+      "id": "DEF-243",
+      "title": "evidence/shots/mock/ is excluded from every instrument that reads the shots directory",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-136"
+      ],
+      "note": "RECORDED, NOT FIXED. capture-lineage.py drops any path with a `mock` directory component from its population (`'mock' not in {q.lower() for q in p.relative_to(shots_dir).parts[:-1]}`), and shot_disposition.py's audit globs `SHOTS.glob('*.png')`, which never descends. So the five files under docs/test-campaign/evidence/shots/mock/ are in neither instrument's population: four PNGs and one HTML, one of them cited by CASE-0039 as the design of record beside the capture it is compared against. Both exclusions are correct on their own terms — a mock is what the surface should look like, not a picture of what it did, and PRO-0106's citation check follows capture-lineage's rule deliberately so CASE-0039's mock-versus-build comparison is not read as a fault. What is not established is that anything checks the mock lane at all: a mock file could be replaced, deleted, or renamed and no gate in this repository would say so, while a case citing it would go on passing. Found by PRO-0106's new citation check firing on that path before the exclusion was written, so the gap is measured rather than supposed. The repair is a disposition lane for the design of record with its own standard, which is a different piece of work from proving an instrument's own step."
+    },
+    {
+      "id": "DEF-244",
+      "title": "mutation_seam_arm.py scored a run that executed zero tests as ARMED",
+      "status": "fixed",
+      "severity": "high",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "requirements": [
+        "REQ-137"
+      ],
+      "note": "DEF-208's own repair, carrying DEF-208's property. The instrument's docstring names the three events `armed = code != 0` conflated — a setup death, a --filter matching nothing, and a check firing — and the repair separated the first from the third and graded the second a pass. Driven end to end by the verifier: CASE-0461's real, landing mutation with only its Swift function name changed produced `[CASE-0461] ARMED ... exit 1 · Test run with 0 tests in 0 suites passed` and `armed 1 of 1 · inconclusive 0` at process exit 0 with the tree clean. The started-line guard could not catch it — `started` is empty, so `display is not None and started and display not in started` is skipped, and `display` was None anyway because display_name correctly refused. The non-zero exit is scripts/test.sh's OWN zero-test refusal, so the rule was reading the harness's refusal to grade as a grade. Fixed: the test count is read back out of the published verdict line, and a verdict over zero tests is inconclusive naming why, exactly as a setup death is. Reintroducing `armed = code != 0` returns ARMED on the same fixture.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/zero-tests-arming.txt"
+      ]
+    },
+    {
+      "id": "DEF-245",
+      "title": "porcelain_paths re-created DEF-206 on the rename branch DEF-206's repair added",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "requirements": [
+        "REQ-134"
+      ],
+      "note": "The DEF-206 repair split a rename entry from the RIGHT, on the reasoning that an unconditional split re-creates DEF-206 on any path containing the arrow. Splitting from the right re-creates it on a different input: `git mv src.png \"stage-1 -> stage-2.png\"` gives `R  src.png -> \"stage-1 -> stage-2.png\"`, whose last ` -> ` is inside the quoted destination, so porcelain_paths returned `stage-2.png\"` — unopenable — and --allow-dirty wrote that phantom permanently into run.json.dirty_inputs, which is DEF-206's original harm. Neither naive split survives git: the first ` -> ` is wrong when the SOURCE is quoted and holds an arrow, the last is wrong when the destination is. Fixed by reading the quoting: porcelain v1 quotes a path holding a space (git's own QUOTE_PATH_QUOTE_SP, driven against git 2.50.1), so an unquoted side cannot contain the separator, and a quoted side is scanned to its closing quote honouring backslash escapes. The existing fixture drove an arrow inside a ` M` path and never inside an `R` destination.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+      ]
+    },
+    {
+      "id": "DEF-246",
+      "title": "a cited .mov failed as absent from an audit whose population could never hold it",
+      "status": "fixed",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-136"
+      ],
+      "note": "audit() globbed `*.png` while cite_paths accepts twelve suffixes, so the two sets differed and the gap read as a missing file: a real .mov placed under evidence/shots and cited gave `CASE-0001 cites evidence/shots/probe-clip.mov: under evidence/shots and absent from this audit`, a hard failure over a file that is present. audit() cannot widen — measure() reads a PNG IHDR out of bytes 16..24 and hands the file to PIL for the pixel counts — so the population is declared once as AUDIT_SUFFIX, the glob is built from it, and the citation branch reads it: a cited file outside the population is a notice saying so and is checked for existence and no further.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
+    },
+    {
+      "id": "DEF-247",
+      "title": "cite_paths skipped every dict key and every path holding a space",
+      "status": "fixed",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-136"
+      ],
+      "note": "Two places a citation could hide from the gate DEF-227 built, both DEF-227's own shape: the walk recursed into dict VALUES only, so a path used as a key — a per-shot note keyed by the file it is about — was never scanned; and any string holding a space was disqualified outright, which is a proxy for `this is prose about a file` and also disqualifies a real capture whose name has a space in it. Keys are walked now, and a spaced string that RESOLVES on disk is a citation. RESIDUAL, stated rather than closed: a citation of a MISSING file whose name holds a space still reads as prose, because that string and a sentence naming a file are not separable by any rule this has.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
+    },
+    {
+      "id": "DEF-248",
+      "title": "unquote_path returned a still-quoted path under core.quotePath=false",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "requirements": [
+        "REQ-134"
+      ],
+      "note": "DEF-206's harm reached by a git CONFIG rather than by a filename. core.quotePath decides whether git escapes non-ASCII bytes in octal or writes the UTF-8 through literally, and it is a setting a user commonly carries in their own gitconfig. The old `encode(ascii, backslashreplace).decode(unicode_escape).encode(latin-1).decode(utf-8)` round trip handled the octal form and raised UnicodeDecodeError on the literal one, and the except branch returned the entry WITH ITS QUOTES ON: `\"docs/test-campaign/café latte.json\"`, a name nothing can open, written permanently into run.json.dirty_inputs under --allow-dirty. Measured against git 2.50.1 in both modes. Fixed by unquoting byte by byte, with surrogateescape on a sequence that is not UTF-8 so an undecodable name stays openable. Found by the out-of-family review of the gap-fix.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+      ]
+    },
+    {
+      "id": "DEF-249",
+      "title": "tree_dirty carried the same line[3:] slice DEF-206 was about",
+      "status": "fixed",
+      "severity": "low",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "requirements": [
+        "REQ-134"
+      ],
+      "note": "In mutation_seam_arm.py, the file DEF-206's second round repaired. `tree_dirty` filtered on `line[3:].strip().startswith('docs/')`, so a quoted entry — any path with a space or a non-ASCII byte — arrived as `\"docs/...` and was not recognised as a docs-only change, and the arm refused to run at exit 2 over a change it is meant to tolerate. It errs the other way too: `R  docs/x.md -> Sources/y.swift` starts with `docs/` when nothing splits the rename, so a file moving OUT of docs/ was silently tolerated. Fail closed on one side and open on the other, and the same defect on both. A rename is tolerated now only when both names it carries are under docs/. Found by the out-of-family review of the gap-fix.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
+    },
+    {
+      "id": "DEF-250",
+      "title": "a repo-relative citation skipped every check but existence",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-136"
+      ],
+      "note": "cases.json may write a cited path campaign-relative or repo-relative. `rows` is keyed campaign-relative and the branch tested `path.startswith('evidence/shots/')`, so a citation written as `docs/test-campaign/evidence/shots/x.png` matched neither: it resolved on disk and then returned no reasons at all, skipping the disposition check and the publishing-subject check that are the whole of DEF-227's repair. DEF-227's own class, reached by writing the path the other way round. The prefix is derived from CAMPAIGN.relative_to(REPO) rather than written a second time. Latent rather than active — no case in this campaign cites a shot that way today. Found by the out-of-family review of the gap-fix.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
+    },
+    {
+      "id": "DEF-251",
+      "title": "the check that verify() guards the identity grouping could not fail",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-130"
+      ],
+      "note": "`check(\"the byte-identical grouping moved\" in text, \"verify() fails on a change to the grouping\")` read shot_disposition.py's SOURCE for the sentence the branch would print. It passes whether or not the branch runs, it never called verify(), and it would keep passing over a verify() that had stopped comparing groups at all. A check nobody has watched fire is indistinguishable from a check that cannot, which is the sentence this item opens with, sitting in this item's own fixture file. verify() is now driven twice in one session: over an emptied grouping, where it exits 1 and prints the sentence, and over the grouping the run computes, where it exits 0 and does not. Found by the out-of-family review of the gap-fix rather than by the item.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
     }
   ]
 }

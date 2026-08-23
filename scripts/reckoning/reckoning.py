@@ -99,6 +99,140 @@ def git(repo, *args):
     return code, out.strip(), err.strip()
 
 
+def git_raw(repo, *args):
+    """git's output exactly as git wrote it.
+
+    `git()` strips, which is right for a `rev-parse` and wrong for anything
+    column-oriented. DEF-206: a porcelain status line's leading space is a status
+    column, so ` M docs/x` arriving as `M docs/x` moves every column left by one
+    and the slice that drops the two status characters and the space eats the
+    first character of the path instead.
+    """
+    return run(["git", "-C", str(repo)] + list(args))
+
+
+_C_ESCAPES = {ord("a"): 0x07, ord("b"): 0x08, ord("t"): 0x09, ord("n"): 0x0A,
+              ord("v"): 0x0B, ord("f"): 0x0C, ord("r"): 0x0D,
+              ord('"'): 0x22, ord("\\"): 0x5C}
+
+
+def unquote_path(entry):
+    """A path as git printed it, back to the path on disk.
+
+    git quotes a path containing a control character, a space, a quote, a
+    backslash or a non-ASCII byte. Left quoted, such a path is as unfindable as
+    the one DEF-206 chopped a character off.
+
+    UNQUOTED BYTE BY BYTE RATHER THAN THROUGH `unicode_escape`, because the two
+    quoting modes need the same answer and the round trip only handled one.
+    Under the default `core.quotePath=true` git escapes every non-ASCII byte in
+    octal (`"d/caf\\303\\251 latte.txt"`); under `core.quotePath=false`, which
+    is a common setting in a user's own gitconfig, it writes the UTF-8 through
+    literally (`"d/caf\u00e9 latte.txt"`) and quotes only for the space. The old
+    round trip decoded the first and raised `UnicodeDecodeError` on the second,
+    whose except branch returned the entry WITH ITS QUOTES ON \u2014 DEF-206's harm
+    again, reached by a git config rather than by a filename. Measured against
+    git 2.50.1 in both modes. Out-of-family review, PRO-0106.
+
+    A byte sequence that is not UTF-8 is decoded with `surrogateescape`, which is
+    what the filesystem calls accept, so an undecodable name is still openable
+    rather than mangled into one that is not.
+    """
+    if not (len(entry) >= 2 and entry[0] == '"' and entry[-1] == '"'):
+        return entry
+    raw = entry[1:-1].encode("utf-8", "surrogateescape")
+    out = bytearray()
+    i = 0
+    while i < len(raw):
+        if raw[i] != 0x5C:
+            out.append(raw[i])
+            i += 1
+            continue
+        i += 1
+        if i >= len(raw):
+            out.append(0x5C)
+            break
+        if 0x30 <= raw[i] <= 0x37:
+            digits = ""
+            while i < len(raw) and len(digits) < 3 and 0x30 <= raw[i] <= 0x37:
+                digits += chr(raw[i])
+                i += 1
+            out.append(int(digits, 8) & 0xFF)
+            continue
+        out.append(_C_ESCAPES.get(raw[i], raw[i]))
+        i += 1
+    return out.decode("utf-8", "surrogateescape")
+
+
+def rename_destination(entry):
+    """The destination half of a porcelain `R`/`C` entry, read by its quoting.
+
+    DEF-206 again, one level in. A rename entry names both sides on one line
+    separated by ` -> `, and NEITHER naive split survives contact with git:
+
+        R  src.png -> "stage-1 -> stage-2.png"      split last  -> `stage-2.png"`
+        R  "a -> b.png" -> renamed.png              split first -> `b.png" -> renamed.png`
+
+    Both of those are names nobody can open, and `--allow-dirty` writes whichever
+    one it got permanently into `run.json.dirty_inputs`, which is the original
+    harm. The separator is findable only by reading the quoting, so that is what
+    this does: porcelain v1 quotes a path C-style whenever it holds a space, a
+    quote, a backslash or a non-ASCII byte (git's own QUOTE_PATH_QUOTE_SP, driven
+    against git 2.50.1 and recorded in the selftest), so an UNQUOTED side cannot
+    contain a space and therefore cannot contain the separator. Quoted side: scan
+    to the closing quote, honouring backslash escapes, and the separator is what
+    follows. Unquoted side: the first ` -> ` is the separator, and there is no
+    second candidate for it to be confused with.
+
+    Returns the entry unchanged when it carries no separator, so a status code
+    this misreads as a rename cannot silently truncate a plain path.
+    """
+    if entry.startswith('"'):
+        i = 1
+        while i < len(entry):
+            if entry[i] == "\\":
+                i += 2
+                continue
+            if entry[i] == '"':
+                rest = entry[i + 1:]
+                return rest[4:] if rest.startswith(" -> ") else entry
+            i += 1
+        return entry
+    head, sep, tail = entry.partition(" -> ")
+    return tail if sep else entry
+
+
+def porcelain_paths(repo, inputs):
+    """(exit, paths) — the paths `git status --porcelain` names, parsed not sliced.
+
+    DEF-206. The refusal built on this names files a reader has to be able to
+    find, and `--allow-dirty` writes them permanently into `run.json.dirty_inputs`,
+    so a mangled name here becomes a permanent record of a path that never
+    existed. Three things the old slice got wrong: the leading status space that
+    `git()` stripped off the first line, a rename entry that names both sides,
+    and a quoted non-ASCII path.
+    """
+    code, out, _ = git_raw(repo, "status", "--porcelain", "--", *inputs)
+    paths = []
+    for line in out.splitlines():
+        if len(line) < 4:
+            continue
+        status, entry = line[:2], line[3:]
+        # `R  old -> new` / `C  old -> new`. The working tree carries the
+        # destination. Gated on the status code, and either column is read: git
+        # 2.50.1 reports an unstaged rename as ` D` plus `??` rather than ` R`,
+        # so column two is not observed to carry one here, and the guard is wide
+        # on purpose rather than on evidence. `rename_destination` returns the
+        # entry untouched when there is no separator, so a status code read
+        # wrongly costs nothing.
+        if "R" in status or "C" in status:
+            entry = rename_destination(entry)
+        entry = unquote_path(entry)
+        if entry:
+            paths.append(entry)
+    return code, paths
+
+
 def repo_name(repo):
     """The repository's name, not the worktree's.
 
@@ -226,8 +360,7 @@ def resolve_tree(repo, inputs, allow_dirty=False):
     if code != 0:
         return None, "not a git repository at %s (%s)" % (repo, err)
     _, branch, _ = git(repo, "rev-parse", "--abbrev-ref", "HEAD")
-    code, dirty, _ = git(repo, "status", "--porcelain", "--", *inputs)
-    dirty_paths = [line[3:] for line in dirty.splitlines() if line.strip()]
+    _, dirty_paths = porcelain_paths(repo, inputs)
 
     tree = {"repo": repo_name(repo), "commit": head, "short": head[:7],
             "branch": branch, "tree_named": True, "dirty_inputs": dirty_paths}
@@ -279,6 +412,16 @@ def cmd_take(args):
     build_exit = code
     after = sweep(out)
     written = sorted(set(after) - set(before))
+    # DEF-205. `sweep()` measures bytes and a digest per file and the record used
+    # to keep only the names, so the witness could say two files appeared and not
+    # what was in them — and a file rewritten between the two sweeps appeared in
+    # neither set, which is the case a name-only witness cannot see at all.
+    rewritten = sorted(n for n in set(after) & set(before) if after[n] != before[n])
+    unchanged = sorted(n for n in set(after) & set(before) if after[n] == before[n])
+    # The third kind, and it is the same blindness in the other direction: under
+    # --force a re-take runs over a directory that already holds a reading, and a
+    # file the build stopped writing leaves no trace in either name set.
+    removed = sorted(set(before) - set(after))
 
     if not (out / "ledger.json").is_file():
         return refuse("reckon wrote no ledger (build exit %d)" % build_exit)
@@ -303,8 +446,18 @@ def cmd_take(args):
         "denominators": {k: v for k, v in ledger.get("denominators", {}).items()
                          if isinstance(v, dict)},
         "class_counts": dict(counts),
-        "effect": {"kind": "filesystem-write", "root": str(out), "files_written": written,
-                   "count": len(written)},
+        "effect": {"kind": "filesystem-write", "root": str(out),
+                   "files_written": written, "count": len(written),
+                   "written": {n: after[n] for n in written},
+                   "rewritten": {n: {"before": before[n], "after": after[n]}
+                                 for n in rewritten},
+                   "rewritten_count": len(rewritten),
+                   "removed": {n: before[n] for n in removed},
+                   "removed_count": len(removed),
+                   "unchanged_count": len(unchanged),
+                   "witness": ("every file under the root with its byte count and sha256, "
+                               "before and after the build, so the claim that a command wrote "
+                               "something names what appeared and what it held")},
         "provenance": "measured",
         "notes": list(args.note or []),
     }
