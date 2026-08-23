@@ -704,7 +704,7 @@
       "surfaces": [
         "SURF-004"
       ],
-      "note": "The 'Automation Running' banner the report named is macOS's own: 'Automation Mode Enabled Title' in AutomationModeUI.app's Localizable.loctable, drawn by AutomationModeUI.app (pid 64198, ppid 1) and driven by XCTest/testmanagerd. It is not Proctor's and not cua-driver's, so the report's first clause names runs Proctor never drove and no change here can put an overlay over them. Recorded inconclusive against a stated ceiling rather than passed.",
+      "note": "The 'Automation Running' banner the report named is macOS's own: 'Automation Mode Enabled Title' in AutomationModeUI.app's Localizable.loctable, drawn by AutomationModeUI.app (pid 64198, ppid 1) and driven by XCTest/testmanagerd. It is not Proctor's and not cua-driver's, so the report's first clause names runs Proctor never drove and no change here can put an overlay over them. Recorded inconclusive against a stated ceiling rather than passed. EVIDENCE WORD RECORDED, 2026-08-23: this requirement's evidence reads `inconclusive`, which is a deliberate case status rather than an oversight — the instrument for it could not settle the claim and said so. It was flagged by reckon 1.2.0's vocabulary check at the wave-17-close reckoning, which is the check doing its job: the word is real, it names one row, and its rule now lives in the registry rather than in the tool. `inconclusive` is evidence that was sought and not obtained — distinct from `unmeasured`, which is evidence nobody has sought.",
       "effect": "none"
     },
     {

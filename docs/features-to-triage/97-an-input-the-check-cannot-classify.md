@@ -10,7 +10,8 @@ saying so**.
 
 - **DEF-201** — `reckon`'s `ID_RE` scans a brief's whole body for id-shaped tokens with no code-fence
   and no placeholder exclusion, so a quoted example id becomes a citation at confidence 1.0. A brief
-  whose only id-shaped token was `CASE-9999` inside an example command classed `unbuilt`, on the
+  whose only id-shaped token was `CASE-9999` inside an example command — **a quotation of a probe,
+not a citation of this registry**; the id does not exist and cites nothing — classed `unbuilt`, on the
   reasoning that the registry holds none of the ids it cites.
 - **DEF-203** — `spec_citation_measure.py`'s legacy fallback accepts a brief path from a fenced block,
   an HTML comment or a struck-through line; its `none.` floor accepts an unresolvable reference and
