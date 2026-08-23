@@ -23,14 +23,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 3 issues.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.002 seconds with 3 issues.",
    "testsStarted": [
     "Asking for windowless apps returns the accessory ones too"
    ],
    "testsFinished": [
     "Asking for windowless apps returns the accessory ones too"
    ],
-   "seconds": 5.7,
+   "seconds": 6.6,
    "why": "the includeWindowless flag inverts meaning"
   },
   {
@@ -46,14 +46,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.011 seconds with 1 issue.",
    "testsStarted": [
     "Every decoded boolean default matches the default its schema states"
    ],
    "testsFinished": [
     "Every decoded boolean default matches the default its schema states"
    ],
-   "seconds": 4.2,
+   "seconds": 6.2,
    "why": "every stability run compares pixel tiles nobody asked for"
   },
   {
@@ -76,7 +76,7 @@
    "testsFinished": [
     "An omitted boolean argument resolves at runtime to its published default"
    ],
-   "seconds": 1.6,
+   "seconds": 2.6,
    "why": "the same survivor asked of the decoder rather than of the source"
   },
   {
@@ -99,7 +99,7 @@
    "testsFinished": [
     "An omitted boolean argument resolves at runtime to its published default"
    ],
-   "seconds": 4.2,
+   "seconds": 12.7,
    "why": "the same survivor asked of the decoder rather than of the source"
   },
   {
@@ -115,14 +115,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.010 seconds with 1 issue.",
    "testsStarted": [
     "Every decoded boolean default matches the default its schema states"
    ],
    "testsFinished": [
     "Every decoded boolean default matches the default its schema states"
    ],
-   "seconds": 1.6,
+   "seconds": 2.6,
    "why": "inspect stops returning presentation values it publishes by default"
   },
   {
@@ -145,7 +145,7 @@
    "testsFinished": [
     "A default snapshot leaves invisible nodes out, as its schema says"
    ],
-   "seconds": 18.4,
+   "seconds": 15.0,
    "why": "an unasked-for snapshot carries zero-area and offscreen nodes"
   },
   {
@@ -159,14 +159,14 @@
    "mutationLanded": "mutation landed, confirmed by re-reading the file",
    "state": "ARMED",
    "armed": true,
-   "reason": "no verdict line, and the log shows the named test was running when the process died: `Test \"A single fitting window is correlated to its own number\" started.` with no completion line and exit 1. A trap inside the mutated code is the check firing; a death before that line is not.",
+   "reason": "no verdict line, and the log shows the named test was running when the process died: `Test \"A single fitting window is correlated to its own number\" started.` was the only test to start, none finished, exit 1. A trap inside the mutated code is the check firing; a death before that line is not. WHAT THIS DOES NOT ESTABLISH: a trap in the test's own setup, a `try #require` before the subject is called, or a crash in teardown all land after the started line and would read the same. The evidence separates a death inside the named test from a death before any test ran, and no further.",
    "exit": 1,
    "verdict": "",
    "testsStarted": [
     "A single fitting window is correlated to its own number"
    ],
    "testsFinished": [],
-   "seconds": 19.8,
+   "seconds": 12.1,
    "why": "the single fitting window resolves to a number that is not its own"
   },
   {
@@ -189,7 +189,7 @@
    "testsFinished": [
     "A bare pid that is not a GUI application is still a candidate"
    ],
-   "seconds": 5.2,
+   "seconds": 4.4,
    "why": "a bare pid stops being selectable while any other process runs"
   },
   {
@@ -205,14 +205,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.146 seconds with 1 issue.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.051 seconds with 1 issue.",
    "testsStarted": [
     "The HUD panel takes key and refuses to become main"
    ],
    "testsFinished": [
     "The HUD panel takes key and refuses to become main"
    ],
-   "seconds": 5.0,
+   "seconds": 4.5,
    "why": "the HUD takes the main window from the app under test"
   },
   {
@@ -235,7 +235,7 @@
    "testsFinished": [
     "Every light-palette ink and fill tone is one graphite at a different opacity"
    ],
-   "seconds": 8.2,
+   "seconds": 7.6,
    "why": "one ink tone drifts off the palette's single graphite"
   },
   {
@@ -258,7 +258,7 @@
    "testsFinished": [
     "Only the two disable notices read as macOS switching the tap off"
    ],
-   "seconds": 8.5,
+   "seconds": 7.3,
    "why": "every keystroke reads as macOS switching the tap off"
   },
   {
@@ -274,14 +274,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.005 seconds with 1 issue.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.044 seconds with 1 issue.",
    "testsStarted": [
     "The cached public key is a file in the audit directory, and reads back"
    ],
    "testsFinished": [
     "The cached public key is a file in the audit directory, and reads back"
    ],
-   "seconds": 4.7,
+   "seconds": 4.4,
    "why": "the cached public key's URL claims to be a directory"
   }
  ]
