@@ -2843,3 +2843,46 @@ The cost of holding out was measured rather than hypothetical, and it is recorde
 merged with **no out-of-family verdict**, because gemini refused twice on its own permission probes and
 the in-family fallback read the merge base rather than the branch. That verdict is now obtainable
 retrospectively.
+
+### A repair can inherit the property it was repairing — hold this for PRO-0106's verification (2026-08-23)
+
+Measured in a sibling project the same morning, and it is this campaign's founding failure in a
+different substrate. An out-of-family critic caught that an id-allocation instrument was a **static
+register parser that never invoked the allocator**, so its defect was closed by *arming* rather than by
+*construction* and reverting the lock would have left every assertion green. The repair that critic
+prompted then **reproduced the same flaw one layer down**: the new harness drives one kind only, so the
+other write path is driven by nothing, and reintroducing the original defect on that path leaves both
+new instruments at exit 0.
+
+**PRO-0106 is in flight building repairs for exactly this class**, so its obvious failure mode is now
+named: a repair that proves the step on the path the harness exercises while leaving another path
+undriven. Its verifier is to drive **every** kind the repaired write path accepts rather than the one
+the harness happens to run, and to reintroduce each original defect on each path.
+
+Workflow-inner agents do not appear in `ListAgents` and cannot be messaged mid-run, so this reaches the
+item at verification rather than during the build. Worth knowing as a limit of this orchestration: a
+finding that arrives after dispatch waits for the next stage boundary.
+
+### The out-of-family lane has now broken four decisions in a day, and that is the argument for it
+
+A lane that only ever agrees is not paying for its cost. These did the opposite: it found the
+id-allocation instrument was never constructional; it found a repair inheriting its own flaw; it found
+two real defects inside PRO-0104's new code (`9+` matching `REQ-9`, and a path resolving against the
+machine, which passed `/bin/sh` and `../../../etc/passwd`); and on PRO-0107 it found **DEF-227**, the
+only reviewer of four to ask what the instrument does **not** read.
+
+The agreements are worth recording too, and one is worth more than the disagreements. On PRO-0107's
+central judgement — publish nothing, because a target records where the capture channel was pointed and
+inspection cannot establish it — the out-of-family reviewer reached the same conclusion **independently
+and in its own words**, having not seen the in-family reasoning. That was the call this orchestration
+was least sure of, and a second family arriving at it separately is the only evidence available that it
+is right rather than merely consistent.
+
+### One open question, recorded as open rather than as a finding
+
+`shot_disposition.py` **does** detect identity and reports it — `43 image(s) · 43 disposed · 4
+byte-identical group(s)` — and that byte-identity is what carries DEF-221. So a reader would notice two
+identical files. What is **not** established is whether that detection is itself armed: would anything
+fail if it silently stopped grouping? DEF-226 records the neighbouring hole, that `--write` adopts any
+new content as the baseline. This one is unmeasured and is on the list as a question, not asserted
+either way.
