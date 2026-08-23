@@ -4650,8 +4650,9 @@
       "design/surfaces/proctor-surfaces.html",
       "docs/test-campaign/evidence/PRO-0100/full-suite-run2.txt"
     ],
-    "armed": false,
-    "note": "PRO-0100, DEF-163, the design half. Asserts the record still draws the refusing primary plain-and-disabled (class=\"btn\" disabled) and never in the accent fill. NOT ARMED, and recorded so rather than claimed: the design already draws it correctly and this case exists to stop the app and the record being reconciled in the wrong direction later. Arming it would mean breaking the design of record to watch a case fail, which is the mutation CASE-0390's arming already performs on the same file and pane. A case nobody has watched fail is a case whose green means less; that is the honest status here rather than a mutation invented to dress it up.",
+    "armed": true,
+    "armedBy": "PRO-0106, DEF-200. Watched to fail on a scratch basis: the permissions footer's refusing primary redrawn from class=\"btn\" disabled to class=\"btn prominent\" disabled — the accent-fill treatment DEF-163 was about — and WalkthroughFlowTests.theDesignDrawsTheRefusingPrimaryPlain reds at WalkthroughFlowTests.swift:397 with `the design's refusing primary is no longer drawn plain-and-disabled`. The mutation was confirmed landed by re-reading the file before the verdict was read, restored immediately, and the tree checked clean afterwards. docs/test-campaign/evidence/PRO-0106/def200-case-0392-arming.txt.",
+    "note": "PRO-0100, DEF-163, the design half. Asserts the record still draws the refusing primary plain-and-disabled (class=\"btn\" disabled) and never in the accent fill. Recorded NOT ARMED at PRO-0100 on the grounds that arming it would mean breaking the design of record; a verifier broke it on a scratch basis anyway and the check red, so the case was armable all along and the registry understated its own strength. The flag stayed down because that probe left no evidence file, and no artifact means no verdict. PRO-0106 ran it again and kept the artifact, which is what closes DEF-200 — the repair was never a change to the check.",
     "defects": [
       "DEF-163"
     ],

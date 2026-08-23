@@ -36,6 +36,12 @@ the file re-read from disk must equal the spliced text exactly — and a mutant 
 fails either is `inconclusive`, out of the survival-rate denominator with the
 timeouts, because nothing was measured. DEF-207.
 
+The same verdict covers a suite that did not report. `p.returncode == 0` was the
+whole reading once a build error was ruled out, so a runner that died after
+linking and before printing scored `killed` — crediting the tests with catching a
+fault they were never run against. A non-zero exit with no `Test run with N tests`
+line is `inconclusive` too. DEF-240.
+
 The count is stated here because the first version of this file said six and
 listed an integer literal increment it did not implement. A docstring that
 describes a table it does not read is a second source, which is the defect this
@@ -262,11 +268,34 @@ def score(passed: bool, why: str, elapsed: float, bound: int) -> tuple[str, bool
         return "unbuildable", False
     if why == "timeout":
         return "TIMEOUT", True
+    if why == "no-verdict-line":
+        # DEF-240. The suite exited non-zero and never said it had run. A kill is
+        # a claim that the tests caught the fault, and there is nothing here that
+        # says the tests ran at all.
+        return "inconclusive", False
     return ("SURVIVED" if passed else "killed"), elapsed >= bound * NEAR_BOUND
 
 
+VERDICT_LINE = re.compile(r"Test run with \d+ test")
+
+
 def run_suite(timeout: int) -> tuple[bool, str]:
-    """(suite passed, why). A build failure is not a kill and is reported apart."""
+    """(suite passed, why). A build failure is not a kill and is reported apart.
+
+    DEF-240, and it is DEF-208's shape inside this file rather than beside it.
+    `p.returncode == 0` was the whole verdict once the build was ruled out, so a
+    runner that died after linking and before reporting scored `failed` and then
+    `killed` — the direction that flatters the suite, because it credits the tests
+    with catching a fault they were never run against. The suite says whether it
+    ran: swift-testing prints `Test run with N tests …` on a pass and on a
+    failure alike, and `scripts/test.sh` prints `FAIL: no swift-testing verdict
+    line` when it finds neither. No verdict line and no build error is a run that
+    did not report, which is `inconclusive` rather than a kill.
+
+    The (passed, why) shape is kept deliberately: `mutation_timeout_arm.py`
+    substitutes its own `run_suite` to drive this runner end to end, and widening
+    the contract would break the arming that watches this file.
+    """
     try:
         p = subprocess.run(["./scripts/test.sh"], capture_output=True, text=True,
                            timeout=timeout)
@@ -277,6 +306,8 @@ def run_suite(timeout: int) -> tuple[bool, str]:
         return False, "build-failed"
     if p.returncode == 0:
         return True, "passed"
+    if not VERDICT_LINE.search(out):
+        return False, "no-verdict-line"
     return False, "failed"
 
 
@@ -306,6 +337,9 @@ def main() -> int:
     base_passed, base_why = run_suite(args.timeout)
     if not base_passed:
         print(f"REFUSING: the suite does not pass before any mutation ({base_why}).")
+        if base_why == "no-verdict-line":
+            print("The suite exited non-zero and printed no `Test run with N tests` line, so it "
+                  "is not a red baseline — it is a baseline that did not report.")
         print("Every mutant would report as killed and the survival rate would be 0% "
               "for the wrong reason.")
         return 2
@@ -356,6 +390,8 @@ def main() -> int:
             unbuildable += 1
         elif verdict == "TIMEOUT":
             timed_out += 1
+        elif verdict == "inconclusive":
+            inconclusive += 1
         elif verdict == "SURVIVED":
             survived += 1
         else:
@@ -426,7 +462,10 @@ def main() -> int:
               f"watches.")
         for r in results:
             if r["verdict"] == "inconclusive":
-                print(f"  inconclusive: {Path(r['file']).name}:{r['line']} — {r['mutationLanded']}")
+                why_line = ("the suite exited non-zero and printed no verdict line, so nothing "
+                            "says it ran" if r["why"] == "no-verdict-line"
+                            else r.get("mutationLanded", r["why"]))
+                print(f"  inconclusive: {Path(r['file']).name}:{r['line']} — {why_line}")
     if timed_out:
         print(f"{timed_out} mutant(s) reached the {args.timeout}s bound and are NOT in that "
               f"denominator. A timeout is the absence of a measurement, and scoring one as a "

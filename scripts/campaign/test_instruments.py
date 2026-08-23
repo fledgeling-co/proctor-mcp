@@ -1070,6 +1070,56 @@ def test_mutate_swift_unproved_mutation_is_inconclusive() -> None:
           "and the row names why the step could not be proved", row["mutationLanded"])
 
 
+def test_mutate_swift_unreported_suite_is_inconclusive() -> None:
+    """DEF-240: the same hole as DEF-208, inside this file rather than beside it.
+
+    `run_suite` read `p.returncode == 0` as the whole verdict once a build error
+    was ruled out, so a runner dying after linking and before reporting scored
+    `failed` and then `killed` — the direction that flatters the suite, because it
+    credits the tests with catching a fault they were never run against.
+
+    The (passed, why) contract is held on purpose: `mutation_timeout_arm.py`
+    substitutes its own `run_suite` to drive the runner end to end, so widening it
+    would break the arming that watches this file. Checked here rather than
+    assumed.
+    """
+    mod = _mutate_swift()
+    real_subprocess_run = mod.subprocess.run
+
+    class _P:
+        def __init__(self, out, code):
+            self.stdout, self.stderr, self.returncode = out, "", code
+
+    linked = "Build complete! (4.83s)\n"
+    cases = [
+        ("a run that reported a failure", linked + "Test run with 1 test in 1 suite failed "
+         "after 0.001 seconds with 1 issue.", 1, "failed", "killed"),
+        ("a run that died after linking", linked + "error: Process '…' exited with unexpected "
+         "signal code 5\nFAIL: no swift-testing verdict line in the output.", 1,
+         "no-verdict-line", "inconclusive"),
+        ("a run that passed", linked + "Test run with 2074 tests in 252 suites passed after "
+         "18.008 seconds.", 0, "passed", "SURVIVED"),
+        ("a build failure", "error: cannot find 'x' in scope\n", 1, "build-failed", "unbuildable"),
+    ]
+    try:
+        for label, out, code, want_why, want_verdict in cases:
+            mod.subprocess.run = lambda *a, _o=out, _c=code, **k: _P(_o, _c)
+            passed, why = mod.run_suite(600)
+            check(why == want_why, f"{label} is reported as `{want_why}` ({why})")
+            verdict, _near = mod.score(passed, why, 12.0, 600)
+            check(verdict == want_verdict,
+                  f"{label} scores `{want_verdict}` ({verdict})")
+    finally:
+        mod.subprocess.run = real_subprocess_run
+
+    check(len(mod.run_suite.__annotations__.get("return").__args__) == 2
+          if hasattr(mod.run_suite.__annotations__.get("return"), "__args__") else True,
+          "run_suite still returns the (passed, why) pair mutation_timeout_arm substitutes")
+    timeout_arm = (ROOT / "scripts/campaign/mutation_timeout_arm.py").read_text()
+    check('return (True, "passed") if calls["n"] == 1 else (False, "timeout")' in timeout_arm,
+          "and the substitute in mutation_timeout_arm.py still matches that shape")
+
+
 # ── DEF-208: a non-zero exit is not a test result ───────────────────────────
 #
 # `armed = code != 0` read three different events as one: a check firing, a
@@ -1231,6 +1281,7 @@ def main() -> int:
                test_operator_path_gate_on_this_repository,
                test_mutate_swift_proves_its_splice,
                test_mutate_swift_unproved_mutation_is_inconclusive,
+               test_mutate_swift_unreported_suite_is_inconclusive,
                test_seam_arm_scores_the_trap_from_the_log,
                test_seam_arm_scores_a_reported_run,
                test_seam_arm_refuses_an_ambiguous_display_name,

@@ -1,0 +1,22 @@
+[control] test_instruments.py on the repaired tree
+  exit 0 · campaign instruments: 106 passed, 0 failed
+
+[DEF-240] mutate the verdict-line requirement in mutate_swift.py
+  effect: run_suite scores a runner that died after linking as a plain failure, and score() turns that into a kill
+  occurrences of the anchor: 1
+  mutation landed, confirmed by re-reading the file: True
+  exit 1 · campaign instruments: 104 passed, 2 failed
+    FAIL  a run that died after linking is reported as `no-verdict-line` (failed)
+    FAIL  a run that died after linking scores `inconclusive` (killed)
+
+[DEF-240] mutate the inconclusive verdict in mutate_swift.py
+  effect: score() grades an unreported run as a kill or a survivor
+  occurrences of the anchor: 1
+  mutation landed, confirmed by re-reading the file: True
+  exit 1 · campaign instruments: 105 passed, 1 failed
+    FAIL  a run that died after linking scores `inconclusive` (killed)
+
+[restored]
+  exit 0 · campaign instruments: 106 passed, 0 failed
+  git status: M scripts/campaign/mutate_swift.py
+  unarmed: none — both mutations were seen to red the suite
