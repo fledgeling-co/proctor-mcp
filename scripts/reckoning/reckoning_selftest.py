@@ -308,6 +308,52 @@ def main():
         report("two-way · with the versions agreeing the same pair compares",
                code == 0, "exit %d: %s" % (code, out[-200:]))
 
+        # --- 7c. altered code at matching version is refused (DEF-204) ------
+        # 1. Current reading was taken by tool with altered code/hash vs comparison tool
+        altered_rec = json.loads((b / "run.json").read_text())
+        good_sha = altered_rec["tool"].get("sha256") or _sha256_of(good_tool)
+        altered_rec["tool"]["sha256"] = "0" * 64
+        (b / "run.json").write_text(json.dumps(altered_rec), encoding="utf-8")
+        code, out = run([sys.executable, SUBJECT, "compare", third, b, "--repo", repo,
+                         "--reckon", good_tool], cwd=repo)
+        report("gate · altered tool code at matching version is refused for current reading",
+               code == 2 and "altered code at a matching version" in out and "content hashes differ" in out,
+               "exit %d: %s" % (code, out[-240:]))
+        code, out = run([sys.executable, SUBJECT, "compare", third, b, "--repo", repo,
+                         "--reckon", good_tool, "--allow-differing-tool"], cwd=repo)
+        report("two-way · --allow-differing-tool permits comparison of altered current reading",
+               code == 0, "exit %d: %s" % (code, out[-200:]))
+
+        # 2. Previous reading was taken by tool with altered code/hash vs current reading
+        altered_rec["tool"]["sha256"] = good_sha
+        (b / "run.json").write_text(json.dumps(altered_rec), encoding="utf-8")
+        prev_altered_rec = json.loads((third / "run.json").read_text())
+        prev_altered_rec["tool"]["sha256"] = "f" * 64
+        (third / "run.json").write_text(json.dumps(prev_altered_rec), encoding="utf-8")
+        code, out = run([sys.executable, SUBJECT, "compare", third, b, "--repo", repo,
+                         "--reckon", good_tool], cwd=repo)
+        report("gate · altered tool code at matching version is refused across readings",
+               code == 2 and "altered code at a matching version" in out and "content hashes differ" in out,
+               "exit %d: %s" % (code, out[-240:]))
+        code, out = run([sys.executable, SUBJECT, "compare", third, b, "--repo", repo,
+                         "--reckon", good_tool, "--allow-differing-tool"], cwd=repo)
+        report("two-way · --allow-differing-tool decomposes across readings with altered tool code",
+               code == 0 and json.loads((b / "delta.json").read_text())["attribution"] == "decomposed",
+               "exit %d: %s" % (code, out[-200:]))
+
+        # Arming: with tool_code_differs checks disabled, altered code passes directly
+        mutant = mutate_subject(tmp / "m7c.py", [
+            ('    if differs_prev_cur and not allow_differing_tool:', '    if False:', 1)
+        ])
+        code, out = run([sys.executable, mutant, "compare", third, b, "--repo", repo,
+                         "--reckon", good_tool], cwd=repo)
+        report("arming · removing the tool code disparity check passes altered code without flag",
+               code == 0, "exit %d: %s" % (code, out[-200:]))
+
+        # Restore third run.json sha256
+        prev_altered_rec["tool"]["sha256"] = good_sha
+        (third / "run.json").write_text(json.dumps(prev_altered_rec), encoding="utf-8")
+
         # --- 8. the ratchet ------------------------------------------------
         violating = tmp / "violating"
         shutil.copytree(b, violating)
