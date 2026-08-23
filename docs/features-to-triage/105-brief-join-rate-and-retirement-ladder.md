@@ -1,3 +1,6 @@
+---
+sources: [REQ-170, REQ-171, REQ-172, DEF-295]
+---
 # Brief join rate optimization and retirement ladder
 
 **Wave 19, brief 3.**

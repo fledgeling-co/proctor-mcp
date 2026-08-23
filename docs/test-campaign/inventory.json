@@ -3,7 +3,7 @@
     {
       "id": "REQ-001",
       "text": "The 21-tool MCP catalog exposes unified black-box automation tools with schema compliance",
-      "source": "docs/PRD.md:85",
+      "source": "docs/PRD.md:85; docs/features-to-triage/01-cua-schema-facade.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -16,7 +16,7 @@
     {
       "id": "REQ-002",
       "text": "Process-directed actions reach background, occluded, and other-Space windows without stealing focus",
-      "source": "docs/PRD.md:72",
+      "source": "docs/PRD.md:72; docs/features-to-triage/26-prefer-background-and-pointer-in-plane.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -30,7 +30,7 @@
     {
       "id": "REQ-003",
       "text": "Synthetic event steps require foreground activation, post via CGEventPost, and report plane=syntheticEvent",
-      "source": "docs/PRD.md:76",
+      "source": "docs/PRD.md:76; docs/features-to-triage/71-effect-witnesses-on-glass.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -45,7 +45,7 @@
     {
       "id": "REQ-004",
       "text": "ScreenCaptureKit window captures report SCFrameStatus, dirty rects, and trustworthy verdicts",
-      "source": "docs/PRD.md:93",
+      "source": "docs/PRD.md:93; docs/features-to-triage/02-set-of-marks-captures.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -59,7 +59,7 @@
     {
       "id": "REQ-005",
       "text": "Captures support 3-tier resolution scaling (targeting 768px, verify 1024px, detail 1568px)",
-      "source": "docs/PRD.md:93",
+      "source": "docs/PRD.md:93; docs/features-to-triage/06-vision-capture-normalisation.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -73,7 +73,7 @@
     {
       "id": "REQ-006",
       "text": "Per-screen Run HUD Cocoa overlay displays running 22pt Mac character sprite, step title, and target badge",
-      "source": "docs/PRD.md:129",
+      "source": "docs/PRD.md:129; docs/features-to-triage/16-run-hud-panel.md",
       "class": "affordance",
       "evidence": "observed",
       "surfaces": [
@@ -86,7 +86,7 @@
     {
       "id": "REQ-007",
       "text": "Contention Yield detects human mouse/keyboard interaction and yields automation control immediately",
-      "source": "docs/PRD.md:131",
+      "source": "docs/PRD.md:131; docs/features-to-triage/19-yield-when-a-person-takes-the-machine.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -100,7 +100,7 @@
     {
       "id": "REQ-008",
       "text": "Takeover Shield displays full-screen input blocker during synthetic batches on the host",
-      "source": "docs/PRD.md:130",
+      "source": "docs/PRD.md:130; docs/features-to-triage/20-foreground-run-is-obvious.md",
       "class": "affordance",
       "evidence": "observed",
       "surfaces": [
@@ -113,7 +113,7 @@
     {
       "id": "REQ-009",
       "text": "Status Window displays doctor diagnostic health checks (TCC, tools, observers, secure input)",
-      "source": "docs/PRD.md:100",
+      "source": "docs/PRD.md:100; docs/features-to-triage/29-re-check-now-says-what-it-checks.md",
       "class": "affordance",
       "evidence": "observed",
       "surfaces": [
@@ -126,7 +126,7 @@
     {
       "id": "REQ-010",
       "text": "Walkthrough onboarding guides user through initial Accessibility and Screen Recording consent",
-      "source": "docs/PRD.md:68",
+      "source": "docs/PRD.md:68; docs/features-to-triage/61-walkthrough-to-the-mock.md",
       "class": "affordance",
       "evidence": "observed",
       "surfaces": [
@@ -138,7 +138,7 @@
     {
       "id": "REQ-011",
       "text": "Menu Bar Extra provides status item indicator, quick doctor check, and preferences access",
-      "source": "docs/PRD.md:104",
+      "source": "docs/PRD.md:104; docs/features-to-triage/03-menu-bar-key-equivalents.md",
       "class": "affordance",
       "evidence": "observed",
       "surfaces": [
@@ -150,7 +150,7 @@
     {
       "id": "REQ-012",
       "text": "Multi-signal settling evaluates pixel quiet, AX notifications, and reflector idle signals",
-      "source": "docs/PRD.md:95",
+      "source": "docs/PRD.md:95; docs/features-to-triage/11-stability-per-step-pointer.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -164,7 +164,7 @@
     {
       "id": "REQ-013",
       "text": "Statistical determinism sweeps replay flows N times and report firstDivergence and per-step instability",
-      "source": "docs/PRD.md:98",
+      "source": "docs/PRD.md:98; docs/features-to-triage/12-gate-flow-replay-stability.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -177,7 +177,7 @@
     {
       "id": "REQ-014",
       "text": "Tri-observer consistency (kind: agree) validates AX tree, layer geometry, and pixels concurrently",
-      "source": "docs/PRD.md:96",
+      "source": "docs/PRD.md:96; docs/features-to-triage/71-effect-witnesses-on-glass.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -191,7 +191,7 @@
     {
       "id": "REQ-015",
       "text": "Audit trail logs are HMAC-SHA256 chained, signed, and encrypted at rest with CryptoKit AES-GCM",
-      "source": "docs/PRD.md:132",
+      "source": "docs/PRD.md:132; docs/features-to-triage/13-audit-log-encryption-at-rest.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -205,7 +205,7 @@
     {
       "id": "REQ-016",
       "text": "Policy gate enforces action filters, path confinement, and redaction patterns before execution",
-      "source": "docs/PRD.md:106",
+      "source": "docs/PRD.md:106; docs/features-to-triage/05-audit-trail-policy-gate.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -218,7 +218,7 @@
     {
       "id": "REQ-017",
       "text": "Guest routing manages virtualized macOS/Linux/Windows machines via lume and prlctl adapters",
-      "source": "docs/PRD.md:109",
+      "source": "docs/PRD.md:109; docs/features-to-triage/57-vm-targets.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -232,7 +232,7 @@
     {
       "id": "REQ-018",
       "text": "Witness tiers distinguish native macOS guests from delegated Cua Linux/Windows guests",
-      "source": "docs/PRD.md:113",
+      "source": "docs/PRD.md:113; docs/features-to-triage/52-decide-what-happens-to-the-native-planes.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -245,7 +245,7 @@
     {
       "id": "REQ-019",
       "text": "Auto-route refusal gate stops takeover batches on host when PROCTOR_GUEST is configured",
-      "source": "docs/PRD.md:125",
+      "source": "docs/PRD.md:125; docs/features-to-triage/57-vm-targets.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -259,7 +259,7 @@
     {
       "id": "REQ-020",
       "text": "iOS simulator driving supports deep-link launches and Maestro flow file execution",
-      "source": "docs/PRD.md:108",
+      "source": "docs/PRD.md:108; docs/features-to-triage/49-drive-ios-through-deep-links.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -273,7 +273,7 @@
     {
       "id": "REQ-021",
       "text": "Strict Swift 6 concurrency safety with zero data races across actors and asynchronous suites",
-      "source": "docs/PRD.md:139",
+      "source": "docs/PRD.md:139; docs/features-to-triage/56-the-suite-wedges-in-haltcheckpoint.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -286,7 +286,7 @@
     {
       "id": "REQ-022",
       "text": "Developer ID signing, notarization, and stapling ensures TCC grants survive app upgrades",
-      "source": "docs/PRD.md:145",
+      "source": "docs/PRD.md:145; docs/features-to-triage/31-the-build-says-which-build-it-is.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -299,7 +299,7 @@
     {
       "id": "REQ-023",
       "text": "ProctorReflector inspection reads resolved layout constraints, colors, and CALayer models",
-      "source": "docs/PRD.md:99",
+      "source": "docs/PRD.md:99; docs/features-to-triage/43-backfill-horizontal-alignment-assertion.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -313,7 +313,7 @@
     {
       "id": "REQ-024",
       "text": "Automatic browser routing dispatches web URLs to Obscura or browser-use engines",
-      "source": "docs/PRD.md:20",
+      "source": "docs/PRD.md:20; docs/features-to-triage/21-route-browser-work-to-obscura.md",
       "class": "behaviour",
       "evidence": "vacuous",
       "surfaces": [
@@ -327,7 +327,7 @@
     {
       "id": "REQ-025",
       "text": "Tahoe guest window rendering workaround",
-      "source": "docs/PRD.md:26",
+      "source": "docs/PRD.md:26; docs/features-to-triage/57-vm-targets.md",
       "class": "deferred",
       "evidence": "reported",
       "surfaces": [
@@ -339,7 +339,7 @@
     {
       "id": "REQ-026",
       "text": "Reopening from the Dock or the menu bar restores the Status window when none is visible",
-      "source": "Sources/ProctorUI/ProctorUIApp.swift:65-71 applicationShouldHandleReopen",
+      "source": "Sources/ProctorUI/ProctorUIApp.swift:65-71 applicationShouldHandleReopen; docs/features-to-triage/41-open-cannot-launch-proctor.md",
       "class": "behaviour",
       "evidence": "observed",
       "surfaces": [
@@ -352,7 +352,7 @@
     {
       "id": "REQ-027",
       "text": "The status window stops claiming the agent is ready when the agent holds the socket and never answers",
-      "source": "references/sweeps.md L (half-open connection); Sources/ProctorUI/AgentModel.swift pollTimeoutSeconds",
+      "source": "references/sweeps.md L (half-open connection); Sources/ProctorUI/AgentModel.swift pollTimeoutSeconds; docs/features-to-triage/60-status-window-to-the-mock.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -365,7 +365,7 @@
     {
       "id": "REQ-028",
       "text": "Every overlay Proctor draws over other applications is excluded from screen capture unless somebody lifts it",
-      "source": "Sources/ProctorCore/OverlayCapture.swift; RunHUDPanel, TakeoverOverlay and CursorOverlay",
+      "source": "Sources/ProctorCore/OverlayCapture.swift; RunHUDPanel, TakeoverOverlay and CursorOverlay; docs/features-to-triage/10-pointer-overlay-captures.md",
       "class": "honesty-guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -379,7 +379,7 @@
     {
       "id": "REQ-029",
       "text": "An operator over SSH can watch a run and halt it, on a Mac with no window server",
-      "source": "Sources/ProctorCore/TUISurface.swift; SupervisionBroadcast, SupervisionControl, ProctorCLI/TUI",
+      "source": "Sources/ProctorCore/TUISurface.swift; SupervisionBroadcast, SupervisionControl, ProctorCLI/TUI; docs/features-to-triage/69-the-supervision-tui.md",
       "class": "capability",
       "effect": "ipc",
       "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
@@ -388,28 +388,28 @@
     {
       "id": "REQ-030",
       "text": "The supervision surface draws what the design compiled, at 100x30 and at the 80x24 floor",
-      "source": "design/surfaces/tui/ (22 compiled frames); Sources/ProctorCore/TUILayout.swift",
+      "source": "design/surfaces/tui/ (22 compiled frames); Sources/ProctorCore/TUILayout.swift; docs/features-to-triage/59-design-tokens-as-a-swift-value.md",
       "class": "fidelity",
       "effect": "none"
     },
     {
       "id": "REQ-031",
       "text": "Every command the catalogue declares for the menu bar is actually rendered in it",
-      "source": "Sources/ProctorCore/CommandSurface.swift; Sources/ProctorUI/ProctorUIApp.swift",
+      "source": "Sources/ProctorCore/CommandSurface.swift; Sources/ProctorUI/ProctorUIApp.swift; docs/features-to-triage/62-menu-bar-and-the-command-surface.md",
       "class": "honesty guardrail",
       "effect": "none"
     },
     {
       "id": "REQ-032",
       "text": "The status window lists every permission macOS holds about Proctor, including the one whose absence is silent",
-      "source": "Sources/ProctorAgent/Session/SessionDoctor.swift; design/surfaces/ status pane",
+      "source": "Sources/ProctorAgent/Session/SessionDoctor.swift; design/surfaces/ status pane; docs/features-to-triage/37-the-status-windows-checks-say-what-they-can-check.md",
       "class": "affordance",
       "effect": "none"
     },
     {
       "id": "REQ-033",
       "text": "A supervision client can read the machine's readiness, switches and history, not only its run and queue",
-      "source": "Sources/ProctorCore/TUISurface.swift readiness(from:), switches(from:) and history(from:)",
+      "source": "Sources/ProctorCore/TUISurface.swift readiness(from:), switches(from:) and history(from:); docs/features-to-triage/48-the-run-has-a-history-you-can-read.md",
       "class": "affordance",
       "effect": "ipc",
       "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift"
@@ -418,7 +418,7 @@
       "id": "REQ-034",
       "class": "affordance",
       "text": "An operator drives and checks this Mac from a shell: 21 verbs derived from the tool catalogue, six exit codes, and shell completion generated from the same catalogue",
-      "source": "Sources/ProctorCLI/CLI.swift, Sources/ProctorCore/CLISurface.swift; spec-PRO-0073.md A1, A6, A8",
+      "source": "Sources/ProctorCLI/CLI.swift, Sources/ProctorCore/CLISurface.swift; spec-PRO-0073.md A1, A6, A8; docs/features-to-triage/68-the-operator-cli.md",
       "effect": "ipc",
       "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift"
     },
@@ -426,7 +426,7 @@
       "id": "REQ-035",
       "class": "honesty guardrail",
       "text": "A CLI call is not a privilege bypass: same socket, same policy gate, same queue lane, same audit trail, and the trail records which front end called, read from the peer process rather than the request",
-      "source": "Sources/ProctorCLI/CLI.swift; spec-PRO-0073.md A3, A4, A5",
+      "source": "Sources/ProctorCLI/CLI.swift; spec-PRO-0073.md A3, A4, A5; docs/features-to-triage/68-the-operator-cli.md",
       "effect": "ipc",
       "provider": "LOCAL_PEERPID getsockopt in Sources/ProctorAgent/SessionIdentity.swift"
     },
@@ -434,14 +434,14 @@
       "id": "REQ-036",
       "class": "honesty guardrail",
       "text": "Exit code 1 (a check failed) and exit code 3 (the agent is not answering) are never confused, because CI reads an exit code rather than prose",
-      "source": "Sources/ProctorCore/CLISurface.swift exit(for:); spec-PRO-0073.md exit-code table",
+      "source": "Sources/ProctorCore/CLISurface.swift exit(for:); spec-PRO-0073.md exit-code table; docs/features-to-triage/68-the-operator-cli.md",
       "effect": "none"
     },
     {
       "id": "REQ-037",
       "class": "affordance",
       "text": "A session attaches to a macOS guest and executes its steps inside that guest; the host agent routes calls over the forwarded socket and actuates nothing on the guest's behalf",
-      "source": "Sources/ProctorAgent/Session/SessionGuest.swift, Sources/ProctorAgent/Guest/GuestLink.swift, Dispatch.swift; spec-PRO-0076.md A1, A2",
+      "source": "Sources/ProctorAgent/Session/SessionGuest.swift, Sources/ProctorAgent/Guest/GuestLink.swift, Dispatch.swift; spec-PRO-0076.md A1, A2; docs/features-to-triage/57-vm-targets.md",
       "effect": "ipc",
       "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift"
     },
@@ -449,14 +449,14 @@
       "id": "REQ-038",
       "class": "behaviour",
       "text": "Guest attachments are held against a counted lane whose capacity is a parameter: macOS at two, one session per named guest, and a run that would exceed it queues rather than being refused",
-      "source": "Sources/ProctorCore/RunQueue.swift counted lane, GuestAttachment.swift; spec-PRO-0076.md A5, A6, A7, A8",
+      "source": "Sources/ProctorCore/RunQueue.swift counted lane, GuestAttachment.swift; spec-PRO-0076.md A5, A6, A7, A8; docs/features-to-triage/17-multi-session-queue.md",
       "effect": "none"
     },
     {
       "id": "REQ-039",
       "class": "honesty guardrail",
       "text": "The pool never evicts: a guest a person started, or one another session holds, is waited for and never stopped to free a slot, and every stop this agent performs goes through the audited path",
-      "source": "Sources/ProctorAgent/Session/SessionGuest.swift stopGuestThroughAuditedPath; spec-PRO-0076.md A9, A10",
+      "source": "Sources/ProctorAgent/Session/SessionGuest.swift stopGuestThroughAuditedPath; spec-PRO-0076.md A9, A10; docs/features-to-triage/57-vm-targets.md",
       "effect": "subprocess",
       "provider": "Process() in Sources/ProctorAgent/Guest/GuestProvider.swift — lume/prlctl/tart argv built and executed"
     },
@@ -464,62 +464,62 @@
       "id": "REQ-040",
       "class": "behaviour",
       "text": "A guest's witness tier is derived from the platform its provider reports, so a provider saying darwin yields macOS and the native tier rather than being read from the guest's name",
-      "source": "Sources/ProctorCore/GuestInventory.swift GuestPlatform.infer, Wire.swift Machine.tier; spec-PRO-0076.md A3, A5",
+      "source": "Sources/ProctorCore/GuestInventory.swift GuestPlatform.infer, Wire.swift Machine.tier; spec-PRO-0076.md A3, A5; docs/features-to-triage/57-vm-targets.md",
       "effect": "none"
     },
     {
       "id": "REQ-041",
       "class": "honesty guardrail",
       "text": "Only the agent draws on this Mac: a switch says what an operator asked for and cannot say who is asking, so every live surface also requires the process to have claimed it is the agent",
-      "source": "Sources/ProctorAgent/AgentProcess.swift, Sources/ProctorCore/OverlaySwitch.swift mayRaise",
+      "source": "Sources/ProctorAgent/AgentProcess.swift, Sources/ProctorCore/OverlaySwitch.swift mayRaise; docs/features-to-triage/30-a-home-for-the-proctor-switches.md",
       "effect": "none"
     },
     {
       "id": "REQ-042",
       "class": "behaviour",
       "text": "The takeover statement holds for a minimum duration once raised, and a request arriving while it is up extends it rather than raising it again, so a batch-driving agent sees one statement instead of a strobe",
-      "source": "Sources/ProctorCore/Takeover.swift Dwell; Sources/ProctorAgent/Overlay/TakeoverOverlay.swift",
+      "source": "Sources/ProctorCore/Takeover.swift Dwell; Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; docs/features-to-triage/27-foreground-takeover-overlay.md",
       "effect": "none"
     },
     {
       "id": "REQ-043",
       "class": "honesty guardrail",
       "text": "No drawn pointer over a window the person cannot see: where the pointer's plane cannot be confirmed and something covers the target, nothing is drawn rather than a dimmed pointer in the wrong plane",
-      "source": "Sources/ProctorCore/PointerPlane.swift decide/fallback/isCovered; Sources/ProctorAgent/Overlay/CursorOverlay.swift",
+      "source": "Sources/ProctorCore/PointerPlane.swift decide/fallback/isCovered; Sources/ProctorAgent/Overlay/CursorOverlay.swift; docs/features-to-triage/26-prefer-background-and-pointer-in-plane.md",
       "effect": "none"
     },
     {
       "id": "REQ-044",
       "class": "honesty guardrail",
       "text": "The takeover statement names a control reachable from the screen reading it: the run panel on the panel's own display, Proctor's menu bar on every other and when no panel is standing",
-      "source": "Sources/ProctorCore/Takeover.swift label(app:blocking:panelIsOnThisScreen:) and panelScreen(panel:in:)",
+      "source": "Sources/ProctorCore/Takeover.swift label(app:blocking:panelIsOnThisScreen:) and panelScreen(panel:in:); docs/features-to-triage/27-foreground-takeover-overlay.md",
       "effect": "none"
     },
     {
       "id": "REQ-045",
       "class": "honesty guardrail",
       "text": "A campaign instrument carries a measured false-positive rate with its denominator before anything is gated on its count: the blind-mutation pass over the Swift suite reports a number that is 96% noise, and a count read as a defect count would be the misconfiguration the tool warns about",
-      "source": "test-campaign 0.9.2 scripts/vacuity-check.py pass_blind; docs/test-campaign/campaign.json blindVocabulary; spec-PRO-0079.md A1, A2, A5",
+      "source": "test-campaign 0.9.2 scripts/vacuity-check.py pass_blind; docs/test-campaign/campaign.json blindVocabulary; spec-PRO-0079.md A1, A2, A5; docs/features-to-triage/72-tests-that-mutate-and-never-read-back.md",
       "effect": "none"
     },
     {
       "id": "REQ-046",
       "class": "honesty guardrail",
       "text": "Every campaign gate is proved able to go red before its passing state is read as evidence, and the proof covers each of the gate's passes separately: both requirement-level census passes have a seeded control that turns them red and restores the registry byte-for-byte, because a control that exercises one predicate leaves the other in exactly the position the control exists to end",
-      "source": "test-campaign 0.9.2 scripts/vacuity-check.py seed_strengthen; scripts/campaign/seed_unclass.py; spec-PRO-0080.md A1, A2, A3",
+      "source": "test-campaign 0.9.2 scripts/vacuity-check.py seed_strengthen; scripts/campaign/seed_unclass.py; spec-PRO-0080.md A1, A2, A3; docs/features-to-triage/72-tests-that-mutate-and-never-read-back.md",
       "effect": "none"
     },
     {
       "id": "REQ-047",
       "class": "honesty guardrail",
       "text": "Mutation survival for the agent package is measured with its denominator, its seed and its unrun count rather than inferred from the core package's figure, and every survivor the lane can reach is closed by a test that was watched failing on the mutant, the rest recorded with a reason typed equivalent or uncovered-by-lane",
-      "source": "scripts/campaign/mutate_swift.py; docs/test-campaign/evidence/mutation-agent.json; spec-PRO-0080.md A4, A5, A6",
+      "source": "scripts/campaign/mutate_swift.py; docs/test-campaign/evidence/mutation-agent.json; spec-PRO-0080.md A4, A5, A6; docs/features-to-triage/72-tests-that-mutate-and-never-read-back.md",
       "effect": "none"
     },
     {
       "id": "REQ-048",
       "text": "Every user-facing string the status window can show is a value in ProctorCore rather than a literal in the view, so a test can read it and a translator can find it; the clause is enforced by a default-deny classifier over MainWindow.swift plus a committed snapshot of the identifier literals it legitimately keeps",
-      "source": "spec-PRO-0066.md A2; spec-PRO-0081.md clauses 1-4",
+      "source": "spec-PRO-0066.md A2; spec-PRO-0081.md clauses 1-4; docs/features-to-triage/74-the-carried-acceptance-clauses.md",
       "class": "maintainability guardrail",
       "evidence": "observed",
       "surfaces": [
@@ -531,7 +531,7 @@
     {
       "id": "REQ-049",
       "text": "A control the flow will not let a person use is drawn disabled and stays in the accessibility tree rather than being removed from it, because a control that disappears makes the layout jump and teaches the user the step does not exist",
-      "source": "spec-PRO-0067.md A3; design/surfaces/proctor-surfaces.html walkthrough/permissions pane and its state matrix",
+      "source": "spec-PRO-0067.md A3; design/surfaces/proctor-surfaces.html walkthrough/permissions pane and its state matrix; docs/features-to-triage/61-walkthrough-to-the-mock.md",
       "class": "accessibility guarantee",
       "evidence": "observed",
       "surfaces": [
@@ -1515,6 +1515,42 @@
       ],
       "note": "Instrument tests assert charter validation, census class rules, and release gate verification.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-170",
+      "class": "correctness",
+      "text": "Feature briefs carry structured frontmatter sources referencing registry requirements and defects at confidence 1.0",
+      "source": "DEF-295; docs/specs/spec-PRO-0113.md; docs/features-to-triage/105-brief-join-rate-and-retirement-ladder.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-033"
+      ],
+      "note": "Brief frontmatter structured source declarations tie feature briefs to registry entities at confidence 1.0.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-171",
+      "class": "correctness",
+      "text": "Campaign requirements cite feature brief paths in source fields to establish bidirectional join traceability",
+      "source": "DEF-295; docs/specs/spec-PRO-0113.md; docs/features-to-triage/105-brief-join-rate-and-retirement-ladder.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-033"
+      ],
+      "note": "Campaign requirements reference feature brief paths across inventory.json to guarantee bidirectional join resolution.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-172",
+      "class": "correctness",
+      "text": "Reckon join rate reaches or exceeds the 50.0% threshold (>= 53/105 briefs) enabling automated retirement verification",
+      "source": "DEF-295; docs/specs/spec-PRO-0113.md; docs/features-to-triage/105-brief-join-rate-and-retirement-ladder.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-033"
+      ],
+      "note": "Reckon build achieves >= 50.0% join rate without token-overlap guessing, unblocking retirement verification.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -1977,6 +2013,19 @@
         "census-enforced"
       ],
       "description": "The warrant charter definition in .warrant/warrant.toml defining seven defect classes (evidence-integrity, surface-conformance, capture-trust, operator-state, run-lifecycle, registry-drift, release-integrity), surfaces globs for class rollups, 100% census requirements, and release boundary verification without charter-absent blocks."
+    },
+    {
+      "id": "SURF-033",
+      "name": "Brief Queue & Reckoning Registry",
+      "title": "Feature brief queue, frontmatter citations, and reckoning registry join",
+      "route": "tool://reckon/brief-join",
+      "status": "reachable",
+      "states": [
+        "frontmatter-cited",
+        "join-threshold-passed",
+        "retirement-eligible"
+      ],
+      "description": "The feature brief queue in docs/features-to-triage/ and its high-confidence join to campaign requirements and defects in docs/test-campaign/, enabling retirement verification and intent reconciliation."
     }
   ],
   "flow": [
@@ -4481,6 +4530,24 @@
         "REQ-167"
       ],
       "note": "PRO-0112 / brief 104: Formalized the seven warrant charter classes with concrete surface globs, census flags, and release gate verification in test_instruments.py.",
+      "evidence": [
+        "scripts/campaign/test_instruments.py"
+      ]
+    },
+    {
+      "id": "DEF-295",
+      "title": "Reckon brief join rate (26.7%, 28/105) fell below 50.0% threshold due to missing frontmatter source declarations and unlinked legacy requirements, suppressing retirement verification",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-033"
+      ],
+      "requirements": [
+        "REQ-170",
+        "REQ-171",
+        "REQ-172"
+      ],
+      "note": "PRO-0113 / brief 105: Populated structured brief frontmatter and requirement sources, lifting cited join rate to 100.0% (105/105) and unblocking retirement verification.",
       "evidence": [
         "scripts/campaign/test_instruments.py"
       ]

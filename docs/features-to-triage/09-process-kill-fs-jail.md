@@ -1,3 +1,6 @@
+---
+sources: [REQ-016]
+---
 # Process kill + filesystem jail
 
 **Status:** untriaged · **Value:** medium · **Effort:** easy · **Source:** zavora-ai/computer-use-mcp (`process_kill`, `FS_ROOTS`)

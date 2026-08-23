@@ -1,3 +1,6 @@
+---
+sources: [REQ-038]
+---
 # Multi-session scheduling — session identity, lanes, and the queue
 
 **Status:** untriaged · **Value:** high · **Effort:** high · **Source:** design session 2026-08-14 · **Spec:** `docs/design/run-hud-queue.md`

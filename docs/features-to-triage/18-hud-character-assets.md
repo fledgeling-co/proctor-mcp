@@ -1,3 +1,6 @@
+---
+sources: [REQ-006]
+---
 # HUD character — sprite assets and state binding
 
 **Status:** untriaged · **Value:** med · **Effort:** med · **Source:** design session 2026-08-14 · **Spec:** `docs/design/run-hud-character.md`

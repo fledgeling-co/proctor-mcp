@@ -1,3 +1,6 @@
+---
+sources: [REQ-011, REQ-031]
+---
 # The menu bar, and the complete command surface
 
 **Wave 9, brief 4 of 11.** Reads `58`, `59`, and lands after `61`. Mock anchors:

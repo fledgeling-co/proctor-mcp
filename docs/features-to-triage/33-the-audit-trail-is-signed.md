@@ -1,3 +1,6 @@
+---
+sources: [REQ-015]
+---
 # The audit trail is signed, and it records what Proctor recommended
 
 ## The problem

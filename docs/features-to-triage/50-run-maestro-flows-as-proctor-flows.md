@@ -1,3 +1,6 @@
+---
+sources: [REQ-020]
+---
 # Run Maestro flows as Proctor flows
 
 **Read `00-WAVE-7-DIRECTION.md` first.**

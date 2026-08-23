@@ -1,3 +1,6 @@
+---
+sources: [REQ-091, REQ-092]
+---
 # The proctor skill tracks what actually shipped
 
 **Read `00-WAVE-7-DIRECTION.md` first.** Sequence this last in the wave: it documents

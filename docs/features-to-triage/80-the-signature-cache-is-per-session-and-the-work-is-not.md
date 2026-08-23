@@ -1,3 +1,6 @@
+---
+sources: [REQ-035, DEF-044]
+---
 # The signature cache is per-session and the work it caches is not
 
 **Wave 12.** DEF-044. Sequence it before PRO-0083's remaining gap-fix, which cannot close its

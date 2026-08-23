@@ -1,3 +1,6 @@
+---
+sources: [REQ-011, REQ-031]
+---
 # A menu bar switch for the panel, and a menu bar icon that is the same character
 
 ## The problem

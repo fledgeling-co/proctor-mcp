@@ -1,3 +1,6 @@
+---
+sources: [REQ-165, REQ-166, REQ-167, DEF-290]
+---
 # Formalize warrant charter and release gate integration
 
 **Wave 19, brief 2.**

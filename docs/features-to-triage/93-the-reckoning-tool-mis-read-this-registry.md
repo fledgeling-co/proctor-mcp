@@ -1,3 +1,6 @@
+---
+sources: [REQ-097, REQ-098, REQ-099]
+---
 # The reckoning tool mis-read this registry three ways
 
 - origin: running the reckoning against proctor-mcp for the first time · 2026-08-22

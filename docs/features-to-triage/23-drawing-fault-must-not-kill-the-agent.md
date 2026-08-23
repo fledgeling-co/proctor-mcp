@@ -1,3 +1,6 @@
+---
+sources: [REQ-006, DEF-215]
+---
 # A drawing fault must not kill the agent
 
 ## What happened

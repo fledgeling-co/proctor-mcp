@@ -1,3 +1,6 @@
+---
+sources: [REQ-030]
+---
 # The design tokens are a Swift value, generated from the mock
 
 **Wave 9, brief 1 of 11.** Read `58-swiftui-conversion-direction.md` first. Nothing else in

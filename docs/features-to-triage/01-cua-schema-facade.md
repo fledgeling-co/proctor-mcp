@@ -1,3 +1,6 @@
+---
+sources: [REQ-001]
+---
 # Stock computer-use schema façade (Anthropic + OpenAI)
 
 **Status:** untriaged · **Value:** high · **Effort:** medium · **Source:** both surveyed repos (domdomegg mirrors Anthropic's `computer` schema; zavora ships an `openai_computer` adapter)

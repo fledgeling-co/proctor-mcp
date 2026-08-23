@@ -1,3 +1,6 @@
+---
+sources: [REQ-002, REQ-003, REQ-004, REQ-006, REQ-007, REQ-008, REQ-012, REQ-014]
+---
 # Effect witnesses for the eight effects that need a display server
 
 **Wave 11, brief 2 of 4.** Reads `70` for the rung's contract; can run beside it. The two briefs

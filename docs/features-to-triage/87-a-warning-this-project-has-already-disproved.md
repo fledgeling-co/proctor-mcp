@@ -1,3 +1,6 @@
+---
+sources: [REQ-108]
+---
 # Proctor ships a guest warning its own spec records as not reproducing
 
 **Wave 13, brief 7.** Raised by a consumer session on 2026-08-21 that was about to download a

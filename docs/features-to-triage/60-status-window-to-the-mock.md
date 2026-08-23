@@ -1,3 +1,6 @@
+---
+sources: [REQ-009, REQ-027]
+---
 # The status window becomes the mock
 
 **Wave 9, brief 2 of 11.** Reads `58` and `59`. Mock anchors:

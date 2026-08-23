@@ -1,3 +1,6 @@
+---
+sources: [REQ-130, REQ-131, REQ-132, REQ-133, REQ-134, REQ-135, REQ-136, REQ-137, DEF-205, DEF-206, DEF-207, DEF-208, DEF-226, DEF-227, DEF-240, DEF-244]
+---
 # Instruments that do not prove their own step
 
 **Wave 17, brief 3.** DEF-205, DEF-206, DEF-207, DEF-208. Four defects in three instruments, all of

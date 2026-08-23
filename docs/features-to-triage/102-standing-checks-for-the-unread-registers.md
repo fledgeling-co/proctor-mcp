@@ -1,3 +1,6 @@
+---
+sources: [REQ-145, REQ-146, REQ-147, DEF-228, DEF-229, DEF-243]
+---
 # Standing checks for the registers nothing reads
 
 **Wave 18, brief 2.** DEF-228, DEF-229, DEF-243. The standing checks for the three registers

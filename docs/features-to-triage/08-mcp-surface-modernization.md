@@ -1,3 +1,6 @@
+---
+sources: [REQ-001]
+---
 # MCP surface modernization
 
 **Status:** untriaged · **Value:** medium · **Effort:** easy · **Source:** zavora-ai/computer-use-mcp

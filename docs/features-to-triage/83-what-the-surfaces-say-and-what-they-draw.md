@@ -1,3 +1,6 @@
+---
+sources: [REQ-073, REQ-074, REQ-075, DEF-035, DEF-037, DEF-039, DEF-056]
+---
 # What the surfaces say, what they draw, and the branch that cannot be reached
 
 **Wave 13, brief 3 of 6.** DEF-035, DEF-037, DEF-039, DEF-056. Four surface defects with one shape:

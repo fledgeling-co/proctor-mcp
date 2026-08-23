@@ -1,3 +1,6 @@
+---
+sources: [REQ-155, REQ-156, REQ-157, DEF-280, DEF-281]
+---
 # What 1.1.0 still groups, and what it still lets a citation grade
 
 **Wave 16, brief 6.** Two findings a peer session measured against `reckon` 1.1.0 *after* PRO-0102

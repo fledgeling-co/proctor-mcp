@@ -1,3 +1,6 @@
+---
+sources: [REQ-010, REQ-048]
+---
 # The consent sheets, and the asymmetry that runs through them
 
 **Wave 9, brief 8 of 11.** Reads `58`, `59`, lands after `60`. Mock anchors:

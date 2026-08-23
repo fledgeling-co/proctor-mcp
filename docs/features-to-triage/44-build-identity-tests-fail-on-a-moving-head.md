@@ -1,3 +1,6 @@
+---
+sources: [REQ-022]
+---
 # The build-identity tests fail whenever HEAD moves without a source change
 
 ## The measurement

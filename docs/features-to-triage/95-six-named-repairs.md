@@ -1,3 +1,6 @@
+---
+sources: [REQ-094, REQ-095, REQ-096]
+---
 # Six repairs whose diagnosis is already done
 
 - origin: the open-defect sweep after wave 15, and today's clarify pass · 2026-08-22

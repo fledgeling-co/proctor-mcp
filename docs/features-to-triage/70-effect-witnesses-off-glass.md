@@ -1,3 +1,6 @@
+---
+sources: [REQ-009, REQ-015, REQ-017, REQ-020]
+---
 # Effect witnesses for the four effects that need no window server
 
 **Wave 11, brief 1 of 4.** Build this first. `71` is the same job on the glass lane and can

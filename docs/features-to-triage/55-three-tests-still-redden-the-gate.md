@@ -1,3 +1,6 @@
+---
+sources: [REQ-022]
+---
 > **A FOURTH CASE, added 2026-08-16 after this brief was written, and it is the worst of the
 > set because it is not intermittent.** `ToolchainDoctorTests.swift:203` — *"a machine with
 > none of these tools is still ready"* — fails **4 runs out of 4** on unmodified `main` at

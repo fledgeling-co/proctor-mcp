@@ -1,3 +1,6 @@
+---
+sources: [REQ-070, REQ-071, REQ-072]
+---
 # The cua path leaves Proctor's own plane, and nothing on screen says so
 
 **Wave 12, brief 1 of 2.** Reported from real use 2026-08-21. Sequence it first: it is the only

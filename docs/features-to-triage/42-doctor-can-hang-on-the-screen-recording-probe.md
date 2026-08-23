@@ -1,3 +1,6 @@
+---
+sources: [REQ-009, REQ-032]
+---
 > **REVISED for wave 7, 2026-08-15.** Unchanged and now load-bearing. Proctor keeps its own capture path precisely because Cua's screenshots carry no frame status, so an unbounded await in the capture-adjacent probe is a defect in the half of the product being kept. The diagnosis has since sharpened: the wedge is `replayd` saturating machine-wide under fleet load, which is why the same tree was green earlier the same day.
 
 # `proctor_doctor` can hang forever waiting on the Screen Recording probe

@@ -1,3 +1,6 @@
+---
+sources: [REQ-091, REQ-092, REQ-093]
+---
 # The skill advertises 20 tools of 27, and talks an agent out of the guest lane
 
 **Wave 12, brief 2 of 2.** Independent of `77`. This is the instruction file at

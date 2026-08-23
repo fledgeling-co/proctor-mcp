@@ -1,3 +1,6 @@
+---
+sources: [REQ-028, REQ-061, REQ-062, DEF-025, DEF-028]
+---
 # The capture path reports a frame it did not get, and a window it does not know about
 
 **Wave 13, brief 1 of 6.** DEF-025 and DEF-028. Sequence it first: every visual claim this project

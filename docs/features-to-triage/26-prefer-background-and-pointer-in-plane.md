@@ -1,3 +1,6 @@
+---
+sources: [REQ-002, REQ-043]
+---
 # Prefer the background, and draw the pointer where the work is happening
 
 ## The problem

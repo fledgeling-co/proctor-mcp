@@ -1,3 +1,6 @@
+---
+sources: [REQ-150, REQ-151, DEF-204, DEF-216]
+---
 # A version string is not the artifact
 
 **Wave 17, brief 2.** DEF-216, DEF-204. Two defects, one evening, and the second is the first with

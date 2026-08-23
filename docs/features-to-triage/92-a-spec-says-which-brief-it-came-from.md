@@ -1,3 +1,6 @@
+---
+sources: [REQ-100, REQ-101]
+---
 # A spec says which brief it came from
 
 - origin: the 2026-08-22 reckoning, which could not speak for 14% of the brief queue · 2026-08-22

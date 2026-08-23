@@ -1,5 +1,5 @@
 {
- "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0112/docs/test-campaign",
+ "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0113/docs/test-campaign",
  "classes": {
   "capture-trust": {
    "coverage": 0.9545,
@@ -11,13 +11,13 @@
    "total": 44
   },
   "evidence-integrity": {
-   "coverage": 0.8876,
-   "covered": 150,
+   "coverage": 0.895,
+   "covered": 162,
    "green": false,
    "lineage_gaps": 19,
-   "surfaces_matched": 9,
+   "surfaces_matched": 10,
    "threshold": 1.0,
-   "total": 169
+   "total": 181
   },
   "operator-state": {
    "coverage": 0.9444,
@@ -65,16 +65,10 @@
    "total": 115
   }
  },
- "generated_at": "2026-08-23T09:25:19.611094+00:00",
+ "generated_at": "2026-08-23T11:11:46.346684+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
-  {
-   "figures": 7,
-   "file": "SURF-031",
-   "sourced": 7,
-   "unsourced": 0
-  },
   {
    "figures": 1,
    "file": "cli://install-notarize",
@@ -178,6 +172,12 @@
    "unsourced": 0
   },
   {
+   "figures": 16,
+   "file": "tool://boundary-audit/limits",
+   "sourced": 16,
+   "unsourced": 0
+  },
+  {
    "figures": 25,
    "file": "tool://capture-lineage/unaccounted",
    "sourced": 25,
@@ -187,6 +187,12 @@
    "figures": 14,
    "file": "tool://mutate-swift/agent",
    "sourced": 14,
+   "unsourced": 0
+  },
+  {
+   "figures": 3,
+   "file": "tool://reckon/brief-join",
+   "sourced": 3,
    "unsourced": 0
   },
   {

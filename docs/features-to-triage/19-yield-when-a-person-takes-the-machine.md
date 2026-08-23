@@ -1,3 +1,6 @@
+---
+sources: [REQ-007]
+---
 # Notice when a person is taking the machine back, and yield
 
 ## The problem

@@ -1,3 +1,6 @@
+---
+sources: [REQ-026, REQ-030]
+---
 # Wave 9: the surface set becomes the app
 
 **Direction for briefs 59–69.** The surfaces now exist as a measured, gated HTML set at

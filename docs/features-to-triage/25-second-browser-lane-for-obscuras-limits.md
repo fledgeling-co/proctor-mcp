@@ -1,3 +1,6 @@
+---
+sources: [REQ-024]
+---
 # A second browser lane for what Obscura cannot do
 
 ## The problem

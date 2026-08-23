@@ -1,3 +1,6 @@
+---
+sources: [REQ-109, REQ-110, DEF-018, DEF-033]
+---
 # Nineteen of twenty-two ProctorAgent mutants survived
 
 **Wave 13, brief 5 of 6.** DEF-033. The single largest statement anyone has made about how much this

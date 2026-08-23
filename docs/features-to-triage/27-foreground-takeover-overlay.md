@@ -1,3 +1,6 @@
+---
+sources: [REQ-008, REQ-042]
+---
 # When Proctor must take the front, take it visibly and hold it
 
 ## The problem

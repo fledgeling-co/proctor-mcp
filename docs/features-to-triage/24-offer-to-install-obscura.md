@@ -1,3 +1,6 @@
+---
+sources: [REQ-024]
+---
 # Offer to install Obscura when it is missing
 
 ## The problem

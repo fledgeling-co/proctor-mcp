@@ -1,3 +1,6 @@
+---
+sources: [REQ-018]
+---
 # Decide what happens to the native planes
 
 **Read `00-WAVE-7-DIRECTION.md` first.** Do not start this before brief 45 has merged.

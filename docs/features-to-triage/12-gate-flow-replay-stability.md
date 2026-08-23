@@ -1,3 +1,6 @@
+---
+sources: [REQ-013, REQ-016]
+---
 # Gate recorded flow-replay and stability through the policy gate + audit
 
 **Status:** untriaged · **Value:** high (security) · **Effort:** med · **Source:** deferred child of PRO-0005 (scheduled 2026-08-13 via whats-left ingest)

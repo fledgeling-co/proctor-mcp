@@ -1,3 +1,6 @@
+---
+sources: [REQ-009]
+---
 # "Re-check now" does not say what it checks
 
 ## The problem

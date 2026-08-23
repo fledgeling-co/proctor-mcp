@@ -1,3 +1,6 @@
+---
+sources: [REQ-017, REQ-018, REQ-029]
+---
 # Wave 7 direction: Cua underneath, Proctor on top
 
 **Read this before any wave 7 brief.** It is the architecture every item in this wave

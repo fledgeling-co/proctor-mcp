@@ -1,3 +1,6 @@
+---
+sources: [REQ-079, REQ-080, REQ-081, DEF-026, DEF-027]
+---
 # A dead peer holds the queue, and a swallowed event says nothing
 
 **Wave 13, brief 6 of 6.** DEF-026 and DEF-027. Both are run-lifecycle defects a person meets as

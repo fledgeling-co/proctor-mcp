@@ -1,3 +1,6 @@
+---
+sources: [REQ-023]
+---
 # Backfill: `horizontalAlignment` on `proctor_assert`
 
 ## Why this brief exists

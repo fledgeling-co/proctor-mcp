@@ -1,3 +1,6 @@
+---
+sources: [REQ-005]
+---
 # Vision-capture normalisation + reported scale factor
 
 **Status:** untriaged · **Value:** medium · **Effort:** easy · **Source:** domdomegg/computer-use-mcp

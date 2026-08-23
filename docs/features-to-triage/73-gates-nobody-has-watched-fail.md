@@ -1,3 +1,6 @@
+---
+sources: [REQ-001, REQ-017, REQ-046, DEF-018, DEF-020, DEF-024]
+---
 # Two gates nobody has watched fail, and one record that drifted
 
 **Wave 11, brief 4 of 4.** Sequence it after `72`, which measures whether the blind pass is
