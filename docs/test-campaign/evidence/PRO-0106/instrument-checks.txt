@@ -1,1 +1,1 @@
-campaign instruments: 178 passed, 0 failed
+campaign instruments: 195 passed, 0 failed

@@ -54,6 +54,14 @@ arming · the rsplit repair is wrong on both arrow-in-destination renames PASS
 fixture · the arrow-in-destination line is the one git actually writes PASS
 gate · an unstaged rename is a deletion and an untracked file, not ` R` PASS
 gate · and both halves of it resolve to names on disk or off it PASS
+gate · the octal-escaped form unquotes to the path on disk PASS
+gate · and so does the literal-UTF-8 form the other config writes PASS
+arming · the pre-repair round trip returns the literal form still quoted PASS
+gate · a quote survives the unquote as one character       PASS
+gate · a backslash survives the unquote as one character   PASS
+gate · a tab survives the unquote as one character         PASS
+fixture · quotePath=false writes the UTF-8 through and quotes for the space PASS
+gate · and porcelain_paths resolves it to a file that opens PASS
 gate · --allow-dirty records the renamed path a reader can open PASS
 arming · the rsplit repair writes the phantom permanently into run.json PASS
 gate · the effect records a byte count and digest for every file written PASS
@@ -64,4 +72,4 @@ gate · a file that stopped being written is named by the digest diff PASS
 gate · the record carries all three kinds, not only the one it ran PASS
 gate · the cadence note states this file's own check count PASS
 
-reckoning selftest: 65 checks, 0 failed
+reckoning selftest: 73 checks, 0 failed

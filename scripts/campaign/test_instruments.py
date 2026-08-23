@@ -1268,10 +1268,14 @@ def test_seam_arm_zero_tests_is_not_an_arming() -> None:
           "and the reason names the filter rather than the exit code", why)
 
     # The original defect, reintroduced on this exact path. `armed = code != 0`
-    # is the whole of the pre-repair rule and it returns ARMED here, which is the
-    # verdict the verifier drove.
-    check(("ARMED" if r["exit"] != 0 else "NOT ARMED") == "ARMED",
-          "the pre-repair rule `armed = code != 0` scores this same fixture ARMED")
+    # is the whole of the pre-repair rule; it returns ARMED here, which is the
+    # verdict the verifier drove, and the check is that it DISAGREES with what
+    # the rule now says. Comparing it to the literal "ARMED" instead would pass
+    # whether or not the repair were present, which is this file's own subject.
+    before = "ARMED" if r["exit"] != 0 else "NOT ARMED"
+    check(before == "ARMED" and before != state,
+          "the pre-repair rule `armed = code != 0` scores this same fixture ARMED, and the "
+          "repaired rule does not", f"before={before} now={state}")
 
     # And the repair does not lean on the exit code either way: a zero-test run
     # that exits 0 — `swift test` without this repo's wrapper — is equally
@@ -1281,9 +1285,11 @@ def test_seam_arm_zero_tests_is_not_an_arming() -> None:
     check(state == "INCONCLUSIVE" and armed is None,
           "and a zero-test run that exits 0 is inconclusive too, not a check that did not fire",
           f"{state}: {why}")
-    check(("ARMED" if quiet["exit"] != 0 else "NOT ARMED") == "NOT ARMED",
+    quiet_before = "ARMED" if quiet["exit"] != 0 else "NOT ARMED"
+    check(quiet_before == "NOT ARMED" and quiet_before != state,
           "which the pre-repair rule scored NOT ARMED — the same non-measurement, filed as a "
-          "pass in one direction and a fail in the other")
+          "pass in one direction and a fail in the other, and inconclusive both ways now",
+          f"before={quiet_before} now={state}")
 
     # A verdict line over tests that DID run is untouched by the new guard, so
     # the check is watched clearing as well as firing.
@@ -1511,9 +1517,23 @@ def test_shot_disposition_identity_grouping_is_checked() -> None:
     stored = json.loads(sd.AUDIT.read_text())["byteIdenticalGroups"]
     check({k: sorted(v) for k, v in stored.items()} == {k: sorted(v) for k, v in groups.items()},
           "and the audit on disk records the same grouping this run computes")
-    text = (ROOT / "scripts/campaign/shot_disposition.py").read_text()
-    check("the byte-identical grouping moved" in text,
-          "verify() fails on a change to the grouping rather than only printing the count")
+    # verify() is DRIVEN over a changed grouping rather than grepped for the
+    # sentence it would print. Out-of-family review, PRO-0106: reading the
+    # source for a string literal passes whether or not the branch runs, and a
+    # check nobody has watched fire is indistinguishable from one that cannot —
+    # which is the whole of this file's subject, sitting in this file.
+    moved = io.StringIO()
+    with contextlib.redirect_stdout(moved):
+        rc_moved = sd.verify(dict(a, byteIdenticalGroups={}))
+    check(rc_moved == 1 and "the byte-identical grouping moved" in moved.getvalue(),
+          "verify() fails on a run whose grouping does not match the audit's",
+          f"exit {rc_moved}: {moved.getvalue()[-300:]}")
+    intact = io.StringIO()
+    with contextlib.redirect_stdout(intact):
+        rc_intact = sd.verify(a)
+    check(rc_intact == 0 and "the byte-identical grouping moved" not in intact.getvalue(),
+          "and passes on the grouping this run actually computes, in the same session",
+          f"exit {rc_intact}: {intact.getvalue()[-300:]}")
 
 
 def test_shot_disposition_manifest_reflects_the_bytes_on_disk() -> None:
@@ -1682,6 +1702,55 @@ def test_shot_disposition_reads_more_than_png_citations() -> None:
           str(sorted(out)))
 
 
+def test_seam_arm_tree_dirty_reads_the_quoting_too() -> None:
+    """The same slice DEF-206 was about, in the file DEF-206's second round repaired.
+
+    `tree_dirty` filtered on `line[3:].strip().startswith("docs/")`, so a quoted
+    entry — any path with a space or a non-ASCII byte in it — arrived as
+    `"docs/...` and was not recognised as a docs-only change. This arm then
+    refused to run at exit 2 over a change it is meant to tolerate. Fail closed
+    rather than a wrong verdict, and still the original defect on a sibling path.
+    Out-of-family review, PRO-0106.
+    """
+    mod = _seam_arm()
+
+    def old_form(lines: list[str]) -> str:
+        """The pre-repair filter, verbatim."""
+        return "\n".join(l for l in lines
+                          if not l[3:].strip().startswith("docs/")).strip()
+
+    lines = [
+        (' M docs/test-campaign/cases.json', True, "a plain docs path"),
+        ('?? "docs/test-campaign/a name.json"', True, "a docs path quoted for a space"),
+        ('?? "docs/test-campaign/caf\\303\\251.json"', True, "a docs path quoted in octal"),
+        ('R  "docs/a -> b.md" -> "docs/c -> d.md"', True,
+         "a docs rename with arrows on both sides"),
+        (' M Sources/ProctorAgent/Dispatch.swift', False, "a source file"),
+        ('R  docs/x.md -> Sources/y.swift', False, "a rename OUT of docs/"),
+    ]
+    for line, tolerated, label in lines:
+        paths = mod.porcelain_line_paths(line)
+        check(bool(paths) and all(q.startswith("docs/") for q in paths) == tolerated,
+              "tree_dirty · %s is %s" % (label, "tolerated" if tolerated else "refused over"),
+              f"{line!r} -> {paths}")
+        check(all((" " in q or "\\" not in q) for q in paths),
+              "and its paths come back unquoted rather than as git printed them", str(paths))
+
+    # The arming: the pre-repair filter keeps the two quoted docs paths, so the
+    # arm refuses over a change it should tolerate. Both directions in one run.
+    tolerated = [l for l, ok, _lbl in lines if ok]
+    check(old_form(tolerated) != "",
+          "the pre-repair filter refuses over quoted docs paths it should have tolerated",
+          repr(old_form(tolerated)))
+    refused = [l for l, ok, _lbl in lines if not ok]
+    check(len(old_form(refused).splitlines()) == 1
+          and "Dispatch.swift" in old_form(refused),
+          "and it errs the other way too: of the two lines that genuinely leave docs/ it keeps "
+          "one and silently tolerates the rename OUT of docs/, because `docs/x.md -> "
+          "Sources/y.swift` starts with `docs/` when you look at the whole entry",
+          repr(old_form(refused)))
+
+
 def test_shot_disposition_citations_read_the_audits_own_population() -> None:
     """A cited `.mov` failed as absent from an audit that could never hold it.
 
@@ -1735,6 +1804,24 @@ def test_shot_disposition_citations_read_the_audits_own_population() -> None:
             fails, notes = cited("evidence/shots/probe-frame.png", ".mov")
             check(not [f for f in fails if "probe-frame" in f],
                   "while the .png becomes the one outside it, in the same run", str(fails))
+
+            # The other way of writing the same path. A repo-relative citation
+            # missed the row lookup AND the `evidence/shots/` test, so it
+            # resolved on disk and then skipped the disposition and publishing
+            # checks entirely — DEF-227's own class, reachable by writing the
+            # path the other way round. Out-of-family review, PRO-0106.
+            check(sd.CAMPAIGN_PREFIX == "docs/test-campaign/",
+                  "the campaign prefix is derived from the paths, not written twice",
+                  sd.CAMPAIGN_PREFIX)
+            (Path(tmp) / "docs/test-campaign/evidence/shots").mkdir(parents=True)
+            (Path(tmp) / "docs/test-campaign/evidence/shots/probe-clip.mov").write_bytes(b"m")
+            sd.REPO = Path(tmp)
+            fails, notes = cited("docs/test-campaign/evidence/shots/probe-clip.mov", ".png")
+            check([n for n in notes if "outside this audit's population" in n],
+                  "a repo-relative citation reaches the same branch a campaign-relative one "
+                  "does, rather than resolving on disk and skipping every further check",
+                  f"failures={fails} notices={notes}")
+            sd.REPO = Path(tmp)
         finally:
             sd.REPO, sd.CAMPAIGN = real_repo, real_campaign
 
@@ -1834,6 +1921,7 @@ def main() -> int:
                test_seam_arm_scores_a_reported_run,
                test_seam_arm_zero_tests_is_not_an_arming,
                test_seam_arm_scores_every_route_through_the_rule,
+               test_seam_arm_tree_dirty_reads_the_quoting_too,
                test_seam_arm_refuses_an_ambiguous_display_name,
                test_seam_arm_display_names_resolve_for_every_case,
                test_seam_arm_apply_proves_its_own_write,

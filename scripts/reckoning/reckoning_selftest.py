@@ -614,6 +614,62 @@ def main():
                and not (repo / F / "01-a-thing.md").exists(),
                "got %r" % (sorted(got_unstaged),))
 
+        # --- 11d. the other quoting mode, which is a git config not a filename -
+        # Out-of-family review, PRO-0106. `core.quotePath` decides whether git
+        # escapes non-ASCII bytes in octal or writes the UTF-8 through literally,
+        # and it is a setting a user commonly has in their own gitconfig. The old
+        # `unicode_escape` round trip decoded the octal form and raised
+        # UnicodeDecodeError on the literal one, whose except branch returned the
+        # entry WITH ITS QUOTES ON \u2014 an unopenable name, which is DEF-206's harm
+        # reached by a config rather than by a path. Both modes are driven here,
+        # and the pre-repair round trip is reintroduced against each.
+        def _old_unquote(entry):
+            """The pre-repair unquote, verbatim."""
+            if len(entry) >= 2 and entry[0] == '"' and entry[-1] == '"':
+                try:
+                    return (entry[1:-1].encode("ascii", "backslashreplace")
+                            .decode("unicode_escape").encode("latin-1").decode("utf-8"))
+                except (UnicodeDecodeError, UnicodeEncodeError):
+                    return entry
+            return entry
+
+        octal_form = '"docs/test-campaign/caf\\303\\251 latte.json"'
+        literal_form = '"docs/test-campaign/café latte.json"'
+        want = "docs/test-campaign/café latte.json"
+        report("gate · the octal-escaped form unquotes to the path on disk",
+               _SUBJECT_MOD.unquote_path(octal_form) == want,
+               repr(_SUBJECT_MOD.unquote_path(octal_form)))
+        report("gate · and so does the literal-UTF-8 form the other config writes",
+               _SUBJECT_MOD.unquote_path(literal_form) == want,
+               repr(_SUBJECT_MOD.unquote_path(literal_form)))
+        report("arming · the pre-repair round trip returns the literal form still quoted",
+               _old_unquote(octal_form) == want and _old_unquote(literal_form) == literal_form,
+               "octal %r, literal %r" % (_old_unquote(octal_form), _old_unquote(literal_form)))
+        for label, escape in (('a quote', 'a\\"b.json'), ('a backslash', 'a\\\\b.json'),
+                              ('a tab', 'a\\tb.json')):
+            got = _SUBJECT_MOD.unquote_path('"%s"' % escape)
+            report("gate · %s survives the unquote as one character" % label,
+                   len(got) == len("ab.json") + 1 and got.endswith("b.json"), repr(got))
+
+        # End to end under the other config, because a unit check on the helper
+        # is not the thing that publishes the name.
+        run(["git", "reset", "-q", "--hard"], cwd=repo)
+        run(["git", "clean", "-qfd"], cwd=repo)
+        run(["git", "config", "core.quotePath", "false"], cwd=repo)
+        (repo / "docs/test-campaign/café latte.json").write_text("{}", encoding="utf-8")
+        raw_literal = _SUBJECT_MOD.git_raw(
+            repo, "status", "--porcelain", "--", "docs/test-campaign")[1].rstrip("\n")
+        _, got_literal = _SUBJECT_MOD.porcelain_paths(repo, ["docs/test-campaign"])
+        report("fixture · quotePath=false writes the UTF-8 through and quotes for the space",
+               raw_literal.endswith('"docs/test-campaign/café latte.json"'), repr(raw_literal))
+        report("gate · and porcelain_paths resolves it to a file that opens",
+               got_literal == [want] and (repo / want).is_file(),
+               "got %r" % (got_literal,))
+        run(["git", "config", "--unset", "core.quotePath"], cwd=repo)
+        (repo / "docs/test-campaign/café latte.json").unlink()
+        run(["git", "reset", "-q", "--hard"], cwd=repo)
+        run(["git", "clean", "-qfd"], cwd=repo)
+
         # End to end, because the harm is what --allow-dirty writes down. The
         # phantom is permanent in run.json, so a parse that is only right in a
         # unit check is not the thing that was broken.
