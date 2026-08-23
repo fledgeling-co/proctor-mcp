@@ -394,6 +394,73 @@ def main():
                "exit %d: %s" % (code, out[-240:]))
         run(["git", "checkout", "--", "docs/test-campaign/cases.json"], cwd=repo)
 
+        # --- 11b. every kind of status line, not the one the fixture ran -----
+        # A repair proved on the path the harness happens to exercise, with
+        # another path left undriven, is the failure mode this item was warned
+        # about by name. `porcelain_paths` accepts six kinds of entry and the
+        # check above drove one, so each is driven here and the pre-repair slice
+        # is reintroduced against each.
+        def _old_form(inputs):
+            """The pre-repair parse, verbatim, for the same inputs."""
+            code, dirty, _ = _SUBJECT_MOD.git(repo, "status", "--porcelain", "--", *inputs)
+            return [line[3:] for line in dirty.splitlines() if line.strip()]
+
+        run(["git", "checkout", "--", "."], cwd=repo)
+        kinds = []
+        # modified, tracked, unstaged — ` M path`
+        (repo / "docs/test-campaign/cases.json").write_text(
+            json.dumps(CASES + [{"id": "CASE-M", "req": "REQ-1", "surface": "SURF-1",
+                                 "oracle": "outcome", "status": "pass", "evidence": ["f"],
+                                 "armed": True, "note": "modified"}]), encoding="utf-8")
+        kinds.append(("modified unstaged", ["docs/test-campaign/cases.json"],
+                      ["docs/test-campaign/cases.json"]))
+        # untracked — `?? path`
+        (repo / "docs/test-campaign/new-file.json").write_text("{}", encoding="utf-8")
+        kinds.append(("untracked", ["docs/test-campaign/new-file.json"],
+                      ["docs/test-campaign/new-file.json"]))
+        # staged addition — `A  path`
+        (repo / "docs/test-campaign/added.json").write_text("{}", encoding="utf-8")
+        run(["git", "add", "docs/test-campaign/added.json"], cwd=repo)
+        kinds.append(("staged addition", ["docs/test-campaign/added.json"],
+                      ["docs/test-campaign/added.json"]))
+        # deleted — ` D path`
+        (repo / "docs/test-campaign/campaign.json").unlink()
+        kinds.append(("deleted", ["docs/test-campaign/campaign.json"],
+                      ["docs/test-campaign/campaign.json"]))
+        # renamed — `R  old -> new`, which names both sides on one line
+        run(["git", "mv", "docs/features-to-triage/01-a-thing.md",
+             "docs/features-to-triage/02-renamed.md"], cwd=repo)
+        kinds.append(("renamed", ["docs/features-to-triage"],
+                      ["docs/features-to-triage/02-renamed.md"]))
+        # a non-ASCII path, which git prints C-quoted with octal escapes
+        (repo / "docs/test-campaign/café.json").write_text("{}", encoding="utf-8")
+        kinds.append(("quoted non-ASCII", ["docs/test-campaign/café.json"],
+                      ["docs/test-campaign/café.json"]))
+
+        wrong_before = []
+        for label, inputs, expected in kinds:
+            _, got = _SUBJECT_MOD.porcelain_paths(repo, inputs)
+            report("gate · %s resolves to the path on disk" % label,
+                   got == expected and all((repo / g).exists() or label == "deleted"
+                                           for g in got),
+                   "got %r, wanted %r" % (got, expected))
+            if _old_form(inputs) != expected:
+                wrong_before.append(label)
+        # Four of the six moved and two did not, and naming which is the point: a
+        # control that changes on every input is measuring the harness rather than
+        # the repair. `??` and `A ` survive a strip intact, so an untracked file
+        # and a staged addition were always parsed correctly — which is why the
+        # defect went unnoticed and why the fixture had to be a modified tracked
+        # file. The rename and the quoted path were wrong for their own reasons
+        # rather than the strip's.
+        report("arming · the pre-repair slice is wrong on four kinds and right on two",
+               sorted(wrong_before) == ["deleted", "modified unstaged",
+                                        "quoted non-ASCII", "renamed"],
+               "wrong before the repair: %r" % (sorted(wrong_before),))
+        run(["git", "reset", "-q", "--hard"], cwd=repo)
+        for stray in ("docs/test-campaign/new-file.json", "docs/test-campaign/café.json"):
+            (repo / stray).unlink(missing_ok=True)
+
         # --- 12. the witness records what sweep() measured (DEF-205) ---------
         # sweep() computes a byte count and sha256 per file and cmd_take kept only
         # the names, so the witness could say two files appeared and not what was
@@ -436,6 +503,20 @@ def main():
                moved == ["ledger.json"]
                and before_sweep["ledger.json"]["sha256"] != after_sweep["ledger.json"]["sha256"],
                "moved %r" % (moved,))
+        # The third kind the record now carries: a file the build stopped writing.
+        # Driven here rather than left to the one path the fixture happened to run.
+        (scratch / "gone.json").write_text("here", encoding="utf-8")
+        with_gone = _sweep(scratch)
+        (scratch / "gone.json").unlink()
+        without = _sweep(scratch)
+        report("gate · a file that stopped being written is named by the digest diff",
+               sorted(set(with_gone) - set(without)) == ["gone.json"]
+               and with_gone["gone.json"]["sha256"],
+               "removed %r" % (sorted(set(with_gone) - set(without)),))
+        latest_effect = json.loads((latest / "run.json").read_text())["effect"]
+        report("gate · the record carries all three kinds, not only the one it ran",
+               {"written", "rewritten", "removed"} <= set(latest_effect),
+               "effect keys %r" % (sorted(latest_effect),))
 
         # --- 14. the cadence note's count of this file ----------------------
         # DEF-193 was the fifth stale count in a document nothing read. A number

@@ -337,6 +337,10 @@ def cmd_take(args):
     # neither set, which is the case a name-only witness cannot see at all.
     rewritten = sorted(n for n in set(after) & set(before) if after[n] != before[n])
     unchanged = sorted(n for n in set(after) & set(before) if after[n] == before[n])
+    # The third kind, and it is the same blindness in the other direction: under
+    # --force a re-take runs over a directory that already holds a reading, and a
+    # file the build stopped writing leaves no trace in either name set.
+    removed = sorted(set(before) - set(after))
 
     if not (out / "ledger.json").is_file():
         return refuse("reckon wrote no ledger (build exit %d)" % build_exit)
@@ -367,6 +371,8 @@ def cmd_take(args):
                    "rewritten": {n: {"before": before[n], "after": after[n]}
                                  for n in rewritten},
                    "rewritten_count": len(rewritten),
+                   "removed": {n: before[n] for n in removed},
+                   "removed_count": len(removed),
                    "unchanged_count": len(unchanged),
                    "witness": ("every file under the root with its byte count and sha256, "
                                "before and after the build, so the claim that a command wrote "

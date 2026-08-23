@@ -107,6 +107,6 @@ the numbers rather than being worked around:
 ## Keeping it honest
 
 `python3 scripts/reckoning/reckoning_selftest.py` proves every refusal above can fire, and that
-the refusal came from the check rather than from the input. 36 checks; exit 0 means all armed.
+the refusal came from the check rather than from the input. 45 checks; exit 0 means all armed.
 Run it after changing `reckoning.py`. The last of the 28 reads the count this paragraph states
 and compares it to the run, so this sentence cannot go stale unwatched.
