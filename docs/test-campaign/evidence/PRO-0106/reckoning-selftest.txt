@@ -36,6 +36,26 @@ gate · deleted resolves to the path on disk                PASS
 gate · renamed resolves to the path on disk                PASS
 gate · quoted non-ASCII resolves to the path on disk       PASS
 arming · the pre-repair slice is wrong on four kinds and right on two PASS
+gate · isolated modified unstaged resolves to the path on disk PASS
+gate · isolated modified staged resolves to the path on disk PASS
+gate · isolated untracked resolves to the path on disk     PASS
+gate · isolated staged addition resolves to the path on disk PASS
+gate · isolated deleted unstaged resolves to the path on disk PASS
+gate · isolated deleted staged resolves to the path on disk PASS
+gate · isolated untracked, quoted for a non-ASCII byte resolves to the path on disk PASS
+gate · isolated untracked, quoted for a space resolves to the path on disk PASS
+gate · isolated rename, neither side quoted resolves to the path on disk PASS
+gate · isolated rename, destination quoted for an arrow in it resolves to the path on disk PASS
+gate · isolated rename, source quoted for an arrow in it resolves to the path on disk PASS
+gate · isolated rename, both sides quoted for an arrow resolves to the path on disk PASS
+gate · isolated rename, destination quoted for a space only resolves to the path on disk PASS
+arming · the pre-repair slice is wrong on nine of the thirteen isolated kinds PASS
+arming · the rsplit repair is wrong on both arrow-in-destination renames PASS
+fixture · the arrow-in-destination line is the one git actually writes PASS
+gate · an unstaged rename is a deletion and an untracked file, not ` R` PASS
+gate · and both halves of it resolve to names on disk or off it PASS
+gate · --allow-dirty records the renamed path a reader can open PASS
+arming · the rsplit repair writes the phantom permanently into run.json PASS
 gate · the effect records a byte count and digest for every file written PASS
 arming · dropping the digests leaves the witness naming files only PASS
 gate · a rewrite of equal length is invisible to a name-only diff PASS
@@ -44,4 +64,4 @@ gate · a file that stopped being written is named by the digest diff PASS
 gate · the record carries all three kinds, not only the one it ran PASS
 gate · the cadence note states this file's own check count PASS
 
-reckoning selftest: 45 checks, 0 failed
+reckoning selftest: 65 checks, 0 failed

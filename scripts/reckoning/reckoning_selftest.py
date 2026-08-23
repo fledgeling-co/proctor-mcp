@@ -461,6 +461,189 @@ def main():
         for stray in ("docs/test-campaign/new-file.json", "docs/test-campaign/café.json"):
             (repo / stray).unlink(missing_ok=True)
 
+        # --- 11c. every kind ISOLATED, and the rename forms 11b could not see -
+        # 11b drove six kinds with the tree carrying all six at once, and its
+        # arrow only ever sat inside a ` M` path. A rename DESTINATION holding
+        # one was undriven — and the repair 11b was checking, split from the
+        # RIGHT, is wrong on exactly that. `git mv src.md "stage-1 -> stage-2.md"`
+        # gives `R  src.md -> "stage-1 -> stage-2.md"`, whose last ` -> ` is
+        # inside the quoted destination, so the rsplit returned `stage-2.md"` and
+        # `--allow-dirty` wrote that phantom permanently into
+        # `run.json.dirty_inputs`, which is DEF-206's original harm re-created by
+        # DEF-206's own repair. So the kinds are enumerated from
+        # `porcelain_paths`' branches rather than from this file, each is driven
+        # ALONE in a reset tree, and all three parses are computed against every
+        # one: the pre-repair slice, the rsplit repair, and the code as it stands.
+        def _rsplit_form(inputs):
+            """The shipped repair this one replaces, verbatim."""
+            _c, out, _e = _SUBJECT_MOD.git_raw(repo, "status", "--porcelain", "--", *inputs)
+            got = []
+            for line in out.splitlines():
+                if len(line) < 4:
+                    continue
+                status, entry = line[:2], line[3:]
+                if status[0] in "RC" and " -> " in entry:
+                    entry = entry.rsplit(" -> ", 1)[1]
+                entry = _SUBJECT_MOD.unquote_path(entry)
+                if entry:
+                    got.append(entry)
+            return got
+
+        run(["git", "reset", "-q", "--hard"], cwd=repo)
+        run(["git", "clean", "-qfd"], cwd=repo)
+        D, F = "docs/test-campaign", "docs/features-to-triage"
+        for stem in ("src.md", "c-src.md", "sp.md"):
+            (repo / F / stem).write_text("a rename source\n", encoding="utf-8")
+        (repo / F / "a -> b.md").write_text("a source whose own name holds the arrow\n",
+                                            encoding="utf-8")
+        run(["git", "add", "-A"], cwd=repo)
+        run(["git", "commit", "-q", "-m", "rename sources"], cwd=repo)
+
+        def _mv(src, dst):
+            return lambda: run(["git", "mv", "%s/%s" % (F, src), "%s/%s" % (F, dst)], cwd=repo)
+
+        def _write(rel, body="{}"):
+            return lambda: (repo / rel).write_text(body, encoding="utf-8")
+
+        def _write_add(rel, body="{}"):
+            def go():
+                (repo / rel).write_text(body, encoding="utf-8")
+                run(["git", "add", rel], cwd=repo)
+            return go
+
+        isolated = [
+            # (label, setup, inputs, expected)
+            ("modified unstaged", _write("%s/cases.json" % D, "[]"),
+             ["%s/cases.json" % D], ["%s/cases.json" % D]),
+            ("modified staged", _write_add("%s/cases.json" % D, "[]"),
+             ["%s/cases.json" % D], ["%s/cases.json" % D]),
+            ("untracked", _write("%s/new-file.json" % D),
+             ["%s/new-file.json" % D], ["%s/new-file.json" % D]),
+            ("staged addition", _write_add("%s/added.json" % D),
+             ["%s/added.json" % D], ["%s/added.json" % D]),
+            ("deleted unstaged", lambda: (repo / D / "campaign.json").unlink(),
+             ["%s/campaign.json" % D], ["%s/campaign.json" % D]),
+            ("deleted staged",
+             lambda: run(["git", "rm", "-q", "%s/campaign.json" % D], cwd=repo),
+             ["%s/campaign.json" % D], ["%s/campaign.json" % D]),
+            ("untracked, quoted for a non-ASCII byte", _write("%s/café.json" % D),
+             ["%s/café.json" % D], ["%s/café.json" % D]),
+            ("untracked, quoted for a space", _write("%s/a name.json" % D),
+             ["%s/a name.json" % D], ["%s/a name.json" % D]),
+            ("rename, neither side quoted", _mv("01-a-thing.md", "02-renamed.md"),
+             [F], ["%s/02-renamed.md" % F]),
+            ("rename, destination quoted for an arrow in it",
+             _mv("src.md", "stage-1 -> stage-2.md"),
+             [F], ["%s/stage-1 -> stage-2.md" % F]),
+            ("rename, source quoted for an arrow in it", _mv("a -> b.md", "plain.md"),
+             [F], ["%s/plain.md" % F]),
+            ("rename, both sides quoted for an arrow", _mv("a -> b.md", "c -> d.md"),
+             [F], ["%s/c -> d.md" % F]),
+            ("rename, destination quoted for a space only", _mv("sp.md", "two words.md"),
+             [F], ["%s/two words.md" % F]),
+        ]
+
+        wrong_slice, wrong_rsplit, seen_raw = [], [], {}
+        for label, setup, inputs, expected in isolated:
+            run(["git", "reset", "-q", "--hard"], cwd=repo)
+            run(["git", "clean", "-qfd"], cwd=repo)
+            setup()
+            seen_raw[label] = _SUBJECT_MOD.git_raw(
+                repo, "status", "--porcelain", "--", *inputs)[1].rstrip("\n")
+            _, got = _SUBJECT_MOD.porcelain_paths(repo, inputs)
+            report("gate · isolated %s resolves to the path on disk" % label,
+                   got == expected
+                   and all((repo / g).exists() for g in got if "deleted" not in label),
+                   "raw %r gave %r, wanted %r" % (seen_raw[label], got, expected))
+            if _old_form(inputs) != expected:
+                wrong_slice.append(label)
+            if _rsplit_form(inputs) != expected:
+                wrong_rsplit.append(label)
+
+        # The record 11b wrote says the pre-repair slice is wrong on four kinds.
+        # That is a statement about the six kinds 11b drove, not about the
+        # population: enumerated from the code and isolated, thirteen kinds reach
+        # `porcelain_paths` and the slice is wrong on NINE of them, from three
+        # separate causes — two the strip (a leading-space status column), two
+        # the quoting, and five the rename naming both sides on one line. The
+        # four kinds it gets right are the four with neither a leading space, a
+        # quote, nor an arrow.
+        report("arming · the pre-repair slice is wrong on nine of the thirteen isolated kinds",
+               sorted(wrong_slice) == sorted([
+                   "modified unstaged", "deleted unstaged",
+                   "untracked, quoted for a non-ASCII byte", "untracked, quoted for a space",
+                   "rename, neither side quoted",
+                   "rename, destination quoted for an arrow in it",
+                   "rename, source quoted for an arrow in it",
+                   "rename, both sides quoted for an arrow",
+                   "rename, destination quoted for a space only"]),
+               "wrong before the repair: %r" % (sorted(wrong_slice),))
+        # And the shipped repair is wrong on exactly the two kinds whose LAST
+        # ` -> ` is inside a quoted destination, which is the failure this block
+        # exists for. Splitting from the right is not a repair, it is the same
+        # defect aimed at a different input: `git()`'s strip and the rsplit both
+        # publish a name nobody can open.
+        report("arming · the rsplit repair is wrong on both arrow-in-destination renames",
+               sorted(wrong_rsplit) == sorted([
+                   "rename, destination quoted for an arrow in it",
+                   "rename, both sides quoted for an arrow"]),
+               "wrong under the rsplit: %r" % (sorted(wrong_rsplit),))
+        report("fixture · the arrow-in-destination line is the one git actually writes",
+               seen_raw["rename, destination quoted for an arrow in it"].endswith(
+                   'src.md -> "docs/features-to-triage/stage-1 -> stage-2.md"'),
+               repr(seen_raw.get("rename, destination quoted for an arrow in it")))
+
+        # The out-of-family review claimed an UNSTAGED rename arrives as ` R`,
+        # which would put a rename entry in the second status column. It does not
+        # reproduce: git 2.50.1 has no rename to report until one side is staged,
+        # so a plain `mv` is a deletion and an untracked file. Driven rather than
+        # argued, because the guard above reads both columns on the strength of
+        # it and a guard resting on an unchecked claim is the shape of this item.
+        run(["git", "reset", "-q", "--hard"], cwd=repo)
+        run(["git", "clean", "-qfd"], cwd=repo)
+        (repo / F / "01-a-thing.md").rename(repo / F / "03-moved-on-disk.md")
+        raw_unstaged = _SUBJECT_MOD.git_raw(
+            repo, "status", "--porcelain", "--", F)[1].rstrip("\n")
+        _, got_unstaged = _SUBJECT_MOD.porcelain_paths(repo, [F])
+        report("gate · an unstaged rename is a deletion and an untracked file, not ` R`",
+               sorted(l[:2] for l in raw_unstaged.splitlines()) == [" D", "??"],
+               "raw %r" % (raw_unstaged,))
+        report("gate · and both halves of it resolve to names on disk or off it",
+               sorted(got_unstaged) == ["%s/01-a-thing.md" % F, "%s/03-moved-on-disk.md" % F]
+               and (repo / F / "03-moved-on-disk.md").is_file()
+               and not (repo / F / "01-a-thing.md").exists(),
+               "got %r" % (sorted(got_unstaged),))
+
+        # End to end, because the harm is what --allow-dirty writes down. The
+        # phantom is permanent in run.json, so a parse that is only right in a
+        # unit check is not the thing that was broken.
+        run(["git", "reset", "-q", "--hard"], cwd=repo)
+        run(["git", "clean", "-qfd"], cwd=repo)
+        run(["git", "mv", "%s/src.md" % F, "%s/stage-1 -> stage-2.md" % F], cwd=repo)
+        code, out = take(repo, tmp / "out-arrow", reckon=good_tool, extra=["--allow-dirty"])
+        runs = sorted((tmp / "out-arrow").iterdir()) if (tmp / "out-arrow").exists() else []
+        recorded = (json.loads((runs[0] / "run.json").read_text())["tree"]["dirty_inputs"]
+                    if runs else [])
+        report("gate · --allow-dirty records the renamed path a reader can open",
+               recorded == ["%s/stage-1 -> stage-2.md" % F] and (repo / recorded[0]).is_file()
+               if recorded else False,
+               "exit %d, dirty_inputs %r" % (code, recorded))
+        rsplit_mutant = mutate_subject(tmp / "m11c.py", [(
+            '        if "R" in status or "C" in status:\n'
+            "            entry = rename_destination(entry)",
+            '        if status[0] in "RC" and " -> " in entry:\n'
+            '            entry = entry.rsplit(" -> ", 1)[1]', 1)])
+        code, out = take(repo, tmp / "out-arrow-armed", subject=rsplit_mutant,
+                         reckon=good_tool, extra=["--allow-dirty"])
+        runs = sorted((tmp / "out-arrow-armed").iterdir()) if (tmp / "out-arrow-armed").exists() else []
+        armed_recorded = (json.loads((runs[0] / "run.json").read_text())["tree"]["dirty_inputs"]
+                          if runs else [])
+        report("arming · the rsplit repair writes the phantom permanently into run.json",
+               armed_recorded == ['stage-2.md"'] and not (repo / 'stage-2.md"').exists(),
+               "exit %d, dirty_inputs %r" % (code, armed_recorded))
+        run(["git", "reset", "-q", "--hard"], cwd=repo)
+        run(["git", "clean", "-qfd"], cwd=repo)
+
         # --- 12. the witness records what sweep() measured (DEF-205) ---------
         # sweep() computes a byte count and sha256 per file and cmd_take kept only
         # the names, so the witness could say two files appeared and not what was

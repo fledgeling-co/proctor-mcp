@@ -1226,6 +1226,153 @@ def test_seam_arm_scores_a_reported_run() -> None:
           "an unresolvable display name makes the arming inconclusive, not weaker", why)
 
 
+ZERO_TESTS_LOG = ROOT / "docs/test-campaign/evidence/PRO-0106/zero-tests-arming.txt"
+
+
+def test_seam_arm_zero_tests_is_not_an_arming() -> None:
+    """A filter that matched nothing has not watched anything fail.
+
+    The first repair separated a setup death from a check firing and left the
+    third event `armed = code != 0` conflated — a `--filter` matching no test —
+    graded as a pass. Driven end to end by the verifier: CASE-0461's real,
+    landing mutation with only its Swift function name changed came back
+
+        [CASE-0461] ARMED … exit 1 · Test run with 0 tests in 0 suites passed
+        armed 1 of 1 · inconclusive 0
+
+    against a suite in which nothing had run. The fixture is that run recorded
+    rather than a string written here: `scripts/test.sh --filter
+    thisFunctionDoesNotExistAnywhere`, whose own refusal block is the exit 1.
+    """
+    mod = _seam_arm()
+    text = ZERO_TESTS_LOG.read_text(errors="replace")
+    # The fixture, established before anything is read off it — a recorded run
+    # that does not carry the shape being graded arms nothing.
+    check("Test run with 0 tests in 0 suites passed" in text
+          and "FAIL: the run executed 0 tests, which is not a pass." in text
+          and "EXIT=1" in text and not mod.STARTED_RE.search(text),
+          "the fixture is the recorded zero-test run: a well-formed verdict line over no "
+          "tests, scripts/test.sh's own refusal, exit 1, and no started line",
+          text[-400:])
+
+    r = _parse(mod, text, 1)
+    check(r["verdict"] and mod.verdict_test_count(r["verdict"]) == 0 and not r["started"],
+          "and it parses as a verdict line reporting zero tests",
+          f"{r['verdict']!r} started={r['started']}")
+
+    display, why_display = mod.display_name("correlateReturnsTheMatchingWindowsNumber")
+    state, armed, why = mod.score_arming(display, why_display, r, 1200)
+    check(state == "INCONCLUSIVE" and armed is None,
+          "an arming that ran zero tests is inconclusive, not armed", f"{state}: {why}")
+    check("ZERO tests" in why and "matched nothing" in why,
+          "and the reason names the filter rather than the exit code", why)
+
+    # The original defect, reintroduced on this exact path. `armed = code != 0`
+    # is the whole of the pre-repair rule and it returns ARMED here, which is the
+    # verdict the verifier drove.
+    check(("ARMED" if r["exit"] != 0 else "NOT ARMED") == "ARMED",
+          "the pre-repair rule `armed = code != 0` scores this same fixture ARMED")
+
+    # And the repair does not lean on the exit code either way: a zero-test run
+    # that exits 0 — `swift test` without this repo's wrapper — is equally
+    # unmeasured, and the pre-repair rule called that one NOT ARMED.
+    quiet = _parse(mod, text, 0)
+    state, armed, why = mod.score_arming(display, why_display, quiet, 1200)
+    check(state == "INCONCLUSIVE" and armed is None,
+          "and a zero-test run that exits 0 is inconclusive too, not a check that did not fire",
+          f"{state}: {why}")
+    check(("ARMED" if quiet["exit"] != 0 else "NOT ARMED") == "NOT ARMED",
+          "which the pre-repair rule scored NOT ARMED — the same non-measurement, filed as a "
+          "pass in one direction and a fail in the other")
+
+    # A verdict line over tests that DID run is untouched by the new guard, so
+    # the check is watched clearing as well as firing.
+    ran = _parse(mod, '\u1088  Test run with 1 test in 1 suite failed after 0.001 seconds '
+                      'with 1 issue.', 1)
+    state, armed, _ = mod.score_arming(display, why_display, ran, 1200)
+    check(state == "ARMED" and armed is True,
+          "and the same rule still arms a verdict line over one test that failed", state)
+
+
+def test_seam_arm_scores_every_route_through_the_rule() -> None:
+    """Every route through `score_arming`, enumerated from the code not the tests.
+
+    The failure this item is about is a repair proved on the path its own fixture
+    drives, with a sibling path left carrying the original defect — which is how
+    the zero-test route above survived the first pass. So the branches are read
+    out of `score_arming` and each gets its own fixture, scored on its own and
+    with `armed = code != 0` reintroduced against it. Three of the eleven agree
+    with the pre-repair rule, and naming which is the point: a control that moves
+    on every input is measuring the harness rather than the repair.
+    """
+    mod = _seam_arm()
+    display, why_display = mod.display_name("correlateReturnsTheMatchingWindowsNumber")
+    other = "Some other test"
+    trap_text = TRAP_LOG.read_text(errors="replace")
+    zero_text = ZERO_TESTS_LOG.read_text(errors="replace")
+
+    def log(*lines: str) -> str:
+        return "\n".join(lines)
+
+    started_line = 'Test "%s" started.' % display
+    other_started = 'Test "%s" started.' % other
+    failed_verdict = ('\u1088  Test run with 1 test in 1 suite failed after 0.001 seconds '
+                      'with 1 issue.')
+    passed_verdict = 'Test run with 1 test in 1 suite passed after 0.001 seconds.'
+
+    # (label, r, display, expected state) — one fixture per route, never one
+    # fixture standing for several.
+    routes = [
+        ("timed out",
+         {"exit": 124, "verdict": "", "started": [], "finished": [], "timedOut": True},
+         display, "INCONCLUSIVE"),
+        ("verdict over zero tests, non-zero exit",
+         _parse(mod, zero_text, 1), display, "INCONCLUSIVE"),
+        ("verdict over zero tests, exit 0",
+         _parse(mod, zero_text, 0), display, "INCONCLUSIVE"),
+        ("verdict, and the named test never started",
+         _parse(mod, log(failed_verdict, other_started), 1), display, "INCONCLUSIVE"),
+        ("verdict, the named test ran, non-zero exit",
+         _parse(mod, log(started_line, failed_verdict), 1), display, "ARMED"),
+        ("verdict, exit 0",
+         _parse(mod, passed_verdict, 0), display, "NOT ARMED"),
+        ("no verdict, the display name could not be resolved",
+         _parse(mod, log(started_line), 1), None, "INCONCLUSIVE"),
+        ("no verdict, one started, none finished, non-zero exit",
+         _parse(mod, trap_text, 1), display, "ARMED"),
+        ("no verdict, two started, none finished, non-zero exit",
+         _parse(mod, log(started_line, other_started), 1), display, "INCONCLUSIVE"),
+        ("no verdict, the named test started, exit 0",
+         _parse(mod, log(started_line), 0), display, "INCONCLUSIVE"),
+        ("no verdict, nothing started, non-zero exit",
+         _parse(mod, log("dyld: symbol not found"), 1), display, "INCONCLUSIVE"),
+    ]
+
+    agree = []
+    for label, r, disp, expected in routes:
+        state, armed, why = mod.score_arming(
+            disp, "no @Test function named x under Tests/" if disp is None else why_display,
+            r, 1200)
+        check(state == expected,
+              "route · %s scores %s" % (label, expected), f"{state}: {why}")
+        check(armed is (True if expected == "ARMED" else False if expected == "NOT ARMED"
+                        else None),
+              "route · %s carries the armed value its state implies" % label, repr(armed))
+        # The original defect on this route.
+        before = "ARMED" if r["exit"] != 0 else "NOT ARMED"
+        if before == state:
+            agree.append(label)
+    check(sorted(agree) == sorted([
+              "verdict, the named test ran, non-zero exit",
+              "verdict, exit 0",
+              "no verdict, one started, none finished, non-zero exit"]),
+          "the pre-repair rule `armed = code != 0` agrees on three of the eleven routes and "
+          "differs on the other eight, including both zero-test routes",
+          "agreed: %r" % (sorted(agree),))
+    check(len(routes) == 11 and len({lbl for lbl, _r, _d, _e in routes}) == 11,
+          "eleven distinct routes, one fixture each")
+
+
 def test_seam_arm_refuses_an_ambiguous_display_name() -> None:
     """The ambiguity refusal, on a fixture, because the real tree cannot fire it.
 
@@ -1535,6 +1682,123 @@ def test_shot_disposition_reads_more_than_png_citations() -> None:
           str(sorted(out)))
 
 
+def test_shot_disposition_citations_read_the_audits_own_population() -> None:
+    """A cited `.mov` failed as absent from an audit that could never hold it.
+
+    `audit()` globbed `*.png` while `cite_paths` accepts twelve suffixes, so the
+    two sets differed and the gap read as a missing file. Driven and reproducible
+    before the repair. The population is declared once now and the citation
+    branch reads it, so this is watched in both directions rather than pinned to
+    the string `.png`.
+    """
+    sd = load(ROOT / "scripts/campaign/shot_disposition.py", "shot_disposition_population")
+    check(sd.AUDIT_SUFFIX in sd.IMAGE_SUFFIXES,
+          "the audit's population is one of the suffixes a case may cite", sd.AUDIT_SUFFIX)
+
+    a = sd.audit()
+    check(a["shots"] and all(r["file"].lower().endswith(sd.AUDIT_SUFFIX) for r in a["shots"]),
+          "and the audit's own glob is that population rather than a second literal",
+          str([r["file"] for r in a["shots"]][:3]))
+
+    def cited(path: str, suffix: str) -> tuple[list[str], list[str]]:
+        """citations() over one real cases.json citing `path`, at a chosen population."""
+        (sd.CAMPAIGN / "cases.json").write_text(
+            json.dumps([{"id": "CASE-X", "evidence": [path]}]))
+        real_suffix = sd.AUDIT_SUFFIX
+        sd.AUDIT_SUFFIX = suffix
+        try:
+            return sd.citations(a)
+        finally:
+            sd.AUDIT_SUFFIX = real_suffix
+
+    with tempfile.TemporaryDirectory() as tmp:
+        shots = Path(tmp) / "evidence/shots"
+        shots.mkdir(parents=True)
+        (shots / "probe-clip.mov").write_bytes(b"\0\0\0\x14ftypqt  ")
+        (shots / "probe-frame.png").write_bytes(b"\x89PNG\r\n\x1a\n" + b"\0" * 40)
+        real_repo, real_campaign = sd.REPO, sd.CAMPAIGN
+        sd.REPO, sd.CAMPAIGN = Path(tmp), Path(tmp)
+        try:
+            fails, notes = cited("evidence/shots/probe-clip.mov", ".png")
+            check(not [f for f in fails if "probe-clip" in f]
+                  and [n for n in notes if "outside this audit's population" in n],
+                  "a cited .mov under evidence/shots is outside the audit's population, "
+                  "not absent from it", f"failures={fails} notices={notes}")
+
+            # The original defect, reintroduced by moving the population rather
+            # than by editing the branch: at a `.mov` population the same file is
+            # one the audit should have held, and it fails.
+            fails, notes = cited("evidence/shots/probe-clip.mov", ".mov")
+            check([f for f in fails if "absent from this audit" in f],
+                  "and at a .mov population the same citation fails as absent — the branch "
+                  "reads the declared population and can still fire", str(fails))
+            fails, notes = cited("evidence/shots/probe-frame.png", ".mov")
+            check(not [f for f in fails if "probe-frame" in f],
+                  "while the .png becomes the one outside it, in the same run", str(fails))
+        finally:
+            sd.REPO, sd.CAMPAIGN = real_repo, real_campaign
+
+
+def test_shot_disposition_cite_paths_reads_keys_and_resolvable_spaces() -> None:
+    """Two places a citation could hide from `cite_paths`, both driven.
+
+    A path used as a dict KEY was not scanned at all, and any string holding a
+    space was disqualified outright — a proxy for prose that also disqualifies a
+    real capture whose name has a space in it. Both are DEF-227's own shape: a
+    place citations live that the gate did not look in.
+    """
+    sd = load(ROOT / "scripts/campaign/shot_disposition.py", "shot_disposition_citepaths")
+
+    def old_form(node, cid, out):
+        """The pre-repair walk, verbatim: values only, and no string with a space."""
+        if isinstance(node, str):
+            s = node.strip()
+            if s.lower().endswith(sd.IMAGE_SUFFIXES) and " " not in s and "/" in s:
+                out.setdefault(s, set()).add(cid)
+        elif isinstance(node, dict):
+            for v in node.values():
+                old_form(v, cid, out)
+        elif isinstance(node, list):
+            for v in node:
+                old_form(v, cid, out)
+
+    keyed = {"notes": {"evidence/shots/keyed.png": "what this frame shows"}}
+    now, before = {}, {}
+    sd.cite_paths(keyed, "CASE-K", now)
+    old_form(keyed, "CASE-K", before)
+    check(sorted(now) == ["evidence/shots/keyed.png"] and before == {},
+          "a citation used as a dict key is read, and the pre-repair walk saw nothing there",
+          f"now={sorted(now)} before={sorted(before)}")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "evidence/shots").mkdir(parents=True)
+        (root / "evidence/shots/two words.png").write_bytes(b"\x89PNG")
+        real_repo, real_campaign = sd.REPO, sd.CAMPAIGN
+        sd.REPO, sd.CAMPAIGN = root, root
+        try:
+            spaced = ["evidence/shots/two words.png",
+                      "the negative control at evidence/shots/absent one.png"]
+            now, before = {}, {}
+            sd.cite_paths(spaced, "CASE-S", now)
+            old_form(spaced, "CASE-S", before)
+            check(sorted(now) == ["evidence/shots/two words.png"] and before == {},
+                  "a spaced path that resolves on disk is a citation and prose about a file "
+                  "that does not is still prose; the pre-repair walk skipped both",
+                  f"now={sorted(now)} before={sorted(before)}")
+
+            (root / "evidence/shots/two words.png").unlink()
+            gone: dict = {}
+            sd.cite_paths(spaced, "CASE-S", gone)
+            check(gone == {},
+                  "and the same string stops being a citation when the file is not there — "
+                  "the residual this cannot separate, stated rather than hidden: a citation "
+                  "of a MISSING file whose name holds a space reads as prose",
+                  str(sorted(gone)))
+        finally:
+            sd.REPO, sd.CAMPAIGN = real_repo, real_campaign
+
+
 def test_mutation_timeout_arm_refuses_an_unresolvable_baseline() -> None:
     """A pinned sha does not exist in a shallow clone, and git show fails quietly."""
     out = subprocess.run(
@@ -1568,6 +1832,8 @@ def main() -> int:
                test_mutate_swift_unreported_suite_is_inconclusive,
                test_seam_arm_scores_the_trap_from_the_log,
                test_seam_arm_scores_a_reported_run,
+               test_seam_arm_zero_tests_is_not_an_arming,
+               test_seam_arm_scores_every_route_through_the_rule,
                test_seam_arm_refuses_an_ambiguous_display_name,
                test_seam_arm_display_names_resolve_for_every_case,
                test_seam_arm_apply_proves_its_own_write,
@@ -1578,6 +1844,8 @@ def main() -> int:
                test_seam_arm_display_name_refuses_a_name_it_cannot_read,
                test_shot_disposition_adoption_covers_every_route_in,
                test_shot_disposition_reads_more_than_png_citations,
+               test_shot_disposition_citations_read_the_audits_own_population,
+               test_shot_disposition_cite_paths_reads_keys_and_resolvable_spaces,
                test_mutation_timeout_arm_refuses_an_unresolvable_baseline):
         try:
             fn()
