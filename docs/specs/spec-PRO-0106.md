@@ -4,7 +4,7 @@
 **Status:** Developer Review
 **Created:** 2026-08-23
 **Last updated:** 2026-08-23
-**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240, DEF-241, DEF-242, DEF-243
+**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240..DEF-247
 **Brief:** `docs/features-to-triage/99-instruments-that-do-not-prove-their-own-step.md`
 
 ## Feature description
@@ -126,9 +126,17 @@ exercises while leaving another path undriven*. Four paths were undriven, and ea
 the original defect reintroduced on it.
 
 - **`porcelain_paths` accepts six kinds of status entry and one was driven.** All six now, and the
-  result is more useful than the assertion first written: the pre-repair slice is wrong on **four**,
-  not two. An untracked entry and a staged addition survive a strip intact, which is exactly why the
-  defect went unnoticed and why the fixture had to be a modified tracked file.
+  result is more useful than the assertion first written: over those six the pre-repair slice is wrong
+  on **four**, not two. An untracked entry and a staged addition survive a strip intact, which is
+  exactly why the defect went unnoticed and why the fixture had to be a modified tracked file. **Six
+  was not the population, and "four" is a statement about the fixture rather than about the parse** —
+  enumerated from the code and driven one at a time in a reset tree there are **thirteen** kinds, and
+  the slice is wrong on **nine** of them: two from the strip eating a leading status space, two from a
+  quoted path left quoted, and five from a rename naming both sides on one line. The four it gets
+  right are the four with no leading space, no quote and no arrow. The verifier's own recount put it
+  at three of eight; that enumeration is not recoverable from here and does not reproduce against this
+  one, so the figure above is the measured one with its population named and every raw porcelain line
+  in the selftest.
 - **The witness had two kinds of change and there are three.** Under `--force` a re-take runs over a
   directory that already holds a reading, and a file the build stopped writing leaves no trace in
   either name set. `removed` records it.
@@ -183,15 +191,69 @@ bits, and `cmd_take` sweeps only its own output directory, so a write elsewhere 
 are scope decisions in the instrument's design rather than steps it failed to prove. And **DEF-243**,
 recorded rather than fixed.
 
+## What the verifier sent back, and it is this item's own subject twice
+
+Two acceptance clauses came back `Needs More Work`, and both are the same shape: **a repair
+inherited the property it was repairing.** Each fixed the path its own fixture drove and left a
+sibling path carrying the original defect — which is precisely what PRO-0106 exists to stop, so
+closing them is closing the item rather than patching around it.
+
+**DEF-244 — the arming scored ARMED where zero tests ran.** The instrument's own docstring names the
+three events `armed = code != 0` conflated: a setup death, a `--filter` matching nothing, and a check
+firing. The repair separated the first from the third **and graded the second a pass**. Driven end to
+end: CASE-0461's real, landing mutation with only its Swift function name changed produced
+`[CASE-0461] ARMED … exit 1 · Test run with 0 tests in 0 suites passed`, `armed 1 of 1 ·
+inconclusive 0`, process exit 0, tree clean. The started-line guard could not see it — `started` is
+empty so `display is not None and started and display not in started` is skipped, and `display` was
+None anyway because `display_name` correctly refused. Worse, the non-zero exit is
+`scripts/test.sh`'s **own** zero-test refusal, in a block whose comment says a filter matching
+nothing is not a pass: the rule was reading the harness's refusal to grade as a grade. The count is
+read back out of the published verdict line now, and a verdict over zero tests is `inconclusive`
+naming why, exactly as a setup death is. **Every route through `score_arming` is enumerated from the
+code**, eleven of them, one fixture each, with `armed = code != 0` reintroduced against every one; it
+agrees on three — a reported failure, a reported pass, and the trap — and differs on the other eight.
+
+**DEF-245 — `porcelain_paths` re-created DEF-206 on the rename branch the repair added.** The first
+repair split from the RIGHT, reasoning that an unconditional split re-creates DEF-206 on a path
+containing the arrow. Splitting from the right re-creates it on a different input:
+`git mv src.png "stage-1 -> stage-2.png"` gives `R  src.png -> "stage-1 -> stage-2.png"`, whose last
+` -> ` is inside the quoted destination, so the parse returned `stage-2.png"` and `--allow-dirty`
+wrote that phantom permanently into `run.json.dirty_inputs` — DEF-206's original harm, restored by
+DEF-206's own repair. **Neither naive split survives git**, and that is the finding: the first ` -> `
+is wrong when the SOURCE is quoted and holds an arrow, the last is wrong when the destination is.
+Both forms were measured against git 2.50.1. The separator is findable only by reading the quoting,
+so that is what `rename_destination` does — porcelain v1 quotes a path holding a space (git's own
+`QUOTE_PATH_QUOTE_SP`), so an unquoted side cannot contain the separator, and a quoted side is
+scanned to its closing quote honouring backslash escapes. Thirteen kinds are enumerated from
+`porcelain_paths`' branches and each is driven ALONE in a reset tree, with three parses computed
+against every one: the pre-repair slice (wrong on nine), the rsplit repair (wrong on exactly the two
+whose last ` -> ` is inside a quoted destination), and the code as it stands (wrong on none). The
+`--allow-dirty` harm is driven end to end in both directions.
+
+## The verifier's six non-acceptance findings
+
+Four repaired, two recorded with their reason.
+
+| Finding | What was done |
+|---|---|
+| `audit()` globs `*.png` while `cite_paths` accepts twelve suffixes, so a cited `.mov` under `evidence/shots` fails as *absent from this audit* | **DEF-246, fixed.** Reproduced first. `audit()` cannot widen — `measure()` reads a PNG IHDR out of bytes 16..24 and hands the file to PIL — so the population is declared once as `AUDIT_SUFFIX`, the glob is built from it, and the citation branch reads it. A cited file outside the population is a notice, checked for existence and no further. Armed by moving the population rather than the branch: at a `.mov` population the same citation fails and the `.png` becomes the notice. |
+| `cite_paths` skips any path containing a space, and any dict key | **DEF-247, fixed.** Keys are walked, and a spaced string that resolves on disk is a citation. **Residual, stated:** a citation of a MISSING file whose name holds a space still reads as prose, because that and a sentence naming a file are not separable by any rule this has. |
+| `citations` checks nothing outside `evidence/shots` | **Recorded, with a correction.** Existence IS checked for every cited path wherever it lives; what is scoped to `evidence/shots/` is the disposition and the publishing subject, because a disposition is a fact about that directory and nowhere else holds one. The function now says so in its own docstring rather than leaving it to be found. DEF-243 is the row for the standard the mock lane still has no gate for. |
+| `sweep()` witnesses no mode bits | **Recorded, unchanged.** A scope decision in the instrument's design rather than a step it failed to prove, and the same call as the one already recorded above. |
+| gemini's ` R` unstaged-rename claim | **Does not reproduce, and now driven rather than argued.** git 2.50.1 has no rename to report until a side is staged, so a plain `mv` arrives as ` D` plus `??`. The new guard reads both status columns anyway, and the selftest records the measurement so a guard resting on an unchecked claim is not what this leaves behind. |
+
 ## Where absence claims were checked
 
-**The `code != 0`-as-verdict pattern is not in these 27 files.** Every `.py` under `scripts/campaign/`
+**The `code != 0`-as-verdict pattern is not in these 25 files.** Every `.py` under `scripts/campaign/`
 and `scripts/reckoning/` was grepped for a verdict taken from an exit code and every hit read in
-place. `mutation_timeout_arm.py` compares scored verdicts; `skill_doc_arm.py` and
+place. The count said 27 and `git ls-tree` says **25**, at HEAD and at the merge base; the sweep is
+unchanged and the number was wrong. The verifier extended it to the ten `.py` outside that window and
+found one hit, `design/surfaces/tui/build_specs.py:328`, a compiler-invocation check inside
+`defect_gate`'s own class rather than a verdict. `mutation_timeout_arm.py` compares scored verdicts; `skill_doc_arm.py` and
 `spec_citation_arm.py` read named PASS/FAIL verdicts out of their subject's output;
 `defect_gate.py` and `spec_citation_measure.py` use `returncode` only to decide whether a git
-subprocess produced usable output, which is a different question. **Nothing outside `scripts/` was
-searched and the Swift suite was not**, so this is a statement about 27 files rather than about the
+subprocess produced usable output, which is a different question. **The Swift suite was not
+searched**, so this is a statement about the 35 `.py` files in the tree rather than about the
 repository.
 
 **The strip-then-slice pattern is not in the other three instruments.** `mutate_swift.py` and
@@ -214,5 +276,9 @@ Searched: the four instruments this item names, plus every `git status --porcela
 | DEF-240 | fixed |
 | DEF-241 | fixed |
 | DEF-242 | fixed |
+| DEF-244 | fixed |
+| DEF-245 | fixed |
+| DEF-246 | fixed |
+| DEF-247 | fixed |
 | DEF-243 | (recorded) `evidence/shots/mock/` is excluded from capture-lineage and from this audit's glob, both correctly and for the same reason, and nothing checks that lane at all. A disposition standard for the design of record is a different piece of work.
 | DEF-215 | (recorded) four ledger rows carry no spec file. Writing retrospective specs for two retired items is a decision about those items and belongs to whoever takes it, so it is recorded open rather than closed here. |
