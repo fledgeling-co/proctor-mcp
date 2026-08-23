@@ -1,0 +1,138 @@
+{
+ "schema": "reckoning-run/1",
+ "taken_at": "2026-08-23T04:30:31Z",
+ "project": "proctor-mcp",
+ "tree": {
+  "repo": "proctor-mcp",
+  "commit": "7674c7f79f1ecb95be0b7417cc3b8e05053bad59",
+  "short": "7674c7f",
+  "branch": "main",
+  "tree_named": true,
+  "dirty_inputs": [],
+  "inputs": {
+   "docs/features-to-triage": {
+    "last_commit": "c5f1b6234e4d577b72e1eec26bc1414319e8cad9"
+   },
+   "docs/test-campaign": {
+    "last_commit": "7674c7f79f1ecb95be0b7417cc3b8e05053bad59"
+   }
+  }
+ },
+ "tool": {
+  "name": "reckon",
+  "version": "1.2.0",
+  "script": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py",
+  "manifest": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/.claude-plugin/plugin.json",
+  "source_commit": "a305a747b3233ec942158cdc8999e8e4b8084a04",
+  "classes": [
+   "broken",
+   "retirable",
+   "unbuilt",
+   "undecided",
+   "unjoined",
+   "unmeasured",
+   "unnamed",
+   "verified-done",
+   "waived"
+  ]
+ },
+ "inputs": {
+  "briefs": "docs/features-to-triage",
+  "campaign": "docs/test-campaign"
+ },
+ "gate": {
+  "build_exit": 4,
+  "check_exit": 4
+ },
+ "headline": "150 piece(s) of work remain — 24 product, 39 evidence, 87 decision — across 796 ledger rows. This reckoning speaks for 99% of the campaign's designed cases and 77% of its stated requirements; the rest is not known to be done, it is simply not known. 1 input(s) could not be classified — id-shaped token 'CASE-9999' on 1 row(s) — and each is named with its row count rather than counted as work or as done. 79 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.",
+ "summary": {
+  "counts": {
+   "verified-done": 646,
+   "unmeasured": 39,
+   "undecided": 8,
+   "broken": 24,
+   "unjoined": 79
+  },
+  "work_items": 150,
+  "work_by_class": {
+   "undecided": 8,
+   "unmeasured": 35,
+   "broken": 24,
+   "unjoined": 79
+  },
+  "work_by_kind": {
+   "decision-work": 87,
+   "evidence-work": 39,
+   "product-work": 24
+  },
+  "rows": 796
+ },
+ "denominators": {
+  "cases_adjudicated": {
+   "n": 396,
+   "of": 400,
+   "pct": 99.0,
+   "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+  },
+  "decisions_taken": {
+   "n": 0,
+   "of": 400,
+   "pct": 0.0,
+   "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+  },
+  "requirements_observed": {
+   "n": 89,
+   "of": 116,
+   "pct": 76.7,
+   "means": "somebody watched it happen, rather than the project reporting it of itself."
+  },
+  "surfaces_spoken_for": {
+   "n": 27,
+   "of": 27,
+   "pct": 100.0,
+   "means": "at least one case on this surface reached a verdict."
+  },
+  "briefs_joined": {
+   "n": 21,
+   "of": 100,
+   "pct": 21.0,
+   "means": "the brief could be tied to something in the registry at all."
+  }
+ },
+ "class_counts": {
+  "verified-done": 646,
+  "unmeasured": 39,
+  "undecided": 8,
+  "broken": 24,
+  "unjoined": 79
+ },
+ "effect": {
+  "kind": "filesystem-write",
+  "root": "docs/reckoning/wave-17-close-final",
+  "files_written": [
+   "ledger.json",
+   "reckoning.md"
+  ],
+  "count": 2,
+  "written": {
+   "ledger.json": {
+    "bytes": 743329,
+    "sha256": "cab29dc3a12d59838beac614ce842d7f4e5b272a9f3d16fecd3bb3b6a6ca4c24"
+   },
+   "reckoning.md": {
+    "bytes": 32649,
+    "sha256": "aee5ff534e993e5d8e0dd00335ef5e0e9cd9b1f41bae798fe00106061de545fd"
+   }
+  },
+  "rewritten": {},
+  "rewritten_count": 0,
+  "removed": {},
+  "removed_count": 0,
+  "unchanged_count": 0,
+  "witness": "every file under the root with its byte count and sha256, before and after the build, so the claim that a command wrote something names what appeared and what it held"
+ },
+ "provenance": "measured",
+ "notes": [
+  "Wave 17 close, third reading. First named two unclassifiable inputs; both were this session's own vocabulary errors and are corrected at their rows. Compare against 2026-08-22-2bdc808 for the wave-16 delta."
+ ]
+}

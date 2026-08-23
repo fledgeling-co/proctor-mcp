@@ -1,0 +1,236 @@
+{
+ "schema": "reckoning-delta/1",
+ "project": "proctor-mcp",
+ "attribution": "direct",
+ "previous": {
+  "dir_stamp": "2026-08-23T04:30:31Z",
+  "commit": "7674c7f79f1ecb95be0b7417cc3b8e05053bad59",
+  "short": "7674c7f",
+  "tool": "1.2.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 17 close, third reading. First named two unclassifiable inputs; both were this session's own vocabulary errors and are corrected at their rows. Compare against 2026-08-22-2bdc808 for the wave-16 delta."
+  ]
+ },
+ "current": {
+  "dir_stamp": "2026-08-23T04:51:13Z",
+  "commit": "ad0c19636864fc6ca214721c8668c77dafc0d146",
+  "short": "ad0c196",
+  "tool": "1.2.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 17 close. Fourth reading. Both vocabulary violations from the first reading were this session's own errors and are now at their rows: REQ-072's evidence word is unknown, the planted CASE-9999 sits in a fence. Compare against 2026-08-22-2bdc808."
+  ]
+ },
+ "verdict": "0 of 5 axes improved, 5 flat, 0 worsened; evidence work flat at 39 and the unmeasured class flat at 39 rows.",
+ "movement": {
+  "tool": {
+   "work_items": 0,
+   "product": 0,
+   "evidence": 0,
+   "decision": 0,
+   "rows": 0
+  },
+  "project": {
+   "work_items": 0,
+   "product": 0,
+   "evidence": 0,
+   "decision": 0,
+   "rows": 0
+  },
+  "net": {
+   "work_items": 0,
+   "product": 0,
+   "evidence": 0,
+   "decision": 0,
+   "rows": 0
+  },
+  "previous": {
+   "work_items": 150,
+   "product": 24,
+   "evidence": 39,
+   "decision": 87,
+   "rows": 796
+  },
+  "control": {
+   "work_items": 150,
+   "product": 24,
+   "evidence": 39,
+   "decision": 87,
+   "rows": 796
+  },
+  "current": {
+   "work_items": 150,
+   "product": 24,
+   "evidence": 39,
+   "decision": 87,
+   "rows": 796
+  }
+ },
+ "classes": {
+  "previous": {
+   "verified-done": 646,
+   "unmeasured": 39,
+   "undecided": 8,
+   "broken": 24,
+   "unjoined": 79
+  },
+  "control": {
+   "verified-done": 646,
+   "unmeasured": 39,
+   "undecided": 8,
+   "broken": 24,
+   "unjoined": 79
+  },
+  "current": {
+   "verified-done": 646,
+   "unmeasured": 39,
+   "undecided": 8,
+   "broken": 24,
+   "unjoined": 79
+  }
+ },
+ "axes": [
+  {
+   "key": "cases_adjudicated",
+   "label": "Cases adjudicated",
+   "prev": {
+    "n": 396,
+    "of": 400,
+    "pct": 99.0,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "control": {
+    "n": 396,
+    "of": 400,
+    "pct": 99.0,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "current": {
+    "n": 396,
+    "of": 400,
+    "pct": 99.0,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "denominator_moved": false,
+   "direction": "flat"
+  },
+  {
+   "key": "decisions_taken",
+   "label": "Cases ruled out by decision",
+   "prev": {
+    "n": 0,
+    "of": 400,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "control": {
+    "n": 0,
+    "of": 400,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "current": {
+    "n": 0,
+    "of": 400,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "denominator_moved": false,
+   "direction": "flat"
+  },
+  {
+   "key": "requirements_observed",
+   "label": "Requirements observed",
+   "prev": {
+    "n": 89,
+    "of": 116,
+    "pct": 76.7,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "control": {
+    "n": 89,
+    "of": 116,
+    "pct": 76.7,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "current": {
+    "n": 89,
+    "of": 116,
+    "pct": 76.7,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "denominator_moved": false,
+   "direction": "flat"
+  },
+  {
+   "key": "surfaces_spoken_for",
+   "label": "Surfaces spoken for",
+   "prev": {
+    "n": 27,
+    "of": 27,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "control": {
+    "n": 27,
+    "of": 27,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "current": {
+    "n": 27,
+    "of": 27,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "denominator_moved": false,
+   "direction": "flat"
+  },
+  {
+   "key": "briefs_joined",
+   "label": "Briefs joined to evidence",
+   "prev": {
+    "n": 21,
+    "of": 100,
+    "pct": 21.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "control": {
+    "n": 21,
+    "of": 100,
+    "pct": 21.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "current": {
+    "n": 21,
+    "of": 100,
+    "pct": 21.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "denominator_moved": false,
+   "direction": "flat"
+  }
+ ],
+ "unmeasured": {
+  "control_rows": 39,
+  "current_rows": 39,
+  "left": [],
+  "entered": [],
+  "direction": "flat"
+ },
+ "rows": {
+  "moved": [],
+  "appeared": [],
+  "vanished": []
+ },
+ "ratchets": [
+  {
+   "pair": "published",
+   "from": "7674c7f",
+   "to": "ad0c196",
+   "exit": 0,
+   "violations": []
+  }
+ ]
+}

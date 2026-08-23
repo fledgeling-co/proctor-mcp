@@ -1,0 +1,1343 @@
+{
+ "schema": "reckoning-delta/1",
+ "project": "proctor-mcp",
+ "attribution": "decomposed",
+ "previous": {
+  "dir_stamp": "2026-08-22T13:13:25Z",
+  "commit": "2bdc8087471dc930af04d981fbac16e172d263b6",
+  "short": "2bdc808",
+  "tool": "1.1.0",
+  "provenance": "measured",
+  "notes": [
+   "Taken at wave 16's close-in-progress rather than after it: PRO-0101 had not merged when this was read, so its REQ-100/101, CASE-0430-0440, DEF-215 and SURF-024 are not in this tree.",
+   "PRO-0103's own campaign rows (REQ-102-107, CASE-0441-0456, DEF-216, SURF-025) land two commits after this reading and are not in it. They will appear as movement at the next wave close."
+  ]
+ },
+ "current": {
+  "dir_stamp": "2026-08-23T04:51:13Z",
+  "commit": "ad0c19636864fc6ca214721c8668c77dafc0d146",
+  "short": "ad0c196",
+  "tool": "1.2.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 17 close. Fourth reading. Both vocabulary violations from the first reading were this session's own errors and are now at their rows: REQ-072's evidence word is unknown, the planted CASE-9999 sits in a fence. Compare against 2026-08-22-2bdc808."
+  ]
+ },
+ "verdict": "3 of 5 axes improved, 2 flat, 0 worsened; evidence work up at 39 and the unmeasured class larger at 39 rows.",
+ "movement": {
+  "tool": {
+   "work_items": 0,
+   "product": 0,
+   "evidence": 0,
+   "decision": 0,
+   "rows": 0
+  },
+  "project": {
+   "work_items": 16,
+   "product": 14,
+   "evidence": 3,
+   "decision": -1,
+   "rows": 176
+  },
+  "net": {
+   "work_items": 16,
+   "product": 14,
+   "evidence": 3,
+   "decision": -1,
+   "rows": 176
+  },
+  "previous": {
+   "work_items": 134,
+   "product": 10,
+   "evidence": 36,
+   "decision": 88,
+   "rows": 620
+  },
+  "control": {
+   "work_items": 134,
+   "product": 10,
+   "evidence": 36,
+   "decision": 88,
+   "rows": 620
+  },
+  "current": {
+   "work_items": 150,
+   "product": 24,
+   "evidence": 39,
+   "decision": 87,
+   "rows": 796
+  }
+ },
+ "classes": {
+  "previous": {
+   "verified-done": 486,
+   "unmeasured": 36,
+   "undecided": 8,
+   "broken": 10,
+   "unjoined": 80
+  },
+  "control": {
+   "verified-done": 486,
+   "unmeasured": 36,
+   "undecided": 8,
+   "broken": 10,
+   "unjoined": 80
+  },
+  "current": {
+   "verified-done": 646,
+   "unmeasured": 39,
+   "undecided": 8,
+   "broken": 24,
+   "unjoined": 79
+  }
+ },
+ "axes": [
+  {
+   "key": "cases_adjudicated",
+   "label": "Cases adjudicated",
+   "prev": {
+    "n": 289,
+    "of": 293,
+    "pct": 98.6,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "control": {
+    "n": 289,
+    "of": 293,
+    "pct": 98.6,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "current": {
+    "n": 396,
+    "of": 400,
+    "pct": 99.0,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "decisions_taken",
+   "label": "Cases ruled out by decision",
+   "prev": {
+    "n": 0,
+    "of": 293,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "control": {
+    "n": 0,
+    "of": 293,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "current": {
+    "n": 0,
+    "of": 400,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "requirements_observed",
+   "label": "Requirements observed",
+   "prev": {
+    "n": 63,
+    "of": 90,
+    "pct": 70.0,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "control": {
+    "n": 63,
+    "of": 90,
+    "pct": 70.0,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "current": {
+    "n": 89,
+    "of": 116,
+    "pct": 76.7,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "surfaces_spoken_for",
+   "label": "Surfaces spoken for",
+   "prev": {
+    "n": 23,
+    "of": 23,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "control": {
+    "n": 23,
+    "of": 23,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "current": {
+    "n": 27,
+    "of": 27,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "briefs_joined",
+   "label": "Briefs joined to evidence",
+   "prev": {
+    "n": 16,
+    "of": 96,
+    "pct": 16.7,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "control": {
+    "n": 16,
+    "of": 96,
+    "pct": 16.7,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "current": {
+    "n": 21,
+    "of": 100,
+    "pct": 21.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  }
+ ],
+ "unmeasured": {
+  "control_rows": 36,
+  "current_rows": 39,
+  "left": [],
+  "entered": [
+   {
+    "id": "BRIEF-96-what-1-1-0-still-groups-and-still-grades",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "What 1.1.0 still groups, and what it still lets a citation grade",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   }
+  ],
+  "direction": "worsened"
+ },
+ "rows": {
+  "moved": [
+   {
+    "id": "BRIEF-96-what-1-1-0-still-groups-and-still-grades",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "What 1.1.0 still groups, and what it still lets a citation grade",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "DEF-200",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "CASE-0392 records armed: false with a reason the verification disproved",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-201",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "A quoted placeholder id is read as a citation at confidence 1.0",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-202",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "An unrecognised status word decides the headline, and it can fail in either direction",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   }
+  ],
+  "appeared": [
+   {
+    "id": "BRIEF-100-a-screenshot-gallery-the-gate-cannot-see",
+    "entity": "brief",
+    "class": "unmeasured",
+    "title": "Thirty-five pictures the gate cannot see"
+   },
+   {
+    "id": "BRIEF-97-an-input-the-check-cannot-classify",
+    "entity": "brief",
+    "class": "unmeasured",
+    "title": "An input the check cannot classify, and the two directions it can be wrong"
+   },
+   {
+    "id": "BRIEF-98-a-version-string-is-not-the-artifact",
+    "entity": "brief",
+    "class": "broken",
+    "title": "A version string is not the artifact"
+   },
+   {
+    "id": "BRIEF-99-instruments-that-do-not-prove-their-own-step",
+    "entity": "brief",
+    "class": "broken",
+    "title": "Instruments that do not prove their own step"
+   },
+   {
+    "id": "CASE-0430",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0431",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0432",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0433",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0434",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0435",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0436",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0437",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0438",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0439",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0440",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · ?"
+   },
+   {
+    "id": "CASE-0441",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0442",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0443",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0444",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0445",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0446",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0447",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0448",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0449",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0450",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0451",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0452",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0453",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0454",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0455",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0456",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-025 · ?"
+   },
+   {
+    "id": "CASE-0457",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0458",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0459",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0460",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0461",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0462",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0463",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-004 · ?"
+   },
+   {
+    "id": "CASE-0464",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-004 · ?"
+   },
+   {
+    "id": "CASE-0465",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-005 · ?"
+   },
+   {
+    "id": "CASE-0466",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-012 · ?"
+   },
+   {
+    "id": "CASE-0467",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0468",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0469",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0470",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0471",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-002 · ?"
+   },
+   {
+    "id": "CASE-0472",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0473",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0474",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0475",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0476",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0477",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0478",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0479",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0480",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0500",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0501",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0502",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0503",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0504",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0505",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0506",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0507",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · reporting"
+   },
+   {
+    "id": "CASE-0508",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · reporting"
+   },
+   {
+    "id": "CASE-0509",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · reporting"
+   },
+   {
+    "id": "CASE-0510",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · reporting"
+   },
+   {
+    "id": "CASE-0511",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · reporting"
+   },
+   {
+    "id": "CASE-0512",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · reporting"
+   },
+   {
+    "id": "CASE-0513",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0514",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0515",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · reporting"
+   },
+   {
+    "id": "CASE-0516",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0517",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · cited by path"
+   },
+   {
+    "id": "CASE-0518",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · cited by path"
+   },
+   {
+    "id": "CASE-0519",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · cited by path"
+   },
+   {
+    "id": "CASE-0520",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · registered as unclaimed"
+   },
+   {
+    "id": "CASE-0521",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · registered as unclaimed"
+   },
+   {
+    "id": "CASE-0522",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · registered as unclaimed"
+   },
+   {
+    "id": "CASE-0523",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · registered as unclaimed"
+   },
+   {
+    "id": "CASE-0524",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · cited by path"
+   },
+   {
+    "id": "CASE-0525",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · declared no brief"
+   },
+   {
+    "id": "CASE-0526",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · registered as unclaimed"
+   },
+   {
+    "id": "CASE-0527",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-023 · classifying"
+   },
+   {
+    "id": "CASE-0528",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-024 · declared no brief"
+   },
+   {
+    "id": "CASE-0540",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0541",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0542",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0543",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0544",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0545",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-022 · ?"
+   },
+   {
+    "id": "CASE-0546",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-022 · ?"
+   },
+   {
+    "id": "CASE-0547",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-022 · ?"
+   },
+   {
+    "id": "CASE-0548",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0549",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0550",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-022 · ?"
+   },
+   {
+    "id": "CASE-0551",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0552",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0553",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0554",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0555",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0556",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0557",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0558",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0559",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0560",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-022 · ?"
+   },
+   {
+    "id": "CASE-0561",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0562",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0563",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-022 · ?"
+   },
+   {
+    "id": "CASE-0564",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-026 · ?"
+   },
+   {
+    "id": "CASE-0565",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0566",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "DEF-203",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Three citation checks accept inputs their names imply they reject"
+   },
+   {
+    "id": "DEF-204",
+    "entity": "defect",
+    "class": "broken",
+    "title": "Two different tools with the same version string compare as the same tool"
+   },
+   {
+    "id": "DEF-205",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "cmd_take discards the digests sweep() computed, so the witness records names without content"
+   },
+   {
+    "id": "DEF-206",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "resolve_tree prints a path that does not exist in its own refusal"
+   },
+   {
+    "id": "DEF-207",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "mutate_swift.py splices by byte offset and never reads back"
+   },
+   {
+    "id": "DEF-208",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "mutation_seam_arm.py scores any non-zero exit as armed, including a process that died"
+   },
+   {
+    "id": "DEF-209",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Thirty-five images in the shots directory that nothing publishes and no manifest names"
+   },
+   {
+    "id": "DEF-215",
+    "entity": "defect",
+    "class": "broken",
+    "title": "Four ledger rows have no spec file, so two briefs have no artifact that could cite them"
+   },
+   {
+    "id": "DEF-216",
+    "entity": "defect",
+    "class": "broken",
+    "title": "The installed reckon plugin is still 1.0.0, and 1.0.0 crashes on this registry"
+   },
+   {
+    "id": "DEF-217",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Three boolean arguments are published with no stated default while the decoder has one"
+   },
+   {
+    "id": "DEF-218",
+    "entity": "defect",
+    "class": "broken",
+    "title": "Nine files named for nine engine surfaces are app-icon renders (recorded)"
+   },
+   {
+    "id": "DEF-219",
+    "entity": "defect",
+    "class": "broken",
+    "title": "Three files named for the takeover shield contain no image at all (recorded)"
+   },
+   {
+    "id": "DEF-220",
+    "entity": "defect",
+    "class": "broken",
+    "title": "sweepK-scaling.json lists two frames its own mode table has no capture of (recorded)"
+   },
+   {
+    "id": "DEF-221",
+    "entity": "defect",
+    "class": "broken",
+    "title": "One image carries three captions across two unrelated sweeps, and two wedged timestamps share one frame (recor"
+   },
+   {
+    "id": "DEF-222",
+    "entity": "defect",
+    "class": "broken",
+    "title": "sweepL-status-agent-down.png depicts a Ready window, and the two agent-down frames are one image (recorded)"
+   },
+   {
+    "id": "DEF-223",
+    "entity": "defect",
+    "class": "broken",
+    "title": "A file's surface prefix binds it to a surface the picture does not show (recorded)"
+   },
+   {
+    "id": "DEF-224",
+    "entity": "defect",
+    "class": "broken",
+    "title": "Case evidence and the lineage manifest disagree about the same five files (recorded)"
+   },
+   {
+    "id": "DEF-225",
+    "entity": "defect",
+    "class": "broken",
+    "title": "A passing case cites a shots file that does not exist, and no gate looks (recorded)"
+   },
+   {
+    "id": "DEF-226",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "shot_disposition.py --write adopts any new content as the baseline"
+   },
+   {
+    "id": "DEF-227",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "shot_disposition.py never reads cases.json, so a case citing an unpublished image is unflagged"
+   },
+   {
+    "id": "DEF-228",
+    "entity": "defect",
+    "class": "broken",
+    "title": "LEDGER.md is the ledger of record and no standing instrument reads it"
+   },
+   {
+    "id": "DEF-229",
+    "entity": "defect",
+    "class": "broken",
+    "title": "capture-lineage.py never reads cases.json either, so DEF-227's class reaches the gate"
+   },
+   {
+    "id": "DEF-230",
+    "entity": "defect",
+    "class": "broken",
+    "title": "A requirement carries an evidence word its own schema rejects, and the tool explained it as a self-report"
+   },
+   {
+    "id": "DEF-240",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "mutate_swift.py scored a suite that never reported as a kill"
+   },
+   {
+    "id": "DEF-241",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "shot_disposition.py published a count of its own directory that was wrong"
+   },
+   {
+    "id": "DEF-242",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "mutation_timeout_arm.py compared the repaired runner against itself"
+   },
+   {
+    "id": "DEF-243",
+    "entity": "defect",
+    "class": "broken",
+    "title": "evidence/shots/mock/ is excluded from every instrument that reads the shots directory"
+   },
+   {
+    "id": "DEF-244",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "mutation_seam_arm.py scored a run that executed zero tests as ARMED"
+   },
+   {
+    "id": "DEF-245",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "porcelain_paths re-created DEF-206 on the rename branch DEF-206's repair added"
+   },
+   {
+    "id": "DEF-246",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "a cited .mov failed as absent from an audit whose population could never hold it"
+   },
+   {
+    "id": "DEF-247",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "cite_paths skipped every dict key and every path holding a space"
+   },
+   {
+    "id": "DEF-248",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "unquote_path returned a still-quoted path under core.quotePath=false"
+   },
+   {
+    "id": "DEF-249",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "tree_dirty carried the same line[3:] slice DEF-206 was about"
+   },
+   {
+    "id": "DEF-250",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "a repo-relative citation skipped every check but existence"
+   },
+   {
+    "id": "DEF-251",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "the check that verify() guards the identity grouping could not fail"
+   },
+   {
+    "id": "REQ-100",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Every one of the 99 files in docs/specs carries a citation saying where it came from — a brief path, a brief p"
+   },
+   {
+    "id": "REQ-101",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The shipyard triage stage records the citation when it allocates an id, and neither it nor the reckon join der"
+   },
+   {
+    "id": "REQ-102",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A published reckoning names the tree it was taken on by commit, and a reading over uncommitted inputs is refus"
+   },
+   {
+    "id": "REQ-103",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The reckoning tool is checked for its declared version and for its actual class vocabulary before a reading is"
+   },
+   {
+    "id": "REQ-104",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Two readings taken with different versions of the reckoning tool are not differenced directly: the comparison "
+   },
+   {
+    "id": "REQ-105",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The comparison runs the ratchet on every pair it reports and exits 3 where an item left the unmeasured class w"
+   },
+   {
+    "id": "REQ-106",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The delta report leads with what moved and puts totals last"
+   },
+   {
+    "id": "REQ-107",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The cadence is recorded in the repository as a trigger tied to wave close, and every command its runbook quote"
+   },
+   {
+    "id": "REQ-108",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Every optional boolean argument a tool publishes decodes to the default that tool's own schema states, and no "
+   },
+   {
+    "id": "REQ-109",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A mutation run reports a mutant that reached its time bound apart from one the suite killed, and leaves it out"
+   },
+   {
+    "id": "REQ-110",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A ProctorAgent mutation sample states its pool, its seed, its unrun count and the machine's load and thermal s"
+   },
+   {
+    "id": "REQ-111",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Every image in the shots directory has a disposition: published under the subject it depicts, or an `unpublish"
+   },
+   {
+    "id": "REQ-112",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A capture's disposition is written from the picture rather than from its filename, and the machine-checkable h"
+   },
+   {
+    "id": "REQ-113",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Two files holding one image are not two pieces of evidence, and a byte-identical group is declared rather than"
+   },
+   {
+    "id": "REQ-120",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Every status word, evidence word and id-shaped token the reckoning tool reads is placed by a rule that is writ"
+   },
+   {
+    "id": "REQ-121",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Both document scanners exclude fenced blocks, HTML comments and struck-through text before matching, and each "
+   },
+   {
+    "id": "REQ-122",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A brief is accounted for by a decision somebody wrote down — a Brief, Supersedes or Direction header segment, "
+   },
+   {
+    "id": "REQ-123",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "`partially-fixed` stays in the set of defect statuses that owe remaining work, and the reason is recorded besi"
+   },
+   {
+    "id": "REQ-130",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "An instrument proves its own step before grading the outcome, and where the step cannot be proved the result i"
+   },
+   {
+    "id": "REQ-131",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A mutation is confirmed to have landed in the file before its verdict is read, and a mutant that cannot be sho"
+   },
+   {
+    "id": "REQ-132",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "An arming is scored from what the run reported rather than from its exit code, and a run with no verdict line "
+   },
+   {
+    "id": "REQ-133",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A directory witness records what its sweep measured — a byte count and digest for every file written, and the "
+   },
+   {
+    "id": "REQ-134",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "An instrument's refusal names a path the reader can open, and a path it records is the path git named"
+   },
+   {
+    "id": "REQ-135",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A baseline is never adopted from an instrument's own re-measurement; new content becomes the standard only whe"
+   },
+   {
+    "id": "REQ-136",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Every image a case cites resolves to a picture this campaign accounts for, and a citation the campaign cannot "
+   },
+   {
+    "id": "REQ-137",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "An arming that ran no tests is a measurement that did not happen, and is never filed as a check that fired or "
+   },
+   {
+    "id": "SURF-024",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "The line in every spec that says which brief it came from, and the brief queue it points into"
+   },
+   {
+    "id": "SURF-025",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "The in-repo machinery that takes a reading and differences two of them"
+   },
+   {
+    "id": "SURF-026",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "The mutation runner pointed at the agent package, and the verdicts it reports"
+   },
+   {
+    "id": "SURF-027",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Every image in the campaign's shots directory, as the capture-lineage gate reads it"
+   }
+  ],
+  "vanished": []
+ },
+ "ratchets": [
+  {
+   "pair": "published",
+   "from": "2bdc808",
+   "to": "ad0c196",
+   "exit": 0,
+   "violations": []
+  },
+  {
+   "pair": "tool-constant",
+   "from": "2bdc808 (rebuilt)",
+   "to": "ad0c196",
+   "exit": 0,
+   "violations": []
+  }
+ ]
+}

@@ -3002,3 +3002,38 @@ reason — none is a surprise.**
 **The reckoning at wave close is now due**, per PRO-0103's settled cadence, and this time against
 reckon 1.2.0 from source with the comparison machinery that separates tool movement from project
 movement built by the item whose whole point was making that separation possible.
+
+### Wave 17 closed — the first comparison that is the project's, not the tool's (2026-08-23)
+
+Taken at `ad0c196` against the wave-16 reading at `2bdc808`, with **reckon 1.2.0 from source** (content-checked: `DEFECT_NOT_OWING` and `unclassified_inputs` both present). Attribution **decomposed**. Gate clean. Ratchet clean on both the published pair and the tool-constant pair.
+
+| Axis | Was | Now | Move |
+|---|---|---|---|
+| Cases adjudicated | 289/293 (98.6%) | 396/400 (99.0%) | **+0.4 pts**; denominator 293 → 400 |
+| Requirements observed | 63/90 (70.0%) | 89/116 (76.7%) | **+6.7 pts**; denominator 90 → 116 |
+| Briefs joined | 16/96 (16.7%) | 21/100 (21.0%) | **+4.3 pts**; denominator 96 → 100 |
+| Surfaces spoken for | 23/23 | 27/27 | flat; denominator 23 → 27 |
+| Cases ruled out | 0/293 | 0/400 | flat |
+
+**The separation this item exists for, and this time it is the project's.** Wave 16's first comparison said the project shed 84 items; holding the tool constant said −88 tool, +4 project. Wave 17's says:
+
+| Count | Previous (published) | Control (same tree, current tool) | Current | Tool | Project |
+|---|---:|---:|---:|---:|---:|
+| Work items | 134 | 134 | 150 | **0** | **+16** |
+| · product | 10 | 10 | 24 | 0 | +14 |
+| · evidence | 36 | 36 | 39 | 0 | +3 |
+| · decision | 88 | 88 | 87 | 0 | −1 |
+| Ledger rows | 620 | 620 | 796 | 0 | +176 |
+| `verified-done` | 486 | 486 | 646 | 0 | +160 |
+| `broken` | 10 | 10 | 24 | 0 | +14 |
+| `unmeasured` | 36 | 36 | 39 | 0 | +3 |
+
+**The control column equals the published previous**, so 1.2.0 versus 1.1.0 did not reclassify any of the 620 rows the earlier reading held. That is the same negative result PRO-0104's verification established over 690 rows, now holding across a wave rather than a fixture. **Only the project column is progress**, and the project grew: 176 new ledger rows of which 157 are already `verified-done`, 17 `broken` and 2 `unmeasured`. The 17 broken are tonight's findings-gate rows that have not yet been closed — DEF-204, DEF-216 (PRO-0105's), DEF-218–225 (PRO-0107's recorded capture findings), DEF-228/229 (the register nobody reads), DEF-215, DEF-230, DEF-243.
+
+**`unmeasured` went 36 → 39, and that is honest rather than a regression to paper over.** One row entered (`BRIEF-96`, from `unjoined`) and none left. The ratchet's rule is that a row may leave `unmeasured` only by being measured, and nothing left.
+
+**The first reading of this close was refused, twice, by the instrument this wave built, on this wave's own work.** Exit 4, two vocabulary violations: `CASE-9999` planted in brief 97 as a quotation of a probe, and REQ-072's evidence field carrying `inconclusive` — a case status, not a requirement-evidence word, and not in test-campaign's own `REQ_EVIDENCE` schema. Both named with their row counts rather than counted as work or as done, which is the behaviour PRO-0104 specified and nothing before it would have produced. Four readings to a clean gate: the planted token now sits in a fence so the scanner that blanks fenced blocks can exclude it, and REQ-072's evidence word is `unknown`. That is the third time today an instrument built in this session caught a fault in this session's own work.
+
+**Join remains the open weakness this comparison does not hide.** 21.0% of briefs could be tied to the registry, up from 16.7%, still well below the half at which retirement claims are withheld. 79 briefs stay `unjoined` and are counted as decision work rather than assumed unbuilt. That is PRO-0101's remaining work, not this close's.
+
+Taken at `docs/reckoning/wave-17-close`, commit `ad0c196`, tool `466f2a6` (reckon 1.2.0 source).

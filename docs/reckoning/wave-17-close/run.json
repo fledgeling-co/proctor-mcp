@@ -1,0 +1,147 @@
+{
+ "schema": "reckoning-run/1",
+ "taken_at": "2026-08-23T04:51:13Z",
+ "project": "proctor-mcp",
+ "tree": {
+  "repo": "proctor-mcp",
+  "commit": "ad0c19636864fc6ca214721c8668c77dafc0d146",
+  "short": "ad0c196",
+  "branch": "main",
+  "tree_named": true,
+  "dirty_inputs": [],
+  "inputs": {
+   "docs/features-to-triage": {
+    "last_commit": "ad0c19636864fc6ca214721c8668c77dafc0d146"
+   },
+   "docs/test-campaign": {
+    "last_commit": "7674c7f79f1ecb95be0b7417cc3b8e05053bad59"
+   }
+  }
+ },
+ "tool": {
+  "name": "reckon",
+  "version": "1.2.0",
+  "script": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py",
+  "manifest": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/.claude-plugin/plugin.json",
+  "source_commit": "466f2a6bc32cb6f25f339c94bc2e3b0ab711c120",
+  "classes": [
+   "broken",
+   "retirable",
+   "unbuilt",
+   "undecided",
+   "unjoined",
+   "unmeasured",
+   "unnamed",
+   "verified-done",
+   "waived"
+  ]
+ },
+ "inputs": {
+  "briefs": "docs/features-to-triage",
+  "campaign": "docs/test-campaign"
+ },
+ "gate": {
+  "build_exit": 0,
+  "check_exit": 0
+ },
+ "headline": "150 piece(s) of work remain — 24 product, 39 evidence, 87 decision — across 796 ledger rows. This reckoning speaks for 99% of the campaign's designed cases and 77% of its stated requirements; the rest is not known to be done, it is simply not known. 79 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.",
+ "summary": {
+  "counts": {
+   "verified-done": 646,
+   "unmeasured": 39,
+   "undecided": 8,
+   "broken": 24,
+   "unjoined": 79
+  },
+  "work_items": 150,
+  "work_by_class": {
+   "undecided": 8,
+   "unmeasured": 35,
+   "broken": 24,
+   "unjoined": 79
+  },
+  "work_by_kind": {
+   "decision-work": 87,
+   "evidence-work": 39,
+   "product-work": 24
+  },
+  "rows": 796
+ },
+ "denominators": {
+  "cases_adjudicated": {
+   "n": 396,
+   "of": 400,
+   "pct": 99.0,
+   "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+  },
+  "decisions_taken": {
+   "n": 0,
+   "of": 400,
+   "pct": 0.0,
+   "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+  },
+  "requirements_observed": {
+   "n": 89,
+   "of": 116,
+   "pct": 76.7,
+   "means": "somebody watched it happen, rather than the project reporting it of itself."
+  },
+  "surfaces_spoken_for": {
+   "n": 27,
+   "of": 27,
+   "pct": 100.0,
+   "means": "at least one case on this surface reached a verdict."
+  },
+  "briefs_joined": {
+   "n": 21,
+   "of": 100,
+   "pct": 21.0,
+   "means": "the brief could be tied to something in the registry at all."
+  }
+ },
+ "class_counts": {
+  "verified-done": 646,
+  "unmeasured": 39,
+  "undecided": 8,
+  "broken": 24,
+  "unjoined": 79
+ },
+ "effect": {
+  "kind": "filesystem-write",
+  "root": "docs/reckoning/wave-17-close",
+  "files_written": [],
+  "count": 0,
+  "written": {},
+  "rewritten": {
+   "ledger.json": {
+    "before": {
+     "bytes": 742669,
+     "sha256": "cee88ee57a4fd3fb1425df835c6321da9ca46285d09c604d6c1a926874ff44f0"
+    },
+    "after": {
+     "bytes": 743042,
+     "sha256": "dd8baa63ea9d5dc136eadbb13c6bce04214b177fa6e7b5bd1e104026e5591e87"
+    }
+   },
+   "reckoning.md": {
+    "before": {
+     "bytes": 32818,
+     "sha256": "db2f97bbb8df3e2b315b615fe852228b2eadf371729eaaeb80c501671fbb6edf"
+    },
+    "after": {
+     "bytes": 31865,
+     "sha256": "2f2443aa3c7dc34d214511eb6d4a7ece12070faa240a824410b1e3cd3eab5020"
+    }
+   }
+  },
+  "rewritten_count": 2,
+  "removed": {},
+  "removed_count": 0,
+  "unchanged_count": 1,
+  "witness": "every file under the root with its byte count and sha256, before and after the build, so the claim that a command wrote something names what appeared and what it held"
+ },
+ "provenance": "measured",
+ "notes": [
+  "Wave 17 close. Fourth reading. Both vocabulary violations from the first reading were this session's own errors and are now at their rows: REQ-072's evidence word is unknown, the planted CASE-9999 sits in a fence. Compare against 2026-08-22-2bdc808."
+ ]
+}
