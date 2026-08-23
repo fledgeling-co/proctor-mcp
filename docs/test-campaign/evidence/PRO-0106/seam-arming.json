@@ -23,14 +23,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.002 seconds with 3 issues.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 3 issues.",
    "testsStarted": [
     "Asking for windowless apps returns the accessory ones too"
    ],
    "testsFinished": [
     "Asking for windowless apps returns the accessory ones too"
    ],
-   "seconds": 6.6,
+   "seconds": 3.9,
    "why": "the includeWindowless flag inverts meaning"
   },
   {
@@ -46,14 +46,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.011 seconds with 1 issue.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.007 seconds with 1 issue.",
    "testsStarted": [
     "Every decoded boolean default matches the default its schema states"
    ],
    "testsFinished": [
     "Every decoded boolean default matches the default its schema states"
    ],
-   "seconds": 6.2,
+   "seconds": 4.0,
    "why": "every stability run compares pixel tiles nobody asked for"
   },
   {
@@ -76,7 +76,7 @@
    "testsFinished": [
     "An omitted boolean argument resolves at runtime to its published default"
    ],
-   "seconds": 2.6,
+   "seconds": 2.0,
    "why": "the same survivor asked of the decoder rather than of the source"
   },
   {
@@ -99,7 +99,7 @@
    "testsFinished": [
     "An omitted boolean argument resolves at runtime to its published default"
    ],
-   "seconds": 12.7,
+   "seconds": 4.7,
    "why": "the same survivor asked of the decoder rather than of the source"
   },
   {
@@ -115,14 +115,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.010 seconds with 1 issue.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.",
    "testsStarted": [
     "Every decoded boolean default matches the default its schema states"
    ],
    "testsFinished": [
     "Every decoded boolean default matches the default its schema states"
    ],
-   "seconds": 2.6,
+   "seconds": 1.7,
    "why": "inspect stops returning presentation values it publishes by default"
   },
   {
@@ -145,7 +145,7 @@
    "testsFinished": [
     "A default snapshot leaves invisible nodes out, as its schema says"
    ],
-   "seconds": 15.0,
+   "seconds": 34.2,
    "why": "an unasked-for snapshot carries zero-area and offscreen nodes"
   },
   {
@@ -166,7 +166,7 @@
     "A single fitting window is correlated to its own number"
    ],
    "testsFinished": [],
-   "seconds": 12.1,
+   "seconds": 9.6,
    "why": "the single fitting window resolves to a number that is not its own"
   },
   {
@@ -205,14 +205,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.051 seconds with 1 issue.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.052 seconds with 1 issue.",
    "testsStarted": [
     "The HUD panel takes key and refuses to become main"
    ],
    "testsFinished": [
     "The HUD panel takes key and refuses to become main"
    ],
-   "seconds": 4.5,
+   "seconds": 4.6,
    "why": "the HUD takes the main window from the app under test"
   },
   {
@@ -235,7 +235,7 @@
    "testsFinished": [
     "Every light-palette ink and fill tone is one graphite at a different opacity"
    ],
-   "seconds": 7.6,
+   "seconds": 7.7,
    "why": "one ink tone drifts off the palette's single graphite"
   },
   {
@@ -258,7 +258,7 @@
    "testsFinished": [
     "Only the two disable notices read as macOS switching the tap off"
    ],
-   "seconds": 7.3,
+   "seconds": 7.5,
    "why": "every keystroke reads as macOS switching the tap off"
   },
   {
@@ -274,14 +274,14 @@
    "armed": true,
    "reason": "the suite reported a verdict line and exited 1",
    "exit": 1,
-   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.044 seconds with 1 issue.",
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.002 seconds with 1 issue.",
    "testsStarted": [
     "The cached public key is a file in the audit directory, and reads back"
    ],
    "testsFinished": [
     "The cached public key is a file in the audit directory, and reads back"
    ],
-   "seconds": 4.4,
+   "seconds": 4.5,
    "why": "the cached public key's URL claims to be a directory"
   }
  ]
