@@ -2962,3 +2962,43 @@ why it was worth establishing rather than accepting the dismissal.
 verifier swept the ten `.py` outside that window anyway and the single hit is a compiler-invocation
 check in `defect_gate`'s class. That is the absence-claim discipline working as intended: the claim
 named its window, so the window could be checked and found mis-stated without the finding collapsing.
+
+### PRO-0106 merged — wave 17 closes, and the merge rule split both ways again (2026-08-23)
+
+`main` carries PRO-0104, PRO-0106 and PRO-0107 from this wave. Nothing pushed. Registry: **400 cases ·
+153 defect rows · 116 requirements · 27 surfaces**, 19 open defects.
+
+Gates on merged `main`: suite **2,074 tests in 252 suites** exit 0; `test_instruments.py` **195**;
+`mutation_seam_arm` 12/12; `shot_disposition` 0; `reckoning_selftest` 73; `capture-lineage --gate` 0,
+ratchet 6; `spec_citation_measure` 19/19; `defect_gate dropped` 0; `campaign.py check` 1 on other
+items' work only.
+
+**The registry conflict split both ways for the second time**: `main` won as corrector on **seven rows**
+— DEF-200, DEF-205, DEF-206, DEF-207, DEF-208, DEF-226 and DEF-227, all closed by this very branch's
+work but recorded `open` in `main`'s copy because the branch forked first — while **the branch won on
+DEF-215**, which its gap-fix had re-counted from four rows to three. Seven correctors one way and one
+the other, in a single merge, decided row by row.
+
+**The suite's own instruments more than tripled across this item**: `test_instruments.py` 62 → 195
+checks, the reckoning selftest 28 → 73, and every repair carries its own one-path fixture.
+
+**The item's arc is the finding.** Built → verified `Needs More Work` on two repairs that inherited the
+flaw they repair → gap-fixed → verified `Done` with both failures reproduced live and closed. The
+inherited-flaw discipline came from a sibling's measurement the same morning and fired twice on first
+use — `score_arming` grading a zero-test verdict as ARMED (one of the three events its own docstring
+said the old rule conflated) and `porcelain_paths` re-creating DEF-206 on the rename branch the repair
+added. **A first-round `Needs More Work` on exactly the class an item exists to close is the pipeline
+working, and worth recording as such**: the alternative was a green first round carrying two undriven
+paths.
+
+**Nineteen open defects, and the shape of the list matters.** DEF-033 stays open by measurement.
+DEF-141, DEF-151 and DEF-180 are recorded limits. DEF-215 is a decision about retired items. DEF-204
+and DEF-216 are PRO-0105's, which waits on the plugin cache refresh — the reader's action. DEF-218
+through DEF-225 are PRO-0107's recorded capture findings, real work awaiting their own item. DEF-228
+and DEF-229 are the register-nobody-reads class. DEF-230 is PRO-0104's recorded-not-claimed row.
+DEF-243 is the mock lane. **Every row is either someone's named work or a recorded limit with a
+reason — none is a surprise.**
+
+**The reckoning at wave close is now due**, per PRO-0103's settled cadence, and this time against
+reckon 1.2.0 from source with the comparison machinery that separates tool movement from project
+movement built by the item whose whole point was making that separation possible.
