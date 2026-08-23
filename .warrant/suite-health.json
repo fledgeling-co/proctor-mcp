@@ -2,7 +2,7 @@
  "armed": 420,
  "armed_ratio": 0.9589,
  "blocked": 0,
- "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0113/docs/test-campaign",
+ "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/docs/test-campaign",
  "campaign_gate_clear": false,
  "cases": 442,
  "classes": {
@@ -50,7 +50,7 @@
   }
  },
  "effect_rung_passes": 395,
- "generated_at": "2026-08-23T11:11:46.345780+00:00",
+ "generated_at": "2026-08-23T19:36:10.317041+00:00",
  "green": false,
  "inconclusive": 4,
  "mutation_measured": false,
