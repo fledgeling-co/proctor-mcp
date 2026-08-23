@@ -1,0 +1,288 @@
+{
+ "summary": {
+  "run": 12,
+  "armed": 12,
+  "notArmed": 0,
+  "inconclusive": 0,
+  "treeCleanAfter": true,
+  "armedByTrap": [
+   "CASE-0461"
+  ]
+ },
+ "cases": [
+  {
+   "case": "CASE-0457",
+   "survivor": "1 \u00b7 AXEngineImpl.swift:33",
+   "file": "Sources/ProctorAgent/AX/AXEngineImpl.swift",
+   "function": "listAppsHonoursIncludeWindowless",
+   "displayName": "Asking for windowless apps returns the accessory ones too",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "guard includeWindowless || app.isRegular else { return nil }  ->  guard includeWindowless && app.isRegular else { return nil }",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 3 issues.",
+   "testsStarted": [
+    "Asking for windowless apps returns the accessory ones too"
+   ],
+   "testsFinished": [
+    "Asking for windowless apps returns the accessory ones too"
+   ],
+   "seconds": 5.7,
+   "why": "the includeWindowless flag inverts meaning"
+  },
+  {
+   "case": "CASE-0458",
+   "survivor": "2 \u00b7 Dispatch.swift:381",
+   "file": "Sources/ProctorAgent/Dispatch.swift",
+   "function": "dispatchDefaultsAgreeWithTheCatalogue",
+   "displayName": "Every decoded boolean default matches the default its schema states",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "args.bool(\"includeTiles\", false)  ->  args.bool(\"includeTiles\", true)",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.",
+   "testsStarted": [
+    "Every decoded boolean default matches the default its schema states"
+   ],
+   "testsFinished": [
+    "Every decoded boolean default matches the default its schema states"
+   ],
+   "seconds": 4.2,
+   "why": "every stability run compares pixel tiles nobody asked for"
+  },
+  {
+   "case": "CASE-0470",
+   "survivor": "2 \u00b7 Dispatch.swift:381, at runtime",
+   "file": "Sources/ProctorAgent/Dispatch.swift",
+   "function": "decodedArgumentsResolveToThePublishedDefaults",
+   "displayName": "An omitted boolean argument resolves at runtime to its published default",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "includeTiles = args.bool(\"includeTiles\", false)  ->  includeTiles = args.bool(\"includeTiles\", true)",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+   "testsStarted": [
+    "An omitted boolean argument resolves at runtime to its published default"
+   ],
+   "testsFinished": [
+    "An omitted boolean argument resolves at runtime to its published default"
+   ],
+   "seconds": 1.6,
+   "why": "the same survivor asked of the decoder rather than of the source"
+  },
+  {
+   "case": "CASE-0471",
+   "survivor": "8 \u00b7 Dispatch.swift:394, at runtime",
+   "file": "Sources/ProctorAgent/Dispatch.swift",
+   "function": "decodedArgumentsResolveToThePublishedDefaults",
+   "displayName": "An omitted boolean argument resolves at runtime to its published default",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "presentation = args.bool(\"presentation\", true)  ->  presentation = args.bool(\"presentation\", false)",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+   "testsStarted": [
+    "An omitted boolean argument resolves at runtime to its published default"
+   ],
+   "testsFinished": [
+    "An omitted boolean argument resolves at runtime to its published default"
+   ],
+   "seconds": 4.2,
+   "why": "the same survivor asked of the decoder rather than of the source"
+  },
+  {
+   "case": "CASE-0459",
+   "survivor": "8 \u00b7 Dispatch.swift:394",
+   "file": "Sources/ProctorAgent/Dispatch.swift",
+   "function": "dispatchDefaultsAgreeWithTheCatalogue",
+   "displayName": "Every decoded boolean default matches the default its schema states",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "args.bool(\"presentation\", true)  ->  args.bool(\"presentation\", false)",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.004 seconds with 1 issue.",
+   "testsStarted": [
+    "Every decoded boolean default matches the default its schema states"
+   ],
+   "testsFinished": [
+    "Every decoded boolean default matches the default its schema states"
+   ],
+   "seconds": 1.6,
+   "why": "inspect stops returning presentation values it publishes by default"
+  },
+  {
+   "case": "CASE-0460",
+   "survivor": "4 \u00b7 Session.swift:92",
+   "file": "Sources/ProctorAgent/Session/Session.swift",
+   "function": "snapshotOptionDefaultsMatchTheSchema",
+   "displayName": "A default snapshot leaves invisible nodes out, as its schema says",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "var includeInvisible: Bool = false  ->  var includeInvisible: Bool = true",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+   "testsStarted": [
+    "A default snapshot leaves invisible nodes out, as its schema says"
+   ],
+   "testsFinished": [
+    "A default snapshot leaves invisible nodes out, as its schema says"
+   ],
+   "seconds": 18.4,
+   "why": "an unasked-for snapshot carries zero-area and offscreen nodes"
+  },
+  {
+   "case": "CASE-0461",
+   "survivor": "10 \u00b7 CGWindowCorrelation.swift:59",
+   "file": "Sources/ProctorAgent/AX/CGWindowCorrelation.swift",
+   "function": "correlateReturnsTheMatchingWindowsNumber",
+   "displayName": "A single fitting window is correlated to its own number",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "return matches.count == 1 ? matches[0].number : nil  ->  return matches.count == 1 ? matches[1].number : nil",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "no verdict line, and the log shows the named test was running when the process died: `Test \"A single fitting window is correlated to its own number\" started.` with no completion line and exit 1. A trap inside the mutated code is the check firing; a death before that line is not.",
+   "exit": 1,
+   "verdict": "",
+   "testsStarted": [
+    "A single fitting window is correlated to its own number"
+   ],
+   "testsFinished": [],
+   "seconds": 19.8,
+   "why": "the single fitting window resolves to a number that is not its own"
+  },
+  {
+   "case": "CASE-0462",
+   "survivor": "7 \u00b7 SessionKill.swift:26",
+   "file": "Sources/ProctorAgent/Session/SessionKill.swift",
+   "function": "barePidIsSynthesisedExactlyOnce",
+   "displayName": "A bare pid that is not a GUI application is still a candidate",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "!candidates.contains(where: { $0.pid == pid }) else { return candidates }  ->  !candidates.contains(where: { $0.pid != pid }) else { return candidates }",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.",
+   "testsStarted": [
+    "A bare pid that is not a GUI application is still a candidate"
+   ],
+   "testsFinished": [
+    "A bare pid that is not a GUI application is still a candidate"
+   ],
+   "seconds": 5.2,
+   "why": "a bare pid stops being selectable while any other process runs"
+  },
+  {
+   "case": "CASE-0463",
+   "survivor": "9 \u00b7 RunHUDPanel.swift:653",
+   "file": "Sources/ProctorAgent/Overlay/RunHUDPanel.swift",
+   "function": "hudPanelTakesKeyAndRefusesMain",
+   "displayName": "The HUD panel takes key and refuses to become main",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "override var canBecomeMain: Bool { false }  ->  override var canBecomeMain: Bool { true }",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.146 seconds with 1 issue.",
+   "testsStarted": [
+    "The HUD panel takes key and refuses to become main"
+   ],
+   "testsFinished": [
+    "The HUD panel takes key and refuses to become main"
+   ],
+   "seconds": 5.0,
+   "why": "the HUD takes the main window from the app under test"
+  },
+  {
+   "case": "CASE-0464",
+   "survivor": "11 \u00b7 RunHUDContentView.swift:97",
+   "file": "Sources/ProctorAgent/Overlay/RunHUDContentView.swift",
+   "function": "lightPaletteTonesShareOneBase",
+   "displayName": "Every light-palette ink and fill tone is one graphite at a different opacity",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "ink3: hex(17, 18, 21, 0.36), ink4: hex(17, 18, 21, 0.16),  ->  ink3: hex(18, 18, 21, 0.36), ink4: hex(17, 18, 21, 0.16),",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.",
+   "testsStarted": [
+    "Every light-palette ink and fill tone is one graphite at a different opacity"
+   ],
+   "testsFinished": [
+    "Every light-palette ink and fill tone is one graphite at a different opacity"
+   ],
+   "seconds": 8.2,
+   "why": "one ink tone drifts off the palette's single graphite"
+  },
+  {
+   "case": "CASE-0465",
+   "survivor": "12 \u00b7 TakeoverOverlay.swift:363",
+   "file": "Sources/ProctorAgent/Overlay/TakeoverOverlay.swift",
+   "function": "tapDisableNoticesAreTheOnlyDisableNotices",
+   "displayName": "Only the two disable notices read as macOS switching the tap off",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "type == .tapDisabledByTimeout || type == .tapDisabledByUserInput  ->  type != .tapDisabledByTimeout || type == .tapDisabledByUserInput",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.001 seconds with 2 issues.",
+   "testsStarted": [
+    "Only the two disable notices read as macOS switching the tap off"
+   ],
+   "testsFinished": [
+    "Only the two disable notices read as macOS switching the tap off"
+   ],
+   "seconds": 8.5,
+   "why": "every keystroke reads as macOS switching the tap off"
+  },
+  {
+   "case": "CASE-0466",
+   "survivor": "13 \u00b7 AuditKeyStore.swift:47",
+   "file": "Sources/ProctorAgent/Session/AuditKeyStore.swift",
+   "function": "publicKeyURLNamesAFileThatRoundTrips",
+   "displayName": "The cached public key is a file in the audit directory, and reads back",
+   "displayNameFrom": "read from /Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0106/Tests/ProctorAgentTests/MutationSeamTests.swift",
+   "mutation": "directory.appendingPathComponent(\"audit.pub\", isDirectory: false)  ->  directory.appendingPathComponent(\"audit.pub\", isDirectory: true)",
+   "mutationLanded": "mutation landed, confirmed by re-reading the file",
+   "state": "ARMED",
+   "armed": true,
+   "reason": "the suite reported a verdict line and exited 1",
+   "exit": 1,
+   "verdict": "\udbc2\udc84  Test run with 1 test in 1 suite failed after 0.005 seconds with 1 issue.",
+   "testsStarted": [
+    "The cached public key is a file in the audit directory, and reads back"
+   ],
+   "testsFinished": [
+    "The cached public key is a file in the audit directory, and reads back"
+   ],
+   "seconds": 4.7,
+   "why": "the cached public key's URL claims to be a directory"
+  }
+ ]
+}
