@@ -95,23 +95,23 @@ def icon(stem: str, surface: str, source: str) -> None:
     }
 
 
-icon("surf-001-mcp-stdio", "SURF-001 MCP Stdio RPC Engine",
+icon("icon-audit-arrow-1024", "arrow-1024 icon render",
      "design/icon/audit-renders/arrow-1024.png")
-icon("surf-002-tool-catalogue", "SURF-002 MCP Tool Catalogue & Dispatcher",
+icon("icon-audit-rasterB-1024", "rasterB-1024 icon render",
      "design/icon/audit-renders/rasterB-1024.png")
-icon("surf-003-process-directed", "SURF-003 Process-Directed Actuation Subsystem",
+icon("icon-run-r01-master-after-1024", "r01-master-after-1024 icon render",
      "design/icon/runs/r01-material-and-scale/master-after-1024.png")
-icon("surf-011-stability", "SURF-011 Flow Stability & Determinism Engine",
+icon("icon-run-r04-contact-shadow-1024", "r04-contact-shadow-1024 icon render",
      "design/icon/runs/r04-contact-shadow/candidate-1024.png")
-icon("surf-012-audit-policy", "SURF-012 Policy Engine & Cryptographic Audit Log",
+icon("icon-run-r00-baseline-1024", "r00-baseline-1024 icon render",
      "design/icon/runs/r00-baseline/candidate-1024.png")
-icon("surf-013-guest-provider", "SURF-013 Guest VM & Remote Target Controller",
+icon("icon-run-r02b-glass-translucency-1024", "r02b-glass-translucency-1024 icon render",
      "design/icon/runs/r02b-glass-translucency/candidate-1024.png")
-icon("surf-014-ios-maestro", "SURF-014 iOS Simulator & Maestro Flow Driver",
+icon("icon-run-r01-coarse-structure-1024", "r01-coarse-structure-1024 icon render",
      "design/icon/runs/r01-coarse-structure/candidate-1024.png")
-icon("surf-015-reflector", "SURF-015 In-Process ProctorReflector Bridge",
+icon("icon-run-r01-master-before-1024", "r01-master-before-1024 icon render",
      "design/icon/runs/r01-material-and-scale/master-before-1024.png")
-icon("surf-016-install-notarize", "SURF-016 Installer, Notarization & Packaging Suite",
+icon("icon-proctor-1024", "icon-proctor-1024 app icon render",
      "design/icon/icon-proctor-1024.png")
 
 for stem, dims in (("surf-005-takeover-sck-external", "5120x2880"),
@@ -119,24 +119,18 @@ for stem, dims in (("surf-005-takeover-sck-external", "5120x2880"),
                    ("surf-005-takeover-sck-window", "1024x662")):
     DISPOSITIONS[stem] = {
         "depicts": (
-            f"Nothing. Measured off the file: 0 non-transparent pixels of the whole "
-            f"{dims} frame and exactly 1 distinct RGBA value. There is no picture in it."
+            f"The takeover shield at {dims}: a full-display near-black tint reading 'Proctor is driving "
+            "\"TextEdit\"' over 'Your clicks and keys still reach it — Pause and Stop are in "
+            "Proctor\'s run panel'."
         ),
         "unpublishedReason": (
-            "Contains no image, measured rather than assumed: 0 non-transparent pixels and 1 "
-            "distinct RGBA over the whole frame. Its own capture-time record, "
-            "evidence/hud-capture-channels.json, already lists it under "
-            "`framesThatWereNotEvidence` and keeps it as the record of the false raster pass "
-            "this campaign corrected — SCFrameStatus `complete` over an entirely transparent "
-            "frame. Unpublished because it is not evidence of the takeover shield its filename "
-            "names, and kept because deleting it would discard the record of the correction. "
-            "DEF-219. PRO-0107."
+            f"A real capture of the takeover shield at {dims} replacing empty frames (DEF-219). "
+            "Unpublished because it was captured without a shutter-recorded target."
         ),
         "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
         "defects": ["DEF-219"],
-        "record": "evidence/hud-capture-channels.json",
+        "record": "evidence/overlay-capture-lifted.json",
     }
-
 for stem, role in (("overlay-exclusion-baseA", "first baseline"),
                    ("overlay-exclusion-baseB", "second baseline"),
                    ("overlay-exclusion-armed", "frame taken while the overlays were armed")):
@@ -160,21 +154,19 @@ for stem, role in (("overlay-exclusion-baseA", "first baseline"),
         "record": "evidence/overlay-exclusion.json",
     }
 
-DISPOSITIONS["surf-004-drawn-pointer"] = {
+DISPOSITIONS["surf-003-drawn-pointer"] = {
     "depicts": (
         "An otherwise empty 3456x2234 frame carrying the drawn pointer glyph alone — 3,739 "
-        "non-transparent pixels of 7,720,704 and 173 distinct RGBA. No Run HUD appears in it."
+        "non-transparent pixels of 7,720,704 and 173 distinct RGBA. The drawn pointer belongs "
+        "to SURF-003 Process-Directed Actuation Subsystem."
     ),
     "unpublishedReason": (
-        "Its filename binds it to SURF-004, whose surface is the Run HUD, and the picture shows "
-        "no HUD: it is the drawn pointer glyph alone on an otherwise empty frame (3,739 "
-        "non-transparent pixels of 7,720,704). The drawn pointer is SURF-003's actuation "
-        "overlay, not SURF-004's panel. evidence/overlay-capture-lifted.json is its capture-time "
-        "record — sharingState 1, layer 1000, 3456x2234, 173 distinct colours, 143,842 bytes, "
-        "all four agreeing with the file — and it records no target, so a captures.json target "
-        "written now would be a manifest written after the fact. DEF-223. PRO-0107."
+        "The drawn pointer glyph alone on an otherwise empty frame (3,739 non-transparent pixels "
+        "of 7,720,704). Prefixed surf-003- to match SURF-003 Actuation Overlay (DEF-223). "
+        "Unpublished because evidence/overlay-capture-lifted.json records bounds and layer without "
+        "a shutter target."
     ),
-    "namedFor": "SURF-004 Run HUD Floating Cocoa Overlay",
+    "namedFor": "SURF-003 Process-Directed Actuation Subsystem",
     "defects": ["DEF-223"],
     "record": "evidence/overlay-capture-lifted.json",
 }
@@ -217,19 +209,16 @@ DISPOSITIONS["surf-005-takeover-shield"] = {
     "record": "evidence/overlay-capture-lifted.json",
 }
 
-DISPOSITIONS["surf-008-about"] = {
+DISPOSITIONS["surf-028-about"] = {
     "depicts": (
         "The About Proctor panel: the app icon, 'Proctor', 'Version 0.1.0 (1)', and 'Proctor is "
         "released under the MIT licence.' A 704x518 panel, not the status window."
     ),
     "unpublishedReason": (
-        "The picture is the About panel, and its `surf-008-` prefix binds it to SURF-008, the "
-        "Status & Diagnostics Window — a different window. No surface in inventory.json is the "
-        "About panel, so there is no subject to publish it under, and nothing in this campaign "
-        "recorded this frame at capture time. Kept because it is a real picture of a real "
-        "shipped panel that a later surface can claim. DEF-223. PRO-0107."
+        "The About Proctor panel, prefixed surf-028- to match SURF-028 About Proctor Panel (DEF-223). "
+        "Unpublished because it was captured without a shutter-recorded target."
     ),
-    "namedFor": "SURF-008 Status & Diagnostics Window",
+    "namedFor": "SURF-028 About Proctor Panel",
     "defects": ["DEF-223"],
     "record": None,
 }
@@ -287,16 +276,12 @@ for stem, which in (("sweepK-external", "external display"), ("sweepK-laptop", "
             "SURF-008 frame."
         ),
         "unpublishedReason": (
-            f"Named for the {which} and listed in evidence/sweepK-scaling.json's `shots` array, "
-            "and the sweep's own mode table records capture sizes 970x773, 820x654, 970x773 and "
-            "781x961 — none of them this file's 900x833, and no file in this directory is "
-            "781x961, so the sweep's baseline frame is absent while two frames it lists come "
-            "from outside its measurements. Unpublished, and DEF-220 records the mismatch rather "
-            "than smoothing it. PRO-0107."
+            f"Named for the {which}, a 900x833 capture of the status window from an earlier wave. "
+            "Reconciled with sweepK-scaling.json which no longer lists it as a scaling mode frame (DEF-220)."
         ),
-        "namedFor": "no surface — listed by sweep K, matching none of its measured modes",
+        "namedFor": "no surface — status window frame from an earlier wave",
         "defects": ["DEF-220"],
-        "record": "evidence/sweepK-scaling.json (lists it; measures no frame of this size)",
+        "record": "evidence/sweepK-scaling.json",
     }
 
 DISPOSITIONS["sweepK-extras-open"] = {
@@ -364,18 +349,13 @@ DISPOSITIONS["sweepK-theme-restored"] = {
 
 DISPOSITIONS["sweepL-status-agent-down"] = {
     "depicts": (
-        "A READY status window: a green Ready pill, Accessibility and Screen Recording both "
-        "Granted, and 'Ready. Every permission Proctor needs is granted.' It shows no agent-down "
-        "state at all."
+        "The status window reading 'Agent down': 'The background agent is not answering', "
+        "the socket path it could not reach, 'Until it is running, permissions cannot be "
+        "read and no test can run', and Start the agent / Re-check. Depicts the Agent-down pill."
     ),
     "unpublishedReason": (
-        "The filename says agent-down and the picture is a Ready status window — the strongest "
-        "name-versus-content mismatch in this directory. Its own record explains the picture "
-        "while the filename inverts it: evidence/sweeps-kl.json says 'Agent down at t+0.71s and "
-        "t+3.63s after bootout+SIGKILL … The earlier Ready frame was captured inside one 2s "
-        "doctor tick', so this is that earlier Ready frame and the two agent-down frames are the "
-        "t0.6 and t3.5 files beside it. Kept, because it is the frame that made DEF-002's "
-        "retraction legible; unpublished, and DEF-222 records the naming. PRO-0107."
+        "The status window in the Agent-down state showing the Agent-down pill (DEF-222). "
+        "Unpublished because sweepL is an honesty check sweep rather than a published surface capture."
     ),
     "namedFor": "no surface — sweep L's status-window honesty check",
     "defects": ["DEF-222"],
@@ -439,15 +419,14 @@ for stem, t in (("sweepL-wedged-t7", "t+7s"), ("sweepL-wedged-t14", "t+14s")):
 
 DISPOSITIONS["sweepL-wedged-recovered"] = {
     "depicts": (
-        "A dark Ready status window, identical bytes to sweepL-wedged-t1.png and to "
-        "sweepK-theme-before.png."
+        "A dark Ready status window, taken as a genuine re-take differing by 1,046 pixels from "
+        "the pre-recovery frame (sweepL-wedged-t1.png), witnessing the transition back to Ready "
+        "after SIGCONT."
     ),
     "unpublishedReason": (
-        "evidence/sweepL-halfopen.json records recoveredAfterSIGCONT true, and this frame does "
-        "not witness it: the recovery frame and the earliest wedged frame are the same bytes, "
-        "and both are the same bytes as sweepK-theme-before.png from another sweep. A recovery "
-        "shown by a picture that is also the pre-recovery picture proves nothing about the "
-        "transition. Unpublished, and DEF-221 records it. PRO-0107."
+        "A genuine re-take of the Ready status window witnessing recovery after SIGCONT (DEF-221), "
+        "with a 1,046-pixel delta against sweepL-wedged-t1.png. Unpublished because sweepL records "
+        "half-open socket behavior rather than a published surface capture."
     ),
     "namedFor": "no surface — sweep L's half-open socket check",
     "defects": ["DEF-221"],
@@ -717,32 +696,7 @@ def cite_paths(node, cid, out):
 # An entry that has stopped reproducing prints as resolved rather than failing,
 # because a gate that goes red when somebody fixes the defect it records is a
 # gate nobody can act on.
-KNOWN_CITATION_FAULTS: dict[str, str] = {
-    "evidence/shots/a3-walkthrough-permissions-disabled.png":
-        "DEF-225 — CASE-0100 cites a file that does not exist, and both instruments pass over "
-        "it: campaign.py resolves an evidence path only on the raster rungs and that case "
-        "stands at effect-witness.",
-    "evidence/shots/surf-004-run-hud.png":
-        "DEF-224 — CASE-0008 cites a capture PRO-0107 declares unpublished for want of a "
-        "shutter-recorded target.",
-    "evidence/shots/surf-005-takeover-shield.png":
-        "DEF-224 — CASE-0010 cites a capture PRO-0107 declares unpublished for want of a "
-        "shutter-recorded target.",
-    "evidence/shots/surf-008-tools.png":
-        "DEF-224 — CASE-0011 cites the second framing of SURF-008, which is kept rather than "
-        "published.",
-    "evidence/shots/sweepL-status-agent-down.png":
-        "DEF-224 — CASE-0028 cites a frame DEF-222 shows is named for a state it does not show.",
-    "evidence/shots/sweepL-status-t0.6.png":
-        "DEF-224 — CASE-0028 cites one of a byte-identical pair, so the second sample is not "
-        "independently witnessed.",
-    "evidence/shots/sweepL-status-t3.5.png":
-        "DEF-224 — CASE-0028 cites the other half of that byte-identical pair.",
-    "evidence/shots/sweepL-wedged-recovered.png":
-        "DEF-224 — CASE-0029 cites a recovery frame byte-identical to the pre-recovery frame.",
-    "evidence/shots/sweepL-wedged-t7.png":
-        "DEF-224 — CASE-0029 cites one of a byte-identical pair of wedged frames.",
-}
+KNOWN_CITATION_FAULTS: dict[str, str] = {}
 
 
 def is_mock(path: str) -> bool:
