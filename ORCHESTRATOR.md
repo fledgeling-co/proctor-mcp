@@ -3037,3 +3037,16 @@ Taken at `ad0c196` against the wave-16 reading at `2bdc808`, with **reckon 1.2.0
 **Join remains the open weakness this comparison does not hide.** 21.0% of briefs could be tied to the registry, up from 16.7%, still well below the half at which retirement claims are withheld. 79 briefs stay `unjoined` and are counted as decision work rather than assumed unbuilt. That is PRO-0101's remaining work, not this close's.
 
 Taken at `docs/reckoning/wave-17-close`, commit `ad0c196`, tool `466f2a6` (reckon 1.2.0 source).
+
+### Wave 18 triaged and ready for dispatch (2026-08-23)
+
+Following the closing of wave 17, all remaining open defects and findings are triaged into concrete specs:
+
+- **PRO-0105 (`spec-PRO-0105.md`):** A version string is not the artifact (DEF-204, DEF-216).
+- **PRO-0108 (`spec-PRO-0108.md`):** Two findings reckon 1.2.0 still leaves open (brief 96 remaining scope: denominator printing, circular `source` evidence gating).
+- **PRO-0109 (`spec-PRO-0109.md`):** Thirty-five captures reconciled with their cases (DEF-218..225: icon renders, empty takeover frames, multi-caption duplicates, case citation repairs).
+- **PRO-0110 (`spec-PRO-0110.md`):** The registers nothing reads (DEF-228, DEF-229, DEF-243: standing checks for `LEDGER.md`, `capture-lineage` cross-checking `cases.json`, and mock shots accounting).
+
+DEF-230 is closed (`fixed`), as REQ-072 evidence was corrected from `inconclusive` to `unknown` per schema.
+
+All 19 checks of `spec_citation_measure.py` pass (102 briefs, 100 claimed, 2 registered in `UNCLAIMED-BRIEFS.md`, 0 unclaimed).

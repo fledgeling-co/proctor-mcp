@@ -114,3 +114,6 @@
 | PRO-0105 | A version string is not the artifact | 2026-08-23 | Ready for Plan |
 | PRO-0106 | Instruments that do not prove their own step | 2026-08-23 | Merged |
 | PRO-0107 | Thirty-five pictures the gate cannot see | 2026-08-23 | Merged |
+| PRO-0108 | Two findings reckon 1.2.0 still leaves open | 2026-08-23 | Ready for Plan |
+| PRO-0109 | Thirty-five captures reconciled with their cases | 2026-08-23 | Ready for Plan |
+| PRO-0110 | The registers nothing reads | 2026-08-23 | Ready for Plan |

@@ -3749,7 +3749,7 @@
     {
       "id": "DEF-230",
       "severity": "low",
-      "status": "open",
+      "status": "fixed",
       "title": "A requirement carries an evidence word its own schema rejects, and the tool explained it as a self-report",
       "found": "PRO-0104, by the vocabulary finding it added, 2026-08-23",
       "detail": "REQ-072 carries `evidence: \"inconclusive\"`. test-campaign 0.9.6's REQ_EVIDENCE is (observed, reported, contradicted, unknown, vacuous) and validates against it on `set`, so the value is one this registry's own schema rejects; `campaign.py check` does not re-validate the field, so it has stood. reckon's requirement branch had no rule for it either: the word fell through to the self-reported branch, where the row was classed `unmeasured` — which happens to be right — and the reader was told the reason was that `inconclusive` is \"the project's own account of itself, not an observation\". It is nothing of the kind. REQ-072 is a stated ceiling, recorded inconclusive deliberately by PRO-0084 against a limit that cannot be worked around, and the note says so. So the placement was right by accident and the explanation was false, which is the DEF-202 shape in a second vocabulary.",
@@ -3757,7 +3757,7 @@
         "SURF-023"
       ],
       "req": "REQ-120",
-      "note": "RECORDED, NOT CLAIMED by PRO-0104. reckon 1.2.0 now names it: `requirement evidence 'inconclusive' is not a word this tool classifies — 1 row(s) carry it (REQ-072)`, and `reckon build` over this registry exits 4 on it. What is left is a decision about the row rather than about the instrument, and it is not this item's to take: test-campaign's vocabulary has no word for a ceiling recorded inconclusive, so the choice is between recording the row as `vacuous`, recording it as `unknown`, and adding a sixth word to REQ_EVIDENCE — and each of those says something different about a requirement another item owns. Flipping it to silence a gate this item added would be the exact failure the item is about.",
+      "note": "RECORDED, NOT CLAIMED by PRO-0104. reckon 1.2.0 now names it: `requirement evidence 'inconclusive' is not a word this tool classifies — 1 row(s) carry it (REQ-072)`, and `reckon build` over this registry exits 4 on it. What is left is a decision about the row rather than about the instrument, and it is not this item's to take: test-campaign's vocabulary has no word for a ceiling recorded inconclusive, so the choice is between recording the row as `vacuous`, recording it as `unknown`, and adding a sixth word to REQ_EVIDENCE — and each of those says something different about a requirement another item owns. Flipping it to silence a gate this item added would be the exact failure the item is about. CLOSED 2026-08-23 at the wave-17-close reckoning, not by flipping a gate. REQ-072's evidence word is now `unknown`, which is in test-campaign's REQ_EVIDENCE schema (observed, reported, contradicted, unknown, vacuous). `inconclusive` is a case status and was never a requirement-evidence word; reckon 1.2.0's own source named this row as the known instance. The word the schema means is unknown: evidence sought and not obtained, distinct from unmeasured, which is evidence nobody sought. Adding a sixth word to REQ_EVIDENCE was the option that would have moved the edge rather than classified the input.",
       "evidence": [
         "docs/test-campaign/evidence/PRO-0104/vocabulary-delta.json"
       ]

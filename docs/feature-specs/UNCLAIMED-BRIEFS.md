@@ -13,8 +13,6 @@ empty is not a row: it fails the check the same way a missing row does.
 |---|---|---|
 | `23-drawing-fault-must-not-kill-the-agent.md` | PRO-0022, Merged 2026-08-14 | The ledger row exists and the work shipped; `docs/specs/spec-PRO-0022.md` was never written, so there is no spec to carry the citation. DEF-215. |
 | `40-page-scoped-refusal.md` | PRO-0039, Retired 2026-08-15 | Retired unbuilt — the brief's own banner says so, and names PRO-0039. No spec was written, so nothing can cite it. DEF-215. |
-| `85-proctoragents-mutants-mostly-survive.md` | PRO-0092, Ready for AI | Allocated and held for a quiet machine; its mutation runner scores a timeout as a kill. The spec is written at plan time, and the citation with it. |
-| `96-what-1-1-0-still-groups-and-still-grades.md` | untriaged | Filed 2026-08-22 and not yet triaged. No id, so no spec; triage writes the citation when it mints one. |
 
 ## Briefs several specs share
 
