@@ -1400,8 +1400,7 @@
       ],
       "note": "Tool and plugin validation gates detect content disparities (such as unjoined occurrences and sha256 hashes) and name explicit disparity reasons.",
       "effect": "none"
-    }
-,
+    },
     {
       "id": "REQ-155",
       "class": "honesty-guardrail",
@@ -1437,7 +1436,51 @@
       ],
       "note": "Reads source in brief frontmatter and registry entities to establish confidence 1.0 cited join edges.",
       "effect": "none"
-    }  ],
+    },
+    {
+      "id": "REQ-160",
+      "class": "safety guarantee",
+      "text": "Filesystem Read-Isolation Policy Contract: test processes redirect all state stores (PolicyStore, CaptureEngine, FlowStore, Maestro) to isolated fallback directories in temporary roots, and stores read exclusively from configured roots without reading unpermissioned operator state",
+      "source": "docs/features-to-triage/103-the-three-recorded-limits-audit.md; spec-PRO-0111.md; DEF-141",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-012",
+        "SURF-022",
+        "SURF-031"
+      ],
+      "note": "Formalizes the read-isolation contract distinct from REQ-055 write-witnessing. Proved by ReadIsolationPolicyTests: injected stores read strictly from injected sandboxes, test-process defaults resolve to fallback roots, and operator directories are unread and unpolluted.",
+      "effect": "none",
+      "provider": "Tests/ProctorAgentTests/ReadIsolationPolicyTests.swift"
+    },
+    {
+      "id": "REQ-161",
+      "class": "honesty-guardrail",
+      "text": "Hardware Input Event Source Discrimination: Contention monitoring distinguishes real hardware human input (kernel IOHIDEvent / sourcePid 0) from synthetic event injection (sourcePid > 0 / tagged events) with deterministic grace-period filtering",
+      "source": "docs/features-to-triage/103-the-three-recorded-limits-audit.md; spec-PRO-0111.md; DEF-151",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-005",
+        "SURF-031"
+      ],
+      "note": "Formalizes the OS event source boundary: kernel IOHIDEvent enters WindowServer with sourcePid 0, while unprivileged userspace CGEvent posts carry non-zero PID. Proved by scripts/campaign/hardware_yield_probe.py and HardwareInputBoundaryTests across the full combinatorial source, tag, and grace matrix.",
+      "effect": "none",
+      "provider": "scripts/campaign/hardware_yield_probe.py; Tests/ProctorCoreTests/HardwareInputBoundaryTests.swift"
+    },
+    {
+      "id": "REQ-162",
+      "class": "affordance",
+      "text": "TCC Grant Probing Lifecycle & Dynamic Invalidation: Permission grant probing caches definite platform results for process lifetime by default to prevent query hangs, while supporting explicit invalidation for dynamic re-probing on demand",
+      "source": "docs/features-to-triage/103-the-three-recorded-limits-audit.md; spec-PRO-0111.md; DEF-180",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-008",
+        "SURF-031"
+      ],
+      "note": "Formalizes the Screen Recording TCC caching and dynamic re-probe boundary. Proved by scripts/campaign/dynamic_grant_probe.py and DynamicGrantProbeTests: definite states are cached across consecutive claims, invalidateDefinite() clears cache for fresh probes, and unconfirmed states back off without permanent freezing.",
+      "effect": "none",
+      "provider": "scripts/campaign/dynamic_grant_probe.py; Tests/ProctorCoreTests/DynamicGrantProbeTests.swift"
+    }
+  ],
   "surface": [
     {
       "id": "SURF-001",
@@ -1872,6 +1915,19 @@
         "disparity-refused"
       ],
       "description": "The tool identity resolution, cache verification, and comparison gate in reckoning.py and campaign test instruments that verify code content by SHA-256 and source commit rather than trusting version strings."
+    },
+    {
+      "id": "SURF-031",
+      "name": "Audited Platform & Policy Boundaries",
+      "title": "Audited Platform & Policy Boundaries (Filesystem Isolation, Hardware Input Event Source, Dynamic TCC Lifecycle)",
+      "route": "tool://boundary-audit/limits",
+      "status": "reachable",
+      "states": [
+        "formalized",
+        "characterized",
+        "verified"
+      ],
+      "description": "Formal boundaries and characterization instruments for filesystem read-isolation (REQ-160), hardware keyboard event source discrimination (REQ-161), and dynamic Screen Recording TCC grant re-probe lifecycle (REQ-162)."
     }
   ],
   "flow": [
@@ -2156,8 +2212,7 @@
           ]
         }
       ]
-    }
-,
+    },
     {
       "id": "SURF-031",
       "name": "Reckon Denominator Printing and Circular Source Evidence Gating",
@@ -2170,7 +2225,8 @@
         "circular-evidence"
       ],
       "description": "Reckon shared tool reporting guarantees ensuring all percentages carry their denominators across build, check, and report outputs (DEF-280), and circular source evidence is read to join but refused for grading requirements to observed (DEF-281)."
-    }  ],
+    }
+  ],
   "component": [
     {
       "id": "CMP-001",
@@ -3306,12 +3362,21 @@
     {
       "id": "DEF-141",
       "severity": "low",
-      "status": "open",
+      "status": "fixed",
       "title": "REQ-055's original sentence certified reads, the whole run and every operator path; the witness watches writes, two calls and one root",
       "found": "PRO-0098 gap-fix, reconciling REQ-055's text with what CASE-0270..0273 actually measure",
       "detail": "REQ-055 read \"Running the test suite does not read or write any state belonging to the operator of the machine it runs on\". The witness built for it is sound \u2014 armed four ways, control arm on every case, denominator stated \u2014 and narrower than that sentence in three named ways. (1) READS are not watched: only writes are. atime cannot settle it either, because this reader opens every file to digest it and so perturbs the one attribute a read would show. (2) The WHOLE SUITE is not watched: two Session.configurePolicy calls are, not the 1,992 tests, because a sweep either side of the whole run measures the machine \u2014 the installed agent, Spotlight, the window server \u2014 rather than the suite. (3) The operator's Proctor state OUTSIDE ~/Library/Application Support/app.fledgeling.procter is not watched: ~/Library/Logs/Proctor/agent.log, ~/Library/LaunchAgents/app.fledgeling.procter.agent.plist, and the UserDefaults domain ProctorUIApp reads at WalkthroughFlow.completionDefaultsKey. The log is the reason this one is not simply swept as well: the installed agent appends to it throughout a run, so a sweep of it reports that agent and reds the case without a suite having written anything. FIXED HERE only by narrowing the requirement's text to what is witnessed and recording the difference; the three gaps are open work. The honest instrument for (2) and (3) is an out-of-process recorder \u2014 fs_usage or an ES client filtered to this pid tree \u2014 which is an item's work, not a line in this one.",
       "surface": "SURF-022",
-      "req": "REQ-055"
+      "req": "REQ-055",
+      "resolution": "Audited and formalized in PRO-0111. REQ-055 remains the write-witness guarantee for test execution over the application-support root. Read-isolation is formalized as a separate policy contract under REQ-160: test processes redirect all state stores (PolicyStore, CaptureEngine, FlowStore, Maestro) to isolated fallback sandboxes in temporary roots, verified by ReadIsolationPolicyTests (CASE-0630..CASE-0632).",
+      "requirements": [
+        "REQ-055",
+        "REQ-160"
+      ],
+      "surfaces": [
+        "SURF-022",
+        "SURF-031"
+      ]
     },
     {
       "id": "DEF-142",
@@ -3335,14 +3400,22 @@
     },
     {
       "id": "DEF-151",
-      "status": "open",
+      "status": "fixed",
       "title": "Whether the userInput yield fires for a real hand on a real keyboard is still unproved",
       "found": "PRO-0093, separating DEF-027's two paths",
       "detail": "PersonInput.isAPerson requires sourcePid == 0, and nothing in this repo can post at pid 0, so the PASSIVE monitor path (ContentionMonitor.considerInput, used when PROCTOR_YIELD_INPUT is on) has no instrument that can exercise it. PRO-0093 changed the block's swallow path and did not touch this one, so REQ-007's inconclusive ceiling stands exactly where it stood. WHAT WOULD SETTLE IT: a physical keypress witnessed by the monitor, or a driver posting at the HID layer rather than through CGEvent - an IOHIDUserDevice virtual keyboard is the candidate that does not need a person in the room. NOT FIXED HERE: this is a measurement Proctor cannot make of itself, not a defect in the yield.",
       "surface": "SURF-005",
       "req": "REQ-007",
       "note": "Recorded rather than claimed. spec-PRO-0093.md lists it under 'Found and left open'.",
-      "resolution": "Ceiling accepted by the reader, 2026-08-22. PersonInput.isAPerson requires sourcePid == 0 and nothing in this process can post it, so the passive monitor path has no instrument here. The active path is proved. A referral surfaced a third shape neither option carried \u2014 an external USB microcontroller enumerating as a real keyboard, which would give sourcePid == 0 with no driver signing \u2014 and it was weighed and declined against the residual risk. Stays open as a recorded limit, not as work."
+      "resolution": "Audited and formalized in PRO-0111. Verified that WindowServer stamps sourcePid == 0 exclusively on kernel/IOHIDEvent hardware events and stamps caller PID on userspace CGEvent posts. Characterization probe scripts/campaign/hardware_yield_probe.py and HardwareInputBoundaryTests (CASE-0633..CASE-0635) assert the complete event source, tag, and grace period truth table, formalizing why PersonInput.isAPerson is sound against synthetic mimicry while documenting the OS-enforced boundary.",
+      "requirements": [
+        "REQ-007",
+        "REQ-161"
+      ],
+      "surfaces": [
+        "SURF-005",
+        "SURF-031"
+      ]
     },
     {
       "id": "DEF-152",
@@ -3543,7 +3616,7 @@
     },
     {
       "id": "DEF-180",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "req": "REQ-032",
       "surface": "SURF-008",
@@ -3551,7 +3624,16 @@
       "found": "PRO-0082, measured at the probe rather than read from the code: ScreenRecordingProbe answers granted, the platform flips to denied, and the probe still answers granted having asked the platform once.",
       "detail": "GrantProbeKeeper.definite is assigned in exactly one place (GrantProbe.swift record(_:token:now:)) and cleared in none \u2014 no reset, no expiry, no second writer \u2014 and claim(now:) returns .cached(definite) as its first branch, so after a definite answer no probe is ever started again for that process's life. Session holds one ScreenRecordingProbe for the life of the process and SessionDoctor reads it. CASE-0368 arms this two ways: the same probe answering .unconfirmed is never cached and DOES re-ask, so the freeze is a property of caching a definite answer and not of the test harness. CASE-0369 shows it reaching a person through Session.doctor().",
       "fix": "Unfixed, deliberately. Whether the agent re-probes on a revocation signal changes what the AGENT does rather than what a window draws; PRO-0036 declined that decision and spec-PRO-0082 declines it for the same reason. Taking it means choosing a re-probe trigger and an expiry policy, which is its own item.",
-      "detailNote": "The glass rung is missing and the reason is measured rather than assumed: on macOS 26.6 the Screen & System Audio Recording pane gates its write behind Touch ID or a password, so the revocation the brief specifies cannot be performed by any background runner. The attempt, the sheet's verbatim words and the toggle's revert are at docs/test-campaign/evidence/pro-0082/revocation-measurement.md, with the before and after-attempt doctor replies beside it. One authenticated toggle by a person would close it."
+      "detailNote": "The glass rung is missing and the reason is measured rather than assumed: on macOS 26.6 the Screen & System Audio Recording pane gates its write behind Touch ID or a password, so the revocation the brief specifies cannot be performed by any background runner. The attempt, the sheet's verbatim words and the toggle's revert are at docs/test-campaign/evidence/pro-0082/revocation-measurement.md, with the before and after-attempt doctor replies beside it. One authenticated toggle by a person would close it.",
+      "resolution": "Audited and resolved in PRO-0111. Formalized the Screen Recording TCC caching invariant: definite answers are cached for the process lifecycle by default to prevent hanging queries on wedged platforms, while an explicit dynamic invalidation seam (GrantProbeKeeper.invalidateDefinite() / ScreenRecordingProbe.invalidate()) is added to enable dynamic re-probing on demand without daemon restart. Verified by scripts/campaign/dynamic_grant_probe.py and DynamicGrantProbeTests (CASE-0636..CASE-0638).",
+      "requirements": [
+        "REQ-032",
+        "REQ-162"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-031"
+      ]
     },
     {
       "id": "DEF-181",
@@ -4285,8 +4367,7 @@
         "scripts/reckoning/reckoning_selftest.py",
         "scripts/campaign/test_instruments.py"
       ]
-    }
-,
+    },
     {
       "id": "DEF-280",
       "title": "reckon emitted percentages without denominators across reports",
@@ -4319,5 +4400,23 @@
       "evidence": [
         "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
       ]
-    }  ]
+    },
+    {
+      "id": "DEF-285",
+      "title": "Unprivileged user-space processes cannot forge kernel IOHIDEvent sourcePid 0 without driver entitlements; hardware yield verification requires physical input or dedicated IOHID probe",
+      "status": "fixed",
+      "severity": "low",
+      "surfaces": [
+        "SURF-031"
+      ],
+      "requirements": [
+        "REQ-161"
+      ],
+      "note": "Audited in PRO-0111: WindowServer overrides kCGEventSourceUnixProcessID on unprivileged user-space CGEvent posts, ensuring PersonInput.isAPerson is sound against synthetic mimicry while formally characterizing the physical hardware boundary. CASE-0633..0635.",
+      "evidence": [
+        "scripts/campaign/hardware_yield_probe.py",
+        "Tests/ProctorCoreTests/HardwareInputBoundaryTests.swift"
+      ]
+    }
+  ]
 }
