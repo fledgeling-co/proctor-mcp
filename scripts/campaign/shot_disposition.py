@@ -455,24 +455,81 @@ DISPOSITIONS["sweepL-wedged-recovered"] = {
 }
 
 
+# Mock files (DEF-243)
+DISPOSITIONS["mock/step-a3-walkthrough-primary-disabled.png"] = {
+    "depicts": (
+        "Design mock of Step A3 (Walkthrough with permissions disabled): 1280x720 reference "
+        "rendering of the disabled advance button state."
+    ),
+    "disposition": "design-mock",
+    "namedFor": "Step A3 disabled-button state design of record",
+    "record": "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.html",
+    "defects": ["DEF-243"],
+}
+
+DISPOSITIONS["mock/step-a3-walkthrough-primary-disabled.html"] = {
+    "depicts": (
+        "HTML markup fixture and source for the Step A3 disabled-button walkthrough mock."
+    ),
+    "disposition": "design-mock-source",
+    "namedFor": "Step A3 mock HTML source",
+    "record": "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.html",
+    "defects": ["DEF-243"],
+}
+
+DISPOSITIONS["mock/surf-008-status-window.png"] = {
+    "depicts": (
+        "Design mock of SURF-008 (Status Window): 640x552 reference mockup showing Permissions, "
+        "Tools, and Agent status."
+    ),
+    "disposition": "design-mock",
+    "namedFor": "SURF-008 status window design of record",
+    "record": "docs/mockups/status-window.html",
+    "defects": ["DEF-243"],
+}
+
+DISPOSITIONS["mock/surf-009-walkthrough.png"] = {
+    "depicts": (
+        "Design mock of SURF-009 (Walkthrough): 560x437 reference mockup for the onboarding "
+        "walkthrough window."
+    ),
+    "disposition": "design-mock",
+    "namedFor": "SURF-009 walkthrough design of record",
+    "record": "docs/mockups/walkthrough.html",
+    "defects": ["DEF-243"],
+}
+
+DISPOSITIONS["mock/surf-010-menubar.png"] = {
+    "depicts": (
+        "Design mock of SURF-010 (Menu Bar): 66x66 reference mockup for the Proctor menu bar "
+        "status and command menu."
+    ),
+    "disposition": "design-mock",
+    "namedFor": "SURF-010 menu bar design of record",
+    "record": "docs/mockups/menubar.html",
+    "defects": ["DEF-243"],
+}
+
+
 def measure(p: Path) -> dict:
     data = p.read_bytes()
-    w, h = struct.unpack(">II", data[16:24])
     out = {
         "bytes": len(data),
         "sha256": hashlib.sha256(data).hexdigest(),
-        "width": w,
-        "height": h,
     }
-    try:
-        from PIL import Image
-    except ImportError:
-        return out
-    im = Image.open(p).convert("RGBA")
-    px = list(im.getdata())
-    out["totalPixels"] = len(px)
-    out["opaquePixels"] = sum(1 for q in px if q[3] != 0)
-    out["distinctRGBA"] = len(set(px))
+    if p.suffix.lower() == ".png" and len(data) >= 24:
+        try:
+            w, h = struct.unpack(">II", data[16:24])
+            out["width"] = w
+            out["height"] = h
+            from PIL import Image
+            im = Image.open(p).convert("RGBA")
+            px = list(getattr(im, "get_flattened_data", im.getdata)())
+            out["totalPixels"] = len(px)
+            out["opaquePixels"] = sum(1 for q in px if q[3] != 0)
+            out["distinctRGBA"] = len(set(px))
+        except Exception:
+            pass
     return out
 
 
@@ -504,6 +561,8 @@ AUDIT_SUFFIX = ".png"
 
 def audit() -> dict:
     files = sorted(p for p in SHOTS.glob("*" + AUDIT_SUFFIX))
+    mock_dir = SHOTS / "mock"
+    mock_files = sorted(p for p in mock_dir.glob("*" + AUDIT_SUFFIX)) if mock_dir.is_dir() else []
     pub = published_shots()
     rows, by_hash = [], defaultdict(list)
     for p in files:
@@ -525,6 +584,25 @@ def audit() -> dict:
             "defects": (d or {}).get("defects", []),
             **m,
         })
+    for p in mock_files:
+        m = measure(p)
+        file_key = f"mock/{p.name}"
+        by_hash[m["sha256"]].append(file_key)
+        rel = f"evidence/shots/mock/{p.name}"
+        d = DISPOSITIONS.get(file_key)
+        rows.append({
+            "file": file_key,
+            "path": rel,
+            "disposition": (d or {}).get("disposition", "design-mock"),
+            "disposed": d is not None,
+            "publishedAs": None,
+            "depicts": (d or {}).get("depicts"),
+            "namedFor": (d or {}).get("namedFor"),
+            "record": (d or {}).get("record"),
+            "defects": (d or {}).get("defects", []),
+            "isMock": True,
+            **m,
+        })
     groups = {h: n for h, n in sorted(by_hash.items()) if len(n) > 1}
     return {
         "item": "PRO-0107",
@@ -540,6 +618,7 @@ def audit() -> dict:
         "files": len(rows),
         "published": sum(1 for r in rows if r["publishedAs"]),
         "unpublishedWithReason": sum(1 for r in rows if r["disposition"] == "unpublished-with-reason"),
+        "designMock": sum(1 for r in rows if r.get("isMock")),
         "disposed": sum(1 for r in rows if r["disposed"]),
         "byteIdenticalGroups": groups,
         "redundantFiles": sum(len(n) - 1 for n in groups.values()),
@@ -805,7 +884,7 @@ def citations(a: dict) -> tuple[list[str], list[str]]:
         if row is not None:
             if not row["disposed"]:
                 reasons.append("in the shots directory with no disposition")
-            elif not row["publishedAs"]:
+            elif not row["publishedAs"] and not row.get("isMock"):
                 reasons.append("cited as evidence while no subject publishes it "
                                f"({(row['depicts'] or '')[:80]}…)")
         elif on_disk and rel.startswith("evidence/shots/") and not is_mock(rel):
@@ -820,10 +899,10 @@ def citations(a: dict) -> tuple[list[str], list[str]]:
                 continue
         if not reasons:
             continue
-        known = KNOWN_CITATION_FAULTS.get(path)
+        known = KNOWN_CITATION_FAULTS.get(rel) or KNOWN_CITATION_FAULTS.get(path)
         line = f"{who} cites {path}: {'; '.join(reasons)}"
         if known:
-            seen_known.add(path)
+            seen_known.add(rel if rel in KNOWN_CITATION_FAULTS else path)
             notices.append(f"{line}  [recorded: {known}]")
         else:
             failures.append(line)
@@ -858,8 +937,8 @@ def main() -> int:
     if "--manifest" in sys.argv:
         entries = []
         for r in a["shots"]:
-            d = DISPOSITIONS.get(Path(r["file"]).stem)
-            if not d:
+            d = DISPOSITIONS.get(r["file"]) or DISPOSITIONS.get(Path(r["file"]).stem)
+            if not d or not d.get("unpublishedReason"):
                 continue
             entries.append({
                 "path": r["path"],

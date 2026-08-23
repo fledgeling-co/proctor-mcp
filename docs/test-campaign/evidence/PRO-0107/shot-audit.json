@@ -3,10 +3,11 @@
  "generatedBy": "scripts/campaign/shot_disposition.py",
  "shotsDir": "docs/test-campaign/evidence/shots",
  "howDepictsWasEstablished": "Every file was opened and looked at. `depicts` is what the picture shows, never what the filename claims \u2014 the rule the twenty-captures failure this gate was built for came from. Dimensions, byte counts, sha256, opaque-pixel counts and distinct-RGBA counts are re-measured by this script and are the half a reader can check without opening anything.",
- "files": 43,
+ "files": 47,
  "published": 8,
  "unpublishedWithReason": 35,
- "disposed": 43,
+ "designMock": 4,
+ "disposed": 47,
  "byteIdenticalGroups": {
   "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d": [
    "sweepL-status-t0.6.png",
@@ -30,7 +31,7 @@
  "redundantFiles": 6,
  "deleted": 0,
  "deletionTests": {
-  "zeroByte": "no file in the directory is zero bytes; the smallest is 10,680.",
+  "zeroByte": "no file in the directory is zero bytes; the smallest is 337.",
   "exactDuplicateOfAPublishedFile": "no byte-identical group contains a published file \u2014 the 4 groups cover 10 files (sweepL-status-t0.6.png, sweepL-status-t3.5.png; sweepL-wedged-t14.png, sweepL-wedged-t7.png; sweepK-theme-before.png, sweepL-wedged-recovered.png, sweepL-wedged-t1.png; overlay-exclusion-armed.png, overlay-exclusion-baseA.png, overlay-exclusion-baseB.png), and none of them is any subject's `shot`. The duplication is itself the evidence for DEF-221 and DEF-222, so deleting a member would delete the finding."
  },
  "shots": [
@@ -855,6 +856,90 @@
    "totalPixels": 3825504,
    "opaquePixels": 3744865,
    "distinctRGBA": 1035
+  },
+  {
+   "file": "mock/step-a3-walkthrough-primary-disabled.png",
+   "path": "evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
+   "disposition": "design-mock",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "Design mock of Step A3 (Walkthrough with permissions disabled): 1280x720 reference rendering of the disabled advance button state.",
+   "namedFor": "Step A3 disabled-button state design of record",
+   "record": "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.html",
+   "defects": [
+    "DEF-243"
+   ],
+   "isMock": true,
+   "bytes": 40057,
+   "sha256": "9c25ed38e92c0d2a37af0aeb6019f3689cff414efc0d2879a9ce7171c6bd0060",
+   "width": 1280,
+   "height": 720,
+   "totalPixels": 921600,
+   "opaquePixels": 921600,
+   "distinctRGBA": 740
+  },
+  {
+   "file": "mock/surf-008-status-window.png",
+   "path": "evidence/shots/mock/surf-008-status-window.png",
+   "disposition": "design-mock",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "Design mock of SURF-008 (Status Window): 640x552 reference mockup showing Permissions, Tools, and Agent status.",
+   "namedFor": "SURF-008 status window design of record",
+   "record": "docs/mockups/status-window.html",
+   "defects": [
+    "DEF-243"
+   ],
+   "isMock": true,
+   "bytes": 55777,
+   "sha256": "fc408b6c3e18c79f0356ea750afc9c49741e9dbea4e01974a012a561140474fb",
+   "width": 640,
+   "height": 552,
+   "totalPixels": 353280,
+   "opaquePixels": 353280,
+   "distinctRGBA": 711
+  },
+  {
+   "file": "mock/surf-009-walkthrough.png",
+   "path": "evidence/shots/mock/surf-009-walkthrough.png",
+   "disposition": "design-mock",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "Design mock of SURF-009 (Walkthrough): 560x437 reference mockup for the onboarding walkthrough window.",
+   "namedFor": "SURF-009 walkthrough design of record",
+   "record": "docs/mockups/walkthrough.html",
+   "defects": [
+    "DEF-243"
+   ],
+   "isMock": true,
+   "bytes": 36773,
+   "sha256": "f053f1e2284bbf493e670e4aeb28499c18c29bd99bd84722bd6eba31fa921a97",
+   "width": 560,
+   "height": 437,
+   "totalPixels": 244720,
+   "opaquePixels": 244720,
+   "distinctRGBA": 836
+  },
+  {
+   "file": "mock/surf-010-menubar.png",
+   "path": "evidence/shots/mock/surf-010-menubar.png",
+   "disposition": "design-mock",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "Design mock of SURF-010 (Menu Bar): 66x66 reference mockup for the Proctor menu bar status and command menu.",
+   "namedFor": "SURF-010 menu bar design of record",
+   "record": "docs/mockups/menubar.html",
+   "defects": [
+    "DEF-243"
+   ],
+   "isMock": true,
+   "bytes": 337,
+   "sha256": "ae4b315d49db16bddc3e8798cb51b10dc64cc7e36af930cf8b19230ba6831ec8",
+   "width": 66,
+   "height": 66,
+   "totalPixels": 4356,
+   "opaquePixels": 2322,
+   "distinctRGBA": 4
   }
  ]
 }
