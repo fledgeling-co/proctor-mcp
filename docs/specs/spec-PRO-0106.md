@@ -4,7 +4,7 @@
 **Status:** Developer Review
 **Created:** 2026-08-23
 **Last updated:** 2026-08-23
-**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240..DEF-247
+**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240..DEF-251
 **Brief:** `docs/features-to-triage/99-instruments-that-do-not-prove-their-own-step.md`
 
 ## Feature description
@@ -242,6 +242,50 @@ Four repaired, two recorded with their reason.
 | `sweep()` witnesses no mode bits | **Recorded, unchanged.** A scope decision in the instrument's design rather than a step it failed to prove, and the same call as the one already recorded above. |
 | gemini's ` R` unstaged-rename claim | **Does not reproduce, and now driven rather than argued.** git 2.50.1 has no rename to report until a side is staged, so a plain `mv` arrives as ` D` plus `??`. The new guard reads both status columns anyway, and the selftest records the measurement so a guard resting on an unchecked claim is not what this leaves behind. |
 
+## The gap-fix's own out-of-family review, and it found the class again
+
+`gemini-3.7-flash-high` via `agy --new-project --dangerously-skip-permissions` from `/tmp`. It
+answered about PRO-0106, quoting real lines from these files, so the lane held. **Five findings, all
+five checked against the code and all five real.** Four are repairs and one is the item's own opening
+sentence turning on the item a third time.
+
+- **DEF-248 — `unquote_path` returned a still-quoted path under `core.quotePath=false`.** Not a
+  filename this time but a **git config**, and one a user commonly carries in their own gitconfig.
+  Measured against git 2.50.1 in both modes: the default escapes non-ASCII in octal
+  (`"d/caf\303\251 latte.txt"`) and `quotePath=false` writes the UTF-8 through literally
+  (`"d/café latte.txt"`), quoting only for the space. The `unicode_escape` round trip decoded the
+  first and raised `UnicodeDecodeError` on the second, whose except branch returned the entry **with
+  its quotes on** — DEF-206's harm, reached by a setting rather than by a path. Unquoted byte by byte
+  now, with `surrogateescape` on a sequence that is not UTF-8 so an undecodable name stays openable.
+- **DEF-249 — `tree_dirty` carried the same `line[3:]` slice DEF-206 was about**, in
+  `mutation_seam_arm.py`, the file DEF-206's second round repaired. A quoted entry arrives as
+  `"docs/...` so the `docs/` test missed it and the arm refused at exit 2 over a change it tolerates.
+  It errs the other way too: `R  docs/x.md -> Sources/y.swift` starts with `docs/` when nothing
+  splits the rename, so a file moving OUT of docs/ was tolerated silently. Fail closed on one side
+  and open on the other.
+- **DEF-250 — a repo-relative citation skipped every check but existence.** `rows` is keyed
+  campaign-relative and the branch tested `path.startswith("evidence/shots/")`, so
+  `docs/test-campaign/evidence/shots/x.png` matched neither, resolved on disk, and returned no
+  reasons at all — skipping the disposition check and the publishing-subject check that are the whole
+  of DEF-227's repair. Latent rather than active: no case cites a shot that way today.
+- **DEF-251 — the check that `verify()` guards the identity grouping could not fail.**
+  `check("the byte-identical grouping moved" in text, …)` read the instrument's **source** for the
+  sentence the branch would print. It passes whether or not the branch runs, it never called
+  `verify()`, and it would keep passing over a `verify()` that had stopped comparing groups at all.
+  That is this item's opening sentence, in this item's own fixture file, found by a reviewer rather
+  than by the item. `verify()` is driven twice in one session now: over an emptied grouping, where it
+  exits 1 and prints the sentence, and over the grouping the run computes, where it exits 0.
+- **Two assertions this gap-fix had just written that could not fail.**
+  `check(("ARMED" if r["exit"] != 0 else "NOT ARMED") == "ARMED", …)` compares a fixture-derived
+  constant against a literal, so it stands whether or not the repair is present. Both now compare the
+  pre-repair rule's verdict against what the repaired rule says, which fails if the repair is removed.
+  Recorded here rather than as a defect row, on this item's own precedent: they were written and armed
+  inside this branch and never shipped.
+
+Its answers to the other two questions were checked and neither produced a finding: the zero-test
+guard sits directly under `if r["verdict"]:`, before the started-line and exit-code branches, and
+every remaining non-measurement route returns `("INCONCLUSIVE", None, …)`.
+
 ## Where absence claims were checked
 
 **The `code != 0`-as-verdict pattern is not in these 25 files.** Every `.py` under `scripts/campaign/`
@@ -277,6 +321,10 @@ Searched: the four instruments this item names, plus every `git status --porcela
 | DEF-241 | fixed |
 | DEF-242 | fixed |
 | DEF-244 | fixed |
+| DEF-248 | fixed |
+| DEF-249 | fixed |
+| DEF-250 | fixed |
+| DEF-251 | fixed |
 | DEF-245 | fixed |
 | DEF-246 | fixed |
 | DEF-247 | fixed |
