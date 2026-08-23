@@ -1,0 +1,38 @@
+control · a clean tree and a current tool take a reading   PASS
+control · the reading names its own commit                 PASS
+control · the first reading has nothing to compare against PASS
+gate · a tool below the version floor is refused           PASS
+arming · removing the floor lets the old tool through      PASS
+gate · a tool whose partition lacks a class is refused     PASS
+arming · removing the vocabulary check lets the liar through PASS
+gate · a tool with no ratchet is refused                   PASS
+gate · uncommitted inputs refuse to be named by a commit   PASS
+gate · --allow-dirty takes the reading and marks it unnamed PASS
+arming · removing the dirty check publishes the unnamed reading PASS
+control · a second reading compares against the first      PASS
+gate · a reading with no provenance is not differenced     PASS
+arming · with the provenance check gone the refusal is replaced by a crash PASS
+gate · an unnamed reading is a reading, not a baseline     PASS
+arming · removing the unnamed check differences it anyway  PASS
+gate · an unresolvable earlier commit refuses the delta    PASS
+two-way · a resolvable earlier commit is decomposed instead PASS
+gate · a control built by a third tool is refused          PASS
+two-way · with the versions agreeing the same pair compares PASS
+gate · a row leaving unmeasured with no evidence exits 3   PASS
+gate · the violation is written into the report, not only printed PASS
+two-way · the same pair unedited ratchets clean            PASS
+gate · the report's first section is what moved            PASS
+gate · totals come last                                    PASS
+two-way · the ordering check fails on a report that leads with totals PASS
+gate · a ledger failing reckon's own gate is not reported clean PASS
+fixture · the status line is the one that fires it (leading space) PASS
+gate · the refusal names a path that exists on disk        PASS
+gate · --allow-dirty records a path the reader can open    PASS
+arming · the pre-repair slice puts the phantom back in the refusal PASS
+gate · the effect records a byte count and digest for every file written PASS
+arming · dropping the digests leaves the witness naming files only PASS
+gate · a rewrite of equal length is invisible to a name-only diff PASS
+gate · the digest diff names the file the name diff missed PASS
+gate · the cadence note states this file's own check count PASS
+
+reckoning selftest: 36 checks, 0 failed

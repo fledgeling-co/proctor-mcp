@@ -15,6 +15,7 @@ check here is armed twice over:
 
 Run: python3 scripts/reckoning/reckoning_selftest.py     (exit 0 = all armed)
 """
+import importlib.util
 import json
 import os
 import re
@@ -26,6 +27,22 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SUBJECT = HERE / "reckoning.py"
+
+
+def _subject_module():
+    """The subject imported, so its own sweep() is what gets measured.
+
+    A reimplementation of sweep() here would arm a copy rather than the tool.
+    """
+    spec = importlib.util.spec_from_file_location("_reckoning_subject", SUBJECT)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+_SUBJECT_MOD = _subject_module()
+_sweep = _SUBJECT_MOD.sweep
+_sha256_of = _SUBJECT_MOD.sha256_of
 REAL_RECKON = Path(os.environ.get(
     "RECKON_SCRIPT",
     "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py"))
@@ -338,7 +355,89 @@ def main():
         report("gate · a ledger failing reckon's own gate is not reported clean",
                code != 0 and "did not come back clean" in out, "exit %d: %s" % (code, out[-200:]))
 
-        # --- 11. the cadence note's count of this file ----------------------
+        # --- 11. the refusal names the path git named (DEF-206) -------------
+        # `git()` strips its output, so the first porcelain line lost its leading
+        # status space and the [3:] slice ate the first character of the path.
+        # The refusal named `ocs/test-campaign/cases.json`, and --allow-dirty
+        # wrote that phantom permanently into run.json.dirty_inputs.
+        (repo / "docs/test-campaign/cases.json").write_text(
+            json.dumps(CASES + [{"id": "CASE-4", "req": "REQ-1", "surface": "SURF-1",
+                                 "oracle": "outcome", "status": "pass", "evidence": ["f"],
+                                 "armed": True, "note": "modified, tracked, unstaged"}]),
+            encoding="utf-8")
+        porcelain = run(["git", "status", "--porcelain", "--",
+                         "docs/test-campaign/cases.json"], cwd=repo)[1]
+        report("fixture · the status line is the one that fires it (leading space)",
+               porcelain.startswith(" M "), repr(porcelain[:40]))
+        code, out = take(repo, tmp / "out-def206", reckon=good_tool)
+        report("gate · the refusal names a path that exists on disk",
+               code == 2 and "docs/test-campaign/cases.json" in out
+               and "ocs/test-campaign/cases.json" not in out.replace("docs/test-campaign", ""),
+               "exit %d: %s" % (code, out[-240:]))
+        code, out = take(repo, tmp / "out-def206-dirty", reckon=good_tool,
+                         extra=["--allow-dirty"])
+        d206 = sorted((tmp / "out-def206-dirty").iterdir()) if (tmp / "out-def206-dirty").exists() else []
+        recorded = json.loads((d206[0] / "run.json").read_text())["tree"]["dirty_inputs"] if d206 else []
+        report("gate · --allow-dirty records a path the reader can open",
+               recorded == ["docs/test-campaign/cases.json"]
+               and (repo / recorded[0]).is_file() if recorded else False,
+               "dirty_inputs %r" % (recorded,))
+        # The mutation restores the pre-repair line verbatim, so this is the two-way
+        # control across the repair rather than a check that merely passes now.
+        mutant = mutate_subject(tmp / "m11.py", [(
+            "    _, dirty_paths = porcelain_paths(repo, inputs)",
+            '    code, dirty, _ = git(repo, "status", "--porcelain", "--", *inputs)\n'
+            "    dirty_paths = [line[3:] for line in dirty.splitlines() if line.strip()]", 1)])
+        code, out = take(repo, tmp / "out-def206-armed", subject=mutant, reckon=good_tool)
+        report("arming · the pre-repair slice puts the phantom back in the refusal",
+               code == 2 and "ocs/test-campaign/cases.json" in out,
+               "exit %d: %s" % (code, out[-240:]))
+        run(["git", "checkout", "--", "docs/test-campaign/cases.json"], cwd=repo)
+
+        # --- 12. the witness records what sweep() measured (DEF-205) ---------
+        # sweep() computes a byte count and sha256 per file and cmd_take kept only
+        # the names, so the witness could say two files appeared and not what was
+        # in them.
+        latest = sorted((tmp / "out-control").iterdir())[-1]
+        effect = json.loads((latest / "run.json").read_text())["effect"]
+        written = effect.get("written") or {}
+        digests_hold = bool(written) and all(
+            isinstance(v, dict) and v.get("sha256") == _sha256_of(latest / n)
+            and v.get("bytes") == (latest / n).stat().st_size
+            for n, v in written.items())
+        report("gate · the effect records a byte count and digest for every file written",
+               digests_hold and sorted(written) == effect["files_written"],
+               "written %r" % (list(written)[:3],))
+        mutant = mutate_subject(tmp / "m12.py", [(
+            '                   "written": {n: after[n] for n in written},',
+            '                   "written": {},', 1)])
+        run(["git", "commit", "-q", "--allow-empty", "-m", "third"], cwd=repo)
+        code, out = take(repo, tmp / "out-def205-armed", subject=mutant, reckon=good_tool)
+        armed_dir = sorted((tmp / "out-def205-armed").iterdir()) if (tmp / "out-def205-armed").exists() else []
+        blind = json.loads((armed_dir[0] / "run.json").read_text())["effect"]["written"] if armed_dir else None
+        report("arming · dropping the digests leaves the witness naming files only",
+               code == 0 and blind == {}, "exit %d, written %r" % (code, blind))
+
+        # --- 13. a file rewritten between sweeps is not invisible (DEF-205) --
+        # The half a name-only witness could not see at all: same name, different
+        # content, absent from set(after) - set(before) entirely.
+        scratch = tmp / "sweep-scratch"
+        scratch.mkdir()
+        (scratch / "ledger.json").write_text("one", encoding="utf-8")
+        before_sweep = _sweep(scratch)
+        (scratch / "ledger.json").write_text("two", encoding="utf-8")   # same length
+        after_sweep = _sweep(scratch)
+        appeared = sorted(set(after_sweep) - set(before_sweep))
+        moved = sorted(n for n in set(after_sweep) & set(before_sweep)
+                       if after_sweep[n] != before_sweep[n])
+        report("gate · a rewrite of equal length is invisible to a name-only diff",
+               appeared == [], "appeared %r" % (appeared,))
+        report("gate · the digest diff names the file the name diff missed",
+               moved == ["ledger.json"]
+               and before_sweep["ledger.json"]["sha256"] != after_sweep["ledger.json"]["sha256"],
+               "moved %r" % (moved,))
+
+        # --- 14. the cadence note's count of this file ----------------------
         # DEF-193 was the fifth stale count in a document nothing read. A number
         # a document states about an instrument is a number the instrument can
         # read back.
