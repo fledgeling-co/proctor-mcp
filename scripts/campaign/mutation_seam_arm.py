@@ -179,17 +179,22 @@ FINISHED_RE = re.compile(r'Test "((?:[^"\\]|\\.)*)" (?:passed|failed|skipped)')
 TEST_ATTR_RE = re.compile(r'@Test\(\s*"((?:[^"\\]|\\.)*)"')
 
 
-def display_name(function: str) -> tuple[str | None, str]:
+def display_name(function: str, tests_root: Path | None = None) -> tuple[str | None, str]:
     """The @Test display string for a Swift test function, read from the source.
 
     Derived rather than hand-copied, so the table below cannot drift out of step
     with the tests it names. Returns (display, why) and the display is None when
     the source cannot settle it — which makes the arming `inconclusive` rather
     than letting an unresolvable name quietly weaken the check that uses it.
+
+    `tests_root` exists so the ambiguity refusal has a fixture. No function under
+    this repository's Tests/ resolves two ways, so against the real tree that
+    branch cannot be watched to fire, and a check nobody has seen fire is the
+    defect this item is about.
     """
     hits: list[tuple[str, str]] = []
     decl = re.compile(r"func\s+" + re.escape(function) + r"\s*\(")
-    for path in sorted((ROOT / "Tests").rglob("*.swift")):
+    for path in sorted((tests_root or ROOT / "Tests").rglob("*.swift")):
         text = path.read_text(encoding="utf-8", errors="replace")
         for m in decl.finditer(text):
             head = text[max(0, m.start() - 800):m.start()]
@@ -200,7 +205,8 @@ def display_name(function: str) -> tuple[str | None, str]:
             hits.append((attr.group(1) if attr else function + "()", str(path)))
     names = {h[0] for h in hits}
     if not hits:
-        return None, "no @Test function named %s under Tests/" % function
+        return None, "no @Test function named %s under %s" % (
+            function, tests_root or ROOT / "Tests")
     if len(names) != 1:
         return None, ("%s resolves to %d different @Test display names (%s), so no started line "
                       "can be attributed to it" % (function, len(names), ", ".join(sorted(names))))

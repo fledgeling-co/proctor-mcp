@@ -22,8 +22,11 @@ all three were found by arming rather than by reading.
 """
 from __future__ import annotations
 
+import atexit
+import contextlib
 import hashlib
 import importlib.util
+import io
 import json
 import os
 import subprocess
@@ -920,6 +923,296 @@ def test_operator_path_gate_on_this_repository() -> None:
               (out.stdout + out.stderr)[-800:])
 
 
+
+# ── DEF-207: the splice was never read back ─────────────────────────────────
+#
+# `mutate_swift.py`'s `apply()` spliced by byte offset and returned nothing, so a
+# wrong-offset write was silent: the harness graded pristine or wrongly-edited
+# code and no line anywhere disagreed with the verdict. An anchor-string mutator
+# that aborts at least reports INERT; this had nothing to report. A survivor then
+# has two readings — the guard is decorative, or the mutation never happened.
+#
+# Both directions, and the fixture is the drift the offsets are exposed to:
+# `candidates()` reads the file, and between that read and the write the text can
+# move. The pre-repair form is reproduced inline as the control, so this is a
+# comparison across the repair rather than a check that merely passes now.
+
+def _mutate_swift():
+    return load(ROOT / "scripts/campaign/mutate_swift.py", "mutate_swift_def207")
+
+
+def test_mutate_swift_proves_its_splice() -> None:
+    mod = _mutate_swift()
+    source = "func f() -> Bool { return a == b }\n"
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "F.swift"
+
+        # The offsets a candidates() pass over `source` would have produced.
+        start = source.index("==")
+        good = {"file": str(path), "start": start, "end": start + 2,
+                "before": "==", "after": "!=", "line": 1}
+
+        path.write_text(source)
+        mod._APPLIED.clear()
+        landed, why = mod.apply(dict(good))
+        check(landed and path.read_text() == source.replace("==", "!=", 1),
+              "a splice at the right offset lands and says so", why)
+        check("confirmed by re-reading the file" in why,
+              "the landing message names how it was established", why)
+
+        # The same mutant against a file that moved under it: one line inserted
+        # above, so every offset is late by that line's length.
+        drifted = "// a line somebody added\n" + source
+        path.write_text(drifted)
+        mod._APPLIED.clear()
+        landed, why = mod.apply(dict(good))
+        check(not landed, "a splice whose offsets have drifted is refused", why)
+        check(path.read_text() == drifted,
+              "the refused splice left the file exactly as it was")
+        check("the file moved under the offsets" in why,
+              "the refusal says what it found instead", why)
+
+        # The pre-repair form, verbatim, on the same fixture.
+        text = path.read_text()
+        path.write_text(text[:good["start"]] + good["after"] + text[good["end"]:])
+        check(path.read_text() != drifted and "==" in path.read_text(),
+              "the pre-repair splice wrote into the wrong place and reported nothing",
+              repr(path.read_text()))
+        check("fun!=f()" in path.read_text() and "a == b" in path.read_text(),
+              "and the damage it did is the one nothing in the log would mention: the "
+              "declaration mangled while the site it meant to mutate stands untouched",
+              repr(path.read_text()))
+
+        # A write that does not survive a re-read is refused too, which is the
+        # half an offset check alone cannot cover.
+        path.write_text(source)
+        mod._APPLIED.clear()
+        real_write = Path.write_text
+        try:
+            Path.write_text = lambda self, data, *a, **k: real_write(self, source, *a, **k)
+            landed, why = mod.apply(dict(good))
+        finally:
+            Path.write_text = real_write
+        check(not landed and "not the text that was written" in why,
+              "a write the disk did not take is refused on the re-read", why)
+
+
+def test_mutate_swift_unproved_mutation_is_inconclusive() -> None:
+    """The verdict wiring: a mutant that did not land is never scored.
+
+    A survivor and a kill are both statements about a mutated tree, so an
+    unproved edit has no outcome to grade. It must be `inconclusive`, out of the
+    survival-rate denominator, and the suite must not be run for it at all —
+    running it would produce a verdict about pristine code.
+    """
+    mod = _mutate_swift()
+    source = "func f() -> Bool { return a == b }\n"
+    with tempfile.TemporaryDirectory() as tmp:
+        tmpdir = Path(tmp)
+        path = tmpdir / "F.swift"
+        path.write_text(source)
+        ran = []
+
+        good = {"file": str(path), "start": source.index("=="), "end": source.index("==") + 2,
+                "before": "==", "after": "!=", "line": 1}
+        drifted = dict(good, start=0, end=2)      # points at "fu", not "=="
+
+        real_candidates, real_run_suite = mod.candidates, mod.run_suite
+        real_revert, real_restore = mod.revert, mod.restore_all
+        try:
+            mod.candidates = lambda _p: [dict(good), dict(drifted)]
+            mod.run_suite = lambda timeout: (ran.append(1), (True, "passed"))[1]
+            mod.revert = lambda m: path.write_text(source)
+            mod.restore_all = lambda: path.write_text(source)
+            out = tmpdir / "out.json"
+            sys.argv = ["mutate_swift.py", "--targets", str(path), "--count", "2",
+                        "--out", str(out), "--timeout", "5"]
+            # main() runs a baseline and a git-clean check; both are stubbed to the
+            # answers a clean tree would give, so the loop under test is the subject.
+            real_subprocess_run = mod.subprocess.run
+
+            class _P:
+                def __init__(self, stdout="", returncode=0):
+                    self.stdout, self.stderr, self.returncode = stdout, "", returncode
+
+            mod.subprocess.run = lambda *a, **k: _P()
+            try:
+                with contextlib.redirect_stdout(io.StringIO()) as spoken:
+                    code = mod.main()
+            finally:
+                mod.subprocess.run = real_subprocess_run
+            record = json.loads(out.read_text())
+            said = spoken.getvalue()
+        finally:
+            # main() registers whatever `restore_all` names at the time, so the
+            # stub would outlive the temporary directory and fire at interpreter
+            # exit against a path that is gone.
+            atexit.unregister(mod.restore_all)
+            mod.candidates, mod.run_suite = real_candidates, real_run_suite
+            mod.revert, mod.restore_all = real_revert, real_restore
+
+    verdicts = {r["before"] + "@" + str(r["start"]): r["verdict"] for r in record["mutants"]}
+    s = record["summary"]
+    check(code == 0, f"the run completed (exit {code})")
+    check(s["inconclusive"] == 1, f"the drifted mutant is counted apart ({s['inconclusive']})")
+    check(s["scored"] == 1 and s["survived"] == 1,
+          f"only the mutant that landed is in the denominator (scored {s['scored']})")
+    check(len(ran) == 2,
+          "the suite ran for the baseline and the one mutant that landed, and not for the "
+          f"one that did not ({len(ran)} run(s))")
+    check("inconclusive" in said and "NOT in that denominator" in said,
+          "the summary tells the reader an unproved mutant was set aside, and why",
+          said[-400:])
+    check("inconclusive" in verdicts.values(),
+          f"the verdict is `inconclusive` rather than a kill or a survivor: {verdicts}")
+    row = [r for r in record["mutants"] if r["verdict"] == "inconclusive"][0]
+    check("the file moved under the offsets" in row["mutationLanded"],
+          "and the row names why the step could not be proved", row["mutationLanded"])
+
+
+# ── DEF-208: a non-zero exit is not a test result ───────────────────────────
+#
+# `armed = code != 0` read three different events as one: a check firing, a
+# process dying in setup, and a `--filter` matching nothing. CASE-0461's trapping
+# mutant gave signal 5, zero verdict lines and the suite's own `FAIL: no
+# swift-testing verdict line`, and scored ARMED for a reason the rule could not
+# see. It IS armed — the log shows the named test running as the process died —
+# so the repair makes the rule able to tell rather than weakening the verdict.
+#
+# The fixture is that run's own recorded output, not a hand-written imitation.
+
+TRAP_LOG = ROOT / "docs/test-campaign/evidence/PRO-0092/correlate-crash-arming.txt"
+
+
+def _seam_arm():
+    return load(ROOT / "scripts/campaign/mutation_seam_arm.py", "seam_arm_def208")
+
+
+def _parse(mod, text: str, exit_code: int) -> dict:
+    return {"exit": exit_code, "timedOut": False,
+            "verdict": next((l.strip() for l in reversed(text.splitlines())
+                             if mod.VERDICT_RE.search(l)), ""),
+            "started": mod.STARTED_RE.findall(text),
+            "finished": mod.FINISHED_RE.findall(text), "tail": ""}
+
+
+def test_seam_arm_scores_the_trap_from_the_log() -> None:
+    mod = _seam_arm()
+    display, why_display = mod.display_name("correlateReturnsTheMatchingWindowsNumber")
+    check(display == "A single fitting window is correlated to its own number",
+          "the display name is read out of the Swift source, not hand-copied",
+          f"{display!r} — {why_display}")
+
+    text = TRAP_LOG.read_text(errors="replace")
+    check("FAIL: no swift-testing verdict line" in text and "unexpected signal code 5" in text,
+          "the fixture is the recorded trapping run, with no verdict line in it")
+    trap = _parse(mod, text, 1)
+    check(trap["verdict"] == "" and display in trap["started"] and display not in trap["finished"],
+          f"the log has no verdict line and shows the named test started: {trap['started']}")
+
+    state, armed, why = mod.score_arming(display, why_display, trap, 1200)
+    check(state == "ARMED" and armed is True,
+          "a trap while the named test was running is armed", f"{state}: {why}")
+    check("started" in why and "no completion line" in why,
+          "and the reason names the evidence rather than the exit code", why)
+
+    # The setup death: the same output with the started line taken out. Under the
+    # old rule this is indistinguishable from the trap above — both exit 1.
+    setup_death = _parse(mod, "\n".join(
+        l for l in text.splitlines() if not mod.STARTED_RE.search(l)), 1)
+    state, armed, why = mod.score_arming(display, why_display, setup_death, 1200)
+    check(state == "INCONCLUSIVE" and armed is None,
+          "a non-zero exit with nothing showing the test ran is inconclusive",
+          f"{state}: {why}")
+    check("died in setup" in why, "and it says which reading it is refusing", why)
+    check((trap["exit"] != 0) == (setup_death["exit"] != 0),
+          "the two differ in no way the pre-repair rule `armed = code != 0` could see")
+
+
+def test_seam_arm_scores_a_reported_run() -> None:
+    mod = _seam_arm()
+    display, why_display = mod.display_name("correlateReturnsTheMatchingWindowsNumber")
+    failed = _parse(mod, '\u1088  Test run with 1 test in 1 suite failed after 0.001 seconds '
+                         'with 1 issue.', 1)
+    state, armed, _ = mod.score_arming(display, why_display, failed, 1200)
+    check(state == "ARMED" and armed is True, f"a verdict line and a non-zero exit is armed ({state})")
+
+    passed = _parse(mod, 'Test run with 1 test in 1 suite passed after 0.001 seconds.', 0)
+    state, armed, why = mod.score_arming(display, why_display, passed, 1200)
+    check(state == "NOT ARMED" and armed is False,
+          f"a verdict line and exit 0 is not armed ({state})")
+    check("the check did not fire" in why, "and it says so plainly", why)
+
+    timed = {"exit": 124, "verdict": "", "started": [], "finished": [], "timedOut": True}
+    state, armed, why = mod.score_arming(display, why_display, timed, 1200)
+    check(state == "INCONCLUSIVE" and armed is None,
+          f"a starved run is the absence of a measurement ({state})")
+
+    state, armed, why = mod.score_arming(None, "no @Test function named x under Tests/",
+                                         _parse(mod, "nothing at all", 1), 1200)
+    check(state == "INCONCLUSIVE" and "display name could not be resolved" in why,
+          "an unresolvable display name makes the arming inconclusive, not weaker", why)
+
+
+def test_seam_arm_refuses_an_ambiguous_display_name() -> None:
+    """The ambiguity refusal, on a fixture, because the real tree cannot fire it.
+
+    No function under this repository's Tests/ resolves two ways, so against the
+    real tree that branch is unfalsifiable — which is exactly the shape this item
+    exists to remove. Two files declaring the same function under different @Test
+    names give it something to refuse.
+    """
+    mod = _seam_arm()
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "A.swift").write_text(
+            '@Test("The first reading of it")\nfunc theSameName() throws {}\n')
+        display, why = mod.display_name("theSameName", tests_root=root)
+        check(display == "The first reading of it",
+              "one declaration resolves to its @Test display string", f"{display!r} {why}")
+
+        (root / "B.swift").write_text(
+            '@Test("A different reading of it")\nfunc theSameName() throws {}\n')
+        display, why = mod.display_name("theSameName", tests_root=root)
+        check(display is None and "resolves to 2 different @Test display names" in why,
+              "two declarations under different display names are refused, not picked between",
+              f"{display!r} {why}")
+
+        state, armed, reason = mod.score_arming(
+            display, why, {"exit": 1, "verdict": "", "started": ["The first reading of it"],
+                           "finished": [], "timedOut": False}, 1200)
+        check(state == "INCONCLUSIVE" and armed is None,
+              "and a trap it cannot attribute is inconclusive rather than armed",
+              f"{state}: {reason}")
+
+        (root / "B.swift").unlink()
+        display, _ = mod.display_name("theSameName", tests_root=root)
+        check(display == "The first reading of it",
+              "removing the second declaration resolves it again")
+
+        display, why = mod.display_name("noSuchTestFunction", tests_root=root)
+        check(display is None and "no @Test function named" in why,
+              "a function with no declaration at all is refused too", why)
+
+
+def test_seam_arm_display_names_resolve_for_every_case() -> None:
+    """Every case in the table can be attributed if its mutant traps.
+
+    A display name that stops resolving turns a real arming into an
+    `inconclusive`, so the table and the tests are checked against each other
+    here rather than at the moment a mutant happens to trap.
+    """
+    mod = _seam_arm()
+    unresolved = []
+    for case, _s, _f, _b, _a, function, _w in mod.CASES:
+        display, why = mod.display_name(function)
+        if display is None:
+            unresolved.append(f"{case} {function}: {why}")
+    check(not unresolved,
+          f"all {len(mod.CASES)} seam cases resolve to a @Test display name",
+          "\n".join(unresolved))
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -935,7 +1228,13 @@ def main() -> int:
                test_operator_path_gate_qualified_reach_is_never_excused,
                test_operator_path_gate_composed_path,
                test_operator_path_gate_reflector_guard,
-               test_operator_path_gate_on_this_repository):
+               test_operator_path_gate_on_this_repository,
+               test_mutate_swift_proves_its_splice,
+               test_mutate_swift_unproved_mutation_is_inconclusive,
+               test_seam_arm_scores_the_trap_from_the_log,
+               test_seam_arm_scores_a_reported_run,
+               test_seam_arm_refuses_an_ambiguous_display_name,
+               test_seam_arm_display_names_resolve_for_every_case):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001
