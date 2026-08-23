@@ -6508,5 +6508,186 @@
     ],
     "armed": false,
     "note": "Of the 17 `evidence/shots/*.png` paths cited across cases.json, one does not resolve: CASE-0100 names `evidence/shots/a3-walkthrough-permissions-disabled.png` and no such file exists. It is invisible to both instruments — campaign.py resolves an evidence path only on the raster rungs and CASE-0100 stands at effect-witness, and capture-lineage never reads cases.json. DEF-225. NOT ARMED, and recorded so rather than claimed: same reason as CASE-0479 — the assertion is over the disposition record, so the available mutation edits the thing being read. Declaration added at out-of-family adjudication, where its absence was the finding."
+  },
+  {
+    "id": "CASE-0540",
+    "req": "REQ-131",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Three mutations, each alone and each confirmed landed by re-reading the file before the verdict was read. Removing the offset assertion reds 9 checks; removing the read-back reds 1; removing the inconclusive branch reds 6. All restored, control green at 106 before and after.",
+    "note": "DEF-207. apply() refuses a splice whose recorded offsets no longer hold the recorded before-text, and leaves the file exactly as it was. The fixture is the drift the offsets are actually exposed to — candidates() reads the file, and between that read and the write a line can be inserted above. The pre-repair form is reproduced inline on the same fixture and shown mangling the declaration to `fun!=f()` while `a == b`, the site it meant to mutate, stands untouched. That is the damage nothing in the log would have mentioned.",
+    "defects": [
+      "DEF-207"
+    ]
+  },
+  {
+    "id": "CASE-0541",
+    "req": "REQ-131",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Removing the `if not landed` branch from main() reds 6 checks, including the verdict map, the denominator and the count of suite runs.",
+    "note": "DEF-207, the verdict wiring rather than the check. main() is driven end to end over two mutants, one landing and one drifted: the drifted one is scored `inconclusive`, kept out of the survival-rate denominator, and the suite is not run for it at all — running it would have produced a verdict about pristine code. The summary line telling the reader an unproved mutant was set aside is asserted too, because a verdict nobody is told about is a verdict nobody can act on.",
+    "defects": [
+      "DEF-207"
+    ]
+  },
+  {
+    "id": "CASE-0542",
+    "req": "REQ-132",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0092/correlate-crash-arming.txt",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Reverting score_arming to `armed = code != 0` for a run with no verdict line reds 2 checks; removing the verdict-line requirement reds 5.",
+    "note": "DEF-208. The fixture is CASE-0461's own recorded trapping run — signal 5, zero verdict lines, the suite's own `FAIL: no swift-testing verdict line` — rather than a hand-written imitation. It scores ARMED because the log shows `Test \"A single fitting window is correlated to its own number\" started.` with no completion beside it, and that display string is read out of MutationSeamTests.swift rather than copied into the table. The same log with the started line removed is the setup death and scores INCONCLUSIVE, and the two differ in no way the pre-repair rule could see: both exit 1.",
+    "defects": [
+      "DEF-208"
+    ]
+  },
+  {
+    "id": "CASE-0543",
+    "req": "REQ-132",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Removing the ambiguity refusal reds 2 checks — but only after the check was given a fixture. On the first arming pass that mutation changed nothing at all, because no function under this repository's Tests/ resolves two ways, so the branch could not be made to fire against the real tree. display_name now takes a tests_root and the fixture is two files declaring one function under different @Test names. A check nobody has watched fire is the shape this whole item is about, and it turned up in this item's own work.",
+    "note": "DEF-208, the lookup the trap evidence rests on. Two declarations of one function under different display names are refused rather than picked between, a function with no declaration is refused, and a trap the instrument cannot attribute is INCONCLUSIVE rather than armed. Removing the second declaration resolves it again, which is the pass direction.",
+    "defects": [
+      "DEF-208"
+    ]
+  },
+  {
+    "id": "CASE-0544",
+    "req": "REQ-132",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def240-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "Two mutations, each alone and each confirmed landed. Removing the verdict-line test from run_suite reds 2 checks; removing the `no-verdict-line` branch from score() reds 1. Control green at 106 before and after.",
+    "note": "DEF-240. Four suite outputs are driven through run_suite and score together: a reported failure scores killed, a run that died after `Build complete` with no verdict line scores inconclusive, a pass scores SURVIVED, and a compile error scores unbuildable. The (passed, why) contract is asserted to still match the substitute mutation_timeout_arm.py installs, because widening it would break the arming that watches this file.",
+    "defects": [
+      "DEF-240"
+    ]
+  },
+  {
+    "id": "CASE-0545",
+    "req": "REQ-134",
+    "surface": "SURF-022",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "The mutation restores the pre-repair `git()`-then-`[3:]` pair verbatim on a scratch copy, and the phantom `ocs/test-campaign/cases.json` comes back in the refusal. This is a comparison across the repair rather than a check that merely passes now.",
+    "note": "DEF-206. The fixture asserts first that the status line is the one that fires it — a leading space in the status column, which is what git() stripped — then that the refusal names a path that exists on disk, and that --allow-dirty records a path the reader can open rather than a phantom.",
+    "defects": [
+      "DEF-206"
+    ]
+  },
+  {
+    "id": "CASE-0546",
+    "req": "REQ-133",
+    "surface": "SURF-022",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "Mutating the effect block to write an empty `written` map leaves the witness naming files only, and the check reds.",
+    "note": "DEF-205, the record half. Every file the take wrote carries a byte count and a sha256 in run.json, each re-derived from the file on disk by the selftest rather than read back from the record that is under test, and the digest map's keys are checked against files_written so the two halves cannot drift apart.",
+    "defects": [
+      "DEF-205"
+    ]
+  },
+  {
+    "id": "CASE-0547",
+    "req": "REQ-133",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "The two-way control is the arming: the same rewrite is invisible to the name diff and named by the digest diff, in one run, so a check that cannot fire is distinguishable from a check that found nothing.",
+    "note": "DEF-205, the half a name-only witness could not see at all. The subject's own sweep() is imported and run over a file rewritten to different content of equal length: `set(after) - set(before)` is empty, and the digest comparison names it. A reimplementation of sweep() here would have armed a copy rather than the tool.",
+    "defects": [
+      "DEF-205"
+    ]
+  },
+  {
+    "id": "CASE-0548",
+    "req": "REQ-135",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/def226-adoption-arming.txt",
+      "scripts/campaign/shot_disposition.py"
+    ],
+    "armed": true,
+    "armedBy": "The defect's own fixture, watched in both directions in one run: a flat magenta frame written over surf-007-zoom.png takes the check to exit 1, `--write` now stays at 1 with the audit byte-identical on disk, and `--write --adopt surf-007-zoom.png` writes it. Before the repair that middle step returned 0 with the row still recording publishedAs SURF-007 and distinctRGBA 1.",
+    "note": "DEF-226. The frame and the audit are both restored from bytes held in memory and the gate is re-run afterwards, so the fixture leaves nothing behind. Adoption is per file and there is no blanket flag, because the point is that somebody looked at the picture.",
+    "defects": [
+      "DEF-226"
+    ]
+  },
+  {
+    "id": "CASE-0549",
+    "req": "REQ-136",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/def227-citation-arming.txt",
+      "scripts/campaign/shot_disposition.py"
+    ],
+    "armed": true,
+    "armedBy": "Its own fixture, separate from DEF-226's — a fixture covering two repairs together proves neither individually. One spliced case citing a file that is not on disk and one citing a picture no subject publishes each take the gate to exit 1 naming the case; the merge-base instrument is run against the same two fixtures and exits 0 without mentioning either, which is the class it could not see. A third fixture citing a published capture clears.",
+    "note": "DEF-227. Each fixture is spliced into cases.json as text and restored with git checkout, with json.load run after every edit and the tree checked clean at the end. The nine rows DEF-224 and DEF-225 already record are printed as notes rather than failures, so this item does not claim repairs that belong to those rows.",
+    "defects": [
+      "DEF-227"
+    ]
   }
 ]
