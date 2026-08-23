@@ -1,9 +1,80 @@
 {
- "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0080/docs/test-campaign",
- "generated_at": "2026-08-21T02:23:06.706087+00:00",
+ "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0112/docs/test-campaign",
+ "classes": {
+  "capture-trust": {
+   "coverage": 0.9545,
+   "covered": 42,
+   "green": false,
+   "lineage_gaps": 2,
+   "surfaces_matched": 3,
+   "threshold": 1.0,
+   "total": 44
+  },
+  "evidence-integrity": {
+   "coverage": 0.8876,
+   "covered": 150,
+   "green": false,
+   "lineage_gaps": 19,
+   "surfaces_matched": 9,
+   "threshold": 1.0,
+   "total": 169
+  },
+  "operator-state": {
+   "coverage": 0.9444,
+   "covered": 51,
+   "green": false,
+   "lineage_gaps": 3,
+   "surfaces_matched": 4,
+   "threshold": 1.0,
+   "total": 54
+  },
+  "registry-drift": {
+   "coverage": 0.963,
+   "covered": 26,
+   "green": false,
+   "lineage_gaps": 1,
+   "surfaces_matched": 3,
+   "threshold": 1.0,
+   "total": 27
+  },
+  "release-integrity": {
+   "coverage": 1.0,
+   "covered": 1,
+   "green": true,
+   "lineage_gaps": 0,
+   "surfaces_matched": 1,
+   "threshold": 1.0,
+   "total": 1
+  },
+  "run-lifecycle": {
+   "coverage": 1.0,
+   "covered": 39,
+   "green": true,
+   "lineage_gaps": 0,
+   "surfaces_matched": 8,
+   "threshold": 1.0,
+   "total": 39
+  },
+  "surface-conformance": {
+   "coverage": 0.8348,
+   "covered": 96,
+   "green": false,
+   "lineage_gaps": 19,
+   "surfaces_matched": 6,
+   "threshold": 1.0,
+   "total": 115
+  }
+ },
+ "generated_at": "2026-08-23T09:19:56.343028+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
+  {
+   "figures": 7,
+   "file": "SURF-031",
+   "sourced": 7,
+   "unsourced": 0
+  },
   {
    "figures": 1,
    "file": "cli://install-notarize",
@@ -11,33 +82,33 @@
    "unsourced": 0
   },
   {
-   "figures": 4,
+   "figures": 6,
    "file": "cli://proctor",
-   "sourced": 4,
+   "sourced": 6,
    "unsourced": 0
   },
   {
-   "figures": 7,
+   "figures": 11,
    "file": "cli://tui",
-   "sourced": 7,
+   "sourced": 11,
    "unsourced": 0
   },
   {
-   "figures": 2,
+   "figures": 24,
    "file": "core://tools",
-   "sourced": 2,
-   "unsourced": 0
+   "sourced": 14,
+   "unsourced": 10
   },
   {
-   "figures": 5,
+   "figures": 36,
    "file": "engine://audit-policy",
-   "sourced": 5,
-   "unsourced": 0
+   "sourced": 33,
+   "unsourced": 3
   },
   {
-   "figures": 3,
+   "figures": 4,
    "file": "engine://guest-provider",
-   "sourced": 3,
+   "sourced": 4,
    "unsourced": 0
   },
   {
@@ -47,22 +118,22 @@
    "unsourced": 0
   },
   {
-   "figures": 6,
+   "figures": 17,
    "file": "engine://process-directed",
-   "sourced": 6,
+   "sourced": 17,
    "unsourced": 0
   },
   {
-   "figures": 2,
+   "figures": 3,
    "file": "engine://reflector",
-   "sourced": 2,
+   "sourced": 3,
    "unsourced": 0
   },
   {
-   "figures": 4,
+   "figures": 18,
    "file": "engine://screen-capture",
-   "sourced": 4,
-   "unsourced": 0
+   "sourced": 16,
+   "unsourced": 2
   },
   {
    "figures": 3,
@@ -77,20 +148,26 @@
    "unsourced": 0
   },
   {
-   "figures": 3,
+   "figures": 4,
    "file": "mcp://proctor_doctor#guestPool",
-   "sourced": 3,
+   "sourced": 4,
    "unsourced": 0
   },
   {
-   "figures": 3,
+   "figures": 4,
    "file": "mcp://proctor_guest?action=attach",
-   "sourced": 3,
+   "sourced": 4,
    "unsourced": 0
   },
   {
    "figures": 1,
    "file": "process://agent-claim",
+   "sourced": 1,
+   "unsourced": 0
+  },
+  {
+   "figures": 1,
+   "file": "proctor://panel/about",
    "sourced": 1,
    "unsourced": 0
   },
@@ -101,40 +178,88 @@
    "unsourced": 0
   },
   {
+   "figures": 25,
+   "file": "tool://capture-lineage/unaccounted",
+   "sourced": 25,
+   "unsourced": 0
+  },
+  {
+   "figures": 14,
+   "file": "tool://mutate-swift/agent",
+   "sourced": 14,
+   "unsourced": 0
+  },
+  {
+   "figures": 38,
+   "file": "tool://reckon/build",
+   "sourced": 35,
+   "unsourced": 3
+  },
+  {
+   "figures": 16,
+   "file": "tool://reckoning/compare",
+   "sourced": 15,
+   "unsourced": 1
+  },
+  {
    "figures": 3,
-   "file": "tool://vacuity-check/blind",
+   "file": "tool://reckoning/tool-identity",
    "sourced": 3,
    "unsourced": 0
   },
   {
-   "figures": 2,
+   "figures": 22,
+   "file": "tool://spec-citation/measure",
+   "sourced": 22,
+   "unsourced": 0
+  },
+  {
+   "figures": 8,
+   "file": "tool://standing-registers/unread-gates",
+   "sourced": 8,
+   "unsourced": 0
+  },
+  {
+   "figures": 41,
+   "file": "tool://vacuity-check/blind",
+   "sourced": 36,
+   "unsourced": 5
+  },
+  {
+   "figures": 4,
+   "file": "tool://warrant/charter-integrity",
+   "sourced": 4,
+   "unsourced": 0
+  },
+  {
+   "figures": 7,
    "file": "ui://menubar",
-   "sourced": 2,
-   "unsourced": 0
+   "sourced": 6,
+   "unsourced": 1
   },
   {
-   "figures": 7,
+   "figures": 31,
    "file": "ui://run-hud",
-   "sourced": 7,
-   "unsourced": 0
+   "sourced": 30,
+   "unsourced": 1
   },
   {
-   "figures": 7,
+   "figures": 35,
    "file": "ui://status-window",
-   "sourced": 7,
-   "unsourced": 0
+   "sourced": 27,
+   "unsourced": 8
   },
   {
-   "figures": 10,
+   "figures": 17,
    "file": "ui://takeover-shield",
-   "sourced": 10,
+   "sourced": 17,
    "unsourced": 0
   },
   {
-   "figures": 1,
+   "figures": 24,
    "file": "ui://walkthrough",
-   "sourced": 1,
-   "unsourced": 0
+   "sourced": 15,
+   "unsourced": 9
   }
  ]
 }

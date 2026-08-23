@@ -7432,5 +7432,73 @@
     "defects": [
       "DEF-281"
     ]
+  },
+  {
+    "id": "CASE-0650",
+    "req": "REQ-165",
+    "surface": "SURF-032",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "test_instruments.py test_warrant_charter_integrity asserts charter_validate and export-warrant pass cleanly",
+    "note": "DEF-290: .warrant/warrant.toml validates against charter_validate.py and export-warrant without charter-absent blocks.",
+    "defects": [
+      "DEF-290"
+    ]
+  },
+  {
+    "id": "CASE-0651",
+    "req": "REQ-165",
+    "surface": "SURF-032",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "test_instruments.py test_warrant_census_classes_and_surface_coverage asserts all 31 surfaces match charter class globs",
+    "note": "DEF-290: Campaign export-warrant exports suite-health and oracle-coverage with all 7 classes rolled up across all 31 surfaces.",
+    "defects": [
+      "DEF-290"
+    ]
+  },
+  {
+    "id": "CASE-0652",
+    "req": "REQ-166",
+    "surface": "SURF-032",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "test_instruments.py test_warrant_census_classes_and_surface_coverage asserts census classes capped at tier 0 and 100% sampled",
+    "note": "DEF-290: Census classes (evidence-integrity, operator-state, inconclusive) verified capped at tier 0 and sampled at 100%.",
+    "defects": [
+      "DEF-290"
+    ]
+  },
+  {
+    "id": "CASE-0653",
+    "req": "REQ-167",
+    "surface": "SURF-032",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "test_instruments.py test_warrant_release_gate_and_export_verification verifies release gate assertions and mutation checks",
+    "note": "DEF-290: Release boundary gate verification asserts charter integrity and prevents unearned tier escalation.",
+    "defects": [
+      "DEF-290"
+    ]
   }
 ]

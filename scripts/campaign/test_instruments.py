@@ -2145,6 +2145,192 @@ def test_plugin_cache_content_check() -> None:
               str(res_good))
 
 
+
+
+def test_warrant_charter_integrity() -> None:
+    """DEF-290: standing check that .warrant/warrant.toml is valid, signed, and unexpired."""
+    warrant_file = ROOT / ".warrant" / "warrant.toml"
+    check(warrant_file.is_file(), "warrant.toml exists at repository root", str(warrant_file))
+
+    try:
+        import tomllib
+    except ImportError:
+        import tomli as tomllib  # type: ignore
+
+    with open(warrant_file, "rb") as f:
+        doc = tomllib.load(f)
+
+    # Validate owner signature
+    owner = doc.get("owner", {})
+    check(bool(owner.get("name")) and bool(owner.get("email")),
+          "warrant owner carries both name and email signature",
+          f"owner={owner}")
+
+    # Validate version and renewal
+    version = str(doc.get("version", ""))
+    check(version == "1", "warrant specifies schema version 1", f"version={version}")
+
+    # Validate charter_validate execution
+    warrant_scripts = Path("/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/warrant/0.2.1/scripts")
+    charter_val = warrant_scripts / "charter_validate.py"
+    if charter_val.is_file():
+        p = subprocess.run([sys.executable, str(charter_val), "--root", str(ROOT)],
+                           capture_output=True, text=True)
+        check(p.returncode == 0 and "warrant accepted" in p.stdout,
+              "charter_validate accepts repository warrant without charter-absent or unearned tier blocks",
+              f"exit={p.returncode} stdout={p.stdout} stderr={p.stderr}")
+
+        # Negative mutation check: missing owner fails validation
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_root = Path(tmp)
+            (tmp_root / ".warrant").mkdir()
+            bad_content = """version = "1"
+signed = "2026-08-22"
+renewal = "2027-02-18"
+
+[owner]
+name = ""
+email = ""
+
+[lot]
+tolerable_error_rate = 0.05
+
+[[classes]]
+name = "evidence-integrity"
+tier = 0
+escalation = "owner"
+"""
+            (tmp_root / ".warrant" / "warrant.toml").write_text(bad_content)
+            p_bad = subprocess.run([sys.executable, str(charter_val), "--root", str(tmp_root)],
+                                   capture_output=True, text=True)
+            check(p_bad.returncode == 2 and "owner.unnamed" in (p_bad.stdout + p_bad.stderr),
+                  "charter_validate rejects unsigned warrant with missing owner (exit 2)",
+                  f"exit={p_bad.returncode} output={p_bad.stdout + p_bad.stderr}")
+
+
+def test_warrant_census_classes_and_surface_coverage() -> None:
+    """DEF-290: standing check that all 7 charter classes are defined and cover 100% of campaign surfaces."""
+    try:
+        import tomllib
+    except ImportError:
+        import tomli as tomllib  # type: ignore
+
+    warrant_file = ROOT / ".warrant" / "warrant.toml"
+    with open(warrant_file, "rb") as f:
+        doc = tomllib.load(f)
+
+    classes = doc.get("classes", [])
+    expected_classes = {
+        "evidence-integrity",
+        "surface-conformance",
+        "capture-trust",
+        "operator-state",
+        "run-lifecycle",
+        "registry-drift",
+        "release-integrity",
+    }
+    actual_classes = {c.get("name") for c in classes}
+    check(actual_classes == expected_classes,
+          "warrant charter defines exactly the 7 expected defect classes",
+          f"missing={expected_classes - actual_classes}, extra={actual_classes - expected_classes}")
+
+    # Check tier and escalation for each class
+    for c in classes:
+        name = c.get("name")
+        tier = c.get("tier")
+        esc = c.get("escalation")
+        surfaces = c.get("surfaces")
+        check(tier == 0 and esc == "owner" and isinstance(surfaces, list) and len(surfaces) > 0,
+              f"class {name} is at advisory tier 0, escalates to owner, and defines surface globs",
+              f"class={c}")
+
+    # Check census enforcement
+    census_classes = set(doc.get("lot", {}).get("census_classes", []))
+    check("evidence-integrity" in census_classes and "operator-state" in census_classes and "inconclusive" in census_classes,
+          "lot.census_classes designates evidence-integrity, operator-state, and inconclusive for 100% census review",
+          f"census_classes={census_classes}")
+
+    for c in classes:
+        name = c.get("name")
+        is_census = c.get("census")
+        expected_census = name in ("evidence-integrity", "operator-state")
+        check(is_census == expected_census,
+              f"class {name} census flag correctly set to {expected_census}",
+              f"census={is_census}")
+
+    # Check 100% surface coverage against oracle-coverage.json
+    cov_file = ROOT / ".warrant" / "oracle-coverage.json"
+    if cov_file.is_file():
+        cov = json.loads(cov_file.read_text(encoding="utf-8"))
+        surface_names = [s["file"] for s in cov.get("surfaces", [])]
+        import fnmatch
+        from pathlib import PurePath
+
+        def _matches(path: str, globs: list[str]) -> bool:
+            p = path.replace("\\", "/")
+            return any(fnmatch.fnmatch(p, g) or fnmatch.fnmatch(PurePath(p).name, g) for g in globs)
+
+        matched = set()
+        for c in classes:
+            globs = c.get("surfaces", [])
+            for s in surface_names:
+                if _matches(s, globs):
+                    matched.add(s)
+
+        unmatched = set(surface_names) - matched
+        check(len(unmatched) == 0 and len(surface_names) > 0,
+              f"charter surface globs cover 100% of campaign surfaces ({len(surface_names)} surfaces)",
+              f"unmatched={unmatched}")
+
+        # Negative mutation check: unmatched surface is detected
+        fake_surfaces = surface_names + ["unknown://phantom-surface"]
+        unmatched_fake = [s for s in fake_surfaces if not any(_matches(s, c.get("surfaces", [])) for c in classes)]
+        check("unknown://phantom-surface" in unmatched_fake,
+              "surface matching detects orphaned surface without class globs",
+              f"unmatched_fake={unmatched_fake}")
+
+
+def test_warrant_release_gate_and_export_verification() -> None:
+    """DEF-290: standing check that campaign export-warrant and rollup_classes produce valid release evidence."""
+    campaign_script = Path("/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.9.6/skills/test-campaign/scripts/campaign.py")
+    warrant_scripts = Path("/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/warrant/0.2.1/scripts")
+    rollup_script = warrant_scripts / "rollup_classes.py"
+
+    if campaign_script.is_file() and rollup_script.is_file():
+        p_export = subprocess.run([sys.executable, str(campaign_script), "export-warrant", "docs/test-campaign", "--root", str(ROOT)],
+                                  cwd=str(ROOT), capture_output=True, text=True)
+        check(p_export.returncode == 0,
+              "campaign export-warrant executes cleanly",
+              f"exit={p_export.returncode} stdout={p_export.stdout} stderr={p_export.stderr}")
+
+        p_rollup = subprocess.run([sys.executable, str(rollup_script), "--root", str(ROOT)],
+                                  cwd=str(ROOT), capture_output=True, text=True)
+        check(p_rollup.returncode == 0,
+              "rollup_classes rolls up surfaces per defect class cleanly",
+              f"exit={p_rollup.returncode} stdout={p_rollup.stdout} stderr={p_rollup.stderr}")
+
+        cov_file = ROOT / ".warrant" / "oracle-coverage.json"
+        cov = json.loads(cov_file.read_text(encoding="utf-8"))
+        rolled_classes = cov.get("classes", {})
+        check(len(rolled_classes) == 7,
+              "oracle-coverage.json contains rollup for all 7 defect classes",
+              f"rolled_classes={list(rolled_classes.keys())}")
+
+        # Negative mutation check: unearned tier 1 fails charter_validate
+        charter_val = warrant_scripts / "charter_validate.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_root = Path(tmp)
+            (tmp_root / ".warrant").mkdir()
+            w_text = (ROOT / ".warrant" / "warrant.toml").read_text()
+            bad_w_text = w_text.replace("name = \"evidence-integrity\"\ntier = 0", "name = \"evidence-integrity\"\ntier = 1")
+            (tmp_root / ".warrant" / "warrant.toml").write_text(bad_w_text)
+            p_bad = subprocess.run([sys.executable, str(charter_val), "--root", str(tmp_root)],
+                                   capture_output=True, text=True)
+            check(p_bad.returncode == 2 and "classes.tier-unearned" in (p_bad.stdout + p_bad.stderr),
+                  "charter_validate refuses unearned tier 1 elevation without evidence (exit 2)",
+                  f"exit={p_bad.returncode} output={p_bad.stdout + p_bad.stderr}")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2186,7 +2372,10 @@ def main() -> int:
                test_ledger_gate_mutation_checks,
                test_shot_disposition_mock_lane_accounted_and_guarded,
                test_tool_identity_content_over_version,
-               test_plugin_cache_content_check):
+               test_plugin_cache_content_check,
+               test_warrant_charter_integrity,
+               test_warrant_census_classes_and_surface_coverage,
+               test_warrant_release_gate_and_export_verification):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

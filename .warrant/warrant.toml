@@ -48,6 +48,9 @@ email = "luke@rhodes.gg"
 name = "evidence-integrity"
 tier = 0
 escalation = "owner"
+census = true
+plane = "oracle"
+surfaces = ["core://tools", "tool://reckon/*", "tool://reckoning/*", "tool://vacuity-check/*", "tool://mutate-swift/*", "tool://spec-citation/*", "tool://warrant/*", "SURF-*"]
 
 # what a surface draws disagrees with its design of record, or with the value
 # the code says it renders. Includes a branch nothing can reach and a control
@@ -56,6 +59,9 @@ escalation = "owner"
 name = "surface-conformance"
 tier = 0
 escalation = "owner"
+census = false
+plane = "panel"
+surfaces = ["ui://*", "proctor://panel/*"]
 
 # the capture path making a claim about a frame it does not have: a transparent
 # frame called complete and trustworthy, an overlay counted excluded against a
@@ -64,6 +70,9 @@ escalation = "owner"
 name = "capture-trust"
 tier = 0
 escalation = "owner"
+census = false
+plane = "oracle"
+surfaces = ["engine://screen-capture", "engine://zoom", "tool://capture-lineage/*"]
 
 # the product or its own suite touching the state of the machine it runs on —
 # the operator's policy, settings, captures or flows. Found three separate
@@ -72,6 +81,9 @@ escalation = "owner"
 name = "operator-state"
 tier = 0
 escalation = "owner"
+census = true
+plane = "oracle"
+surfaces = ["engine://audit-policy", "cli://proctor", "cli://tui", "process://agent-claim"]
 
 # the queue, the yield and the contention path: a slot held by a dead peer,
 # swallowed input that reports nothing, a cooperative pool starved by work that
@@ -80,6 +92,9 @@ escalation = "owner"
 name = "run-lifecycle"
 tier = 0
 escalation = "owner"
+census = false
+plane = "panel"
+surfaces = ["engine://stability", "engine://process-directed", "engine://guest-provider", "engine://ios-maestro", "engine://reflector", "mcp://proctor_doctor*", "mcp://proctor_guest*", "stdio://proctor-shim"]
 
 # the campaign's own bookkeeping losing or contradicting itself — a merge
 # dropping a value, a note disagreeing with its evidence, a pinned plugin path
@@ -88,6 +103,9 @@ escalation = "owner"
 name = "registry-drift"
 tier = 0
 escalation = "owner"
+census = false
+plane = "oracle"
+surfaces = ["tool://standing-registers/*", "tool://reckoning/*", "docs/test-campaign/*"]
 
 # how the app is signed, notarised, stapled and packaged. A release that skips
 # notarisation reaches a user as a Gatekeeper block, and ad-hoc signing throws
@@ -96,6 +114,16 @@ escalation = "owner"
 name = "release-integrity"
 tier = 0
 escalation = "owner"
+census = false
+plane = "oracle"
+surfaces = ["cli://install-notarize", "scripts/install.sh", "scripts/notarize.sh", ".github/workflows/release.yml"]
+
+# Thresholds for the deterministic plane.
+[oracle]
+lineage_coverage_min = 0.95
+tick_and_tie_abs_tolerance = 0.01
+tick_and_tie_rel_tolerance = 0.005
+taxonomy_violations_max = 0
 
 [lot]
 tolerable_error_rate = 0.05
