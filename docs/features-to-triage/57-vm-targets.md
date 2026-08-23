@@ -1,3 +1,6 @@
+---
+sources: [REQ-017, REQ-018]
+---
 # VM targets: test in a guest, and say which machine
 
 **Wave 8.** Seven items, PRO-0056 through PRO-0062. The approved plan is at

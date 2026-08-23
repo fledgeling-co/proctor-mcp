@@ -1,3 +1,6 @@
+---
+sources: [REQ-007]
+---
 # A person's click reaches Stop
 
 ## The problem

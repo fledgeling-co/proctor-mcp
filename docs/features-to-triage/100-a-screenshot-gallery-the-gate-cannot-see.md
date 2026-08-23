@@ -1,3 +1,6 @@
+---
+sources: [REQ-111, REQ-112, REQ-113, DEF-209]
+---
 # Thirty-five pictures the gate cannot see
 
 **Wave 17, brief 4.** DEF-209. Found by auditing gates rather than by reading their output, and it

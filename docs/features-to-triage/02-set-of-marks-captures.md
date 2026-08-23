@@ -1,3 +1,6 @@
+---
+sources: [REQ-004, REQ-005]
+---
 # Set-of-marks annotated captures
 
 **Status:** untriaged · **Value:** high · **Effort:** medium · **Source:** zavora-ai/computer-use-mcp (`snapshot use_annotation / grid_lines`)

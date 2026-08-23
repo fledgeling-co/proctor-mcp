@@ -1,3 +1,6 @@
+---
+sources: [REQ-006]
+---
 # Run HUD — the overlay shown while Proctor drives an app
 
 **Status:** untriaged · **Value:** high · **Effort:** high · **Source:** design session 2026-08-14

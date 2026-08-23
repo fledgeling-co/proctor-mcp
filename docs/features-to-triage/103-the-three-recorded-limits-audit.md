@@ -1,3 +1,6 @@
+---
+sources: [REQ-160, REQ-161, REQ-162, DEF-141, DEF-151, DEF-180]
+---
 # Audit of the three recorded limits: filesystem certification, hardware keyboard yield, and dynamic TCC grant re-probe
 
 **Wave 19, brief 1.** DEF-141, DEF-151, DEF-180.

@@ -1,3 +1,6 @@
+---
+sources: [REQ-001]
+---
 # App scripting-dictionary introspection
 
 **Status:** untriaged · **Value:** med-high · **Effort:** medium · **Source:** zavora-ai/computer-use-mcp (`get_app_dictionary`, `get_app_capabilities`)

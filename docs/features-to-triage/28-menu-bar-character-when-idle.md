@@ -1,3 +1,6 @@
+---
+sources: [REQ-011]
+---
 # The menu bar shows the character when idle, not a status symbol
 
 ## The problem

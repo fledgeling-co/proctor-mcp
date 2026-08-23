@@ -1,3 +1,6 @@
+---
+sources: [REQ-033]
+---
 # The history window, and the detail that says what it could not check
 
 **Wave 9, brief 7 of 11.** Reads `58`, `59`. Mock anchors: `#mac/history/ideal`,

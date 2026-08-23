@@ -1,3 +1,6 @@
+---
+sources: [REQ-015]
+---
 # Encryption-at-rest for the JSONL audit log
 
 **Status:** untriaged · **Value:** high (security) · **Effort:** med · **Source:** deferred child of PRO-0005 (scheduled 2026-08-13 via whats-left ingest)

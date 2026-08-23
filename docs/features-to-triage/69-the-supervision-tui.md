@@ -1,3 +1,6 @@
+---
+sources: [REQ-029, REQ-030, REQ-033]
+---
 # `proctor tui`, the supervision surface
 
 **Wave 9, brief 11 of 11.** Reads `58`, `59`, `68`. Specified in `docs/PRD.md` §16.

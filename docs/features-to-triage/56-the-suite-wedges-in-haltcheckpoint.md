@@ -1,3 +1,6 @@
+---
+sources: [REQ-038]
+---
 # The suite wedges in `haltCheckpoint`, and the singleton is why
 
 **Read `00-WAVE-7-DIRECTION.md` first.** Third gate-reliability item, and the first one where

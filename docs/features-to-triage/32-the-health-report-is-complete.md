@@ -1,3 +1,6 @@
+---
+sources: [REQ-009, REQ-032]
+---
 > **RETIRED 2026-08-15 (PRO-0031), not built.** Superseded by brief 51, which covers the whole toolchain rather than two browser tools. Both halves survive there: the missing `policy` block and `scripts/doctor.sh` knowing what the agent knows.
 >
 > Kept for the reasoning, not as a plan. See `00-WAVE-7-DIRECTION.md`.

@@ -1,3 +1,6 @@
+---
+sources: [REQ-015, REQ-016]
+---
 # A delegated call is still gated and recorded
 
 **Read `00-WAVE-7-DIRECTION.md` first.**

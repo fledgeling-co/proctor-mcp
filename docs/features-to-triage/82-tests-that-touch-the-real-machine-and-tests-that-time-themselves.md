@@ -1,3 +1,6 @@
+---
+sources: [REQ-055, REQ-056, DEF-029, DEF-042, DEF-051]
+---
 # A test that writes the operator's real policy, and tests that assert a wall clock
 
 **Wave 13, brief 2 of 6.** DEF-042 and DEF-029/DEF-051. Two unrelated defects sharing one property:

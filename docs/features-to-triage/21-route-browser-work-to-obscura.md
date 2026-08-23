@@ -1,3 +1,6 @@
+---
+sources: [REQ-024]
+---
 # Route browser work to Obscura instead of driving a browser by hand
 
 ## The problem

@@ -1,3 +1,6 @@
+---
+sources: [REQ-082, REQ-083, REQ-084]
+---
 # The walkthrough will not advance until its grants are in
 
 **Wave 12.** Retrofits a justification onto behaviour that already exists on `ai/pro-0081`. The

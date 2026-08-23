@@ -1,3 +1,6 @@
+---
+sources: [REQ-024]
+---
 # The browser catalogue stops guessing, and the handoff is machine-readable
 
 ## The problem

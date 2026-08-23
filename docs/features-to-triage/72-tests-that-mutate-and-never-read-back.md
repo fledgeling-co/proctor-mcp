@@ -1,3 +1,6 @@
+---
+sources: [REQ-045, REQ-046]
+---
 # Seventy-eight tests that change state and never look at it
 
 **Wave 11, brief 3 of 4.** Independent of `70` and `71`. Sequence it before `73`, because the

@@ -1,3 +1,6 @@
+---
+sources: [REQ-008, REQ-042, REQ-043]
+---
 # The takeover overlay, and what it does not claim
 
 **Wave 9, brief 6 of 11.** Reads `58`, `59`. Mock anchors: `#mac/takeover/armed`,

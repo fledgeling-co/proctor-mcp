@@ -1,3 +1,6 @@
+---
+sources: [REQ-008, REQ-042]
+---
 > **RESOLVED as PRO-0053, merged `477941f`. Both diagnoses in this brief were wrong, and
 > the corrections are the interesting part.** It was not a flake: `TakeoverWiringTests` was
 > exposing a live production concurrency defect in which a run that could not post cleared

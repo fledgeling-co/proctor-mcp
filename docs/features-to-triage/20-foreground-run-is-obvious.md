@@ -1,3 +1,6 @@
+---
+sources: [REQ-008]
+---
 # Make a foreground-only run obvious before it takes the machine
 
 ## The problem

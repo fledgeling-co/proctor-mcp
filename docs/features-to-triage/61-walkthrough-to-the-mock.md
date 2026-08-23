@@ -1,3 +1,6 @@
+---
+sources: [REQ-010, REQ-049]
+---
 # The walkthrough becomes the mock
 
 **Wave 9, brief 3 of 11.** Reads `58` and `59`. Mock anchors:

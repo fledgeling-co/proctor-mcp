@@ -7662,5 +7662,56 @@
     "defects": [
       "DEF-290"
     ]
+  },
+  {
+    "id": "CASE-0670",
+    "req": "REQ-170",
+    "surface": "SURF-033",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "test_instruments.py test_reckon_brief_join_rate_and_retirement_ladder asserts structured frontmatter citations across briefs",
+    "note": "DEF-295: Brief frontmatter structured source declarations resolve at confidence 1.0 across feature briefs.",
+    "defects": [
+      "DEF-295"
+    ]
+  },
+  {
+    "id": "CASE-0671",
+    "req": "REQ-171",
+    "surface": "SURF-033",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "test_instruments.py test_reckon_brief_join_rate_and_retirement_ladder asserts requirement source bidirectional citations",
+    "note": "DEF-295: Requirement source fields in inventory.json establish bidirectional links to feature briefs.",
+    "defects": [
+      "DEF-295"
+    ]
+  },
+  {
+    "id": "CASE-0672",
+    "req": "REQ-172",
+    "surface": "SURF-033",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py"
+    ],
+    "armed": true,
+    "armedBy": "test_instruments.py test_reckon_brief_join_rate_and_retirement_ladder asserts join rate >= 50% and retirement ladder unblocking",
+    "note": "DEF-295: Reckon build join rate climbs past 50% threshold without token guessing, enabling retirement verification.",
+    "defects": [
+      "DEF-295"
+    ]
   }
 ]

@@ -2349,6 +2349,95 @@ def test_warrant_release_gate_and_export_verification() -> None:
                   f"exit={p_bad.returncode} output={p_bad.stdout + p_bad.stderr}")
 
 
+def test_reckon_brief_join_rate_and_retirement_ladder() -> None:
+    """DEF-295 / REQ-170..172: reckon brief join rate reaches >= 50% without guessing, unblocking retirement ladder."""
+    reckon_script = Path("/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py")
+    if not reckon_script.is_file():
+        return
+
+    reckon = load(reckon_script, "reckon_instrument_test")
+    briefs_dir = ROOT / "docs/features-to-triage"
+    campaign_dir = ROOT / "docs/test-campaign"
+
+    briefs = reckon.read_briefs(str(briefs_dir))
+    campaign = reckon.read_campaign(str(campaign_dir))
+
+    check(len(briefs) == 105,
+          f"reckon reads exactly 105 briefs from docs/features-to-triage (got {len(briefs)})")
+
+    edges = reckon.build_join(briefs, campaign)
+    cited_edges = [e for e in edges if e.get("method") == "cited"]
+    cited_briefs = {e["brief"] for e in cited_edges}
+
+    check(len(cited_briefs) >= 53,
+          f"reckon join rate passes 50% threshold: {len(cited_briefs)}/105 briefs cited ({100.0*len(cited_briefs)/len(briefs):.1f}%)",
+          f"joined={len(cited_briefs)}")
+
+    check(len(cited_briefs) == 105,
+          "100% of feature briefs join at confidence 1.0 (105/105)",
+          f"missing={sorted(set(b['id'] for b in briefs) - cited_briefs)}")
+
+    check(all(e.get("confidence") == 1.0 for e in cited_edges),
+          "all cited edges carry confidence 1.0 without token guessing",
+          f"non_100={[e for e in cited_edges if e.get('confidence') != 1.0]}")
+
+    join_is_weak = (100.0 * len(cited_briefs) / len(briefs)) < 50.0
+    check(not join_is_weak, "reckon join is not flagged as weak")
+
+    rows = reckon.classify(briefs, campaign, edges, join_is_weak)
+    dens = reckon.denominators(rows, campaign)
+    unclass = reckon.unclassified_inputs(rows)
+    ledger = {
+        "tool": "reckon", "version": "1.2.0", "project": "proctor-mcp",
+        "campaign_present": campaign["present"],
+        "campaign_dir": str(campaign_dir),
+        "briefs_dir": str(briefs_dir),
+        "headline": {}, "summary": {}, "denominators": dens,
+        "join": {"edges": edges, "stats": {}},
+        "blockers": [], "unclassified": unclass, "rows": rows
+    }
+    violations, warnings = reckon.gate(ledger)
+    check(len(violations) == 0,
+          "reckon gate produces 0 structural violations over current ledger",
+          f"violations={violations}")
+    check(len(warnings) == 0,
+          "reckon gate produces 0 weak-join warnings over current ledger",
+          f"warnings={warnings}")
+
+    # Negative control 1: simulated weak join (< 50% join rate) raises weak join warning
+    weak_briefs = [dict(b) for b in briefs]
+    for b in weak_briefs[10:]:
+        b["source_ids"] = []
+        b["text"] = "no references here"
+        b["id_scan"] = {"cited": [], "shown": {}, "shown_only": [], "unclassifiable": []}
+    weak_edges = [e for e in reckon.build_join(weak_briefs, campaign) if e["brief"] in {b["id"] for b in weak_briefs[:10]}]
+    weak_joined = {e["brief"] for e in weak_edges}
+    weak_is_weak = (100.0 * len(weak_joined) / len(weak_briefs)) < 50.0
+    weak_rows = reckon.classify(weak_briefs, campaign, weak_edges, weak_is_weak)
+    weak_dens = reckon.denominators(weak_rows, campaign)
+    weak_ledger = {
+        "tool": "reckon", "version": "1.2.0", "project": "proctor-mcp",
+        "campaign_present": campaign["present"],
+        "campaign_dir": str(campaign_dir),
+        "briefs_dir": str(briefs_dir),
+        "headline": {}, "summary": {}, "denominators": weak_dens,
+        "join": {"edges": weak_edges, "stats": {}},
+        "blockers": [], "unclassified": reckon.unclassified_inputs(weak_rows), "rows": weak_rows
+    }
+    _, w_warnings = reckon.gate(weak_ledger)
+    check(any("below half, retirement claims are withheld" in w for w in w_warnings),
+          "negative control: join rate < 50% emits weak-join warning with withheld retirement claims",
+          f"warnings={w_warnings}")
+
+    # Negative control 2: token-overlap only join refuses retirable placement
+    guess_edges = [{"brief": briefs[0]["id"], "target": "REQ-001", "method": "overlap", "confidence": 0.45}]
+    guess_rows = reckon.classify([briefs[0]], campaign, guess_edges, False)
+    guess_brief_row = next(r for r in guess_rows if r.get("id") == briefs[0]["id"])
+    check(guess_brief_row["class"] != "retirable",
+          "negative control: brief with only token-overlap join cannot be classed retirable",
+          f"class={guess_brief_row['class']} why={guess_brief_row['why']}")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2395,7 +2484,8 @@ def main() -> int:
                test_dynamic_grant_probe_characterization,
                test_warrant_charter_integrity,
                test_warrant_census_classes_and_surface_coverage,
-               test_warrant_release_gate_and_export_verification):
+               test_warrant_release_gate_and_export_verification,
+               test_reckon_brief_join_rate_and_retirement_ladder):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

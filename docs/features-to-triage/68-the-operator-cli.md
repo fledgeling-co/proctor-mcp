@@ -1,3 +1,6 @@
+---
+sources: [REQ-034, REQ-035, REQ-036]
+---
 # `proctor`, the operator CLI
 
 **Wave 9, brief 10 of 11.** Reads `58`, `59`. Specified in `docs/PRD.md` §15. Mock anchors:

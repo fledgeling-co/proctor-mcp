@@ -1,3 +1,6 @@
+---
+sources: [REQ-029]
+---
 # Supervision survives delegation
 
 **Read `00-WAVE-7-DIRECTION.md` first.**

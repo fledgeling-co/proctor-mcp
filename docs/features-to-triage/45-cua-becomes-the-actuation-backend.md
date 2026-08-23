@@ -1,3 +1,6 @@
+---
+sources: [REQ-001, REQ-017]
+---
 # Cua becomes the actuation backend
 
 **Read `00-WAVE-7-DIRECTION.md` first.**

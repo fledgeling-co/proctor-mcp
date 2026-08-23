@@ -1,3 +1,6 @@
+---
+sources: [REQ-015, REQ-016]
+---
 # Redacting audit trail + policy / approval gate
 
 **Status:** untriaged · **Value:** med-high · **Effort:** medium · **Source:** zavora-ai/computer-use-mcp (policy lists, `approval_token`, redacting JSONL audit)

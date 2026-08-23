@@ -1,3 +1,6 @@
+---
+sources: [REQ-067, REQ-068, DEF-025, DEF-028, DEF-033]
+---
 # The registry says open where the code says fixed
 
 **Wave 14, brief 1.** Registry reconciliation plus the gate findings nobody owns. Sequence it first:

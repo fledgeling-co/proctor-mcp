@@ -1,3 +1,6 @@
+---
+sources: [REQ-001]
+---
 # Human-readable step descriptions, derived not supplied
 
 **Status:** untriaged · **Value:** high · **Effort:** low-med · **Source:** design session 2026-08-14

@@ -1,3 +1,6 @@
+---
+sources: [REQ-057, REQ-058, DEF-030, DEF-032, DEF-040]
+---
 # The campaign's own instruments, and what each of them could not see
 
 **Wave 13, brief 4 of 6.** DEF-030, DEF-032, DEF-040, DEF-041, DEF-055, DEF-057, DEF-058. Seven

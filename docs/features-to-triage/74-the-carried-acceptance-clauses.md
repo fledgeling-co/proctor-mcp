@@ -1,3 +1,6 @@
+---
+sources: [REQ-048]
+---
 # Two acceptance clauses that merged carried rather than green
 
 **Wave 11, brief 5 of 6.** Independent of `70`-`73`. Both clauses were honestly recorded as

@@ -1,3 +1,6 @@
+---
+sources: [REQ-102, REQ-103, REQ-104, REQ-105, REQ-106, REQ-107]
+---
 # A reckoning worth comparing against
 
 - origin: proposed while running the first reckoning · 2026-08-22

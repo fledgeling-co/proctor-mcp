@@ -1,3 +1,6 @@
+---
+sources: [REQ-085, REQ-086, DEF-042, DEF-142, DEF-164]
+---
 # Eight more operator paths with no seam
 
 **Wave 15, brief 1.** The class behind DEF-042, DEF-142 and DEF-164, swept rather than met a fourth

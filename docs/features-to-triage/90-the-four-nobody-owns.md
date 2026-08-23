@@ -1,3 +1,6 @@
+---
+sources: [REQ-076, REQ-077, DEF-099, DEF-110, DEF-111, DEF-132, DEF-135, DEF-136]
+---
 # Twenty-seven unwrapped tests, a fixed timer, and two witnesses the rung wants
 
 **Wave 14, brief 2.** DEF-136, DEF-132, DEF-110, DEF-111. Four open defects no item covers. Do

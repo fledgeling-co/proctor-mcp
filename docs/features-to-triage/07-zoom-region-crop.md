@@ -1,3 +1,6 @@
+---
+sources: [REQ-005]
+---
 # Zoom native-resolution region crop
 
 **Status:** untriaged · **Value:** medium · **Effort:** easy · **Source:** zavora-ai/computer-use-mcp (`zoom`)

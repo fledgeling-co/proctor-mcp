@@ -1,3 +1,6 @@
+---
+sources: [REQ-006]
+---
 # The run HUD, and the seven character states
 
 **Wave 9, brief 5 of 11.** Reads `58`, `59`. Mock anchors: `#mac/hud/idle` through

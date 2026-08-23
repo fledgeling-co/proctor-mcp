@@ -1,3 +1,6 @@
+---
+sources: [REQ-023]
+---
 # The fidelity harness: Proctor measures Proctor
 
 **Wave 9, brief 9 of 11.** Reads `58`. **Build this second, immediately after `59`** — the

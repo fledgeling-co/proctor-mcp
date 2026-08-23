@@ -1,3 +1,6 @@
+---
+sources: [REQ-020]
+---
 # Drive iOS through deep links
 
 **Read `00-WAVE-7-DIRECTION.md` first.**

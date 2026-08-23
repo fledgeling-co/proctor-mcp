@@ -1,3 +1,6 @@
+---
+sources: [REQ-012, REQ-013]
+---
 # Pointer marker in proctor_stability per-step artifacts
 
 **Status:** untriaged · **Value:** low · **Effort:** med · **Source:** deferred child of PRO-0010 (scheduled 2026-08-13 via whats-left ingest)

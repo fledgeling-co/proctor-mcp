@@ -1,3 +1,6 @@
+---
+sources: [REQ-032, REQ-088, REQ-089, REQ-090]
+---
 # What the status window still owes, and one permission that may lie
 
 **Wave 11, brief 6 of 6.** Independent of `70`-`74`. Sequence the last item first: it is the only

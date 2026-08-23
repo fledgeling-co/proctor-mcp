@@ -1,3 +1,6 @@
+---
+sources: [REQ-011, REQ-031]
+---
 # Menu-bar enumeration with key-equivalents
 
 **Status:** untriaged · **Value:** med-high · **Effort:** easy · **Source:** zavora-ai/computer-use-mcp (`list_menu_bar`)

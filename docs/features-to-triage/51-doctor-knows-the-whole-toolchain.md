@@ -1,3 +1,6 @@
+---
+sources: [REQ-009, REQ-032]
+---
 # Doctor knows the whole toolchain
 
 **Read `00-WAVE-7-DIRECTION.md` first.** This item supersedes brief 32, which is

@@ -1,3 +1,6 @@
+---
+sources: [REQ-006, REQ-028]
+---
 # Pointer / target overlay in captures
 
 **Status:** untriaged · **Value:** low-med · **Effort:** low · **Source:** both surveyed repos (domdomegg crosshair-in-screenshot; zavora `agent_pointer`)

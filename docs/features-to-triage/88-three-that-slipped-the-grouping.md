@@ -1,3 +1,6 @@
+---
+sources: [REQ-063, REQ-064, DEF-043, DEF-068, DEF-075]
+---
 # The policy file's mode, a control that lies twice, and a sibling already fixed
 
 **Wave 13, brief 8.** DEF-068, DEF-075, DEF-043. Three open defects the earlier grouping did not

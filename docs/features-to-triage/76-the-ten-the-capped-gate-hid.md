@@ -1,3 +1,6 @@
+---
+sources: [REQ-007, REQ-015, REQ-023, REQ-024, REQ-027, REQ-028, REQ-029, REQ-033, REQ-034, REQ-035, REQ-037, REQ-039, REQ-050]
+---
 # The ten external effects a capped gate output hid
 
 **Wave 11, brief 7 of 7.** Reads `70` for the rung's contract. Sequence after PRO-0077 and

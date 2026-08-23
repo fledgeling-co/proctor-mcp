@@ -1,3 +1,6 @@
+---
+sources: [REQ-120, REQ-121, REQ-122, REQ-123, DEF-201, DEF-202, DEF-203]
+---
 # An input the check cannot classify, and the two directions it can be wrong
 
 **Wave 17, brief 1.** DEF-201, DEF-202, DEF-203. Three defects found in one evening across two

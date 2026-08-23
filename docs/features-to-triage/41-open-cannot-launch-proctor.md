@@ -1,3 +1,6 @@
+---
+sources: [REQ-026]
+---
 # `open -a Proctor` cannot launch Proctor while the agent is running
 
 ## The problem

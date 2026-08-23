@@ -1,3 +1,6 @@
+---
+sources: [DEF-218, DEF-219, DEF-220, DEF-221, DEF-222, DEF-223, DEF-224, DEF-225]
+---
 # Reconcile thirty-five captures with their cases and manifest
 
 **Wave 18, brief 1.** DEF-218, DEF-219, DEF-220, DEF-221, DEF-222, DEF-223, DEF-224, DEF-225.
