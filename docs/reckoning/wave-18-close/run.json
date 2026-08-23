@@ -1,0 +1,139 @@
+{
+ "schema": "reckoning-run/1",
+ "taken_at": "2026-08-23T08:28:14Z",
+ "project": "proctor-mcp",
+ "tree": {
+  "repo": "proctor-mcp",
+  "commit": "68431dcc639c5cf4743f5d0762dead0a834dff03",
+  "short": "68431dc",
+  "branch": "main",
+  "tree_named": true,
+  "dirty_inputs": [],
+  "inputs": {
+   "docs/features-to-triage": {
+    "last_commit": "b708818ee12df98d018b86599c34f616dcb3e4f1"
+   },
+   "docs/test-campaign": {
+    "last_commit": "e2d5afe5f0965cf1882e72b40327bb0b316cae6c"
+   }
+  }
+ },
+ "tool": {
+  "name": "reckon",
+  "version": "1.2.0",
+  "script": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py",
+  "manifest": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/.claude-plugin/plugin.json",
+  "source_commit": "d998ef34c3767c24d4ad18c7d292de44c2db961b",
+  "sha256": "b3811432bedac8f6da7d5c410be496d51eaed3719850a939507f90e50f8096ab",
+  "classes": [
+   "broken",
+   "retirable",
+   "unbuilt",
+   "undecided",
+   "unjoined",
+   "unmeasured",
+   "unnamed",
+   "verified-done",
+   "waived"
+  ]
+ },
+ "inputs": {
+  "briefs": "docs/features-to-triage",
+  "campaign": "docs/test-campaign"
+ },
+ "gate": {
+  "build_exit": 0,
+  "check_exit": 0
+ },
+ "headline": "138 piece(s) of work remain — 9 product, 37 evidence, 92 decision — across 839 ledger rows. This reckoning speaks for 422/426 (99%) of the campaign's designed cases and 98/125 (78%) of its stated requirements; the rest is not known to be done, it is simply not known. 76 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.",
+ "summary": {
+  "counts": {
+   "verified-done": 701,
+   "unmeasured": 37,
+   "undecided": 16,
+   "broken": 9,
+   "unjoined": 76
+  },
+  "work_items": 138,
+  "work_by_class": {
+   "undecided": 16,
+   "unmeasured": 33,
+   "broken": 9,
+   "unjoined": 76
+  },
+  "work_by_kind": {
+   "decision-work": 92,
+   "evidence-work": 37,
+   "product-work": 9
+  },
+  "rows": 839
+ },
+ "denominators": {
+  "cases_adjudicated": {
+   "n": 422,
+   "of": 426,
+   "pct": 99.1,
+   "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+  },
+  "decisions_taken": {
+   "n": 0,
+   "of": 426,
+   "pct": 0.0,
+   "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+  },
+  "requirements_observed": {
+   "n": 98,
+   "of": 125,
+   "pct": 78.4,
+   "means": "somebody watched it happen, rather than the project reporting it of itself."
+  },
+  "surfaces_spoken_for": {
+   "n": 30,
+   "of": 30,
+   "pct": 100.0,
+   "means": "at least one case on this surface reached a verdict."
+  },
+  "briefs_joined": {
+   "n": 26,
+   "of": 102,
+   "pct": 25.5,
+   "means": "the brief could be tied to something in the registry at all."
+  }
+ },
+ "class_counts": {
+  "verified-done": 701,
+  "unmeasured": 37,
+  "undecided": 16,
+  "broken": 9,
+  "unjoined": 76
+ },
+ "effect": {
+  "kind": "filesystem-write",
+  "root": "docs/reckoning/wave-18-close",
+  "files_written": [
+   "ledger.json",
+   "reckoning.md"
+  ],
+  "count": 2,
+  "written": {
+   "ledger.json": {
+    "bytes": 774255,
+    "sha256": "293ba6c5ba9698aa1763e259c5c8951e55a0c957472c879e76636da547cd8cfc"
+   },
+   "reckoning.md": {
+    "bytes": 31441,
+    "sha256": "585d9394e1f0df746d12770f3cee11f29fe5af2c1916624d6854c956b72af5a4"
+   }
+  },
+  "rewritten": {},
+  "rewritten_count": 0,
+  "removed": {},
+  "removed_count": 0,
+  "unchanged_count": 0,
+  "witness": "every file under the root with its byte count and sha256, before and after the build, so the claim that a command wrote something names what appeared and what it held"
+ },
+ "provenance": "measured",
+ "notes": [
+  "Wave 18 close. PRO-0105, PRO-0108, PRO-0109, PRO-0110 merged. 0 unmerged ai/ branches, 0 unclaimed briefs, 5 remaining open defects (all recorded limits / measured negative)."
+ ]
+}

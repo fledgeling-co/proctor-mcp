@@ -1,0 +1,657 @@
+{
+ "schema": "reckoning-delta/1",
+ "project": "proctor-mcp",
+ "attribution": "decomposed",
+ "previous": {
+  "dir_stamp": "2026-08-23T04:51:13Z",
+  "commit": "ad0c19636864fc6ca214721c8668c77dafc0d146",
+  "short": "ad0c196",
+  "tool": "1.2.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 17 close. Fourth reading. Both vocabulary violations from the first reading were this session's own errors and are now at their rows: REQ-072's evidence word is unknown, the planted CASE-9999 sits in a fence. Compare against 2026-08-22-2bdc808."
+  ]
+ },
+ "current": {
+  "dir_stamp": "2026-08-23T08:28:14Z",
+  "commit": "68431dcc639c5cf4743f5d0762dead0a834dff03",
+  "short": "68431dc",
+  "tool": "1.2.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 18 close. PRO-0105, PRO-0108, PRO-0109, PRO-0110 merged. 0 unmerged ai/ branches, 0 unclaimed briefs, 5 remaining open defects (all recorded limits / measured negative)."
+  ]
+ },
+ "verdict": "3 of 5 axes improved, 2 flat, 0 worsened; evidence work up at 37 and the unmeasured class larger at 37 rows.",
+ "movement": {
+  "tool": {
+   "work_items": 0,
+   "product": 0,
+   "evidence": -4,
+   "decision": 4,
+   "rows": 0
+  },
+  "project": {
+   "work_items": -12,
+   "product": -15,
+   "evidence": 2,
+   "decision": 1,
+   "rows": 43
+  },
+  "net": {
+   "work_items": -12,
+   "product": -15,
+   "evidence": -2,
+   "decision": 5,
+   "rows": 43
+  },
+  "previous": {
+   "work_items": 150,
+   "product": 24,
+   "evidence": 39,
+   "decision": 87,
+   "rows": 796
+  },
+  "control": {
+   "work_items": 150,
+   "product": 24,
+   "evidence": 35,
+   "decision": 91,
+   "rows": 796
+  },
+  "current": {
+   "work_items": 138,
+   "product": 9,
+   "evidence": 37,
+   "decision": 92,
+   "rows": 839
+  }
+ },
+ "classes": {
+  "previous": {
+   "verified-done": 646,
+   "unmeasured": 39,
+   "undecided": 8,
+   "broken": 24,
+   "unjoined": 79
+  },
+  "control": {
+   "verified-done": 646,
+   "unmeasured": 35,
+   "undecided": 15,
+   "broken": 24,
+   "unjoined": 76
+  },
+  "current": {
+   "verified-done": 701,
+   "unmeasured": 37,
+   "undecided": 16,
+   "broken": 9,
+   "unjoined": 76
+  }
+ },
+ "axes": [
+  {
+   "key": "cases_adjudicated",
+   "label": "Cases adjudicated",
+   "prev": {
+    "n": 396,
+    "of": 400,
+    "pct": 99.0,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "control": {
+    "n": 396,
+    "of": 400,
+    "pct": 99.0,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "current": {
+    "n": 422,
+    "of": 426,
+    "pct": 99.1,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "decisions_taken",
+   "label": "Cases ruled out by decision",
+   "prev": {
+    "n": 0,
+    "of": 400,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "control": {
+    "n": 0,
+    "of": 400,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "current": {
+    "n": 0,
+    "of": 426,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "requirements_observed",
+   "label": "Requirements observed",
+   "prev": {
+    "n": 89,
+    "of": 116,
+    "pct": 76.7,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "control": {
+    "n": 89,
+    "of": 116,
+    "pct": 76.7,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "current": {
+    "n": 98,
+    "of": 125,
+    "pct": 78.4,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "surfaces_spoken_for",
+   "label": "Surfaces spoken for",
+   "prev": {
+    "n": 27,
+    "of": 27,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "control": {
+    "n": 27,
+    "of": 27,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "current": {
+    "n": 30,
+    "of": 30,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "briefs_joined",
+   "label": "Briefs joined to evidence",
+   "prev": {
+    "n": 21,
+    "of": 100,
+    "pct": 21.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "control": {
+    "n": 24,
+    "of": 100,
+    "pct": 24.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "current": {
+    "n": 26,
+    "of": 102,
+    "pct": 25.5,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  }
+ ],
+ "unmeasured": {
+  "control_rows": 35,
+  "current_rows": 37,
+  "left": [
+   {
+    "id": "BRIEF-96-what-1-1-0-still-groups-and-still-grades",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "What 1.1.0 still groups, and what it still lets a citation grade",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent; and the join as a whole is too weak to carry a retireme"
+   }
+  ],
+  "entered": [
+   {
+    "id": "BRIEF-98-a-version-string-is-not-the-artifact",
+    "entity": "brief",
+    "from": "broken",
+    "to": "unmeasured",
+    "title": "A version string is not the artifact",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   }
+  ],
+  "direction": "worsened"
+ },
+ "rows": {
+  "moved": [
+   {
+    "id": "BRIEF-96-what-1-1-0-still-groups-and-still-grades",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "What 1.1.0 still groups, and what it still lets a citation grade",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent; and the join as a whole is too weak to carry a retireme"
+   },
+   {
+    "id": "BRIEF-98-a-version-string-is-not-the-artifact",
+    "entity": "brief",
+    "from": "broken",
+    "to": "unmeasured",
+    "title": "A version string is not the artifact",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "DEF-204",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "Two different tools with the same version string compare as the same tool",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-216",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "The installed reckon plugin is still 1.0.0, and 1.0.0 crashes on this registry",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-218",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "Nine files named for nine engine surfaces are app-icon renders",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-219",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "Three files named for the takeover shield contain no image at all",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-220",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "sweepK-scaling.json lists two frames its own mode table has no capture of",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-221",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "One image carries three captions across two unrelated sweeps, and two wedged timestamps share one frame",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-222",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "sweepL-status-agent-down.png depicts a Ready window, and the two agent-down frames are one image",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-223",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "A file's surface prefix binds it to a surface the picture does not show",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-224",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "Case evidence and the lineage manifest disagree about the same five files",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-225",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "A passing case cites a shots file that does not exist, and no gate looks",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-228",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "LEDGER.md is the ledger of record and no standing instrument reads it",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-229",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "capture-lineage.py never reads cases.json either, so DEF-227's class reaches the gate",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-230",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "A requirement carries an evidence word its own schema rejects, and the tool explained it as a self-report",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-243",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "evidence/shots/mock/ is excluded from every instrument that reads the shots directory",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   }
+  ],
+  "appeared": [
+   {
+    "id": "BRIEF-101-reconcile-captures-with-cases",
+    "entity": "brief",
+    "class": "unmeasured",
+    "title": "Reconcile thirty-five captures with their cases and manifest"
+   },
+   {
+    "id": "BRIEF-102-standing-checks-for-the-unread-registers",
+    "entity": "brief",
+    "class": "unmeasured",
+    "title": "Standing checks for the registers nothing reads"
+   },
+   {
+    "id": "CASE-0570",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0571",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0572",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0573",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0574",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0575",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-028 · ?"
+   },
+   {
+    "id": "CASE-0576",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0577",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-027 · ?"
+   },
+   {
+    "id": "CASE-0590",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-029 · ?"
+   },
+   {
+    "id": "CASE-0591",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-029 · ?"
+   },
+   {
+    "id": "CASE-0592",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-029 · ?"
+   },
+   {
+    "id": "CASE-0593",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-029 · ?"
+   },
+   {
+    "id": "CASE-0594",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-029 · ?"
+   },
+   {
+    "id": "CASE-0595",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-029 · ?"
+   },
+   {
+    "id": "CASE-0596",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-029 · ?"
+   },
+   {
+    "id": "CASE-0597",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-029 · ?"
+   },
+   {
+    "id": "CASE-0600",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-030 · ?"
+   },
+   {
+    "id": "CASE-0601",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-030 · ?"
+   },
+   {
+    "id": "CASE-0602",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-030 · ?"
+   },
+   {
+    "id": "CASE-0620",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0621",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0622",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0623",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0624",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0625",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0626",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "DEF-270",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Tool comparison accepts altered code under matching version strings without checking content hashes or source "
+   },
+   {
+    "id": "DEF-280",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "reckon emitted percentages without denominators across reports"
+   },
+   {
+    "id": "DEF-281",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "reckon allowed circular source evidence to grade requirements to observed"
+   },
+   {
+    "id": "REQ-140",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": ""
+   },
+   {
+    "id": "REQ-145",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Every merged branch/commit claims Merged in LEDGER.md, every spec on disk has a ledger row, and every row lack"
+   },
+   {
+    "id": "REQ-146",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Cases citing unpublished, misnamed, or absent images fail standing lineage and disposition checks unless recor"
+   },
+   {
+    "id": "REQ-147",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "All design mock files under evidence/shots/mock/ carry explicit dispositions and byte audits"
+   },
+   {
+    "id": "REQ-150",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Reckoning compare identifies tools by content hash and source_commit, refusing altered code at matching versio"
+   },
+   {
+    "id": "REQ-151",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Plugin cache and tool identity checks measure content disparity explicitly rather than trusting manifest versi"
+   },
+   {
+    "id": "REQ-155",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Every percentage emitted by reckon across all report modes carries its denominator beside it"
+   },
+   {
+    "id": "REQ-156",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A requirement whose only evidence is its own source declaration stays unmeasured with circular evidence named"
+   },
+   {
+    "id": "REQ-157",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "A brief that cites registry entities through source joins at confidence 1.0"
+   },
+   {
+    "id": "SURF-028",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "About Proctor modal panel displaying app version and licensing"
+   },
+   {
+    "id": "SURF-029",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Standing gate checks for LEDGER.md, capture lineage case citations, and mock shots population"
+   },
+   {
+    "id": "SURF-030",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Tool artifact identity, content hash gating, and plugin cache verification"
+   }
+  ],
+  "vanished": []
+ },
+ "ratchets": [
+  {
+   "pair": "published",
+   "from": "ad0c196",
+   "to": "68431dc",
+   "exit": 3,
+   "violations": [
+    "RATCHET BRIEF-100-a-screenshot-gallery-the-gate-cannot-see moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-81-the-capture-path-reports-frames-it-did-not-get moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-82-tests-that-touch-the-real-machine-and-tests-that-time-themselves moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-88-three-that-slipped-the-grouping moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-96-what-1-1-0-still-groups-and-still-grades moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)"
+   ]
+  },
+  {
+   "pair": "tool-constant",
+   "from": "ad0c196 (rebuilt)",
+   "to": "68431dc",
+   "exit": 3,
+   "violations": [
+    "RATCHET BRIEF-96-what-1-1-0-still-groups-and-still-grades moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)"
+   ]
+  }
+ ]
+}

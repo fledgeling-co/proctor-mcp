@@ -3050,3 +3050,29 @@ Following the closing of wave 17, all remaining open defects and findings are tr
 DEF-230 is closed (`fixed`), as REQ-072 evidence was corrected from `inconclusive` to `unknown` per schema.
 
 All 19 checks of `spec_citation_measure.py` pass (102 briefs, 100 claimed, 2 registered in `UNCLAIMED-BRIEFS.md`, 0 unclaimed).
+
+### Wave 18 closed — all items merged, product work down to 9, verified-done past 700 (2026-08-23)
+
+`main` carries PRO-0105, PRO-0108, PRO-0109 and PRO-0110. Nothing pushed.
+
+| Gate on closed `main` | Exit | Reading |
+|---|:---:|---|
+| `ledger_gate.py` | **0** | 110 ledger rows · 107 specs on disk · 3 declared without spec · 55 merged in git |
+| `test_instruments.py` | **0** | **217 passed**, 0 failed |
+| `shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
+| `capture-lineage.py --gate` | **0** | ratchet: 6 held |
+| `defect_gate.py dropped` | **0** | 130 merges examined, 0 dropped values |
+| `spec_citation_measure.py` | **0** | **19/19 checks passed** (102 briefs: 100 claimed 1-to-1, 2 registered, 0 unclaimed) |
+| `reckoning_selftest.py` | **0** | 73 checks passed |
+| `plugins/reckon/skills/reckon/scripts/selftest.py` | **0** | 53 checks passed |
+| `campaign.py check` | 1 | Pre-existing standing baseline (0 new blockers) |
+
+Registry: **426 cases · 156 defect rows · 125 requirements · 30 surfaces**.
+Open defects: **5** (DEF-033 measured negative, DEF-141, DEF-151, DEF-180 recorded limits, DEF-215 declared retired items).
+
+**Wave 18 Close Reckoning (`ad0c196` → `68431dc`):**
+- **Broken product work:** 24 → **9** (-15)
+- **Verified-done:** 646 → **701** (+55)
+- **Requirements observed:** 76.7% → **78.4%** (98/125)
+- **Cases adjudicated:** 99.0% → **99.1%** (422/426)
+- **Tool movement:** Decomposed attribution cleanly separated tool modifications from project movement via SHA-256 / commit digest comparisons (DEF-204).
