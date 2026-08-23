@@ -3076,3 +3076,16 @@ Open defects: **5** (DEF-033 measured negative, DEF-141, DEF-151, DEF-180 record
 - **Requirements observed:** 76.7% → **78.4%** (98/125)
 - **Cases adjudicated:** 99.0% → **99.1%** (422/426)
 - **Tool movement:** Decomposed attribution cleanly separated tool modifications from project movement via SHA-256 / commit digest comparisons (DEF-204).
+
+### Wave 19 triaged — three candidate paths from recorded limits and opportunities (2026-08-23)
+
+Following intake over the three recorded limits (DEF-141, DEF-151, DEF-180), ARMADA opportunities, and reckon 1.2.0 join metrics, three new features are triaged:
+
+- **PRO-0111 (`spec-PRO-0111.md`):** Audit of the three recorded limits (DEF-141 filesystem certification scope, DEF-151 real hardware keyboard yield, DEF-180 dynamic Screen Recording grant re-probe).
+- **PRO-0112 (`spec-PRO-0112.md`):** Warrant charter and release integrity (`.warrant/warrant.toml` census classes and export validation).
+- **PRO-0113 (`spec-PRO-0113.md`):** Brief join rate optimization (frontmatter and structured citations across legacy specs to lift reckon join rate past 50%).
+
+Standing gates:
+- `ledger_gate.py`: 0 (113 rows, 110 specs, 3 declared without spec, 55 merged in git)
+- `spec_citation_measure.py`: 19/19 passed (105 briefs, 103 claimed, 2 registered, 0 unclaimed)
+- `test_instruments.py`: 217 passed, 0 failed
