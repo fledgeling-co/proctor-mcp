@@ -5482,7 +5482,7 @@
     "armedBy": "Two-way control: the sweep runs on a directory that did not exist before the build, so an empty before-set and a two-file after-set are different readings of the same instrument. A take that wrote nothing would record count 0, and the refusal path (CASE-0441) writes no directory at all. Count corrected from four to two at verification; the two-way control is unaffected, because what it turns on is empty against non-empty.",
     "note": "The take command's filesystem effect, witnessed rather than inferred. run.json records the sweep the command took of its own output directory before and after the reckon build: an empty before-set and an after-set of TWO files, ledger.json and reckoning.md.\n\nCORRECTED AT PRO-0103'S VERIFICATION, and the correction is the point. This note previously said four files — adding delta.json and delta.md — and said each carried its byte count and sha256. run.json holds count 2, two filenames, and no digests at all. The delta files are written after the sweep, so they were never in the after-set; and cmd_take discards the digests sweep() computes, so they were never stored. The case was recording evidence it did not have, and campaign.py counted it witnessed without opening the artifact. The count that stands is 2, which is non-zero and is what the recorder actually saw. DEF-205 holds the repair.",
     "witness": {
-      "recorder": "sweep() in scripts/reckoning/reckoning.py: a recursive walk of the run directory taken before and after the reckon build and stored in run.json under effect. It computes a byte count and sha256 per file, and cmd_take stores only the names and the count — so the recorder is stronger than the record it leaves, which is DEF-205.",
+      "recorder": "sweep() in scripts/reckoning/reckoning.py: a recursive walk of the run directory taken before and after the reckon build and stored in run.json under effect. It computes a byte count and sha256 per file. When this case was written cmd_take stored only the names and the count, so the recorder was stronger than the record it left — DEF-205, closed by PRO-0106. The record now carries the digest of every file written, the before-and-after pair for any file rewritten between the sweeps, and any file the build stopped writing. The count of two is unchanged and so is this case's two-way control.",
       "effect": "filesystem-write",
       "count": 4
     }
@@ -6631,6 +6631,11 @@
     ],
     "armed": true,
     "armedBy": "Mutating the effect block to write an empty `written` map leaves the witness naming files only, and the check reds.",
+    "witness": {
+      "recorder": "sweep() in scripts/reckoning/reckoning.py, taken by cmd_take before and after the reckon build and stored in run.json under effect. It walks the run directory and computes a byte count and sha256 per file, and since PRO-0106 the record keeps all of it: `written` per new file, `rewritten` for a file whose digest moved between the sweeps, and `removed` for one the build stopped writing.",
+      "effect": "filesystem-write",
+      "count": 2
+    },
     "note": "DEF-205, the record half. Every file the take wrote carries a byte count and a sha256 in run.json, each re-derived from the file on disk by the selftest rather than read back from the record that is under test, and the digest map's keys are checked against files_written so the two halves cannot drift apart.",
     "defects": [
       "DEF-205"
@@ -6747,7 +6752,7 @@
     "id": "CASE-0553",
     "req": "REQ-135",
     "surface": "SURF-027",
-    "oracle": "effect-witness",
+    "oracle": "outcome",
     "lane": "headless",
     "status": "pass",
     "evidence": [
@@ -6777,6 +6782,74 @@
     "note": "DEF-242. The gate's --baseline-ref defaulted to `main`, which absorbed the fix the gate exists to demonstrate, so it loaded the same file twice and had been red since fc1b9a4 with nothing reading it. Pinned to fc1b9a4~1. A baseline ref that will one day contain the change cannot hold the state before it.",
     "defects": [
       "DEF-242"
+    ]
+  },
+  {
+    "id": "CASE-0555",
+    "req": "REQ-131",
+    "surface": "SURF-026",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "The test re-reads the mutated file off disk with Path.read_text and compares it against the text the splice should have produced, byte for byte — the same read-back apply() itself performs, done independently by the caller so the instrument's own claim is not the evidence for it. The refusal paths are witnessed the same way: the file is read back and compared against the bytes it held before the call.",
+      "effect": "filesystem-write",
+      "count": 1
+    },
+    "armedBy": "Two-way in one run: the landing splice is witnessed changing the file, and each refusal is witnessed leaving it byte-identical. Removing the offset check reds 9 checks and removing the read-back reds 1, both watched.",
+    "note": "DEF-207's effect, witnessed rather than inferred. apply() writes exactly one file per mutant and the point of the repair is that the write is established rather than assumed, so the effect and its absence are both read off the disk. A write the disk does not take is driven too, by intercepting Path.write_text so the file keeps its old bytes: the instrument refuses on the re-read, which is the case an offset check alone cannot cover.",
+    "defects": [
+      "DEF-207"
+    ]
+  },
+  {
+    "id": "CASE-0556",
+    "req": "REQ-132",
+    "surface": "SURF-026",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/seam-arming.json"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "subprocess.run(['./scripts/test.sh', '--filter', <function>]) with stdout and stderr captured, one process per case, and the captured output parsed for swift-testing's own verdict, started and finished lines. seam-arming.json records the exit code, the verdict line, the tests started and finished, and the elapsed seconds for every one.",
+      "effect": "subprocess",
+      "count": 12
+    },
+    "armedBy": "The population is its own control and it is not uniform: 11 of the 12 processes printed a verdict line and one did not. CASE-0461's trapping mutant produced zero verdict lines and is armed on its started line instead, which is the distinction the repair exists to make — under the pre-repair rule all 12 were one undifferentiated `exit != 0`.",
+    "note": "DEF-208's effect. Twelve filtered suite runs across 87.1 seconds, each spawned against a mutated tree and each reverted after. What the record carries is what the process said rather than only what it returned: exit code, verdict line, and the list of tests swift-testing reported starting and finishing.",
+    "defects": [
+      "DEF-208"
+    ]
+  },
+  {
+    "id": "CASE-0557",
+    "req": "REQ-135",
+    "surface": "SURF-027",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/def226-adoption-arming.txt",
+      "scripts/campaign/shot_disposition.py"
+    ],
+    "armed": true,
+    "witness": {
+      "recorder": "The audit file's bytes are held in memory before the run and compared against the file on disk after it, so a refused --write is witnessed writing nothing rather than reported as having written nothing. The adopted write is witnessed by reading the row back and finding the new sha256 and distinctRGBA in it.",
+      "effect": "filesystem-write",
+      "count": 1
+    },
+    "armedBy": "Three writes driven in one run and the middle one is the arming: --write over an unchanged directory writes, --write over a replaced frame is refused and the audit on disk is byte-identical to before, and --write --adopt writes. Before the repair the middle step wrote and returned 0.",
+    "note": "DEF-226's effect. The instrument's one filesystem write is the audit, and the defect was that it performed that write while treating its own re-measurement as the standard. Both the refusal and the write are read off the disk rather than taken from the exit code.",
+    "defects": [
+      "DEF-226"
     ]
   }
 ]
