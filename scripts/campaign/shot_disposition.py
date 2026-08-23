@@ -60,6 +60,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 CAMPAIGN = REPO / "docs/test-campaign"
 SHOTS = CAMPAIGN / "evidence/shots"
+# The prefix a repo-relative citation carries, derived rather than written twice.
+CAMPAIGN_PREFIX = CAMPAIGN.relative_to(REPO).as_posix() + "/"
 AUDIT = CAMPAIGN / "evidence/PRO-0107/shot-audit.json"
 
 ICON_RENDER = (
@@ -792,15 +794,22 @@ def citations(a: dict) -> tuple[list[str], list[str]]:
         on_disk = (REPO / path).is_file() or (CAMPAIGN / path).is_file()
         if not on_disk:
             reasons.append("no such file on disk")
-        row = rows.get(path)
+        # `rows` is keyed campaign-relative, and a case may cite either way. A
+        # repo-relative citation used to miss the row AND fail the
+        # `evidence/shots/` test, so it resolved on disk and then skipped the
+        # disposition and publishing checks entirely \u2014 DEF-227's own class,
+        # reachable by writing the path the other way round. Out-of-family
+        # review, PRO-0106.
+        rel = path[len(CAMPAIGN_PREFIX):] if path.startswith(CAMPAIGN_PREFIX) else path
+        row = rows.get(rel)
         if row is not None:
             if not row["disposed"]:
                 reasons.append("in the shots directory with no disposition")
             elif not row["publishedAs"]:
                 reasons.append("cited as evidence while no subject publishes it "
                                f"({(row['depicts'] or '')[:80]}…)")
-        elif on_disk and path.startswith("evidence/shots/") and not is_mock(path):
-            if Path(path).suffix.lower() == AUDIT_SUFFIX:
+        elif on_disk and rel.startswith("evidence/shots/") and not is_mock(rel):
+            if Path(rel).suffix.lower() == AUDIT_SUFFIX:
                 reasons.append("under evidence/shots and absent from this audit")
             else:
                 notices.append(
