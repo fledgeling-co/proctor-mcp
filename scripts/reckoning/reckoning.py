@@ -99,6 +99,59 @@ def git(repo, *args):
     return code, out.strip(), err.strip()
 
 
+def git_raw(repo, *args):
+    """git's output exactly as git wrote it.
+
+    `git()` strips, which is right for a `rev-parse` and wrong for anything
+    column-oriented. DEF-206: a porcelain status line's leading space is a status
+    column, so ` M docs/x` arriving as `M docs/x` moves every column left by one
+    and the slice that drops the two status characters and the space eats the
+    first character of the path instead.
+    """
+    return run(["git", "-C", str(repo)] + list(args))
+
+
+def unquote_path(entry):
+    """A path as git printed it, back to the path on disk.
+
+    git quotes a path containing a control character, a quote, a backslash or a
+    non-ASCII byte, C-style with octal escapes. Left quoted, such a path is as
+    unfindable as the one DEF-206 chopped a character off.
+    """
+    if len(entry) >= 2 and entry[0] == '"' and entry[-1] == '"':
+        try:
+            return (entry[1:-1].encode("ascii", "backslashreplace")
+                    .decode("unicode_escape").encode("latin-1").decode("utf-8"))
+        except (UnicodeDecodeError, UnicodeEncodeError):
+            return entry
+    return entry
+
+
+def porcelain_paths(repo, inputs):
+    """(exit, paths) — the paths `git status --porcelain` names, parsed not sliced.
+
+    DEF-206. The refusal built on this names files a reader has to be able to
+    find, and `--allow-dirty` writes them permanently into `run.json.dirty_inputs`,
+    so a mangled name here becomes a permanent record of a path that never
+    existed. Three things the old slice got wrong: the leading status space that
+    `git()` stripped off the first line, a rename entry that names both sides,
+    and a quoted non-ASCII path.
+    """
+    code, out, _ = git_raw(repo, "status", "--porcelain", "--", *inputs)
+    paths = []
+    for line in out.splitlines():
+        if len(line) < 4:
+            continue
+        entry = line[3:]
+        if " -> " in entry:
+            # `R  old -> new`. The working tree carries the destination.
+            entry = entry.split(" -> ", 1)[1]
+        entry = unquote_path(entry)
+        if entry:
+            paths.append(entry)
+    return code, paths
+
+
 def repo_name(repo):
     """The repository's name, not the worktree's.
 
@@ -226,8 +279,7 @@ def resolve_tree(repo, inputs, allow_dirty=False):
     if code != 0:
         return None, "not a git repository at %s (%s)" % (repo, err)
     _, branch, _ = git(repo, "rev-parse", "--abbrev-ref", "HEAD")
-    code, dirty, _ = git(repo, "status", "--porcelain", "--", *inputs)
-    dirty_paths = [line[3:] for line in dirty.splitlines() if line.strip()]
+    _, dirty_paths = porcelain_paths(repo, inputs)
 
     tree = {"repo": repo_name(repo), "commit": head, "short": head[:7],
             "branch": branch, "tree_named": True, "dirty_inputs": dirty_paths}
@@ -279,6 +331,12 @@ def cmd_take(args):
     build_exit = code
     after = sweep(out)
     written = sorted(set(after) - set(before))
+    # DEF-205. `sweep()` measures bytes and a digest per file and the record used
+    # to keep only the names, so the witness could say two files appeared and not
+    # what was in them — and a file rewritten between the two sweeps appeared in
+    # neither set, which is the case a name-only witness cannot see at all.
+    rewritten = sorted(n for n in set(after) & set(before) if after[n] != before[n])
+    unchanged = sorted(n for n in set(after) & set(before) if after[n] == before[n])
 
     if not (out / "ledger.json").is_file():
         return refuse("reckon wrote no ledger (build exit %d)" % build_exit)
@@ -303,8 +361,16 @@ def cmd_take(args):
         "denominators": {k: v for k, v in ledger.get("denominators", {}).items()
                          if isinstance(v, dict)},
         "class_counts": dict(counts),
-        "effect": {"kind": "filesystem-write", "root": str(out), "files_written": written,
-                   "count": len(written)},
+        "effect": {"kind": "filesystem-write", "root": str(out),
+                   "files_written": written, "count": len(written),
+                   "written": {n: after[n] for n in written},
+                   "rewritten": {n: {"before": before[n], "after": after[n]}
+                                 for n in rewritten},
+                   "rewritten_count": len(rewritten),
+                   "unchanged_count": len(unchanged),
+                   "witness": ("every file under the root with its byte count and sha256, "
+                               "before and after the build, so the claim that a command wrote "
+                               "something names what appeared and what it held")},
         "provenance": "measured",
         "notes": list(args.note or []),
     }
