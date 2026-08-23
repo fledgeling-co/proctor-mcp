@@ -619,9 +619,21 @@ def adoptable(a: dict) -> list[tuple[str, str]]:
     at the picture, and a flag that adopts everything is the hole this closes.
     """
     if not AUDIT.exists():
-        return []
+        # Out-of-family review, PRO-0106: deleting the audit was a way past the
+        # whole check. With no prior there is nothing to compare against, so the
+        # first --write would adopt the entire directory unchallenged, which is
+        # DEF-226 reached by removing a file rather than by changing one.
+        where = AUDIT.relative_to(REPO) if AUDIT.is_relative_to(REPO) else AUDIT
+        return [("(the audit itself)",
+                 f"there is no audit at {where}, so this run has nothing to "
+                 f"compare against and --write would take the whole directory as read. Name it "
+                 f"with --adopt '(the audit itself)' to write the first one.")]
     prior = {r["file"]: r for r in json.loads(AUDIT.read_text())["shots"]}
     out = []
+    for name in sorted(set(prior) - {r["file"] for r in a["shots"]}):
+        out.append((name,
+                    "disposed in the audit and no longer on disk; writing now would remove the "
+                    "row rather than record that the file went"))
     for r in a["shots"]:
         old_row = prior.get(r["file"])
         if old_row and old_row.get("sha256") != r["sha256"]:
@@ -632,11 +644,22 @@ def adoptable(a: dict) -> list[tuple[str, str]]:
                         "bytes changed under a disposition written for the old ones "
                         f"({old_row['sha256'][:12]} → {r['sha256'][:12]}); the old bytes stood "
                         f"for: {stood_for[:110]}"))
-        elif old_row is None and not r["disposed"]:
+        elif old_row is None:
+            # Out-of-family review, PRO-0106: this used to let a new file through
+            # whenever a disposition already existed for its stem. A disposition
+            # is a reading of specific bytes, and bytes that arrived after it was
+            # written are bytes nobody has read — a re-capture landing on a
+            # retired name is exactly that case.
             out.append((r["file"],
-                        "new since the audit and carries no disposition, so writing it now "
-                        "would record `nobody has read this` as the baseline"))
+                        "new since the audit was written, so nothing has read these bytes"
+                        + ("; a disposition exists for that name and was written for the bytes "
+                           "that used to be there" if r["disposed"]
+                           else " and it carries no disposition at all")))
     return out
+
+
+IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".webp", ".gif", ".tiff", ".heic",
+                  ".pdf", ".svg", ".mov", ".mp4")
 
 
 def cite_paths(node, cid, out):
@@ -649,7 +672,10 @@ def cite_paths(node, cid, out):
     """
     if isinstance(node, str):
         s = node.strip()
-        if s.endswith(".png") and " " not in s and "/" in s:
+        # Out-of-family review, PRO-0106: `.png` alone left every other image
+        # format uncheckable, so a case citing a jpg or a pdf was invisible to
+        # this gate for the same reason cases.json was.
+        if s.lower().endswith(IMAGE_SUFFIXES) and " " not in s and "/" in s:
             out.setdefault(s, set()).add(cid)
     elif isinstance(node, dict):
         for v in node.values():

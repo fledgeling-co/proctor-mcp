@@ -142,10 +142,14 @@ def porcelain_paths(repo, inputs):
     for line in out.splitlines():
         if len(line) < 4:
             continue
-        entry = line[3:]
-        if " -> " in entry:
-            # `R  old -> new`. The working tree carries the destination.
-            entry = entry.split(" -> ", 1)[1]
+        status, entry = line[:2], line[3:]
+        # `R  old -> new` / `C  old -> new`. The working tree carries the
+        # destination. Gated on the status code and split from the RIGHT, because
+        # an unconditional split re-creates DEF-206 on any path containing the
+        # arrow: ` M docs/step-1 -> step-2.json` would be recorded as
+        # `step-2.json`, a name nobody can open. Out-of-family review, PRO-0106.
+        if status[0] in "RC" and " -> " in entry:
+            entry = entry.rsplit(" -> ", 1)[1]
         entry = unquote_path(entry)
         if entry:
             paths.append(entry)

@@ -109,6 +109,19 @@ def main() -> int:
                     help="the ref holding the runner as it was before this change")
     args = ap.parse_args()
 
+    # Resolved first, because it is a question about the repository's history
+    # rather than about the working tree, and a gate that refuses for the wrong
+    # reason sends the reader to the wrong place.
+    shown = subprocess.run(
+        ["git", "show", f"{args.baseline_ref}:scripts/campaign/mutate_swift.py"],
+        cwd=ROOT, capture_output=True, text=True)
+    if shown.returncode != 0 or not shown.stdout:
+        print(f"REFUSING: {args.baseline_ref} does not resolve in this checkout "
+              f"({shown.stderr.strip()[:160] or 'no output'}). This gate compares the runner "
+              f"against the tree before the change, and a shallow clone does not carry it — "
+              f"fetch that commit or pass --baseline-ref.")
+        return 2
+
     dirty = tree_dirty()
     if dirty:
         print("REFUSING: the working tree is not clean outside docs/.")
@@ -142,9 +155,11 @@ def main() -> int:
     # Pass 2 — the whole runner, both versions, from the same fixture.
     with tempfile.TemporaryDirectory() as tmp:
         old_path = Path(tmp) / "mutate_swift_old.py"
-        old_source = subprocess.run(
-            ["git", "show", f"{args.baseline_ref}:scripts/campaign/mutate_swift.py"],
-            cwd=ROOT, capture_output=True, text=True).stdout
+        # Resolved above, before the tree check. Out-of-family review, PRO-0106:
+        # a pinned sha does not exist in a shallow clone, and `git show` failing
+        # silently would leave an empty baseline that armed nothing while
+        # reporting a comparison.
+        old_source = shown.stdout
         marker_present = OLD_SOURCE_MARKER in old_source
         old_path.write_text(old_source)
         old = load(old_path, "mutate_swift_old")

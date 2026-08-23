@@ -220,10 +220,21 @@ def apply(mutant: dict) -> tuple[bool, str]:
     if not (0 <= start < end <= len(text)):
         return False, ("the recorded offsets %d-%d fall outside a file of %d characters"
                        % (start, end, len(text)))
+    if mutant["before"] == mutant["after"]:
+        return False, "the mutation is a no-op: %r replaced by itself" % mutant["before"]
     found = text[start:end]
     if found != mutant["before"]:
         return False, ("the text at offset %d-%d is %r, not the recorded %r — the file moved "
                        "under the offsets" % (start, end, found, mutant["before"]))
+    # The offsets holding the right token proves a valid splice, not the INTENDED
+    # one: an edit above can slide a different `==` into exactly this offset, and
+    # the read-back would agree while the harness attributed the verdict to a line
+    # nothing touched. The recorded line number is a second coordinate on the same
+    # site, and the two move independently. Out-of-family review, PRO-0106.
+    line = text.count("\n", 0, start) + 1
+    if mutant.get("line") is not None and line != mutant["line"]:
+        return False, ("offset %d is on line %d and the mutant was recorded at line %d — the "
+                       "token is right and the site is not" % (start, line, mutant["line"]))
     expected = text[:start] + mutant["after"] + text[end:]
     _APPLIED.append(str(path))
     path.write_text(expected)
@@ -234,11 +245,26 @@ def apply(mutant: dict) -> tuple[bool, str]:
                   % (start, mutant["before"], mutant["after"]))
 
 
-def revert(mutant: dict) -> None:
+def revert(mutant: dict) -> tuple[bool, str]:
+    """Put the file back, and prove it went back. (restored, why).
+
+    `check=True` proves the git command exited 0, which is a fact about the
+    command rather than about the file — the same distinction DEF-207 turned on,
+    one call further down. A revert that half-writes leaves every later mutant in
+    the loop grading corrupted source, and nothing in the run would say so.
+    Out-of-family review, PRO-0106.
+    """
+    path = Path(mutant["file"])
     subprocess.run(["git", "checkout", "--", mutant["file"]], check=True,
                    capture_output=True)
     if mutant["file"] in _APPLIED:
         _APPLIED.remove(mutant["file"])
+    text = path.read_text()
+    if text[mutant["start"]:mutant["end"]] != mutant["before"]:
+        return False, ("the file was not restored: offset %d-%d holds %r, not the original %r"
+                       % (mutant["start"], mutant["end"],
+                          text[mutant["start"]:mutant["end"]], mutant["before"]))
+    return True, "file restored, confirmed by re-reading the mutated span"
 
 
 # How close to the bound an elapsed time has to be before the reader is told.
@@ -383,9 +409,15 @@ def main() -> int:
             continue
         started = time.time()
         passed, why = run_suite(args.timeout)
-        revert(m)
+        restored, how_restored = revert(m)
         elapsed = round(time.time() - started, 1)
         verdict, near_bound = score(passed, why, elapsed, args.timeout)
+        if not restored:
+            # Every later mutant would grade a tree nobody chose, so the run stops
+            # rather than publishing verdicts taken over corrupted source.
+            print(f"STOPPING: {how_restored}", flush=True)
+            restore_all()
+            return 3
         if verdict == "unbuildable":
             unbuildable += 1
         elif verdict == "TIMEOUT":

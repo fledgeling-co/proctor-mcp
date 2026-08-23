@@ -1022,7 +1022,7 @@ def test_mutate_swift_unproved_mutation_is_inconclusive() -> None:
         try:
             mod.candidates = lambda _p: [dict(good), dict(drifted)]
             mod.run_suite = lambda timeout: (ran.append(1), (True, "passed"))[1]
-            mod.revert = lambda m: path.write_text(source)
+            mod.revert = lambda m: (path.write_text(source), (True, "stub"))[1]
             mod.restore_all = lambda: path.write_text(source)
             out = tmpdir / "out.json"
             sys.argv = ["mutate_swift.py", "--targets", str(path), "--count", "2",
@@ -1163,8 +1163,30 @@ def test_seam_arm_scores_the_trap_from_the_log() -> None:
     state, armed, why = mod.score_arming(display, why_display, trap, 1200)
     check(state == "ARMED" and armed is True,
           "a trap while the named test was running is armed", f"{state}: {why}")
-    check("started" in why and "no completion line" in why,
+    check("was the only test to start" in why and "none finished" in why,
           "and the reason names the evidence rather than the exit code", why)
+    check("WHAT THIS DOES NOT ESTABLISH" in why,
+          "and it says what the started line cannot settle — a trap in the test's own setup, "
+          "a require before the subject is called, or a crash in teardown all read the same",
+          why)
+
+    # Concurrency: swift-testing runs tests in parallel unless a suite is
+    # serialized, so two started lines and no completions cannot say which one
+    # died. Out-of-family review, PRO-0106.
+    concurrent = dict(trap, started=trap["started"] + ["Some other test"])
+    state, armed, why = mod.score_arming(display, why_display, concurrent, 1200)
+    check(state == "INCONCLUSIVE" and armed is None,
+          "two tests started and none finished cannot attribute the death to either",
+          f"{state}: {why}")
+
+    # A verdict line for a run that never started the named test is about some
+    # other test, and the exit code cannot say so.
+    other = _parse(mod, 'Test run with 1 test in 1 suite failed after 0.001 seconds '
+                        'with 1 issue.\n\u1088  Test "Some other test" started.', 1)
+    state, armed, why = mod.score_arming(display, why_display, other, 1200)
+    check(state == "INCONCLUSIVE" and "never started" in why,
+          "a verdict line for a run that never started the named test is inconclusive",
+          f"{state}: {why}")
 
     # The setup death: the same output with the started line taken out. Under the
     # old rule this is indistinguishable from the trap above — both exit 1.
@@ -1367,6 +1389,164 @@ def test_shot_disposition_manifest_reflects_the_bytes_on_disk() -> None:
           "\n".join(wrong))
 
 
+# ── What the out-of-family review found, each on its own fixture ────────────
+
+def test_mutate_swift_offsets_are_two_coordinates() -> None:
+    """The token being right does not make the site right.
+
+    An edit above can slide a different `==` into exactly the recorded offset:
+    the offset check agrees, the read-back agrees, and the harness attributes the
+    verdict to a line nothing touched. The line number is a second coordinate on
+    the same site and the two move independently.
+    """
+    mod = _mutate_swift()
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "F.swift"
+        # Two sites. The mutant names the second, on line 2.
+        source = "if x == y { }\nif p == q { }\n"
+        first = source.index("==")
+        second = source.index("==", first + 1)
+        mutant = {"file": str(path), "start": second, "end": second + 2,
+                  "before": "==", "after": "!=", "line": 2}
+        path.write_text(source)
+        mod._APPLIED.clear()
+        landed, why = mod.apply(dict(mutant))
+        check(landed, "the mutant lands at its own site", why)
+
+        # Padding above slides LINE 1's `==` to exactly the recorded offset, so
+        # the token there is right and the site is a different line.
+        slid = source[:first] + " " * (second - first) + source[first:]
+        check(slid[second:second + 2] == "==" and slid.count("\n", 0, second) + 1 == 1,
+              "the fixture puts line 1's `==` at exactly the recorded offset",
+              repr(slid[max(0, second - 6):second + 6]))
+        path.write_text(slid)
+        mod._APPLIED.clear()
+        landed, why = mod.apply(dict(mutant))
+        check(not landed and "the token is right and the site is not" in why,
+              "and the recorded line number refuses it", why)
+        check(path.read_text() == slid, "leaving the file as it was")
+
+        path.write_text(source)
+        mod._APPLIED.clear()
+        landed, why = mod.apply({**mutant, "after": "=="})
+        check(not landed and "no-op" in why,
+              "a mutation that replaces a token with itself is not a mutation", why)
+
+
+def test_mutate_swift_revert_is_read_back() -> None:
+    """`check=True` proves the command exited 0, not that the file came back."""
+    mod = _mutate_swift()
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "F.swift"
+        source = "if x == y { }\n"
+        path.write_text(source)
+        mutant = {"file": str(path), "start": source.index("=="),
+                  "end": source.index("==") + 2, "before": "==", "after": "!=", "line": 1}
+        real_run = mod.subprocess.run
+        try:
+            # A git checkout that exits 0 and restores nothing.
+            mod.subprocess.run = lambda *a, **k: type("P", (), {"returncode": 0})()
+            path.write_text(source.replace("==", "!="))
+            restored, why = mod.revert(dict(mutant))
+            check(not restored and "was not restored" in why,
+                  "a revert that exited 0 and changed nothing is refused", why)
+            path.write_text(source)
+            restored, why = mod.revert(dict(mutant))
+            check(restored and "confirmed by re-reading" in why,
+                  "and a revert that put the file back is accepted", why)
+        finally:
+            mod.subprocess.run = real_run
+
+
+def test_seam_arm_display_name_refuses_a_name_it_cannot_read() -> None:
+    """Guessing `function()` would put a name in the comparison the log never prints."""
+    mod = _seam_arm()
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "A.swift").write_text('@Test\nfunc bare() throws {}\n')
+        display, why = mod.display_name("bare", tests_root=root)
+        check(display == "bare()", "a bare @Test shows the function signature", f"{display!r} {why}")
+
+        (root / "B.swift").write_text('@Test(.tags(.slow), "The name is second")\n'
+                                      'func tagged() throws {}\n')
+        display, why = mod.display_name("tagged", tests_root=root)
+        check(display is None and "does not open with a display string" in why,
+              "an attribute whose display string is not first is refused, not guessed",
+              f"{display!r} {why}")
+
+
+def test_shot_disposition_adoption_covers_every_route_in() -> None:
+    """Changing a file was one route to the baseline. There were three more."""
+    sd = load(ROOT / "scripts/campaign/shot_disposition.py", "shot_disposition_routes")
+    a = sd.audit()
+    check(sd.adoptable(a) == [], "the real directory needs no adoption", str(sd.adoptable(a)))
+
+    prior = json.loads(sd.AUDIT.read_text())
+    real_audit = sd.AUDIT
+    with tempfile.TemporaryDirectory() as tmp:
+        scratch = Path(tmp) / "audit.json"
+
+        def _with(rows):
+            scratch.write_text(json.dumps({**prior, "shots": rows}))
+            sd.AUDIT = scratch
+
+        try:
+            # A file present in the audit and gone from disk.
+            _with(prior["shots"] + [dict(prior["shots"][0], file="departed.png")])
+            blocked = dict(sd.adoptable(a))
+            check("departed.png" in blocked and "no longer on disk" in blocked["departed.png"],
+                  "a file that left the directory is named rather than dropped from the record",
+                  str(blocked))
+
+            # A file on disk the audit has never seen, WITH a disposition for its
+            # stem — the route that used to be open.
+            _with([r for r in prior["shots"] if r["file"] != "surf-004-run-hud.png"])
+            blocked = dict(sd.adoptable(a))
+            check("surf-004-run-hud.png" in blocked
+                  and "nothing has read these bytes" in blocked["surf-004-run-hud.png"],
+                  "a new file is named even when a disposition already exists for it",
+                  str(blocked))
+            row = next(r for r in a["shots"] if r["file"] == "surf-004-run-hud.png")
+            check(row["disposed"] and "written for the bytes that used to be there"
+                  in blocked["surf-004-run-hud.png"],
+                  "and the refusal says the disposition was written for other bytes")
+
+            # No audit at all: deleting the file was a route past the whole check.
+            sd.AUDIT = Path(tmp) / "absent.json"
+            blocked = dict(sd.adoptable(a))
+            check(list(blocked) == ["(the audit itself)"]
+                  and "nothing to compare against" in blocked["(the audit itself)"],
+                  "with no audit on disk, --write is refused rather than taking the directory "
+                  "as read", str(blocked))
+        finally:
+            sd.AUDIT = real_audit
+
+
+def test_shot_disposition_reads_more_than_png_citations() -> None:
+    sd = load(ROOT / "scripts/campaign/shot_disposition.py", "shot_disposition_suffixes")
+    out: dict = {}
+    sd.cite_paths({"evidence": ["evidence/shots/a.jpg", "evidence/shots/b.pdf",
+                                "evidence/shots/c.png", "docs/x.mov",
+                                "negative control docs/nope.png", "not-a-path.png"]},
+                  "CASE-X", out)
+    check(sorted(out) == ["docs/x.mov", "evidence/shots/a.jpg", "evidence/shots/b.pdf",
+                          "evidence/shots/c.png"],
+          "every image and media suffix is a citation, and prose about a file is not",
+          str(sorted(out)))
+
+
+def test_mutation_timeout_arm_refuses_an_unresolvable_baseline() -> None:
+    """A pinned sha does not exist in a shallow clone, and git show fails quietly."""
+    out = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/campaign/mutation_timeout_arm.py"),
+         "--baseline-ref", "0000000000000000000000000000000000000000",
+         "--out", "/tmp/pro0106-unresolvable.json"],
+        capture_output=True, text=True, cwd=ROOT)
+    check(out.returncode == 2 and "does not resolve in this checkout" in out.stdout,
+          f"an unresolvable baseline ref is refused rather than compared against nothing "
+          f"(exit {out.returncode})", (out.stdout + out.stderr)[-400:])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -1392,7 +1572,13 @@ def main() -> int:
                test_seam_arm_display_names_resolve_for_every_case,
                test_seam_arm_apply_proves_its_own_write,
                test_shot_disposition_identity_grouping_is_checked,
-               test_shot_disposition_manifest_reflects_the_bytes_on_disk):
+               test_shot_disposition_manifest_reflects_the_bytes_on_disk,
+               test_mutate_swift_offsets_are_two_coordinates,
+               test_mutate_swift_revert_is_read_back,
+               test_seam_arm_display_name_refuses_a_name_it_cannot_read,
+               test_shot_disposition_adoption_covers_every_route_in,
+               test_shot_disposition_reads_more_than_png_citations,
+               test_mutation_timeout_arm_refuses_an_unresolvable_baseline):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

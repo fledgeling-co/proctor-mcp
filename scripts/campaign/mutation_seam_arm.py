@@ -202,11 +202,27 @@ def display_name(function: str, tests_root: Path | None = None) -> tuple[str | N
             if at < 0:
                 continue
             attr = TEST_ATTR_RE.match(head[at:])
-            hits.append((attr.group(1) if attr else function + "()", str(path)))
+            if attr:
+                hits.append((attr.group(1), str(path)))
+            elif re.match(r"@Test\s*(?:\n|func\b)", head[at:]):
+                # A bare `@Test` with no arguments: swift-testing shows the
+                # function signature.
+                hits.append((function + "()", str(path)))
+            else:
+                # `@Test(.tags(...), "Name")` or `@Test(arguments: …)`. The
+                # display string is not where this expects it, and guessing
+                # `function()` would put a name in the log comparison that the
+                # log will never print — turning a real arming into a silent
+                # mismatch. Refusing is the direction that stays honest.
+                hits.append((None, str(path)))
     names = {h[0] for h in hits}
     if not hits:
         return None, "no @Test function named %s under %s" % (
             function, tests_root or ROOT / "Tests")
+    if None in names:
+        return None, ("the @Test attribute on %s does not open with a display string, so the "
+                      "name swift-testing will print cannot be read from the source (%s)"
+                      % (function, hits[0][1]))
     if len(names) != 1:
         return None, ("%s resolves to %d different @Test display names (%s), so no started line "
                       "can be attributed to it" % (function, len(names), ", ".join(sorted(names))))
@@ -263,7 +279,16 @@ def score_arming(display: str | None, why_display: str, r: dict, timeout: int) -
         return ("INCONCLUSIVE", None,
                 "the filtered run reached the %ds bound without reporting — a starved run is "
                 "the absence of a measurement, not a test that failed" % timeout)
+    started, finished = set(r["started"]), set(r["finished"])
     if r["verdict"]:
+        # A `--filter` selects by function name, so a reported failure is almost
+        # certainly the named test — and `almost certainly` is what this item
+        # refuses. If the filter matched nothing, or matched something else, the
+        # started lines say so and the exit code does not. Out-of-family review.
+        if display is not None and started and display not in started:
+            return ("INCONCLUSIVE", None,
+                    "the suite reported a verdict line and never started `%s` (it started %s), "
+                    "so the exit code is about some other test" % (display, sorted(started)))
         if r["exit"] != 0:
             return "ARMED", True, "the suite reported a verdict line and exited %d" % r["exit"]
         return ("NOT ARMED", False,
@@ -273,12 +298,23 @@ def score_arming(display: str | None, why_display: str, r: dict, timeout: int) -
         return ("INCONCLUSIVE", None,
                 "no swift-testing verdict line, and the test's display name could not be "
                 "resolved to attribute the run: %s" % why_display)
-    started, finished = set(r["started"]), set(r["finished"])
-    if display in started and display not in finished and r["exit"] != 0:
+    if display in started and not finished and r["exit"] != 0:
+        if len(started) != 1:
+            # Swift Testing runs tests concurrently unless a suite is serialized,
+            # so two started lines and no completions cannot say which one died.
+            # Out-of-family review, PRO-0106.
+            return ("INCONCLUSIVE", None,
+                    "no verdict line and %d tests started with none finishing, so nothing "
+                    "attributes the death to `%s` rather than to one running beside it: %s"
+                    % (len(started), display, sorted(started)))
         return ("ARMED", True,
                 'no verdict line, and the log shows the named test was running when the process '
-                'died: `Test "%s" started.` with no completion line and exit %d. A trap inside '
-                'the mutated code is the check firing; a death before that line is not.'
+                'died: `Test "%s" started.` was the only test to start, none finished, exit %d. '
+                'A trap inside the mutated code is the check firing; a death before that line is '
+                'not. WHAT THIS DOES NOT ESTABLISH: a trap in the test\'s own setup, a '
+                '`try #require` before the subject is called, or a crash in teardown all land '
+                'after the started line and would read the same. The evidence separates a death '
+                'inside the named test from a death before any test ran, and no further.'
                 % (display, r["exit"]))
     if display in started and r["exit"] == 0:
         return ("INCONCLUSIVE", None,
