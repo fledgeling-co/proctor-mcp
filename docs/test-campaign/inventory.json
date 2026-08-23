@@ -3891,6 +3891,19 @@
         "REQ-132"
       ],
       "note": "DEF-208's shape inside mutate_swift.py rather than beside it, and found by turning PRO-0106's own discipline on the instrument it was already repairing. run_suite() read `p.returncode == 0` as the whole verdict once a build error was ruled out, so a runner that died after linking and before printing anything scored `failed` and then `killed` — the direction that flatters the suite, because it credits the tests with catching a fault they were never run against. The existing `error:` check catches a compile failure; a runner death after `Build complete` is exactly the case it does not. WHERE THIS WAS LOOKED FOR, so an absence claim can be read: every .py under scripts/campaign/ and scripts/reckoning/ was grepped for a verdict taken from an exit code (`code != 0`, `returncode != 0`, `returncode == 0`), 27 files, and every hit read in place. mutation_timeout_arm.py compares scored verdicts rather than exit codes; skill_doc_arm.py and spec_citation_arm.py read named PASS/FAIL verdicts out of their subject's output; defect_gate.py and spec_citation_measure.py use returncode only to decide whether a git subprocess produced usable output, which is a different question. That is 'not in these 27 files', not 'not anywhere' — nothing outside scripts/ was searched, and the Swift suite was not. CLOSED BY PRO-0106: a non-zero exit with no `Test run with N tests` line is `no-verdict-line` and scores `inconclusive`, and the baseline refusal says a baseline that did not report is not a red baseline. The (passed, why) contract is held deliberately, because mutation_timeout_arm.py substitutes its own run_suite to drive this runner end to end and widening it would break the arming that watches this file; a check asserts the substitute still matches. Both mutations watched to red the suite: docs/test-campaign/evidence/PRO-0106/def240-arming.txt."
+    },
+    {
+      "id": "DEF-241",
+      "title": "shot_disposition.py published a count of its own directory that was wrong",
+      "status": "fixed",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-130"
+      ],
+      "note": "The audit's `deletionTests.exactDuplicateOfAPublishedFile` sentence read 'none of those eleven files is any subject's shot'. The four byte-identical groups cover TEN files — two sweepL-status, two sweepL-wedged, three around sweepK-theme-before, three overlay-exclusion — and the instrument's own `redundantFiles` field says 6, which is 10 minus 4 and agrees with the data rather than with the sentence. Both numbers were literals in a string that the instrument writes into the published audit, so the file carried a claim nothing re-derived, in the file whose whole argument is that a claim nothing re-derives is an opinion. The same sentence's companion, 'the smallest is 10,680', was a literal too. Found by asserting the count in a test rather than by reading the sentence. CLOSED BY PRO-0106: both sentences are built from the rows, and a check asserts the published sentence states the count that run computed, so the two cannot disagree again. This is the class DEF-193 opened — the fifth stale count in a document nothing read — arriving inside the instrument rather than beside it."
     }
   ]
 }

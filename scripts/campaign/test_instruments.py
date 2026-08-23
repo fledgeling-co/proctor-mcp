@@ -1263,6 +1263,110 @@ def test_seam_arm_display_names_resolve_for_every_case() -> None:
           "\n".join(unresolved))
 
 
+# ── The other write path, driven ────────────────────────────────────────────
+#
+# `main` names this item's likely failure mode by name: a repair that proves the
+# step on the path the harness exercises while another path stays undriven.
+# `mutation_seam_arm.py` has its own `apply()`, with its own occurrence-count and
+# read-back check, and nothing was driving it. The original defect is reintroduced
+# on that path too rather than only on the one PRO-0106 rewrote.
+
+def test_seam_arm_apply_proves_its_own_write() -> None:
+    mod = _seam_arm()
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        rel = "F.swift"
+        real_root = mod.ROOT
+        try:
+            mod.ROOT = root
+            mod._APPLIED.clear()
+            (root / rel).write_text("guard a || b else { return nil }\n")
+            landed, why = mod.apply(rel, "a || b", "a && b")
+            check(landed and (root / rel).read_text() == "guard a && b else { return nil }\n",
+                  "a unique anchor is replaced and the file re-reads as the mutation", why)
+
+            mod._APPLIED.clear()
+            twice = "guard a || b else { return nil }\n// and again: a || b\n"
+            (root / rel).write_text(twice)
+            landed, why = mod.apply(rel, "a || b", "a && b")
+            check(not landed and "occurs 2 times, not once" in why,
+                  "an anchor occurring twice is refused rather than replaced everywhere", why)
+            check((root / rel).read_text() == twice,
+                  "and the refused mutation left the file exactly as it was")
+
+            mod._APPLIED.clear()
+            (root / rel).write_text("guard a || b else { return nil }\n")
+            landed, why = mod.apply(rel, "nothing like this", "x")
+            check(not landed and "occurs 0 times" in why,
+                  "an anchor that is not there is refused", why)
+
+            # The read-back half: a write the disk does not take.
+            mod._APPLIED.clear()
+            source = "guard a || b else { return nil }\n"
+            (root / rel).write_text(source)
+            real_write = Path.write_text
+            try:
+                Path.write_text = lambda self, data, *a, **k: real_write(self, source, *a, **k)
+                landed, why = mod.apply(rel, "a || b", "a && b")
+            finally:
+                Path.write_text = real_write
+            check(not landed and "not in the file after writing it" in why,
+                  "a write the disk did not take is refused on the re-read", why)
+        finally:
+            mod.ROOT = real_root
+            mod._APPLIED.clear()
+
+
+def test_shot_disposition_identity_grouping_is_checked() -> None:
+    """The open question main recorded, answered by making it fail.
+
+    `shot_disposition.py` detects byte-identity and reports it, and that identity
+    is what DEF-221 and DEF-222 rest on. Nothing would have failed if it silently
+    stopped grouping: the count was printed and never checked.
+    """
+    sd = load(ROOT / "scripts/campaign/shot_disposition.py", "shot_disposition_groups")
+    a = sd.audit()
+    groups = a["byteIdenticalGroups"]
+    n_files = sum(len(v) for v in groups.values())
+    check(len(groups) == 4 and n_files == 10,
+          f"the directory still holds four groups over ten files ({len(groups)} over {n_files})")
+    # DEF-241: the sentence used to say eleven. It is derived now, so the two
+    # cannot disagree again.
+    sentence = a["deletionTests"]["exactDuplicateOfAPublishedFile"]
+    check(f"{len(groups)} groups cover {n_files} files" in sentence,
+          "and the published sentence states the count this run computed", sentence[:160])
+    smallest = min(r["bytes"] for r in a["shots"])
+    check(f"{smallest:,}" in a["deletionTests"]["zeroByte"] and smallest > 0,
+          "the zero-byte test names the smallest file this run measured",
+          a["deletionTests"]["zeroByte"])
+    stored = json.loads(sd.AUDIT.read_text())["byteIdenticalGroups"]
+    check({k: sorted(v) for k, v in stored.items()} == {k: sorted(v) for k, v in groups.items()},
+          "and the audit on disk records the same grouping this run computes")
+    text = (ROOT / "scripts/campaign/shot_disposition.py").read_text()
+    check("the byte-identical grouping moved" in text,
+          "verify() fails on a change to the grouping rather than only printing the count")
+
+
+def test_shot_disposition_manifest_reflects_the_bytes_on_disk() -> None:
+    """`--manifest` is a second output path, and it was undriven too."""
+    out = subprocess.run(
+        [sys.executable, "-W", "ignore",
+         str(ROOT / "scripts/campaign/shot_disposition.py"), "--manifest"],
+        capture_output=True, text=True, cwd=ROOT)
+    check(out.returncode == 0, f"--manifest exits 0 ({out.returncode})", out.stderr[-300:])
+    entries = json.loads(out.stdout)
+    check(len(entries) == 35, f"it emits one entry per disposed-and-unpublished image ({len(entries)})")
+    wrong = []
+    for e in entries:
+        f = ROOT / "docs/test-campaign" / e["path"]
+        data = f.read_bytes()
+        if hashlib.sha256(data).hexdigest() != e["sha256"] or len(data) != e["bytes"]:
+            wrong.append(e["path"])
+    check(not wrong,
+          "and every sha256 and byte count in it is the file on disk, re-derived here",
+          "\n".join(wrong))
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -1285,7 +1389,10 @@ def main() -> int:
                test_seam_arm_scores_the_trap_from_the_log,
                test_seam_arm_scores_a_reported_run,
                test_seam_arm_refuses_an_ambiguous_display_name,
-               test_seam_arm_display_names_resolve_for_every_case):
+               test_seam_arm_display_names_resolve_for_every_case,
+               test_seam_arm_apply_proves_its_own_write,
+               test_shot_disposition_identity_grouping_is_checked,
+               test_shot_disposition_manifest_reflects_the_bytes_on_disk):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

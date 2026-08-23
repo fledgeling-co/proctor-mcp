@@ -1,0 +1,123 @@
+{
+ "summary": {
+  "armed": false,
+  "decisionArmed": true,
+  "genuineFailureUnchanged": true,
+  "endToEndArmed": false,
+  "preChangeSourceMatched": false,
+  "baselineRef": "main",
+  "treeCleanAfter": true,
+  "target": "Sources/ProctorAgent/RunIdentity.swift"
+ },
+ "decisions": [
+  {
+   "input": "a timeout",
+   "why": "timeout",
+   "seconds": 600.0,
+   "before": "killed",
+   "after": "TIMEOUT",
+   "nearBound": true
+  },
+  {
+   "input": "a genuine failure",
+   "why": "failed",
+   "seconds": 31.4,
+   "before": "killed",
+   "after": "killed",
+   "nearBound": false
+  },
+  {
+   "input": "a survivor",
+   "why": "passed",
+   "seconds": 22.9,
+   "before": "SURVIVED",
+   "after": "SURVIVED",
+   "nearBound": false
+  },
+  {
+   "input": "a build failure",
+   "why": "build-failed",
+   "seconds": 8.1,
+   "before": "unbuildable",
+   "after": "unbuildable",
+   "nearBound": false
+  },
+  {
+   "input": "a kill that came close",
+   "why": "failed",
+   "seconds": 594.0,
+   "before": "killed",
+   "after": "killed",
+   "nearBound": true
+  }
+ ],
+ "endToEnd": {
+  "before": {
+   "verdict": "TIMEOUT",
+   "seconds": 0.0,
+   "summary": {
+    "sites": 1,
+    "run": 1,
+    "killed": 0,
+    "survived": 0,
+    "unbuildable": 0,
+    "timedOut": 1,
+    "scored": 0,
+    "survivalRate": null,
+    "timeoutBoundSeconds": 600,
+    "nearBound": [
+     "RunIdentity.swift:30 TIMEOUT at 0.0s"
+    ],
+    "treeCleanAfter": true,
+    "targets": [
+     "Sources/ProctorAgent/RunIdentity.swift"
+    ],
+    "seed": 20260823,
+    "byOperator": {
+     "int-literal": {
+      "killed": 0,
+      "survived": 0,
+      "unbuildable": 0,
+      "timedOut": 1
+     }
+    },
+    "baselineGreen": true
+   }
+  },
+  "after": {
+   "verdict": "TIMEOUT",
+   "seconds": 0.0,
+   "nearBound": true,
+   "summary": {
+    "sites": 1,
+    "run": 1,
+    "killed": 0,
+    "survived": 0,
+    "unbuildable": 0,
+    "timedOut": 1,
+    "inconclusive": 0,
+    "scored": 0,
+    "survivalRate": null,
+    "timeoutBoundSeconds": 600,
+    "nearBound": [
+     "RunIdentity.swift:30 TIMEOUT at 0.0s"
+    ],
+    "treeCleanAfter": true,
+    "targets": [
+     "Sources/ProctorAgent/RunIdentity.swift"
+    ],
+    "seed": 20260823,
+    "byOperator": {
+     "int-literal": {
+      "killed": 0,
+      "survived": 0,
+      "unbuildable": 0,
+      "timedOut": 1,
+      "inconclusive": 0
+     }
+    },
+    "baselineGreen": true
+   }
+  }
+ }
+}

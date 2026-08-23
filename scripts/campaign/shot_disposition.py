@@ -530,14 +530,22 @@ def audit() -> dict:
         "byteIdenticalGroups": groups,
         "redundantFiles": sum(len(n) - 1 for n in groups.values()),
         "deleted": 0,
+        # DEF-241. Both sentences used to state their numbers as literals, and one
+        # of them was wrong: the four groups cover TEN files and the text said
+        # eleven. A count a document states about an instrument is a count the
+        # instrument can compute, and this file's whole argument is that a claim
+        # nothing re-derives is an opinion. Both are now built from the rows.
         "deletionTests": {
-            "zeroByte": "no file in the directory is zero bytes; the smallest is 10,680.",
+            "zeroByte": (
+                "no file in the directory is zero bytes; the smallest is "
+                f"{min((r['bytes'] for r in rows), default=0):,}."
+            ),
             "exactDuplicateOfAPublishedFile": (
-                "no byte-identical group contains a published file — the four groups are three "
-                "overlay-exclusion frames, sweepK-theme-before with two sweepL frames, the two "
-                "sweepL-status frames and the two later sweepL-wedged frames, and none of those "
-                "eleven files is any subject's `shot`. The duplication is itself the evidence "
-                "for DEF-221 and DEF-222, so deleting a member would delete the finding."
+                f"no byte-identical group contains a published file — the "
+                f"{len(groups)} groups cover {sum(len(n) for n in groups.values())} files "
+                f"({'; '.join(', '.join(sorted(n)) for n in groups.values())}), and none of "
+                f"them is any subject's `shot`. The duplication is itself the evidence for "
+                f"DEF-221 and DEF-222, so deleting a member would delete the finding."
             ),
         },
         "shots": rows,
@@ -562,6 +570,19 @@ def verify(a: dict) -> int:
                        f"({p['sha256'][:12]} → {r['sha256'][:12]})")
     for name in sorted(set(prior) - set(now)):
         bad.append(f"{name}: disposed in the audit and no longer on disk")
+    # The identity grouping is what carries DEF-221 and DEF-222, and until now
+    # nothing would have failed if it silently stopped grouping — the count is
+    # printed and never checked. Recorded on main as an open question; this
+    # answers it by comparing the recomputed groups against the ones the audit
+    # holds, which is what makes the mutation `groups = {}` fail.
+    stored_groups = json.loads(AUDIT.read_text()).get("byteIdenticalGroups", {})
+    now_groups = a["byteIdenticalGroups"]
+    if {k: sorted(v) for k, v in stored_groups.items()} != {k: sorted(v) for k, v in now_groups.items()}:
+        bad.append(
+            f"the byte-identical grouping moved: the audit holds {len(stored_groups)} group(s) "
+            f"covering {sum(len(v) for v in stored_groups.values())} file(s) and this run finds "
+            f"{len(now_groups)} covering {sum(len(v) for v in now_groups.values())}. Identity is "
+            f"what DEF-221 and DEF-222 rest on, so a change here is a change to a finding.")
     cite_failures, cite_notices = citations(a)
     print(f"{len(now)} image(s) · {a['disposed']} disposed · "
           f"{len(a['byteIdenticalGroups'])} byte-identical group(s) · "

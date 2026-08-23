@@ -4,7 +4,7 @@
 **Status:** Developer Review
 **Created:** 2026-08-23
 **Last updated:** 2026-08-23
-**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240
+**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240, DEF-241
 **Brief:** `docs/features-to-triage/99-instruments-that-do-not-prove-their-own-step.md`
 
 ## Feature description
@@ -103,6 +103,37 @@ population. Not a fault: `capture-lineage.py` excludes any path with a `mock` di
 the same reason, and CASE-0039 cites the mock and the capture side by side, which is the comparison.
 The `mock/` lane is checked for existence only, and the exclusion says why.
 
+**DEF-241**, found by asserting a count instead of reading it. The audit's own sentence said "none of
+those **eleven** files is any subject's shot"; the four byte-identical groups cover **ten**, and the
+instrument's own `redundantFiles` field says 6, which agrees with the data rather than with the
+sentence. Both that number and "the smallest is 10,680" beside it were literals inside a string the
+instrument writes into the published audit — a claim nothing re-derives, in the file whose whole
+argument is that a claim nothing re-derives is an opinion. Both are built from the rows now, and a
+check asserts the published sentence states the count that run computed.
+
+## The failure mode this item was warned about, and what the audit found
+
+`main` named it while this was in flight: *a repair that proves the step on the path the harness
+exercises while leaving another path undriven*. Four paths were undriven, and each is now driven with
+the original defect reintroduced on it.
+
+- **`porcelain_paths` accepts six kinds of status entry and one was driven.** All six now, and the
+  result is more useful than the assertion first written: the pre-repair slice is wrong on **four**,
+  not two. An untracked entry and a staged addition survive a strip intact, which is exactly why the
+  defect went unnoticed and why the fixture had to be a modified tracked file.
+- **The witness had two kinds of change and there are three.** Under `--force` a re-take runs over a
+  directory that already holds a reading, and a file the build stopped writing leaves no trace in
+  either name set. `removed` records it.
+- **`mutation_seam_arm.py` has its own `apply()`**, with its own occurrence-count and read-back check,
+  and nothing was driving it. Both halves are driven to refuse now, and the passing direction in the
+  same run.
+- **`--manifest` is a second output path** emitting digests and byte counts that nothing checked
+  against the disk. All 35 entries are re-derived.
+
+The open question `main` recorded is answered rather than left: byte-identity grouping is what DEF-221
+and DEF-222 rest on, and nothing would have failed if it silently stopped grouping. `verify()` now
+fails on a change to it.
+
 ## Where absence claims were checked
 
 **The `code != 0`-as-verdict pattern is not in these 27 files.** Every `.py` under `scripts/campaign/`
@@ -132,4 +163,5 @@ Searched: the four instruments this item names, plus every `git status --porcela
 | DEF-226 | fixed |
 | DEF-227 | fixed |
 | DEF-240 | fixed |
+| DEF-241 | fixed |
 | DEF-215 | (recorded) four ledger rows carry no spec file. Writing retrospective specs for two retired items is a decision about those items and belongs to whoever takes it, so it is recorded open rather than closed here. |
