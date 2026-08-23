@@ -6760,5 +6760,23 @@
     "defects": [
       "DEF-226"
     ]
+  },
+  {
+    "id": "CASE-0554",
+    "req": "REQ-130",
+    "surface": "SURF-026",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0106/timeout-arming.json",
+      "scripts/campaign/mutation_timeout_arm.py"
+    ],
+    "armed": true,
+    "armedBy": "The gate is its own two-way control and it was found failing, not passing: on a clean detached worktree of main it exits 1 with before=TIMEOUT after=TIMEOUT, and with the baseline pinned it exits 0 with before=killed after=TIMEOUT. Both readings taken in the same session.",
+    "note": "DEF-242. The gate's --baseline-ref defaulted to `main`, which absorbed the fix the gate exists to demonstrate, so it loaded the same file twice and had been red since fc1b9a4 with nothing reading it. Pinned to fc1b9a4~1. A baseline ref that will one day contain the change cannot hold the state before it.",
+    "defects": [
+      "DEF-242"
+    ]
   }
 ]

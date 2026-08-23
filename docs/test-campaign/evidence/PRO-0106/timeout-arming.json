@@ -1,11 +1,11 @@
 {
  "summary": {
-  "armed": false,
+  "armed": true,
   "decisionArmed": true,
   "genuineFailureUnchanged": true,
-  "endToEndArmed": false,
-  "preChangeSourceMatched": false,
-  "baselineRef": "main",
+  "endToEndArmed": true,
+  "preChangeSourceMatched": true,
+  "baselineRef": "fc1b9a4~1",
   "treeCleanAfter": true,
   "target": "Sources/ProctorAgent/RunIdentity.swift"
  },
@@ -53,21 +53,16 @@
  ],
  "endToEnd": {
   "before": {
-   "verdict": "TIMEOUT",
+   "verdict": "killed",
    "seconds": 0.0,
    "summary": {
     "sites": 1,
     "run": 1,
-    "killed": 0,
+    "killed": 1,
     "survived": 0,
     "unbuildable": 0,
-    "timedOut": 1,
-    "scored": 0,
-    "survivalRate": null,
-    "timeoutBoundSeconds": 600,
-    "nearBound": [
-     "RunIdentity.swift:30 TIMEOUT at 0.0s"
-    ],
+    "scored": 1,
+    "survivalRate": 0.0,
     "treeCleanAfter": true,
     "targets": [
      "Sources/ProctorAgent/RunIdentity.swift"
@@ -75,10 +70,9 @@
     "seed": 20260823,
     "byOperator": {
      "int-literal": {
-      "killed": 0,
+      "killed": 1,
       "survived": 0,
-      "unbuildable": 0,
-      "timedOut": 1
+      "unbuildable": 0
      }
     },
     "baselineGreen": true

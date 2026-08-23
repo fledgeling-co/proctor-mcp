@@ -3904,6 +3904,19 @@
         "REQ-130"
       ],
       "note": "The audit's `deletionTests.exactDuplicateOfAPublishedFile` sentence read 'none of those eleven files is any subject's shot'. The four byte-identical groups cover TEN files — two sweepL-status, two sweepL-wedged, three around sweepK-theme-before, three overlay-exclusion — and the instrument's own `redundantFiles` field says 6, which is 10 minus 4 and agrees with the data rather than with the sentence. Both numbers were literals in a string that the instrument writes into the published audit, so the file carried a claim nothing re-derived, in the file whose whole argument is that a claim nothing re-derives is an opinion. The same sentence's companion, 'the smallest is 10,680', was a literal too. Found by asserting the count in a test rather than by reading the sentence. CLOSED BY PRO-0106: both sentences are built from the rows, and a check asserts the published sentence states the count that run computed, so the two cannot disagree again. This is the class DEF-193 opened — the fifth stale count in a document nothing read — arriving inside the instrument rather than beside it."
+    },
+    {
+      "id": "DEF-242",
+      "title": "mutation_timeout_arm.py compared the repaired runner against itself",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "requirements": [
+        "REQ-130"
+      ],
+      "note": "--baseline-ref defaulted to `main`, and main absorbed PRO-0092's timeout fix the moment that branch merged. From then on the gate loaded the same file twice and reported `before=TIMEOUT after=TIMEOUT`, armed: False, exit 1. ESTABLISHED ON TWO TREES RATHER THAN ARGUED: it exits 1 with identical output on a clean `git worktree add --detach main` tree and on PRO-0106's branch, and `git log -S` puts the marker's disappearance at fc1b9a4, PRO-0092's own fix. So this gate has been red since that merge and nothing noticed, because it is not in the per-merge gate list — the same gap that let capture-lineage sit red across three trees before PRO-0107. The failure was loud rather than silent: OLD_SOURCE_MARKER stopped matching at the same moment, so the run says so. A baseline ref that will one day contain the change cannot hold the state before it. CLOSED BY PRO-0106: pinned to fc1b9a4~1, with the reason in the flag's own comment. Armed at exit 0 with before=killed scored=1 survivalRate=0.0 against after=TIMEOUT scored=0 survivalRate=None, which is the contrast the gate exists to show."
     }
   ]
 }

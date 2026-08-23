@@ -4,7 +4,7 @@
 **Status:** Developer Review
 **Created:** 2026-08-23
 **Last updated:** 2026-08-23
-**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240, DEF-241
+**Defects:** DEF-200, DEF-205..DEF-208, DEF-215, DEF-226, DEF-227, DEF-240, DEF-241, DEF-242
 **Brief:** `docs/features-to-triage/99-instruments-that-do-not-prove-their-own-step.md`
 
 ## Feature description
@@ -111,6 +111,14 @@ instrument writes into the published audit — a claim nothing re-derives, in th
 argument is that a claim nothing re-derives is an opinion. Both are built from the rows now, and a
 check asserts the published sentence states the count that run computed.
 
+**DEF-242**, and it is a gate that had been red on `main` since the change it measures was merged.
+`mutation_timeout_arm.py --baseline-ref` defaulted to `main`, which absorbed PRO-0092's timeout fix at
+that merge, so the gate loaded the same file twice and reported `before=TIMEOUT after=TIMEOUT`. Checked
+on two trees rather than argued: identical exit 1 on a clean detached worktree of `main` and on this
+branch. Nothing noticed because this gate is not in the per-merge list — the same gap that let
+`capture-lineage` sit red across three trees before PRO-0107. Pinned to `fc1b9a4~1`, and it now arms at
+exit 0 with `before=killed scored=1 survivalRate=0.0` against `after=TIMEOUT scored=0 survivalRate=None`.
+
 ## The failure mode this item was warned about, and what the audit found
 
 `main` named it while this was in flight: *a repair that proves the step on the path the harness
@@ -164,4 +172,5 @@ Searched: the four instruments this item names, plus every `git status --porcela
 | DEF-227 | fixed |
 | DEF-240 | fixed |
 | DEF-241 | fixed |
+| DEF-242 | fixed |
 | DEF-215 | (recorded) four ledger rows carry no spec file. Writing retrospective specs for two retired items is a decision about those items and belongs to whoever takes it, so it is recorded open rather than closed here. |
