@@ -7259,5 +7259,124 @@
     "defects": [
       "DEF-229"
     ]
+  },
+  {
+    "id": "CASE-0620",
+    "req": "REQ-155",
+    "surface": "SURF-031",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py check 18a asserts headline carries denominators beside percentages for both cases and requirements",
+    "note": "DEF-280: headline output carries explicit cases and requirements denominators (X/Y (Z%)).",
+    "defects": [
+      "DEF-280"
+    ]
+  },
+  {
+    "id": "CASE-0621",
+    "req": "REQ-155",
+    "surface": "SURF-031",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py check 18c asserts weak-join warning carries joined/total denominator beside percentage",
+    "note": "DEF-280: weak-join warning output carries explicit denominator (only N/D (pct%) of briefs).",
+    "defects": [
+      "DEF-280"
+    ]
+  },
+  {
+    "id": "CASE-0622",
+    "req": "REQ-155",
+    "surface": "SURF-031",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py check 18b asserts blocker table in markdown report carries denominator in coverage returned",
+    "note": "DEF-280: blocker table Coverage returned column prints denominator (+X/Y (+Z.Z pts)).",
+    "defects": [
+      "DEF-280"
+    ]
+  },
+  {
+    "id": "CASE-0623",
+    "req": "REQ-155",
+    "surface": "SURF-031",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py check clean ledger passes and render produces Measured and Of columns next to percentage",
+    "note": "DEF-280: reckon markdown report What it can speak for table includes Measured and Of denominator columns.",
+    "defects": [
+      "DEF-280"
+    ]
+  },
+  {
+    "id": "CASE-0624",
+    "req": "REQ-157",
+    "surface": "SURF-031",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py check 19a asserts brief citing only via source joins at confidence 1.0 cited edge",
+    "note": "DEF-281: read source to join creates cited edges at confidence 1.0 for brief frontmatter and registry citations.",
+    "defects": [
+      "DEF-281"
+    ]
+  },
+  {
+    "id": "CASE-0625",
+    "req": "REQ-156",
+    "surface": "SURF-031",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py check 19b asserts circular source evidence stays unmeasured with circular why and zero unclassified inputs",
+    "note": "DEF-281: refuse to let source grade classes circular source evidence as unmeasured with circular why rather than unclassified finding.",
+    "defects": [
+      "DEF-281"
+    ]
+  },
+  {
+    "id": "CASE-0626",
+    "req": "REQ-156",
+    "surface": "SURF-031",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
+    ],
+    "armed": true,
+    "armedBy": "selftest.py check 19b expect circular source evidence classed done fails gate with placement violation exit 1",
+    "note": "DEF-281: gate() placement check rejects requirement with circular source evidence classed verified-done.",
+    "defects": [
+      "DEF-281"
+    ]
   }
 ]

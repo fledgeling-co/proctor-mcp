@@ -1377,7 +1377,43 @@
       "note": "PRO-0110 DEF-243 accounts for the design of record mock files in shot_disposition.py so mock mutations, deletions, or unmanaged additions are caught.",
       "effect": "none"
     }
-  ],
+,
+    {
+      "id": "REQ-155",
+      "class": "honesty-guardrail",
+      "text": "Every percentage emitted by reckon across all report modes carries its denominator beside it",
+      "source": "DEF-280; docs/specs/spec-PRO-0108.md; docs/features-to-triage/96-what-1-1-0-still-groups-and-still-grades.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-031"
+      ],
+      "note": "Ensures every percentage output across headlines, warnings, and markdown reports includes its denominator (e.g. X/Y (Z%)) so numbers from different registries cannot look like contradictions.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-156",
+      "class": "honesty-guardrail",
+      "text": "A requirement whose only evidence is its own source declaration stays unmeasured with circular evidence named",
+      "source": "DEF-281; docs/specs/spec-PRO-0108.md; docs/features-to-triage/96-what-1-1-0-still-groups-and-still-grades.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-031"
+      ],
+      "note": "Refuses to let source evidence grade a requirement to observed; it stays unmeasured by a rule naming circular evidence rather than an unclassified fallback.",
+      "effect": "none"
+    },
+    {
+      "id": "REQ-157",
+      "class": "correctness",
+      "text": "A brief that cites registry entities through source joins at confidence 1.0",
+      "source": "DEF-281; docs/specs/spec-PRO-0108.md; docs/features-to-triage/96-what-1-1-0-still-groups-and-still-grades.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-031"
+      ],
+      "note": "Reads source in brief frontmatter and registry entities to establish confidence 1.0 cited join edges.",
+      "effect": "none"
+    }  ],
   "surface": [
     {
       "id": "SURF-001",
@@ -2084,7 +2120,20 @@
         }
       ]
     }
-  ],
+,
+    {
+      "id": "SURF-031",
+      "name": "Reckon Denominator Printing and Circular Source Evidence Gating",
+      "title": "Denominator printing across reckon report modes and circular source evidence gating",
+      "route": "tool://reckon/denominators-and-source-gating",
+      "status": "reachable",
+      "states": [
+        "clean",
+        "missing-denominator",
+        "circular-evidence"
+      ],
+      "description": "Reckon shared tool reporting guarantees ensuring all percentages carry their denominators across build, check, and report outputs (DEF-280), and circular source evidence is read to join but refused for grading requirements to observed (DEF-281)."
+    }  ],
   "component": [
     {
       "id": "CMP-001",
@@ -4169,5 +4218,38 @@
         "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
       ]
     }
-  ]
+,
+    {
+      "id": "DEF-280",
+      "title": "reckon emitted percentages without denominators across reports",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-031"
+      ],
+      "requirements": [
+        "REQ-155"
+      ],
+      "note": "PRO-0108 / brief 96 finding 1: percentages emitted in headline, blocker tables, and weak join warnings lacked explicit denominators, leading to reconciliation confusion between different registries.",
+      "evidence": [
+        "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
+      ]
+    },
+    {
+      "id": "DEF-281",
+      "title": "reckon allowed circular source evidence to grade requirements to observed",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-031"
+      ],
+      "requirements": [
+        "REQ-156",
+        "REQ-157"
+      ],
+      "note": "PRO-0108 / brief 96 finding 2: source was used both to join and to grade, allowing circular source restatements to promote requirements to observed. Repaired to read source to join while refusing to let it grade.",
+      "evidence": [
+        "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py"
+      ]
+    }  ]
 }
