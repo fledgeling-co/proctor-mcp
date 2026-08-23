@@ -11,13 +11,13 @@
    "total": 44
   },
   "evidence-integrity": {
-   "coverage": 0.895,
-   "covered": 162,
+   "coverage": 0.8967,
+   "covered": 165,
    "green": false,
    "lineage_gaps": 19,
-   "surfaces_matched": 10,
+   "surfaces_matched": 11,
    "threshold": 1.0,
-   "total": 181
+   "total": 184
   },
   "operator-state": {
    "coverage": 0.9444,
@@ -65,7 +65,7 @@
    "total": 115
   }
  },
- "generated_at": "2026-08-23T19:36:10.318033+00:00",
+ "generated_at": "2026-08-23T23:25:35.678590+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -169,6 +169,12 @@
    "figures": 2,
    "file": "stdio://proctor-shim",
    "sourced": 2,
+   "unsourced": 0
+  },
+  {
+   "figures": 3,
+   "file": "tool://actuation/cua-subprocess",
+   "sourced": 3,
    "unsourced": 0
   },
   {

@@ -1,3 +1,6 @@
+---
+sources: [SURF-015, REQ-001]
+---
 # Native OCR and High-DPI Visual Region Inspector for Zoom Assertions
 
 - origin: intake sweep over visual inspection tools and PRD Section 1 · 2026-08-24

@@ -2155,6 +2155,17 @@ def test_hardware_yield_probe_characterization() -> None:
     check(len(results) == 11 and all(ok for _, ok, _ in results), "hardware_yield_probe truth table passes all 11 assertions")
 
 
+
+def test_subprocess_witness_characterization() -> None:
+    """DEF-305 / REQ-180: Characterize cua-driver subprocess lifecycle, exit code capture, and daemon interlock."""
+    script = ROOT / "scripts/campaign/subprocess_witness.py"
+    res = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(res.returncode == 0, "subprocess_witness.py exits 0 on truth table verification", res.stderr or res.stdout)
+    mod = load(script, "subprocess_witness")
+    results = mod.verify_subprocess_lifecycle_truth_table()
+    check(len(results) == 5 and all(r.passed for r in results), "subprocess_witness truth table passes all 5 assertions")
+
+
 def test_dynamic_grant_probe_characterization() -> None:
     """DEF-180 / REQ-162: Characterize dynamic TCC grant re-probe lifecycle and invalidation."""
     script = ROOT / "scripts/campaign/dynamic_grant_probe.py"
@@ -2362,19 +2373,19 @@ def test_reckon_brief_join_rate_and_retirement_ladder() -> None:
     briefs = reckon.read_briefs(str(briefs_dir))
     campaign = reckon.read_campaign(str(campaign_dir))
 
-    check(len(briefs) == 105,
-          f"reckon reads exactly 105 briefs from docs/features-to-triage (got {len(briefs)})")
+    check(len(briefs) >= 105,
+          f"reckon reads >= 105 briefs from docs/features-to-triage (got {len(briefs)})")
 
     edges = reckon.build_join(briefs, campaign)
     cited_edges = [e for e in edges if e.get("method") == "cited"]
     cited_briefs = {e["brief"] for e in cited_edges}
 
-    check(len(cited_briefs) >= 53,
-          f"reckon join rate passes 50% threshold: {len(cited_briefs)}/105 briefs cited ({100.0*len(cited_briefs)/len(briefs):.1f}%)",
+    check(len(cited_briefs) >= len(briefs) // 2,
+          f"reckon join rate passes 50% threshold: {len(cited_briefs)}/{len(briefs)} briefs cited ({100.0*len(cited_briefs)/len(briefs):.1f}%)",
           f"joined={len(cited_briefs)}")
 
-    check(len(cited_briefs) == 105,
-          "100% of feature briefs join at confidence 1.0 (105/105)",
+    check(len(cited_briefs) == len(briefs),
+          f"100% of feature briefs join at confidence 1.0 ({len(cited_briefs)}/{len(briefs)})",
           f"missing={sorted(set(b['id'] for b in briefs) - cited_briefs)}")
 
     check(all(e.get("confidence") == 1.0 for e in cited_edges),
@@ -2481,6 +2492,7 @@ def main() -> int:
                test_tool_identity_content_over_version,
                test_plugin_cache_content_check,
                test_hardware_yield_probe_characterization,
+               test_subprocess_witness_characterization,
                test_dynamic_grant_probe_characterization,
                test_warrant_charter_integrity,
                test_warrant_census_classes_and_surface_coverage,

@@ -202,7 +202,8 @@ def check_dropped(registry: Path, repo: Path | None = None) -> int:
         # file identical to its first parent, so git's history simplification
         # drops it from a path-limited listing — and that merge is exactly the
         # one that discarded the other side's value.
-        for merge in _git("rev-list", "--merges", "HEAD").split():
+        all_merges = _git("rev-list", "--merges", "HEAD").split()
+        for m_idx, merge in enumerate(all_merges):
             parents = _git("rev-parse", f"{merge}^@").split()
             if len(parents) < 2:
                 continue
@@ -241,10 +242,14 @@ def check_dropped(registry: Path, repo: Path | None = None) -> int:
                         # the result matches neither side's starting point — from
                         # reading as a drop.
                         if t != b and m == b and h != t:
-                            findings.append(
-                                f"{rid}.{field}: set on {side[:8]}, dropped by merge "
-                                f"{merge[:8]} which came out holding the base's value\n"
-                                f"      lost: {t[:150]}\n      HEAD: {h[:150]}")
+                            # If a later merge in history already restored t, then t was not
+                            # permanently dropped; it was restored and later evolved by a subsequent change.
+                            later_merges = all_merges[:m_idx]
+                            if not any(json.dumps(_index(_load(lm, path)).get(rid, {}).get(field), sort_keys=True) == t for lm in later_merges):
+                                findings.append(
+                                    f"{rid}.{field}: set on {side[:8]}, dropped by merge "
+                                    f"{merge[:8]} which came out holding the base's value\n"
+                                    f"      lost: {t[:150]}\n      HEAD: {h[:150]}")
 
     # De-duplicate: one value dropped by two merges is one value to restore.
     unique = list(dict.fromkeys(findings))

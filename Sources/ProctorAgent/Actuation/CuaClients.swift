@@ -22,6 +22,7 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
     private var process: Process?
     private var input: FileHandle?
     private var reader: CuaLineReader?
+    private var errorPipe: Pipe?
     private var identity: CuaProcessIdentity?
     /// Why this lane stopped accepting calls, once it has. A lane is never
     /// un-poisoned: see `poison(_:)`.
@@ -43,6 +44,10 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
 
     init(path: String) {
         self.path = path
+    }
+
+    deinit {
+        stop()
     }
 
     func adopt(laneId: String) {
@@ -111,10 +116,14 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
     @discardableResult
     private func poison(_ failure: AgentError) -> AgentError {
         poisonReason = failure.message
-        process?.terminate()
+        if let proc = process, proc.isRunning {
+            proc.terminate()
+            proc.waitUntilExit()
+        }
         process = nil
         input = nil
         reader = nil
+        errorPipe = nil
         return failure
     }
 
@@ -123,10 +132,10 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: path)
         process.arguments = ["serve", "--stdio"]
-        let toDriver = Pipe(), fromDriver = Pipe()
+        let toDriver = Pipe(), fromDriver = Pipe(), errDriver = Pipe()
         process.standardInput = toDriver
         process.standardOutput = fromDriver
-        process.standardError = FileHandle.nullDevice
+        process.standardError = errDriver
         do {
             try process.run()
         } catch {
@@ -145,6 +154,7 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
         self.process = process
         self.input = toDriver.fileHandleForWriting
         self.reader = CuaLineReader(fd: fromDriver.fileHandleForReading.fileDescriptor)
+        self.errorPipe = errDriver
         self.identity = checked
     }
 
@@ -194,9 +204,14 @@ final class CuaEndpointTransport: CuaTransport, @unchecked Sendable {
     func stop() {
         lock.lock()
         defer { lock.unlock() }
-        process?.terminate()
+        if let proc = process, proc.isRunning {
+            proc.terminate()
+            proc.waitUntilExit()
+        }
         process = nil
+        input = nil
         reader = nil
+        errorPipe = nil
     }
 }
 
@@ -230,8 +245,9 @@ final class CuaOneShotTransport: CuaTransport, @unchecked Sendable {
                 process.executableURL = URL(fileURLWithPath: path)
                 process.arguments = ["call", "--json", line]
                 let out = Pipe()
+                let err = Pipe()
                 process.standardOutput = out
-                process.standardError = FileHandle.nullDevice
+                process.standardError = err
                 do {
                     try process.run()
                 } catch {
@@ -241,11 +257,14 @@ final class CuaOneShotTransport: CuaTransport, @unchecked Sendable {
                     return
                 }
                 let data = out.fileHandleForReading.readDataToEndOfFile()
+                let errData = err.fileHandleForReading.readDataToEndOfFile()
                 process.waitUntilExit()
                 guard process.terminationStatus == 0 else {
+                    let errStr = String(decoding: errData, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
+                    let detail = errStr.isEmpty ? "" : ": \(errStr)"
                     continuation.resume(throwing: AgentError(
                         code: .backendUnavailable,
-                        message: "cua-driver exited \(process.terminationStatus)"))
+                        message: "cua-driver exited \(process.terminationStatus)\(detail)"))
                     return
                 }
                 continuation.resume(returning: data)

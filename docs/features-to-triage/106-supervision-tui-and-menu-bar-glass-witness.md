@@ -1,3 +1,6 @@
+---
+sources: [REQ-030, REQ-031, REQ-033]
+---
 # Supervision TUI and Menu Bar Status Extra On-Glass Witness
 
 - origin: intake sweep over unmeasured/unknown requirements (REQ-030, REQ-031, REQ-033) · 2026-08-24

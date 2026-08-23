@@ -1,3 +1,6 @@
+---
+sources: [REQ-024, REQ-180, DEF-305]
+---
 # Subprocess Actuation Witness for Cua Driver
 
 - origin: intake sweep over BLOCK-0001 (REQ-024) and subprocess effect boundary · 2026-08-24

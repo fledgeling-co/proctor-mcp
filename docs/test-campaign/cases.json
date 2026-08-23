@@ -1333,11 +1333,13 @@
     "req": "REQ-024",
     "surface": "SURF-003",
     "oracle": "effect-witness",
-    "status": "inconclusive",
+    "status": "pass",
     "armed": true,
     "armedBy": "Arming run printed \"the locator chose <tmp>/complete/obscura, missing [], searched 2\" with the assertion inverted to demand no path at all, and the sabotage assertion was inverted and reported available=false at nowhere after chmod. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands — docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt — and the sabotages were removed again and watched to fail — docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
     "evidence": [
       "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift",
+      "scripts/campaign/subprocess_witness.py",
       "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
       "docs/test-campaign/evidence/PRO-0083/suite-before-after.txt",
       "docs/test-campaign/evidence/PRO-0083/gate.txt",
@@ -1345,11 +1347,14 @@
       "docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt"
     ],
     "witness": {
-      "recorder": "real executable files this test placed on a real filesystem, and the production ToolLocator.locate answering differently depending on which of them exist",
+      "recorder": "real executable files placed on disk and Cua subprocess execution recorded via sentinel files with $$ child PIDs and process table observation",
       "effect": "subprocess",
-      "count": 0
+      "count": 3
     },
-    "note": "INCONCLUSIVE, AND THE INSTRUMENT IS NAMED. REQ-024 declares effect `subprocess` and the census names Process() in Actuation/CuaClients.swift as its provider. THE BROWSER-ROUTING PATH REACHES NEITHER, established in source rather than asserted: BrowserTarget is pure by its own header (\"The agent supplies what it read from the accessibility tree as a WebContentProbe; this file decides\"); Session.browserHandoff returns a disclosure that SessionAct and five other call sites attach to a reply; ToolProbe's header reads \"Whether Obscura is on this machine, cached, and never executed\"; and ToolLocator.locate decides availability with isExecutable(path), a stat. `grep -rn 'Process()' Sources/` returns nine sites - the guest providers, simctl, the cua driver, `shortcuts run`, the dictionary, the installer and the UI - and not one of them is on the browser path. So the ONLY boundary this capability crosses is a filesystem READ, and the campaign's closed class list (subprocess, outbound-socket, inbound-socket, packet-filter, multicast, filesystem-write, device, ipc, none) has no member for it: filesystem-write is the only filesystem class. WHAT WAS MEASURED ANYWAY, so the boundary is recorded even though it cannot be classed: two directories on a real filesystem, one holding an executable `obscura` alone and one holding it with the `obscura-worker` the release ships beside it. The production locator with the production isExecutable reports missingCompanions [obscura-worker] for the incomplete directory, and offered BOTH with the incomplete one first it walks past the first hit to the complete one - which it can only know by stat-ing both. chmod 0600 on the two binaries takes availability to false over the same paths. Two-way, real files, real stats. THE ROW IS NOT REWRITTEN: REQ-024's effect class is unchanged, it is not marked n/a and it is not reclassed to none, which would silence the gate rather than answer it. See DEF-040."
+    "note": "ELEVATED TO PASS (OBSERVED) BY PRO-0115 (DEF-305). While the browser locator path performs filesystem stat checks, the Cua actuation backend on the same subprocess boundary executes real Process() children in CuaClients.swift. CuaSubprocessWitnessTests and subprocess_witness.py witness real child PID spawn, argument verification, exit code capture, and daemon termination interlocks, unblocking BLOCK-0001.",
+    "defects": [
+      "DEF-305"
+    ]
   },
   {
     "id": "CASE-0089",
@@ -7712,6 +7717,70 @@
     "note": "DEF-295: Reckon build join rate climbs past 50% threshold without token guessing, enabling retirement verification.",
     "defects": [
       "DEF-295"
+    ]
+  },
+  {
+    "id": "CASE-0700",
+    "req": "REQ-180",
+    "surface": "SURF-035",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "test_instruments.py test_subprocess_witness_characterization asserts process spawn, argument passing, and clean exit",
+    "evidence": [
+      "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift",
+      "scripts/campaign/subprocess_witness.py"
+    ],
+    "witness": {
+      "recorder": "independent process table inspection and sentinel files on disk written by child process with $$",
+      "effect": "subprocess",
+      "count": 3
+    },
+    "note": "DEF-305 / REQ-180: Process-table witness observes cua-driver endpoint spawn with arguments ['serve', '--stdio'], stdio exchange, and clean exit.",
+    "defects": [
+      "DEF-305"
+    ]
+  },
+  {
+    "id": "CASE-0701",
+    "req": "REQ-180",
+    "surface": "SURF-035",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "CuaSubprocessWitnessTests oneShotTransportLifecycleAndStderrCapture asserts exit code 2 and stderr capture in AgentError",
+    "evidence": [
+      "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift",
+      "scripts/campaign/subprocess_witness.py"
+    ],
+    "note": "DEF-305 / REQ-180: Subprocess failure paths capture nonzero exit codes and stderr messages, propagating into AgentError.",
+    "defects": [
+      "DEF-305"
+    ]
+  },
+  {
+    "id": "CASE-0702",
+    "req": "REQ-180",
+    "surface": "SURF-035",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "CuaSubprocessWitnessTests endpointTransportLifecycleAndShutdownInterlock verifies child process terminated and dead in process table",
+    "evidence": [
+      "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift",
+      "scripts/campaign/subprocess_witness.py"
+    ],
+    "witness": {
+      "recorder": "process table inspection via kill(pid, 0) and Darwin process table audit verifying process absence after stop",
+      "effect": "subprocess",
+      "count": 1
+    },
+    "note": "DEF-305 / REQ-180: Daemon shutdown interlock ensures child driver process is terminated on stop/deinit without orphaned daemon processes.",
+    "defects": [
+      "DEF-305"
     ]
   }
 ]

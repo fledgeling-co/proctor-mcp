@@ -1,3 +1,6 @@
+---
+sources: [REQ-037, REQ-038, REQ-039, REQ-040]
+---
 # Guest VM Lifecycle and Multi-Session Attachment Oracle
 
 - origin: intake sweep over REQ-037..REQ-040 and VM queueing requirements · 2026-08-24

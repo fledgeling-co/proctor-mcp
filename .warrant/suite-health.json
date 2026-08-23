@@ -1,10 +1,10 @@
 {
- "armed": 420,
- "armed_ratio": 0.9589,
+ "armed": 424,
+ "armed_ratio": 0.9593,
  "blocked": 0,
  "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/docs/test-campaign",
  "campaign_gate_clear": false,
- "cases": 442,
+ "cases": 445,
  "classes": {
   "capture-trust": {
    "green": false,
@@ -49,13 +49,13 @@
    "mutation_score": null
   }
  },
- "effect_rung_passes": 395,
- "generated_at": "2026-08-23T19:36:10.317041+00:00",
+ "effect_rung_passes": 399,
+ "generated_at": "2026-08-23T23:25:35.677605+00:00",
  "green": false,
- "inconclusive": 4,
+ "inconclusive": 3,
  "mutation_measured": false,
  "note": "armed_ratio is passes watched to fail over passes; an unarmed pass is not known to bite. `green` is not set here: in warrant it means the mutation score is holding, and this plugin does not measure mutation survival. Run warrant:assay for that number.",
- "passing": 438,
+ "passing": 442,
  "source": "test-campaign",
  "unoracled": 0
 }

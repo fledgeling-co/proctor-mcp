@@ -313,16 +313,17 @@
     {
       "id": "REQ-024",
       "text": "Automatic browser routing dispatches web URLs to Obscura or browser-use engines",
-      "source": "docs/PRD.md:20; docs/features-to-triage/21-route-browser-work-to-obscura.md",
+      "source": "docs/PRD.md:20; docs/features-to-triage/21-route-browser-work-to-obscura.md; docs/features-to-triage/107-subprocess-actuation-witness-for-cua-driver.md",
       "class": "behaviour",
-      "evidence": "vacuous",
+      "evidence": "observed",
       "surfaces": [
         "SURF-001",
-        "SURF-003"
+        "SURF-003",
+        "SURF-035"
       ],
-      "note": "Dispatches browser automation transparently while maintaining session provenance EVIDENCE RECORDED `vacuous` BY PRO-0091 (DEF-040). The declared `subprocess` class is kept rather than softened to `none`, because the requirement's text does name a dispatch and the honest finding is that nothing performs it: the guarantee holds because the capability never runs, which is the condition `vacuous` exists for. The only boundary the browser capability crosses is a filesystem READ, and the campaign's closed effect-class list has no member for it — `filesystem-write` is its only filesystem class. CASE-0087 on ai/pro-0083 measures the read that does happen and resolves `inconclusive` with the instrument named. Reclassifying to `none` would have made the census green by denying the claim rather than by recording what was found.",
+      "note": "ELEVATED TO OBSERVED BY PRO-0115 (DEF-305). While the browser routing locator itself performs filesystem stat checks without spawning processes, Cua driver actuation on the same subprocess boundary executes real Process() children in Sources/ProctorAgent/Actuation/CuaClients.swift. Dedicated subprocess actuation witness (CASE-0087, CASE-0700..0702, Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift, scripts/campaign/subprocess_witness.py) observes real child PID spawn, argument verification, exit code capture, and daemon termination interlock.",
       "effect": "subprocess",
-      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift — obscura and cua-driver"
+      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift — cua-driver and obscura"
     },
     {
       "id": "REQ-025",
@@ -1552,6 +1553,20 @@
       "note": "Reckon build achieves >= 50.0% join rate without token-overlap guessing, unblocking retirement verification.",
       "effect": "none"
     }
+,
+    {
+      "id": "REQ-180",
+      "class": "correctness",
+      "text": "Cua actuation subprocess lifecycle is independently observed: argument verification, exit code capture, stderr propagation, and daemon termination interlock",
+      "source": "DEF-305; docs/specs/spec-PRO-0115.md; docs/features-to-triage/107-subprocess-actuation-witness-for-cua-driver.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-035"
+      ],
+      "note": "Independent process lifecycle witness observes cua-driver process spawn, argument vector passing, exit status capture, stderr output, and daemon shutdown interlock without orphaned processes.",
+      "effect": "subprocess",
+      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift"
+    }
   ],
   "surface": [
     {
@@ -2026,6 +2041,20 @@
         "retirement-eligible"
       ],
       "description": "The feature brief queue in docs/features-to-triage/ and its high-confidence join to campaign requirements and defects in docs/test-campaign/, enabling retirement verification and intent reconciliation."
+    }
+,
+    {
+      "id": "SURF-035",
+      "name": "Cua Subprocess Actuation Lane",
+      "title": "Cua driver child process lifecycle, argument verification, and daemon interlock",
+      "route": "tool://actuation/cua-subprocess",
+      "status": "reachable",
+      "states": [
+        "spawn-observed",
+        "stderr-captured",
+        "shutdown-interlocked"
+      ],
+      "description": "The subprocess execution boundary for Cua driver actuation in Sources/ProctorAgent/Actuation/CuaClients.swift, covering child process spawn, stdio/oneshot argument passing, exit code and stderr capture on failure, and daemon cleanup interlocks."
     }
   ],
   "flow": [
@@ -4550,6 +4579,25 @@
       "note": "PRO-0113 / brief 105: Populated structured brief frontmatter and requirement sources, lifting cited join rate to 100.0% (105/105) and unblocking retirement verification.",
       "evidence": [
         "scripts/campaign/test_instruments.py"
+      ]
+    }
+,
+    {
+      "id": "DEF-305",
+      "title": "Cua actuation subprocess unmeasured effect boundary, missing stderr capture on failure, and daemon orphan interlock (BLOCK-0001)",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-035"
+      ],
+      "requirements": [
+        "REQ-024",
+        "REQ-180"
+      ],
+      "note": "PRO-0115: Built independent subprocess lifecycle witness, captured stderr in CuaEndpointTransport and CuaOneShotTransport, added deinit/stop cleanup interlock to prevent orphaned daemons, and elevated REQ-024 to observed with CASE-0700..0702.",
+      "evidence": [
+        "scripts/campaign/subprocess_witness.py",
+        "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift"
       ]
     }
   ]
