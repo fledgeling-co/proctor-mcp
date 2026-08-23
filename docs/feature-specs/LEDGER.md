@@ -118,7 +118,7 @@
 | PRO-0109 | Thirty-five captures reconciled with their cases | 2026-08-23 | Merged |
 | PRO-0110 | The registers nothing reads | 2026-08-23 | Merged |
 
-| PRO-0111 | Audit of the three recorded limits | 2026-08-23 | Ready for Plan |
+| PRO-0111 | Audit of the three recorded limits | 2026-08-23 | Merged |
 | PRO-0112 | Warrant charter and release integrity | 2026-08-23 | Ready for Plan |
 | PRO-0113 | Brief join rate optimization | 2026-08-23 | Ready for Plan |
 
