@@ -135,8 +135,6 @@
   "controlCountStableAcrossScales": true,
   "shots": [
     "evidence/shots/sweepK-scale-1x.png",
-    "evidence/shots/sweepK-scale-small.png",
-    "evidence/shots/sweepK-external.png",
-    "evidence/shots/sweepK-laptop.png"
+    "evidence/shots/sweepK-scale-small.png"
   ]
 }

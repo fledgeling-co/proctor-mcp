@@ -9,6 +9,7 @@
  "disposed": 43,
  "byteIdenticalGroups": {
   "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d": [
+   "sweepL-status-agent-down.png",
    "sweepL-status-t0.6.png",
    "sweepL-status-t3.5.png"
   ],
@@ -18,7 +19,6 @@
   ],
   "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a": [
    "sweepK-theme-before.png",
-   "sweepL-wedged-recovered.png",
    "sweepL-wedged-t1.png"
   ],
   "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78": [
@@ -31,9 +31,189 @@
  "deleted": 0,
  "deletionTests": {
   "zeroByte": "no file in the directory is zero bytes; the smallest is 10,680.",
-  "exactDuplicateOfAPublishedFile": "no byte-identical group contains a published file \u2014 the 4 groups cover 10 files (sweepL-status-t0.6.png, sweepL-status-t3.5.png; sweepL-wedged-t14.png, sweepL-wedged-t7.png; sweepK-theme-before.png, sweepL-wedged-recovered.png, sweepL-wedged-t1.png; overlay-exclusion-armed.png, overlay-exclusion-baseA.png, overlay-exclusion-baseB.png), and none of them is any subject's `shot`. The duplication is itself the evidence for DEF-221 and DEF-222, so deleting a member would delete the finding."
+  "exactDuplicateOfAPublishedFile": "no byte-identical group contains a published file \u2014 the 4 groups cover 10 files (sweepL-status-agent-down.png, sweepL-status-t0.6.png, sweepL-status-t3.5.png; sweepL-wedged-t14.png, sweepL-wedged-t7.png; sweepK-theme-before.png, sweepL-wedged-t1.png; overlay-exclusion-armed.png, overlay-exclusion-baseA.png, overlay-exclusion-baseB.png), and none of them is any subject's `shot`. The duplication is itself the evidence for DEF-221 and DEF-222, so deleting a member would delete the finding."
  },
  "shots": [
+  {
+   "file": "icon-audit-arrow-1024.png",
+   "path": "evidence/shots/icon-audit-arrow-1024.png",
+   "disposition": "unpublished-with-reason",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "namedFor": "arrow-1024 icon render",
+   "record": "scripts/build_test_campaign.py:282-296",
+   "defects": [
+    "DEF-218"
+   ],
+   "bytes": 18136,
+   "sha256": "7fdb3536e6c5052af4e1fde9dd42870420fa287821d8fc604cbe78a4324cfd85",
+   "width": 1024,
+   "height": 1024,
+   "totalPixels": 1048576,
+   "opaquePixels": 266644,
+   "distinctRGBA": 997
+  },
+  {
+   "file": "icon-audit-rasterB-1024.png",
+   "path": "evidence/shots/icon-audit-rasterB-1024.png",
+   "disposition": "unpublished-with-reason",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "namedFor": "rasterB-1024 icon render",
+   "record": "scripts/build_test_campaign.py:282-296",
+   "defects": [
+    "DEF-218"
+   ],
+   "bytes": 1505713,
+   "sha256": "7f6166226dfdb94add708700cdd3ca5ba1d1d74cffab1ecf5456fa8d6fa95d50",
+   "width": 1024,
+   "height": 1024,
+   "totalPixels": 1048576,
+   "opaquePixels": 997703,
+   "distinctRGBA": 113465
+  },
+  {
+   "file": "icon-proctor-1024.png",
+   "path": "evidence/shots/icon-proctor-1024.png",
+   "disposition": "unpublished-with-reason",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "namedFor": "icon-proctor-1024 app icon render",
+   "record": "scripts/build_test_campaign.py:282-296",
+   "defects": [
+    "DEF-218"
+   ],
+   "bytes": 1376951,
+   "sha256": "a67cf67af07e4971c54f2e23a94f1602663f4955b8ba38ac7fbc508a03df7743",
+   "width": 1024,
+   "height": 1024,
+   "totalPixels": 1048576,
+   "opaquePixels": 997703,
+   "distinctRGBA": 118081
+  },
+  {
+   "file": "icon-run-r00-baseline-1024.png",
+   "path": "evidence/shots/icon-run-r00-baseline-1024.png",
+   "disposition": "unpublished-with-reason",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "namedFor": "r00-baseline-1024 icon render",
+   "record": "scripts/build_test_campaign.py:282-296",
+   "defects": [
+    "DEF-218"
+   ],
+   "bytes": 244038,
+   "sha256": "2184898473a0915a9fcdc48626b49d8403335bf5a5944da20a5d67cab35501ca",
+   "width": 1024,
+   "height": 1024,
+   "totalPixels": 1048576,
+   "opaquePixels": 997703,
+   "distinctRGBA": 17543
+  },
+  {
+   "file": "icon-run-r01-coarse-structure-1024.png",
+   "path": "evidence/shots/icon-run-r01-coarse-structure-1024.png",
+   "disposition": "unpublished-with-reason",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "namedFor": "r01-coarse-structure-1024 icon render",
+   "record": "scripts/build_test_campaign.py:282-296",
+   "defects": [
+    "DEF-218"
+   ],
+   "bytes": 413879,
+   "sha256": "6ccd84e18cae82546d16b57755ef4556f87e5f0d3cd31008f922fbc4bd12fda0",
+   "width": 1024,
+   "height": 1024,
+   "totalPixels": 1048576,
+   "opaquePixels": 997703,
+   "distinctRGBA": 23784
+  },
+  {
+   "file": "icon-run-r01-master-after-1024.png",
+   "path": "evidence/shots/icon-run-r01-master-after-1024.png",
+   "disposition": "unpublished-with-reason",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "namedFor": "r01-master-after-1024 icon render",
+   "record": "scripts/build_test_campaign.py:282-296",
+   "defects": [
+    "DEF-218"
+   ],
+   "bytes": 250677,
+   "sha256": "5fd9f9950c9fe21803ae4bd34e2d4c58938e461827f883d0ba11af506742280c",
+   "width": 1024,
+   "height": 1024,
+   "totalPixels": 1048576,
+   "opaquePixels": 997703,
+   "distinctRGBA": 17543
+  },
+  {
+   "file": "icon-run-r01-master-before-1024.png",
+   "path": "evidence/shots/icon-run-r01-master-before-1024.png",
+   "disposition": "unpublished-with-reason",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "namedFor": "r01-master-before-1024 icon render",
+   "record": "scripts/build_test_campaign.py:282-296",
+   "defects": [
+    "DEF-218"
+   ],
+   "bytes": 212324,
+   "sha256": "bdb8838e0f50e90b6b6c307f7aa352497245d5a65dc002e4d808c44b23bec9a5",
+   "width": 1024,
+   "height": 1024,
+   "totalPixels": 1048576,
+   "opaquePixels": 997703,
+   "distinctRGBA": 14799
+  },
+  {
+   "file": "icon-run-r02b-glass-translucency-1024.png",
+   "path": "evidence/shots/icon-run-r02b-glass-translucency-1024.png",
+   "disposition": "unpublished-with-reason",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "namedFor": "r02b-glass-translucency-1024 icon render",
+   "record": "scripts/build_test_campaign.py:282-296",
+   "defects": [
+    "DEF-218"
+   ],
+   "bytes": 515436,
+   "sha256": "5afe9eed9f8af025dfab37f2bc5290d10f39165d7105ff304f2f4fe0e43a301c",
+   "width": 1024,
+   "height": 1024,
+   "totalPixels": 1048576,
+   "opaquePixels": 997703,
+   "distinctRGBA": 36900
+  },
+  {
+   "file": "icon-run-r04-contact-shadow-1024.png",
+   "path": "evidence/shots/icon-run-r04-contact-shadow-1024.png",
+   "disposition": "unpublished-with-reason",
+   "disposed": true,
+   "publishedAs": null,
+   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "namedFor": "r04-contact-shadow-1024 icon render",
+   "record": "scripts/build_test_campaign.py:282-296",
+   "defects": [
+    "DEF-218"
+   ],
+   "bytes": 541471,
+   "sha256": "7d5c07bb445545f59f3f150d1323a5eb75ba5a9bd41772ac653b79bacfe13184",
+   "width": 1024,
+   "height": 1024,
+   "totalPixels": 1048576,
+   "opaquePixels": 997703,
+   "distinctRGBA": 45326
+  },
   {
    "file": "overlay-exclusion-armed.png",
    "path": "evidence/shots/overlay-exclusion-armed.png",
@@ -107,73 +287,13 @@
    "distinctRGBA": 8290
   },
   {
-   "file": "surf-001-mcp-stdio.png",
-   "path": "evidence/shots/surf-001-mcp-stdio.png",
+   "file": "surf-003-drawn-pointer.png",
+   "path": "evidence/shots/surf-003-drawn-pointer.png",
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-   "namedFor": "SURF-001 MCP Stdio RPC Engine",
-   "record": "scripts/build_test_campaign.py:282-296",
-   "defects": [
-    "DEF-218"
-   ],
-   "bytes": 18136,
-   "sha256": "7fdb3536e6c5052af4e1fde9dd42870420fa287821d8fc604cbe78a4324cfd85",
-   "width": 1024,
-   "height": 1024,
-   "totalPixels": 1048576,
-   "opaquePixels": 266644,
-   "distinctRGBA": 997
-  },
-  {
-   "file": "surf-002-tool-catalogue.png",
-   "path": "evidence/shots/surf-002-tool-catalogue.png",
-   "disposition": "unpublished-with-reason",
-   "disposed": true,
-   "publishedAs": null,
-   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-   "namedFor": "SURF-002 MCP Tool Catalogue & Dispatcher",
-   "record": "scripts/build_test_campaign.py:282-296",
-   "defects": [
-    "DEF-218"
-   ],
-   "bytes": 1505713,
-   "sha256": "7f6166226dfdb94add708700cdd3ca5ba1d1d74cffab1ecf5456fa8d6fa95d50",
-   "width": 1024,
-   "height": 1024,
-   "totalPixels": 1048576,
-   "opaquePixels": 997703,
-   "distinctRGBA": 113465
-  },
-  {
-   "file": "surf-003-process-directed.png",
-   "path": "evidence/shots/surf-003-process-directed.png",
-   "disposition": "unpublished-with-reason",
-   "disposed": true,
-   "publishedAs": null,
-   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+   "depicts": "An otherwise empty 3456x2234 frame carrying the drawn pointer glyph alone \u2014 3,739 non-transparent pixels of 7,720,704 and 173 distinct RGBA. The drawn pointer belongs to SURF-003 Process-Directed Actuation Subsystem.",
    "namedFor": "SURF-003 Process-Directed Actuation Subsystem",
-   "record": "scripts/build_test_campaign.py:282-296",
-   "defects": [
-    "DEF-218"
-   ],
-   "bytes": 250677,
-   "sha256": "5fd9f9950c9fe21803ae4bd34e2d4c58938e461827f883d0ba11af506742280c",
-   "width": 1024,
-   "height": 1024,
-   "totalPixels": 1048576,
-   "opaquePixels": 997703,
-   "distinctRGBA": 17543
-  },
-  {
-   "file": "surf-004-drawn-pointer.png",
-   "path": "evidence/shots/surf-004-drawn-pointer.png",
-   "disposition": "unpublished-with-reason",
-   "disposed": true,
-   "publishedAs": null,
-   "depicts": "An otherwise empty 3456x2234 frame carrying the drawn pointer glyph alone \u2014 3,739 non-transparent pixels of 7,720,704 and 173 distinct RGBA. No Run HUD appears in it.",
-   "namedFor": "SURF-004 Run HUD Floating Cocoa Overlay",
    "record": "evidence/overlay-capture-lifted.json",
    "defects": [
     "DEF-223"
@@ -210,19 +330,19 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "Nothing. Measured off the file: 0 non-transparent pixels of the whole 5120x2880 frame and exactly 1 distinct RGBA value. There is no picture in it.",
+   "depicts": "The takeover shield at 5120x2880: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
-   "record": "evidence/hud-capture-channels.json",
+   "record": "evidence/overlay-capture-lifted.json",
    "defects": [
     "DEF-219"
    ],
-   "bytes": 257720,
-   "sha256": "234a1db4e84e5154d86799d7df991a797901f400148dfb182bec22b2fc1cb091",
+   "bytes": 636565,
+   "sha256": "6fd8f87196a648c2ec6f7d67bb3950d8fde28843e3738d5a39dc436ef5c86ad7",
    "width": 5120,
    "height": 2880,
    "totalPixels": 14745600,
-   "opaquePixels": 0,
-   "distinctRGBA": 1
+   "opaquePixels": 14745600,
+   "distinctRGBA": 2739
   },
   {
    "file": "surf-005-takeover-sck-laptop.png",
@@ -230,19 +350,19 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "Nothing. Measured off the file: 0 non-transparent pixels of the whole 3456x2234 frame and exactly 1 distinct RGBA value. There is no picture in it.",
+   "depicts": "The takeover shield at 3456x2234: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
-   "record": "evidence/hud-capture-channels.json",
+   "record": "evidence/overlay-capture-lifted.json",
    "defects": [
     "DEF-219"
    ],
-   "bytes": 135025,
-   "sha256": "8fb6ba781df54bf583d513c402d1167d4169077720ac32f94821d58454f5ffd9",
+   "bytes": 513267,
+   "sha256": "652d36640f0a485cc5e1016a57f95d92d2b1f4b99f18e754bdcb0f80b8f1fe4f",
    "width": 3456,
    "height": 2234,
    "totalPixels": 7720704,
-   "opaquePixels": 0,
-   "distinctRGBA": 1
+   "opaquePixels": 7720704,
+   "distinctRGBA": 3647
   },
   {
    "file": "surf-005-takeover-sck-window.png",
@@ -250,19 +370,19 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "Nothing. Measured off the file: 0 non-transparent pixels of the whole 1024x662 frame and exactly 1 distinct RGBA value. There is no picture in it.",
+   "depicts": "The takeover shield at 1024x662: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
-   "record": "evidence/hud-capture-channels.json",
+   "record": "evidence/overlay-capture-lifted.json",
    "defects": [
     "DEF-219"
    ],
-   "bytes": 11988,
-   "sha256": "08da4f2273fdfbbfe97e18b8c143d04d65328efacdf70ca0085f456d69075d87",
+   "bytes": 40263,
+   "sha256": "4baff8a362099bc803c963a4ff4a187dc8eb702c8829971efdfef2597f7300c6",
    "width": 1024,
    "height": 662,
    "totalPixels": 677888,
-   "opaquePixels": 0,
-   "distinctRGBA": 1
+   "opaquePixels": 677888,
+   "distinctRGBA": 966
   },
   {
    "file": "surf-005-takeover-shield.png",
@@ -355,26 +475,6 @@
    "distinctRGBA": 453
   },
   {
-   "file": "surf-008-about.png",
-   "path": "evidence/shots/surf-008-about.png",
-   "disposition": "unpublished-with-reason",
-   "disposed": true,
-   "publishedAs": null,
-   "depicts": "The About Proctor panel: the app icon, 'Proctor', 'Version 0.1.0 (1)', and 'Proctor is released under the MIT licence.' A 704x518 panel, not the status window.",
-   "namedFor": "SURF-008 Status & Diagnostics Window",
-   "record": null,
-   "defects": [
-    "DEF-223"
-   ],
-   "bytes": 119455,
-   "sha256": "75ee625c4d9fda67d032421e17fd6f01e01ead3c8bd911b43bd064252d4c6e43",
-   "width": 704,
-   "height": 518,
-   "totalPixels": 364672,
-   "opaquePixels": 332759,
-   "distinctRGBA": 6397
-  },
-  {
    "file": "surf-008-status-window.png",
    "path": "evidence/shots/surf-008-status-window.png",
    "disposition": "published",
@@ -447,124 +547,24 @@
    "distinctRGBA": 860
   },
   {
-   "file": "surf-011-stability.png",
-   "path": "evidence/shots/surf-011-stability.png",
+   "file": "surf-028-about.png",
+   "path": "evidence/shots/surf-028-about.png",
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-   "namedFor": "SURF-011 Flow Stability & Determinism Engine",
-   "record": "scripts/build_test_campaign.py:282-296",
+   "depicts": "The About Proctor panel: the app icon, 'Proctor', 'Version 0.1.0 (1)', and 'Proctor is released under the MIT licence.' A 704x518 panel, not the status window.",
+   "namedFor": "SURF-028 About Proctor Panel",
+   "record": null,
    "defects": [
-    "DEF-218"
+    "DEF-223"
    ],
-   "bytes": 541471,
-   "sha256": "7d5c07bb445545f59f3f150d1323a5eb75ba5a9bd41772ac653b79bacfe13184",
-   "width": 1024,
-   "height": 1024,
-   "totalPixels": 1048576,
-   "opaquePixels": 997703,
-   "distinctRGBA": 45326
-  },
-  {
-   "file": "surf-012-audit-policy.png",
-   "path": "evidence/shots/surf-012-audit-policy.png",
-   "disposition": "unpublished-with-reason",
-   "disposed": true,
-   "publishedAs": null,
-   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-   "namedFor": "SURF-012 Policy Engine & Cryptographic Audit Log",
-   "record": "scripts/build_test_campaign.py:282-296",
-   "defects": [
-    "DEF-218"
-   ],
-   "bytes": 244038,
-   "sha256": "2184898473a0915a9fcdc48626b49d8403335bf5a5944da20a5d67cab35501ca",
-   "width": 1024,
-   "height": 1024,
-   "totalPixels": 1048576,
-   "opaquePixels": 997703,
-   "distinctRGBA": 17543
-  },
-  {
-   "file": "surf-013-guest-provider.png",
-   "path": "evidence/shots/surf-013-guest-provider.png",
-   "disposition": "unpublished-with-reason",
-   "disposed": true,
-   "publishedAs": null,
-   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-   "namedFor": "SURF-013 Guest VM & Remote Target Controller",
-   "record": "scripts/build_test_campaign.py:282-296",
-   "defects": [
-    "DEF-218"
-   ],
-   "bytes": 515436,
-   "sha256": "5afe9eed9f8af025dfab37f2bc5290d10f39165d7105ff304f2f4fe0e43a301c",
-   "width": 1024,
-   "height": 1024,
-   "totalPixels": 1048576,
-   "opaquePixels": 997703,
-   "distinctRGBA": 36900
-  },
-  {
-   "file": "surf-014-ios-maestro.png",
-   "path": "evidence/shots/surf-014-ios-maestro.png",
-   "disposition": "unpublished-with-reason",
-   "disposed": true,
-   "publishedAs": null,
-   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-   "namedFor": "SURF-014 iOS Simulator & Maestro Flow Driver",
-   "record": "scripts/build_test_campaign.py:282-296",
-   "defects": [
-    "DEF-218"
-   ],
-   "bytes": 413879,
-   "sha256": "6ccd84e18cae82546d16b57755ef4556f87e5f0d3cd31008f922fbc4bd12fda0",
-   "width": 1024,
-   "height": 1024,
-   "totalPixels": 1048576,
-   "opaquePixels": 997703,
-   "distinctRGBA": 23784
-  },
-  {
-   "file": "surf-015-reflector.png",
-   "path": "evidence/shots/surf-015-reflector.png",
-   "disposition": "unpublished-with-reason",
-   "disposed": true,
-   "publishedAs": null,
-   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-   "namedFor": "SURF-015 In-Process ProctorReflector Bridge",
-   "record": "scripts/build_test_campaign.py:282-296",
-   "defects": [
-    "DEF-218"
-   ],
-   "bytes": 212324,
-   "sha256": "bdb8838e0f50e90b6b6c307f7aa352497245d5a65dc002e4d808c44b23bec9a5",
-   "width": 1024,
-   "height": 1024,
-   "totalPixels": 1048576,
-   "opaquePixels": 997703,
-   "distinctRGBA": 14799
-  },
-  {
-   "file": "surf-016-install-notarize.png",
-   "path": "evidence/shots/surf-016-install-notarize.png",
-   "disposition": "unpublished-with-reason",
-   "disposed": true,
-   "publishedAs": null,
-   "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-   "namedFor": "SURF-016 Installer, Notarization & Packaging Suite",
-   "record": "scripts/build_test_campaign.py:282-296",
-   "defects": [
-    "DEF-218"
-   ],
-   "bytes": 1376951,
-   "sha256": "a67cf67af07e4971c54f2e23a94f1602663f4955b8ba38ac7fbc508a03df7743",
-   "width": 1024,
-   "height": 1024,
-   "totalPixels": 1048576,
-   "opaquePixels": 997703,
-   "distinctRGBA": 118081
+   "bytes": 119455,
+   "sha256": "75ee625c4d9fda67d032421e17fd6f01e01ead3c8bd911b43bd064252d4c6e43",
+   "width": 704,
+   "height": 518,
+   "totalPixels": 364672,
+   "opaquePixels": 332759,
+   "distinctRGBA": 6397
   },
   {
    "file": "sweepK-external.png",
@@ -573,8 +573,8 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants \u2014 the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
-   "namedFor": "no surface \u2014 listed by sweep K, matching none of its measured modes",
-   "record": "evidence/sweepK-scaling.json (lists it; measures no frame of this size)",
+   "namedFor": "no surface \u2014 status window frame from an earlier wave",
+   "record": "evidence/sweepK-scaling.json",
    "defects": [
     "DEF-220"
    ],
@@ -611,8 +611,8 @@
    "disposed": true,
    "publishedAs": null,
    "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants \u2014 the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
-   "namedFor": "no surface \u2014 listed by sweep K, matching none of its measured modes",
-   "record": "evidence/sweepK-scaling.json (lists it; measures no frame of this size)",
+   "namedFor": "no surface \u2014 status window frame from an earlier wave",
+   "record": "evidence/sweepK-scaling.json",
    "defects": [
     "DEF-220"
    ],
@@ -722,19 +722,19 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "A READY status window: a green Ready pill, Accessibility and Screen Recording both Granted, and 'Ready. Every permission Proctor needs is granted.' It shows no agent-down state at all.",
+   "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the socket path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check. Depicts the Agent-down pill.",
    "namedFor": "no surface \u2014 sweep L's status-window honesty check",
    "record": "evidence/sweeps-kl.json",
    "defects": [
     "DEF-222"
    ],
-   "bytes": 344743,
-   "sha256": "69909cb3cbb152c0b5a5ff19be614f6bc9dfc09a876311df7702896192e24ae2",
+   "bytes": 361696,
+   "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
    "width": 1416,
    "height": 1320,
    "totalPixels": 1869120,
    "opaquePixels": 1810435,
-   "distinctRGBA": 1121
+   "distinctRGBA": 906
   },
   {
    "file": "sweepL-status-t0.6.png",
@@ -782,19 +782,19 @@
    "disposition": "unpublished-with-reason",
    "disposed": true,
    "publishedAs": null,
-   "depicts": "A dark Ready status window, identical bytes to sweepL-wedged-t1.png and to sweepK-theme-before.png.",
+   "depicts": "A dark Ready status window, taken as a genuine re-take differing by 1,046 pixels from the pre-recovery frame (sweepL-wedged-t1.png), witnessing the transition back to Ready after SIGCONT.",
    "namedFor": "no surface \u2014 sweep L's half-open socket check",
    "record": "evidence/sweepL-halfopen.json",
    "defects": [
     "DEF-221"
    ],
-   "bytes": 592144,
-   "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
+   "bytes": 373465,
+   "sha256": "e687c3f78cf639cb35195401a566920526b11b1166a4d0d8c93e2573d12e364a",
    "width": 1776,
    "height": 2154,
    "totalPixels": 3825504,
    "opaquePixels": 3744865,
-   "distinctRGBA": 1414
+   "distinctRGBA": 1305
   },
   {
    "file": "sweepL-wedged-t1.png",
