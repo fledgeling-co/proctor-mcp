@@ -27,9 +27,26 @@ Two halves, deliberately:
   when a new image arrives with no disposition at all. That is the half that
   keeps this file from becoming a stale opinion about a directory.
 
+Two repairs to this file's own conduct, PRO-0106:
+
+  DEF-226. `--write` re-measured the directory and took the result as the new
+  standard, so anything that had happened to a file since was adopted as correct
+  — a flat magenta frame over surf-007-zoom.png went from exit 1 to exit 0 with
+  the row still reading `publishedAs: SURF-007` and `distinctRGBA: 1`. A rewrite
+  now has to be named with `--adopt <file>`, one file at a time, and there is no
+  blanket flag on purpose.
+
+  DEF-227. It read `captures.json` and the disk and never `cases.json`, so a case
+  citing an unpublished, misnamed or absent image was invisible to it. DEF-224
+  and DEF-225 are both instances of that class and both were found by a person
+  reading rather than by a gate running. Citations are checked now, and the rows
+  those two defects already record are named rather than failed.
+
     python3 scripts/campaign/shot_disposition.py --write     # evidence/PRO-0107/shot-audit.json
+    python3 scripts/campaign/shot_disposition.py --write --adopt <file>   # accept new bytes
     python3 scripts/campaign/shot_disposition.py --manifest  # captures.json entries, on stdout
-    python3 scripts/campaign/shot_disposition.py --verify    # exit 1 on drift or an undisposed file
+    python3 scripts/campaign/shot_disposition.py             # verify: exit 1 on drift, an
+                                                             # undisposed file, or a bad citation
 """
 from __future__ import annotations
 
@@ -545,23 +562,201 @@ def verify(a: dict) -> int:
                        f"({p['sha256'][:12]} → {r['sha256'][:12]})")
     for name in sorted(set(prior) - set(now)):
         bad.append(f"{name}: disposed in the audit and no longer on disk")
+    cite_failures, cite_notices = citations(a)
     print(f"{len(now)} image(s) · {a['disposed']} disposed · "
-          f"{len(a['byteIdenticalGroups'])} byte-identical group(s)")
+          f"{len(a['byteIdenticalGroups'])} byte-identical group(s) · "
+          f"{len(cite_failures)} citation failure(s), {len(cite_notices)} recorded")
     for b in bad:
         print(f"   {b}")
-    if bad:
-        print(f"\n{len(bad)} failure(s). A disposition is about a specific set of bytes.")
+    for b in cite_failures:
+        print(f"   {b}")
+    for n in cite_notices:
+        print(f"   note: {n}")
+    if bad or cite_failures:
+        print(f"\n{len(bad) + len(cite_failures)} failure(s). A disposition is about a specific "
+              f"set of bytes, and a case citing a picture is a claim about that picture.")
         return 1
-    print("\nEvery image carries a disposition, and every disposition is about the bytes on disk.")
+    print("\nEvery image carries a disposition, every disposition is about the bytes on disk, "
+          "and every image a case cites resolves to one — bar the citation faults recorded above.")
     return 0
+
+
+def adoptable(a: dict) -> list[tuple[str, str]]:
+    """(file, why) for every row `--write` would change the standard of.
+
+    DEF-226. `--write` re-measured the directory and wrote the result as the new
+    baseline, so anything that had happened to a file since was adopted as
+    correct. A flat magenta frame written over surf-007-zoom.png took `--verify`
+    to exit 1, and one `--write` returned it to 0 with the row still recording
+    `publishedAs: SURF-007` and `distinctRGBA: 1` — a single-colour frame among
+    the six judged captures, and nothing left saying so. That is DEF-207's shape
+    one level on: a step that performs an action and then treats its own result
+    as the standard, with nothing able to disagree.
+
+    So a rewrite has to be named. `--adopt <file>` accepts one file's new bytes,
+    and a blanket flag is deliberately absent: the point is that somebody looked
+    at the picture, and a flag that adopts everything is the hole this closes.
+    """
+    if not AUDIT.exists():
+        return []
+    prior = {r["file"]: r for r in json.loads(AUDIT.read_text())["shots"]}
+    out = []
+    for r in a["shots"]:
+        old_row = prior.get(r["file"])
+        if old_row and old_row.get("sha256") != r["sha256"]:
+            stood_for = (old_row.get("depicts")
+                         or (f"the picture {old_row['publishedAs']} publishes"
+                             if old_row.get("publishedAs") else "no reading at all"))
+            out.append((r["file"],
+                        "bytes changed under a disposition written for the old ones "
+                        f"({old_row['sha256'][:12]} → {r['sha256'][:12]}); the old bytes stood "
+                        f"for: {stood_for[:110]}"))
+        elif old_row is None and not r["disposed"]:
+            out.append((r["file"],
+                        "new since the audit and carries no disposition, so writing it now "
+                        "would record `nobody has read this` as the baseline"))
+    return out
+
+
+def cite_paths(node, cid, out):
+    """Every string in a case that is a path to a .png, gathered recursively.
+
+    A path token rather than any string ending in `.png`: CASE-0064's prose
+    reads `negative control docs/.../a1-agent-capture.png`, which is a sentence
+    about a file rather than a citation of one, and counting it would make this
+    gate red over a comment.
+    """
+    if isinstance(node, str):
+        s = node.strip()
+        if s.endswith(".png") and " " not in s and "/" in s:
+            out.setdefault(s, set()).add(cid)
+    elif isinstance(node, dict):
+        for v in node.values():
+            cite_paths(v, cid, out)
+    elif isinstance(node, list):
+        for v in node:
+            cite_paths(v, cid, out)
+
+
+# A citation fault this campaign has already opened a defect over. The gate names
+# each one and does not fail on it, so the reading stays honest without this item
+# claiming repairs that belong to those rows; anything NOT on this list fails.
+# An entry that has stopped reproducing prints as resolved rather than failing,
+# because a gate that goes red when somebody fixes the defect it records is a
+# gate nobody can act on.
+KNOWN_CITATION_FAULTS: dict[str, str] = {
+    "evidence/shots/a3-walkthrough-permissions-disabled.png":
+        "DEF-225 — CASE-0100 cites a file that does not exist, and both instruments pass over "
+        "it: campaign.py resolves an evidence path only on the raster rungs and that case "
+        "stands at effect-witness.",
+    "evidence/shots/surf-004-run-hud.png":
+        "DEF-224 — CASE-0008 cites a capture PRO-0107 declares unpublished for want of a "
+        "shutter-recorded target.",
+    "evidence/shots/surf-005-takeover-shield.png":
+        "DEF-224 — CASE-0010 cites a capture PRO-0107 declares unpublished for want of a "
+        "shutter-recorded target.",
+    "evidence/shots/surf-008-tools.png":
+        "DEF-224 — CASE-0011 cites the second framing of SURF-008, which is kept rather than "
+        "published.",
+    "evidence/shots/sweepL-status-agent-down.png":
+        "DEF-224 — CASE-0028 cites a frame DEF-222 shows is named for a state it does not show.",
+    "evidence/shots/sweepL-status-t0.6.png":
+        "DEF-224 — CASE-0028 cites one of a byte-identical pair, so the second sample is not "
+        "independently witnessed.",
+    "evidence/shots/sweepL-status-t3.5.png":
+        "DEF-224 — CASE-0028 cites the other half of that byte-identical pair.",
+    "evidence/shots/sweepL-wedged-recovered.png":
+        "DEF-224 — CASE-0029 cites a recovery frame byte-identical to the pre-recovery frame.",
+    "evidence/shots/sweepL-wedged-t7.png":
+        "DEF-224 — CASE-0029 cites one of a byte-identical pair of wedged frames.",
+}
+
+
+def is_mock(path: str) -> bool:
+    """A design mock rather than a capture.
+
+    `evidence/shots/mock/` holds the design of record, and `capture-lineage.py`
+    excludes any path with a `mock` directory component from its own population
+    for the same reason: it is what the surface should look like, not a picture
+    of what it did. CASE-0039 cites the mock and the capture side by side, which
+    is the comparison rather than a fault, so this lane is checked for existence
+    and not for a disposition or a publishing subject.
+    """
+    return "mock" in {q.lower() for q in Path(path).parts[:-1]}
+
+
+def citations(a: dict) -> tuple[list[str], list[str]]:
+    """(failures, notices) for the images `cases.json` cites. DEF-227.
+
+    THIS FILE USED TO READ `captures.json` AND THE DISK AND NEVER `cases.json`,
+    so a case citing an unpublished, misnamed or absent image was invisible to
+    it. DEF-224 and DEF-225 are both instances of that class, and both were found
+    by a person reading rather than by a gate running — which is the whole
+    argument for the gate existing.
+
+    A citation is checked three ways: the file resolves on disk, a shot in this
+    directory carries a disposition, and a shot cited as evidence is one a
+    subject publishes. The third is the one that opens the class: an unpublished
+    picture is by this campaign's own reckoning not bound to any subject, so a
+    case resting on it rests on the filename.
+    """
+    cases = json.loads((CAMPAIGN / "cases.json").read_text())
+    cited: dict[str, set] = {}
+    for c in cases:
+        cite_paths(c, c.get("id", "?"), cited)
+    rows = {r["path"]: r for r in a["shots"]}
+    failures, notices, seen_known = [], [], set()
+    for path, ids in sorted(cited.items()):
+        who = ", ".join(sorted(ids))
+        reasons = []
+        on_disk = (REPO / path).is_file() or (CAMPAIGN / path).is_file()
+        if not on_disk:
+            reasons.append("no such file on disk")
+        row = rows.get(path)
+        if row is not None:
+            if not row["disposed"]:
+                reasons.append("in the shots directory with no disposition")
+            elif not row["publishedAs"]:
+                reasons.append("cited as evidence while no subject publishes it "
+                               f"({(row['depicts'] or '')[:80]}…)")
+        elif on_disk and path.startswith("evidence/shots/") and not is_mock(path):
+            reasons.append("under evidence/shots and absent from this audit")
+        if not reasons:
+            continue
+        known = KNOWN_CITATION_FAULTS.get(path)
+        line = f"{who} cites {path}: {'; '.join(reasons)}"
+        if known:
+            seen_known.add(path)
+            notices.append(f"{line}  [recorded: {known}]")
+        else:
+            failures.append(line)
+    for path in sorted(set(KNOWN_CITATION_FAULTS) - seen_known):
+        notices.append(f"{path}: recorded as a citation fault and no longer reproducing — "
+                       f"the entry in KNOWN_CITATION_FAULTS can go")
+    return failures, notices
 
 
 def main() -> int:
     a = audit()
     if "--write" in sys.argv:
+        adopt = {sys.argv[i + 1] for i, arg in enumerate(sys.argv)
+                 if arg == "--adopt" and i + 1 < len(sys.argv)}
+        blocked = [(f, why) for f, why in adoptable(a) if f not in adopt]
+        if blocked:
+            print(f"REFUSING to write {AUDIT.relative_to(REPO)} — "
+                  f"{len(blocked)} row(s) would take new bytes as the standard:")
+            for f, why in blocked:
+                print(f"   {f}: {why}")
+            print("\nA disposition is a person's reading of specific bytes. Look at the file, "
+                  "update its entry here, then name it: --adopt <file>.")
+            return 1
+        unused = sorted(adopt - {f for f, _ in adoptable(a)})
+        for f in unused:
+            print(f"note: --adopt {f} names a file whose bytes have not moved")
         AUDIT.parent.mkdir(parents=True, exist_ok=True)
         AUDIT.write_text(json.dumps(a, indent=1) + "\n")
-        print(f"wrote {AUDIT.relative_to(REPO)} — {a['files']} image(s), {a['disposed']} disposed")
+        print(f"wrote {AUDIT.relative_to(REPO)} — {a['files']} image(s), {a['disposed']} disposed"
+              + (f", {len(adopt)} adopted by name" if adopt else ""))
         return 0
     if "--manifest" in sys.argv:
         entries = []

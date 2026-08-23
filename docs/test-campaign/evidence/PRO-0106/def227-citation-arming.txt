@@ -1,0 +1,23 @@
+subject       : scripts/campaign/shot_disposition.py
+merge-base copy at _sd_at_merge_base.py so its REPO = parents[2] still resolves
+
+[1 · control] the real registry, repaired instrument
+  exit 0 · 43 image(s) · 43 disposed · 4 byte-identical group(s) · 0 citation failure(s), 9 recorded
+
+[CASE-9901] a case citing a picture that is not on disk — DEF-225's class
+  repaired  : exit 1
+    CASE-9901 cites evidence/shots/does-not-exist-PRO0106.png: no such file on disk
+  merge base: exit 0 · 43 image(s) · 43 disposed · 4 byte-identical group(s)
+    the version that never read cases.json says nothing about it
+
+[CASE-9902] a case citing a picture no subject publishes — DEF-224's class
+  repaired  : exit 1
+    CASE-9902 cites evidence/shots/surf-008-about.png: cited as evidence while no subject publishes it (The About Proctor panel: the app icon, 'Proctor', 'Version 0.1.0 (1)', and 'Proc…)
+  merge base: exit 0 · 43 image(s) · 43 disposed · 4 byte-identical group(s)
+    the version that never read cases.json says nothing about it
+
+[CASE-9903] the pass direction: a case citing a published capture
+  repaired  : exit 0 · 43 image(s) · 43 disposed · 4 byte-identical group(s) · 0 citation failure(s), 9 recorded
+
+[restored] cases.json back at HEAD, gate exit 0
+  git status: clean
