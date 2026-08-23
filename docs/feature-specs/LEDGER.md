@@ -98,7 +98,7 @@
 | PRO-0089 | Tests that touch the real machine, and tests that time themselves | 2026-08-21 | Merged |
 | PRO-0090 | What the surfaces say and what they draw | 2026-08-22 | Merged |
 | PRO-0091 | The campaign's own instruments | 2026-08-21 | Merged |
-| PRO-0092 | ProctorAgent's mutants mostly survive | 2026-08-21 | In Progress |
+| PRO-0092 | ProctorAgent's mutants mostly survive | 2026-08-21 | Merged |
 | PRO-0093 | A dead peer holds the queue | 2026-08-22 | Merged |
 | PRO-0094 | A warning this project has already disproved | 2026-08-21 | Merged |
 | PRO-0095 | Three that slipped the grouping | 2026-08-21 | Merged |

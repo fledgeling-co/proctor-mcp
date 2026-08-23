@@ -2886,3 +2886,39 @@ identical files. What is **not** established is whether that detection is itself
 fail if it silently stopped grouping? DEF-226 records the neighbouring hole, that `--write` adopts any
 new content as the baseline. This one is unmeasured and is on the list as a question, not asserted
 either way.
+
+### DEF-227's probe, run deliberately — and it found the register nothing reads (2026-08-23)
+
+DEF-227 was met by accident: an out-of-family reviewer asked what `shot_disposition.py` does **not**
+read. The generalised form is worth more than the instance — **name every register a check reads, name
+the ones it does not, and ask what class of defect lives only in the gap** — so it was run across all
+27 instruments in `scripts/`.
+
+Between them they read `cases.json`, `inventory.json`, `captures.json`, the specs, the briefs, the
+shots directory, `campaign.json`, `Sources/` and `Tests/`. **One column has no row in it.**
+
+**DEF-228 — `LEDGER.md` is the ledger of record and no standing instrument reads it.** Exactly one file
+mentions it, `docs/goals/gate-wave9.sh`, a one-off from an earlier wave. And it is *already wrong*: the
+probe found **PRO-0092's row reading `In Progress` while its branch is merged into `main`** — six
+sibling rows were updated at their merges and this one was missed, by me, and nothing in this repository
+could have said so. Corrected in the same change. The ledger also carries 107 rows against 104 spec
+files, and DEF-215's count of four rows-without-specs is now three, a figure that moved without anything
+noticing.
+
+The check is cheap and absent: a row whose branch is merged claims `Merged`, a row with no spec is
+declared, a spec with no row is a finding. All three are computable from git and the filesystem already,
+which makes the gap notable rather than excusable.
+
+**DEF-229 — the same blindness reaches the gate, not just the new instrument.** `capture-lineage.py` has
+**zero** references to `cases.json`; it reads `inventory.json`, `captures.json` and the shots directory.
+Its own line 16 comment mentions `RASTER_RUNGS` cases, so the concept is present and the register is
+not. A case citing an unpublished, misnamed or absent image is invisible to both instruments — which is
+why DEF-224 and DEF-225 were found by a person reading and not by anything running, and why the lineage
+gate can exit 0 over a manifest that disagrees with every case citing it.
+
+**Why this probe is different from the others in this campaign.** Every other one interrogates a
+*result*: a check returning nothing has two readings, a set returning members has two, an instrument can
+answer a narrower question than the one asked. This one interrogates the *inputs*, and it fires on an
+instrument whose output is entirely correct. Nothing in `shot_disposition.py`'s output would ever hint
+the gap exists, and nothing in `capture-lineage.py`'s would either. That is the class of defect that
+survives every result-shaped check ever written.

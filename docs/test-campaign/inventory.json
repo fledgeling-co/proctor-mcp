@@ -3577,7 +3577,8 @@
       "detail": "docs/feature-specs/LEDGER.md carries 103 ids against 99 files in docs/specs. The four with no spec are PRO-0022 (A drawing fault must not kill the agent, Merged 2026-08-14), PRO-0031 (The health report is complete, Retired), PRO-0039 (Page-scoped refusal, Retired) and PRO-0092 (ProctorAgent's mutants mostly survive, Ready for AI). Two of them are why the reverse direction cannot close by citation alone: docs/features-to-triage/23-drawing-fault-must-not-kill-the-agent.md is PRO-0022 and 40-page-scoped-refusal.md is PRO-0039 — each brief's own banner names its id — and neither has a spec to carry a **Brief:** line. No spec lacks a ledger row, so the gap is one-directional.",
       "surface": "SURF-024",
       "req": "REQ-100",
-      "fix": "NOT FIXED HERE. A spec citation needs a spec, and writing three retrospective specs for two retired items and one merged item is a different piece of work with its own decision about whether a retired item earns a spec at all. Recorded instead in docs/feature-specs/UNCLAIMED-BRIEFS.md, which is read by spec_citation_measure.py, so briefs 23 and 40 are accounted for with their reason rather than counted as unclaimed. PRO-0092 closes its own row when its spec is written at plan time."
+      "fix": "NOT FIXED HERE. A spec citation needs a spec, and writing three retrospective specs for two retired items and one merged item is a different piece of work with its own decision about whether a retired item earns a spec at all. Recorded instead in docs/feature-specs/UNCLAIMED-BRIEFS.md, which is read by spec_citation_measure.py, so briefs 23 and 40 are accounted for with their reason rather than counted as unclaimed. PRO-0092 closes its own row when its spec is written at plan time.",
+      "note": " COUNT UPDATED 2026-08-23: three rows now, not four — PRO-0022, PRO-0031 and PRO-0039. PRO-0092 left the set because its runner wrote it a spec. The figure moved without anything noticing, which is DEF-228's subject: nothing reads the ledger."
     },
     {
       "id": "DEF-203",
@@ -3792,6 +3793,32 @@
         "REQ-111"
       ],
       "note": "The instrument checks captures.json against the disk and stops there. It never reads cases.json, so a case citing an unpublished, misnamed or absent image is invisible to it. DEF-224 (five files where case evidence and the lineage manifest disagree) and DEF-225 (a passing case citing a shots file that does not exist) are both instances of a class this instrument cannot see, which is precisely why both were found by a person reading rather than by a gate running. Found at the retrospective out-of-family adjudication, by the only reviewer to ask what the instrument does NOT read. Related: the eight published captures carry depicts: null, so semantic inspection was enforced on the 35 unpublished and not on the 8 that the ratchet pins — the unexamined set is the one the gate's number rests on."
+    },
+    {
+      "id": "DEF-228",
+      "title": "LEDGER.md is the ledger of record and no standing instrument reads it",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "requirements": [
+        "REQ-046"
+      ],
+      "note": "Found by running DEF-227's probe deliberately across every instrument in scripts/ rather than meeting it by accident: name every register a check reads, name the ones it does not, and ask what class of defect lives only in the gap. The matrix has one column no row fills. Twenty-seven instruments read cases.json, inventory.json, captures.json, the specs, the briefs, the shots, campaign.json, Sources/ and Tests/ between them. **LEDGER.md is read by exactly one file, docs/goals/gate-wave9.sh, a one-off from an earlier wave rather than a standing gate.**\n\nIT IS ALREADY WRONG, and that is the point rather than the risk. The probe found PRO-0092's row reading `In Progress` while its branch is merged into main — six sibling rows were updated at their merges and this one was missed, and no instrument in this repository could have said so. Corrected in the same change that opened this row. The ledger also carries 107 rows against 104 spec files.\n\nThe check is cheap and does not exist: a ledger row whose branch is merged claims Merged; a row with no spec file is declared; a spec with no row is a finding. The evidence for all three is already computable from git and the filesystem, which is what makes the absence notable rather than excusable."
+    },
+    {
+      "id": "DEF-229",
+      "title": "capture-lineage.py never reads cases.json either, so DEF-227's class reaches the gate",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "requirements": [
+        "REQ-046"
+      ],
+      "note": "DEF-227 recorded that shot_disposition.py checks captures.json against the disk and never reads cases.json. The same probe shows the **gate** shares the blindness: capture-lineage.py has zero references to cases.json — it reads inventory.json, captures.json and the shots directory. Its own line 16 comment mentions `RASTER_RUNGS` cases, so the concept is present and the register is not.\n\nThat widens the class from a new instrument to the gate this repository relies on for capture lineage. A case citing an unpublished, misnamed or absent image is invisible to both, which is why DEF-224 and DEF-225 were found by a person reading and not by anything running — and why the capture-lineage gate could exit 0 over a manifest that disagrees with every case citing it."
     }
   ]
 }
