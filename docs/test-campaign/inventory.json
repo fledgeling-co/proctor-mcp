@@ -1318,6 +1318,18 @@
       ],
       "note": "The instrument read the manifest and the disk and never cases.json, so a case citing an unpublished, misnamed or absent image was invisible to it. DEF-224 and DEF-225 are both instances of that class, and both were found by a person reading rather than by a gate running — which is the whole argument for the gate existing. The nine rows those two defects already record are named rather than failed, so the reading stays honest without this item claiming repairs that belong to them.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-137",
+      "class": "honesty-guardrail",
+      "text": "An arming that ran no tests is a measurement that did not happen, and is never filed as a check that fired or as a check that did not",
+      "source": "DEF-244; scripts/campaign/mutation_seam_arm.py score_arming()",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "note": "DEF-208's repair separated a setup death from a check firing and then graded the third event `armed = code != 0` conflated \u2014 a --filter matching no test \u2014 as a pass. scripts/test.sh refuses a zero-test run with an exit 1 of its own, in a block whose own comment says a filter matching nothing is not a pass, and the repaired rule read that refusal as the check firing. A repair can inherit the property it was repairing, which is this item's own subject turning on this item a second time.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -3930,6 +3942,70 @@
         "REQ-136"
       ],
       "note": "RECORDED, NOT FIXED. capture-lineage.py drops any path with a `mock` directory component from its population (`'mock' not in {q.lower() for q in p.relative_to(shots_dir).parts[:-1]}`), and shot_disposition.py's audit globs `SHOTS.glob('*.png')`, which never descends. So the five files under docs/test-campaign/evidence/shots/mock/ are in neither instrument's population: four PNGs and one HTML, one of them cited by CASE-0039 as the design of record beside the capture it is compared against. Both exclusions are correct on their own terms — a mock is what the surface should look like, not a picture of what it did, and PRO-0106's citation check follows capture-lineage's rule deliberately so CASE-0039's mock-versus-build comparison is not read as a fault. What is not established is that anything checks the mock lane at all: a mock file could be replaced, deleted, or renamed and no gate in this repository would say so, while a case citing it would go on passing. Found by PRO-0106's new citation check firing on that path before the exclusion was written, so the gap is measured rather than supposed. The repair is a disposition lane for the design of record with its own standard, which is a different piece of work from proving an instrument's own step."
+    },
+    {
+      "id": "DEF-244",
+      "title": "mutation_seam_arm.py scored a run that executed zero tests as ARMED",
+      "status": "fixed",
+      "severity": "high",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "requirements": [
+        "REQ-137"
+      ],
+      "note": "DEF-208's own repair, carrying DEF-208's property. The instrument's docstring names the three events `armed = code != 0` conflated \u2014 a setup death, a --filter matching nothing, and a check firing \u2014 and the repair separated the first from the third and graded the second a pass. Driven end to end by the verifier: CASE-0461's real, landing mutation with only its Swift function name changed produced `[CASE-0461] ARMED ... exit 1 \u00b7 Test run with 0 tests in 0 suites passed` and `armed 1 of 1 \u00b7 inconclusive 0` at process exit 0 with the tree clean. The started-line guard could not catch it \u2014 `started` is empty, so `display is not None and started and display not in started` is skipped, and `display` was None anyway because display_name correctly refused. The non-zero exit is scripts/test.sh's OWN zero-test refusal, so the rule was reading the harness's refusal to grade as a grade. Fixed: the test count is read back out of the published verdict line, and a verdict over zero tests is inconclusive naming why, exactly as a setup death is. Reintroducing `armed = code != 0` returns ARMED on the same fixture.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/zero-tests-arming.txt"
+      ]
+    },
+    {
+      "id": "DEF-245",
+      "title": "porcelain_paths re-created DEF-206 on the rename branch DEF-206's repair added",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "requirements": [
+        "REQ-134"
+      ],
+      "note": "The DEF-206 repair split a rename entry from the RIGHT, on the reasoning that an unconditional split re-creates DEF-206 on any path containing the arrow. Splitting from the right re-creates it on a different input: `git mv src.png \"stage-1 -> stage-2.png\"` gives `R  src.png -> \"stage-1 -> stage-2.png\"`, whose last ` -> ` is inside the quoted destination, so porcelain_paths returned `stage-2.png\"` \u2014 unopenable \u2014 and --allow-dirty wrote that phantom permanently into run.json.dirty_inputs, which is DEF-206's original harm. Neither naive split survives git: the first ` -> ` is wrong when the SOURCE is quoted and holds an arrow, the last is wrong when the destination is. Fixed by reading the quoting: porcelain v1 quotes a path holding a space (git's own QUOTE_PATH_QUOTE_SP, driven against git 2.50.1), so an unquoted side cannot contain the separator, and a quoted side is scanned to its closing quote honouring backslash escapes. The existing fixture drove an arrow inside a ` M` path and never inside an `R` destination.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+      ]
+    },
+    {
+      "id": "DEF-246",
+      "title": "a cited .mov failed as absent from an audit whose population could never hold it",
+      "status": "fixed",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-136"
+      ],
+      "note": "audit() globbed `*.png` while cite_paths accepts twelve suffixes, so the two sets differed and the gap read as a missing file: a real .mov placed under evidence/shots and cited gave `CASE-0001 cites evidence/shots/probe-clip.mov: under evidence/shots and absent from this audit`, a hard failure over a file that is present. audit() cannot widen \u2014 measure() reads a PNG IHDR out of bytes 16..24 and hands the file to PIL for the pixel counts \u2014 so the population is declared once as AUDIT_SUFFIX, the glob is built from it, and the citation branch reads it: a cited file outside the population is a notice saying so and is checked for existence and no further.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
+    },
+    {
+      "id": "DEF-247",
+      "title": "cite_paths skipped every dict key and every path holding a space",
+      "status": "fixed",
+      "severity": "low",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-136"
+      ],
+      "note": "Two places a citation could hide from the gate DEF-227 built, both DEF-227's own shape: the walk recursed into dict VALUES only, so a path used as a key \u2014 a per-shot note keyed by the file it is about \u2014 was never scanned; and any string holding a space was disqualified outright, which is a proxy for `this is prose about a file` and also disqualifies a real capture whose name has a space in it. Keys are walked now, and a spaced string that RESOLVES on disk is a citation. RESIDUAL, stated rather than closed: a citation of a MISSING file whose name holds a space still reads as prose, because that string and a sentence naming a file are not separable by any rule this has.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
     }
   ]
 }

@@ -6851,5 +6851,96 @@
     "defects": [
       "DEF-226"
     ]
+  },
+  {
+    "id": "CASE-0558",
+    "req": "REQ-137",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/zero-tests-arming.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-repair rule `armed = code != 0` is reintroduced against this exact fixture and returns ARMED, which is the verdict the verifier drove end to end on CASE-0461. The same fixture at exit 0 is scored NOT ARMED by that rule, so the two-way control shows one non-measurement filed as a pass in one direction and a fail in the other, and inconclusive both ways after the repair. A verdict line over one test that failed still arms, so the guard is watched clearing as well as firing.",
+    "note": "DEF-244. The fixture is `scripts/test.sh --filter thisFunctionDoesNotExistAnywhere` recorded rather than a string written in the test: a well-formed `Test run with 0 tests in 0 suites passed`, scripts/test.sh's own zero-test refusal, exit 1, and no started line. The count is read back out of the published verdict line rather than carried beside it.",
+    "defects": [
+      "DEF-244"
+    ]
+  },
+  {
+    "id": "CASE-0559",
+    "req": "REQ-137",
+    "surface": "SURF-026",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "`armed = code != 0` is reintroduced against every one of the eleven routes and the check asserts WHICH three it agrees on rather than that it disagrees somewhere \u2014 a control that moves on every input is measuring the harness rather than the repair. The three it agrees on are a reported failure, a reported pass, and the trap; it differs on the other eight, both zero-test routes among them.",
+    "note": "DEF-244's own shape, refused: every route through score_arming enumerated from the code rather than from the tests, one fixture each, none standing for two. The zero-test route survived the first repair because the fixtures were written from the paths the harness happened to drive.",
+    "defects": [
+      "DEF-244"
+    ]
+  },
+  {
+    "id": "CASE-0560",
+    "req": "REQ-134",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "Three parses are computed against all thirteen kinds in one run: the pre-repair slice, the rsplit repair, and the code as it stands. The slice is wrong on nine and the rsplit on exactly the two whose last ` -> ` sits inside a quoted destination, and both sets are asserted by membership. End to end, a scratch copy carrying the rsplit writes `stage-2.md\"` into run.json.dirty_inputs under --allow-dirty and the real subject writes the path that opens.",
+    "note": "DEF-245. CASE-0550 drove six kinds with the tree carrying all six at once and an arrow only ever inside a ` M` path, so a rename DESTINATION holding one was undriven \u2014 and splitting from the right, the repair CASE-0550 was checking, is wrong on exactly that. Thirteen kinds are enumerated from porcelain_paths' branches and each is driven ALONE in a reset tree. Also driven: an unstaged rename arrives as ` D` plus `??` rather than the ` R` the out-of-family review claimed, so the guard that reads both status columns rests on a measurement rather than on the claim.",
+    "defects": [
+      "DEF-245",
+      "DEF-206"
+    ]
+  },
+  {
+    "id": "CASE-0561",
+    "req": "REQ-136",
+    "surface": "SURF-027",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "The population is moved rather than the branch: at a `.png` population the cited .mov is a notice and at a `.mov` population the same citation fails as absent while the .png becomes the notice, in the same run. So the branch is shown to read the declared population and to be able to fire in both directions, which a check pinned to the literal `.png` could not show.",
+    "note": "DEF-246. Reproduced before the repair by citing a real .mov under evidence/shots: `CASE-0001 cites evidence/shots/probe-clip.mov: under evidence/shots and absent from this audit`. audit() measures PNG rasters \u2014 an IHDR read out of bytes 16..24 and PIL for the pixel counts \u2014 so a .mov has no row there to be absent from, and the population is declared once and read by the citation branch.",
+    "defects": [
+      "DEF-246"
+    ]
+  },
+  {
+    "id": "CASE-0562",
+    "req": "REQ-136",
+    "surface": "SURF-027",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-repair walk is reimplemented verbatim beside the repaired one and run over the same two fixtures: it finds nothing under a dict key and nothing in a spaced path, while the repaired walk finds both. The spaced path is then deleted and the same string stops being a citation, which is the residual stated rather than hidden.",
+    "note": "DEF-247. Two places a citation could hide from cite_paths, each on its own fixture: a path used as a dict key was not walked at all, and any string holding a space was disqualified outright \u2014 a proxy for prose that also disqualifies a real capture whose name has a space in it. A spaced string that resolves on disk is a citation now; one that does not stays prose, because a sentence naming a file and a citation of a missing file with a space in its name are not separable by any rule this has.",
+    "defects": [
+      "DEF-247"
+    ]
   }
 ]
