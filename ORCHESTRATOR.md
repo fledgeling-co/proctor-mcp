@@ -3089,3 +3089,31 @@ Standing gates:
 - `ledger_gate.py`: 0 (113 rows, 110 specs, 3 declared without spec, 55 merged in git)
 - `spec_citation_measure.py`: 19/19 passed (105 briefs, 103 claimed, 2 registered, 0 unclaimed)
 - `test_instruments.py`: 217 passed, 0 failed
+
+### Wave 19 closed — 100% brief join rate, 0 unjoined briefs, verified-done past 735 (2026-08-24)
+
+`main` carries PRO-0111, PRO-0112 and PRO-0113. Nothing pushed.
+
+| Gate on closed `main` | Exit | Reading |
+|---|:---:|---|
+| `ledger_gate.py` | **0** | 113 ledger rows · 110 specs on disk · 3 declared without spec · 55 merged in git |
+| `test_instruments.py` | **0** | **257 passed**, 0 failed |
+| `shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
+| `capture-lineage.py --gate` | **0** | ratchet: 6 held |
+| `defect_gate.py dropped` | **0** | 134 merges examined, 0 dropped values |
+| `spec_citation_measure.py` | **0** | **19/19 checks passed** (105 briefs: 103 claimed 1-to-1, 2 registered, 0 unclaimed) |
+| `reckoning_selftest.py` | **0** | 78 checks passed |
+| `plugins/reckon/skills/reckon/scripts/selftest.py` | **0** | 53 checks passed |
+| `campaign.py check` | 1 | Pre-existing standing baseline (0 new blockers) |
+
+Registry: **442 cases · 159 defect rows · 134 requirements · 33 surfaces**.
+Open defects: **2** (`DEF-033` measured negative, `DEF-215` declared retired items without spec file).
+
+**Wave 19 Close Reckoning (`68431dc` → `a29e3bd`):**
+- **Unjoined briefs:** 76 → **0** (-76)
+- **Brief join rate:** 25.5% → **100.0%** (105/105 briefs joined at confidence 1.0, +74.5 pts)
+- **Weak-join warnings:** Completely eliminated (0 warnings).
+- **Verified-done:** 701 → **735** (+34)
+- **Broken product work:** 9 → **8** (-1)
+- **Requirements observed:** 78.4% → **79.9%** (107/134)
+- **Cases adjudicated:** 99.1% (438/442)

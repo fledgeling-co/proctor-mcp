@@ -1,0 +1,1220 @@
+{
+ "schema": "reckoning-delta/1",
+ "project": "proctor-mcp",
+ "attribution": "decomposed",
+ "previous": {
+  "dir_stamp": "2026-08-23T08:28:14Z",
+  "commit": "68431dcc639c5cf4743f5d0762dead0a834dff03",
+  "short": "68431dc",
+  "tool": "1.2.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 18 close. PRO-0105, PRO-0108, PRO-0109, PRO-0110 merged. 0 unmerged ai/ branches, 0 unclaimed briefs, 5 remaining open defects (all recorded limits / measured negative)."
+  ]
+ },
+ "current": {
+  "dir_stamp": "2026-08-23T19:37:34Z",
+  "commit": "a29e3bd46d0002a0eef3acc917d9b223ad8ce7b6",
+  "short": "a29e3bd",
+  "tool": "1.3.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 19 close. PRO-0111, PRO-0112, PRO-0113 merged. 100% brief join rate, 0 weak join warnings, warrant charter verified, limits audited."
+  ]
+ },
+ "verdict": "2 of 5 axes improved, 3 flat, 0 worsened; evidence work up at 41 and the unmeasured class larger at 41 rows.",
+ "movement": {
+  "tool": {
+   "work_items": 0,
+   "product": 0,
+   "evidence": 0,
+   "decision": 0,
+   "rows": 0
+  },
+  "project": {
+   "work_items": 0,
+   "product": -1,
+   "evidence": 4,
+   "decision": -3,
+   "rows": 34
+  },
+  "net": {
+   "work_items": 0,
+   "product": -1,
+   "evidence": 4,
+   "decision": -3,
+   "rows": 34
+  },
+  "previous": {
+   "work_items": 138,
+   "product": 9,
+   "evidence": 37,
+   "decision": 92,
+   "rows": 839
+  },
+  "control": {
+   "work_items": 138,
+   "product": 9,
+   "evidence": 37,
+   "decision": 92,
+   "rows": 839
+  },
+  "current": {
+   "work_items": 138,
+   "product": 8,
+   "evidence": 41,
+   "decision": 89,
+   "rows": 873
+  }
+ },
+ "classes": {
+  "previous": {
+   "verified-done": 701,
+   "unmeasured": 37,
+   "undecided": 16,
+   "broken": 9,
+   "unjoined": 76
+  },
+  "control": {
+   "verified-done": 701,
+   "unmeasured": 37,
+   "undecided": 16,
+   "broken": 9,
+   "unjoined": 76
+  },
+  "current": {
+   "verified-done": 735,
+   "unmeasured": 41,
+   "undecided": 89,
+   "broken": 8
+  }
+ },
+ "axes": [
+  {
+   "key": "cases_adjudicated",
+   "label": "Cases adjudicated",
+   "prev": {
+    "n": 422,
+    "of": 426,
+    "pct": 99.1,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "control": {
+    "n": 422,
+    "of": 426,
+    "pct": 99.1,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "current": {
+    "n": 438,
+    "of": 442,
+    "pct": 99.1,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "decisions_taken",
+   "label": "Cases ruled out by decision",
+   "prev": {
+    "n": 0,
+    "of": 426,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "control": {
+    "n": 0,
+    "of": 426,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "current": {
+    "n": 0,
+    "of": 442,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "requirements_observed",
+   "label": "Requirements observed",
+   "prev": {
+    "n": 98,
+    "of": 125,
+    "pct": 78.4,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "control": {
+    "n": 98,
+    "of": 125,
+    "pct": 78.4,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "current": {
+    "n": 107,
+    "of": 134,
+    "pct": 79.9,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "surfaces_spoken_for",
+   "label": "Surfaces spoken for",
+   "prev": {
+    "n": 30,
+    "of": 30,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "control": {
+    "n": 30,
+    "of": 30,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "current": {
+    "n": 33,
+    "of": 33,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "briefs_joined",
+   "label": "Briefs joined to evidence",
+   "prev": {
+    "n": 26,
+    "of": 102,
+    "pct": 25.5,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "control": {
+    "n": 26,
+    "of": 102,
+    "pct": 25.5,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "current": {
+    "n": 105,
+    "of": 105,
+    "pct": 100.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  }
+ ],
+ "unmeasured": {
+  "control_rows": 37,
+  "current_rows": 41,
+  "left": [
+   {
+    "id": "BRIEF-102-standing-checks-for-the-unread-registers",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "Standing checks for the registers nothing reads",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-60-status-window-to-the-mock",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "The status window becomes the mock",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-97-an-input-the-check-cannot-classify",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "An input the check cannot classify, and the two directions it can be wrong",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-98-a-version-string-is-not-the-artifact",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "A version string is not the artifact",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   }
+  ],
+  "entered": [
+   {
+    "id": "BRIEF-17-multi-session-queue",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "Multi-session scheduling — session identity, lanes, and the queue",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-30-a-home-for-the-proctor-switches",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "A home for the PROCTOR_* switches",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-38-a-hold-names-whose-run-it-is",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "A hold names whose run it is",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-48-the-run-has-a-history-you-can-read",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "The run has a history you can read",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-59-design-tokens-as-a-swift-value",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "The design tokens are a Swift value, generated from the mock",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-65-history-window-to-the-mock",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "The history window, and the detail that says what it could not check",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-68-the-operator-cli",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "`proctor`, the operator CLI",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-72-tests-that-mutate-and-never-read-back",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "Seventy-eight tests that change state and never look at it",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   }
+  ],
+  "direction": "worsened"
+ },
+ "rows": {
+  "moved": [
+   {
+    "id": "BRIEF-00-WAVE-7-DIRECTION",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Wave 7 direction: Cua underneath, Proctor on top",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-01-cua-schema-facade",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Stock computer-use schema façade (Anthropic + OpenAI)",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-02-set-of-marks-captures",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Set-of-marks annotated captures",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-03-menu-bar-key-equivalents",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Menu-bar enumeration with key-equivalents",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-04-app-scripting-dictionary",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "App scripting-dictionary introspection",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-05-audit-trail-policy-gate",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Redacting audit trail + policy / approval gate",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-06-vision-capture-normalisation",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Vision-capture normalisation + reported scale factor",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-07-zoom-region-crop",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Zoom native-resolution region crop",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-08-mcp-surface-modernization",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "MCP surface modernization",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-09-process-kill-fs-jail",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Process kill + filesystem jail",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-10-pointer-overlay-captures",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Pointer / target overlay in captures",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-102-standing-checks-for-the-unread-registers",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "Standing checks for the registers nothing reads",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-11-stability-per-step-pointer",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Pointer marker in proctor_stability per-step artifacts",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-12-gate-flow-replay-stability",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Gate recorded flow-replay and stability through the policy gate + audit",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-13-audit-log-encryption-at-rest",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Encryption-at-rest for the JSONL audit log",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-15-step-descriptions",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Human-readable step descriptions, derived not supplied",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-16-run-hud-panel",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Run HUD — the overlay shown while Proctor drives an app",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-17-multi-session-queue",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "Multi-session scheduling — session identity, lanes, and the queue",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-18-hud-character-assets",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "HUD character — sprite assets and state binding",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-19-yield-when-a-person-takes-the-machine",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Notice when a person is taking the machine back, and yield",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-20-foreground-run-is-obvious",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Make a foreground-only run obvious before it takes the machine",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-21-route-browser-work-to-obscura",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Route browser work to Obscura instead of driving a browser by hand",
+    "why": "the requirement this brief maps to is contradicted or vacuous; the document and the build disagree"
+   },
+   {
+    "id": "BRIEF-22-menu-bar-switch-and-character",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "A menu bar switch for the panel, and a menu bar icon that is the same character",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-23-drawing-fault-must-not-kill-the-agent",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "broken",
+    "title": "A drawing fault must not kill the agent",
+    "why": "the registry records a defect or a failing case against this brief's subject"
+   },
+   {
+    "id": "BRIEF-24-offer-to-install-obscura",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Offer to install Obscura when it is missing",
+    "why": "the requirement this brief maps to is contradicted or vacuous; the document and the build disagree"
+   },
+   {
+    "id": "BRIEF-25-second-browser-lane-for-obscuras-limits",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "A second browser lane for what Obscura cannot do",
+    "why": "the requirement this brief maps to is contradicted or vacuous; the document and the build disagree"
+   },
+   {
+    "id": "BRIEF-26-prefer-background-and-pointer-in-plane",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Prefer the background, and draw the pointer where the work is happening",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-27-foreground-takeover-overlay",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "When Proctor must take the front, take it visibly and hold it",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-28-menu-bar-character-when-idle",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The menu bar shows the character when idle, not a status symbol",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-29-re-check-now-says-what-it-checks",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "\"Re-check now\" does not say what it checks",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-30-a-home-for-the-proctor-switches",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "A home for the PROCTOR_* switches",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-31-the-build-says-which-build-it-is",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The build says which build it is",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-32-the-health-report-is-complete",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The health report is complete",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-33-the-audit-trail-is-signed",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The audit trail is signed, and it records what Proctor recommended",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-34-a-persons-click-reaches-stop",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "A person's click reaches Stop",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-35-scroll-moves-by-what-was-asked",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Scroll moves by what was asked",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-36-the-browser-catalogue-stops-guessing",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The browser catalogue stops guessing, and the handoff is machine-readable",
+    "why": "the requirement this brief maps to is contradicted or vacuous; the document and the build disagree"
+   },
+   {
+    "id": "BRIEF-37-the-status-windows-checks-say-what-they-can-check",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The status window's checks say what they can check",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-38-a-hold-names-whose-run-it-is",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "A hold names whose run it is",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-39-stability-knows-when-it-is-scoring-a-page",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Stability knows when it is scoring a page",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-40-page-scoped-refusal",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "broken",
+    "title": "Page-scoped refusal",
+    "why": "the registry records a defect or a failing case against this brief's subject"
+   },
+   {
+    "id": "BRIEF-41-open-cannot-launch-proctor",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "`open -a Proctor` cannot launch Proctor while the agent is running",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-42-doctor-can-hang-on-the-screen-recording-probe",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "`proctor_doctor` can hang forever waiting on the Screen Recording probe",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-43-backfill-horizontal-alignment-assertion",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Backfill: `horizontalAlignment` on `proctor_assert`",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-44-build-identity-tests-fail-on-a-moving-head",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The build-identity tests fail whenever HEAD moves without a source change",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-45-cua-becomes-the-actuation-backend",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Cua becomes the actuation backend",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-46-a-delegated-call-is-still-gated-and-recorded",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "A delegated call is still gated and recorded",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-47-supervision-survives-delegation",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Supervision survives delegation",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-48-the-run-has-a-history-you-can-read",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "The run has a history you can read",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-49-drive-ios-through-deep-links",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Drive iOS through deep links",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-50-run-maestro-flows-as-proctor-flows",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Run Maestro flows as Proctor flows",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-51-doctor-knows-the-whole-toolchain",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Doctor knows the whole toolchain",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-52-decide-what-happens-to-the-native-planes",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Decide what happens to the native planes",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-53-the-proctor-skill-tracks-what-shipped",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The proctor skill tracks what actually shipped",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-54-takeover-tests-redden-the-gate",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "`TakeoverWiringTests` reddens the gate at random, and `swift test` exits 0 when it does",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-55-three-tests-still-redden-the-gate",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Three tests still redden the gate at random, and PRO-0053 only fixed one of them",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-56-the-suite-wedges-in-haltcheckpoint",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The suite wedges in `haltCheckpoint`, and the singleton is why",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-57-vm-targets",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "VM targets: test in a guest, and say which machine",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-58-swiftui-conversion-direction",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Wave 9: the surface set becomes the app",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-59-design-tokens-as-a-swift-value",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "The design tokens are a Swift value, generated from the mock",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-60-status-window-to-the-mock",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "The status window becomes the mock",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-61-walkthrough-to-the-mock",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The walkthrough becomes the mock",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-62-menu-bar-and-the-command-surface",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The menu bar, and the complete command surface",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-63-run-hud-and-the-character",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The run HUD, and the seven character states",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-64-takeover-overlay-and-the-drawn-pointer",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The takeover overlay, and what it does not claim",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-65-history-window-to-the-mock",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "The history window, and the detail that says what it could not check",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-66-consent-sheets",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The consent sheets, and the asymmetry that runs through them",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-67-the-fidelity-harness-proctor-on-proctor",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The fidelity harness: Proctor measures Proctor",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-68-the-operator-cli",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "`proctor`, the operator CLI",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-69-the-supervision-tui",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "`proctor tui`, the supervision surface",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-72-tests-that-mutate-and-never-read-back",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "unmeasured",
+    "title": "Seventy-eight tests that change state and never look at it",
+    "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   },
+   {
+    "id": "BRIEF-74-the-carried-acceptance-clauses",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Two acceptance clauses that merged carried rather than green",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-75-what-the-status-window-still-owes",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "What the status window still owes, and one permission that may lie",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-77-the-cua-path-leaves-proctors-plane-silently",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The cua path leaves Proctor's own plane, and nothing on screen says so",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-79-the-walkthrough-will-not-advance-without-its-grants",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The walkthrough will not advance until its grants are in",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-87-a-warning-this-project-has-already-disproved",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Proctor ships a guest warning its own spec records as not reproducing",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-93-the-reckoning-tool-mis-read-this-registry",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "The reckoning tool mis-read this registry three ways",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-95-six-named-repairs",
+    "entity": "brief",
+    "from": "unjoined",
+    "to": "undecided",
+    "title": "Six repairs whose diagnosis is already done",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-97-an-input-the-check-cannot-classify",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "An input the check cannot classify, and the two directions it can be wrong",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-98-a-version-string-is-not-the-artifact",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "A version string is not the artifact",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "DEF-141",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "REQ-055's original sentence certified reads, the whole run and every operator path; the witness watches writes",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-151",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "Whether the userInput yield fires for a real hand on a real keyboard is still unproved",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "DEF-180",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "A Screen Recording answer is frozen for the life of the agent process, so a revoked grant is reported as grant",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   }
+  ],
+  "appeared": [
+   {
+    "id": "BRIEF-103-the-three-recorded-limits-audit",
+    "entity": "brief",
+    "class": "undecided",
+    "title": "Audit of the three recorded limits: filesystem certification, hardware keyboard yield, and dynamic TCC grant r"
+   },
+   {
+    "id": "BRIEF-104-warrant-charter-and-release-integrity",
+    "entity": "brief",
+    "class": "undecided",
+    "title": "Formalize warrant charter and release gate integration"
+   },
+   {
+    "id": "BRIEF-105-brief-join-rate-and-retirement-ladder",
+    "entity": "brief",
+    "class": "undecided",
+    "title": "Brief join rate optimization and retirement ladder"
+   },
+   {
+    "id": "CASE-0630",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0631",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0632",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0633",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0634",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0635",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0636",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0637",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0638",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-031 · ?"
+   },
+   {
+    "id": "CASE-0650",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-032 · ?"
+   },
+   {
+    "id": "CASE-0651",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-032 · ?"
+   },
+   {
+    "id": "CASE-0652",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-032 · ?"
+   },
+   {
+    "id": "CASE-0653",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-032 · ?"
+   },
+   {
+    "id": "CASE-0670",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-033 · ?"
+   },
+   {
+    "id": "CASE-0671",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-033 · ?"
+   },
+   {
+    "id": "CASE-0672",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-033 · ?"
+   },
+   {
+    "id": "DEF-285",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Unprivileged user-space processes cannot forge kernel IOHIDEvent sourcePid 0 without driver entitlements; hard"
+   },
+   {
+    "id": "DEF-290",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Warrant charter .warrant/warrant.toml lacked surface mappings and census class integration causing rollup and "
+   },
+   {
+    "id": "DEF-295",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Reckon brief join rate (26.7%, 28/105) fell below 50.0% threshold due to missing frontmatter source declaratio"
+   },
+   {
+    "id": "REQ-160",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Filesystem Read-Isolation Policy Contract: test processes redirect all state stores (PolicyStore, CaptureEngin"
+   },
+   {
+    "id": "REQ-161",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Hardware Input Event Source Discrimination: Contention monitoring distinguishes real hardware human input (ker"
+   },
+   {
+    "id": "REQ-162",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "TCC Grant Probing Lifecycle & Dynamic Invalidation: Permission grant probing caches definite platform results "
+   },
+   {
+    "id": "REQ-165",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "The warrant charter .warrant/warrant.toml validates against schema, owner signature, renewal date, and campaig"
+   },
+   {
+    "id": "REQ-166",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "All seven defect classes in warrant charter specify surface globs covering 100% of campaign surfaces and enfor"
+   },
+   {
+    "id": "REQ-167",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Release gate and tier integrity verification asserting charter consistency and census class rules in test_inst"
+   },
+   {
+    "id": "REQ-170",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Feature briefs carry structured frontmatter sources referencing registry requirements and defects at confidenc"
+   },
+   {
+    "id": "REQ-171",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Campaign requirements cite feature brief paths in source fields to establish bidirectional join traceability"
+   },
+   {
+    "id": "REQ-172",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Reckon join rate reaches or exceeds the 50.0% threshold (>= 53/105 briefs) enabling automated retirement verif"
+   },
+   {
+    "id": "SURF-031",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Audited Platform & Policy Boundaries (Filesystem Isolation, Hardware Input Event Source, Dynamic TCC Lifecycle"
+   },
+   {
+    "id": "SURF-032",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Warrant charter integrity, defect class surface mapping, and census enforcement"
+   },
+   {
+    "id": "SURF-033",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Feature brief queue, frontmatter citations, and reckoning registry join"
+   }
+  ],
+  "vanished": []
+ },
+ "ratchets": [
+  {
+   "pair": "published",
+   "from": "68431dc",
+   "to": "a29e3bd",
+   "exit": 3,
+   "violations": [
+    "RATCHET BRIEF-102-standing-checks-for-the-unread-registers moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-60-status-window-to-the-mock moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-97-an-input-the-check-cannot-classify moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-98-a-version-string-is-not-the-artifact moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)"
+   ]
+  },
+  {
+   "pair": "tool-constant",
+   "from": "68431dc (rebuilt)",
+   "to": "a29e3bd",
+   "exit": 3,
+   "violations": [
+    "RATCHET BRIEF-102-standing-checks-for-the-unread-registers moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-60-status-window-to-the-mock moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-97-an-input-the-check-cannot-classify moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-98-a-version-string-is-not-the-artifact moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)"
+   ]
+  }
+ ]
+}
