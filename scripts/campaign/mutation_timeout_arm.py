@@ -43,6 +43,11 @@ RUNNER = ROOT / "scripts/campaign/mutate_swift.py"
 # The pre-change scoring expression, copied from `mutate_swift.py` at the commit
 # before this one rather than paraphrased. If this stops matching the file git
 # holds, the arming is comparing against something nobody shipped.
+# The commit before `fix(PRO-0092): the mutation runner scores a timeout apart
+# from a kill`. Pinned rather than named by branch: a branch that will one day
+# contain the change cannot hold the state before it. DEF-242.
+BASELINE_REF = "fc1b9a4~1"
+
 OLD_SOURCE_MARKER = 'if why == "build-failed":\n            verdict, unbuildable = "unbuildable", unbuildable + 1'
 
 
@@ -92,7 +97,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="docs/test-campaign/evidence/PRO-0092/timeout-arming.json")
     ap.add_argument("--target", default="Sources/ProctorAgent/RunIdentity.swift")
-    ap.add_argument("--baseline-ref", default="main",
+    # DEF-242. The default was `main`, and `main` absorbed PRO-0092's fix the
+    # moment it merged — so this gate has compared the repaired runner against
+    # itself ever since, printing `before=TIMEOUT after=TIMEOUT` and exiting 1 on
+    # a clean `main` tree. The failure was loud rather than silent, because
+    # OLD_SOURCE_MARKER stopped matching too, and nobody read it: this gate was
+    # not in the per-merge list. A baseline ref that moves is not a baseline. It
+    # is pinned to the commit before the change it measures, which is the only
+    # tree that can be the before-state.
+    ap.add_argument("--baseline-ref", default=BASELINE_REF,
                     help="the ref holding the runner as it was before this change")
     args = ap.parse_args()
 
