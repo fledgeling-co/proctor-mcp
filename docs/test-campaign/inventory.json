@@ -4006,6 +4006,70 @@
       "evidence": [
         "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
       ]
+    },
+    {
+      "id": "DEF-248",
+      "title": "unquote_path returned a still-quoted path under core.quotePath=false",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "requirements": [
+        "REQ-134"
+      ],
+      "note": "DEF-206's harm reached by a git CONFIG rather than by a filename. core.quotePath decides whether git escapes non-ASCII bytes in octal or writes the UTF-8 through literally, and it is a setting a user commonly carries in their own gitconfig. The old `encode(ascii, backslashreplace).decode(unicode_escape).encode(latin-1).decode(utf-8)` round trip handled the octal form and raised UnicodeDecodeError on the literal one, and the except branch returned the entry WITH ITS QUOTES ON: `\"docs/test-campaign/caf\u00e9 latte.json\"`, a name nothing can open, written permanently into run.json.dirty_inputs under --allow-dirty. Measured against git 2.50.1 in both modes. Fixed by unquoting byte by byte, with surrogateescape on a sequence that is not UTF-8 so an undecodable name stays openable. Found by the out-of-family review of the gap-fix.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+      ]
+    },
+    {
+      "id": "DEF-249",
+      "title": "tree_dirty carried the same line[3:] slice DEF-206 was about",
+      "status": "fixed",
+      "severity": "low",
+      "surfaces": [
+        "SURF-026"
+      ],
+      "requirements": [
+        "REQ-134"
+      ],
+      "note": "In mutation_seam_arm.py, the file DEF-206's second round repaired. `tree_dirty` filtered on `line[3:].strip().startswith('docs/')`, so a quoted entry \u2014 any path with a space or a non-ASCII byte \u2014 arrived as `\"docs/...` and was not recognised as a docs-only change, and the arm refused to run at exit 2 over a change it is meant to tolerate. It errs the other way too: `R  docs/x.md -> Sources/y.swift` starts with `docs/` when nothing splits the rename, so a file moving OUT of docs/ was silently tolerated. Fail closed on one side and open on the other, and the same defect on both. A rename is tolerated now only when both names it carries are under docs/. Found by the out-of-family review of the gap-fix.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
+    },
+    {
+      "id": "DEF-250",
+      "title": "a repo-relative citation skipped every check but existence",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-136"
+      ],
+      "note": "cases.json may write a cited path campaign-relative or repo-relative. `rows` is keyed campaign-relative and the branch tested `path.startswith('evidence/shots/')`, so a citation written as `docs/test-campaign/evidence/shots/x.png` matched neither: it resolved on disk and then returned no reasons at all, skipping the disposition check and the publishing-subject check that are the whole of DEF-227's repair. DEF-227's own class, reached by writing the path the other way round. The prefix is derived from CAMPAIGN.relative_to(REPO) rather than written a second time. Latent rather than active \u2014 no case in this campaign cites a shot that way today. Found by the out-of-family review of the gap-fix.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
+    },
+    {
+      "id": "DEF-251",
+      "title": "the check that verify() guards the identity grouping could not fail",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-130"
+      ],
+      "note": "`check(\"the byte-identical grouping moved\" in text, \"verify() fails on a change to the grouping\")` read shot_disposition.py's SOURCE for the sentence the branch would print. It passes whether or not the branch runs, it never called verify(), and it would keep passing over a verify() that had stopped comparing groups at all. A check nobody has watched fire is indistinguishable from a check that cannot, which is the sentence this item opens with, sitting in this item's own fixture file. verify() is now driven twice in one session: over an emptied grouping, where it exits 1 and prints the sentence, and over the grouping the run computes, where it exits 0 and does not. Found by the out-of-family review of the gap-fix rather than by the item.",
+      "evidence": [
+        "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+      ]
     }
   ]
 }

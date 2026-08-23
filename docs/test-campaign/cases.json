@@ -6942,5 +6942,77 @@
     "defects": [
       "DEF-247"
     ]
+  },
+  {
+    "id": "CASE-0563",
+    "req": "REQ-134",
+    "surface": "SURF-022",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/reckoning/reckoning_selftest.py",
+      "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt"
+    ],
+    "armed": true,
+    "armedBy": "The pre-repair `unicode_escape` round trip is reintroduced against both forms in one run: it decodes the octal one and returns the literal one with its quotes still attached, which is the unopenable name. End to end, the fixture repo is set to core.quotePath=false and porcelain_paths resolves a file whose name carries both a non-ASCII byte and a space to a path that opens.",
+    "note": "DEF-248. Not a filename this time but a git CONFIG: core.quotePath decides whether git escapes non-ASCII in octal or writes the UTF-8 through literally, and it is a setting a user commonly carries in their own gitconfig. Both modes were measured against git 2.50.1 and both are driven. The unquote works byte by byte now, and a sequence that is not UTF-8 decodes with surrogateescape so an undecodable name stays openable rather than being mangled into one that is not. A quote, a backslash and a tab escape are each driven back to one character.",
+    "defects": [
+      "DEF-248"
+    ]
+  },
+  {
+    "id": "CASE-0564",
+    "req": "REQ-134",
+    "surface": "SURF-026",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "Six porcelain lines are driven, and the pre-repair filter is run over the same set. It errs in both directions and the check asserts which: it refuses over three quoted docs paths it should tolerate, and it silently tolerates `R  docs/x.md -> Sources/y.swift` because the whole entry starts with `docs/` when nothing splits the rename.",
+    "note": "DEF-249. The same `line[3:]` slice DEF-206 was about, sitting in mutation_seam_arm.py \u2014 the file DEF-206's second round repaired. tree_dirty filtered on `line[3:].strip().startswith('docs/')`, so a quoted entry arrived as `\"docs/...` and this arm refused at exit 2 over a change it is meant to tolerate. Fail closed rather than a wrong verdict, and still the original defect on a sibling path. A rename is tolerated now only when BOTH names it carries are under docs/.",
+    "defects": [
+      "DEF-249"
+    ]
+  },
+  {
+    "id": "CASE-0565",
+    "req": "REQ-136",
+    "surface": "SURF-027",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "The same file is cited both ways in the same run against the same audit: campaign-relative and repo-relative reach the same branch and produce the same notice. Before the repair the repo-relative form produced neither a row nor a prefix match, so it resolved on disk and returned no reasons at all.",
+    "note": "DEF-250. cases.json may write a citation either way. `rows` is keyed campaign-relative and the branch tested `path.startswith('evidence/shots/')`, so a repo-relative citation missed both, resolved on disk, and skipped the disposition and publishing checks entirely \u2014 DEF-227's own class reached by writing the path the other way round. The prefix is derived from CAMPAIGN.relative_to(REPO) rather than written a second time.",
+    "defects": [
+      "DEF-250"
+    ]
+  },
+  {
+    "id": "CASE-0566",
+    "req": "REQ-130",
+    "surface": "SURF-027",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "status": "pass",
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt"
+    ],
+    "armed": true,
+    "armedBy": "verify() is called twice in one session: once over an audit dict whose byteIdenticalGroups have been emptied, where it exits 1 and prints `the byte-identical grouping moved`, and once over the grouping this run computes, where it exits 0 and does not. That is the branch watched firing and clearing, which reading the source for the sentence could not do.",
+    "note": "DEF-251. The check that the grouping guard exists read the instrument's SOURCE for the string literal it would print: `check(\"the byte-identical grouping moved\" in text, ...)`. It passes whether or not the branch runs, and it never called verify(). A check nobody has watched fire is indistinguishable from a check that cannot \u2014 the sentence this item opens with, in this item's own fixture file, found by an out-of-family reviewer rather than by the item.",
+    "defects": [
+      "DEF-251"
+    ]
   }
 ]
