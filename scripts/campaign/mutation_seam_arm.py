@@ -28,6 +28,14 @@ string is read out of the Swift source rather than hand-copied here. Anything
 that satisfies neither route is `inconclusive` naming why, and exits 3 rather
 than 1 so a thing nobody measured is not filed with a thing that failed.
 
+THE SECOND OF THOSE THREE EVENTS WAS SEPARATED FROM THE FIRST AND THEN GRADED A
+PASS, which is this repair. A `--filter` matching no test produces a real,
+well-formed `Test run with 0 tests in 0 suites passed` and an exit 1 from
+`scripts/test.sh`'s own refusal, and the rule above read the pair as the suite
+reporting a failure: CASE-0461's landing mutation with only its Swift function
+name changed scored ARMED with nothing having run. An arming that ran zero tests
+is `inconclusive` naming why, exactly as a setup death is.
+
 The tree is restored with `git checkout --` after every case and verified clean at
 the end, and an `atexit` hook plus signal handlers close the window in which a
 killed run leaves a live mutation behind — the same three rules `mutate_swift.py`
@@ -173,10 +181,20 @@ def apply(rel: str, before: str, after: str) -> tuple[bool, str]:
 # swift-testing's own lines. The verdict line is the report; the started/finished
 # lines are the only thing in the output that says which test was running, and
 # they carry the @Test display string rather than the Swift function name.
-VERDICT_RE = re.compile(r"Test run with \d+ test")
+VERDICT_RE = re.compile(r"Test run with (\d+) test")
 STARTED_RE = re.compile(r'Test "((?:[^"\\]|\\.)*)" started\.')
 FINISHED_RE = re.compile(r'Test "((?:[^"\\]|\\.)*)" (?:passed|failed|skipped)')
 TEST_ATTR_RE = re.compile(r'@Test\(\s*"((?:[^"\\]|\\.)*)"')
+
+
+def verdict_test_count(verdict: str) -> int | None:
+    """How many tests the verdict line says ran, or None if it does not say.
+
+    Read back out of the published line rather than carried beside it, so the
+    count this is graded on is the count a reader of the artifact sees.
+    """
+    m = VERDICT_RE.search(verdict or "")
+    return int(m.group(1)) if m else None
 
 
 def display_name(function: str, tests_root: Path | None = None) -> tuple[str | None, str]:
@@ -266,6 +284,8 @@ def score_arming(display: str | None, why_display: str, r: dict, timeout: int) -
     died, which is the distinction the brief's own sentence turns on. So the
     evidence, not the exit code, decides:
 
+      * a verdict line over zero tests      — `inconclusive`, the filter matched
+                                              nothing and nothing was watched
       * a verdict line and a non-zero exit  — ARMED, the suite reported
       * a verdict line and exit 0           — NOT ARMED, the check did not fire
       * no verdict line, the named test started and never finished, non-zero exit
@@ -281,6 +301,25 @@ def score_arming(display: str | None, why_display: str, r: dict, timeout: int) -
                 "the absence of a measurement, not a test that failed" % timeout)
     started, finished = set(r["started"]), set(r["finished"])
     if r["verdict"]:
+        # ZERO TESTS IS NOT AN ARMING, and this is the third of the three events
+        # `armed = code != 0` conflated — the one the first repair separated the
+        # other two from and then graded as a pass. `scripts/test.sh` refuses a
+        # zero-test run with an exit 1 of its own, in a block whose own comment
+        # says a filter matching nothing is not a pass, and the rule below read
+        # that refusal as the check firing: CASE-0461's real mutation with only
+        # its Swift function name changed scored ARMED over
+        # `Test run with 0 tests in 0 suites passed`, against a suite in which
+        # nothing had run. A filter that matched nothing has not watched anything
+        # fail, so this is `inconclusive` naming why, exactly as a setup death is.
+        # Recorded run: docs/test-campaign/evidence/PRO-0106/zero-tests-arming.txt.
+        if verdict_test_count(r["verdict"]) == 0:
+            return ("INCONCLUSIVE", None,
+                    "the suite reported a verdict line over ZERO tests (%s) and exited %d — "
+                    "`--filter` matches the Swift function name and this one matched nothing, "
+                    "so no check was watched. `scripts/test.sh` refuses a zero-test run itself, "
+                    "and that refusal is the non-zero exit; reading it as an arming credits a "
+                    "mutation with killing a test that never ran"
+                    % (r["verdict"], r["exit"]))
         # A `--filter` selects by function name, so a reported failure is almost
         # certainly the named test — and `almost certainly` is what this item
         # refuses. If the filter matched nothing, or matched something else, the

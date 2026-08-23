@@ -1,0 +1,31 @@
+==> swift test --filter thisFunctionDoesNotExistAnywhere (output: /var/folders/b3/hwz3nk4d1kz8x6mzk7qrbpsc0000gn/T/proctor-test.JAWOb3kdCJ)
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/9] Emitting module ProctorAgent
+[6/9] Compiling ProctorAgent CGWindowCorrelation.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking proctor-agent
+[8/11] Applying proctor-agent
+[9/11] Write Objects.LinkFileList
+[10/11] Linking proctor-mcpPackageTests
+Build complete! (4.04s)
+warning: No matching test cases were run
+Test Suite 'Selected tests' started at 2026-08-23 12:58:06.278.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-23 12:58:06.279.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-23 12:58:06.279.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-23 12:58:06.279.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􁁛  Test run with 0 tests in 0 suites passed after 0.001 seconds.
+
+FAIL: the run executed 0 tests, which is not a pass.
+      􁁛  Test run with 0 tests in 0 suites passed after 0.001 seconds.
+      --filter matches the Swift function name, never the @Test
+      display string.
+EXIT=1
