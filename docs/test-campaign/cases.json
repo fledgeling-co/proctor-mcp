@@ -6492,7 +6492,7 @@
       "docs/test-campaign/evidence/PRO-0107/gemini-review.md"
     ],
     "armed": false,
-    "note": "The two registries disagree about five files, measured by joining every `evidence/shots/*.png` path in cases.json against the published set and the unpublished declarations. Three raster-visual passes cite captures the manifest declares unpublished — CASE-0008, CASE-0010, CASE-0011 — and each of the three does carry a case-level capture method, so what is missing is the shutter-recorded target rather than the channel. Two outcome passes, CASE-0028 and CASE-0029, cite frames DEF-222 and DEF-221 show to be misnamed or byte-duplicated; their verdicts rest on their sweep JSON, so the frames are what is wrong. Denominator: 17 shots cited across cases.json. DEF-224."
+    "note": "The two registries disagree about five files, measured by joining every `evidence/shots/*.png` path in cases.json against the published set and the unpublished declarations. Three raster-visual passes cite captures the manifest declares unpublished — CASE-0008, CASE-0010, CASE-0011 — and each of the three does carry a case-level capture method, so what is missing is the shutter-recorded target rather than the channel. Two outcome passes, CASE-0028 and CASE-0029, cite frames DEF-222 and DEF-221 show to be misnamed or byte-duplicated; their verdicts rest on their sweep JSON, so the frames are what is wrong. Denominator: 17 shots cited across cases.json. DEF-224. NOT ARMED, and recorded so rather than claimed: this case asserts a property of the disposition record itself, and the only mutation that would red it is editing the record the case reads, which tests the edit rather than the instrument. The five other unarmed cases in this item carry the same declaration; CASE-0479 and CASE-0480 were missing it, found at out-of-family adjudication."
   },
   {
     "id": "CASE-0480",
@@ -6506,6 +6506,6 @@
       "docs/test-campaign/evidence/PRO-0107/shot-audit.json"
     ],
     "armed": false,
-    "note": "Of the 17 `evidence/shots/*.png` paths cited across cases.json, one does not resolve: CASE-0100 names `evidence/shots/a3-walkthrough-permissions-disabled.png` and no such file exists. It is invisible to both instruments — campaign.py resolves an evidence path only on the raster rungs and CASE-0100 stands at effect-witness, and capture-lineage never reads cases.json. DEF-225."
+    "note": "Of the 17 `evidence/shots/*.png` paths cited across cases.json, one does not resolve: CASE-0100 names `evidence/shots/a3-walkthrough-permissions-disabled.png` and no such file exists. It is invisible to both instruments — campaign.py resolves an evidence path only on the raster rungs and CASE-0100 stands at effect-witness, and capture-lineage never reads cases.json. DEF-225. NOT ARMED, and recorded so rather than claimed: same reason as CASE-0479 — the assertion is over the disposition record, so the available mutation edits the thing being read. Declaration added at out-of-family adjudication, where its absence was the finding."
   }
 ]

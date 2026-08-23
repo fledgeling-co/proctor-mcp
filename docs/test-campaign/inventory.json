@@ -3779,6 +3779,19 @@
         "REQ-111"
       ],
       "note": "shot_disposition.py's --write re-baselines the check it exists to keep honest. Demonstrated at verification: surf-007-zoom.png was replaced with a flat magenta frame, the check went to exit 1, and --write returned it to exit 0 with capture-lineage still at 0 — the row keeping publishedAs: SURF-007 and recording distinctRGBA: 1, a single-colour frame sitting among the six judged captures. So the instrument's repair path accepts any content as the new truth, and its own \\\"How it is kept honest\\\" section does not name that. This is the same shape as DEF-207 and DEF-208 one level on: a step that performs an action and then treats the result as the standard, with nothing able to disagree. The repair is that --write refuses a file whose recorded digest changed, or records the change as a finding naming the old and new digests, rather than adopting it silently."
+    },
+    {
+      "id": "DEF-227",
+      "title": "shot_disposition.py never reads cases.json, so a case citing an unpublished image is unflagged",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-027"
+      ],
+      "requirements": [
+        "REQ-111"
+      ],
+      "note": "The instrument checks captures.json against the disk and stops there. It never reads cases.json, so a case citing an unpublished, misnamed or absent image is invisible to it. DEF-224 (five files where case evidence and the lineage manifest disagree) and DEF-225 (a passing case citing a shots file that does not exist) are both instances of a class this instrument cannot see, which is precisely why both were found by a person reading rather than by a gate running. Found at the retrospective out-of-family adjudication, by the only reviewer to ask what the instrument does NOT read. Related: the eight published captures carry depicts: null, so semantic inspection was enforced on the 35 unpublished and not on the 8 that the ratchet pins — the unexamined set is the one the gate's number rests on."
     }
   ]
 }

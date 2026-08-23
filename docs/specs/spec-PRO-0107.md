@@ -127,6 +127,8 @@ reproducing the passing reading.
 | DEF-223 | A file's surface prefix binds it to a surface the picture does not show (recorded) | open |
 | DEF-224 | Case evidence and the lineage manifest disagree about the same five files (recorded) | open |
 | DEF-225 | A passing case cites a shots file that does not exist, and no gate looks (recorded) | open |
+| DEF-226 | shot_disposition.py --write adopts any new content as the baseline (recorded) | open |
+| DEF-227 | shot_disposition.py never reads cases.json, so a case citing an unpublished image is unflagged (recorded) | open |
 
 ## Gates
 
@@ -149,6 +151,8 @@ Admitted on the fifth at `available 6`. Another reading in the direction this fi
 machine was idle while nothing could be granted.
 
 ## Out-of-family review — 2026-08-23
+
+**Two out-of-family calls are recorded in this spec and they are different calls, not a contradiction.** This section is the **build stage's** review, which ran and answered on subject. The verification section below records the **verify stage's** lane, which refused twice on its own permission probes and returned nothing, so that stage fell back in-family and its fallback read the merge base. A third call, the **retrospective adjudication** recorded at the foot of this file, was made after the reader settled `--dangerously-skip-permissions` as standing; it answered on subject and returned `Needs More Work`, and its findings are the last three rows of the table above plus the reconciliation you are reading.
 
 `gemini-3.7-flash-high` via `agy --new-project` from `/tmp`, answering about PRO-0107 by name and
 citing this worktree's own paths, so the lane was on subject. It agreed with all four calls — the
@@ -250,3 +254,38 @@ recorded rather than worked around.
 - `sweepL-halfopen.json` cites a `statusShot` under `/tmp/campaign-run/` with no counterpart in
   `evidence/`, which no gate reads. CASE-0479 and CASE-0480 carry `armed: false` without the in-note
   declaration the other unarmed new cases have.
+
+
+## Retrospective out-of-family adjudication — 2026-08-23, `Needs More Work`
+
+Obtained after the reader settled the lane flag as standing, closing the gap this item merged with.
+`agy --new-project --dangerously-skip-permissions --model gemini-3.7-flash-high` from `/tmp`, on
+subject throughout — it names `shot_disposition.py`, `capture-lineage`, `unpublishedReason` and five of
+the `surf-*` files.
+
+**It reached the item's central judgement independently and agreed**, which is the corroboration the
+in-family verdict could not supply: *"Inspecting a bitmap after the fact can verify what subject it
+depicts, but it cannot establish the capture target without fabricating metadata. Faking shutter
+targets post-hoc to inflate published counts would subvert the exact provenance guarantees
+`capture-lineage.py` was built to enforce."* Same conclusion, reached from a different family, without
+having seen the in-family reasoning.
+
+All three acceptance clauses met. Three findings neither the runner nor the in-family verifier made:
+
+- **DEF-226 was in the registry and not in this spec's Defects table.** A defect recorded in one place
+  and absent from the other is exactly the drift this campaign gates against. Added.
+- **DEF-227, new:** `shot_disposition.py` checks `captures.json` against the disk and **never reads
+  `cases.json`**, so a case citing an unpublished or misnamed image is invisible to it. DEF-224 and
+  DEF-225 are both instances of a class the instrument cannot see, which is why they were found by
+  reading rather than by a gate.
+- **The eight published captures carry `depicts: null`.** Semantic inspection was enforced on the 35
+  and not on the 8 — and the 8 are exactly what the ratchet pins, so the unexamined set is the one the
+  gate's number rests on.
+
+It also held that the disposition protects the gates while leaving the filesystem misleading: nine
+app-icon renders keep surface names and a Ready window keeps `sweepL-status-agent-down.png`, so anyone
+browsing `evidence/shots/` directly is still deceived. That is true, and it is DEF-218 and DEF-222'
+subject rather than a new finding — recorded here because the rename is the cheap half and nobody has
+scheduled it.
+
+CASE-0479 and CASE-0480 now carry their unarmed declarations.
