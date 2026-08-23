@@ -2922,3 +2922,43 @@ answer a narrower question than the one asked. This one interrogates the *inputs
 instrument whose output is entirely correct. Nothing in `shot_disposition.py`'s output would ever hint
 the gap exists, and nothing in `capture-lineage.py`'s would either. That is the class of defect that
 survives every result-shaped check ever written.
+
+### The inherited-flaw hunt found two on its first deliberate use (2026-08-23)
+
+PRO-0106 came back `Needs More Work` on two acceptance clauses, and both are the item's own subject
+turned on itself: **a repair that fixed the path its own fixture drives and left a sibling path
+carrying the original defect.** The discipline was folded into the verification brief from a sibling
+project's measurement the same morning, and it fired twice on first use.
+
+**`mutation_seam_arm.py` scores ARMED where zero tests ran.** CASE-0461's real, landing mutation with
+only its Swift function name changed produces `[CASE-0461] ARMED … exit 1 · Test run with 0 tests in 0
+suites passed`, with `armed 1 of 1 · inconclusive 0` and a process exit of 0. `score_arming`'s guard
+reads `if display is not None and started and display not in started` — `started` is empty so the guard
+is skipped, and `display` is `None` because `display_name` correctly refused. **The instrument's own
+docstring names the three events the old rule conflated: a setup death, a `--filter` matching nothing,
+and a check firing.** The repair separates the first from the third and grades the second a pass, and
+reintroducing `armed = code != 0` on that path returns the same answer.
+
+**`porcelain_paths` re-creates DEF-206 on the rename branch the repair added.**
+`git mv src.png "stage-1 -> stage-2.png"` yields `R  src.png -> "stage-1 -> stage-2.png"`, and the
+function returns `stage-2.png"` — unopenable — with `--allow-dirty` writing that phantom permanently
+into `run.json.dirty_inputs`, which is DEF-206's original harm exactly. The fixture drives an arrow
+inside a ` M` path and never inside an `R` destination.
+
+Everything else reproduces: suite at 2,074 in 252, `mutation_seam_arm` 12/12, `test_instruments` **138
+passed**, `capture-lineage` ratchet 6, both `defect_gate` modes 0, and `campaign.py check` 1 on head and
+base with identical blocker sets — the only movement a denominator, external-effect witnessed
+28-of-30 → 32-of-34.
+
+**A rejected finding was checked rather than trusted, and it was genuinely a fabrication.** The runner
+had dismissed a gemini finding that quoted
+`if p.returncode != 0 and ("cannot find" in out or "error:" in out or "Build failed" in out)`. The real
+guard is `if "error:" in out and "Build complete" not in out`, present verbatim in every commit since
+`7f95a55`. **A rejected finding that turns out to be true is the most expensive kind of miss**, which is
+why it was worth establishing rather than accepting the dismissal.
+
+**And an absence claim's denominator was wrong while its substance held.** The spec's prose says 27
+`.py` files under the two script directories; `git ls-tree` gives **25**, at HEAD and at merge base. The
+verifier swept the ten `.py` outside that window anyway and the single hit is a compiler-invocation
+check in `defect_gate`'s class. That is the absence-claim discipline working as intended: the claim
+named its window, so the window could be checked and found mis-stated without the finding collapsing.
