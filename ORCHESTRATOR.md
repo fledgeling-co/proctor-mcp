@@ -3131,3 +3131,19 @@ Open defects: **2** (`DEF-033` measured negative, `DEF-215` declared retired ite
 Standing gates:
 - `ledger_gate.py`: PASS (117 rows, 114 specs, 3 declared without spec, 58 merged in git)
 - `spec_citation_measure.py`: 19/19 passed (109 briefs: 107 claimed, 2 registered, 0 unclaimed)
+
+### Wave 20 final execution tranche in flight (2026-08-24)
+
+- **PRO-0115 merged on `main` at `7a8bed3`:** Subprocess Actuation Witness for Cua Driver (`subprocess_witness.py` 5 passing scenarios, `CuaSubprocessWitnessTests.swift`, `REQ-024` / `REQ-180` elevated to `observed` with verified effect witness cases).
+- **Tranche in flight (`proctor-wave20-remaining`):**
+  - **PRO-0114 (`ai/pro-0114`):** Supervision TUI & Menu Bar Status Extra On-Glass Witness (elevating `REQ-030` and `REQ-031`).
+  - **PRO-0116 (`ai/pro-0116`):** Native OCR & High-DPI Visual Region Inspector for Zoom (`VNRecognizeTextRequest`).
+  - **PRO-0117 (`ai/pro-0117`):** Guest VM Lifecycle & Multi-Session Attachment Oracle (elevating `REQ-037`..`REQ-040`).
+
+Standing gates on `main`:
+- `scripts/test.sh`: **PASS: 2,087 tests in 256 suites passed**
+- `scripts/campaign/test_instruments.py`: **259 passed, 0 failed**
+- `scripts/campaign/ledger_gate.py`: **PASS** (117 rows, 114 specs, 3 declared without spec, 58 merged in git)
+- `scripts/campaign/spec_citation_measure.py`: **19/19 checks passed**
+- `scripts/campaign/shot_disposition.py`: **47 images disposed, 0 citation failures**
+- `capture-lineage.py --gate`: **ratchet 6 held**
