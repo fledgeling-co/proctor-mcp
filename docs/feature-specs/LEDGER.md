@@ -124,7 +124,7 @@
 | PRO-0113 | Brief join rate optimization | 2026-08-23 | Merged |
 | PRO-0114 | Supervision TUI and Menu Bar Status Extra On-Glass Witness | 2026-08-24 | Ready for Plan |
 | PRO-0115 | Subprocess Actuation Witness for Cua Driver | 2026-08-24 | Merged |
-| PRO-0116 | Native OCR and High-DPI Visual Region Inspector for Zoom Assertions | 2026-08-24 | Ready for Plan |
+| PRO-0116 | Native OCR and High-DPI Visual Region Inspector for Zoom Assertions | 2026-08-24 | Merged |
 | PRO-0117 | Guest VM Lifecycle and Multi-Session Attachment Oracle | 2026-08-24 | Merged |
 
 ## Rows with no spec file
