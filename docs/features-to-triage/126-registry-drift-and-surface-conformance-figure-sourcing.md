@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-001, REQ-064]
-status: to-triage
+status: retired
 ---
 
 # Registry Drift and Surface Conformance Figure Sourcing

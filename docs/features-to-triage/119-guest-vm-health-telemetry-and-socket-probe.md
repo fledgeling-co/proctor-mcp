@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-013, REQ-037]
-status: to-triage
+status: retired
 ---
 
 # Guest VM Health Telemetry and Socket Probe

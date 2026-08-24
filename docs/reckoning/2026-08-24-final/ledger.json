@@ -5,28 +5,28 @@
  "campaign_present": true,
  "campaign_dir": "docs/test-campaign",
  "briefs_dir": "docs/features-to-triage",
- "headline": "147 piece(s) of work remain — 5 product, 23 evidence, 105 decision — across 942 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
+ "headline": "134 piece(s) of work remain — 5 product, 23 evidence, 105 decision — across 942 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
  "summary": {
   "counts": {
    "verified-done": 792,
-   "waived": 3,
+   "waived": 16,
    "unmeasured": 23,
    "broken": 5,
    "undecided": 105,
-   "retirable": 14
+   "retirable": 1
   },
-  "work_items": 147,
+  "work_items": 134,
   "work_by_class": {
    "unmeasured": 23,
    "broken": 5,
    "undecided": 105,
-   "retirable": 14
+   "retirable": 1
   },
   "work_by_kind": {
    "evidence-work": 23,
    "product-work": 5,
    "decision-work": 105,
-   "bookkeeping": 14
+   "bookkeeping": 1
   },
   "rows": 942
  },
@@ -10843,6 +10843,10 @@
    "evidence": "observed",
    "note": "Exposed through ProctorCore.ToolCatalogue across full/core/scripting profiles",
    "provider": null,
+   "backed_by": [
+    "CASE-0001",
+    "CASE-0002"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10856,6 +10860,10 @@
    "evidence": "observed",
    "note": "Uses AXUIElement actions, attributes, and Apple Events",
    "provider": "AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift",
+   "backed_by": [
+    "CASE-0003",
+    "CASE-0069"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10869,6 +10877,10 @@
    "evidence": "observed",
    "note": "click, hover, dragPath, key inject into WindowServer event stream",
    "provider": "CGEventPost in Sources/ProctorAgent/Actuation/ActuationBackend.swift",
+   "backed_by": [
+    "CASE-0004",
+    "CASE-0066"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10882,6 +10894,10 @@
    "evidence": "observed",
    "note": "Proctor refuses stale frames and flags caveats rather than presenting fake passes",
    "provider": "StreamCapture in ProctorAgent/Capture/StreamCapture.swift",
+   "backed_by": [
+    "CASE-0005",
+    "CASE-0064"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10895,6 +10911,10 @@
    "evidence": "observed",
    "note": "Optimizes vision model token budget while preserving 2x crop inspection via proctor_zoom",
    "provider": null,
+   "backed_by": [
+    "CASE-0006",
+    "CASE-0007"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10908,6 +10928,11 @@
    "evidence": "observed",
    "note": "Floating NSPanel with 22pt sprite, interactive Pause and Stop controls",
    "provider": "NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo",
+   "backed_by": [
+    "CASE-0008",
+    "CASE-0030",
+    "CASE-0065"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10921,6 +10946,9 @@
    "evidence": "observed",
    "note": "Hardware event tap detection with contention back-off EFFECT CORRECTED 2026-08-24: zoom region crop is pure native pixel math over existing SCK buffers, no external device I/O.",
    "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+   "backed_by": [
+    "CASE-0009"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10934,6 +10962,11 @@
    "evidence": "observed",
    "note": "Translucent blocking panel preventing accidental mouse clicks into background windows",
    "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+   "backed_by": [
+    "CASE-0010",
+    "CASE-0031",
+    "CASE-0068"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10947,6 +10980,11 @@
    "evidence": "observed",
    "note": "Native AppKit/SwiftUI status window with real-time TCC grant status and tool probing. Peer death is named within one 2s doctor tick: Agent down at t+0.71s and t+3.63s after the agent was killed.",
    "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+   "backed_by": [
+    "CASE-0011",
+    "CASE-0028",
+    "CASE-0062"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10960,6 +10998,9 @@
    "evidence": "observed",
    "note": "Adaptive walkthrough view responding to system preference changes",
    "provider": null,
+   "backed_by": [
+    "CASE-0012"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10973,6 +11014,9 @@
    "evidence": "observed",
    "note": "AppKit NSStatusItem with pixel sprite animations and contextual menu",
    "provider": null,
+   "backed_by": [
+    "CASE-0013"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10986,6 +11030,10 @@
    "evidence": "observed",
    "note": "Bounded settle conjunction reporting allSignalsQuiet, reflectorIdle, or timeout",
    "provider": "AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift",
+   "backed_by": [
+    "CASE-0014",
+    "CASE-0070"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10999,6 +11047,9 @@
    "evidence": "observed",
    "note": "Differentiates application non-determinism from harness timing flakiness",
    "provider": null,
+   "backed_by": [
+    "CASE-0015"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11012,6 +11063,10 @@
    "evidence": "observed",
    "note": "Identifies ghost nodes, unexposed controls, and geometry mismatches",
    "provider": "AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift",
+   "backed_by": [
+    "CASE-0016",
+    "CASE-0071"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11025,6 +11080,10 @@
    "evidence": "observed",
    "note": "AuditLog.append and AuditLog.verify with macOS Keychain-backed key derivation",
    "provider": "data.write(to:options:.atomic) in Sources/ProctorAgent/Session/PolicyStore.swift; key material in Sources/ProctorAgent/Session/AuditKeyStore.swift",
+   "backed_by": [
+    "CASE-0017",
+    "CASE-0061"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11038,6 +11097,9 @@
    "evidence": "observed",
    "note": "Refuses out-of-policy actions and redacts sensitive credentials from logs",
    "provider": null,
+   "backed_by": [
+    "CASE-0018"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11051,6 +11113,10 @@
    "evidence": "observed",
    "note": "proctor_guest tool handles list, status, start, stop, clone, reach",
    "provider": "Process() in Sources/ProctorAgent/Guest/GuestProvider.swift — lume/prlctl/tart argv built and executed",
+   "backed_by": [
+    "CASE-0019",
+    "CASE-0059"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11064,6 +11130,10 @@
    "evidence": "observed",
    "note": "Delegated tier refuses tree/agree assertions with explicit reasons rather than returning weak passes",
    "provider": null,
+   "backed_by": [
+    "CASE-0020",
+    "CASE-0038"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11077,6 +11147,9 @@
    "evidence": "observed",
    "note": "Refuses host takeover with actionable diagnostic remedy instead of stealing host focus",
    "provider": null,
+   "backed_by": [
+    "CASE-0021"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11090,6 +11163,10 @@
    "evidence": "observed",
    "note": "proctor_ios tool with simctl deep link verification and Maestro flow repeat scoring",
    "provider": "Process() in Sources/ProctorAgent/Session/SessionIOSProcess.swift — simctl and maestro",
+   "backed_by": [
+    "CASE-0022",
+    "CASE-0060"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11103,6 +11180,9 @@
    "evidence": "observed",
    "note": "Compiled with -strict-concurrency=complete and audited thread isolation",
    "provider": null,
+   "backed_by": [
+    "CASE-0023"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11116,6 +11196,9 @@
    "evidence": "observed",
    "note": "Team-scoped Developer ID signature retains Accessibility and Screen Recording. Installed build is notarised and stapled: spctl accepted, source=Notarized Developer ID.",
    "provider": null,
+   "backed_by": [
+    "CASE-0024"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11129,6 +11212,10 @@
    "evidence": "observed",
    "note": "In-process debug package delivering ground-truth computed styles",
    "provider": "ProctorReflector in ProctorReflector/ProctorReflector.swift",
+   "backed_by": [
+    "CASE-0025",
+    "CASE-0088"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11142,6 +11229,10 @@
    "evidence": "observed",
    "note": "ELEVATED TO OBSERVED BY PRO-0115 (DEF-305). While the browser routing locator itself performs filesystem stat checks without spawning processes, Cua driver actuation on the same subprocess boundary executes real Process() children in Sources/ProctorAgent/Actuation/CuaClients.swift. Dedicated subprocess actuation witness (CASE-0087, CASE-0700..0702, Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift, scripts/campaign/subprocess_witness.py) observes real child PID spawn, argument verification, exit code capture, and daemon termination interlock.",
    "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift — cua-driver and obscura",
+   "backed_by": [
+    "CASE-0026",
+    "CASE-0087"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11155,6 +11246,7 @@
    "evidence": "reported",
    "note": "Upstream Apple FB21748086 / trycua issue #870; verified on Sequoia guest instead",
    "provider": null,
+   "backed_by": null,
    "remedy": "obtain independent evidence — this is the project's own account of itself",
    "is_work_item": true,
    "why": "requirement evidence 'reported' is the project's own account of itself, not an observation"
@@ -11168,6 +11260,9 @@
    "evidence": "observed",
    "note": "WindowPresentation asks whether a window titled Proctor is on screen rather than trusting hasVisibleWindows, which the extras item satisfies. Verified on the installed build: cg 0 / ax 0 before, cg 1 640x592 / ax 1 after open -a.",
    "provider": null,
+   "backed_by": [
+    "CASE-0027"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11181,6 +11276,10 @@
    "evidence": "observed",
    "note": "A killed agent fails connect() at once. A stopped one accepts and never replies, which is the case that used to latch isChecking and freeze the last good report.",
    "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+   "backed_by": [
+    "CASE-0029",
+    "CASE-0084"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11194,6 +11293,10 @@
    "evidence": "observed",
    "note": "Three surfaces cover other windows: the run panel, the takeover tint and the drawn pointer. The pointer was measured at sharingState 1 while the other two were 0.",
    "provider": "StreamCapture in ProctorAgent/Capture/StreamCapture.swift",
+   "backed_by": [
+    "CASE-0032",
+    "CASE-0089"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11207,6 +11310,12 @@
    "evidence": "observed",
    "note": null,
    "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+   "backed_by": [
+    "CASE-0035",
+    "CASE-0036",
+    "CASE-0040",
+    "CASE-0082"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11220,6 +11329,13 @@
    "evidence": "observed",
    "note": "Independent headless pty probe and render tests witness 5-pane TUI rendering at 80x24 floor and 100x30 target with zero line overflow, and TUI keypresses mutating shared latch state.",
    "provider": "Terminal.paint in Sources/ProctorCLI/TUI/Terminal.swift; scripts/campaign/supervision_tui_pty_probe.py",
+   "backed_by": [
+    "CASE-0033",
+    "CASE-0034",
+    "CASE-0710",
+    "CASE-0711",
+    "CASE-0712"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11233,6 +11349,10 @@
    "evidence": "observed",
    "note": "AppKit NSMenu extra hierarchy witness verifies that every command declared in CommandSurface.all and ToolCatalogue.all is populated with exact titles, shortcuts, and dynamic enablement.",
    "provider": "NSMenu in Sources/ProctorUI/ProctorUIApp.swift and Sources/ProctorCore/CommandSurface.swift",
+   "backed_by": [
+    "CASE-0037",
+    "CASE-0713"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11246,6 +11366,12 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0039",
+    "CASE-0042",
+    "CASE-0368",
+    "CASE-0369"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11259,6 +11385,12 @@
    "evidence": "observed",
    "note": "Supervision client queries proctor_doctor and proctor_history IPC endpoints, projecting machine readiness grants, switch states, and historical audit entries into the TUI panes.",
    "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+   "backed_by": [
+    "CASE-0041",
+    "CASE-0043",
+    "CASE-0083",
+    "CASE-0715"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11272,6 +11404,10 @@
    "evidence": "unknown",
    "note": null,
    "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+   "backed_by": [
+    "CASE-0044",
+    "CASE-0081"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11285,6 +11421,11 @@
    "evidence": "unknown",
    "note": null,
    "provider": "LOCAL_PEERPID getsockopt in Sources/ProctorAgent/SessionIdentity.swift",
+   "backed_by": [
+    "CASE-0045",
+    "CASE-0080",
+    "CASE-0114"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11298,6 +11439,10 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0046",
+    "CASE-0057"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11311,6 +11456,12 @@
    "evidence": "observed",
    "note": "A session attached to a macOS guest executes steps via forwarded socket link, actuating inside the guest with 0 host actuations; observed in multi-session witness harness.",
    "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+   "backed_by": [
+    "CASE-0047",
+    "CASE-0056",
+    "CASE-0085",
+    "CASE-0754"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11324,6 +11475,11 @@
    "evidence": "observed",
    "note": "Capacity for macOS guest lane set at 2; third concurrent request enters waiting queue and acquires slot upon release without being refused.",
    "provider": null,
+   "backed_by": [
+    "CASE-0048",
+    "CASE-0055",
+    "CASE-0751"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11337,6 +11493,11 @@
    "evidence": "observed",
    "note": "Never-evicting queue policy guarantees running VMs are never stopped to free slots under contention; stops occur solely through the audited path when started by this agent.",
    "provider": "Process() in Sources/ProctorAgent/Guest/GuestProvider.swift — lume/prlctl/tart argv built and executed",
+   "backed_by": [
+    "CASE-0049",
+    "CASE-0086",
+    "CASE-0752"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11350,6 +11511,10 @@
    "evidence": "observed",
    "note": "Provider reporting os darwin correctly maps to macos platform and assigns native witness tier, evaluating AX tree assertions without skipping.",
    "provider": null,
+   "backed_by": [
+    "CASE-0050",
+    "CASE-0753"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11363,6 +11528,9 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0051"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11376,6 +11544,10 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0052",
+    "CASE-0058"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11389,6 +11561,10 @@
    "evidence": "observed",
    "note": " ELEVATED 2026-08-24: verified by window_occlusion_witness.py and CoveredTargetOcclusionWitnessTests. PRO-0118.",
    "provider": null,
+   "backed_by": [
+    "CASE-0053",
+    "CASE-0760"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11402,6 +11578,9 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0054"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11415,6 +11594,9 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0063"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11428,6 +11610,11 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0072",
+    "CASE-0073",
+    "CASE-0152"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11441,6 +11628,23 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0074",
+    "CASE-0075",
+    "CASE-0076",
+    "CASE-0077",
+    "CASE-0078",
+    "CASE-0079",
+    "CASE-0153",
+    "CASE-0154",
+    "CASE-0457",
+    "CASE-0461",
+    "CASE-0462",
+    "CASE-0463",
+    "CASE-0464",
+    "CASE-0465",
+    "CASE-0466"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11454,6 +11658,14 @@
    "evidence": "observed",
    "note": "scripts/campaign/status_literals.py, armed four ways; docs/test-campaign/evidence/PRO-0081/",
    "provider": null,
+   "backed_by": [
+    "CASE-0102",
+    "CASE-0103",
+    "CASE-0104",
+    "CASE-0105",
+    "CASE-0155",
+    "CASE-0156"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11467,6 +11679,11 @@
    "evidence": "observed",
    "note": "witnessed on macos-glass by a process that is not the app under test, with a negative arm on a build lacking the modifier",
    "provider": "Walkthrough in ProctorUI/Walkthrough.swift",
+   "backed_by": [
+    "CASE-0100",
+    "CASE-0101",
+    "CASE-0106"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11480,6 +11697,22 @@
    "evidence": "observed",
    "note": "proved by reading the operator's real policy.json — its bytes and its modification time — before and after a configure, with the reader armed on a file the same call does change. PRO-0098: witnessed at effect-witness by CASE-0270..0272 with CASE-0273 guarding the reader, closing DEF-110. NARROWED by PRO-0098's gap-fix, 2026-08-22. Until then this requirement read \"Running the test suite does not read or write any state belonging to the operator of the machine it runs on\", and that sentence certified more than the witness does: reads are not watched, the whole 1,992-test run is not watched (two calls are), and the operator's Proctor state outside the application-support root is not watched. The zero is now reported against a stated population — changed / len(files) over the swept root — and the unwitnessed remainder is recorded as DEF-141 rather than left standing under the old sentence. The narrowing paid for itself in one run: the first clean ./scripts/test.sh after it went red on captures/win-1-zoom-1787361639249.full.png, a real write the suite had been making into the operator's captures directory since PRO-0089 and catching only on a race. DEF-142, fixed by carrying PolicyStore.live's interlock onto the capture path, with CASE-0285 asserting the resolved paths so the guarantee no longer depends on that race.",
    "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift — a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) — 0 of the 3,290 regular files `find -type f` reports under that root on this machine — so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written.",
+   "backed_by": [
+    "CASE-0130",
+    "CASE-0131",
+    "CASE-0132",
+    "CASE-0133",
+    "CASE-0134",
+    "CASE-0270",
+    "CASE-0271",
+    "CASE-0272",
+    "CASE-0273",
+    "CASE-0285",
+    "CASE-0320",
+    "CASE-0330",
+    "CASE-0331",
+    "CASE-0332"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11493,6 +11726,16 @@
    "evidence": "observed",
    "note": "the population is enumerated by scripts/campaign/wall_clock_census.py, which arms itself against both pre-PRO-0089 offenders before any zero it prints is believed",
    "provider": null,
+   "backed_by": [
+    "CASE-0135",
+    "CASE-0136",
+    "CASE-0137",
+    "CASE-0138",
+    "CASE-0139",
+    "CASE-0219",
+    "CASE-0220",
+    "CASE-0221"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11506,6 +11749,14 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0110",
+    "CASE-0111",
+    "CASE-0113",
+    "CASE-0115",
+    "CASE-0116",
+    "CASE-0197"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11519,6 +11770,9 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0112"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11532,6 +11786,11 @@
    "evidence": "observed",
    "note": "PRO-0091, from DEF-041. The instrument, not the product. Raising the cap is not the remedy — the next set outgrows the next cap — so the denominator prints whether the list truncated or not.",
    "provider": null,
+   "backed_by": [
+    "CASE-0150",
+    "CASE-0151",
+    "CASE-0159"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11545,6 +11804,10 @@
    "evidence": "observed",
    "note": "PRO-0091, from DEF-058. A hand-merge swept the two keys the conflict was about and dropped a third, unpublishing a judged capture. The remedy is a script rather than a resolution to be careful.",
    "provider": null,
+   "backed_by": [
+    "CASE-0157",
+    "CASE-0158"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11558,6 +11821,19 @@
    "evidence": "observed",
    "note": "PRO-0088, from DEF-025. SCFrameStatus complete means a frame was delivered, not that it depicts anything. The verdict now asks whether the frame has anything in it, and distinguishes a window Proctor excludes by design from a frame that arrived empty from a window it does not own.",
    "provider": "CaptureContentGate in Sources/ProctorCore/FrameContent.swift, spent at Sources/ProctorAgent/Capture/CaptureEngineImpl.swift",
+   "backed_by": [
+    "CASE-0120",
+    "CASE-0121",
+    "CASE-0122",
+    "CASE-0123",
+    "CASE-0124",
+    "CASE-0125",
+    "CASE-0126",
+    "CASE-0129",
+    "CASE-0199",
+    "CASE-0216",
+    "CASE-0217"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11571,6 +11847,11 @@
    "evidence": "observed",
    "note": "PRO-0088, from DEF-028. Assigning NSWindow.level resets sharingType, and the drawn pointer is the only overlay that changes band at runtime. Measured by intervention: reverting CursorOverlay.swift alone flips the layer-0 window from sharingState 0 to 1 and nothing else moves.",
    "provider": "CursorOverlay.place(_:at:) in Sources/ProctorAgent/Overlay/CursorOverlay.swift, readable back through CGWindowListCopyWindowInfo from a separate process",
+   "backed_by": [
+    "CASE-0127",
+    "CASE-0128",
+    "CASE-0218"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11584,6 +11865,15 @@
    "evidence": "observed",
    "note": "proved by reading the mode back off disk with attributesOfItem rather than from the options the write was given, with the pre-fix Data.write(to:options:.atomic) put back and the cases watched red",
    "provider": "PolicyStore.write in Sources/ProctorAgent/Session/PolicyStore.swift, which opens the temporary with Darwin.open(O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0o600) and replaces atomically with .usingNewMetadataOnly",
+   "backed_by": [
+    "CASE-0190",
+    "CASE-0191",
+    "CASE-0192",
+    "CASE-0193",
+    "CASE-0198",
+    "CASE-0274",
+    "CASE-0275"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11597,6 +11887,13 @@
    "evidence": "observed",
    "note": "8 gate checks in scripts/campaign/test_instruments.py, all 8 watched red across four sabotages; the control is also watched running and biting from a clear baseline, so refusing everything does not satisfy it",
    "provider": null,
+   "backed_by": [
+    "CASE-0194",
+    "CASE-0195",
+    "CASE-0196",
+    "CASE-0268",
+    "CASE-0269"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11610,6 +11907,9 @@
    "evidence": "observed",
    "note": "Armed two-way in CASE-0200 by moving one status field and watching the guard turn on and off. No plugin change was needed or made; stock 0.9.4 already behaves this way.",
    "provider": null,
+   "backed_by": [
+    "CASE-0200"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11623,6 +11923,17 @@
    "evidence": "observed",
    "note": "The brief's claim that no takeover statement is raised did not survive arming: a test asserting the raise passed with the raising line deleted, because every foregroundPaths member maps to .syntheticEvent, which SessionAct already raises on. The redundant raise was removed and the previously unguarded coupling is now pinned by CASE-0236..0238. What was genuinely absent, and is what this requirement covers, is the wording.",
    "provider": null,
+   "backed_by": [
+    "CASE-0230",
+    "CASE-0231",
+    "CASE-0233",
+    "CASE-0234",
+    "CASE-0235",
+    "CASE-0236",
+    "CASE-0237",
+    "CASE-0238",
+    "CASE-0241"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11636,6 +11947,12 @@
    "evidence": "observed",
    "note": "The state is proved end to end on the wire by CASE-0242/0243/0244 and the panel wording by CASE-0232. The hud(.pointerDeferred) emission joining the two is NOT witnessed by any test: RunHUDPanel's feed is hardcoded to RunHUDFeed.shared, so a wiring assertion would read a singleton other suites write concurrently. Probe F of the arming ledger records this honestly - deleting the emission reddens nothing.",
    "provider": null,
+   "backed_by": [
+    "CASE-0232",
+    "CASE-0242",
+    "CASE-0243",
+    "CASE-0244"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11649,6 +11966,7 @@
    "evidence": "unknown",
    "note": "The 'Automation Running' banner the report named is macOS's own: 'Automation Mode Enabled Title' in AutomationModeUI.app's Localizable.loctable, drawn by AutomationModeUI.app (pid 64198, ppid 1) and driven by XCTest/testmanagerd. It is not Proctor's and not cua-driver's, so the report's first clause names runs Proctor never drove and no change here can put an overlay over them. Recorded inconclusive against a stated ceiling rather than passed. EVIDENCE WORD RECORDED, 2026-08-23: this requirement's evidence reads `inconclusive`, which is a deliberate case status rather than an oversight — the instrument for it could not settle the claim and said so. It was flagged by reckon 1.2.0's vocabulary check at the wave-17-close reckoning, which is the check doing its job: the word is real, it names one row, and its rule now lives in the registry rather than in the tool. `inconclusive` is evidence that was sought and not obtained — distinct from `unmeasured`, which is evidence nobody has sought. CORRECTED AGAIN, same day: `inconclusive` is a case status, not a requirement-evidence word — test-campaign's own REQ_EVIDENCE schema admits observed, reported, contradicted, unknown, vacuous, and `inconclusive` is not among them. reckon 1.2.0's source documents this exact row as this repository's known mis-vocabulary instance. The word this schema means is `unknown`: evidence that was sought and not obtained. First record said `inconclusive` and explained it; the explanation was right and the word was wrong, which is the tool's point exactly.",
    "provider": null,
+   "backed_by": null,
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11662,6 +11980,13 @@
    "evidence": "observed",
    "note": "The registry reported 23 open defects over a tree that had fixed sixteen of them. A defect an item RECORDS rather than fixes is marked `(recorded)` in the spec's Defects table and is not checked for closure, because reading PRO-0088's honest DEF-099 row as a fix claim would make the gate refuse an item for telling the truth.",
    "provider": null,
+   "backed_by": [
+    "CASE-0210",
+    "CASE-0212",
+    "CASE-0213",
+    "CASE-0222",
+    "CASE-0224"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11675,6 +12000,12 @@
    "evidence": "observed",
    "note": "Fourteen values were lost across five merges. The test that separates a drop from a legitimate change is the parent: a commit that sets x where its parent held y, against a HEAD holding y, lost a value; the newest non-merge commit that touches a field is the one that decides it, which is what stops a restoration reading as a fresh drop.",
    "provider": null,
+   "backed_by": [
+    "CASE-0211",
+    "CASE-0214",
+    "CASE-0215",
+    "CASE-0223"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11688,6 +12019,22 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0250",
+    "CASE-0251",
+    "CASE-0252",
+    "CASE-0254",
+    "CASE-0255",
+    "CASE-0256",
+    "CASE-0257",
+    "CASE-0258",
+    "CASE-0259",
+    "CASE-0260",
+    "CASE-0261",
+    "CASE-0265",
+    "CASE-0266",
+    "CASE-0267"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11701,6 +12048,10 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0263",
+    "CASE-0264"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11714,6 +12065,10 @@
    "evidence": "unknown",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0253",
+    "CASE-0262"
+   ],
    "remedy": "obtain any evidence at all",
    "is_work_item": true,
    "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
@@ -11727,6 +12082,15 @@
    "evidence": "observed",
    "note": "The lifecycle is RestartWatch in ProctorCore, fed probe results and holding no clock, so a restart of any duration is the same sequence to a test. AgentModel keeps the 1.2 s beat before the FIRST probe — polling immediately races launchd — and no longer clears anything on it.",
    "provider": null,
+   "backed_by": [
+    "CASE-0276",
+    "CASE-0277",
+    "CASE-0278",
+    "CASE-0279",
+    "CASE-0280",
+    "CASE-0281",
+    "CASE-0282"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11740,6 +12104,12 @@
    "evidence": "observed",
    "note": "Every force-unwrap in Tests is classed: 24 live sites converted to try #require or restructured away, 4 unfailable by construction left with the reason recorded. The claim is proved by breaking one converted site and showing the same sabotage report 0 tests and no verdict line before, and 1,992 tests with four named failures after.",
    "provider": null,
+   "backed_by": [
+    "CASE-0283",
+    "CASE-0284",
+    "CASE-0395",
+    "CASE-0396"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11753,6 +12123,11 @@
    "evidence": "observed",
    "note": null,
    "provider": "PeerLiveness in Sources/ProctorCore/PeerLiveness.swift; SessionIdentity.probe (kill(pid,0) and proc_pidinfo) in Sources/ProctorAgent/SessionIdentity.swift; RunScheduler.reclaimDeadPeers",
+   "backed_by": [
+    "CASE-0290",
+    "CASE-0298",
+    "CASE-0299"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11766,6 +12141,11 @@
    "evidence": "observed",
    "note": null,
    "provider": "PeerLiveness.verdict in Sources/ProctorCore/PeerLiveness.swift",
+   "backed_by": [
+    "CASE-0291",
+    "CASE-0292",
+    "CASE-0293"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11779,6 +12159,12 @@
    "evidence": "observed",
    "note": " ELEVATED 2026-08-24: verified by cross_automation_yield_witness.py. PRO-0120.",
    "provider": "ContentionSample.userInputSince and ContentionWatch.conditions in Sources/ProctorCore/Contention.swift; ContentionMonitor.sample; the probe after the last step in Sources/ProctorAgent/Session/SessionAct.swift",
+   "backed_by": [
+    "CASE-0294",
+    "CASE-0295",
+    "CASE-0296",
+    "CASE-0297"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11792,6 +12178,14 @@
    "evidence": "observed",
    "note": "The sentence is non-nil exactly where primaryEnabled is false, and nominates the same grant prominentGrant draws filled, so the caption and the one prominent Allow button cannot offer different first moves. Value-level at outcome rung; the rendered half is CASE-0316.",
    "provider": null,
+   "backed_by": [
+    "CASE-0310",
+    "CASE-0311",
+    "CASE-0312",
+    "CASE-0316",
+    "CASE-0317",
+    "CASE-0318"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11805,6 +12199,12 @@
    "evidence": "observed",
    "note": "Guarded in two halves. Absence of a gate: one `.disabled(` in Walkthrough.swift and it is the primary's; a second — on Skip or on Back — is the lockout, and ARM-6 watched that assertion fail with the count at 2. Presence: `WalkthroughFlow.showsSkip` asked at all sixteen states with the view's condition read verbatim, because the count clause passes on a tree where Skip has been conditioned out of the three refusing states — ARM-7 did exactly that and only the presence guard failed.",
    "provider": null,
+   "backed_by": [
+    "CASE-0313",
+    "CASE-0314",
+    "CASE-0319",
+    "CASE-0390"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11818,6 +12218,9 @@
    "evidence": "observed",
    "note": "PRO-0067's A5 has been true at the value level and false on the glass since the constant was written: the test asserted Copy.restartNote contained the word 'restart' and nothing asserted a window drew it. DEF-161.",
    "provider": null,
+   "backed_by": [
+    "CASE-0315"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11831,6 +12234,11 @@
    "evidence": "observed",
    "note": "PRO-0099. The class behind DEF-042/110, DEF-142, DEF-164 and DEF-172/173/174 is one shape — a static computing a path under ~/Library/Application Support/app.fledgeling.procter with nothing to inject — and not one of the first three was found by looking for it. This makes the ninth structural rather than accidental. Witnessed by CASE-0333 (census), CASE-0334 (seams) and CASE-0335 (the gate's own name resolution). NARROWED AND THEN WIDENED BACK by PRO-0099's gap-fix, 2026-08-22. The verifier built three shapes that cleared BOTH modes, so the sentence above did not hold as written: a bare manifest entry absorbed a second declaration of that name; the leak check skipped every reference in a file that declared the name at all, so a qualified reach around the seam passed; and a path COMPOSED as `url(home: FileManager.default.homeDirectoryForCurrentUser)` names no root literal, so the census never saw it — which is exactly how the real SwitchStore.operatorURL is written, and SwitchStore.url(home:) was itself unclassed. All three are closed and are fixtures in test_instruments.py. The ambiguity rule found a real collision on its first run: Wire.swift was classed on a bare `socketPath` that DoctorReport also declares, now Wire.socketPath. WHAT IT STILL DOES NOT CATCH, stated rather than implied: a path whose root literal is hidden behind a constant AND whose builder takes the home as an argument would be seen by neither sweep. That needs a new indirection rather than a new caller — the constant's own declaration is still a census site — but it is not refused by construction. On this tree: 12 literal + 1 composed = 13 sites in Sources/, 15 classed, exit 0 in both modes. The gate is armed in both directions in scripts/campaign/test_instruments.py, which Tests/ProctorCoreTests/CampaignInstrumentTests.swift runs — so a check here that stopped being able to fire is a red suite rather than a quiet one. Arming it caught DEF-170 and DEF-171 before it had ever been trusted.",
    "provider": "scripts/campaign/operator_path_gate.py over Sources/, read against scripts/campaign/operator_paths.json; run in both modes and armed on fixture trees in scripts/campaign/test_instruments.py (62 checks, 0 failed). Evidence: docs/test-campaign/evidence/PRO-0099/gate-arming.txt",
+   "backed_by": [
+    "CASE-0333",
+    "CASE-0334",
+    "CASE-0335"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11844,6 +12252,9 @@
    "evidence": "observed",
    "note": "PRO-0099. Reading the diff proves the literal was MOVED into an operator accessor; it does not prove production still REACHES that accessor. Proved for all three writers converted here by replacing the predicate with `false` and printing the resolved path. The assertion that makes the rest mean anything is that TestProcess.isActive was TRUE on that run while the paths resolved to the operator's own, which rules out the reading where the sabotage appeared to work only because the predicate happened to be false. Permanently witnessed by CASE-0330..0332, which each compare their operator accessor with an independently reconstructed pre-change literal on every run, so the guarantee does not depend on anybody repeating the sabotage.",
    "provider": "./scripts/test.sh --filter pro0099SabotageResolvedPaths against a tree with all three interlocks replaced by `guard false`, printing resolved and pre-change paths side by side; the probe was temporary and the sources restored from a byte copy. Evidence: docs/test-campaign/evidence/PRO-0099/sabotage-production-unchanged.txt",
+   "backed_by": [
+    "CASE-0336"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11857,6 +12268,14 @@
    "evidence": "observed",
    "note": "The agent no longer emits the row; the readers keep the partition as the decode path for an older agent's report, and the drift guard now asserts that retired set explicitly rather than by set equality.",
    "provider": null,
+   "backed_by": [
+    "CASE-0350",
+    "CASE-0351",
+    "CASE-0352",
+    "CASE-0353",
+    "CASE-0354",
+    "CASE-0355"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11870,6 +12289,17 @@
    "evidence": "observed",
    "note": "Value-level at outcome rung: the rows are derived in StatusSurface and judged without a window, with status_literals.py as the gate on the drawing half. The rendered card is not claimed here.",
    "provider": null,
+   "backed_by": [
+    "CASE-0356",
+    "CASE-0357",
+    "CASE-0358",
+    "CASE-0359",
+    "CASE-0360",
+    "CASE-0361",
+    "CASE-0362",
+    "CASE-0363",
+    "CASE-0364"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11883,6 +12313,11 @@
    "evidence": "observed",
    "note": "Both surfaces' constants are bound by a test and the retired question form is scanned for across the whole of Sources, so the string cannot survive by moving.",
    "provider": null,
+   "backed_by": [
+    "CASE-0365",
+    "CASE-0366",
+    "CASE-0367"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11896,6 +12331,10 @@
    "evidence": "observed",
    "note": "The deliverable is ~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor/references/tools.md, outside this repository. The brief measured 20 advertised against 27 shipped and named seven missing; re-measured 2026-08-22 the gap is one tool, proctor_guest, and six of the brief's seven are internal agent verbs that belong in no tool list. DEF-190, DEF-192.",
    "provider": null,
+   "backed_by": [
+    "CASE-0370",
+    "CASE-0400"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11909,6 +12348,9 @@
    "evidence": "observed",
    "note": "SKILL.md:802 was the only VM sentence in the skill and reads as a prohibition; the cap is a throughput fact and the reasons to use a guest are isolation. No provision action is documented: that is a safety-posture change and is recorded as the reader's open question. DEF-190, DEF-191.",
    "provider": null,
+   "backed_by": [
+    "CASE-0371"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11922,6 +12364,11 @@
    "evidence": "observed",
    "note": "AgentVerbs.swift asserted this boundary in prose and nothing tested it. Adding proctor_hud to the catalogue would hand an MCP client a person's Pause, Resume and Stop while the comment kept reading as true. CASE-0372, CASE-0373.",
    "provider": null,
+   "backed_by": [
+    "CASE-0372",
+    "CASE-0373",
+    "CASE-0374"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11935,6 +12382,10 @@
    "evidence": "observed",
    "note": "PRO-0100. Sibling to REQ-082, which is about the refusal being STATED; this is about it being LEGIBLE. Both halves failed differently: PRO-0081 built a refusal nobody could see the reason for, and PRO-0086 found the refusal itself drawn as an invitation. The rule is primaryEnabled, read twice in one place — the .disabled and the fill take the same call, so they cannot nominate different states. CASE-0391, CASE-0392. LIMIT OF THE GUARDS, recorded rather than left to be discovered: the three prominence guards partition Walkthrough.swift into [0, PrimaryProminence) = 0 fills, the branch span = 1, and [HeroPermRow, EOF) = 1, so no unbranched .borderedProminent can hide anywhere in the file. They read that one spelling. An accent fill drawn through .tint, or a .background on the primary, would satisfy all three while destroying the treatment REQ-094 exists to protect. Nothing in the tree draws one today, which is why this is a limit and not a defect; it is also the kind of gap that only announces itself once somebody writes the second spelling. Established by PRO-0100 verification.",
    "provider": null,
+   "backed_by": [
+    "CASE-0391",
+    "CASE-0392"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11948,6 +12399,10 @@
    "evidence": "observed",
    "note": "PRO-0100. Sibling to REQ-077, which is about a run reaching a verdict at all; this is about the verdict meaning the same thing twice. Both defects were found the same way and neither by review: four full runs of one unchanged tree read exit 0/1/0 (DEF-165) and five read 0/0/0/1/0 (DEF-175). A suite that gates every item and reds on a password field taking focus elsewhere on the Mac teaches its readers to re-run rather than to read. CASE-0393, CASE-0394.",
    "provider": null,
+   "backed_by": [
+    "CASE-0393",
+    "CASE-0394"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11961,6 +12416,11 @@
    "evidence": "observed",
    "note": "PRO-0100. Widens REQ-091's denominator from the two files PRO-0085 pointed the instrument at to every *.md under the skill. DEF-193 was the FIFTH stale count and all five were found by a person reading, because gemini.md was never opened by any check. The measurement now reads the directory on both dimensions — stated counts and named tools — and its arming copies the whole tree rather than two files, which was the same mistake one layer down. CASE-0397, CASE-0398, CASE-0399.",
    "provider": null,
+   "backed_by": [
+    "CASE-0397",
+    "CASE-0398",
+    "CASE-0399"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11974,6 +12434,17 @@
    "evidence": "observed",
    "note": "The pre-fix classifier hardcoded every defect row to broken. Measured against this repo's own inventory.json: 110 defect rows, 100 fixed, and all 110 reported as remaining product work. After the change the ten it reports broken are exactly the ten this file records as non-fixed — DEF-033, 140, 141, 151, 162, 163, 165, 175, 180, 193. CASE-0410 through CASE-0415, CASE-0429. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine.",
    "provider": null,
+   "backed_by": [
+    "CASE-0410",
+    "CASE-0411",
+    "CASE-0412",
+    "CASE-0413",
+    "CASE-0414",
+    "CASE-0415",
+    "CASE-0419",
+    "CASE-0420",
+    "CASE-0429"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11987,6 +12458,17 @@
    "evidence": "observed",
    "note": "unbuilt claims the registry answered and said no; a join returning nothing is a different fact with the opposite conclusion. 75 of 91 briefs here landed in unbuilt on a 17.6% join and every one named a merged item. The two are now separate classes and unbuilt stays a live predicate rather than a dead one. CASE-0416 through CASE-0423, CASE-0425, CASE-0426. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine.",
    "provider": null,
+   "backed_by": [
+    "CASE-0416",
+    "CASE-0417",
+    "CASE-0418",
+    "CASE-0421",
+    "CASE-0422",
+    "CASE-0423",
+    "CASE-0424",
+    "CASE-0425",
+    "CASE-0426"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12000,6 +12482,10 @@
    "evidence": "observed",
    "note": "The delivery half, and the reason it is a requirement rather than a chore: the flatten_text crash repair at 81ad488 was correct, committed, and stranded at 1.0.0, so every other repository kept crashing. selftest.py now fails on version drift between the two files and on a version predating the behaviour it asserts. CASE-0427, CASE-0428. Filed under SURF-023 · Reckoning reconciler: the subject is the reckoning tool in ~/Dev/fledgeling-plugins/plugins/reckon, and no surface in this inventory covered shared tooling outside the app, so SURF-023 was minted for it. SURF-022 was the near miss and is the wrong home — its route is tool://vacuity-check/blind, an in-repo script, and its own description says it exists so that a suite-wide measurement is not filed against a surface it did not examine.",
    "provider": null,
+   "backed_by": [
+    "CASE-0427",
+    "CASE-0428"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12013,6 +12499,12 @@
    "evidence": "observed",
    "note": "The failure the item turns on. The first reckoning here names its tree in one sentence of prose, so a second run could difference against it only by trusting somebody to have read that sentence. take resolves HEAD, refuses uncommitted inputs, and writes run.json; --allow-dirty marks the reading unnamed and compare then declines it as a baseline. CASE-0441, CASE-0442, CASE-0443, CASE-0456.",
    "provider": null,
+   "backed_by": [
+    "CASE-0441",
+    "CASE-0442",
+    "CASE-0443",
+    "CASE-0456"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12026,6 +12518,12 @@
    "evidence": "observed",
    "note": "Two checks because they fail in opposite directions: the manifest version catches an old copy that is honest about being old, and the class list catches a copy whose manifest and behaviour disagree. REQ-099 is the same fault from the other side, where the behaviour moved and the version did not. The live instance is DEF-216. CASE-0444, CASE-0445, CASE-0446, CASE-0447.",
    "provider": null,
+   "backed_by": [
+    "CASE-0444",
+    "CASE-0445",
+    "CASE-0446",
+    "CASE-0447"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12039,6 +12537,12 @@
    "evidence": "observed",
    "note": "Measured on the published pair: the two reckonings straddle PRO-0102's repair of the tool, and the tool accounts for -88 work items against the project's +4. A reader differencing the published headlines alone records a day in which this project shed 84 pieces of work. The decomposition is only possible because the earlier run names its commit, which is why REQ-102 is the requirement underneath this one. CASE-0448, CASE-0449, CASE-0450, CASE-0451.",
    "provider": null,
+   "backed_by": [
+    "CASE-0448",
+    "CASE-0449",
+    "CASE-0450",
+    "CASE-0451"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12052,6 +12556,10 @@
    "evidence": "observed",
    "note": "A snapshot gate catches a bad run; this catches the slow version, where a row is quietly reclassified across runs until nothing remembers it was never checked. A run that cannot show the item was measured fails rather than reporting a smaller number, which is the acceptance clause verbatim. CASE-0452, CASE-0453.",
    "provider": null,
+   "backed_by": [
+    "CASE-0452",
+    "CASE-0453"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12065,6 +12573,9 @@
    "evidence": "observed",
    "note": "The single-run report already answers how much there is, and only two runs can answer whether it is moving, so the delta opens on movement and the totals table carries the sentence saying to read it second. Checked structurally on the published report rather than asserted. CASE-0454.",
    "provider": null,
+   "backed_by": [
+    "CASE-0454"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12078,6 +12589,9 @@
    "evidence": "observed",
    "note": "The fifth thing the proposal asked for, and the one the reader settled rather than the builder. A wave close is the trigger, not a date: a clock fires whether or not anything changed. The runbook is checked rather than trusted, and the note's stated count of the selftest's own checks is read back by that selftest so it cannot go stale unwatched, which is DEF-193's class of fault. CASE-0455.",
    "provider": null,
+   "backed_by": [
+    "CASE-0455"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12091,6 +12605,17 @@
    "evidence": "observed",
    "note": "Presence and resolution are two claims, and this repo has had them diverge: at 9f99a0f four specs cited briefs that 400808d had deleted, so a presence-only check would have reported 75 citations of which 71 resolved. A brief deliberately consumed is cited by the commit that holds it, which is a recoverable reference rather than a dangling one. CASE-0430..0435, CASE-0438.",
    "provider": null,
+   "backed_by": [
+    "CASE-0430",
+    "CASE-0431",
+    "CASE-0432",
+    "CASE-0433",
+    "CASE-0434",
+    "CASE-0435",
+    "CASE-0438",
+    "CASE-0439",
+    "CASE-0440"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12104,6 +12629,10 @@
    "evidence": "observed",
    "note": "The forward half lands outside this repository, so nothing in ./scripts/test.sh can hold it; spec_citation_measure.py reads the shared source tree by hand, as skill_doc_measure.py does for the proctor skill. The number fallback was already removed by PRO-0102 at 224a696, so this requirement verifies rather than re-edits, per spec-PRO-0101's assumption that the second item to reach it verifies. CASE-0436, CASE-0437, CASE-0438.",
    "provider": null,
+   "backed_by": [
+    "CASE-0436",
+    "CASE-0437"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12117,6 +12646,14 @@
    "evidence": "observed",
    "note": "Two statements of one fact, checked against each other rather than either against itself. 28 boolean properties across 21 tools; 25 stated a default and 3 did not — includeTiles, tileHashes and verbose, measured, now stated (DEF-217). Sixteen (tool, argument) pairs are comparable between the schema and the decoder and all sixteen agree. The pair is (tool, argument) rather than argument alone because act.foreground defaults to false and computer.foreground to true, and a join on the name would have called that a disagreement. CASE-0458, CASE-0459, CASE-0460.",
    "provider": null,
+   "backed_by": [
+    "CASE-0458",
+    "CASE-0459",
+    "CASE-0460",
+    "CASE-0469",
+    "CASE-0470",
+    "CASE-0471"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12130,6 +12667,9 @@
    "evidence": "observed",
    "note": "A timeout is the absence of a measurement rather than a measurement, and scoring one as a kill is the only direction the error runs: starvation can turn a survivor into a false kill and can never turn a kill into a false survivor. CASE-0467.",
    "provider": null,
+   "backed_by": [
+    "CASE-0467"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12143,6 +12683,9 @@
    "evidence": "observed",
    "note": "PRO-0080's sample finished under a load average of 271 and the number it produced needed reconstructing afterwards from an evidence file's first two lines. The readings are published with the sample instead.",
    "provider": null,
+   "backed_by": [
+    "CASE-0468"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12156,6 +12699,17 @@
    "evidence": "observed",
    "note": "The direction is the whole finding. reckon over-reports on an unknown word, which is annoying and self-announcing and gets looked at; a gate selecting its population by a single status string drops rows meaning still-broken out of the obligation and prints a clean count over a quietly smaller population. A clean green is the worse failure because nothing about it asks to be checked. CASE-0505 through CASE-0513.",
    "provider": null,
+   "backed_by": [
+    "CASE-0505",
+    "CASE-0507",
+    "CASE-0508",
+    "CASE-0509",
+    "CASE-0510",
+    "CASE-0511",
+    "CASE-0512",
+    "CASE-0515",
+    "CASE-0516"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12169,6 +12723,21 @@
    "evidence": "observed",
    "note": "Two tools in two repositories grew the same blind spot within a day of each other, which makes it a shape to check for rather than a mistake either author made: a scanner that reads a whole document for a token cannot tell a citation from a mention of one. CASE-0500 through CASE-0504, CASE-0514 through CASE-0519.",
    "provider": null,
+   "backed_by": [
+    "CASE-0500",
+    "CASE-0501",
+    "CASE-0502",
+    "CASE-0503",
+    "CASE-0504",
+    "CASE-0514",
+    "CASE-0517",
+    "CASE-0518",
+    "CASE-0519",
+    "CASE-0520",
+    "CASE-0521",
+    "CASE-0522",
+    "CASE-0527"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12182,6 +12751,13 @@
    "evidence": "observed",
    "note": "Brief 32 is why the account grammar has three relations rather than one: spec-PRO-0050 supersedes it in a header line, which is a decision, while the same path in body prose is a reference. Under the strict rule unclaimed stays 0 on this tree and spec-PRO-0096 was the one real red — its citation named `campaign.py`, a name this repository cannot open. CASE-0520 through CASE-0526.",
    "provider": null,
+   "backed_by": [
+    "CASE-0523",
+    "CASE-0524",
+    "CASE-0525",
+    "CASE-0526",
+    "CASE-0528"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12195,6 +12771,10 @@
    "evidence": "observed",
    "note": "The word list DEF-202 was first filed with grouped `partially-fixed` with the not-owing words, and the project owning those rows corrected it: none of its three partially-fixed rows had a reproduction for the broken half. This is the one place in reckon where the fail-closed direction is chosen against a word that sounds like a closure. CASE-0506, CASE-0513.",
    "provider": null,
+   "backed_by": [
+    "CASE-0506",
+    "CASE-0513"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12208,6 +12788,11 @@
    "evidence": "observed",
    "note": "The gate's own reasoning: every finding it makes is derived from published captures, so a file nobody publishes is a capture it cannot see. It cites a campaign that read `published captures: 0 · files in shots dir: 11` and exited 0 — clean over nothing. The requirement is that the population is accounted for, not that it is small: the count of files may not fall to satisfy it.",
    "provider": null,
+   "backed_by": [
+    "CASE-0472",
+    "CASE-0479",
+    "CASE-0480"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12221,6 +12806,12 @@
    "evidence": "observed",
    "note": "The campaign this gate was built for published twenty surface captures filed by filename: twenty files held six distinct images, and a step captioned \"Open pairing QR code sheet\" showed a questionnaire about Apple developer credentials. So a disposition is split in two — `depicts`, read by opening the file, and dimensions, byte counts, sha256, opaque-pixel counts and distinct-RGBA counts, which `shot_disposition.py --verify` re-derives and fails on when the bytes move under a disposition written for the old ones.",
    "provider": null,
+   "backed_by": [
+    "CASE-0473",
+    "CASE-0474",
+    "CASE-0477",
+    "CASE-0478"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12234,6 +12825,10 @@
    "evidence": "observed",
    "note": "capture-lineage's SHARED pass enforces this for published captures and says nothing about unpublished ones, which is where every instance in this directory sits: four byte-identical groups among the 35, six redundant files, one of them a single image carrying three captions across two unrelated sweeps.",
    "provider": null,
+   "backed_by": [
+    "CASE-0475",
+    "CASE-0476"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12247,6 +12842,11 @@
    "evidence": "observed",
    "note": "The clause the whole item turns on: an instrument owes the same standard it applies to its subject. A mutation harness that demands a test prove itself, while not proving its own edit, is holding its subject to a rule it does not keep. Six rows shared one shape — the tool performed a step and published the result without establishing the step happened — across mutate_swift.py, mutation_seam_arm.py, reckoning.py and shot_disposition.py.",
    "provider": null,
+   "backed_by": [
+    "CASE-0552",
+    "CASE-0554",
+    "CASE-0566"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12260,6 +12860,12 @@
    "evidence": "observed",
    "note": "An anchor-string mutator that aborts still reports INERT, so something in the log disagrees with the verdict. An unconditional splice by byte offset writes regardless, so a wrong-offset write is silent and nothing anywhere contradicts it. A survivor then has two readings — the guard is decorative, or the mutation never happened — and only the instrument can tell them apart at the moment it matters.",
    "provider": null,
+   "backed_by": [
+    "CASE-0540",
+    "CASE-0541",
+    "CASE-0551",
+    "CASE-0555"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12273,6 +12879,12 @@
    "evidence": "observed",
    "note": "`armed = code != 0` read three different events as one: a check firing, a process dying in setup, and a --filter matching nothing. CASE-0461's trapping mutant gave signal 5, zero verdict lines and the suite's own `FAIL: no swift-testing verdict line`, and scored ARMED for a reason the rule could not see. The repair makes the rule able to tell rather than weakening the verdict.",
    "provider": null,
+   "backed_by": [
+    "CASE-0542",
+    "CASE-0543",
+    "CASE-0544",
+    "CASE-0556"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12286,6 +12898,10 @@
    "evidence": "observed",
    "note": "sweep() computes bytes and sha256 per file and the record kept only the names, so the witness could say two files appeared and not what was in them. A file rewritten between the two sweeps is in neither `set(after) - set(before)` nor any other name-level difference, so a name-only witness could not see that case at all.",
    "provider": null,
+   "backed_by": [
+    "CASE-0546",
+    "CASE-0547"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12299,6 +12915,13 @@
    "evidence": "observed",
    "note": "git() strips its output, so the first porcelain line lost its leading status space and the [3:] slice ate the first character of the path: a modified docs/test-campaign/cases.json was refused as ocs/test-campaign/cases.json. The refusal was correct and its message named a file nobody could find, and with --allow-dirty that phantom was written permanently into run.json.dirty_inputs. An instrument's own error message is part of its output and carries a test.",
    "provider": null,
+   "backed_by": [
+    "CASE-0545",
+    "CASE-0550",
+    "CASE-0560",
+    "CASE-0563",
+    "CASE-0564"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12312,6 +12935,11 @@
    "evidence": "observed",
    "note": "--write re-measured the directory and wrote the result as the new baseline, so a flat magenta frame over surf-007-zoom.png went exit 1 -> --write -> exit 0 with the row still recording publishedAs SURF-007 and distinctRGBA 1. DEF-207's shape one level on: a step that performs an action and then treats its own result as the standard, with nothing able to disagree. There is no blanket adopt flag, because a flag that adopts everything is the hole this closes.",
    "provider": null,
+   "backed_by": [
+    "CASE-0548",
+    "CASE-0553",
+    "CASE-0557"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12325,6 +12953,12 @@
    "evidence": "observed",
    "note": "The instrument read the manifest and the disk and never cases.json, so a case citing an unpublished, misnamed or absent image was invisible to it. DEF-224 and DEF-225 are both instances of that class, and both were found by a person reading rather than by a gate running — which is the whole argument for the gate existing. The nine rows those two defects already record are named rather than failed, so the reading stays honest without this item claiming repairs that belong to them.",
    "provider": null,
+   "backed_by": [
+    "CASE-0549",
+    "CASE-0561",
+    "CASE-0562",
+    "CASE-0565"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12338,6 +12972,10 @@
    "evidence": "observed",
    "note": "DEF-208's repair separated a setup death from a check firing and then graded the third event `armed = code != 0` conflated — a --filter matching no test — as a pass. scripts/test.sh refuses a zero-test run with an exit 1 of its own, in a block whose own comment says a filter matching nothing is not a pass, and the repaired rule read that refusal as the check firing. A repair can inherit the property it was repairing, which is this item's own subject turning on this item a second time.",
    "provider": null,
+   "backed_by": [
+    "CASE-0558",
+    "CASE-0559"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12351,6 +12989,16 @@
    "evidence": "observed",
    "note": null,
    "provider": null,
+   "backed_by": [
+    "CASE-0570",
+    "CASE-0571",
+    "CASE-0572",
+    "CASE-0573",
+    "CASE-0574",
+    "CASE-0575",
+    "CASE-0576",
+    "CASE-0577"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12364,6 +13012,13 @@
    "evidence": "observed",
    "note": "PRO-0110 DEF-228 standing check for LEDGER.md integrity. Prevents merged features remaining In Progress and enforces bidirectional accounting between specs on disk and ledger rows.",
    "provider": null,
+   "backed_by": [
+    "CASE-0590",
+    "CASE-0591",
+    "CASE-0592",
+    "CASE-0593",
+    "CASE-0594"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12377,6 +13032,9 @@
    "evidence": "observed",
    "note": "PRO-0110 DEF-229 cross-checks cases.json against captures.json and disk existence, ensuring cases cannot cite ghost or unpublished captures silently.",
    "provider": null,
+   "backed_by": [
+    "CASE-0597"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12390,6 +13048,10 @@
    "evidence": "observed",
    "note": "PRO-0110 DEF-243 accounts for the design of record mock files in shot_disposition.py so mock mutations, deletions, or unmanaged additions are caught.",
    "provider": null,
+   "backed_by": [
+    "CASE-0595",
+    "CASE-0596"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12403,6 +13065,10 @@
    "evidence": "observed",
    "note": "compare identifies tools by SHA-256 and source_commit, refusing altered code at exit 2 unless --allow-differing-tool is passed.",
    "provider": null,
+   "backed_by": [
+    "CASE-0600",
+    "CASE-0602"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12416,6 +13082,9 @@
    "evidence": "observed",
    "note": "Tool and plugin validation gates detect content disparities (such as unjoined occurrences and sha256 hashes) and name explicit disparity reasons.",
    "provider": null,
+   "backed_by": [
+    "CASE-0601"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12429,6 +13098,12 @@
    "evidence": "observed",
    "note": "Ensures every percentage output across headlines, warnings, and markdown reports includes its denominator (e.g. X/Y (Z%)) so numbers from different registries cannot look like contradictions.",
    "provider": null,
+   "backed_by": [
+    "CASE-0620",
+    "CASE-0621",
+    "CASE-0622",
+    "CASE-0623"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12442,6 +13117,10 @@
    "evidence": "observed",
    "note": "Refuses to let source evidence grade a requirement to observed; it stays unmeasured by a rule naming circular evidence rather than an unclassified fallback.",
    "provider": null,
+   "backed_by": [
+    "CASE-0625",
+    "CASE-0626"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12455,6 +13134,9 @@
    "evidence": "observed",
    "note": "Reads source in brief frontmatter and registry entities to establish confidence 1.0 cited join edges.",
    "provider": null,
+   "backed_by": [
+    "CASE-0624"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12468,6 +13150,11 @@
    "evidence": "observed",
    "note": "Formalizes the read-isolation contract distinct from REQ-055 write-witnessing. Proved by ReadIsolationPolicyTests: injected stores read strictly from injected sandboxes, test-process defaults resolve to fallback roots, and operator directories are unread and unpolluted.",
    "provider": "Tests/ProctorAgentTests/ReadIsolationPolicyTests.swift",
+   "backed_by": [
+    "CASE-0630",
+    "CASE-0631",
+    "CASE-0632"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12481,6 +13168,11 @@
    "evidence": "observed",
    "note": "Formalizes the OS event source boundary: kernel IOHIDEvent enters WindowServer with sourcePid 0, while unprivileged userspace CGEvent posts carry non-zero PID. Proved by scripts/campaign/hardware_yield_probe.py and HardwareInputBoundaryTests across the full combinatorial source, tag, and grace matrix.",
    "provider": "scripts/campaign/hardware_yield_probe.py; Tests/ProctorCoreTests/HardwareInputBoundaryTests.swift",
+   "backed_by": [
+    "CASE-0633",
+    "CASE-0634",
+    "CASE-0635"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12494,6 +13186,11 @@
    "evidence": "observed",
    "note": "Formalizes the Screen Recording TCC caching and dynamic re-probe boundary. Proved by scripts/campaign/dynamic_grant_probe.py and DynamicGrantProbeTests: definite states are cached across consecutive claims, invalidateDefinite() clears cache for fresh probes, and unconfirmed states back off without permanent freezing.",
    "provider": "scripts/campaign/dynamic_grant_probe.py; Tests/ProctorCoreTests/DynamicGrantProbeTests.swift",
+   "backed_by": [
+    "CASE-0636",
+    "CASE-0637",
+    "CASE-0638"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12507,6 +13204,10 @@
    "evidence": "observed",
    "note": "Warrant charter validates cleanly against charter_validate.py and campaign.py export-warrant.",
    "provider": null,
+   "backed_by": [
+    "CASE-0650",
+    "CASE-0651"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12520,6 +13221,9 @@
    "evidence": "observed",
    "note": "Census classes (evidence-integrity, operator-state, inconclusive) enforced at 100% sampling with tier cap 0 under warrant rules.",
    "provider": null,
+   "backed_by": [
+    "CASE-0652"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12533,6 +13237,9 @@
    "evidence": "observed",
    "note": "Instrument tests assert charter validation, census class rules, and release gate verification.",
    "provider": null,
+   "backed_by": [
+    "CASE-0653"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12546,6 +13253,9 @@
    "evidence": "observed",
    "note": "Brief frontmatter structured source declarations tie feature briefs to registry entities at confidence 1.0.",
    "provider": null,
+   "backed_by": [
+    "CASE-0670"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12559,6 +13269,9 @@
    "evidence": "observed",
    "note": "Campaign requirements reference feature brief paths across inventory.json to guarantee bidirectional join resolution.",
    "provider": null,
+   "backed_by": [
+    "CASE-0671"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12572,6 +13285,9 @@
    "evidence": "observed",
    "note": "Reckon build achieves >= 50.0% join rate without token-overlap guessing, unblocking retirement verification.",
    "provider": null,
+   "backed_by": [
+    "CASE-0672"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12585,6 +13301,11 @@
    "evidence": "observed",
    "note": "Independent process lifecycle witness observes cua-driver process spawn, argument vector passing, exit status capture, stderr output, and daemon shutdown interlock without orphaned processes.",
    "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift",
+   "backed_by": [
+    "CASE-0700",
+    "CASE-0701",
+    "CASE-0702"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12598,6 +13319,9 @@
    "evidence": "observed",
    "note": "Multi-session test simulates 3 concurrent requests against 2-slot guest lane, witnessing fair slot acquisition, never-evicting queue policy, and native tier derivation.",
    "provider": null,
+   "backed_by": [
+    "CASE-0750"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12611,6 +13335,13 @@
    "evidence": "observed",
    "note": "proctor_zoom provides native Apple Vision text recognition (VNRecognizeTextRequest) and WCAG contrast measurements on cropped UI regions within bounded timeouts (< 500ms), preserving high-DPI Retina scale factor for text fields and custom canvas renders.",
    "provider": null,
+   "backed_by": [
+    "CASE-0730",
+    "CASE-0731",
+    "CASE-0732",
+    "CASE-0733",
+    "CASE-0734"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12624,6 +13355,9 @@
    "evidence": "observed",
    "note": "Automated headless pty harness and NSMenu inspection witness 5-pane rendering at 80x24 and 100x30, pause/stop keypress latch mutation, and 21-tool command hierarchy completeness.",
    "provider": "Terminal in Sources/ProctorCLI/TUI/Terminal.swift; CommandSurface in Sources/ProctorCore/CommandSurface.swift",
+   "backed_by": [
+    "CASE-0714"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12637,6 +13371,10 @@
    "evidence": "observed",
    "note": "PRO-0118.",
    "provider": null,
+   "backed_by": [
+    "CASE-0761",
+    "CASE-0762"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12650,6 +13388,9 @@
    "evidence": "observed",
    "note": "PRO-0120.",
    "provider": null,
+   "backed_by": [
+    "CASE-0780"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -12663,6 +13404,9 @@
    "evidence": "observed",
    "note": "PRO-0121.",
    "provider": null,
+   "backed_by": [
+    "CASE-0790"
+   ],
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -16374,13 +17118,13 @@
   {
    "id": "BRIEF-114-ios-simulator-boot-fixture-harness",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "iOS Simulator Boot Fixture Harness",
    "file": "114-ios-simulator-boot-fixture-harness.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-020",
@@ -16401,18 +17145,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'interactive-glass', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-115-tart-and-lume-guest-vm-virtualization-fixture",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Tart and Lume Guest VM Virtualization Fixture",
    "file": "115-tart-and-lume-guest-vm-virtualization-fixture.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-017",
@@ -16433,18 +17177,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-116-maestro-flow-network-isolated-fixture",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Maestro Flow Network-Isolated Step Fixture",
    "file": "116-maestro-flow-network-isolated-fixture.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-020",
@@ -16465,7 +17209,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-117-proctoragent-mutation-survival-elimination",
@@ -16502,13 +17246,13 @@
   {
    "id": "BRIEF-118-headless-simulator-provisioning-and-teardown-hook",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Headless Simulator Provisioning and Teardown Hook",
    "file": "118-headless-simulator-provisioning-and-teardown-hook.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-020",
@@ -16529,18 +17273,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'interactive-glass', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-119-guest-vm-health-telemetry-and-socket-probe",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Guest VM Health Telemetry and Socket Probe",
    "file": "119-guest-vm-health-telemetry-and-socket-probe.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-037",
@@ -16561,7 +17305,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-12-gate-flow-replay-stability",
@@ -16630,13 +17374,13 @@
   {
    "id": "BRIEF-121-surface-conformance-and-capture-trust-sourcing",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Surface Conformance and Capture Trust Sourcing",
    "file": "121-surface-conformance-and-capture-trust-sourcing.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-064",
@@ -16657,18 +17401,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-122-operator-state-and-evidence-integrity-chain",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Operator State and Evidence Integrity Chain",
    "file": "122-operator-state-and-evidence-integrity-chain.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-015",
@@ -16689,7 +17433,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-123-high-dpi-display-scale-factor-injection-helper",
@@ -16726,13 +17470,13 @@
   {
    "id": "BRIEF-124-automated-warrant-tier-promotion-ledger-helper",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Automated Warrant Tier Promotion Ledger Helper",
    "file": "124-automated-warrant-tier-promotion-ledger-helper.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-102",
@@ -16753,18 +17497,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-125-legacy-brief-spec-validation-and-retirement",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Legacy Brief Spec-Validation and Retirement",
    "file": "125-legacy-brief-spec-validation-and-retirement.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-001",
@@ -16785,18 +17529,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-126-registry-drift-and-surface-conformance-figure-sourcing",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Registry Drift and Surface Conformance Figure Sourcing",
    "file": "126-registry-drift-and-surface-conformance-figure-sourcing.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-064",
@@ -16817,18 +17561,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-127-operator-state-and-capture-trust-figure-sourcing",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Operator State and Capture Trust Figure Sourcing",
    "file": "127-operator-state-and-capture-trust-figure-sourcing.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-015",
@@ -16849,18 +17593,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-128-automated-spec-validation-runner",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Automated Continuous Spec-Validation Runner",
    "file": "128-automated-spec-validation-runner.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-102",
@@ -16881,18 +17625,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-129-warrant-assurance-tier-dashboard-exporter",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Warrant Assurance Tier Dashboard Exporter",
    "file": "129-warrant-assurance-tier-dashboard-exporter.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-102",
@@ -16913,7 +17657,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-13-audit-log-encryption-at-rest",

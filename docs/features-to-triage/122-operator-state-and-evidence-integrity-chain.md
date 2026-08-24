@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-012, REQ-015]
-status: to-triage
+status: retired
 ---
 
 # Operator State and Evidence Integrity Chain

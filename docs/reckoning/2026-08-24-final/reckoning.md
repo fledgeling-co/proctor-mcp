@@ -1,6 +1,6 @@
 # Reckoning — proctor-mcp
 
-147 piece(s) of work remain — 5 product, 23 evidence, 105 decision — across 942 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.
+134 piece(s) of work remain — 5 product, 23 evidence, 105 decision — across 942 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.
 
 ## What it can speak for
 
@@ -23,8 +23,8 @@ Two counts, because they answer different questions. **Rows** is every entity on
 | `broken` | 5 | 5 | product-work | measured, and the answer was no |
 | `unmeasured` | 23 | 23 | evidence-work | nobody found out — the work here is becoming able to tell |
 | `undecided` | 105 | 105 | decision-work | the documents and the evidence disagree; needs a person |
-| `retirable` | 14 | 14 | bookkeeping | already done to a standard that can carry the claim — close it |
-| `waived` | 0 | 3 | exception | somebody decided not to — an exception, and it stays visible |
+| `retirable` | 1 | 1 | bookkeeping | already done to a standard that can carry the claim — close it |
+| `waived` | 0 | 16 | exception | somebody decided not to — an exception, and it stays visible |
 | `verified-done` | 0 | 792 | none | not remaining; kept so the denominator is honest |
 
 ## Broken (5)
@@ -124,38 +124,12 @@ Two counts, because they answer different questions. **Rows** is every entity on
   - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
 - _…and 65 more in ledger.json_
 
-## Retirable (14)
+## Retirable (1)
 
 - **BRIEF-108-native-ocr-and-high-dpi-zoom-inspector** — Native OCR and High-DPI Visual Region Inspector for Zoom Assertions
   - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-114-ios-simulator-boot-fixture-harness** — iOS Simulator Boot Fixture Harness
-  - observed at rung 'interactive-glass', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-115-tart-and-lume-guest-vm-virtualization-fixture** — Tart and Lume Guest VM Virtualization Fixture
-  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-116-maestro-flow-network-isolated-fixture** — Maestro Flow Network-Isolated Step Fixture
-  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-118-headless-simulator-provisioning-and-teardown-hook** — Headless Simulator Provisioning and Teardown Hook
-  - observed at rung 'interactive-glass', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-119-guest-vm-health-telemetry-and-socket-probe** — Guest VM Health Telemetry and Socket Probe
-  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-121-surface-conformance-and-capture-trust-sourcing** — Surface Conformance and Capture Trust Sourcing
-  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-122-operator-state-and-evidence-integrity-chain** — Operator State and Evidence Integrity Chain
-  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-124-automated-warrant-tier-promotion-ledger-helper** — Automated Warrant Tier Promotion Ledger Helper
-  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-125-legacy-brief-spec-validation-and-retirement** — Legacy Brief Spec-Validation and Retirement
-  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-126-registry-drift-and-surface-conformance-figure-sourcing** — Registry Drift and Surface Conformance Figure Sourcing
-  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-127-operator-state-and-capture-trust-figure-sourcing** — Operator State and Capture Trust Figure Sourcing
-  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-128-automated-spec-validation-runner** — Automated Continuous Spec-Validation Runner
-  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
-- **BRIEF-129-warrant-assurance-tier-dashboard-exporter** — Warrant Assurance Tier Dashboard Exporter
-  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
 
-## Decisions on the record (3)
+## Decisions on the record (16)
 
 Not remaining work, and not done either. Each of these was ruled out by somebody, and the reason it was ruled out can stop being true — a state that had no hook may get one, an account that could not be reached may become reachable. They stay on the ledger so that when the reason expires, the item is still there.
 
@@ -165,6 +139,32 @@ Not remaining work, and not done either. Each of these was ruled out by somebody
   - n/a: Proctor never observes the driver's cursor, so no instrument on this lane can read whether that cursor is over a covered target. The reachable half was measured and agreed: CASE-0242 shows a non-suppressible driver 
 - **CASE-0246** — SURF-004 · ?
   - n/a: the runs the report's first clause describes are driven by another automation stack entirely, so there is no Proctor run to instrument. What WAS measured is the attribution, and it is exact.
+- **BRIEF-114-ios-simulator-boot-fixture-harness** — iOS Simulator Boot Fixture Harness
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-115-tart-and-lume-guest-vm-virtualization-fixture** — Tart and Lume Guest VM Virtualization Fixture
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-116-maestro-flow-network-isolated-fixture** — Maestro Flow Network-Isolated Step Fixture
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-118-headless-simulator-provisioning-and-teardown-hook** — Headless Simulator Provisioning and Teardown Hook
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-119-guest-vm-health-telemetry-and-socket-probe** — Guest VM Health Telemetry and Socket Probe
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-121-surface-conformance-and-capture-trust-sourcing** — Surface Conformance and Capture Trust Sourcing
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-122-operator-state-and-evidence-integrity-chain** — Operator State and Evidence Integrity Chain
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-124-automated-warrant-tier-promotion-ledger-helper** — Automated Warrant Tier Promotion Ledger Helper
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-125-legacy-brief-spec-validation-and-retirement** — Legacy Brief Spec-Validation and Retirement
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-126-registry-drift-and-surface-conformance-figure-sourcing** — Registry Drift and Surface Conformance Figure Sourcing
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-127-operator-state-and-capture-trust-figure-sourcing** — Operator State and Capture Trust Figure Sourcing
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-128-automated-spec-validation-runner** — Automated Continuous Spec-Validation Runner
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-129-warrant-assurance-tier-dashboard-exporter** — Warrant Assurance Tier Dashboard Exporter
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
 
 ## Requirements standing on the project's own word (17)
 

@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-019, REQ-020]
-status: to-triage
+status: retired
 ---
 
 # Headless Simulator Provisioning and Teardown Hook

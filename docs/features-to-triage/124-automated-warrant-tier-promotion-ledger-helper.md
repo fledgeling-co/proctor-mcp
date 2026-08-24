@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-025, REQ-102]
-status: to-triage
+status: retired
 ---
 
 # Automated Warrant Tier Promotion Ledger Helper

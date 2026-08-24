@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-013, REQ-017]
-status: to-triage
+status: retired
 ---
 
 # Tart and Lume Guest VM Virtualization Fixture

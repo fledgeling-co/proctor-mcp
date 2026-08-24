@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-020, REQ-020]
-status: to-triage
+status: retired
 ---
 
 # Maestro Flow Network-Isolated Step Fixture
