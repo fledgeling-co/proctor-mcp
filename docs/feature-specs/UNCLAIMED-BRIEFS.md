@@ -9,6 +9,11 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
+| `130-proctoragent-mutation-hardening-and-boundary-sweep.md` | `docs/features-to-triage/130-proctoragent-mutation-hardening-and-boundary-sweep.md` | Intake from reckoning 2026-08-24-final pending triage (DEF-033) |
+| `131-legacy-direction-briefs-spec-validation.md` | `docs/features-to-triage/131-legacy-direction-briefs-spec-validation.md` | Intake from reckoning undecided briefs pending triage |
+| `132-hermetic-multi-process-chaos-fixture.md` | `docs/features-to-triage/132-hermetic-multi-process-chaos-fixture.md` | Intake from reckoning unmeasured gaps pending triage |
+| `133-process-lifecycle-chaos-and-recovery-harness.md` | `docs/features-to-triage/133-process-lifecycle-chaos-and-recovery-harness.md` | Intake proposed companion pending triage |
+| `134-automated-mutation-survival-benchmark-reporter.md` | `docs/features-to-triage/134-automated-mutation-survival-benchmark-reporter.md` | Intake proposed companion pending triage |
 
 ## Briefs several specs share
 
