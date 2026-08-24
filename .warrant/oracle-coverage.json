@@ -20,13 +20,13 @@
    "total": 200
   },
   "operator-state": {
-   "coverage": 0.9444,
-   "covered": 51,
+   "coverage": 0.9455,
+   "covered": 52,
    "green": false,
    "lineage_gaps": 3,
    "surfaces_matched": 4,
    "threshold": 1.0,
-   "total": 54
+   "total": 55
   },
   "registry-drift": {
    "coverage": 0.963,
@@ -65,7 +65,7 @@
    "total": 115
   }
  },
- "generated_at": "2026-08-24T05:36:33.064599+00:00",
+ "generated_at": "2026-08-24T06:00:46.977457+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -94,9 +94,9 @@
    "unsourced": 10
   },
   {
-   "figures": 36,
+   "figures": 37,
    "file": "engine://audit-policy",
-   "sourced": 33,
+   "sourced": 34,
    "unsourced": 3
   },
   {

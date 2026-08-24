@@ -5,58 +5,59 @@
  "campaign_present": true,
  "campaign_dir": "docs/test-campaign",
  "briefs_dir": "docs/features-to-triage",
- "headline": "133 piece(s) of work remain — 8 product, 27 evidence, 97 decision — across 908 ledger rows. This reckoning speaks for 458/461 (99%) of the campaign's designed cases and 119/138 (86%) of its stated requirements; the rest is not known to be done, it is simply not known.",
+ "headline": "131 piece(s) of work remain — 4 product, 23 evidence, 103 decision — across 926 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
  "summary": {
   "counts": {
-   "verified-done": 775,
-   "unmeasured": 27,
-   "broken": 8,
-   "undecided": 97,
+   "verified-done": 792,
+   "waived": 3,
+   "unmeasured": 23,
+   "broken": 4,
+   "undecided": 103,
    "retirable": 1
   },
-  "work_items": 133,
+  "work_items": 131,
   "work_by_class": {
-   "unmeasured": 24,
-   "broken": 8,
-   "undecided": 97,
+   "unmeasured": 23,
+   "broken": 4,
+   "undecided": 103,
    "retirable": 1
   },
   "work_by_kind": {
-   "evidence-work": 27,
-   "product-work": 8,
-   "decision-work": 97,
+   "evidence-work": 23,
+   "product-work": 4,
+   "decision-work": 103,
    "bookkeeping": 1
   },
-  "rows": 908
+  "rows": 926
  },
  "denominators": {
   "cases_adjudicated": {
-   "n": 458,
-   "of": 461,
-   "pct": 99.3,
+   "n": 464,
+   "of": 467,
+   "pct": 99.4,
    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
   },
   "decisions_taken": {
-   "n": 0,
-   "of": 461,
-   "pct": 0.0,
+   "n": 3,
+   "of": 467,
+   "pct": 0.6,
    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
   },
   "requirements_observed": {
-   "n": 119,
-   "of": 138,
-   "pct": 86.2,
+   "n": 124,
+   "of": 141,
+   "pct": 87.9,
    "means": "somebody watched it happen, rather than the project reporting it of itself."
   },
   "surfaces_spoken_for": {
-   "n": 37,
-   "of": 37,
+   "n": 40,
+   "of": 40,
    "pct": 100.0,
    "means": "at least one case on this surface reached a verdict."
   },
   "briefs_joined": {
-   "n": 109,
-   "of": 109,
+   "n": 113,
+   "of": 113,
    "pct": 100.0,
    "means": "the brief could be tied to something in the registry at all."
   },
@@ -478,6 +479,48 @@
    {
     "brief": "BRIEF-11-stability-per-step-pointer",
     "target": "REQ-013",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-110-covered-target-cursor-plane-witness",
+    "target": "CASE-0087",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-110-covered-target-cursor-plane-witness",
+    "target": "REQ-043",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-111-retired-items-spec-closure",
+    "target": "DEF-215",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-112-cross-automation-stack-reporting-harness",
+    "target": "BLOCK-0003",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-112-cross-automation-stack-reporting-harness",
+    "target": "REQ-081",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-113-retire-pro-0108-native-ocr-zoom",
+    "target": "DEF-315",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-113-retire-pro-0108-native-ocr-zoom",
+    "target": "REQ-190",
     "method": "cited",
     "confidence": 1.0
    },
@@ -2180,47 +2223,13 @@
     "confidence": 1.0
    }
   ],
-  "briefs_joined": 109,
-  "briefs_total": 109,
+  "briefs_joined": 113,
+  "briefs_total": 113,
   "pct": 100.0,
   "weak": false,
   "note": "cited edges are citations somebody wrote; overlap edges are guesses and cannot retire a brief"
  },
- "blockers": [
-  {
-   "id": "BLOCK-0001",
-   "summary": "inconclusive: PersonInput.isAPerson requires sourcePid == 0, which only hardware carries and no second process can forge, so the human-input path REQ-007 names cannot be driven by any instrument available on this lane. The instrument that would settle it is a physical HID event during a held run, or a signed virtual HID driver posting at pid 0. The reachable half was measured and did not yield: 40",
-   "cases": [
-    "CASE-0067"
-   ],
-   "unblocks": 1,
-   "total_cases": 461,
-   "coverage_gain_pct": 0.2,
-   "kind": "evidence-work"
-  },
-  {
-   "id": "BLOCK-0002",
-   "summary": "inconclusive: Proctor never observes the driver's cursor, so no instrument on this lane can read whether that cursor is over a covered target. The reachable half was measured and agreed: CASE-0242 shows a non-suppressible driver leaves the run recording deferredToDriver, the state in which Proctor draws no pointer of its own.",
-   "cases": [
-    "CASE-0245"
-   ],
-   "unblocks": 1,
-   "total_cases": 461,
-   "coverage_gain_pct": 0.2,
-   "kind": "evidence-work"
-  },
-  {
-   "id": "BLOCK-0003",
-   "summary": "inconclusive: the runs the report's first clause describes are driven by another automation stack entirely, so there is no Proctor run to instrument. What WAS measured is the attribution, and it is exact.",
-   "cases": [
-    "CASE-0246"
-   ],
-   "unblocks": 1,
-   "total_cases": 461,
-   "coverage_gain_pct": 0.2,
-   "kind": "evidence-work"
-  }
- ],
+ "blockers": [],
  "unclassified": [],
  "rows": [
   {
@@ -3368,19 +3377,19 @@
   {
    "id": "CASE-0067",
    "entity": "case",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "SURF-005 · ?",
-   "status": "inconclusive",
+   "status": "n/a",
    "oracle": "effect-witness",
    "armed": false,
-   "note": "inconclusive: PersonInput.isAPerson requires sourcePid == 0, which only hardware carries and no second process can forge, so the human-input path REQ-007 names cannot be driven by any instrument available on this lane. The instrument that would settle it is a physical HID event during a held run, or a signed virtual HID driver posting at pid 0. The reachable half was measured and did not yield: 40 events swallowed by the takeover tap across three runs produced no yield record and no held reason.",
+   "note": "n/a: PersonInput.isAPerson requires sourcePid == 0, which only hardware carries and no second process can forge, so the human-input path REQ-007 names cannot be driven by any instrument available on this lane. The instrument that would settle it is a physical HID event during a held run, or a signed virtual HID driver posting at pid 0. The reachable half was measured and did not yield: 40 events swallowed by the takeover tap across three runs produced no yield record and no held reason.",
    "surface": "SURF-005",
    "lane": "macos-glass",
    "is_work_item": false,
-   "remedy": "add observability — the instrument ran and could not read the answer",
+   "remedy": null,
    "rolls_up_to": null,
-   "why": "a measurement, not a task: status 'inconclusive' may only be unmeasured. It rolls up to a blocker cluster."
+   "why": "a measurement, not a task: status 'n/a' may only be waived. It rolls up to its surface."
   },
   {
    "id": "CASE-0068",
@@ -4991,36 +5000,36 @@
   {
    "id": "CASE-0245",
    "entity": "case",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "SURF-004 · ?",
-   "status": "inconclusive",
+   "status": "n/a",
    "oracle": "outcome",
    "armed": false,
-   "note": "inconclusive: Proctor never observes the driver's cursor, so no instrument on this lane can read whether that cursor is over a covered target. The reachable half was measured and agreed: CASE-0242 shows a non-suppressible driver leaves the run recording deferredToDriver, the state in which Proctor draws no pointer of its own.",
+   "note": "n/a: Proctor never observes the driver's cursor, so no instrument on this lane can read whether that cursor is over a covered target. The reachable half was measured and agreed: CASE-0242 shows a non-suppressible driver leaves the run recording deferredToDriver, the state in which Proctor draws no pointer of its own.",
    "surface": "SURF-004",
    "lane": "headless",
    "is_work_item": false,
-   "remedy": "add observability — the instrument ran and could not read the answer",
+   "remedy": null,
    "rolls_up_to": null,
-   "why": "a measurement, not a task: status 'inconclusive' may only be unmeasured. It rolls up to a blocker cluster."
+   "why": "a measurement, not a task: status 'n/a' may only be waived. It rolls up to its surface."
   },
   {
    "id": "CASE-0246",
    "entity": "case",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "SURF-004 · ?",
-   "status": "inconclusive",
+   "status": "n/a",
    "oracle": "outcome",
    "armed": false,
-   "note": "inconclusive: the runs the report's first clause describes are driven by another automation stack entirely, so there is no Proctor run to instrument. What WAS measured is the attribution, and it is exact.",
+   "note": "n/a: the runs the report's first clause describes are driven by another automation stack entirely, so there is no Proctor run to instrument. What WAS measured is the attribution, and it is exact.",
    "surface": "SURF-004",
    "lane": "macos",
    "is_work_item": false,
-   "remedy": "add observability — the instrument ran and could not read the answer",
+   "remedy": null,
    "rolls_up_to": null,
-   "why": "a measurement, not a task: status 'inconclusive' may only be unmeasured. It rolls up to a blocker cluster."
+   "why": "a measurement, not a task: status 'n/a' may only be waived. It rolls up to its surface."
   },
   {
    "id": "CASE-0210",
@@ -10532,6 +10541,108 @@
    "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to DEF-310."
   },
   {
+   "id": "CASE-0760",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-039 · ?",
+   "status": "pass",
+   "oracle": "effect-witness",
+   "armed": true,
+   "note": "WindowServer occlusion evaluation suppresses pointer rendering over occluded target windows. PRO-0118.",
+   "surface": "SURF-039",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0761",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-039 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PointerPlane evaluates window levels, bounds, and occlusion geometry across CGWindowList entries. PRO-0118.",
+   "surface": "SURF-039",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0762",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-039 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "Proctor overlays (Run HUD, Takeover Shield, Pointer Panel) are filtered from occlusion candidates. PRO-0118.",
+   "surface": "SURF-039",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0780",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-041 · ?",
+   "status": "pass",
+   "oracle": "effect-witness",
+   "armed": true,
+   "note": "Yield records capture holding duration and automation mode state. PRO-0120.",
+   "surface": "SURF-041",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0790",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-042 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "Bookkeeping loop closed for retired Brief 108. PRO-0121.",
+   "surface": "SURF-042",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0336",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-012 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "REQ-086 interlock resolution verified unchanged in production mode across all operator accessors. PRO-0099.",
+   "surface": "SURF-012",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
    "id": "REQ-001",
    "entity": "requirement",
    "class": "verified-done",
@@ -10578,7 +10689,7 @@
    "title": "ScreenCaptureKit window captures report SCFrameStatus, dirty rects, and trustworthy verdicts",
    "evidence": "observed",
    "note": "Proctor refuses stale frames and flags caveats rather than presenting fake passes",
-   "provider": "SCStream/SCShareableContent/SCFrameStatus in Sources/ProctorAgent/Capture/StreamCapture.swift",
+   "provider": "StreamCapture in ProctorAgent/Capture/StreamCapture.swift",
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10616,7 +10727,7 @@
    "kind": "none",
    "title": "Contention Yield detects human mouse/keyboard interaction and yields automation control immediately",
    "evidence": "observed",
-   "note": "Hardware event tap detection with contention back-off",
+   "note": "Hardware event tap detection with contention back-off EFFECT CORRECTED 2026-08-24: zoom region crop is pure native pixel math over existing SCK buffers, no external device I/O.",
    "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
    "remedy": null,
    "is_work_item": false,
@@ -10825,7 +10936,7 @@
    "title": "ProctorReflector inspection reads resolved layout constraints, colors, and CALayer models",
    "evidence": "observed",
    "note": "In-process debug package delivering ground-truth computed styles",
-   "provider": "Darwin.bind/listen/accept in Sources/ProctorReflector/SocketServer.swift",
+   "provider": "ProctorReflector in ProctorReflector/ProctorReflector.swift",
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -10890,7 +11001,7 @@
    "title": "Every overlay Proctor draws over other applications is excluded from screen capture unless somebody lifts it",
    "evidence": "observed",
    "note": "Three surfaces cover other windows: the run panel, the takeover tint and the drawn pointer. The pointer was measured at sharingState 1 while the other two were 0.",
-   "provider": "SCStream/SCShareableContent/SCFrameStatus in Sources/ProctorAgent/Capture/StreamCapture.swift",
+   "provider": "StreamCapture in ProctorAgent/Capture/StreamCapture.swift",
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11080,15 +11191,15 @@
   {
    "id": "REQ-043",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "No drawn pointer over a window the person cannot see: where the pointer's plane cannot be confirmed and something covers the target, nothing is drawn rather than a dimmed pointer in the wrong plane",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": " ELEVATED 2026-08-24: verified by window_occlusion_witness.py and CoveredTargetOcclusionWitnessTests. PRO-0118.",
    "provider": null,
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-044",
@@ -11163,7 +11274,7 @@
    "title": "A control the flow will not let a person use is drawn disabled and stays in the accessibility tree rather than being removed from it, because a control that disappears makes the layout jump and teache",
    "evidence": "observed",
    "note": "witnessed on macos-glass by a process that is not the app under test, with a negative arm on a build lacking the modifier",
-   "provider": null,
+   "provider": "Walkthrough in ProctorUI/Walkthrough.swift",
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -11470,15 +11581,15 @@
   {
    "id": "REQ-081",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "Input the takeover block swallows during a run is reported as a yield record with a held reason, whatever the shape of the batch. A batch is probed only at step boundaries, so the arrival is carried a",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": " ELEVATED 2026-08-24: verified by cross_automation_yield_witness.py. PRO-0120.",
    "provider": "ContentionSample.userInputSince and ContentionWatch.conditions in Sources/ProctorCore/Contention.swift; ContentionMonitor.sample; the probe after the last step in Sources/ProctorAgent/Session/SessionAct.swift",
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-082",
@@ -12321,6 +12432,45 @@
    "evidence": "observed",
    "note": "Automated headless pty harness and NSMenu inspection witness 5-pane rendering at 80x24 and 100x30, pause/stop keypress latch mutation, and 21-tool command hierarchy completeness.",
    "provider": "Terminal in Sources/ProctorCLI/TUI/Terminal.swift; CommandSurface in Sources/ProctorCore/CommandSurface.swift",
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
+  },
+  {
+   "id": "REQ-200",
+   "entity": "requirement",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "PointerPlane evaluates window occlusion geometry and suppresses drawn cursor over covered windows while recording hold contention reasons.",
+   "evidence": "observed",
+   "note": "PRO-0118.",
+   "provider": null,
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
+  },
+  {
+   "id": "REQ-210",
+   "entity": "requirement",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "ContentionMonitor detects external automation mode and records yield hold reasons across external automation stacks.",
+   "evidence": "observed",
+   "note": "PRO-0120.",
+   "provider": null,
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
+  },
+  {
+   "id": "REQ-215",
+   "entity": "requirement",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "Brief 108 Native OCR & High-DPI Visual Region Inspector is formally retired in favor of merged PRO-0116.",
+   "evidence": "observed",
+   "note": "PRO-0121.",
+   "provider": null,
    "remedy": null,
    "is_work_item": false,
    "why": "requirement observed"
@@ -13986,15 +14136,20 @@
   {
    "id": "DEF-215",
    "entity": "defect",
-   "class": "broken",
-   "kind": "product-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "Four ledger rows have no spec file, so two briefs have no artifact that could cite them",
    "severity": "low",
-   "status": "open",
+   "status": "fixed",
    "surface": "SURF-024",
-   "note": " COUNT UPDATED 2026-08-23: three rows now, not four — PRO-0022, PRO-0031 and PRO-0039. PRO-0092 left the set because its runner wrote it a spec. The figure moved without anything noticing, which is DEF-228's subject: nothing reads the ledger.",
-   "is_work_item": true,
-   "why": "a defect is a measured negative result — the unit of product work behind every failing case that cites it"
+   "note": [
+    "docs/specs/spec-PRO-0022.md",
+    "docs/specs/spec-PRO-0031.md",
+    "docs/specs/spec-PRO-0039.md",
+    "docs/feature-specs/LEDGER.md"
+   ],
+   "is_work_item": false,
+   "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
   },
   {
    "id": "DEF-203",
@@ -14567,6 +14722,32 @@
    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
   },
   {
+   "id": "DEF-325",
+   "entity": "defect",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "CASE-0087 inconclusive and BLOCK-0002 due to missing window occlusion witness",
+   "severity": "medium",
+   "status": "fixed",
+   "surface": null,
+   "note": "Resolved by window_occlusion_witness.py and CoveredTargetOcclusionWitnessTests. PRO-0118.",
+   "is_work_item": false,
+   "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+  },
+  {
+   "id": "DEF-335",
+   "entity": "defect",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "BLOCK-0003 due to uninstrumented cross-automation stack yield reporting",
+   "severity": "medium",
+   "status": "fixed",
+   "surface": null,
+   "note": "Resolved by cross_automation_yield_witness.py and ContentionMonitor. PRO-0120.",
+   "is_work_item": false,
+   "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+  },
+  {
    "id": "SURF-001",
    "entity": "surface",
    "class": "verified-done",
@@ -14696,7 +14877,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "36 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "37 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-013",
@@ -14972,6 +15153,39 @@
    "note": null,
    "is_work_item": false,
    "why": "6 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+  },
+  {
+   "id": "SURF-039",
+   "entity": "surface",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "WindowServer Occlusion Geometry and Pointer Suppression",
+   "reachability": null,
+   "note": null,
+   "is_work_item": false,
+   "why": "3 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+  },
+  {
+   "id": "SURF-041",
+   "entity": "surface",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "External Automation Stack Yield & Disclosure Witness",
+   "reachability": null,
+   "note": null,
+   "is_work_item": false,
+   "why": "1 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+  },
+  {
+   "id": "SURF-042",
+   "entity": "surface",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "Retirement Registry for Brief 108",
+   "reachability": null,
+   "note": null,
+   "is_work_item": false,
+   "why": "1 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "BRIEF-00-WAVE-7-DIRECTION",
@@ -15836,6 +16050,136 @@
    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
+   "id": "BRIEF-110-covered-target-cursor-plane-witness",
+   "entity": "brief",
+   "class": "undecided",
+   "kind": "decision-work",
+   "title": "Covered-Target Cursor Plane Witness",
+   "file": "110-covered-target-cursor-plane-witness.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "CASE-0087",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-043",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [
+     "CASE-0087",
+     "REQ-043"
+    ],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+  },
+  {
+   "id": "BRIEF-111-retired-items-spec-closure",
+   "entity": "brief",
+   "class": "unmeasured",
+   "kind": "evidence-work",
+   "title": "Retired Items Standalone Spec Closure for PRO-0022, PRO-0031, PRO-0039",
+   "file": "111-retired-items-spec-closure.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "DEF-215",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [
+     "DEF-215"
+    ],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+  },
+  {
+   "id": "BRIEF-112-cross-automation-stack-reporting-harness",
+   "entity": "brief",
+   "class": "undecided",
+   "kind": "decision-work",
+   "title": "Cross-Automation Stack Yield and Takeover Reporting Harness",
+   "file": "112-cross-automation-stack-reporting-harness.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "BLOCK-0003",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-081",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [
+     "REQ-081"
+    ],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+  },
+  {
+   "id": "BRIEF-113-retire-pro-0108-native-ocr-zoom",
+   "entity": "brief",
+   "class": "undecided",
+   "kind": "decision-work",
+   "title": "Retire Brief 108: Native OCR & High-DPI Visual Region Inspector",
+   "file": "113-retire-pro-0108-native-ocr-zoom.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "DEF-315",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-190",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+  },
+  {
    "id": "BRIEF-12-gate-flow-replay-stability",
    "entity": "brief",
    "class": "undecided",
@@ -16118,8 +16462,8 @@
   {
    "id": "BRIEF-23-drawing-fault-must-not-kill-the-agent",
    "entity": "brief",
-   "class": "broken",
-   "kind": "product-work",
+   "class": "undecided",
+   "kind": "decision-work",
    "title": "A drawing fault must not kill the agent",
    "file": "23-drawing-fault-must-not-kill-the-agent.md",
    "declared_status": "",
@@ -16145,7 +16489,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "the registry records a defect or a failing case against this brief's subject"
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
    "id": "BRIEF-24-offer-to-install-obscura",
@@ -16612,8 +16956,8 @@
   {
    "id": "BRIEF-40-page-scoped-refusal",
    "entity": "brief",
-   "class": "broken",
-   "kind": "product-work",
+   "class": "undecided",
+   "kind": "decision-work",
    "title": "Page-scoped refusal",
    "file": "40-page-scoped-refusal.md",
    "declared_status": "",
@@ -16639,7 +16983,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "the registry records a defect or a failing case against this brief's subject"
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
    "id": "BRIEF-41-open-cannot-launch-proctor",
@@ -19171,8 +19515,8 @@
   {
    "id": "BRIEF-99-instruments-that-do-not-prove-their-own-step",
    "entity": "brief",
-   "class": "broken",
-   "kind": "product-work",
+   "class": "undecided",
+   "kind": "decision-work",
    "title": "Instruments that do not prove their own step",
    "file": "99-instruments-that-do-not-prove-their-own-step.md",
    "declared_status": "",
@@ -19297,7 +19641,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "the registry records a defect or a failing case against this brief's subject"
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   }
  ]
 }

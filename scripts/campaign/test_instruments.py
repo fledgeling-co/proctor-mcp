@@ -269,12 +269,17 @@ def _fixture(tmp: Path, clear: bool) -> Path:
         src = ROOT / "docs/test-campaign" / name
         if src.exists():
             (d / name).write_bytes(src.read_bytes())
+    inv = json.loads((d / "inventory.json").read_text())
     if clear:
-        inv = json.loads((d / "inventory.json").read_text())
         for r in inv.get("requirement", []):
             if r.get("effect") and r["effect"] != "none" and not r.get("provider"):
                 r["provider"] = "fixture-only provider, so this copy starts clear"
-        (d / "inventory.json").write_text(json.dumps(inv, indent=2) + "\n")
+    else:
+        for r in inv.get("requirement", []):
+            if r.get("effect") and r["effect"] != "none" and r.get("id") != "REQ-017":
+                r.pop("provider", None)
+                break
+    (d / "inventory.json").write_text(json.dumps(inv, indent=2) + "\n")
     return d
 
 
