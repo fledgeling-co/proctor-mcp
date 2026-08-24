@@ -1,0 +1,700 @@
+{
+ "schema": "reckoning-delta/1",
+ "project": "proctor-mcp",
+ "attribution": "decomposed",
+ "previous": {
+  "dir_stamp": "2026-08-23T19:37:34Z",
+  "commit": "a29e3bd46d0002a0eef3acc917d9b223ad8ce7b6",
+  "short": "a29e3bd",
+  "tool": "1.3.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 19 close. PRO-0111, PRO-0112, PRO-0113 merged. 100% brief join rate, 0 weak join warnings, warrant charter verified, limits audited."
+  ]
+ },
+ "current": {
+  "dir_stamp": "2026-08-24T02:11:23Z",
+  "commit": "4da1424e8fd0b747efde09ecadbf963c1d1227ba",
+  "short": "4da1424",
+  "tool": "1.3.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 20 close. PRO-0114, PRO-0115, PRO-0116, PRO-0117 merged. All 117 ledger rows resolved, 259 instrument checks passing, 100% brief join rate."
+  ]
+ },
+ "verdict": "2 of 5 axes improved, 3 flat, 0 worsened; evidence work down at 27 and the unmeasured class smaller at 27 rows.",
+ "movement": {
+  "tool": {
+   "work_items": 0,
+   "product": 0,
+   "evidence": 0,
+   "decision": 0,
+   "rows": 0
+  },
+  "project": {
+   "work_items": -5,
+   "product": 0,
+   "evidence": -14,
+   "decision": 8,
+   "rows": 35
+  },
+  "net": {
+   "work_items": -5,
+   "product": 0,
+   "evidence": -14,
+   "decision": 8,
+   "rows": 35
+  },
+  "previous": {
+   "work_items": 138,
+   "product": 8,
+   "evidence": 41,
+   "decision": 89,
+   "rows": 873
+  },
+  "control": {
+   "work_items": 138,
+   "product": 8,
+   "evidence": 41,
+   "decision": 89,
+   "rows": 873
+  },
+  "current": {
+   "work_items": 133,
+   "product": 8,
+   "evidence": 27,
+   "decision": 97,
+   "rows": 908
+  }
+ },
+ "classes": {
+  "previous": {
+   "verified-done": 735,
+   "unmeasured": 41,
+   "undecided": 89,
+   "broken": 8
+  },
+  "control": {
+   "verified-done": 735,
+   "unmeasured": 41,
+   "undecided": 89,
+   "broken": 8
+  },
+  "current": {
+   "verified-done": 775,
+   "unmeasured": 27,
+   "broken": 8,
+   "undecided": 97,
+   "retirable": 1
+  }
+ },
+ "axes": [
+  {
+   "key": "cases_adjudicated",
+   "label": "Cases adjudicated",
+   "prev": {
+    "n": 438,
+    "of": 442,
+    "pct": 99.1,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "control": {
+    "n": 438,
+    "of": 442,
+    "pct": 99.1,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "current": {
+    "n": 458,
+    "of": 461,
+    "pct": 99.3,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "decisions_taken",
+   "label": "Cases ruled out by decision",
+   "prev": {
+    "n": 0,
+    "of": 442,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "control": {
+    "n": 0,
+    "of": 442,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "current": {
+    "n": 0,
+    "of": 461,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "requirements_observed",
+   "label": "Requirements observed",
+   "prev": {
+    "n": 107,
+    "of": 134,
+    "pct": 79.9,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "control": {
+    "n": 107,
+    "of": 134,
+    "pct": 79.9,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "current": {
+    "n": 119,
+    "of": 138,
+    "pct": 86.2,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "surfaces_spoken_for",
+   "label": "Surfaces spoken for",
+   "prev": {
+    "n": 33,
+    "of": 33,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "control": {
+    "n": 33,
+    "of": 33,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "current": {
+    "n": 37,
+    "of": 37,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "briefs_joined",
+   "label": "Briefs joined to evidence",
+   "prev": {
+    "n": 105,
+    "of": 105,
+    "pct": 100.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "control": {
+    "n": 105,
+    "of": 105,
+    "pct": 100.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "current": {
+    "n": 109,
+    "of": 109,
+    "pct": 100.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  }
+ ],
+ "unmeasured": {
+  "control_rows": 41,
+  "current_rows": 27,
+  "left": [
+   {
+    "id": "BRIEF-17-multi-session-queue",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "Multi-session scheduling — session identity, lanes, and the queue",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-30-a-home-for-the-proctor-switches",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "A home for the PROCTOR_* switches",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-38-a-hold-names-whose-run-it-is",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "A hold names whose run it is",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-48-the-run-has-a-history-you-can-read",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "The run has a history you can read",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-59-design-tokens-as-a-swift-value",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "The design tokens are a Swift value, generated from the mock",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-65-history-window-to-the-mock",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "The history window, and the detail that says what it could not check",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "CASE-0087",
+    "entity": "case",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "SURF-003 · ?",
+    "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to DEF-305."
+   },
+   {
+    "id": "REQ-030",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "The supervision surface draws what the design compiled, at 100x30 and at the 80x24 floor",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-031",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "Every command the catalogue declares for the menu bar is actually rendered in it",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-033",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "A supervision client can read the machine's readiness, switches and history, not only its run and queue",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-037",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "A session attaches to a macOS guest and executes its steps inside that guest; the host agent routes calls over",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-038",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "Guest attachments are held against a counted lane whose capacity is a parameter: macOS at two, one session per",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-039",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "The pool never evicts: a guest a person started, or one another session holds, is waited for and never stopped",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-040",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "A guest's witness tier is derived from the platform its provider reports, so a provider saying darwin yields m",
+    "why": "requirement observed"
+   }
+  ],
+  "entered": [],
+  "direction": "improved"
+ },
+ "rows": {
+  "moved": [
+   {
+    "id": "BRIEF-17-multi-session-queue",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "Multi-session scheduling — session identity, lanes, and the queue",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-30-a-home-for-the-proctor-switches",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "A home for the PROCTOR_* switches",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-38-a-hold-names-whose-run-it-is",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "A hold names whose run it is",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-48-the-run-has-a-history-you-can-read",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "The run has a history you can read",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-59-design-tokens-as-a-swift-value",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "The design tokens are a Swift value, generated from the mock",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-65-history-window-to-the-mock",
+    "entity": "brief",
+    "from": "unmeasured",
+    "to": "undecided",
+    "title": "The history window, and the detail that says what it could not check",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "CASE-0087",
+    "entity": "case",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "SURF-003 · ?",
+    "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to DEF-305."
+   },
+   {
+    "id": "REQ-024",
+    "entity": "requirement",
+    "from": "undecided",
+    "to": "verified-done",
+    "title": "Automatic browser routing dispatches web URLs to Obscura or browser-use engines",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-030",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "The supervision surface draws what the design compiled, at 100x30 and at the 80x24 floor",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-031",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "Every command the catalogue declares for the menu bar is actually rendered in it",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-033",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "A supervision client can read the machine's readiness, switches and history, not only its run and queue",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-037",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "A session attaches to a macOS guest and executes its steps inside that guest; the host agent routes calls over",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-038",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "Guest attachments are held against a counted lane whose capacity is a parameter: macOS at two, one session per",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-039",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "The pool never evicts: a guest a person started, or one another session holds, is waited for and never stopped",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-040",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "A guest's witness tier is derived from the platform its provider reports, so a provider saying darwin yields m",
+    "why": "requirement observed"
+   }
+  ],
+  "appeared": [
+   {
+    "id": "BRIEF-106-supervision-tui-and-menu-bar-glass-witness",
+    "entity": "brief",
+    "class": "undecided",
+    "title": "Supervision TUI and Menu Bar Status Extra On-Glass Witness"
+   },
+   {
+    "id": "BRIEF-107-subprocess-actuation-witness-for-cua-driver",
+    "entity": "brief",
+    "class": "undecided",
+    "title": "Subprocess Actuation Witness for Cua Driver"
+   },
+   {
+    "id": "BRIEF-108-native-ocr-and-high-dpi-zoom-inspector",
+    "entity": "brief",
+    "class": "retirable",
+    "title": "Native OCR and High-DPI Visual Region Inspector for Zoom Assertions"
+   },
+   {
+    "id": "BRIEF-109-guest-vm-lifecycle-and-attachment-oracle",
+    "entity": "brief",
+    "class": "undecided",
+    "title": "Guest VM Lifecycle and Multi-Session Attachment Oracle"
+   },
+   {
+    "id": "CASE-0700",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-035 · ?"
+   },
+   {
+    "id": "CASE-0701",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-035 · ?"
+   },
+   {
+    "id": "CASE-0702",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-035 · ?"
+   },
+   {
+    "id": "CASE-0710",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-036 · ?"
+   },
+   {
+    "id": "CASE-0711",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-036 · ?"
+   },
+   {
+    "id": "CASE-0712",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-036 · ?"
+   },
+   {
+    "id": "CASE-0713",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-036 · ?"
+   },
+   {
+    "id": "CASE-0714",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-036 · ?"
+   },
+   {
+    "id": "CASE-0715",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-036 · ?"
+   },
+   {
+    "id": "CASE-0730",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-037 · ?"
+   },
+   {
+    "id": "CASE-0731",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-037 · ?"
+   },
+   {
+    "id": "CASE-0732",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-037 · ?"
+   },
+   {
+    "id": "CASE-0733",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-037 · ?"
+   },
+   {
+    "id": "CASE-0734",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-037 · ?"
+   },
+   {
+    "id": "CASE-0750",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-038 · ?"
+   },
+   {
+    "id": "CASE-0751",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-038 · ?"
+   },
+   {
+    "id": "CASE-0752",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-038 · ?"
+   },
+   {
+    "id": "CASE-0753",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-038 · ?"
+   },
+   {
+    "id": "CASE-0754",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-038 · ?"
+   },
+   {
+    "id": "DEF-305",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Cua actuation subprocess unmeasured effect boundary, missing stderr capture on failure, and daemon orphan inte"
+   },
+   {
+    "id": "DEF-310",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Supervision TUI 80x24/100x30 rendering and menu bar command hierarchy lacked automated pty and NSMenu on-glass"
+   },
+   {
+    "id": "DEF-315",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Missing native Vision OCR and high-DPI text contrast verification in zoom crops for unpopulated accessibility "
+   },
+   {
+    "id": "DEF-320",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "Multi-session guest VM queue contention, never-evicting policy under slot exhaustion, and darwin native witnes"
+   },
+   {
+    "id": "REQ-180",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Cua actuation subprocess lifecycle is independently observed: argument verification, exit code capture, stderr"
+   },
+   {
+    "id": "REQ-185",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Supervision TUI pty rendering at 80x24 floor / 100x30 target, interactive keypress latch updates, and AppKit N"
+   },
+   {
+    "id": "REQ-190",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Native Vision OCR and high-DPI visual region inspector for zoom assertions: optical text recognition via VNRec"
+   },
+   {
+    "id": "REQ-195",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Multi-session guest queue harness validates concurrent session requests across a 2-slot macOS guest lane with "
+   },
+   {
+    "id": "SURF-035",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Cua driver child process lifecycle, argument verification, and daemon interlock"
+   },
+   {
+    "id": "SURF-036",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Supervision TUI Headless PTY Rendering & AppKit NSMenu Hierarchy Witness"
+   },
+   {
+    "id": "SURF-037",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Apple Vision text recognition, bounding box geometry, and high-DPI contrast inspection on zoom crops"
+   },
+   {
+    "id": "SURF-038",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Guest VM lifecycle, multi-session queue contention, non-evicting policy, and attachment oracle"
+   }
+  ],
+  "vanished": []
+ },
+ "ratchets": [
+  {
+   "pair": "published",
+   "from": "a29e3bd",
+   "to": "4da1424",
+   "exit": 3,
+   "violations": [
+    "RATCHET BRIEF-17-multi-session-queue moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-30-a-home-for-the-proctor-switches moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-38-a-hold-names-whose-run-it-is moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-48-the-run-has-a-history-you-can-read moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-59-design-tokens-as-a-swift-value moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-65-history-window-to-the-mock moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)"
+   ]
+  },
+  {
+   "pair": "tool-constant",
+   "from": "a29e3bd (rebuilt)",
+   "to": "4da1424",
+   "exit": 3,
+   "violations": [
+    "RATCHET BRIEF-17-multi-session-queue moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-30-a-home-for-the-proctor-switches moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-38-a-hold-names-whose-run-it-is moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-48-the-run-has-a-history-you-can-read moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-59-design-tokens-as-a-swift-value moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)",
+    "RATCHET BRIEF-65-history-window-to-the-mock moved from unmeasured to 'undecided' with no evidence-bearing event (status None, evidence None)"
+   ]
+  }
+ ]
+}
