@@ -1,0 +1,189 @@
+# Reckoning — proctor-mcp
+
+133 piece(s) of work remain — 8 product, 27 evidence, 97 decision — across 908 ledger rows. This reckoning speaks for 458/461 (99%) of the campaign's designed cases and 119/138 (86%) of its stated requirements; the rest is not known to be done, it is simply not known.
+
+## What it can speak for
+
+| Axis | Measured | Of | % | What the number means |
+|---|---:|---:|---:|---|
+| Cases adjudicated | 458 | 461 | 99.3% | an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate. |
+| Cases ruled out by decision | 0 | 461 | 0.0% | somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose. |
+| Requirements observed | 119 | 138 | 86.2% | somebody watched it happen, rather than the project reporting it of itself. |
+| Surfaces spoken for | 37 | 37 | 100.0% | at least one case on this surface reached a verdict. |
+| Briefs joined to evidence | 109 | 109 | 100.0% | the brief could be tied to something in the registry at all. |
+
+_Each figure is a lower bound. Every `unnamed` row is a surface the documents never described, which means the true denominator is larger than the one the documents can supply._
+
+## What remains
+
+Two counts, because they answer different questions. **Rows** is every entity on both sides, and it is total by construction — that is what makes the gate meaningful. **Work** is what somebody would actually schedule: a failing case and the defect it evidences are one job, and blocked cases are counted as the blockers behind them rather than one by one.
+
+| Class | Work | Rows | Kind | What it is |
+|---|---:|---:|---|---|
+| `broken` | 8 | 8 | product-work | measured, and the answer was no |
+| `unmeasured` | 24 + 3 blockers | 27 | evidence-work | nobody found out — the work here is becoming able to tell |
+| `undecided` | 97 | 97 | decision-work | the documents and the evidence disagree; needs a person |
+| `retirable` | 1 | 1 | bookkeeping | already done to a standard that can carry the claim — close it |
+| `verified-done` | 0 | 775 | none | not remaining; kept so the denominator is honest |
+
+## What unblocks the most
+
+Blocked cases cluster: a handful of causes usually account for most of them. Resolving these in order returns the most measurement per unit of work.
+
+| Blocker | Cases it unblocks | Coverage returned | Cause |
+|---|---:|---:|---|
+| `BLOCK-0001` | 1 | +1/461 (+0.2 pts) | inconclusive: PersonInput.isAPerson requires sourcePid == 0, which only hardware carries and no second process can forge, so the human-input path REQ- |
+| `BLOCK-0002` | 1 | +1/461 (+0.2 pts) | inconclusive: Proctor never observes the driver's cursor, so no instrument on this lane can read whether that cursor is over a covered target. The rea |
+| `BLOCK-0003` | 1 | +1/461 (+0.2 pts) | inconclusive: the runs the report's first clause describes are driven by another automation stack entirely, so there is no Proctor run to instrument.  |
+
+## Broken (8)
+
+- **BRIEF-23-drawing-fault-must-not-kill-the-agent** — A drawing fault must not kill the agent
+  - the registry records a defect or a failing case against this brief's subject
+- **BRIEF-40-page-scoped-refusal** — Page-scoped refusal
+  - the registry records a defect or a failing case against this brief's subject
+- **BRIEF-85-proctoragents-mutants-mostly-survive** — Nineteen of twenty-two ProctorAgent mutants survived
+  - the registry records a defect or a failing case against this brief's subject
+- **BRIEF-89-the-registry-says-open-and-the-code-says-fixed** — The registry says open where the code says fixed
+  - the registry records a defect or a failing case against this brief's subject
+- **BRIEF-90-the-four-nobody-owns** — Twenty-seven unwrapped tests, a fixed timer, and two witnesses the rung wants
+  - the registry records a defect or a failing case against this brief's subject
+- **BRIEF-99-instruments-that-do-not-prove-their-own-step** — Instruments that do not prove their own step
+  - the registry records a defect or a failing case against this brief's subject
+- **DEF-033** — Nineteen of twenty-two trustworthy-scored ProctorAgent mutants survived, against half in ProctorCore
+  - a defect is a measured negative result — the unit of product work behind every failing case that cites it
+- **DEF-215** — Four ledger rows have no spec file, so two briefs have no artifact that could cite them
+  - a defect is a measured negative result — the unit of product work behind every failing case that cites it
+
+## Undecided (97)
+
+- **BRIEF-00-WAVE-7-DIRECTION** — Wave 7 direction: Cua underneath, Proctor on top
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-01-cua-schema-facade** — Stock computer-use schema façade (Anthropic + OpenAI)
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-02-set-of-marks-captures** — Set-of-marks annotated captures
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-03-menu-bar-key-equivalents** — Menu-bar enumeration with key-equivalents
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-04-app-scripting-dictionary** — App scripting-dictionary introspection
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-05-audit-trail-policy-gate** — Redacting audit trail + policy / approval gate
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-06-vision-capture-normalisation** — Vision-capture normalisation + reported scale factor
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-07-zoom-region-crop** — Zoom native-resolution region crop
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-08-mcp-surface-modernization** — MCP surface modernization
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-09-process-kill-fs-jail** — Process kill + filesystem jail
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-10-pointer-overlay-captures** — Pointer / target overlay in captures
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-100-a-screenshot-gallery-the-gate-cannot-see** — Thirty-five pictures the gate cannot see
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-102-standing-checks-for-the-unread-registers** — Standing checks for the registers nothing reads
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-103-the-three-recorded-limits-audit** — Audit of the three recorded limits: filesystem certification, hardware keyboard yield, and dynamic TCC grant re-probe
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-104-warrant-charter-and-release-integrity** — Formalize warrant charter and release gate integration
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-105-brief-join-rate-and-retirement-ladder** — Brief join rate optimization and retirement ladder
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-106-supervision-tui-and-menu-bar-glass-witness** — Supervision TUI and Menu Bar Status Extra On-Glass Witness
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-107-subprocess-actuation-witness-for-cua-driver** — Subprocess Actuation Witness for Cua Driver
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-109-guest-vm-lifecycle-and-attachment-oracle** — Guest VM Lifecycle and Multi-Session Attachment Oracle
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-11-stability-per-step-pointer** — Pointer marker in proctor_stability per-step artifacts
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-12-gate-flow-replay-stability** — Gate recorded flow-replay and stability through the policy gate + audit
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-13-audit-log-encryption-at-rest** — Encryption-at-rest for the JSONL audit log
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-15-step-descriptions** — Human-readable step descriptions, derived not supplied
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-16-run-hud-panel** — Run HUD — the overlay shown while Proctor drives an app
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-17-multi-session-queue** — Multi-session scheduling — session identity, lanes, and the queue
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-18-hud-character-assets** — HUD character — sprite assets and state binding
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-19-yield-when-a-person-takes-the-machine** — Notice when a person is taking the machine back, and yield
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-20-foreground-run-is-obvious** — Make a foreground-only run obvious before it takes the machine
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-21-route-browser-work-to-obscura** — Route browser work to Obscura instead of driving a browser by hand
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-22-menu-bar-switch-and-character** — A menu bar switch for the panel, and a menu bar icon that is the same character
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-24-offer-to-install-obscura** — Offer to install Obscura when it is missing
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-25-second-browser-lane-for-obscuras-limits** — A second browser lane for what Obscura cannot do
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-26-prefer-background-and-pointer-in-plane** — Prefer the background, and draw the pointer where the work is happening
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-27-foreground-takeover-overlay** — When Proctor must take the front, take it visibly and hold it
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-28-menu-bar-character-when-idle** — The menu bar shows the character when idle, not a status symbol
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-29-re-check-now-says-what-it-checks** — "Re-check now" does not say what it checks
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-30-a-home-for-the-proctor-switches** — A home for the PROCTOR_* switches
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-31-the-build-says-which-build-it-is** — The build says which build it is
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-32-the-health-report-is-complete** — The health report is complete
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-33-the-audit-trail-is-signed** — The audit trail is signed, and it records what Proctor recommended
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- _…and 57 more in ledger.json_
+
+## Retirable (1)
+
+- **BRIEF-108-native-ocr-and-high-dpi-zoom-inspector** — Native OCR and High-DPI Visual Region Inspector for Zoom Assertions
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+
+## Requirements standing on the project's own word (19)
+
+These are not failures. Each is a claim the project makes about itself that nothing independent has confirmed, which is a different thing from a claim that has been checked and held.
+
+- **REQ-025** (`reported`) — Tahoe guest window rendering workaround
+  - obtain independent evidence — this is the project's own account of itself
+- **REQ-032** (`unknown`) — The status window lists every permission macOS holds about Proctor, including the one whose absence is silent
+  - obtain any evidence at all
+- **REQ-034** (`unknown`) — An operator drives and checks this Mac from a shell: 21 verbs derived from the tool catalogue, six exit codes, and shell completion generate
+  - obtain any evidence at all
+- **REQ-035** (`unknown`) — A CLI call is not a privilege bypass: same socket, same policy gate, same queue lane, same audit trail, and the trail records which front en
+  - obtain any evidence at all
+- **REQ-036** (`unknown`) — Exit code 1 (a check failed) and exit code 3 (the agent is not answering) are never confused, because CI reads an exit code rather than pros
+  - obtain any evidence at all
+- **REQ-041** (`unknown`) — Only the agent draws on this Mac: a switch says what an operator asked for and cannot say who is asking, so every live surface also requires
+  - obtain any evidence at all
+- **REQ-042** (`unknown`) — The takeover statement holds for a minimum duration once raised, and a request arriving while it is up extends it rather than raising it aga
+  - obtain any evidence at all
+- **REQ-043** (`unknown`) — No drawn pointer over a window the person cannot see: where the pointer's plane cannot be confirmed and something covers the target, nothing
+  - obtain any evidence at all
+- **REQ-044** (`unknown`) — The takeover statement names a control reachable from the screen reading it: the run panel on the panel's own display, Proctor's menu bar on
+  - obtain any evidence at all
+- **REQ-045** (`unknown`) — A campaign instrument carries a measured false-positive rate with its denominator before anything is gated on its count: the blind-mutation 
+  - obtain any evidence at all
+- **REQ-046** (`unknown`) — Every campaign gate is proved able to go red before its passing state is read as evidence, and the proof covers each of the gate's passes se
+  - obtain any evidence at all
+- **REQ-047** (`unknown`) — Mutation survival for the agent package is measured with its denominator, its seed and its unrun count rather than inferred from the core pa
+  - obtain any evidence at all
+- **REQ-053** (`unknown`) — One process verifies a given binary's code signature once per file identity, however many sessions ask about it and however many ask at the 
+  - obtain any evidence at all
+- **REQ-054** (`unknown`) — The shared signature store is a default rather than a singleton: a ToolProbes handed a cache uses that one, so a test gets an isolated store
+  - obtain any evidence at all
+- **REQ-072** (`unknown`) — Two limits on how far Proctor's plane disclosures can reach are recorded as ceilings rather than worked around: wave 9's covered-target rule
+  - obtain any evidence at all
+- **REQ-073** (`unknown`) — Every user-facing string a ProctorUI view draws has exactly one definition, in ProctorCore, named for what the string addresses rather than 
+  - obtain any evidence at all
+- **REQ-074** (`unknown`) — The status window draws no branch its own state machine cannot reach, and every state it can reach is drawn by the section that is actually 
+  - obtain any evidence at all
+- **REQ-075** (`unknown`) — Every key in the payload Proctor's window reads and Proctor's agent writes has one definition that both ends reach. This is not a style rule
+  - obtain any evidence at all
+- **REQ-081** (`unknown`) — Input the takeover block swallows during a run is reported as a yield record with a held reason, whatever the shape of the batch. A batch is
+  - obtain any evidence at all
+
