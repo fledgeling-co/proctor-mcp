@@ -1,5 +1,5 @@
 {
- "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/docs/test-campaign",
+ "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/.worktrees/PRO-0117/docs/test-campaign",
  "classes": {
   "capture-trust": {
    "coverage": 0.9545,
@@ -48,12 +48,12 @@
   },
   "run-lifecycle": {
    "coverage": 1.0,
-   "covered": 39,
+   "covered": 44,
    "green": true,
    "lineage_gaps": 0,
-   "surfaces_matched": 8,
+   "surfaces_matched": 9,
    "threshold": 1.0,
-   "total": 39
+   "total": 44
   },
   "surface-conformance": {
    "coverage": 0.8348,
@@ -65,7 +65,7 @@
    "total": 115
   }
  },
- "generated_at": "2026-08-23T23:25:35.678590+00:00",
+ "generated_at": "2026-08-24T01:33:32.672995+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -187,6 +187,12 @@
    "figures": 25,
    "file": "tool://capture-lineage/unaccounted",
    "sourced": 25,
+   "unsourced": 0
+  },
+  {
+   "figures": 5,
+   "file": "tool://guest/multi-session-queue",
+   "sourced": 5,
    "unsourced": 0
   },
   {

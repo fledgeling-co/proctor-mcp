@@ -2360,6 +2360,38 @@ def test_warrant_release_gate_and_export_verification() -> None:
                   f"exit={p_bad.returncode} output={p_bad.stdout + p_bad.stderr}")
 
 
+def test_guest_multisession_queue_witness_characterization() -> None:
+    """DEF-320 / REQ-037..040, REQ-195: Characterize multi-session guest queue contention and darwin native tier derivation."""
+    witness_test = ROOT / "Tests/ProctorAgentTests/GuestMultiSessionQueueWitnessTests.swift"
+    check(witness_test.is_file(), "GuestMultiSessionQueueWitnessTests.swift exists", str(witness_test))
+
+    inv = json.loads((ROOT / "docs/test-campaign/inventory.json").read_text())
+    cases = json.loads((ROOT / "docs/test-campaign/cases.json").read_text())
+
+    # Validate requirements transition to observed
+    req_map = {r["id"]: r for r in inv.get("requirement", [])}
+    for req_id in ("REQ-037", "REQ-038", "REQ-039", "REQ-040", "REQ-195"):
+        check(req_id in req_map, f"{req_id} present in inventory")
+        check(req_map[req_id].get("evidence") == "observed", f"{req_id} is marked observed")
+        check("SURF-038" in req_map[req_id].get("surfaces", []), f"{req_id} covers SURF-038")
+
+    # Validate surface SURF-038
+    surf_map = {s["id"]: s for s in inv.get("surface", [])}
+    check("SURF-038" in surf_map, "SURF-038 present in surface inventory")
+
+    # Validate defect DEF-320
+    defect_map = {d["id"]: d for d in inv.get("defect", [])}
+    check("DEF-320" in defect_map, "DEF-320 present in defect inventory")
+    check(defect_map["DEF-320"].get("status") == "fixed", "DEF-320 status is fixed")
+
+    # Validate cases CASE-0750..0754
+    case_map = {c["id"]: c for c in cases}
+    for case_id in ("CASE-0750", "CASE-0751", "CASE-0752", "CASE-0753", "CASE-0754"):
+        check(case_id in case_map, f"{case_id} present in cases.json")
+        check(case_map[case_id].get("status") == "pass", f"{case_id} status is pass")
+        check(case_map[case_id].get("armed") is True, f"{case_id} is armed with true")
+
+
 def test_reckon_brief_join_rate_and_retirement_ladder() -> None:
     """DEF-295 / REQ-170..172: reckon brief join rate reaches >= 50% without guessing, unblocking retirement ladder."""
     reckon_script = Path("/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py")
@@ -2497,6 +2529,7 @@ def main() -> int:
                test_warrant_charter_integrity,
                test_warrant_census_classes_and_surface_coverage,
                test_warrant_release_gate_and_export_verification,
+               test_guest_multisession_queue_witness_characterization,
                test_reckon_brief_join_rate_and_retirement_ladder):
         try:
             fn()
