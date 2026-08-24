@@ -3219,3 +3219,30 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 - **Unmeasured evidence work:** 27 → **26** (-1).
 - **DEF-215:** Closed (`verified-done`) with 100% standalone spec coverage across all ledger rows.
 - **BLOCK-0002 & BLOCK-0003:** Unblocked with `REQ-043` and `REQ-081` elevated to `observed`.
+
+## Wave 22 — Simulator Fixtures, VM Virtualization Runners, and Mutation Hardening (2026-08-24)
+
+**Status:** Wave 22 open on `main` · 6 items (PRO-0122..PRO-0127).
+**Berths:** 6 available (sampled via harbourmaster `berths.py`, cpu healthy, memory tight, overall tight).
+
+### Wave 22 DAG & Execution Plan
+
+- **PRO-0122 (`spec-PRO-0122.md`):** iOS Simulator Boot Fixture Harness (unblocking `BLOCK-0001` / `SURF-019`).
+- **PRO-0123 (`spec-PRO-0123.md`):** Tart and Lume Guest VM Virtualization Fixture (unblocking `BLOCK-0004` / `SURF-013`).
+- **PRO-0124 (`spec-PRO-0124.md`):** Maestro Flow Network-Isolated Step Fixture (unblocking `BLOCK-0005` / `SURF-020`).
+- **PRO-0125 (`spec-PRO-0125.md`):** ProctorAgent Mutation Survival Elimination (closing `DEF-033` / Briefs 85, 89, 90).
+- **PRO-0126 (`spec-PRO-0126.md`):** Headless Simulator Provisioning and Teardown Hook (companion to PRO-0122).
+- **PRO-0127 (`spec-PRO-0127.md`):** Guest VM Health Telemetry and Live Socket Probe (companion to PRO-0123).
+
+### Standing Gates on `main`
+
+| Gate on `main` | Exit | Reading |
+|---|:---:|---|
+| `scripts/test.sh` | **0** | **2,108 tests in 261 suites passed** (0 failures) |
+| `campaign.py check` | **0** | **Every case accounted for** (464 pass, 3 n/a, 0 inconclusive, 0 fail of 467) |
+| `strict-check.py` | **0** | **ratchet 405 held** (87% checked) |
+| `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
+| `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
+| `ledger_gate.py` | **0** | **127 ledger rows · 127 specs on disk · 0 declared without spec** |
+| `spec_citation_measure.py` | **0** | **19/19 checks passed** (119 briefs: 119 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `reckon.py check` | **0** | **926 rows reconciled**, gate clean |
