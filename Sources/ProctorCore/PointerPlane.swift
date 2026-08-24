@@ -112,3 +112,133 @@ public enum PointerPlanePolicy {
         return t == p + 1
     }
 }
+
+
+// MARK: - Window Occlusion Detection (PRO-0118 / DEF-325 / REQ-043 / REQ-200)
+
+/// An individual window entry in the WindowServer display hierarchy.
+public struct WindowOcclusionEntry: Equatable, Sendable {
+    public var windowID: UInt32
+    public var pid: Int32
+    public var bounds: Rect
+    public var layer: Int
+    public var alpha: Double
+    public var isOnScreen: Bool
+
+    public init(windowID: UInt32, pid: Int32, bounds: Rect, layer: Int = 0,
+                alpha: Double = 1.0, isOnScreen: Bool = true) {
+        self.windowID = windowID
+        self.pid = pid
+        self.bounds = bounds
+        self.layer = layer
+        self.alpha = alpha
+        self.isOnScreen = isOnScreen
+    }
+}
+
+/// The result of evaluating occlusion for a target window or point.
+public enum WindowOcclusionState: Equatable, Sendable {
+    /// Target is completely visible / unoccluded at the target coordinate.
+    case clear
+    /// Target coordinate is covered by one or more overlapping windows.
+    case pointOccluded(by: [UInt32])
+    /// Entire target window is fully covered by overlapping windows.
+    case fullyCovered(by: [UInt32])
+    /// Target window is not present on screen.
+    case notOnScreen
+
+    public var isOccluded: Bool {
+        switch self {
+        case .pointOccluded, .fullyCovered, .notOnScreen:
+            return true
+        case .clear:
+            return false
+        }
+    }
+}
+
+public enum WindowOcclusionDetector {
+
+    /// Correlates window bounds, layers, and pointer coordinates to determine occlusion.
+    ///
+    /// `windows` is the ordered list of on-screen windows (front to back as returned by WindowServer).
+    /// `targetID` is the CGWindowID of the window being actuated.
+    /// `targetPoint` is the coordinate (in screen points) where the action / cursor is directed.
+    /// `ignoring` is the set of window IDs belonging to Proctor itself (overlays, HUD) that must not
+    /// be counted as covering the target.
+    public static func evaluate(
+        targetID: UInt32,
+        targetPoint: Point? = nil,
+        windows: [WindowOcclusionEntry],
+        ignoring: Set<UInt32> = []
+    ) -> WindowOcclusionState {
+        guard let targetIndex = windows.firstIndex(where: { $0.windowID == targetID && $0.isOnScreen }) else {
+            return .notOnScreen
+        }
+        let target = windows[targetIndex]
+
+        var coveringWindows: [UInt32] = []
+        var pointCoveringWindows: [UInt32] = []
+
+        // 1. Windows stacked in front of target in Z-order
+        for window in windows[..<targetIndex] {
+            guard !ignoring.contains(window.windowID) else { continue }
+            guard window.isOnScreen && window.alpha > 0.05 else { continue }
+            guard window.layer >= target.layer else { continue }
+
+            if rectsIntersect(target.bounds, window.bounds) {
+                coveringWindows.append(window.windowID)
+            }
+
+            if let pt = targetPoint, pointInside(pt, rect: window.bounds) {
+                pointCoveringWindows.append(window.windowID)
+            }
+        }
+
+        if !pointCoveringWindows.isEmpty {
+            return .pointOccluded(by: pointCoveringWindows)
+        }
+
+        // 2. Higher layer windows (e.g. modal panels, system alerts) even if later in list
+        for window in windows[targetIndex...] {
+            guard !ignoring.contains(window.windowID) else { continue }
+            guard window.isOnScreen && window.alpha > 0.05 else { continue }
+            if window.layer > target.layer {
+                if let pt = targetPoint, pointInside(pt, rect: window.bounds) {
+                    return .pointOccluded(by: [window.windowID])
+                }
+                if rectsIntersect(target.bounds, window.bounds) {
+                    coveringWindows.append(window.windowID)
+                }
+            }
+        }
+
+        if !coveringWindows.isEmpty {
+            for cid in coveringWindows {
+                if let cw = windows.first(where: { $0.windowID == cid }),
+                   rectEncloses(container: cw.bounds, enclosed: target.bounds) {
+                    return .fullyCovered(by: [cid])
+                }
+            }
+        }
+
+        return .clear
+    }
+
+    public static func rectsIntersect(_ r1: Rect, _ r2: Rect) -> Bool {
+        !(r1.x + r1.w <= r2.x || r2.x + r2.w <= r1.x ||
+          r1.y + r1.h <= r2.y || r2.y + r2.h <= r1.y)
+    }
+
+    public static func pointInside(_ p: Point, rect r: Rect) -> Bool {
+        p.x >= r.x && p.x <= r.x + r.w &&
+        p.y >= r.y && p.y <= r.y + r.h
+    }
+
+    public static func rectEncloses(container: Rect, enclosed: Rect) -> Bool {
+        container.x <= enclosed.x &&
+        container.y <= enclosed.y &&
+        container.x + container.w >= enclosed.x + enclosed.w &&
+        container.y + container.h >= enclosed.y + enclosed.h
+    }
+}

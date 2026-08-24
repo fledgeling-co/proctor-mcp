@@ -59,7 +59,8 @@ extension Session {
         // belief about another process that Proctor never observes.
         guard owner == .proctor else { return }
         guard CursorOverlay.isEnabled else { return }
-        let plane = cursorPlane(for: window)
+        let target = cursorTarget(for: step)
+        let plane = cursorPlane(for: window, at: target)
 
         if step.kind == .dragPath {
             let route = cursorRoute(for: step)
@@ -78,16 +79,44 @@ extension Session {
         }
     }
 
-    /// Where this window's pointer belongs, from the window list rather than
-    /// from accessibility. A window that is minimised, hidden, or on another
-    /// Space is absent from the on-screen list, and all three mean the same
-    /// thing: there is nothing in front of anybody for this pointer to annotate.
-    /// `WindowHandle.isMinimized` and `isOnActiveSpace` are beliefs recorded
-    /// when the handle was made; the list is the instrument.
-    func cursorPlane(for window: WindowHandle) -> PointerPlane {
-        let onScreen = CGWindowIndex.records(option: .optionOnScreenOnly)
-            .contains { $0.number == window.cgWindowID }
-        return PointerPlanePolicy.decide(targetWindowID: window.cgWindowID,
+    /// Where this window's pointer belongs, correlating CGWindowList bounds,
+    /// layers, and pointer coordinates. An occluded window or target point
+    /// resolves to `.hidden` so no pointer is drawn over a window the person
+    /// cannot see.
+    func cursorPlane(for window: WindowHandle, at point: CGPoint? = nil) -> PointerPlane {
+        guard let windowID = window.cgWindowID else {
+            return .hidden
+        }
+        let records = CGWindowIndex.records(option: .optionOnScreenOnly)
+        let onScreen = records.contains { $0.number == windowID }
+        guard onScreen else { return .hidden }
+
+        let windowEntries = records.map {
+            WindowOcclusionEntry(
+                windowID: $0.number,
+                pid: $0.pid,
+                bounds: Rect(x: Double($0.bounds.origin.x),
+                             y: Double($0.bounds.origin.y),
+                             w: Double($0.bounds.size.width),
+                             h: Double($0.bounds.size.height)),
+                layer: $0.layer,
+                alpha: 1.0,
+                isOnScreen: true
+            )
+        }
+
+        let occlusion = WindowOcclusionDetector.evaluate(
+            targetID: windowID,
+            targetPoint: point.map { Point(x: Double($0.x), y: Double($0.y)) },
+            windows: windowEntries,
+            ignoring: []
+        )
+
+        if occlusion.isOccluded {
+            return .hidden
+        }
+
+        return PointerPlanePolicy.decide(targetWindowID: windowID,
                                          targetIsOnScreen: onScreen)
     }
 

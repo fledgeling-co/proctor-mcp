@@ -1,7 +1,7 @@
 # PRO-0118: Covered-Target Cursor Plane Witness
 
 **ID:** PRO-0118
-**Status:** Ready for Plan
+**Status:** Merged
 **Created:** 2026-08-24
 **Last updated:** 2026-08-24
 **Brief:** `docs/features-to-triage/110-covered-target-cursor-plane-witness.md`
@@ -17,6 +17,6 @@ Provide an independent window-server layer witness that correlates CGWindowList 
 - CASE-0087 transitions from inconclusive to observed with a deterministic test witness.
 - BLOCK-0002 is unblocked in reckon reports.
 
-## Assumptions made writing this
+## Defects
 
-- Assuming window occlusion calculations use CoreGraphics `CGWindowListCopyWindowInfo` without private APIs.
+DEF-325.

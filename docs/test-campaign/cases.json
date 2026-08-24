@@ -8078,5 +8078,42 @@
     "defects": [
       "DEF-310"
     ]
+  },
+  {
+    "id": "CASE-0760",
+    "req": "REQ-043",
+    "surface": "SURF-039",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "scripts/campaign/window_occlusion_witness.py Scenario 2: target point occluded by overlapping front window suppresses drawn pointer and records hold reason.",
+    "note": "WindowServer occlusion evaluation suppresses pointer rendering over occluded target windows. PRO-0118.",
+    "witness": {
+      "recorder": "scripts/campaign/window_occlusion_witness.py: window occlusion truth table evaluation",
+      "effect": "none"
+    }
+  },
+  {
+    "id": "CASE-0761",
+    "req": "REQ-200",
+    "surface": "SURF-039",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "CoveredTargetOcclusionWitnessTests.targetOcclusionSuppressesPointer: verifies PointerPlane.evaluateOcclusion returns .pointOccluded.",
+    "note": "PointerPlane evaluates window levels, bounds, and occlusion geometry across CGWindowList entries. PRO-0118."
+  },
+  {
+    "id": "CASE-0762",
+    "req": "REQ-200",
+    "surface": "SURF-039",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "CoveredTargetOcclusionWitnessTests.selfOverlayPanelsIgnored: verifies Proctor overlay windows do not cause self-occlusion.",
+    "note": "Proctor overlays (Run HUD, Takeover Shield, Pointer Panel) are filtered from occlusion candidates. PRO-0118."
   }
 ]

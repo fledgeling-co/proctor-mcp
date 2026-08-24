@@ -2491,6 +2491,18 @@ def test_reckon_brief_join_rate_and_retirement_ladder() -> None:
           f"class={guess_brief_row['class']} why={guess_brief_row['why']}")
 
 
+
+
+def test_window_occlusion_witness_characterization() -> None:
+    """DEF-325 / REQ-043 / REQ-200: standing check that window occlusion detector evaluates geometry cleanly."""
+    script = ROOT / "scripts/campaign/window_occlusion_witness.py"
+    check(script.is_file(), "window_occlusion_witness.py exists", str(script))
+    res = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(res.returncode == 0, "window_occlusion_witness.py exits 0 on all 6 scenarios", res.stderr or res.stdout)
+    mod = load(script, "window_occlusion_witness")
+    results = mod.verify_all_scenarios()
+    check(len(results) == 6 and all(ok for _, ok, _ in results), "window_occlusion_witness truth table passes all 6 scenarios")
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,

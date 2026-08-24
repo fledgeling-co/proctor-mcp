@@ -230,6 +230,13 @@ public struct Rect: Codable, Sendable, Hashable {
     }
 }
 
+public struct Point: Codable, Sendable, Hashable {
+    public var x: Double, y: Double
+    public init(x: Double, y: Double) {
+        self.x = x; self.y = y
+    }
+}
+
 // MARK: - The accessibility tree
 
 /// How the tree was obtained, because for Chromium/Electron apps it is negotiated

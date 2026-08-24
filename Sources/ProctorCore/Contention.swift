@@ -54,6 +54,7 @@ public enum YieldReason: String, Codable, Sendable, CaseIterable {
     case secureInput
     case userInput
     case frontmostChanged
+    case targetOccluded
 
     /// The panel's one line. One size, one row, in the settled vocabulary: a
     /// person using their own Mac is not a fault and is not worded as one.
@@ -62,6 +63,7 @@ public enum YieldReason: String, Codable, Sendable, CaseIterable {
         case .secureInput: return "Paused — secure keyboard entry is on"
         case .userInput: return "Paused — you used the keyboard or mouse"
         case .frontmostChanged: return "Paused — you moved to another app"
+        case .targetOccluded: return "Paused — target window is occluded"
         }
     }
 
@@ -77,6 +79,9 @@ public enum YieldReason: String, Codable, Sendable, CaseIterable {
         case .frontmostChanged:
             return "the run was held because the application Proctor brought to the front is no "
                  + "longer in front"
+        case .targetOccluded:
+            return "the run was held because the target window is occluded by another application "
+                 + "or modal panel"
         }
     }
 }
@@ -119,11 +124,13 @@ public struct ContentionSample: Sendable, Equatable {
     /// An age that expires unread is a signal that was never delivered, so the
     /// arrival is carried as a flag until something reads it.
     public var userInputSince: Bool
+    public var targetOccluded: Bool
     public var now: Double
 
     public init(expectedPid: Int32? = nil, frontmostPid: Int32? = nil,
                 proctorPids: Set<Int32> = [], secureInput: Bool = false,
                 lastUserInputAt: Double? = nil, userInputSince: Bool = false,
+                targetOccluded: Bool = false,
                 now: Double = 0) {
         self.expectedPid = expectedPid
         self.frontmostPid = frontmostPid
@@ -131,6 +138,7 @@ public struct ContentionSample: Sendable, Equatable {
         self.secureInput = secureInput
         self.lastUserInputAt = lastUserInputAt
         self.userInputSince = userInputSince
+        self.targetOccluded = targetOccluded
         self.now = now
     }
 }
@@ -202,6 +210,7 @@ public struct ContentionWatch: Sendable, Equatable {
         // without parking the run on evidence that has gone cold.
         if s.userInputSince { out.insert(.userInput) }
         if let last = s.lastUserInputAt, s.now - last < inputWindow { out.insert(.userInput) }
+        if s.targetOccluded { out.insert(.targetOccluded) }
         // Four things must all be true, and each removes a way for Proctor to
         // pause itself. There has to be an app Proctor demonstrably put in
         // front; it has to have actually been in front at some point, or there

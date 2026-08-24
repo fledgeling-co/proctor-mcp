@@ -50,7 +50,7 @@ tier = 0
 escalation = "owner"
 census = true
 plane = "oracle"
-surfaces = ["core://tools", "tool://reckon/*", "tool://reckoning/*", "tool://vacuity-check/*", "tool://mutate-swift/*", "tool://spec-citation/*", "tool://warrant/*", "tool://boundary-audit/*", "tool://reckon-join/*", "tool://actuation/*", "tool://inspection/*", "tool://tui-pty/*", "tool://menubar-hierarchy/*", "SURF-*"]
+surfaces = ["core://tools", "tool://reckon/*", "tool://reckoning/*", "tool://vacuity-check/*", "tool://mutate-swift/*", "tool://spec-citation/*", "tool://warrant/*", "tool://boundary-audit/*", "tool://reckon-join/*", "tool://actuation/*", "tool://cursor-plane/*", "tool://inspection/*", "tool://tui-pty/*", "tool://menubar-hierarchy/*", "SURF-*"]
 
 # what a surface draws disagrees with its design of record, or with the value
 # the code says it renders. Includes a branch nothing can reach and a control
@@ -72,7 +72,7 @@ tier = 0
 escalation = "owner"
 census = false
 plane = "oracle"
-surfaces = ["engine://screen-capture", "engine://zoom", "tool://capture-lineage/*"]
+surfaces = ["engine://screen-capture", "engine://zoom", "tool://capture-lineage/*", "cgwindow://*"]
 
 # the product or its own suite touching the state of the machine it runs on —
 # the operator's policy, settings, captures or flows. Found three separate
