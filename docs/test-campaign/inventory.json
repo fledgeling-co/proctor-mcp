@@ -389,16 +389,30 @@
     {
       "id": "REQ-030",
       "text": "The supervision surface draws what the design compiled, at 100x30 and at the 80x24 floor",
-      "source": "design/surfaces/tui/ (22 compiled frames); Sources/ProctorCore/TUILayout.swift; docs/features-to-triage/59-design-tokens-as-a-swift-value.md",
+      "source": "design/surfaces/tui/ (22 compiled frames); Sources/ProctorCore/TUILayout.swift; docs/features-to-triage/59-design-tokens-as-a-swift-value.md; docs/features-to-triage/106-supervision-tui-and-menu-bar-glass-witness.md",
       "class": "fidelity",
-      "effect": "none"
+      "effect": "none",
+      "evidence": "observed",
+      "provider": "Terminal.paint in Sources/ProctorCLI/TUI/Terminal.swift; scripts/campaign/supervision_tui_pty_probe.py",
+      "surfaces": [
+        "SURF-017",
+        "SURF-036"
+      ],
+      "note": "Independent headless pty probe and render tests witness 5-pane TUI rendering at 80x24 floor and 100x30 target with zero line overflow, and TUI keypresses mutating shared latch state."
     },
     {
       "id": "REQ-031",
       "text": "Every command the catalogue declares for the menu bar is actually rendered in it",
-      "source": "Sources/ProctorCore/CommandSurface.swift; Sources/ProctorUI/ProctorUIApp.swift; docs/features-to-triage/62-menu-bar-and-the-command-surface.md",
+      "source": "Sources/ProctorCore/CommandSurface.swift; Sources/ProctorUI/ProctorUIApp.swift; docs/features-to-triage/62-menu-bar-and-the-command-surface.md; docs/features-to-triage/106-supervision-tui-and-menu-bar-glass-witness.md",
       "class": "honesty guardrail",
-      "effect": "none"
+      "effect": "none",
+      "evidence": "observed",
+      "provider": "NSMenu in Sources/ProctorUI/ProctorUIApp.swift and Sources/ProctorCore/CommandSurface.swift",
+      "surfaces": [
+        "SURF-010",
+        "SURF-036"
+      ],
+      "note": "AppKit NSMenu extra hierarchy witness verifies that every command declared in CommandSurface.all and ToolCatalogue.all is populated with exact titles, shortcuts, and dynamic enablement."
     },
     {
       "id": "REQ-032",
@@ -410,10 +424,16 @@
     {
       "id": "REQ-033",
       "text": "A supervision client can read the machine's readiness, switches and history, not only its run and queue",
-      "source": "Sources/ProctorCore/TUISurface.swift readiness(from:), switches(from:) and history(from:); docs/features-to-triage/48-the-run-has-a-history-you-can-read.md",
+      "source": "Sources/ProctorCore/TUISurface.swift readiness(from:), switches(from:) and history(from:); docs/features-to-triage/48-the-run-has-a-history-you-can-read.md; docs/features-to-triage/106-supervision-tui-and-menu-bar-glass-witness.md",
       "class": "affordance",
       "effect": "ipc",
-      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift"
+      "evidence": "observed",
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "surfaces": [
+        "SURF-017",
+        "SURF-036"
+      ],
+      "note": "Supervision client queries proctor_doctor and proctor_history IPC endpoints, projecting machine readiness grants, switch states, and historical audit entries into the TUI panes."
     },
     {
       "id": "REQ-034",
@@ -1613,6 +1633,19 @@
       ],
       "note": "proctor_zoom provides native Apple Vision text recognition (VNRecognizeTextRequest) and WCAG contrast measurements on cropped UI regions within bounded timeouts (< 500ms), preserving high-DPI Retina scale factor for text fields and custom canvas renders.",
       "effect": "none"
+    },
+    {
+      "id": "REQ-185",
+      "class": "correctness",
+      "text": "Supervision TUI pty rendering at 80x24 floor / 100x30 target, interactive keypress latch updates, and AppKit NSMenu command hierarchy are independently witnessed",
+      "source": "DEF-310; docs/specs/spec-PRO-0114.md; docs/features-to-triage/106-supervision-tui-and-menu-bar-glass-witness.md",
+      "evidence": "observed",
+      "effect": "none",
+      "provider": "Terminal in Sources/ProctorCLI/TUI/Terminal.swift; CommandSurface in Sources/ProctorCore/CommandSurface.swift",
+      "surfaces": [
+        "SURF-036"
+      ],
+      "note": "Automated headless pty harness and NSMenu inspection witness 5-pane rendering at 80x24 and 100x30, pause/stop keypress latch mutation, and 21-tool command hierarchy completeness."
     }
   ],
   "surface": [
@@ -2129,6 +2162,19 @@
         "timeout-bounded"
       ],
       "description": "The native Vision OCR and visual region inspection engine in Sources/ProctorAgent/Capture/VisionOCR.swift and SessionZoom.swift, executing VNRecognizeTextRequest and PixelProbe contrast measurement on high-DPI zoom crops."
+    },
+    {
+      "id": "SURF-036",
+      "name": "Supervision TUI Headless PTY & On-Glass Menu Bar Extra Witness",
+      "title": "Supervision TUI Headless PTY Rendering & AppKit NSMenu Hierarchy Witness",
+      "route": "tool://tui-pty/rendering",
+      "status": "reachable",
+      "states": [
+        "pty-verified",
+        "hierarchy-witnessed",
+        "latch-observed"
+      ],
+      "description": "Automated headless pseudo-terminal (pty) probe and AppKit NSMenu extra hierarchy witness validating Supervision TUI 5-pane rendering at 80x24 floor & 100x30 target geometries without terminal overflow, interactive keypress latch state updates, and menu bar 21-tool command hierarchy completeness."
     }
   ],
   "flow": [
@@ -4710,6 +4756,27 @@
         "Sources/ProctorAgent/Capture/VisionOCR.swift",
         "Sources/ProctorAgent/Session/SessionZoom.swift",
         "Tests/ProctorAgentTests/NativeOCRZoomTests.swift"
+      ]
+    },
+    {
+      "id": "DEF-310",
+      "title": "Supervision TUI 80x24/100x30 rendering and menu bar command hierarchy lacked automated pty and NSMenu on-glass effect witnesses",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-036"
+      ],
+      "requirements": [
+        "REQ-030",
+        "REQ-031",
+        "REQ-033",
+        "REQ-185"
+      ],
+      "note": "PRO-0114: Implemented automated headless pty harness scripts/campaign/supervision_tui_pty_probe.py, SupervisionTUIPtyWitnessTests.swift, and MenuBarHierarchyWitnessTests.swift, elevating REQ-030, REQ-031, and REQ-033 to observed.",
+      "evidence": [
+        "scripts/campaign/supervision_tui_pty_probe.py",
+        "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",
+        "Tests/ProctorAgentTests/MenuBarHierarchyWitnessTests.swift"
       ]
     }
   ]

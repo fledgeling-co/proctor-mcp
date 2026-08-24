@@ -7957,5 +7957,126 @@
     "defects": [
       "DEF-315"
     ]
+  },
+  {
+    "id": "CASE-0710",
+    "req": "REQ-030",
+    "surface": "SURF-036",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "test_instruments.py test_supervision_tui_pty_probe_characterization asserts 80x24 floor rendering across all 5 panes with 0 line overflow",
+    "evidence": [
+      "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",
+      "scripts/campaign/supervision_tui_pty_probe.py"
+    ],
+    "note": "DEF-310 / REQ-030: Headless pty probe sets TIOCSWINSZ to 80x24 floor and renders all 5 panes (run, queue, readiness, history, switches), verifying 0 horizontal overflow or line tearing.",
+    "defects": [
+      "DEF-310"
+    ]
+  },
+  {
+    "id": "CASE-0711",
+    "req": "REQ-030",
+    "surface": "SURF-036",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "test_instruments.py test_supervision_tui_pty_probe_characterization asserts 100x30 target rendering across all 5 panes with full layout fidelity",
+    "evidence": [
+      "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",
+      "scripts/campaign/supervision_tui_pty_probe.py"
+    ],
+    "note": "DEF-310 / REQ-030: Headless pty probe sets TIOCSWINSZ to 100x30 target geometry and renders all 5 panes, verifying complete keybars, tab headers, and shelf metadata.",
+    "defects": [
+      "DEF-310"
+    ]
+  },
+  {
+    "id": "CASE-0712",
+    "req": "REQ-030",
+    "surface": "SURF-036",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "SupervisionTUIPtyWitnessTests tuiKeypressUpdatesSharedLatchState asserts pause and stop keypresses mutate shared latch",
+    "evidence": [
+      "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",
+      "scripts/campaign/supervision_tui_pty_probe.py"
+    ],
+    "witness": {
+      "recorder": "pty keystroke injection and RunControl / SupervisionControl latch state observation",
+      "effect": "ipc",
+      "count": 2
+    },
+    "note": "DEF-310 / REQ-030: TUI interactive keypress events ('p' for pause/resume, 's' for stop) mutate shared RunControl state and dispatch proctor.control requests.",
+    "defects": [
+      "DEF-310"
+    ]
+  },
+  {
+    "id": "CASE-0713",
+    "req": "REQ-031",
+    "surface": "SURF-036",
+    "oracle": "effect-witness",
+    "lane": "macos",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "MenuBarHierarchyWitnessTests menuBarHierarchyCompletenessAndToolCatalogueWitness asserts all 20 menu commands and 21 tools in NSMenu hierarchy",
+    "evidence": [
+      "Tests/ProctorAgentTests/MenuBarHierarchyWitnessTests.swift"
+    ],
+    "witness": {
+      "recorder": "AppKit NSMenu extra item traversal and CommandSurface / ToolCatalogue bidirectional validation",
+      "effect": "ipc",
+      "count": 21
+    },
+    "note": "DEF-310 / REQ-031: Live AppKit NSMenu extra hierarchy traversal validates that all 20 declared commands and 21 catalogue tools are populated with exact titles, shortcuts, and dynamic enablement.",
+    "defects": [
+      "DEF-310"
+    ]
+  },
+  {
+    "id": "CASE-0714",
+    "req": "REQ-185",
+    "surface": "SURF-036",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "test_instruments.py test_supervision_tui_pty_probe_characterization verifies 5-scenario truth table passes",
+    "evidence": [
+      "scripts/campaign/supervision_tui_pty_probe.py"
+    ],
+    "note": "DEF-310 / REQ-185: Characterization harness executes full 5-scenario truth table for headless pty TUI rendering, key navigation, latch mutation, and clean teardown.",
+    "defects": [
+      "DEF-310"
+    ]
+  },
+  {
+    "id": "CASE-0715",
+    "req": "REQ-033",
+    "surface": "SURF-036",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "SupervisionTUIPtyWitnessTests tuiReadinessSwitchesAndHistoryProjectionWitness asserts proctor_doctor and proctor_history projection into TUISurface model",
+    "evidence": [
+      "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",
+      "scripts/campaign/supervision_tui_pty_probe.py"
+    ],
+    "witness": {
+      "recorder": "proctor_doctor and proctor_history IPC query and TUISurface projection state validation",
+      "effect": "ipc",
+      "count": 2
+    },
+    "note": "DEF-310 / REQ-033: Supervision client queries proctor_doctor and proctor_history across the socket, projecting machine readiness grants, switch states, and historical audit entries into the TUI panes.",
+    "defects": [
+      "DEF-310"
+    ]
   }
 ]

@@ -51,6 +51,7 @@ escalation = "owner"
 census = true
 plane = "oracle"
 surfaces = ["core://tools", "tool://reckon/*", "tool://reckoning/*", "tool://vacuity-check/*", "tool://mutate-swift/*", "tool://spec-citation/*", "tool://warrant/*", "tool://boundary-audit/*", "tool://reckon-join/*", "tool://actuation/*", "tool://inspection/*", "SURF-*"]
+surfaces = ["core://tools", "tool://reckon/*", "tool://reckoning/*", "tool://vacuity-check/*", "tool://mutate-swift/*", "tool://spec-citation/*", "tool://warrant/*", "tool://boundary-audit/*", "tool://reckon-join/*", "tool://actuation/*", "tool://tui-pty/*", "tool://menubar-hierarchy/*", "SURF-*"]
 
 # what a surface draws disagrees with its design of record, or with the value
 # the code says it renders. Includes a branch nothing can reach and a control

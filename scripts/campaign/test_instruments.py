@@ -2166,6 +2166,16 @@ def test_subprocess_witness_characterization() -> None:
     check(len(results) == 5 and all(r.passed for r in results), "subprocess_witness truth table passes all 5 assertions")
 
 
+def test_supervision_tui_pty_probe_characterization() -> None:
+    """DEF-310 / REQ-030 / REQ-185: Characterize supervision TUI headless pty rendering, geometry bounds, and latch state mutation."""
+    script = ROOT / "scripts/campaign/supervision_tui_pty_probe.py"
+    res = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(res.returncode == 0, "supervision_tui_pty_probe.py exits 0 on truth table verification", res.stderr or res.stdout)
+    mod = load(script, "supervision_tui_pty_probe")
+    results = mod.verify_tui_pty_truth_table()
+    check(len(results) == 5 and all(r.passed for r in results), "supervision_tui_pty_probe truth table passes all 5 assertions")
+
+
 def test_dynamic_grant_probe_characterization() -> None:
     """DEF-180 / REQ-162: Characterize dynamic TCC grant re-probe lifecycle and invalidation."""
     script = ROOT / "scripts/campaign/dynamic_grant_probe.py"
@@ -2525,6 +2535,7 @@ def main() -> int:
                test_plugin_cache_content_check,
                test_hardware_yield_probe_characterization,
                test_subprocess_witness_characterization,
+               test_supervision_tui_pty_probe_characterization,
                test_dynamic_grant_probe_characterization,
                test_warrant_charter_integrity,
                test_warrant_census_classes_and_surface_coverage,
