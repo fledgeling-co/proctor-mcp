@@ -2503,6 +2503,26 @@ def test_window_occlusion_witness_characterization() -> None:
     results = mod.verify_all_scenarios()
     check(len(results) == 6 and all(ok for _, ok, _ in results), "window_occlusion_witness truth table passes all 6 scenarios")
 
+
+
+def test_cross_automation_yield_witness() -> None:
+    """DEF-335 / REQ-081: standing check for cross-automation stack yield witness."""
+    script = ROOT / "scripts/campaign/cross_automation_yield_witness.py"
+    check(script.is_file(), "cross_automation_yield_witness.py exists", str(script))
+    res = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(res.returncode == 0, "cross_automation_yield_witness.py exits 0 on all scenarios", res.stderr or res.stdout)
+    mod = load(script, "cross_automation_yield_witness")
+    results = mod.verify_all_scenarios() if hasattr(mod, 'verify_all_scenarios') else mod.evaluate_cross_automation_yield()
+    check(len(results) == 3 and all(ok for _, ok, _ in results), "cross_automation_yield_witness passes all 3 scenarios")
+
+
+def test_brief_108_retirement_verification() -> None:
+    """PRO-0121 / REQ-215: standing check that Brief 108 is marked retired citing spec-PRO-0116.md."""
+    brief = ROOT / "docs/features-to-triage/108-native-ocr-and-high-dpi-zoom-inspector.md"
+    check(brief.is_file(), "brief 108 exists", str(brief))
+    text = brief.read_text(encoding="utf-8")
+    check("status: retired" in text and "spec-PRO-0116.md" in text, "brief 108 is marked retired citing spec-PRO-0116.md", text[:200])
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,

@@ -853,7 +853,9 @@
         "SURF-005",
         "SURF-004"
       ],
-      "provider": "ContentionSample.userInputSince and ContentionWatch.conditions in Sources/ProctorCore/Contention.swift; ContentionMonitor.sample; the probe after the last step in Sources/ProctorAgent/Session/SessionAct.swift"
+      "provider": "ContentionSample.userInputSince and ContentionWatch.conditions in Sources/ProctorCore/Contention.swift; ContentionMonitor.sample; the probe after the last step in Sources/ProctorAgent/Session/SessionAct.swift",
+      "evidence": "observed",
+      "note": " ELEVATED 2026-08-24: verified by cross_automation_yield_witness.py. PRO-0120."
     },
     {
       "id": "REQ-082",
@@ -1658,6 +1660,26 @@
         "SURF-039"
       ],
       "note": "PRO-0118."
+    },
+    {
+      "id": "REQ-210",
+      "text": "ContentionMonitor detects external automation mode and records yield hold reasons across external automation stacks.",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-041"
+      ],
+      "note": "PRO-0120."
+    },
+    {
+      "id": "REQ-215",
+      "text": "Brief 108 Native OCR & High-DPI Visual Region Inspector is formally retired in favor of merged PRO-0116.",
+      "class": "behaviour",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-042"
+      ],
+      "note": "PRO-0121."
     }
   ],
   "surface": [
@@ -2199,6 +2221,28 @@
         "point_occluded",
         "window_occluded",
         "unwitnessed"
+      ]
+    },
+    {
+      "id": "SURF-041",
+      "name": "Cross-Automation Yield & Takeover Witness",
+      "title": "External Automation Stack Yield & Disclosure Witness",
+      "route": "tool://automation-yield/cross-stack",
+      "status": "reachable",
+      "states": [
+        "idle",
+        "yield_recorded",
+        "automation_mode_active"
+      ]
+    },
+    {
+      "id": "SURF-042",
+      "name": "Brief 108 Retirement Bookkeeping",
+      "title": "Retirement Registry for Brief 108",
+      "route": "tool://bookkeeping/brief-108-retirement",
+      "status": "reachable",
+      "states": [
+        "retired"
       ]
     }
   ],
@@ -4824,6 +4868,20 @@
         "REQ-200"
       ],
       "note": "Resolved by window_occlusion_witness.py and CoveredTargetOcclusionWitnessTests. PRO-0118."
+    },
+    {
+      "id": "DEF-335",
+      "title": "BLOCK-0003 due to uninstrumented cross-automation stack yield reporting",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-041"
+      ],
+      "requirements": [
+        "REQ-081",
+        "REQ-210"
+      ],
+      "note": "Resolved by cross_automation_yield_witness.py and ContentionMonitor. PRO-0120."
     }
   ]
 }

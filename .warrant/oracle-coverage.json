@@ -11,13 +11,13 @@
    "total": 44
   },
   "evidence-integrity": {
-   "coverage": 0.904,
-   "covered": 179,
+   "coverage": 0.905,
+   "covered": 181,
    "green": false,
    "lineage_gaps": 19,
-   "surfaces_matched": 14,
+   "surfaces_matched": 16,
    "threshold": 1.0,
-   "total": 198
+   "total": 200
   },
   "operator-state": {
    "coverage": 0.9444,
@@ -65,7 +65,7 @@
    "total": 115
   }
  },
- "generated_at": "2026-08-24T05:14:14.375051+00:00",
+ "generated_at": "2026-08-24T05:14:37.176999+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -175,6 +175,18 @@
    "figures": 3,
    "file": "tool://actuation/cua-subprocess",
    "sourced": 3,
+   "unsourced": 0
+  },
+  {
+   "figures": 1,
+   "file": "tool://automation-yield/cross-stack",
+   "sourced": 1,
+   "unsourced": 0
+  },
+  {
+   "figures": 1,
+   "file": "tool://bookkeeping/brief-108-retirement",
+   "sourced": 1,
    "unsourced": 0
   },
   {

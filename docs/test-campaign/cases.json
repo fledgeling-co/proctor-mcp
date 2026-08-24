@@ -8115,5 +8115,31 @@
     "armed": true,
     "armedBy": "CoveredTargetOcclusionWitnessTests.selfOverlayPanelsIgnored: verifies Proctor overlay windows do not cause self-occlusion.",
     "note": "Proctor overlays (Run HUD, Takeover Shield, Pointer Panel) are filtered from occlusion candidates. PRO-0118."
+  },
+  {
+    "id": "CASE-0780",
+    "req": "REQ-081",
+    "surface": "SURF-041",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "scripts/campaign/cross_automation_yield_witness.py: evaluates yield and hold attribution across external automation mode and CUA contention.",
+    "note": "Yield records capture holding duration and automation mode state. PRO-0120.",
+    "witness": {
+      "recorder": "scripts/campaign/cross_automation_yield_witness.py: cross automation stack yield witness",
+      "effect": "none"
+    }
+  },
+  {
+    "id": "CASE-0790",
+    "req": "REQ-215",
+    "surface": "SURF-042",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "test_instruments.py test_brief_108_retirement_verification: verifies Brief 108 is marked retired citing spec-PRO-0116.md.",
+    "note": "Bookkeeping loop closed for retired Brief 108. PRO-0121."
   }
 ]

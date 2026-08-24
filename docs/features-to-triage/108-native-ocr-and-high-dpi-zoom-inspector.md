@@ -7,6 +7,8 @@ sources: [SURF-015, REQ-001]
 - audience: models verifying small UI elements, text labels, and canvas renders
 - platforms: mac
 - proposed-by-ai: true
+status: retired
+superseded-by: docs/specs/spec-PRO-0116.md
 
 ## What and why
 `proctor_zoom` provides native-resolution region crops from ScreenCaptureKit frames. Extending the zoom capability to include optional native Vision-framework text recognition (OCR) and high-DPI contrast checks allows models to verify rendered text inside custom canvas views or non-standard AppKit controls where the accessibility tree is unavailable or unpopulated.
