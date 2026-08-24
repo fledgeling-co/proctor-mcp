@@ -3298,3 +3298,29 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `ledger_gate.py` | **0** | **137 ledger rows · 137 specs on disk · 0 declared without spec** |
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (129 briefs: 129 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | **939 rows reconciled**, gate clean |
+
+## Wave 25 — Mutation Hardening, Direction Validation & Process Chaos Fixtures (2026-08-24)
+
+**Status:** Wave 25 open on `main` · 5 items (PRO-0138..PRO-0142).
+**Berths:** 6 available (sampled via harbourmaster `berths.py`, cpu healthy, memory tight, overall tight).
+
+### Wave 25 DAG & Execution Plan
+
+- **PRO-0138 (`spec-PRO-0138.md`):** ProctorAgent Mutation Hardening and Boundary Sweep (eliminating mutant survivals for `DEF-033`).
+- **PRO-0139 (`spec-PRO-0139.md`):** Legacy Direction Briefs Specification Validation (resolving undecided direction briefs).
+- **PRO-0140 (`spec-PRO-0140.md`):** Hermetic Multi-Process Chaos and Recovery Fixture (unblocking process isolation gaps).
+- **PRO-0141 (`spec-PRO-0141.md`):** Process Lifecycle Chaos and Recovery Harness (companion to PRO-0140).
+- **PRO-0142 (`spec-PRO-0142.md`):** Automated Mutation Survival Benchmark Reporter (companion to PRO-0138).
+
+### Standing Gates on `main`
+
+| Gate on `main` | Exit | Reading |
+|---|:---:|---|
+| `scripts/test.sh` | **0** | **2,117 tests in 264 suites passed** (0 failures) |
+| `campaign.py check` | **0** | **Every case accounted for** (464 pass, 3 n/a, 0 inconclusive, 0 fail of 467) |
+| `strict-check.py` | **0** | **ratchet 405 held** (87% checked) |
+| `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
+| `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
+| `ledger_gate.py` | **0** | **142 ledger rows · 142 specs on disk · 0 declared without spec** |
+| `spec_citation_measure.py` | **0** | **19/19 checks passed** (134 briefs: 134 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `reckon.py check` | **0** | **947 rows reconciled**, gate clean |

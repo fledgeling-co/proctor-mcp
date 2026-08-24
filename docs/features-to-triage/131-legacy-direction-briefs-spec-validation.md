@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-025, REQ-001]
-status: to-triage
+status: retired
 ---
 # Legacy Direction Briefs Specification Validation
 

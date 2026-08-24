@@ -147,3 +147,8 @@
 | PRO-0135 | Operator State and Capture Trust Figure Sourcing | 2026-08-24 | Ready for AI |
 | PRO-0136 | Automated Continuous Spec-Validation Runner | 2026-08-24 | Ready for AI |
 | PRO-0137 | Warrant Assurance Tier Dashboard Exporter | 2026-08-24 | Ready for AI |
+| PRO-0138 | ProctorAgent Mutation Hardening and Boundary Sweep | 2026-08-24 | Ready for AI |
+| PRO-0139 | Legacy Direction Briefs Specification Validation | 2026-08-24 | Ready for AI |
+| PRO-0140 | Hermetic Multi-Process Chaos and Recovery Fixture | 2026-08-24 | Ready for AI |
+| PRO-0141 | Process Lifecycle Chaos and Recovery Harness | 2026-08-24 | Ready for AI |
+| PRO-0142 | Automated Mutation Survival Benchmark Reporter | 2026-08-24 | Ready for AI |

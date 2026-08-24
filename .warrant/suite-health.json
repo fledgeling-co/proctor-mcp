@@ -6,7 +6,7 @@
  "campaign_gate_clear": true,
  "cases": 467,
  "effect_rung_passes": 421,
- "generated_at": "2026-08-24T11:44:56.486939+00:00",
+ "generated_at": "2026-08-24T12:07:32.250522+00:00",
  "inconclusive": 0,
  "mutation_measured": false,
  "note": "armed_ratio is passes watched to fail over passes; an unarmed pass is not known to bite. `green` is not set here: in warrant it means the mutation score is holding, and this plugin does not measure mutation survival. Run warrant:assay for that number.",

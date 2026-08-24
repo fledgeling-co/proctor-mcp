@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-012, REQ-079, REQ-080]
-status: to-triage
+status: retired
 ---
 # Hermetic Multi-Process Chaos and Recovery Fixture
 

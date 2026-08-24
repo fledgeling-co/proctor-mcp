@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-026, DEF-033, REQ-067]
-status: to-triage
+status: retired
 ---
 # ProctorAgent Mutation Hardening and Boundary Sweep
 

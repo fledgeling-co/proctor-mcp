@@ -5,30 +5,27 @@
  "campaign_present": true,
  "campaign_dir": "docs/test-campaign",
  "briefs_dir": "docs/features-to-triage",
- "headline": "134 piece(s) of work remain — 5 product, 23 evidence, 105 decision — across 942 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
+ "headline": "133 piece(s) of work remain — 5 product, 23 evidence, 105 decision — across 947 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
  "summary": {
   "counts": {
    "verified-done": 792,
-   "waived": 16,
+   "waived": 22,
    "unmeasured": 23,
    "broken": 5,
-   "undecided": 105,
-   "retirable": 1
+   "undecided": 105
   },
-  "work_items": 134,
+  "work_items": 133,
   "work_by_class": {
    "unmeasured": 23,
    "broken": 5,
-   "undecided": 105,
-   "retirable": 1
+   "undecided": 105
   },
   "work_by_kind": {
    "evidence-work": 23,
    "product-work": 5,
-   "decision-work": 105,
-   "bookkeeping": 1
+   "decision-work": 105
   },
-  "rows": 942
+  "rows": 947
  },
  "denominators": {
   "cases_adjudicated": {
@@ -56,8 +53,8 @@
    "means": "at least one case on this surface reached a verdict."
   },
   "briefs_joined": {
-   "n": 129,
-   "of": 129,
+   "n": 134,
+   "of": 134,
    "pct": 100.0,
    "means": "the brief could be tied to something in the registry at all."
   },
@@ -731,6 +728,78 @@
    {
     "brief": "BRIEF-13-audit-log-encryption-at-rest",
     "target": "REQ-015",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-130-proctoragent-mutation-hardening-and-boundary-sweep",
+    "target": "DEF-033",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-130-proctoragent-mutation-hardening-and-boundary-sweep",
+    "target": "REQ-067",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-130-proctoragent-mutation-hardening-and-boundary-sweep",
+    "target": "SURF-026",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-131-legacy-direction-briefs-spec-validation",
+    "target": "REQ-001",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-131-legacy-direction-briefs-spec-validation",
+    "target": "SURF-025",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-132-hermetic-multi-process-chaos-fixture",
+    "target": "REQ-079",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-132-hermetic-multi-process-chaos-fixture",
+    "target": "REQ-080",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-132-hermetic-multi-process-chaos-fixture",
+    "target": "SURF-012",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-133-process-lifecycle-chaos-and-recovery-harness",
+    "target": "REQ-079",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-133-process-lifecycle-chaos-and-recovery-harness",
+    "target": "SURF-012",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-134-automated-mutation-survival-benchmark-reporter",
+    "target": "DEF-033",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-134-automated-mutation-survival-benchmark-reporter",
+    "target": "SURF-026",
     "method": "cited",
     "confidence": 1.0
    },
@@ -2415,8 +2484,8 @@
     "confidence": 1.0
    }
   ],
-  "briefs_joined": 129,
-  "briefs_total": 129,
+  "briefs_joined": 134,
+  "briefs_total": 134,
   "pct": 100.0,
   "weak": false,
   "note": "cited edges are citations somebody wrote; overlap edges are guesses and cannot retire a brief"
@@ -16867,13 +16936,13 @@
   {
    "id": "BRIEF-108-native-ocr-and-high-dpi-zoom-inspector",
    "entity": "brief",
-   "class": "retirable",
-   "kind": "bookkeeping",
+   "class": "waived",
+   "kind": "exception",
    "title": "Native OCR and High-DPI Visual Region Inspector for Zoom Assertions",
    "file": "108-native-ocr-and-high-dpi-zoom-inspector.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-001",
@@ -16899,7 +16968,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-109-guest-vm-lifecycle-and-attachment-oracle",
@@ -17685,6 +17754,176 @@
    "unclassifiable_ids": null,
    "remedy": null,
    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+  },
+  {
+   "id": "BRIEF-130-proctoragent-mutation-hardening-and-boundary-sweep",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "ProctorAgent Mutation Hardening and Boundary Sweep",
+   "file": "130-proctoragent-mutation-hardening-and-boundary-sweep.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "DEF-033",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-067",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-026",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-131-legacy-direction-briefs-spec-validation",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Legacy Direction Briefs Specification Validation",
+   "file": "131-legacy-direction-briefs-spec-validation.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-001",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-025",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-132-hermetic-multi-process-chaos-fixture",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Hermetic Multi-Process Chaos and Recovery Fixture",
+   "file": "132-hermetic-multi-process-chaos-fixture.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-079",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-080",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-012",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-133-process-lifecycle-chaos-and-recovery-harness",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Process Lifecycle Chaos and Recovery Harness",
+   "file": "133-process-lifecycle-chaos-and-recovery-harness.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-079",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-012",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-134-automated-mutation-survival-benchmark-reporter",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Automated Mutation Survival Benchmark Reporter",
+   "file": "134-automated-mutation-survival-benchmark-reporter.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "DEF-033",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-026",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-15-step-descriptions",

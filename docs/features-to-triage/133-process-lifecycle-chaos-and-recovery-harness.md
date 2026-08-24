@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-012, REQ-079]
-status: to-triage
+status: retired
 ---
 # Process Lifecycle Chaos and Recovery Harness
 
