@@ -3191,3 +3191,31 @@ Standing gates on `main` (`6fada0e`):
 - `scripts/campaign/spec_citation_measure.py`: **19/19 passed** (113 briefs: 111 claimed, 2 registered, 0 unclaimed)
 - `scripts/campaign/shot_disposition.py`: **47 images disposed, 0 citation failures**
 - `capture-lineage.py --gate`: **ratchet 6 held**
+
+### Wave 21 closed — DEF-215 permanently closed, BLOCK-0002 & 0003 unblocked, broken product work halved (2026-08-24)
+
+`main` carries PRO-0118, PRO-0119, PRO-0120, and PRO-0121. Nothing pushed.
+
+| Gate on closed `main` | Exit | Reading |
+|---|:---:|---|
+| `ledger_gate.py` | **0** | 121 ledger rows · 121 specs on disk · **0 declared without spec** (100% 1-to-1 spec mapping) |
+| `test_instruments.py` | **0** | **295 passed**, 0 failed |
+| `shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
+| `capture-lineage.py --gate` | **0** | ratchet: 6 held |
+| `defect_gate.py dropped` | **0** | 148 merges examined, 0 dropped values |
+| `spec_citation_measure.py` | **0** | **19/19 checks passed** (113 briefs: 113 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `reckoning_selftest.py` | **0** | 78 checks passed |
+| `plugins/reckon/skills/reckon/scripts/selftest.py` | **0** | 53 checks passed |
+| `campaign.py check` | 1 | Pre-existing standing baseline (0 new blockers) |
+
+Registry: **466 cases · 165 defect rows · 141 requirements · 40 surfaces**.
+Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
+
+**Wave 21 Close Reckoning (`4da1424` → `56a46fc`):**
+- **Broken product work:** 8 → **4** (-4, halved).
+- **Verified-done:** 775 → **791** (+16).
+- **Requirements observed:** 86.2% → **87.9%** (124/141, +1.7 pts).
+- **Cases adjudicated:** 99.3% → **99.4%** (463/466).
+- **Unmeasured evidence work:** 27 → **26** (-1).
+- **DEF-215:** Closed (`verified-done`) with 100% standalone spec coverage across all ledger rows.
+- **BLOCK-0002 & BLOCK-0003:** Unblocked with `REQ-043` and `REQ-081` elevated to `observed`.

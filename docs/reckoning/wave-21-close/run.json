@@ -1,0 +1,140 @@
+{
+ "schema": "reckoning-run/1",
+ "taken_at": "2026-08-24T05:29:39Z",
+ "project": "proctor-mcp",
+ "tree": {
+  "repo": "proctor-mcp",
+  "commit": "56a46fc716d90a34d07412803e2473016773b1fe",
+  "short": "56a46fc",
+  "branch": "main",
+  "tree_named": true,
+  "dirty_inputs": [],
+  "inputs": {
+   "docs/features-to-triage": {
+    "last_commit": "9362c4d565c289a2a37bed61cd2f41e50959df53"
+   },
+   "docs/test-campaign": {
+    "last_commit": "9362c4d565c289a2a37bed61cd2f41e50959df53"
+   }
+  }
+ },
+ "tool": {
+  "name": "reckon",
+  "version": "1.3.0",
+  "script": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/reckon.py",
+  "manifest": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/.claude-plugin/plugin.json",
+  "source_commit": "33ab134c96aa95be2aa47f79c57092e68c44fadf",
+  "sha256": "52481e0135017b16789eccf6a8bbf2ad0e000b933228d1266bb43b2cdd657974",
+  "classes": [
+   "broken",
+   "retirable",
+   "unbuilt",
+   "undecided",
+   "unjoined",
+   "unmeasured",
+   "unnamed",
+   "verified-done",
+   "waived"
+  ]
+ },
+ "inputs": {
+  "briefs": "docs/features-to-triage",
+  "campaign": "docs/test-campaign"
+ },
+ "gate": {
+  "build_exit": 0,
+  "check_exit": 0
+ },
+ "headline": "134 piece(s) of work remain — 4 product, 26 evidence, 103 decision — across 925 ledger rows. This reckoning speaks for 463/466 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
+ "summary": {
+  "counts": {
+   "verified-done": 791,
+   "unmeasured": 26,
+   "broken": 4,
+   "undecided": 103,
+   "retirable": 1
+  },
+  "work_items": 134,
+  "work_by_class": {
+   "unmeasured": 23,
+   "broken": 4,
+   "undecided": 103,
+   "retirable": 1
+  },
+  "work_by_kind": {
+   "evidence-work": 26,
+   "product-work": 4,
+   "decision-work": 103,
+   "bookkeeping": 1
+  },
+  "rows": 925
+ },
+ "denominators": {
+  "cases_adjudicated": {
+   "n": 463,
+   "of": 466,
+   "pct": 99.4,
+   "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+  },
+  "decisions_taken": {
+   "n": 0,
+   "of": 466,
+   "pct": 0.0,
+   "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+  },
+  "requirements_observed": {
+   "n": 124,
+   "of": 141,
+   "pct": 87.9,
+   "means": "somebody watched it happen, rather than the project reporting it of itself."
+  },
+  "surfaces_spoken_for": {
+   "n": 40,
+   "of": 40,
+   "pct": 100.0,
+   "means": "at least one case on this surface reached a verdict."
+  },
+  "briefs_joined": {
+   "n": 113,
+   "of": 113,
+   "pct": 100.0,
+   "means": "the brief could be tied to something in the registry at all."
+  }
+ },
+ "class_counts": {
+  "verified-done": 791,
+  "unmeasured": 26,
+  "broken": 4,
+  "undecided": 103,
+  "retirable": 1
+ },
+ "effect": {
+  "kind": "filesystem-write",
+  "root": "docs/reckoning/wave-21-close",
+  "files_written": [
+   "ledger.json",
+   "reckoning.md"
+  ],
+  "count": 2,
+  "written": {
+   "ledger.json": {
+    "bytes": 833702,
+    "sha256": "2db1d5a10850659f6adf24515d3b8165c2569c59d5cedec5b33ab399715876ef"
+   },
+   "reckoning.md": {
+    "bytes": 18004,
+    "sha256": "500c2c937efb600b1784f8f7ab543302511feadf5d1fe41b998b209c1b5c6c3e"
+   }
+  },
+  "rewritten": {},
+  "rewritten_count": 0,
+  "removed": {},
+  "removed_count": 0,
+  "unchanged_count": 0,
+  "witness": "every file under the root with its byte count and sha256, before and after the build, so the claim that a command wrote something names what appeared and what it held"
+ },
+ "provenance": "measured",
+ "notes": [
+  "Wave 21 close. PRO-0118, PRO-0119, PRO-0120, PRO-0121 merged. 100% 1-to-1 spec mapping, DEF-215 closed, BLOCK-0002 & BLOCK-0003 unblocked, Brief 108 retired."
+ ]
+}

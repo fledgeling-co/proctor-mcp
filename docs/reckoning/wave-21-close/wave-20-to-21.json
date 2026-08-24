@@ -1,0 +1,412 @@
+{
+ "schema": "reckoning-delta/1",
+ "project": "proctor-mcp",
+ "attribution": "decomposed",
+ "previous": {
+  "dir_stamp": "2026-08-24T02:11:23Z",
+  "commit": "4da1424e8fd0b747efde09ecadbf963c1d1227ba",
+  "short": "4da1424",
+  "tool": "1.3.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 20 close. PRO-0114, PRO-0115, PRO-0116, PRO-0117 merged. All 117 ledger rows resolved, 259 instrument checks passing, 100% brief join rate."
+  ]
+ },
+ "current": {
+  "dir_stamp": "2026-08-24T05:29:39Z",
+  "commit": "56a46fc716d90a34d07412803e2473016773b1fe",
+  "short": "56a46fc",
+  "tool": "1.3.0",
+  "provenance": "measured",
+  "notes": [
+   "Wave 21 close. PRO-0118, PRO-0119, PRO-0120, PRO-0121 merged. 100% 1-to-1 spec mapping, DEF-215 closed, BLOCK-0002 & BLOCK-0003 unblocked, Brief 108 retired."
+  ]
+ },
+ "verdict": "2 of 5 axes improved, 3 flat, 0 worsened; evidence work down at 26 and the unmeasured class smaller at 26 rows.",
+ "movement": {
+  "tool": {
+   "work_items": 0,
+   "product": 0,
+   "evidence": 0,
+   "decision": 0,
+   "rows": 0
+  },
+  "project": {
+   "work_items": 1,
+   "product": -4,
+   "evidence": -1,
+   "decision": 6,
+   "rows": 17
+  },
+  "net": {
+   "work_items": 1,
+   "product": -4,
+   "evidence": -1,
+   "decision": 6,
+   "rows": 17
+  },
+  "previous": {
+   "work_items": 133,
+   "product": 8,
+   "evidence": 27,
+   "decision": 97,
+   "rows": 908
+  },
+  "control": {
+   "work_items": 133,
+   "product": 8,
+   "evidence": 27,
+   "decision": 97,
+   "rows": 908
+  },
+  "current": {
+   "work_items": 134,
+   "product": 4,
+   "evidence": 26,
+   "decision": 103,
+   "rows": 925
+  }
+ },
+ "classes": {
+  "previous": {
+   "verified-done": 775,
+   "unmeasured": 27,
+   "broken": 8,
+   "undecided": 97,
+   "retirable": 1
+  },
+  "control": {
+   "verified-done": 775,
+   "unmeasured": 27,
+   "broken": 8,
+   "undecided": 97,
+   "retirable": 1
+  },
+  "current": {
+   "verified-done": 791,
+   "unmeasured": 26,
+   "broken": 4,
+   "undecided": 103,
+   "retirable": 1
+  }
+ },
+ "axes": [
+  {
+   "key": "cases_adjudicated",
+   "label": "Cases adjudicated",
+   "prev": {
+    "n": 458,
+    "of": 461,
+    "pct": 99.3,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "control": {
+    "n": 458,
+    "of": 461,
+    "pct": 99.3,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "current": {
+    "n": 463,
+    "of": 466,
+    "pct": 99.4,
+    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "decisions_taken",
+   "label": "Cases ruled out by decision",
+   "prev": {
+    "n": 0,
+    "of": 461,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "control": {
+    "n": 0,
+    "of": 461,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "current": {
+    "n": 0,
+    "of": 466,
+    "pct": 0.0,
+    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "requirements_observed",
+   "label": "Requirements observed",
+   "prev": {
+    "n": 119,
+    "of": 138,
+    "pct": 86.2,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "control": {
+    "n": 119,
+    "of": 138,
+    "pct": 86.2,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "current": {
+    "n": 124,
+    "of": 141,
+    "pct": 87.9,
+    "means": "somebody watched it happen, rather than the project reporting it of itself."
+   },
+   "denominator_moved": true,
+   "direction": "improved"
+  },
+  {
+   "key": "surfaces_spoken_for",
+   "label": "Surfaces spoken for",
+   "prev": {
+    "n": 37,
+    "of": 37,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "control": {
+    "n": 37,
+    "of": 37,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "current": {
+    "n": 40,
+    "of": 40,
+    "pct": 100.0,
+    "means": "at least one case on this surface reached a verdict."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  },
+  {
+   "key": "briefs_joined",
+   "label": "Briefs joined to evidence",
+   "prev": {
+    "n": 109,
+    "of": 109,
+    "pct": 100.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "control": {
+    "n": 109,
+    "of": 109,
+    "pct": 100.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "current": {
+    "n": 113,
+    "of": 113,
+    "pct": 100.0,
+    "means": "the brief could be tied to something in the registry at all."
+   },
+   "denominator_moved": true,
+   "direction": "flat"
+  }
+ ],
+ "unmeasured": {
+  "control_rows": 27,
+  "current_rows": 26,
+  "left": [
+   {
+    "id": "REQ-043",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "No drawn pointer over a window the person cannot see: where the pointer's plane cannot be confirmed and someth",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-081",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "Input the takeover block swallows during a run is reported as a yield record with a held reason, whatever the ",
+    "why": "requirement observed"
+   }
+  ],
+  "entered": [],
+  "direction": "improved"
+ },
+ "rows": {
+  "moved": [
+   {
+    "id": "BRIEF-23-drawing-fault-must-not-kill-the-agent",
+    "entity": "brief",
+    "from": "broken",
+    "to": "undecided",
+    "title": "A drawing fault must not kill the agent",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-40-page-scoped-refusal",
+    "entity": "brief",
+    "from": "broken",
+    "to": "undecided",
+    "title": "Page-scoped refusal",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "BRIEF-99-instruments-that-do-not-prove-their-own-step",
+    "entity": "brief",
+    "from": "broken",
+    "to": "undecided",
+    "title": "Instruments that do not prove their own step",
+    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   },
+   {
+    "id": "DEF-215",
+    "entity": "defect",
+    "from": "broken",
+    "to": "verified-done",
+    "title": "Four ledger rows have no spec file, so two briefs have no artifact that could cite them",
+    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+   },
+   {
+    "id": "REQ-043",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "No drawn pointer over a window the person cannot see: where the pointer's plane cannot be confirmed and someth",
+    "why": "requirement observed"
+   },
+   {
+    "id": "REQ-081",
+    "entity": "requirement",
+    "from": "unmeasured",
+    "to": "verified-done",
+    "title": "Input the takeover block swallows during a run is reported as a yield record with a held reason, whatever the ",
+    "why": "requirement observed"
+   }
+  ],
+  "appeared": [
+   {
+    "id": "BRIEF-110-covered-target-cursor-plane-witness",
+    "entity": "brief",
+    "class": "undecided",
+    "title": "Covered-Target Cursor Plane Witness"
+   },
+   {
+    "id": "BRIEF-111-retired-items-spec-closure",
+    "entity": "brief",
+    "class": "unmeasured",
+    "title": "Retired Items Standalone Spec Closure for PRO-0022, PRO-0031, PRO-0039"
+   },
+   {
+    "id": "BRIEF-112-cross-automation-stack-reporting-harness",
+    "entity": "brief",
+    "class": "undecided",
+    "title": "Cross-Automation Stack Yield and Takeover Reporting Harness"
+   },
+   {
+    "id": "BRIEF-113-retire-pro-0108-native-ocr-zoom",
+    "entity": "brief",
+    "class": "undecided",
+    "title": "Retire Brief 108: Native OCR & High-DPI Visual Region Inspector"
+   },
+   {
+    "id": "CASE-0760",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-039 · ?"
+   },
+   {
+    "id": "CASE-0761",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-039 · ?"
+   },
+   {
+    "id": "CASE-0762",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-039 · ?"
+   },
+   {
+    "id": "CASE-0780",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-041 · ?"
+   },
+   {
+    "id": "CASE-0790",
+    "entity": "case",
+    "class": "verified-done",
+    "title": "SURF-042 · ?"
+   },
+   {
+    "id": "DEF-325",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "CASE-0087 inconclusive and BLOCK-0002 due to missing window occlusion witness"
+   },
+   {
+    "id": "DEF-335",
+    "entity": "defect",
+    "class": "verified-done",
+    "title": "BLOCK-0003 due to uninstrumented cross-automation stack yield reporting"
+   },
+   {
+    "id": "REQ-200",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "PointerPlane evaluates window occlusion geometry and suppresses drawn cursor over covered windows while record"
+   },
+   {
+    "id": "REQ-210",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "ContentionMonitor detects external automation mode and records yield hold reasons across external automation s"
+   },
+   {
+    "id": "REQ-215",
+    "entity": "requirement",
+    "class": "verified-done",
+    "title": "Brief 108 Native OCR & High-DPI Visual Region Inspector is formally retired in favor of merged PRO-0116."
+   },
+   {
+    "id": "SURF-039",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "WindowServer Occlusion Geometry and Pointer Suppression"
+   },
+   {
+    "id": "SURF-041",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "External Automation Stack Yield & Disclosure Witness"
+   },
+   {
+    "id": "SURF-042",
+    "entity": "surface",
+    "class": "verified-done",
+    "title": "Retirement Registry for Brief 108"
+   }
+  ],
+  "vanished": []
+ },
+ "ratchets": [
+  {
+   "pair": "published",
+   "from": "4da1424",
+   "to": "56a46fc",
+   "exit": 0,
+   "violations": []
+  },
+  {
+   "pair": "tool-constant",
+   "from": "4da1424 (rebuilt)",
+   "to": "56a46fc",
+   "exit": 0,
+   "violations": []
+  }
+ ]
+}
