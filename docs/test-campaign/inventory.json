@@ -1566,6 +1566,18 @@
       "note": "Independent process lifecycle witness observes cua-driver process spawn, argument vector passing, exit status capture, stderr output, and daemon shutdown interlock without orphaned processes.",
       "effect": "subprocess",
       "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift"
+    },
+    {
+      "id": "REQ-190",
+      "class": "correctness",
+      "text": "Native Vision OCR and high-DPI visual region inspector for zoom assertions: optical text recognition via VNRecognizeTextRequest, Retina scale factor preservation, and text bounding box contrast verification within bounded timeouts",
+      "source": "DEF-315; docs/specs/spec-PRO-0116.md; docs/features-to-triage/108-native-ocr-and-high-dpi-zoom-inspector.md",
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-037"
+      ],
+      "note": "proctor_zoom provides native Apple Vision text recognition (VNRecognizeTextRequest) and WCAG contrast measurements on cropped UI regions within bounded timeouts (< 500ms), preserving high-DPI Retina scale factor for text fields and custom canvas renders.",
+      "effect": "none"
     }
   ],
   "surface": [
@@ -2055,6 +2067,20 @@
         "shutdown-interlocked"
       ],
       "description": "The subprocess execution boundary for Cua driver actuation in Sources/ProctorAgent/Actuation/CuaClients.swift, covering child process spawn, stdio/oneshot argument passing, exit code and stderr capture on failure, and daemon cleanup interlocks."
+    },
+    {
+      "id": "SURF-037",
+      "name": "Native Vision OCR and High-DPI Zoom Inspector",
+      "title": "Apple Vision text recognition, bounding box geometry, and high-DPI contrast inspection on zoom crops",
+      "route": "tool://inspection/native-ocr-zoom",
+      "status": "reachable",
+      "states": [
+        "ocr-recognized",
+        "retina-scale-preserved",
+        "contrast-verified",
+        "timeout-bounded"
+      ],
+      "description": "The native Vision OCR and visual region inspection engine in Sources/ProctorAgent/Capture/VisionOCR.swift and SessionZoom.swift, executing VNRecognizeTextRequest and PixelProbe contrast measurement on high-DPI zoom crops."
     }
   ],
   "flow": [
@@ -4598,6 +4624,24 @@
       "evidence": [
         "scripts/campaign/subprocess_witness.py",
         "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift"
+      ]
+    },
+    {
+      "id": "DEF-315",
+      "title": "Missing native Vision OCR and high-DPI text contrast verification in zoom crops for unpopulated accessibility trees and custom canvas views",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-037"
+      ],
+      "requirements": [
+        "REQ-190"
+      ],
+      "note": "PRO-0116: Extended proctor_zoom with recognize_text option using Apple Vision VNRecognizeTextRequest, returning text strings, bounding boxes in pixel and point coordinates, WCAG contrast ratios, and preserving Retina scale factor within bounded timeouts.",
+      "evidence": [
+        "Sources/ProctorAgent/Capture/VisionOCR.swift",
+        "Sources/ProctorAgent/Session/SessionZoom.swift",
+        "Tests/ProctorAgentTests/NativeOCRZoomTests.swift"
       ]
     }
   ]

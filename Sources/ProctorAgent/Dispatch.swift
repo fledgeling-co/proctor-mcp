@@ -301,6 +301,7 @@ struct Dispatcher: Sendable {
 
     private func zoom(_ args: Args) async throws -> JSONValue {
         let region = args.value("region")?.arrayValue?.compactMap(\.doubleValue)
+        let recognize = args.bool("recognize_text", false) || args.bool("recognizeText", false)
         return try await session.zoom(window: try args.requiredString("window"),
                                       region: region,
                                       node: args.string("node"),
@@ -310,6 +311,7 @@ struct Dispatcher: Sendable {
                                       timeoutMs: args.int("timeoutMs") ?? 3000,
                                       scale: args.double("scale"),
                                       includeCursor: args.bool("includeCursor", false),
+                                      recognizeText: recognize,
                                       encoding: try Self.encoding(args))
     }
 

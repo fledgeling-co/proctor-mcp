@@ -7782,5 +7782,95 @@
     "defects": [
       "DEF-305"
     ]
+  },
+  {
+    "id": "CASE-0730",
+    "req": "REQ-190",
+    "surface": "SURF-037",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "NativeOCRZoomTests nativeVisionOCRTextRecognition verifies VNRecognizeTextRequest extracts text strings and bounding boxes from rendered text",
+    "evidence": [
+      "Tests/ProctorAgentTests/NativeOCRZoomTests.swift",
+      "Sources/ProctorAgent/Capture/VisionOCR.swift"
+    ],
+    "note": "DEF-315 / REQ-190: proctor_zoom with recognize_text: true extracts text strings, confidence scores, and pixel/point bounding boxes via VNRecognizeTextRequest.",
+    "defects": [
+      "DEF-315"
+    ]
+  },
+  {
+    "id": "CASE-0731",
+    "req": "REQ-190",
+    "surface": "SURF-037",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "NativeOCRZoomTests highDPIRetinaScalePreservation verifies scale factor 2.0 and pointBox/boundingBox coordinate transformation",
+    "evidence": [
+      "Tests/ProctorAgentTests/NativeOCRZoomTests.swift",
+      "Sources/ProctorAgent/Capture/VisionOCR.swift"
+    ],
+    "note": "DEF-315 / REQ-190: High-DPI Retina scale factor is preserved in zoom OCR results and maps pixel coordinates to window point geometry.",
+    "defects": [
+      "DEF-315"
+    ]
+  },
+  {
+    "id": "CASE-0732",
+    "req": "REQ-190",
+    "surface": "SURF-037",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "NativeOCRZoomTests textContrastVerification verifies WCAG contrast ratio measurement and pass/fail determination across themes",
+    "evidence": [
+      "Tests/ProctorAgentTests/NativeOCRZoomTests.swift",
+      "Sources/ProctorAgent/Capture/VisionOCR.swift"
+    ],
+    "note": "DEF-315 / REQ-190: High-DPI contrast checking measures dominant background and foreground text colors and computes WCAG contrast ratios.",
+    "defects": [
+      "DEF-315"
+    ]
+  },
+  {
+    "id": "CASE-0733",
+    "req": "REQ-190",
+    "surface": "SURF-037",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "NativeOCRZoomTests boundedExecutionTimeout verifies OCR completion duration and timeout enforcement within 500ms",
+    "evidence": [
+      "Tests/ProctorAgentTests/NativeOCRZoomTests.swift",
+      "Sources/ProctorAgent/Capture/VisionOCR.swift"
+    ],
+    "note": "DEF-315 / REQ-190: Vision OCR execution duration is measured and bounded to < 500ms timeouts for region crops.",
+    "defects": [
+      "DEF-315"
+    ]
+  },
+  {
+    "id": "CASE-0734",
+    "req": "REQ-190",
+    "surface": "SURF-037",
+    "oracle": "outcome",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "NativeOCRZoomTests zoomToolDispatchAndGracefulDegradation verifies tool argument parsing and nil OCR when recognize_text is false",
+    "evidence": [
+      "Tests/ProctorAgentTests/NativeOCRZoomTests.swift",
+      "Sources/ProctorAgent/Dispatch.swift"
+    ],
+    "note": "DEF-315 / REQ-190: proctor_zoom dispatch supports recognize_text and recognizeText parameters with graceful degradation when disabled.",
+    "defects": [
+      "DEF-315"
+    ]
   }
 ]
