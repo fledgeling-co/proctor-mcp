@@ -127,6 +127,11 @@
 | PRO-0116 | Native OCR and High-DPI Visual Region Inspector for Zoom Assertions | 2026-08-24 | Merged |
 | PRO-0117 | Guest VM Lifecycle and Multi-Session Attachment Oracle | 2026-08-24 | Merged |
 
+| PRO-0118 | Covered-Target Cursor Plane Witness | 2026-08-24 | Ready for Plan |
+| PRO-0119 | Retired Items Standalone Spec Closure | 2026-08-24 | Ready for Plan |
+| PRO-0120 | Cross-Automation Stack Yield and Takeover Reporting Harness | 2026-08-24 | Ready for Plan |
+| PRO-0121 | Retire Brief 108 Native OCR & High-DPI Zoom Inspector | 2026-08-24 | Ready for Plan |
+
 ## Rows with no spec file
 
 The three rows below shipped or were retired before the spec convention was introduced or without a standalone spec file, and are declared here with their reasons:
