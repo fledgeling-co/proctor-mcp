@@ -1,6 +1,6 @@
 # Reckoning — proctor-mcp
 
-138 piece(s) of work remain — 5 product, 23 evidence, 109 decision — across 933 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known. 6 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.
+144 piece(s) of work remain — 5 product, 23 evidence, 115 decision — across 939 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known. 12 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.
 
 ## What it can speak for
 
@@ -10,7 +10,7 @@
 | Cases ruled out by decision | 3 | 467 | 0.6% | somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose. |
 | Requirements observed | 124 | 141 | 87.9% | somebody watched it happen, rather than the project reporting it of itself. |
 | Surfaces spoken for | 40 | 40 | 100.0% | at least one case on this surface reached a verdict. |
-| Briefs joined to evidence | 114 | 120 | 95.0% | the brief could be tied to something in the registry at all. |
+| Briefs joined to evidence | 114 | 126 | 90.5% | the brief could be tied to something in the registry at all. |
 
 _Each figure is a lower bound. Every `unnamed` row is a surface the documents never described, which means the true denominator is larger than the one the documents can supply._
 
@@ -20,7 +20,7 @@ Two counts, because they answer different questions. **Rows** is every entity on
 
 | Class | Work | Rows | Kind | What it is |
 |---|---:|---:|---|---|
-| `unjoined` | 6 | 6 | decision-work | named in a brief; the join reached nothing, so its state is unknown either way |
+| `unjoined` | 12 | 12 | decision-work | named in a brief; the join reached nothing, so its state is unknown either way |
 | `broken` | 5 | 5 | product-work | measured, and the answer was no |
 | `unmeasured` | 23 | 23 | evidence-work | nobody found out — the work here is becoming able to tell |
 | `undecided` | 103 | 103 | decision-work | the documents and the evidence disagree; needs a person |
@@ -41,7 +41,7 @@ Two counts, because they answer different questions. **Rows** is every entity on
 - **DEF-033** — Nineteen of twenty-two trustworthy-scored ProctorAgent mutants survived, against half in ProctorCore
   - a defect is a measured negative result — the unit of product work behind every failing case that cites it
 
-## Unjoined (6)
+## Unjoined (12)
 
 - **BRIEF-114-ios-simulator-boot-fixture-harness** — iOS Simulator Boot Fixture Harness
   - the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule
@@ -61,6 +61,24 @@ Two counts, because they answer different questions. **Rows** is every entity on
 - **BRIEF-119-guest-vm-health-telemetry-and-socket-probe** — Guest VM Health Telemetry and Socket Probe
   - the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule
   - nearest the join considered: DEF-029 (0.05), REQ-076 (0.05), DEF-024 (0.04)
+- **BRIEF-120-native-ocr-and-high-dpi-inspection-fixture** — Native OCR and High-DPI Inspection Fixture
+  - the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule
+  - nearest the join considered: REQ-190 (0.10), SURF-037 (0.07), REQ-215 (0.05)
+- **BRIEF-121-surface-conformance-and-capture-trust-sourcing** — Surface Conformance and Capture Trust Sourcing
+  - the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule
+  - nearest the join considered: DEF-025 (0.08), DEF-290 (0.07), DEF-210 (0.07)
+- **BRIEF-122-operator-state-and-evidence-integrity-chain** — Operator State and Evidence Integrity Chain
+  - the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule
+  - nearest the join considered: REQ-166 (0.06), REQ-015 (0.06), DEF-100 (0.05)
+- **BRIEF-123-high-dpi-display-scale-factor-injection-helper** — High-DPI Display Scale Factor Injection Helper
+  - the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule
+  - nearest the join considered: REQ-190 (0.05), REQ-130 (0.04), REQ-095 (0.04)
+- **BRIEF-124-automated-warrant-tier-promotion-ledger-helper** — Automated Warrant Tier Promotion Ledger Helper
+  - the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule
+  - nearest the join considered: REQ-166 (0.07), DEF-210 (0.06), REQ-167 (0.06)
+- **BRIEF-reckoning-intake-round2-trawl** — Ideation Trawl — Reckoning & Warrant Sourcing Intake (2026-08-24)
+  - the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule
+  - nearest the join considered: REQ-166 (0.07), REQ-215 (0.07), REQ-190 (0.06)
 
 ## Undecided (103)
 

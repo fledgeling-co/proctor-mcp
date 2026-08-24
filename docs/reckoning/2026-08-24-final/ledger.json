@@ -5,7 +5,7 @@
  "campaign_present": true,
  "campaign_dir": "docs/test-campaign",
  "briefs_dir": "docs/features-to-triage",
- "headline": "138 piece(s) of work remain — 5 product, 23 evidence, 109 decision — across 933 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known. 6 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.",
+ "headline": "144 piece(s) of work remain — 5 product, 23 evidence, 115 decision — across 939 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known. 12 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.",
  "summary": {
   "counts": {
    "verified-done": 792,
@@ -14,23 +14,23 @@
    "broken": 5,
    "undecided": 103,
    "retirable": 1,
-   "unjoined": 6
+   "unjoined": 12
   },
-  "work_items": 138,
+  "work_items": 144,
   "work_by_class": {
    "unmeasured": 23,
    "broken": 5,
    "undecided": 103,
    "retirable": 1,
-   "unjoined": 6
+   "unjoined": 12
   },
   "work_by_kind": {
    "evidence-work": 23,
    "product-work": 5,
-   "decision-work": 109,
+   "decision-work": 115,
    "bookkeeping": 1
   },
-  "rows": 933
+  "rows": 939
  },
  "denominators": {
   "cases_adjudicated": {
@@ -59,8 +59,8 @@
   },
   "briefs_joined": {
    "n": 114,
-   "of": 120,
-   "pct": 95.0,
+   "of": 126,
+   "pct": 90.5,
    "means": "the brief could be tied to something in the registry at all."
   },
   "is_floor": true,
@@ -2232,8 +2232,8 @@
    }
   ],
   "briefs_joined": 114,
-  "briefs_total": 120,
-  "pct": 95.0,
+  "briefs_total": 126,
+  "pct": 90.5,
   "weak": false,
   "note": "cited edges are citations somebody wrote; overlap edges are guesses and cannot retire a brief"
  },
@@ -16442,6 +16442,191 @@
    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
+   "id": "BRIEF-120-native-ocr-and-high-dpi-inspection-fixture",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "Native OCR and High-DPI Inspection Fixture",
+   "file": "120-native-ocr-and-high-dpi-inspection-fixture.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "REQ-190",
+     "kind": "requirement",
+     "score": 0.104
+    },
+    {
+     "target": "SURF-037",
+     "kind": "surface",
+     "score": 0.07
+    },
+    {
+     "target": "REQ-215",
+     "kind": "requirement",
+     "score": 0.05
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
+   "id": "BRIEF-121-surface-conformance-and-capture-trust-sourcing",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "Surface Conformance and Capture Trust Sourcing",
+   "file": "121-surface-conformance-and-capture-trust-sourcing.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "DEF-025",
+     "kind": "defect",
+     "score": 0.081
+    },
+    {
+     "target": "DEF-290",
+     "kind": "defect",
+     "score": 0.067
+    },
+    {
+     "target": "DEF-210",
+     "kind": "defect",
+     "score": 0.065
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
+   "id": "BRIEF-122-operator-state-and-evidence-integrity-chain",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "Operator State and Evidence Integrity Chain",
+   "file": "122-operator-state-and-evidence-integrity-chain.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "REQ-166",
+     "kind": "requirement",
+     "score": 0.062
+    },
+    {
+     "target": "REQ-015",
+     "kind": "requirement",
+     "score": 0.057
+    },
+    {
+     "target": "DEF-100",
+     "kind": "defect",
+     "score": 0.053
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
+   "id": "BRIEF-123-high-dpi-display-scale-factor-injection-helper",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "High-DPI Display Scale Factor Injection Helper",
+   "file": "123-high-dpi-display-scale-factor-injection-helper.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "REQ-190",
+     "kind": "requirement",
+     "score": 0.049
+    },
+    {
+     "target": "REQ-130",
+     "kind": "requirement",
+     "score": 0.037
+    },
+    {
+     "target": "REQ-095",
+     "kind": "requirement",
+     "score": 0.035
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
+   "id": "BRIEF-124-automated-warrant-tier-promotion-ledger-helper",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "Automated Warrant Tier Promotion Ledger Helper",
+   "file": "124-automated-warrant-tier-promotion-ledger-helper.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "REQ-166",
+     "kind": "requirement",
+     "score": 0.07
+    },
+    {
+     "target": "DEF-210",
+     "kind": "defect",
+     "score": 0.063
+    },
+    {
+     "target": "REQ-167",
+     "kind": "requirement",
+     "score": 0.058
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
    "id": "BRIEF-13-audit-log-encryption-at-rest",
    "entity": "brief",
    "class": "undecided",
@@ -19872,6 +20057,43 @@
    "unclassifiable_ids": null,
    "remedy": null,
    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+  },
+  {
+   "id": "BRIEF-reckoning-intake-round2-trawl",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "Ideation Trawl — Reckoning & Warrant Sourcing Intake (2026-08-24)",
+   "file": ".ideation/reckoning-intake-round2-trawl.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "REQ-166",
+     "kind": "requirement",
+     "score": 0.07
+    },
+    {
+     "target": "REQ-215",
+     "kind": "requirement",
+     "score": 0.067
+    },
+    {
+     "target": "REQ-190",
+     "kind": "requirement",
+     "score": 0.062
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
   },
   {
    "id": "BRIEF-reckoning-intake-trawl",
