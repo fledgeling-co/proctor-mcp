@@ -94,7 +94,7 @@ tier = 0
 escalation = "owner"
 census = false
 plane = "panel"
-surfaces = ["engine://stability", "engine://process-directed", "engine://guest-provider", "engine://ios-maestro", "engine://reflector", "mcp://proctor_doctor*", "mcp://proctor_guest*", "stdio://proctor-shim"]
+surfaces = ["engine://stability", "engine://process-directed", "engine://guest-provider", "engine://ios-maestro", "engine://reflector", "mcp://proctor_doctor*", "mcp://proctor_guest*", "stdio://proctor-shim", "tool://guest/*"]
 
 # the campaign's own bookkeeping losing or contradicting itself — a merge
 # dropping a value, a note disagreeing with its evidence, a pinned plugin path
