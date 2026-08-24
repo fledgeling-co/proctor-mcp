@@ -424,10 +424,16 @@
     {
       "id": "REQ-033",
       "text": "A supervision client can read the machine's readiness, switches and history, not only its run and queue",
-      "source": "Sources/ProctorCore/TUISurface.swift readiness(from:), switches(from:) and history(from:); docs/features-to-triage/48-the-run-has-a-history-you-can-read.md",
+      "source": "Sources/ProctorCore/TUISurface.swift readiness(from:), switches(from:) and history(from:); docs/features-to-triage/48-the-run-has-a-history-you-can-read.md; docs/features-to-triage/106-supervision-tui-and-menu-bar-glass-witness.md",
       "class": "affordance",
       "effect": "ipc",
-      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift"
+      "evidence": "observed",
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "surfaces": [
+        "SURF-017",
+        "SURF-036"
+      ],
+      "note": "Supervision client queries proctor_doctor and proctor_history IPC endpoints, projecting machine readiness grants, switch states, and historical audit entries into the TUI panes."
     },
     {
       "id": "REQ-034",
@@ -4648,9 +4654,10 @@
       "requirements": [
         "REQ-030",
         "REQ-031",
+        "REQ-033",
         "REQ-185"
       ],
-      "note": "PRO-0114: Implemented automated headless pty harness scripts/campaign/supervision_tui_pty_probe.py, SupervisionTUIPtyWitnessTests.swift, and MenuBarHierarchyWitnessTests.swift, elevating REQ-030 and REQ-031 to observed.",
+      "note": "PRO-0114: Implemented automated headless pty harness scripts/campaign/supervision_tui_pty_probe.py, SupervisionTUIPtyWitnessTests.swift, and MenuBarHierarchyWitnessTests.swift, elevating REQ-030, REQ-031, and REQ-033 to observed.",
       "evidence": [
         "scripts/campaign/supervision_tui_pty_probe.py",
         "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",

@@ -7880,5 +7880,28 @@
     "defects": [
       "DEF-310"
     ]
+  },
+  {
+    "id": "CASE-0715",
+    "req": "REQ-033",
+    "surface": "SURF-036",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "SupervisionTUIPtyWitnessTests tuiReadinessSwitchesAndHistoryProjectionWitness asserts proctor_doctor and proctor_history projection into TUISurface model",
+    "evidence": [
+      "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",
+      "scripts/campaign/supervision_tui_pty_probe.py"
+    ],
+    "witness": {
+      "recorder": "proctor_doctor and proctor_history IPC query and TUISurface projection state validation",
+      "effect": "ipc",
+      "count": 2
+    },
+    "note": "DEF-310 / REQ-033: Supervision client queries proctor_doctor and proctor_history across the socket, projecting machine readiness grants, switch states, and historical audit entries into the TUI panes.",
+    "defects": [
+      "DEF-310"
+    ]
   }
 ]

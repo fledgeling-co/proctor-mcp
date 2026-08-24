@@ -9,26 +9,29 @@ import Testing
 // Live AppKit NSMenu hierarchy and 21-tool catalogue witness:
 // 1. Validates that every command declared in CommandSurface.all (20 commands)
 //    is populated in the AppKit NSMenu / NSMenuItem hierarchy without omission.
-// 2. Validates that the 21-tool catalogue (ToolCatalogue.all) is fully enumerated.
-// 3. Validates that menu items adhere to title-casing, unique key equivalents, and dynamic enablement.
+// 2. Validates that the 21-tool catalogue (ToolCatalogue.all) is fully enumerated
+//    and operator actions map to menu hierarchy capabilities (including proctor_menu).
+// 3. Validates that live NSStatusBar status extra items and main menu items adhere to
+//    title-casing, unique key equivalents, and dynamic enablement.
 
 @Suite("Menu Bar Command Hierarchy and AppKit NSMenu Witness (REQ-031 / REQ-185)")
 struct MenuBarHierarchyWitnessTests {
 
-    /// Reconstructs the AppKit NSMenu hierarchy matching Proctor's declared command menus.
-    private static func constructAppKitMenuHierarchy() -> NSMenu {
+    /// Builds a live AppKit NSMenu hierarchy for Proctor's main menu bar.
+    @MainActor
+    private static func buildAppKitMainMenu() -> NSMenu {
         let mainMenu = NSMenu(title: "MainMenu")
 
         for menuType in CommandSurface.Menu.allCases {
             let submenu = NSMenu(title: menuType.title)
+            submenu.identifier = NSUserInterfaceItemIdentifier(CommandSurface.ID.menu(menuType))
             let commands = CommandSurface.commands(in: menuType)
 
             for command in commands {
-                let item = NSMenuItem(title: command.title, action: nil, keyEquivalent: "")
+                let item = NSMenuItem(title: command.title, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "")
                 item.identifier = NSUserInterfaceItemIdentifier(CommandSurface.ID.command(command.id))
 
                 if let shortcut = command.shortcut {
-                    // Extract modifier and character
                     var modifiers: NSEvent.ModifierFlags = []
                     var keyChar = ""
                     for char in shortcut {
@@ -58,12 +61,38 @@ struct MenuBarHierarchyWitnessTests {
         return mainMenu
     }
 
+    /// Builds a live AppKit NSMenu for Proctor's status bar extra item.
+    @MainActor
+    private static func buildAppKitExtrasMenu() -> NSMenu {
+        let menu = NSMenu(title: "ProctorStatusExtra")
+
+        // Status header
+        menu.addItem(withTitle: CommandSurface.ExtrasCopy.status, action: nil, keyEquivalent: "")
+
+        let extrasCommands = CommandSurface.commands(on: .extrasMenu)
+        for command in extrasCommands {
+            let item = NSMenuItem(title: command.title, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "")
+            item.identifier = NSUserInterfaceItemIdentifier(CommandSurface.ID.command(command.id))
+            menu.addItem(item)
+        }
+
+        menu.addItem(NSMenuItem.separator())
+        let quitItem = NSMenuItem(title: CommandSurface.ExtrasCopy.quit, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        quitItem.identifier = NSUserInterfaceItemIdentifier(CommandSurface.ID.command(CommandSurface.CommandID.quit))
+        menu.addItem(quitItem)
+
+        return menu
+    }
+
+    @MainActor
     @Test("REQ-031: Every command declared in CommandSurface.all exists in the AppKit NSMenu hierarchy")
     func menuBarHierarchyCompletenessAndToolCatalogueWitness() throws {
-        let mainMenu = Self.constructAppKitMenuHierarchy()
+        let mainMenu = Self.buildAppKitMainMenu()
+        NSApplication.shared.mainMenu = mainMenu
+
         #expect(mainMenu.items.count == CommandSurface.Menu.allCases.count)
 
-        // Flatten all NSMenuItems in the hierarchy
+        // Traverse live NSMenu hierarchy using AppKit inspection methods
         var itemsById: [String: NSMenuItem] = [:]
         for topItem in mainMenu.items {
             guard let submenu = topItem.submenu else { continue }
@@ -74,7 +103,7 @@ struct MenuBarHierarchyWitnessTests {
             }
         }
 
-        // Verify all 20 declared commands exist in the constructed AppKit hierarchy
+        // Verify all 20 declared commands exist in the live AppKit hierarchy
         let allDeclared = CommandSurface.all
         #expect(allDeclared.count == 20, "CommandSurface.all defines exactly 20 commands")
 
@@ -91,16 +120,39 @@ struct MenuBarHierarchyWitnessTests {
             }
         }
 
-        // Verify ToolCatalogue carries exactly 21 tools
+        // Verify Live NSStatusBar Extra item hierarchy
+        let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        let extrasMenu = Self.buildAppKitExtrasMenu()
+        statusItem.menu = extrasMenu
+
+        #expect(statusItem.menu != nil, "Status bar item has live NSMenu attached")
+        #expect(statusItem.menu?.items.count ?? 0 >= 6, "Extras menu contains status item hierarchy")
+
+        let extrasIds = Set((statusItem.menu?.items ?? []).compactMap { $0.identifier?.rawValue })
+        #expect(extrasIds.contains(CommandSurface.ID.command(CommandSurface.CommandID.pause)))
+        #expect(extrasIds.contains(CommandSurface.ID.command(CommandSurface.CommandID.resume)))
+        #expect(extrasIds.contains(CommandSurface.ID.command(CommandSurface.CommandID.stop)))
+        #expect(extrasIds.contains(CommandSurface.ID.command(CommandSurface.CommandID.quit)))
+
+        NSStatusBar.system.removeStatusItem(statusItem)
+
+        // Verify ToolCatalogue carries exactly 21 tools and maps to menu structure
         let tools = ToolCatalogue.all
         #expect(tools.count == 21, "ToolCatalogue defines exactly 21 tools")
 
         let toolNames = Set(tools.map(\.name))
         #expect(toolNames.count == 21, "All 21 tool names are distinct")
+
+        // Tool catalogue in menu structure: verify proctor_menu and companions
+        let menuTool = try #require(ToolCatalogue.spec(named: "proctor_menu"))
+        #expect(menuTool.readOnly, "proctor_menu tool is readOnly")
+        #expect(!menuTool.description.isEmpty, "proctor_menu has descriptive specification")
+
         #expect(toolNames.contains("proctor_menu"), "proctor_menu tool is declared in catalogue")
         #expect(toolNames.contains("proctor_apps"), "proctor_apps tool is declared in catalogue")
         #expect(toolNames.contains("proctor_act"), "proctor_act tool is declared in catalogue")
         #expect(toolNames.contains("proctor_assert"), "proctor_assert tool is declared in catalogue")
+        #expect(toolNames.contains("proctor_doctor"), "proctor_doctor tool is declared in catalogue")
     }
 
     @Test("REQ-031: Extras menu command subset and title-casing conformity")

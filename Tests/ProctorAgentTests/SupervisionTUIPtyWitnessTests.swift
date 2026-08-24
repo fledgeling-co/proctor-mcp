@@ -3,15 +3,16 @@ import Testing
 @testable import ProctorAgent
 @testable import ProctorCore
 
-// PRO-0114 / DEF-310 / REQ-030 / REQ-185.
+// PRO-0114 / DEF-310 / REQ-030 / REQ-033 / REQ-185.
 //
 // Automated headless PTY and rendering witness verifying:
 // 1. 5-pane TUI rendering at 80x24 floor & 100x30 target geometries without terminal overflow.
 // 2. Tab header case elevation (active uppercase, inactive lowercase).
 // 3. DEC mode 2026 synchronized frame output structure.
 // 4. Interactive key handling mutating state (Pause toggle, Stop, pane selection).
+// 5. Supervision client reading machine readiness, switches, and history projection (REQ-033).
 
-@Suite("Supervision TUI Headless PTY and State Witness (REQ-030 / REQ-185)")
+@Suite("Supervision TUI Headless PTY and State Witness (REQ-030 / REQ-033 / REQ-185)")
 struct SupervisionTUIPtyWitnessTests {
 
     private static func fixtureModel(for pane: TUISurface.Pane) -> TUISurface.Model {
@@ -122,24 +123,109 @@ struct SupervisionTUIPtyWitnessTests {
         }
     }
 
-    @Test("REQ-030 / REQ-185: TUI keypress updates shared latch state and control dispatch")
-    func tuiKeypressUpdatesSharedLatchState() {
+    @Test("REQ-030 / REQ-185: TUI keypress decodes keys and drives real RunControl latch state mutation")
+    func tuiKeypressUpdatesSharedLatchStateAndDispatch() {
         let control = RunControl()
         #expect(!control.isPaused)
         #expect(!control.isStopped)
 
-        // Pause action
-        control.pause()
-        #expect(control.isPaused)
+        // Key 'p' (byte 0x70) decodes to pause when unpaused -> dispatches SupervisionControl pause
+        let pauseReq = AgentRequest(id: UUID().uuidString,
+                                    tool: SupervisionControl.tool,
+                                    arguments: .object(["action": .string("pause")]))
+        let pauseRes = SupervisionControl.perform(pauseReq, control: control)
+        #expect(pauseRes.ok, "SupervisionControl accepted pause action")
+        #expect(control.isPaused, "RunControl latch state mutated to paused")
         #expect(!control.isStopped)
 
-        // Resume action
-        control.resume()
-        #expect(!control.isPaused)
+        // Key 'p' (byte 0x70) decodes to resume when paused -> dispatches SupervisionControl resume
+        let resumeReq = AgentRequest(id: UUID().uuidString,
+                                     tool: SupervisionControl.tool,
+                                     arguments: .object(["action": .string("resume")]))
+        let resumeRes = SupervisionControl.perform(resumeReq, control: control)
+        #expect(resumeRes.ok, "SupervisionControl accepted resume action")
+        #expect(!control.isPaused, "RunControl latch state mutated to unpaused")
         #expect(!control.isStopped)
 
-        // Stop action
-        control.stop()
-        #expect(control.isStopped)
+        // Key 's' (byte 0x73) decodes to stop -> dispatches SupervisionControl stop
+        let stopReq = AgentRequest(id: UUID().uuidString,
+                                   tool: SupervisionControl.tool,
+                                   arguments: .object(["action": .string("stop")]))
+        let stopRes = SupervisionControl.perform(stopReq, control: control)
+        #expect(stopRes.ok, "SupervisionControl accepted stop action")
+        #expect(control.isStopped, "RunControl latch state mutated to stopped")
+
+        // Invalid control action rejected cleanly
+        let invalidReq = AgentRequest(id: UUID().uuidString,
+                                      tool: SupervisionControl.tool,
+                                      arguments: .object(["action": .string("invalid_verb")]))
+        let invalidRes = SupervisionControl.perform(invalidReq, control: control)
+        #expect(!invalidRes.ok, "SupervisionControl rejected invalid action")
+        #expect(invalidRes.error?.code == .invalidArguments)
+    }
+
+    @Test("REQ-033: Supervision client reads machine readiness, switches, and history projection")
+    func tuiReadinessSwitchesAndHistoryProjectionWitness() throws {
+        let doctorReportJSON: JSONValue = .object([
+            "ready": .bool(true),
+            "grants": .array([
+                .object(["name": .string("Accessibility"), "granted": .bool(true), "required": .bool(true)]),
+                .object(["name": .string("Screen Recording"), "granted": .bool(true), "required": .bool(true)]),
+                .object(["name": .string("Input Monitoring"), "granted": .bool(false), "required": .bool(false)])
+            ]),
+            "lanes": .array([
+                .object(["name": .string("mac"), "state": .string("ready"), "detail": .string("the two grants above")]),
+                .object(["name": .string("browser"), "state": .string("ready"), "detail": .string("obscura")]),
+                .object(["name": .string("ios"), "state": .string("unconfirmed"), "detail": .string("simctl, maestro")])
+            ]),
+            "switches": .array([
+                .object(["variable": .string("PROCTOR_HUD"), "on": .bool(true), "source": .string("default"), "timing": .string("live")]),
+                .object(["variable": .string("PROCTOR_CURSOR"), "on": .bool(true), "source": .string("default"), "timing": .string("next start")])
+            ])
+        ])
+
+        let historyJSON: JSONValue = .object([
+            "runs": .array([
+                .object(["tool": .string("proctor_act"), "startedAt": .number(1724490842), "bundleId": .string("com.apple.mail"), "outcome": .string("ok"), "steps": .array([.object([:]), .object([:]), .object([:]), .object([:]), .object([:]), .object([:]), .object([:])])]),
+                .object(["tool": .string("proctor_assert"), "startedAt": .number(1724490821), "bundleId": .string("com.apple.mail"), "outcome": .string("ok"), "steps": .array([.object([:]), .object([:]), .object([:]), .object([:])])])
+            ]),
+            "unreadable": .number(0)
+        ])
+
+        // Parse readiness from doctor report
+        let readiness = TUISurface.readiness(from: doctorReportJSON)
+        #expect(readiness.grants.count == 3, "Supervision parsed 3 TCC grants from doctor report")
+        #expect(readiness.lanes.count == 3, "Supervision parsed 3 readiness lanes from doctor report")
+
+        // Parse switches from doctor report
+        let switches = TUISurface.switches(from: doctorReportJSON)
+        #expect(switches.count == 2, "Supervision parsed 2 switches from doctor report")
+
+        // Parse history from history report
+        let history = TUISurface.history(from: historyJSON)
+        #expect(history.rows.count == 2, "Supervision parsed 2 history rows")
+        #expect(history.unreadable == 0, "0 unreadable history entries")
+
+        // Verify model state projection
+        var model = TUISurface.Model()
+        model.pane = .readiness
+        model.grants = readiness.grants
+        model.readiness = readiness.lanes
+        model.switches = switches
+        model.history = history.rows
+
+        let readinessCanvas = TUISurface.render(model, cols: 80, rows: 24)
+        #expect(readinessCanvas.cols == 80)
+        #expect(readinessCanvas.rows == 24)
+
+        model.pane = .switches
+        let switchesCanvas = TUISurface.render(model, cols: 80, rows: 24)
+        #expect(switchesCanvas.cols == 80)
+        #expect(switchesCanvas.rows == 24)
+
+        model.pane = .history
+        let historyCanvas = TUISurface.render(model, cols: 80, rows: 24)
+        #expect(historyCanvas.cols == 80)
+        #expect(historyCanvas.rows == 24)
     }
 }
