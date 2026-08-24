@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""DEF-228: standing gate for docs/feature-specs/LEDGER.md.
+"""DEF-228 / PRO-0119: standing gate for docs/feature-specs/LEDGER.md.
 
 Verifies:
   1. Every merged branch / feature claims `Merged` (or `Retired`) in LEDGER.md.
   2. Every spec file on disk (docs/specs/spec-PRO-*.md) has a row in LEDGER.md.
-  3. Every ledger row with no spec file is declared in `## Rows with no spec file`
+  3. 100% of ledger rows have standalone specs on disk (0 declared without spec).
+  4. Every ledger row with no spec file is declared in `## Rows with no spec file`
      with a non-empty reason, and no declared row has a spec on disk (stale declaration).
 
     python3 scripts/campaign/ledger_gate.py [--ledger FILE] [--specs DIR] [--repo DIR]
@@ -206,7 +207,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  FAILED: {f}")
         return 1
 
-    print("PASS: Every merged branch claims Merged, all specs on disk have rows, and every no-spec row is declared.")
+    if res['specs_on_disk'] == res['ledger_rows'] and res['declared_no_spec'] == 0:
+        print("PASS: 100% of ledger rows have standalone specs on disk (0 declared without spec), all specs have ledger rows, and git merges match ledger status.")
+    else:
+        print("PASS: Every merged branch claims Merged, all specs on disk have rows, and every no-spec row is declared.")
     return 0
 
 
