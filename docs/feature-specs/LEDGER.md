@@ -128,6 +128,6 @@
 | PRO-0117 | Guest VM Lifecycle and Multi-Session Attachment Oracle | 2026-08-24 | Merged |
 
 | PRO-0118 | Covered-Target Cursor Plane Witness | 2026-08-24 | Ready for Plan |
-| PRO-0119 | Retired Items Standalone Spec Closure | 2026-08-24 | Ready for Plan |
+| PRO-0119 | Retired Items Standalone Spec Closure | 2026-08-24 | Merged |
 | PRO-0120 | Cross-Automation Stack Yield and Takeover Reporting Harness | 2026-08-24 | Ready for Plan |
 | PRO-0121 | Retire Brief 108 Native OCR & High-DPI Zoom Inspector | 2026-08-24 | Ready for Plan |
