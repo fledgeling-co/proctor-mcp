@@ -9,11 +9,6 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
-| `125-legacy-brief-spec-validation-and-retirement.md` | `docs/features-to-triage/125-legacy-brief-spec-validation-and-retirement.md` | Intake from reckoning 2026-08-24-final pending triage (Undecided 103) |
-| `126-registry-drift-and-surface-conformance-figure-sourcing.md` | `docs/features-to-triage/126-registry-drift-and-surface-conformance-figure-sourcing.md` | Intake from warrant charter gaps pending triage |
-| `127-operator-state-and-capture-trust-figure-sourcing.md` | `docs/features-to-triage/127-operator-state-and-capture-trust-figure-sourcing.md` | Intake from warrant charter gaps pending triage |
-| `128-automated-spec-validation-runner.md` | `docs/features-to-triage/128-automated-spec-validation-runner.md` | Intake proposed companion pending triage |
-| `129-warrant-assurance-tier-dashboard-exporter.md` | `docs/features-to-triage/129-warrant-assurance-tier-dashboard-exporter.md` | Intake proposed companion pending triage |
 
 ## Briefs several specs share
 

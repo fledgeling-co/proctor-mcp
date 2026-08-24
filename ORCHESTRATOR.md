@@ -3272,3 +3272,29 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `ledger_gate.py` | **0** | **132 ledger rows · 132 specs on disk · 0 declared without spec** |
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (124 briefs: 124 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | **933 rows reconciled**, gate clean |
+
+## Wave 24 — Legacy Spec-Validation, Warrant Figure Completeness & Assurance Dashboard (2026-08-24)
+
+**Status:** Wave 24 open on `main` · 5 items (PRO-0133..PRO-0137).
+**Berths:** 6 available (sampled via harbourmaster `berths.py`, cpu healthy, memory tight, overall tight).
+
+### Wave 24 DAG & Execution Plan
+
+- **PRO-0133 (`spec-PRO-0133.md`):** Legacy Brief Spec-Validation and Retirement (resolving undecided backlog items).
+- **PRO-0134 (`spec-PRO-0134.md`):** Registry Drift and Surface Conformance Figure Sourcing (closing warrant charter gaps).
+- **PRO-0135 (`spec-PRO-0135.md`):** Operator State and Capture Trust Figure Sourcing (closing warrant audit integrity gaps).
+- **PRO-0136 (`spec-PRO-0136.md`):** Automated Continuous Spec-Validation Runner (companion to PRO-0133).
+- **PRO-0137 (`spec-PRO-0137.md`):** Warrant Assurance Tier Dashboard Exporter (companion to PRO-0134/0135).
+
+### Standing Gates on `main`
+
+| Gate on `main` | Exit | Reading |
+|---|:---:|---|
+| `scripts/test.sh` | **0** | **2,108 tests in 261 suites passed** (0 failures) |
+| `campaign.py check` | **0** | **Every case accounted for** (464 pass, 3 n/a, 0 inconclusive, 0 fail of 467) |
+| `strict-check.py` | **0** | **ratchet 405 held** (87% checked) |
+| `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
+| `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
+| `ledger_gate.py` | **0** | **137 ledger rows · 137 specs on disk · 0 declared without spec** |
+| `spec_citation_measure.py` | **0** | **19/19 checks passed** (129 briefs: 129 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `reckon.py check` | **0** | **939 rows reconciled**, gate clean |

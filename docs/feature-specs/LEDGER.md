@@ -142,3 +142,8 @@
 | PRO-0130 | Operator State and Evidence Integrity Chain | 2026-08-24 | Ready for AI |
 | PRO-0131 | High-DPI Display Scale Factor Injection Helper | 2026-08-24 | Ready for AI |
 | PRO-0132 | Automated Warrant Tier Promotion Ledger Helper | 2026-08-24 | Ready for AI |
+| PRO-0133 | Legacy Brief Spec-Validation and Retirement | 2026-08-24 | Ready for AI |
+| PRO-0134 | Registry Drift and Surface Conformance Figure Sourcing | 2026-08-24 | Ready for AI |
+| PRO-0135 | Operator State and Capture Trust Figure Sourcing | 2026-08-24 | Ready for AI |
+| PRO-0136 | Automated Continuous Spec-Validation Runner | 2026-08-24 | Ready for AI |
+| PRO-0137 | Warrant Assurance Tier Dashboard Exporter | 2026-08-24 | Ready for AI |
