@@ -93,8 +93,8 @@
         "SURF-004",
         "SURF-005"
       ],
-      "note": "Hardware event tap detection with contention back-off",
-      "effect": "device",
+      "note": "Hardware event tap detection with contention back-off EFFECT CORRECTED 2026-08-24: zoom region crop is pure native pixel math over existing SCK buffers, no external device I/O.",
+      "effect": "none",
       "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents"
     },
     {
