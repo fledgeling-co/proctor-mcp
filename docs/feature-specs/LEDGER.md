@@ -131,13 +131,3 @@
 | PRO-0119 | Retired Items Standalone Spec Closure | 2026-08-24 | Ready for Plan |
 | PRO-0120 | Cross-Automation Stack Yield and Takeover Reporting Harness | 2026-08-24 | Ready for Plan |
 | PRO-0121 | Retire Brief 108 Native OCR & High-DPI Zoom Inspector | 2026-08-24 | Ready for Plan |
-
-## Rows with no spec file
-
-The three rows below shipped or were retired before the spec convention was introduced or without a standalone spec file, and are declared here with their reasons:
-
-| ID | Title | Status | Why no spec file |
-|---|---|---|---|
-| PRO-0022 | A drawing fault must not kill the agent | Merged | Shipped 2026-08-14 without a standalone spec file; DEF-215. |
-| PRO-0031 | The health report is complete | Retired | Retired 2026-08-15 unbuilt; superseded by brief 51 and PRO-0050. |
-| PRO-0039 | Page-scoped refusal | Retired | Retired 2026-08-15 unbuilt; brief 40 banner names PRO-0039; DEF-215. |
