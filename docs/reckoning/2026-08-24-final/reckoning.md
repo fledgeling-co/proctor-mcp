@@ -1,6 +1,6 @@
 # Reckoning — proctor-mcp
 
-133 piece(s) of work remain — 5 product, 23 evidence, 105 decision — across 947 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.
+131 piece(s) of work remain — 0 product, 23 evidence, 108 decision — across 947 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.
 
 ## What it can speak for
 
@@ -20,26 +20,12 @@ Two counts, because they answer different questions. **Rows** is every entity on
 
 | Class | Work | Rows | Kind | What it is |
 |---|---:|---:|---|---|
-| `broken` | 5 | 5 | product-work | measured, and the answer was no |
 | `unmeasured` | 23 | 23 | evidence-work | nobody found out — the work here is becoming able to tell |
-| `undecided` | 105 | 105 | decision-work | the documents and the evidence disagree; needs a person |
-| `waived` | 0 | 22 | exception | somebody decided not to — an exception, and it stays visible |
-| `verified-done` | 0 | 792 | none | not remaining; kept so the denominator is honest |
+| `undecided` | 108 | 108 | decision-work | the documents and the evidence disagree; needs a person |
+| `waived` | 0 | 23 | exception | somebody decided not to — an exception, and it stays visible |
+| `verified-done` | 0 | 793 | none | not remaining; kept so the denominator is honest |
 
-## Broken (5)
-
-- **BRIEF-117-proctoragent-mutation-survival-elimination** — ProctorAgent Mutation Survival Elimination
-  - the registry records a defect or a failing case against this brief's subject
-- **BRIEF-85-proctoragents-mutants-mostly-survive** — Nineteen of twenty-two ProctorAgent mutants survived
-  - the registry records a defect or a failing case against this brief's subject
-- **BRIEF-89-the-registry-says-open-and-the-code-says-fixed** — The registry says open where the code says fixed
-  - the registry records a defect or a failing case against this brief's subject
-- **BRIEF-90-the-four-nobody-owns** — Twenty-seven unwrapped tests, a fixed timer, and two witnesses the rung wants
-  - the registry records a defect or a failing case against this brief's subject
-- **DEF-033** — Nineteen of twenty-two trustworthy-scored ProctorAgent mutants survived, against half in ProctorCore
-  - a defect is a measured negative result — the unit of product work behind every failing case that cites it
-
-## Undecided (105)
+## Undecided (108)
 
 - **BRIEF-00-WAVE-7-DIRECTION** — Wave 7 direction: Cua underneath, Proctor on top
   - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
@@ -121,9 +107,9 @@ Two counts, because they answer different questions. **Rows** is every entity on
   - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
 - **BRIEF-27-foreground-takeover-overlay** — When Proctor must take the front, take it visibly and hold it
   - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
-- _…and 65 more in ledger.json_
+- _…and 68 more in ledger.json_
 
-## Decisions on the record (22)
+## Decisions on the record (23)
 
 Not remaining work, and not done either. Each of these was ruled out by somebody, and the reason it was ruled out can stop being true — a state that had no hook may get one, an account that could not be reached may become reachable. They stay on the ledger so that when the reason expires, the item is still there.
 
@@ -140,6 +126,8 @@ Not remaining work, and not done either. Each of these was ruled out by somebody
 - **BRIEF-115-tart-and-lume-guest-vm-virtualization-fixture** — Tart and Lume Guest VM Virtualization Fixture
   - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
 - **BRIEF-116-maestro-flow-network-isolated-fixture** — Maestro Flow Network-Isolated Step Fixture
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-117-proctoragent-mutation-survival-elimination** — ProctorAgent Mutation Survival Elimination
   - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
 - **BRIEF-118-headless-simulator-provisioning-and-teardown-hook** — Headless Simulator Provisioning and Teardown Hook
   - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.

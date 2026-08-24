@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-026, DEF-033]
-status: to-triage
+status: retired
 ---
 
 # ProctorAgent Mutation Survival Elimination

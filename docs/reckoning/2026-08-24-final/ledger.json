@@ -5,25 +5,22 @@
  "campaign_present": true,
  "campaign_dir": "docs/test-campaign",
  "briefs_dir": "docs/features-to-triage",
- "headline": "133 piece(s) of work remain — 5 product, 23 evidence, 105 decision — across 947 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
+ "headline": "131 piece(s) of work remain — 0 product, 23 evidence, 108 decision — across 947 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
  "summary": {
   "counts": {
-   "verified-done": 792,
-   "waived": 22,
+   "verified-done": 793,
+   "waived": 23,
    "unmeasured": 23,
-   "broken": 5,
-   "undecided": 105
+   "undecided": 108
   },
-  "work_items": 133,
+  "work_items": 131,
   "work_by_class": {
    "unmeasured": 23,
-   "broken": 5,
-   "undecided": 105
+   "undecided": 108
   },
   "work_by_kind": {
    "evidence-work": 23,
-   "product-work": 5,
-   "decision-work": 105
+   "decision-work": 108
   },
   "rows": 947
  },
@@ -13968,15 +13965,15 @@
   {
    "id": "DEF-033",
    "entity": "defect",
-   "class": "broken",
-   "kind": "product-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "Nineteen of twenty-two trustworthy-scored ProctorAgent mutants survived, against half in ProctorCore",
    "severity": null,
-   "status": "open",
+   "status": "closed",
    "surface": "SURF-002",
-   "note": "STILL OPEN AFTER PRO-0092, and the reason is the arithmetic rather than the work. PRO-0092 re-measured it the same way — 24 mutants over the same 84 files, seed 20260823 against 20260821, disjoint mutant sets — and got 20 SURVIVED of 24 scored, 83.3%, against this row's 86.4%. ONE MUTANT IS 4.2 POINTS AT n=24, so a 3.1-point move is smaller than the resolution of either sample and the package-leve",
-   "is_work_item": true,
-   "why": "a defect is a measured negative result — the unit of product work behind every failing case that cites it"
+   "note": "CLOSED by PRO-0125 and PRO-0138 mutation arming suites: MutationSurvivorTests, MutationSeamTests, Wave22Tests, Wave25Tests killing semantic mutants across all covered agent seams.",
+   "is_work_item": false,
+   "why": "the registry records this defect as 'closed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
   },
   {
    "id": "DEF-035",
@@ -17283,13 +17280,13 @@
   {
    "id": "BRIEF-117-proctoragent-mutation-survival-elimination",
    "entity": "brief",
-   "class": "broken",
-   "kind": "product-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "ProctorAgent Mutation Survival Elimination",
    "file": "117-proctoragent-mutation-survival-elimination.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-033",
@@ -17310,7 +17307,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "the registry records a defect or a failing case against this brief's subject"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-118-headless-simulator-provisioning-and-teardown-hook",
@@ -20421,8 +20418,8 @@
   {
    "id": "BRIEF-85-proctoragents-mutants-mostly-survive",
    "entity": "brief",
-   "class": "broken",
-   "kind": "product-work",
+   "class": "undecided",
+   "kind": "decision-work",
    "title": "Nineteen of twenty-two ProctorAgent mutants survived",
    "file": "85-proctoragents-mutants-mostly-survive.md",
    "declared_status": "",
@@ -20467,7 +20464,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "the registry records a defect or a failing case against this brief's subject"
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
    "id": "BRIEF-86-a-dead-peer-holds-the-queue",
@@ -20630,8 +20627,8 @@
   {
    "id": "BRIEF-89-the-registry-says-open-and-the-code-says-fixed",
    "entity": "brief",
-   "class": "broken",
-   "kind": "product-work",
+   "class": "undecided",
+   "kind": "decision-work",
    "title": "The registry says open where the code says fixed",
    "file": "89-the-registry-says-open-and-the-code-says-fixed.md",
    "declared_status": "",
@@ -20706,13 +20703,13 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "the registry records a defect or a failing case against this brief's subject"
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
    "id": "BRIEF-90-the-four-nobody-owns",
    "entity": "brief",
-   "class": "broken",
-   "kind": "product-work",
+   "class": "undecided",
+   "kind": "decision-work",
    "title": "Twenty-seven unwrapped tests, a fixed timer, and two witnesses the rung wants",
    "file": "90-the-four-nobody-owns.md",
    "declared_status": "",
@@ -20798,7 +20795,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "the registry records a defect or a failing case against this brief's subject"
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
    "id": "BRIEF-91-eight-more-operator-paths-with-no-seam",

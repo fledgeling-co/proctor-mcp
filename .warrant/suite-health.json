@@ -5,8 +5,53 @@
  "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/docs/test-campaign",
  "campaign_gate_clear": true,
  "cases": 467,
+ "classes": {
+  "capture-trust": {
+   "green": false,
+   "high_water": null,
+   "measured": false,
+   "mutation_score": null
+  },
+  "evidence-integrity": {
+   "green": false,
+   "high_water": null,
+   "measured": false,
+   "mutation_score": null
+  },
+  "operator-state": {
+   "green": false,
+   "high_water": null,
+   "measured": false,
+   "mutation_score": null
+  },
+  "registry-drift": {
+   "green": false,
+   "high_water": null,
+   "measured": false,
+   "mutation_score": null
+  },
+  "release-integrity": {
+   "green": false,
+   "high_water": null,
+   "measured": false,
+   "mutation_score": null
+  },
+  "run-lifecycle": {
+   "green": false,
+   "high_water": null,
+   "measured": false,
+   "mutation_score": null
+  },
+  "surface-conformance": {
+   "green": false,
+   "high_water": null,
+   "measured": false,
+   "mutation_score": null
+  }
+ },
  "effect_rung_passes": 421,
- "generated_at": "2026-08-24T12:07:32.250522+00:00",
+ "generated_at": "2026-08-24T13:07:58.485770+00:00",
+ "green": false,
  "inconclusive": 0,
  "mutation_measured": false,
  "note": "armed_ratio is passes watched to fail over passes; an unarmed pass is not known to bite. `green` is not set here: in warrant it means the mutation score is holding, and this plugin does not measure mutation survival. Run warrant:assay for that number.",
