@@ -9,11 +9,6 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
-| `120-native-ocr-and-high-dpi-inspection-fixture.md` | `docs/features-to-triage/120-native-ocr-and-high-dpi-inspection-fixture.md` | Intake from reckoning 2026-08-24-final pending triage (BLOCK-0006) |
-| `121-surface-conformance-and-capture-trust-sourcing.md` | `docs/features-to-triage/121-surface-conformance-and-capture-trust-sourcing.md` | Intake from warrant assay gaps pending triage |
-| `122-operator-state-and-evidence-integrity-chain.md` | `docs/features-to-triage/122-operator-state-and-evidence-integrity-chain.md` | Intake from audit and evidence integrity gaps pending triage |
-| `123-high-dpi-display-scale-factor-injection-helper.md` | `docs/features-to-triage/123-high-dpi-display-scale-factor-injection-helper.md` | Intake proposed companion pending triage |
-| `124-automated-warrant-tier-promotion-ledger-helper.md` | `docs/features-to-triage/124-automated-warrant-tier-promotion-ledger-helper.md` | Intake proposed companion pending triage |
 
 ## Briefs several specs share
 

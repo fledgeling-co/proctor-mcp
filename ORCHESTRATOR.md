@@ -3246,3 +3246,29 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `ledger_gate.py` | **0** | **127 ledger rows · 127 specs on disk · 0 declared without spec** |
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (119 briefs: 119 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | **926 rows reconciled**, gate clean |
+
+## Wave 23 — High-DPI Inspection Fixtures, Warrant Charter Sourcing & Audit Provenance (2026-08-24)
+
+**Status:** Wave 23 open on `main` · 5 items (PRO-0128..PRO-0132).
+**Berths:** 6 available (sampled via harbourmaster `berths.py`, cpu healthy, memory tight, overall tight).
+
+### Wave 23 DAG & Execution Plan
+
+- **PRO-0128 (`spec-PRO-0128.md`):** Native OCR and High-DPI Inspection Fixture (unblocking `BLOCK-0006` / `SURF-007`).
+- **PRO-0129 (`spec-PRO-0129.md`):** Surface Conformance and Capture Trust Sourcing (closing warrant surface conformance gaps).
+- **PRO-0130 (`spec-PRO-0130.md`):** Operator State and Evidence Integrity Chain (closing warrant evidence integrity gaps).
+- **PRO-0131 (`spec-PRO-0131.md`):** High-DPI Display Scale Factor Injection Helper (companion to PRO-0128).
+- **PRO-0132 (`spec-PRO-0132.md`):** Automated Warrant Tier Promotion Ledger Helper (advancing warrant charter levels).
+
+### Standing Gates on `main`
+
+| Gate on `main` | Exit | Reading |
+|---|:---:|---|
+| `scripts/test.sh` | **0** | **2,108 tests in 261 suites passed** (0 failures) |
+| `campaign.py check` | **0** | **Every case accounted for** (464 pass, 3 n/a, 0 inconclusive, 0 fail of 467) |
+| `strict-check.py` | **0** | **ratchet 405 held** (87% checked) |
+| `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
+| `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
+| `ledger_gate.py` | **0** | **132 ledger rows · 132 specs on disk · 0 declared without spec** |
+| `spec_citation_measure.py` | **0** | **19/19 checks passed** (124 briefs: 124 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `reckon.py check` | **0** | **933 rows reconciled**, gate clean |
