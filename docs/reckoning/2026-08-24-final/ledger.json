@@ -5,30 +5,32 @@
  "campaign_present": true,
  "campaign_dir": "docs/test-campaign",
  "briefs_dir": "docs/features-to-triage",
- "headline": "131 piece(s) of work remain — 4 product, 23 evidence, 103 decision — across 926 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
+ "headline": "138 piece(s) of work remain — 5 product, 23 evidence, 109 decision — across 933 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known. 6 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.",
  "summary": {
   "counts": {
    "verified-done": 792,
    "waived": 3,
    "unmeasured": 23,
-   "broken": 4,
+   "broken": 5,
    "undecided": 103,
-   "retirable": 1
+   "retirable": 1,
+   "unjoined": 6
   },
-  "work_items": 131,
+  "work_items": 138,
   "work_by_class": {
    "unmeasured": 23,
-   "broken": 4,
+   "broken": 5,
    "undecided": 103,
-   "retirable": 1
+   "retirable": 1,
+   "unjoined": 6
   },
   "work_by_kind": {
    "evidence-work": 23,
-   "product-work": 4,
-   "decision-work": 103,
+   "product-work": 5,
+   "decision-work": 109,
    "bookkeeping": 1
   },
-  "rows": 926
+  "rows": 933
  },
  "denominators": {
   "cases_adjudicated": {
@@ -56,9 +58,9 @@
    "means": "at least one case on this surface reached a verdict."
   },
   "briefs_joined": {
-   "n": 113,
-   "of": 113,
-   "pct": 100.0,
+   "n": 114,
+   "of": 120,
+   "pct": 95.0,
    "means": "the brief could be tied to something in the registry at all."
   },
   "is_floor": true,
@@ -2221,11 +2223,17 @@
     "target": "REQ-137",
     "method": "cited",
     "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-reckoning-intake-trawl",
+    "target": "DEF-033",
+    "method": "cited",
+    "confidence": 1.0
    }
   ],
-  "briefs_joined": 113,
-  "briefs_total": 113,
-  "pct": 100.0,
+  "briefs_joined": 114,
+  "briefs_total": 120,
+  "pct": 95.0,
   "weak": false,
   "note": "cited edges are citations somebody wrote; overlap edges are guesses and cannot retire a brief"
  },
@@ -16180,6 +16188,228 @@
    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
+   "id": "BRIEF-114-ios-simulator-boot-fixture-harness",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "iOS Simulator Boot Fixture Harness",
+   "file": "114-ios-simulator-boot-fixture-harness.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "DEF-285",
+     "kind": "defect",
+     "score": 0.067
+    },
+    {
+     "target": "REQ-072",
+     "kind": "requirement",
+     "score": 0.061
+    },
+    {
+     "target": "DEF-100",
+     "kind": "defect",
+     "score": 0.056
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
+   "id": "BRIEF-115-tart-and-lume-guest-vm-virtualization-fixture",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "Tart and Lume Guest VM Virtualization Fixture",
+   "file": "115-tart-and-lume-guest-vm-virtualization-fixture.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "REQ-195",
+     "kind": "requirement",
+     "score": 0.062
+    },
+    {
+     "target": "DEF-100",
+     "kind": "defect",
+     "score": 0.048
+    },
+    {
+     "target": "REQ-038",
+     "kind": "requirement",
+     "score": 0.045
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
+   "id": "BRIEF-116-maestro-flow-network-isolated-fixture",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "Maestro Flow Network-Isolated Step Fixture",
+   "file": "116-maestro-flow-network-isolated-fixture.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "DEF-025",
+     "kind": "defect",
+     "score": 0.064
+    },
+    {
+     "target": "REQ-130",
+     "kind": "requirement",
+     "score": 0.057
+    },
+    {
+     "target": "REQ-055",
+     "kind": "requirement",
+     "score": 0.05
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
+   "id": "BRIEF-117-proctoragent-mutation-survival-elimination",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "ProctorAgent Mutation Survival Elimination",
+   "file": "117-proctoragent-mutation-survival-elimination.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "REQ-132",
+     "kind": "requirement",
+     "score": 0.071
+    },
+    {
+     "target": "REQ-109",
+     "kind": "requirement",
+     "score": 0.065
+    },
+    {
+     "target": "REQ-083",
+     "kind": "requirement",
+     "score": 0.064
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
+   "id": "BRIEF-118-headless-simulator-provisioning-and-teardown-hook",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "Headless Simulator Provisioning and Teardown Hook",
+   "file": "118-headless-simulator-provisioning-and-teardown-hook.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "REQ-160",
+     "kind": "requirement",
+     "score": 0.065
+    },
+    {
+     "target": "REQ-130",
+     "kind": "requirement",
+     "score": 0.045
+    },
+    {
+     "target": "REQ-064",
+     "kind": "requirement",
+     "score": 0.044
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
+   "id": "BRIEF-119-guest-vm-health-telemetry-and-socket-probe",
+   "entity": "brief",
+   "class": "unjoined",
+   "kind": "decision-work",
+   "title": "Guest VM Health Telemetry and Socket Probe",
+   "file": "119-guest-vm-health-telemetry-and-socket-probe.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [],
+   "near_misses": [
+    {
+     "target": "DEF-029",
+     "kind": "defect",
+     "score": 0.047
+    },
+    {
+     "target": "REQ-076",
+     "kind": "requirement",
+     "score": 0.046
+    },
+    {
+     "target": "DEF-024",
+     "kind": "defect",
+     "score": 0.04
+    }
+   ],
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
+   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+  },
+  {
    "id": "BRIEF-12-gate-flow-replay-stability",
    "entity": "brief",
    "class": "undecided",
@@ -19642,6 +19872,35 @@
    "unclassifiable_ids": null,
    "remedy": null,
    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+  },
+  {
+   "id": "BRIEF-reckoning-intake-trawl",
+   "entity": "brief",
+   "class": "broken",
+   "kind": "product-work",
+   "title": "Ideation Trawl — Reckoning Unmeasured & Broken Work (2026-08-24)",
+   "file": ".ideation/reckoning-intake-trawl.md",
+   "declared_status": "",
+   "generated_by": null,
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "DEF-033",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [
+     "DEF-033"
+    ],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the registry records a defect or a failing case against this brief's subject"
   }
  ]
 }

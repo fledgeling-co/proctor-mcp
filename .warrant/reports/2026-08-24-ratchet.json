@@ -1,0 +1,287 @@
+{
+ "at": "2026-08-24T09:55:10.899849+00:00",
+ "classes": {
+  "capture-trust": {
+   "blockers": [
+    "oracle plane not green for this class"
+   ],
+   "calibrated_at": null,
+   "current_tier": 0,
+   "earned_tier": 0,
+   "escapes_since_calibration": [],
+   "lane_drift": [
+    "no lane is pinned for this class, so the control cannot be shown unchanged"
+   ],
+   "max_tier": 4,
+   "oracle": {
+    "coverage": 0.9545,
+    "lineage_gaps": 2,
+    "threshold": 0.95
+   },
+   "regression": {
+    "cases": 0,
+    "not_caught": []
+   },
+   "triggers": [
+    {
+     "reason": "no lane is pinned for this class, so the control cannot be shown unchanged",
+     "trigger": "model_drift"
+    }
+   ]
+  },
+  "evidence-integrity": {
+   "blockers": [
+    "oracle plane not green for this class"
+   ],
+   "calibrated_at": null,
+   "current_tier": 0,
+   "earned_tier": 0,
+   "escapes_since_calibration": [],
+   "lane_drift": [
+    "no lane is pinned for this class, so the control cannot be shown unchanged"
+   ],
+   "max_tier": 0,
+   "oracle": {
+    "coverage": 0.905,
+    "lineage_gaps": 19,
+    "threshold": 0.95
+   },
+   "regression": {
+    "cases": 0,
+    "not_caught": []
+   },
+   "triggers": [
+    {
+     "reason": "no lane is pinned for this class, so the control cannot be shown unchanged",
+     "trigger": "model_drift"
+    },
+    {
+     "reason": "oracle coverage is 90.5% against a tier-1 threshold of 95.0%",
+     "trigger": "oracle_coverage"
+    }
+   ]
+  },
+  "operator-state": {
+   "blockers": [
+    "oracle plane not green for this class"
+   ],
+   "calibrated_at": null,
+   "current_tier": 0,
+   "earned_tier": 0,
+   "escapes_since_calibration": [],
+   "lane_drift": [
+    "no lane is pinned for this class, so the control cannot be shown unchanged"
+   ],
+   "max_tier": 0,
+   "oracle": {
+    "coverage": 0.9455,
+    "lineage_gaps": 3,
+    "threshold": 0.95
+   },
+   "regression": {
+    "cases": 0,
+    "not_caught": []
+   },
+   "triggers": [
+    {
+     "reason": "no lane is pinned for this class, so the control cannot be shown unchanged",
+     "trigger": "model_drift"
+    },
+    {
+     "reason": "oracle coverage is 94.5% against a tier-1 threshold of 95.0%",
+     "trigger": "oracle_coverage"
+    }
+   ]
+  },
+  "registry-drift": {
+   "blockers": [
+    "oracle plane not green for this class"
+   ],
+   "calibrated_at": null,
+   "current_tier": 0,
+   "earned_tier": 0,
+   "escapes_since_calibration": [],
+   "lane_drift": [
+    "no lane is pinned for this class, so the control cannot be shown unchanged"
+   ],
+   "max_tier": 4,
+   "oracle": {
+    "coverage": 0.963,
+    "lineage_gaps": 1,
+    "threshold": 0.95
+   },
+   "regression": {
+    "cases": 0,
+    "not_caught": []
+   },
+   "triggers": [
+    {
+     "reason": "no lane is pinned for this class, so the control cannot be shown unchanged",
+     "trigger": "model_drift"
+    }
+   ]
+  },
+  "release-integrity": {
+   "blockers": [
+    "the assay is not green",
+    "no clean regression run covering this class",
+    "the pinned lanes no longer match the calibration"
+   ],
+   "calibrated_at": null,
+   "current_tier": 0,
+   "earned_tier": 1,
+   "escapes_since_calibration": [],
+   "lane_drift": [
+    "no lane is pinned for this class, so the control cannot be shown unchanged"
+   ],
+   "max_tier": 4,
+   "oracle": {
+    "coverage": 1.0,
+    "lineage_gaps": 0,
+    "threshold": 0.95
+   },
+   "regression": {
+    "cases": 0,
+    "not_caught": []
+   },
+   "triggers": [
+    {
+     "reason": "no lane is pinned for this class, so the control cannot be shown unchanged",
+     "trigger": "model_drift"
+    }
+   ]
+  },
+  "run-lifecycle": {
+   "blockers": [
+    "the assay is not green",
+    "no clean regression run covering this class",
+    "the pinned lanes no longer match the calibration"
+   ],
+   "calibrated_at": null,
+   "current_tier": 0,
+   "earned_tier": 1,
+   "escapes_since_calibration": [],
+   "lane_drift": [
+    "no lane is pinned for this class, so the control cannot be shown unchanged"
+   ],
+   "max_tier": 4,
+   "oracle": {
+    "coverage": 1.0,
+    "lineage_gaps": 0,
+    "threshold": 0.95
+   },
+   "regression": {
+    "cases": 0,
+    "not_caught": []
+   },
+   "triggers": [
+    {
+     "reason": "no lane is pinned for this class, so the control cannot be shown unchanged",
+     "trigger": "model_drift"
+    }
+   ]
+  },
+  "surface-conformance": {
+   "blockers": [
+    "the assay is not green",
+    "no clean regression run covering this class",
+    "the pinned lanes no longer match the calibration"
+   ],
+   "calibrated_at": null,
+   "current_tier": 0,
+   "earned_tier": 0,
+   "escapes_since_calibration": [],
+   "lane_drift": [
+    "no lane is pinned for this class, so the control cannot be shown unchanged"
+   ],
+   "max_tier": 4,
+   "oracle": {
+    "coverage": 0.8348,
+    "lineage_gaps": 19,
+    "threshold": 0.95
+   },
+   "regression": {
+    "cases": 0,
+    "not_caught": []
+   },
+   "triggers": [
+    {
+     "reason": "no lane is pinned for this class, so the control cannot be shown unchanged",
+     "trigger": "model_drift"
+    }
+   ]
+  }
+ },
+ "dry_run": false,
+ "inputs": {
+  "escapes": {
+   "rows": 0
+  },
+  "lanes": {
+   "note": "no lanes.toml: no class's control can be shown unchanged",
+   "present": false
+  },
+  "oracle_coverage": {
+   "present": true
+  },
+  "regression": {
+   "ok": null,
+   "present": false
+  },
+  "suite_health": {
+   "assay_green": false,
+   "cannot_fail": null,
+   "mutation_score": null,
+   "present": true
+  },
+  "westgard": {
+   "charted": false,
+   "note": "0 run(s) against a minimum of 5: too few to chart, so no control-chart signal either way",
+   "runs": 0,
+   "violations": []
+  }
+ },
+ "proposals": [
+  {
+   "defect_class": "run-lifecycle",
+   "evidence": {
+    "assay_green": false,
+    "calibrated_at": null,
+    "oracle": {
+     "coverage": 1.0,
+     "lineage_gaps": 0,
+     "threshold": 0.95
+    },
+    "regression": {
+     "cases": 0,
+     "not_caught": []
+    }
+   },
+   "from_tier": 0,
+   "to_tier": 1
+  },
+  {
+   "defect_class": "release-integrity",
+   "evidence": {
+    "assay_green": false,
+    "calibrated_at": null,
+    "oracle": {
+     "coverage": 1.0,
+     "lineage_gaps": 0,
+     "threshold": 0.95
+    },
+    "regression": {
+     "cases": 0,
+     "not_caught": []
+    }
+   },
+   "from_tier": 0,
+   "to_tier": 1
+  }
+ ],
+ "revocations": [],
+ "revoked": [],
+ "tier3": "counted from ledger rows carrying a defect_class; see this script's docstring",
+ "tier4": "unreachable by design",
+ "warrant_version": "1"
+}
