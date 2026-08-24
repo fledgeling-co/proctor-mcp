@@ -15,6 +15,11 @@ empty is not a row: it fails the check the same way a missing row does.
 | `40-page-scoped-refusal.md` | PRO-0039, Retired 2026-08-15 | Retired unbuilt — the brief's own banner says so, and names PRO-0039. No spec was written, so nothing can cite it. DEF-215. |
 
 
+| `110-covered-target-cursor-plane-witness.md` | untriaged | Filed 2026-08-24 by shipyard:intake; unblocks BLOCK-0002. |
+| `111-retired-items-spec-closure.md` | untriaged | Filed 2026-08-24 by shipyard:intake; closes DEF-215. |
+| `112-cross-automation-stack-reporting-harness.md` | untriaged | Filed 2026-08-24 by shipyard:intake; unblocks BLOCK-0003. |
+| `113-retire-pro-0108-native-ocr-zoom.md` | untriaged | Filed 2026-08-24 by shipyard:intake; closes retirable loop on Brief 108. |
+
 ## Briefs several specs share
 
 One-to-one is the rule for the `**Brief:**` header, and these four briefs are why it is not the
