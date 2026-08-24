@@ -3173,3 +3173,21 @@ Open defects: **2** (`DEF-033` measured negative, `DEF-215` declared retired ite
 - **Requirements observed:** 79.9% → **86.2%** (119/138, +6.3 pts).
 - **Cases adjudicated:** 99.1% → **99.3%** (458/461).
 - **Briefs joined:** 100.0% (109/109).
+
+### Wave 21 pre-triage complete & Wave 21a in flight (2026-08-24)
+
+- **Pre-triage:** Briefs 110..113 triaged into specs PRO-0118..PRO-0121 (`spec_citation_measure.py` 19/19 passed, `ledger_gate.py` PASS).
+- **Wave 21a in flight:**
+  - **PRO-0118 (`ai/pro-0118`):** Covered-Target Cursor Plane Witness (unblocking `BLOCK-0002` / `REQ-043`).
+  - **PRO-0119 (`ai/pro-0119`):** Retired Items Standalone Spec Closure for PRO-0022, PRO-0031, PRO-0039 (closing `DEF-215`).
+- **Wave 21b queued:**
+  - **PRO-0120 (`spec-PRO-0120.md`):** Cross-Automation Stack Yield and Takeover Reporting Harness (unblocking `BLOCK-0003` / `REQ-081`).
+  - **PRO-0121 (`spec-PRO-0121.md`):** Retire Brief 108 Native OCR & High-DPI Zoom Inspector (reconciling retirable bookkeeping).
+
+Standing gates on `main` (`6fada0e`):
+- `scripts/test.sh`: **PASS: 2,087+ tests in 256+ suites passed**
+- `scripts/campaign/test_instruments.py`: **295 passed, 0 failed**
+- `scripts/campaign/ledger_gate.py`: **PASS** (121 rows, 118 specs, 3 declared without spec, 61 merged in git)
+- `scripts/campaign/spec_citation_measure.py`: **19/19 passed** (113 briefs: 111 claimed, 2 registered, 0 unclaimed)
+- `scripts/campaign/shot_disposition.py`: **47 images disposed, 0 citation failures**
+- `capture-lineage.py --gate`: **ratchet 6 held**
