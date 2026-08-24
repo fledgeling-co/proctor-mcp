@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-001, REQ-064]
+status: to-triage
+---
+
 # Registry Drift and Surface Conformance Figure Sourcing
 
 - origin: docs/test-campaign/evidence.html · 2026-08-24

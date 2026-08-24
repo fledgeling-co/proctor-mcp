@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-001, REQ-064]
+status: to-triage
+---
+
 # Surface Conformance and Capture Trust Sourcing
 
 - origin: docs/test-campaign/evidence.html · 2026-08-24

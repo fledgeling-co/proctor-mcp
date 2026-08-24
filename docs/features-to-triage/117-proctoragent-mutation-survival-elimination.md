@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-026, DEF-033]
+status: to-triage
+---
+
 # ProctorAgent Mutation Survival Elimination
 
 - origin: docs/reckoning/2026-08-24-final/reckoning.md · 2026-08-24

@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-007, REQ-007]
+status: to-triage
+---
+
 # High-DPI Display Scale Factor Injection Helper
 
 - origin: docs/features-to-triage/.ideation/reckoning-intake-round2-trawl.md · 2026-08-24

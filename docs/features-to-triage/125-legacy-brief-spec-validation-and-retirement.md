@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-025, REQ-001]
+status: to-triage
+---
+
 # Legacy Brief Spec-Validation and Retirement
 
 - origin: docs/reckoning/2026-08-24-final/reckoning.md · 2026-08-24

@@ -756,3 +756,27 @@ public enum GuestOSVersionResolution {
              + "is untouched — this is a read, and a read does not release a slot."
     }
 }
+
+// MARK: - Guest Health & Telemetry Probe (PRO-0127)
+
+public struct GuestHealth: Codable, Sendable, Equatable {
+    public enum Status: String, Codable, Sendable {
+        case healthy
+        case degraded
+        case unreachable
+        case stalled
+    }
+
+    public var status: Status
+    public var pingLatencyMs: Double?
+    public var socketReachable: Bool
+    public var diagnosticNote: String?
+
+    public init(status: Status = .healthy, pingLatencyMs: Double? = nil,
+                socketReachable: Bool = true, diagnosticNote: String? = nil) {
+        self.status = status
+        self.pingLatencyMs = pingLatencyMs
+        self.socketReachable = socketReachable
+        self.diagnosticNote = diagnosticNote
+    }
+}

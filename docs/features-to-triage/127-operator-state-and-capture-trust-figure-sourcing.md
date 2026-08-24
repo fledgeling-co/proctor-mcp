@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-012, REQ-015]
+status: to-triage
+---
+
 # Operator State and Capture Trust Figure Sourcing
 
 - origin: docs/test-campaign/evidence.html · 2026-08-24

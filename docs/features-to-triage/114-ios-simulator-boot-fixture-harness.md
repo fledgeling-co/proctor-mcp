@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-019, REQ-020]
+status: to-triage
+---
+
 # iOS Simulator Boot Fixture Harness
 
 - origin: docs/reckoning/2026-08-24-final/reckoning.md · 2026-08-24

@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-019, REQ-020]
+status: to-triage
+---
+
 # Headless Simulator Provisioning and Teardown Hook
 
 - origin: docs/features-to-triage/.ideation/reckoning-intake-trawl.md · 2026-08-24

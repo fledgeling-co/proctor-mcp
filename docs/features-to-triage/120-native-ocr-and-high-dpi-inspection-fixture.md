@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-007, REQ-007]
+status: to-triage
+---
+
 # Native OCR and High-DPI Inspection Fixture
 
 - origin: docs/reckoning/2026-08-24-final/reckoning.md · 2026-08-24

@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-013, REQ-037]
+status: to-triage
+---
+
 # Guest VM Health Telemetry and Socket Probe
 
 - origin: docs/features-to-triage/.ideation/reckoning-intake-trawl.md · 2026-08-24

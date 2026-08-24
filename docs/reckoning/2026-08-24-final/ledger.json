@@ -5,32 +5,30 @@
  "campaign_present": true,
  "campaign_dir": "docs/test-campaign",
  "briefs_dir": "docs/features-to-triage",
- "headline": "144 piece(s) of work remain — 5 product, 23 evidence, 115 decision — across 939 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known. 12 brief(s) could not be tied to the registry at all; they are listed as `unjoined` and counted as decision work, rather than assumed unbuilt.",
+ "headline": "147 piece(s) of work remain — 5 product, 23 evidence, 105 decision — across 942 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
  "summary": {
   "counts": {
    "verified-done": 792,
    "waived": 3,
    "unmeasured": 23,
    "broken": 5,
-   "undecided": 103,
-   "retirable": 1,
-   "unjoined": 12
+   "undecided": 105,
+   "retirable": 14
   },
-  "work_items": 144,
+  "work_items": 147,
   "work_by_class": {
    "unmeasured": 23,
    "broken": 5,
-   "undecided": 103,
-   "retirable": 1,
-   "unjoined": 12
+   "undecided": 105,
+   "retirable": 14
   },
   "work_by_kind": {
    "evidence-work": 23,
    "product-work": 5,
-   "decision-work": 115,
-   "bookkeeping": 1
+   "decision-work": 105,
+   "bookkeeping": 14
   },
-  "rows": 939
+  "rows": 942
  },
  "denominators": {
   "cases_adjudicated": {
@@ -58,9 +56,9 @@
    "means": "at least one case on this surface reached a verdict."
   },
   "briefs_joined": {
-   "n": 114,
-   "of": 126,
-   "pct": 90.5,
+   "n": 129,
+   "of": 129,
+   "pct": 100.0,
    "means": "the brief could be tied to something in the registry at all."
   },
   "is_floor": true,
@@ -527,6 +525,78 @@
     "confidence": 1.0
    },
    {
+    "brief": "BRIEF-114-ios-simulator-boot-fixture-harness",
+    "target": "REQ-020",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-114-ios-simulator-boot-fixture-harness",
+    "target": "SURF-019",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-115-tart-and-lume-guest-vm-virtualization-fixture",
+    "target": "REQ-017",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-115-tart-and-lume-guest-vm-virtualization-fixture",
+    "target": "SURF-013",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-116-maestro-flow-network-isolated-fixture",
+    "target": "REQ-020",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-116-maestro-flow-network-isolated-fixture",
+    "target": "SURF-020",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-117-proctoragent-mutation-survival-elimination",
+    "target": "DEF-033",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-117-proctoragent-mutation-survival-elimination",
+    "target": "SURF-026",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-118-headless-simulator-provisioning-and-teardown-hook",
+    "target": "REQ-020",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-118-headless-simulator-provisioning-and-teardown-hook",
+    "target": "SURF-019",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-119-guest-vm-health-telemetry-and-socket-probe",
+    "target": "REQ-037",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-119-guest-vm-health-telemetry-and-socket-probe",
+    "target": "SURF-013",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
     "brief": "BRIEF-12-gate-flow-replay-stability",
     "target": "REQ-013",
     "method": "cited",
@@ -535,6 +605,126 @@
    {
     "brief": "BRIEF-12-gate-flow-replay-stability",
     "target": "REQ-016",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-120-native-ocr-and-high-dpi-inspection-fixture",
+    "target": "REQ-007",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-120-native-ocr-and-high-dpi-inspection-fixture",
+    "target": "SURF-007",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-121-surface-conformance-and-capture-trust-sourcing",
+    "target": "REQ-064",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-121-surface-conformance-and-capture-trust-sourcing",
+    "target": "SURF-001",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-122-operator-state-and-evidence-integrity-chain",
+    "target": "REQ-015",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-122-operator-state-and-evidence-integrity-chain",
+    "target": "SURF-012",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-123-high-dpi-display-scale-factor-injection-helper",
+    "target": "REQ-007",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-123-high-dpi-display-scale-factor-injection-helper",
+    "target": "SURF-007",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-124-automated-warrant-tier-promotion-ledger-helper",
+    "target": "REQ-102",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-124-automated-warrant-tier-promotion-ledger-helper",
+    "target": "SURF-025",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-125-legacy-brief-spec-validation-and-retirement",
+    "target": "REQ-001",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-125-legacy-brief-spec-validation-and-retirement",
+    "target": "SURF-025",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-126-registry-drift-and-surface-conformance-figure-sourcing",
+    "target": "REQ-064",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-126-registry-drift-and-surface-conformance-figure-sourcing",
+    "target": "SURF-001",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-127-operator-state-and-capture-trust-figure-sourcing",
+    "target": "REQ-015",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-127-operator-state-and-capture-trust-figure-sourcing",
+    "target": "SURF-012",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-128-automated-spec-validation-runner",
+    "target": "REQ-102",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-128-automated-spec-validation-runner",
+    "target": "SURF-025",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-129-warrant-assurance-tier-dashboard-exporter",
+    "target": "REQ-102",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-129-warrant-assurance-tier-dashboard-exporter",
+    "target": "SURF-025",
     "method": "cited",
     "confidence": 1.0
    },
@@ -2223,17 +2413,11 @@
     "target": "REQ-137",
     "method": "cited",
     "confidence": 1.0
-   },
-   {
-    "brief": "BRIEF-reckoning-intake-trawl",
-    "target": "DEF-033",
-    "method": "cited",
-    "confidence": 1.0
    }
   ],
-  "briefs_joined": 114,
-  "briefs_total": 126,
-  "pct": 90.5,
+  "briefs_joined": 129,
+  "briefs_total": 129,
+  "pct": 100.0,
   "weak": false,
   "note": "cited edges are citations somebody wrote; overlap edges are guesses and cannot retire a brief"
  },
@@ -16190,224 +16374,194 @@
   {
    "id": "BRIEF-114-ios-simulator-boot-fixture-harness",
    "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
+   "class": "retirable",
+   "kind": "bookkeeping",
    "title": "iOS Simulator Boot Fixture Harness",
    "file": "114-ios-simulator-boot-fixture-harness.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "DEF-285",
-     "kind": "defect",
-     "score": 0.067
+     "target": "REQ-020",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "REQ-072",
-     "kind": "requirement",
-     "score": 0.061
-    },
-    {
-     "target": "DEF-100",
-     "kind": "defect",
-     "score": 0.056
+     "target": "SURF-019",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "observed at rung 'interactive-glass', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
   },
   {
    "id": "BRIEF-115-tart-and-lume-guest-vm-virtualization-fixture",
    "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
+   "class": "retirable",
+   "kind": "bookkeeping",
    "title": "Tart and Lume Guest VM Virtualization Fixture",
    "file": "115-tart-and-lume-guest-vm-virtualization-fixture.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "REQ-195",
-     "kind": "requirement",
-     "score": 0.062
+     "target": "REQ-017",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "DEF-100",
-     "kind": "defect",
-     "score": 0.048
-    },
-    {
-     "target": "REQ-038",
-     "kind": "requirement",
-     "score": 0.045
+     "target": "SURF-013",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
   },
   {
    "id": "BRIEF-116-maestro-flow-network-isolated-fixture",
    "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
+   "class": "retirable",
+   "kind": "bookkeeping",
    "title": "Maestro Flow Network-Isolated Step Fixture",
    "file": "116-maestro-flow-network-isolated-fixture.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "DEF-025",
-     "kind": "defect",
-     "score": 0.064
+     "target": "REQ-020",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "REQ-130",
-     "kind": "requirement",
-     "score": 0.057
-    },
-    {
-     "target": "REQ-055",
-     "kind": "requirement",
-     "score": 0.05
+     "target": "SURF-020",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
   },
   {
    "id": "BRIEF-117-proctoragent-mutation-survival-elimination",
    "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
+   "class": "broken",
+   "kind": "product-work",
    "title": "ProctorAgent Mutation Survival Elimination",
    "file": "117-proctoragent-mutation-survival-elimination.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "REQ-132",
-     "kind": "requirement",
-     "score": 0.071
+     "target": "DEF-033",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "REQ-109",
-     "kind": "requirement",
-     "score": 0.065
-    },
-    {
-     "target": "REQ-083",
-     "kind": "requirement",
-     "score": 0.064
+     "target": "SURF-026",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "the registry records a defect or a failing case against this brief's subject"
   },
   {
    "id": "BRIEF-118-headless-simulator-provisioning-and-teardown-hook",
    "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
+   "class": "retirable",
+   "kind": "bookkeeping",
    "title": "Headless Simulator Provisioning and Teardown Hook",
    "file": "118-headless-simulator-provisioning-and-teardown-hook.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "REQ-160",
-     "kind": "requirement",
-     "score": 0.065
+     "target": "REQ-020",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "REQ-130",
-     "kind": "requirement",
-     "score": 0.045
-    },
-    {
-     "target": "REQ-064",
-     "kind": "requirement",
-     "score": 0.044
+     "target": "SURF-019",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "observed at rung 'interactive-glass', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
   },
   {
    "id": "BRIEF-119-guest-vm-health-telemetry-and-socket-probe",
    "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
+   "class": "retirable",
+   "kind": "bookkeeping",
    "title": "Guest VM Health Telemetry and Socket Probe",
    "file": "119-guest-vm-health-telemetry-and-socket-probe.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "DEF-029",
-     "kind": "defect",
-     "score": 0.047
+     "target": "REQ-037",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "REQ-076",
-     "kind": "requirement",
-     "score": 0.046
-    },
-    {
-     "target": "DEF-024",
-     "kind": "defect",
-     "score": 0.04
+     "target": "SURF-013",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
   },
   {
    "id": "BRIEF-12-gate-flow-replay-stability",
@@ -16444,187 +16598,322 @@
   {
    "id": "BRIEF-120-native-ocr-and-high-dpi-inspection-fixture",
    "entity": "brief",
-   "class": "unjoined",
+   "class": "undecided",
    "kind": "decision-work",
    "title": "Native OCR and High-DPI Inspection Fixture",
    "file": "120-native-ocr-and-high-dpi-inspection-fixture.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "REQ-190",
-     "kind": "requirement",
-     "score": 0.104
+     "target": "REQ-007",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "SURF-037",
-     "kind": "surface",
-     "score": 0.07
-    },
-    {
-     "target": "REQ-215",
-     "kind": "requirement",
-     "score": 0.05
+     "target": "SURF-007",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
    "id": "BRIEF-121-surface-conformance-and-capture-trust-sourcing",
    "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
+   "class": "retirable",
+   "kind": "bookkeeping",
    "title": "Surface Conformance and Capture Trust Sourcing",
    "file": "121-surface-conformance-and-capture-trust-sourcing.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "DEF-025",
-     "kind": "defect",
-     "score": 0.081
+     "target": "REQ-064",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "DEF-290",
-     "kind": "defect",
-     "score": 0.067
-    },
-    {
-     "target": "DEF-210",
-     "kind": "defect",
-     "score": 0.065
+     "target": "SURF-001",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
   },
   {
    "id": "BRIEF-122-operator-state-and-evidence-integrity-chain",
    "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
+   "class": "retirable",
+   "kind": "bookkeeping",
    "title": "Operator State and Evidence Integrity Chain",
    "file": "122-operator-state-and-evidence-integrity-chain.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
-    {
-     "target": "REQ-166",
-     "kind": "requirement",
-     "score": 0.062
-    },
+   "edges": [
     {
      "target": "REQ-015",
-     "kind": "requirement",
-     "score": 0.057
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "DEF-100",
-     "kind": "defect",
-     "score": 0.053
+     "target": "SURF-012",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
   },
   {
    "id": "BRIEF-123-high-dpi-display-scale-factor-injection-helper",
    "entity": "brief",
-   "class": "unjoined",
+   "class": "undecided",
    "kind": "decision-work",
    "title": "High-DPI Display Scale Factor Injection Helper",
    "file": "123-high-dpi-display-scale-factor-injection-helper.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "REQ-190",
-     "kind": "requirement",
-     "score": 0.049
+     "target": "REQ-007",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "REQ-130",
-     "kind": "requirement",
-     "score": 0.037
-    },
-    {
-     "target": "REQ-095",
-     "kind": "requirement",
-     "score": 0.035
+     "target": "SURF-007",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
   },
   {
    "id": "BRIEF-124-automated-warrant-tier-promotion-ledger-helper",
    "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
+   "class": "retirable",
+   "kind": "bookkeeping",
    "title": "Automated Warrant Tier Promotion Ledger Helper",
    "file": "124-automated-warrant-tier-promotion-ledger-helper.md",
-   "declared_status": "",
-   "generated_by": null,
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
    "is_work_item": true,
-   "edges": [],
-   "near_misses": [
+   "edges": [
     {
-     "target": "REQ-166",
-     "kind": "requirement",
-     "score": 0.07
+     "target": "REQ-102",
+     "method": "cited",
+     "confidence": 1.0
     },
     {
-     "target": "DEF-210",
-     "kind": "defect",
-     "score": 0.063
-    },
-    {
-     "target": "REQ-167",
-     "kind": "requirement",
-     "score": 0.058
+     "target": "SURF-025",
+     "method": "cited",
+     "confidence": 1.0
     }
    ],
+   "near_misses": null,
    "id_scan": {
     "cited": [],
     "shown": {},
     "shown_only": []
    },
    "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
+   "remedy": null,
+   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+  },
+  {
+   "id": "BRIEF-125-legacy-brief-spec-validation-and-retirement",
+   "entity": "brief",
+   "class": "retirable",
+   "kind": "bookkeeping",
+   "title": "Legacy Brief Spec-Validation and Retirement",
+   "file": "125-legacy-brief-spec-validation-and-retirement.md",
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "REQ-001",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-025",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+  },
+  {
+   "id": "BRIEF-126-registry-drift-and-surface-conformance-figure-sourcing",
+   "entity": "brief",
+   "class": "retirable",
+   "kind": "bookkeeping",
+   "title": "Registry Drift and Surface Conformance Figure Sourcing",
+   "file": "126-registry-drift-and-surface-conformance-figure-sourcing.md",
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "REQ-064",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-001",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+  },
+  {
+   "id": "BRIEF-127-operator-state-and-capture-trust-figure-sourcing",
+   "entity": "brief",
+   "class": "retirable",
+   "kind": "bookkeeping",
+   "title": "Operator State and Capture Trust Figure Sourcing",
+   "file": "127-operator-state-and-capture-trust-figure-sourcing.md",
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "REQ-015",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-012",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+  },
+  {
+   "id": "BRIEF-128-automated-spec-validation-runner",
+   "entity": "brief",
+   "class": "retirable",
+   "kind": "bookkeeping",
+   "title": "Automated Continuous Spec-Validation Runner",
+   "file": "128-automated-spec-validation-runner.md",
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "REQ-102",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-025",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
+  },
+  {
+   "id": "BRIEF-129-warrant-assurance-tier-dashboard-exporter",
+   "entity": "brief",
+   "class": "retirable",
+   "kind": "bookkeeping",
+   "title": "Warrant Assurance Tier Dashboard Exporter",
+   "file": "129-warrant-assurance-tier-dashboard-exporter.md",
+   "declared_status": "to-triage",
+   "generated_by": "reckon",
+   "is_work_item": true,
+   "edges": [
+    {
+     "target": "REQ-102",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-025",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done"
   },
   {
    "id": "BRIEF-13-audit-log-encryption-at-rest",
@@ -20057,72 +20346,6 @@
    "unclassifiable_ids": null,
    "remedy": null,
    "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
-  },
-  {
-   "id": "BRIEF-reckoning-intake-round2-trawl",
-   "entity": "brief",
-   "class": "unjoined",
-   "kind": "decision-work",
-   "title": "Ideation Trawl — Reckoning & Warrant Sourcing Intake (2026-08-24)",
-   "file": ".ideation/reckoning-intake-round2-trawl.md",
-   "declared_status": "",
-   "generated_by": null,
-   "is_work_item": true,
-   "edges": [],
-   "near_misses": [
-    {
-     "target": "REQ-166",
-     "kind": "requirement",
-     "score": 0.07
-    },
-    {
-     "target": "REQ-215",
-     "kind": "requirement",
-     "score": 0.067
-    },
-    {
-     "target": "REQ-190",
-     "kind": "requirement",
-     "score": 0.062
-    }
-   ],
-   "id_scan": {
-    "cited": [],
-    "shown": {},
-    "shown_only": []
-   },
-   "unclassifiable_ids": null,
-   "remedy": "read the brief against the registry and rule — the join is a guess and it returned nothing, so nothing here is a finding about the product yet",
-   "why": "the join could not tie this brief to anything in the registry. That is not evidence that it was never built — it is the inferential step of this pipeline returning nothing, and a person has to read the brief and rule"
-  },
-  {
-   "id": "BRIEF-reckoning-intake-trawl",
-   "entity": "brief",
-   "class": "broken",
-   "kind": "product-work",
-   "title": "Ideation Trawl — Reckoning Unmeasured & Broken Work (2026-08-24)",
-   "file": ".ideation/reckoning-intake-trawl.md",
-   "declared_status": "",
-   "generated_by": null,
-   "is_work_item": true,
-   "edges": [
-    {
-     "target": "DEF-033",
-     "method": "cited",
-     "confidence": 1.0
-    }
-   ],
-   "near_misses": null,
-   "id_scan": {
-    "cited": [
-     "DEF-033"
-    ],
-    "shown": {},
-    "shown_only": []
-   },
-   "unclassifiable_ids": null,
-   "remedy": null,
-   "why": "the registry records a defect or a failing case against this brief's subject"
   }
  ]
 }

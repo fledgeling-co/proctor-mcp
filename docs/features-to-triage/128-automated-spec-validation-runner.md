@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-025, REQ-102]
+status: to-triage
+---
+
 # Automated Continuous Spec-Validation Runner
 
 - origin: docs/features-to-triage/.ideation/reckoning-intake-round3-trawl.md · 2026-08-24

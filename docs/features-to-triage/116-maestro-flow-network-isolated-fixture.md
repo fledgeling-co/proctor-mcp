@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-020, REQ-020]
+status: to-triage
+---
+
 # Maestro Flow Network-Isolated Step Fixture
 
 - origin: docs/reckoning/2026-08-24-final/reckoning.md · 2026-08-24

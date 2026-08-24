@@ -1,3 +1,9 @@
+---
+generated-by: reckon
+reckon-sources: [SURF-013, REQ-017]
+status: to-triage
+---
+
 # Tart and Lume Guest VM Virtualization Fixture
 
 - origin: docs/reckoning/2026-08-24-final/reckoning.md · 2026-08-24
