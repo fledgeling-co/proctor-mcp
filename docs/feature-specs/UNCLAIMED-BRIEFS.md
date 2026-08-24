@@ -9,6 +9,12 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
+| `114-ios-simulator-boot-fixture-harness.md` | `docs/features-to-triage/114-ios-simulator-boot-fixture-harness.md` | Intake from reckoning 2026-08-24-final pending triage (BLOCK-0001) |
+| `115-tart-and-lume-guest-vm-virtualization-fixture.md` | `docs/features-to-triage/115-tart-and-lume-guest-vm-virtualization-fixture.md` | Intake from reckoning 2026-08-24-final pending triage (BLOCK-0004) |
+| `116-maestro-flow-network-isolated-fixture.md` | `docs/features-to-triage/116-maestro-flow-network-isolated-fixture.md` | Intake from reckoning 2026-08-24-final pending triage (BLOCK-0005) |
+| `117-proctoragent-mutation-survival-elimination.md` | `docs/features-to-triage/117-proctoragent-mutation-survival-elimination.md` | Intake from reckoning 2026-08-24-final pending triage (DEF-033) |
+| `118-headless-simulator-provisioning-and-teardown-hook.md` | `docs/features-to-triage/118-headless-simulator-provisioning-and-teardown-hook.md` | Intake proposed companion pending triage |
+| `119-guest-vm-health-telemetry-and-socket-probe.md` | `docs/features-to-triage/119-guest-vm-health-telemetry-and-socket-probe.md` | Intake proposed companion pending triage |
 
 ## Briefs several specs share
 
