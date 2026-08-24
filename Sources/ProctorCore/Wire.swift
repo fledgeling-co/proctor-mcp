@@ -387,6 +387,10 @@ public struct CaptureResult: Codable, Sendable {
     /// is false when it is false for this reason. Distinguishes an empty frame
     /// from a window Proctor excludes from its own captures by design.
     public var contentVerdict: CaptureContentVerdict?
+    /// PRO-0116. Present when optical character recognition (OCR) was requested
+    /// on a zoom crop (`recognize_text: true`). Contains recognized text bounding
+    /// boxes, strings, confidence values, and high-DPI contrast measurements.
+    public var ocr: ZoomOCRResult?
 
     public init(window: String, path: String, width: Int, height: Int, scale: Double,
                 status: FrameStatus, contentRect: Rect?, dirtyRectCount: Int, dirtyArea: Double,
@@ -396,7 +400,8 @@ public struct CaptureResult: Codable, Sendable {
                 normalization: CaptureNormalization? = nil, crop: CropRegion? = nil,
                 pointer: PointerOverlay? = nil,
                 content: FrameContentSummary? = nil,
-                contentVerdict: CaptureContentVerdict? = nil) {
+                contentVerdict: CaptureContentVerdict? = nil,
+                ocr: ZoomOCRResult? = nil) {
         self.window = window; self.path = path; self.width = width; self.height = height
         self.scale = scale; self.status = status; self.contentRect = contentRect
         self.dirtyRectCount = dirtyRectCount; self.dirtyArea = dirtyArea
@@ -405,6 +410,7 @@ public struct CaptureResult: Codable, Sendable {
         self.annotation = annotation; self.normalization = normalization; self.crop = crop
         self.pointer = pointer
         self.content = content; self.contentVerdict = contentVerdict
+        self.ocr = ocr
     }
 }
 
@@ -483,6 +489,56 @@ public struct CropRegion: Codable, Sendable, Equatable {
         self.source = source; self.node = node; self.requestedRegion = requestedRegion
         self.pixelRect = pixelRect; self.clamped = clamped; self.padding = padding
         self.fullPath = fullPath
+    }
+}
+
+// MARK: - Native Vision OCR for Zoom Assertions (PRO-0116)
+
+/// One recognized text element extracted from a native-resolution zoom crop.
+/// Carries the recognized text string, OCR confidence, exact bounding box in
+/// cropped pixel coordinates, pointBox in window points (scaled by display scale),
+/// and measured WCAG contrast information.
+public struct RecognizedTextItem: Codable, Sendable, Equatable {
+    public var text: String
+    public var confidence: Double
+    public var boundingBox: Rect       // in crop pixel coordinates (top-left origin)
+    public var pointBox: Rect          // in crop point coordinates (scaled by capture.scale)
+    public var contrastRatio: Double?  // measured WCAG contrast ratio (1.0..21.0)
+    public var foreground: String?     // hex string e.g. "#112233"
+    public var background: String?     // hex string e.g. "#ffffff"
+    public var contrastPass: Bool?     // true if contrastRatio >= 4.5 (or 3.0 for large text)
+
+    public init(text: String, confidence: Double, boundingBox: Rect, pointBox: Rect,
+                contrastRatio: Double? = nil, foreground: String? = nil,
+                background: String? = nil, contrastPass: Bool? = nil) {
+        self.text = text
+        self.confidence = confidence
+        self.boundingBox = boundingBox
+        self.pointBox = pointBox
+        self.contrastRatio = contrastRatio
+        self.foreground = foreground
+        self.background = background
+        self.contrastPass = contrastPass
+    }
+}
+
+/// The result of native Apple Vision OCR on a `proctor_zoom` crop (`recognize_text: true`).
+public struct ZoomOCRResult: Codable, Sendable, Equatable {
+    public var items: [RecognizedTextItem]
+    public var text: String             // concatenated recognized text lines
+    public var count: Int               // number of recognized text items
+    public var executionMs: Double      // execution duration in ms (< 500ms bounded)
+    public var scale: Double            // scale factor preserved (e.g. 2.0 on Retina)
+    public var timedOut: Bool           // whether bounded timeout triggered
+
+    public init(items: [RecognizedTextItem], text: String, count: Int? = nil,
+                executionMs: Double, scale: Double, timedOut: Bool = false) {
+        self.items = items
+        self.text = text
+        self.count = count ?? items.count
+        self.executionMs = executionMs
+        self.scale = scale
+        self.timedOut = timedOut
     }
 }
 

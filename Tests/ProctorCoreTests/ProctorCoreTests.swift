@@ -1831,6 +1831,7 @@ struct ZoomRegionCropTests {
         #expect(props["window"] != nil)
         #expect(props["region"] != nil)
         #expect(props["node"] != nil)
+        #expect(props["recognize_text"] != nil)
     }
 
     @Test("proctor_zoom advertises a bespoke output schema with freshness and crop fields")
@@ -1844,6 +1845,7 @@ struct ZoomRegionCropTests {
         #expect(props["path"] != nil)
         // The crop descriptor itself.
         #expect(props["crop"] != nil)
+        #expect(props["ocr"] != nil)
     }
 
     @Test("proctor_zoom rides in the core profile alongside capture, not in ax")
@@ -1969,19 +1971,28 @@ struct ZoomRegionCropTests {
         #expect(round.crop == nil)
     }
 
-    @Test("a zoom crop round-trips the crop descriptor and keeps the freshness fields")
+    @Test("a zoom crop round-trips the crop descriptor, OCR results, and keeps freshness fields")
     func cropRegionRoundTrips() throws {
         let crop = CropRegion(source: "element", node: "n7",
                               requestedRegion: Rect(x: 20, y: 50, w: 50, h: 20),
                               pixelRect: Rect(x: 40, y: 100, w: 100, h: 40),
                               clamped: false, padding: 0, fullPath: "/tmp/full.png")
+        let item = RecognizedTextItem(text: "Save", confidence: 0.98,
+                                      boundingBox: Rect(x: 10, y: 10, w: 50, h: 20),
+                                      pointBox: Rect(x: 5, y: 5, w: 25, h: 10),
+                                      contrastRatio: 8.5, foreground: "#ffffff",
+                                      background: "#000000", contrastPass: true)
+        let ocr = ZoomOCRResult(items: [item], text: "Save", executionMs: 45.2, scale: 2.0)
         let result = CaptureResult(window: "win:1:1", path: "/tmp/crop.png", width: 100, height: 40,
                                    scale: 2, status: .complete, contentRect: Rect(x: 0, y: 0, w: 400, h: 300),
                                    dirtyRectCount: 3, dirtyArea: 0.1, capturedAt: 42,
-                                   framesWaited: 2, trustworthy: true, crop: crop)
+                                   framesWaited: 2, trustworthy: true, crop: crop, ocr: ocr)
         let round = try JSONDecoder().decode(CaptureResult.self,
                                              from: JSONEncoder().encode(result))
         #expect(round.crop == crop)
+        #expect(round.ocr == ocr)
+        #expect(round.ocr?.items.first?.text == "Save")
+        #expect(round.ocr?.items.first?.contrastPass == true)
         // Freshness is the capture's own, unmodified by cropping.
         #expect(round.trustworthy == true)
         #expect(round.framesWaited == 2)

@@ -73,14 +73,15 @@ public extension ToolCatalogue {
                  "content": p("object"), "contentVerdict": p("string")]),
 
             "proctor_zoom": openObject(
-                "A native-resolution crop of a region or element, with the same freshness metadata as a capture; the crop PNG is on disk at `path`, never inline, and `crop` names what was cut.",
+                "A native-resolution crop of a region or element, with the same freshness metadata as a capture; the crop PNG is on disk at `path`, never inline, `crop` names what was cut, and optional `ocr` carries recognized text blocks and contrast measurements.",
                 ["window": p("string"), "path": p("string"), "width": p("number"),
                  "height": p("number"), "scale": p("number"), "status": p("string"),
                  "contentRect": p("object"), "dirtyRectCount": p("number"),
                  "dirtyArea": p("number"), "capturedAt": p("number"),
                  "framesWaited": p("number"), "trustworthy": p("boolean"),
                  "caveat": p("string"), "crop": p("object"),
-                 "content": p("object"), "contentVerdict": p("string")]),
+                 "content": p("object"), "contentVerdict": p("string"),
+                 "ocr": p("object")]),
 
             "proctor_wait": openObject(
                 "Whether a named condition held, and the state when it resolved.",

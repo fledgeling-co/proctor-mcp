@@ -359,7 +359,8 @@ public enum ToolCatalogue {
         names the pixel rect actually cut, whether it was clamped to the window, and the path to \
         the un-cropped full-window image. A region with no area, or one outside the frame, is an \
         error naming the reason rather than an empty image. Reading the text is left to the \
-        caller; this restores the pixels, it does not OCR them.
+        caller by default; pass `recognize_text: true` for native Apple Vision OCR (VNRecognizeTextRequest) \
+        and high-DPI contrast checks within bounded timeouts (< 500ms), preserving Retina scale factor.
         """,
         inputSchema: .object([
             "type": .string("object"),
@@ -374,7 +375,9 @@ public enum ToolCatalogue {
                 "waitForComplete": .object(["type": .string("boolean"), "description": .string("Keep pulling frames until one is .complete or the timeout expires. Defaults to true.")]),
                 "timeoutMs": .object(["type": .string("integer"), "description": .string("Defaults to 3000.")]),
                 "scale": .object(["type": .string("number"), "description": .string("Capture scale. Defaults to the display's backing scale, which is what makes the crop native-resolution.")]),
-                "includeCursor": .object(["type": .string("boolean"), "description": .string("Defaults to false, since a cursor in the frame is a source of false diffs.")])
+                "includeCursor": .object(["type": .string("boolean"), "description": .string("Defaults to false, since a cursor in the frame is a source of false diffs.")]),
+                "recognize_text": .object(["type": .string("boolean"), "description": .string("Run native Apple Vision text recognition (OCR) on the cropped region and return recognized text blocks, bounding boxes, and contrast measurements. Defaults to false.")]),
+                "recognizeText": .object(["type": .string("boolean"), "description": .string("Alias for recognize_text. Defaults to false.")])
             ]),
             "required": .array([.string("window")])
         ]),

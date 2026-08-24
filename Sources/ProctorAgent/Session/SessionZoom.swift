@@ -26,6 +26,7 @@ extension Session {
               timeoutMs: Int,
               scale: Double?,
               includeCursor: Bool,
+              recognizeText: Bool = false,
               encoding: ImageEncodingOptions = .default) async throws -> JSONValue {
         let window = try windowHandle(id)
 
@@ -93,6 +94,11 @@ extension Session {
         try Session.cropPNG(from: full.path, to: cropPath, pixelRect: placement.pixelRect,
                             format: encoding.format, quality: encoding.quality)
 
+        var ocrResult: ZoomOCRResult? = nil
+        if recognizeText {
+            ocrResult = VisionOCR.recognize(from: cropPath, scale: full.scale, timeoutMs: 500)
+        }
+
         // Freshness is the capture's own, unmodified: the crop is part of the same
         // frame, so its status, dirty coverage, frames waited and trustworthiness
         // are exactly what the whole-window capture reported.
@@ -111,7 +117,8 @@ extension Session {
             // its parent's emptiness for the same reason: it is a window onto
             // the same frame, so a crop of a frame with nothing in it has
             // nothing in it either.
-            content: full.content, contentVerdict: full.contentVerdict)
+            content: full.content, contentVerdict: full.contentVerdict,
+            ocr: ocrResult)
         return try JSONValue.encode(result)
     }
 
