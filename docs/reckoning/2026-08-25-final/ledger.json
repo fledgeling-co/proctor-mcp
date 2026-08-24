@@ -5,11 +5,11 @@
  "campaign_present": true,
  "campaign_dir": "docs/test-campaign",
  "briefs_dir": "docs/features-to-triage",
- "headline": "131 piece(s) of work remain — 0 product, 23 evidence, 108 decision — across 947 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
+ "headline": "131 piece(s) of work remain — 0 product, 23 evidence, 108 decision — across 952 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
  "summary": {
   "counts": {
    "verified-done": 793,
-   "waived": 23,
+   "waived": 28,
    "unmeasured": 23,
    "undecided": 108
   },
@@ -22,7 +22,7 @@
    "evidence-work": 23,
    "decision-work": 108
   },
-  "rows": 947
+  "rows": 952
  },
  "denominators": {
   "cases_adjudicated": {
@@ -50,8 +50,8 @@
    "means": "at least one case on this surface reached a verdict."
   },
   "briefs_joined": {
-   "n": 134,
-   "of": 134,
+   "n": 139,
+   "of": 139,
    "pct": 100.0,
    "means": "the brief could be tied to something in the registry at all."
   },
@@ -797,6 +797,102 @@
    {
     "brief": "BRIEF-134-automated-mutation-survival-benchmark-reporter",
     "target": "SURF-026",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-135-legacy-briefs-04-to-07-spec-validation",
+    "target": "REQ-001",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-135-legacy-briefs-04-to-07-spec-validation",
+    "target": "SURF-006",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-135-legacy-briefs-04-to-07-spec-validation",
+    "target": "SURF-007",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-135-legacy-briefs-04-to-07-spec-validation",
+    "target": "SURF-014",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-135-legacy-briefs-04-to-07-spec-validation",
+    "target": "SURF-015",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-136-legacy-briefs-08-to-10-spec-validation",
+    "target": "REQ-001",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-136-legacy-briefs-08-to-10-spec-validation",
+    "target": "SURF-004",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-136-legacy-briefs-08-to-10-spec-validation",
+    "target": "SURF-015",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-136-legacy-briefs-08-to-10-spec-validation",
+    "target": "SURF-018",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-137-hermetic-tool-process-boundary-fixtures",
+    "target": "REQ-009",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-137-hermetic-tool-process-boundary-fixtures",
+    "target": "REQ-027",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-137-hermetic-tool-process-boundary-fixtures",
+    "target": "SURF-018",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-138-continuous-spec-symbol-citation-linter",
+    "target": "REQ-102",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-138-continuous-spec-symbol-citation-linter",
+    "target": "SURF-025",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-139-multi-plane-verification-receipt-generator",
+    "target": "REQ-102",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-139-multi-plane-verification-receipt-generator",
+    "target": "SURF-025",
     "method": "cited",
     "confidence": 1.0
    },
@@ -2481,8 +2577,8 @@
     "confidence": 1.0
    }
   ],
-  "briefs_joined": 134,
-  "briefs_total": 134,
+  "briefs_joined": 139,
+  "briefs_total": 139,
   "pct": 100.0,
   "weak": false,
   "note": "cited edges are citations somebody wrote; overlap edges are guesses and cannot retire a brief"
@@ -17908,6 +18004,196 @@
     },
     {
      "target": "SURF-026",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-135-legacy-briefs-04-to-07-spec-validation",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Legacy Briefs 04 to 07 Specification Validation",
+   "file": "135-legacy-briefs-04-to-07-spec-validation.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-001",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-006",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-007",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-014",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-015",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-136-legacy-briefs-08-to-10-spec-validation",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Legacy Briefs 08 to 10 Specification Validation",
+   "file": "136-legacy-briefs-08-to-10-spec-validation.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-001",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-004",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-015",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-018",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-137-hermetic-tool-process-boundary-fixtures",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Hermetic Tool Process Boundary Fixtures",
+   "file": "137-hermetic-tool-process-boundary-fixtures.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-009",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-027",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-018",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-138-continuous-spec-symbol-citation-linter",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Continuous Spec-Symbol Citation Linter",
+   "file": "138-continuous-spec-symbol-citation-linter.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-102",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-025",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-139-multi-plane-verification-receipt-generator",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Multi-Plane Verification Receipt Generator",
+   "file": "139-multi-plane-verification-receipt-generator.md",
+   "declared_status": "retired",
+   "generated_by": "reckon",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-102",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "SURF-025",
      "method": "cited",
      "confidence": 1.0
     }

@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-014, SURF-015, SURF-006, SURF-007, REQ-001]
-status: to-triage
+status: retired
 ---
 # Legacy Briefs 04 to 07 Specification Validation
 

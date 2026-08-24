@@ -9,11 +9,6 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
-| `135-legacy-briefs-04-to-07-spec-validation.md` | `docs/features-to-triage/135-legacy-briefs-04-to-07-spec-validation.md` | Intake from reckoning undecided briefs 04..07 pending triage |
-| `136-legacy-briefs-08-to-10-spec-validation.md` | `docs/features-to-triage/136-legacy-briefs-08-to-10-spec-validation.md` | Intake from reckoning undecided briefs 08..10 pending triage |
-| `137-hermetic-tool-process-boundary-fixtures.md` | `docs/features-to-triage/137-hermetic-tool-process-boundary-fixtures.md` | Intake from reckoning unmeasured socket gaps pending triage |
-| `138-continuous-spec-symbol-citation-linter.md` | `docs/features-to-triage/138-continuous-spec-symbol-citation-linter.md` | Intake proposed companion pending triage |
-| `139-multi-plane-verification-receipt-generator.md` | `docs/features-to-triage/139-multi-plane-verification-receipt-generator.md` | Intake proposed companion pending triage |
 
 ## Briefs several specs share
 

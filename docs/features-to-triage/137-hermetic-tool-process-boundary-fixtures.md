@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-018, REQ-009, REQ-027]
-status: to-triage
+status: retired
 ---
 # Hermetic Tool Process Boundary Fixtures
 

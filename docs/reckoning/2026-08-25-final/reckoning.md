@@ -1,6 +1,6 @@
 # Reckoning — proctor-mcp
 
-131 piece(s) of work remain — 0 product, 23 evidence, 108 decision — across 947 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.
+131 piece(s) of work remain — 0 product, 23 evidence, 108 decision — across 952 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.
 
 ## What it can speak for
 
@@ -10,7 +10,7 @@
 | Cases ruled out by decision | 3 | 467 | 0.6% | somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose. |
 | Requirements observed | 124 | 141 | 87.9% | somebody watched it happen, rather than the project reporting it of itself. |
 | Surfaces spoken for | 40 | 40 | 100.0% | at least one case on this surface reached a verdict. |
-| Briefs joined to evidence | 134 | 134 | 100.0% | the brief could be tied to something in the registry at all. |
+| Briefs joined to evidence | 139 | 139 | 100.0% | the brief could be tied to something in the registry at all. |
 
 _Each figure is a lower bound. Every `unnamed` row is a surface the documents never described, which means the true denominator is larger than the one the documents can supply._
 
@@ -22,7 +22,7 @@ Two counts, because they answer different questions. **Rows** is every entity on
 |---|---:|---:|---|---|
 | `unmeasured` | 23 | 23 | evidence-work | nobody found out — the work here is becoming able to tell |
 | `undecided` | 108 | 108 | decision-work | the documents and the evidence disagree; needs a person |
-| `waived` | 0 | 23 | exception | somebody decided not to — an exception, and it stays visible |
+| `waived` | 0 | 28 | exception | somebody decided not to — an exception, and it stays visible |
 | `verified-done` | 0 | 793 | none | not remaining; kept so the denominator is honest |
 
 ## Undecided (108)
@@ -109,7 +109,7 @@ Two counts, because they answer different questions. **Rows** is every entity on
   - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
 - _…and 68 more in ledger.json_
 
-## Decisions on the record (23)
+## Decisions on the record (28)
 
 Not remaining work, and not done either. Each of these was ruled out by somebody, and the reason it was ruled out can stop being true — a state that had no hook may get one, an account that could not be reached may become reachable. They stay on the ledger so that when the reason expires, the item is still there.
 
@@ -158,6 +158,10 @@ Not remaining work, and not done either. Each of these was ruled out by somebody
 - **BRIEF-133-process-lifecycle-chaos-and-recovery-harness** — Process Lifecycle Chaos and Recovery Harness
   - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
 - **BRIEF-134-automated-mutation-survival-benchmark-reporter** — Automated Mutation Survival Benchmark Reporter
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-135-legacy-briefs-04-to-07-spec-validation** — Legacy Briefs 04 to 07 Specification Validation
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-136-legacy-briefs-08-to-10-spec-validation** — Legacy Briefs 08 to 10 Specification Validation
   - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
 
 ## Requirements standing on the project's own word (17)
