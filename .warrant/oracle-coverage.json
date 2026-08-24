@@ -65,7 +65,7 @@
    "total": 115
   }
  },
- "generated_at": "2026-08-24T13:07:58.486625+00:00",
+ "generated_at": "2026-08-24T21:08:49.848791+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
