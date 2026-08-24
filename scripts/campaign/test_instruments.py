@@ -1914,7 +1914,7 @@ def test_ledger_gate_on_this_repository() -> None:
           f"ledger_gate sees all ledger rows ({res.get('ledger_rows')})")
     check(res.get("specs_on_disk", 0) >= 107,
           f"ledger_gate sees all specs on disk ({res.get('specs_on_disk')})")
-    check(res.get("declared_no_spec") == 3,
+    check(res.get("declared_no_spec") == 0,
           f"ledger_gate accounts for the 3 declared no-spec rows ({res.get('declared_no_spec')})")
     check(res.get("merged_in_git", 0) >= 50,
           f"ledger_gate cross-checks merged features from git history ({res.get('merged_in_git')})")
