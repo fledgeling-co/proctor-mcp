@@ -9,6 +9,12 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
+| `151-a-declared-pass-that-never-ran.md` | Untriaged — campaign/reckoning intake 2026-08-25 | The blind pass reported NOT RUN for the life of the campaign; nothing read that back. No spec exists until triage allocates one. |
+| `152-thirty-eight-surfaces-that-declare-no-controls.md` | Untriaged — campaign/reckoning intake 2026-08-25 | `Controls: 4 of 34` describes two surfaces of forty. No spec exists until triage allocates one. |
+| `153-forty-one-cases-that-only-prove-something-rendered.md` | Untriaged — campaign/reckoning intake 2026-08-25 | 497 pass, 438 checked; 41 sit below the effect rung and 16 were never armed. No spec exists until triage allocates one. |
+| `154-seven-durable-boundaries-nobody-cut.md` | Untriaged — campaign/reckoning intake 2026-08-25 | 43 of 50 boundaries cut; four journeys are non-critical because their cuts do not exist. No spec exists until triage allocates one. |
+| `155-the-figure-sourcing-that-did-not-close-its-classes.md` | Untriaged — campaign/reckoning intake 2026-08-25 | Four specs merged to close five warrant classes and the rollup still reports all five short. No spec exists until triage allocates one. |
+| `156-two-captures-nobody-judged.md` | Untriaged — campaign/reckoning intake 2026-08-25 | 6 of 8 judgeable captures judged, on the one lineage pass that ratchets rather than blocks. No spec exists until triage allocates one. |
 
 ## Briefs several specs share
 
