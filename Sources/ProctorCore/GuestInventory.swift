@@ -780,3 +780,107 @@ public struct GuestHealth: Codable, Sendable, Equatable {
         self.diagnosticNote = diagnosticNote
     }
 }
+
+// MARK: - Guest health, probed rather than assumed (PRO-0127)
+
+/// What a heartbeat found, and why that is the answer.
+///
+/// The distinction this exists for is `unreachable` against `stalled`, and it is
+/// a measured one rather than a taxonomy. CASE-0029: a process stopped with
+/// SIGSTOP leaves its listener bound, so `connect()` SUCCEEDS and the reply
+/// never comes. A probe that only asks "did the socket accept me" reports that
+/// guest healthy, and a runner then waits on it until its own deadline fires —
+/// which is the shape PRO-0127's second clause is about. Only a bound on the
+/// REPLY separates the two, and only the two together tell an operator whether
+/// to restart the agent or the whole guest.
+public enum GuestHealthProbe {
+
+    /// What one heartbeat attempt did. Supplied by the caller so the classifier
+    /// is testable without a guest: the probe is the interesting part, and a
+    /// classifier that can only be exercised against a real VM is a classifier
+    /// nobody exercises.
+    public enum Beat: Sendable, Equatable {
+        /// The socket answered, in this many milliseconds.
+        case answered(latencyMs: Double)
+        /// The socket accepted the connection and did not answer within the bound.
+        case silent
+        /// Nothing is listening: no socket file, or the connection was refused.
+        case refused(String)
+        /// The attempt could not be made at all — a permission failure, a path
+        /// too long for `sun_path`. Never read as death, because it is not a
+        /// fact about the guest.
+        case indeterminate(String)
+    }
+
+    /// Above this, a guest that answers is answering slowly enough to say so.
+    /// 750ms is not a tuned number and is not pretending to be: it is the point
+    /// past which a per-step heartbeat starts costing a run more than it saves,
+    /// and it is named here rather than buried at a call site.
+    public static let degradedAboveMs: Double = 750
+
+    /// Classify a heartbeat, and say what an operator should do about it.
+    ///
+    /// `attempts` is the run of beats, oldest first. A single slow beat on a
+    /// busy machine is not a degraded guest, so the verdict reads the LAST beat
+    /// for reachability and the whole run for latency — one bad sample inside a
+    /// healthy run is noise, and a run that is entirely slow is a finding.
+    public static func classify(_ attempts: [Beat]) -> GuestHealth {
+        guard let last = attempts.last else {
+            return GuestHealth(status: .unreachable, pingLatencyMs: nil, socketReachable: false,
+                               diagnosticNote: "no heartbeat was attempted, so nothing here is a "
+                                             + "fact about the guest")
+        }
+        switch last {
+        case let .refused(why):
+            return GuestHealth(status: .unreachable, pingLatencyMs: nil, socketReachable: false,
+                               diagnosticNote: "nothing is listening: \(why). Start the guest, or "
+                                             + "check that its agent is running inside it.")
+        case let .indeterminate(why):
+            // Not death. An attempt that could not be made says nothing about
+            // the far end, and reporting it as unreachable would have an
+            // operator restart a guest that was fine.
+            return GuestHealth(status: .degraded, pingLatencyMs: nil, socketReachable: false,
+                               diagnosticNote: "the heartbeat could not be attempted: \(why). "
+                                             + "This is a fact about this host, not about the guest.")
+        case .silent:
+            return GuestHealth(status: .stalled, pingLatencyMs: nil, socketReachable: true,
+                               diagnosticNote: "the socket accepted the connection and did not "
+                                             + "answer. A stopped process leaves its listener "
+                                             + "bound, so this is the guest's agent wedged rather "
+                                             + "than the guest being down — restart the agent "
+                                             + "inside it before restarting the guest.")
+        case let .answered(latency):
+            let latencies = attempts.compactMap { beat -> Double? in
+                if case let .answered(ms) = beat { return ms }
+                return nil
+            }
+            let slowRun = latencies.count > 1 && latencies.allSatisfy { $0 > degradedAboveMs }
+            if slowRun {
+                let mean = latencies.reduce(0, +) / Double(latencies.count)
+                return GuestHealth(status: .degraded, pingLatencyMs: mean, socketReachable: true,
+                                   diagnosticNote: "every one of \(latencies.count) heartbeat(s) "
+                                                 + "took over \(Int(degradedAboveMs))ms, mean "
+                                                 + "\(Int(mean))ms. One slow beat is a busy "
+                                                 + "machine; a run of them is the guest.")
+            }
+            return GuestHealth(status: .healthy, pingLatencyMs: latency, socketReachable: true,
+                               diagnosticNote: nil)
+        }
+    }
+
+    /// Whether to try again, and how long to wait first.
+    ///
+    /// Reconnection is bounded and the bound is stated: a probe that retries
+    /// forever turns a dead guest into a hung runner, which is the fault it was
+    /// added to prevent. `silent` is retried because a wedged agent sometimes
+    /// comes back; `refused` is not, because nothing is listening and waiting
+    /// does not change that — the remedy is a person or a start command.
+    public static func retryDelayMs(after beat: Beat, attempt: Int) -> Int? {
+        guard attempt < 3 else { return nil }
+        switch beat {
+        case .answered: return nil
+        case .refused: return nil
+        case .silent, .indeterminate: return 250 * (1 << attempt)
+        }
+    }
+}

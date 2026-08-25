@@ -1,7 +1,7 @@
 # Spec PRO-0127 — Guest VM Health Telemetry and Live Socket Probe
 
 **Brief:** `docs/features-to-triage/119-guest-vm-health-telemetry-and-socket-probe.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-013
 **Defects:** none

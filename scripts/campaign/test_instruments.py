@@ -2635,6 +2635,18 @@ def test_spec_symbol_linter_gate_and_negative_arm() -> None:
           "the count is reported per root rather than as one blended figure",
           green.stdout.splitlines()[0] if green.stdout else "")
 
+    # The arm sets the bar to the CURRENT count first. A ratchet carrying slack
+    # — which it does the moment production gains a symbol that grounds an
+    # existing citation — swallows a newly added one, and the negative arm then
+    # passes over a gate that would not have fired. Found exactly that way:
+    # adding GuestHealthProbe and proctorSuppressSIGPIPE resolved enough
+    # citations that one more ungrounded name stayed under the bar.
+    ratchet_before = ratchet.read_text()
+    measured = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    current = int(re.search(r"(\d+) unresolved", measured.stdout).group(1))
+    subprocess.run([sys.executable, str(script), "--set-ratchet", str(current)],
+                   capture_output=True, text=True)
+
     spec = ROOT / "docs" / "specs" / "spec-PRO-0001.md"
     before = spec.read_text()
     try:
@@ -2649,11 +2661,15 @@ def test_spec_symbol_linter_gate_and_negative_arm() -> None:
               red.stdout[-300:])
     finally:
         spec.write_text(before)
+        ratchet.write_text(ratchet_before)
 
     restored = subprocess.run([sys.executable, str(script), "--gate"],
                               capture_output=True, text=True)
     check(restored.returncode == 0, "removing the citation puts the gate back green",
           restored.stdout[-200:])
+    check(current <= json.loads(ratchet_before)["unresolved"],
+          "the committed ratchet is at or above the measured count, so it is not stale upward",
+          f"measured {current}, ratchet {json.loads(ratchet_before)['unresolved']}")
 
     # A fenced block is a quotation. A symbol quoted inside one is not a citation
     # of it, and counting it is how a scanner confuses a mention with a claim.

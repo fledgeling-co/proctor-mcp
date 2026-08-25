@@ -5,9 +5,9 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
-  "recordedAt": "2026-08-25T04:37:17Z",
+  "recordedAt": "2026-08-25T05:15:52Z",
   "tree": {
-    "commit": "8dcc784",
+    "commit": "ffd5622",
     "dirty": true
   },
   "witness": {

@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0814",
+  "requirement": "REQ-039",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T05:15:52Z",
+  "tree": {
+    "commit": "ffd5622",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The beats are read off REAL sockets rather than invented: one listener that answers and one that accepts and holds. A classifier that collapsed the two would call the second healthy, and the case reads the distinction back off the socket.",
+  "evidence": [
+    {
+      "path": "Sources/ProctorCore/GuestInventory.swift",
+      "sha256_16": "db9a3a0e5bdb1469",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorCoreTests/GuestHealthProbeTests.swift",
+      "sha256_16": "02c4637cd4b4aad3",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0127/guest-health.txt",
+      "sha256_16": "23fdb0e292848da9",
+      "present": true
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # Spec PRO-0123 — Tart and Lume Guest VM Virtualization Fixture
 
 **Brief:** `docs/features-to-triage/115-tart-and-lume-guest-vm-virtualization-fixture.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-013
 **Defects:** BLOCK-0004

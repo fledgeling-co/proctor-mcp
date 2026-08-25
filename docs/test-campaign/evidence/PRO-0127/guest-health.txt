@@ -1,0 +1,53 @@
+PRO-0123 / PRO-0127 — guest health, and where the coverage already was
+date: Tue 25 Aug 2026 15:15:26 AEST
+
+== PRO-0123, ALREADY COVERED, CHECKED RATHER THAN REBUILT ==
+  GuestPoolWiringTests            21 tests — two-slot capacity, the queue,
+                                  per-session waiting cap, slot reclamation
+  GuestAttachWiringTests          17 tests — attachment, identity, forwarding,
+                                  a link that will not answer refusing the attach
+  GuestMultiSessionQueueWitness    4 tests — 3 concurrent against 2 slots,
+                                  never-evicting policy, socket forwarding
+  CASE-0039                        stop verified by a real child: a guest this
+                                  agent started is stopped and one a person
+                                  started is not
+  Tart and prlctl parse            4 call sites in the suite
+Rebuilding any of that would have been a second copy that drifts.
+
+== PRO-0127, THE GAP ==
+GuestHealth existed as a TYPE with nothing behind it. GuestHealthProbe is the
+probe, and the distinction it exists for is measured rather than invented:
+CASE-0029 established that SIGSTOP leaves a listener bound, so connect()
+succeeds and the reply never comes. A probe that asks only 'did the socket
+accept me' calls that guest healthy and a runner waits on it until its own
+deadline fires.
+
+  unreachable   nothing listening — start the guest
+  stalled       accepted and silent — restart the AGENT inside it
+  degraded      every beat in a run over 750ms, or a host-side failure that
+                says nothing about the guest
+  healthy       answered
+
+Two rules that keep it honest. A run of beats decides latency, not one sample:
+one slow beat on a machine running five simulators is noise. And an attempt
+that could not be MADE is degraded, never unreachable — reporting a host-side
+failure as the guest's has an operator restart a guest that was fine.
+
+The report does not probe. proctor_doctor is called before anything is
+established, and a health block that pinged would add to the load somebody is
+running it to diagnose. Beats are recorded as a side effect of traffic the
+session was making anyway, bounded to 5, and an attachment with no beat yet
+reports unreachable with beatsSeen 0 rather than healthy.
+
+== READ-ONLY AGAINST THE REAL LANE ==
+lume ls --format json parsed through LumeInventory: 1 guest, proctor-guest,
+stopped, macOS, native tier, no IP so no reach claimed. Nothing was started,
+stopped or removed.
+
+== A WEAKNESS THIS RUN FOUND IN ITS OWN RATCHET ==
+The spec-symbol negative arm went green: adding GuestHealthProbe and
+proctorSuppressSIGPIPE grounded enough existing citations that the ratchet at
+827 carried slack, and one more ungrounded name stayed under the bar. A
+ratchet with slack swallows exactly what it exists to catch. The arm now sets
+the bar to the measured count before adding its citation, and the committed
+ratchet is asserted to be at or above the measurement. 827 to 825.

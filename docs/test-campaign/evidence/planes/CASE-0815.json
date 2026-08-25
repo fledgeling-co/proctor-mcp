@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0815",
+  "requirement": "REQ-039",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T05:15:52Z",
+  "tree": {
+    "commit": "ffd5622",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The window bound is asserted against the branch it feeds: a window of 1 makes classify's degraded branch unreachable, so the test refuses a window that cannot show a run.",
+  "evidence": [
+    {
+      "path": "Sources/ProctorAgent/Session/SessionGuest.swift",
+      "sha256_16": "ce3208201c9146f8",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorAgent/Session/Session.swift",
+      "sha256_16": "4a328207680ea289",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorAgentTests/GuestHealthReportingTests.swift",
+      "sha256_16": "2370948dfe55a6c0",
+      "present": true
+    }
+  ]
+}

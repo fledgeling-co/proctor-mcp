@@ -260,6 +260,29 @@ actor Session {
     /// The open channel to each attached guest.
     var guestLinks: [String: any GuestLink] = [:]
 
+    /// PRO-0127. What each guest's link has already seen, keyed by pool guest
+    /// key, oldest beat first and bounded.
+    ///
+    /// Recorded as a side effect of ordinary traffic rather than by a heartbeat
+    /// of its own. A timer that pings every guest on a schedule costs a run
+    /// nothing when the guest is healthy and adds to the load exactly when it is
+    /// not, so the beats here are the calls the session was making anyway.
+    var guestBeats: [String: [GuestHealthProbe.Beat]] = [:]
+
+    /// How many beats are kept per guest. Enough for `classify` to tell one slow
+    /// sample from a slow run, and no more: this is a diagnostic, not a history.
+    static let guestBeatWindow = 5
+
+    /// Record what one call to a guest did, for the health block in the report.
+    func recordGuestBeat(_ beat: GuestHealthProbe.Beat, guestKey: String) {
+        var beats = guestBeats[guestKey] ?? []
+        beats.append(beat)
+        if beats.count > Session.guestBeatWindow {
+            beats.removeFirst(beats.count - Session.guestBeatWindow)
+        }
+        guestBeats[guestKey] = beats
+    }
+
     /// The pool slot each attachment holds.
     ///
     /// Held for the ATTACHMENT rather than for a batch, which is the spec's

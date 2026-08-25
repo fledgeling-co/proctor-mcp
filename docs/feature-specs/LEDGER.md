@@ -132,11 +132,11 @@
 | PRO-0120 | Cross-Automation Stack Yield and Takeover Reporting Harness | 2026-08-24 | Merged |
 | PRO-0121 | Retire Brief 108 Native OCR & High-DPI Zoom Inspector | 2026-08-24 | Merged |
 | PRO-0122 | iOS Simulator Boot Fixture Harness | 2026-08-24 | Merged |
-| PRO-0123 | Tart and Lume Guest VM Virtualization Fixture | 2026-08-24 | Ready for AI |
+| PRO-0123 | Tart and Lume Guest VM Virtualization Fixture | 2026-08-24 | Merged |
 | PRO-0124 | Maestro Flow Network-Isolated Step Fixture | 2026-08-24 | Ready for AI |
 | PRO-0125 | ProctorAgent Mutation Survival Elimination | 2026-08-24 | Merged |
 | PRO-0126 | Headless Simulator Provisioning and Teardown Hook | 2026-08-24 | Merged |
-| PRO-0127 | Guest VM Health Telemetry and Live Socket Probe | 2026-08-24 | Ready for AI |
+| PRO-0127 | Guest VM Health Telemetry and Live Socket Probe | 2026-08-24 | Merged |
 | PRO-0128 | Native OCR and High-DPI Inspection Fixture | 2026-08-24 | Merged |
 | PRO-0129 | Surface Conformance and Capture Trust Sourcing | 2026-08-24 | Merged |
 | PRO-0130 | Operator State and Evidence Integrity Chain | 2026-08-24 | Merged |

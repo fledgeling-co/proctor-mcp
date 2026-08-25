@@ -1,5 +1,5 @@
-Wave 27 — the suite after PRO-0128/PRO-0131
+Wave 27 — the suite after PRO-0123/PRO-0127
 command: ./scripts/test.sh
-date: Tue 25 Aug 2026 14:39:11 AEST
-􁁛  Test run with 2158 tests in 272 suites passed after 97.639 seconds.
-PASS: 􁁛  Test run with 2158 tests in 272 suites passed after 97.639 seconds.
+date: Tue 25 Aug 2026 15:16:14 AEST
+􁁛  Test run with 2168 tests in 274 suites passed after 99.125 seconds.
+PASS: 􁁛  Test run with 2168 tests in 274 suites passed after 99.125 seconds.

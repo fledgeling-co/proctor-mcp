@@ -989,14 +989,45 @@ extension Session {
             }
         }
 
+        // PRO-0127. The health of each attachment this session holds, reported
+        // beside the slots rather than in a tool of its own.
+        //
+        // Read from what the link has already seen, and never by pinging here.
+        // proctor_doctor is called before anything is established and is
+        // explicitly a report rather than an action: a health block that probed
+        // would make a diagnostic call start network traffic into a guest, and
+        // an operator running doctor to find out WHY a guest is slow would be
+        // adding to the load they are diagnosing. An attachment with no beat yet
+        // says so rather than reporting healthy.
+        var health: [JSONValue] = []
+        for attachment in guestAttachments.values {
+            let beats = guestBeats[attachment.poolGuestKey] ?? []
+            let reading = GuestHealthProbe.classify(beats)
+            var row: [String: JSONValue] = [
+                "guest": .string(attachment.poolGuestKey),
+                "handle": .string(attachment.handle),
+                "status": .string(reading.status.rawValue),
+                "socketReachable": .bool(reading.socketReachable),
+                "beatsSeen": .number(Double(beats.count)),
+            ]
+            if let ms = reading.pingLatencyMs { row["pingLatencyMs"] = .number(ms.rounded()) }
+            if let note = reading.diagnosticNote { row["note"] = .string(note) }
+            health.append(.object(row))
+        }
+
         return .object([
             "pools": .array(pools),
             "held": .array(holders),
             "waiting": .array(waitingFor),
+            "health": .array(health),
             "note": .string(
                 "Counted from Proctor's own scheduler, which is state on this Mac, so reading "
                 + "this runs no provider and starts no VM. A guest a person started outside "
-                + "Proctor is not in this count and is never stopped to free a slot.")
+                + "Proctor is not in this count and is never stopped to free a slot. "
+                + "`health` is what each link has already seen and is not probed here: a "
+                + "diagnostic that pinged would add to the load somebody is running it to "
+                + "diagnose, and an attachment with no beat yet reports `unreachable` with "
+                + "`beatsSeen: 0` rather than reporting healthy.")
         ])
     }
 }
