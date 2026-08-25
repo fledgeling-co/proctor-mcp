@@ -5,9 +5,9 @@
   "oracle": "metamorphic",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
-  "recordedAt": "2026-08-25T03:51:53Z",
+  "recordedAt": "2026-08-25T04:05:03Z",
   "tree": {
-    "commit": "f420a24",
+    "commit": "b4f94d2",
     "dirty": true
   },
   "witness": null,

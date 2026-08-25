@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0806",
+  "requirement": "REQ-047",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T04:05:03Z",
+  "tree": {
+    "commit": "b4f94d2",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The arming IS the measurement: each edit was re-applied to the real file, read back to prove the splice landed, the suite run, and the file restored and read back again. docs/test-campaign/evidence/PRO-0125/survivor-kills.json carries the verdict per site.",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/MutationSurvivorTests.swift",
+      "sha256_16": "e7b91466c37cb88a",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0125/survivor-kills.json",
+      "sha256_16": "0f29df611445e556",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/mutation-aggregate.txt",
+      "sha256_16": "d9ab90ade390f057",
+      "present": true
+    }
+  ]
+}

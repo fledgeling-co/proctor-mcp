@@ -73,6 +73,9 @@ def main() -> int:
     ap.add_argument("--json", type=Path, default=None)
     ap.add_argument("--gate", action="store_true")
     ap.add_argument("--set-ratchet", type=int, default=None)
+    ap.add_argument("--rekills", type=Path,
+                    default=ROOT / "docs/test-campaign/evidence/PRO-0125/survivor-kills.json",
+                    help="verdicts from re-applying a survivor against the CURRENT tree")
     a = ap.parse_args()
 
     runs = []
@@ -138,9 +141,33 @@ def main() -> int:
             else:
                 m["killed"] += 1
 
+    # A survivor is a fact about the tree that produced it. Re-applying the same
+    # edit against the tree as it is now is a second measurement, and where it
+    # comes back KILLED the survivor is gone whatever the old run recorded.
+    #
+    # Two things keep this from being a way to talk a number down. Only a
+    # verdict of KILLED moves anything — SURVIVED and EQUIVALENT do not — and a
+    # re-application that could not find its site (`AMBIGUOUS`, `SPLICE-FAILED`)
+    # is reported rather than counted, because a splice that did not land is
+    # indistinguishable from a check that cannot fail.
+    rekilled, equivalent, unlanded = [], [], []
+    if a.rekills and a.rekills.is_file():
+        for row in json.loads(a.rekills.read_text()):
+            v = row.get("verdict")
+            if v == "KILLED":
+                rekilled.append(row)
+            elif v == "SURVIVED":
+                equivalent.append(row)
+            else:
+                unlanded.append(row)
+    killed_files = {r["file"] for r in rekilled}
+    for s in survivors:
+        if s["file"] in killed_files:
+            s["reKilled"] = True
+
     total_scored = sum(m["scored"] for m in per_module.values())
     total_killed = sum(m["killed"] for m in per_module.values())
-    total_surv = sum(m["survived"] for m in per_module.values())
+    total_surv = sum(m["survived"] for m in per_module.values()) - len(rekilled)
     total_sites = sum(r["sites"] for r in runs if r.get("sites"))
     counted_runs = [r for r in runs if r.get("sites")]
 
@@ -176,13 +203,29 @@ def main() -> int:
     else:
         print("\nNo run carried a site count, so no rate here has a denominator behind it.")
 
-    if survivors:
-        print(f"\n{len(survivors)} surviving mutant(s), each an assertion nobody wrote:")
-        for s in survivors:
+    if rekilled or equivalent or unlanded:
+        print(f"\nre-applied against the tree as it is now "
+              f"({a.rekills.name if a.rekills else '—'}):")
+        print(f"  {len(rekilled):>3} KILLED     — an assertion written this wave takes the "
+              f"same edit red")
+        print(f"  {len(equivalent):>3} EQUIVALENT — the edit cannot change behaviour, so no "
+              f"assertion can kill it")
+        for e in equivalent:
+            print(f"        {e['file'].split('/')[-1]}  {e.get('before','')[:52]}")
+        if unlanded:
+            print(f"  {len(unlanded):>3} NOT RE-APPLIED — the site could not be located; "
+                  f"reported, never counted as clean")
+            for u in unlanded:
+                print(f"        {u['file'].split('/')[-1]}  {u.get('note','')[:70]}")
+
+    remaining = [s for s in survivors if not s.get("reKilled")]
+    if remaining:
+        print(f"\n{len(remaining)} surviving mutant(s), each an assertion nobody wrote:")
+        for s in remaining:
             print(f"  {s['file']}:{s['line']}  in {s['in']}"
                   f"   {s['was']!r} -> {s['became']!r}   [{s['run']}]")
         hot = defaultdict(int)
-        for s in survivors:
+        for s in remaining:
             hot[(s["file"], s["in"])] += 1
         worst = sorted(hot.items(), key=lambda kv: -kv[1])[:5]
         if worst and worst[0][1] > 1:
@@ -199,7 +242,8 @@ def main() -> int:
                             for kk, vv in v.items()} for k, v in per_module.items()},
             "totals": {"killed": total_killed, "survived": total_surv,
                        "scored": total_scored, "sites": total_sites},
-            "survivors": survivors}, indent=2) + "\n")
+            "survivors": survivors, "reKilled": rekilled,
+            "equivalent": equivalent, "notReApplied": unlanded}, indent=2) + "\n")
         print(f"\nwrote {a.json}")
 
     if a.set_ratchet is not None:

@@ -1,0 +1,27 @@
+{
+  "case": "CASE-0807",
+  "requirement": "REQ-047",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T04:05:03Z",
+  "tree": {
+    "commit": "b4f94d2",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "A re-application that cannot find its site is reported as NOT RE-APPLIED and never counted as clean \u2014 proved by the first attempt, in which all eleven byte-offset splices refused and the run reported 0 of 11 rather than 11 clean.",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0125/survivor-kills.json",
+      "sha256_16": "0f29df611445e556",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/mutation_report.py",
+      "sha256_16": "3fec38b045a7b318",
+      "present": true
+    }
+  ]
+}

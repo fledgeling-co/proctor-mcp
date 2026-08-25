@@ -9042,5 +9042,40 @@
       "docs/test-campaign/evidence/PRO-0151/negative-arm.txt"
     ],
     "note": "PRO-0151. The tailings partition run standing over the artifacts another session plans from. It found three live contradictions on its first run, all real: ORCHESTRATOR.md's header still said 'Wave 11 open on ai/wave-9' sixteen waves on, and Wave 27's own gate table said 147 rows and 147 specs after briefs 140-144 were triaged to 152. The file was fixed rather than the scanner. `waived` is reachable only when the line marks itself superseded or dated in its own words: a waiver a tool grants itself is not a waiver, and `unbacked` is kept apart from `contradicted` because folding them is how a pass over-reports and loses its reader."
+  },
+  {
+    "id": "CASE-0806",
+    "req": "REQ-047",
+    "surface": "SURF-026",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The arming IS the measurement: each edit was re-applied to the real file, read back to prove the splice landed, the suite run, and the file restored and read back again. docs/test-campaign/evidence/PRO-0125/survivor-kills.json carries the verdict per site.",
+    "defects": [],
+    "evidence": [
+      "Tests/ProctorCoreTests/MutationSurvivorTests.swift",
+      "docs/test-campaign/evidence/PRO-0125/survivor-kills.json",
+      "docs/test-campaign/evidence/mutation-aggregate.txt"
+    ],
+    "note": "PRO-0125/PRO-0138. Ten surviving mutants re-applied against the tree as it is now: 8 KILLED by assertions written this wave, 2 proved EQUIVALENT. The relation is across trees \u2014 the same edit, green before and red after. Two of the ten needed the test sharpened before they died, which is the failure this exercise exists to catch one layer in: a test written AGAINST a mutant that the mutant survives is an assertion nobody wrote wearing the name of one. HorizontalPlacement tested 0 and 4 where `<= 0` and `<= 1` agree, and RunHUDGate tested a horizontal route where `<=` and `<` agree."
+  },
+  {
+    "id": "CASE-0807",
+    "req": "REQ-047",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "A re-application that cannot find its site is reported as NOT RE-APPLIED and never counted as clean \u2014 proved by the first attempt, in which all eleven byte-offset splices refused and the run reported 0 of 11 rather than 11 clean.",
+    "defects": [],
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0125/survivor-kills.json",
+      "scripts/campaign/mutation_report.py"
+    ],
+    "note": "A mutation record's byte offset is not durable. Re-applying eleven survivors by `start`/`end` against a tree many commits on refused every one: the offsets are valid only against the tree that produced them. Re-locating by line and content worked, and an anchor appearing twice in a file (TUILayout's overflow guard) is reported AMBIGUOUS rather than spliced at the first match. Only KILLED moves the count; EQUIVALENT and NOT RE-APPLIED are printed and do not."
   }
 ]

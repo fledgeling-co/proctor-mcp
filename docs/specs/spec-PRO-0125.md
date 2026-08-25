@@ -1,7 +1,7 @@
 # Spec PRO-0125 — ProctorAgent Mutation Survival Elimination
 
 **Brief:** `docs/features-to-triage/117-proctoragent-mutation-survival-elimination.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-026
 **Defects:** DEF-033

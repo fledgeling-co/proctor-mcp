@@ -1,0 +1,72 @@
+[
+  {
+    "file": "Sources/ProctorCore/MenuKeyEquivalent.swift",
+    "before": "109: \"f10\"",
+    "after": "110: \"f10\"",
+    "verdict": "KILLED",
+    "killedBy": "\udbc2\udc84  Test \"every function-key virtual code maps to the name the actuator drives\" recorded an issue at MutationSurvivorTests.swift:27:9: Expectation fail"
+  },
+  {
+    "file": "Sources/ProctorCore/BrowserTarget.swift",
+    "before": "guard let host = URL(string: url)?.host?.lowercased() else {",
+    "after": "guard let host = URL(string: url)?.host?.lowercased() else {",
+    "verdict": "KILLED",
+    "killedBy": "\udbc2\udc84  Test \"a URL with no host is not a private network address\" recorded an issue at MutationSurvivorTests.swift:42:9: Expectation failed: !(BrowserTarg"
+  },
+  {
+    "file": "Sources/ProctorCore/Takeover.swift",
+    "before": "public static let command = InputModifiers(rawValue: 1 << 0)",
+    "after": "public static let command = InputModifiers(rawValue: 1 << 1)",
+    "verdict": "KILLED",
+    "killedBy": "\udbc2\udc84  Test \"each modifier owns one bit, and the four are disjoint\" recorded an issue at MutationSurvivorTests.swift:57:9: Expectation failed: (InputModif"
+  },
+  {
+    "file": "Sources/ProctorCore/SetOfMarks.swift",
+    "before": "guard options.enabled, options.spacingPoints > 0, scale > 0,",
+    "after": "guard options.enabled, options.spacingPoints >= 0, scale > 0",
+    "verdict": "SURVIVED",
+    "killedBy": null
+  },
+  {
+    "file": "Sources/ProctorCore/PointerMarker.swift",
+    "before": "if let frame = elementFrame, frame.w > 0, frame.h > 0 {",
+    "after": "if let frame = elementFrame, frame.w > 1, frame.h > 0 {",
+    "verdict": "KILLED",
+    "killedBy": "\udbc2\udc84  Test \"a one-point element still has a centre to mark\" recorded an issue at MutationSurvivorTests.swift:103:9: Expectation failed: (target \u2192 nil) !="
+  },
+  {
+    "file": "Sources/ProctorCore/RunHUDSurface.swift",
+    "before": "a.fields.count == b.fields.count",
+    "after": "a.fields.count != b.fields.count",
+    "verdict": "KILLED",
+    "killedBy": "\udbc2\udc84  Test \"two chips of different length are not equal\" recorded an issue at MutationSurvivorTests.swift:119:9: Expectation failed: (one \u2192 Chip(fields: "
+  },
+  {
+    "file": "Sources/ProctorCore/HorizontalPlacement.swift",
+    "before": "let centre = centreOffset <= 0",
+    "after": "let centre = centreOffset <= 1",
+    "verdict": "KILLED",
+    "killedBy": "\udbc2\udc84  Test \"an element centred exactly reads as left of centre, not right of it\" recorded an issue at MutationSurvivorTests.swift:144:9: Expectation fail"
+  },
+  {
+    "file": "Sources/ProctorCore/TUILayout.swift",
+    "verdict": "KILLED",
+    "note": "anchored on the following line as well, because the bare guard appears twice in this file and a splice needs exactly one site",
+    "before": "if i >= region.h {\n                canva",
+    "after": "if i > region.h {\n                canvas"
+  },
+  {
+    "file": "Sources/ProctorCore/RunHUDGate.swift",
+    "before": "min(a.x, b.x) <= c.x && c.x <= max(a.x, b.x)",
+    "after": "min(a.x, b.x) < c.x && c.x <= max(a.x, b.x)",
+    "verdict": "KILLED",
+    "killedBy": "\udbc2\udc84  Test \"RunHUDGate.onSegment: a drag that grazes the panel's edge still steps aside\" recorded an issue at MutationSurvivorTests.swift:204:9: Expectat"
+  },
+  {
+    "file": "Sources/ProctorCore/VisionCapture.swift",
+    "before": "guard width > 0, height > 0 else { return 0 }",
+    "after": "guard width >= 0, height > 0 else { return 0 }",
+    "verdict": "SURVIVED",
+    "killedBy": null
+  }
+]

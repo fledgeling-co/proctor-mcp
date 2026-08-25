@@ -1,7 +1,7 @@
 # Spec PRO-0138 — ProctorAgent Mutation Hardening and Boundary Sweep
 
 **Brief:** `docs/features-to-triage/130-proctoragent-mutation-hardening-and-boundary-sweep.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-026
 **Defects:** DEF-033

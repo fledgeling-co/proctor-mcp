@@ -5,9 +5,9 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T03:51:53Z",
+  "recordedAt": "2026-08-25T04:05:03Z",
   "tree": {
-    "commit": "f420a24",
+    "commit": "b4f94d2",
     "dirty": true
   },
   "witness": null,
@@ -15,17 +15,17 @@
   "evidence": [
     {
       "path": "scripts/campaign/mutation_report.py",
-      "sha256_16": "d0a94ec3295221c2",
+      "sha256_16": "3fec38b045a7b318",
       "present": true
     },
     {
       "path": "docs/test-campaign/evidence/mutation-aggregate.txt",
-      "sha256_16": "43be7ffaf787b52e",
+      "sha256_16": "d9ab90ade390f057",
       "present": true
     },
     {
       "path": "docs/test-campaign/evidence/mutation-aggregate.json",
-      "sha256_16": "7f8d8ca13c9d7659",
+      "sha256_16": "b87a230c829d846c",
       "present": true
     }
   ]
