@@ -1,6 +1,10 @@
 ---
 sources: [REQ-063, REQ-064, DEF-043, DEF-068, DEF-075]
 status: retired
+validated-by: REQ-024, REQ-034, REQ-046, REQ-055, REQ-063, REQ-064 via CASE-0026, CASE-0044, CASE-0072, CASE-0073, CASE-0081, CASE-0087
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: Process() in Sources/ProctorAgent/Actuation/CuaClients.swift — cua-driver and obscura
+validated-through-defect: REQ-046 via DEF-030; REQ-034 via DEF-043; REQ-024 via DEF-044; REQ-055 via DEF-068
 ---
 # The policy file's mode, a control that lies twice, and a sibling already fixed
 
@@ -71,13 +75,3 @@ separate finding and it gets its own detail rather than inheriting DEF-044's.
 
 It does not change what the policy file contains or who may write it, and it does not touch the
 audit path, which already does the right thing and is the reference here.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-063, REQ-064
-- surface: SURF-012, SURF-022
-- cases: CASE-0017, CASE-0018, CASE-0061, CASE-0063, CASE-0072, CASE-0073
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: PolicyStore.write in Sources/ProctorAgent/Session/PolicyStore.swift, which opens the temporary with Darwin.open(O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0o600) and replaces atomically with .usingNewMetadataOnly

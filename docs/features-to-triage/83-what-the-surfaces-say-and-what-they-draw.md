@@ -1,6 +1,10 @@
 ---
 sources: [REQ-073, REQ-074, REQ-075, DEF-035, DEF-037, DEF-039, DEF-056]
 status: retired
+validated-by: REQ-048, REQ-073, REQ-075 via CASE-0155, CASE-0156, CASE-0251, CASE-0252, CASE-0253, CASE-0255
+validated-rungs: metamorphic, outcome
+validated-provider: none
+validated-through-defect: REQ-048 via DEF-035
 ---
 # What the surfaces say, what they draw, and the branch that cannot be reached
 
@@ -88,13 +92,3 @@ about what to do first, so sequence this with PRO-0086 or hand it to the same ru
 
 It does not revisit the composition decisions settled in wave 9 — the status window keeps its
 explanation, its title block and its grant-row "why" text.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-073, REQ-074, REQ-075
-- surface: SURF-004, SURF-008, SURF-009, SURF-010
-- cases: CASE-0004, CASE-0008, CASE-0011, CASE-0012, CASE-0013, CASE-0021
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: none

@@ -1,6 +1,9 @@
 ---
 sources: [REQ-009, REQ-032]
 status: retired
+validated-by: REQ-009, REQ-032 via CASE-0011, CASE-0028, CASE-0039, CASE-0042, CASE-0062, CASE-0368
+validated-rungs: effect-witness, outcome, raster-visual
+validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift
 ---
 > **REVISED for wave 7, 2026-08-15.** Unchanged and now load-bearing. Proctor keeps its own capture path precisely because Cua's screenshots carry no frame status, so an unbounded await in the capture-adjacent probe is a defect in the half of the product being kept. The diagnosis has since sharpened: the wedge is `replayd` saturating machine-wide under fleet load, which is why the same tree was green earlier the same day.
 
@@ -82,13 +85,3 @@ measurement contradicts.
 ## Not in scope
 
 Making ScreenCaptureKit answer. This is about what Proctor does when it does not.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-009
-- surface: SURF-008
-- cases: CASE-0011, CASE-0027, CASE-0028, CASE-0029, CASE-0039, CASE-0042
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift

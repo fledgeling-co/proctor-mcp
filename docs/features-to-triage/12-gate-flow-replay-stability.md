@@ -1,6 +1,9 @@
 ---
 sources: [REQ-013, REQ-016]
 status: retired
+validated-by: REQ-013, REQ-016 via CASE-0015, CASE-0018
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # Gate recorded flow-replay and stability through the policy gate + audit
 
@@ -23,13 +26,3 @@ A recorded flow that violates the current policy is blocked on replay exactly as
 ## Dependencies / notes
 - Parent: PRO-0005 (reuses its gate + audit rails).
 - Pairs with the audit-log encryption child (13): both are "shared-tool" hardening.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-013, REQ-016
-- surface: SURF-001, SURF-011, SURF-012
-- cases: CASE-0001, CASE-0015, CASE-0016, CASE-0017, CASE-0018, CASE-0038
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: none

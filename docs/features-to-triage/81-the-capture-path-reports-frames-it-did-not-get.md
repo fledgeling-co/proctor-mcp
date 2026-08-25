@@ -1,6 +1,10 @@
 ---
 sources: [REQ-028, REQ-061, REQ-062, DEF-025, DEF-028]
 status: retired
+validated-by: REQ-004, REQ-006, REQ-028, REQ-061, REQ-062 via CASE-0005, CASE-0008, CASE-0030, CASE-0032, CASE-0064, CASE-0065
+validated-rungs: effect-witness, outcome
+validated-provider: StreamCapture in ProctorAgent/Capture/StreamCapture.swift
+validated-through-defect: REQ-004 via DEF-025; REQ-006 via DEF-028
 ---
 # The capture path reports a frame it did not get, and a window it does not know about
 
@@ -70,13 +74,3 @@ process actually owns rather than asserting the number the case was written with
 
 It does not change what `be-my-witness` judges, and it does not make Proctor's overlays appear in
 Proctor's own captures.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-028, REQ-061, REQ-062
-- surface: SURF-004, SURF-005, SURF-006
-- cases: CASE-0004, CASE-0005, CASE-0006, CASE-0008, CASE-0009, CASE-0010
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: StreamCapture in ProctorAgent/Capture/StreamCapture.swift

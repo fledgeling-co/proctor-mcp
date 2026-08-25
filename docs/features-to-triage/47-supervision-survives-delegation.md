@@ -1,6 +1,9 @@
 ---
 sources: [REQ-029]
 status: retired
+validated-by: REQ-029 via CASE-0035, CASE-0036, CASE-0040, CASE-0082
+validated-rungs: effect-witness, outcome
+validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift
 ---
 # Supervision survives delegation
 
@@ -44,13 +47,3 @@ Make one supervised run surface that tells the truth about a run it did not actu
   passes through Cua does not get a free pass on that.
 - **Reduce Motion and Reduce Transparency still apply**, and the panel is still one per
   screen, never one spanning the union of the displays.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-029
-- surface: SURF-017
-- cases: CASE-0033, CASE-0034, CASE-0035, CASE-0036, CASE-0040, CASE-0041
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift

@@ -1,6 +1,9 @@
 ---
 sources: [REQ-022]
 status: retired
+validated-by: REQ-022 via CASE-0024
+validated-rungs: outcome
+validated-provider: none
 ---
 # The build says which build it is
 
@@ -46,13 +49,3 @@ question.
 
 `docs/specs/spec-PRO-0027.md` and `spec-PRO-0028.md` both record this as child
 work, from the staleness side and the `agentVersion` side respectively.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-022
-- surface: SURF-008, SURF-016
-- cases: CASE-0011, CASE-0024, CASE-0027, CASE-0028, CASE-0029, CASE-0039
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: none

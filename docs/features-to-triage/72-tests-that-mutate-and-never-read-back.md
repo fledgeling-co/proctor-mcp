@@ -1,6 +1,9 @@
 ---
 sources: [REQ-045, REQ-046]
 status: retired
+validated-by: REQ-045, REQ-046 via CASE-0063, CASE-0072, CASE-0073, CASE-0152, CASE-0796
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # Seventy-eight tests that change state and never look at it
 
@@ -95,13 +98,3 @@ It does not raise the campaign's score. Adding a read to a test that lacked one 
 know more and changes no count. If a genuine finding turns out to be a product defect rather than a
 test defect, it gets a surgical fix and its own defect record; a styling inconsistency noticed in
 passing gets flagged, not changed.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-045, REQ-046
-- surface: SURF-022
-- cases: CASE-0063, CASE-0072, CASE-0073, CASE-0150, CASE-0151, CASE-0152
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: none

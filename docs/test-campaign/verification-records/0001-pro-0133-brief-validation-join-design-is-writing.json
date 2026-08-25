@@ -1,0 +1,22 @@
+{
+  "task": "PRO-0133 brief-validation join design: is writing a Validation record into a brief the failure reckon warned about",
+  "asked": {
+    "lane": "grok-4.6",
+    "family": "xai",
+    "effort": "xhigh"
+  },
+  "ran": {
+    "lane": "grok-4.6",
+    "family": "xai"
+  },
+  "substituted": false,
+  "substitutionReason": null,
+  "writerFamily": "anthropic",
+  "inFamily": false,
+  "egress": {
+    "blocked": false,
+    "basis": "no egress marker is set for this repository"
+  },
+  "evidence": "docs/test-campaign/evidence/PRO-0133/out-of-family-review-grok.md",
+  "recordedAt": "2026-08-25T03:38:37Z"
+}

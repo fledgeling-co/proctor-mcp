@@ -1,0 +1,16 @@
+PRO-0150 negative arm — the capture index gate is proved able to go red
+date: Tue 25 Aug 2026 13:31:03 AEST
+
+== a declared root that does not exist ==
+exit=1
+  docs/test-campaign/evidence/no-such-dir         0 image(s)   MISSING — not checked, rather than clean
+FAIL  1 declared capture root(s) do not exist: docs/test-campaign/evidence/no-such-dir — a probe over an absent directory is not checked, and reporting it clean is the failure this closes.
+
+== an image on disk that the index does not hold ==
+exit=1
+FAIL  docs/test-campaign/evidence/shots/zz-arming-copy.png is on disk and not in the index
+1 added · 0 gone · 0 changed. Re-run with --write once somebody has decided the new content is the standard — adopting it here would make the index agree with whatever is on disk.
+
+== restored ==
+gate: 54 image(s) across 4 declared root(s), all present and unchanged.
+exit=0

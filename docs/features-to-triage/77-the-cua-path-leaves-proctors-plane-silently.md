@@ -1,6 +1,9 @@
 ---
 sources: [REQ-070, REQ-071, REQ-072]
 status: retired
+validated-by: REQ-070, REQ-071 via CASE-0230, CASE-0231, CASE-0232, CASE-0233, CASE-0234, CASE-0235
+validated-rungs: outcome
+validated-provider: none
 ---
 # The cua path leaves Proctor's own plane, and nothing on screen says so
 
@@ -89,13 +92,3 @@ Proctor's own captures.
 It also does not remove the cua backend or make it a second-class path. cua is how Proctor reaches
 things its own planes cannot; the defect is that the surfaces reporting a run do not follow the run
 when it goes there.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-070, REQ-071, REQ-072
-- surface: SURF-003, SURF-004, SURF-005
-- cases: CASE-0003, CASE-0004, CASE-0008, CASE-0009, CASE-0010, CASE-0014
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: none

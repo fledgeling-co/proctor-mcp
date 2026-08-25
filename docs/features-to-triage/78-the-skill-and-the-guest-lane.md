@@ -1,6 +1,9 @@
 ---
 sources: [REQ-091, REQ-092, REQ-093]
 status: retired
+validated-by: REQ-091, REQ-092, REQ-093 via CASE-0370, CASE-0371, CASE-0372, CASE-0373, CASE-0374
+validated-rungs: outcome
+validated-provider: none
 ---
 # The skill advertises 20 tools of 27, and talks an agent out of the guest lane
 
@@ -86,13 +89,3 @@ documentation decision. Record the question; do not answer it in the skill.
 It does not claim the guest lane is easy. Provisioning one took most of a session and four closed
 routes, recorded in `docs/specs/spec-PRO-0076.md`. The skill should set that expectation rather
 than hide it.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-091, REQ-092, REQ-093
-- surface: SURF-002, SURF-013
-- cases: CASE-0002, CASE-0019, CASE-0020, CASE-0059, CASE-0074, CASE-0154
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: none

@@ -1,6 +1,9 @@
 ---
 sources: [REQ-001]
 status: retired
+validated-by: REQ-001 via CASE-0001, CASE-0002
+validated-rungs: outcome
+validated-provider: none
 ---
 # Stock computer-use schema façade (Anthropic + OpenAI)
 
@@ -30,13 +33,3 @@ A stock Anthropic or OpenAI computer-use agent, pointed at Proctor with no promp
 - Pairs with the native `act` / hit-test path already in place.
 - Site-relevant once shipped: upgrades the "works with your stack" copy to "including Anthropic/OpenAI computer-use models, unmodified."
 - Licensing: reimplement the schema mapping on Proctor's plane; do not lift synthetic-event code (MIT sources, attribution if any snippet is reused).
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-001
-- surface: SURF-001, SURF-002
-- cases: CASE-0001, CASE-0002, CASE-0038, CASE-0074, CASE-0154, CASE-0370
-- rungs reached: metamorphic, outcome
-- provider: none

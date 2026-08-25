@@ -8950,5 +8950,60 @@
       "docs/test-campaign/evidence/PRO-0137/warrant-tiers.json"
     ],
     "note": "PRO-0137. One self-contained file, 9.5 KB, zero external references \u2014 grep for http, cdn or src= returns 0. A dashboard that needs the network renders blank on the machine somebody actually opens it on. Each blocked class card names the surfaces short of the threshold and the case ids under each, because '84.0% (100 of 119)' tells nobody what to do next."
+  },
+  {
+    "id": "CASE-0801",
+    "req": "REQ-111",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "docs/test-campaign/evidence/PRO-0150/negative-arm.txt \u2014 a declared root that does not exist takes the gate to exit 1 naming it MISSING rather than reporting clean, and an image copied into a declared root takes it to exit 1 naming the file. Removing each puts it back to exit 0.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/capture_manifest.py",
+      "docs/test-campaign/capture-index.json",
+      "docs/test-campaign/evidence/PRO-0150/negative-arm.txt"
+    ],
+    "note": "PRO-0150. An external audit reported 'R4: no capture directory found; capture identity unchecked' over a tree holding 54 images. Nothing was wrong with the captures \u2014 the probe tries six conventional root names and this repository uses none of them, so a probe that would have found 54 found none and correctly reported itself unrun. `captureRoots` in campaign.json declares the four roots, and the index makes the population explicit: 54 images, 44 distinct, 8 digests held by more than one path. What a picture DEPICTS is not decided here; shot_disposition.py owns that and was written by opening every file."
+  },
+  {
+    "id": "CASE-0802",
+    "req": "REQ-101",
+    "surface": "SURF-033",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The relation is across two joins over the same tree: the surface-wide join retired brief 01 on six cases and the citing join on two, and the two are a superset and a subset. test_instruments checks every retired brief's named cases cite its own requirement \u2014 planting one that does not takes it red.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/brief_validation.py",
+      "docs/test-campaign/evidence/PRO-0133/validation.json",
+      "docs/test-campaign/evidence/PRO-0133/out-of-family-review-grok.md"
+    ],
+    "note": "PRO-0133, corrected. The first join read cases by SURFACE, so a brief could be retired on evidence about a different requirement that happened to share one \u2014 brief 01 was retired on six cases where only two cite REQ-001. An out-of-family review (grok-4.6 at xhigh) returned UNSOUND naming that, and two other things it was right about: writing surface ids into a brief's prose is the tool feeding itself the tokens it wants to read, and a later reader takes that prose for original intent. 112 briefs re-validated on the citing join, 0 mismatches, and the record now lives in frontmatter where reckon's body scan cannot read it back as a citation."
+  },
+  {
+    "id": "CASE-0803",
+    "req": "REQ-102",
+    "surface": "SURF-030",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "A record whose asked and ran lanes differ is refused without a reason, so a substitution cannot be recorded as if it were the first choice. Verified by attempting one: exit 2 with the reason named.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/verification_record.py",
+      "docs/test-campaign/verification-records/0001-pro-0133-brief-validation-join-design-is-writing.json",
+      "docs/test-campaign/verification-records/0002-pro-0133-same-question-to-the-openai-family.json",
+      "docs/test-campaign/evidence/PRO-0152/instrument-sweep.json"
+    ],
+    "note": "PRO-0148 and PRO-0152. Two records from a real verification act rather than a fixture: the grok-4.6 review that overturned PRO-0133's join, and the OpenAI lane that was asked for and not taken \u2014 recorded as a POLICY substitution (Codex is off for this repository by the reader's standing decision) rather than as a lane failure, which is the distinction T15 exists to keep. The sweep reports 4 of 4 CLIs resolving and says plainly that resolution is presence at a path, not usability."
   }
 ]

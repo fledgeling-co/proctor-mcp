@@ -1,6 +1,9 @@
 ---
 sources: [REQ-009, REQ-015, REQ-017, REQ-020]
 status: retired
+validated-by: REQ-009, REQ-015, REQ-017, REQ-020 via CASE-0011, CASE-0017, CASE-0019, CASE-0022, CASE-0028, CASE-0059
+validated-rungs: effect-witness, outcome
+validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift
 ---
 # Effect witnesses for the four effects that need no window server
 
@@ -101,13 +104,3 @@ the socket path between bind and connect.
 It does not close the other eight requirements, and it does not touch the 78 blind-pass findings.
 Recording a requirement as `none` to keep `campaign.py check` green is off the table: the twelve
 demands are the gate doing its job, and a class changed to silence a gate is a finish line that moved.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-009, REQ-015, REQ-017, REQ-020
-- surface: SURF-001, SURF-008, SURF-012, SURF-013, SURF-014
-- cases: CASE-0001, CASE-0011, CASE-0017, CASE-0018, CASE-0019, CASE-0020
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift

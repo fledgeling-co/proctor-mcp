@@ -1,6 +1,10 @@
 ---
 sources: [REQ-076, REQ-077, DEF-099, DEF-110, DEF-111, DEF-132, DEF-135, DEF-136]
 status: retired
+validated-by: REQ-028, REQ-047, REQ-055, REQ-063, REQ-076, REQ-077 via CASE-0032, CASE-0074, CASE-0075, CASE-0076, CASE-0077, CASE-0078
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: StreamCapture in ProctorAgent/Capture/StreamCapture.swift
+validated-through-defect: REQ-047 via DEF-033; REQ-028 via DEF-099
 ---
 # Twenty-seven unwrapped tests, a fixed timer, and two witnesses the rung wants
 
@@ -90,13 +94,3 @@ not a reclassification to `none` to clear the gate.
 
 It does not touch DEF-033, which is a survival-rate measurement and closes when the number moves.
 It does not close DEF-099. It does not raise any ratchet.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-055, REQ-063, REQ-076, REQ-077
-- surface: SURF-008, SURF-012, SURF-022
-- cases: CASE-0011, CASE-0017, CASE-0018, CASE-0027, CASE-0028, CASE-0029
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift — a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) — 0 of the 3,290 regular files `find -type f` reports under that root on this machine — so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written.

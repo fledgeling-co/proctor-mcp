@@ -1,6 +1,9 @@
 ---
 sources: [REQ-023]
 status: retired
+validated-by: REQ-023 via CASE-0025, CASE-0088
+validated-rungs: effect-witness, outcome
+validated-provider: ProctorReflector in ProctorReflector/ProctorReflector.swift
 ---
 # The fidelity harness: Proctor measures Proctor
 
@@ -90,13 +93,3 @@ diverge with a comment explaining why.
 - Once this lands, the `proctor` skill in `vendor/fledgeling-plugins` should learn the
   dogfooding path, because "drive Proctor with Proctor to check a UI change" is the shortest
   demonstration of the product that exists and it is currently written down nowhere.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-023
-- surface: SURF-001, SURF-015
-- cases: CASE-0001, CASE-0023, CASE-0025, CASE-0038, CASE-0088
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: ProctorReflector in ProctorReflector/ProctorReflector.swift

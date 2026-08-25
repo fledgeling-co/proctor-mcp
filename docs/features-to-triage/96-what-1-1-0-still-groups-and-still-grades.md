@@ -1,6 +1,9 @@
 ---
 sources: [REQ-155, REQ-156, REQ-157, DEF-280, DEF-281]
 status: retired
+validated-by: REQ-155, REQ-156, REQ-157 via CASE-0620, CASE-0621, CASE-0622, CASE-0623, CASE-0624, CASE-0625
+validated-rungs: outcome
+validated-provider: none
 ---
 # What 1.1.0 still groups, and what it still lets a citation grade
 
@@ -83,13 +86,3 @@ look like a refutation of the other.
 **So finding 1 stands for the registry it was measured on, and does not describe this one.** The
 practice that would have prevented the whole exchange is cheap: **print the denominator beside every
 percentage.** Two right numbers that disagree cost more to reconcile than either cost to produce.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-155, REQ-156, REQ-157
-- surface: SURF-031
-- cases: CASE-0620, CASE-0621, CASE-0622, CASE-0623, CASE-0624, CASE-0625
-- rungs reached: outcome
-- provider: none

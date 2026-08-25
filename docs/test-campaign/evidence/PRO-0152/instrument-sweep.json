@@ -1,0 +1,32 @@
+{
+  "instruments": [
+    {
+      "instrument": "agy",
+      "resolved": true,
+      "path": "/Users/lukerhodes/.local/bin/agy",
+      "evidence": "presence at a path"
+    },
+    {
+      "instrument": "claude",
+      "resolved": true,
+      "path": "/Users/lukerhodes/.local/bin/claude",
+      "evidence": "presence at a path"
+    },
+    {
+      "instrument": "codex",
+      "resolved": true,
+      "path": "/Users/lukerhodes/.local/bin/codex",
+      "evidence": "presence at a path"
+    },
+    {
+      "instrument": "grok",
+      "resolved": true,
+      "path": "/Users/lukerhodes/.grok/bin/grok",
+      "evidence": "presence at a path"
+    }
+  ],
+  "egress": {
+    "blocked": false,
+    "basis": "no egress marker is set for this repository"
+  }
+}

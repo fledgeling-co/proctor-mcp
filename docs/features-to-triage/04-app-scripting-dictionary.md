@@ -1,6 +1,9 @@
 ---
 sources: [REQ-001]
 status: retired
+validated-by: REQ-001 via CASE-0001, CASE-0002
+validated-rungs: outcome
+validated-provider: none
 ---
 # App scripting-dictionary introspection
 
@@ -28,13 +31,3 @@ For a scriptable app, `get_app_dictionary` returns its commands and classes, and
 ## Dependencies / notes
 - Pairs with the AppleEvents driver already in place; pairs with 03 (menu shortcuts) as the "prefer the precise route" theme.
 - Licensing: reimplement sdef parsing; MIT source.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-001
-- surface: SURF-001, SURF-002
-- cases: CASE-0001, CASE-0002, CASE-0038, CASE-0074, CASE-0154, CASE-0370
-- rungs reached: metamorphic, outcome
-- provider: none

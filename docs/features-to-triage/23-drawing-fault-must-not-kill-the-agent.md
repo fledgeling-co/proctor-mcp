@@ -1,6 +1,10 @@
 ---
 sources: [REQ-006, DEF-215]
 status: retired
+validated-by: REQ-006, REQ-100 via CASE-0008, CASE-0030, CASE-0065, CASE-0430, CASE-0431, CASE-0432
+validated-rungs: effect-witness, outcome
+validated-provider: NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo
+validated-through-defect: REQ-100 via DEF-215
 ---
 # A drawing fault must not kill the agent
 
@@ -71,13 +75,3 @@ than around one call, because the next fault will be in a different one.
   report that looked healthy while nothing was presented.
 - The window list is the instrument that did work: during a run the panel appears
   as a 352x200 layer-25 window with its alpha animating down through the fade.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-006
-- surface: SURF-004
-- cases: CASE-0004, CASE-0008, CASE-0021, CASE-0030, CASE-0032, CASE-0065
-- rungs reached: effect-witness, outcome
-- provider: NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo

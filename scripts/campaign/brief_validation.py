@@ -2,17 +2,32 @@
 """Spec-validation over the legacy brief queue, and retirement with a citation.
 
 `reckon.py` classes a brief `undecided` when it cannot read a rung behind it,
-and its stated remedy is spec-validation. 111 of this repository's briefs sit
+and its stated remedy is spec-validation. 111 of this repository's briefs sat
 there for one mechanical reason: they cite requirements in prose, and reckon
-looks cases up by surface, so the hop from requirement to surface is never made
+looks cases up by SURFACE, so the hop from requirement to surface is never made
 and the strongest oracle reads as `none`.
 
-The hop exists in the registry — every requirement declares its surfaces — so
-the validation is answerable without reading prose:
+**The first version of this file closed that hop the wrong way**, and an
+out-of-family review (grok-4.6 at xhigh, 25 Aug 2026, recorded in
+`docs/test-campaign/evidence/PRO-0133/out-of-family-review-grok.md`) returned
+UNSOUND on it. It wrote the surface ids into each brief's prose so reckon's
+scanner would find them, then let reckon award `retirable`. Three things were
+wrong with that and the review named all three: it is the tool feeding itself
+the tokens it wants to read; a brief acquires prose its author never wrote,
+which a later reader takes for original intent; and — the sharpest of them —
+`case_by_surface[SURF-X]` returns *every* case on that surface, so the rung a
+brief was retired on need not have come from a case that cites the brief's own
+requirement at all.
 
-    brief --cites--> REQ --declares--> SURF --carries--> case(s)
-                      |
-                      +--declares--> provider symbol --> Sources/**.swift
+So the join is the strong one, computed here rather than planted:
+
+    brief --cites--> REQ <--cites-- passing case(s)          ← the cases that
+                      |                                         name THIS req
+                      +--declares--> provider --> vacuity census
+
+A case on a surface a requirement happens to share is not evidence about that
+requirement. `backed_by` is reckon's own name for the strong edge, and this
+file computes the same thing rather than approximating it with a surface.
 
 A brief is **validated** when all three hold, each read from a different place:
 
@@ -34,17 +49,21 @@ implementations of one rule disagree, and the one this file would have shipped
 was the wrong one — so the census's own findings list is the input, and an
 absent census is a lane failure rather than a pass.
 
-`--record` writes the verdict into the brief as a **Validation record** section
-naming the requirement, the surface, the cases and the provider that carried it.
+`--retire` writes the verdict into the brief's **frontmatter** — `validated-by`
+naming the requirement and the exact case ids, and `validated-provider` — and
+sets `status: retired`.
 
-It deliberately does **not** set `status: retired`. reckon maps a declared
-retirement onto `waived` — "somebody decided not to" — and 111 briefs proved
-done would then read as 111 somebody declined. Proved-done is `retirable`, which
-is reckon's to award and not this script's to assert. What the record does is
-complete the hop the join was missing, by naming the surface in the brief's own
-prose where `brief_scan` can see it; reckon then reads the rung off the cases
-itself and classes the row on its own evidence. The instrument supplies the
-citation; the verdict stays with the tool that owns it.
+Frontmatter and not prose, deliberately. reckon scans a brief's body for
+id-shaped tokens, so an id written into the body during a reckoning becomes an
+edge in the next run's join; a frontmatter key other than `sources` is inert to
+it. The record is there for a person to re-check and for nothing to re-read as
+intent.
+
+reckon then classes these `waived` — "a decision, not a measurement" — and that
+is the honest reading. The retirement IS a decision, taken on a measurement, and
+the measurement is named on the row. What it is not is reckon independently
+awarding `retirable`, and the difference between those two matters enough that
+the first version of this file was reverted for blurring it.
 
   brief_validation.py [--briefs DIR] [--campaign DIR] [--retire] [--json PATH]
 """
@@ -139,7 +158,8 @@ def main() -> int:
     ap.add_argument("--vacuity", type=Path, default=None,
                     help="path to vacuity-check.py; default resolves the newest installed copy")
     ap.add_argument("--record", action="store_true",
-                    help="write the validation record into each validated brief")
+                    help="write the verdict into each validated brief's FRONTMATTER and "
+                         "retire it")
     ap.add_argument("--retire-from", type=Path, default=None,
                     help="a reckon ledger.json; retire exactly the briefs IT classes retirable")
     ap.add_argument("--json", type=Path, default=None)
@@ -165,20 +185,25 @@ def main() -> int:
     defects = {d["id"]: d for d in inv.get("defect", [])}
     symbols = production_symbols(a.source)
 
-    by_surface: dict[str, list[dict]] = defaultdict(list)
+    by_req: dict[str, list[dict]] = defaultdict(list)
     for c in cases:
-        if c.get("surface"):
-            by_surface[c["surface"]].append(c)
+        if not str(c.get("status", "")).startswith("pass"):
+            continue
+        cited_req = c.get("req")
+        for rid in ([cited_req] if isinstance(cited_req, str) else (cited_req or [])):
+            if rid:
+                by_req[rid].append(c)
 
     def strong_cases(req_id: str) -> list[dict]:
-        r = reqs.get(req_id) or {}
-        out = []
-        for sid in r.get("surfaces") or []:
-            for c in by_surface.get(sid, []):
-                if str(c.get("status", "")).startswith("pass") \
-                        and c.get("oracle") in RETIRING_RUNGS:
-                    out.append(c)
-        return out
+        """The passing cases that CITE this requirement, at or above the floor.
+
+        Not the cases on a surface the requirement happens to sit on. Two
+        requirements sharing SURF-001 do not share its evidence, and reading it
+        that way retires a brief on a case about something else — which is what
+        the out-of-family review refused.
+        """
+        return [c for c in by_req.get(req_id, [])
+                if c.get("oracle") in RETIRING_RUNGS]
 
     def provider_ok(req_id: str) -> tuple[bool, str]:
         r = reqs.get(req_id) or {}
@@ -279,23 +304,31 @@ def main() -> int:
         validated.append(rec)
 
         if a.record:
-            record = (
-                "\n## Validation record\n\n"
-                "Written by `scripts/campaign/brief_validation.py`, which reads the registry "
-                "rather than this document. Every id below is re-checkable: the requirement is "
-                "in `inventory.json`, the surface is the one that requirement itself names, and "
-                "each case passed at a rung at or above reckon's retiring floor.\n\n"
-                f"- requirement: {', '.join(carrying)}\n"
-                f"- surface: {', '.join(surfaces)}\n"
-                f"- cases: {', '.join(ids)}\n"
-                f"- rungs reached: {', '.join(rec['rungs'])}\n"
-                f"- provider: {rec['provider']}\n"
-                + (f"- reached through a closed defect: {', '.join(via_defect)}\n"
-                   if via_defect else ""))
-            stripped = re.sub(r"\n## Validation record\n.*?(?=\n## |\Z)", "\n",
-                              body, flags=re.S)
-            new_body = stripped.rstrip() + "\n" + record
-            f.write_text((f"---\n{front}\n---\n" if m else "") + new_body.lstrip("\n"))
+            # Frontmatter, never prose. reckon scans the body for id-shaped
+            # tokens, so an id written into the body during a reckoning becomes
+            # an edge in the next run's join — the tool feeding itself the
+            # tokens it wants to read. A frontmatter key other than `sources` is
+            # inert to that scan and legible to a person, which is the whole
+            # requirement.
+            lines = {
+                "validated-by": f"{', '.join(carrying)} via {', '.join(ids)}",
+                "validated-rungs": ", ".join(rec["rungs"]),
+                "validated-provider": rec["provider"],
+            }
+            if via_defect:
+                lines["validated-through-defect"] = "; ".join(via_defect)
+            block = front
+            if re.search(r"^status:", block, re.M):
+                block = re.sub(r"^status:.*$", "status: retired", block, flags=re.M)
+            else:
+                block = (block + "\nstatus: retired").strip()
+            for k, v in lines.items():
+                line = f"{k}: {v}"
+                if re.search(rf"^{k}:", block, re.M):
+                    block = re.sub(rf"^{k}:.*$", line, block, flags=re.M)
+                else:
+                    block += "\n" + line
+            f.write_text(f"---\n{block}\n---\n" + body.lstrip("\n"))
 
     if a.retire_from:
         led = json.loads(a.retire_from.read_text())
@@ -348,7 +381,7 @@ def main() -> int:
             {"validated": validated, "blocked": blocked, "skipped": skipped}, indent=2) + "\n")
         print(f"\nwrote {a.json}")
     print("\nDRY RUN — pass --record to write the validation records in."
-          if not a.record else "\nrecorded. reckon reads the rung and classes each row itself.")
+          if not a.record else "\nrecorded in frontmatter, and retired on that verdict.")
     return 0
 
 

@@ -2726,32 +2726,66 @@ def test_requirement_evidence_is_backed_by_a_passing_case() -> None:
 # validator supplies the citation; the class is reckon's to award, so a brief
 # carrying a Validation record must also carry the ids that record names.
 def test_brief_validation_records_are_recheckable() -> None:
+    """Every retirement names cases that cite the brief's OWN requirement.
+
+    The first version of this join read `case_by_surface`, which returns every
+    case on a surface — so a brief could be retired on evidence about a
+    different requirement that happened to share one. An out-of-family review
+    (grok-4.6, xhigh, 25 Aug 2026) returned UNSOUND on exactly that, and this is
+    the check that keeps the correction: for every retired brief, every case it
+    names must name the brief's requirement back.
+    """
     briefs = ROOT / "docs" / "features-to-triage"
     inv = json.loads((CAMPAIGN_DIR / "inventory.json").read_text())
     req_ids = {r["id"] for r in inv["requirement"]}
-    surf_ids = {s["id"] for s in inv["surface"]}
     raw = json.loads((CAMPAIGN_DIR / "cases.json").read_text())
     seq = raw if isinstance(raw, list) else (raw.get("case") or raw.get("cases"))
-    passing = {c["id"] for c in seq if str(c.get("status", "")).startswith("pass")}
+    passing = {c["id"]: c for c in seq if str(c.get("status", "")).startswith("pass")}
 
-    checked, bad = 0, []
+    checked, bad, planted = 0, [], []
     for f in sorted(briefs.rglob("*.md")):
         text = f.read_text()
-        if "## Validation record" not in text:
+        # No brief carries a section this pipeline wrote into its prose. reckon
+        # scans a body for id-shaped tokens, so prose written during a reckoning
+        # becomes an edge in the next run's join — the tool feeding itself the
+        # tokens it wants to read.
+        if "## Validation record" in text:
+            planted.append(f.name)
+        m = re.match(r"\A---\n(.*?)\n---\n", text, re.S)
+        if not m:
             continue
-        block = text.split("## Validation record", 1)[1]
+        front = m.group(1)
+        vb = re.search(r"^validated-by:\s*(.+)$", front, re.M)
+        if not vb:
+            continue
         checked += 1
-        for label, universe in (("requirement:", req_ids), ("surface:", surf_ids),
-                                ("cases:", passing)):
-            line = next((l for l in block.splitlines() if l.strip().startswith("- " + label)), "")
-            ids = [x.strip() for x in line.split(":", 1)[-1].split(",") if x.strip()]
-            missing = [i for i in ids if i not in universe]
-            if not ids or missing:
-                bad.append(f"{f.name} {label} {missing or 'names nothing'}")
-    check(checked > 0, "validation records exist to check", f"{checked} found")
+        line = vb.group(1)
+        reqs = re.findall(r"\bREQ-\d{3}\b", line)
+        cases = re.findall(r"\bCASE-\d{4}\b", line)
+        if not reqs or not cases:
+            bad.append(f"{f.name}: validated-by names {len(reqs)} req and {len(cases)} case")
+            continue
+        for r in reqs:
+            if r not in req_ids:
+                bad.append(f"{f.name}: {r} is not in the registry")
+        for cid in cases:
+            c = passing.get(cid)
+            if c is None:
+                bad.append(f"{f.name}: {cid} is not a passing case")
+                continue
+            cited = c.get("req")
+            names = [cited] if isinstance(cited, str) else (cited or [])
+            if not set(names) & set(reqs):
+                bad.append(f"{f.name}: {cid} cites {names}, not any of {reqs} — retired on "
+                           f"evidence about something else")
+
+    check(checked > 0, "there are retirements to check", f"{checked} found")
+    check(not planted,
+          "no brief carries a Validation record this pipeline wrote into its prose",
+          ", ".join(planted[:6]))
     check(not bad,
-          f"every id in every validation record resolves, and every case in one passed "
-          f"({checked} record(s))",
+          f"every case named by every one of {checked} retirement(s) cites that brief's own "
+          f"requirement",
           "\n".join(bad[:6]))
 
 
@@ -2904,6 +2938,54 @@ def test_warrant_dashboard_is_self_contained() -> None:
           "and it is a real page rather than a stub", html[:200])
 
 
+
+# ── PRO-0150 · the capture store's location is declared, not guessed ────────
+def test_capture_index_declares_where_the_store_is() -> None:
+    script = ROOT / "scripts" / "campaign" / "capture_manifest.py"
+    cfg = json.loads((CAMPAIGN_DIR / "campaign.json").read_text())
+    roots = cfg.get("captureRoots") or []
+    check(bool(roots), "campaign.json declares captureRoots", str(roots))
+    for r in roots:
+        check((ROOT / r).is_dir(), f"declared capture root {r} exists", r)
+
+    out = subprocess.run([sys.executable, str(script), "--gate"],
+                         capture_output=True, text=True)
+    check(out.returncode == 0, "the capture index gate is green on this tree",
+          out.stdout[-300:])
+
+    idx = json.loads((CAMPAIGN_DIR / "capture-index.json").read_text())
+    on_disk = sum(1 for r in roots for f in (ROOT / r).rglob("*")
+                  if f.is_file() and f.suffix.lower() in
+                  (".png", ".jpg", ".jpeg", ".webp", ".gif", ".tiff"))
+    check(idx["images"] == on_disk,
+          f"the index counts every image under every declared root ({on_disk})",
+          f"index says {idx['images']}")
+
+    # The negative arm, on a copy of the campaign: a declared root that does not
+    # exist must go red rather than quietly contributing zero.
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td) / "campaign"
+        shutil.copytree(CAMPAIGN_DIR, d)
+        c = json.loads((d / "campaign.json").read_text())
+        c["captureRoots"] = list(roots) + ["docs/test-campaign/evidence/no-such-directory"]
+        (d / "campaign.json").write_text(json.dumps(c, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--campaign", str(d), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1,
+              "a declared capture root that does not exist takes the gate red",
+              f"exit {red.returncode}")
+        check("not checked, rather than clean" in red.stdout,
+              "and says the probe was not checked rather than that it passed",
+              red.stdout[-300:])
+
+    # And the index never adopts changed bytes as the new standard by itself:
+    # that decision belongs to a person, which is DEF-226's whole subject.
+    src = (ROOT / roots[0])
+    body = script.read_text()
+    check("adopting it here would make the index agree with whatever is on disk" in body,
+          "the refusal says why it will not adopt new content on its own", str(src))
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2963,7 +3045,8 @@ def main() -> int:
                test_a_generated_untriaged_brief_is_never_validated,
                test_mutation_report_carries_its_denominators,
                test_warrant_promotion_refuses_an_empty_population,
-               test_warrant_dashboard_is_self_contained):
+               test_warrant_dashboard_is_self_contained,
+               test_capture_index_declares_where_the_store_is):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

@@ -1,6 +1,9 @@
 ---
 sources: [REQ-022]
 status: retired
+validated-by: REQ-022 via CASE-0024
+validated-rungs: outcome
+validated-provider: none
 ---
 > **A FOURTH CASE, added 2026-08-16 after this brief was written, and it is the worst of the
 > set because it is not intermittent.** `ToolchainDoctorTests.swift:203` — *"a machine with
@@ -90,13 +93,3 @@ it.
 Changing what the takeover overlay, the foreground disclosure or the Screen Recording probe
 do. PRO-0026, PRO-0019 and PRO-0041 settled those; this is about the tests being able to tell
 the truth about them.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-022
-- surface: SURF-008, SURF-016
-- cases: CASE-0011, CASE-0024, CASE-0027, CASE-0028, CASE-0029, CASE-0039
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: none

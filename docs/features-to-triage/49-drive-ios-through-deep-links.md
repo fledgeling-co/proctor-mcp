@@ -1,6 +1,9 @@
 ---
 sources: [REQ-020]
 status: retired
+validated-by: REQ-020 via CASE-0022, CASE-0060
+validated-rungs: effect-witness, outcome
+validated-provider: Process() in Sources/ProctorAgent/Session/SessionIOSProcess.swift — simctl and maestro
 ---
 # Drive iOS through deep links
 
@@ -42,13 +45,3 @@ named state by opening a deep link, with the result reported in Proctor's own sh
 
 `xcrun simctl` is part of Xcode, not macOS. A machine without Xcode has no lane here at
 all, which is a `proctor_doctor` row rather than a runtime surprise.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-020
-- surface: SURF-001, SURF-014
-- cases: CASE-0001, CASE-0022, CASE-0038, CASE-0060
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: Process() in Sources/ProctorAgent/Session/SessionIOSProcess.swift — simctl and maestro

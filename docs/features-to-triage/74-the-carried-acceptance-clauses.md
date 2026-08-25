@@ -1,6 +1,9 @@
 ---
 sources: [REQ-048]
 status: retired
+validated-by: REQ-048 via CASE-0155, CASE-0156
+validated-rungs: outcome
+validated-provider: none
 ---
 # Two acceptance clauses that merged carried rather than green
 
@@ -78,13 +81,3 @@ accessibility tree can answer, rather than about a resolved modifier value, whic
 It does not convert any surface the mock and the build already agree on, and it does not revisit
 the composition decisions settled in wave 9 — the status window keeps its explanation, its title
 block and its grant-row treatment. Those were the reader's call and they were made.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-048
-- surface: SURF-002
-- cases: CASE-0002, CASE-0074, CASE-0154, CASE-0370, CASE-0372, CASE-0373
-- rungs reached: metamorphic, outcome
-- provider: none

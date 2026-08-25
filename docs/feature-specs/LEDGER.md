@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 147
+**Last allocated:** 152
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -157,3 +157,8 @@
 | PRO-0145 | Hermetic Tool Process Boundary Fixtures | 2026-08-25 | Ready for AI |
 | PRO-0146 | Continuous Spec-Symbol Citation Linter | 2026-08-25 | Merged |
 | PRO-0147 | Multi-Plane Verification Receipt Generator | 2026-08-25 | Merged |
+| PRO-0148 | Deterministic Lane Routing and Selection Record | 2026-08-25 | Merged |
+| PRO-0149 | Skill Overlay Family Guidance Reader | 2026-08-25 | Ready for AI |
+| PRO-0150 | Capture Directory Identity Manifest | 2026-08-25 | Merged |
+| PRO-0151 | Session Claim Provenance Audit Gate | 2026-08-25 | Ready for AI |
+| PRO-0152 | Instrument Availability Disclosure Reporter | 2026-08-25 | Merged |

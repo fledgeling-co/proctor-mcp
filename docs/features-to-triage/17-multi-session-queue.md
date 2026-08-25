@@ -1,6 +1,9 @@
 ---
 sources: [REQ-038]
 status: retired
+validated-by: REQ-038 via CASE-0048, CASE-0055, CASE-0751
+validated-rungs: outcome
+validated-provider: none
 ---
 # Multi-session scheduling — session identity, lanes, and the queue
 
@@ -52,13 +55,3 @@ Two MCP clients driving the same app serialise and both complete. Two driving di
 - The scheduler half is independently testable — it is agent logic with no window involved.
 - The queue UI depends on the run HUD panel.
 - Open questions are listed at the end of `docs/design/run-hud-queue.md`; triage should settle them rather than leave them to the implementer.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-038
-- surface: SURF-020, SURF-038
-- cases: CASE-0048, CASE-0049, CASE-0055, CASE-0086, CASE-0750, CASE-0751
-- rungs reached: effect-witness, outcome
-- provider: none

@@ -1,6 +1,9 @@
 ---
 sources: [REQ-033, REQ-041]
 status: retired
+validated-by: REQ-033, REQ-041 via CASE-0041, CASE-0043, CASE-0051, CASE-0083, CASE-0715
+validated-rungs: effect-witness, outcome
+validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift
 ---
 > **REVISED for wave 7, 2026-08-15.** Still wanted, and the switch list changes. The UI switches (`PROCTOR_CURSOR`, `PROCTOR_HUD`, `PROCTOR_YIELD`, `PROCTOR_YIELD_INPUT`, `PROCTOR_TAKEOVER_INPUT`) survive because the supervision surface survives. `PROCTOR_SECOND_LANE` may not, since brief 45 hands browser work to Cua. Read `00-WAVE-7-DIRECTION.md` and enumerate the switches that actually exist when this is built rather than trusting the list below.
 
@@ -54,13 +57,3 @@ when they want to know what Proctor is doing and change it.
 ## Not in scope
 
 New switches. This gives the existing six a home; it does not add a seventh.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-033
-- surface: SURF-017, SURF-036
-- cases: CASE-0033, CASE-0034, CASE-0035, CASE-0036, CASE-0040, CASE-0041
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift

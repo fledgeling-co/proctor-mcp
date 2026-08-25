@@ -1,6 +1,9 @@
 ---
 sources: [REQ-094, REQ-095, REQ-096]
 status: retired
+validated-by: REQ-095 via CASE-0393, CASE-0394
+validated-rungs: outcome
+validated-provider: none
 ---
 # Six repairs whose diagnosis is already done
 
@@ -53,13 +56,3 @@ every project on this machine.
   assertion is what the requirement actually promises.
 - Assuming the two force-unwrap shapes are converted rather than exempted, because the hazard is
   identical and only the grep differed.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-094, REQ-095, REQ-096
-- surface: SURF-002, SURF-009, SURF-022
-- cases: CASE-0002, CASE-0012, CASE-0063, CASE-0072, CASE-0073, CASE-0074
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: none

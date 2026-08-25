@@ -9,11 +9,6 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
-| `140-deterministic-lane-routing-and-selection-record.md` | Untriaged — intake 2026-08-25 | Written by `shipyard:intake` from tailings probe T9; no spec exists until triage allocates one. |
-| `141-skill-overlay-family-guidance-reader.md` | Untriaged — intake 2026-08-25 | Written by `shipyard:intake` from tailings probe T1; no spec exists until triage allocates one. |
-| `142-capture-directory-identity-manifest.md` | Untriaged — intake 2026-08-25 | Written by `shipyard:intake` from crossref probe R4; no spec exists until triage allocates one. |
-| `143-session-claim-provenance-audit-gate.md` | Untriaged — intake 2026-08-25 | Written by `shipyard:intake` from tailings probes T3/T11/T17; proposed-by-ai, awaiting triage. |
-| `144-instrument-availability-disclosure-reporter.md` | Untriaged — intake 2026-08-25 | Written by `shipyard:intake` from tailings probe T15; proposed-by-ai, awaiting triage. |
 
 ## Briefs several specs share
 

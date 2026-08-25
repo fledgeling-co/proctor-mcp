@@ -1,6 +1,9 @@
 ---
 sources: [REQ-007, REQ-015, REQ-023, REQ-024, REQ-027, REQ-028, REQ-029, REQ-033, REQ-034, REQ-035, REQ-037, REQ-039, REQ-050]
 status: retired
+validated-by: REQ-007, REQ-015, REQ-023, REQ-024, REQ-027, REQ-028, REQ-029, REQ-033, REQ-034, REQ-035, REQ-037, REQ-039 via CASE-0009, CASE-0017, CASE-0025, CASE-0026, CASE-0029, CASE-0032
+validated-rungs: effect-witness, interactive-glass, metamorphic, outcome
+validated-provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents
 ---
 # The ten external effects a capped gate output hid
 
@@ -84,13 +87,3 @@ Evidence must not change because somebody was watching.
 It does not revisit REQ-007, which PRO-0078 recorded `inconclusive` on a real ceiling — `isAPerson`
 requires `sourcePid == 0`, unforgeable from any process. A ceiling that was measured stays
 measured.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-007, REQ-015, REQ-023, REQ-024, REQ-027, REQ-028, REQ-033, REQ-037, REQ-039
-- surface: SURF-001, SURF-003, SURF-004, SURF-005, SURF-008, SURF-012, SURF-015, SURF-017, SURF-019, SURF-020, SURF-035, SURF-036, SURF-038
-- cases: CASE-0001, CASE-0003, CASE-0004, CASE-0008, CASE-0009, CASE-0010
-- rungs reached: effect-witness, interactive-glass, metamorphic, outcome, raster-visual
-- provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents

@@ -1,6 +1,10 @@
 ---
 sources: [REQ-111, REQ-112, REQ-113, DEF-209]
 status: retired
+validated-by: REQ-046, REQ-111, REQ-112, REQ-113 via CASE-0072, CASE-0073, CASE-0152, CASE-0472, CASE-0473, CASE-0474
+validated-rungs: metamorphic, outcome
+validated-provider: none
+validated-through-defect: REQ-046 via DEF-209
 ---
 # Thirty-five pictures the gate cannot see
 
@@ -58,13 +62,3 @@ this gate was red then and had been red before the session started. It was not c
 sweep ran the gates it knew about, and this one was invoked against the wrong directory in an earlier
 pass — where it exited 2 saying `no inventory at …/evidence/inventory.json`, an honest refusal that an
 exit-code-only reading would have logged as a failing gate and a message-only reading as noise.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-111, REQ-112, REQ-113
-- surface: SURF-027
-- cases: CASE-0472, CASE-0473, CASE-0474, CASE-0475, CASE-0476, CASE-0477
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: none

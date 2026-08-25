@@ -1,6 +1,9 @@
 ---
 sources: [REQ-011, REQ-031]
 status: retired
+validated-by: REQ-011, REQ-031 via CASE-0013, CASE-0037, CASE-0713, CASE-0792, CASE-0795
+validated-rungs: effect-witness, outcome, raster-visual
+validated-provider: none
 ---
 # The menu bar, and the complete command surface
 
@@ -75,13 +78,3 @@ Brief 63 owns the asset set; this brief owns which state the menu bar shows when
   and the switches live in the status window instead. That is a defensible choice for a
   background agent and this brief does not change it — but it is worth recording as a
   deliberate deviation rather than an oversight.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-011, REQ-031
-- surface: SURF-010, SURF-036
-- cases: CASE-0013, CASE-0037, CASE-0258, CASE-0259, CASE-0260, CASE-0266
-- rungs reached: effect-witness, outcome, raster-visual
-- provider: none

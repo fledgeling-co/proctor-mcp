@@ -1,6 +1,9 @@
 ---
 sources: [REQ-030, REQ-031, REQ-033]
 status: retired
+validated-by: REQ-030, REQ-031, REQ-033 via CASE-0033, CASE-0034, CASE-0037, CASE-0041, CASE-0043, CASE-0083
+validated-rungs: effect-witness, outcome
+validated-provider: Terminal.paint in Sources/ProctorCLI/TUI/Terminal.swift; scripts/campaign/supervision_tui_pty_probe.py
 ---
 # Supervision TUI and Menu Bar Status Extra On-Glass Witness
 
@@ -21,13 +24,3 @@ Proctor provides a five-pane supervision TUI over SSH (`proctor tui`) and a menu
 ## Assumptions made writing this
 - Assuming the pty harness runs headlessly without requiring interactive user terminal input.
 - Assuming AppKit menu inspection queries the live `NSStatusBar` item rather than a mock model.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-030, REQ-031, REQ-033
-- surface: SURF-010, SURF-017, SURF-036
-- cases: CASE-0013, CASE-0033, CASE-0034, CASE-0035, CASE-0036, CASE-0037
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: Terminal.paint in Sources/ProctorCLI/TUI/Terminal.swift; scripts/campaign/supervision_tui_pty_probe.py

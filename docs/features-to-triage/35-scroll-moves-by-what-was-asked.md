@@ -1,6 +1,9 @@
 ---
 sources: [REQ-001]
 status: retired
+validated-by: REQ-001 via CASE-0001, CASE-0002
+validated-rungs: outcome
+validated-provider: none
 ---
 > **RETIRED 2026-08-15 (PRO-0034), not built.** Scroll is Cua's now. This brief asks Proctor to fix the unit mapping and rung order of an actuation path that brief 45 hands to `cua-driver`. Fixing units in code that is being replaced is spend on both sides of a decision. If Cua's scroll has the same problem, that is a bug report to file upstream, which is a better use of the finding.
 >
@@ -48,13 +51,3 @@ serve the delta that was asked for rather than the first action that exists.
 - **Ordering the rungs by fitness rather than by availability** means the page
   action becomes a fallback for a delta close to a page. Define the rule
   numerically rather than by adjective.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-001
-- surface: SURF-001, SURF-002
-- cases: CASE-0001, CASE-0002, CASE-0038, CASE-0074, CASE-0154, CASE-0370
-- rungs reached: metamorphic, outcome
-- provider: none

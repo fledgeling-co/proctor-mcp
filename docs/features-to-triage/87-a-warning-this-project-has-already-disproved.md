@@ -1,6 +1,9 @@
 ---
 sources: [REQ-108]
 status: retired
+validated-by: REQ-108 via CASE-0460, CASE-0469, CASE-0470, CASE-0471
+validated-rungs: outcome
+validated-provider: none
 ---
 # Proctor ships a guest warning its own spec records as not reproducing
 
@@ -72,13 +75,3 @@ of its own and should be recorded.
 
 It does not claim the upstream bug is fixed, and it does not close trycua/cua #870. It does not
 change guest provisioning, which deliberately happens outside a tool call.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-108
-- surface: SURF-002
-- cases: CASE-0002, CASE-0074, CASE-0154, CASE-0370, CASE-0372, CASE-0373
-- rungs reached: metamorphic, outcome
-- provider: none

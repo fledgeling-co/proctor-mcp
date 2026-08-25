@@ -1,6 +1,9 @@
 ---
 sources: [REQ-002, REQ-043]
 status: retired
+validated-by: REQ-002, REQ-043 via CASE-0003, CASE-0053, CASE-0069, CASE-0760
+validated-rungs: effect-witness, outcome
+validated-provider: AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift
 ---
 # Prefer the background, and draw the pointer where the work is happening
 
@@ -68,13 +71,3 @@ changes which steps need the front changes that predicate, so it must go through
 Making a step work that genuinely cannot travel through the accessibility plane. A
 drag path, a canvas surface and a hover state have no accessibility expression; this
 is about not paying the foreground cost when there was another route.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-002
-- surface: SURF-001, SURF-003
-- cases: CASE-0001, CASE-0003, CASE-0014, CASE-0026, CASE-0038, CASE-0069
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift

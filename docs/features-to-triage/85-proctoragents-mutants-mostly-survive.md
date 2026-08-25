@@ -1,6 +1,10 @@
 ---
 sources: [REQ-109, REQ-110, DEF-018, DEF-033]
 status: retired
+validated-by: REQ-047, REQ-109, REQ-110 via CASE-0074, CASE-0075, CASE-0076, CASE-0077, CASE-0078, CASE-0079
+validated-rungs: metamorphic, outcome
+validated-provider: none
+validated-through-defect: REQ-047 via DEF-033
 ---
 # Nineteen of twenty-two ProctorAgent mutants survived
 
@@ -77,13 +81,3 @@ It does not chase equivalent mutants — `RunHUDGate.onSegment`'s `<=` boundary 
 one, and a suite contorted to kill an unkillable mutant is worse than the survivor. It does not aim
 at a survival-rate target: the number is a measurement, and moving it by choosing easier mutants
 would be the finish line moving.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-109, REQ-110
-- surface: SURF-026
-- cases: CASE-0467, CASE-0468, CASE-0540, CASE-0541, CASE-0542, CASE-0543
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: none

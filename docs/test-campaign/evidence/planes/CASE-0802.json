@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0802",
+  "requirement": "REQ-101",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:43:28Z",
+  "tree": {
+    "commit": "a52d897",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The relation is across two joins over the same tree: the surface-wide join retired brief 01 on six cases and the citing join on two, and the two are a superset and a subset. test_instruments checks every retired brief's named cases cite its own requirement \u2014 planting one that does not takes it red.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/brief_validation.py",
+      "sha256_16": "962f3e70d2efe54a",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0133/validation.json",
+      "sha256_16": "58a6677ac0ada866",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0133/out-of-family-review-grok.md",
+      "sha256_16": "f9e59f6617f034a2",
+      "present": true
+    }
+  ]
+}

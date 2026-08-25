@@ -1,6 +1,9 @@
 ---
 sources: [REQ-037, REQ-038, REQ-039, REQ-040]
 status: retired
+validated-by: REQ-037, REQ-038, REQ-039, REQ-040 via CASE-0047, CASE-0048, CASE-0049, CASE-0050, CASE-0055, CASE-0056
+validated-rungs: effect-witness, interactive-glass, outcome
+validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift
 ---
 # Guest VM Lifecycle and Multi-Session Attachment Oracle
 
@@ -21,13 +24,3 @@ Proctor supports macOS guest VM testing over `lume`, `tart`, and `prlctl` with a
 ## Assumptions made writing this
 - Assuming multi-session queue testing can run with simulated socket endpoints in CI/headless suites.
 - Assuming live VM boots are reserved for full integration passes.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-037, REQ-038, REQ-039, REQ-040
-- surface: SURF-019, SURF-020, SURF-038
-- cases: CASE-0047, CASE-0048, CASE-0049, CASE-0050, CASE-0055, CASE-0056
-- rungs reached: effect-witness, interactive-glass, outcome
-- provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift

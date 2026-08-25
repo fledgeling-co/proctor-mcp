@@ -1,6 +1,9 @@
 ---
 sources: [REQ-008, REQ-042]
 status: retired
+validated-by: REQ-008, REQ-042 via CASE-0010, CASE-0031, CASE-0052, CASE-0058, CASE-0068
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents
 ---
 # When Proctor must take the front, take it visibly and hold it
 
@@ -76,13 +79,3 @@ somebody with a Mac that ignores them.
 
 Blocking input outside a foreground step, or any always-on interception. The
 overlay exists for the seconds Proctor genuinely holds the machine.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-008
-- surface: SURF-005
-- cases: CASE-0009, CASE-0010, CASE-0031, CASE-0052, CASE-0053, CASE-0054
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents

@@ -1,6 +1,10 @@
 ---
 sources: [REQ-150, REQ-151, DEF-204, DEF-216]
 status: retired
+validated-by: REQ-102, REQ-103, REQ-150, REQ-151 via CASE-0441, CASE-0442, CASE-0443, CASE-0444, CASE-0445, CASE-0446
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: none
+validated-through-defect: REQ-102 via DEF-204; REQ-099 via DEF-216; REQ-103 via DEF-216
 ---
 # A version string is not the artifact
 
@@ -51,13 +55,3 @@ rows already misclassified behind it.
 1. Refresh the plugin cache, and make the refresh checkable by content rather than by version.
 2. Teach `compare` to read the `source_commit` it already records.
 3. Anywhere else a tool's identity gates a decision, identify it by content.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-150, REQ-151
-- surface: SURF-030
-- cases: CASE-0600, CASE-0601, CASE-0602
-- rungs reached: metamorphic, outcome
-- provider: none

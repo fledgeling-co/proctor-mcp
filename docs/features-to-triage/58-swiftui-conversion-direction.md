@@ -1,6 +1,9 @@
 ---
 sources: [REQ-026, REQ-030]
 status: retired
+validated-by: REQ-026, REQ-030 via CASE-0027, CASE-0033, CASE-0034, CASE-0710, CASE-0711, CASE-0712
+validated-rungs: effect-witness, outcome
+validated-provider: none
 ---
 # Wave 9: the surface set becomes the app
 
@@ -177,13 +180,3 @@ one to run.
 6. **66** after 60, since the consent sheets are raised from the status window's switches.
 7. **68** and **69** last and independent of the rest: they are new binaries rather than
    changes to an existing one, and 69 depends on 68 for the shared argument surface.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-026, REQ-030
-- surface: SURF-008, SURF-010, SURF-017, SURF-036
-- cases: CASE-0011, CASE-0013, CASE-0027, CASE-0028, CASE-0029, CASE-0033
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: none

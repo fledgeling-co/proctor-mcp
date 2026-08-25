@@ -1,0 +1,37 @@
+{
+  "case": "CASE-0803",
+  "requirement": "REQ-102",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:43:28Z",
+  "tree": {
+    "commit": "a52d897",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "A record whose asked and ran lanes differ is refused without a reason, so a substitution cannot be recorded as if it were the first choice. Verified by attempting one: exit 2 with the reason named.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/verification_record.py",
+      "sha256_16": "499d36bc56283a26",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/verification-records/0001-pro-0133-brief-validation-join-design-is-writing.json",
+      "sha256_16": "50d22098059f188a",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/verification-records/0002-pro-0133-same-question-to-the-openai-family.json",
+      "sha256_16": "db53fffe5e675a07",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0152/instrument-sweep.json",
+      "sha256_16": "b8a814cb4281673d",
+      "present": true
+    }
+  ]
+}

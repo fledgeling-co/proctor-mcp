@@ -1,6 +1,9 @@
 ---
 sources: [REQ-102, REQ-103, REQ-104, REQ-105, REQ-106, REQ-107]
 status: retired
+validated-by: REQ-102, REQ-103, REQ-104, REQ-105, REQ-106 via CASE-0441, CASE-0442, CASE-0443, CASE-0444, CASE-0445, CASE-0446
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: none
 ---
 # A reckoning worth comparing against
 
@@ -46,13 +49,3 @@ clock.
 - Assuming the ratchet is worth turning on before the join is perfect, since the delta is meaningful
   even over a partial denominator as long as the denominator is stated.
 - Assuming this is proposed rather than asked-for, so deleting this file is the way to say no.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-102, REQ-103, REQ-104, REQ-105, REQ-106, REQ-107
-- surface: SURF-025
-- cases: CASE-0441, CASE-0442, CASE-0443, CASE-0444, CASE-0445, CASE-0446
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: none

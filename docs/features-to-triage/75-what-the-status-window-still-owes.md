@@ -1,6 +1,9 @@
 ---
 sources: [REQ-032, REQ-088, REQ-089, REQ-090]
 status: retired
+validated-by: REQ-032, REQ-088, REQ-089, REQ-090 via CASE-0039, CASE-0042, CASE-0350, CASE-0351, CASE-0352, CASE-0353
+validated-rungs: metamorphic, outcome, raster-visual
+validated-provider: none
 ---
 # What the status window still owes, and one permission that may lie
 
@@ -93,13 +96,3 @@ It does not add a warning about a revoked permission before the measurement says
 and it does not change what the agent does on a revocation signal without that decision being
 made deliberately. PRO-0036 declined to decide it; this brief surfaces it rather than deciding it
 by default.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-088, REQ-089, REQ-090
-- surface: SURF-008, SURF-009, SURF-012, SURF-017
-- cases: CASE-0011, CASE-0012, CASE-0017, CASE-0018, CASE-0027, CASE-0028
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: none

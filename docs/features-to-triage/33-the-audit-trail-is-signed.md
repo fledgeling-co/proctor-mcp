@@ -1,6 +1,9 @@
 ---
 sources: [REQ-015]
 status: retired
+validated-by: REQ-015 via CASE-0017, CASE-0061
+validated-rungs: effect-witness, outcome
+validated-provider: data.write(to:options:.atomic) in Sources/ProctorAgent/Session/PolicyStore.swift; key material in Sources/ProctorAgent/Session/AuditKeyStore.swift
 ---
 # The audit trail is signed, and it records what Proctor recommended
 
@@ -45,13 +48,3 @@ auditable act.
   Record that Proctor recommended a lane, which lane, and which rule drove it.
   A URL in an audit entry is a person's browsing history in a file Proctor keeps.
   Decide what is recorded about the target, and default to less.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-015
-- surface: SURF-008, SURF-012
-- cases: CASE-0011, CASE-0017, CASE-0018, CASE-0027, CASE-0028, CASE-0029
-- rungs reached: effect-witness, metamorphic, outcome, raster-visual
-- provider: data.write(to:options:.atomic) in Sources/ProctorAgent/Session/PolicyStore.swift; key material in Sources/ProctorAgent/Session/AuditKeyStore.swift

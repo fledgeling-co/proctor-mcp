@@ -1,6 +1,9 @@
 ---
 sources: [REQ-033]
 status: retired
+validated-by: REQ-033 via CASE-0041, CASE-0043, CASE-0083, CASE-0715
+validated-rungs: effect-witness, outcome
+validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift
 ---
 # The history window, and the detail that says what it could not check
 
@@ -58,13 +61,3 @@ fence rather than around it — the compiler is the rule here, because the failu
 **Rotation is not pruning, and the copy must not say it is.** The trail is hash-chained from
 a genesis over its own prefix, so removing entries from the front is unrepresentable: the
 first survivor would link to a record that is gone. The window says the trail rotates.
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-033
-- surface: SURF-017, SURF-036
-- cases: CASE-0033, CASE-0034, CASE-0035, CASE-0036, CASE-0040, CASE-0041
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift

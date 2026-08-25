@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0801",
+  "requirement": "REQ-111",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:43:28Z",
+  "tree": {
+    "commit": "a52d897",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "docs/test-campaign/evidence/PRO-0150/negative-arm.txt \u2014 a declared root that does not exist takes the gate to exit 1 naming it MISSING rather than reporting clean, and an image copied into a declared root takes it to exit 1 naming the file. Removing each puts it back to exit 0.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/capture_manifest.py",
+      "sha256_16": "213de5af2555ac6b",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/capture-index.json",
+      "sha256_16": "9c72af72a6cea435",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0150/negative-arm.txt",
+      "sha256_16": "c59b65e866712e38",
+      "present": true
+    }
+  ]
+}

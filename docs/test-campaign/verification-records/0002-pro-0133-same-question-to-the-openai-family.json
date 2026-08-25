@@ -1,0 +1,22 @@
+{
+  "task": "PRO-0133 same question to the OpenAI family",
+  "asked": {
+    "lane": "codex gpt-5.6-sol",
+    "family": "openai",
+    "effort": "xhigh"
+  },
+  "ran": {
+    "lane": "grok-4.6",
+    "family": "xai"
+  },
+  "substituted": true,
+  "substitutionReason": "Codex is OFF for this repository by the reader's explicit standing decision recorded in ORCHESTRATOR.md \u2014 not a lane failure, a policy. xAI was taken as the next family.",
+  "writerFamily": "anthropic",
+  "inFamily": false,
+  "egress": {
+    "blocked": false,
+    "basis": "no egress marker is set for this repository"
+  },
+  "evidence": "docs/test-campaign/evidence/PRO-0133/out-of-family-review-grok.md",
+  "recordedAt": "2026-08-25T03:38:37Z"
+}
