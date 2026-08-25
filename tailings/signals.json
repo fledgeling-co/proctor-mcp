@@ -3,8 +3,8 @@
  "transcript": "/Users/lukerhodes/.claude/projects/-Users-lukerhodes-Dev-proctor-mcp/30dfe9f8-ca66-4e1a-98f6-8e593b0302a4.jsonl",
  "repo": "/Users/lukerhodes/Dev/proctor-mcp",
  "models": {
-  "claude-opus-5": 5884,
-  "gemini-3.7-flash-high": 866,
+  "claude-opus-5": 6122,
+  "gemini-3.7-flash-high": 868,
   "gemini-3.7-flash": 124,
   "grok-4.6": 36,
   "glm-5.3": 25,
@@ -13,12 +13,12 @@
   "<synthetic>": 5
  },
  "counts": {
-  "records": 22273,
-  "assistant_prose_turns": 1216,
-  "tool_calls": 4087,
-  "bash": 3783,
-  "human_turns": 109,
-  "skills": 45,
+  "records": 22879,
+  "assistant_prose_turns": 1280,
+  "tool_calls": 4211,
+  "bash": 3904,
+  "human_turns": 115,
+  "skills": 48,
   "sidechain_records": 0,
   "spawns": 105
  },
@@ -67,7 +67,10 @@
   "ship-fleet:ship-fleet",
   "tailings:tailings",
   "shipyard:intake",
-  "ship-fleet:ship-fleet"
+  "ship-fleet:ship-fleet",
+  "test-campaign:test-campaign",
+  "reckon:reckon",
+  "shipyard:intake"
  ],
  "assertions": [
   {
@@ -866,6 +869,30 @@
    "kind": "status",
    "line": 22252,
    "text": "`proctor-shim` writes every tool call down that socket \u2014 an agent dying mid-write took the MCP server with it, silently, with no error and no audit record",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "figure",
+   "line": 22341,
+   "text": "Exact now: the suite as a whole bites (exit 0 \u2192 1), but `hangUpOnAccept` \u2014 the test I named \u2014 passes either way",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22463,
+   "text": "** A case named a test as its arm and that test passes with the fix removed",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22598,
+   "text": "Three arms verified against a clean tree",
    "names": [],
    "unmatched": [],
    "durable": false
@@ -2301,12 +2328,84 @@
    "names": [],
    "unmatched": [],
    "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22302,
+   "text": "Three findings already. Checking the two ledger rows that are neither Merged nor Ready for AI.",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22411,
+   "text": "\ud83e\udee5 The pass found four contradicted claims, and the one that matters is about my own arming. ``` 344 assertions \u00b7 10 substantiated \u00b7 1 unbacked \u00b7 4 contradicted \u00b7 329 waived 0 unclassified \u00b7 8 of 12 sites \u00b7 worklist check exit 3 ``` **The SIGPIPE test does not arm the SIGPIPE fix.** I wrote in the co",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22463,
+   "text": "\ud83e\udee5 Six briefs written from the pass, four asked-for by a probe and two I had to reason to. They're revealed in Finder. | Brief | From | What it is | |---|---|---| | **145** | A100 | An `armedBy` claim nobody checks \u2014 495 cases carry one and nothing reads it | | **146** | the suite-verdict fault | A g",
+   "names": [],
+   "unmatched": [],
+   "durable": true
+  },
+  {
+   "kind": "status",
+   "line": 22472,
+   "text": "Triage done \u2014 158 rows, 158 specs, 150 briefs all claimed. Now building. PRO-0156 and PRO-0154 first, since both are gates that already exist.",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22652,
+   "text": "\ud83e\udee5 Wave 28 is closed. The ledger is drained again \u2014 **158 rows, 156 Merged and 2 Retired, outstanding 0** \u2014 and all six briefs the tailings pass raised were triaged into PRO-0153\u2026PRO-0158 and built. **The instrument that mattered found two faults within minutes of existing.** PRO-0153 makes an arming",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22751,
+   "text": "Campaign phases complete. Now reckon, against the campaign as it now stands.",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22789,
+   "text": "\ud83e\udee5 Both ran full \u2014 scope declared at rung 1, no inference. The reckoning is revealed in Finder. **The campaign found two things it had been reporting without having.** **A third of the vacuity check had never run here.** `testRoot` was absent from `campaign.json`, so the blind pass reported `NOT RUN ",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22819,
+   "text": "\ud83e\udee5 Six briefs, each named after the figure it came from. They're revealed in Finder. | Brief | The figure | |---|---| | **151** | The blind pass reported `NOT RUN` for the life of the campaign, and nothing read that back | | **152** | `Controls: 4 of 34` \u2014 38 of 40 surfaces declare none | | **153** |",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22839,
+   "text": "Triage done \u2014 164 rows, 164 specs. Building. PRO-0163 first: a wave of work merged and the figure it existed for never moved.",
+   "names": [],
+   "unmatched": [],
+   "durable": false
   }
  ],
  "findings": [
   {
    "probe": "T11",
-   "title": "a printed non-zero class (520 blind) is absent from the report that follows  (\u00d76)",
+   "title": "a printed non-zero class (520 blind) is absent from the report that follows  (\u00d77)",
    "line": 19036,
    "quote": "blind: examined=2159 mutating=603 re-read-after=520 blind=83",
    "band": 1,
@@ -2319,14 +2418,6 @@
      "quote": "blind: examined=2159 mutating=603 re-read-after=520 blind=83"
     },
     {
-     "line": 19250,
-     "quote": "**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements wi"
-    },
-    {
-     "line": 19346,
-     "quote": "**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements wi"
-    },
-    {
      "line": 20393,
      "quote": "[band 1] T11 a printed non-zero class (520 blind) is absent from the report that follows (\u00d73)"
     },
@@ -2335,18 +2426,71 @@
      "quote": "- **A270** (T11, line 19036) a printed non-zero class (520 blind) is absent from the report that follows (\u00d73)"
     },
     {
-     "line": 20577,
-     "quote": "**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements wi"
+     "line": 22274,
+     "quote": "[band 1] T11 a printed non-zero class (520 blind) is absent from the report that follows (\u00d76)"
+    },
+    {
+     "line": 22283,
+     "quote": "a printed non-zero class (520 blind) is absent from the report that follows (\u00d76)"
+    },
+    {
+     "line": 22681,
+     "quote": "\"why\": \"Derived from this tree's own call frequencies, not assumed. #expect and #require are deliberately absent from the readers: every swift-testing assertion wraps one, so inclu"
+    },
+    {
+     "line": 22694,
+     "quote": "blind: examined=2224 mutating=616 re-read-after=531 blind=85"
     }
    ],
-   "count": 6,
+   "count": 7,
    "lines": [
     19036,
-    19250,
-    19346,
     20393,
     20414,
-    20577
+    22274,
+    22283,
+    22681,
+    22694
+   ]
+  },
+  {
+   "probe": "T11",
+   "title": "a printed non-zero class (skipped 143) is absent from the report that follows  (\u00d75)",
+   "line": 21312,
+   "quote": "skipped 143 \u2014 already decided, or cites no requirement",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "report every class the gate printed, summing to its total",
+   "figure": "143",
+   "occurrences": [
+    {
+     "line": 21312,
+     "quote": "skipped 143 \u2014 already decided, or cites no requirement"
+    },
+    {
+     "line": 22217,
+     "quote": "skipped 137 \u2014 already decided, or cites no requirement"
+    },
+    {
+     "line": 22296,
+     "quote": "text: a printed non-zero class (skipped 143) is absent from the report that follows (\u00d73)"
+    },
+    {
+     "line": 22318,
+     "quote": "=== SITE 8 (A283): did the report carry 'skipped 143'? ==="
+    },
+    {
+     "line": 22775,
+     "quote": "skipped 144 \u2014 already decided, or cites no requirement"
+    }
+   ],
+   "count": 5,
+   "lines": [
+    21312,
+    22217,
+    22296,
+    22318,
+    22775
    ]
   },
   {
@@ -2418,36 +2562,6 @@
    ]
   },
   {
-   "probe": "T11",
-   "title": "a printed non-zero class (skipped 143) is absent from the report that follows  (\u00d73)",
-   "line": 21312,
-   "quote": "skipped 143 \u2014 already decided, or cites no requirement",
-   "band": 1,
-   "confidence": "observed",
-   "remedy": "report every class the gate printed, summing to its total",
-   "figure": "143",
-   "occurrences": [
-    {
-     "line": 21312,
-     "quote": "skipped 143 \u2014 already decided, or cites no requirement"
-    },
-    {
-     "line": 21579,
-     "quote": "skipped 32 \u2014 already decided, or cites no requirement"
-    },
-    {
-     "line": 22217,
-     "quote": "skipped 137 \u2014 already decided, or cites no requirement"
-    }
-   ],
-   "count": 3,
-   "lines": [
-    21312,
-    21579,
-    22217
-   ]
-  },
-  {
    "probe": "T17",
    "title": "the figure 0083 appears in a durable claim and in no earlier tool result  (\u00d73)",
    "line": 12122,
@@ -2475,6 +2589,31 @@
     12122,
     17663,
     18742
+   ]
+  },
+  {
+   "probe": "T11",
+   "title": "a printed non-zero class (UNCHECKED 62) is absent from the report that follows  (\u00d72)",
+   "line": 22729,
+   "quote": "UNCHECKED 62 \u2014 and unchecked is failed",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "report every class the gate printed, summing to its total",
+   "figure": "62",
+   "occurrences": [
+    {
+     "line": 22729,
+     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
+    },
+    {
+     "line": 22796,
+     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
+    }
+   ],
+   "count": 2,
+   "lines": [
+    22729,
+    22796
    ]
   },
   {
@@ -3264,25 +3403,25 @@
   {
    "probe": "T5",
    "title": "gate output suppressed and never re-run unsuppressed: plane_census.py  (\u00d72)",
-   "line": 22026,
-   "quote": "cd /Users/lukerhodes/Dev/proctor-mcp; python3 - << 'PY' import json p=\"docs/test-campaign/cases.json\" raw=json.load(open(p)); seq=raw if isinstance(raw,list) else (raw.get(\"case\") or raw.get(\"cases\"))",
+   "line": 22593,
+   "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 scripts/campaign/plane_census.py docs/test-campaign --write --receipts docs/test-campaign/evidence/planes >/dev/null 2>&1 TC=~/.claude/plugins/cache/fledge",
    "band": 2,
    "confidence": "observed",
    "remedy": "re-run plane_census.py and read its exit code",
    "occurrences": [
     {
-     "line": 22026,
-     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp; python3 - << 'PY' import json p=\"docs/test-campaign/cases.json\" raw=json.load(open(p)); seq=raw if isinstance(raw,list) else (raw.get(\"case\") or raw.get(\"cases\"))"
+     "line": 22593,
+     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 scripts/campaign/plane_census.py docs/test-campaign --write --receipts docs/test-campaign/evidence/planes >/dev/null 2>&1 TC=~/.claude/plugins/cache/fledge"
     },
     {
-     "line": 22197,
-     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 - << 'PY' import json inv=json.load(open(\"docs/test-campaign/inventory.json\")) inv[\"defect\"].append({ \"id\":\"DEF-339\", \"title\":\"The Maestro lane reaches the"
+     "line": 22637,
+     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 scripts/campaign/plane_census.py docs/test-campaign --write --receipts docs/test-campaign/evidence/planes >/dev/null 2>&1 TC=~/.claude/plugins/cache/fledge"
     }
    ],
    "count": 2,
    "lines": [
-    22026,
-    22197
+    22593,
+    22637
    ]
   },
   {
@@ -3534,21 +3673,40 @@
   },
   {
    "probe": "T5",
-   "title": "gate output suppressed and never re-run unsuppressed: spec_citation_measure.py",
-   "line": 21901,
-   "quote": "cd /Users/lukerhodes/Dev/proctor-mcp for g in \"spec_citation_measure.py\" \"ledger_gate.py\" \"capture_manifest.py --gate\" \"mutation_report.py --gate\" \"spec_symbol_linter.py --gate\" \"verification_record.p",
+   "title": "gate output suppressed and never re-run unsuppressed: slice.py",
+   "line": 22317,
+   "quote": "cd /Users/lukerhodes/Dev/proctor-mcp grep -rn \"cgWindowID: 7\\b\" Tests/ 2>/dev/null echo echo \"=== SITE 8 (A283): did the report carry 'skipped 143'? ===\" S=~/.claude/plugins/cache/fledgeling-plugins/t",
    "band": 2,
    "confidence": "observed",
-   "remedy": "re-run spec_citation_measure.py and read its exit code",
+   "remedy": "re-run slice.py and read its exit code",
    "occurrences": [
     {
-     "line": 21901,
-     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp for g in \"spec_citation_measure.py\" \"ledger_gate.py\" \"capture_manifest.py --gate\" \"mutation_report.py --gate\" \"spec_symbol_linter.py --gate\" \"verification_record.p"
+     "line": 22317,
+     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp grep -rn \"cgWindowID: 7\\b\" Tests/ 2>/dev/null echo echo \"=== SITE 8 (A283): did the report carry 'skipped 143'? ===\" S=~/.claude/plugins/cache/fledgeling-plugins/t"
     }
    ],
    "count": 1,
    "lines": [
-    21901
+    22317
+   ]
+  },
+  {
+   "probe": "T5",
+   "title": "gate output suppressed and never re-run unsuppressed: warrant_promotion.py",
+   "line": 22740,
+   "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 scripts/campaign/warrant_promotion.py \\ --json docs/test-campaign/evidence/PRO-0137/warrant-tiers.json \\ --html docs/test-campaign/evidence/PRO-0137/warran",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "re-run warrant_promotion.py and read its exit code",
+   "occurrences": [
+    {
+     "line": 22740,
+     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 scripts/campaign/warrant_promotion.py \\ --json docs/test-campaign/evidence/PRO-0137/warrant-tiers.json \\ --html docs/test-campaign/evidence/PRO-0137/warran"
+    }
+   ],
+   "count": 1,
+   "lines": [
+    22740
    ]
   },
   {
@@ -3606,7 +3764,7 @@
  "marker": {
   "applicable": true,
   "present": 39,
-  "absent": 61,
+  "absent": 66,
   "wrong_glyph": 0,
   "note": "diagnostics only \u2014 never a finding"
  },

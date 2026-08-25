@@ -2,12 +2,42 @@
  "schema": 1,
  "repo": "/Users/lukerhodes/Dev/proctor-mcp",
  "window": {
-  "since": "2026-08-25T11:30:00+10:00",
-  "until": "2026-08-25T15:40:00+10:00",
-  "commits": 19
+  "since": null,
+  "until": null,
+  "commits": 706
  },
- "uncommitted_paths": 1,
+ "uncommitted_paths": 18,
  "findings": [
+  {
+   "probe": "R1",
+   "title": "PRO-0108 reached a done-state and no commit in history carries its work",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "git log --all --grep PRO-0108 \u2014 point the row at the work, or move it back",
+   "item": "PRO-0108",
+   "sha": "3b459bfe9b85",
+   "subject": "docs(ledger): PRO-0108 Merged"
+  },
+  {
+   "probe": "R1",
+   "title": "DEF-209 reached a done-state and no commit in history carries its work",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "git log --all --grep DEF-209 \u2014 point the row at the work, or move it back",
+   "item": "DEF-209",
+   "sha": "b7be8356fa4f",
+   "subject": "registry(PRO-0107): DEF-209 closed, and six findings recorded rather than smoothed"
+  },
+  {
+   "probe": "R1",
+   "title": "PRO-0052 reached a done-state and no commit in history carries its work",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "git log --all --grep PRO-0052 \u2014 point the row at the work, or move it back",
+   "item": "PRO-0052",
+   "sha": "7fc32d9c4637",
+   "subject": "Orchestrator: PRO-0052 merged, the skill matches what shipped"
+  },
   {
    "probe": "R2",
    "title": "a cited path exists nowhere in the repo or its history: LEDGER.md",
@@ -97,6 +127,80 @@
    "path": "inventory.json",
    "line": 20141,
    "quote": "\ud83e\udee5 `/reckon:reckon` (v1.7.0) executed against the latest campaign and brief registry, reconciling `docs/reckoning/2026-08-25-final/ledger.json` with a clean gate exit code 0. ### Account Summary - **Pr"
+  },
+  {
+   "probe": "R4",
+   "title": "2 differently-named captures are one image (a67cf67af07e)",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "re-capture each surface, or say plainly that they share one",
+   "digest": "a67cf67af07e",
+   "paths": [
+    "docs/evidence/app-icon-proctor.png",
+    "docs/evidence/shots/icon-proctor-1024.png"
+   ]
+  },
+  {
+   "probe": "R4",
+   "title": "3 differently-named captures are one image (ee7807db110e)",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "re-capture each surface, or say plainly that they share one",
+   "digest": "ee7807db110e",
+   "paths": [
+    "docs/evidence/shots/overlay-exclusion-armed.png",
+    "docs/evidence/shots/overlay-exclusion-baseB.png",
+    "docs/evidence/shots/overlay-exclusion-baseA.png"
+   ]
+  },
+  {
+   "probe": "R4",
+   "title": "3 differently-named captures are one image (4f8c11912bbd)",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "re-capture each surface, or say plainly that they share one",
+   "digest": "4f8c11912bbd",
+   "paths": [
+    "docs/evidence/shots/sweepL-status-agent-down.png",
+    "docs/evidence/shots/sweepL-status-t0.6.png",
+    "docs/evidence/shots/sweepL-status-t3.5.png"
+   ]
+  },
+  {
+   "probe": "R4",
+   "title": "2 differently-named captures are one image (670a93988315)",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "re-capture each surface, or say plainly that they share one",
+   "digest": "670a93988315",
+   "paths": [
+    "docs/evidence/shots/sweepL-wedged-t1.png",
+    "docs/evidence/shots/sweepK-theme-before.png"
+   ]
+  },
+  {
+   "probe": "R11",
+   "title": "a credential falls back to a literal: site/assets/vendor/ScrollTrigger.min.js:10",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "hand to code-review; if the repo owns a loader, call it",
+   "path": "site/assets/vendor/ScrollTrigger.min.js",
+   "line": 10,
+   "quote": "key,n)}}function r(){return Ce||\"undefined\"",
+   "env_var": "",
+   "env_var_occurrences": 0
+  },
+  {
+   "probe": "R11",
+   "title": "a credential falls back to a literal: site/assets/vendor/gsap.min.js:10",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "hand to code-review; if the repo owns a loader, call it",
+   "path": "site/assets/vendor/gsap.min.js",
+   "line": 10,
+   "quote": "keyframes?function _setKeyframeDefaults(i){return function(t,e){for(var r in e)r in t||\"duration\"",
+   "env_var": "",
+   "env_var_occurrences": 0
   },
   {
    "probe": "R2",
@@ -299,6 +403,203 @@
    "quote": "\ud83e\udee5 **Wave 21 pre-triage complete and Wave 21a dispatched in flight:** ### Wave 21 Work Plan 1. **PRO-0118 (`spec-PRO-0118.md` \u2014 Building in `ai/pro-0118`):** Covered-Target Cursor Plane Witness (indepe"
   },
   {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: campaign.json",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write campaign.json, or strike the claim that cites it",
+   "path": "campaign.json",
+   "line": 22789,
+   "quote": "\ud83e\udee5 Both ran full \u2014 scope declared at rung 1, no inference. The reckoning is revealed in Finder. **The campaign found two things it had been reporting without having.** **A third of the vacuity check ha"
+  },
+  {
+   "probe": "R10",
+   "title": "Sources/ProctorCore/TUIGrid.swift is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep TUIGrid \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "Sources/ProctorCore/TUIGrid.swift",
+   "referenced_by": [
+    "docs/test-campaign/evidence/PRO-0085/baseline.txt",
+    "docs/test-campaign/evidence/PRO-0088/gate-before.txt",
+    "docs/test-campaign/evidence/PRO-0090/gate-baseline.txt",
+    "docs/test-campaign/evidence/PRO-0097/gate-before.txt",
+    "docs/test-campaign/evidence/PRO-0098/gate-before.txt",
+    "docs/test-campaign/evidence/PRO-0099/baseline-suite-before.txt"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "docs/test-campaign/evidence/PRO-0079/reader-sensitivity.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep reader-sensitivity \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "docs/test-campaign/evidence/PRO-0079/reader-sensitivity.py",
+   "referenced_by": [
+    "docs/test-campaign/REPORT.md",
+    "docs/test-campaign/cases.json",
+    "docs/test-campaign/evidence.html",
+    "docs/test-campaign/evidence/planes/CASE-0063.json"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "docs/test-campaign/evidence/PRO-0102/source-denominators.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep source-denominators \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "docs/test-campaign/evidence/PRO-0102/source-denominators.py",
+   "referenced_by": [
+    "docs/specs/spec-PRO-0102.md",
+    "docs/test-campaign/cases.json",
+    "docs/test-campaign/evidence.html",
+    "docs/test-campaign/evidence/PRO-0102/source-denominators.txt",
+    "docs/test-campaign/evidence/planes/CASE-0210.json",
+    "docs/test-campaign/evidence/planes/CASE-0216.json"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "scripts/campaign/arming_verify.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep arming_verify \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "scripts/campaign/arming_verify.py",
+   "referenced_by": [
+    "docs/test-campaign/cases.json",
+    "docs/test-campaign/evidence/planes/CASE-0808.json",
+    "docs/test-campaign/evidence/planes/CASE-0819.json",
+    "docs/test-campaign/evidence/planes/CASE-0820.json",
+    "scripts/campaign/test_instruments.py"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "scripts/campaign/count_agent_windows.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep count_agent_windows \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "scripts/campaign/count_agent_windows.py",
+   "referenced_by": [
+    "docs/test-campaign/inventory.json"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "scripts/campaign/operator_census.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep operator_census \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "scripts/campaign/operator_census.py",
+   "referenced_by": [
+    "docs/specs/spec-PRO-0099.md",
+    "docs/test-campaign/evidence/PRO-0099/README.txt"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "scripts/campaign/reclass_record.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep reclass_record \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "scripts/campaign/reclass_record.py",
+   "referenced_by": [
+    "docs/test-campaign/cases.json",
+    "docs/test-campaign/evidence.html",
+    "docs/test-campaign/evidence/planes/CASE-0823.json"
+   ]
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Actuation/CuaTransport.swift:125",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Actuation/CuaTransport.swift",
+   "line": 125,
+   "quote": "func adopt(laneId: String) {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:67",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 67,
+   "quote": "func arm(observeInput: Bool) {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:68",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 68,
+   "quote": "func disarm() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:69",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 69,
+   "quote": "func setExpectedPid(_ pid: Int32?) {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:70",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 70,
+   "quote": "func noteSyntheticPost() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:71",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 71,
+   "quote": "func noteUserInput() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorReflector/ProctorReflector.swift:77",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorReflector/ProctorReflector.swift",
+   "line": 77,
+   "quote": "func start(socketPath: String? = nil) {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorReflector/ProctorReflector.swift:79",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorReflector/ProctorReflector.swift",
+   "line": 79,
+   "quote": "func stop() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorReflector/ProctorReflector.swift:87",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorReflector/ProctorReflector.swift",
+   "line": 87,
+   "quote": "func endActivity(_ token: ActivityToken) {}"
+  },
+  {
    "probe": "R9",
    "title": "function body is empty: Tests/ProctorAgentTests/Fakes.swift:166",
    "band": 2,
@@ -307,10 +608,18 @@
    "path": "Tests/ProctorAgentTests/Fakes.swift",
    "line": 166,
    "quote": "func stop() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "SwiftUI button with an empty action: docs/test-campaign/evidence/PRO-0090/pre/HistoryWindow.swift:42",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "docs/test-campaign/evidence/PRO-0090/pre/HistoryWindow.swift",
+   "line": 42,
+   "quote": "Button(\"Keep it\", role: .cancel) {}"
   }
  ],
- "notes": [
-  "R4: no capture directory found; capture identity unchecked"
- ],
+ "notes": [],
  "probes_that_could_not_run": []
 }

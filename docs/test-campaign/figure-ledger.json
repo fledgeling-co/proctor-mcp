@@ -1,0 +1,18 @@
+{
+  "entries": [
+    {
+      "at": "2026-08-25T09:59:07Z",
+      "spec": "PRO-0161",
+      "figure": "warrant.surface-conformance",
+      "value": 84.0,
+      "status": "Ready for AI"
+    },
+    {
+      "at": "2026-08-25T09:59:07Z",
+      "spec": "PRO-0163",
+      "figure": "warrant.evidence-integrity",
+      "value": 91.1,
+      "status": "Ready for AI"
+    }
+  ]
+}

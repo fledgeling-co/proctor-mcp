@@ -1,0 +1,19 @@
+3 declared pass(es) over /Users/lukerhodes/Dev/proctor-mcp/docs/test-campaign
+  unclassed    ran          examined 141       needs=— declared='n/a'
+  uncensused   ran          examined 29        needs=sourceRoot declared='Sources'
+  blind        ran          examined 2224      needs=testRoot declared='Tests'
+
+wrote docs/test-campaign/evidence/PRO-0159/pass-census.json
+
+gate: all 3 declared pass(es) ran, and each printed the population it examined.
+
+== THE ARM ==
+Removing testRoot from campaign.json:
+  exit=1
+  blind        DID NOT RUN  NO DENOMINATOR   needs=testRoot declared=None
+  FAIL blind did not run — `testRoot` is not declared in campaign.json, and it is
+       what gives this pass its corpus
+  restored: exit=0
+
+Naming the field is the half that matters. An operator told 'blind did not run'
+still has to find out why, and the why is one missing key.

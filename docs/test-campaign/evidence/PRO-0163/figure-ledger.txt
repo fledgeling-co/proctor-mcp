@@ -1,0 +1,21 @@
+2 specification(s) declare a figure they will move
+
+  PRO-0161  warrant.surface-conformance  declared 84.0 -> 100.0  · status Ready for AI · now 84.0
+  PRO-0163  warrant.evidence-integrity  declared 91.1 -> 100.0  · status Ready for AI · now 91.1
+
+== WHY THIS EXISTS ==
+PRO-0129, PRO-0130, PRO-0134 and PRO-0135 were written to bring five warrant
+classes to full figure sourcing. All four merged. The rollup still reports every
+one of the five short, and the two that are green were green before that work.
+
+== AND WHAT THE PER-CLASS BREAKDOWN SHOWS ==
+All 43 figures short across those five classes are cases standing at
+source-analysis — a rung that reads a fact off the source and witnesses no
+effect. Aggregated it reads as five separate shortfalls; named, it is one
+population and one piece of work, which is PRO-0161.
+
+  evidence-integrity   91.1% (195/214)   core://tools 10, vacuity/blind 5, reckon/build 3
+  surface-conformance  84.0% (100/119)   walkthrough 9, status-window 8, menubar 1
+  capture-trust        95.7% (44/46)     screen-capture 2
+  operator-state       94.5% (52/55)     audit-policy 3
+  registry-drift       97.0% (32/33)     reckoning/compare 1

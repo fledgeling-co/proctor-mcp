@@ -9,12 +9,12 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
-| `151-a-declared-pass-that-never-ran.md` | Untriaged — campaign/reckoning intake 2026-08-25 | The blind pass reported NOT RUN for the life of the campaign; nothing read that back. No spec exists until triage allocates one. |
-| `152-thirty-eight-surfaces-that-declare-no-controls.md` | Untriaged — campaign/reckoning intake 2026-08-25 | `Controls: 4 of 34` describes two surfaces of forty. No spec exists until triage allocates one. |
-| `153-forty-one-cases-that-only-prove-something-rendered.md` | Untriaged — campaign/reckoning intake 2026-08-25 | 497 pass, 438 checked; 41 sit below the effect rung and 16 were never armed. No spec exists until triage allocates one. |
-| `154-seven-durable-boundaries-nobody-cut.md` | Untriaged — campaign/reckoning intake 2026-08-25 | 43 of 50 boundaries cut; four journeys are non-critical because their cuts do not exist. No spec exists until triage allocates one. |
-| `155-the-figure-sourcing-that-did-not-close-its-classes.md` | Untriaged — campaign/reckoning intake 2026-08-25 | Four specs merged to close five warrant classes and the rollup still reports all five short. No spec exists until triage allocates one. |
-| `156-two-captures-nobody-judged.md` | Untriaged — campaign/reckoning intake 2026-08-25 | 6 of 8 judgeable captures judged, on the one lineage pass that ratchets rather than blocks. No spec exists until triage allocates one. |
+| `157-non-zero-class-partition-breakdown-reporter.md` | Untriaged — tailings intake 2026-08-25 | Tailings T11: report all non-zero sub-class counts in downstream summaries. No spec exists until triage allocates one. |
+| `158-unsuppressed-gate-execution-and-exit-verification.md` | Untriaged — tailings intake 2026-08-25 | Tailings T5: capture and verify primary process exit codes without swallowing by pipe. No spec exists until triage allocates one. |
+| `159-repository-relative-path-citation-resolver.md` | Untriaged — tailings intake 2026-08-25 | Tailings R2: resolve path citations relative to repository root to eliminate ambiguous references. No spec exists until triage allocates one. |
+| `160-release-stub-and-no-op-verification-attestation.md` | Untriaged — tailings intake 2026-08-25 | Tailings R9: provide formal attestation and tests for intentional release/null no-ops. No spec exists until triage allocates one. |
+| `161-polling-loop-suppression-and-notification-monitor.md` | Untriaged — tailings intake 2026-08-25 | Tailings T13: replace repetitive polling loops with event-driven background notifications. No spec exists until triage allocates one. |
+| `162-autonomous-audit-worklist-continuous-verifier.md` | Untriaged — tailings intake 2026-08-25 | Tailings proposal: continuous background audit verification of newly modified artifacts. No spec exists until triage allocates one. |
 
 ## Briefs several specs share
 

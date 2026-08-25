@@ -3274,6 +3274,43 @@ def test_no_brief_is_untriaged_while_its_spec_is_merged() -> None:
           "\n".join(stale[:8]))
 
 
+
+# ── PRO-0159 / PRO-0163 · a pass that ran, and a merge that moved its figure ─
+def test_every_declared_pass_ran_over_a_named_population() -> None:
+    script = ROOT / "scripts" / "campaign" / "pass_census.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0,
+          "every declared vacuity pass ran and printed its population", out.stdout[-400:])
+    check("NO DENOMINATOR" not in out.stdout,
+          "no pass reports a finding count with nothing behind it", out.stdout[-400:])
+
+    # The arm, on a copy: removing the field that gives a pass its corpus must
+    # name that field, not merely report the pass as quiet.
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td) / "campaign"
+        shutil.copytree(CAMPAIGN_DIR, d)
+        cfg = json.loads((d / "campaign.json").read_text())
+        cfg.pop("testRoot", None)
+        (d / "campaign.json").write_text(json.dumps(cfg, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--campaign", str(d), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "a pass with no corpus takes the gate red",
+              f"exit {red.returncode}")
+        check("testRoot" in red.stdout,
+              "and the refusal names the field whose absence disabled it", red.stdout[-400:])
+
+
+def test_a_spec_that_names_a_figure_is_checked_against_it() -> None:
+    script = ROOT / "scripts" / "campaign" / "figure_ledger.py"
+    out = subprocess.run([sys.executable, str(script), "check", "--gate"],
+                         capture_output=True, text=True)
+    check(out.returncode == 0, "no merged specification left its named figure unmoved",
+          out.stdout[-400:])
+    check("declare a figure they will move" in out.stdout,
+          "at least one specification names a figure, so this check has a subject",
+          out.stdout[:300])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3339,7 +3376,9 @@ def main() -> int:
                test_claim_provenance_gate_and_its_waiver_rule,
                test_claim_provenance_reads_the_verdict_not_only_the_number,
                test_blind_pass_runs_and_holds_its_ratchet,
-               test_no_brief_is_untriaged_while_its_spec_is_merged):
+               test_no_brief_is_untriaged_while_its_spec_is_merged,
+               test_every_declared_pass_ran_over_a_named_population,
+               test_a_spec_that_names_a_figure_is_checked_against_it):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

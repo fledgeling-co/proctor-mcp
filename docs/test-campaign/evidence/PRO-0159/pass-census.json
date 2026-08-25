@@ -1,0 +1,30 @@
+{
+  "passes": [
+    {
+      "pass": "unclassed",
+      "ran": true,
+      "population": 141,
+      "needs": null,
+      "declared": "n/a",
+      "line": "unclassed:  examined=141 findings=0"
+    },
+    {
+      "pass": "uncensused",
+      "ran": true,
+      "population": 29,
+      "needs": "sourceRoot",
+      "declared": "Sources",
+      "line": "uncensused: examined=29 findings=0"
+    },
+    {
+      "pass": "blind",
+      "ran": true,
+      "population": 2224,
+      "needs": "testRoot",
+      "declared": "Tests",
+      "line": "blind:      examined=2224 mutating=616 re-read-after=531 blind=85"
+    }
+  ],
+  "silent": [],
+  "withoutPopulation": []
+}
