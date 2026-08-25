@@ -1,5 +1,6 @@
 ---
 sources: [REQ-009]
+status: retired
 ---
 # "Re-check now" does not say what it checks
 
@@ -45,3 +46,13 @@ describes nothing.
   decided here should not contradict that path.
 - The menu's other items are "Proctor Status…", "Run Setup Again…", "Show Run Panel",
   "Pause Run" / "Stop Run" and "Quit Proctor". Match their register.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-009
+- surface: SURF-008
+- cases: CASE-0011, CASE-0027, CASE-0028, CASE-0029, CASE-0039, CASE-0042
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift

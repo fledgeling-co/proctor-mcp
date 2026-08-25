@@ -1,5 +1,6 @@
 ---
 sources: [REQ-038]
+status: retired
 ---
 # A hold names whose run it is
 
@@ -45,3 +46,13 @@ the front.
   Giving it a lane means it can. Say what a caller sees when it does, because a
   call that used to return immediately and now queues is a behaviour change for
   anything already driving Proctor.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-038
+- surface: SURF-020, SURF-038
+- cases: CASE-0048, CASE-0049, CASE-0055, CASE-0086, CASE-0750, CASE-0751
+- rungs reached: effect-witness, outcome
+- provider: none

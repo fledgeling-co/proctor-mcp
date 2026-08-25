@@ -1,5 +1,6 @@
 ---
 sources: [REQ-022]
+status: retired
 ---
 # The build-identity tests fail whenever HEAD moves without a source change
 
@@ -60,3 +61,13 @@ readings, and they lead to different work:
   the fix: a runner has to know to do it, and knowing is the thing that is missing.
 - The plugin is `BuildIdentity`; its cached outputs sit under
   `.build/plugins/` and `.build/index-build/plugins/`.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-022
+- surface: SURF-008, SURF-016
+- cases: CASE-0011, CASE-0024, CASE-0027, CASE-0028, CASE-0029, CASE-0039
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: none

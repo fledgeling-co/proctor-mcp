@@ -1,7 +1,7 @@
 # Spec PRO-0133 — Legacy Brief Spec-Validation and Retirement
 
 **Brief:** `docs/features-to-triage/125-legacy-brief-spec-validation-and-retirement.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-025
 **Defects:** none

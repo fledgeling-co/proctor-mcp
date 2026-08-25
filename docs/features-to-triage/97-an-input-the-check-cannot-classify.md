@@ -1,5 +1,6 @@
 ---
 sources: [REQ-120, REQ-121, REQ-122, REQ-123, DEF-201, DEF-202, DEF-203]
+status: retired
 ---
 # An input the check cannot classify, and the two directions it can be wrong
 
@@ -70,3 +71,13 @@ repository whose briefs cite by convention — *the brief names the defects it c
 opposite prior, and one does: there, a brief discussing a neighbouring defect is textually identical
 to one that owns it. A count of zero taken on the wrong population invites the next reader to treat
 the defect as theoretical.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-120, REQ-121, REQ-122, REQ-123
+- surface: SURF-023, SURF-024
+- cases: CASE-0410, CASE-0411, CASE-0412, CASE-0413, CASE-0414, CASE-0415
+- rungs reached: effect-witness, outcome
+- provider: none

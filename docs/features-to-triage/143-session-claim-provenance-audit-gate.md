@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [T3, T11, T17]
 reckon-sources: [REQ-156, REQ-122]
-status: to-triage
+status: retired
 ---
 # Session Claim Provenance Audit Gate
 
@@ -24,3 +24,13 @@ Reports summarizing verification results carry figures drawn from gate output, t
 ## Assumptions made writing this
 - Assuming figure extraction distinguishes measurements from identifiers and dates
 - Assuming matching is order-bound so a later measurement cannot retroactively justify an earlier claim
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-122, REQ-156
+- surface: SURF-024, SURF-031
+- cases: CASE-0430, CASE-0431, CASE-0432, CASE-0433, CASE-0434, CASE-0435
+- rungs reached: effect-witness, outcome
+- provider: none

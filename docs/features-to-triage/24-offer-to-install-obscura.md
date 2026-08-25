@@ -1,5 +1,6 @@
 ---
 sources: [REQ-024]
+status: retired
 ---
 # Offer to install Obscura when it is missing
 
@@ -57,3 +58,13 @@ what is installed on the machine.
   explicitly rather than assumed to be on the path it inherited.
 - The repo already reports `shortcutsCLIAvailable` in `proctor_doctor`; match that
   shape rather than inventing a second one.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-024
+- surface: SURF-001, SURF-003, SURF-035
+- cases: CASE-0001, CASE-0003, CASE-0014, CASE-0026, CASE-0038, CASE-0069
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: Process() in Sources/ProctorAgent/Actuation/CuaClients.swift — cua-driver and obscura

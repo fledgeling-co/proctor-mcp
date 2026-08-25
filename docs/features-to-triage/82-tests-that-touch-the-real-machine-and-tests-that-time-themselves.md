@@ -1,5 +1,6 @@
 ---
 sources: [REQ-055, REQ-056, DEF-029, DEF-042, DEF-051]
+status: retired
 ---
 # A test that writes the operator's real policy, and tests that assert a wall clock
 
@@ -61,3 +62,13 @@ against a numeric literal and convert them together, or record why one genuinely
 
 It does not touch `SignatureVerdictCache` or the cooperative-pool starvation; PRO-0087 owns that.
 It does not raise any timeout.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-055, REQ-056
+- surface: SURF-003, SURF-006, SURF-012, SURF-022
+- cases: CASE-0003, CASE-0005, CASE-0006, CASE-0014, CASE-0017, CASE-0018
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift — a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) — 0 of the 3,290 regular files `find -type f` reports under that root on this machine — so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written.

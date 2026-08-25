@@ -1,5 +1,6 @@
 ---
 sources: [REQ-091, REQ-092]
+status: retired
 ---
 # The proctor skill tracks what actually shipped
 
@@ -68,3 +69,13 @@ file and its authoring rules differ from earlier models in ways that change the 
 Changing the campaign's seven stages, which are the skill's actual method and are not
 affected by what performs the clicking. Also not in scope: the plugin version bump and
 any release of the plugin, which is the reader's call.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-091, REQ-092
+- surface: SURF-002, SURF-013
+- cases: CASE-0002, CASE-0019, CASE-0020, CASE-0059, CASE-0074, CASE-0154
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

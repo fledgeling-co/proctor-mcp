@@ -1,5 +1,6 @@
 ---
 sources: [REQ-006]
+status: retired
 ---
 # HUD character — sprite assets and state binding
 
@@ -35,3 +36,13 @@ The character changes with run state in the built HUD, holds a stable footprint 
 ## Dependencies / notes
 - Depends on the run HUD panel.
 - Regeneration guidance is in `docs/design/run-hud-character.md`. Two facts worth keeping: `style: "openai"` is the model that honours exclusions, and asking for a **transparent** background is what summons a painted checkerboard — ask for flat charcoal instead. Regenerate the whole sheet, never one cell, or the character drifts.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-006
+- surface: SURF-004
+- cases: CASE-0004, CASE-0008, CASE-0021, CASE-0030, CASE-0032, CASE-0065
+- rungs reached: effect-witness, outcome
+- provider: NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo

@@ -1,5 +1,6 @@
 ---
 sources: [REQ-001]
+status: retired
 ---
 # MCP surface modernization
 
@@ -31,3 +32,13 @@ A host loads the `core` profile and sees a short tool list; it reads `frontmost`
 - Protocol-layer only; no new macOS surface.
 - The destructive annotations reinforce 05 (policy/approval gate).
 - Licensing: protocol conventions, not code; MIT source.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-001
+- surface: SURF-001, SURF-002
+- cases: CASE-0001, CASE-0002, CASE-0038, CASE-0074, CASE-0154, CASE-0370
+- rungs reached: metamorphic, outcome
+- provider: none

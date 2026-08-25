@@ -1,7 +1,7 @@
 # Spec PRO-0143 — Legacy Briefs 04 to 07 Specification Validation
 
 **Brief:** `docs/features-to-triage/135-legacy-briefs-04-to-07-spec-validation.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-014, SURF-015, SURF-006, SURF-007
 **Defects:** none

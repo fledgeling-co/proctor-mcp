@@ -1,5 +1,6 @@
 ---
 sources: [REQ-008, REQ-042, REQ-043]
+status: retired
 ---
 # The takeover overlay, and what it does not claim
 
@@ -52,3 +53,13 @@ narrower and honest claim.
 **`PROCTOR_TAKEOVER_INPUT` is a separate capability and is not this brief.** The event tap
 that swallows a person's input is gated by brief 66's consent sheet and by the switch
 catalogue. This brief draws the notice; it does not acquire the capability.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-008
+- surface: SURF-005
+- cases: CASE-0009, CASE-0010, CASE-0031, CASE-0052, CASE-0053, CASE-0054
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents

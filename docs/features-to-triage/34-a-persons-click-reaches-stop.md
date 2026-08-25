@@ -1,5 +1,6 @@
 ---
 sources: [REQ-007]
+status: retired
 ---
 # A person's click reaches Stop
 
@@ -55,3 +56,13 @@ whether or not the takeover block is armed.
 True click-through on the panel body, which was rejected in PRO-0015 for a
 reason that has not changed: it needs an always-on global mouse monitor inside a
 process holding Accessibility.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-007
+- surface: SURF-004, SURF-005
+- cases: CASE-0004, CASE-0008, CASE-0009, CASE-0010, CASE-0021, CASE-0030
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents

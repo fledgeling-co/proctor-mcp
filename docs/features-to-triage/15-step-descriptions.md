@@ -1,5 +1,6 @@
 ---
 sources: [REQ-001]
+status: retired
 ---
 # Human-readable step descriptions, derived not supplied
 
@@ -27,3 +28,13 @@ Every `ActionStep` kind produces a sensible line with no caller input, verified 
 ## Dependencies / notes
 - Feeds the run HUD, but is independently testable — it is pure logic in the agent with no window involved, so it does not depend on the panel-rendering fix.
 - The prospective/present distinction matters: the HUD shows the step it is *about to* perform during travel and the step it *is* performing during actuation, from the same step object.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-001
+- surface: SURF-001, SURF-002
+- cases: CASE-0001, CASE-0002, CASE-0038, CASE-0074, CASE-0154, CASE-0370
+- rungs reached: metamorphic, outcome
+- provider: none

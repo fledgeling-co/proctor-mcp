@@ -1,5 +1,6 @@
 ---
 sources: [REQ-079, REQ-080, REQ-081, DEF-026, DEF-027]
+status: retired
 ---
 # A dead peer holds the queue, and a swallowed event says nothing
 
@@ -68,3 +69,13 @@ machine back.
 
 It does not revisit REQ-007's `inconclusive` ceiling, which was checked in source twice. It does not
 add a heartbeat or a new wire field; peer liveness is already derivable from the socket.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-007, REQ-079, REQ-080, REQ-081
+- surface: SURF-004, SURF-005
+- cases: CASE-0004, CASE-0008, CASE-0009, CASE-0010, CASE-0021, CASE-0030
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents

@@ -1,5 +1,6 @@
 ---
 sources: [REQ-004, REQ-005]
+status: retired
 ---
 # Set-of-marks annotated captures
 
@@ -30,3 +31,13 @@ A vision model reliably actuates by mark id on a dense window, and a tri-observe
 - Pairs naturally with 06 (vision-capture normalisation) so marks stay legible after scaling.
 - Site-relevant once shipped: strengthens the vision / testing story.
 - Licensing: reimplement the overlay step; MIT source.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-004, REQ-005
+- surface: SURF-001, SURF-006, SURF-007
+- cases: CASE-0001, CASE-0005, CASE-0006, CASE-0007, CASE-0038, CASE-0064
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: StreamCapture in ProctorAgent/Capture/StreamCapture.swift

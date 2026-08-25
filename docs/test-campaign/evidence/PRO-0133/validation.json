@@ -1,0 +1,2964 @@
+{
+  "validated": [
+    {
+      "brief": "00-WAVE-7-DIRECTION.md",
+      "requirements": [
+        "REQ-017",
+        "REQ-018"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-013"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0019",
+        "CASE-0020",
+        "CASE-0038",
+        "CASE-0059",
+        "CASE-0371"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Guest/GuestProvider.swift \u2014 lume/prlctl/tart argv built and executed",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "01-cua-schema-facade.md",
+      "requirements": [
+        "REQ-001"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-002"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0002",
+        "CASE-0038",
+        "CASE-0074",
+        "CASE-0154",
+        "CASE-0370"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "02-set-of-marks-captures.md",
+      "requirements": [
+        "REQ-004",
+        "REQ-005"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-006",
+        "SURF-007"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0005",
+        "CASE-0006",
+        "CASE-0007",
+        "CASE-0038",
+        "CASE-0064"
+      ],
+      "provider": "StreamCapture in ProctorAgent/Capture/StreamCapture.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "03-menu-bar-key-equivalents.md",
+      "requirements": [
+        "REQ-011",
+        "REQ-031"
+      ],
+      "surfaces": [
+        "SURF-010",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0013",
+        "CASE-0037",
+        "CASE-0258",
+        "CASE-0259",
+        "CASE-0260",
+        "CASE-0266"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "04-app-scripting-dictionary.md",
+      "requirements": [
+        "REQ-001"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-002"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0002",
+        "CASE-0038",
+        "CASE-0074",
+        "CASE-0154",
+        "CASE-0370"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "05-audit-trail-policy-gate.md",
+      "requirements": [
+        "REQ-015",
+        "REQ-016"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-008",
+        "SURF-012"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0011",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0027",
+        "CASE-0028"
+      ],
+      "provider": "data.write(to:options:.atomic) in Sources/ProctorAgent/Session/PolicyStore.swift; key material in Sources/ProctorAgent/Session/AuditKeyStore.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "06-vision-capture-normalisation.md",
+      "requirements": [
+        "REQ-005"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-006",
+        "SURF-007"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0005",
+        "CASE-0006",
+        "CASE-0007",
+        "CASE-0038",
+        "CASE-0064"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "07-zoom-region-crop.md",
+      "requirements": [
+        "REQ-005"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-006",
+        "SURF-007"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0005",
+        "CASE-0006",
+        "CASE-0007",
+        "CASE-0038",
+        "CASE-0064"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "08-mcp-surface-modernization.md",
+      "requirements": [
+        "REQ-001"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-002"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0002",
+        "CASE-0038",
+        "CASE-0074",
+        "CASE-0154",
+        "CASE-0370"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "09-process-kill-fs-jail.md",
+      "requirements": [
+        "REQ-016"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-012"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0038",
+        "CASE-0061",
+        "CASE-0076"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "10-pointer-overlay-captures.md",
+      "requirements": [
+        "REQ-006",
+        "REQ-028"
+      ],
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0021",
+        "CASE-0030"
+      ],
+      "provider": "NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "100-a-screenshot-gallery-the-gate-cannot-see.md",
+      "requirements": [
+        "REQ-111",
+        "REQ-112",
+        "REQ-113"
+      ],
+      "surfaces": [
+        "SURF-027"
+      ],
+      "cases": [
+        "CASE-0472",
+        "CASE-0473",
+        "CASE-0474",
+        "CASE-0475",
+        "CASE-0476",
+        "CASE-0477"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "102-standing-checks-for-the-unread-registers.md",
+      "requirements": [
+        "REQ-145",
+        "REQ-146",
+        "REQ-147"
+      ],
+      "surfaces": [
+        "SURF-029"
+      ],
+      "cases": [
+        "CASE-0590",
+        "CASE-0591",
+        "CASE-0592",
+        "CASE-0593",
+        "CASE-0594",
+        "CASE-0595"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "103-the-three-recorded-limits-audit.md",
+      "requirements": [
+        "REQ-055",
+        "REQ-160",
+        "REQ-161",
+        "REQ-162"
+      ],
+      "surfaces": [
+        "SURF-005",
+        "SURF-008",
+        "SURF-012",
+        "SURF-022",
+        "SURF-031"
+      ],
+      "cases": [
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0011",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0027"
+      ],
+      "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) \u2014 0 of the 3,290 regular files `find -type f` reports under that root on this machine \u2014 so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written.",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "104-warrant-charter-and-release-integrity.md",
+      "requirements": [
+        "REQ-165",
+        "REQ-166",
+        "REQ-167"
+      ],
+      "surfaces": [
+        "SURF-032"
+      ],
+      "cases": [
+        "CASE-0650",
+        "CASE-0651",
+        "CASE-0652",
+        "CASE-0653"
+      ],
+      "provider": "none",
+      "rungs": [
+        "outcome"
+      ]
+    },
+    {
+      "brief": "105-brief-join-rate-and-retirement-ladder.md",
+      "requirements": [
+        "REQ-170",
+        "REQ-171",
+        "REQ-172"
+      ],
+      "surfaces": [
+        "SURF-033"
+      ],
+      "cases": [
+        "CASE-0670",
+        "CASE-0671",
+        "CASE-0672"
+      ],
+      "provider": "none",
+      "rungs": [
+        "outcome"
+      ]
+    },
+    {
+      "brief": "106-supervision-tui-and-menu-bar-glass-witness.md",
+      "requirements": [
+        "REQ-030",
+        "REQ-031",
+        "REQ-033"
+      ],
+      "surfaces": [
+        "SURF-010",
+        "SURF-017",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0013",
+        "CASE-0033",
+        "CASE-0034",
+        "CASE-0035",
+        "CASE-0036",
+        "CASE-0037"
+      ],
+      "provider": "Terminal.paint in Sources/ProctorCLI/TUI/Terminal.swift; scripts/campaign/supervision_tui_pty_probe.py",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "107-subprocess-actuation-witness-for-cua-driver.md",
+      "requirements": [
+        "REQ-024",
+        "REQ-180"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-003",
+        "SURF-035"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0003",
+        "CASE-0014",
+        "CASE-0026",
+        "CASE-0038",
+        "CASE-0069"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift \u2014 cua-driver and obscura",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "109-guest-vm-lifecycle-and-attachment-oracle.md",
+      "requirements": [
+        "REQ-037",
+        "REQ-038",
+        "REQ-039",
+        "REQ-040"
+      ],
+      "surfaces": [
+        "SURF-019",
+        "SURF-020",
+        "SURF-038"
+      ],
+      "cases": [
+        "CASE-0047",
+        "CASE-0048",
+        "CASE-0049",
+        "CASE-0050",
+        "CASE-0055",
+        "CASE-0056"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "interactive-glass",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "11-stability-per-step-pointer.md",
+      "requirements": [
+        "REQ-012",
+        "REQ-013"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-003",
+        "SURF-011"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0003",
+        "CASE-0014",
+        "CASE-0015",
+        "CASE-0016",
+        "CASE-0026"
+      ],
+      "provider": "AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "112-cross-automation-stack-reporting-harness.md",
+      "requirements": [
+        "REQ-081"
+      ],
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0021",
+        "CASE-0030"
+      ],
+      "provider": "ContentionSample.userInputSince and ContentionWatch.conditions in Sources/ProctorCore/Contention.swift; ContentionMonitor.sample; the probe after the last step in Sources/ProctorAgent/Session/SessionAct.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "113-retire-pro-0108-native-ocr-zoom.md",
+      "requirements": [
+        "REQ-190"
+      ],
+      "surfaces": [
+        "SURF-037"
+      ],
+      "cases": [
+        "CASE-0730",
+        "CASE-0731",
+        "CASE-0732",
+        "CASE-0733",
+        "CASE-0734"
+      ],
+      "provider": "none",
+      "rungs": [
+        "outcome"
+      ]
+    },
+    {
+      "brief": "12-gate-flow-replay-stability.md",
+      "requirements": [
+        "REQ-013",
+        "REQ-016"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-011",
+        "SURF-012"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0015",
+        "CASE-0016",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0038"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "120-native-ocr-and-high-dpi-inspection-fixture.md",
+      "requirements": [
+        "REQ-007"
+      ],
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0021",
+        "CASE-0030"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "123-high-dpi-display-scale-factor-injection-helper.md",
+      "requirements": [
+        "REQ-007"
+      ],
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0021",
+        "CASE-0030"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "13-audit-log-encryption-at-rest.md",
+      "requirements": [
+        "REQ-015"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-012"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029"
+      ],
+      "provider": "data.write(to:options:.atomic) in Sources/ProctorAgent/Session/PolicyStore.swift; key material in Sources/ProctorAgent/Session/AuditKeyStore.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "140-deterministic-lane-routing-and-selection-record.md",
+      "requirements": [
+        "REQ-130",
+        "REQ-151"
+      ],
+      "surfaces": [
+        "SURF-022",
+        "SURF-026",
+        "SURF-027",
+        "SURF-030"
+      ],
+      "cases": [
+        "CASE-0063",
+        "CASE-0072",
+        "CASE-0073",
+        "CASE-0150",
+        "CASE-0151",
+        "CASE-0152"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "141-skill-overlay-family-guidance-reader.md",
+      "requirements": [
+        "REQ-091",
+        "REQ-096"
+      ],
+      "surfaces": [
+        "SURF-002"
+      ],
+      "cases": [
+        "CASE-0002",
+        "CASE-0074",
+        "CASE-0154",
+        "CASE-0370",
+        "CASE-0372",
+        "CASE-0373"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "142-capture-directory-identity-manifest.md",
+      "requirements": [
+        "REQ-111",
+        "REQ-133"
+      ],
+      "surfaces": [
+        "SURF-022",
+        "SURF-027"
+      ],
+      "cases": [
+        "CASE-0063",
+        "CASE-0072",
+        "CASE-0073",
+        "CASE-0150",
+        "CASE-0151",
+        "CASE-0152"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "143-session-claim-provenance-audit-gate.md",
+      "requirements": [
+        "REQ-122",
+        "REQ-156"
+      ],
+      "surfaces": [
+        "SURF-024",
+        "SURF-031"
+      ],
+      "cases": [
+        "CASE-0430",
+        "CASE-0431",
+        "CASE-0432",
+        "CASE-0433",
+        "CASE-0434",
+        "CASE-0435"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "144-instrument-availability-disclosure-reporter.md",
+      "requirements": [
+        "REQ-065",
+        "REQ-130"
+      ],
+      "surfaces": [
+        "SURF-022",
+        "SURF-026",
+        "SURF-027"
+      ],
+      "cases": [
+        "CASE-0063",
+        "CASE-0072",
+        "CASE-0073",
+        "CASE-0150",
+        "CASE-0151",
+        "CASE-0152"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "15-step-descriptions.md",
+      "requirements": [
+        "REQ-001"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-002"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0002",
+        "CASE-0038",
+        "CASE-0074",
+        "CASE-0154",
+        "CASE-0370"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "16-run-hud-panel.md",
+      "requirements": [
+        "REQ-006"
+      ],
+      "surfaces": [
+        "SURF-004"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0021",
+        "CASE-0030",
+        "CASE-0032",
+        "CASE-0065"
+      ],
+      "provider": "NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "17-multi-session-queue.md",
+      "requirements": [
+        "REQ-038"
+      ],
+      "surfaces": [
+        "SURF-020",
+        "SURF-038"
+      ],
+      "cases": [
+        "CASE-0048",
+        "CASE-0049",
+        "CASE-0055",
+        "CASE-0086",
+        "CASE-0750",
+        "CASE-0751"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "18-hud-character-assets.md",
+      "requirements": [
+        "REQ-006"
+      ],
+      "surfaces": [
+        "SURF-004"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0021",
+        "CASE-0030",
+        "CASE-0032",
+        "CASE-0065"
+      ],
+      "provider": "NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "19-yield-when-a-person-takes-the-machine.md",
+      "requirements": [
+        "REQ-007"
+      ],
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0021",
+        "CASE-0030"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "20-foreground-run-is-obvious.md",
+      "requirements": [
+        "REQ-008"
+      ],
+      "surfaces": [
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0031",
+        "CASE-0052",
+        "CASE-0053",
+        "CASE-0054"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "21-route-browser-work-to-obscura.md",
+      "requirements": [
+        "REQ-024"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-003",
+        "SURF-035"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0003",
+        "CASE-0014",
+        "CASE-0026",
+        "CASE-0038",
+        "CASE-0069"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift \u2014 cua-driver and obscura",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "22-menu-bar-switch-and-character.md",
+      "requirements": [
+        "REQ-011",
+        "REQ-031"
+      ],
+      "surfaces": [
+        "SURF-010",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0013",
+        "CASE-0037",
+        "CASE-0258",
+        "CASE-0259",
+        "CASE-0260",
+        "CASE-0266"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "23-drawing-fault-must-not-kill-the-agent.md",
+      "requirements": [
+        "REQ-006"
+      ],
+      "surfaces": [
+        "SURF-004"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0021",
+        "CASE-0030",
+        "CASE-0032",
+        "CASE-0065"
+      ],
+      "provider": "NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "24-offer-to-install-obscura.md",
+      "requirements": [
+        "REQ-024"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-003",
+        "SURF-035"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0003",
+        "CASE-0014",
+        "CASE-0026",
+        "CASE-0038",
+        "CASE-0069"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift \u2014 cua-driver and obscura",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "25-second-browser-lane-for-obscuras-limits.md",
+      "requirements": [
+        "REQ-024"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-003",
+        "SURF-035"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0003",
+        "CASE-0014",
+        "CASE-0026",
+        "CASE-0038",
+        "CASE-0069"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift \u2014 cua-driver and obscura",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "26-prefer-background-and-pointer-in-plane.md",
+      "requirements": [
+        "REQ-002"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-003"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0003",
+        "CASE-0014",
+        "CASE-0026",
+        "CASE-0038",
+        "CASE-0069"
+      ],
+      "provider": "AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "27-foreground-takeover-overlay.md",
+      "requirements": [
+        "REQ-008"
+      ],
+      "surfaces": [
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0031",
+        "CASE-0052",
+        "CASE-0053",
+        "CASE-0054"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "28-menu-bar-character-when-idle.md",
+      "requirements": [
+        "REQ-011"
+      ],
+      "surfaces": [
+        "SURF-010"
+      ],
+      "cases": [
+        "CASE-0013",
+        "CASE-0037",
+        "CASE-0258",
+        "CASE-0259",
+        "CASE-0260",
+        "CASE-0266"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "29-re-check-now-says-what-it-checks.md",
+      "requirements": [
+        "REQ-009"
+      ],
+      "surfaces": [
+        "SURF-008"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0039",
+        "CASE-0042"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "30-a-home-for-the-proctor-switches.md",
+      "requirements": [
+        "REQ-033"
+      ],
+      "surfaces": [
+        "SURF-017",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0033",
+        "CASE-0034",
+        "CASE-0035",
+        "CASE-0036",
+        "CASE-0040",
+        "CASE-0041"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "31-the-build-says-which-build-it-is.md",
+      "requirements": [
+        "REQ-022"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-016"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0024",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0039"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "32-the-health-report-is-complete.md",
+      "requirements": [
+        "REQ-009"
+      ],
+      "surfaces": [
+        "SURF-008"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0039",
+        "CASE-0042"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "33-the-audit-trail-is-signed.md",
+      "requirements": [
+        "REQ-015"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-012"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029"
+      ],
+      "provider": "data.write(to:options:.atomic) in Sources/ProctorAgent/Session/PolicyStore.swift; key material in Sources/ProctorAgent/Session/AuditKeyStore.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "34-a-persons-click-reaches-stop.md",
+      "requirements": [
+        "REQ-007"
+      ],
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0021",
+        "CASE-0030"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "35-scroll-moves-by-what-was-asked.md",
+      "requirements": [
+        "REQ-001"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-002"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0002",
+        "CASE-0038",
+        "CASE-0074",
+        "CASE-0154",
+        "CASE-0370"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "36-the-browser-catalogue-stops-guessing.md",
+      "requirements": [
+        "REQ-024"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-003",
+        "SURF-035"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0003",
+        "CASE-0014",
+        "CASE-0026",
+        "CASE-0038",
+        "CASE-0069"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift \u2014 cua-driver and obscura",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "37-the-status-windows-checks-say-what-they-can-check.md",
+      "requirements": [
+        "REQ-009"
+      ],
+      "surfaces": [
+        "SURF-008"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0039",
+        "CASE-0042"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "38-a-hold-names-whose-run-it-is.md",
+      "requirements": [
+        "REQ-038"
+      ],
+      "surfaces": [
+        "SURF-020",
+        "SURF-038"
+      ],
+      "cases": [
+        "CASE-0048",
+        "CASE-0049",
+        "CASE-0055",
+        "CASE-0086",
+        "CASE-0750",
+        "CASE-0751"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "39-stability-knows-when-it-is-scoring-a-page.md",
+      "requirements": [
+        "REQ-013"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-011"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0015",
+        "CASE-0016",
+        "CASE-0038",
+        "CASE-0071"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "40-page-scoped-refusal.md",
+      "requirements": [
+        "REQ-016"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-012"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0038",
+        "CASE-0061",
+        "CASE-0076"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "41-open-cannot-launch-proctor.md",
+      "requirements": [
+        "REQ-026"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-010"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0013",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0037"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "42-doctor-can-hang-on-the-screen-recording-probe.md",
+      "requirements": [
+        "REQ-009"
+      ],
+      "surfaces": [
+        "SURF-008"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0039",
+        "CASE-0042"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "43-backfill-horizontal-alignment-assertion.md",
+      "requirements": [
+        "REQ-023"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-015"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0023",
+        "CASE-0025",
+        "CASE-0038",
+        "CASE-0088"
+      ],
+      "provider": "ProctorReflector in ProctorReflector/ProctorReflector.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "44-build-identity-tests-fail-on-a-moving-head.md",
+      "requirements": [
+        "REQ-022"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-016"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0024",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0039"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "45-cua-becomes-the-actuation-backend.md",
+      "requirements": [
+        "REQ-001",
+        "REQ-017"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-002",
+        "SURF-013"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0002",
+        "CASE-0019",
+        "CASE-0020",
+        "CASE-0038",
+        "CASE-0059"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "46-a-delegated-call-is-still-gated-and-recorded.md",
+      "requirements": [
+        "REQ-015",
+        "REQ-016"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-008",
+        "SURF-012"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0011",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0027",
+        "CASE-0028"
+      ],
+      "provider": "data.write(to:options:.atomic) in Sources/ProctorAgent/Session/PolicyStore.swift; key material in Sources/ProctorAgent/Session/AuditKeyStore.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "48-the-run-has-a-history-you-can-read.md",
+      "requirements": [
+        "REQ-033"
+      ],
+      "surfaces": [
+        "SURF-017",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0033",
+        "CASE-0034",
+        "CASE-0035",
+        "CASE-0036",
+        "CASE-0040",
+        "CASE-0041"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "49-drive-ios-through-deep-links.md",
+      "requirements": [
+        "REQ-020"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-014"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0022",
+        "CASE-0038",
+        "CASE-0060"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Session/SessionIOSProcess.swift \u2014 simctl and maestro",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "50-run-maestro-flows-as-proctor-flows.md",
+      "requirements": [
+        "REQ-020"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-014"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0022",
+        "CASE-0038",
+        "CASE-0060"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Session/SessionIOSProcess.swift \u2014 simctl and maestro",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "51-doctor-knows-the-whole-toolchain.md",
+      "requirements": [
+        "REQ-009"
+      ],
+      "surfaces": [
+        "SURF-008"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0039",
+        "CASE-0042"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "52-decide-what-happens-to-the-native-planes.md",
+      "requirements": [
+        "REQ-018"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-013"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0019",
+        "CASE-0020",
+        "CASE-0038",
+        "CASE-0059",
+        "CASE-0371"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "53-the-proctor-skill-tracks-what-shipped.md",
+      "requirements": [
+        "REQ-091",
+        "REQ-092"
+      ],
+      "surfaces": [
+        "SURF-002",
+        "SURF-013"
+      ],
+      "cases": [
+        "CASE-0002",
+        "CASE-0019",
+        "CASE-0020",
+        "CASE-0059",
+        "CASE-0074",
+        "CASE-0154"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "54-takeover-tests-redden-the-gate.md",
+      "requirements": [
+        "REQ-008"
+      ],
+      "surfaces": [
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0031",
+        "CASE-0052",
+        "CASE-0053",
+        "CASE-0054"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "55-three-tests-still-redden-the-gate.md",
+      "requirements": [
+        "REQ-022"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-016"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0024",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0039"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "56-the-suite-wedges-in-haltcheckpoint.md",
+      "requirements": [
+        "REQ-038"
+      ],
+      "surfaces": [
+        "SURF-020",
+        "SURF-038"
+      ],
+      "cases": [
+        "CASE-0048",
+        "CASE-0049",
+        "CASE-0055",
+        "CASE-0086",
+        "CASE-0750",
+        "CASE-0751"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "57-vm-targets.md",
+      "requirements": [
+        "REQ-017",
+        "REQ-018"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-013"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0019",
+        "CASE-0020",
+        "CASE-0038",
+        "CASE-0059",
+        "CASE-0371"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Guest/GuestProvider.swift \u2014 lume/prlctl/tart argv built and executed",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "58-swiftui-conversion-direction.md",
+      "requirements": [
+        "REQ-026",
+        "REQ-030"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-010",
+        "SURF-017",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0013",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0033"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "59-design-tokens-as-a-swift-value.md",
+      "requirements": [
+        "REQ-030"
+      ],
+      "surfaces": [
+        "SURF-017",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0033",
+        "CASE-0034",
+        "CASE-0035",
+        "CASE-0036",
+        "CASE-0040",
+        "CASE-0041"
+      ],
+      "provider": "Terminal.paint in Sources/ProctorCLI/TUI/Terminal.swift; scripts/campaign/supervision_tui_pty_probe.py",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "60-status-window-to-the-mock.md",
+      "requirements": [
+        "REQ-009",
+        "REQ-027"
+      ],
+      "surfaces": [
+        "SURF-008"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029",
+        "CASE-0039",
+        "CASE-0042"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "61-walkthrough-to-the-mock.md",
+      "requirements": [
+        "REQ-010",
+        "REQ-049"
+      ],
+      "surfaces": [
+        "SURF-009"
+      ],
+      "cases": [
+        "CASE-0012",
+        "CASE-0100",
+        "CASE-0101",
+        "CASE-0106",
+        "CASE-0251",
+        "CASE-0252"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "62-menu-bar-and-the-command-surface.md",
+      "requirements": [
+        "REQ-011",
+        "REQ-031"
+      ],
+      "surfaces": [
+        "SURF-010",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0013",
+        "CASE-0037",
+        "CASE-0258",
+        "CASE-0259",
+        "CASE-0260",
+        "CASE-0266"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "63-run-hud-and-the-character.md",
+      "requirements": [
+        "REQ-006"
+      ],
+      "surfaces": [
+        "SURF-004"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0021",
+        "CASE-0030",
+        "CASE-0032",
+        "CASE-0065"
+      ],
+      "provider": "NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "64-takeover-overlay-and-the-drawn-pointer.md",
+      "requirements": [
+        "REQ-008"
+      ],
+      "surfaces": [
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0031",
+        "CASE-0052",
+        "CASE-0053",
+        "CASE-0054"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "65-history-window-to-the-mock.md",
+      "requirements": [
+        "REQ-033"
+      ],
+      "surfaces": [
+        "SURF-017",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0033",
+        "CASE-0034",
+        "CASE-0035",
+        "CASE-0036",
+        "CASE-0040",
+        "CASE-0041"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "66-consent-sheets.md",
+      "requirements": [
+        "REQ-010",
+        "REQ-048"
+      ],
+      "surfaces": [
+        "SURF-002",
+        "SURF-009"
+      ],
+      "cases": [
+        "CASE-0002",
+        "CASE-0012",
+        "CASE-0074",
+        "CASE-0100",
+        "CASE-0101",
+        "CASE-0106"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "67-the-fidelity-harness-proctor-on-proctor.md",
+      "requirements": [
+        "REQ-023"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-015"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0023",
+        "CASE-0025",
+        "CASE-0038",
+        "CASE-0088"
+      ],
+      "provider": "ProctorReflector in ProctorReflector/ProctorReflector.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "69-the-supervision-tui.md",
+      "requirements": [
+        "REQ-030",
+        "REQ-033"
+      ],
+      "surfaces": [
+        "SURF-017",
+        "SURF-036"
+      ],
+      "cases": [
+        "CASE-0033",
+        "CASE-0034",
+        "CASE-0035",
+        "CASE-0036",
+        "CASE-0040",
+        "CASE-0041"
+      ],
+      "provider": "Terminal.paint in Sources/ProctorCLI/TUI/Terminal.swift; scripts/campaign/supervision_tui_pty_probe.py",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "70-effect-witnesses-off-glass.md",
+      "requirements": [
+        "REQ-009",
+        "REQ-015",
+        "REQ-017",
+        "REQ-020"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-008",
+        "SURF-012",
+        "SURF-013",
+        "SURF-014"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0011",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0019",
+        "CASE-0020"
+      ],
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "71-effect-witnesses-on-glass.md",
+      "requirements": [
+        "REQ-002",
+        "REQ-003",
+        "REQ-004",
+        "REQ-006",
+        "REQ-007",
+        "REQ-008",
+        "REQ-012",
+        "REQ-014"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-003",
+        "SURF-004",
+        "SURF-005",
+        "SURF-006",
+        "SURF-011"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0003",
+        "CASE-0004",
+        "CASE-0005",
+        "CASE-0006",
+        "CASE-0008"
+      ],
+      "provider": "AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "73-gates-nobody-has-watched-fail.md",
+      "requirements": [
+        "REQ-001",
+        "REQ-017"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-002",
+        "SURF-013"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0002",
+        "CASE-0019",
+        "CASE-0020",
+        "CASE-0038",
+        "CASE-0059"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "74-the-carried-acceptance-clauses.md",
+      "requirements": [
+        "REQ-048"
+      ],
+      "surfaces": [
+        "SURF-002"
+      ],
+      "cases": [
+        "CASE-0002",
+        "CASE-0074",
+        "CASE-0154",
+        "CASE-0370",
+        "CASE-0372",
+        "CASE-0373"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "75-what-the-status-window-still-owes.md",
+      "requirements": [
+        "REQ-088",
+        "REQ-089",
+        "REQ-090"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-009",
+        "SURF-012",
+        "SURF-017"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0012",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0027",
+        "CASE-0028"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "76-the-ten-the-capped-gate-hid.md",
+      "requirements": [
+        "REQ-007",
+        "REQ-015",
+        "REQ-023",
+        "REQ-024",
+        "REQ-027",
+        "REQ-028",
+        "REQ-033",
+        "REQ-037",
+        "REQ-039"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-003",
+        "SURF-004",
+        "SURF-005",
+        "SURF-008",
+        "SURF-012",
+        "SURF-015",
+        "SURF-017",
+        "SURF-019",
+        "SURF-020",
+        "SURF-035",
+        "SURF-036",
+        "SURF-038"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0003",
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "interactive-glass",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "77-the-cua-path-leaves-proctors-plane-silently.md",
+      "requirements": [
+        "REQ-070",
+        "REQ-071",
+        "REQ-072"
+      ],
+      "surfaces": [
+        "SURF-003",
+        "SURF-004",
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0003",
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0014"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "78-the-skill-and-the-guest-lane.md",
+      "requirements": [
+        "REQ-091",
+        "REQ-092",
+        "REQ-093"
+      ],
+      "surfaces": [
+        "SURF-002",
+        "SURF-013"
+      ],
+      "cases": [
+        "CASE-0002",
+        "CASE-0019",
+        "CASE-0020",
+        "CASE-0059",
+        "CASE-0074",
+        "CASE-0154"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "79-the-walkthrough-will-not-advance-without-its-grants.md",
+      "requirements": [
+        "REQ-082",
+        "REQ-083",
+        "REQ-084"
+      ],
+      "surfaces": [
+        "SURF-009"
+      ],
+      "cases": [
+        "CASE-0012",
+        "CASE-0100",
+        "CASE-0101",
+        "CASE-0106",
+        "CASE-0251",
+        "CASE-0252"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "81-the-capture-path-reports-frames-it-did-not-get.md",
+      "requirements": [
+        "REQ-028",
+        "REQ-061",
+        "REQ-062"
+      ],
+      "surfaces": [
+        "SURF-004",
+        "SURF-005",
+        "SURF-006"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0005",
+        "CASE-0006",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010"
+      ],
+      "provider": "StreamCapture in ProctorAgent/Capture/StreamCapture.swift",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md",
+      "requirements": [
+        "REQ-055",
+        "REQ-056"
+      ],
+      "surfaces": [
+        "SURF-003",
+        "SURF-006",
+        "SURF-012",
+        "SURF-022"
+      ],
+      "cases": [
+        "CASE-0003",
+        "CASE-0005",
+        "CASE-0006",
+        "CASE-0014",
+        "CASE-0017",
+        "CASE-0018"
+      ],
+      "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) \u2014 0 of the 3,290 regular files `find -type f` reports under that root on this machine \u2014 so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written.",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "84-the-campaigns-own-instruments.md",
+      "requirements": [
+        "REQ-024",
+        "REQ-048",
+        "REQ-057",
+        "REQ-058"
+      ],
+      "surfaces": [
+        "SURF-001",
+        "SURF-002",
+        "SURF-003",
+        "SURF-022",
+        "SURF-035"
+      ],
+      "cases": [
+        "CASE-0001",
+        "CASE-0002",
+        "CASE-0003",
+        "CASE-0014",
+        "CASE-0026",
+        "CASE-0038"
+      ],
+      "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift \u2014 cua-driver and obscura",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "85-proctoragents-mutants-mostly-survive.md",
+      "requirements": [
+        "REQ-109",
+        "REQ-110"
+      ],
+      "surfaces": [
+        "SURF-026"
+      ],
+      "cases": [
+        "CASE-0467",
+        "CASE-0468",
+        "CASE-0540",
+        "CASE-0541",
+        "CASE-0542",
+        "CASE-0543"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "86-a-dead-peer-holds-the-queue.md",
+      "requirements": [
+        "REQ-007",
+        "REQ-079",
+        "REQ-080",
+        "REQ-081"
+      ],
+      "surfaces": [
+        "SURF-004",
+        "SURF-005"
+      ],
+      "cases": [
+        "CASE-0004",
+        "CASE-0008",
+        "CASE-0009",
+        "CASE-0010",
+        "CASE-0021",
+        "CASE-0030"
+      ],
+      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "87-a-warning-this-project-has-already-disproved.md",
+      "requirements": [
+        "REQ-108"
+      ],
+      "surfaces": [
+        "SURF-002"
+      ],
+      "cases": [
+        "CASE-0002",
+        "CASE-0074",
+        "CASE-0154",
+        "CASE-0370",
+        "CASE-0372",
+        "CASE-0373"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "88-three-that-slipped-the-grouping.md",
+      "requirements": [
+        "REQ-063",
+        "REQ-064"
+      ],
+      "surfaces": [
+        "SURF-012",
+        "SURF-022"
+      ],
+      "cases": [
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0061",
+        "CASE-0063",
+        "CASE-0072",
+        "CASE-0073"
+      ],
+      "provider": "PolicyStore.write in Sources/ProctorAgent/Session/PolicyStore.swift, which opens the temporary with Darwin.open(O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0o600) and replaces atomically with .usingNewMetadataOnly",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "89-the-registry-says-open-and-the-code-says-fixed.md",
+      "requirements": [
+        "REQ-067",
+        "REQ-068"
+      ],
+      "surfaces": [
+        "SURF-022"
+      ],
+      "cases": [
+        "CASE-0063",
+        "CASE-0072",
+        "CASE-0073",
+        "CASE-0150",
+        "CASE-0151",
+        "CASE-0152"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "90-the-four-nobody-owns.md",
+      "requirements": [
+        "REQ-055",
+        "REQ-063",
+        "REQ-076",
+        "REQ-077"
+      ],
+      "surfaces": [
+        "SURF-008",
+        "SURF-012",
+        "SURF-022"
+      ],
+      "cases": [
+        "CASE-0011",
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0027",
+        "CASE-0028",
+        "CASE-0029"
+      ],
+      "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) \u2014 0 of the 3,290 regular files `find -type f` reports under that root on this machine \u2014 so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written.",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "91-eight-more-operator-paths-with-no-seam.md",
+      "requirements": [
+        "REQ-055",
+        "REQ-085",
+        "REQ-086"
+      ],
+      "surfaces": [
+        "SURF-012"
+      ],
+      "cases": [
+        "CASE-0017",
+        "CASE-0018",
+        "CASE-0061",
+        "CASE-0076",
+        "CASE-0078",
+        "CASE-0114"
+      ],
+      "provider": "the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) \u2014 0 of the 3,290 regular files `find -type f` reports under that root on this machine \u2014 so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written.",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "92-a-spec-says-which-brief-it-came-from.md",
+      "requirements": [
+        "REQ-100",
+        "REQ-101"
+      ],
+      "surfaces": [
+        "SURF-024"
+      ],
+      "cases": [
+        "CASE-0430",
+        "CASE-0431",
+        "CASE-0432",
+        "CASE-0433",
+        "CASE-0434",
+        "CASE-0435"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "93-the-reckoning-tool-mis-read-this-registry.md",
+      "requirements": [
+        "REQ-097",
+        "REQ-098",
+        "REQ-099"
+      ],
+      "surfaces": [
+        "SURF-023"
+      ],
+      "cases": [
+        "CASE-0410",
+        "CASE-0411",
+        "CASE-0412",
+        "CASE-0413",
+        "CASE-0414",
+        "CASE-0415"
+      ],
+      "provider": "none",
+      "rungs": [
+        "outcome"
+      ]
+    },
+    {
+      "brief": "94-a-reckoning-worth-comparing-against.md",
+      "requirements": [
+        "REQ-102",
+        "REQ-103",
+        "REQ-104",
+        "REQ-105",
+        "REQ-106",
+        "REQ-107"
+      ],
+      "surfaces": [
+        "SURF-025"
+      ],
+      "cases": [
+        "CASE-0441",
+        "CASE-0442",
+        "CASE-0443",
+        "CASE-0444",
+        "CASE-0445",
+        "CASE-0446"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "95-six-named-repairs.md",
+      "requirements": [
+        "REQ-094",
+        "REQ-095",
+        "REQ-096"
+      ],
+      "surfaces": [
+        "SURF-002",
+        "SURF-009",
+        "SURF-022"
+      ],
+      "cases": [
+        "CASE-0002",
+        "CASE-0012",
+        "CASE-0063",
+        "CASE-0072",
+        "CASE-0073",
+        "CASE-0074"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome",
+        "raster-visual"
+      ]
+    },
+    {
+      "brief": "96-what-1-1-0-still-groups-and-still-grades.md",
+      "requirements": [
+        "REQ-155",
+        "REQ-156",
+        "REQ-157"
+      ],
+      "surfaces": [
+        "SURF-031"
+      ],
+      "cases": [
+        "CASE-0620",
+        "CASE-0621",
+        "CASE-0622",
+        "CASE-0623",
+        "CASE-0624",
+        "CASE-0625"
+      ],
+      "provider": "none",
+      "rungs": [
+        "outcome"
+      ]
+    },
+    {
+      "brief": "97-an-input-the-check-cannot-classify.md",
+      "requirements": [
+        "REQ-120",
+        "REQ-121",
+        "REQ-122",
+        "REQ-123"
+      ],
+      "surfaces": [
+        "SURF-023",
+        "SURF-024"
+      ],
+      "cases": [
+        "CASE-0410",
+        "CASE-0411",
+        "CASE-0412",
+        "CASE-0413",
+        "CASE-0414",
+        "CASE-0415"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "98-a-version-string-is-not-the-artifact.md",
+      "requirements": [
+        "REQ-150",
+        "REQ-151"
+      ],
+      "surfaces": [
+        "SURF-030"
+      ],
+      "cases": [
+        "CASE-0600",
+        "CASE-0601",
+        "CASE-0602"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ]
+    },
+    {
+      "brief": "99-instruments-that-do-not-prove-their-own-step.md",
+      "requirements": [
+        "REQ-130",
+        "REQ-131",
+        "REQ-132",
+        "REQ-133",
+        "REQ-134",
+        "REQ-135",
+        "REQ-136",
+        "REQ-137"
+      ],
+      "surfaces": [
+        "SURF-022",
+        "SURF-026",
+        "SURF-027"
+      ],
+      "cases": [
+        "CASE-0063",
+        "CASE-0072",
+        "CASE-0073",
+        "CASE-0150",
+        "CASE-0151",
+        "CASE-0152"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ]
+    }
+  ],
+  "blocked": [
+    {
+      "brief": "110-covered-target-cursor-plane-witness.md",
+      "cited": [
+        "REQ-043"
+      ],
+      "why": "no cited requirement carries both a passing case at the retiring floor and a provider that resolves",
+      "detail": [
+        "REQ-043: declares no external effect, so no provider is owed"
+      ]
+    },
+    {
+      "brief": "47-supervision-survives-delegation.md",
+      "cited": [
+        "REQ-029"
+      ],
+      "why": "no cited requirement carries both a passing case at the retiring floor and a provider that resolves",
+      "detail": [
+        "REQ-029: the vacuity census resolves its provider"
+      ]
+    },
+    {
+      "brief": "68-the-operator-cli.md",
+      "cited": [
+        "REQ-034",
+        "REQ-035",
+        "REQ-036"
+      ],
+      "why": "no cited requirement carries both a passing case at the retiring floor and a provider that resolves",
+      "detail": [
+        "REQ-034: the vacuity census resolves its provider",
+        "REQ-035: the vacuity census resolves its provider",
+        "REQ-036: declares no external effect, so no provider is owed"
+      ]
+    },
+    {
+      "brief": "72-tests-that-mutate-and-never-read-back.md",
+      "cited": [
+        "REQ-045",
+        "REQ-046"
+      ],
+      "why": "no cited requirement carries both a passing case at the retiring floor and a provider that resolves",
+      "detail": [
+        "REQ-045: declares no external effect, so no provider is owed",
+        "REQ-046: declares no external effect, so no provider is owed"
+      ]
+    },
+    {
+      "brief": "80-the-signature-cache-is-per-session-and-the-work-is-not.md",
+      "cited": [
+        "REQ-035"
+      ],
+      "why": "no cited requirement carries both a passing case at the retiring floor and a provider that resolves",
+      "detail": [
+        "REQ-035: the vacuity census resolves its provider"
+      ]
+    },
+    {
+      "brief": "83-what-the-surfaces-say-and-what-they-draw.md",
+      "cited": [
+        "REQ-073",
+        "REQ-074",
+        "REQ-075"
+      ],
+      "why": "no cited requirement carries both a passing case at the retiring floor and a provider that resolves",
+      "detail": [
+        "REQ-073: declares no external effect, so no provider is owed",
+        "REQ-074: declares no external effect, so no provider is owed",
+        "REQ-075: declares no external effect, so no provider is owed"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "brief": "101-reconcile-captures-with-cases.md",
+      "why": "cites no requirement"
+    },
+    {
+      "brief": "108-native-ocr-and-high-dpi-zoom-inspector.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "111-retired-items-spec-closure.md",
+      "why": "cites no requirement"
+    },
+    {
+      "brief": "114-ios-simulator-boot-fixture-harness.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "115-tart-and-lume-guest-vm-virtualization-fixture.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "116-maestro-flow-network-isolated-fixture.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "117-proctoragent-mutation-survival-elimination.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "118-headless-simulator-provisioning-and-teardown-hook.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "119-guest-vm-health-telemetry-and-socket-probe.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "121-surface-conformance-and-capture-trust-sourcing.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "122-operator-state-and-evidence-integrity-chain.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "124-automated-warrant-tier-promotion-ledger-helper.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "125-legacy-brief-spec-validation-and-retirement.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "126-registry-drift-and-surface-conformance-figure-sourcing.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "127-operator-state-and-capture-trust-figure-sourcing.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "128-automated-spec-validation-runner.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "129-warrant-assurance-tier-dashboard-exporter.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "130-proctoragent-mutation-hardening-and-boundary-sweep.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "131-legacy-direction-briefs-spec-validation.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "132-hermetic-multi-process-chaos-fixture.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "133-process-lifecycle-chaos-and-recovery-harness.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "134-automated-mutation-survival-benchmark-reporter.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "135-legacy-briefs-04-to-07-spec-validation.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "136-legacy-briefs-08-to-10-spec-validation.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "137-hermetic-tool-process-boundary-fixtures.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "138-continuous-spec-symbol-citation-linter.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "139-multi-plane-verification-receipt-generator.md",
+      "why": "already retired"
+    }
+  ]
+}

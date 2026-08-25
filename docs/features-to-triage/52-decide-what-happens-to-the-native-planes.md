@@ -1,5 +1,6 @@
 ---
 sources: [REQ-018]
+status: retired
 ---
 # Decide what happens to the native planes
 
@@ -41,3 +42,13 @@ and for scriptable apps it is the most reliable thing in the box.
   characterisation of the platform whatever drives it.
 - **Do not decide this by counting lines.** The question is which failure mode a person
   running an unattended campaign would rather have.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-018
+- surface: SURF-001, SURF-013
+- cases: CASE-0001, CASE-0019, CASE-0020, CASE-0038, CASE-0059, CASE-0371
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

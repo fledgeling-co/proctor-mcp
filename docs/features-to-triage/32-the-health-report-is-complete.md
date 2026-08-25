@@ -1,5 +1,6 @@
 ---
 sources: [REQ-009, REQ-032]
+status: retired
 ---
 > **RETIRED 2026-08-15 (PRO-0031), not built.** Superseded by brief 51, which covers the whole toolchain rather than two browser tools. Both halves survive there: the missing `policy` block and `scripts/doctor.sh` knowing what the agent knows.
 >
@@ -48,3 +49,13 @@ Report policy state in `proctor_doctor` alongside the grants, and teach
 
 `shortcutsCLIAvailable` is the existing shape for a tool in the health report,
 and PRO-0023 added `obscura` as a tool object with `searched` paths. Match those.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-009
+- surface: SURF-008
+- cases: CASE-0011, CASE-0027, CASE-0028, CASE-0029, CASE-0039, CASE-0042
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift

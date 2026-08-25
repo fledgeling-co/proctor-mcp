@@ -1,5 +1,6 @@
 ---
 sources: [REQ-002, REQ-003, REQ-004, REQ-006, REQ-007, REQ-008, REQ-012, REQ-014]
+status: retired
 ---
 # Effect witnesses for the eight effects that need a display server
 
@@ -82,3 +83,13 @@ not know" is a weaker claim than "no difference found".
 It does not build a second machine, and it does not depend on the guest lane. `proctor-guest` and
 `anvil-mac-node` are both stopped and neither is to be deleted; a witness needing a guest is out of
 scope here and belongs with the VM work in `57`.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-002, REQ-003, REQ-004, REQ-006, REQ-007, REQ-008, REQ-012, REQ-014
+- surface: SURF-001, SURF-003, SURF-004, SURF-005, SURF-006, SURF-011
+- cases: CASE-0001, CASE-0003, CASE-0004, CASE-0005, CASE-0006, CASE-0008
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift

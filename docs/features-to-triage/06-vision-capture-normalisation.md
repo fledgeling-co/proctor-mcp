@@ -1,5 +1,6 @@
 ---
 sources: [REQ-005]
+status: retired
 ---
 # Vision-capture normalisation + reported scale factor
 
@@ -28,3 +29,13 @@ A capture fed to a vision model comes back with coordinates that map exactly ont
 - Small, self-contained addition to the `capture` path.
 - Prerequisite-adjacent to 02 (set-of-marks) and 07 (zoom) staying coordinate-honest.
 - Licensing: reimplement; MIT source.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-005
+- surface: SURF-001, SURF-006, SURF-007
+- cases: CASE-0001, CASE-0005, CASE-0006, CASE-0007, CASE-0038, CASE-0064
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: none

@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [R4]
 reckon-sources: [REQ-133, REQ-111]
-status: to-triage
+status: retired
 ---
 # Capture Directory Identity Manifest
 
@@ -24,3 +24,13 @@ Audit passes that verify published captures need a discoverable capture director
 ## Assumptions made writing this
 - Assuming capture manifests are written at capture time rather than reconstructed later
 - Assuming manifest discovery follows standard configuration conventions rather than hardcoded paths
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-111, REQ-133
+- surface: SURF-022, SURF-027
+- cases: CASE-0063, CASE-0072, CASE-0073, CASE-0150, CASE-0151, CASE-0152
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

@@ -1,5 +1,6 @@
 ---
 sources: [REQ-001, REQ-017]
+status: retired
 ---
 # Cua becomes the actuation backend
 
@@ -45,3 +46,13 @@ by `cua-driver` while everything a caller sees stays the same.
 
 Deleting the native planes. That is its own item, deliberately, so this one can land
 and be measured against the thing it replaces.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-001, REQ-017
+- surface: SURF-001, SURF-002, SURF-013
+- cases: CASE-0001, CASE-0002, CASE-0019, CASE-0020, CASE-0038, CASE-0059
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

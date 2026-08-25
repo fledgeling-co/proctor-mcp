@@ -142,18 +142,18 @@
 | PRO-0130 | Operator State and Evidence Integrity Chain | 2026-08-24 | Ready for AI |
 | PRO-0131 | High-DPI Display Scale Factor Injection Helper | 2026-08-24 | Ready for AI |
 | PRO-0132 | Automated Warrant Tier Promotion Ledger Helper | 2026-08-24 | Ready for AI |
-| PRO-0133 | Legacy Brief Spec-Validation and Retirement | 2026-08-24 | Ready for AI |
+| PRO-0133 | Legacy Brief Spec-Validation and Retirement | 2026-08-24 | Merged |
 | PRO-0134 | Registry Drift and Surface Conformance Figure Sourcing | 2026-08-24 | Ready for AI |
 | PRO-0135 | Operator State and Capture Trust Figure Sourcing | 2026-08-24 | Ready for AI |
 | PRO-0136 | Automated Continuous Spec-Validation Runner | 2026-08-24 | Merged |
 | PRO-0137 | Warrant Assurance Tier Dashboard Exporter | 2026-08-24 | Ready for AI |
 | PRO-0138 | ProctorAgent Mutation Hardening and Boundary Sweep | 2026-08-24 | Ready for AI |
-| PRO-0139 | Legacy Direction Briefs Specification Validation | 2026-08-24 | Ready for AI |
+| PRO-0139 | Legacy Direction Briefs Specification Validation | 2026-08-24 | Merged |
 | PRO-0140 | Hermetic Multi-Process Chaos and Recovery Fixture | 2026-08-24 | Ready for AI |
 | PRO-0141 | Process Lifecycle Chaos and Recovery Harness | 2026-08-24 | Ready for AI |
 | PRO-0142 | Automated Mutation Survival Benchmark Reporter | 2026-08-24 | Ready for AI |
-| PRO-0143 | Legacy Briefs 04 to 07 Specification Validation | 2026-08-25 | Ready for AI |
-| PRO-0144 | Legacy Briefs 08 to 10 Specification Validation | 2026-08-25 | Ready for AI |
+| PRO-0143 | Legacy Briefs 04 to 07 Specification Validation | 2026-08-25 | Merged |
+| PRO-0144 | Legacy Briefs 08 to 10 Specification Validation | 2026-08-25 | Merged |
 | PRO-0145 | Hermetic Tool Process Boundary Fixtures | 2026-08-25 | Ready for AI |
 | PRO-0146 | Continuous Spec-Symbol Citation Linter | 2026-08-25 | Merged |
 | PRO-0147 | Multi-Plane Verification Receipt Generator | 2026-08-25 | Ready for AI |

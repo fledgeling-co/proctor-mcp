@@ -1,5 +1,6 @@
 ---
 sources: [REQ-016, DEF-215]
+status: retired
 ---
 > **RETIRED 2026-08-15 (PRO-0039), not built.** This is a policy rule refusing actuation into browser page content, written when Proctor performed that actuation and only recommended a browser tool. Cua binds a native window to its tab and drives it over CDP, so the shape of the question changed underneath the brief. A refusal rule may still be wanted over delegated calls; it should be re-derived from the new architecture in a later wave rather than ported.
 >
@@ -46,3 +47,13 @@ while leaving native chrome, toolbars, tabs and application menus drivable.
 - **Off by default.** This is an operator decision, exactly like
   `PROCTOR_SECOND_LANE`, and for the same reason: it changes what Proctor will do
   on somebody's behalf.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-016
+- surface: SURF-001, SURF-012
+- cases: CASE-0001, CASE-0017, CASE-0018, CASE-0038, CASE-0061, CASE-0076
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

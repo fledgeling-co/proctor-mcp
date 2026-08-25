@@ -1,5 +1,6 @@
 ---
 sources: [REQ-067, REQ-068, DEF-025, DEF-028, DEF-033]
+status: retired
 ---
 # The registry says open where the code says fixed
 
@@ -82,3 +83,13 @@ seam keeps the guarantee and makes it measurable. Follow the precedent rather th
 
 It does not close DEF-033, which is a measurement. It does not close DEF-099. It does not raise any
 ratchet, and it does not change a case's status to clear a gate.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-067, REQ-068
+- surface: SURF-022
+- cases: CASE-0063, CASE-0072, CASE-0073, CASE-0150, CASE-0151, CASE-0152
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

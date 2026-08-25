@@ -1,5 +1,6 @@
 ---
 sources: [REQ-001, REQ-017, REQ-046, DEF-018, DEF-020, DEF-024]
+status: retired
 ---
 # Two gates nobody has watched fail, and one record that drifted
 
@@ -95,3 +96,13 @@ against the thing it describes. Recorded as DEF-031 and fixed by completing the 
 It does not author `.warrant/warrant.toml`. That charter needs a defect-class taxonomy and a risk
 limit, both of which are the reader's call rather than a derivable default, and inventing them
 would put a number on the run's own risk tolerance that nobody chose.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-001, REQ-017
+- surface: SURF-001, SURF-002, SURF-013
+- cases: CASE-0001, CASE-0002, CASE-0019, CASE-0020, CASE-0038, CASE-0059
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

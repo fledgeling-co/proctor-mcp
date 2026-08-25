@@ -1,5 +1,6 @@
 ---
 sources: [REQ-006]
+status: retired
 ---
 # Run HUD — the overlay shown while Proctor drives an app
 
@@ -40,3 +41,13 @@ A run driven from an MCP client shows the panel over the driven app; the live li
 - **Blocked by the agent-panel-rendering fix.** This is the same shape of panel from the same process whose panel currently draws nothing.
 - Needs the derived step descriptions to fill its live line.
 - Light and dark are authored independently in the mock; both are in the reference.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-006
+- surface: SURF-004
+- cases: CASE-0004, CASE-0008, CASE-0021, CASE-0030, CASE-0032, CASE-0065
+- rungs reached: effect-witness, outcome
+- provider: NSPanel over the window server in Sources/ProctorAgent/Overlay/RunHUDPanel.swift, readable back through CGWindowListCopyWindowInfo

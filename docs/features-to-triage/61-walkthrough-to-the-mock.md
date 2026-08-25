@@ -1,5 +1,6 @@
 ---
 sources: [REQ-010, REQ-049]
+status: retired
 ---
 # The walkthrough becomes the mock
 
@@ -70,3 +71,13 @@ launch for somebody who has decided they do not want it.
 - The "Already allowed? Open System Settings" line is still-open child work from PRO-0041 and
   is not resolved here. It is a different question — what to do when macOS says denied and the
   person believes otherwise — and folding it in would make this brief a grant-diagnosis brief.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-010, REQ-049
+- surface: SURF-009
+- cases: CASE-0012, CASE-0100, CASE-0101, CASE-0106, CASE-0251, CASE-0252
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: none

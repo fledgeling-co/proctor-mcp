@@ -1,5 +1,6 @@
 ---
 sources: [REQ-017, REQ-018]
+status: retired
 ---
 # VM targets: test in a guest, and say which machine
 
@@ -95,3 +96,13 @@ implicit because the per-item convention is to log in the same change: these ite
 add fields and seams but no capability a reader can use until PRO-0062, and seven
 entries for one feature would be noise. `ORCHESTRATOR.md` carries the obligation
 so it cannot drift.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-017, REQ-018
+- surface: SURF-001, SURF-013
+- cases: CASE-0001, CASE-0019, CASE-0020, CASE-0038, CASE-0059, CASE-0371
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: Process() in Sources/ProctorAgent/Guest/GuestProvider.swift — lume/prlctl/tart argv built and executed

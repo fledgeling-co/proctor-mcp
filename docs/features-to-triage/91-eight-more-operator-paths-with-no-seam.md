@@ -1,5 +1,6 @@
 ---
 sources: [REQ-085, REQ-086, DEF-042, DEF-142, DEF-164]
+status: retired
 ---
 # Eight more operator paths with no seam
 
@@ -91,3 +92,13 @@ them.
 
 It does not delete anything under the operator's directories, it does not change what any of these
 paths resolve to in production, and it does not touch the socket paths' behaviour.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-055, REQ-085, REQ-086
+- surface: SURF-012
+- cases: CASE-0017, CASE-0018, CASE-0061, CASE-0076, CASE-0078, CASE-0114
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: the test suite itself, observed through DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift — a recursive sweep of ~/Library/Application Support/app.fledgeling.procter recording existence, byte count, mtime and sha256 per file either side of a Session.configurePolicy. The population is stated rather than implied: the sweep asserts the root exists and that len(files) >= 1 before the claim is read, and the claim is reported as changed / len(files) — 0 of the 3,290 regular files `find -type f` reports under that root on this machine — so a zero out of an absent or empty root fails instead of passing. The claim is a negative, so each case also carries a control arm: the same recorder, over the same call, reporting a non-zero count on a root that IS written.

@@ -1,5 +1,6 @@
 ---
 sources: [REQ-100, REQ-101]
+status: retired
 ---
 # A spec says which brief it came from
 
@@ -46,3 +47,13 @@ reason to skip it.
   because a reckoning reads the whole history and a merged item is exactly what should be retirable.
 - Assuming the forward half is a change to the shared pipeline stage rather than a convention in this
   repo's own docs, since a convention nobody enforces is what produced the twenty-four.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-100, REQ-101
+- surface: SURF-024
+- cases: CASE-0430, CASE-0431, CASE-0432, CASE-0433, CASE-0434, CASE-0435
+- rungs reached: effect-witness, outcome
+- provider: none

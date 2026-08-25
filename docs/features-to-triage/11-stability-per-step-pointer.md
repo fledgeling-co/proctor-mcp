@@ -1,5 +1,6 @@
 ---
 sources: [REQ-012, REQ-013]
+status: retired
 ---
 # Pointer marker in proctor_stability per-step artifacts
 
@@ -22,3 +23,13 @@ A divergent stability run shows, per step, exactly where Proctor acted, the same
 ## Dependencies / notes
 - Parent: PRO-0010 (shares the compositing path).
 - The underlying change (per-step PNG emission) is the real cost; the marker is cheap on top of it. The reader accepted that commitment by scheduling this.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-012, REQ-013
+- surface: SURF-001, SURF-003, SURF-011
+- cases: CASE-0001, CASE-0003, CASE-0014, CASE-0015, CASE-0016, CASE-0026
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: AXUIElementPerformAction in Sources/ProctorAgent/AX/Actuator.swift; AXObserverCreate in Sources/ProctorAgent/AX/Observers.swift

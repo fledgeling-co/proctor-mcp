@@ -1,0 +1,219 @@
+# Reckoning — proctor-mcp
+
+137 piece(s) of work remain — 1 product, 23 evidence, 2 decision — across 962 ledger rows. This reckoning speaks for 468/471 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.
+
+## What it can speak for
+
+| Axis | Measured | Of | % | What the number means |
+|---|---:|---:|---:|---|
+| Cases adjudicated | 468 | 471 | 99.4% | an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate. |
+| Cases ruled out by decision | 3 | 471 | 0.6% | somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose. |
+| Requirements observed | 124 | 141 | 87.9% | somebody watched it happen, rather than the project reporting it of itself. |
+| Surfaces spoken for | 40 | 40 | 100.0% | at least one case on this surface reached a verdict. |
+| Briefs joined to evidence | 144 | 144 | 100.0% | the brief could be tied to something in the registry at all. |
+
+_Each figure is a lower bound. Every `unnamed` row is a surface the documents never described, which means the true denominator is larger than the one the documents can supply._
+
+## What remains
+
+Two counts, because they answer different questions. **Rows** is every entity on both sides, and it is total by construction — that is what makes the gate meaningful. **Work** is what somebody would actually schedule: a failing case and the defect it evidences are one job, and blocked cases are counted as the blockers behind them rather than one by one.
+
+| Class | Work | Rows | Kind | What it is |
+|---|---:|---:|---|---|
+| `broken` | 1 | 1 | product-work | measured, and the answer was no |
+| `unmeasured` | 23 | 23 | evidence-work | nobody found out — the work here is becoming able to tell |
+| `undecided` | 2 | 2 | decision-work | the documents and the evidence disagree; needs a person |
+| `retirable` | 111 | 111 | bookkeeping | already done to a standard that can carry the claim — close it |
+| `waived` | 0 | 28 | exception | somebody decided not to — an exception, and it stays visible |
+| `verified-done` | 0 | 797 | none | not remaining; kept so the denominator is honest |
+
+## Broken (1)
+
+- **DEF-336** — proctor_act cannot actuate a menu-bar-only app, because every step resolves a window handle first
+  - a defect is a measured negative result — the unit of product work behind every failing case that cites it
+
+## Undecided (2)
+
+- **BRIEF-110-covered-target-cursor-plane-witness** — Covered-Target Cursor Plane Witness
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+- **BRIEF-47-supervision-survives-delegation** — Supervision survives delegation
+  - looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring
+
+## Retirable (111)
+
+- **BRIEF-00-WAVE-7-DIRECTION** — Wave 7 direction: Cua underneath, Proctor on top
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-01-cua-schema-facade** — Stock computer-use schema façade (Anthropic + OpenAI)
+  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-02-set-of-marks-captures** — Set-of-marks annotated captures
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-03-menu-bar-key-equivalents** — Menu-bar enumeration with key-equivalents
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-04-app-scripting-dictionary** — App scripting-dictionary introspection
+  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-05-audit-trail-policy-gate** — Redacting audit trail + policy / approval gate
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-06-vision-capture-normalisation** — Vision-capture normalisation + reported scale factor
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-07-zoom-region-crop** — Zoom native-resolution region crop
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-08-mcp-surface-modernization** — MCP surface modernization
+  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-09-process-kill-fs-jail** — Process kill + filesystem jail
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-10-pointer-overlay-captures** — Pointer / target overlay in captures
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-100-a-screenshot-gallery-the-gate-cannot-see** — Thirty-five pictures the gate cannot see
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-102-standing-checks-for-the-unread-registers** — Standing checks for the registers nothing reads
+  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-103-the-three-recorded-limits-audit** — Audit of the three recorded limits: filesystem certification, hardware keyboard yield, and dynamic TCC grant re-probe
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-104-warrant-charter-and-release-integrity** — Formalize warrant charter and release gate integration
+  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-105-brief-join-rate-and-retirement-ladder** — Brief join rate optimization and retirement ladder
+  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-106-supervision-tui-and-menu-bar-glass-witness** — Supervision TUI and Menu Bar Status Extra On-Glass Witness
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-107-subprocess-actuation-witness-for-cua-driver** — Subprocess Actuation Witness for Cua Driver
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-109-guest-vm-lifecycle-and-attachment-oracle** — Guest VM Lifecycle and Multi-Session Attachment Oracle
+  - observed at rung 'interactive-glass', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-11-stability-per-step-pointer** — Pointer marker in proctor_stability per-step artifacts
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-112-cross-automation-stack-reporting-harness** — Cross-Automation Stack Yield and Takeover Reporting Harness
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-113-retire-pro-0108-native-ocr-zoom** — Retire Brief 108: Native OCR & High-DPI Visual Region Inspector
+  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-12-gate-flow-replay-stability** — Gate recorded flow-replay and stability through the policy gate + audit
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-120-native-ocr-and-high-dpi-inspection-fixture** — Native OCR and High-DPI Inspection Fixture
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-123-high-dpi-display-scale-factor-injection-helper** — High-DPI Display Scale Factor Injection Helper
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-13-audit-log-encryption-at-rest** — Encryption-at-rest for the JSONL audit log
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-140-deterministic-lane-routing-and-selection-record** — Deterministic Lane Routing and Selection Record
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-141-skill-overlay-family-guidance-reader** — Skill Overlay Family Guidance Reader
+  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-142-capture-directory-identity-manifest** — Capture Directory Identity Manifest
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-143-session-claim-provenance-audit-gate** — Session Claim Provenance Audit Gate
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-144-instrument-availability-disclosure-reporter** — Instrument Availability Disclosure Reporter
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-15-step-descriptions** — Human-readable step descriptions, derived not supplied
+  - observed at rung 'outcome', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-16-run-hud-panel** — Run HUD — the overlay shown while Proctor drives an app
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-17-multi-session-queue** — Multi-session scheduling — session identity, lanes, and the queue
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-18-hud-character-assets** — HUD character — sprite assets and state binding
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-19-yield-when-a-person-takes-the-machine** — Notice when a person is taking the machine back, and yield
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-20-foreground-run-is-obvious** — Make a foreground-only run obvious before it takes the machine
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-21-route-browser-work-to-obscura** — Route browser work to Obscura instead of driving a browser by hand
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-22-menu-bar-switch-and-character** — A menu bar switch for the panel, and a menu bar icon that is the same character
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- **BRIEF-23-drawing-fault-must-not-kill-the-agent** — A drawing fault must not kill the agent
+  - observed at rung 'effect-witness', at or above the 'outcome' floor, on a cited join — the work this brief asks for appears already done
+- _…and 71 more in ledger.json_
+
+## Decisions on the record (28)
+
+Not remaining work, and not done either. Each of these was ruled out by somebody, and the reason it was ruled out can stop being true — a state that had no hook may get one, an account that could not be reached may become reachable. They stay on the ledger so that when the reason expires, the item is still there.
+
+- **CASE-0067** — SURF-005 · ?
+  - n/a: PersonInput.isAPerson requires sourcePid == 0, which only hardware carries and no second process can forge, so the human-input path REQ-007 names cannot be driven by any instrument available on this lane. The instru
+- **CASE-0245** — SURF-004 · ?
+  - n/a: Proctor never observes the driver's cursor, so no instrument on this lane can read whether that cursor is over a covered target. The reachable half was measured and agreed: CASE-0242 shows a non-suppressible driver 
+- **CASE-0246** — SURF-004 · ?
+  - n/a: the runs the report's first clause describes are driven by another automation stack entirely, so there is no Proctor run to instrument. What WAS measured is the attribution, and it is exact.
+- **BRIEF-108-native-ocr-and-high-dpi-zoom-inspector** — Native OCR and High-DPI Visual Region Inspector for Zoom Assertions
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-114-ios-simulator-boot-fixture-harness** — iOS Simulator Boot Fixture Harness
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-115-tart-and-lume-guest-vm-virtualization-fixture** — Tart and Lume Guest VM Virtualization Fixture
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-116-maestro-flow-network-isolated-fixture** — Maestro Flow Network-Isolated Step Fixture
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-117-proctoragent-mutation-survival-elimination** — ProctorAgent Mutation Survival Elimination
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-118-headless-simulator-provisioning-and-teardown-hook** — Headless Simulator Provisioning and Teardown Hook
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-119-guest-vm-health-telemetry-and-socket-probe** — Guest VM Health Telemetry and Socket Probe
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-121-surface-conformance-and-capture-trust-sourcing** — Surface Conformance and Capture Trust Sourcing
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-122-operator-state-and-evidence-integrity-chain** — Operator State and Evidence Integrity Chain
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-124-automated-warrant-tier-promotion-ledger-helper** — Automated Warrant Tier Promotion Ledger Helper
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-125-legacy-brief-spec-validation-and-retirement** — Legacy Brief Spec-Validation and Retirement
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-126-registry-drift-and-surface-conformance-figure-sourcing** — Registry Drift and Surface Conformance Figure Sourcing
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-127-operator-state-and-capture-trust-figure-sourcing** — Operator State and Capture Trust Figure Sourcing
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-128-automated-spec-validation-runner** — Automated Continuous Spec-Validation Runner
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-129-warrant-assurance-tier-dashboard-exporter** — Warrant Assurance Tier Dashboard Exporter
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-130-proctoragent-mutation-hardening-and-boundary-sweep** — ProctorAgent Mutation Hardening and Boundary Sweep
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-131-legacy-direction-briefs-spec-validation** — Legacy Direction Briefs Specification Validation
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-132-hermetic-multi-process-chaos-fixture** — Hermetic Multi-Process Chaos and Recovery Fixture
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-133-process-lifecycle-chaos-and-recovery-harness** — Process Lifecycle Chaos and Recovery Harness
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-134-automated-mutation-survival-benchmark-reporter** — Automated Mutation Survival Benchmark Reporter
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-135-legacy-briefs-04-to-07-spec-validation** — Legacy Briefs 04 to 07 Specification Validation
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+- **BRIEF-136-legacy-briefs-08-to-10-spec-validation** — Legacy Briefs 08 to 10 Specification Validation
+  - the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true.
+
+## Requirements standing on the project's own word (17)
+
+These are not failures. Each is a claim the project makes about itself that nothing independent has confirmed, which is a different thing from a claim that has been checked and held.
+
+- **REQ-025** (`reported`) — Tahoe guest window rendering workaround
+  - obtain independent evidence — this is the project's own account of itself
+- **REQ-032** (`unknown`) — The status window lists every permission macOS holds about Proctor, including the one whose absence is silent
+  - obtain any evidence at all
+- **REQ-034** (`unknown`) — An operator drives and checks this Mac from a shell: 21 verbs derived from the tool catalogue, six exit codes, and shell completion generate
+  - obtain any evidence at all
+- **REQ-035** (`unknown`) — A CLI call is not a privilege bypass: same socket, same policy gate, same queue lane, same audit trail, and the trail records which front en
+  - obtain any evidence at all
+- **REQ-036** (`unknown`) — Exit code 1 (a check failed) and exit code 3 (the agent is not answering) are never confused, because CI reads an exit code rather than pros
+  - obtain any evidence at all
+- **REQ-041** (`unknown`) — Only the agent draws on this Mac: a switch says what an operator asked for and cannot say who is asking, so every live surface also requires
+  - obtain any evidence at all
+- **REQ-042** (`unknown`) — The takeover statement holds for a minimum duration once raised, and a request arriving while it is up extends it rather than raising it aga
+  - obtain any evidence at all
+- **REQ-044** (`unknown`) — The takeover statement names a control reachable from the screen reading it: the run panel on the panel's own display, Proctor's menu bar on
+  - obtain any evidence at all
+- **REQ-045** (`unknown`) — A campaign instrument carries a measured false-positive rate with its denominator before anything is gated on its count: the blind-mutation 
+  - obtain any evidence at all
+- **REQ-046** (`unknown`) — Every campaign gate is proved able to go red before its passing state is read as evidence, and the proof covers each of the gate's passes se
+  - obtain any evidence at all
+- **REQ-047** (`unknown`) — Mutation survival for the agent package is measured with its denominator, its seed and its unrun count rather than inferred from the core pa
+  - obtain any evidence at all
+- **REQ-053** (`unknown`) — One process verifies a given binary's code signature once per file identity, however many sessions ask about it and however many ask at the 
+  - obtain any evidence at all
+- **REQ-054** (`unknown`) — The shared signature store is a default rather than a singleton: a ToolProbes handed a cache uses that one, so a test gets an isolated store
+  - obtain any evidence at all
+- **REQ-072** (`unknown`) — Two limits on how far Proctor's plane disclosures can reach are recorded as ceilings rather than worked around: wave 9's covered-target rule
+  - obtain any evidence at all
+- **REQ-073** (`unknown`) — Every user-facing string a ProctorUI view draws has exactly one definition, in ProctorCore, named for what the string addresses rather than 
+  - obtain any evidence at all
+- **REQ-074** (`unknown`) — The status window draws no branch its own state machine cannot reach, and every state it can reach is drawn by the section that is actually 
+  - obtain any evidence at all
+- **REQ-075** (`unknown`) — Every key in the payload Proctor's window reads and Proctor's agent writes has one definition that both ends reach. This is not a style rule
+  - obtain any evidence at all
+

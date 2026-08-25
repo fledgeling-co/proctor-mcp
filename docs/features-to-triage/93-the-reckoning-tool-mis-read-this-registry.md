@@ -1,5 +1,6 @@
 ---
 sources: [REQ-097, REQ-098, REQ-099]
+status: retired
 ---
 # The reckoning tool mis-read this registry three ways
 
@@ -46,3 +47,13 @@ get a report at all.
   two carry opposite conclusions and the reckoning's own report has to distinguish them.
 - Assuming the crash is worth fixing even though a local patch already exists here, because a local
   patch is invisible to every other repository.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-097, REQ-098, REQ-099
+- surface: SURF-023
+- cases: CASE-0410, CASE-0411, CASE-0412, CASE-0413, CASE-0414, CASE-0415
+- rungs reached: outcome
+- provider: none

@@ -1,5 +1,6 @@
 ---
 sources: [REQ-011, REQ-031]
+status: retired
 ---
 # A menu bar switch for the panel, and a menu bar icon that is the same character
 
@@ -65,3 +66,13 @@ the better home for exactly that job.
 ## Not in scope
 
 Choosing a different character, or redesigning the panel. Both are settled.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-011, REQ-031
+- surface: SURF-010, SURF-036
+- cases: CASE-0013, CASE-0037, CASE-0258, CASE-0259, CASE-0260, CASE-0266
+- rungs reached: effect-witness, outcome, raster-visual
+- provider: none

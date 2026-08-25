@@ -1,5 +1,6 @@
 ---
 sources: [REQ-015, REQ-016]
+status: retired
 ---
 # A delegated call is still gated and recorded
 
@@ -43,3 +44,13 @@ say precisely what the trail now attests to.
 The interlock that stops `swift test` writing to the operator's real trail
 (`PolicyStore.isTestProcess`) has already been inert once. Verify it fires before
 running any suite that appends.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-015, REQ-016
+- surface: SURF-001, SURF-008, SURF-012
+- cases: CASE-0001, CASE-0011, CASE-0017, CASE-0018, CASE-0027, CASE-0028
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: data.write(to:options:.atomic) in Sources/ProctorAgent/Session/PolicyStore.swift; key material in Sources/ProctorAgent/Session/AuditKeyStore.swift

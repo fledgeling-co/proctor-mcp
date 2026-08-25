@@ -1,5 +1,6 @@
 ---
 sources: [REQ-082, REQ-083, REQ-084]
+status: retired
 ---
 # The walkthrough will not advance until its grants are in
 
@@ -79,3 +80,13 @@ PRO-0036 child item 6 and briefed as part of `75`.
 It does not revisit the composition decisions settled in wave 9, and it does not change what the
 status window draws. It also does not decide whether the agent should re-probe a revoked permission;
 that is `75`'s question and it needs a measurement first.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-082, REQ-083, REQ-084
+- surface: SURF-009
+- cases: CASE-0012, CASE-0100, CASE-0101, CASE-0106, CASE-0251, CASE-0252
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: none

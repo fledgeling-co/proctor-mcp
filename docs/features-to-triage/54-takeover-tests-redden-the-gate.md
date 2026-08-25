@@ -1,5 +1,6 @@
 ---
 sources: [REQ-008, REQ-042]
+status: retired
 ---
 > **RESOLVED as PRO-0053, merged `477941f`. Both diagnoses in this brief were wrong, and
 > the corrections are the interesting part.** It was not a flake: `TakeoverWiringTests` was
@@ -80,3 +81,13 @@ Make the suite deterministic, and make a failed run fail the process.
 
 Changing what the takeover overlay does. PRO-0026 settled that, and this item is about
 the test being able to tell the truth about it.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-008
+- surface: SURF-005
+- cases: CASE-0009, CASE-0010, CASE-0031, CASE-0052, CASE-0053, CASE-0054
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents

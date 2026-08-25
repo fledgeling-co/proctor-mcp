@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [T9]
 reckon-sources: [REQ-130, REQ-151]
-status: to-triage
+status: retired
 ---
 # Deterministic Lane Routing and Selection Record
 
@@ -24,3 +24,13 @@ Verification and review stages route work to different model families for indepe
 ## Assumptions made writing this
 - Assuming lane selection uses a deterministic selector rather than ad-hoc direct invocation
 - Assuming routing records are machine-readable for automated audit consumption
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-130, REQ-151
+- surface: SURF-022, SURF-026, SURF-027, SURF-030
+- cases: CASE-0063, CASE-0072, CASE-0073, CASE-0150, CASE-0151, CASE-0152
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

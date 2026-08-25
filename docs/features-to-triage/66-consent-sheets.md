@@ -1,5 +1,6 @@
 ---
 sources: [REQ-010, REQ-048]
+status: retired
 ---
 # The consent sheets, and the asymmetry that runs through them
 
@@ -58,3 +59,13 @@ softening it would make the sheet a formality. The mock's copy is the settled wo
 
 **A capability applies at the next agent start, and the sheet must say so** — otherwise a
 person presses the button, sees nothing change, and presses it again.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-010, REQ-048
+- surface: SURF-002, SURF-009
+- cases: CASE-0002, CASE-0012, CASE-0074, CASE-0100, CASE-0101, CASE-0106
+- rungs reached: effect-witness, metamorphic, outcome, raster-visual
+- provider: none

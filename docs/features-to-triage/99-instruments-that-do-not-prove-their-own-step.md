@@ -1,5 +1,6 @@
 ---
 sources: [REQ-130, REQ-131, REQ-132, REQ-133, REQ-134, REQ-135, REQ-136, REQ-137, DEF-205, DEF-206, DEF-207, DEF-208, DEF-226, DEF-227, DEF-240, DEF-244]
+status: retired
 ---
 # Instruments that do not prove their own step
 
@@ -65,3 +66,13 @@ artifact, closes the row.
 **DEF-215.** Four ledger rows carry no spec file, so two briefs have no artifact that could cite them.
 Recorded open rather than fixed: writing retrospective specs for two retired items is a separate
 decision and belongs to whoever takes it.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-130, REQ-131, REQ-132, REQ-133, REQ-134, REQ-135, REQ-136, REQ-137
+- surface: SURF-022, SURF-026, SURF-027
+- cases: CASE-0063, CASE-0072, CASE-0073, CASE-0150, CASE-0151, CASE-0152
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

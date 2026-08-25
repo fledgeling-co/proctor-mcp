@@ -1,5 +1,6 @@
 ---
 sources: [REQ-013]
+status: retired
 ---
 > **REVISED for wave 7, 2026-08-15.** Still wanted and more central than when it was written: determinism scoring is the capability this repo is pivoting towards, and nothing else on this platform packages it. Its browser half changes, because a page driven by Cua over CDP is executed rather than handed off. Brief 50 raises the same question for a Maestro flow, and the two should share an answer about what a score means when Proctor did not run the steps itself.
 
@@ -40,3 +41,13 @@ say what that does to the number.
   target was recommended to Obscura was never executed by Proctor at all. That is
   not churn, it is an absence, and it should not be scored as if it were a step
   that ran.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-013
+- surface: SURF-001, SURF-011
+- cases: CASE-0001, CASE-0015, CASE-0016, CASE-0038, CASE-0071
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: none

@@ -1,5 +1,6 @@
 ---
 sources: [REQ-057, REQ-058, DEF-030, DEF-032, DEF-040]
+status: retired
 ---
 # The campaign's own instruments, and what each of them could not see
 
@@ -84,3 +85,13 @@ in a script rather than in an instruction. Write it.
 ## What this brief does not do
 
 It does not raise any ratchet, and it does not change a case's status to clear a gate.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-024, REQ-048, REQ-057, REQ-058
+- surface: SURF-001, SURF-002, SURF-003, SURF-022, SURF-035
+- cases: CASE-0001, CASE-0002, CASE-0003, CASE-0014, CASE-0026, CASE-0038
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: Process() in Sources/ProctorAgent/Actuation/CuaClients.swift — cua-driver and obscura

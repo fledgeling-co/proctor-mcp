@@ -1,5 +1,6 @@
 ---
 sources: [REQ-017, REQ-018, REQ-029]
+status: retired
 ---
 # Wave 7 direction: Cua underneath, Proctor on top
 
@@ -82,3 +83,13 @@ Do not rebuild anything Cua already does. Do not delete the reflector. Do not we
 the recovery decision from PRO-0013: a lost keychain key still means a permanently
 unreadable history, and no export path, second secret or plaintext copy is added to
 work around it.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-017, REQ-018
+- surface: SURF-001, SURF-013
+- cases: CASE-0001, CASE-0019, CASE-0020, CASE-0038, CASE-0059, CASE-0371
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: Process() in Sources/ProctorAgent/Guest/GuestProvider.swift — lume/prlctl/tart argv built and executed

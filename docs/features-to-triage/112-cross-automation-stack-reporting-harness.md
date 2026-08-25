@@ -1,5 +1,6 @@
 ---
 sources: [REQ-081, BLOCK-0003]
+status: retired
 ---
 # Cross-Automation Stack Yield and Takeover Reporting Harness
 
@@ -18,3 +19,13 @@ BLOCK-0003 records that runs driven by external automation stacks (e.g. XCTest t
 
 ## Assumptions made writing this
 - Assuming passive detection uses standard Quartz Event Taps (`CGEventTapCreate`) without stealing focus.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-081
+- surface: SURF-004, SURF-005
+- cases: CASE-0004, CASE-0008, CASE-0009, CASE-0010, CASE-0021, CASE-0030
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: ContentionSample.userInputSince and ContentionWatch.conditions in Sources/ProctorCore/Contention.swift; ContentionMonitor.sample; the probe after the last step in Sources/ProctorAgent/Session/SessionAct.swift

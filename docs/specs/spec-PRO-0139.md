@@ -1,7 +1,7 @@
 # Spec PRO-0139 — Legacy Direction Briefs Specification Validation
 
 **Brief:** `docs/features-to-triage/131-legacy-direction-briefs-spec-validation.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-025
 **Defects:** none
