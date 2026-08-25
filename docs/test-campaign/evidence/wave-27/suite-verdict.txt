@@ -1,5 +1,19 @@
-Wave 27 close — every ledger row merged
+Wave 27 close — the full suite
 command: ./scripts/test.sh
-date: Tue 25 Aug 2026 15:32:27 AEST
-􀢄  Test run with 2173 tests in 275 suites failed after 154.718 seconds with 1 issue.
-      􀢄  Test run with 2173 tests in 275 suites failed after 154.718 seconds with 1 issue.
+date: Tue 25 Aug 2026 16:03:39 AEST
+head: dcb9896
+
+􁁛  Test run with 2173 tests in 275 suites passed after 101.149 seconds.
+PASS: 􁁛  Test run with 2173 tests in 275 suites passed after 101.149 seconds.
+
+Corrected by the tailings pass of 2026-08-25. The file previously carried the
+line from a FAILED run — 'failed after 154.718 seconds with 1 issue' — under a
+heading saying every ledger row merged. It was written from /tmp/st.txt during
+the window in which test_instruments was red, and was never rewritten after the
+passing re-run.
+
+claim_provenance.py did not catch it: that gate matches '<n> suites' and reads
+the NUMBER, never the verdict word. A committed evidence page can therefore say
+a suite failed while the gate over it stays green. Recorded as owed work rather
+than fixed here — changing the scanner is a change whose correctness this pass
+has not measured.

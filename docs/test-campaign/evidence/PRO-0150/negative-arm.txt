@@ -14,3 +14,20 @@ FAIL  docs/test-campaign/evidence/shots/zz-arming-copy.png is on disk and not in
 == restored ==
 gate: 54 image(s) across 4 declared root(s), all present and unchanged.
 exit=0
+
+== WHAT THIS DOES NOT DO, corrected 2026-08-25 by the tailings pass ==
+A sentence in the session said PRO-0150 "closes the one probe tailings could not
+run". It does not, and a tailings run this same day still reports:
+
+    NOT CHECKED
+      R4: no capture directory found; capture identity unchecked
+
+crossref.py's R4 tries six hardcoded names at the repository root — evidence,
+docs/evidence, shots, docs/shots, campaign, docs/campaign — and reads no
+campaign.json. Declaring `captureRoots` makes the population explicit to THIS
+repository's own instruments and to a person; it cannot make somebody else's
+probe look somewhere new.
+
+The honest reading: R4 remains not-checked, and capture identity is answered here
+by capture_manifest.py instead. Teaching an external probe where to look is that
+probe's change to make, not this one's.

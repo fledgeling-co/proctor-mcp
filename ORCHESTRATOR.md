@@ -1,6 +1,6 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 27 closed. The ledger is drained — 0 rows at `Ready for AI`, 152 of 152 Merged.** Waves 9 through 26 are closed and merged. All three censuses test-campaign 0.14.1 added are declared, and reckon reports **3 pieces of work remaining** across 989 rows: one product defect that cannot be closed from here, and two requirements that are honestly unmeasured. Decision-work is zero.
+**Status:** **Wave 27 closed. The ledger is drained — 0 rows at `Ready for AI`.** 152 rows: 150 Merged and 2 Retired (PRO-0031, PRO-0039, both historical). An earlier wording here said "152 of 152 Merged", which counted the two Retired rows as merged; corrected by the tailings pass of 2026-08-25 from `grep -cE '^\| PRO-[0-9]{4} \|.*\| Merged'`. Waves 9 through 26 are closed and merged. All three censuses test-campaign 0.14.1 added are declared, and reckon reports **3 pieces of work remaining** across 989 rows: one product defect that cannot be closed from here, and two requirements that are honestly unmeasured. Decision-work is zero.
 **Updated:** 2026-08-25 — Wave 27 closed. Gate: 2,173 tests in 275 suites, twelve standing gates green, reckon check and ratchet clean. `main` is 480+ commits ahead of `origin` and unpushed.
 
 ### Repository state (reconciled 2026-08-17)

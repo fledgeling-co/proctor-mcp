@@ -32,5 +32,19 @@ Four sites, plus the accepted descriptor, which does NOT inherit the option:
 
 == AFTER ==
 Test "a listener that hangs up on accept is an error, not a signal" passes.
-Before the fix the whole test process died at that line and the suite reported
-nothing at all, which is exactly how the fault presented.
+
+CORRECTED 2026-08-25 by the tailings pass. That sentence previously continued
+"Before the fix the whole test process died at that line", and it is wrong.
+Measured by removing proctorSuppressSIGPIPE from Transport.swift and re-running:
+
+  swift test --filter SocketBoundaryChaosTests/hangUpOnAccept   -> returncode 0
+  swift test --filter SocketBoundaryChaos (whole suite)         -> returncode 1
+
+So the suite DOES arm the fix and that test does NOT. One send into a peer that
+has closed gets EPIPE returned; SIGPIPE needs a second write after the FIN has
+landed, which is why the two-write probe measured 141 and a single send does not.
+The discriminating case is the repeated-failure one, which writes fifty times.
+
+Naming a test that does not bite is the same fault this wave described elsewhere
+as an assertion nobody wrote wearing the name of one. The defect, the fix and the
+suite-level arming are unaffected; only the attribution was wrong.

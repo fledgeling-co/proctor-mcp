@@ -8967,7 +8967,7 @@
       "docs/test-campaign/capture-index.json",
       "docs/test-campaign/evidence/PRO-0150/negative-arm.txt"
     ],
-    "note": "PRO-0150. An external audit reported 'R4: no capture directory found; capture identity unchecked' over a tree holding 54 images. Nothing was wrong with the captures \u2014 the probe tries six conventional root names and this repository uses none of them, so a probe that would have found 54 found none and correctly reported itself unrun. `captureRoots` in campaign.json declares the four roots, and the index makes the population explicit: 54 images, 44 distinct, 8 digests held by more than one path. What a picture DEPICTS is not decided here; shot_disposition.py owns that and was written by opening every file."
+    "note": "PRO-0150. An external audit reported 'R4: no capture directory found; capture identity unchecked' over a tree holding 54 images. Nothing was wrong with the captures \u2014 the probe tries six conventional root names and this repository uses none of them, so a probe that would have found 54 found none and correctly reported itself unrun. `captureRoots` in campaign.json declares the four roots, and the index makes the population explicit: 54 images, 44 distinct, 8 digests held by more than one path. What a picture DEPICTS is not decided here; shot_disposition.py owns that and was written by opening every file. CORRECTED 2026-08-25: this closes capture identity for this repository's own instruments, and does NOT make the external R4 probe run \u2014 that probe tries six hardcoded repo-root names and reads no campaign.json. A tailings run the same day still reports R4 as not checked."
   },
   {
     "id": "CASE-0802",
@@ -9087,7 +9087,7 @@
     "plane": "hermetic",
     "status": "pass",
     "armed": true,
-    "armedBy": "The negative arm is the standalone probe at exit 141, recorded before the fix. With SO_NOSIGPIPE removed the test process dies at the write and the suite reports nothing at all \u2014 which is how the fault presented and why nothing had caught it.",
+    "armedBy": "The arm is the standalone probe at exit 141, recorded before the fix, and the chaos SUITE as a whole: with proctorSuppressSIGPIPE removed from Transport.swift the suite returns 1 where it returned 0. It is NOT the hangUpOnAccept case \u2014 measured by the tailings pass of 2026-08-25, that test returns 0 with the fix removed, so it does not discriminate. One send into a peer that closed gets EPIPE back; SIGPIPE needs a second write after the FIN has landed, which only the repeated-failure case reaches.",
     "defects": [
       "DEF-338"
     ],
@@ -9101,7 +9101,7 @@
       "Tests/ProctorCoreTests/SocketBoundaryChaosTests.swift",
       "Sources/ProctorCore/Transport.swift"
     ],
-    "note": "DEF-338, found by PRO-0145's chaos fixture before it measured anything it was written for. A real AF_UNIX listener that accepts and closes; the client writes into the corpse. Before the fix that raised SIGPIPE and terminated the process. Fixed at four socket sites and at the accepted descriptor, which does not inherit the option \u2014 the agent writing a reply to a shim that hung up mid-batch is the same fault in reverse."
+    "note": "DEF-338, found by PRO-0145's chaos fixture before it measured anything it was written for. A real AF_UNIX listener that accepts and closes; the client writes into the corpse. Before the fix that raised SIGPIPE and terminated the process. Fixed at four socket sites and at the accepted descriptor, which does not inherit the option \u2014 the agent writing a reply to a shim that hung up mid-batch is the same fault in reverse. CORRECTED 2026-08-25: this case's arming previously named hangUpOnAccept as the discriminating test. It is not \u2014 it passes with or without the fix. Naming a test that does not bite is the same fault this wave described elsewhere as 'an assertion nobody wrote wearing the name of one', and it was made here. The defect, the fix and the suite-level arming are unaffected; only the attribution was wrong."
   },
   {
     "id": "CASE-0809",

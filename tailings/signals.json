@@ -3,22 +3,22 @@
  "transcript": "/Users/lukerhodes/.claude/projects/-Users-lukerhodes-Dev-proctor-mcp/30dfe9f8-ca66-4e1a-98f6-8e593b0302a4.jsonl",
  "repo": "/Users/lukerhodes/Dev/proctor-mcp",
  "models": {
-  "claude-opus-5": 5187,
-  "gemini-3.7-flash-high": 854,
+  "claude-opus-5": 5884,
+  "gemini-3.7-flash-high": 866,
   "gemini-3.7-flash": 124,
   "grok-4.6": 36,
   "glm-5.3": 25,
-  "perch-router": 15,
+  "perch-router": 16,
   "us.openai.gpt-5.6-luna": 8,
   "<synthetic>": 5
  },
  "counts": {
-  "records": 20392,
-  "assistant_prose_turns": 1146,
-  "tool_calls": 3651,
-  "bash": 3367,
-  "human_turns": 103,
-  "skills": 43,
+  "records": 22273,
+  "assistant_prose_turns": 1216,
+  "tool_calls": 4087,
+  "bash": 3783,
+  "human_turns": 109,
+  "skills": 45,
   "sidechain_records": 0,
   "spawns": 105
  },
@@ -65,7 +65,9 @@
   "shipyard:intake",
   "ship-fleet:ship-fleet",
   "ship-fleet:ship-fleet",
-  "tailings:tailings"
+  "tailings:tailings",
+  "shipyard:intake",
+  "ship-fleet:ship-fleet"
  ],
  "assertions": [
   {
@@ -808,6 +810,62 @@
    "kind": "figure",
    "line": 20298,
    "text": "- **108 items remain `undecided` in closed-world reckoning:** Early direction briefs whose core behavior works and passes in-tree unit tests, but which `reckon` holds as `undecided` because they were verified against in-tree doubles rather than persistent multi-machine infrastructure",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "figure",
+   "line": 20430,
+   "text": "- **Gate Status:** Clean exit code 0 (`tailings/worklist",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "figure",
+   "line": 20557,
+   "text": "py check` exit 0, strict ratchet 405 held, vacuity 0 findings over 29 resolved providers, `reckon",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "figure",
+   "line": 21500,
+   "text": "py check` exits 0 with them:",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "figure",
+   "line": 21500,
+   "text": "Verified against the signed build: menu step ran on the accessibility plane, foreground measured 0, window server went 1 \u2192 2",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 21846,
+   "text": "The shim writing to a dead agent is killed by signal, with no error and no audit record",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 21905,
+   "text": "A test passed or failed by whether that window was up",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 22252,
+   "text": "`proctor-shim` writes every tool call down that socket \u2014 an agent dying mid-write took the MCP server with it, silently, with no error and no audit record",
    "names": [],
    "unmatched": [],
    "durable": false
@@ -2195,72 +2253,100 @@
    "names": [],
    "unmatched": [],
    "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 20990,
+   "text": "The 113 `undecided` rows share one cause: reckon looks cases up by surface, and 111 briefs cite requirements only. The registry already holds requirement\u2192surface, so the join can be completed by transcription rather than by authoring.",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 21050,
+   "text": "Continuing the fleet \u2014 Wave 27 is mid-flight, six rows merged so far. Committing this batch.",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 21500,
+   "text": "\ud83e\udee5 Wave 27 is 14 of 26 rows merged, with the fleet's memory on disk and resumable. Here's where it stands. **The three censuses the fleet argument named are declared** and `campaign.py check` exits 0 with them: | | Before | After | |---|---|---| | Planes | NOT DECLARED | in-tree 148 \u00b7 hermetic 296 \u00b7 ",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 21519,
+   "text": "Triage complete: 152 rows, 152 specs, all 144 briefs claimed 1-to-1. Now building \u2014 starting with PRO-0150, which closes the one probe tailings could not run.",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 21905,
+   "text": "\ud83e\udee5 Wave 27 stands at 24 of 31 rows merged, across 14 commits. Seven remain, all live-lane fixture harnesses. **Three product defects, all found by driving Proctor at Proctor, all fixed and witnessed:** - **DEF-338 (high)** \u2014 no socket in the package set `SO_NOSIGPIPE`. A write to a peer that had clos",
+   "names": [],
+   "unmatched": [],
+   "durable": true
+  },
+  {
+   "kind": "status",
+   "line": 22252,
+   "text": "\ud83e\udee5 **The ledger is drained.** 152 of 152 rows Merged, 0 at `Ready for AI`, across 18 commits in Wave 27. Reckon's exit condition \u2014 the one that matters more than an empty ledger \u2014 reports **3 pieces of work remaining across 989 rows, and decision-work is zero.** All three are things that genuinely ca",
+   "names": [],
+   "unmatched": [],
+   "durable": false
   }
  ],
  "findings": [
   {
    "probe": "T11",
-   "title": "a printed non-zero class (UNCHECKED 62) is absent from the report that follows  (\u00d710)",
-   "line": 18758,
-   "quote": "UNCHECKED 62 \u2014 and unchecked is failed",
+   "title": "a printed non-zero class (520 blind) is absent from the report that follows  (\u00d76)",
+   "line": 19036,
+   "quote": "blind: examined=2159 mutating=603 re-read-after=520 blind=83",
    "band": 1,
    "confidence": "observed",
    "remedy": "report every class the gate printed, summing to its total",
-   "figure": "62",
+   "figure": "520",
    "occurrences": [
     {
-     "line": 18758,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
+     "line": 19036,
+     "quote": "blind: examined=2159 mutating=603 re-read-after=520 blind=83"
     },
     {
-     "line": 18769,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
+     "line": 19250,
+     "quote": "**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements wi"
     },
     {
-     "line": 19002,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
+     "line": 19346,
+     "quote": "**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements wi"
     },
     {
-     "line": 19011,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
+     "line": 20393,
+     "quote": "[band 1] T11 a printed non-zero class (520 blind) is absent from the report that follows (\u00d73)"
     },
     {
-     "line": 19130,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
+     "line": 20414,
+     "quote": "- **A270** (T11, line 19036) a printed non-zero class (520 blind) is absent from the report that follows (\u00d73)"
     },
     {
-     "line": 19403,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
-    },
-    {
-     "line": 19529,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
-    },
-    {
-     "line": 19875,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
-    },
-    {
-     "line": 20022,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
-    },
-    {
-     "line": 20241,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
+     "line": 20577,
+     "quote": "**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements wi"
     }
    ],
-   "count": 10,
+   "count": 6,
    "lines": [
-    18758,
-    18769,
-    19002,
-    19011,
-    19130,
-    19403,
-    19529,
-    19875,
-    20022,
-    20241
+    19036,
+    19250,
+    19346,
+    20393,
+    20414,
+    20577
    ]
   },
   {
@@ -2333,32 +2419,32 @@
   },
   {
    "probe": "T11",
-   "title": "a printed non-zero class (520 blind) is absent from the report that follows  (\u00d73)",
-   "line": 19036,
-   "quote": "blind: examined=2159 mutating=603 re-read-after=520 blind=83",
+   "title": "a printed non-zero class (skipped 143) is absent from the report that follows  (\u00d73)",
+   "line": 21312,
+   "quote": "skipped 143 \u2014 already decided, or cites no requirement",
    "band": 1,
    "confidence": "observed",
    "remedy": "report every class the gate printed, summing to its total",
-   "figure": "520",
+   "figure": "143",
    "occurrences": [
     {
-     "line": 19036,
-     "quote": "blind: examined=2159 mutating=603 re-read-after=520 blind=83"
+     "line": 21312,
+     "quote": "skipped 143 \u2014 already decided, or cites no requirement"
     },
     {
-     "line": 19250,
-     "quote": "**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements wi"
+     "line": 21579,
+     "quote": "skipped 32 \u2014 already decided, or cites no requirement"
     },
     {
-     "line": 19346,
-     "quote": "**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements wi"
+     "line": 22217,
+     "quote": "skipped 137 \u2014 already decided, or cites no requirement"
     }
    ],
    "count": 3,
    "lines": [
-    19036,
-    19250,
-    19346
+    21312,
+    21579,
+    22217
    ]
   },
   {
@@ -2500,7 +2586,7 @@
   },
   {
    "probe": "T3",
-   "title": "a failing command is followed by a clean claim that does not name it  (\u00d752)",
+   "title": "a failing command is followed by a clean claim that does not name it  (\u00d756)",
    "line": 2275,
    "quote": "Six consecutive clean runs. Committing the fix:",
    "band": 2,
@@ -2716,9 +2802,25 @@
     {
      "line": 20083,
      "quote": "\ud83e\udee5 `ship-fleet` (v2.8.0) executed Phase 6 Exit Condition Reconciliation across the entire backlog, closed the final remaining defect (`DEF-033`), retired `BRIEF-117`, and verified all quality and test gates. ### Final Reconciliation & Backlog Accounting 1. **Broken Product Work:** **0 broken items"
+    },
+    {
+     "line": 20430,
+     "quote": "\ud83e\udee5 `/tailings:tailings` (v0.1.0) executed across the session transcript (`30dfe9f8-ca66-4e1a-98f6-8e593b0302a4.jsonl`), auditing 3,651 tool calls, 266 extracted assertions, and 88 signal probes against live repository and git state. ### Audit Summary & Partition 1. **Deterministic Signals (`signals"
+    },
+    {
+     "line": 20430,
+     "quote": "\ud83e\udee5 `/tailings:tailings` (v0.1.0) executed across the session transcript (`30dfe9f8-ca66-4e1a-98f6-8e593b0302a4.jsonl`), auditing 3,651 tool calls, 266 extracted assertions, and 88 signal probes against live repository and git state. ### Audit Summary & Partition 1. **Deterministic Signals (`signals"
+    },
+    {
+     "line": 20430,
+     "quote": "\ud83e\udee5 `/tailings:tailings` (v0.1.0) executed across the session transcript (`30dfe9f8-ca66-4e1a-98f6-8e593b0302a4.jsonl`), auditing 3,651 tool calls, 266 extracted assertions, and 88 signal probes against live repository and git state. ### Audit Summary & Partition 1. **Deterministic Signals (`signals"
+    },
+    {
+     "line": 21962,
+     "quote": "The live lifecycle passed in 25s. Confirming nothing leaked."
     }
    ],
-   "count": 52,
+   "count": 56,
    "lines": [
     2275,
     6624,
@@ -3160,6 +3262,30 @@
    ]
   },
   {
+   "probe": "T5",
+   "title": "gate output suppressed and never re-run unsuppressed: plane_census.py  (\u00d72)",
+   "line": 22026,
+   "quote": "cd /Users/lukerhodes/Dev/proctor-mcp; python3 - << 'PY' import json p=\"docs/test-campaign/cases.json\" raw=json.load(open(p)); seq=raw if isinstance(raw,list) else (raw.get(\"case\") or raw.get(\"cases\"))",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "re-run plane_census.py and read its exit code",
+   "occurrences": [
+    {
+     "line": 22026,
+     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp; python3 - << 'PY' import json p=\"docs/test-campaign/cases.json\" raw=json.load(open(p)); seq=raw if isinstance(raw,list) else (raw.get(\"case\") or raw.get(\"cases\"))"
+    },
+    {
+     "line": 22197,
+     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 - << 'PY' import json inv=json.load(open(\"docs/test-campaign/inventory.json\")) inv[\"defect\"].append({ \"id\":\"DEF-339\", \"title\":\"The Maestro lane reaches the"
+    }
+   ],
+   "count": 2,
+   "lines": [
+    22026,
+    22197
+   ]
+  },
+  {
    "probe": "T2",
    "title": "mac-design-digest: 0 of 2 bundled scripts ran",
    "line": 527,
@@ -3408,97 +3534,21 @@
   },
   {
    "probe": "T5",
-   "title": "gate output suppressed and never re-run unsuppressed: campaign.py",
-   "line": 20271,
-   "quote": "python3 -c ' import os S_CAMP = \"/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.14.1/skills/test-campaign/scripts\" S_RECK = \"/Users/lukerhodes/.claude/plugins/cache/fledgel",
+   "title": "gate output suppressed and never re-run unsuppressed: spec_citation_measure.py",
+   "line": 21901,
+   "quote": "cd /Users/lukerhodes/Dev/proctor-mcp for g in \"spec_citation_measure.py\" \"ledger_gate.py\" \"capture_manifest.py --gate\" \"mutation_report.py --gate\" \"spec_symbol_linter.py --gate\" \"verification_record.p",
    "band": 2,
    "confidence": "observed",
-   "remedy": "re-run campaign.py and read its exit code",
+   "remedy": "re-run spec_citation_measure.py and read its exit code",
    "occurrences": [
     {
-     "line": 20271,
-     "quote": "python3 -c ' import os S_CAMP = \"/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.14.1/skills/test-campaign/scripts\" S_RECK = \"/Users/lukerhodes/.claude/plugins/cache/fledgel"
+     "line": 21901,
+     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp for g in \"spec_citation_measure.py\" \"ledger_gate.py\" \"capture_manifest.py --gate\" \"mutation_report.py --gate\" \"spec_symbol_linter.py --gate\" \"verification_record.p"
     }
    ],
    "count": 1,
    "lines": [
-    20271
-   ]
-  },
-  {
-   "probe": "T15",
-   "title": "instrument `/compact` was asked for, never used, and never mentioned",
-   "line": 14942,
-   "quote": "compact",
-   "band": 2,
-   "confidence": "strong-inference",
-   "remedy": "say plainly whether /compact was available, and what stood in for it",
-   "occurrences": [
-    {
-     "line": 14942,
-     "quote": "compact"
-    }
-   ],
-   "count": 1,
-   "lines": [
-    14942
-   ]
-  },
-  {
-   "probe": "T15",
-   "title": "instrument `/reload-plugins` was asked for, never used, and never mentioned",
-   "line": 14953,
-   "quote": "reload-plugins",
-   "band": 2,
-   "confidence": "strong-inference",
-   "remedy": "say plainly whether /reload-plugins was available, and what stood in for it",
-   "occurrences": [
-    {
-     "line": 14953,
-     "quote": "reload-plugins"
-    }
-   ],
-   "count": 1,
-   "lines": [
-    14953
-   ]
-  },
-  {
-   "probe": "T1",
-   "title": "overlay present and unread: mac-design-digest/gemini.md",
-   "line": 527,
-   "quote": "/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/mac-design-digest/1.1.0/skills/mac-design-digest",
-   "band": 3,
-   "confidence": "observed",
-   "remedy": "read /Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/mac-design-digest/1.1.0/skills/mac-design-digest/gemini.md and re-check the overrides it names",
-   "occurrences": [
-    {
-     "line": 527,
-     "quote": "/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/mac-design-digest/1.1.0/skills/mac-design-digest"
-    }
-   ],
-   "count": 1,
-   "lines": [
-    527
-   ]
-  },
-  {
-   "probe": "T9",
-   "title": "18 reviewer lane(s) chosen without lane_pick.py",
-   "line": 5080,
-   "quote": "cd /tmp && perl -e 'alarm shift @ARGV; exec @ARGV' 900 codex exec -m gpt-5.6-sol -c model_reasoning_effort=\"high\" -s read-only -o /tmp/so-forks.md \"$(cat /tmp/proctor-forks.md)\" < /dev/null > /tmp/so-",
-   "band": 3,
-   "confidence": "observed",
-   "remedy": "lane_pick.py --task verification --json",
-   "occurrences": [
-    {
-     "line": 5080,
-     "quote": "cd /tmp && perl -e 'alarm shift @ARGV; exec @ARGV' 900 codex exec -m gpt-5.6-sol -c model_reasoning_effort=\"high\" -s read-only -o /tmp/so-forks.md \"$(cat /tmp/proctor-forks.md)\" < /dev/null > /tmp/so-"
-    }
-   ],
-   "count": 1,
-   "lines": [
-    5080
+    21901
    ]
   },
   {
@@ -3509,7 +3559,7 @@
    "band": 3,
    "confidence": "observed",
    "remedy": "`until <check>; do sleep N; done` or the harness's own notification",
-   "share": 0.009,
+   "share": 0.008,
    "longest_run": 9,
    "occurrences": [
     {
@@ -3555,8 +3605,8 @@
  ],
  "marker": {
   "applicable": true,
-  "present": 37,
-  "absent": 56,
+  "present": 39,
+  "absent": 61,
   "wrong_glyph": 0,
   "note": "diagnostics only \u2014 never a finding"
  },
