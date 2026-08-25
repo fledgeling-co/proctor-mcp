@@ -397,6 +397,17 @@ final class AXEngineImpl: AXEngine, @unchecked Sendable {
 
     private func sessionOwning(window: String) throws -> AppSession {
         for session in sessions.values where session.window(window) != nil { return session }
+        // DEF-336. An application handle resolves to its own session, so a step
+        // that addresses the app plane — a menu press — reaches the app element
+        // without a window to hang it on. `session.window(appId)` then returns
+        // nil and the target carries `windowElement: nil`, which the menu path
+        // already tolerates because the menu bar hangs off the app element.
+        // Whether a batch is ALLOWED here is decided in SessionAct against
+        // WindowlessActuation; this only makes the lookup possible.
+        if WindowlessActuation.isAppHandle(window),
+           let session = sessions.values.first(where: { $0.handle.id == window }) {
+            return session
+        }
         // The window may not have been enumerated yet in this session, but its
         // id still names the epoch that minted it.
         let epoch = window.split(separator: ":").dropFirst().first.flatMap { Int($0) }

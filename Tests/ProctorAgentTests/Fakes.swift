@@ -1,6 +1,40 @@
+import CoreGraphics
 import Foundation
 import ProctorCore
 @testable import ProctorAgent
+
+/// A CoreGraphics window number this Mac is not using.
+///
+/// DEF-337. Every fake window here carried `cgWindowID: 7`, and 7 is a real
+/// window on a running Mac — Notification Centre, measured 2026-08-25, at layer
+/// 21. `Session.cursorPlane(for:)` resolves a plane by asking whether the id is
+/// in the on-screen window list, so a suite asserting `.hidden` for a fabricated
+/// window passed or failed according to whether Notification Centre happened to
+/// be up. It failed once in this repository's history for exactly that reason,
+/// and re-running it made it pass, which is the worst shape a failure can take.
+///
+/// Picking a large constant would only move the collision further away. This
+/// reads the live list and takes one above the highest number on it, then the
+/// caller asserts the absence it was given — so a helper that ever stops working
+/// makes the test say so rather than pass vacuously.
+enum TestWindowIDs {
+
+    /// A number no window on this machine holds, at the moment it is asked.
+    static func absent() -> UInt32 {
+        let ws = CGWindowListCopyWindowInfo([.optionAll, .excludeDesktopElements],
+                                            kCGNullWindowID) as? [[String: Any]] ?? []
+        let highest = ws.compactMap { $0[kCGWindowNumber as String] as? UInt32 }.max() ?? 0
+        return highest &+ 1_000
+    }
+
+    /// Is this number genuinely absent from the on-screen list right now?
+    /// The assertion a test makes about its own fixture before trusting it.
+    static func isAbsentOnScreen(_ id: UInt32) -> Bool {
+        let ws = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements],
+                                            kCGNullWindowID) as? [[String: Any]] ?? []
+        return !ws.contains { ($0[kCGWindowNumber as String] as? UInt32) == id }
+    }
+}
 
 // Fake engines for the agent's own wiring tests. Session takes its accessibility
 // and capture sides as injected protocols, so the order the policy gate runs in,
@@ -58,7 +92,8 @@ final class FakeAX: AXEngine, @unchecked Sendable {
         app = AppHandle(id: appID, pid: 4242, bundleId: bundleId, name: "Fake")
         window = WindowHandle(id: windowID, app: appID, title: "Fake Window",
                               frame: Rect(x: 0, y: 0, w: 800, h: 600), isMain: true,
-                              isMinimized: false, isOnActiveSpace: true, cgWindowID: 7)
+                              isMinimized: false, isOnActiveSpace: true,
+                              cgWindowID: TestWindowIDs.absent())
     }
 
     func listApps(includeWindowless: Bool) throws -> [AppHandle] { [app] }

@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0795",
+  "requirement": "REQ-011",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "the macos-glass lane commits to a display server, whatever the artefact reads as",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0148/def-336-closed.txt",
+      "sha256_16": "b4ae3f4f5f729656",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorCore/WindowlessActuation.swift",
+      "sha256_16": "71ba4f004fdf16e0",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorCoreTests/WindowlessActuationTests.swift",
+      "sha256_16": "b4e2539608023c76",
+      "present": true
+    }
+  ]
+}

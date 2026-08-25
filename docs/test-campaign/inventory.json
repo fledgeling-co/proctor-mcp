@@ -5023,7 +5023,7 @@
     {
       "id": "DEF-336",
       "title": "proctor_act cannot actuate a menu-bar-only app, because every step resolves a window handle first",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "surfaces": [
         "SURF-002",
@@ -5032,7 +5032,21 @@
       "requirements": [
         "REQ-011"
       ],
-      "note": "Measured 2026-08-25 against Proctor's own app (pid 2614). proctor_menu reads the full 165-item menu bar from the app handle, and proctor_act refuses the same menuPath with windowNotFound because it resolves a window before any step. proctor_apps activate reports 'frontmost but exposes no windows'. So a command that would open the first window cannot be reached, and Proctor cannot drive its own status item. The actuation in PRO-0148 had to travel through System Events."
+      "note": "Measured 2026-08-25 against Proctor's own app (pid 2614). proctor_menu reads the full 165-item menu bar from the app handle, and proctor_act refuses the same menuPath with windowNotFound because it resolves a window before any step. proctor_apps activate reports 'frontmost but exposes no windows'. So a command that would open the first window cannot be reached, and Proctor cannot drive its own status item. The actuation in PRO-0148 had to travel through System Events. \u00b7 CLOSED 2026-08-25 by WindowlessActuation in ProctorCore: an app handle is admitted when every step addresses the app plane (menu, appleScript, waitFor) and refused by name when one does not. Witnessed on glass at pid 21914 \u2014 the menu step actuated on the accessibility plane with foreground measured 0, and CGWindowListCopyWindowInfo went from 1 window to 2. evidence/PRO-0148/def-336-closed.txt"
+    },
+    {
+      "id": "DEF-337",
+      "title": "A unit test's verdict depended on whether Notification Centre happened to be on screen",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-004"
+      ],
+      "requirements": [
+        "REQ-043",
+        "REQ-046"
+      ],
+      "note": "Measured 2026-08-25. Every fake window in ProctorAgentTests carried `cgWindowID: 7`, and 7 is a real window on a running Mac \u2014 Notification Centre, layer 21. Session.cursorPlane(for:) resolves a plane by asking whether the id is in the on-screen window list, so 'the plane comes from the window list, not from the handle's beliefs' passed or failed according to whether Notification Centre was up. It failed once in a full run and passed on an immediate re-run of the same suite, which is the worst shape a failure can take: a re-run is what a reader does, and it is what hid this. Fixed by TestWindowIDs.absent(), which reads the live list and takes one above the highest number on it, and by the test asserting that absence before resting on it \u2014 a fixture that stops being absent now makes the test say so rather than silently invert what it proves. evidence/PRO-0148/def-337-flaky-fixture.txt"
     }
   ],
   "journey": [

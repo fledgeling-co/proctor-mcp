@@ -81,7 +81,34 @@ extension Session {
     func act(window id: String, steps: [ActionStep], settle: SettlePolicy, foreground: Bool,
              captureEach: Bool, diffEach: Bool, record: String?,
              pointerMarks: Bool = false) async throws -> JSONValue {
-        let window = try windowHandle(id)
+        // DEF-336. A menu-bar-only application has no window to resolve, and the
+        // command that would open its first one lives on the menu bar. The menu
+        // tree hangs off the APPLICATION element, so the step never needed a
+        // window; only the handle resolution in front of it did. An app handle is
+        // therefore admitted here when every step in the batch addresses the app
+        // plane, and refused by name when one does not — a refusal that says which
+        // kinds need a window beats one that says the window was not found.
+        let window: WindowHandle
+        if WindowlessActuation.isAppHandle(id) {
+            guard let app = appHandle(id: id) else {
+                let r = WindowlessActuation.notAttached(id)
+                throw AgentError(code: .windowNotFound, message: r.message, remedy: r.remedy)
+            }
+            guard WindowlessActuation.canRunWithoutWindow(steps.map(\.kind)) else {
+                let r = WindowlessActuation.refusal(kinds: steps.map(\.kind), app: id)
+                throw AgentError(code: .invalidArguments, message: r.message, remedy: r.remedy)
+            }
+            // The handle a windowless batch carries names the app on both fields,
+            // so nothing downstream can mistake it for a window that was found:
+            // its frame is zero, it is not main, and `windowElement` resolves to
+            // nil in the actuator exactly as it would for a window that closed.
+            window = WindowHandle(id: id, app: app.id, title: app.name,
+                                  frame: Rect(x: 0, y: 0, w: 0, h: 0),
+                                  isMain: false, isMinimized: false,
+                                  isOnActiveSpace: true, cgWindowID: nil)
+        } else {
+            window = try windowHandle(id)
+        }
         // The policy gate runs before anything is actuated: a blocked app, or a
         // sensitive one with no current token, is refused here (and the refusal is
         // audited) rather than driven. The returned context names the target for
@@ -585,6 +612,21 @@ extension Session {
             var diff: SnapshotDiff?
             var postStateError: AgentError?
             do {
+                // DEF-336. A batch driven against an application handle has no
+                // window tree to walk, and attempting one reported "window
+                // app:… has not been enumerated · Call windows(app:) first" —
+                // true of a window and meaningless about an app. The read is
+                // declined by name instead, so the step result says what was
+                // not read rather than describing a lookup that could never
+                // have succeeded.
+                if WindowlessActuation.isAppHandle(window.id) {
+                    throw AgentError(
+                        code: .windowNotFound,
+                        message: "no window tree to read: this batch ran against the "
+                            + "application plane, which has none",
+                        remedy: "A menu step may have opened one. Call proctor_apps with "
+                            + "action \"attach\" to mint its handle, then act on that.")
+                }
                 let outcome = try walk(window: window.id)
                 stateHash = outcome.hash
                 if diffEach {

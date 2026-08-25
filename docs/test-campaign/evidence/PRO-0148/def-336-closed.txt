@@ -1,0 +1,38 @@
+DEF-336 closed on glass — proctor_act drives a menu-bar-only application
+date: Tue 25 Aug 2026 12:31:03 AEST
+build: /Applications/Proctor.app, Developer ID signed, TeamIdentifier=H4HGFL52W7
+app:  pid 21914, /Applications/Proctor.app/Contents/MacOS/Proctor
+
+== BEFORE THE FIX (recorded 2026-08-25, pid 2614) ==
+proctor_menu  app:2614:5           -> 165 items read from the app handle
+proctor_act   window=app:2614:5    -> windowNotFound
+                                      "no window with handle app:2614:5"
+                                      "Call proctor_apps with action list ..."
+proctor_apps  activate             -> "frontmost but exposes no windows after 8000ms"
+The command that opens the first window was unreachable without the window it creates.
+
+== AFTER, ADMISSION PATH ==
+proctor_apps attach pid=21914      -> windows: []   (Proctor's own view: windowless)
+CGWindowList over pid 21914        -> 1 window
+proctor_act window=app:21914:1 steps=[menu Window>History]
+  completed              1
+  steps[0].ok            true
+  steps[0].plane         accessibility
+  steps[0].route         action
+  foreground.measured    0          (nothing stole focus)
+  steps[0].error         windowNotFound — "no window tree to read: this batch ran
+                         against the application plane, which has none"
+CGWindowList over pid 21914        -> 2 windows: 25801 "History" 900x492 added
+
+The post-state read is DECLINED BY NAME rather than attempted and failed. Before this
+it read "window app:21914:1 has not been enumerated · Call windows(app:) first",
+which is true of a window and meaningless about an application.
+
+== AFTER, REFUSAL PATH ==
+proctor_act window=app:21914:1 steps=[menu, press, setValue]
+  -> invalidArguments
+     "app:21914:1 is an application handle, and press, setValue address something
+      inside a window"
+     "Menu, appleScript and waitFor steps run against an app handle. For the rest,
+      open a window first ..."
+Each offending kind is named once; the admitted kind is not named at all.

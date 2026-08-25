@@ -21,7 +21,7 @@ struct ReflectorRefusalTests {
     private let window = WindowHandle(id: "win-1", app: "app-1", title: "Fake Window",
                                       frame: Rect(x: 0, y: 0, w: 640, h: 480),
                                       isMain: true, isMinimized: false, isOnActiveSpace: true,
-                                      cgWindowID: 7)
+                                      cgWindowID: TestWindowIDs.absent())
 
     @Test("inspect refuses with its own code rather than returning a shape")
     func inspectRefuses() {

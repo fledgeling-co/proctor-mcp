@@ -8832,5 +8832,53 @@
       "docs/test-campaign/evidence/PRO-0146/negative-arm.txt"
     ],
     "note": "PRO-0146 acceptance 4. The pre-commit hook runs the linter only when the change touches docs/specs/, Sources/ or Package.swift \u2014 a docs-only commit cannot move the count, and a hook that runs on every commit is a hook that gets disabled. PROCTOR_SKIP_SPEC_LINT skips it loudly rather than silently, and the skip prints to stderr so it appears in the commit's own output."
+  },
+  {
+    "id": "CASE-0795",
+    "req": "REQ-011",
+    "surface": "SURF-010",
+    "oracle": "effect-witness",
+    "lane": "macos-glass",
+    "plane": "live-glass",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "docs/test-campaign/evidence/PRO-0148/def-336-closed.txt records the same call against the same product before the fix, refused with windowNotFound and zero windows opened. The negative arm is the previous build.",
+    "actuates": [
+      "History"
+    ],
+    "defects": [
+      "DEF-336"
+    ],
+    "witness": {
+      "recorder": "CGWindowListCopyWindowInfo over pid 21914, read by a standalone Swift binary outside the app \u2014 the window server's own census, which the menu command does not participate in",
+      "effect": "device",
+      "count": 1
+    },
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0148/def-336-closed.txt",
+      "Sources/ProctorCore/WindowlessActuation.swift",
+      "Tests/ProctorCoreTests/WindowlessActuationTests.swift"
+    ],
+    "note": "DEF-336 closed on glass. proctor_act driven with an APPLICATION handle against a build whose own attach reports windows: [] \u2014 the exact state in which the old code refused. The menu step ran on the accessibility plane with foreground measured 0, and the window server went from one window to two. The refusal path is witnessed in the same file: a batch mixing menu with press and setValue is refused naming press and setValue and not naming menu, so the caller is told which of its own steps was the problem."
+  },
+  {
+    "id": "CASE-0796",
+    "req": "REQ-046",
+    "surface": "SURF-004",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "plane": "in-tree",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "docs/test-campaign/evidence/PRO-0148/def-337-flaky-fixture.txt records the failing run and the passing re-run of the identical suite minutes apart, with no code change between them.",
+    "defects": [
+      "DEF-337"
+    ],
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0148/def-337-flaky-fixture.txt",
+      "Tests/ProctorAgentTests/Fakes.swift",
+      "Tests/ProctorAgentTests/BackgroundRouteTests.swift"
+    ],
+    "note": "DEF-337. The relation is across runs rather than within one: the same suite, the same tree, two verdicts. A fixture id chosen as a constant collides with the window server's own allocation, so the fix reads the live list and the test asserts the absence it rests on. TestWindowIDs.isAbsentOnScreen is checked inside the test, so a helper that ever stops working reports itself rather than letting the assertion pass for the wrong reason."
   }
 ]

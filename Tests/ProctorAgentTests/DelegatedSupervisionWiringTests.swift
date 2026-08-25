@@ -353,7 +353,7 @@ struct DelegatedDriverFactsTests {
     private func target() -> StepTarget {
         StepTarget(window: WindowHandle(id: "win-1", app: "app-1", title: "Fake Window",
                                         frame: Rect(x: 0, y: 0, w: 800, h: 600), isMain: true,
-                                        isMinimized: false, isOnActiveSpace: true, cgWindowID: 7),
+                                        isMinimized: false, isOnActiveSpace: true, cgWindowID: TestWindowIDs.absent()),
                    app: AppHandle(id: "app-1", pid: 4242, bundleId: "com.example", name: "Fake"),
                    nodeId: nil, identity: nil)
     }

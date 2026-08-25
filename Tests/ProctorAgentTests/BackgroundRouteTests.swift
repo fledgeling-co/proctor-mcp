@@ -154,10 +154,20 @@ struct PointerPlaneWiringTests {
         await session.setDrawsHUD(false)
         _ = try await session.attachResolved(bundleId: "com.example.target", pid: nil, name: nil)
 
-        // The fake's window claims cgWindowID 7 and says it is neither minimised
-        // nor off its Space. No such window is on this machine's screen, so the
-        // plane is `hidden` — which is the point: the handle's own belief is not
+        // The fake's window says it is neither minimised nor off its Space, and
+        // its CoreGraphics number belongs to no window on this machine — so the
+        // plane is `hidden`, which is the point: the handle's own belief is not
         // what decides, the window list is.
+        //
+        // DEF-337. That number used to be the literal 7, which is Notification
+        // Centre on a running Mac, so this assertion passed or failed according
+        // to whether Notification Centre happened to be up. The fixture now takes
+        // one above the highest live window number, and the absence it rests on
+        // is asserted here rather than assumed — a fixture that stops being
+        // absent must make the test say so, not quietly invert what it proves.
+        let id = try #require(ax.window.cgWindowID)
+        #expect(TestWindowIDs.isAbsentOnScreen(id),
+                "the fixture's window number is on screen, so this test would be measuring a real window rather than a fabricated one")
         #expect(ax.window.isMinimized == false)
         #expect(ax.window.isOnActiveSpace == true)
         #expect(await session.cursorPlane(for: ax.window) == .hidden)

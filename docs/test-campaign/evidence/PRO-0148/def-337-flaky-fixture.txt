@@ -1,0 +1,31 @@
+DEF-337 — a unit test whose verdict came from the host's window list
+date: Tue 25 Aug 2026 12:40:15 AEST
+
+== THE FAILURE, in a full run of ./scripts/test.sh ==
+Test "the plane comes from the window list, not from the handle's beliefs"
+  recorded an issue at BackgroundRouteTests.swift:163:9:
+  Expectation failed: await session.cursorPlane(for: ax.window) == .hidden
+Test run with 2129 tests in 267 suites FAILED after 113.990 seconds with 1 issue.
+
+== THE RE-RUN, minutes later, no code change ==
+swift test --filter PointerPlaneWiringTests
+Test "the plane comes from the window list, not from the handle's beliefs" PASSED after 0.064s
+Test run with 2 tests in 1 suite passed.
+
+== THE CAUSE ==
+Every fake window carried cgWindowID: 7. On this Mac:
+  window 7 EXISTS: owner=Notification Centre layer=21 name=Notification Center
+  total windows on the live list: 411
+Session.cursorPlane(for:) does:
+  let records = CGWindowIndex.records(option: .optionOnScreenOnly)
+  let onScreen = records.contains { $0.number == windowID }
+  guard onScreen else { return .hidden }
+So the assertion "a fabricated window is hidden" held only while Notification Centre
+was off screen. A re-run is what a reader does when a test fails once, and a re-run
+is exactly what hid this.
+
+== THE FIX ==
+TestWindowIDs.absent() reads the live list and returns one above its highest number.
+The test then asserts TestWindowIDs.isAbsentOnScreen(id) BEFORE resting on it, so a
+fixture that stops being absent makes the test say so rather than quietly inverting
+what it proves. Four fixture sites moved off the constant.

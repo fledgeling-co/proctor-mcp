@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0796",
+  "requirement": "REQ-046",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0148/def-337-flaky-fixture.txt",
+      "sha256_16": "653c43d78f1a69fd",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorAgentTests/Fakes.swift",
+      "sha256_16": "0cf16cee63accef3",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorAgentTests/BackgroundRouteTests.swift",
+      "sha256_16": "9c15f3b9ee8fe1ec",
+      "present": true
+    }
+  ]
+}
