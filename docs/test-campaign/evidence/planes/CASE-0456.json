@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0456",
+  "requirement": "REQ-102",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/reckoning/2026-08-22-2bdc808/run.json",
+      "sha256_16": "15e2c33c78fc0d6b",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0103/published-take.txt",
+      "sha256_16": "41ec71cdb9edc1ce",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0572",
+  "requirement": "REQ-140",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/sweepK-scaling.json",
+      "sha256_16": "2f15a44948e66213",
+      "present": true
+    }
+  ]
+}

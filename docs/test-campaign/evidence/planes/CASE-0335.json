@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0335",
+  "requirement": "REQ-085",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/test_instruments.py",
+      "sha256_16": "eb7194992a602bf6",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/operator_path_gate.py",
+      "sha256_16": "aa902860a3b4ba91",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0099/gate-arming.txt",
+      "sha256_16": "4122c537e9dffb85",
+      "present": true
+    }
+  ]
+}

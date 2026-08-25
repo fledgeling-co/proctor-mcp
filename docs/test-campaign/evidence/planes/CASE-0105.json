@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0105",
+  "requirement": "REQ-048",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0081/a2-sibling-scope.txt",
+      "sha256_16": "9ef232f4ec7de075",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0542",
+  "requirement": "REQ-132",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/test_instruments.py",
+      "sha256_16": "eb7194992a602bf6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0092/correlate-crash-arming.txt",
+      "sha256_16": "9b651fde350bad7f",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0106/def207-def208-arming.txt",
+      "sha256_16": "4b903869ae5cbd15",
+      "present": true
+    }
+  ]
+}

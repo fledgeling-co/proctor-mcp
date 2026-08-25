@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0101",
+  "requirement": "REQ-049",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0081/a3-negative-arm.json",
+      "sha256_16": "f13ed4f9ab24a7cd",
+      "present": true
+    }
+  ]
+}

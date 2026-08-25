@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0222",
+  "requirement": "REQ-067",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt",
+      "sha256_16": "5612f4202c8e7f23",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/defect_gate.py",
+      "sha256_16": "2560dd4e4f685780",
+      "present": true
+    }
+  ]
+}

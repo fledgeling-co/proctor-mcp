@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0040",
+  "requirement": "REQ-029",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/tui-stop-halts-mcp-run.json",
+      "sha256_16": "523bcaf14e6bf4c8",
+      "present": true
+    },
+    {
+      "path": "evidence/tui-live-run.json",
+      "sha256_16": "e94676a344a7b421",
+      "present": true
+    },
+    {
+      "path": "evidence/tui-live-stopped.json",
+      "sha256_16": "cf60c9a7a11184e2",
+      "present": true
+    }
+  ]
+}

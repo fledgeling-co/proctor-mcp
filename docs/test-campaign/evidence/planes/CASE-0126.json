@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0126",
+  "requirement": "REQ-061",
+  "lane": null,
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "evidence/PRO-0088/gate-sabotage.txt",
+      "sha256_16": "a5ba483cf819d059",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0088/gate.md",
+      "sha256_16": "690f81bd1f28c57f",
+      "present": true
+    }
+  ]
+}

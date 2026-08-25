@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0624",
+  "requirement": "REQ-157",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "/Users/lukerhodes/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "sha256_16": "a70d753fe497b44f",
+      "present": true
+    }
+  ]
+}

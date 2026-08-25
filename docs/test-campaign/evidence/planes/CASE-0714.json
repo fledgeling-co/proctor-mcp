@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0714",
+  "requirement": "REQ-185",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/supervision_tui_pty_probe.py",
+      "sha256_16": "a4045b315b98752b",
+      "present": true
+    }
+  ]
+}

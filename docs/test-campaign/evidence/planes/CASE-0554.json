@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0554",
+  "requirement": "REQ-130",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0106/timeout-arming.json",
+      "sha256_16": "e559b4378fe34725",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/mutation_timeout_arm.py",
+      "sha256_16": "150e0415a6bdd5b7",
+      "present": true
+    }
+  ]
+}

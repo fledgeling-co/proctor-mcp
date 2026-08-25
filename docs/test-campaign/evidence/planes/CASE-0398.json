@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0398",
+  "requirement": "REQ-096",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/skill_doc_measure.py",
+      "sha256_16": "0d85692ad0d651ec",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/skill_doc_arm.py",
+      "sha256_16": "f49c1b9991ae0e8f",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/skill-doc-arm.txt",
+      "sha256_16": "a45d6324d0d26e8e",
+      "present": true
+    }
+  ]
+}

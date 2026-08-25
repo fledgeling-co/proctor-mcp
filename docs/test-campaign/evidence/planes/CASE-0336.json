@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0336",
+  "requirement": "REQ-086",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "sha256_16": "33c302654bc85382",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0099/sabotage-production-unchanged.txt",
+      "sha256_16": "2a36993d3432016e",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0320",
+  "requirement": "REQ-055",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "sha256_16": "33c302654bc85382",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/flow-write-caught.txt",
+      "sha256_16": "f3ca22a2550437be",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/flow-interlock-arming.txt",
+      "sha256_16": "3f1f2a0ad23dc7bc",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0006",
+  "requirement": "REQ-005",
+  "lane": null,
+  "oracle": "raster-visual",
+  "plane": "live-glass",
+  "placedBecause": "the raster-visual rung owes a display server",
+  "evidence": [
+    {
+      "path": "evidence/shots/surf-006-screen-capture.png",
+      "sha256_16": "ab31d8bf945d09bd",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "case": "CASE-0032",
+  "requirement": "REQ-028",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "evidence/overlay-capture-default.json",
+      "sha256_16": "6439c0f6a7a52f83",
+      "present": true
+    },
+    {
+      "path": "evidence/window-level-sharing.json",
+      "sha256_16": "32aa66d06323a80b",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0088/case-0032-population-before.json",
+      "sha256_16": "ff0fdde1509d737d",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0088/glass/overlay-population.json",
+      "sha256_16": "f2aa3c0077ff68f3",
+      "present": true
+    }
+  ]
+}

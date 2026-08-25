@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0253",
+  "requirement": "REQ-075",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/RunHistoryWiringTests.swift",
+      "sha256_16": "bca3af636b663a11",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorCoreTests/HistorySurfaceTests.swift",
+      "sha256_16": "b5ed0f75d51a157f",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/b-history-arming.txt",
+      "sha256_16": "dbffa63adfc70451",
+      "present": true
+    }
+  ]
+}

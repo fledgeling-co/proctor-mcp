@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0251",
+  "requirement": "REQ-073",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "sha256_16": "dd35d797988bcd86",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift",
+      "sha256_16": "49b095def1bda5db",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/gate-final.txt",
+      "sha256_16": "c05c044385f2643c",
+      "present": true
+    }
+  ]
+}

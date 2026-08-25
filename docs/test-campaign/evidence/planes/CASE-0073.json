@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0073",
+  "requirement": "REQ-046",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/census-control.txt",
+      "sha256_16": "1a8b4133305ea85a",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/seed_unclass.py",
+      "sha256_16": "3749d09a3ba499d1",
+      "present": true
+    }
+  ]
+}

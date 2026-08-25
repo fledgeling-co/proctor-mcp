@@ -1,0 +1,50 @@
+{
+  "case": "CASE-0069",
+  "requirement": "REQ-002",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/witness/a6-windows-before.json",
+      "sha256_16": "cb73e21c20fdbacd",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a6-windows-after.json",
+      "sha256_16": "3a3a8d0f621833e7",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a6-act.json",
+      "sha256_16": "3f20e61d85d5f6d1",
+      "present": true
+    },
+    {
+      "path": "sabotage docs/test-campaign/evidence/witness/a6-sabotage-act.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage docs/test-campaign/evidence/witness/a6-sabotage-windows-after.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage control docs/test-campaign/evidence/witness/a6-sabotage-control-act.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage control docs/test-campaign/evidence/witness/a6-sabotage-windows-before.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage control docs/test-campaign/evidence/witness/a6-sabotage-windows-control-after.json",
+      "sha256_16": null,
+      "present": false
+    }
+  ]
+}

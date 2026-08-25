@@ -1,0 +1,35 @@
+{
+  "case": "CASE-0371",
+  "requirement": "REQ-092",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/skill_doc_measure.py",
+      "sha256_16": "0d85692ad0d651ec",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/skill_doc_arm.py",
+      "sha256_16": "f49c1b9991ae0e8f",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0085/doc-measurement.txt",
+      "sha256_16": "2e894e3b25b76b43",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0085/doc-measurement-arming.txt",
+      "sha256_16": "c5137d7b5cfcc8d4",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0085/doc-description-anchor-arming.txt",
+      "sha256_16": "7928537d9aaf65d0",
+      "present": true
+    }
+  ]
+}

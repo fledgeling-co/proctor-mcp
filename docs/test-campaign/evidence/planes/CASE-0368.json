@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0368",
+  "requirement": "REQ-032",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "sha256_16": "34e70ac033c1b7a5",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/pro-0082/revocation-measurement.md",
+      "sha256_16": "b64b8e336654b230",
+      "present": true
+    }
+  ]
+}

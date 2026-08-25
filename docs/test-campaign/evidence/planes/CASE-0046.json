@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0046",
+  "requirement": "REQ-036",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/cli/exit-codes.txt",
+      "sha256_16": "d4ce4f740cdf19cd",
+      "present": true
+    },
+    {
+      "path": "evidence/cli/exit-codes-after-fix.txt",
+      "sha256_16": "1d3ecfdbf0586759",
+      "present": true
+    }
+  ]
+}

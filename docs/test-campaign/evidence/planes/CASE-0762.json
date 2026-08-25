@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0762",
+  "requirement": "REQ-200",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/CoveredTargetOcclusionWitnessTests.swift",
+      "sha256_16": "91f7f75228684f99",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorAgent/Session/SessionCursor.swift",
+      "sha256_16": "f9c66e566c060d6a",
+      "present": true
+    }
+  ]
+}

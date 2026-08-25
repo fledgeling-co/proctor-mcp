@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0078",
+  "requirement": "REQ-047",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/MutationSurvivorTests.swift",
+      "sha256_16": "3a2a2c0bb6bdca38",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/mutation-arming.txt",
+      "sha256_16": "69d037d1d54d553e",
+      "present": true
+    }
+  ]
+}

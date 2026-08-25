@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0113",
+  "requirement": "REQ-053",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "sha256_16": "eabbbee01185ba76",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt",
+      "sha256_16": "e637e9d1147e90b8",
+      "present": true
+    }
+  ]
+}

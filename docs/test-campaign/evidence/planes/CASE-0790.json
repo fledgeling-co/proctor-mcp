@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0790",
+  "requirement": "REQ-215",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/features-to-triage/108-native-ocr-and-high-dpi-zoom-inspector.md",
+      "sha256_16": "4d47f94b58f4a69d",
+      "present": true
+    },
+    {
+      "path": "docs/specs/spec-PRO-0116.md",
+      "sha256_16": "e78d13c8880327a1",
+      "present": true
+    }
+  ]
+}

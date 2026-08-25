@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0199",
+  "requirement": "REQ-061",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/PRO-0088/gate-final.txt",
+      "sha256_16": "7799823717b2a6aa",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0088/case-0199-0200-arming.txt",
+      "sha256_16": "7dfae5b39ac3b46f",
+      "present": true
+    }
+  ]
+}

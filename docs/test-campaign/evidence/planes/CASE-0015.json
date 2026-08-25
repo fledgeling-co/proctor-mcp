@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0015",
+  "requirement": "REQ-013",
+  "lane": null,
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/stability-sweep-5run.json",
+      "sha256_16": "f0acc06c994e405c",
+      "present": true
+    }
+  ]
+}

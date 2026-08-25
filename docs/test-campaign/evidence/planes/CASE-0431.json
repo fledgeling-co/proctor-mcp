@@ -1,0 +1,30 @@
+{
+  "case": "CASE-0431",
+  "requirement": "REQ-100",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/spec_citation_measure.py",
+      "sha256_16": "d74e24eb6b492441",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/spec_citation_arm.py",
+      "sha256_16": "4a70d03509d94ac1",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0101/provenance-measure.txt",
+      "sha256_16": "24ab017df0210838",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0101/provenance-arming.txt",
+      "sha256_16": "f13014639ee74904",
+      "present": true
+    }
+  ]
+}

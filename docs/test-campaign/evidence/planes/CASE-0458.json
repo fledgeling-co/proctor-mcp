@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0458",
+  "requirement": "REQ-108",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "sha256_16": "5394f68beb3bfa28",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "sha256_16": "d0f9c74fbda5a25a",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/mutation_seam_arm.py",
+      "sha256_16": "34b72b142988b4d7",
+      "present": true
+    }
+  ]
+}

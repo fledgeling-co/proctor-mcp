@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0732",
+  "requirement": "REQ-190",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/NativeOCRZoomTests.swift",
+      "sha256_16": "82929ace87fc997f",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorAgent/Capture/VisionOCR.swift",
+      "sha256_16": "382216e86fd8838b",
+      "present": true
+    }
+  ]
+}

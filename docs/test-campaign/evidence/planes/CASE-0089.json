@@ -1,0 +1,55 @@
+{
+  "case": "CASE-0089",
+  "requirement": "REQ-028",
+  "lane": null,
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "scripts/campaign/overlay_witness.sh",
+      "sha256_16": "1d763b032d5d836e",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/frame_content.swift",
+      "sha256_16": "33282c1aafccd0ea",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/windows-proctor.json",
+      "sha256_16": "dcf746b9957ff6a7",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/overlay-captures.json",
+      "sha256_16": "8a9a4886258a2d3e",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/subject-capture.json",
+      "sha256_16": "bf92451450118ac5",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/subject-content.json",
+      "sha256_16": "deba2e12ec898a7b",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/subject-axtext.json",
+      "sha256_16": "cdd6860440fd38aa",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/control-blank-content.json",
+      "sha256_16": "11bc918d00d0f031",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/subject.png",
+      "sha256_16": "e8d60260add742ce",
+      "present": true
+    }
+  ]
+}

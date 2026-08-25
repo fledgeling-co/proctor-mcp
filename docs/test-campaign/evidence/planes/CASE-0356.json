@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0356",
+  "requirement": "REQ-089",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",
+      "sha256_16": "34e70ac033c1b7a5",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/pro-0082/arming-gapfix.json",
+      "sha256_16": "772391fdb0d9c009",
+      "present": true
+    }
+  ]
+}

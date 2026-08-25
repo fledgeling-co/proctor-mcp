@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0074",
+  "requirement": "REQ-047",
+  "lane": null,
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/mutation-agent.json",
+      "sha256_16": "2f58bb491a7792c5",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/mutation-agent.txt",
+      "sha256_16": "381a12b0b94521e9",
+      "present": true
+    }
+  ]
+}

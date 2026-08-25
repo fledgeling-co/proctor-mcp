@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0045",
+  "requirement": "REQ-035",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/cli/audit-via.txt",
+      "sha256_16": "7204843cf8cfa16a",
+      "present": true
+    }
+  ]
+}

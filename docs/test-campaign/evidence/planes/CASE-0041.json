@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0041",
+  "requirement": "REQ-033",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/tui-live-readiness.json",
+      "sha256_16": "90d1fa252ef0f45b",
+      "present": true
+    },
+    {
+      "path": "evidence/tui-live-switches.json",
+      "sha256_16": "a24dad6fd7bd9c9c",
+      "present": true
+    }
+  ]
+}

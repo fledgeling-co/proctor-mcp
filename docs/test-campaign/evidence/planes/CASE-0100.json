@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0100",
+  "requirement": "REQ-049",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "evidence/shots/step-a3-walkthrough-primary-disabled.png",
+      "sha256_16": "d7d9f2b5dfc172dc",
+      "present": true
+    },
+    {
+      "path": "evidence/step-a3-walkthrough-primary-disabled.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "evidence/step-a3-walkthrough-primary-disabled-probe.json",
+      "sha256_16": null,
+      "present": false
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0134",
+  "requirement": "REQ-055",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0089/gate-after.txt",
+      "sha256_16": "46ff171d3b484e5c",
+      "present": true
+    }
+  ]
+}

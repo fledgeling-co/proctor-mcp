@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0285",
+  "requirement": "REQ-055",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "sha256_16": "33c302654bc85382",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/capture-write-caught.txt",
+      "sha256_16": "4e593ae527cfc202",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/capture-interlock-arming.txt",
+      "sha256_16": "8fe794634eddb9ad",
+      "present": true
+    }
+  ]
+}

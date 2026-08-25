@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0392",
+  "requirement": "REQ-094",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "sha256_16": "dd35d797988bcd86",
+      "present": true
+    },
+    {
+      "path": "design/surfaces/proctor-surfaces.html",
+      "sha256_16": "f30abd85de5fe5e7",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/full-suite-run2.txt",
+      "sha256_16": "4e4081e651ebe86a",
+      "present": true
+    }
+  ]
+}

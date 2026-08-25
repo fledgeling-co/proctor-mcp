@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0595",
+  "requirement": "REQ-147",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/shot_disposition.py",
+      "sha256_16": "7629f2d94a90c8c6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "sha256_16": "9f73ca0928aec0b6",
+      "present": true
+    }
+  ]
+}

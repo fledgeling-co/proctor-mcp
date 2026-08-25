@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0269",
+  "requirement": "REQ-064",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/status_literals.py",
+      "sha256_16": "a2481d678739b0f5",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt",
+      "sha256_16": "85638b76014930e2",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0026",
+  "requirement": "REQ-024",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/mcp-doctor-report.json",
+      "sha256_16": "850ab706a7abe236",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0154",
+  "requirement": "REQ-047",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",
+      "sha256_16": "e06b7e28f99c1672",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/mutation-agent.txt",
+      "sha256_16": "381a12b0b94521e9",
+      "present": true
+    }
+  ]
+}

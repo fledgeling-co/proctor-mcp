@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0563",
+  "requirement": "REQ-134",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/reckoning/reckoning_selftest.py",
+      "sha256_16": "2fa98f33529cd03f",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0106/reckoning-selftest.txt",
+      "sha256_16": "67ace97201d476a2",
+      "present": true
+    }
+  ]
+}

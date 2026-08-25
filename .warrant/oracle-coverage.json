@@ -56,16 +56,16 @@
    "total": 44
   },
   "surface-conformance": {
-   "coverage": 0.8348,
-   "covered": 96,
+   "coverage": 0.8376,
+   "covered": 98,
    "green": false,
    "lineage_gaps": 19,
    "surfaces_matched": 6,
    "threshold": 1.0,
-   "total": 115
+   "total": 117
   }
  },
- "generated_at": "2026-08-25T01:32:51.642010+00:00",
+ "generated_at": "2026-08-25T01:56:49.933802+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -280,9 +280,9 @@
    "unsourced": 0
   },
   {
-   "figures": 7,
+   "figures": 8,
    "file": "ui://menubar",
-   "sourced": 6,
+   "sourced": 7,
    "unsourced": 1
   },
   {
@@ -292,9 +292,9 @@
    "unsourced": 1
   },
   {
-   "figures": 35,
+   "figures": 36,
    "file": "ui://status-window",
-   "sourced": 27,
+   "sourced": 28,
    "unsourced": 8
   },
   {

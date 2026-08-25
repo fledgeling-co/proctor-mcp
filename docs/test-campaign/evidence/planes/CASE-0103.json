@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0103",
+  "requirement": "REQ-048",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0081/a2-arming.txt",
+      "sha256_16": "464bda47df339596",
+      "present": true
+    }
+  ]
+}

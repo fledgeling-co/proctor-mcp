@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0014",
+  "requirement": "REQ-012",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "evidence/test-suite-pass.log",
+      "sha256_16": "23feae2b4e529b45",
+      "present": true
+    }
+  ]
+}

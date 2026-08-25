@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0058",
+  "requirement": "REQ-042",
+  "lane": null,
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/mutation-wave10.txt",
+      "sha256_16": "3bede53fd210233a",
+      "present": true
+    },
+    {
+      "path": "evidence/mutation-wave10.json",
+      "sha256_16": "0deea2ae9afa8ae8",
+      "present": true
+    }
+  ]
+}

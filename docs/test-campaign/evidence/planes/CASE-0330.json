@@ -1,0 +1,35 @@
+{
+  "case": "CASE-0330",
+  "requirement": "REQ-055",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "sha256_16": "33c302654bc85382",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0099/witness-arming.txt",
+      "sha256_16": "08adeead0a9e0e0a",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0099/diversion-positive.txt",
+      "sha256_16": "5931ecb6d7d0315b",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0099/sabotage-production-unchanged.txt",
+      "sha256_16": "2a36993d3432016e",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0099/operator-census-after.tsv",
+      "sha256_16": "72a4efa86df0d4bb",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0754",
+  "requirement": "REQ-037",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/GuestMultiSessionQueueWitnessTests.swift",
+      "sha256_16": "f1a6be413cf974df",
+      "present": true
+    }
+  ]
+}

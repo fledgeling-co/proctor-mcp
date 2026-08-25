@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0272",
+  "requirement": "REQ-055",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "sha256_16": "33c302654bc85382",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt",
+      "sha256_16": "93943dc0e90abcb7",
+      "present": true
+    }
+  ]
+}

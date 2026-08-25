@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0575",
+  "requirement": "REQ-140",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "sha256_16": "9f73ca0928aec0b6",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0037",
+  "requirement": "REQ-031",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/menu-bar-rendered.json",
+      "sha256_16": "c0cc8f467e9fec27",
+      "present": true
+    }
+  ]
+}

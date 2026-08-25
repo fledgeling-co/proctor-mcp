@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0313",
+  "requirement": "REQ-083",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "sha256_16": "dd35d797988bcd86",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorUI/Walkthrough.swift",
+      "sha256_16": "813ed2bd53645ab4",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0086/arming.json",
+      "sha256_16": "34346b411d3c4629",
+      "present": true
+    }
+  ]
+}

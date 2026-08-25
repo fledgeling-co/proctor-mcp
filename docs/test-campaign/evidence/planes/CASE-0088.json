@@ -1,0 +1,35 @@
+{
+  "case": "CASE-0088",
+  "requirement": "REQ-023",
+  "lane": null,
+  "oracle": "effect-witness",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/ReflectorWitnessTests.swift",
+      "sha256_16": "fb0c6bb5c1d5a8c3",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/witness-w9-req023.txt",
+      "sha256_16": "415b5d15c8ca2d23",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/arming-w9-req023.txt",
+      "sha256_16": "3b7dc6fa0a4b5a58",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/suite-before-after.txt",
+      "sha256_16": "49d22f8588ac06fc",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/gate.txt",
+      "sha256_16": "71739270fc2f8886",
+      "present": true
+    }
+  ]
+}

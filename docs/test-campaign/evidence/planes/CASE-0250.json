@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0250",
+  "requirement": "REQ-073",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/status_literals.py",
+      "sha256_16": "a2481d678739b0f5",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/a-walkthrough-arming.txt",
+      "sha256_16": "0c812cc65c56136f",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/i-classifier-arming.txt",
+      "sha256_16": "85638b76014930e2",
+      "present": true
+    }
+  ]
+}

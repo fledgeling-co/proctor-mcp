@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0210",
+  "requirement": "REQ-067",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/defect-reconciliation.md",
+      "sha256_16": "a890a2d770140e4c",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/source-denominators.txt",
+      "sha256_16": "20703e2449e3e69f",
+      "present": true
+    }
+  ]
+}

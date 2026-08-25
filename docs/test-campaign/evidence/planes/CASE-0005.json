@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0005",
+  "requirement": "REQ-004",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/sck-capture-frame.json",
+      "sha256_16": "6c9d80ff3644d80c",
+      "present": true
+    }
+  ]
+}

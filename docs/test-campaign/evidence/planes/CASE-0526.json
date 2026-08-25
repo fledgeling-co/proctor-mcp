@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0526",
+  "requirement": "REQ-122",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0104/spec-citation-measure.txt",
+      "sha256_16": "699be8178daa6a48",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/spec_citation_measure.py",
+      "sha256_16": "d74e24eb6b492441",
+      "present": true
+    }
+  ]
+}

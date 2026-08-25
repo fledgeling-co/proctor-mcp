@@ -1,0 +1,55 @@
+{
+  "case": "CASE-0067",
+  "requirement": "REQ-007",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/witness/a4-act.json",
+      "sha256_16": "cf19a7f2b98b5171",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a4-poll.json",
+      "sha256_16": "3bbd123d149ec2b0",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a4c-burst.json",
+      "sha256_16": "5752085dc6c58ad6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a45b-act.json",
+      "sha256_16": "09d5aede611750b9",
+      "present": true
+    },
+    {
+      "path": "contrast docs/test-campaign/evidence/witness/a4-stranded-run-queue.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage docs/test-campaign/evidence/witness/a4-sabotage-tagged-poll.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage docs/test-campaign/evidence/witness/a4-sabotage-tagged-act.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage control docs/test-campaign/evidence/witness/a4-sabotage-untagged-poll.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage control docs/test-campaign/evidence/witness/a4-sabotage-untagged-act.json",
+      "sha256_16": null,
+      "present": false
+    }
+  ]
+}

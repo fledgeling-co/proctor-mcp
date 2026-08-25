@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0019",
+  "requirement": "REQ-017",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/guest-autoroute-refusal.json",
+      "sha256_16": "11a89956ad2738ed",
+      "present": true
+    }
+  ]
+}

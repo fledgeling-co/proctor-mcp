@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0246",
+  "requirement": "REQ-072",
+  "lane": "macos",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0084/arming.txt",
+      "sha256_16": "e606356e26479a58",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0084/automation-mode.txt",
+      "sha256_16": "9b209089c713cbe8",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0051",
+  "requirement": "REQ-041",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/overlay/entitlement-on-glass.txt",
+      "sha256_16": "01688d50a7ef3855",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0212",
+  "requirement": "REQ-067",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/test_instruments.py",
+      "sha256_16": "eb7194992a602bf6",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorCoreTests/CampaignInstrumentTests.swift",
+      "sha256_16": "414e84d1b457ccd7",
+      "present": true
+    }
+  ]
+}

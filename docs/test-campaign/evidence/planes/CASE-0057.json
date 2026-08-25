@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0057",
+  "requirement": "REQ-036",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/cli/sweep-refusal-honesty.txt",
+      "sha256_16": "8e2cfcd7b395583e",
+      "present": true
+    }
+  ]
+}

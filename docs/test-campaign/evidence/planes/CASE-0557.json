@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0557",
+  "requirement": "REQ-135",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0106/def226-adoption-arming.txt",
+      "sha256_16": "6293457d47d0ac33",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/shot_disposition.py",
+      "sha256_16": "7629f2d94a90c8c6",
+      "present": true
+    }
+  ]
+}

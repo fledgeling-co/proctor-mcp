@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0713",
+  "requirement": "REQ-031",
+  "lane": "macos",
+  "oracle": "effect-witness",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/MenuBarHierarchyWitnessTests.swift",
+      "sha256_16": "9af382d13c428ccd",
+      "present": true
+    }
+  ]
+}

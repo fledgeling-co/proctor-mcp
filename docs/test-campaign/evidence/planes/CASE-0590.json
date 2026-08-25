@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0590",
+  "requirement": "REQ-145",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/ledger_gate.py",
+      "sha256_16": "59eb407c26a2570a",
+      "present": true
+    },
+    {
+      "path": "docs/feature-specs/LEDGER.md",
+      "sha256_16": "e8e3b01e9d126e2c",
+      "present": true
+    }
+  ]
+}

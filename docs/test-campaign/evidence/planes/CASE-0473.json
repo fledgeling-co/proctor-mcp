@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0473",
+  "requirement": "REQ-112",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a capture or window witness off a display server, held at hermetic by the headless lane",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "sha256_16": "9f73ca0928aec0b6",
+      "present": true
+    },
+    {
+      "path": "scripts/build_test_campaign.py",
+      "sha256_16": "8a881c9edb6ef421",
+      "present": true
+    },
+    {
+      "path": "design/icon/icon-proctor-1024.png",
+      "sha256_16": "a67cf67af07e4971",
+      "present": true
+    }
+  ]
+}

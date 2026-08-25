@@ -1,0 +1,55 @@
+{
+  "case": "CASE-0064",
+  "requirement": "REQ-004",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/witness/a1b-capture.json",
+      "sha256_16": "71709f7550a2e05e",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a1b-agent-capture.png",
+      "sha256_16": "b0af4b4ac7494c83",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a1b-attach.json",
+      "sha256_16": "015dcc8e17eb1c14",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a1b-windows-helper.json",
+      "sha256_16": "dc8f1f029116202c",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a1b-axtext-helper.json",
+      "sha256_16": "972af36e6c6845d1",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a1b-axtree-helper.json",
+      "sha256_16": "3298180eb09074d1",
+      "present": true
+    },
+    {
+      "path": "negative control docs/test-campaign/evidence/witness/a1-capture.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "negative control docs/test-campaign/evidence/witness/a1-agent-capture.png",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage docs/test-campaign/evidence/witness/a1-sabotage-capture.json",
+      "sha256_16": null,
+      "present": false
+    }
+  ]
+}

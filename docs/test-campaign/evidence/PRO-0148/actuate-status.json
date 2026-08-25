@@ -1,0 +1,56 @@
+{
+  "subject": "Proctor's own Status window, on glass",
+  "recordedAt": "2026-08-25T01:44:41Z",
+  "app": {
+    "pid": 2614,
+    "bundle": "app.fledgeling.procter",
+    "binary": "/Applications/Proctor.app/Contents/MacOS/Proctor"
+  },
+  "recorder": "CGWindowListCopyWindowInfo over pid 2614 \u2014 a window server read Proctor does not control",
+  "menuActuation": {
+    "control": "Status",
+    "menuPath": [
+      "Window",
+      "Status"
+    ],
+    "drivenBy": "System Events AXPress, because proctor_act resolves a window handle before any step and the app is menu-bar-only (DEF-320)",
+    "windowsBefore": 0,
+    "windowsAfter": 1,
+    "windowAfter": {
+      "id": 25111,
+      "name": "Proctor",
+      "w": 760,
+      "h": 1000
+    }
+  },
+  "inWindowActuation": {
+    "window": "win:5:0",
+    "plane": "accessibility",
+    "completed": 2,
+    "foregroundMeasured": 0,
+    "steps": [
+      {
+        "control": "Show details for obscura",
+        "effect": "the tools section expanded",
+        "nodesAdded": 190,
+        "stateHashAfter": "073dc2b9f834b6ac08fa94d9c488b7895e84ca554d8e40a038b73b1108a2ad50"
+      },
+      {
+        "control": "Show history",
+        "effect": "a second window appeared on the window server",
+        "nodesChanged": 7,
+        "stateHashAfter": "978881a7cebf2693153970355b4a9d3c220b71144615cf2d873ac3e44e7203fb",
+        "windowsBefore": 1,
+        "windowsAfter": 2,
+        "windowAfter": {
+          "id": 25133,
+          "name": "History",
+          "w": 900,
+          "h": 492
+        }
+      }
+    ],
+    "finalHash": "978881a7cebf2693153970355b4a9d3c220b71144615cf2d873ac3e44e7203fb"
+  },
+  "whyThisIsAnEffect": "Each step read a state the control does not own: the first moved the window's canonical state hash, the second put a new window into CGWindowListCopyWindowInfo. A presence check on either button would have passed while its closure was empty."
+}

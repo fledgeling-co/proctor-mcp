@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0129",
+  "requirement": "REQ-061",
+  "lane": null,
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/PRO-0088/glass/capture-proctor-owned.json",
+      "sha256_16": "f7840849aad5a0fd",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0088/glass/capture-calculator.json",
+      "sha256_16": "a987504168bdc50b",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0088/glass/README.md",
+      "sha256_16": "f4fe55b1af25a7d8",
+      "present": true
+    }
+  ]
+}

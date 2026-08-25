@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0216",
+  "requirement": "REQ-061",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/source-denominators.txt",
+      "sha256_16": "20703e2449e3e69f",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt",
+      "sha256_16": "132b567de7c21b27",
+      "present": true
+    }
+  ]
+}

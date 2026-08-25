@@ -1,0 +1,30 @@
+{
+  "case": "CASE-0374",
+  "requirement": "REQ-093",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/AgentVerbBoundaryTests.swift",
+      "sha256_16": "d956e716f0540275",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0085/arming-A-hud-in-catalogue.txt",
+      "sha256_16": "31b125d51a8c2701",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0085/baseline.txt",
+      "sha256_16": "5b1771adae79a27c",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0085/full-suite.txt",
+      "sha256_16": "db680e87c31aae2f",
+      "present": true
+    }
+  ]
+}

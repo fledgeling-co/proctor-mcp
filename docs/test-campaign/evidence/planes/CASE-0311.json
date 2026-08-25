@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0311",
+  "requirement": "REQ-082",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "sha256_16": "dd35d797988bcd86",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0086/arming.json",
+      "sha256_16": "34346b411d3c4629",
+      "present": true
+    }
+  ]
+}

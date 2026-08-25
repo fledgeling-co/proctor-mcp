@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0467",
+  "requirement": "REQ-109",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/mutate_swift.py",
+      "sha256_16": "253122a5594b0c18",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/mutation_timeout_arm.py",
+      "sha256_16": "150e0415a6bdd5b7",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0092/timeout-arming.json",
+      "sha256_16": "4519abad539a6226",
+      "present": true
+    }
+  ]
+}

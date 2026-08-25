@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0476",
+  "requirement": "REQ-113",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "sha256_16": "9f73ca0928aec0b6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/sweeps-kl.json",
+      "sha256_16": "ee4117f7cfb6c251",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/sweepL-halfopen.json",
+      "sha256_16": "9d979e90a254bd29",
+      "present": true
+    }
+  ]
+}

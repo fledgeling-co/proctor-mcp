@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0153",
+  "requirement": "REQ-047",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",
+      "sha256_16": "e06b7e28f99c1672",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0091/instrument-arming.txt",
+      "sha256_16": "2d557b2f227ec71e",
+      "present": true
+    }
+  ]
+}

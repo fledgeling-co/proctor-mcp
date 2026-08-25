@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0030",
+  "requirement": "REQ-006",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "evidence/overlay-lifecycle.json",
+      "sha256_16": "8ac6ddc8281de65f",
+      "present": true
+    },
+    {
+      "path": "evidence/glass-probe.json",
+      "sha256_16": "1ae0656040d9fb23",
+      "present": true
+    }
+  ]
+}

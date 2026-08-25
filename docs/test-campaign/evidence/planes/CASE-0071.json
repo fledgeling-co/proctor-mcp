@@ -1,0 +1,30 @@
+{
+  "case": "CASE-0071",
+  "requirement": "REQ-014",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/witness/a8-axtree-helper.json",
+      "sha256_16": "3d97803292f86228",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a8-assert.json",
+      "sha256_16": "fc4e0eb3ed8c9a12",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a8-snapshot.json",
+      "sha256_16": "bb2cd38e2d6dbe24",
+      "present": true
+    },
+    {
+      "path": "sabotage docs/test-campaign/evidence/witness/a8-sabotage-axtree.json",
+      "sha256_16": null,
+      "present": false
+    }
+  ]
+}

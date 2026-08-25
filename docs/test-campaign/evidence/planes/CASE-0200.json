@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0200",
+  "requirement": "REQ-065",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0096/gate-inconclusive-exemption.txt",
+      "sha256_16": "c25896b54604cb13",
+      "present": true
+    }
+  ]
+}

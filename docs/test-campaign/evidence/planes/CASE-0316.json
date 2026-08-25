@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0316",
+  "requirement": "REQ-082",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0086/glass-tree-read.json",
+      "sha256_16": "0372452a07deac13",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason.png",
+      "sha256_16": "a10a7e65e96e0358",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason-key.png",
+      "sha256_16": "6bb5be215cc932dd",
+      "present": true
+    }
+  ]
+}

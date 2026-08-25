@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0220",
+  "requirement": "REQ-056",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/ProctorCoreTests.swift",
+      "sha256_16": "8f59fe18581d55c6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/gate-after.txt",
+      "sha256_16": "f7b00c6a75a849fd",
+      "present": true
+    }
+  ]
+}

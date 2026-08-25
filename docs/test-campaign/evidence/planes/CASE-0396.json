@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0396",
+  "requirement": "REQ-077",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/unwrap-census.md",
+      "sha256_16": "ae90b369209c2e45",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/unwrap-census-raw.txt",
+      "sha256_16": "183b51c04050e11a",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/full-suite-run2.txt",
+      "sha256_16": "4e4081e651ebe86a",
+      "present": true
+    }
+  ]
+}

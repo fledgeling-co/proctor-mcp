@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0135",
+  "requirement": "REQ-056",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0089/arming.txt",
+      "sha256_16": "4b49128663dee41a",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0089/under-load.txt",
+      "sha256_16": "ffd6b6c98844db07",
+      "present": true
+    }
+  ]
+}

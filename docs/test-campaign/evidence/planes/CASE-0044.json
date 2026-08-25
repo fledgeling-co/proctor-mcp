@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0044",
+  "requirement": "REQ-034",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/cli/verb-derivation.txt",
+      "sha256_16": "a126ffc491c62262",
+      "present": true
+    },
+    {
+      "path": "evidence/cli/verbs.txt",
+      "sha256_16": "70fe762ab8ae1a0b",
+      "present": true
+    }
+  ]
+}

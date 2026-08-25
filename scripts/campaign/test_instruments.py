@@ -29,6 +29,7 @@ import importlib.util
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -37,6 +38,28 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 VERBOSE = "-v" in sys.argv
 RESULTS: list[tuple[bool, str]] = []
+
+
+CAMPAIGN_DIR = ROOT / "docs" / "test-campaign"
+
+
+def _newest_campaign_py() -> Path | None:
+    """The installed test-campaign's own `campaign.py`, newest version first.
+
+    Pinned to a version string this drifts silently on the next plugin upgrade,
+    and the run then measures a copy nobody is using. Sorting the cache by
+    version tuple costs one listdir and cannot go stale.
+    """
+    cache = Path.home() / ".claude/plugins/cache/fledgeling-plugins/test-campaign"
+    if not cache.is_dir():
+        return None
+    def key(d: Path) -> tuple:
+        return tuple(int(x) if x.isdigit() else -1 for x in d.name.split("."))
+    for d in sorted((x for x in cache.iterdir() if x.is_dir()), key=key, reverse=True):
+        candidate = d / "skills/test-campaign/scripts/campaign.py"
+        if candidate.is_file():
+            return candidate
+    return None
 
 
 def check(ok: bool, label: str, detail: str = "") -> None:
@@ -2528,6 +2551,67 @@ def test_brief_108_retirement_verification() -> None:
     text = brief.read_text(encoding="utf-8")
     check("status: retired" in text and "spec-PRO-0116.md" in text, "brief 108 is marked retired citing spec-PRO-0116.md", text[:200])
 
+
+# ── The three censuses test-campaign 0.14.1 added ───────────────────────────
+#
+# `campaign.py check` reports each of Planes, Journeys and Controls as
+# `NOT DECLARED` when nothing populates it, and a census over an undeclared
+# population is the empty-denominator failure rather than a clean result. So
+# the check here is that the authoritative instrument prints a count for all
+# three — this reads campaign.py's own output rather than recomputing the
+# rules, because a second copy of somebody else's gate drifts from it silently.
+def test_three_censuses_are_declared() -> None:
+    campaign_py = _newest_campaign_py()
+    if campaign_py is None:
+        check(False, "the installed test-campaign's campaign.py is findable",
+              "no version under ~/.claude/plugins/cache/fledgeling-plugins/test-campaign "
+              "carries scripts/campaign.py — an absent instrument is a lane failure, not a pass")
+        return
+    out = subprocess.run([sys.executable, str(campaign_py), "check", str(CAMPAIGN_DIR)],
+                         capture_output=True, text=True)
+    check(out.returncode == 0,
+          f"campaign.py check clears with the three censuses declared ({campaign_py.parts[-4]})",
+          f"exit {out.returncode}: {out.stdout[-400:]}")
+    for census in ("Planes", "Journeys", "Controls"):
+        line = next((l for l in out.stdout.splitlines() if l.startswith(f"{census}:")), "")
+        check(bool(line) and "NOT DECLARED" not in line,
+              f"the {census} census is declared, not absent", line or "no line printed")
+
+
+# A plane placement is only worth reading if it was derived rather than typed,
+# so the census recomputes from its rules and the gate refuses a passing case
+# that names none, or one resting higher than its lane reached.
+def test_plane_census_places_every_passing_case() -> None:
+    script = ROOT / "scripts" / "campaign" / "plane_census.py"
+    out = subprocess.run([sys.executable, str(script), str(CAMPAIGN_DIR), "--gate"],
+                         capture_output=True, text=True)
+    check(out.returncode == 0, "every passing case names a plane its lane can reach",
+          out.stdout.strip().splitlines()[-1] if out.stdout.strip() else out.stderr[:200])
+    check("live-glass" in out.stdout and "in-tree" in out.stdout,
+          "the census prints a count per plane rather than one blended figure",
+          out.stdout[-200:])
+
+    # The negative arm: a case whose plane the rules do not support is rewritten
+    # rather than preserved, so an edited registry cannot carry a placement past
+    # this gate. A run over a copy proves the rules decide, not the file.
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td) / "campaign"
+        shutil.copytree(CAMPAIGN_DIR, d)
+        cases = json.loads((d / "cases.json").read_text())
+        seq = cases if isinstance(cases, list) else (cases.get("case") or cases.get("cases"))
+        for c in seq:
+            c["plane"] = "in-tree"
+        (d / "cases.json").write_text(json.dumps(cases, indent=2) + "\n")
+        subprocess.run([sys.executable, str(script), str(d), "--write"],
+                       capture_output=True, text=True)
+        after = json.loads((d / "cases.json").read_text())
+        seq2 = after if isinstance(after, list) else (after.get("case") or after.get("cases"))
+        planes = {c.get("plane") for c in seq2}
+        check(planes != {"in-tree"},
+              "a registry flattened to one plane is re-derived rather than believed",
+              f"planes after rewrite: {sorted(planes)}")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2578,7 +2662,9 @@ def main() -> int:
                test_warrant_census_classes_and_surface_coverage,
                test_warrant_release_gate_and_export_verification,
                test_guest_multisession_queue_witness_characterization,
-               test_reckon_brief_join_rate_and_retirement_ladder):
+               test_reckon_brief_join_rate_and_retirement_ladder,
+               test_three_censuses_are_declared,
+               test_plane_census_places_every_passing_case):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

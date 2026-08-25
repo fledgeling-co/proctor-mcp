@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0447",
+  "requirement": "REQ-103",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0103/cache-1.0.0-crash.txt",
+      "sha256_16": "eeff593421fae29d",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0103/published-take.txt",
+      "sha256_16": "41ec71cdb9edc1ce",
+      "present": true
+    }
+  ]
+}

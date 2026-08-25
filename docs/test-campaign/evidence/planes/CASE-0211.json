@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0211",
+  "requirement": "REQ-068",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt",
+      "sha256_16": "8801ae30a99545d3",
+      "present": true
+    }
+  ]
+}

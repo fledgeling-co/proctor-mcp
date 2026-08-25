@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0702",
+  "requirement": "REQ-180",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift",
+      "sha256_16": "6dc7237c41d3cbc5",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/subprocess_witness.py",
+      "sha256_16": "5f6ea0c17dab6884",
+      "present": true
+    }
+  ]
+}

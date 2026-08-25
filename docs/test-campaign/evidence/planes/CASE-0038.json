@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0038",
+  "requirement": "REQ-018",
+  "lane": null,
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/cli-json-identical.json",
+      "sha256_16": "86076afdfebbc69f",
+      "present": true
+    }
+  ]
+}

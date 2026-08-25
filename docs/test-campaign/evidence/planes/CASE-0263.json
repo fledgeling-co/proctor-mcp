@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0263",
+  "requirement": "REQ-074",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "sha256_16": "49fb2355b0617426",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorCore/StatusSurface.swift",
+      "sha256_16": "7a3bf568a9d31d27",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt",
+      "sha256_16": "1e20dd9c11383cb5",
+      "present": true
+    }
+  ]
+}

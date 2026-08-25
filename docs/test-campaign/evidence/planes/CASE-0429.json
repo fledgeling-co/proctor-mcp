@@ -1,0 +1,35 @@
+{
+  "case": "CASE-0429",
+  "requirement": "REQ-097",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0102/arming/arming-D-full-prefix.txt",
+      "sha256_16": "52bc7bba4a9763cb",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0102/arming/arming-C-post-critic.txt",
+      "sha256_16": "6574561aeaaf919a",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0102/after/run.txt",
+      "sha256_16": "39ff0b7c9887e25d",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0102/arming/selftest-green.txt",
+      "sha256_16": "48a31e242783cb66",
+      "present": true
+    }
+  ]
+}

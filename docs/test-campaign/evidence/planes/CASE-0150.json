@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0150",
+  "requirement": "REQ-057",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0091/def041-denominator.txt",
+      "sha256_16": "57734e018cb5db31",
+      "present": true
+    }
+  ]
+}

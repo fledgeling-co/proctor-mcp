@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0760",
+  "requirement": "REQ-043",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/window_occlusion_witness.py",
+      "sha256_16": "18ca7e8b86583887",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "sha256_16": "9f73ca0928aec0b6",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0393",
+  "requirement": "REQ-095",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/BrowserLaneWiringTests.swift",
+      "sha256_16": "e02f9a87a1e66c42",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/arming-def165.txt",
+      "sha256_16": "1a12a3ce2f5e5a64",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/full-suite-run2.txt",
+      "sha256_16": "4e4081e651ebe86a",
+      "present": true
+    }
+  ]
+}

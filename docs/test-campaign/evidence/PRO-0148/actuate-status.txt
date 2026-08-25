@@ -1,0 +1,9 @@
+PRO-0148 control actuation witness — Proctor's own menu-bar commands, on glass
+date: Tue 25 Aug 2026 11:43:35 AEST
+app pid: 2614 (/Applications/Proctor.app/Contents/MacOS/Proctor)
+
+== BEFORE: windows owned by pid 2614 ==
+(none) Traceback (most recent call last):
+  File "<string>", line 2, in <module>
+ModuleNotFoundError: No module named 'Quartz'
+

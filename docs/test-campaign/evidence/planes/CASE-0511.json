@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0511",
+  "requirement": "REQ-120",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",
+      "sha256_16": "4c029f518107b28a",
+      "present": true
+    }
+  ]
+}

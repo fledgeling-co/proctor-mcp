@@ -1,0 +1,50 @@
+{
+  "case": "CASE-0063",
+  "requirement": "REQ-045",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/PRO-0079/blind-findings-before.txt",
+      "sha256_16": "979b75cabd7e6a35",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0079/classification.tsv",
+      "sha256_16": "24c14333ccb1992c",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0079/rate.txt",
+      "sha256_16": "56602ae198085612",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0079/arming-control.txt",
+      "sha256_16": "eb77b0e5219b179b",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0079/reader-sensitivity.txt",
+      "sha256_16": "7a451d3a2aa3339d",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0079/out-of-family-review-grok.md",
+      "sha256_16": "a97ff1fa67721129",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0079/blind-findings-after.txt",
+      "sha256_16": "e70f30c36ed0824e",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0079/gate-test-sh.txt",
+      "sha256_16": "700dcf7b2c081880",
+      "present": true
+    }
+  ]
+}

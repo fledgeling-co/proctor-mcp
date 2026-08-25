@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0056",
+  "requirement": "REQ-037",
+  "lane": "guest-glass",
+  "oracle": "interactive-glass",
+  "plane": "live-external",
+  "placedBecause": "the guest lane runs outside this host's process tree",
+  "evidence": [
+    {
+      "path": "evidence/guest/a1-guest-calculator-4x7.png",
+      "sha256_16": "ecfe3fb1509a9741",
+      "present": true
+    },
+    {
+      "path": "evidence/guest/a1-attached-session-transcript.txt",
+      "sha256_16": "1ac3d2a1415d4695",
+      "present": true
+    },
+    {
+      "path": "evidence/guest/a1-guest-doctor.json",
+      "sha256_16": "3dc0ad5a038cb43f",
+      "present": true
+    }
+  ]
+}

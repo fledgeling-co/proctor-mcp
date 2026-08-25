@@ -1,0 +1,35 @@
+{
+  "case": "CASE-0271",
+  "requirement": "REQ-055",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",
+      "sha256_16": "33c302654bc85382",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/new-case-arming.txt",
+      "sha256_16": "93943dc0e90abcb7",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/structural-zero-arming.txt",
+      "sha256_16": "622d169bc33833b2",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/capture-write-caught.txt",
+      "sha256_16": "4e593ae527cfc202",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/flow-write-caught.txt",
+      "sha256_16": "f3ca22a2550437be",
+      "present": true
+    }
+  ]
+}

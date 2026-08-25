@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0291",
+  "requirement": "REQ-080",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/PeerReclaimWiringTests.swift",
+      "sha256_16": "1c6e75db348a2392",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0093/sabotages.txt",
+      "sha256_16": "cb8676aaa8468477",
+      "present": true
+    }
+  ]
+}

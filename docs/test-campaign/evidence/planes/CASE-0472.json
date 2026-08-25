@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0472",
+  "requirement": "REQ-111",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a capture or window witness off a display server, held at hermetic by the headless lane",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0107/capture-lineage-before.txt",
+      "sha256_16": "29dbbea357647d37",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0107/capture-lineage-after.txt",
+      "sha256_16": "5bade7f2ebb67570",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/captures.json",
+      "sha256_16": "d4324c53eca04deb",
+      "present": true
+    }
+  ]
+}

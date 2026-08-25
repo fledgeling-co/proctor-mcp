@@ -1,0 +1,50 @@
+{
+  "case": "CASE-0080",
+  "requirement": "REQ-035",
+  "lane": null,
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "sha256_16": "1de4413e4e03cbd8",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/arming-w1-req035.txt",
+      "sha256_16": "62982eba60c350f3",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/suite-before-after.txt",
+      "sha256_16": "49d22f8588ac06fc",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/gate.txt",
+      "sha256_16": "71739270fc2f8886",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt",
+      "sha256_16": "94a492b42ea85eed",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt",
+      "sha256_16": "936dc913e86025f2",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/arming-forger-rawpeer.txt",
+      "sha256_16": "1d8626ea38e4b99b",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/remeasure-forged-peer.txt",
+      "sha256_16": "a485bd1b8ffcad22",
+      "present": true
+    }
+  ]
+}

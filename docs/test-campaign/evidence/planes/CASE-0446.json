@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0446",
+  "requirement": "REQ-103",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "sha256_16": "62129cca05a5adfc",
+      "present": true
+    },
+    {
+      "path": "scripts/reckoning/reckoning.py",
+      "sha256_16": "263b137fd9ae43fb",
+      "present": true
+    }
+  ]
+}

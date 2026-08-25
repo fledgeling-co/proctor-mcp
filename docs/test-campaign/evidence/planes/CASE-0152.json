@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0152",
+  "requirement": "REQ-046",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0091/def030-both-passes-armed.txt",
+      "sha256_16": "ea27c99407bc8b8c",
+      "present": true
+    }
+  ]
+}

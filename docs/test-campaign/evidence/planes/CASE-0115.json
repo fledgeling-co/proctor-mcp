@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0115",
+  "requirement": "REQ-053",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",
+      "sha256_16": "eabbbee01185ba76",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0087/arming.txt",
+      "sha256_16": "0ac3f56139869dc6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0087/wedge-after-blocking.txt",
+      "sha256_16": "3c8770e141bd62e0",
+      "present": true
+    }
+  ]
+}

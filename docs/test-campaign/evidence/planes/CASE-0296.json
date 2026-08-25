@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0296",
+  "requirement": "REQ-081",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/ContentionTests.swift",
+      "sha256_16": "348ea9665977ea63",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorAgentTests/TakeoverWiringTests.swift",
+      "sha256_16": "eacea102ac9eaf16",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0093/sabotages.txt",
+      "sha256_16": "cb8676aaa8468477",
+      "present": true
+    }
+  ]
+}

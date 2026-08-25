@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0282",
+  "requirement": "REQ-076",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/RestartWatchTests.swift",
+      "sha256_16": "910a34bce3485acc",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/delay-arming.txt",
+      "sha256_16": "1e42738a38c99ae7",
+      "present": true
+    }
+  ]
+}

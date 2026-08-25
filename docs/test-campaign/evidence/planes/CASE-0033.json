@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0033",
+  "requirement": "REQ-030",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/tui-capture-100x30.json",
+      "sha256_16": "ef8ed88074646ce2",
+      "present": true
+    },
+    {
+      "path": "evidence/tui-capture-80x24.json",
+      "sha256_16": "59af82b1b95bc32b",
+      "present": true
+    }
+  ]
+}

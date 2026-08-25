@@ -3350,3 +3350,35 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `ledger_gate.py` | **0** | **147 ledger rows · 147 specs on disk · 0 declared without spec** |
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (139 briefs: 139 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | **952 rows reconciled**, gate clean |
+
+## Wave 27 — The three undeclared censuses (2026-08-25)
+
+**Status:** Wave 27 open on `main`. Item 1 (the censuses) landed; PRO-0122..PRO-0147 remain `Ready for AI` and are this wave's build queue.
+**Why this wave exists:** test-campaign 0.14.1 added Planes, Journeys and Controls, and this campaign reported all three `NOT DECLARED`. A census over an undeclared population is the empty-denominator failure, so a green verdict beside three absent censuses was the thing to fix before anything else in the backlog.
+
+### What landed
+
+| Census | Before | After |
+|---|---|---|
+| Planes | NOT DECLARED | in-tree 147 · hermetic 290 · live-glass 28 · live-external 1 |
+| Journeys | NOT DECLARED | 10 declared, 6 critical · boundaries 43/50 cut |
+| Controls | NOT DECLARED | 3 of 34 actuated, across 2 surfaces that declare any |
+
+- `scripts/campaign/plane_census.py` places every case by a written rule and re-derives on `--write`, so an edited plane the rules no longer support is rewritten rather than preserved. Evidence artefacts are opened and classed by what produced them: a Swift Testing run leaves `Test run with N tests`, an instrument leaves anything else.
+- Journeys are the ten existing critical flows promoted into 0.14.1's vocabulary. Six cut all five durable boundaries and carry `critical: true`; four name the boundaries they do not cut and why, rather than claiming a completeness the evidence has not got.
+- Controls are declared on SURF-008 (14, read from the running app's own accessibility tree) and SURF-010 (the 20 `CommandSurface.all` publishes). CASE-0791 and CASE-0792 actuate three of them on glass against the signed build at pid 2614, witnessed by `CGWindowListCopyWindowInfo` — a window-server read Proctor does not control.
+- **DEF-336 opened:** `proctor_act` cannot actuate a menu-bar-only app, because every step resolves a window handle before it runs. `proctor_menu` reads the full 165-item menu bar from the app handle and `proctor_act` refuses the same `menuPath` with `windowNotFound`, so the command that would open the first window is unreachable and Proctor cannot drive its own status item. CASE-0792's actuation had to travel through System Events, and the case says so.
+
+### Standing Gates on `main`
+
+| Gate on `main` | Exit | Reading |
+|---|:---:|---|
+| `scripts/test.sh` | **0** | **2,123 tests in 266 suites passed** (0 failures) |
+| `campaign.py check` | **0** | 466 pass · 3 n/a of **469**; all three censuses declared |
+| `strict-check.py` | **0** | **ratchet 407 held** (raised from 405 by CASE-0791/0792) |
+| `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
+| `capture-lineage.py --gate` | **0** | **ratchet 6 held** |
+| `ledger_gate.py` | **0** | **147 ledger rows · 147 specs on disk · 0 declared without spec** |
+| `spec_citation_measure.py` | **0** | **19/19** (144 briefs: 139 claimed, 5 registered, 0 unclaimed) |
+| `test_instruments.py` | **0** | **302 passed, 0 failed** (+7: the census declarations and the plane re-derivation arm) |
+| `reckon.py check` | **0** | **960 rows** · broken 1 (DEF-336) · unmeasured 23 · undecided 113 · verified-done 795 |

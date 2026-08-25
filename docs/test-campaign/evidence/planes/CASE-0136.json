@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0136",
+  "requirement": "REQ-056",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0089/under-load.txt",
+      "sha256_16": "ffd6b6c98844db07",
+      "present": true
+    }
+  ]
+}

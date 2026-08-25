@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0454",
+  "requirement": "REQ-106",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0103/cadence-and-report-shape.txt",
+      "sha256_16": "4b91a95ac1354015",
+      "present": true
+    },
+    {
+      "path": "docs/reckoning/2026-08-22-2bdc808/delta.md",
+      "sha256_16": "8a4d05cefb6232ca",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",
+      "sha256_16": "62129cca05a5adfc",
+      "present": true
+    }
+  ]
+}

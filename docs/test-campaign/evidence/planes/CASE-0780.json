@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0780",
+  "requirement": "REQ-210",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/cross_automation_yield_witness.py",
+      "sha256_16": "ce0d18425b875e81",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+      "sha256_16": "7e4969966e89f59c",
+      "present": true
+    }
+  ]
+}

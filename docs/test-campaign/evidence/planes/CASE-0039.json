@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0039",
+  "requirement": "REQ-032",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "evidence/shots/surf-008-status-window.png",
+      "sha256_16": "10480d409313135f",
+      "present": true
+    },
+    {
+      "path": "evidence/shots/mock/surf-008-status-window.png",
+      "sha256_16": "fc408b6c3e18c79f",
+      "present": true
+    }
+  ]
+}

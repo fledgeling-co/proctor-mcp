@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0318",
+  "requirement": "REQ-082",
+  "lane": "macos-glass",
+  "oracle": "raster-visual",
+  "plane": "live-glass",
+  "placedBecause": "the raster-visual rung owes a display server",
+  "evidence": [
+    {
+      "path": "evidence/PRO-0086/walkthrough-permissions-reason.png",
+      "sha256_16": "a10a7e65e96e0358",
+      "present": true
+    },
+    {
+      "path": "evidence/PRO-0086/walkthrough-permissions-reason-key.png",
+      "sha256_16": "6bb5be215cc932dd",
+      "present": true
+    }
+  ]
+}

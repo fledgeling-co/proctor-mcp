@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0477",
+  "requirement": "REQ-112",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0107/shot-audit.json",
+      "sha256_16": "9f73ca0928aec0b6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/hud-capture-channels.json",
+      "sha256_16": "e34c5d91101682e3",
+      "present": true
+    }
+  ]
+}

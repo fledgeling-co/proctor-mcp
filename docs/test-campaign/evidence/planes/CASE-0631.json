@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0631",
+  "requirement": "REQ-160",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/ReadIsolationPolicyTests.swift",
+      "sha256_16": "f20f580d703c12d6",
+      "present": true
+    }
+  ]
+}

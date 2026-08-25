@@ -1,0 +1,35 @@
+{
+  "case": "CASE-0104",
+  "requirement": "REQ-048",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0081/a2-arming-baseline.txt",
+      "sha256_16": "ff620592f57cf1ca",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0081/a2-baseline-pre-comparison.txt",
+      "sha256_16": "3dcb48c101603457",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0081/a2-baseline-bite.txt",
+      "sha256_16": "9efc116df3800a50",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json",
+      "sha256_16": "3ba617814f00ba1a",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json",
+      "sha256_16": "ef3e9d4c315db3d3",
+      "present": true
+    }
+  ]
+}

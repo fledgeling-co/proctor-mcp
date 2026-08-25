@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0024",
+  "requirement": "REQ-022",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/gatekeeper.json",
+      "sha256_16": "a75e9a2a92d112c9",
+      "present": true
+    },
+    {
+      "path": "evidence/gatekeeper-spctl.txt",
+      "sha256_16": "b573b828114f733f",
+      "present": true
+    }
+  ]
+}

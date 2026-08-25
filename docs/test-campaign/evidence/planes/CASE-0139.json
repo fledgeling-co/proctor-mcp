@@ -1,0 +1,40 @@
+{
+  "case": "CASE-0139",
+  "requirement": "REQ-056",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0089/wall-clock-census.txt",
+      "sha256_16": "0ce94f47f01fe8c0",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0096/census-arm-broken.txt",
+      "sha256_16": "999434df8d8ffbba",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0096/census-arm-pinned.txt",
+      "sha256_16": "b2130f8e60ffecfe",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0096/census-live.txt",
+      "sha256_16": "63c25144c552dcf6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/census-after.txt",
+      "sha256_16": "d1b248e07ef59b6b",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt",
+      "sha256_16": "5612f4202c8e7f23",
+      "present": true
+    }
+  ]
+}

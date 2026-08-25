@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0217",
+  "requirement": "REQ-061",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt",
+      "sha256_16": "132b567de7c21b27",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/campaign-check-after.txt",
+      "sha256_16": "8176a6a4d0982800",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0213",
+  "requirement": "REQ-067",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/test_instruments.py",
+      "sha256_16": "eb7194992a602bf6",
+      "present": true
+    }
+  ]
+}

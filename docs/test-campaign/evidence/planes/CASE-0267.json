@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0267",
+  "requirement": "REQ-073",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
+      "sha256_16": "dd35d797988bcd86",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/a-walkthrough-arming.txt",
+      "sha256_16": "0c812cc65c56136f",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0043",
+  "requirement": "REQ-033",
+  "lane": "macos",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/tui-history-pane.txt",
+      "sha256_16": "aa6b55a1798ba1c2",
+      "present": true
+    }
+  ]
+}

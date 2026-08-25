@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0471",
+  "requirement": "REQ-108",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/MutationSeamTests.swift",
+      "sha256_16": "5394f68beb3bfa28",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+      "sha256_16": "d0f9c74fbda5a25a",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorAgent/Dispatch.swift",
+      "sha256_16": "d9f95a57d2ebeeae",
+      "present": true
+    }
+  ]
+}

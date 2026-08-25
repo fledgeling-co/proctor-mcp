@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0559",
+  "requirement": "REQ-137",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/test_instruments.py",
+      "sha256_16": "eb7194992a602bf6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0106/instrument-checks.txt",
+      "sha256_16": "5f62dda01fb4db55",
+      "present": true
+    }
+  ]
+}

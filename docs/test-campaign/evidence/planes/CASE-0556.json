@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0556",
+  "requirement": "REQ-132",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0106/seam-arming.json",
+      "sha256_16": "c05f0087ab834bd6",
+      "present": true
+    }
+  ]
+}

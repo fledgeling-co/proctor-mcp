@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0156",
+  "requirement": "REQ-048",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0091/plugin-gate-tests.txt",
+      "sha256_16": "1c1398766216a327",
+      "present": true
+    }
+  ]
+}

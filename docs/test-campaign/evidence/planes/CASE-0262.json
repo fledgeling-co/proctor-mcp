@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0262",
+  "requirement": "REQ-075",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/AgentVerbsWiringTests.swift",
+      "sha256_16": "d69344bf78586ef7",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",
+      "sha256_16": "49fb2355b0617426",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/g-surfaces-arming.txt",
+      "sha256_16": "1e20dd9c11383cb5",
+      "present": true
+    }
+  ]
+}

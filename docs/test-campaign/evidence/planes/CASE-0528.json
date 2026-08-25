@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0528",
+  "requirement": "REQ-122",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",
+      "sha256_16": "04a390d28e220e98",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0104/gemini-review.md",
+      "sha256_16": "a81af2d902ce3c0e",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0070",
+  "requirement": "REQ-012",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/witness/a7-axnotify-helper.json",
+      "sha256_16": "1deb1a06134ff157",
+      "present": true
+    },
+    {
+      "path": "sabotage docs/test-campaign/evidence/witness/a7-sabotage-axnotify.json",
+      "sha256_16": null,
+      "present": false
+    }
+  ]
+}

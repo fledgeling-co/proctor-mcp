@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0293",
+  "requirement": "REQ-080",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/PeerLivenessTests.swift",
+      "sha256_16": "d0fd671f4fc38b04",
+      "present": true
+    }
+  ]
+}

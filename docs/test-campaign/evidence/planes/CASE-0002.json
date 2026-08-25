@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0002",
+  "requirement": "REQ-001",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/sweepL-privilege-separation.json",
+      "sha256_16": "b6ca8ebeaca01462",
+      "present": true
+    },
+    {
+      "path": "evidence/test-suite-pass.log",
+      "sha256_16": "23feae2b4e529b45",
+      "present": true
+    }
+  ]
+}

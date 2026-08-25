@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0449",
+  "requirement": "REQ-104",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0103/metamorphic-decomposition.txt",
+      "sha256_16": "82d299c9f62f9216",
+      "present": true
+    },
+    {
+      "path": "docs/reckoning/2026-08-22-2bdc808/delta.json",
+      "sha256_16": "8173168443ffabfa",
+      "present": true
+    }
+  ]
+}

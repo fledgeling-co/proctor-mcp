@@ -1803,7 +1803,23 @@
         "about-tab"
       ],
       "description": "Native status window rendering doctor diagnostics, audit logs, and settings",
-      "shot": "evidence/shots/surf-008-status-window.png"
+      "shot": "evidence/shots/surf-008-status-window.png",
+      "controls": [
+        "Open Settings for Automation",
+        "How to grant Automation",
+        "Show details for obscura",
+        "Show details for simctl",
+        "Show details for cua-driver",
+        "Show details for maestro",
+        "Show details for lume",
+        "Show details for prlctl",
+        "Show details for Shortcuts CLI",
+        "Show history",
+        "Copy config",
+        "Copy command path only",
+        "Open log",
+        "Restart agent"
+      ]
     },
     {
       "id": "SURF-009",
@@ -1831,7 +1847,29 @@
         "menu-open"
       ],
       "description": "NSStatusItem extra displaying status icon, live feedback, and quick actions",
-      "shot": "evidence/shots/surf-010-menubar.png"
+      "shot": "evidence/shots/surf-010-menubar.png",
+      "controls": [
+        "About Proctor",
+        "Run Setup Again\u2026",
+        "Restart the Agent",
+        "Reveal the Socket in Finder",
+        "Quit Proctor",
+        "Pause Run",
+        "Resume Run",
+        "Stop Run",
+        "Clear Waiting Runs",
+        "Show Run Panel",
+        "Hide Run Panel",
+        "Takeover Notice",
+        "Drawn Pointer",
+        "Status",
+        "History",
+        "Minimize",
+        "Bring All to Front",
+        "Proctor Help",
+        "What Proctor Refuses to Do",
+        "Copy Diagnostics"
+      ]
     },
     {
       "id": "SURF-011",
@@ -4884,6 +4922,155 @@
         "REQ-210"
       ],
       "note": "Resolved by cross_automation_yield_witness.py and ContentionMonitor. PRO-0120."
+    },
+    {
+      "id": "DEF-336",
+      "title": "proctor_act cannot actuate a menu-bar-only app, because every step resolves a window handle first",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-002",
+        "SURF-010"
+      ],
+      "requirements": [
+        "REQ-011"
+      ],
+      "note": "Measured 2026-08-25 against Proctor's own app (pid 2614). proctor_menu reads the full 165-item menu bar from the app handle, and proctor_act refuses the same menuPath with windowNotFound because it resolves a window before any step. proctor_apps activate reports 'frontmost but exposes no windows'. So a command that would open the first window cannot be reached, and Proctor cannot drive its own status item. The actuation in PRO-0148 had to travel through System Events."
+    }
+  ],
+  "journey": [
+    {
+      "id": "JRN-001",
+      "label": "Ask what this machine can do, and read the answer on screen",
+      "critical": true,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "fromFlow": "FLOW-001",
+      "note": "Cut at all five: mcp_drive issues initialize over real stdio (request-issued), tools/list is answered with 21 tools (server-committed), spctl and the TCC read reach the installed artifact (provider-effect), the doctor structure comes back to the caller (client-persisted), and the Status window draws the rows at 760x1000 (user-acknowledged, CASE-0011)."
+    },
+    {
+      "id": "JRN-002",
+      "label": "Drive a background window without taking the screen",
+      "critical": false,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted"
+      ],
+      "fromFlow": "FLOW-002",
+      "note": "No cut at user-acknowledged: nothing in this journey is drawn for a person, by design \u2014 the point is that the target stays in the background. Promotion to critical owes a case that reads the run HUD's account of a background batch."
+    },
+    {
+      "id": "JRN-003",
+      "label": "Photograph a window and read the small print in it",
+      "critical": true,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "fromFlow": "FLOW-003",
+      "note": "Cut at all five: proctor_capture is called (request-issued), SCFrameStatus comes back complete (server-committed), CASE-0129 witnesses the production path against a signed build on a private socket (provider-effect), the normalised file is written (client-persisted), and CASE-0006/0007 are rasters a person can read (user-acknowledged)."
+    },
+    {
+      "id": "JRN-004",
+      "label": "Take the screen, and give it back the moment a person moves",
+      "critical": true,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "fromFlow": "FLOW-004",
+      "note": "Cut at all five: the synthetic batch is armed (request-issued), the HUD and shield are raised (server-committed), CASE-0128 reads sharingState off CGWindowListCopyWindowInfo for every window the agent owns (provider-effect), the yield is recorded within 50ms (client-persisted), and CASE-0008/0010 are the HUD as drawn on both displays (user-acknowledged)."
+    },
+    {
+      "id": "JRN-005",
+      "label": "Record a flow, then ask whether it does the same thing five times",
+      "critical": true,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "fromFlow": "FLOW-005",
+      "note": "Cut at all five: proctor_flow records (request-issued), the named flow is registered (server-committed), five repeats execute against the real app (provider-effect), the per-step hashes are stored and firstDivergence evaluated (client-persisted), and CASE-0042 is the window drawing what was measured (user-acknowledged)."
+    },
+    {
+      "id": "JRN-006",
+      "label": "Write to the trail, and prove afterwards that nobody edited it",
+      "critical": false,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed",
+        "client-persisted"
+      ],
+      "fromFlow": "FLOW-006",
+      "note": "No cut at provider-effect or user-acknowledged. The chain is appended, sealed and read back, but no case witnesses the encrypted bytes on disk independently of the code that wrote them, and nothing reads the trail's verdict off a surface a person looks at. Both are owed work."
+    },
+    {
+      "id": "JRN-007",
+      "label": "Point a run at a guest, and refuse to run it on the host by mistake",
+      "critical": false,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted"
+      ],
+      "fromFlow": "FLOW-007",
+      "note": "No cut at user-acknowledged: the refusal is returned to the caller and never read off a surface. Promotion owes a case reading the guest lane's state in the Status window."
+    },
+    {
+      "id": "JRN-008",
+      "label": "Boot a simulator, open a deep link, and score the flow",
+      "critical": false,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed"
+      ],
+      "fromFlow": "FLOW-008",
+      "note": "One case, and it stands in-tree. The live lane was run once and is not re-runnable here without a simulator runtime, so provider-effect, client-persisted and user-acknowledged are all uncut. This is the thinnest journey in the campaign and the honest denominator says so."
+    },
+    {
+      "id": "JRN-009",
+      "label": "Watch a run from another machine, and stop it from there",
+      "critical": true,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "fromFlow": "FLOW-009",
+      "note": "Cut at all five: a real keystroke enters the TUI under a pty (request-issued), RunControl.shared.isStopped becomes true (server-committed), the run loop stops between steps and the MCP caller is told (provider-effect), the history pane is fed by proctor_history (client-persisted), and CASE-0041 is the readiness pane captured against a live agent (user-acknowledged)."
+    },
+    {
+      "id": "JRN-010",
+      "label": "Refuse to start while a grant is missing, and say so where the person is looking",
+      "critical": true,
+      "boundariesCut": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "fromFlow": "FLOW-010",
+      "note": "Cut at all five: the intro's primary is pressed (request-issued), the walkthrough refuses (server-committed), CASE-0314 takes a grant away while the window is open and the refusal follows (provider-effect), the reason is rendered in place (client-persisted), and CASE-0318 is the coherence clause in pixels (user-acknowledged)."
     }
   ]
 }

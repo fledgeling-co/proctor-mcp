@@ -1,0 +1,35 @@
+{
+  "case": "CASE-0284",
+  "requirement": "REQ-077",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/def136-arming.txt",
+      "sha256_16": "6d9d7780e6f072cc",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/def136-arming-summary.md",
+      "sha256_16": "e0bed3f4ee109360",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/def136-count-reconcile.md",
+      "sha256_16": "584ce4b9dd1db7c4",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/def136-arming-rerun.txt",
+      "sha256_16": "5601de1a370106c4",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0098/def136-rerun-crash.txt",
+      "sha256_16": "d6cfc8de660aa100",
+      "present": true
+    }
+  ]
+}

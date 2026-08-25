@@ -1,0 +1,30 @@
+{
+  "case": "CASE-0066",
+  "requirement": "REQ-003",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/witness/a3-observe.json",
+      "sha256_16": "be736e0e82fdda42",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a3-act.json",
+      "sha256_16": "ea48cf5f7ebca2cc",
+      "present": true
+    },
+    {
+      "path": "sabotage docs/test-campaign/evidence/witness/a3-sabotage-observe.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "sabotage docs/test-campaign/evidence/witness/a3-sabotage-act.json",
+      "sha256_16": null,
+      "present": false
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0455",
+  "requirement": "REQ-107",
+  "lane": "headless",
+  "oracle": "source-analysis",
+  "plane": "in-tree",
+  "placedBecause": "the subject is source text; nothing ran outside this process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0103/cadence-and-report-shape.txt",
+      "sha256_16": "4b91a95ac1354015",
+      "present": true
+    },
+    {
+      "path": "docs/reckoning/CADENCE.md",
+      "sha256_16": "c5a82854474794a7",
+      "present": true
+    },
+    {
+      "path": "scripts/reckoning/reckoning.py",
+      "sha256_16": "263b137fd9ae43fb",
+      "present": true
+    }
+  ]
+}

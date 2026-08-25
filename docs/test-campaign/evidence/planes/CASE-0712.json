@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0712",
+  "requirement": "REQ-030",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",
+      "sha256_16": "1ff5f99928180b53",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/supervision_tui_pty_probe.py",
+      "sha256_16": "a4045b315b98752b",
+      "present": true
+    }
+  ]
+}

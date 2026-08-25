@@ -1,0 +1,35 @@
+{
+  "case": "CASE-0395",
+  "requirement": "REQ-077",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/ConsentSurfaceTests.swift",
+      "sha256_16": "d211cc3bba1d2a52",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/arming-def140.txt",
+      "sha256_16": "e23a4643dd4cffba",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/arming-def140-control.txt",
+      "sha256_16": "22eec0248843fc4a",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/unwrap-census.md",
+      "sha256_16": "ae90b369209c2e45",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/full-suite-run2.txt",
+      "sha256_16": "4e4081e651ebe86a",
+      "present": true
+    }
+  ]
+}

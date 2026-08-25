@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0637",
+  "requirement": "REQ-162",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/dynamic_grant_probe.py",
+      "sha256_16": "339169ec082a54ab",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorCoreTests/DynamicGrantProbeTests.swift",
+      "sha256_16": "f5a46ff6c4a42b3e",
+      "present": true
+    }
+  ]
+}

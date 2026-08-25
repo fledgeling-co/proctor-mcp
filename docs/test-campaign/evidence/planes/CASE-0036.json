@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0036",
+  "requirement": "REQ-029",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/tui-agent-too-old.json",
+      "sha256_16": "93a6fe01a5929749",
+      "present": true
+    }
+  ]
+}

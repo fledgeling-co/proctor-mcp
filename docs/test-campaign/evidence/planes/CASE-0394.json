@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0394",
+  "requirement": "REQ-095",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/HoldAttributionWiringTests.swift",
+      "sha256_16": "821e62c76e24bcf6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/arming-def175.txt",
+      "sha256_16": "7399658d499524e6",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0100/full-suite-run2.txt",
+      "sha256_16": "4e4081e651ebe86a",
+      "present": true
+    }
+  ]
+}

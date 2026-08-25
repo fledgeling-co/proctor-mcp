@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0035",
+  "requirement": "REQ-029",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "evidence/tui-one-latch.json",
+      "sha256_16": "deba293d2cdd64f5",
+      "present": true
+    }
+  ]
+}

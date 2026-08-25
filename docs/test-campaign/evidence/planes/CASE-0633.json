@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0633",
+  "requirement": "REQ-161",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/hardware_yield_probe.py",
+      "sha256_16": "c7501955894b0095",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorCoreTests/HardwareInputBoundaryTests.swift",
+      "sha256_16": "989dbc6fb963a077",
+      "present": true
+    }
+  ]
+}

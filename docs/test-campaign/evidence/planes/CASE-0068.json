@@ -1,0 +1,40 @@
+{
+  "case": "CASE-0068",
+  "requirement": "REQ-008",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "a capture or window witness off a display server",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/witness/a4-act.json",
+      "sha256_16": "cf19a7f2b98b5171",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a4-poll.json",
+      "sha256_16": "3bbd123d149ec2b0",
+      "present": true
+    },
+    {
+      "path": "replicate docs/test-campaign/evidence/witness/a45b-act.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "replicate docs/test-campaign/evidence/witness/a45-poll2.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "replicate docs/test-campaign/evidence/witness/a4c-burst.json",
+      "sha256_16": null,
+      "present": false
+    },
+    {
+      "path": "unarmed control docs/test-campaign/evidence/witness/selftest-post.json",
+      "sha256_16": null,
+      "present": false
+    }
+  ]
+}

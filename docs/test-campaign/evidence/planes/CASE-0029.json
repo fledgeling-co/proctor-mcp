@@ -1,0 +1,15 @@
+{
+  "case": "CASE-0029",
+  "requirement": "REQ-027",
+  "lane": null,
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "evidence/sweepL-halfopen.json",
+      "sha256_16": "9d979e90a254bd29",
+      "present": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0268",
+  "requirement": "REQ-064",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/CommandSurfaceTests.swift",
+      "sha256_16": "8e2e8a1a37210085",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0090/h-def135-runner-abort.txt",
+      "sha256_16": "5082a0a57c76b5a7",
+      "present": true
+    }
+  ]
+}

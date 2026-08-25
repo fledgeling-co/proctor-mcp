@@ -1,0 +1,50 @@
+{
+  "case": "CASE-0087",
+  "requirement": "REQ-024",
+  "lane": null,
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/ExternalWitnessTests.swift",
+      "sha256_16": "1de4413e4e03cbd8",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift",
+      "sha256_16": "6dc7237c41d3cbc5",
+      "present": true
+    },
+    {
+      "path": "scripts/campaign/subprocess_witness.py",
+      "sha256_16": "5f6ea0c17dab6884",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt",
+      "sha256_16": "00b9c5d7e6cb6aeb",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/suite-before-after.txt",
+      "sha256_16": "49d22f8588ac06fc",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/gate.txt",
+      "sha256_16": "71739270fc2f8886",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt",
+      "sha256_16": "94a492b42ea85eed",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt",
+      "sha256_16": "936dc913e86025f2",
+      "present": true
+    }
+  ]
+}

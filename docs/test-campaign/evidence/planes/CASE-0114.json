@@ -1,0 +1,25 @@
+{
+  "case": "CASE-0114",
+  "requirement": "REQ-035",
+  "lane": null,
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0087/run-ledger.md",
+      "sha256_16": "9fcc6e2d2b32d647",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0087/wedge-before.txt",
+      "sha256_16": "95316db2cf6dd679",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0087/wedge-before-2.txt",
+      "sha256_16": "fb4a9b139dad6aa3",
+      "present": true
+    }
+  ]
+}

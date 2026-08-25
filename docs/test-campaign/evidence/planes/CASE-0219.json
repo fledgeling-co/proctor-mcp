@@ -1,0 +1,30 @@
+{
+  "case": "CASE-0219",
+  "requirement": "REQ-056",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/ProctorCoreTests.swift",
+      "sha256_16": "8f59fe18581d55c6",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorCore/Transport.swift",
+      "sha256_16": "7e8a67dccbf5c9cf",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt",
+      "sha256_16": "5612f4202c8e7f23",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0097/gate-after.txt",
+      "sha256_16": "f7b00c6a75a849fd",
+      "present": true
+    }
+  ]
+}
