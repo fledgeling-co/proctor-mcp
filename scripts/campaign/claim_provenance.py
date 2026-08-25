@@ -41,9 +41,22 @@ DEFAULT_ARTIFACTS = ["ORCHESTRATOR.md", "docs/feature-specs/LEDGER.md"]
 # A figure this tool can check: a count of a thing the registries also count.
 # Narrow on purpose. A scanner that reads every number in a markdown file finds
 # version strings, dates and line numbers, and drowns the one figure that moved.
+# A word that turns the subject into a different one. `6,182 spec citations` is
+# not 6,182 specs.
+#
+# **This list replaces a lookahead that rejected any following lowercase word**,
+# and that was a real fault in this scanner rather than a tightening. `(?!\s*[a-z])`
+# rejects "2,173 tests in 275 suites" — because "tests" is followed by " in" —
+# so every figure written in a sentence went unscanned and only figures sitting
+# in table cells, followed by a pipe or a separator, were ever read. Measured
+# 2026-08-25: the committed evidence page this gate exists to catch was not
+# rejected by a rule, it was never matched at all.
+QUALIFIER_WORDS = ("citations?|symbols?|names?|ids?|files?|paths?|references?|"
+                   "directories|directory|entries|entry|lines?")
+
 FIGURE = re.compile(
     r"(?<![\d.])\*?\*?(\d[\d,]*)\*?\*?\s+(tests?|suites?|cases?|rows?|specs?|briefs?|"
-    r"requirements?|surfaces?|defects?)\b(?!\s*[a-z])", re.I)
+    r"requirements?|surfaces?|defects?)\b(?!\s+(?:%s))" % QUALIFIER_WORDS, re.I)
 
 # A version string is not a figure. `0.9.2 test-campaign` matched "2 test" until
 # the lookbehind above refused a digit preceded by a dot or another digit.
@@ -67,6 +80,47 @@ OTHER_POPULATION = re.compile(
 # "accepted unverified, with a named reason", and this is the only way into it:
 # the line must SAY it is superseded or dated, in its own words, on the same
 # line as the figure. A waiver a tool grants itself is not a waiver.
+# PRO-0154. The verdict a figure travels with.
+#
+# A committed evidence page carried "Test run with 2173 tests in 275 suites
+# FAILED after 154.718 seconds with 1 issue" under a heading saying every ledger
+# row was merged. This gate passed over it: it matched `275 suites`, checked the
+# number against the registries, found it right, and never read the word beside
+# it. So a page can state a failure while the gate above it stays green.
+#
+# The vocabulary is small and closed, which is why this is checkable at all. A
+# sentence carrying a figure and no verdict word is not a finding — most do —
+# but one carrying a figure and a NEGATIVE verdict, in a document whose heading
+# claims success, is.
+VERDICT_BAD = re.compile(r"\bfail(?:ed|ing|ure)?\b|\bred\b|\bbroke(?:n)?\b|"
+                         r"\berror(?:s|ed)?\b|\brefused\b|\bblocked\b", re.I)
+VERDICT_GOOD = re.compile(r"\bpass(?:ed|es|ing)?\b|\bgreen\b|\bclean\b|\bheld\b|"
+                          r"\bexit(?:ed)?\s*[:=]?\s*0\b", re.I)
+
+# A heading claiming the work is done. Checked against the file's own headings
+# rather than inferred, so a page with no such claim is never reported.
+HEADING_CLAIMS_DONE = re.compile(
+    r"^\s*#{0,4}\s*.*\b(?:close[ds]?|complete[ds]?|done|merged|drained|shipped|"
+    r"final|verified)\b", re.I)
+
+
+def verdict_of(line: str) -> str | None:
+    """`bad`, `good`, or None when the sentence carries no verdict word.
+
+    A line carrying both — "0 failures" or "failed to fail" — is reported as
+    `mixed` rather than resolved, because deciding which one governs is reading
+    prose and this file does not do that.
+    """
+    bad, good = bool(VERDICT_BAD.search(line)), bool(VERDICT_GOOD.search(line))
+    if bad and good:
+        return "mixed"
+    if bad:
+        return "bad"
+    if good:
+        return "good"
+    return None
+
+
 DECLARED_HISTORY = re.compile(
     r"\bsuperseded\b|\bas at \d{4}-\d{2}-\d{2}\b|\bhistory rather than a claim\b|"
     r"\bno longer\b|\bat the time\b", re.I)
@@ -135,6 +189,11 @@ def main() -> int:
             print(f"{art} does not exist — not checked, rather than clean.", file=sys.stderr)
             return 2
         lines = art.read_text(errors="replace").splitlines()
+        # Does this document claim, in a heading, that the thing is finished?
+        # Only then is a negative verdict beside a figure a contradiction rather
+        # than an ordinary record of something that failed.
+        claims_done = any(HEADING_CLAIMS_DONE.match(ln) for ln in lines
+                          if ln.lstrip().startswith("#") or ln.strip().startswith("Wave"))
         # A wave entry describes a run that is over, so its figures are history.
         # Only the newest wave's block, and anything outside a wave block, is
         # held to the present — the rest is waived with that reason on the row.
@@ -150,7 +209,8 @@ def main() -> int:
                               and i - 1 < newest
                               and any(i - 1 > s for s in wave_starts))
                 row = {"artifact": str(art.relative_to(ROOT)), "line": i,
-                       "figure": n, "subject": subject, "text": ln.strip()[:120]}
+                       "figure": n, "subject": subject, "text": ln.strip()[:120],
+                       "verdict": verdict_of(ln)}
                 if historical:
                     row["class"] = "waived"
                     row["why"] = ("stated inside a closed wave entry, which describes a run "
@@ -167,8 +227,21 @@ def main() -> int:
                                   "not assert a contradiction about a register it does not "
                                   "hold")
                 elif n in known[subject]:
-                    row["class"] = "substantiated"
-                    row["why"] = f"a registry or a recorded run holds {n} {subject}(s)"
+                    verdict = verdict_of(ln)
+                    if verdict == "bad" and claims_done:
+                        # The number is right and the sentence says it failed,
+                        # in a document whose heading says the work is done.
+                        # Reading only the figure is how this passed before.
+                        row["class"] = "contradicted"
+                        row["why"] = (
+                            f"the figure {n} {subject}(s) is right and the sentence carrying it "
+                            f"states a FAILURE, in a document whose heading claims the work is "
+                            f"finished — a right number beside a wrong word")
+                    else:
+                        row["class"] = "substantiated"
+                        row["why"] = (f"a registry or a recorded run holds {n} {subject}(s)"
+                                      + (f", and the sentence reads {verdict}"
+                                         if verdict else ", and the sentence carries no verdict word"))
                 else:
                     row["class"] = "contradicted"
                     row["why"] = (f"the registries hold "
@@ -190,6 +263,16 @@ def main() -> int:
             print(f"  {r['artifact']}:{r['line']}  {r['figure']} {r['subject']}(s)")
             print(f"      {r['why']}")
             print(f"      {r['text']}")
+
+    verdicts = {}
+    for r in rows:
+        verdicts[r.get("verdict") or "none"] = verdicts.get(r.get("verdict") or "none", 0) + 1
+    print("\nverdict words beside those figures: "
+          + " · ".join(f"{k} {v}" for k, v in sorted(verdicts.items())))
+    print("  A figure with no verdict word beside it is the common case and is not a finding. "
+          "A right figure beside a FAILURE, in a document whose heading claims the work is "
+          "finished, is — that is the shape this gate previously read the number of and walked "
+          "past.")
 
     print("\nNot checked (a figure this tool cannot place is not a figure that passed):")
     print(f"  every figure whose subject is not one of "

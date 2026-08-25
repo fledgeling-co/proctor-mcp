@@ -46,6 +46,65 @@ def git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+# PRO-0156. The status words this ledger is allowed to hold, and which of them
+# are terminal.
+#
+# A wave was reported as "152 of 152 rows Merged" over a ledger holding 150
+# Merged and 2 Retired. The sentence built on it — that nothing was outstanding —
+# was right, and the figure was wrong by two. This gate passed either way,
+# because it checks that each row has a spec and that git agrees with the status,
+# and never counts how the statuses are distributed.
+#
+# Terminal means "owes no further work", not "was merged". Retired rows reached
+# that state a different way and folding them into the merged count is exactly
+# the rounding that produced the wrong headline.
+TERMINAL_STATUSES = {"merged", "retired"}
+
+# The open statuses are the pipeline's own stage names rather than a list
+# invented here. shipyard runs intake, triage, plan, design, work, verify and
+# gap-fix, and a row waiting on any of them says "Ready for <stage>" — which is
+# why the vocabulary is generated from the stages instead of enumerated. A first
+# version listed "ready for ai" alone and rejected "Ready for Plan", a status
+# this repository's own test fixtures use.
+SHIPYARD_STAGES = ("ai", "intake", "triage", "plan", "design", "work", "verify",
+                   "gap-fix", "review", "merge")
+OPEN_STATUSES = ({f"ready for {stage}" for stage in SHIPYARD_STAGES}
+                 | {"in progress", "in review", "developer review", "to do", "todo",
+                    "untriaged", "needs more work", "parked", "blocked", "deferred",
+                    "needs input", "resumable"})
+
+
+def status_distribution(main_rows: dict[str, dict]) -> dict:
+    """Every status word in the ledger, counted, summing to the row count.
+
+    A word this file does not know is reported under `unrecognised` rather than
+    bucketed into a known one: a status nobody classified is the one that gets
+    counted as whatever the reader expected.
+    """
+    from collections import Counter
+    counts: Counter = Counter()
+    unrecognised: dict[str, list[str]] = {}
+    for id_, row in main_rows.items():
+        raw = (row.get("status") or "").strip()
+        # A status may carry a commit — "Merged `abc1234`" — and the word is the
+        # first token. Splitting on the backtick keeps the annotation out of the
+        # census without discarding it from the row.
+        word = raw.split("`")[0].strip().rstrip(".").lower()
+        counts[word] += 1
+        if word not in TERMINAL_STATUSES and word not in OPEN_STATUSES:
+            unrecognised.setdefault(word, []).append(id_)
+    terminal = sum(n for w, n in counts.items() if w in TERMINAL_STATUSES)
+    outstanding = sum(n for w, n in counts.items() if w in OPEN_STATUSES)
+    return {
+        "counts": dict(sorted(counts.items(), key=lambda kv: -kv[1])),
+        "total": sum(counts.values()),
+        "terminal": terminal,
+        "outstanding": outstanding,
+        "merged": counts.get("merged", 0),
+        "unrecognised": {w: ids for w, ids in sorted(unrecognised.items())},
+    }
+
+
 def read_ledger(ledger_path: Path) -> tuple[dict[str, dict], dict[str, str]]:
     """Parse LEDGER.md into (main_rows, declared_no_spec).
 
@@ -166,7 +225,18 @@ def audit_ledger(
     if unclaimed_merges:
         failures.append(f"{len(unclaimed_merges)} merged feature(s) issue in ledger: {'; '.join(unclaimed_merges)}")
 
+    dist = status_distribution(main_rows)
+    if dist["unrecognised"]:
+        failures.append(
+            f"{len(dist['unrecognised'])} unrecognised status word(s) in the ledger: "
+            + "; ".join(f"{w!r} on {', '.join(ids[:4])}" for w, ids in dist["unrecognised"].items())
+            + " — a status nobody classified is counted as whatever the reader expected")
+    if dist["total"] != len(main_rows):
+        failures.append(
+            f"the status distribution sums to {dist['total']} over {len(main_rows)} row(s)")
+
     return {
+        "statusDistribution": dist,
         "ledger_rows": len(main_rows),
         "specs_on_disk": len(spec_ids),
         "declared_no_spec": len(declared_no_spec),
@@ -196,6 +266,16 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(res, indent=2))
         return 1 if res["failures"] else 0
 
+    dist = res["statusDistribution"]
+    print(
+        "LEDGER statuses: "
+        + " · ".join(f"{w} {n}" for w, n in dist["counts"].items())
+        + f"  (sums to {dist['total']})")
+    print(
+        f"  terminal {dist['terminal']} of which merged {dist['merged']} · "
+        f"outstanding {dist['outstanding']}"
+        + ("  — a retired row reached its end differently from a merged one, so the two are "
+           "named apart" if dist["terminal"] != dist["merged"] else ""))
     print(
         f"LEDGER gate: {res['ledger_rows']} ledger rows · {res['specs_on_disk']} specs on disk · "
         f"{res['declared_no_spec']} declared without spec · {res['merged_in_git']} merged in git"

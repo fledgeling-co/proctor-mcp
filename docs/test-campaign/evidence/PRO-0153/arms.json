@@ -1,0 +1,23 @@
+{
+  "cases": 497,
+  "armed": 476,
+  "structured": 3,
+  "proseOnly": 473,
+  "results": [
+    {
+      "case": "CASE-0808",
+      "verdict": "verified",
+      "why": "green at baseline, exit 1 with the change applied"
+    },
+    {
+      "case": "CASE-0819",
+      "verdict": "unverifiable",
+      "why": "scripts/campaign/claim_provenance.py is already modified in the working tree, so a baseline taken now measures somebody else's edit"
+    },
+    {
+      "case": "CASE-0820",
+      "verdict": "unverifiable",
+      "why": "scripts/campaign/ledger_gate.py is already modified in the working tree, so a baseline taken now measures somebody else's edit"
+    }
+  ]
+}

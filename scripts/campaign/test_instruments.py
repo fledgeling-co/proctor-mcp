@@ -3113,6 +3113,64 @@ def test_claim_provenance_gate_and_its_waiver_rule() -> None:
           "the waiver rule states why it requires the writer's own words", "")
 
 
+
+# ── PRO-0154 · a right figure beside a wrong word ───────────────────────────
+#
+# Added because PRO-0153 found this missing. CASE-0819 named test_instruments as
+# its arm; arming_verify disabled the verdict branch in claim_provenance.py and
+# this file stayed green, so the case named something that did not bite. The
+# check below is what makes that claim true.
+def test_claim_provenance_reads_the_verdict_not_only_the_number() -> None:
+    script = ROOT / "scripts" / "campaign" / "claim_provenance.py"
+    page = CAMPAIGN_DIR / "evidence" / "wave-27" / "suite-verdict.txt"
+    check(page.is_file(), "the evidence page this was found on is still here", str(page))
+    before = page.read_text()
+    try:
+        # Exactly what the page said when the gate walked past it: a right figure
+        # in a sentence stating a FAILURE, under a heading claiming completion.
+        page.write_text(
+            "Wave 27 close — every ledger row merged\n"
+            "command: ./scripts/test.sh\n"
+            "  Test run with 2173 tests in 275 suites failed after 154.718 seconds "
+            "with 1 issue.\n")
+        red = subprocess.run([sys.executable, str(script), "--gate", "--artifact",
+                              str(page.relative_to(ROOT))], capture_output=True, text=True)
+        check(red.returncode == 1,
+              "a right figure beside a FAILURE, under a heading claiming completion, "
+              "takes the gate red", f"exit {red.returncode}: {red.stdout[-300:]}")
+        check("right number beside a wrong word" in red.stdout,
+              "and the refusal says which half was wrong", red.stdout[-300:])
+    finally:
+        page.write_text(before)
+
+    green = subprocess.run([sys.executable, str(script), "--gate", "--artifact",
+                            str(page.relative_to(ROOT))], capture_output=True, text=True)
+    check(green.returncode == 0, "restoring the page puts the gate back green",
+          green.stdout[-200:])
+
+    # And the fault that made the arm necessary: a lookahead rejecting any figure
+    # followed by a lowercase word meant every figure written in a sentence went
+    # unscanned. The regex must match a figure mid-sentence.
+    out = subprocess.run([sys.executable, "-c",
+                          "import sys; sys.path.insert(0, %r); import claim_provenance as C; "
+                          "print([m.group(2) for m in C.FIGURE.finditer("
+                          "'Test run with 2173 tests in 275 suites passed')])"
+                          % str(ROOT / "scripts" / "campaign")],
+                         capture_output=True, text=True)
+    check("tests" in out.stdout and "suites" in out.stdout,
+          "a figure written mid-sentence is scanned, not skipped for having a word after it",
+          out.stdout.strip() or out.stderr[:200])
+    qual = subprocess.run([sys.executable, "-c",
+                           "import sys; sys.path.insert(0, %r); import claim_provenance as C; "
+                           "print([m.group(2) for m in C.FIGURE.finditer("
+                           "'4,565 of 6,182 spec citations resolve')])"
+                           % str(ROOT / "scripts" / "campaign")],
+                          capture_output=True, text=True)
+    check(qual.stdout.strip() == "[]",
+          "and a subject-changing qualifier still excludes it — spec citations are not specs",
+          qual.stdout.strip())
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3175,7 +3233,8 @@ def main() -> int:
                test_warrant_dashboard_is_self_contained,
                test_capture_index_declares_where_the_store_is,
                test_skill_overlay_reader_fires_on_the_running_family,
-               test_claim_provenance_gate_and_its_waiver_rule):
+               test_claim_provenance_gate_and_its_waiver_rule,
+               test_claim_provenance_reads_the_verdict_not_only_the_number):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

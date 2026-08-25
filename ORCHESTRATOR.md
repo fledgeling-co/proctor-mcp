@@ -1,6 +1,6 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 27 closed. The ledger is drained — 0 rows at `Ready for AI`.** 152 rows: 150 Merged and 2 Retired (PRO-0031, PRO-0039, both historical). An earlier wording here said "152 of 152 Merged", which counted the two Retired rows as merged; corrected by the tailings pass of 2026-08-25 from `grep -cE '^\| PRO-[0-9]{4} \|.*\| Merged'`. Waves 9 through 26 are closed and merged. All three censuses test-campaign 0.14.1 added are declared, and reckon reports **3 pieces of work remaining** across 989 rows: one product defect that cannot be closed from here, and two requirements that are honestly unmeasured. Decision-work is zero.
+**Status:** **Wave 27 closed. The ledger is drained — 0 rows at `Ready for AI`.** At Wave 27's close the ledger held 152 rows — 150 Merged and 2 Retired (PRO-0031, PRO-0039, both historical); Wave 28's triage has since taken it to 158. An earlier wording here said "152 of 152 Merged", which counted the two Retired rows as merged; corrected by the tailings pass of 2026-08-25 from `grep -cE '^\| PRO-[0-9]{4} \|.*\| Merged'`. Waves 9 through 26 are closed and merged. All three censuses test-campaign 0.14.1 added are declared, and reckon reports **3 pieces of work remaining** across 989 rows: one product defect that cannot be closed from here, and two requirements that are honestly unmeasured. Decision-work is zero.
 **Inbox:** 6 untriaged briefs (145-150) from the tailings pass over this wave — an unchecked `armedBy` claim, a provenance gate that reads the number and not the verdict word, a gate that loses which check failed, an uncounted ledger status distribution, a capture store no outside probe can find, and an auditor able to clear its own gate. `tailings/PASS-2026-08-25-wave-27.md`.
 **Updated:** 2026-08-25 — Wave 27 closed. Gate: 2,173 tests in 275 suites, twelve standing gates green, reckon check and ratchet clean. `main` is 480+ commits ahead of `origin` and unpushed.
 
@@ -3354,7 +3354,7 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 ## Wave 27 — The three censuses, the join, and the two defects driving Proctor at Proctor found (2026-08-25)
 
-**Status:** Wave 27 open on `main`. 14 of the 26 rows that opened it are Merged; 12 remain `Ready for AI`.
+**Status (as at the wave's midpoint, superseded):** Wave 27 open on `main`. 14 of the 26 rows that opened it are Merged; 12 remain `Ready for AI`.
 **Why this wave exists:** test-campaign 0.14.1 reported Planes, Journeys and Controls all `NOT DECLARED`, and reckon reported 113 `undecided` briefs. A green verdict beside three absent censuses is the empty-denominator failure, and 113 undecided rows were one mechanical cause wearing a hundred faces.
 
 ### What landed
@@ -3363,7 +3363,7 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 |---|---|---|
 | Planes | NOT DECLARED | in-tree 148 · hermetic 296 · live-glass 31 · live-external 1 |
 | Journeys | NOT DECLARED | 10 declared, 6 critical · boundaries 43/50 cut |
-| Controls | NOT DECLARED | 4 of 34 actuated, across 2 surfaces that declare any |
+| Controls | NOT DECLARED | 4 of 34 actuated, across 2 surfaces that declare any (as at the wave's midpoint, superseded) |
 | reckon remaining work | 137 rows | **9** — 0 product · 2 evidence · 7 decision |
 | reckon `undecided` | 113 | 7 (all of them untriaged briefs, which is what they are) |
 | Requirements observed | 124/141 | 139/141 |
@@ -3419,8 +3419,8 @@ grok-4.6 at xhigh returned **UNSOUND** on `brief_validation.py`'s first join, an
 | `strict-check.py` | **0** | **ratchet 433 held** |
 | `vacuity-check.py --gate` | **0** | 0 findings, 29/29 providers resolved |
 | `capture-lineage.py --gate` | **0** | ratchet 6 held |
-| `ledger_gate.py` | **0** | 152 rows · 152 specs · 0 declared without spec |
-| `spec_citation_measure.py` | **0** | 19/19 (144 briefs, 0 unclaimed) |
+| `ledger_gate.py` | **0** | 158 rows · 158 specs · 0 declared without spec · statuses summing to 158 |
+| `spec_citation_measure.py` | **0** | 19/19 (150 briefs, 0 unclaimed) |
 | `spec_symbol_linter.py --gate` | **0** | ratchet 825 held |
 | `mutation_report.py --gate` | **0** | ratchet 47 survivors held |
 | `test_instruments.py` | **0** | **338 passed, 0 failed** |

@@ -1,0 +1,17 @@
+LEDGER statuses: merged 150 · ready for ai 6 · retired 2  (sums to 158)
+  terminal 152 of which merged 150 · outstanding 6  — a retired row reached its end differently from a merged one, so the two are named apart
+LEDGER gate: 158 ledger rows · 158 specs on disk · 0 declared without spec · 62 merged in git
+PASS: 100% of ledger rows have standalone specs on disk (0 declared without spec), all specs have ledger rows, and git merges match ledger status.
+
+== WHY ==
+"152 of 152 rows Merged" was written over a ledger holding 150 Merged and 2
+Retired. The sentence built on it — that nothing was outstanding — was right,
+and the figure was wrong by two. This gate passed either way, because it checks
+that each row has a spec and that git agrees with the status, and never counted
+how the statuses were distributed.
+
+Terminal means 'owes no further work', not 'was merged'. A retired row reached
+that state a different way, and folding the two together is the rounding that
+produced the wrong headline. An unrecognised status word fails the gate rather
+than being bucketed: a status nobody classified is counted as whatever the
+reader expected.

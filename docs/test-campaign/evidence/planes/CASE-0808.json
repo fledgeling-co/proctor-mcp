@@ -5,9 +5,9 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
-  "recordedAt": "2026-08-25T05:20:27Z",
+  "recordedAt": "2026-08-25T09:04:41Z",
   "tree": {
-    "commit": "ab1234d",
+    "commit": "f8b0c55",
     "dirty": true
   },
   "witness": {
@@ -15,11 +15,11 @@
     "effect": "ipc",
     "count": 1
   },
-  "armedBy": "The negative arm is the standalone probe at exit 141, recorded before the fix. With SO_NOSIGPIPE removed the test process dies at the write and the suite reports nothing at all \u2014 which is how the fault presented and why nothing had caught it.",
+  "armedBy": "The arm is the standalone probe at exit 141, recorded before the fix, and the chaos SUITE as a whole: with proctorSuppressSIGPIPE removed from Transport.swift the suite returns 1 where it returned 0. It is NOT the hangUpOnAccept case \u2014 measured by the tailings pass of 2026-08-25, that test returns 0 with the fix removed, so it does not discriminate. One send into a peer that closed gets EPIPE back; SIGPIPE needs a second write after the FIN has landed, which only the repeated-failure case reaches \u00b7 Machine-readable arm attached (PRO-0153): arming_verify.py applies it and requires the named command to go red, with the tree green at baseline and restored after.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0145/def-338-sigpipe.txt",
-      "sha256_16": "fbaec16922902d4a",
+      "sha256_16": "6a968c23673470a7",
       "present": true
     },
     {

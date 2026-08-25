@@ -9,12 +9,6 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
-| `145-an-arming-claim-nobody-checks.md` | Untriaged — tailings intake 2026-08-25 | An `armedBy` claim nobody checks; a case named a test as its arm that passes with the fix removed. No spec exists until triage allocates one. |
-| `146-a-gate-that-reads-the-number-and-not-the-word.md` | Untriaged — tailings intake 2026-08-25 | A provenance gate read `275 suites` out of a sentence saying the run failed. No spec exists until triage allocates one. |
-| `147-a-gate-that-loses-which-check-failed.md` | Untriaged — tailings intake 2026-08-25 | A standing gate went red once and green three times, and which check failed could not be named. No spec exists until triage allocates one. |
-| `148-nothing-counts-the-ledgers-status-words.md` | Untriaged — tailings intake 2026-08-25 | "152 of 152 Merged" over 150 Merged and 2 Retired; the ledger gate is green either way. No spec exists until triage allocates one. |
-| `149-a-capture-store-an-outside-probe-can-find.md` | Untriaged — tailings intake 2026-08-25 | An external audit reports no capture directory over a tree holding 54 images. No spec exists until triage allocates one. |
-| `150-an-auditor-clearing-its-own-gate.md` | Untriaged — tailings intake 2026-08-25 | The pass reclassified its own contradicted rows to clear its own gate, and reverted it. No spec exists until triage allocates one. |
 
 ## Briefs several specs share
 

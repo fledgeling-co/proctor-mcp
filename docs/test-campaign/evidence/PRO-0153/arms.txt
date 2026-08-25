@@ -1,0 +1,13 @@
+497 case(s) · 476 armed · 3 carrying a machine-readable arm
+  verified         1  green at baseline, red with the change applied
+  does-not-arm     0  the named command stays green — the claim names something that does not bite
+  unverifiable     2  the arm could not be applied; reported, never counted as armed
+
+473 armed case(s) carry prose only, out of 476. 0.6% of arming claims on this campaign are machine-checkable, and the rest are a sentence somebody wrote. That denominator is the finding; structuring them by hand would author claims nobody has established.
+      CASE-0819 unverifiable: scripts/campaign/claim_provenance.py is already modified in the working tree, so a baseline taken now measures somebody else's edit
+      CASE-0820 unverifiable: scripts/campaign/ledger_gate.py is already modified in the working tree, so a baseline taken now measures somebody else's edit
+      CASE-0808 verified: green at baseline, exit 1 with the change applied
+
+wrote docs/test-campaign/evidence/PRO-0153/arms.json
+
+FAIL  2 arm(s) could not be applied, so nothing here says whether they discriminate.

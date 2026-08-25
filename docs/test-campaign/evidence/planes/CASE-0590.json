@@ -5,9 +5,9 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T05:20:27Z",
+  "recordedAt": "2026-08-25T09:04:41Z",
   "tree": {
-    "commit": "ab1234d",
+    "commit": "f8b0c55",
     "dirty": true
   },
   "witness": null,
@@ -15,12 +15,12 @@
   "evidence": [
     {
       "path": "scripts/campaign/ledger_gate.py",
-      "sha256_16": "59eb407c26a2570a",
+      "sha256_16": "2c65d9c501e46f04",
       "present": true
     },
     {
       "path": "docs/feature-specs/LEDGER.md",
-      "sha256_16": "afa18bdcc2ff1152",
+      "sha256_16": "542a854846920324",
       "present": true
     }
   ]

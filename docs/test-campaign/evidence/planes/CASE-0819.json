@@ -1,0 +1,27 @@
+{
+  "case": "CASE-0819",
+  "requirement": "REQ-120",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T09:04:41Z",
+  "tree": {
+    "commit": "f8b0c55",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "docs/test-campaign/evidence/PRO-0154/verdict-word.txt \u2014 the evidence page restored to exactly what it said when the old gate passed takes the gate to exit 1 naming both figures and the reason; the corrected page returns exit 0 \u00b7 Machine-readable arm attached (PRO-0153): arming_verify.py applies it and requires the named command to go red, with the tree green at baseline and restored after.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/claim_provenance.py",
+      "sha256_16": "e0e10713f3ac934f",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0154/verdict-word.txt",
+      "sha256_16": "d929b41549838ee0",
+      "present": true
+    }
+  ]
+}

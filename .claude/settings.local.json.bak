@@ -1,0 +1,13 @@
+{
+  "env" : {
+    "ANTHROPIC_API_KEY" : "local-proxy-supplies-the-real-credential",
+    "ANTHROPIC_BASE_URL" : "http:\/\/127.0.0.1:8858",
+    "ANTHROPIC_CUSTOM_HEADERS" : "X-Perch-Binding: bullettime",
+    "CLAUDE_CODE_MAX_RETRIES" : "30",
+    "CLAUDE_CODE_RETRY_WATCHDOG" : "true",
+    "ENABLE_TOOL_SEARCH" : "true"
+  },
+  "worktree" : {
+    "baseRef" : "head"
+  }
+}

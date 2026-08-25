@@ -5,9 +5,9 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T05:20:27Z",
+  "recordedAt": "2026-08-25T09:04:41Z",
   "tree": {
-    "commit": "ab1234d",
+    "commit": "f8b0c55",
     "dirty": true
   },
   "witness": null,

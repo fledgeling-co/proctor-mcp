@@ -9087,7 +9087,7 @@
     "plane": "hermetic",
     "status": "pass",
     "armed": true,
-    "armedBy": "The arm is the standalone probe at exit 141, recorded before the fix, and the chaos SUITE as a whole: with proctorSuppressSIGPIPE removed from Transport.swift the suite returns 1 where it returned 0. It is NOT the hangUpOnAccept case \u2014 measured by the tailings pass of 2026-08-25, that test returns 0 with the fix removed, so it does not discriminate. One send into a peer that closed gets EPIPE back; SIGPIPE needs a second write after the FIN has landed, which only the repeated-failure case reaches.",
+    "armedBy": "The arm is the standalone probe at exit 141, recorded before the fix, and the chaos SUITE as a whole: with proctorSuppressSIGPIPE removed from Transport.swift the suite returns 1 where it returned 0. It is NOT the hangUpOnAccept case \u2014 measured by the tailings pass of 2026-08-25, that test returns 0 with the fix removed, so it does not discriminate. One send into a peer that closed gets EPIPE back; SIGPIPE needs a second write after the FIN has landed, which only the repeated-failure case reaches \u00b7 Machine-readable arm attached (PRO-0153): arming_verify.py applies it and requires the named command to go red, with the tree green at baseline and restored after.",
     "defects": [
       "DEF-338"
     ],
@@ -9101,7 +9101,17 @@
       "Tests/ProctorCoreTests/SocketBoundaryChaosTests.swift",
       "Sources/ProctorCore/Transport.swift"
     ],
-    "note": "DEF-338, found by PRO-0145's chaos fixture before it measured anything it was written for. A real AF_UNIX listener that accepts and closes; the client writes into the corpse. Before the fix that raised SIGPIPE and terminated the process. Fixed at four socket sites and at the accepted descriptor, which does not inherit the option \u2014 the agent writing a reply to a shim that hung up mid-batch is the same fault in reverse. CORRECTED 2026-08-25: this case's arming previously named hangUpOnAccept as the discriminating test. It is not \u2014 it passes with or without the fix. Naming a test that does not bite is the same fault this wave described elsewhere as 'an assertion nobody wrote wearing the name of one', and it was made here. The defect, the fix and the suite-level arming are unaffected; only the attribution was wrong."
+    "note": "DEF-338, found by PRO-0145's chaos fixture before it measured anything it was written for. A real AF_UNIX listener that accepts and closes; the client writes into the corpse. Before the fix that raised SIGPIPE and terminated the process. Fixed at four socket sites and at the accepted descriptor, which does not inherit the option \u2014 the agent writing a reply to a shim that hung up mid-batch is the same fault in reverse. CORRECTED 2026-08-25: this case's arming previously named hangUpOnAccept as the discriminating test. It is not \u2014 it passes with or without the fix. Naming a test that does not bite is the same fault this wave described elsewhere as 'an assertion nobody wrote wearing the name of one', and it was made here. The defect, the fix and the suite-level arming are unaffected; only the attribution was wrong.",
+    "arm": {
+      "file": "Sources/ProctorCore/Transport.swift",
+      "remove": "        if s >= 0 { proctorSuppressSIGPIPE(s) }",
+      "expectRed": [
+        "swift",
+        "test",
+        "--filter",
+        "SocketBoundaryChaos"
+      ]
+    }
   },
   {
     "id": "CASE-0809",
@@ -9286,5 +9296,57 @@
       "Sources/ProctorCore/MaestroRun.swift"
     ],
     "note": "PRO-0124 clauses 2 to 4. The argument vector carries no --analyze, --api-key or --upload and the absence is asserted against the vector rather than left to a comment. A parsed record keeps each command's status, its duration and its failure reason \u2014 a 5,011ms failure that lost its timing reads like a fast one, and one that lost its reason says only that it failed. The environment block holds exactly one variable, because a growing one is how a tool ends up configured by whatever launches it rather than by its operator."
+  },
+  {
+    "id": "CASE-0819",
+    "req": "REQ-120",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "docs/test-campaign/evidence/PRO-0154/verdict-word.txt \u2014 the evidence page restored to exactly what it said when the old gate passed takes the gate to exit 1 naming both figures and the reason; the corrected page returns exit 0 \u00b7 Machine-readable arm attached (PRO-0153): arming_verify.py applies it and requires the named command to go red, with the tree green at baseline and restored after.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/claim_provenance.py",
+      "docs/test-campaign/evidence/PRO-0154/verdict-word.txt"
+    ],
+    "note": "PRO-0154. A committed evidence page said a run FAILED under a heading saying the work was complete, and the gate written to catch that drift matched the figure, checked it against the registries, found it right, and never read the word beside it. Arming it found a worse fault in the same scanner: FIGURE carried a lookahead rejecting any number followed by a lowercase word, so 'Test run with 2173 tests in 275 suites' was never matched at all and every figure written in a sentence went unscanned. Checkable figures 193 to 326. The subject-changing words are now enumerated rather than approximated by 'any word'.",
+    "arm": {
+      "file": "scripts/campaign/claim_provenance.py",
+      "remove": "                    if verdict == \"bad\" and claims_done:",
+      "after": "                    if False:",
+      "expectRed": [
+        "python3",
+        "scripts/campaign/test_instruments.py"
+      ]
+    }
+  },
+  {
+    "id": "CASE-0820",
+    "req": "REQ-122",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "An unrecognised status word fails the gate rather than being bucketed into a known one, and the distribution is asserted to sum to the row count \u2014 a census that does not sum has lost a row somewhere \u00b7 Machine-readable arm attached (PRO-0153): arming_verify.py applies it and requires the named command to go red, with the tree green at baseline and restored after.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/ledger_gate.py",
+      "docs/test-campaign/evidence/PRO-0156/status-distribution.txt"
+    ],
+    "note": "PRO-0156. '152 of 152 rows Merged' was written over 150 Merged and 2 Retired. The sentence built on it was right and the figure was wrong by two, and this gate passed either way because it checks specs-on-disk and git agreement and never counted the distribution. Terminal now means 'owes no further work' rather than 'was merged', and the two are named apart because a retired row reached its end differently.",
+    "arm": {
+      "file": "scripts/campaign/ledger_gate.py",
+      "remove": "    dist = status_distribution(main_rows)",
+      "after": "    dist = {\"counts\": {}, \"total\": 0, \"terminal\": 0, \"outstanding\": 0, \"merged\": 0, \"unrecognised\": {}}",
+      "expectRed": [
+        "python3",
+        "scripts/campaign/ledger_gate.py"
+      ]
+    }
   }
 ]

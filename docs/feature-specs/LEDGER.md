@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 152
+**Last allocated:** 158
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -162,3 +162,9 @@
 | PRO-0150 | Capture Directory Identity Manifest | 2026-08-25 | Merged |
 | PRO-0151 | Session Claim Provenance Audit Gate | 2026-08-25 | Merged |
 | PRO-0152 | Instrument Availability Disclosure Reporter | 2026-08-25 | Merged |
+| PRO-0153 | Arming Claim Verification | 2026-08-25 | Merged |
+| PRO-0154 | Verdict-Word Reading in the Provenance Gate | 2026-08-25 | Merged |
+| PRO-0155 | Durable Record of a Failing Check | 2026-08-25 | Ready for AI |
+| PRO-0156 | Ledger Status Distribution | 2026-08-25 | Merged |
+| PRO-0157 | Capture Store Discovery by Convention | 2026-08-25 | Ready for AI |
+| PRO-0158 | Reclassification Record for an Audit Pass | 2026-08-25 | Ready for AI |
