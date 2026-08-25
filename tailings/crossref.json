@@ -1,0 +1,536 @@
+{
+ "schema": 1,
+ "repo": "/Users/lukerhodes/Dev/proctor-mcp",
+ "window": {
+  "since": null,
+  "until": null,
+  "commits": 679
+ },
+ "uncommitted_paths": 2,
+ "findings": [
+  {
+   "probe": "R1",
+   "title": "PRO-0108 reached a done-state and no commit in history carries its work",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "git log --all --grep PRO-0108 \u2014 point the row at the work, or move it back",
+   "item": "PRO-0108",
+   "sha": "3b459bfe9b85",
+   "subject": "docs(ledger): PRO-0108 Merged"
+  },
+  {
+   "probe": "R1",
+   "title": "DEF-209 reached a done-state and no commit in history carries its work",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "git log --all --grep DEF-209 \u2014 point the row at the work, or move it back",
+   "item": "DEF-209",
+   "sha": "b7be8356fa4f",
+   "subject": "registry(PRO-0107): DEF-209 closed, and six findings recorded rather than smoothed"
+  },
+  {
+   "probe": "R1",
+   "title": "PRO-0052 reached a done-state and no commit in history carries its work",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "git log --all --grep PRO-0052 \u2014 point the row at the work, or move it back",
+   "item": "PRO-0052",
+   "sha": "7fc32d9c4637",
+   "subject": "Orchestrator: PRO-0052 merged, the skill matches what shipped"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: LEDGER.md",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "write LEDGER.md, or strike the claim that cites it",
+   "path": "LEDGER.md",
+   "line": 1605,
+   "quote": "Harness is armed. `main` is exactly as the peer session left it \u2014 still at `ab53c5e` with all 21 of their uncommitted files intact. **What's watching** - **Goal** `wave9-swiftui-conversion` \u2014 finished"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: vacuity-check.py",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "write vacuity-check.py, or strike the claim that cites it",
+   "path": "vacuity-check.py",
+   "line": 11967,
+   "quote": "\ud83e\udee5 Four briefs written, and wave 11a is running. **What the defects actually were.** All 19 recorded campaign defects are fixed \u2014 the open work is what the 0.9.2 census opened rather than a backlog of "
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0109.md",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0109.md, or strike the claim that cites it",
+   "path": "spec-PRO-0109.md",
+   "line": 16895,
+   "quote": "\ud83e\udee5 **Wave 18 is complete and merged to local `main` (commit `46adfe6`), with all standing instruments and gates green.** ### Summary of Completed Work 1. **PRO-0109 (`spec-PRO-0109.md` \u2014 Merged): Thirt"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0113.md",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0113.md, or strike the claim that cites it",
+   "path": "spec-PRO-0113.md",
+   "line": 17058,
+   "quote": "\ud83e\udee5 **Wave 19b is dispatched** with the final runner in flight: - **PRO-0113 (`spec-PRO-0113.md` \u2014 Building in `ai/pro-0113`):** Brief join rate optimization. Populating structured `source`/`sources` fr"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0119.md",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0119.md, or strike the claim that cites it",
+   "path": "spec-PRO-0119.md",
+   "line": 18483,
+   "quote": "\ud83e\udee5 **Wave 21 Execution Pipeline Update:** 1. **PRO-0119 (`spec-PRO-0119.md` \u2014 Merged to `main` at `18a5f78`):** - Retrospective standalone specs authored for PRO-0022 (`spec-PRO-0022.md`), PRO-0031 (`s"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0022.md",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0022.md, or strike the claim that cites it",
+   "path": "spec-PRO-0022.md",
+   "line": 18483,
+   "quote": "\ud83e\udee5 **Wave 21 Execution Pipeline Update:** 1. **PRO-0119 (`spec-PRO-0119.md` \u2014 Merged to `main` at `18a5f78`):** - Retrospective standalone specs authored for PRO-0022 (`spec-PRO-0022.md`), PRO-0031 (`s"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0031.md",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0031.md, or strike the claim that cites it",
+   "path": "spec-PRO-0031.md",
+   "line": 18483,
+   "quote": "\ud83e\udee5 **Wave 21 Execution Pipeline Update:** 1. **PRO-0119 (`spec-PRO-0119.md` \u2014 Merged to `main` at `18a5f78`):** - Retrospective standalone specs authored for PRO-0022 (`spec-PRO-0022.md`), PRO-0031 (`s"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0039.md",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0039.md, or strike the claim that cites it",
+   "path": "spec-PRO-0039.md",
+   "line": 18483,
+   "quote": "\ud83e\udee5 **Wave 21 Execution Pipeline Update:** 1. **PRO-0119 (`spec-PRO-0119.md` \u2014 Merged to `main` at `18a5f78`):** - Retrospective standalone specs authored for PRO-0022 (`spec-PRO-0022.md`), PRO-0031 (`s"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: inventory.json",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "write inventory.json, or strike the claim that cites it",
+   "path": "inventory.json",
+   "line": 20141,
+   "quote": "\ud83e\udee5 `/reckon:reckon` (v1.7.0) executed against the latest campaign and brief registry, reconciling `docs/reckoning/2026-08-25-final/ledger.json` with a clean gate exit code 0. ### Account Summary - **Pr"
+  },
+  {
+   "probe": "R11",
+   "title": "a credential falls back to a literal: site/assets/vendor/ScrollTrigger.min.js:10",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "hand to code-review; if the repo owns a loader, call it",
+   "path": "site/assets/vendor/ScrollTrigger.min.js",
+   "line": 10,
+   "quote": "key,n)}}function r(){return Ce||\"undefined\"",
+   "env_var": "",
+   "env_var_occurrences": 0
+  },
+  {
+   "probe": "R11",
+   "title": "a credential falls back to a literal: site/assets/vendor/gsap.min.js:10",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "hand to code-review; if the repo owns a loader, call it",
+   "path": "site/assets/vendor/gsap.min.js",
+   "line": 10,
+   "quote": "keyframes?function _setKeyframeDefaults(i){return function(t,e){for(var r in e)r in t||\"duration\"",
+   "env_var": "",
+   "env_var_occurrences": 0
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: arm.sh",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write arm.sh, or strike the claim that cites it",
+   "path": "arm.sh",
+   "line": 1789,
+   "quote": "Gate moved: **10 of 11 outstanding**. PRO-0064 is merged and the first item is off the board. **Two harness defects fixed this turn, and one of them was serious.** `arm.sh` overwrote the `cwd` I gave "
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: guard.sh",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write guard.sh, or strike the claim that cites it",
+   "path": "guard.sh",
+   "line": 1789,
+   "quote": "Gate moved: **10 of 11 outstanding**. PRO-0064 is merged and the first item is off the board. **Two harness defects fixed this turn, and one of them was serious.** `arm.sh` overwrote the `cwd` I gave "
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0073.md",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0073.md, or strike the claim that cites it",
+   "path": "spec-PRO-0073.md",
+   "line": 7367,
+   "quote": "The biggest remaining gap turned out to be a shipped verb that didn't work. **`proctor act` couldn't act at all.** I found it by checking a parked assumption against the code rather than waiting for s"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: lab-mac.sh",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write lab-mac.sh, or strike the claim that cites it",
+   "path": "lab-mac.sh",
+   "line": 9439,
+   "quote": "Clone it. Here's the reasoning, and it got stronger once I looked at egress. `anvil-mac-node` isn't a spare VM \u2014 it's one of three rigs in Anvil's test plan, with `lab-mac.sh` running against it and a"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: rollup_classes.py",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write rollup_classes.py, or strike the claim that cites it",
+   "path": "rollup_classes.py",
+   "line": 9796,
+   "quote": "Running the gate. Two things are open; only one survives it. The warrant charter I'm dropping rather than asking: `rollup_classes.py` stops at `charter absent`, and a charter declares defect classes a"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: capture_with_manifest.py",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write capture_with_manifest.py, or strike the claim that cites it",
+   "path": "capture_with_manifest.py",
+   "line": 12316,
+   "quote": "\ud83e\udee5 Wave 11a is closed \u2014 three of three merged, and the gap-fix found something considerably larger than the clause that exposed it. **`capture_with_manifest.py` wrote every row as `file` plus a dict ta"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: capture-lineage.py",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write capture-lineage.py, or strike the claim that cites it",
+   "path": "capture-lineage.py",
+   "line": 12316,
+   "quote": "\ud83e\udee5 Wave 11a is closed \u2014 three of three merged, and the gap-fix found something considerably larger than the clause that exposed it. **`capture_with_manifest.py` wrote every row as `file` plus a dict ta"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: SKILL.md",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write SKILL.md, or strike the claim that cites it",
+   "path": "SKILL.md",
+   "line": 12414,
+   "quote": "\ud83e\udee5 The MCP is largely ready; **the skill is what's stopping them**, in three specific ways plus one real product gap. **The skill never mentions the lane exists.** Zero occurrences of `proctor_guest` i"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: references/tools.md",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write references/tools.md, or strike the claim that cites it",
+   "path": "references/tools.md",
+   "line": 12414,
+   "quote": "\ud83e\udee5 The MCP is largely ready; **the skill is what's stopping them**, in three specific ways plus one real product gap. **The skill never mentions the lane exists.** Zero occurrences of `proctor_guest` i"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: 0.9.3/.../campaign.py",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write 0.9.3/.../campaign.py, or strike the claim that cites it",
+   "path": "0.9.3/.../campaign.py",
+   "line": 12887,
+   "quote": "\ud83e\udee5 One thing needs flagging before the rest: **PRO-0091 changed tooling outside this repo.** It edited `~/Dev/fledgeling-plugins` as test-campaign **0.9.4** (commit `f37255f`, unpushed) and mirrored th"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: policy.json",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write policy.json, or strike the claim that cites it",
+   "path": "policy.json",
+   "line": 12996,
+   "quote": "\ud83e\udee5 Done and dispatched. Every open defect now has a brief, and the pipeline is moving. **23 open defects \u2192 8 briefs**, `81`\u2013`88`, allocated PRO-0088..0095. The three that slipped my earlier grouping ar"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: OverlayCapture.swift",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write OverlayCapture.swift, or strike the claim that cites it",
+   "path": "OverlayCapture.swift",
+   "line": 14647,
+   "quote": "Eleven open items swept; nine I settled and two are genuinely yours. **Settled without asking:** DEF-099's premise is gone \u2014 `OverlayCapture.swift` arrived with the main merge. DEF-140, DEF-165, DEF-1"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec_citation_measure.py",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write spec_citation_measure.py, or strike the claim that cites it",
+   "path": "spec_citation_measure.py",
+   "line": 15928,
+   "quote": "`spec_citation_measure.py` fails on merged `main` at **14/15** \u2014 a regression the merge introduced, which is exactly why the post-merge sweep exists."
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: build_test_campaign.py",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write build_test_campaign.py, or strike the claim that cites it",
+   "path": "build_test_campaign.py",
+   "line": 16195,
+   "quote": "\ud83e\udee5 Wave 17a is merged, and I owe you a correction on something I told you as fact an hour ago. **`build_test_campaign.py` will not do it again.** I said the icon-render mechanism was live at lines 282-"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0111.md",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0111.md, or strike the claim that cites it",
+   "path": "spec-PRO-0111.md",
+   "line": 16952,
+   "quote": "\ud83e\udee5 **Wave 19 intake and triage complete, and Wave 19a is dispatched in flight:** ### Wave 19 Work Pipeline 1. **PRO-0111 (`spec-PRO-0111.md` \u2014 Building in `ai/pro-0111`):** Audit of the three historica"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: 106-supervision-tui-and-menu-bar-glass-witness.md",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write 106-supervision-tui-and-menu-bar-glass-witness.md, or strike the claim that cites it",
+   "path": "106-supervision-tui-and-menu-bar-glass-witness.md",
+   "line": 17536,
+   "quote": "\ud83e\udee5 **`shipyard:intake` complete. 4 new feature briefs filed in `docs/features-to-triage/` and revealed in Finder:** ### Briefs Filed 1. **`106-supervision-tui-and-menu-bar-glass-witness.md`:** - **Targ"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0114.md",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0114.md, or strike the claim that cites it",
+   "path": "spec-PRO-0114.md",
+   "line": 17564,
+   "quote": "\ud83e\udee5 **Wave 20 pre-triage complete and Wave 20a dispatched in flight:** ### Wave 20 Work Plan 1. **PRO-0114 (`spec-PRO-0114.md` \u2014 Building in `ai/pro-0114`):** Supervision TUI and Menu Bar Status Extra O"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0115.md",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0115.md, or strike the claim that cites it",
+   "path": "spec-PRO-0115.md",
+   "line": 17758,
+   "quote": "\ud83e\udee5 **PRO-0115 is merged, and the remaining Wave 20 features are executing in flight:** ### Status & Deliverables 1. **PRO-0115 (`spec-PRO-0115.md` \u2014 Merged to `main` at `7a8bed3`):** - **`subprocess_wi"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: subprocess_witness.py",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write subprocess_witness.py, or strike the claim that cites it",
+   "path": "subprocess_witness.py",
+   "line": 17758,
+   "quote": "\ud83e\udee5 **PRO-0115 is merged, and the remaining Wave 20 features are executing in flight:** ### Status & Deliverables 1. **PRO-0115 (`spec-PRO-0115.md` \u2014 Merged to `main` at `7a8bed3`):** - **`subprocess_wi"
+  },
+  {
+   "probe": "R2",
+   "title": "a cited path exists nowhere in the repo or its history: spec-PRO-0118.md",
+   "band": 2,
+   "confidence": "observed",
+   "remedy": "write spec-PRO-0118.md, or strike the claim that cites it",
+   "path": "spec-PRO-0118.md",
+   "line": 18251,
+   "quote": "\ud83e\udee5 **Wave 21 pre-triage complete and Wave 21a dispatched in flight:** ### Wave 21 Work Plan 1. **PRO-0118 (`spec-PRO-0118.md` \u2014 Building in `ai/pro-0118`):** Covered-Target Cursor Plane Witness (indepe"
+  },
+  {
+   "probe": "R10",
+   "title": "Sources/ProctorCore/TUIGrid.swift is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep TUIGrid \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "Sources/ProctorCore/TUIGrid.swift",
+   "referenced_by": [
+    "docs/test-campaign/evidence/PRO-0085/baseline.txt",
+    "docs/test-campaign/evidence/PRO-0088/gate-before.txt",
+    "docs/test-campaign/evidence/PRO-0090/gate-baseline.txt",
+    "docs/test-campaign/evidence/PRO-0097/gate-before.txt",
+    "docs/test-campaign/evidence/PRO-0098/gate-before.txt",
+    "docs/test-campaign/evidence/PRO-0099/baseline-suite-before.txt"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "docs/test-campaign/evidence/PRO-0079/reader-sensitivity.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep reader-sensitivity \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "docs/test-campaign/evidence/PRO-0079/reader-sensitivity.py",
+   "referenced_by": [
+    "docs/test-campaign/REPORT.md",
+    "docs/test-campaign/cases.json",
+    "docs/test-campaign/evidence.html"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "docs/test-campaign/evidence/PRO-0102/source-denominators.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep source-denominators \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "docs/test-campaign/evidence/PRO-0102/source-denominators.py",
+   "referenced_by": [
+    "docs/specs/spec-PRO-0102.md",
+    "docs/test-campaign/cases.json",
+    "docs/test-campaign/evidence.html",
+    "docs/test-campaign/evidence/PRO-0102/source-denominators.txt"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "scripts/campaign/count_agent_windows.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep count_agent_windows \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "scripts/campaign/count_agent_windows.py",
+   "referenced_by": [
+    "docs/test-campaign/inventory.json"
+   ]
+  },
+  {
+   "probe": "R10",
+   "title": "scripts/campaign/operator_census.py is referenced only by its own test \u2014 check for an existing module doing this",
+   "band": 2,
+   "confidence": "strong-inference",
+   "remedy": "git grep operator_census \u2014 if a routed equivalent exists, this is a duplicate",
+   "path": "scripts/campaign/operator_census.py",
+   "referenced_by": [
+    "docs/specs/spec-PRO-0099.md",
+    "docs/test-campaign/evidence/PRO-0099/README.txt"
+   ]
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Actuation/CuaTransport.swift:125",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Actuation/CuaTransport.swift",
+   "line": 125,
+   "quote": "func adopt(laneId: String) {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:67",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 67,
+   "quote": "func arm(observeInput: Bool) {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:68",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 68,
+   "quote": "func disarm() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:69",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 69,
+   "quote": "func setExpectedPid(_ pid: Int32?) {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:70",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 70,
+   "quote": "func noteSyntheticPost() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:71",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+   "line": 71,
+   "quote": "func noteUserInput() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorReflector/ProctorReflector.swift:77",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorReflector/ProctorReflector.swift",
+   "line": 77,
+   "quote": "func start(socketPath: String? = nil) {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorReflector/ProctorReflector.swift:79",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorReflector/ProctorReflector.swift",
+   "line": 79,
+   "quote": "func stop() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Sources/ProctorReflector/ProctorReflector.swift:87",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Sources/ProctorReflector/ProctorReflector.swift",
+   "line": 87,
+   "quote": "func endActivity(_ token: ActivityToken) {}"
+  },
+  {
+   "probe": "R9",
+   "title": "function body is empty: Tests/ProctorAgentTests/Fakes.swift:131",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "Tests/ProctorAgentTests/Fakes.swift",
+   "line": 131,
+   "quote": "func stop() {}"
+  },
+  {
+   "probe": "R9",
+   "title": "SwiftUI button with an empty action: docs/test-campaign/evidence/PRO-0090/pre/HistoryWindow.swift:42",
+   "band": 2,
+   "confidence": "weak-inference",
+   "remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
+   "path": "docs/test-campaign/evidence/PRO-0090/pre/HistoryWindow.swift",
+   "line": 42,
+   "quote": "Button(\"Keep it\", role: .cancel) {}"
+  }
+ ],
+ "notes": [
+  "R4: no capture directory found; capture identity unchecked"
+ ],
+ "probes_that_could_not_run": []
+}
