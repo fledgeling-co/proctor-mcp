@@ -1,8 +1,8 @@
 {
-  "cases": 497,
-  "armed": 476,
-  "structured": 3,
-  "proseOnly": 473,
+  "cases": 502,
+  "armed": 481,
+  "structured": 5,
+  "proseOnly": 476,
   "results": [
     {
       "case": "CASE-0808",
@@ -12,12 +12,23 @@
     {
       "case": "CASE-0819",
       "verdict": "unverifiable",
-      "why": "scripts/campaign/claim_provenance.py is already modified in the working tree, so a baseline taken now measures somebody else's edit"
+      "why": "the expectRed command is already red on the unmodified tree (exit 1). Its last words: Supervision TUI PTY verification FAILED (1/5 failed) | campaign instruments: 379 passed, 1 failed",
+      "baselineOutput": "et geometry; verified responsive terminal canvas rendering\n      [PASS] pty-keystroke-navigation-pane-selection: Keystrokes '1'..'5' and 'tab' dispatched across pty slave fd driving pane transitions\n      [PASS] pty-interactive-latch-state-mutation: Keystrokes 'p' and 's' decoded across pty boundary, dispatching control actions (actions: ['pause'])\n      [PASS] pty-clean-exit-and-alt-screen-teardown: Subprocess terminated cleanly on 'q' with exit code 0 and restored terminal discipline\n      \n      Supervision TUI PTY verification FAILED (1/5 failed)\ncampaign instruments: 379 passed, 1 failed\n"
     },
     {
       "case": "CASE-0820",
-      "verdict": "unverifiable",
-      "why": "scripts/campaign/ledger_gate.py is already modified in the working tree, so a baseline taken now measures somebody else's edit"
+      "verdict": "verified",
+      "why": "green at baseline, exit 1 with the change applied"
+    },
+    {
+      "case": "CASE-0821",
+      "verdict": "verified",
+      "why": "green at baseline, exit 1 with the change applied"
+    },
+    {
+      "case": "CASE-0824",
+      "verdict": "verified",
+      "why": "green at baseline, exit 1 with the change applied"
     }
   ]
 }

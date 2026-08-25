@@ -1,13 +1,25 @@
-497 case(s) · 476 armed · 3 carrying a machine-readable arm
-  verified         1  green at baseline, red with the change applied
+502 case(s) · 481 armed · 5 carrying a machine-readable arm
+  verified         4  green at baseline, red with the change applied
   does-not-arm     0  the named command stays green — the claim names something that does not bite
-  unverifiable     2  the arm could not be applied; reported, never counted as armed
+  unverifiable     1  the arm could not be applied; reported, never counted as armed
 
-473 armed case(s) carry prose only, out of 476. 0.6% of arming claims on this campaign are machine-checkable, and the rest are a sentence somebody wrote. That denominator is the finding; structuring them by hand would author claims nobody has established.
-      CASE-0819 unverifiable: scripts/campaign/claim_provenance.py is already modified in the working tree, so a baseline taken now measures somebody else's edit
-      CASE-0820 unverifiable: scripts/campaign/ledger_gate.py is already modified in the working tree, so a baseline taken now measures somebody else's edit
+476 armed case(s) carry prose only, out of 481. 1.0% of arming claims on this campaign are machine-checkable, and the rest are a sentence somebody wrote. That denominator is the finding; structuring them by hand would author claims nobody has established.
+      CASE-0819 unverifiable: the expectRed command is already red on the unmodified tree (exit 1). Its last words: Supervision TUI PTY verification FAILED (1/5 failed) | campaign instruments: 379 passed, 1 failed
       CASE-0808 verified: green at baseline, exit 1 with the change applied
+      CASE-0820 verified: green at baseline, exit 1 with the change applied
+      CASE-0821 verified: green at baseline, exit 1 with the change applied
+      CASE-0824 verified: green at baseline, exit 1 with the change applied
 
 wrote docs/test-campaign/evidence/PRO-0153/arms.json
 
-FAIL  2 arm(s) could not be applied, so nothing here says whether they discriminate.
+== DEF-341: an ordering dependency between arms ==
+CASE-0819 verifies alone and refuses in a full run. Its baseline comes back
+'Supervision TUI PTY verification FAILED (1/5 failed)' after CASE-0808's arm has
+compiled. Restoring the source and rebuilding both the executables and the test
+bundle does not clear it, so the stale-binary reading is wrong or incomplete and
+the cause is not yet known.
+
+The refusal is the tool working. It reports the arm unverifiable rather than
+counting a verified arm taken off a red baseline, and it now records the
+baseline's last words — which is the only reason this is legible at all. Before
+that change the refusal carried an exit code and nothing else.

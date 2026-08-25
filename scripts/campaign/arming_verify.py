@@ -53,8 +53,9 @@ def load_cases(campaign: Path) -> list[dict]:
     return raw if isinstance(raw, list) else (raw.get("case") or raw.get("cases") or [])
 
 
-def run(cmd: list[str]) -> int:
-    return subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True).returncode
+def run(cmd: list[str]) -> tuple[int, str]:
+    r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    return r.returncode, (r.stdout or "")[-600:]
 
 
 def tree_is_clean(paths: list[str]) -> list[str]:
@@ -92,10 +93,17 @@ def verify(case: dict) -> dict:
     # Baseline first. A command already red on the unmodified tree proves nothing
     # about the change, and counting it would be the cheapest possible way to
     # manufacture a verified arm.
-    base = run(arm["expectRed"])
+    base, base_out = run(arm["expectRed"])
     if base != 0:
+        # Record WHY, not just that. A baseline reported red with no reason is a
+        # refusal nobody can act on — and the cause is usually a PREVIOUS arm in
+        # the same run: one that rebuilds, or writes a log, leaves the next
+        # baseline measuring its side effects rather than the tree.
+        tail = " | ".join(l.strip() for l in base_out.splitlines()[-3:] if l.strip())
         return {"case": case["id"], "verdict": "unverifiable",
-                "why": f"the expectRed command is already red on the unmodified tree (exit {base})"}
+                "why": (f"the expectRed command is already red on the unmodified tree "
+                        f"(exit {base}). Its last words: {tail or '(no output)'}"),
+                "baselineOutput": base_out}
 
     replacement = arm.get("after", "")
     try:
@@ -105,12 +113,28 @@ def verify(case: dict) -> dict:
             return {"case": case["id"], "verdict": "unverifiable",
                     "why": "the change did not land; a splice that failed and a check that "
                            "cannot fail look the same from the exit code"}
-        code = run(arm["expectRed"])
+        code, _ = run(arm["expectRed"])
     finally:
         f.write_text(original)
         if f.read_text() != original:
             raise SystemExit(f"RESTORE FAILED for {arm['file']} — stopping rather than "
                              f"applying the next arm on top of this one")
+        # Restoring the SOURCE is not restoring the TREE. An arm whose command
+        # compiles leaves a binary built from the mutated file, and the next
+        # arm's baseline then measures that binary rather than the repository.
+        #
+        # Found by recording why a baseline was red instead of only that it was:
+        # CASE-0819's baseline came back "Supervision TUI PTY verification
+        # FAILED", which is a check that spawns the built binary through a pty —
+        # after the previous arm had rebuilt it from spliced source. The reason
+        # was invisible for as long as the refusal carried only an exit code.
+        if any(part.endswith("swift") or part == "swift" for part in arm["expectRed"][:1]):
+            # Both the executables and the test bundle: the check that caught
+            # this spawns a PRODUCT binary through a pty, which `--build-tests`
+            # alone does not necessarily refresh.
+            subprocess.run(["swift", "build"], cwd=ROOT, capture_output=True, text=True)
+            subprocess.run(["swift", "build", "--build-tests"], cwd=ROOT,
+                           capture_output=True, text=True)
 
     if code != 0:
         return {"case": case["id"], "verdict": "verified",

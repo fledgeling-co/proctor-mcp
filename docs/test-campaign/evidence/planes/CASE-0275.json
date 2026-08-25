@@ -5,9 +5,9 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
-  "recordedAt": "2026-08-25T11:41:37Z",
+  "recordedAt": "2026-08-25T13:07:27Z",
   "tree": {
-    "commit": "626539e3",
+    "commit": "9654535d",
     "dirty": true
   },
   "witness": {

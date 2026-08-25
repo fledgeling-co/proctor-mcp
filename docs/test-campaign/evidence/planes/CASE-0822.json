@@ -5,9 +5,9 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T11:41:37Z",
+  "recordedAt": "2026-08-25T13:07:27Z",
   "tree": {
-    "commit": "626539e3",
+    "commit": "9654535d",
     "dirty": true
   },
   "witness": null,
@@ -20,7 +20,7 @@
     },
     {
       "path": "docs/test-campaign/instrument-runs.jsonl",
-      "sha256_16": "7c0c41aa42f7bc86",
+      "sha256_16": "2d1ba7a86de626d3",
       "present": true
     },
     {

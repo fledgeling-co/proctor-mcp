@@ -5088,6 +5088,19 @@
         "REQ-045"
       ],
       "note": "Measured 2026-08-25 on a full run. 106 of 500 cases have an empty `lane`, and campaign.py reports them as one `unassigned` row \u2014 the per-lane ledger exists so a lane cannot hide, and a fifth of the campaign sitting outside every lane row is that failure at scale. Meanwhile `cli` and `mcp-stdio` were declared and carry zero cases, while `headless` (373) and `guest-glass` (1) were in use and undeclared; the two in use are now declared, which is transcription. The 106 are not: only 9 name a lane readably in their own evidence (7 cli, 2 mcp-stdio) and the other 97 would be inference. Filling a lane ledger by inference is how a lane hides, so the gap is recorded rather than closed."
+    },
+    {
+      "id": "DEF-341",
+      "title": "An arm whose command compiles perturbs the next arm's baseline, and a full rebuild does not undo it",
+      "status": "open",
+      "severity": "low",
+      "surfaces": [
+        "SURF-029"
+      ],
+      "requirements": [
+        "REQ-046"
+      ],
+      "note": "Measured 2026-08-25. arming_verify runs arms in registry order. CASE-0808's arm splices Sources/ProctorCore/Transport.swift and runs `swift test --filter SocketBoundaryChaos`, which compiles. CASE-0819 runs next and its baseline \u2014 test_instruments.py \u2014 comes back red with 'Supervision TUI PTY verification FAILED (1/5 failed)', a check that spawns a product binary through a pty. CASE-0819 verifies cleanly on its own. Restoring the source and rebuilding both the executables and the test bundle does NOT clear it, so the stale-binary reading is wrong or incomplete and the real cause is not yet known. The tool's behaviour is CORRECT: it refuses the arm as unverifiable rather than reporting a verified arm off a red baseline, and since 2026-08-25 it records the baseline's last words so the reason is legible \u2014 which is how this was found at all. 4 of 5 arms verify in a full run; all 5 verify individually."
     }
   ],
   "journey": [
