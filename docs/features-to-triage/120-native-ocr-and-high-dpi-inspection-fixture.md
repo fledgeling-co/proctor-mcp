@@ -1,7 +1,7 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-007, REQ-007]
-status: retired
+status: to-triage
 ---
 # Native OCR and High-DPI Inspection Fixture
 
@@ -23,13 +23,3 @@ Visual inspection tools need to locate text elements and UI controls accurately 
 ## Assumptions made writing this
 - Assuming native system text recognition frameworks are utilized rather than third-party cloud vision services
 - Assuming coordinate transforms normalize backing scale factors transparently to caller interfaces
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-007
-- surface: SURF-004, SURF-005
-- cases: CASE-0004, CASE-0008, CASE-0009, CASE-0010, CASE-0021, CASE-0030
-- rungs reached: effect-witness, metamorphic, outcome
-- provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents

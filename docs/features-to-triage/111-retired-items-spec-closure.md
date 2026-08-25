@@ -1,5 +1,6 @@
 ---
 sources: [DEF-215]
+status: retired
 ---
 # Retired Items Standalone Spec Closure for PRO-0022, PRO-0031, PRO-0039
 
@@ -18,3 +19,14 @@ DEF-215 records that three historical rows in `docs/feature-specs/LEDGER.md` (PR
 
 ## Assumptions made writing this
 - Assuming retrospective specs accurately summarize the historical commits without altering shipped behavior.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-100
+- surface: SURF-024
+- cases: CASE-0430, CASE-0431, CASE-0432, CASE-0433, CASE-0434, CASE-0435
+- rungs reached: effect-witness, outcome
+- provider: none
+- reached through a closed defect: REQ-100 via DEF-215

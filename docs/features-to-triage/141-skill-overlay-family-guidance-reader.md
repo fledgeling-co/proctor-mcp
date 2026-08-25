@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [T1]
 reckon-sources: [REQ-096, REQ-091]
-status: retired
+status: to-triage
 ---
 # Skill Overlay Family Guidance Reader
 
@@ -24,13 +24,3 @@ Some skills ship family-specific overlay guidance beside their main instructions
 ## Assumptions made writing this
 - Assuming overlay files follow a predictable naming convention beside the main skill instructions
 - Assuming overlay reading is recorded rather than assumed from skill invocation alone
-
-## Validation record
-
-Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
-
-- requirement: REQ-091, REQ-096
-- surface: SURF-002
-- cases: CASE-0002, CASE-0074, CASE-0154, CASE-0370, CASE-0372, CASE-0373
-- rungs reached: metamorphic, outcome
-- provider: none

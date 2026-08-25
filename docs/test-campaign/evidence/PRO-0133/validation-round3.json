@@ -1,0 +1,630 @@
+{
+  "validated": [
+    {
+      "brief": "101-reconcile-captures-with-cases.md",
+      "requirements": [
+        "REQ-111",
+        "REQ-112",
+        "REQ-113"
+      ],
+      "surfaces": [
+        "SURF-027"
+      ],
+      "cases": [
+        "CASE-0472",
+        "CASE-0473",
+        "CASE-0474",
+        "CASE-0475",
+        "CASE-0476",
+        "CASE-0477"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "metamorphic",
+        "outcome"
+      ],
+      "viaDefect": [
+        "REQ-112 via DEF-218",
+        "REQ-113 via DEF-221",
+        "REQ-111 via DEF-224"
+      ]
+    },
+    {
+      "brief": "111-retired-items-spec-closure.md",
+      "requirements": [
+        "REQ-100"
+      ],
+      "surfaces": [
+        "SURF-024"
+      ],
+      "cases": [
+        "CASE-0430",
+        "CASE-0431",
+        "CASE-0432",
+        "CASE-0433",
+        "CASE-0434",
+        "CASE-0435"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
+        "outcome"
+      ],
+      "viaDefect": [
+        "REQ-100 via DEF-215"
+      ]
+    }
+  ],
+  "blocked": [],
+  "skipped": [
+    {
+      "brief": "00-WAVE-7-DIRECTION.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "01-cua-schema-facade.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "02-set-of-marks-captures.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "03-menu-bar-key-equivalents.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "04-app-scripting-dictionary.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "05-audit-trail-policy-gate.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "06-vision-capture-normalisation.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "07-zoom-region-crop.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "08-mcp-surface-modernization.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "09-process-kill-fs-jail.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "10-pointer-overlay-captures.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "100-a-screenshot-gallery-the-gate-cannot-see.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "102-standing-checks-for-the-unread-registers.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "103-the-three-recorded-limits-audit.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "104-warrant-charter-and-release-integrity.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "105-brief-join-rate-and-retirement-ladder.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "106-supervision-tui-and-menu-bar-glass-witness.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "107-subprocess-actuation-witness-for-cua-driver.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "108-native-ocr-and-high-dpi-zoom-inspector.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "109-guest-vm-lifecycle-and-attachment-oracle.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "11-stability-per-step-pointer.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "110-covered-target-cursor-plane-witness.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "112-cross-automation-stack-reporting-harness.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "113-retire-pro-0108-native-ocr-zoom.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "114-ios-simulator-boot-fixture-harness.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "115-tart-and-lume-guest-vm-virtualization-fixture.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "116-maestro-flow-network-isolated-fixture.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "117-proctoragent-mutation-survival-elimination.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "118-headless-simulator-provisioning-and-teardown-hook.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "119-guest-vm-health-telemetry-and-socket-probe.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "12-gate-flow-replay-stability.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "120-native-ocr-and-high-dpi-inspection-fixture.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "121-surface-conformance-and-capture-trust-sourcing.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "122-operator-state-and-evidence-integrity-chain.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "123-high-dpi-display-scale-factor-injection-helper.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "124-automated-warrant-tier-promotion-ledger-helper.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "125-legacy-brief-spec-validation-and-retirement.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "126-registry-drift-and-surface-conformance-figure-sourcing.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "127-operator-state-and-capture-trust-figure-sourcing.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "128-automated-spec-validation-runner.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "129-warrant-assurance-tier-dashboard-exporter.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "13-audit-log-encryption-at-rest.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "130-proctoragent-mutation-hardening-and-boundary-sweep.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "131-legacy-direction-briefs-spec-validation.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "132-hermetic-multi-process-chaos-fixture.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "133-process-lifecycle-chaos-and-recovery-harness.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "134-automated-mutation-survival-benchmark-reporter.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "135-legacy-briefs-04-to-07-spec-validation.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "136-legacy-briefs-08-to-10-spec-validation.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "137-hermetic-tool-process-boundary-fixtures.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "138-continuous-spec-symbol-citation-linter.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "139-multi-plane-verification-receipt-generator.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "140-deterministic-lane-routing-and-selection-record.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "141-skill-overlay-family-guidance-reader.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "142-capture-directory-identity-manifest.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "143-session-claim-provenance-audit-gate.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "144-instrument-availability-disclosure-reporter.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "15-step-descriptions.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "16-run-hud-panel.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "17-multi-session-queue.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "18-hud-character-assets.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "19-yield-when-a-person-takes-the-machine.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "20-foreground-run-is-obvious.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "21-route-browser-work-to-obscura.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "22-menu-bar-switch-and-character.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "23-drawing-fault-must-not-kill-the-agent.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "24-offer-to-install-obscura.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "25-second-browser-lane-for-obscuras-limits.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "26-prefer-background-and-pointer-in-plane.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "27-foreground-takeover-overlay.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "28-menu-bar-character-when-idle.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "29-re-check-now-says-what-it-checks.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "30-a-home-for-the-proctor-switches.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "31-the-build-says-which-build-it-is.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "32-the-health-report-is-complete.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "33-the-audit-trail-is-signed.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "34-a-persons-click-reaches-stop.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "35-scroll-moves-by-what-was-asked.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "36-the-browser-catalogue-stops-guessing.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "37-the-status-windows-checks-say-what-they-can-check.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "38-a-hold-names-whose-run-it-is.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "39-stability-knows-when-it-is-scoring-a-page.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "40-page-scoped-refusal.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "41-open-cannot-launch-proctor.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "42-doctor-can-hang-on-the-screen-recording-probe.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "43-backfill-horizontal-alignment-assertion.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "44-build-identity-tests-fail-on-a-moving-head.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "45-cua-becomes-the-actuation-backend.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "46-a-delegated-call-is-still-gated-and-recorded.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "47-supervision-survives-delegation.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "48-the-run-has-a-history-you-can-read.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "49-drive-ios-through-deep-links.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "50-run-maestro-flows-as-proctor-flows.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "51-doctor-knows-the-whole-toolchain.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "52-decide-what-happens-to-the-native-planes.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "53-the-proctor-skill-tracks-what-shipped.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "54-takeover-tests-redden-the-gate.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "55-three-tests-still-redden-the-gate.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "56-the-suite-wedges-in-haltcheckpoint.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "57-vm-targets.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "58-swiftui-conversion-direction.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "59-design-tokens-as-a-swift-value.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "60-status-window-to-the-mock.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "61-walkthrough-to-the-mock.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "62-menu-bar-and-the-command-surface.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "63-run-hud-and-the-character.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "64-takeover-overlay-and-the-drawn-pointer.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "65-history-window-to-the-mock.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "66-consent-sheets.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "67-the-fidelity-harness-proctor-on-proctor.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "68-the-operator-cli.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "69-the-supervision-tui.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "70-effect-witnesses-off-glass.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "71-effect-witnesses-on-glass.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "72-tests-that-mutate-and-never-read-back.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "73-gates-nobody-has-watched-fail.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "74-the-carried-acceptance-clauses.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "75-what-the-status-window-still-owes.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "76-the-ten-the-capped-gate-hid.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "77-the-cua-path-leaves-proctors-plane-silently.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "78-the-skill-and-the-guest-lane.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "79-the-walkthrough-will-not-advance-without-its-grants.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "80-the-signature-cache-is-per-session-and-the-work-is-not.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "81-the-capture-path-reports-frames-it-did-not-get.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "83-what-the-surfaces-say-and-what-they-draw.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "84-the-campaigns-own-instruments.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "85-proctoragents-mutants-mostly-survive.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "86-a-dead-peer-holds-the-queue.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "87-a-warning-this-project-has-already-disproved.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "88-three-that-slipped-the-grouping.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "89-the-registry-says-open-and-the-code-says-fixed.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "90-the-four-nobody-owns.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "91-eight-more-operator-paths-with-no-seam.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "92-a-spec-says-which-brief-it-came-from.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "93-the-reckoning-tool-mis-read-this-registry.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "94-a-reckoning-worth-comparing-against.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "95-six-named-repairs.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "96-what-1-1-0-still-groups-and-still-grades.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "97-an-input-the-check-cannot-classify.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "98-a-version-string-is-not-the-artifact.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "99-instruments-that-do-not-prove-their-own-step.md",
+      "why": "already retired"
+    }
+  ]
+}

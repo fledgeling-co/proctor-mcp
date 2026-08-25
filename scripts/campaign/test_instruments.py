@@ -29,6 +29,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -2754,6 +2755,42 @@ def test_brief_validation_records_are_recheckable() -> None:
           "\n".join(bad[:6]))
 
 
+
+# ── The guard that a routing hint is not a citation ─────────────────────────
+#
+# Measured 2026-08-25: seven briefs an intake pass had just written were retired
+# because the `reckon-sources` that pass wrote to ROUTE them were read as a
+# claim that the work was done. Brief 140 asks for a lane-selection record that
+# does not exist, cites two instrument-identity requirements as a hint, and was
+# retired on their six passing cases. That is reckon's own warning — retiring
+# stated intent on evidence for a neighbour — arriving through the tool built to
+# prevent it.
+def test_a_generated_untriaged_brief_is_never_validated() -> None:
+    briefs = ROOT / "docs" / "features-to-triage"
+    script = ROOT / "scripts" / "campaign" / "brief_validation.py"
+
+    requests = []
+    for f in sorted(briefs.rglob("*.md")):
+        head = f.read_text()[:600]
+        if re.search(r"^generated-by:\s*\S+", head, re.M) and \
+                re.search(r"^status:\s*to-triage\s*$", head, re.M):
+            requests.append(f)
+    check(bool(requests), "there are generated, untriaged briefs to protect",
+          f"{len(requests)} found")
+
+    # None of them carries a validation record, and none is retired.
+    carrying = [f.name for f in requests if "## Validation record" in f.read_text()]
+    check(not carrying,
+          "no brief that is still a request carries a validation record",
+          ", ".join(carrying[:6]))
+
+    out = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(out.returncode == 0, "the validator runs", out.stderr[-200:])
+    check("route it, they do not record it as done" in out.stdout,
+          "the validator says why it skipped a request, rather than skipping it silently",
+          out.stdout[-400:])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2809,7 +2846,8 @@ def main() -> int:
                test_plane_census_places_every_passing_case,
                test_spec_symbol_linter_gate_and_negative_arm,
                test_requirement_evidence_is_backed_by_a_passing_case,
-               test_brief_validation_records_are_recheckable):
+               test_brief_validation_records_are_recheckable,
+               test_a_generated_untriaged_brief_is_never_validated):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

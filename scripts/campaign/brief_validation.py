@@ -60,6 +60,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 FM = re.compile(r"\A---\n(.*?)\n---\n", re.S)
 REQ_ID = re.compile(r"\bREQ-\d{3}\b")
+DEF_ID = re.compile(r"\bDEF-\d{3}\b")
 DECL = re.compile(
     r"^\s*(?:@\w+\s+)*(?:public|internal|private|fileprivate|open|package)?\s*"
     r"(?:final\s+|static\s+|class\s+|mutating\s+|nonisolated\s+|override\s+)*"
@@ -154,6 +155,14 @@ def main() -> int:
     raw = json.loads((a.campaign / "cases.json").read_text())
     cases = raw if isinstance(raw, list) else (raw.get("case") or raw.get("cases") or [])
     reqs = {r["id"]: r for r in inv.get("requirement", [])}
+    # A brief may cite defects rather than requirements — the wave-18 capture
+    # repairs cite eight, and nothing else. A defect names the requirements it
+    # was raised against, so the hop from defect to requirement is a registry
+    # fact in exactly the way requirement-to-surface is, and following it is
+    # transcription rather than inference. A defect still open is not followed:
+    # `broken` is the honest class for a brief resting on one, and reckon awards
+    # it from the defect's own status.
+    defects = {d["id"]: d for d in inv.get("defect", [])}
     symbols = production_symbols(a.source)
 
     by_surface: dict[str, list[dict]] = defaultdict(list)
@@ -195,7 +204,44 @@ def main() -> int:
             skipped.append({"brief": f.name, "why": f"already {status}"})
             continue
 
-        cited = sorted(set(REQ_ID.findall(front)) | set(REQ_ID.findall(blank_fences(body))))
+        # A brief an intake pass wrote and nobody has triaged yet is a REQUEST.
+        # Its `reckon-sources` were written by that pass to route it, not by
+        # somebody recording that the work is done — so evidence standing behind
+        # those ids says nothing about this brief's own subject.
+        #
+        # Measured here, 2026-08-25: seven briefs were retired on exactly that
+        # confusion. Brief 140 asks for a lane-selection record that does not
+        # exist, cites REQ-130 and REQ-151 as a routing hint, and was retired
+        # because those requirements carry six passing cases about instrument
+        # identity. That is reckon's own warning — retiring stated intent on
+        # evidence for a neighbour — arriving through the tool built to prevent
+        # it. A hint is not a citation, and the difference is who wrote it.
+        generated = re.search(r"^generated-by:\s*(\S+)\s*$", front, re.M)
+        if generated and status == "to-triage":
+            skipped.append({"brief": f.name,
+                            "why": (f"written by {generated.group(1)} and still to-triage — its "
+                                    f"sources route it, they do not record it as done")})
+            continue
+
+        text_all = front + "\n" + blank_fences(body)
+        cited = sorted(set(REQ_ID.findall(text_all)))
+        via_defect: list[str] = []
+        for did in sorted(set(DEF_ID.findall(text_all))):
+            d = defects.get(did)
+            if not d or (d.get("status") or "").lower() not in ("fixed", "closed",
+                                                                "resolved", "verified", "done"):
+                continue
+            # The registry spells this both ways — `requirements` on most rows
+            # and `req` on DEF-215 among others. Reading one spelling silently
+            # under-counts, and the row that gets missed is indistinguishable
+            # from a row that had nothing to say.
+            named = d.get("requirements") or ([d["req"]] if isinstance(d.get("req"), str)
+                                              else (d.get("req") or []))
+            for rid in named:
+                if rid not in cited:
+                    cited.append(rid)
+                    via_defect.append(f"{rid} via {did}")
+        cited = sorted(cited)
         if not cited:
             skipped.append({"brief": f.name, "why": "cites no requirement"})
             continue
@@ -228,7 +274,8 @@ def main() -> int:
         req = carrying[0]
         rec = {"brief": f.name, "requirements": carrying, "surfaces": surfaces,
                "cases": ids, "provider": (reqs[req].get("provider") or "none"),
-               "rungs": sorted({c["oracle"] for c in support})}
+               "rungs": sorted({c["oracle"] for c in support}),
+               "viaDefect": via_defect or None}
         validated.append(rec)
 
         if a.record:
@@ -242,7 +289,9 @@ def main() -> int:
                 f"- surface: {', '.join(surfaces)}\n"
                 f"- cases: {', '.join(ids)}\n"
                 f"- rungs reached: {', '.join(rec['rungs'])}\n"
-                f"- provider: {rec['provider']}\n")
+                f"- provider: {rec['provider']}\n"
+                + (f"- reached through a closed defect: {', '.join(via_defect)}\n"
+                   if via_defect else ""))
             stripped = re.sub(r"\n## Validation record\n.*?(?=\n## |\Z)", "\n",
                               body, flags=re.S)
             new_body = stripped.rstrip() + "\n" + record
@@ -284,6 +333,12 @@ def main() -> int:
           f"retiring floor, and its provider resolves")
     print(f"  blocked   {len(blocked):>4} — read the reason on each; none was retired")
     print(f"  skipped   {len(skipped):>4} — already decided, or cites no requirement")
+    # Grouped rather than listed: 144 skip lines is a wall nobody reads, and one
+    # count per reason is the thing a reader is actually checking. A skip with no
+    # reason printed is indistinguishable from a brief that was never examined.
+    from collections import Counter
+    for why, n in Counter(s["why"] for s in skipped).most_common():
+        print(f"      {n:>4}  {why}")
     if blocked:
         print("\nblocked, first ten:")
         for b in blocked[:10]:
