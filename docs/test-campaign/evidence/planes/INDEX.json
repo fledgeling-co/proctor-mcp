@@ -1,19 +1,19 @@
 {
-  "recordedAt": "2026-08-25T03:00:24Z",
+  "recordedAt": "2026-08-25T03:07:33Z",
   "tree": {
-    "commit": "ec9592c",
+    "commit": "7fd1f83",
     "dirty": true
   },
-  "cases": 475,
+  "cases": 477,
   "planeCounts": {
     "in-tree": 148,
-    "hermetic": 295,
+    "hermetic": 297,
     "live-glass": 31,
     "live-external": 1
   },
   "passingPlaneCounts": {
     "in-tree": 148,
-    "hermetic": 293,
+    "hermetic": 295,
     "live-glass": 30,
     "live-external": 1
   },

@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0799",
+  "requirement": "REQ-102",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:07:33Z",
+  "tree": {
+    "commit": "7fd1f83",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The helper refuses a class whose population is empty: a threshold met over zero figures is named as 'a class with nothing in it is not a class that passed' rather than reported at 100%. It also refuses every class when the campaign gate is not clear, because a figure taken during an unfinished run describes an unfinished run.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/warrant_promotion.py",
+      "sha256_16": "1777b7df0ed61eff",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0137/warrant-tiers.txt",
+      "sha256_16": "a663310c5ba10228",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0137/warrant-tiers.json",
+      "sha256_16": "cabb7b0455ef5e43",
+      "present": true
+    }
+  ]
+}

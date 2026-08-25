@@ -1,0 +1,376 @@
+{
+  "owner": {
+    "name": "Luke Rhodes",
+    "email": "luke@rhodes.gg"
+  },
+  "signed": "2026-08-22",
+  "renewal": "2027-02-18",
+  "gateClear": true,
+  "proposals": [
+    {
+      "class": "run-lifecycle",
+      "tier": 0,
+      "escalation": "owner",
+      "surfaces": 9,
+      "figures": 44,
+      "sourced": 44,
+      "pct": 1.0,
+      "gateClear": true,
+      "shortfall": [],
+      "proposedTier": 1
+    },
+    {
+      "class": "release-integrity",
+      "tier": 0,
+      "escalation": "owner",
+      "surfaces": 1,
+      "figures": 1,
+      "sourced": 1,
+      "pct": 1.0,
+      "gateClear": true,
+      "shortfall": [],
+      "proposedTier": 1
+    }
+  ],
+  "blocked": [
+    {
+      "class": "evidence-integrity",
+      "tier": 0,
+      "escalation": "owner",
+      "surfaces": 16,
+      "figures": 204,
+      "sourced": 185,
+      "pct": 0.9069,
+      "gateClear": true,
+      "shortfall": [
+        {
+          "surface": "core://tools",
+          "sourced": 14,
+          "figures": 24,
+          "unsourced": 10,
+          "cases": [
+            {
+              "id": "CASE-0102",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0103",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0104",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0105",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0397",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0398",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0399",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0400",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0458",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0459",
+              "oracle": "source-analysis"
+            }
+          ]
+        },
+        {
+          "surface": "tool://vacuity-check/blind",
+          "sourced": 36,
+          "figures": 41,
+          "unsourced": 5,
+          "cases": [
+            {
+              "id": "CASE-0139",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0210",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0221",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0283",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0396",
+              "oracle": "source-analysis"
+            }
+          ]
+        },
+        {
+          "surface": "tool://reckon/build",
+          "sourced": 35,
+          "figures": 38,
+          "unsourced": 3,
+          "cases": [
+            {
+              "id": "CASE-0426",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0427",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0428",
+              "oracle": "source-analysis"
+            }
+          ]
+        },
+        {
+          "surface": "tool://reckoning/compare",
+          "sourced": 15,
+          "figures": 16,
+          "unsourced": 1,
+          "cases": [
+            {
+              "id": "CASE-0455",
+              "oracle": "source-analysis"
+            }
+          ]
+        }
+      ],
+      "blockedBy": [
+        "19 of 204 case(s) stand below the effect rung, across 4 surface(s)"
+      ]
+    },
+    {
+      "class": "surface-conformance",
+      "tier": 0,
+      "escalation": "owner",
+      "surfaces": 6,
+      "figures": 119,
+      "sourced": 100,
+      "pct": 0.8403,
+      "gateClear": true,
+      "shortfall": [
+        {
+          "surface": "ui://walkthrough",
+          "sourced": 15,
+          "figures": 24,
+          "unsourced": 9,
+          "cases": [
+            {
+              "id": "CASE-0250",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0312",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0313",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0319",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0315",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0366",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0390",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0391",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0392",
+              "oracle": "source-analysis"
+            }
+          ]
+        },
+        {
+          "surface": "ui://status-window",
+          "sourced": 28,
+          "figures": 36,
+          "unsourced": 8,
+          "cases": [
+            {
+              "id": "CASE-0254",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0261",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0263",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0264",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0265",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0282",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0355",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0359",
+              "oracle": "source-analysis"
+            }
+          ]
+        },
+        {
+          "surface": "ui://menubar",
+          "sourced": 8,
+          "figures": 9,
+          "unsourced": 1,
+          "cases": [
+            {
+              "id": "CASE-0257",
+              "oracle": "source-analysis"
+            }
+          ]
+        },
+        {
+          "surface": "ui://run-hud",
+          "sourced": 31,
+          "figures": 32,
+          "unsourced": 1,
+          "cases": [
+            {
+              "id": "CASE-0127",
+              "oracle": "source-analysis"
+            }
+          ]
+        }
+      ],
+      "blockedBy": [
+        "19 of 119 case(s) stand below the effect rung, across 4 surface(s)"
+      ]
+    },
+    {
+      "class": "capture-trust",
+      "tier": 0,
+      "escalation": "owner",
+      "surfaces": 3,
+      "figures": 44,
+      "sourced": 42,
+      "pct": 0.9545,
+      "gateClear": true,
+      "shortfall": [
+        {
+          "surface": "engine://screen-capture",
+          "sourced": 16,
+          "figures": 18,
+          "unsourced": 2,
+          "cases": [
+            {
+              "id": "CASE-0126",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0216",
+              "oracle": "source-analysis"
+            }
+          ]
+        }
+      ],
+      "blockedBy": [
+        "2 of 44 case(s) stand below the effect rung, across 1 surface(s)"
+      ]
+    },
+    {
+      "class": "operator-state",
+      "tier": 0,
+      "escalation": "owner",
+      "surfaces": 4,
+      "figures": 55,
+      "sourced": 52,
+      "pct": 0.9455,
+      "gateClear": true,
+      "shortfall": [
+        {
+          "surface": "engine://audit-policy",
+          "sourced": 34,
+          "figures": 37,
+          "unsourced": 3,
+          "cases": [
+            {
+              "id": "CASE-0333",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0334",
+              "oracle": "source-analysis"
+            },
+            {
+              "id": "CASE-0335",
+              "oracle": "source-analysis"
+            }
+          ]
+        }
+      ],
+      "blockedBy": [
+        "3 of 55 case(s) stand below the effect rung, across 1 surface(s)"
+      ]
+    },
+    {
+      "class": "registry-drift",
+      "tier": 0,
+      "escalation": "owner",
+      "surfaces": 3,
+      "figures": 27,
+      "sourced": 26,
+      "pct": 0.963,
+      "gateClear": true,
+      "shortfall": [
+        {
+          "surface": "tool://reckoning/compare",
+          "sourced": 15,
+          "figures": 16,
+          "unsourced": 1,
+          "cases": [
+            {
+              "id": "CASE-0455",
+              "oracle": "source-analysis"
+            }
+          ]
+        }
+      ],
+      "blockedBy": [
+        "1 of 27 case(s) stand below the effect rung, across 1 surface(s)"
+      ]
+    }
+  ]
+}

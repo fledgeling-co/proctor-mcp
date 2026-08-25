@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warrant tiers — Proctor</title>
+<style>
+:root { --bg:#fbfaf8; --ink:#1a1a1a; --dim:#6b6b6b; --line:#e2ddd5;
+        --ok:#2f6f4f; --blocked:#8a5a2b; --card:#fff; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#16161a; --ink:#eceae6; --dim:#9a968f; --line:#2e2e34;
+          --ok:#6cc79a; --blocked:#c99a5e; --card:#1e1e24; } }
+* { box-sizing:border-box; }
+body { margin:0; padding:2.5rem 1.5rem 4rem; background:var(--bg); color:var(--ink);
+       font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; }
+.wrap { max-width:56rem; margin:0 auto; }
+h1 { font-size:1.6rem; margin:0 0 .3rem; letter-spacing:-.01em; }
+.sub { color:var(--dim); margin:0 0 2rem; font-size:.92rem; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+        padding:1.15rem 1.3rem 1.3rem; margin:0 0 1rem; }
+.card header { display:flex; align-items:baseline; justify-content:space-between; gap:1rem; }
+h2 { font-size:1.05rem; margin:0; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+.tier { color:var(--dim); font-size:.85rem; white-space:nowrap; }
+.meter { height:6px; background:var(--line); border-radius:3px; overflow:hidden; margin:.8rem 0 .55rem; }
+.fill { height:100%; background:var(--blocked); }
+.card.ok .fill { background:var(--ok); }
+.figure { margin:0; font-size:.9rem; }
+.figure span { color:var(--dim); margin-left:.4rem; }
+h3 { font-size:.78rem; text-transform:uppercase; letter-spacing:.06em; color:var(--dim);
+     margin:1.1rem 0 .4rem; font-weight:600; }
+ul { margin:0; padding:0; list-style:none; font-size:.88rem; }
+.why li { padding:.25rem 0 .25rem .9rem; position:relative; }
+.why li::before { content:"·"; position:absolute; left:.15rem; color:var(--dim); }
+.surfaces li { padding:.35rem 0; border-top:1px solid var(--line); }
+.surfaces li:first-child { border-top:0; }
+.surfaces code { font-size:.84rem; }
+.n { color:var(--dim); margin-left:.6rem; }
+.short { float:right; color:var(--blocked); font-size:.82rem; }
+.ids { color:var(--dim); font-size:.78rem; margin-top:.15rem;
+       font-family:ui-monospace,SFMono-Regular,Menlo,monospace; overflow-x:auto; }
+footer { color:var(--dim); font-size:.82rem; margin-top:2rem; border-top:1px solid var(--line);
+         padding-top:1rem; }
+</style></head><body><div class="wrap">
+<h1>Warrant tiers</h1>
+<p class="sub">Owner Luke Rhodes ·
+signed 2026-08-22 · renewal 2027-02-18 ·
+campaign gate clear · 475 cases</p>
+
+    <article class="card ok">
+      <header><h2>run-lifecycle</h2><span class="tier">tier 0 → <strong>1</strong></span></header>
+      <div class="meter" role="img" aria-label="100.0 percent of figures on an effect rung">
+        <div class="fill" style="width:100.0%"></div>
+      </div>
+      <p class="figure"><strong>100.0%</strong>
+         <span>44 of 44 figures on an effect rung,
+         across 9 surface(s)</span></p>
+      
+      
+    </article>
+    <article class="card ok">
+      <header><h2>release-integrity</h2><span class="tier">tier 0 → <strong>1</strong></span></header>
+      <div class="meter" role="img" aria-label="100.0 percent of figures on an effect rung">
+        <div class="fill" style="width:100.0%"></div>
+      </div>
+      <p class="figure"><strong>100.0%</strong>
+         <span>1 of 1 figures on an effect rung,
+         across 1 surface(s)</span></p>
+      
+      
+    </article>
+    <article class="card blocked">
+      <header><h2>evidence-integrity</h2><span class="tier">tier 0</span></header>
+      <div class="meter" role="img" aria-label="90.7 percent of figures on an effect rung">
+        <div class="fill" style="width:90.7%"></div>
+      </div>
+      <p class="figure"><strong>90.7%</strong>
+         <span>185 of 204 figures on an effect rung,
+         across 16 surface(s)</span></p>
+      <h3>What blocks it</h3><ul class="why"><li>19 of 204 case(s) stand below the effect rung, across 4 surface(s)</li></ul>
+      <h3>Where the shortfall is</h3><ul class="surfaces"><li><code>core://tools</code><span class="n">14/24</span><span class="short">10 short</span><div class="ids">CASE-0102 (source-analysis), CASE-0103 (source-analysis), CASE-0104 (source-analysis), CASE-0105 (source-analysis), CASE-0397 (source-analysis), CASE-0398 (source-analysis), CASE-0399 (source-analysis), CASE-0400 (source-analysis)</div></li><li><code>tool://vacuity-check/blind</code><span class="n">36/41</span><span class="short">5 short</span><div class="ids">CASE-0139 (source-analysis), CASE-0210 (source-analysis), CASE-0221 (source-analysis), CASE-0283 (source-analysis), CASE-0396 (source-analysis)</div></li><li><code>tool://reckon/build</code><span class="n">35/38</span><span class="short">3 short</span><div class="ids">CASE-0426 (source-analysis), CASE-0427 (source-analysis), CASE-0428 (source-analysis)</div></li><li><code>tool://reckoning/compare</code><span class="n">15/16</span><span class="short">1 short</span><div class="ids">CASE-0455 (source-analysis)</div></li></ul>
+    </article>
+    <article class="card blocked">
+      <header><h2>surface-conformance</h2><span class="tier">tier 0</span></header>
+      <div class="meter" role="img" aria-label="84.0 percent of figures on an effect rung">
+        <div class="fill" style="width:84.0%"></div>
+      </div>
+      <p class="figure"><strong>84.0%</strong>
+         <span>100 of 119 figures on an effect rung,
+         across 6 surface(s)</span></p>
+      <h3>What blocks it</h3><ul class="why"><li>19 of 119 case(s) stand below the effect rung, across 4 surface(s)</li></ul>
+      <h3>Where the shortfall is</h3><ul class="surfaces"><li><code>ui://walkthrough</code><span class="n">15/24</span><span class="short">9 short</span><div class="ids">CASE-0250 (source-analysis), CASE-0312 (source-analysis), CASE-0313 (source-analysis), CASE-0319 (source-analysis), CASE-0315 (source-analysis), CASE-0366 (source-analysis), CASE-0390 (source-analysis), CASE-0391 (source-analysis)</div></li><li><code>ui://status-window</code><span class="n">28/36</span><span class="short">8 short</span><div class="ids">CASE-0254 (source-analysis), CASE-0261 (source-analysis), CASE-0263 (source-analysis), CASE-0264 (source-analysis), CASE-0265 (source-analysis), CASE-0282 (source-analysis), CASE-0355 (source-analysis), CASE-0359 (source-analysis)</div></li><li><code>ui://menubar</code><span class="n">8/9</span><span class="short">1 short</span><div class="ids">CASE-0257 (source-analysis)</div></li><li><code>ui://run-hud</code><span class="n">31/32</span><span class="short">1 short</span><div class="ids">CASE-0127 (source-analysis)</div></li></ul>
+    </article>
+    <article class="card blocked">
+      <header><h2>capture-trust</h2><span class="tier">tier 0</span></header>
+      <div class="meter" role="img" aria-label="95.5 percent of figures on an effect rung">
+        <div class="fill" style="width:95.5%"></div>
+      </div>
+      <p class="figure"><strong>95.5%</strong>
+         <span>42 of 44 figures on an effect rung,
+         across 3 surface(s)</span></p>
+      <h3>What blocks it</h3><ul class="why"><li>2 of 44 case(s) stand below the effect rung, across 1 surface(s)</li></ul>
+      <h3>Where the shortfall is</h3><ul class="surfaces"><li><code>engine://screen-capture</code><span class="n">16/18</span><span class="short">2 short</span><div class="ids">CASE-0126 (source-analysis), CASE-0216 (source-analysis)</div></li></ul>
+    </article>
+    <article class="card blocked">
+      <header><h2>operator-state</h2><span class="tier">tier 0</span></header>
+      <div class="meter" role="img" aria-label="94.5 percent of figures on an effect rung">
+        <div class="fill" style="width:94.5%"></div>
+      </div>
+      <p class="figure"><strong>94.5%</strong>
+         <span>52 of 55 figures on an effect rung,
+         across 4 surface(s)</span></p>
+      <h3>What blocks it</h3><ul class="why"><li>3 of 55 case(s) stand below the effect rung, across 1 surface(s)</li></ul>
+      <h3>Where the shortfall is</h3><ul class="surfaces"><li><code>engine://audit-policy</code><span class="n">34/37</span><span class="short">3 short</span><div class="ids">CASE-0333 (source-analysis), CASE-0334 (source-analysis), CASE-0335 (source-analysis)</div></li></ul>
+    </article>
+    <article class="card blocked">
+      <header><h2>registry-drift</h2><span class="tier">tier 0</span></header>
+      <div class="meter" role="img" aria-label="96.3 percent of figures on an effect rung">
+        <div class="fill" style="width:96.3%"></div>
+      </div>
+      <p class="figure"><strong>96.3%</strong>
+         <span>26 of 27 figures on an effect rung,
+         across 3 surface(s)</span></p>
+      <h3>What blocks it</h3><ul class="why"><li>1 of 27 case(s) stand below the effect rung, across 1 surface(s)</li></ul>
+      <h3>Where the shortfall is</h3><ul class="surfaces"><li><code>tool://reckoning/compare</code><span class="n">15/16</span><span class="short">1 short</span><div class="ids">CASE-0455 (source-analysis)</div></li></ul>
+    </article>
+<footer>A tier above 0 means a machine may close items in that class and no person will
+look at the item. A proposal is not a promotion: the charter says the signature is the
+commit, and that an agent committing it is not a signature. Generated by
+<code>scripts/campaign/warrant_promotion.py</code>; no network resource is referenced.</footer>
+</div></body></html>

@@ -1,0 +1,27 @@
+{
+  "case": "CASE-0800",
+  "requirement": "REQ-102",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:07:33Z",
+  "tree": {
+    "commit": "7fd1f83",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Rendered and read back through Obscura at file:// \u2014 7 cards, 2 ok, 5 blocked, the first meter filled 852px at rgb(47,111,79). A dashboard asserted from the generator's own variables would pass over a page that never rendered.",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0137/warrant-tiers.html",
+      "sha256_16": "47ba4b1eaf5bf5ce",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0137/warrant-tiers.json",
+      "sha256_16": "cabb7b0455ef5e43",
+      "present": true
+    }
+  ]
+}

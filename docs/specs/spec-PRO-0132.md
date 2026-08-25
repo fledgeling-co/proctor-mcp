@@ -1,7 +1,7 @@
 # Spec PRO-0132 — Automated Warrant Tier Promotion Ledger Helper
 
 **Brief:** `docs/features-to-triage/124-automated-warrant-tier-promotion-ledger-helper.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-025
 **Defects:** none

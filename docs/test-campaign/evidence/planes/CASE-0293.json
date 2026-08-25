@@ -5,9 +5,9 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
-  "recordedAt": "2026-08-25T03:00:24Z",
+  "recordedAt": "2026-08-25T03:07:33Z",
   "tree": {
-    "commit": "ec9592c",
+    "commit": "7fd1f83",
     "dirty": true
   },
   "witness": null,

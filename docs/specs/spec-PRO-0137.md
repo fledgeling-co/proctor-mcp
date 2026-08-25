@@ -1,7 +1,7 @@
 # Spec PRO-0137 — Warrant Assurance Tier Dashboard Exporter
 
 **Brief:** `docs/features-to-triage/129-warrant-assurance-tier-dashboard-exporter.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-025
 **Defects:** none

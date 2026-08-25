@@ -5,9 +5,9 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
-  "recordedAt": "2026-08-25T03:00:24Z",
+  "recordedAt": "2026-08-25T03:07:33Z",
   "tree": {
-    "commit": "ec9592c",
+    "commit": "7fd1f83",
     "dirty": true
   },
   "witness": {

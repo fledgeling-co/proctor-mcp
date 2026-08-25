@@ -2840,6 +2840,70 @@ def test_mutation_report_carries_its_denominators() -> None:
                    f"somebody can open", "\n".join(bad[:5]))
 
 
+
+# ── PRO-0132 / PRO-0137 · the promotion helper and its dashboard ────────────
+#
+# The failure this guards is a promotion proposed over an empty population, or
+# over figures taken while the campaign gate was red. Both read as 100%.
+def test_warrant_promotion_refuses_an_empty_population() -> None:
+    script = ROOT / "scripts" / "campaign" / "warrant_promotion.py"
+    out = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(out.returncode == 0, "the promotion helper runs against this warrant",
+          out.stderr[-300:])
+    check("qualify for promotion" in out.stdout and "blocked" in out.stdout,
+          "it answers both questions, not just the flattering one", out.stdout[:300])
+    check("CASE-" in out.stdout,
+          "a blocked class names the case ids in the way, not just a percentage",
+          out.stdout[-600:])
+
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        shutil.copytree(ROOT / ".warrant", root / ".warrant")
+        (root / "docs").mkdir()
+        shutil.copytree(CAMPAIGN_DIR, root / "docs" / "test-campaign")
+
+        # A class whose surfaces match nothing must be refused rather than
+        # reported at 100% over zero figures.
+        toml = (root / ".warrant" / "warrant.toml")
+        toml.write_text(toml.read_text() + '\n[[classes]]\nname = "nothing-at-all"\n'
+                        'tier = 0\nescalation = "owner"\ncensus = true\n'
+                        'plane = "oracle"\nsurfaces = ["tool://no-such-surface/*"]\n')
+        health = root / ".warrant" / "suite-health.json"
+        blob = json.loads(health.read_text())
+        blob["campaign_dir"] = str(root / "docs" / "test-campaign")
+        health.write_text(json.dumps(blob, indent=2) + "\n")
+
+        empty = subprocess.run([sys.executable, str(script), "--root", str(root)],
+                               capture_output=True, text=True)
+        check("nothing-at-all" in empty.stdout and "not a class that passed" in empty.stdout,
+              "a class with no surface in it is blocked, not promoted at 100% of nothing",
+              empty.stdout[-500:])
+
+        # And a red campaign gate blocks every class, however good the figures.
+        blob["campaign_gate_clear"] = False
+        health.write_text(json.dumps(blob, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--root", str(root)],
+                             capture_output=True, text=True)
+        check("No class qualifies for promotion." in red.stdout,
+              "no class is promoted while the campaign gate was not clear",
+              red.stdout[:400])
+        check("had not finished" in red.stdout,
+              "and the reason names the gate rather than the figures", red.stdout[-500:])
+
+
+def test_warrant_dashboard_is_self_contained() -> None:
+    page = CAMPAIGN_DIR / "evidence" / "PRO-0137" / "warrant-tiers.html"
+    check(page.is_file(), "the dashboard is on disk", str(page))
+    html = page.read_text()
+    for needle in ("http://", "https://", "src=", "//cdn"):
+        check(needle not in html,
+              f"the dashboard references no {needle!r} — a page that needs the network "
+              f"renders blank on the machine somebody opens it on",
+              html[:200])
+    check("<title>" in html and "class=\"card" in html,
+          "and it is a real page rather than a stub", html[:200])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2897,7 +2961,9 @@ def main() -> int:
                test_requirement_evidence_is_backed_by_a_passing_case,
                test_brief_validation_records_are_recheckable,
                test_a_generated_untriaged_brief_is_never_validated,
-               test_mutation_report_carries_its_denominators):
+               test_mutation_report_carries_its_denominators,
+               test_warrant_promotion_refuses_an_empty_population,
+               test_warrant_dashboard_is_self_contained):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

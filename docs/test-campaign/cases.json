@@ -8915,5 +8915,40 @@
       "docs/test-campaign/evidence/mutation-aggregate.txt"
     ],
     "note": "PRO-0142 acceptance 3 and 4. Each of the 47 survivors carries its file, line, enclosing declaration and the edit that survived \u2014 `'||' -> '&&'` in AXEngineImpl's liveRunningApps, `'==' -> '!='` in SessionKill.includingBarePid. The clustering pass names a declaration carrying several survivors as ONE untested branch rather than several, which is the difference between a work list and a wall."
+  },
+  {
+    "id": "CASE-0799",
+    "req": "REQ-102",
+    "surface": "SURF-032",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The helper refuses a class whose population is empty: a threshold met over zero figures is named as 'a class with nothing in it is not a class that passed' rather than reported at 100%. It also refuses every class when the campaign gate is not clear, because a figure taken during an unfinished run describes an unfinished run.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/warrant_promotion.py",
+      "docs/test-campaign/evidence/PRO-0137/warrant-tiers.txt",
+      "docs/test-campaign/evidence/PRO-0137/warrant-tiers.json"
+    ],
+    "note": "PRO-0132. The charter, oracle-coverage.json and suite-health.json are joined on the surface ROUTE the charter globs against rather than the campaign's surface id \u2014 joining on the wrong key is how a class reads as having no evidence at all. Two classes qualify (run-lifecycle 44/44, release-integrity 1/1) and five are blocked, each with the exact case ids and rungs standing in the way. Nothing edits warrant.toml: the charter says the signature is the commit and an agent committing it is not a signature, so the tool writes the ratification block and stops."
+  },
+  {
+    "id": "CASE-0800",
+    "req": "REQ-102",
+    "surface": "SURF-032",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Rendered and read back through Obscura at file:// \u2014 7 cards, 2 ok, 5 blocked, the first meter filled 852px at rgb(47,111,79). A dashboard asserted from the generator's own variables would pass over a page that never rendered.",
+    "defects": [],
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0137/warrant-tiers.html",
+      "docs/test-campaign/evidence/PRO-0137/warrant-tiers.json"
+    ],
+    "note": "PRO-0137. One self-contained file, 9.5 KB, zero external references \u2014 grep for http, cdn or src= returns 0. A dashboard that needs the network renders blank on the machine somebody actually opens it on. Each blocked class card names the surfaces short of the threshold and the case ids under each, because '84.0% (100 of 119)' tells nobody what to do next."
   }
 ]
