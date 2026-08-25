@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [A100]
 reckon-sources: [REQ-046, REQ-130]
-status: to-triage
+status: retired
+triaged-as: PRO-0153
+validated-by: REQ-046, REQ-130 via CASE-0072, CASE-0073, CASE-0152, CASE-0552, CASE-0554, CASE-0566
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # An arming claim nobody checks
 

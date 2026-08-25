@@ -1,153 +1,160 @@
 {
   "validated": [
     {
-      "brief": "120-native-ocr-and-high-dpi-inspection-fixture.md",
+      "brief": "145-an-arming-claim-nobody-checks.md",
       "requirements": [
-        "REQ-007"
-      ],
-      "surfaces": [
-        "SURF-005"
-      ],
-      "cases": [
-        "CASE-0009"
-      ],
-      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
-      "rungs": [
-        "outcome"
-      ],
-      "viaDefect": null
-    },
-    {
-      "brief": "123-high-dpi-display-scale-factor-injection-helper.md",
-      "requirements": [
-        "REQ-007"
-      ],
-      "surfaces": [
-        "SURF-005"
-      ],
-      "cases": [
-        "CASE-0009"
-      ],
-      "provider": "CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents",
-      "rungs": [
-        "outcome"
-      ],
-      "viaDefect": null
-    },
-    {
-      "brief": "140-deterministic-lane-routing-and-selection-record.md",
-      "requirements": [
-        "REQ-130",
-        "REQ-151"
-      ],
-      "surfaces": [
-        "SURF-026",
-        "SURF-027",
-        "SURF-030"
-      ],
-      "cases": [
-        "CASE-0552",
-        "CASE-0554",
-        "CASE-0566",
-        "CASE-0601"
-      ],
-      "provider": "none",
-      "rungs": [
-        "metamorphic",
-        "outcome"
-      ],
-      "viaDefect": null
-    },
-    {
-      "brief": "141-skill-overlay-family-guidance-reader.md",
-      "requirements": [
-        "REQ-091",
-        "REQ-096"
-      ],
-      "surfaces": [
-        "SURF-002",
-        "SURF-029"
-      ],
-      "cases": [
-        "CASE-0370",
-        "CASE-0804"
-      ],
-      "provider": "none",
-      "rungs": [
-        "metamorphic",
-        "outcome"
-      ],
-      "viaDefect": null
-    },
-    {
-      "brief": "142-capture-directory-identity-manifest.md",
-      "requirements": [
-        "REQ-111",
-        "REQ-133"
-      ],
-      "surfaces": [
-        "SURF-022",
-        "SURF-027"
-      ],
-      "cases": [
-        "CASE-0472",
-        "CASE-0479",
-        "CASE-0480",
-        "CASE-0546",
-        "CASE-0547",
-        "CASE-0801"
-      ],
-      "provider": "none",
-      "rungs": [
-        "effect-witness",
-        "metamorphic",
-        "outcome"
-      ],
-      "viaDefect": null
-    },
-    {
-      "brief": "143-session-claim-provenance-audit-gate.md",
-      "requirements": [
-        "REQ-122",
-        "REQ-156"
-      ],
-      "surfaces": [
-        "SURF-024",
-        "SURF-031"
-      ],
-      "cases": [
-        "CASE-0523",
-        "CASE-0524",
-        "CASE-0525",
-        "CASE-0526",
-        "CASE-0528",
-        "CASE-0625"
-      ],
-      "provider": "none",
-      "rungs": [
-        "outcome"
-      ],
-      "viaDefect": null
-    },
-    {
-      "brief": "144-instrument-availability-disclosure-reporter.md",
-      "requirements": [
-        "REQ-065",
+        "REQ-046",
         "REQ-130"
       ],
       "surfaces": [
+        "SURF-004",
         "SURF-022",
+        "SURF-024",
         "SURF-026",
-        "SURF-027"
+        "SURF-027",
+        "SURF-029"
       ],
       "cases": [
-        "CASE-0200",
+        "CASE-0072",
+        "CASE-0073",
+        "CASE-0152",
         "CASE-0552",
         "CASE-0554",
         "CASE-0566"
       ],
       "provider": "none",
       "rungs": [
+        "metamorphic",
+        "outcome"
+      ],
+      "viaDefect": null
+    },
+    {
+      "brief": "146-a-gate-that-reads-the-number-and-not-the-word.md",
+      "requirements": [
+        "REQ-120",
+        "REQ-134"
+      ],
+      "surfaces": [
+        "SURF-022",
+        "SURF-023",
+        "SURF-026",
+        "SURF-029"
+      ],
+      "cases": [
+        "CASE-0505",
+        "CASE-0507",
+        "CASE-0508",
+        "CASE-0509",
+        "CASE-0510",
+        "CASE-0511"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ],
+      "viaDefect": null
+    },
+    {
+      "brief": "147-a-gate-that-loses-which-check-failed.md",
+      "requirements": [
+        "REQ-045",
+        "REQ-130"
+      ],
+      "surfaces": [
+        "SURF-022",
+        "SURF-026",
+        "SURF-027",
+        "SURF-029"
+      ],
+      "cases": [
+        "CASE-0063",
+        "CASE-0552",
+        "CASE-0554",
+        "CASE-0566",
+        "CASE-0822"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ],
+      "viaDefect": null
+    },
+    {
+      "brief": "148-nothing-counts-the-ledgers-status-words.md",
+      "requirements": [
+        "REQ-120",
+        "REQ-122"
+      ],
+      "surfaces": [
+        "SURF-023",
+        "SURF-024",
+        "SURF-029"
+      ],
+      "cases": [
+        "CASE-0505",
+        "CASE-0507",
+        "CASE-0508",
+        "CASE-0509",
+        "CASE-0510",
+        "CASE-0511"
+      ],
+      "provider": "none",
+      "rungs": [
+        "outcome"
+      ],
+      "viaDefect": null
+    },
+    {
+      "brief": "149-a-capture-store-an-outside-probe-can-find.md",
+      "requirements": [
+        "REQ-111",
+        "REQ-113"
+      ],
+      "surfaces": [
+        "SURF-027"
+      ],
+      "cases": [
+        "CASE-0472",
+        "CASE-0475",
+        "CASE-0476",
+        "CASE-0479",
+        "CASE-0480",
+        "CASE-0801"
+      ],
+      "provider": "none",
+      "rungs": [
+        "metamorphic",
+        "outcome"
+      ],
+      "viaDefect": null
+    },
+    {
+      "brief": "150-an-auditor-clearing-its-own-gate.md",
+      "requirements": [
+        "REQ-046",
+        "REQ-135"
+      ],
+      "surfaces": [
+        "SURF-004",
+        "SURF-022",
+        "SURF-024",
+        "SURF-027",
+        "SURF-029"
+      ],
+      "cases": [
+        "CASE-0072",
+        "CASE-0073",
+        "CASE-0152",
+        "CASE-0548",
+        "CASE-0553",
+        "CASE-0557"
+      ],
+      "provider": "none",
+      "rungs": [
+        "effect-witness",
         "metamorphic",
         "outcome"
       ],
@@ -289,11 +296,19 @@
       "why": "already retired"
     },
     {
+      "brief": "120-native-ocr-and-high-dpi-inspection-fixture.md",
+      "why": "already retired"
+    },
+    {
       "brief": "121-surface-conformance-and-capture-trust-sourcing.md",
       "why": "already retired"
     },
     {
       "brief": "122-operator-state-and-evidence-integrity-chain.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "123-high-dpi-display-scale-factor-injection-helper.md",
       "why": "already retired"
     },
     {
@@ -362,6 +377,26 @@
     },
     {
       "brief": "139-multi-plane-verification-receipt-generator.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "140-deterministic-lane-routing-and-selection-record.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "141-skill-overlay-family-guidance-reader.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "142-capture-directory-identity-manifest.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "143-session-claim-provenance-audit-gate.md",
+      "why": "already retired"
+    },
+    {
+      "brief": "144-instrument-availability-disclosure-reporter.md",
       "why": "already retired"
     },
     {

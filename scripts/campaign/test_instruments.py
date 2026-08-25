@@ -3240,6 +3240,40 @@ def _newest_vacuity_check() -> Path | None:
     return None
 
 
+
+# ── A brief cannot still be untriaged once its spec has merged ──────────────
+#
+# `status: to-triage` is a statement about the QUEUE, and it stops being true
+# the moment an id is allocated. Left there it makes the reckoning count built
+# work as a decision somebody still owes — measured twice, in Waves 27 and 28,
+# on thirteen briefs between them. Hand-correcting it a third time would be
+# treating a recurrence as an incident.
+def test_no_brief_is_untriaged_while_its_spec_is_merged() -> None:
+    briefs = ROOT / "docs" / "features-to-triage"
+    ledger = (ROOT / "docs" / "feature-specs" / "LEDGER.md").read_text()
+    status = {m.group(1): m.group(2).strip()
+              for m in re.finditer(r"^\| (PRO-\d{4}) \|[^|]*\|[^|]*\| ([^|]+)\|", ledger, re.M)}
+    claims = {}
+    for spec in sorted((ROOT / "docs" / "specs").glob("spec-PRO-*.md")):
+        m = re.search(r"^\*\*Brief:\*\*\s+`([^`]+)`", spec.read_text(), re.M)
+        if m:
+            claims[Path(m.group(1)).name] = spec.stem.replace("spec-", "")
+
+    stale, checked = [], 0
+    for f in sorted(briefs.rglob("*.md")):
+        head = f.read_text()[:800]
+        if not re.search(r"^status:\s*to-triage\s*$", head, re.M):
+            continue
+        checked += 1
+        pid = claims.get(f.name)
+        if pid and status.get(pid, "") == "Merged":
+            stale.append(f"{f.name} is to-triage while {pid} is Merged")
+    check(not stale,
+          f"no brief reads to-triage while the spec claiming it has merged "
+          f"({checked} untriaged brief(s) examined)",
+          "\n".join(stale[:8]))
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3304,7 +3338,8 @@ def main() -> int:
                test_skill_overlay_reader_fires_on_the_running_family,
                test_claim_provenance_gate_and_its_waiver_rule,
                test_claim_provenance_reads_the_verdict_not_only_the_number,
-               test_blind_pass_runs_and_holds_its_ratchet):
+               test_blind_pass_runs_and_holds_its_ratchet,
+               test_no_brief_is_untriaged_while_its_spec_is_merged):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

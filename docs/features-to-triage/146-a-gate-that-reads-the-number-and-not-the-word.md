@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [A278]
 reckon-sources: [REQ-120, REQ-134]
-status: to-triage
+status: retired
+triaged-as: PRO-0154
+validated-by: REQ-120, REQ-134 via CASE-0505, CASE-0507, CASE-0508, CASE-0509, CASE-0510, CASE-0511
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # A gate that reads the number and not the word
 

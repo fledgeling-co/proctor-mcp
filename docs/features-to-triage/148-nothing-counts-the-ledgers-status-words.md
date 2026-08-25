@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [A279]
 reckon-sources: [REQ-120, REQ-122]
-status: to-triage
+status: retired
+triaged-as: PRO-0156
+validated-by: REQ-120, REQ-122 via CASE-0505, CASE-0507, CASE-0508, CASE-0509, CASE-0510, CASE-0511
+validated-rungs: outcome
+validated-provider: none
 ---
 # Nothing counts the ledger's status words
 

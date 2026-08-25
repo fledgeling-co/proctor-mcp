@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [self-observed]
 reckon-sources: [REQ-135, REQ-046]
-status: to-triage
+status: retired
+triaged-as: PRO-0158
+validated-by: REQ-046, REQ-135 via CASE-0072, CASE-0073, CASE-0152, CASE-0548, CASE-0553, CASE-0557
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: none
 ---
 # An auditor clearing its own gate
 

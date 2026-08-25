@@ -5,9 +5,9 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T09:38:18Z",
+  "recordedAt": "2026-08-25T09:46:45Z",
   "tree": {
-    "commit": "4b95f98",
+    "commit": "cc0e8b0",
     "dirty": true
   },
   "witness": null,
@@ -20,7 +20,7 @@
     },
     {
       "path": "docs/test-campaign/evidence/PRO-0133/validation.json",
-      "sha256_16": "0e81b5ed06719e1a",
+      "sha256_16": "b61d45179834628b",
       "present": true
     },
     {

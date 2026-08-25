@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [A283]
 reckon-sources: [REQ-045, REQ-130]
-status: to-triage
+status: retired
+triaged-as: PRO-0155
+validated-by: REQ-045, REQ-130 via CASE-0063, CASE-0552, CASE-0554, CASE-0566, CASE-0822
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # A gate that loses which check failed
 

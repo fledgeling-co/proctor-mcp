@@ -3247,7 +3247,7 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
 | `ledger_gate.py` | **0** | **127 ledger rows · 127 specs on disk · 0 declared without spec** |
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (119 briefs: 119 claimed 1-to-1, 0 registered, 0 unclaimed) |
-| `reckon.py check` | **0** | **926 rows reconciled**, gate clean |
+| `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 23 — High-DPI Inspection Fixtures, Warrant Charter Sourcing & Audit Provenance (2026-08-24)
 
@@ -3273,7 +3273,7 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
 | `ledger_gate.py` | **0** | **132 ledger rows · 132 specs on disk · 0 declared without spec** |
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (124 briefs: 124 claimed 1-to-1, 0 registered, 0 unclaimed) |
-| `reckon.py check` | **0** | **933 rows reconciled**, gate clean |
+| `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 24 — Legacy Spec-Validation, Warrant Figure Completeness & Assurance Dashboard (2026-08-24)
 
@@ -3299,7 +3299,7 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
 | `ledger_gate.py` | **0** | **137 ledger rows · 137 specs on disk · 0 declared without spec** |
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (129 briefs: 129 claimed 1-to-1, 0 registered, 0 unclaimed) |
-| `reckon.py check` | **0** | **939 rows reconciled**, gate clean |
+| `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 25 — Mutation Hardening, Direction Validation & Process Chaos Fixtures (2026-08-24)
 
@@ -3325,7 +3325,7 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
 | `ledger_gate.py` | **0** | **142 ledger rows · 142 specs on disk · 0 declared without spec** |
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (134 briefs: 134 claimed 1-to-1, 0 registered, 0 unclaimed) |
-| `reckon.py check` | **0** | **947 rows reconciled**, gate clean |
+| `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 26 — Legacy Validation 04..10, Socket Boundary Fixtures & Multi-Plane Receipts (2026-08-25)
 
@@ -3351,7 +3351,7 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
 | `ledger_gate.py` | **0** | **147 ledger rows · 147 specs on disk · 0 declared without spec** |
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (139 briefs: 139 claimed 1-to-1, 0 registered, 0 unclaimed) |
-| `reckon.py check` | **0** | **952 rows reconciled**, gate clean |
+| `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 27 — The three censuses, the join, and the two defects driving Proctor at Proctor found (2026-08-25)
 
@@ -3418,11 +3418,11 @@ grok-4.6 at xhigh returned **UNSOUND** on `brief_validation.py`'s first join, an
 | `verification_record.py check` | **0** | 2 records · 1 substitution, with its reason |
 | `campaign.py check` | **0** | 497 pass · 3 n/a of **500**; all three censuses declared |
 | `strict-check.py` | **0** | **ratchet 438 held** |
-| `vacuity-check.py --gate` | **0** | 0 findings, 29/29 providers resolved |
+| `vacuity-check.py` | ratcheted | unclassed 0 · uncensused 0 · **blind 85 of 616 mutating over 2,224 examined** — the blind pass had never run here until `testRoot` was declared; ratcheted in test_instruments at 85, PRO-0079 measured the population at 0 genuine |
 | `capture-lineage.py --gate` | **0** | ratchet 6 held |
 | `ledger_gate.py` | **0** | 158 rows · 158 specs · statuses summing to 158, outstanding 0 |
 | `spec_citation_measure.py` | **0** | 19/19 (150 briefs, 0 unclaimed) |
 | `spec_symbol_linter.py --gate` | **0** | ratchet 825 held |
 | `mutation_report.py --gate` | **0** | ratchet 47 survivors held |
-| `test_instruments.py` | **0** | **338 passed, 0 failed** |
-| `reckon.py check` | **0** | 979 rows · 9 remaining · gate clean · ratchet clean |
+| `test_instruments.py` | **0** | **372 passed, 0 failed** |
+| `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |

@@ -5,9 +5,9 @@
   "oracle": "effect-witness",
   "plane": "live-external",
   "placedBecause": "the ios-sim lane commits to a display server, whatever the artefact reads as",
-  "recordedAt": "2026-08-25T09:38:18Z",
+  "recordedAt": "2026-08-25T09:46:45Z",
   "tree": {
-    "commit": "4b95f98",
+    "commit": "cc0e8b0",
     "dirty": true
   },
   "witness": {

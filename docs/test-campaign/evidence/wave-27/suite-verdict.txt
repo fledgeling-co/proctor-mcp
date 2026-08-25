@@ -1,5 +1,5 @@
-Wave 28 — the suite
+Full campaign + reckoning run
 command: ./scripts/test.sh
-date: Tue 25 Aug 2026 19:22:13 AEST
-􁁛  Test run with 2173 tests in 275 suites passed after 101.655 seconds.
-PASS: 􁁛  Test run with 2173 tests in 275 suites passed after 101.655 seconds.
+date: Tue 25 Aug 2026 19:50:25 AEST
+􁁛  Test run with 2173 tests in 275 suites passed after 181.772 seconds.
+PASS: 􁁛  Test run with 2173 tests in 275 suites passed after 181.772 seconds.

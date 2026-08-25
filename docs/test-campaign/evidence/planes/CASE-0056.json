@@ -5,9 +5,9 @@
   "oracle": "interactive-glass",
   "plane": "live-external",
   "placedBecause": "the guest lane runs outside this host's process tree",
-  "recordedAt": "2026-08-25T09:38:18Z",
+  "recordedAt": "2026-08-25T09:46:45Z",
   "tree": {
-    "commit": "4b95f98",
+    "commit": "cc0e8b0",
     "dirty": true
   },
   "witness": null,

@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [A277, R4]
 reckon-sources: [REQ-111, REQ-113]
-status: to-triage
+status: retired
+triaged-as: PRO-0157
+validated-by: REQ-111, REQ-113 via CASE-0472, CASE-0475, CASE-0476, CASE-0479, CASE-0480, CASE-0801
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # A capture store an outside probe can find
 
