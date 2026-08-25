@@ -3240,8 +3240,72 @@ def main() -> int:
         except Exception as exc:                                    # noqa: BLE001
             check(False, f"{fn.__name__} raised", f"{type(exc).__name__}: {exc}")
     failed = [label for ok, label in RESULTS if not ok]
+
+    # PRO-0155. Which check failed, kept rather than printed and lost.
+    #
+    # This gate reported one failure out of several hundred checks and none on
+    # three consecutive re-runs, and which check it was could not be
+    # established: the failure went to the terminal and the line had scrolled by
+    # the time anybody looked. A red nobody can name is the one people learn to
+    # re-run rather than read, and a re-run that passes is not evidence the
+    # first result was wrong.
+    #
+    # Appended rather than overwritten, because an overwritten record loses
+    # exactly the intermittent case it exists for.
+    record = ROOT / "docs" / "test-campaign" / "instrument-runs.jsonl"
+    stamp = subprocess.run(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
+                           capture_output=True, text=True).stdout.strip()
+    head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"],
+                          capture_output=True, text=True).stdout.strip()
+    dirty = bool(subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain"],
+                                capture_output=True, text=True).stdout.strip())
+    try:
+        with record.open("a") as fh:
+            fh.write(json.dumps({
+                "at": stamp, "commit": head, "dirty": dirty,
+                "checks": len(RESULTS), "passed": len(RESULTS) - len(failed),
+                "failed": failed,
+                "note": ("A run that passes after a failure leaves both rows here, so an "
+                         "intermittent result is visible as one rather than smoothed away by "
+                         "the re-run."),
+            }) + "\n")
+    except OSError:
+        pass
+
     print(f"campaign instruments: {len(RESULTS) - len(failed)} passed, {len(failed)} failed")
+
+    # A verdict that has been both red and green over the same commit, with a
+    # clean tree, is unreproducible — and that is a different thing from green.
+    unreproducible = _unreproducible_runs(record, head, dirty)
+    if unreproducible:
+        print(f"  UNREPRODUCIBLE: this gate has gone both red and green over {head} with a clean "
+              f"tree. Red on {unreproducible['red']}, green on {unreproducible['green']}. "
+              f"Failing check(s) recorded: {', '.join(unreproducible['labels']) or '(none named)'}")
     return 1 if failed else 0
+
+
+def _unreproducible_runs(record: Path, head: str, dirty: bool) -> dict | None:
+    """Has this gate gone red AND green over the same clean commit?
+
+    Only clean-tree runs count. A run over a dirty tree measures whatever was
+    uncommitted, so pairing one with a clean run would report every ordinary
+    edit as a reproducibility fault.
+    """
+    if dirty or not record.is_file():
+        return None
+    red, green, labels = [], [], set()
+    for line in record.read_text().splitlines():
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if row.get("commit") != head or row.get("dirty"):
+            continue
+        (red if row.get("failed") else green).append(row.get("at"))
+        labels.update(row.get("failed") or [])
+    if red and green:
+        return {"red": red[-1], "green": green[-1], "labels": sorted(labels)}
+    return None
 
 
 if __name__ == "__main__":

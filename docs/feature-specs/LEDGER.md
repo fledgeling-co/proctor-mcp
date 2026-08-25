@@ -164,7 +164,7 @@
 | PRO-0152 | Instrument Availability Disclosure Reporter | 2026-08-25 | Merged |
 | PRO-0153 | Arming Claim Verification | 2026-08-25 | Merged |
 | PRO-0154 | Verdict-Word Reading in the Provenance Gate | 2026-08-25 | Merged |
-| PRO-0155 | Durable Record of a Failing Check | 2026-08-25 | Ready for AI |
+| PRO-0155 | Durable Record of a Failing Check | 2026-08-25 | Merged |
 | PRO-0156 | Ledger Status Distribution | 2026-08-25 | Merged |
-| PRO-0157 | Capture Store Discovery by Convention | 2026-08-25 | Ready for AI |
-| PRO-0158 | Reclassification Record for an Audit Pass | 2026-08-25 | Ready for AI |
+| PRO-0157 | Capture Store Discovery by Convention | 2026-08-25 | Merged |
+| PRO-0158 | Reclassification Record for an Audit Pass | 2026-08-25 | Merged |

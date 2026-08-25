@@ -149,9 +149,7 @@
   },
   "sourceRoot": "Sources",
   "captureRoots": [
-    "docs/test-campaign/evidence/shots",
-    "docs/test-campaign/evidence/shots/mock",
-    "docs/test-campaign/evidence/PRO-0081/shots",
-    "docs/test-campaign/evidence/guest"
-  ]
+    "docs/test-campaign/evidence"
+  ],
+  "captureRootsConventionalPath": "docs/evidence"
 }

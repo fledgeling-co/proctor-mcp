@@ -9348,5 +9348,69 @@
         "scripts/campaign/ledger_gate.py"
       ]
     }
+  },
+  {
+    "id": "CASE-0821",
+    "req": "REQ-113",
+    "surface": "SURF-027",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "arm": {
+      "file": "docs/test-campaign/campaign.json",
+      "remove": "\"captureRootsConventionalPath\": \"docs/evidence\"",
+      "after": "\"captureRootsConventionalPath\": \"docs/no-such-path\"",
+      "expectRed": [
+        "python3",
+        "scripts/campaign/capture_manifest.py",
+        "--gate"
+      ]
+    },
+    "armedBy": "Machine-readable arm (PRO-0153): pointing the conventional path at a directory that does not exist takes capture_manifest --gate red, because an outside probe finding nothing is not checked rather than clean.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/capture_manifest.py",
+      "docs/test-campaign/evidence/PRO-0157/discovery.txt",
+      "docs/test-campaign/capture-index.json"
+    ],
+    "note": "PRO-0157. The relation is between two ways of walking the same tree. An external audit reported no capture directory over 59 images because it tries conventional root names and reads no project configuration; a symlink at docs/evidence makes R4 run, with nothing duplicated on disk. The walk then found the declaration wrong: four declared roots produced 50 entries where convention found 59 \u2014 nine outside the declaration and four double-counted by roots that nested. captureRoots is now the single root that subsumes the store, and the gate fails when the two populations disagree."
+  },
+  {
+    "id": "CASE-0822",
+    "req": "REQ-045",
+    "surface": "SURF-029",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The relation is across runs over one commit: a red row and a green row for the same clean tree are reported as unreproducible rather than resolved by the later one. A record that overwrote would lose the pair and with it the whole condition.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/test_instruments.py",
+      "docs/test-campaign/instrument-runs.jsonl",
+      "docs/test-campaign/evidence/PRO-0155/failing-check-record.txt"
+    ],
+    "note": "PRO-0155. A red nobody can name is the one people learn to re-run rather than read, and a re-run that passes is not evidence the first result was wrong. Only clean-tree runs pair: a run over a dirty tree measures whatever was uncommitted, so pairing one with a clean run would report every ordinary edit as a reproducibility fault."
+  },
+  {
+    "id": "CASE-0823",
+    "req": "REQ-046",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "docs/test-campaign/evidence/PRO-0158/self-cleared.txt \u2014 replaying the exact reclassification the pass performed takes the gate to exit 1 naming all four rows; restoring the worklist returns exit 0.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/reclass_record.py",
+      "docs/test-campaign/evidence/PRO-0158/self-cleared.txt",
+      "tailings/reclass-history.jsonl"
+    ],
+    "note": "PRO-0158. The classification file is the gate's input and the pass is its only writer, so a pass that wants to finish clean can always finish clean. The tailings pass over Wave 27 corrected four artifacts and then re-graded the four rows, clearing its own gate; it caught that and reverted, and nothing in the tooling would have. Correcting the artifact and re-grading the claim are two acts and only the first belongs to the pass that found it."
   }
 ]

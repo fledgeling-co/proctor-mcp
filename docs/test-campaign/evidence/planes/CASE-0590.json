@@ -5,9 +5,9 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T09:04:41Z",
+  "recordedAt": "2026-08-25T09:18:07Z",
   "tree": {
-    "commit": "f8b0c55",
+    "commit": "679810a",
     "dirty": true
   },
   "witness": null,
@@ -20,7 +20,7 @@
     },
     {
       "path": "docs/feature-specs/LEDGER.md",
-      "sha256_16": "542a854846920324",
+      "sha256_16": "c5397eae861b2b3a",
       "present": true
     }
   ]

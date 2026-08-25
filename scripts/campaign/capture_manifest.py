@@ -79,9 +79,34 @@ def main() -> int:
 
     dupes = {h: p for h, p in by_hash.items() if len(p) > 1}
 
+    # PRO-0157. What an outside probe walking the conventional path finds, against
+    # what the declared roots produce. The two must be the same population.
+    #
+    # Measured 2026-08-25: four declared roots produced 50 entries where the
+    # conventional walk found 59 — nine images outside the declaration and four
+    # counted twice by two roots that nested. A declaration narrower than the
+    # store is the empty-denominator failure at the scale of a directory, and it
+    # is invisible until somebody walks the tree a different way.
+    conventional = cfg.get("captureRootsConventionalPath")
+    conv_paths: set[str] = set()
+    conv_missing = None
+    if conventional:
+        conv_root = ROOT / conventional
+        if not conv_root.exists():
+            conv_missing = conventional
+        else:
+            real = conv_root.resolve()
+            for f in sorted(real.rglob("*")):
+                if f.is_file() and f.suffix.lower() in IMAGE:
+                    conv_paths.add(str(f.resolve().relative_to(ROOT.resolve())))
+    declared_paths = {e["path"] for e in entries}
+
     # Which conventional names exist, so a reader can see why an external probe
     # looking for them came back empty rather than guessing at the reason.
     conventional_present = [c for c in CONVENTIONAL if (ROOT / c).is_dir()]
+
+    only_conv = sorted(conv_paths - declared_paths)
+    only_decl = sorted(declared_paths - conv_paths)
 
     index = {
         "note": ("Where this repository keeps its captures, declared so an audit does not have "
@@ -95,6 +120,10 @@ def main() -> int:
         "distinctImages": len(by_hash),
         "duplicateGroups": [{"sha256": h, "paths": p} for h, p in sorted(dupes.items())],
         "dispositionRecord": "scripts/campaign/shot_disposition.py",
+        "conventionalPath": conventional,
+        "conventionalPathMissing": conv_missing,
+        "foundOnlyByConvention": only_conv,
+        "foundOnlyByDeclaration": only_decl,
         "entries": entries,
     }
 
@@ -118,7 +147,29 @@ def main() -> int:
         index_path.write_text(json.dumps(index, indent=2) + "\n")
         print(f"\nwrote {index_path}")
 
+    if conventional:
+        if conv_missing:
+            print(f"\nthe conventional path {conventional} does not exist, so an outside probe "
+                  f"following convention finds nothing here")
+        else:
+            print(f"\nconventional path {conventional}: {len(conv_paths)} image(s) · "
+                  f"declared roots: {len(declared_paths)} · "
+                  + ("they agree" if not (only_conv or only_decl)
+                     else f"{len(only_conv)} only by convention, {len(only_decl)} only declared"))
+            for x in (only_conv + only_decl)[:8]:
+                print(f"  disagree: {x}")
+
     if a.gate:
+        if conventional and conv_missing:
+            print(f"\nFAIL  the conventional path {conventional} does not exist. An outside probe "
+                  f"following convention reports no capture directory, which is not checked "
+                  f"rather than clean.")
+            return 1
+        if conventional and (only_conv or only_decl):
+            print(f"\nFAIL  the conventional walk and the declared roots disagree by "
+                  f"{len(only_conv) + len(only_decl)} image(s) — a declaration narrower or wider "
+                  f"than the store is a denominator nobody can trust.")
+            return 1
         if missing_roots:
             print(f"\nFAIL  {len(missing_roots)} declared capture root(s) do not exist: "
                   f"{', '.join(missing_roots)} — a probe over an absent directory is not "

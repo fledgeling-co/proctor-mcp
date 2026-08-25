@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0821",
+  "requirement": "REQ-113",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T09:18:07Z",
+  "tree": {
+    "commit": "679810a",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Machine-readable arm (PRO-0153): pointing the conventional path at a directory that does not exist takes capture_manifest --gate red, because an outside probe finding nothing is not checked rather than clean.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/capture_manifest.py",
+      "sha256_16": "c7b09998d0ce4561",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0157/discovery.txt",
+      "sha256_16": "98ab67f322298988",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/capture-index.json",
+      "sha256_16": "8071e5937122ea3c",
+      "present": true
+    }
+  ]
+}

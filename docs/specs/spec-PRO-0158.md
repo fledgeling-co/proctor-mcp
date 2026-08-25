@@ -1,7 +1,7 @@
 # Spec PRO-0158 — Reclassification Record for an Audit Pass
 
 **Brief:** `docs/features-to-triage/150-an-auditor-clearing-its-own-gate.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-029
 **Defects:** none

@@ -1,0 +1,30 @@
+PRO-0157 — a capture store an outside probe can find
+date: Tue 25 Aug 2026 19:14:28 AEST
+
+== BEFORE ==
+  crossref.py notes: ["R4: no capture directory found; capture identity unchecked"]
+  over a tree holding 59 images.
+
+R4 tries six conventional names at the repository root — evidence, docs/evidence,
+shots, docs/shots, campaign, docs/campaign — and reads no project configuration.
+Declaring captureRoots in campaign.json answered this for this repository's own
+instruments and could not make somebody else's probe look anywhere new.
+
+== AFTER ==
+  docs/evidence -> test-campaign/evidence   (a symlink; nothing duplicated)
+  crossref.py notes: []
+R4 runs. The probe walks the conventional path and reaches the real store.
+
+== AND WHAT THAT WALK FOUND ==
+The conventional walk found 59 images where the four declared roots produced 50.
+Nine images lived outside the declaration and four were counted twice by two
+roots that nested. A declaration narrower than the store is the empty-denominator
+failure at the scale of a directory, and it is invisible until somebody walks the
+tree a different way — which is what an outside probe is for.
+
+  captureRoots is now the single root that subsumes the store.
+  conventional path docs/evidence: 59 image(s) · declared roots: 59 · they agree
+
+The gate now fails when the two disagree, and when the conventional path is
+absent — an outside probe reporting no capture directory is not checked rather
+than clean.

@@ -1,7 +1,7 @@
 # Spec PRO-0155 — Durable Record of a Failing Check
 
 **Brief:** `docs/features-to-triage/147-a-gate-that-loses-which-check-failed.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-029
 **Defects:** none

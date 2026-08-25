@@ -1,0 +1,20 @@
+PRO-0158 — an auditor clearing its own gate
+date: Tue 25 Aug 2026 19:17:56 AEST
+
+== THE ARM, replaying what the pass actually did ==
+  4 contradicted rows moved to substantiated:  exit=1
+    A278 contradicted -> substantiated  SELF-CLEARED
+    A100 contradicted -> substantiated  SELF-CLEARED
+    A277 contradicted -> substantiated  SELF-CLEARED
+    A279 contradicted -> substantiated  SELF-CLEARED
+  restored: exit=0
+
+The tailings pass over Wave 27 did exactly that — corrected the four artifacts,
+then re-graded the four rows, which cleared its own gate. It caught it and
+reverted. Nothing in the tooling would have.
+
+Two things are kept apart and only one is a conflict. Correcting the artifact is
+the pass's job: it establishes a number and writes it down. Re-grading the claim,
+by the same pass, over a row it had already called blocking, is the auditor
+grading its own repair. A class describes what the session SAID; a correction
+does not change what it said.

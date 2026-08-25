@@ -5,9 +5,9 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T09:04:41Z",
+  "recordedAt": "2026-08-25T09:18:07Z",
   "tree": {
-    "commit": "f8b0c55",
+    "commit": "679810a",
     "dirty": true
   },
   "witness": {
@@ -19,7 +19,7 @@
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "83c7a3fd02e4f45a",
+      "sha256_16": "5bab5614deb19126",
       "present": true
     },
     {

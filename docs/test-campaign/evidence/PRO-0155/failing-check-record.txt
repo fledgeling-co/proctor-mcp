@@ -1,0 +1,16 @@
+PRO-0155 — a gate that keeps which check failed
+date: Tue 25 Aug 2026 19:17:56 AEST
+
+The gate reported one failure out of several hundred checks, then none on three
+consecutive re-runs, and which check it was could not be established: the failure
+went to the terminal and the line had scrolled by the time anybody looked.
+
+docs/test-campaign/instrument-runs.jsonl now carries one row per run — the
+timestamp, the commit, whether the tree was dirty, the check count and the names
+of any that failed. Appended rather than overwritten, because an overwritten
+record loses exactly the intermittent case it exists for.
+
+And a verdict that has been both red and green over the SAME clean commit is
+reported as unreproducible, which is a different thing from green. Only
+clean-tree runs pair: a run over a dirty tree measures whatever was uncommitted,
+and pairing one with a clean run would report every ordinary edit as a fault.

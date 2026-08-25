@@ -1,15 +1,14 @@
 {
   "note": "Where this repository keeps its captures, declared so an audit does not have to guess. What each picture DEPICTS is not decided here \u2014 see scripts/campaign/shot_disposition.py, which was written by opening every file and looking at it.",
   "declaredRoots": [
-    "docs/test-campaign/evidence/shots",
-    "docs/test-campaign/evidence/shots/mock",
-    "docs/test-campaign/evidence/PRO-0081/shots",
-    "docs/test-campaign/evidence/guest"
+    "docs/test-campaign/evidence"
   ],
   "rootsMissing": [],
-  "conventionalRootsPresentAtRepoRoot": [],
-  "images": 54,
-  "distinctImages": 44,
+  "conventionalRootsPresentAtRepoRoot": [
+    "docs/evidence"
+  ],
+  "images": 59,
+  "distinctImages": 52,
   "duplicateGroups": [
     {
       "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
@@ -34,17 +33,10 @@
       ]
     },
     {
-      "sha256": "9c25ed38e92c0d2a37af0aeb6019f3689cff414efc0d2879a9ce7171c6bd0060",
+      "sha256": "a67cf67af07e4971c54f2e23a94f1602663f4955b8ba38ac7fbc508a03df7743",
       "paths": [
-        "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
-        "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png"
-      ]
-    },
-    {
-      "sha256": "ae4b315d49db16bddc3e8798cb51b10dc64cc7e36af930cf8b19230ba6831ec8",
-      "paths": [
-        "docs/test-campaign/evidence/shots/mock/surf-010-menubar.png",
-        "docs/test-campaign/evidence/shots/mock/surf-010-menubar.png"
+        "docs/test-campaign/evidence/app-icon-proctor.png",
+        "docs/test-campaign/evidence/shots/icon-proctor-1024.png"
       ]
     },
     {
@@ -54,347 +46,367 @@
         "docs/test-campaign/evidence/shots/overlay-exclusion-baseA.png",
         "docs/test-campaign/evidence/shots/overlay-exclusion-baseB.png"
       ]
-    },
-    {
-      "sha256": "f053f1e2284bbf493e670e4aeb28499c18c29bd99bd84722bd6eba31fa921a97",
-      "paths": [
-        "docs/test-campaign/evidence/shots/mock/surf-009-walkthrough.png",
-        "docs/test-campaign/evidence/shots/mock/surf-009-walkthrough.png"
-      ]
-    },
-    {
-      "sha256": "fc408b6c3e18c79f0356ea750afc9c49741e9dbea4e01974a012a561140474fb",
-      "paths": [
-        "docs/test-campaign/evidence/shots/mock/surf-008-status-window.png",
-        "docs/test-campaign/evidence/shots/mock/surf-008-status-window.png"
-      ]
     }
   ],
   "dispositionRecord": "scripts/campaign/shot_disposition.py",
+  "conventionalPath": "docs/evidence",
+  "conventionalPathMissing": null,
+  "foundOnlyByConvention": [],
+  "foundOnlyByDeclaration": [],
   "entries": [
     {
-      "path": "docs/test-campaign/evidence/shots/icon-audit-arrow-1024.png",
-      "sha256": "7fdb3536e6c5052af4e1fde9dd42870420fa287821d8fc604cbe78a4324cfd85",
-      "bytes": 18136,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/icon-audit-rasterB-1024.png",
-      "sha256": "7f6166226dfdb94add708700cdd3ca5ba1d1d74cffab1ecf5456fa8d6fa95d50",
-      "bytes": 1505713,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/icon-proctor-1024.png",
-      "sha256": "a67cf67af07e4971c54f2e23a94f1602663f4955b8ba38ac7fbc508a03df7743",
-      "bytes": 1376951,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/icon-run-r00-baseline-1024.png",
-      "sha256": "2184898473a0915a9fcdc48626b49d8403335bf5a5944da20a5d67cab35501ca",
-      "bytes": 244038,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/icon-run-r01-coarse-structure-1024.png",
-      "sha256": "6ccd84e18cae82546d16b57755ef4556f87e5f0d3cd31008f922fbc4bd12fda0",
-      "bytes": 413879,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/icon-run-r01-master-after-1024.png",
-      "sha256": "5fd9f9950c9fe21803ae4bd34e2d4c58938e461827f883d0ba11af506742280c",
-      "bytes": 250677,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/icon-run-r01-master-before-1024.png",
-      "sha256": "bdb8838e0f50e90b6b6c307f7aa352497245d5a65dc002e4d808c44b23bec9a5",
-      "bytes": 212324,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/icon-run-r02b-glass-translucency-1024.png",
-      "sha256": "5afe9eed9f8af025dfab37f2bc5290d10f39165d7105ff304f2f4fe0e43a301c",
-      "bytes": 515436,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/icon-run-r04-contact-shadow-1024.png",
-      "sha256": "7d5c07bb445545f59f3f150d1323a5eb75ba5a9bd41772ac653b79bacfe13184",
-      "bytes": 541471,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
-      "sha256": "9c25ed38e92c0d2a37af0aeb6019f3689cff414efc0d2879a9ce7171c6bd0060",
-      "bytes": 40057,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/mock/surf-008-status-window.png",
-      "sha256": "fc408b6c3e18c79f0356ea750afc9c49741e9dbea4e01974a012a561140474fb",
-      "bytes": 55777,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/mock/surf-009-walkthrough.png",
-      "sha256": "f053f1e2284bbf493e670e4aeb28499c18c29bd99bd84722bd6eba31fa921a97",
-      "bytes": 36773,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/mock/surf-010-menubar.png",
-      "sha256": "ae4b315d49db16bddc3e8798cb51b10dc64cc7e36af930cf8b19230ba6831ec8",
-      "bytes": 337,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/overlay-exclusion-armed.png",
-      "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
-      "bytes": 41268,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/overlay-exclusion-baseA.png",
-      "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
-      "bytes": 41268,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/overlay-exclusion-baseB.png",
-      "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
-      "bytes": 41268,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/step-a3-walkthrough-primary-disabled.png",
-      "sha256": "d7d9f2b5dfc172dc45df52d68f08e0be344c46503e6822ca438607d9f24b168f",
-      "bytes": 147672,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-003-drawn-pointer.png",
-      "sha256": "6e7a2b0256a5dcbc3eeecdec85f5304856ee38dd086eeda5f29d5c744f589908",
-      "bytes": 143842,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-004-run-hud.png",
-      "sha256": "fa7f64e3b7a11c53a52f993fe9663b32ca84fb0c02b5d04075de97998c071c9e",
-      "bytes": 136289,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-005-takeover-sck-external.png",
-      "sha256": "6fd8f87196a648c2ec6f7d67bb3950d8fde28843e3738d5a39dc436ef5c86ad7",
-      "bytes": 636565,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-005-takeover-sck-laptop.png",
-      "sha256": "652d36640f0a485cc5e1016a57f95d92d2b1f4b99f18e754bdcb0f80b8f1fe4f",
-      "bytes": 513267,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-005-takeover-sck-window.png",
-      "sha256": "4baff8a362099bc803c963a4ff4a187dc8eb702c8829971efdfef2597f7300c6",
-      "bytes": 40263,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-005-takeover-shield.png",
-      "sha256": "7946ed24967422fdf4c715c55315918458604fe3778f9e96a293d9748da2aa6f",
-      "bytes": 1037920,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-006-screen-capture.png",
-      "sha256": "ab31d8bf945d09bd5900ec037d1ba93c8eb17b13bd17e7d88ce335e92f00d311",
-      "bytes": 58873,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-006-self-excluded.png",
-      "sha256": "e90ce4108a6891fc5a38e020a6499a764a0b8b4f33e2b2eaa959c46eb3022df5",
-      "bytes": 13236,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-006-xproc-calculator.png",
-      "sha256": "685fa3235e42bd548b7419d7fccdccc7b60d6cb87235d53baa85f85dd69ec0fc",
-      "bytes": 149520,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-007-zoom.png",
-      "sha256": "f5686195906ee1ec2542e878be315c63e5a3b1f84e530102de6ef40b977788e8",
-      "bytes": 48627,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-008-status-window.png",
-      "sha256": "10480d409313135fe5d4888b7c2b133a5dabea58c5d10bda81a5e96fb8014978",
-      "bytes": 152688,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-008-tools.png",
-      "sha256": "e99b456e77575c378c5601dc61060b97c5ce492f2f5a564d6f4161bd2b1f248f",
-      "bytes": 150623,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-009-walkthrough.png",
-      "sha256": "80f045629a3ee664795b1c191906fdfef71e32a790d02797dda48209847768d5",
-      "bytes": 157312,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-010-menubar.png",
-      "sha256": "61bb6f68d7ded1e118cf6dc263f597cb7874877f0616b7c133ce3ffdbbb0c6f2",
-      "bytes": 10680,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/surf-028-about.png",
-      "sha256": "75ee625c4d9fda67d032421e17fd6f01e01ead3c8bd911b43bd064252d4c6e43",
-      "bytes": 119455,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepK-external.png",
-      "sha256": "cea3e1052e630da1fcac09bae9f7fd52b6c90b68a9829fe22a7121d3724c1109",
-      "bytes": 154617,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepK-extras-open.png",
-      "sha256": "1a9141438893bfd287cfa1640a1fcad15883b9945e1f0f19b696f3ea66ffd216",
-      "bytes": 222708,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepK-laptop.png",
-      "sha256": "342e46b0dab579d12eda9c9084c31f21319c1d17729536bed1805c55526c82cf",
-      "bytes": 154478,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepK-scale-1x.png",
-      "sha256": "665d9a52daf2df0863f3b78318dee3d27a04f9688f7db15c881b2bbd12befb0f",
-      "bytes": 86006,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepK-scale-small.png",
-      "sha256": "515e10e3a3fe4ed2e0e15ede0c3b47778046a9407061a2d336a107a8e6b98bfd",
-      "bytes": 165788,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepK-theme-after.png",
-      "sha256": "953b4fdf6d85770317ab61f7b70290a817c76022c85fb8771473f52210101579",
-      "bytes": 582784,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepK-theme-before.png",
-      "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
-      "bytes": 592144,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepK-theme-restored.png",
-      "sha256": "267ab59670504639c58a168f57d14babe4b51b414aa69a659905460f0592716a",
-      "bytes": 590527,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepL-status-agent-down.png",
-      "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
-      "bytes": 361696,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepL-status-t0.6.png",
-      "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
-      "bytes": 361696,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepL-status-t3.5.png",
-      "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
-      "bytes": 361696,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepL-wedged-recovered.png",
-      "sha256": "e687c3f78cf639cb35195401a566920526b11b1166a4d0d8c93e2573d12e364a",
-      "bytes": 373465,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepL-wedged-t1.png",
-      "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
-      "bytes": 592144,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepL-wedged-t14.png",
-      "sha256": "5c7d4535e70c1b9d4cb81d25798d4077b76cab9adf9a35196397151f78528018",
-      "bytes": 648609,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/sweepL-wedged-t7.png",
-      "sha256": "5c7d4535e70c1b9d4cb81d25798d4077b76cab9adf9a35196397151f78528018",
-      "bytes": 648609,
-      "root": "docs/test-campaign/evidence/shots"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
-      "sha256": "9c25ed38e92c0d2a37af0aeb6019f3689cff414efc0d2879a9ce7171c6bd0060",
-      "bytes": 40057,
-      "root": "docs/test-campaign/evidence/shots/mock"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/mock/surf-008-status-window.png",
-      "sha256": "fc408b6c3e18c79f0356ea750afc9c49741e9dbea4e01974a012a561140474fb",
-      "bytes": 55777,
-      "root": "docs/test-campaign/evidence/shots/mock"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/mock/surf-009-walkthrough.png",
-      "sha256": "f053f1e2284bbf493e670e4aeb28499c18c29bd99bd84722bd6eba31fa921a97",
-      "bytes": 36773,
-      "root": "docs/test-campaign/evidence/shots/mock"
-    },
-    {
-      "path": "docs/test-campaign/evidence/shots/mock/surf-010-menubar.png",
-      "sha256": "ae4b315d49db16bddc3e8798cb51b10dc64cc7e36af930cf8b19230ba6831ec8",
-      "bytes": 337,
-      "root": "docs/test-campaign/evidence/shots/mock"
+      "path": "docs/test-campaign/evidence/PRO-0081/a3-primary-disabled-crop.png",
+      "sha256": "3fdae80dcfaefd004773da83ead8d2b722b1a1765192f13d70877bf9f7b6fa39",
+      "bytes": 9062,
+      "root": "docs/test-campaign/evidence"
     },
     {
       "path": "docs/test-campaign/evidence/PRO-0081/shots/a3-walkthrough-permissions-disabled.png",
       "sha256": "9acbcc1d818e7ed4cce5b8fc6679c6cb7a368afc096228ba7f2b9b3e5f7bcc7b",
       "bytes": 180750,
-      "root": "docs/test-campaign/evidence/PRO-0081/shots"
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/control-blank.png",
+      "sha256": "675ea564b653ba26b5b3bb1b3b7c67fa39c4df5f842a831a637013efc27618ea",
+      "bytes": 234,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/subject-activity-monitor.png",
+      "sha256": "dc8f29468d0d89be31308cca6d7da3f1b317389515c1c51f153cd51a58c88ec5",
+      "bytes": 218937,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0083/glass/subject.png",
+      "sha256": "e8d60260add742ce9439ea05a962a7d7c364919cefa55fcb58adba386e45527d",
+      "bytes": 218941,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason-key.png",
+      "sha256": "6bb5be215cc932dd01b71b86d477ea695377c3c8d70ec1b20c114f844b74e4d1",
+      "bytes": 233203,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0086/walkthrough-permissions-reason.png",
+      "sha256": "a10a7e65e96e0358ec92566a11e14c865ee16ac1ae91cefc92937193d017db75",
+      "bytes": 229866,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/app-icon-proctor.png",
+      "sha256": "a67cf67af07e4971c54f2e23a94f1602663f4955b8ba38ac7fbc508a03df7743",
+      "bytes": 1376951,
+      "root": "docs/test-campaign/evidence"
     },
     {
       "path": "docs/test-campaign/evidence/guest/a1-guest-calculator-4x7-crop.png",
       "sha256": "71aae8abe056151f1e3e1df77a5cbd2070a40a0519ff65f971785611aeec50df",
       "bytes": 18463,
-      "root": "docs/test-campaign/evidence/guest"
+      "root": "docs/test-campaign/evidence"
     },
     {
       "path": "docs/test-campaign/evidence/guest/a1-guest-calculator-4x7.png",
       "sha256": "ecfe3fb1509a9741396fe77d544918ef6fe0b58ec6f661b0c8a8f76c1f07a22d",
       "bytes": 1040655,
-      "root": "docs/test-campaign/evidence/guest"
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/icon-audit-arrow-1024.png",
+      "sha256": "7fdb3536e6c5052af4e1fde9dd42870420fa287821d8fc604cbe78a4324cfd85",
+      "bytes": 18136,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/icon-audit-rasterB-1024.png",
+      "sha256": "7f6166226dfdb94add708700cdd3ca5ba1d1d74cffab1ecf5456fa8d6fa95d50",
+      "bytes": 1505713,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/icon-proctor-1024.png",
+      "sha256": "a67cf67af07e4971c54f2e23a94f1602663f4955b8ba38ac7fbc508a03df7743",
+      "bytes": 1376951,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/icon-run-r00-baseline-1024.png",
+      "sha256": "2184898473a0915a9fcdc48626b49d8403335bf5a5944da20a5d67cab35501ca",
+      "bytes": 244038,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/icon-run-r01-coarse-structure-1024.png",
+      "sha256": "6ccd84e18cae82546d16b57755ef4556f87e5f0d3cd31008f922fbc4bd12fda0",
+      "bytes": 413879,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/icon-run-r01-master-after-1024.png",
+      "sha256": "5fd9f9950c9fe21803ae4bd34e2d4c58938e461827f883d0ba11af506742280c",
+      "bytes": 250677,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/icon-run-r01-master-before-1024.png",
+      "sha256": "bdb8838e0f50e90b6b6c307f7aa352497245d5a65dc002e4d808c44b23bec9a5",
+      "bytes": 212324,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/icon-run-r02b-glass-translucency-1024.png",
+      "sha256": "5afe9eed9f8af025dfab37f2bc5290d10f39165d7105ff304f2f4fe0e43a301c",
+      "bytes": 515436,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/icon-run-r04-contact-shadow-1024.png",
+      "sha256": "7d5c07bb445545f59f3f150d1323a5eb75ba5a9bd41772ac653b79bacfe13184",
+      "bytes": 541471,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
+      "sha256": "9c25ed38e92c0d2a37af0aeb6019f3689cff414efc0d2879a9ce7171c6bd0060",
+      "bytes": 40057,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/mock/surf-008-status-window.png",
+      "sha256": "fc408b6c3e18c79f0356ea750afc9c49741e9dbea4e01974a012a561140474fb",
+      "bytes": 55777,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/mock/surf-009-walkthrough.png",
+      "sha256": "f053f1e2284bbf493e670e4aeb28499c18c29bd99bd84722bd6eba31fa921a97",
+      "bytes": 36773,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/mock/surf-010-menubar.png",
+      "sha256": "ae4b315d49db16bddc3e8798cb51b10dc64cc7e36af930cf8b19230ba6831ec8",
+      "bytes": 337,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/overlay-exclusion-armed.png",
+      "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
+      "bytes": 41268,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/overlay-exclusion-baseA.png",
+      "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
+      "bytes": 41268,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/overlay-exclusion-baseB.png",
+      "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
+      "bytes": 41268,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/step-a3-walkthrough-primary-disabled.png",
+      "sha256": "d7d9f2b5dfc172dc45df52d68f08e0be344c46503e6822ca438607d9f24b168f",
+      "bytes": 147672,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-003-drawn-pointer.png",
+      "sha256": "6e7a2b0256a5dcbc3eeecdec85f5304856ee38dd086eeda5f29d5c744f589908",
+      "bytes": 143842,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-004-run-hud.png",
+      "sha256": "fa7f64e3b7a11c53a52f993fe9663b32ca84fb0c02b5d04075de97998c071c9e",
+      "bytes": 136289,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-005-takeover-sck-external.png",
+      "sha256": "6fd8f87196a648c2ec6f7d67bb3950d8fde28843e3738d5a39dc436ef5c86ad7",
+      "bytes": 636565,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-005-takeover-sck-laptop.png",
+      "sha256": "652d36640f0a485cc5e1016a57f95d92d2b1f4b99f18e754bdcb0f80b8f1fe4f",
+      "bytes": 513267,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-005-takeover-sck-window.png",
+      "sha256": "4baff8a362099bc803c963a4ff4a187dc8eb702c8829971efdfef2597f7300c6",
+      "bytes": 40263,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-005-takeover-shield.png",
+      "sha256": "7946ed24967422fdf4c715c55315918458604fe3778f9e96a293d9748da2aa6f",
+      "bytes": 1037920,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-006-screen-capture.png",
+      "sha256": "ab31d8bf945d09bd5900ec037d1ba93c8eb17b13bd17e7d88ce335e92f00d311",
+      "bytes": 58873,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-006-self-excluded.png",
+      "sha256": "e90ce4108a6891fc5a38e020a6499a764a0b8b4f33e2b2eaa959c46eb3022df5",
+      "bytes": 13236,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-006-xproc-calculator.png",
+      "sha256": "685fa3235e42bd548b7419d7fccdccc7b60d6cb87235d53baa85f85dd69ec0fc",
+      "bytes": 149520,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-007-zoom.png",
+      "sha256": "f5686195906ee1ec2542e878be315c63e5a3b1f84e530102de6ef40b977788e8",
+      "bytes": 48627,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-008-status-window.png",
+      "sha256": "10480d409313135fe5d4888b7c2b133a5dabea58c5d10bda81a5e96fb8014978",
+      "bytes": 152688,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-008-tools.png",
+      "sha256": "e99b456e77575c378c5601dc61060b97c5ce492f2f5a564d6f4161bd2b1f248f",
+      "bytes": 150623,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-009-walkthrough.png",
+      "sha256": "80f045629a3ee664795b1c191906fdfef71e32a790d02797dda48209847768d5",
+      "bytes": 157312,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-010-menubar.png",
+      "sha256": "61bb6f68d7ded1e118cf6dc263f597cb7874877f0616b7c133ce3ffdbbb0c6f2",
+      "bytes": 10680,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/surf-028-about.png",
+      "sha256": "75ee625c4d9fda67d032421e17fd6f01e01ead3c8bd911b43bd064252d4c6e43",
+      "bytes": 119455,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepK-external.png",
+      "sha256": "cea3e1052e630da1fcac09bae9f7fd52b6c90b68a9829fe22a7121d3724c1109",
+      "bytes": 154617,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepK-extras-open.png",
+      "sha256": "1a9141438893bfd287cfa1640a1fcad15883b9945e1f0f19b696f3ea66ffd216",
+      "bytes": 222708,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepK-laptop.png",
+      "sha256": "342e46b0dab579d12eda9c9084c31f21319c1d17729536bed1805c55526c82cf",
+      "bytes": 154478,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepK-scale-1x.png",
+      "sha256": "665d9a52daf2df0863f3b78318dee3d27a04f9688f7db15c881b2bbd12befb0f",
+      "bytes": 86006,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepK-scale-small.png",
+      "sha256": "515e10e3a3fe4ed2e0e15ede0c3b47778046a9407061a2d336a107a8e6b98bfd",
+      "bytes": 165788,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepK-theme-after.png",
+      "sha256": "953b4fdf6d85770317ab61f7b70290a817c76022c85fb8771473f52210101579",
+      "bytes": 582784,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepK-theme-before.png",
+      "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
+      "bytes": 592144,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepK-theme-restored.png",
+      "sha256": "267ab59670504639c58a168f57d14babe4b51b414aa69a659905460f0592716a",
+      "bytes": 590527,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepL-status-agent-down.png",
+      "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
+      "bytes": 361696,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepL-status-t0.6.png",
+      "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
+      "bytes": 361696,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepL-status-t3.5.png",
+      "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
+      "bytes": 361696,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepL-wedged-recovered.png",
+      "sha256": "e687c3f78cf639cb35195401a566920526b11b1166a4d0d8c93e2573d12e364a",
+      "bytes": 373465,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepL-wedged-t1.png",
+      "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
+      "bytes": 592144,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepL-wedged-t14.png",
+      "sha256": "5c7d4535e70c1b9d4cb81d25798d4077b76cab9adf9a35196397151f78528018",
+      "bytes": 648609,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/shots/sweepL-wedged-t7.png",
+      "sha256": "5c7d4535e70c1b9d4cb81d25798d4077b76cab9adf9a35196397151f78528018",
+      "bytes": 648609,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a1-agent-capture.png",
+      "sha256": "493f532a5212162992ea1b7fa7e742fc3bbde8d0503a17dcb2ee12e354612db6",
+      "bytes": 51560,
+      "root": "docs/test-campaign/evidence"
+    },
+    {
+      "path": "docs/test-campaign/evidence/witness/a1b-agent-capture.png",
+      "sha256": "b0af4b4ac7494c83b2b2fb4a676bf0f18d31f9b0574b4a5ed947617fc6e8149e",
+      "bytes": 149189,
+      "root": "docs/test-campaign/evidence"
     }
   ]
 }

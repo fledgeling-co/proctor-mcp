@@ -1,7 +1,7 @@
 # Spec PRO-0157 — Capture Store Discovery by Convention
 
 **Brief:** `docs/features-to-triage/149-a-capture-store-an-outside-probe-can-find.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-027
 **Defects:** none

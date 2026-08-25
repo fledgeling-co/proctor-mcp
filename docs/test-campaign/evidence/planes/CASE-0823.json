@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0823",
+  "requirement": "REQ-046",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T09:18:07Z",
+  "tree": {
+    "commit": "679810a",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "docs/test-campaign/evidence/PRO-0158/self-cleared.txt \u2014 replaying the exact reclassification the pass performed takes the gate to exit 1 naming all four rows; restoring the worklist returns exit 0.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/reclass_record.py",
+      "sha256_16": "70c022f091445e1b",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0158/self-cleared.txt",
+      "sha256_16": "09c3649b86db4847",
+      "present": true
+    },
+    {
+      "path": "tailings/reclass-history.jsonl",
+      "sha256_16": "2e8b431c288cfb64",
+      "present": true
+    }
+  ]
+}

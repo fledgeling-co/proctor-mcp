@@ -5,9 +5,9 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T09:04:41Z",
+  "recordedAt": "2026-08-25T09:18:07Z",
   "tree": {
-    "commit": "f8b0c55",
+    "commit": "679810a",
     "dirty": true
   },
   "witness": null,
@@ -15,12 +15,12 @@
   "evidence": [
     {
       "path": "scripts/campaign/capture_manifest.py",
-      "sha256_16": "213de5af2555ac6b",
+      "sha256_16": "c7b09998d0ce4561",
       "present": true
     },
     {
       "path": "docs/test-campaign/capture-index.json",
-      "sha256_16": "9c72af72a6cea435",
+      "sha256_16": "8071e5937122ea3c",
       "present": true
     },
     {
