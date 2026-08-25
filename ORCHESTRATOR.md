@@ -2,7 +2,7 @@
 
 **Status:** **Wave 29 open on `main`.** 170 rows: 158 Merged, 2 Retired, **10 outstanding**. PRO-0159 and PRO-0163 landed this wave; PRO-0160, 0161, 0162, 0164 and PRO-0165..0170 remain. Waves 9 through 28 are closed.
 **Open, and named rather than smoothed:** PRO-0161 is **not** complete — the routing covers 36 of the 43 sub-effect-rung entries and 7 need a person, so it stays `Ready for AI` and the figure it declared (`warrant.surface-conformance` 84.0 → 100) has not moved. `figure_ledger.py` enforces that.
-**Reconciliation (the exit condition, not the ledger):** 1015 rows · broken 2 · unmeasured 2 · **undecided 12** · verified-done 846. The 12 undecided are the 10 outstanding rows' briefs plus two the routing left open — every one is a wave, not a footnote.
+**Reconciliation (the exit condition, not the ledger):** reckon holds 1015 rows · broken 2 · unmeasured 2 · **undecided 12** · verified-done 846. The 12 undecided are the 10 outstanding rows' briefs plus two the routing left open — every one is a wave, not a footnote.
 **Updated:** 2026-08-25 — Wave 29 in flight. Gate: 2,173 tests in 275 suites; fifteen standing gates green; strict 440 of 502 (88%).
 
 ### Repository state (reconciled 2026-08-17)
