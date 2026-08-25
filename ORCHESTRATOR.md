@@ -3351,34 +3351,61 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `spec_citation_measure.py` | **0** | **19/19 checks passed** (139 briefs: 139 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | **952 rows reconciled**, gate clean |
 
-## Wave 27 — The three undeclared censuses (2026-08-25)
+## Wave 27 — The three censuses, the join, and the two defects driving Proctor at Proctor found (2026-08-25)
 
-**Status:** Wave 27 open on `main`. Item 1 (the censuses) landed; PRO-0122..PRO-0147 remain `Ready for AI` and are this wave's build queue.
-**Why this wave exists:** test-campaign 0.14.1 added Planes, Journeys and Controls, and this campaign reported all three `NOT DECLARED`. A census over an undeclared population is the empty-denominator failure, so a green verdict beside three absent censuses was the thing to fix before anything else in the backlog.
+**Status:** Wave 27 open on `main`. 14 of the 26 rows that opened it are Merged; 12 remain `Ready for AI`.
+**Why this wave exists:** test-campaign 0.14.1 reported Planes, Journeys and Controls all `NOT DECLARED`, and reckon reported 113 `undecided` briefs. A green verdict beside three absent censuses is the empty-denominator failure, and 113 undecided rows were one mechanical cause wearing a hundred faces.
 
 ### What landed
 
-| Census | Before | After |
+| | Before | After |
 |---|---|---|
-| Planes | NOT DECLARED | in-tree 147 · hermetic 290 · live-glass 28 · live-external 1 |
+| Planes | NOT DECLARED | in-tree 148 · hermetic 296 · live-glass 31 · live-external 1 |
 | Journeys | NOT DECLARED | 10 declared, 6 critical · boundaries 43/50 cut |
-| Controls | NOT DECLARED | 3 of 34 actuated, across 2 surfaces that declare any |
+| Controls | NOT DECLARED | 4 of 34 actuated, across 2 surfaces that declare any |
+| reckon remaining work | 137 rows | **9** — 0 product · 2 evidence · 7 decision |
+| reckon `undecided` | 113 | 7 (all of them untriaged briefs, which is what they are) |
+| Requirements observed | 124/141 | 139/141 |
+| Suite | 2,117 in 264 | 2,129 in 267 |
+| `test_instruments.py` | 295 | 338 |
+| Strict ratchet | 405 | 415 |
 
-- `scripts/campaign/plane_census.py` places every case by a written rule and re-derives on `--write`, so an edited plane the rules no longer support is rewritten rather than preserved. Evidence artefacts are opened and classed by what produced them: a Swift Testing run leaves `Test run with N tests`, an instrument leaves anything else.
-- Journeys are the ten existing critical flows promoted into 0.14.1's vocabulary. Six cut all five durable boundaries and carry `critical: true`; four name the boundaries they do not cut and why, rather than claiming a completeness the evidence has not got.
-- Controls are declared on SURF-008 (14, read from the running app's own accessibility tree) and SURF-010 (the 20 `CommandSurface.all` publishes). CASE-0791 and CASE-0792 actuate three of them on glass against the signed build at pid 2614, witnessed by `CGWindowListCopyWindowInfo` — a window-server read Proctor does not control.
-- **DEF-336 opened:** `proctor_act` cannot actuate a menu-bar-only app, because every step resolves a window handle before it runs. `proctor_menu` reads the full 165-item menu bar from the app handle and `proctor_act` refuses the same `menuPath` with `windowNotFound`, so the command that would open the first window is unreachable and Proctor cannot drive its own status item. CASE-0792's actuation had to travel through System Events, and the case says so.
+**New instruments, each with its negative arm recorded:**
+
+- `plane_census.py` — places every case by written rule, re-derives on `--write`, and writes one receipt per case with evidence digests, the commit read from, a `dirty` flag and the case's witness. A `-glass` lane is a floor as well as a ceiling.
+- `spec_symbol_linter.py` — 4,565 of 6,182 spec citations resolve in `Sources/`, 790 in `Tests/`, 827 unresolved, ratcheted. Found `ProctorAgentCore`, a target Package.swift never declared. Wired into `.githooks/pre-commit`.
+- `brief_validation.py` — validated 119 briefs against the registry and let reckon award `retirable` rather than asserting it.
+- `requirement_evidence.py` — moves an evidence word only where a passing case cites the requirement, and holds back `ceiling` and `deferred` classes by class.
+- `mutation_report.py` — 113 mutants aggregated, 47 survivors named with file, line and enclosing declaration. **48 of 3,241 sites were ever run: 1.5% of the space.**
+- `warrant_promotion.py` — run-lifecycle and release-integrity qualify for tier 1; five classes blocked, each naming the case ids in the way. Dashboard at `docs/test-campaign/evidence/PRO-0137/warrant-tiers.html`.
+
+**Two product defects, both found by driving Proctor against Proctor:**
+
+- **DEF-336 (fixed).** `proctor_act` resolved a window handle before any step, so a menu-bar-only app could not be driven at all — including Proctor's own. `WindowlessActuation` admits an app handle when every step addresses the app plane and refuses by name when one does not. Witnessed on glass: the menu step ran on the accessibility plane with foreground measured 0, and the window server went from one window to two.
+- **DEF-337 (fixed).** Every fake window carried `cgWindowID: 7`, which is Notification Centre on a running Mac. A suite assertion passed or failed according to whether that window was up; it failed once and passed on an immediate re-run.
+
+**One error corrected in-wave.** The validator retired seven briefs that are requests for unbuilt work, because it read the `reckon-sources` an intake pass wrote to *route* a brief as a claim that the work was *done*. `generated-by` + `status: to-triage` now marks a brief as a request, and 120, 123 and 140–144 are back to `to-triage`.
+
+### What remains
+
+**12 ledger rows at `Ready for AI`** — PRO-0122, 0123, 0124, 0125, 0126, 0127, 0128, 0131, 0138, 0140, 0141, 0145. These are fixture harnesses: iOS simulator boot and teardown, guest VM lifecycle and health telemetry, Maestro flow, native OCR and high-DPI, mutation hardening, and process-chaos and socket-boundary fixtures. **None is lane-blocked** — `proctor_doctor` reports the ios lane ready (simctl 26.6, maestro 2.4.0) and the guest lane ready (lume, prlctl) on this machine, so each is buildable here.
+
+**7 untriaged briefs** — 120, 123, 140, 141, 142, 143, 144. They need triage and ids before they can be built.
+
+**2 evidence rows that are honestly unmeasured** — REQ-025 is `deferred` against an upstream Apple bug (FB21748086 / trycua #870), and REQ-072 is a `ceiling`, a limit on how far a plane disclosure can reach, recorded on purpose. `campaign.py`'s evidence vocabulary has no word for either, so `unmeasured` with the reason visible is where they belong.
 
 ### Standing Gates on `main`
 
-| Gate on `main` | Exit | Reading |
+| Gate | Exit | Reading |
 |---|:---:|---|
-| `scripts/test.sh` | **0** | **2,123 tests in 266 suites passed** (0 failures) |
-| `campaign.py check` | **0** | 466 pass · 3 n/a of **469**; all three censuses declared |
-| `strict-check.py` | **0** | **ratchet 407 held** (raised from 405 by CASE-0791/0792) |
-| `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
-| `capture-lineage.py --gate` | **0** | **ratchet 6 held** |
-| `ledger_gate.py` | **0** | **147 ledger rows · 147 specs on disk · 0 declared without spec** |
-| `spec_citation_measure.py` | **0** | **19/19** (144 briefs: 139 claimed, 5 registered, 0 unclaimed) |
-| `test_instruments.py` | **0** | **302 passed, 0 failed** (+7: the census declarations and the plane re-derivation arm) |
-| `reckon.py check` | **0** | **960 rows** · broken 1 (DEF-336) · unmeasured 23 · undecided 113 · verified-done 795 |
+| `scripts/test.sh` | **0** | **2,129 tests in 267 suites** |
+| `campaign.py check` | **0** | 474 pass · 3 n/a of **477**; all three censuses declared |
+| `strict-check.py` | **0** | **ratchet 415 held** |
+| `vacuity-check.py --gate` | **0** | 0 findings, 29/29 providers resolved |
+| `capture-lineage.py --gate` | **0** | ratchet 6 held |
+| `ledger_gate.py` | **0** | 147 rows · 147 specs · 0 declared without spec |
+| `spec_citation_measure.py` | **0** | 19/19 (144 briefs, 0 unclaimed) |
+| `spec_symbol_linter.py --gate` | **0** | ratchet 827 held |
+| `mutation_report.py --gate` | **0** | ratchet 47 survivors held |
+| `test_instruments.py` | **0** | **338 passed, 0 failed** |
+| `reckon.py check` | **0** | 969 rows · 9 remaining · gate clean · ratchet clean |
