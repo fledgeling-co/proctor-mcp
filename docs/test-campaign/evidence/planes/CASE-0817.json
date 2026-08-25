@@ -1,0 +1,36 @@
+{
+  "case": "CASE-0817",
+  "requirement": "REQ-024",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T05:20:27Z",
+  "tree": {
+    "commit": "ab1234d",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "lsof -nP -i -a -p <pid>, sampled every 350ms \u2014 the kernel's own view of a process's sockets, which Maestro does not participate in producing",
+    "effect": "outbound-socket",
+    "count": 2
+  },
+  "armedBy": "The arm is the variable itself: the same binary, the same argument, measured with and without MAESTRO_CLI_NO_ANALYTICS=1 \u2014 two sockets against one. A run that opened the same count either way would mean the variable does nothing, which is what MAESTRO_DISABLE_ANALYTICS turned out to be.",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0124/network-isolation.txt",
+      "sha256_16": "0c82e5aaabb3fcbe",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorCore/MaestroRun.swift",
+      "sha256_16": "1b5c77df6b2448c4",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorCoreTests/MaestroNetworkIsolationTests.swift",
+      "sha256_16": "cc9cf7e9b5ba1407",
+      "present": true
+    }
+  ]
+}

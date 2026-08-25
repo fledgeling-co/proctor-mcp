@@ -1,7 +1,11 @@
 ---
 generated-by: reckon
 reckon-sources: [SURF-007, REQ-007]
-status: to-triage
+status: retired
+triaged-as: PRO-0128
+validated-by: REQ-007 via CASE-0009
+validated-rungs: outcome
+validated-provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor.swift and Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; NSEvent.addGlobalMonitorForEvents
 ---
 # Native OCR and High-DPI Inspection Fixture
 

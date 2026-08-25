@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [T15]
 reckon-sources: [REQ-065, REQ-130]
-status: to-triage
+status: retired
+triaged-as: PRO-0152
+validated-by: REQ-065, REQ-130 via CASE-0200, CASE-0552, CASE-0554, CASE-0566
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # Instrument Availability Disclosure Reporter
 

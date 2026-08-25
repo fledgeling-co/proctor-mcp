@@ -47,12 +47,21 @@ extension Session {
     /// generic: a JVM that writes more than a pipe buffer deadlocks exactly the
     /// way `simctl listapps` on a full device does, and a wedged Maestro left
     /// unterminated outlives the agent just as a wedged simulator would.
-    static func runBounded(_ path: String, _ arguments: [String], timeoutMs: Int) -> SimctlRun {
+    static func runBounded(_ path: String, _ arguments: [String], timeoutMs: Int,
+                           environment: [String: String]? = nil) -> SimctlRun {
         let maximumBytes = 8 * 1024 * 1024
 
         let process = Process()
         process.executableURL = URL(fileURLWithPath: path)
         process.arguments = arguments
+        if let environment {
+            // Merged onto the inherited set rather than replacing it: a tool
+            // that loses PATH, HOME or the simulator's own variables fails in a
+            // way that reads as the tool being broken.
+            var merged = ProcessInfo.processInfo.environment
+            for (k, v) in environment { merged[k] = v }
+            process.environment = merged
+        }
         let out = Pipe(), err = Pipe()
         process.standardOutput = out
         process.standardError = err

@@ -772,13 +772,35 @@ public enum MaestroInvocation {
         docs: MaestroTool.docs
     )
 
-    /// Disclosed once per result when Maestro's own telemetry is enabled.
+    /// The environment Proctor gives its own Maestro subprocess.
     ///
-    /// Proctor does not rewrite `~/.maestro/analytics.json`: it is the operator's
-    /// configuration, and silently changing third-party config is exactly the
-    /// overreach PRO-0023 rules out. Saying so is the part Proctor owes.
+    /// **Measured 2026-08-25, and the reason this exists.** `maestro --version`
+    /// — an invocation that prints a string and does nothing else — opens TWO
+    /// outbound TLS connections before returning: one to a Google Cloud address
+    /// and one to an AWS one. With `MAESTRO_CLI_NO_ANALYTICS=1` the AWS
+    /// connection does not happen and the Google Cloud one still does.
+    ///
+    /// So the lane is not network-isolated by default and cannot be made fully
+    /// isolated from here. What Proctor can do is stop the half it controls, and
+    /// say plainly that the other half remains.
+    ///
+    /// This is an environment variable on Proctor's OWN subprocess, not a change
+    /// to `~/.maestro/analytics.json`. That file is the operator's configuration
+    /// and silently rewriting third-party config is the overreach PRO-0023 rules
+    /// out; setting a variable for a process Proctor is about to launch is not.
+    public static let environment = ["MAESTRO_CLI_NO_ANALYTICS": "1"]
+
+    /// Disclosed once per result, with the measurement behind it.
+    ///
+    /// The previous wording said telemetry runs "when it is enabled in its
+    /// configuration", which is true and understates it: the traffic was
+    /// measured on the most trivial invocation there is, before any flow runs,
+    /// and one connection persists whatever the analytics setting says.
     public static let telemetryNote =
-        "Maestro's own analytics are enabled in its configuration, so invoking it runs Maestro's "
-        + "telemetry. Proctor does not change that file — it belongs to whoever set it up — but a "
-        + "flow run in a sensitive context should know what the invocation carries."
+        "Maestro reaches the network when it is invoked, and this lane is not network-isolated. "
+        + "Measured on `maestro --version`, an invocation that runs no flow: two outbound TLS "
+        + "connections, one to a Google Cloud address and one to AWS. Proctor sets "
+        + "MAESTRO_CLI_NO_ANALYTICS=1 on its own subprocess, which stops the AWS one; the other "
+        + "still happens. Proctor does not touch ~/.maestro/analytics.json — that file belongs to "
+        + "whoever set it up — so a flow run in a sensitive context should know what remains."
 }

@@ -5,42 +5,42 @@
  "campaign_present": true,
  "campaign_dir": "docs/test-campaign",
  "briefs_dir": "docs/features-to-triage",
- "headline": "131 piece(s) of work remain — 0 product, 23 evidence, 108 decision — across 952 ledger rows. This reckoning speaks for 464/467 (99%) of the campaign's designed cases and 124/141 (88%) of its stated requirements; the rest is not known to be done, it is simply not known.",
+ "headline": "3 piece(s) of work remain — 1 product, 2 evidence, 0 decision — across 989 ledger rows. This reckoning speaks for 492/495 (99%) of the campaign's designed cases and 139/141 (99%) of its stated requirements; the rest is not known to be done, it is simply not known.",
  "summary": {
   "counts": {
-   "verified-done": 793,
-   "waived": 28,
-   "unmeasured": 23,
-   "undecided": 108
+   "verified-done": 839,
+   "waived": 147,
+   "unmeasured": 2,
+   "broken": 1
   },
-  "work_items": 131,
+  "work_items": 3,
   "work_by_class": {
-   "unmeasured": 23,
-   "undecided": 108
+   "unmeasured": 2,
+   "broken": 1
   },
   "work_by_kind": {
-   "evidence-work": 23,
-   "decision-work": 108
+   "evidence-work": 2,
+   "product-work": 1
   },
-  "rows": 952
+  "rows": 989
  },
  "denominators": {
   "cases_adjudicated": {
-   "n": 464,
-   "of": 467,
+   "n": 492,
+   "of": 495,
    "pct": 99.4,
    "means": "an instrument returned a verdict on the product — pass or fail. A fail is knowledge; this is not a pass rate."
   },
   "decisions_taken": {
    "n": 3,
-   "of": 467,
+   "of": 495,
    "pct": 0.6,
    "means": "somebody ruled the cell out of scope or not applicable. A decision, not a measurement, and it is kept out of the line above on purpose."
   },
   "requirements_observed": {
-   "n": 124,
+   "n": 139,
    "of": 141,
-   "pct": 87.9,
+   "pct": 98.6,
    "means": "somebody watched it happen, rather than the project reporting it of itself."
   },
   "surfaces_spoken_for": {
@@ -50,8 +50,8 @@
    "means": "at least one case on this surface reached a verdict."
   },
   "briefs_joined": {
-   "n": 139,
-   "of": 139,
+   "n": 144,
+   "of": 144,
    "pct": 100.0,
    "means": "the brief could be tied to something in the registry at all."
   },
@@ -893,6 +893,66 @@
    {
     "brief": "BRIEF-139-multi-plane-verification-receipt-generator",
     "target": "SURF-025",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-140-deterministic-lane-routing-and-selection-record",
+    "target": "REQ-130",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-140-deterministic-lane-routing-and-selection-record",
+    "target": "REQ-151",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-141-skill-overlay-family-guidance-reader",
+    "target": "REQ-091",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-141-skill-overlay-family-guidance-reader",
+    "target": "REQ-096",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-142-capture-directory-identity-manifest",
+    "target": "REQ-111",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-142-capture-directory-identity-manifest",
+    "target": "REQ-133",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-143-session-claim-provenance-audit-gate",
+    "target": "REQ-122",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-143-session-claim-provenance-audit-gate",
+    "target": "REQ-156",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-144-instrument-availability-disclosure-reporter",
+    "target": "REQ-065",
+    "method": "cited",
+    "confidence": 1.0
+   },
+   {
+    "brief": "BRIEF-144-instrument-availability-disclosure-reporter",
+    "target": "REQ-130",
     "method": "cited",
     "confidence": 1.0
    },
@@ -2577,8 +2637,8 @@
     "confidence": 1.0
    }
   ],
-  "briefs_joined": 139,
-  "briefs_total": 139,
+  "briefs_joined": 144,
+  "briefs_total": 144,
   "pct": 100.0,
   "weak": false,
   "note": "cited edges are citations somebody wrote; overlap edges are guesses and cannot retire a brief"
@@ -10997,6 +11057,490 @@
    "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
   },
   {
+   "id": "CASE-0791",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-008 · ?",
+   "status": "pass",
+   "oracle": "effect-witness",
+   "armed": true,
+   "note": "Two of the Status window's own controls driven through the accessibility plane on the running signed app (pid 2614), each read against a state it does not own. 'Show details for obscura' moved the window's canonical state hash and added 190 nodes; 'Show history' put a second window (id 25133, 900x492) into CGWindowListCopyWindowInfo. foreground measured 0, so neither step stole focus. This is the inert-UI defence: a presence check on either button passes while its closure is empty.",
+   "surface": "SURF-008",
+   "lane": "macos-glass",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0792",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-010 · ?",
+   "status": "pass",
+   "oracle": "effect-witness",
+   "armed": true,
+   "note": "The Window > Status command actuated on the running app's real menu bar, witnessed by a window server read Proctor does not control: 0 windows owned by pid 2614 before, 1 ('Proctor', 760x1000) after. The actuation had to travel through System Events because proctor_act resolves a window handle before any step and the app is menu-bar-only — recorded as DEF-336 rather than worked around silently.",
+   "surface": "SURF-010",
+   "lane": "macos-glass",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": [
+    "DEF-336"
+   ],
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to DEF-336."
+  },
+  {
+   "id": "CASE-0793",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-024 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0136/PRO-0146. Every backticked identifier in all 147 specs resolved against three roots kept apart: 4,565 of 6,182 against declarations in Sources/ (73.8%), 790 against Tests/, and 827 unresolved. The three counts are not blended, because a production declaration and a test name are different claims about a spec. Wire names (snake_case) and platform constants (AX*/kCG*/SC*) are excluded by rule rather than by exception list, and string literals in Sources/ ground a wire key like `fsRoots` that no declaration carries. A ratchet at 827 fails on a RISE, which is the rename this exists to catch; `ProctorAgentCore` in spec-PRO-0011 is the first thing it found.",
+   "surface": "SURF-024",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0794",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-024 · ?",
+   "status": "pass",
+   "oracle": "effect-witness",
+   "armed": true,
+   "note": "PRO-0146 acceptance 4. The pre-commit hook runs the linter only when the change touches docs/specs/, Sources/ or Package.swift — a docs-only commit cannot move the count, and a hook that runs on every commit is a hook that gets disabled. PROCTOR_SKIP_SPEC_LINT skips it loudly rather than silently, and the skip prints to stderr so it appears in the commit's own output.",
+   "surface": "SURF-024",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0795",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-010 · ?",
+   "status": "pass",
+   "oracle": "effect-witness",
+   "armed": true,
+   "note": "DEF-336 closed on glass. proctor_act driven with an APPLICATION handle against a build whose own attach reports windows: [] — the exact state in which the old code refused. The menu step ran on the accessibility plane with foreground measured 0, and the window server went from one window to two. The refusal path is witnessed in the same file: a batch mixing menu with press and setValue is refused naming press and setValue and not naming menu, so the caller is told which of its own steps was the problem.",
+   "surface": "SURF-010",
+   "lane": "macos-glass",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": [
+    "DEF-336"
+   ],
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to DEF-336."
+  },
+  {
+   "id": "CASE-0796",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-004 · ?",
+   "status": "pass",
+   "oracle": "metamorphic",
+   "armed": true,
+   "note": "DEF-337. The relation is across runs rather than within one: the same suite, the same tree, two verdicts. A fixture id chosen as a constant collides with the window server's own allocation, so the fix reads the live list and the test asserts the absence it rests on. TestWindowIDs.isAbsentOnScreen is checked inside the test, so a helper that ever stops working reports itself rather than letting the assertion pass for the wrong reason.",
+   "surface": "SURF-004",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": [
+    "DEF-337"
+   ],
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to DEF-337."
+  },
+  {
+   "id": "CASE-0797",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-026 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0142. Four mutation runs aggregated: 113 distinct mutants, 112 scored, 65 killed, 47 survived. The figure that matters is the one no single run could print — across the two runs that counted their sites, 48 of 3,241 sites were ever run, which is 1.5% of the space. A first draft summed site counts per module and produced 88 scored against 52 sites for ProctorCore, a denominator smaller than its numerator, because three runs covered different files and one counted. Sampling is reported per run for that reason.",
+   "surface": "SURF-026",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0798",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-026 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0142 acceptance 3 and 4. Each of the 47 survivors carries its file, line, enclosing declaration and the edit that survived — `'||' -> '&&'` in AXEngineImpl's liveRunningApps, `'==' -> '!='` in SessionKill.includingBarePid. The clustering pass names a declaration carrying several survivors as ONE untested branch rather than several, which is the difference between a work list and a wall.",
+   "surface": "SURF-026",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0799",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-032 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0132. The charter, oracle-coverage.json and suite-health.json are joined on the surface ROUTE the charter globs against rather than the campaign's surface id — joining on the wrong key is how a class reads as having no evidence at all. Two classes qualify (run-lifecycle 44/44, release-integrity 1/1) and five are blocked, each with the exact case ids and rungs standing in the way. Nothing edits warrant.toml: the charter says the signature is the commit and an agent committing it is not a signature, so the tool writes the ratification block and stops.",
+   "surface": "SURF-032",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0800",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-032 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0137. One self-contained file, 9.5 KB, zero external references — grep for http, cdn or src= returns 0. A dashboard that needs the network renders blank on the machine somebody actually opens it on. Each blocked class card names the surfaces short of the threshold and the case ids under each, because '84.0% (100 of 119)' tells nobody what to do next.",
+   "surface": "SURF-032",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0801",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-027 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0150. An external audit reported 'R4: no capture directory found; capture identity unchecked' over a tree holding 54 images. Nothing was wrong with the captures — the probe tries six conventional root names and this repository uses none of them, so a probe that would have found 54 found none and correctly reported itself unrun. `captureRoots` in campaign.json declares the four roots, and the index makes the population explicit: 54 images, 44 distinct, 8 digests held by more than one path. What a picture DEPICTS is not decided here; shot_disposition.py owns that and was written by opening every file.",
+   "surface": "SURF-027",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0802",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-033 · ?",
+   "status": "pass",
+   "oracle": "metamorphic",
+   "armed": true,
+   "note": "PRO-0133, corrected. The first join read cases by SURFACE, so a brief could be retired on evidence about a different requirement that happened to share one — brief 01 was retired on six cases where only two cite REQ-001. An out-of-family review (grok-4.6 at xhigh) returned UNSOUND naming that, and two other things it was right about: writing surface ids into a brief's prose is the tool feeding itself the tokens it wants to read, and a later reader takes that prose for original intent. 112 briefs re-validated on the citing join, 0 mismatches, and the record now lives in frontmatter where reckon's body scan cannot read it back as a citation.",
+   "surface": "SURF-033",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0803",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-030 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0148 and PRO-0152. Two records from a real verification act rather than a fixture: the grok-4.6 review that overturned PRO-0133's join, and the OpenAI lane that was asked for and not taken — recorded as a POLICY substitution (Codex is off for this repository by the reader's standing decision) rather than as a lane failure, which is the distinction T15 exists to keep. The sweep reports 4 of 4 CLIs resolving and says plainly that resolution is presence at a path, not usability.",
+   "surface": "SURF-030",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0804",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-029 · ?",
+   "status": "pass",
+   "oracle": "metamorphic",
+   "armed": true,
+   "note": "PRO-0149. 181 skills at their newest version across every marketplace, 57 carrying a family overlay. Three earlier drafts each cried wolf and each is recorded in the source: keying on (marketplace, plugin) kept a superseded diolog copy alive and reported mac-design-digest as promising an overlay it has; matching the bare word 'model' flagged a benchmark skill's prompts.md; and matching 'Running as a X model?' alone flagged tailings, which points its Gemini readers at references/probes.md rather than at an overlay. The claim must now name a file 'in this directory'.",
+   "surface": "SURF-029",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0805",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-029 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0151. The tailings partition run standing over the artifacts another session plans from. It found three live contradictions on its first run, all real: ORCHESTRATOR.md's header still said 'Wave 11 open on ai/wave-9' sixteen waves on, and Wave 27's own gate table said 147 rows and 147 specs after briefs 140-144 were triaged to 152. The file was fixed rather than the scanner. `waived` is reachable only when the line marks itself superseded or dated in its own words: a waiver a tool grants itself is not a waiver, and `unbacked` is kept apart from `contradicted` because folding them is how a pass over-reports and loses its reader.",
+   "surface": "SURF-029",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0806",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-026 · ?",
+   "status": "pass",
+   "oracle": "metamorphic",
+   "armed": true,
+   "note": "PRO-0125/PRO-0138. Ten surviving mutants re-applied against the tree as it is now: 8 KILLED by assertions written this wave, 2 proved EQUIVALENT. The relation is across trees — the same edit, green before and red after. Two of the ten needed the test sharpened before they died, which is the failure this exercise exists to catch one layer in: a test written AGAINST a mutant that the mutant survives is an assertion nobody wrote wearing the name of one. HorizontalPlacement tested 0 and 4 where `<= 0` and `<= 1` agree, and RunHUDGate tested a horizontal route where `<=` and `<` agree.",
+   "surface": "SURF-026",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0807",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-026 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "A mutation record's byte offset is not durable. Re-applying eleven survivors by `start`/`end` against a tree many commits on refused every one: the offsets are valid only against the tree that produced them. Re-locating by line and content worked, and an anchor appearing twice in a file (TUILayout's overflow guard) is reported AMBIGUOUS rather than spliced at the first match. Only KILLED moves the count; EQUIVALENT and NOT RE-APPLIED are printed and do not.",
+   "surface": "SURF-026",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0808",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-001 · ?",
+   "status": "pass",
+   "oracle": "effect-witness",
+   "armed": true,
+   "note": "DEF-338, found by PRO-0145's chaos fixture before it measured anything it was written for. A real AF_UNIX listener that accepts and closes; the client writes into the corpse. Before the fix that raised SIGPIPE and terminated the process. Fixed at four socket sites and at the accepted descriptor, which does not inherit the option — the agent writing a reply to a shim that hung up mid-batch is the same fault in reverse.",
+   "surface": "SURF-001",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": [
+    "DEF-338"
+   ],
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to DEF-338."
+  },
+  {
+   "id": "CASE-0809",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-001 · ?",
+   "status": "pass",
+   "oracle": "metamorphic",
+   "armed": true,
+   "note": "PRO-0140/PRO-0141. Descriptor exhaustion measured by SCALING, not by count. A first version compared a process-wide descriptor count either side of each call and failed at 13 against 5: Swift Testing runs suites in parallel, so the count moves for reasons unrelated to the test — and a second version failed with a NEGATIVE delta when another suite closed a file between the readings. Growth is what a leak produces, so growth is what is measured, over 10 calls and then 40. Separately: reading the count off getdtablesize() made a million syscalls per call here, because the soft RLIMIT_NOFILE is 1,048,576, and the suite appeared to hang rather than to fail. /dev/fd is exact and costs one readdir.",
+   "surface": "SURF-001",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0810",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-019 · ?",
+   "status": "pass",
+   "oracle": "effect-witness",
+   "armed": true,
+   "note": "PRO-0122/PRO-0126, on the real lane. A device created for this run (proctor-pro-0126-scratch, D2FCA10B) with its own data container, booted headless — Simulator.app never launched — read as Booted through IOSDeviceList.parse over a live 16,866-byte listing holding 27 devices, then shut down and deleted with the container gone. Scoped to that one UDID: no delete by name, no `delete unavailable`, and the five simulators a person had booted were untouched before and after. The Swift fixture runs the same cycle in 25.3s under PROCTOR_LIVE_SIM=1 and leaves nothing behind.",
+   "surface": "SURF-019",
+   "lane": "ios-sim",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0811",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-019 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0122 acceptance 2, and the teardown's scoping. A truncated listing is an actionFailed naming how many bytes arrived and what to run by hand, not a DecodingError a caller cannot act on — measured 2026-08-20 when a loaded parallel run produced 'Unexpected end of file' and the raw error travelled all the way out. An unavailable device is kept and marked rather than filtered, because 'there is a device here you cannot use' and 'there is no device here' are different answers. And a scratch that never minted a udid tears down to a no-op rather than falling back to a delete by name, which is how a cleanup handler reaches a device somebody else was using.",
+   "surface": "SURF-019",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0812",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-037 · ?",
+   "status": "pass",
+   "oracle": "metamorphic",
+   "armed": true,
+   "note": "PRO-0128. Apple Vision reads the same phrase off a 1x and a 2x render and the two are compared rather than scored. Two API facts were found by getting them wrong first, and both are recorded in the test: VisionCapture.toNative DIVIDES, because it maps a coordinate the model returned in the normalised image back to native pixels — a draft asserting it multiplied read 10 against 90 at scale 3. And boundingBox is crop PIXELS while pointBox is points; a draft asserting invariance on boundingBox read 22 against 376. Both are the mistake a caller makes, so the case pins both fields.",
+   "surface": "SURF-037",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0813",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-037 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0131. Density becomes a thing a test sets rather than one the machine happens to have. Every display on this Mac is 2x, so every geometry assertion here had been written against 2 and a 1x display — an external monitor, a screen-shared session, a CI runner — had never been exercised. Regions place at 1, 1.5, 2 and 3 with the origin flooring and the far edge ceiling, so the whole of a requested region survives rather than being shaved by rounding; a region off the frame is clamped and says so; one entirely outside is a named failure rather than an empty image. The restore runs on the throwing path because Swift Testing runs suites in parallel, and a leaked environment value fails somewhere else entirely.",
+   "surface": "SURF-037",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0814",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-020 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0127. GuestHealth existed as a type with nothing behind it. The probe's whole reason is measured rather than invented: CASE-0029 established that SIGSTOP leaves a listener bound, so connect() succeeds and the reply never comes — `stalled` and `unreachable` have different remedies and a probe that asks only whether the socket accepted reports the wedged one healthy. A run of beats decides latency rather than one sample, because one slow beat on a machine running five simulators is noise. An attempt that could not be MADE is degraded and never unreachable, because a host-side failure is not a fact about the guest.",
+   "surface": "SURF-020",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0815",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-020 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0127 acceptance 4. Health is in proctor_doctor's guestPool block and is NOT probed there. doctor is called before anything is established and a health block that pinged would add to the load an operator is running it to diagnose. Beats are recorded as a side effect of traffic the session was making anyway, bounded to five, and an attachment with no beat yet reports unreachable with beatsSeen 0 rather than defaulting to healthy — the first thing anybody does after attaching is run doctor.",
+   "surface": "SURF-020",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0816",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-024 · ?",
+   "status": "pass",
+   "oracle": "metamorphic",
+   "armed": true,
+   "note": "A weakness this run found in its own ratchet. Adding GuestHealthProbe and proctorSuppressSIGPIPE to production grounded enough existing spec citations that the ratchet at 827 carried slack, and the negative arm went green: one more ungrounded name stayed under the bar. A ratchet with slack swallows exactly what it exists to catch, and the failure is silent because the gate is still reporting a pass. 827 to 825, and the arm no longer trusts the committed bar to be tight.",
+   "surface": "SURF-024",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0817",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-014 · ?",
+   "status": "pass",
+   "oracle": "effect-witness",
+   "armed": true,
+   "note": "PRO-0124, and a claim of Proctor's own that did not survive being measured. The brief calls this a network-isolated fixture. `maestro --version`, which runs no flow, opens two outbound TLS connections — one Google Cloud, one AWS. Proctor now sets MAESTRO_CLI_NO_ANALYTICS=1 on its own subprocess and that stops the AWS one; the other cannot be stopped from here. Recorded as partially-fixed, with the disclosure rewritten from a condition into the measurement, because a lane described as isolated that reaches the network on --version is exactly what this campaign exists to catch.",
+   "surface": "SURF-014",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
+   "id": "CASE-0818",
+   "entity": "case",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "SURF-014 · ?",
+   "status": "pass",
+   "oracle": "outcome",
+   "armed": true,
+   "note": "PRO-0124 clauses 2 to 4. The argument vector carries no --analyze, --api-key or --upload and the absence is asserted against the vector rather than left to a comment. A parsed record keeps each command's status, its duration and its failure reason — a 5,011ms failure that lost its timing reads like a fast one, and one that lost its reason says only that it failed. The environment block holds exactly one variable, because a growing one is how a tool ends up configured by whatever launches it rather than by its operator.",
+   "surface": "SURF-014",
+   "lane": "headless",
+   "is_work_item": false,
+   "remedy": null,
+   "rolls_up_to": null,
+   "why": "a measurement, not a task: status 'pass' may only be retirable/verified-done. It rolls up to its surface."
+  },
+  {
    "id": "REQ-001",
    "entity": "requirement",
    "class": "verified-done",
@@ -11145,7 +11689,8 @@
    "backed_by": [
     "CASE-0011",
     "CASE-0028",
-    "CASE-0062"
+    "CASE-0062",
+    "CASE-0791"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -11177,7 +11722,9 @@
    "note": "AppKit NSStatusItem with pixel sprite animations and contextual menu",
    "provider": null,
    "backed_by": [
-    "CASE-0013"
+    "CASE-0013",
+    "CASE-0792",
+    "CASE-0795"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -11327,7 +11874,9 @@
    "provider": "Process() in Sources/ProctorAgent/Session/SessionIOSProcess.swift — simctl and maestro",
    "backed_by": [
     "CASE-0022",
-    "CASE-0060"
+    "CASE-0060",
+    "CASE-0810",
+    "CASE-0811"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -11393,7 +11942,9 @@
    "provider": "Process() in Sources/ProctorAgent/Actuation/CuaClients.swift — cua-driver and obscura",
    "backed_by": [
     "CASE-0026",
-    "CASE-0087"
+    "CASE-0087",
+    "CASE-0817",
+    "CASE-0818"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -11522,11 +12073,11 @@
   {
    "id": "REQ-032",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "The status window lists every permission macOS holds about Proctor, including the one whose absence is silent",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 4 passing case(s) citing it: CASE-0039, CASE-0042, CASE-0368, CASE-0369",
    "provider": null,
    "backed_by": [
     "CASE-0039",
@@ -11534,9 +12085,9 @@
     "CASE-0368",
     "CASE-0369"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-033",
@@ -11560,54 +12111,55 @@
   {
    "id": "REQ-034",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "An operator drives and checks this Mac from a shell: 21 verbs derived from the tool catalogue, six exit codes, and shell completion generated from the same catalogue",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 2 passing case(s) citing it: CASE-0044, CASE-0081",
    "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
    "backed_by": [
     "CASE-0044",
     "CASE-0081"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-035",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "A CLI call is not a privilege bypass: same socket, same policy gate, same queue lane, same audit trail, and the trail records which front end called, read from the peer process rather than the request",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 3 passing case(s) citing it: CASE-0045, CASE-0080, CASE-0114",
    "provider": "LOCAL_PEERPID getsockopt in Sources/ProctorAgent/SessionIdentity.swift",
    "backed_by": [
     "CASE-0045",
     "CASE-0080",
-    "CASE-0114"
+    "CASE-0114",
+    "CASE-0808"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-036",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "Exit code 1 (a check failed) and exit code 3 (the agent is not answering) are never confused, because CI reads an exit code rather than prose",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 2 passing case(s) citing it: CASE-0046, CASE-0057",
    "provider": null,
    "backed_by": [
     "CASE-0046",
     "CASE-0057"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-037",
@@ -11658,7 +12210,9 @@
    "backed_by": [
     "CASE-0049",
     "CASE-0086",
-    "CASE-0752"
+    "CASE-0752",
+    "CASE-0814",
+    "CASE-0815"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -11684,35 +12238,35 @@
   {
    "id": "REQ-041",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "Only the agent draws on this Mac: a switch says what an operator asked for and cannot say who is asking, so every live surface also requires the process to have claimed it is the agent",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 1 passing case(s) citing it: CASE-0051",
    "provider": null,
    "backed_by": [
     "CASE-0051"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-042",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "The takeover statement holds for a minimum duration once raised, and a request arriving while it is up extends it rather than raising it again, so a batch-driving agent sees one statement instead of a",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 2 passing case(s) citing it: CASE-0052, CASE-0058",
    "provider": null,
    "backed_by": [
     "CASE-0052",
     "CASE-0058"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-043",
@@ -11734,61 +12288,63 @@
   {
    "id": "REQ-044",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "The takeover statement names a control reachable from the screen reading it: the run panel on the panel's own display, Proctor's menu bar on every other and when no panel is standing",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 1 passing case(s) citing it: CASE-0054",
    "provider": null,
    "backed_by": [
     "CASE-0054"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-045",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "A campaign instrument carries a measured false-positive rate with its denominator before anything is gated on its count: the blind-mutation pass over the Swift suite reports a number that is 96% noise",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 1 passing case(s) citing it: CASE-0063",
    "provider": null,
    "backed_by": [
     "CASE-0063"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-046",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "Every campaign gate is proved able to go red before its passing state is read as evidence, and the proof covers each of the gate's passes separately: both requirement-level census passes have a seeded",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 3 passing case(s) citing it: CASE-0072, CASE-0073, CASE-0152",
    "provider": null,
    "backed_by": [
     "CASE-0072",
     "CASE-0073",
-    "CASE-0152"
+    "CASE-0152",
+    "CASE-0796",
+    "CASE-0816"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-047",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "Mutation survival for the agent package is measured with its denominator, its seed and its unrun count rather than inferred from the core package's figure, and every survivor the lane can reach is clo",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 15 passing case(s) citing it: CASE-0074, CASE-0075, CASE-0076, CASE-0077, CASE-0078, CASE-0079",
    "provider": null,
    "backed_by": [
     "CASE-0074",
@@ -11805,11 +12361,15 @@
     "CASE-0463",
     "CASE-0464",
     "CASE-0465",
-    "CASE-0466"
+    "CASE-0466",
+    "CASE-0797",
+    "CASE-0798",
+    "CASE-0806",
+    "CASE-0807"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-048",
@@ -11905,11 +12465,11 @@
   {
    "id": "REQ-053",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "One process verifies a given binary's code signature once per file identity, however many sessions ask about it and however many ask at the same moment: fifteen concurrent callers on a cold entry prod",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 6 passing case(s) citing it: CASE-0110, CASE-0111, CASE-0113, CASE-0115, CASE-0116, CASE-0197",
    "provider": null,
    "backed_by": [
     "CASE-0110",
@@ -11917,27 +12477,28 @@
     "CASE-0113",
     "CASE-0115",
     "CASE-0116",
-    "CASE-0197"
+    "CASE-0197",
+    "CASE-0809"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-054",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "The shared signature store is a default rather than a singleton: a ToolProbes handed a cache uses that one, so a test gets an isolated store and the identify/verify seam stays injectable",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 1 passing case(s) citing it: CASE-0112",
    "provider": null,
    "backed_by": [
     "CASE-0112"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-057",
@@ -12175,11 +12736,11 @@
   {
    "id": "REQ-073",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "Every user-facing string a ProctorUI view draws has exactly one definition, in ProctorCore, named for what the string addresses rather than filed under one word: copy a person reads in a Copy enum, a ",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 14 passing case(s) citing it: CASE-0250, CASE-0251, CASE-0252, CASE-0254, CASE-0255, CASE-0256",
    "provider": null,
    "backed_by": [
     "CASE-0250",
@@ -12197,43 +12758,43 @@
     "CASE-0266",
     "CASE-0267"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-074",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "The status window draws no branch its own state machine cannot reach, and every state it can reach is drawn by the section that is actually on screen in that state. StatusSurface.sections(for:) is the",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 2 passing case(s) citing it: CASE-0263, CASE-0264",
    "provider": null,
    "backed_by": [
     "CASE-0263",
     "CASE-0264"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-075",
    "entity": "requirement",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "verified-done",
+   "kind": "none",
    "title": "Every key in the payload Proctor's window reads and Proctor's agent writes has one definition that both ends reach. This is not a style rule: the reader takes a default for a key it cannot find, so a ",
-   "evidence": "unknown",
-   "note": null,
+   "evidence": "observed",
+   "note": "observed on 2 passing case(s) citing it: CASE-0253, CASE-0262",
    "provider": null,
    "backed_by": [
     "CASE-0253",
     "CASE-0262"
    ],
-   "remedy": "obtain any evidence at all",
-   "is_work_item": true,
-   "why": "requirement evidence 'unknown' is the project's own account of itself, not an observation"
+   "remedy": null,
+   "is_work_item": false,
+   "why": "requirement observed"
   },
   {
    "id": "REQ-076",
@@ -12581,7 +13142,8 @@
    "backed_by": [
     "CASE-0397",
     "CASE-0398",
-    "CASE-0399"
+    "CASE-0399",
+    "CASE-0804"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -12665,7 +13227,10 @@
     "CASE-0441",
     "CASE-0442",
     "CASE-0443",
-    "CASE-0456"
+    "CASE-0456",
+    "CASE-0799",
+    "CASE-0800",
+    "CASE-0803"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -12793,7 +13358,10 @@
    "provider": null,
    "backed_by": [
     "CASE-0436",
-    "CASE-0437"
+    "CASE-0437",
+    "CASE-0793",
+    "CASE-0794",
+    "CASE-0802"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -12870,7 +13438,8 @@
     "CASE-0511",
     "CASE-0512",
     "CASE-0515",
-    "CASE-0516"
+    "CASE-0516",
+    "CASE-0805"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -12953,7 +13522,8 @@
    "backed_by": [
     "CASE-0472",
     "CASE-0479",
-    "CASE-0480"
+    "CASE-0480",
+    "CASE-0801"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -13502,7 +14072,9 @@
     "CASE-0731",
     "CASE-0732",
     "CASE-0733",
-    "CASE-0734"
+    "CASE-0734",
+    "CASE-0812",
+    "CASE-0813"
    ],
    "remedy": null,
    "is_work_item": false,
@@ -15846,6 +16418,58 @@
    "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
   },
   {
+   "id": "DEF-336",
+   "entity": "defect",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "proctor_act cannot actuate a menu-bar-only app, because every step resolves a window handle first",
+   "severity": "medium",
+   "status": "fixed",
+   "surface": null,
+   "note": "Measured 2026-08-25 against Proctor's own app (pid 2614). proctor_menu reads the full 165-item menu bar from the app handle, and proctor_act refuses the same menuPath with windowNotFound because it resolves a window before any step. proctor_apps activate reports 'frontmost but exposes no windows'. So a command that would open the first window cannot be reached, and Proctor cannot drive its own sta",
+   "is_work_item": false,
+   "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+  },
+  {
+   "id": "DEF-337",
+   "entity": "defect",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "A unit test's verdict depended on whether Notification Centre happened to be on screen",
+   "severity": "medium",
+   "status": "fixed",
+   "surface": null,
+   "note": "Measured 2026-08-25. Every fake window in ProctorAgentTests carried `cgWindowID: 7`, and 7 is a real window on a running Mac — Notification Centre, layer 21. Session.cursorPlane(for:) resolves a plane by asking whether the id is in the on-screen window list, so 'the plane comes from the window list, not from the handle's beliefs' passed or failed according to whether Notification Centre was up. It",
+   "is_work_item": false,
+   "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+  },
+  {
+   "id": "DEF-338",
+   "entity": "defect",
+   "class": "verified-done",
+   "kind": "none",
+   "title": "A write to a socket whose peer had closed killed the process by signal, silently",
+   "severity": "high",
+   "status": "fixed",
+   "surface": null,
+   "note": "Measured 2026-08-25. SocketClient set no SO_NOSIGPIPE, and neither did the agent's listener or its accepted descriptors. A two-write probe against a listener that accepts and closes exits 141 — 128 + 13 — with no error returned and nothing written anywhere. proctor-shim writes every tool call down that socket, so an agent dying mid-write took the MCP server with it: the host saw its server vanish,",
+   "is_work_item": false,
+   "why": "the registry records this defect as 'fixed'. That is the same registry, speaking about the same run, as the `pass` that retires a case."
+  },
+  {
+   "id": "DEF-339",
+   "entity": "defect",
+   "class": "broken",
+   "kind": "product-work",
+   "title": "The Maestro lane reaches the network on any invocation, and the disclosure read as a condition",
+   "severity": "medium",
+   "status": "partially-fixed",
+   "surface": null,
+   "note": "Measured 2026-08-25 with lsof over the process's own pid. `maestro --version` — an invocation that prints a string and runs no flow — opens TWO outbound TLS connections before returning: 34.36.150.207:443 (bc.googleusercontent.com) and 3.41.202.171:443 (compute-1.amazonaws.com). MAESTRO_CLI_NO_ANALYTICS=1 stops the AWS one; the Google Cloud one still happens. MAESTRO_DISABLE_ANALYTICS is not a var",
+   "is_work_item": true,
+   "why": "the registry records this defect as 'partially-fixed', which stays in the owing set. A half still broken owes a reproduction for that half, and retiring it here would make this tool under-report for the first time."
+  },
+  {
    "id": "SURF-001",
    "entity": "surface",
    "class": "verified-done",
@@ -15854,7 +16478,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "2 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "4 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-002",
@@ -15887,7 +16511,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "29 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "30 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-005",
@@ -15931,7 +16555,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "35 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "36 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-009",
@@ -15953,7 +16577,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "7 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "9 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-011",
@@ -15997,7 +16621,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "2 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "4 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-015",
@@ -16052,7 +16676,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "4 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "6 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-020",
@@ -16063,7 +16687,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "4 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "6 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-021",
@@ -16118,7 +16742,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "22 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "25 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-026",
@@ -16129,7 +16753,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "14 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "18 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-027",
@@ -16140,7 +16764,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "25 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "26 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-028",
@@ -16162,7 +16786,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "8 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "10 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-030",
@@ -16173,7 +16797,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "3 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "4 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-031",
@@ -16195,7 +16819,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "4 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "6 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-033",
@@ -16206,7 +16830,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "3 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "4 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-035",
@@ -16239,7 +16863,7 @@
    "reachability": null,
    "note": null,
    "is_work_item": false,
-   "why": "5 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
+   "why": "7 case(s) here reached a verdict, so the campaign can speak for this surface. Whether those verdicts were good is carried by the cases and defects themselves."
   },
   {
    "id": "SURF-036",
@@ -16288,13 +16912,13 @@
   {
    "id": "BRIEF-00-WAVE-7-DIRECTION",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Wave 7 direction: Cua underneath, Proctor on top",
    "file": "00-WAVE-7-DIRECTION.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-017",
@@ -16320,18 +16944,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-01-cua-schema-facade",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Stock computer-use schema façade (Anthropic + OpenAI)",
    "file": "01-cua-schema-facade.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-001",
@@ -16347,18 +16971,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-02-set-of-marks-captures",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Set-of-marks annotated captures",
    "file": "02-set-of-marks-captures.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-004",
@@ -16379,18 +17003,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-03-menu-bar-key-equivalents",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Menu-bar enumeration with key-equivalents",
    "file": "03-menu-bar-key-equivalents.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-011",
@@ -16411,18 +17035,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-04-app-scripting-dictionary",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "App scripting-dictionary introspection",
    "file": "04-app-scripting-dictionary.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-001",
@@ -16438,18 +17062,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-05-audit-trail-policy-gate",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Redacting audit trail + policy / approval gate",
    "file": "05-audit-trail-policy-gate.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-015",
@@ -16470,18 +17094,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-06-vision-capture-normalisation",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Vision-capture normalisation + reported scale factor",
    "file": "06-vision-capture-normalisation.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-005",
@@ -16497,18 +17121,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-07-zoom-region-crop",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Zoom native-resolution region crop",
    "file": "07-zoom-region-crop.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-005",
@@ -16524,18 +17148,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-08-mcp-surface-modernization",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "MCP surface modernization",
    "file": "08-mcp-surface-modernization.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-001",
@@ -16551,18 +17175,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-09-process-kill-fs-jail",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Process kill + filesystem jail",
    "file": "09-process-kill-fs-jail.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-016",
@@ -16578,18 +17202,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-10-pointer-overlay-captures",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Pointer / target overlay in captures",
    "file": "10-pointer-overlay-captures.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-006",
@@ -16610,18 +17234,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-100-a-screenshot-gallery-the-gate-cannot-see",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Thirty-five pictures the gate cannot see",
    "file": "100-a-screenshot-gallery-the-gate-cannot-see.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-209",
@@ -16654,18 +17278,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-101-reconcile-captures-with-cases",
    "entity": "brief",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Reconcile thirty-five captures with their cases and manifest",
    "file": "101-reconcile-captures-with-cases.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0100",
@@ -16731,18 +17355,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-102-standing-checks-for-the-unread-registers",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Standing checks for the registers nothing reads",
    "file": "102-standing-checks-for-the-unread-registers.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-227",
@@ -16793,18 +17417,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-103-the-three-recorded-limits-audit",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Audit of the three recorded limits: filesystem certification, hardware keyboard yield, and dynamic TCC grant re-probe",
    "file": "103-the-three-recorded-limits-audit.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-141",
@@ -16855,18 +17479,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-104-warrant-charter-and-release-integrity",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Formalize warrant charter and release gate integration",
    "file": "104-warrant-charter-and-release-integrity.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-290",
@@ -16897,18 +17521,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-105-brief-join-rate-and-retirement-ladder",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Brief join rate optimization and retirement ladder",
    "file": "105-brief-join-rate-and-retirement-ladder.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-295",
@@ -16939,18 +17563,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-106-supervision-tui-and-menu-bar-glass-witness",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Supervision TUI and Menu Bar Status Extra On-Glass Witness",
    "file": "106-supervision-tui-and-menu-bar-glass-witness.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-030",
@@ -16985,18 +17609,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-107-subprocess-actuation-witness-for-cua-driver",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Subprocess Actuation Witness for Cua Driver",
    "file": "107-subprocess-actuation-witness-for-cua-driver.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-305",
@@ -17024,7 +17648,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-108-native-ocr-and-high-dpi-zoom-inspector",
@@ -17066,13 +17690,13 @@
   {
    "id": "BRIEF-109-guest-vm-lifecycle-and-attachment-oracle",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Guest VM Lifecycle and Multi-Session Attachment Oracle",
    "file": "109-guest-vm-lifecycle-and-attachment-oracle.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-037",
@@ -17113,18 +17737,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-11-stability-per-step-pointer",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Pointer marker in proctor_stability per-step artifacts",
    "file": "11-stability-per-step-pointer.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-012",
@@ -17145,18 +17769,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-110-covered-target-cursor-plane-witness",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Covered-Target Cursor Plane Witness",
    "file": "110-covered-target-cursor-plane-witness.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0087",
@@ -17180,18 +17804,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-111-retired-items-spec-closure",
    "entity": "brief",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Retired Items Standalone Spec Closure for PRO-0022, PRO-0031, PRO-0039",
    "file": "111-retired-items-spec-closure.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-215",
@@ -17209,18 +17833,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-112-cross-automation-stack-reporting-harness",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Cross-Automation Stack Yield and Takeover Reporting Harness",
    "file": "112-cross-automation-stack-reporting-harness.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "BLOCK-0003",
@@ -17243,18 +17867,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-113-retire-pro-0108-native-ocr-zoom",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Retire Brief 108: Native OCR & High-DPI Visual Region Inspector",
    "file": "113-retire-pro-0108-native-ocr-zoom.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-315",
@@ -17275,7 +17899,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-114-ios-simulator-boot-fixture-harness",
@@ -17472,13 +18096,13 @@
   {
    "id": "BRIEF-12-gate-flow-replay-stability",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Gate recorded flow-replay and stability through the policy gate + audit",
    "file": "12-gate-flow-replay-stability.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-013",
@@ -17499,18 +18123,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-120-native-ocr-and-high-dpi-inspection-fixture",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Native OCR and High-DPI Inspection Fixture",
    "file": "120-native-ocr-and-high-dpi-inspection-fixture.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-007",
@@ -17531,7 +18155,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-121-surface-conformance-and-capture-trust-sourcing",
@@ -17600,13 +18224,13 @@
   {
    "id": "BRIEF-123-high-dpi-display-scale-factor-injection-helper",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "High-DPI Display Scale Factor Injection Helper",
    "file": "123-high-dpi-display-scale-factor-injection-helper.md",
-   "declared_status": "to-triage",
+   "declared_status": "retired",
    "generated_by": "reckon",
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-007",
@@ -17627,7 +18251,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-124-automated-warrant-tier-promotion-ledger-helper",
@@ -17824,13 +18448,13 @@
   {
    "id": "BRIEF-13-audit-log-encryption-at-rest",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Encryption-at-rest for the JSONL audit log",
    "file": "13-audit-log-encryption-at-rest.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-015",
@@ -17846,7 +18470,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-130-proctoragent-mutation-hardening-and-boundary-sweep",
@@ -18209,15 +18833,175 @@
    "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
+   "id": "BRIEF-140-deterministic-lane-routing-and-selection-record",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Deterministic Lane Routing and Selection Record",
+   "file": "140-deterministic-lane-routing-and-selection-record.md",
+   "declared_status": "retired",
+   "generated_by": "tailings",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-130",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-151",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-141-skill-overlay-family-guidance-reader",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Skill Overlay Family Guidance Reader",
+   "file": "141-skill-overlay-family-guidance-reader.md",
+   "declared_status": "retired",
+   "generated_by": "tailings",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-091",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-096",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-142-capture-directory-identity-manifest",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Capture Directory Identity Manifest",
+   "file": "142-capture-directory-identity-manifest.md",
+   "declared_status": "retired",
+   "generated_by": "tailings",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-111",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-133",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-143-session-claim-provenance-audit-gate",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Session Claim Provenance Audit Gate",
+   "file": "143-session-claim-provenance-audit-gate.md",
+   "declared_status": "retired",
+   "generated_by": "tailings",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-122",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-156",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
+   "id": "BRIEF-144-instrument-availability-disclosure-reporter",
+   "entity": "brief",
+   "class": "waived",
+   "kind": "exception",
+   "title": "Instrument Availability Disclosure Reporter",
+   "file": "144-instrument-availability-disclosure-reporter.md",
+   "declared_status": "retired",
+   "generated_by": "tailings",
+   "is_work_item": false,
+   "edges": [
+    {
+     "target": "REQ-065",
+     "method": "cited",
+     "confidence": 1.0
+    },
+    {
+     "target": "REQ-130",
+     "method": "cited",
+     "confidence": 1.0
+    }
+   ],
+   "near_misses": null,
+   "id_scan": {
+    "cited": [],
+    "shown": {},
+    "shown_only": []
+   },
+   "unclassifiable_ids": null,
+   "remedy": null,
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
+  },
+  {
    "id": "BRIEF-15-step-descriptions",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Human-readable step descriptions, derived not supplied",
    "file": "15-step-descriptions.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-001",
@@ -18233,18 +19017,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-16-run-hud-panel",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Run HUD — the overlay shown while Proctor drives an app",
    "file": "16-run-hud-panel.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-006",
@@ -18260,18 +19044,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-17-multi-session-queue",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Multi-session scheduling — session identity, lanes, and the queue",
    "file": "17-multi-session-queue.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-038",
@@ -18287,18 +19071,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-18-hud-character-assets",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "HUD character — sprite assets and state binding",
    "file": "18-hud-character-assets.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-006",
@@ -18314,18 +19098,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-19-yield-when-a-person-takes-the-machine",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Notice when a person is taking the machine back, and yield",
    "file": "19-yield-when-a-person-takes-the-machine.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-007",
@@ -18341,18 +19125,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-20-foreground-run-is-obvious",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Make a foreground-only run obvious before it takes the machine",
    "file": "20-foreground-run-is-obvious.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-008",
@@ -18368,18 +19152,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-21-route-browser-work-to-obscura",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Route browser work to Obscura instead of driving a browser by hand",
    "file": "21-route-browser-work-to-obscura.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-024",
@@ -18395,18 +19179,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-22-menu-bar-switch-and-character",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A menu bar switch for the panel, and a menu bar icon that is the same character",
    "file": "22-menu-bar-switch-and-character.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-011",
@@ -18427,18 +19211,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-23-drawing-fault-must-not-kill-the-agent",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A drawing fault must not kill the agent",
    "file": "23-drawing-fault-must-not-kill-the-agent.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-215",
@@ -18459,18 +19243,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-24-offer-to-install-obscura",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Offer to install Obscura when it is missing",
    "file": "24-offer-to-install-obscura.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-024",
@@ -18486,18 +19270,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-25-second-browser-lane-for-obscuras-limits",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A second browser lane for what Obscura cannot do",
    "file": "25-second-browser-lane-for-obscuras-limits.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-024",
@@ -18513,18 +19297,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-26-prefer-background-and-pointer-in-plane",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Prefer the background, and draw the pointer where the work is happening",
    "file": "26-prefer-background-and-pointer-in-plane.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-002",
@@ -18545,18 +19329,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-27-foreground-takeover-overlay",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "When Proctor must take the front, take it visibly and hold it",
    "file": "27-foreground-takeover-overlay.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-008",
@@ -18582,18 +19366,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-28-menu-bar-character-when-idle",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The menu bar shows the character when idle, not a status symbol",
    "file": "28-menu-bar-character-when-idle.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-011",
@@ -18609,18 +19393,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-29-re-check-now-says-what-it-checks",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "\"Re-check now\" does not say what it checks",
    "file": "29-re-check-now-says-what-it-checks.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-009",
@@ -18636,18 +19420,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-30-a-home-for-the-proctor-switches",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A home for the PROCTOR_* switches",
    "file": "30-a-home-for-the-proctor-switches.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-033",
@@ -18668,18 +19452,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-31-the-build-says-which-build-it-is",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The build says which build it is",
    "file": "31-the-build-says-which-build-it-is.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-022",
@@ -18695,18 +19479,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-32-the-health-report-is-complete",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The health report is complete",
    "file": "32-the-health-report-is-complete.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-009",
@@ -18727,18 +19511,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-33-the-audit-trail-is-signed",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The audit trail is signed, and it records what Proctor recommended",
    "file": "33-the-audit-trail-is-signed.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-015",
@@ -18754,18 +19538,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-34-a-persons-click-reaches-stop",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A person's click reaches Stop",
    "file": "34-a-persons-click-reaches-stop.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-007",
@@ -18781,18 +19565,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-35-scroll-moves-by-what-was-asked",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Scroll moves by what was asked",
    "file": "35-scroll-moves-by-what-was-asked.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-001",
@@ -18808,18 +19592,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-36-the-browser-catalogue-stops-guessing",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The browser catalogue stops guessing, and the handoff is machine-readable",
    "file": "36-the-browser-catalogue-stops-guessing.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-024",
@@ -18835,18 +19619,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-37-the-status-windows-checks-say-what-they-can-check",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The status window's checks say what they can check",
    "file": "37-the-status-windows-checks-say-what-they-can-check.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-009",
@@ -18867,18 +19651,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-38-a-hold-names-whose-run-it-is",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A hold names whose run it is",
    "file": "38-a-hold-names-whose-run-it-is.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-038",
@@ -18894,18 +19678,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-39-stability-knows-when-it-is-scoring-a-page",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Stability knows when it is scoring a page",
    "file": "39-stability-knows-when-it-is-scoring-a-page.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-013",
@@ -18921,18 +19705,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-40-page-scoped-refusal",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Page-scoped refusal",
    "file": "40-page-scoped-refusal.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-215",
@@ -18953,18 +19737,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-41-open-cannot-launch-proctor",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "`open -a Proctor` cannot launch Proctor while the agent is running",
    "file": "41-open-cannot-launch-proctor.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-026",
@@ -18980,18 +19764,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-42-doctor-can-hang-on-the-screen-recording-probe",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "`proctor_doctor` can hang forever waiting on the Screen Recording probe",
    "file": "42-doctor-can-hang-on-the-screen-recording-probe.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-009",
@@ -19012,18 +19796,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-43-backfill-horizontal-alignment-assertion",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Backfill: `horizontalAlignment` on `proctor_assert`",
    "file": "43-backfill-horizontal-alignment-assertion.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-023",
@@ -19039,18 +19823,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-44-build-identity-tests-fail-on-a-moving-head",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The build-identity tests fail whenever HEAD moves without a source change",
    "file": "44-build-identity-tests-fail-on-a-moving-head.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-022",
@@ -19066,18 +19850,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-45-cua-becomes-the-actuation-backend",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Cua becomes the actuation backend",
    "file": "45-cua-becomes-the-actuation-backend.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-001",
@@ -19098,18 +19882,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-46-a-delegated-call-is-still-gated-and-recorded",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A delegated call is still gated and recorded",
    "file": "46-a-delegated-call-is-still-gated-and-recorded.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-015",
@@ -19130,18 +19914,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-47-supervision-survives-delegation",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Supervision survives delegation",
    "file": "47-supervision-survives-delegation.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-029",
@@ -19157,18 +19941,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-48-the-run-has-a-history-you-can-read",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The run has a history you can read",
    "file": "48-the-run-has-a-history-you-can-read.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-033",
@@ -19184,18 +19968,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-49-drive-ios-through-deep-links",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Drive iOS through deep links",
    "file": "49-drive-ios-through-deep-links.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-020",
@@ -19211,18 +19995,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-50-run-maestro-flows-as-proctor-flows",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Run Maestro flows as Proctor flows",
    "file": "50-run-maestro-flows-as-proctor-flows.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-020",
@@ -19238,18 +20022,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-51-doctor-knows-the-whole-toolchain",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Doctor knows the whole toolchain",
    "file": "51-doctor-knows-the-whole-toolchain.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-009",
@@ -19270,18 +20054,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-52-decide-what-happens-to-the-native-planes",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Decide what happens to the native planes",
    "file": "52-decide-what-happens-to-the-native-planes.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-018",
@@ -19297,18 +20081,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-53-the-proctor-skill-tracks-what-shipped",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The proctor skill tracks what actually shipped",
    "file": "53-the-proctor-skill-tracks-what-shipped.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-091",
@@ -19329,18 +20113,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-54-takeover-tests-redden-the-gate",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "`TakeoverWiringTests` reddens the gate at random, and `swift test` exits 0 when it does",
    "file": "54-takeover-tests-redden-the-gate.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-008",
@@ -19361,18 +20145,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-55-three-tests-still-redden-the-gate",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Three tests still redden the gate at random, and PRO-0053 only fixed one of them",
    "file": "55-three-tests-still-redden-the-gate.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-022",
@@ -19388,18 +20172,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-56-the-suite-wedges-in-haltcheckpoint",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The suite wedges in `haltCheckpoint`, and the singleton is why",
    "file": "56-the-suite-wedges-in-haltcheckpoint.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-021",
@@ -19420,18 +20204,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-57-vm-targets",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "VM targets: test in a guest, and say which machine",
    "file": "57-vm-targets.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-017",
@@ -19477,18 +20261,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-58-swiftui-conversion-direction",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Wave 9: the surface set becomes the app",
    "file": "58-swiftui-conversion-direction.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-026",
@@ -19509,18 +20293,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-59-design-tokens-as-a-swift-value",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The design tokens are a Swift value, generated from the mock",
    "file": "59-design-tokens-as-a-swift-value.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-030",
@@ -19536,18 +20320,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-60-status-window-to-the-mock",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The status window becomes the mock",
    "file": "60-status-window-to-the-mock.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0028",
@@ -19575,18 +20359,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-61-walkthrough-to-the-mock",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The walkthrough becomes the mock",
    "file": "61-walkthrough-to-the-mock.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-010",
@@ -19607,18 +20391,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-62-menu-bar-and-the-command-surface",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The menu bar, and the complete command surface",
    "file": "62-menu-bar-and-the-command-surface.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-011",
@@ -19639,18 +20423,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-63-run-hud-and-the-character",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The run HUD, and the seven character states",
    "file": "63-run-hud-and-the-character.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-006",
@@ -19666,18 +20450,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-64-takeover-overlay-and-the-drawn-pointer",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The takeover overlay, and what it does not claim",
    "file": "64-takeover-overlay-and-the-drawn-pointer.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-008",
@@ -19703,18 +20487,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-65-history-window-to-the-mock",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The history window, and the detail that says what it could not check",
    "file": "65-history-window-to-the-mock.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-033",
@@ -19730,18 +20514,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-66-consent-sheets",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The consent sheets, and the asymmetry that runs through them",
    "file": "66-consent-sheets.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-010",
@@ -19762,18 +20546,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-67-the-fidelity-harness-proctor-on-proctor",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The fidelity harness: Proctor measures Proctor",
    "file": "67-the-fidelity-harness-proctor-on-proctor.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-023",
@@ -19789,18 +20573,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-68-the-operator-cli",
    "entity": "brief",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "`proctor`, the operator CLI",
    "file": "68-the-operator-cli.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-034",
@@ -19826,18 +20610,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-69-the-supervision-tui",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "`proctor tui`, the supervision surface",
    "file": "69-the-supervision-tui.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-029",
@@ -19863,18 +20647,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-70-effect-witnesses-off-glass",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Effect witnesses for the four effects that need no window server",
    "file": "70-effect-witnesses-off-glass.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-009",
@@ -19910,18 +20694,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-71-effect-witnesses-on-glass",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Effect witnesses for the eight effects that need a display server",
    "file": "71-effect-witnesses-on-glass.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-002",
@@ -19981,18 +20765,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-72-tests-that-mutate-and-never-read-back",
    "entity": "brief",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Seventy-eight tests that change state and never look at it",
    "file": "72-tests-that-mutate-and-never-read-back.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-045",
@@ -20018,18 +20802,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-73-gates-nobody-has-watched-fail",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Two gates nobody has watched fail, and one record that drifted",
    "file": "73-gates-nobody-has-watched-fail.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-001",
@@ -20105,18 +20889,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-74-the-carried-acceptance-clauses",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Two acceptance clauses that merged carried rather than green",
    "file": "74-the-carried-acceptance-clauses.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-048",
@@ -20132,18 +20916,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-75-what-the-status-window-still-owes",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "What the status window still owes, and one permission that may lie",
    "file": "75-what-the-status-window-still-owes.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-032",
@@ -20174,18 +20958,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-76-the-ten-the-capped-gate-hid",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The ten external effects a capped gate output hid",
    "file": "76-the-ten-the-capped-gate-hid.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0062",
@@ -20279,18 +21063,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-77-the-cua-path-leaves-proctors-plane-silently",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The cua path leaves Proctor's own plane, and nothing on screen says so",
    "file": "77-the-cua-path-leaves-proctors-plane-silently.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-070",
@@ -20316,18 +21100,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-78-the-skill-and-the-guest-lane",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The skill advertises 20 tools of 27, and talks an agent out of the guest lane",
    "file": "78-the-skill-and-the-guest-lane.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-091",
@@ -20353,18 +21137,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-79-the-walkthrough-will-not-advance-without-its-grants",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The walkthrough will not advance until its grants are in",
    "file": "79-the-walkthrough-will-not-advance-without-its-grants.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-082",
@@ -20390,18 +21174,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-80-the-signature-cache-is-per-session-and-the-work-is-not",
    "entity": "brief",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The signature cache is per-session and the work it caches is not",
    "file": "80-the-signature-cache-is-per-session-and-the-work-is-not.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-044",
@@ -20425,18 +21209,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-81-the-capture-path-reports-frames-it-did-not-get",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The capture path reports a frame it did not get, and a window it does not know about",
    "file": "81-the-capture-path-reports-frames-it-did-not-get.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0032",
@@ -20481,18 +21265,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-82-tests-that-touch-the-real-machine-and-tests-that-time-themselves",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A test that writes the operator's real policy, and tests that assert a wall clock",
    "file": "82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-029",
@@ -20532,18 +21316,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-83-what-the-surfaces-say-and-what-they-draw",
    "entity": "brief",
-   "class": "unmeasured",
-   "kind": "evidence-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "What the surfaces say, what they draw, and the branch that cannot be reached",
    "file": "83-what-the-surfaces-say-and-what-they-draw.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-006",
@@ -20600,18 +21384,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "this brief maps to the registry only through self-reported evidence; nothing observed it"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-84-the-campaigns-own-instruments",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The campaign's own instruments, and what each of them could not see",
    "file": "84-the-campaigns-own-instruments.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0074",
@@ -20699,18 +21483,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-85-proctoragents-mutants-mostly-survive",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Nineteen of twenty-two ProctorAgent mutants survived",
    "file": "85-proctoragents-mutants-mostly-survive.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0075",
@@ -20750,18 +21534,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-86-a-dead-peer-holds-the-queue",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A dead peer holds the queue, and a swallowed event says nothing",
    "file": "86-a-dead-peer-holds-the-queue.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-026",
@@ -20812,18 +21596,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-87-a-warning-this-project-has-already-disproved",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Proctor ships a guest warning its own spec records as not reproducing",
    "file": "87-a-warning-this-project-has-already-disproved.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-108",
@@ -20839,18 +21623,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-88-three-that-slipped-the-grouping",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The policy file's mode, a control that lies twice, and a sibling already fixed",
    "file": "88-three-that-slipped-the-grouping.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0116",
@@ -20908,18 +21692,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-89-the-registry-says-open-and-the-code-says-fixed",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The registry says open where the code says fixed",
    "file": "89-the-registry-says-open-and-the-code-says-fixed.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0126",
@@ -20989,18 +21773,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-90-the-four-nobody-owns",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Twenty-seven unwrapped tests, a fixed timer, and two witnesses the rung wants",
    "file": "90-the-four-nobody-owns.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0130",
@@ -21081,18 +21865,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-91-eight-more-operator-paths-with-no-seam",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Eight more operator paths with no seam",
    "file": "91-eight-more-operator-paths-with-no-seam.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-042",
@@ -21138,18 +21922,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-92-a-spec-says-which-brief-it-came-from",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A spec says which brief it came from",
    "file": "92-a-spec-says-which-brief-it-came-from.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-100",
@@ -21170,18 +21954,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-93-the-reckoning-tool-mis-read-this-registry",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "The reckoning tool mis-read this registry three ways",
    "file": "93-the-reckoning-tool-mis-read-this-registry.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-097",
@@ -21207,18 +21991,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-94-a-reckoning-worth-comparing-against",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A reckoning worth comparing against",
    "file": "94-a-reckoning-worth-comparing-against.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-102",
@@ -21259,18 +22043,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-95-six-named-repairs",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Six repairs whose diagnosis is already done",
    "file": "95-six-named-repairs.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "REQ-094",
@@ -21296,18 +22080,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-96-what-1-1-0-still-groups-and-still-grades",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "What 1.1.0 still groups, and what it still lets a citation grade",
    "file": "96-what-1-1-0-still-groups-and-still-grades.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0020",
@@ -21368,18 +22152,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-97-an-input-the-check-cannot-classify",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "An input the check cannot classify, and the two directions it can be wrong",
    "file": "97-an-input-the-check-cannot-classify.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-201",
@@ -21435,18 +22219,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-98-a-version-string-is-not-the-artifact",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "A version string is not the artifact",
    "file": "98-a-version-string-is-not-the-artifact.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "DEF-204",
@@ -21480,18 +22264,18 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   },
   {
    "id": "BRIEF-99-instruments-that-do-not-prove-their-own-step",
    "entity": "brief",
-   "class": "undecided",
-   "kind": "decision-work",
+   "class": "waived",
+   "kind": "exception",
    "title": "Instruments that do not prove their own step",
    "file": "99-instruments-that-do-not-prove-their-own-step.md",
-   "declared_status": "",
+   "declared_status": "retired",
    "generated_by": null,
-   "is_work_item": true,
+   "is_work_item": false,
    "edges": [
     {
      "target": "CASE-0392",
@@ -21611,7 +22395,7 @@
    },
    "unclassifiable_ids": null,
    "remedy": null,
-   "why": "looks done, but the strongest oracle behind it is 'none', below the 'outcome' floor for retiring intent — route to spec-validation before retiring"
+   "why": "the brief declares status 'retired' — a decision, not a measurement. It stays on the ledger because the reason for it may stop being true."
   }
  ]
 }

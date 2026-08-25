@@ -5062,6 +5062,19 @@
         "REQ-053"
       ],
       "note": "Measured 2026-08-25. SocketClient set no SO_NOSIGPIPE, and neither did the agent's listener or its accepted descriptors. A two-write probe against a listener that accepts and closes exits 141 \u2014 128 + 13 \u2014 with no error returned and nothing written anywhere. proctor-shim writes every tool call down that socket, so an agent dying mid-write took the MCP server with it: the host saw its server vanish, the caller never received agentUnavailable, and no audit record was written because the process was already gone. Fixed by proctorSuppressSIGPIPE() at all four socket sites plus the accepted descriptor, which does not inherit the option. Set per socket rather than by a process-wide SIG_IGN, because the Reflector is embedded in somebody else's application. evidence/PRO-0145/def-338-sigpipe.txt"
+    },
+    {
+      "id": "DEF-339",
+      "title": "The Maestro lane reaches the network on any invocation, and the disclosure read as a condition",
+      "status": "partially-fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-014"
+      ],
+      "requirements": [
+        "REQ-024"
+      ],
+      "note": "Measured 2026-08-25 with lsof over the process's own pid. `maestro --version` \u2014 an invocation that prints a string and runs no flow \u2014 opens TWO outbound TLS connections before returning: 34.36.150.207:443 (bc.googleusercontent.com) and 3.41.202.171:443 (compute-1.amazonaws.com). MAESTRO_CLI_NO_ANALYTICS=1 stops the AWS one; the Google Cloud one still happens. MAESTRO_DISABLE_ANALYTICS is not a variable Maestro reads. Proctor now sets the working variable on its own subprocess, which is not the same act as rewriting ~/.maestro/analytics.json, and that file is deliberately untouched. PARTIALLY fixed and recorded as such: one connection remains and cannot be stopped from here, so a lane called network-isolated is not one. The disclosure previously said telemetry runs 'when it is enabled in its configuration' \u2014 true, and it understates a connection that happens on the most trivial invocation there is. evidence/PRO-0124/network-isolation.txt"
     }
   ],
   "journey": [

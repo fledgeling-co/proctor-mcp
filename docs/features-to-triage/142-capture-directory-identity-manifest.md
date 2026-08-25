@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [R4]
 reckon-sources: [REQ-133, REQ-111]
-status: to-triage
+status: retired
+triaged-as: PRO-0150
+validated-by: REQ-111, REQ-133 via CASE-0472, CASE-0479, CASE-0480, CASE-0546, CASE-0547, CASE-0801
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: none
 ---
 # Capture Directory Identity Manifest
 

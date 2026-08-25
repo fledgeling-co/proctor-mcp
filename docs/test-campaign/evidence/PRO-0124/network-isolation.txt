@@ -1,0 +1,36 @@
+PRO-0124 — the Maestro lane is not network-isolated, measured
+date: Tue 25 Aug 2026 15:19:02 AEST
+maestro: 2.4.0 at /opt/homebrew/bin/maestro
+~/.maestro/analytics.json: enabled = true
+
+== THE MEASUREMENT ==
+Subject: 'maestro --version'. It prints a string and runs no flow, so anything
+it opens is opened before any test does anything.
+
+Recorder: lsof -nP -i -a -p <pid>, sampled every 350ms for 12 samples. lsof is
+the kernel's own view of a process's sockets and Maestro does not participate
+in producing it.
+
+  default                      peak 2 inet sockets
+                                 34.36.150.207:443   (bc.googleusercontent.com)
+                                 3.41.202.171:443    (compute-1.amazonaws.com)
+  MAESTRO_CLI_NO_ANALYTICS=1   peak 1 inet socket
+                                 34.36.150.207:443
+  MAESTRO_DISABLE_ANALYTICS=1  peak 2 inet sockets   (not a variable it reads)
+
+== WHAT CHANGED ==
+Proctor now sets MAESTRO_CLI_NO_ANALYTICS=1 on its OWN subprocess, which stops
+the AWS connection. The Google Cloud one still happens and cannot be stopped
+from here.
+
+Proctor does NOT rewrite ~/.maestro/analytics.json. That file is the operator's
+configuration and silently changing third-party config is the overreach PRO-0023
+rules out; setting a variable on a process Proctor is about to launch is not the
+same act.
+
+The disclosure was strengthened rather than left alone. It previously said
+telemetry runs 'when it is enabled in its configuration' — true, and it
+understates: the traffic is on the most trivial invocation there is, and one
+connection persists whatever the analytics setting says. A lane described as
+network-isolated that opens a TLS connection on --version is the kind of claim
+this campaign exists to catch, and it was Proctor's own.

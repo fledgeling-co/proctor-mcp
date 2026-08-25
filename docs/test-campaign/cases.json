@@ -9244,5 +9244,47 @@
       "docs/test-campaign/evidence/PRO-0127/guest-health.txt"
     ],
     "note": "A weakness this run found in its own ratchet. Adding GuestHealthProbe and proctorSuppressSIGPIPE to production grounded enough existing spec citations that the ratchet at 827 carried slack, and the negative arm went green: one more ungrounded name stayed under the bar. A ratchet with slack swallows exactly what it exists to catch, and the failure is silent because the gate is still reporting a pass. 827 to 825, and the arm no longer trusts the committed bar to be tight."
+  },
+  {
+    "id": "CASE-0817",
+    "req": "REQ-024",
+    "surface": "SURF-014",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The arm is the variable itself: the same binary, the same argument, measured with and without MAESTRO_CLI_NO_ANALYTICS=1 \u2014 two sockets against one. A run that opened the same count either way would mean the variable does nothing, which is what MAESTRO_DISABLE_ANALYTICS turned out to be.",
+    "defects": [
+      "DEF-339"
+    ],
+    "witness": {
+      "recorder": "lsof -nP -i -a -p <pid>, sampled every 350ms \u2014 the kernel's own view of a process's sockets, which Maestro does not participate in producing",
+      "effect": "outbound-socket",
+      "count": 2
+    },
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0124/network-isolation.txt",
+      "Sources/ProctorCore/MaestroRun.swift",
+      "Tests/ProctorCoreTests/MaestroNetworkIsolationTests.swift"
+    ],
+    "note": "PRO-0124, and a claim of Proctor's own that did not survive being measured. The brief calls this a network-isolated fixture. `maestro --version`, which runs no flow, opens two outbound TLS connections \u2014 one Google Cloud, one AWS. Proctor now sets MAESTRO_CLI_NO_ANALYTICS=1 on its own subprocess and that stops the AWS one; the other cannot be stopped from here. Recorded as partially-fixed, with the disclosure rewritten from a condition into the measurement, because a lane described as isolated that reaches the network on --version is exactly what this campaign exists to catch."
+  },
+  {
+    "id": "CASE-0818",
+    "req": "REQ-024",
+    "surface": "SURF-014",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "in-tree",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "A record cut to prose is a named failure rather than zero commands. An unreadable record parsed as an empty flow is a flow that passed by having nothing in it.",
+    "defects": [],
+    "evidence": [
+      "Tests/ProctorCoreTests/MaestroNetworkIsolationTests.swift",
+      "Sources/ProctorCore/MaestroRun.swift"
+    ],
+    "note": "PRO-0124 clauses 2 to 4. The argument vector carries no --analyze, --api-key or --upload and the absence is asserted against the vector rather than left to a comment. A parsed record keeps each command's status, its duration and its failure reason \u2014 a 5,011ms failure that lost its timing reads like a fast one, and one that lost its reason says only that it failed. The environment block holds exactly one variable, because a growing one is how a tool ends up configured by whatever launches it rather than by its operator."
   }
 ]

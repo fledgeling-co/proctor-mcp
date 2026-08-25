@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [T1]
 reckon-sources: [REQ-096, REQ-091]
-status: to-triage
+status: retired
+triaged-as: PRO-0149
+validated-by: REQ-091, REQ-096 via CASE-0370, CASE-0804
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # Skill Overlay Family Guidance Reader
 

@@ -1,7 +1,7 @@
 # Spec PRO-0124 — Maestro Flow Network-Isolated Step Fixture
 
 **Brief:** `docs/features-to-triage/116-maestro-flow-network-isolated-fixture.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-020
 **Defects:** BLOCK-0005

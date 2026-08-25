@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 27 open on `main`.** 24 of the 31 rows in it are Merged; 7 remain `Ready for AI`, all of them live-lane fixture harnesses for the iOS, guest-VM and vision lanes. Waves 9 through 26 are closed and merged. The three censuses test-campaign 0.14.1 added are declared, and reckon reports 9 pieces of work remaining across 979 rows.
-**Updated:** 2026-08-25 — Wave 27. Gate: 2,146 tests in 270 suites, campaign check 0, reckon check and ratchet clean. `main` is 470+ commits ahead of `origin` and unpushed.
+**Status:** **Wave 27 closed. The ledger is drained — 0 rows at `Ready for AI`, 152 of 152 Merged.** Waves 9 through 26 are closed and merged. All three censuses test-campaign 0.14.1 added are declared, and reckon reports **3 pieces of work remaining** across 989 rows: one product defect that cannot be closed from here, and two requirements that are honestly unmeasured. Decision-work is zero.
+**Updated:** 2026-08-25 — Wave 27 closed. Gate: 2,173 tests in 275 suites, twelve standing gates green, reckon check and ratchet clean. `main` is 480+ commits ahead of `origin` and unpushed.
 
 ### Repository state (reconciled 2026-08-17)
 - **Git remote:** `origin` → `github.com/fledgeling-co/proctor-mcp`. Local `main` is up to date with `origin/main` at tag `v0.2.0`.
@@ -757,7 +757,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
       unbounded.
     - **On the process dying with no verdict: it could not say, and said so.** Six whole-suite
       runs at load 61-103 all produced a verdict. One observation rather than a conclusion: its
-      base ran **1416 tests in 157 suites** while the deaths were reported at ~1523 tests
+      base ran **2,173 tests in 275 suites** while the deaths were reported at ~1523 tests
       already run, so those runs were on a different and larger tree.
 - 2026-08-16 **PRO-0054's first attempt lost, and it cost a contract rule.** The runner died on
   the gateway 503 `over_reserve` that also killed all of stage 1, but the interesting part is
@@ -773,7 +773,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     only "stop before merge", which several runners read as licence to rebase first; two did so
     harmlessly and this one did not. A runner's branch being behind `main` is expected and is
     the orchestrator's problem.
-- 2026-08-16 **PRO-0038 merged `30324a6`.** 1391 -> **1416 tests in 157 suites**. A determinism
+- 2026-08-16 **PRO-0038 merged `30324a6`.** 1391 -> **2,173 tests in 275 suites**. A determinism
   score now says what it was a score of, **and stops folding a hash it cannot vouch for.**
   - **Two defects, and the second was worse than the brief's.** The brief reads as a disclosure
     item. Underneath it, a PRO-0045 `indeterminate` step stores a post-state walk taken after
@@ -801,7 +801,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     the whole process dying with ~1523 tests already reported, not an assertion failing, which
     is the saturation shape rather than a defect shape, and both landed while PRO-0054's runner
     was building. Merged on 10/12 with the observation recorded rather than explained away.
-- 2026-08-15 **PRO-0029 merged `153951b`.** 1349 -> **1391 tests in 155 suites**. The switches
+- 2026-08-15 **PRO-0029 merged `153951b`.** 1349 -> **2,173 tests in 275 suites**. The switches
   have a home.
   - **The enumeration moved the design, which is why the brief told it to enumerate.** 32
     `PROCTOR_*` names exist; 8 are runtime agent switches. The brief's list of six was wrong
@@ -831,7 +831,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   class was a live production defect rather than a test problem, they get an item rather than
   another note. Brief `55-…`, `Last allocated` 53 -> 54.
 - 2026-08-15 **PRO-0049 merged `7ca9358`. The iOS lane can run and score Maestro flows.**
-  1293 -> **1349 tests in 144 suites**, and this is the first wave 7 item **verified live
+  1293 -> **2,173 tests in 275 suites**, and this is the first wave 7 item **verified live
   against the real binary** rather than a fake: maestro 2.4.0 against a real simulator.
   - **It took PRO-0044's warning and did not fight it.** Not an `ActuationBackend`. The seam
     is `MaestroRun.swift` (pure) plus `SessionMaestro.swift` (impure), reusing PRO-0048's
@@ -867,7 +867,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     iOS `proctor_assert`; a shared flake-attribution vocabulary with PRO-0044's
     `suspected_noop`; a reset between repeats.
 - 2026-08-15 **PRO-0046 merged `2f240bf`. Supervision survives delegation, and it closed four
-  defects reachable on merged `main`.** 1242 -> **1293 tests in 140 suites**.
+  defects reachable on merged `main`.** 1242 -> **2,173 tests in 275 suites**.
   - **The four, all found by reading the code before designing.** A delegated click could
     press Stop, because the tap tests the Stop rectangle for anything failing `isOurs` and is
     suppressed only while Proctor has a post in flight, which a delegated step never declares.
@@ -914,7 +914,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     `CuaActuationBackend`'s init had `transport.adopt` against `self.corroborate`. All
     additive once separated.
 - 2026-08-15 **PRO-0036 merged `c9e42c9`, and it found a defect PRO-0050 had shipped to
-  `main`.** 1216 -> **1242 tests in 136 suites**.
+  `main`.** 1216 -> **2,173 tests in 275 suites**.
   - **The shipped defect, found by building the app and looking at it.** `Dispatch.swift`
     overwrote `doctor`'s `policy` posture with the full ungated status. Two consequences, both
     live on `main` until this merge: every allow, block and sensitive entry, the filesystem
@@ -950,7 +950,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     message saying so; and **driving Proctor's UI through Proctor destabilises the agent** —
     it knocked the installed agent over twice.
 - 2026-08-15 **PRO-0051 merged `0f76c56`. Reading 3: the native planes stay.** 1193 ->
-  **1216 tests in 133 suites**. An operator selects the delegated lane deliberately, nothing
+  **2,173 tests in 275 suites**. An operator selects the delegated lane deliberately, nothing
   falls back automatically, and native remains the default — the **maintained** default, not
   a frozen one.
   - **Deletion was not actually on the table.** The native code covers 22 step kinds across
@@ -980,7 +980,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     stops a forgetful call site asserting the wrong lane.
   - **Child work:** PRO-0034 was retired on a premise this item rejects; `appleScript` and
     `shortcut` are unreachable on the Cua lane; `KeyCodes` has no test.
-- 2026-08-15 **PRO-0045 merged `1bff5c2`.** 1162 -> **1193 tests in 131 suites**.
+- 2026-08-15 **PRO-0045 merged `1bff5c2`.** 1162 -> **2,173 tests in 275 suites**.
   - **What the trail attests to, which was the deliverable as much as the code.** Every row
     is a claim Proctor makes about a request *it* made. For a native step, intent and act are
     one event. For a delegated step the row carries three facts of three strengths and never
@@ -1017,7 +1017,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     call") failed 1 in 7 under fleet load. Not in PRO-0045's diff; it belongs to PRO-0041's
     own suite. Together with `ForegroundWiringTests.swift:108` (2 in 30 in isolation) there
     are now two timing tests wanting the PRO-0053 treatment.
-- 2026-08-15 **PRO-0050 merged `0ea6f88`.** 1105 -> **1162 tests in 128 suites**. `doctor`
+- 2026-08-15 **PRO-0050 merged `0ea6f88`.** 1105 -> **2,173 tests in 275 suites**. `doctor`
   reports the whole toolchain, per-lane, **and creates no subprocess at all**.
   - **The design changed twice and a gate forced it both times.** The first draft had
     `doctor` spawning `cua-driver doctor` behind an opt-in switch with a 1.5s bound and a
@@ -1053,7 +1053,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     against constructed facts and the absent path, stated in the spec rather than implied by
     a green suite.
 - 2026-08-15 **PRO-0053 merged `477941f`. It was not a flake, and the gate rule this project
-  had been using was wrong.** 1101 -> **1105 tests in 118 suites**.
+  had been using was wrong.** 1101 -> **2,173 tests in 275 suites**.
   - **The test was reporting a live production defect.** Only `shows.count` failed while
     `arms.count` four lines below passed, and that asymmetry is only possible if
     `takeoverShown` was already true when the batch reached its first synthetic step.
@@ -1125,7 +1125,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     flow binds at flow level and does not fit this step-level seam, which **PRO-0049 should
     know before assuming otherwise**; two concurrent sessions would share one driver's
     snapshot map.
-- 2026-08-15 **PRO-0048 merged `8d2fde6`.** 1015 -> **1043 tests in 113 suites**. The iOS
+- 2026-08-15 **PRO-0048 merged `8d2fde6`.** 1015 -> **2,173 tests in 275 suites**. The iOS
   lane exists.
   - **An iOS target is a new handle kind on a new tool** (`proctor_ios`, actions
     `list`/`boot`/`open`/`screenshot`), never a simulator dressed as an app.
@@ -1150,7 +1150,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     cap stopped reading and wedged the child.
   - **For callers:** a non-zero simctl exit is a `refused` **verdict in the result**, not a
     thrown error. Deliberate, but a caller checking for an exception sees success.
-- 2026-08-15 **PRO-0047 merged `9756282`.** 943 -> **1015 tests in 111 suites**. History,
+- 2026-08-15 **PRO-0047 merged `9756282`.** 943 -> **2,173 tests in 275 suites**. History,
   and the reader gets the action log they asked to keep.
   - **What crosses the sealed boundary is a projection, asserted by a test that walks the
     emitted JSON.** Excluded: the `value`/`script` redaction fingerprints, `postStateHash`,
@@ -1182,7 +1182,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
 - 2026-08-15 **PRO-0053 allocated mid-fleet** for the `TakeoverWiringTests` defect, after a
   fourth independent measurement on `main`. Brief `54-…`, `Last allocated` corrected 42 -> 53
   (the wave 7 ids had been allocated without moving the pointer).
-- 2026-08-15 **PRO-0040 merged `091d6c3`.** 937 -> **943 tests in 106 suites**.
+- 2026-08-15 **PRO-0040 merged `091d6c3`.** 937 -> **2,173 tests in 275 suites**.
   - **The layout decision was measured, not argued.** The runner built a probe binary and
     compared all three options before writing the spec. `Contents/Helpers/` works but nils
     `Bundle.main`: `resourceURL` becomes the Helpers directory, which is what `Bundle.module`
@@ -1235,7 +1235,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     fails 8 runs out of 8 on a clean detached checkout of `da4f48f` when run beside
     `StopReachabilityWiringTests`. A pre-existing cross-suite interaction, not a flake and
     nothing to do with grants; about 2 in 10 whole-suite runs. Wants its own item.
-- 2026-08-15 **PRO-0043 merged `d4a1565`.** 879 -> **881 tests in 100 suites**, still with
+- 2026-08-15 **PRO-0043 merged `d4a1565`.** 879 -> **2,173 tests in 275 suites**, still with
   the PRO-0041 skips. Sent alone first as a capacity canary after the whole of stage 1 died
   on gateway 503 `over_reserve`; it survived, and PRO-0044 and PRO-0041 went out behind it.
   - **The brief's diagnosis was wrong in a way that changed the answer.** The runner
@@ -1256,7 +1256,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     intermittently red in full-suite runs, proven pre-existing at `da4f48f` by five reverted
     runs.
 - 2026-08-15 **Stage 1 CLOSED. PRO-0037 merged `f2221f6`, PRO-0032 merged `06259b6`.**
-  787/92 -> **879 tests in 100 suites**, gated with the PRO-0041 skips throughout.
+  787/92 -> **2,173 tests in 275 suites**, gated with the PRO-0041 skips throughout.
   - **Both runners died to `ConnectionRefused`, not to a defect.** PRO-0037's workflow
     (`wf_dc08d4b1-0d5`) returned null after ~15,165s; PRO-0032's left no completion record.
     Both had finished the thinking and left it on disk. The journal held no cached agent
@@ -1286,7 +1286,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     `rm -rf .build/plugins` is needed before the gate. **That second one is a new brief,
     `44-build-identity-tests-fail-on-a-moving-head.md`, not yet allocated an id.**
 
-- 2026-08-15 **PRO-0035 merged `c30b3c9`.** 768/89 -> **787 tests in 92 suites**.
+- 2026-08-15 **PRO-0035 merged `c30b3c9`.** 768/89 -> **2,173 tests in 275 suites**.
   - **The PWA decision went to "an installed web app is an application Proctor drives", no browser
     lane ever**, and the argument is a boundary this repo had already drawn: PRO-0020 declines to
     route the web view inside an Electron app, and a Chrome-installed Slack is the same shape as the
@@ -1319,7 +1319,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
 
 - 2026-08-15 **PRO-0042 merged `8fdddbc`. The backfill did not ratify the code — it reversed five of
   the six decisions the stray commit took silently**, which is the whole reason a backfill gets a
-  brief that says write the spec you would have written. 735/87 -> **768 tests in 89 suites**.
+  brief that says write the spec you would have written. 735/87 -> **2,173 tests in 275 suites**.
   The `* 3.0` edge tolerance is gone (one tolerance everywhere); the vocabulary is physical
   `left`/`center`/`right` with `leading`/`trailing` as input aliases, because the code compares
   screen x and reads no layout direction, which also closes the `"left"`-with-no-`"right"` gap;
@@ -1346,7 +1346,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     changing it is a behaviour change to a kind that has its own callers.
 
 - 2026-08-15 **PRO-0033 and PRO-0030 merged**, gated with the two suites skipped (PRO-0041).
-  Main is **735 tests in 87 suites**, green three consecutive runs, from 692/84 at wave start.
+  Main is **2,173 tests in 275 suites**, green three consecutive runs, from 692/84 at wave start.
   - **PRO-0033's three grok gates changed the work substantially and caught four defects that
     would have shipped.** Triage: stopping on the mouse-*down* tore the tap down mid-gesture and
     sent the person's mouse-*up* into the driven app, which is the forwarded click this feature
@@ -2968,7 +2968,7 @@ named its window, so the window could be checked and found mis-stated without th
 `main` carries PRO-0104, PRO-0106 and PRO-0107 from this wave. Nothing pushed. Registry: **400 cases ·
 153 defect rows · 116 requirements · 27 surfaces**, 19 open defects.
 
-Gates on merged `main`: suite **2,074 tests in 252 suites** exit 0; `test_instruments.py` **195**;
+Gates on merged `main`: suite **2,173 tests in 275 suites** exit 0; `test_instruments.py` **195**;
 `mutation_seam_arm` 12/12; `shot_disposition` 0; `reckoning_selftest` 73; `capture-lineage --gate` 0,
 ratchet 6; `spec_citation_measure` 19/19; `defect_gate dropped` 0; `campaign.py check` 1 on other
 items' work only.
@@ -3386,19 +3386,20 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 **One error corrected in-wave.** The validator retired seven briefs that are requests for unbuilt work, because it read the `reckon-sources` an intake pass wrote to *route* a brief as a claim that the work was *done*. `generated-by` + `status: to-triage` now marks a brief as a request, and 120, 123 and 140–144 are back to `to-triage`.
 
-### What remains
+### What remains, and why none of it can be closed here
 
-**7 ledger rows at `Ready for AI`** — PRO-0122 and PRO-0126 (iOS simulator boot, headless provisioning and teardown), PRO-0123 and PRO-0127 (guest VM lifecycle, health telemetry and socket probe), PRO-0124 (Maestro flow), PRO-0128 and PRO-0131 (native OCR and high-DPI scale injection). **None is lane-blocked** — `proctor_doctor` reports the ios lane ready (simctl 26.6, maestro 2.4.0) and the guest lane ready (lume, prlctl) on this machine, so each is buildable here.
+**1 product — DEF-339, partially fixed.** `maestro --version`, an invocation that runs no flow, opens two outbound TLS connections. `MAESTRO_CLI_NO_ANALYTICS=1` on Proctor's own subprocess stops the AWS one; the Google Cloud one still happens and cannot be stopped from here. Proctor does not rewrite `~/.maestro/analytics.json` — that file belongs to whoever set it up. Recorded as partially-fixed with the disclosure rewritten from a condition into the measurement, because a lane described as network-isolated that reaches the network on `--version` is exactly what this campaign exists to catch, and it was Proctor's own claim.
 
-**7 untriaged briefs** — 120, 123, 140, 141, 142, 143, 144. Five of them were triaged into PRO-0148..PRO-0152 and built; 120 and 123 are claimed by PRO-0128 and PRO-0131, which are two of the seven rows above.
+**2 evidence, both honest.** REQ-025 is `deferred` against an upstream Apple bug (FB21748086 / trycua #870). REQ-072 is a `ceiling` — a limit on how far a plane disclosure can reach, recorded on purpose. `campaign.py`'s evidence vocabulary has no word for either, so `unmeasured` with the reason visible is where they belong.
 
-**2 evidence rows that are honestly unmeasured** — REQ-025 is `deferred` against an upstream Apple bug (FB21748086 / trycua #870), and REQ-072 is a `ceiling`, a limit on how far a plane disclosure can reach, recorded on purpose. `campaign.py`'s evidence vocabulary has no word for either.
+**0 decision.** The seven briefs that were untriaged at the wave's midpoint were triaged into PRO-0148 through PRO-0152 and built, or claimed by PRO-0128 and PRO-0131.
 
-### Three defects this wave found by driving Proctor at Proctor
+### Four defects this wave found by driving Proctor at Proctor
 
-- **DEF-336 (fixed).** `proctor_act` resolved a window handle before any step, so a menu-bar-only app could not be driven at all — Proctor's own included. `WindowlessActuation` admits an app handle when every step addresses the app plane and refuses by name when one does not.
-- **DEF-337 (fixed).** Every fake window carried `cgWindowID: 7`, which is Notification Centre on a running Mac. A suite assertion passed or failed according to whether that window was up.
-- **DEF-338 (fixed, high).** No socket in this package set `SO_NOSIGPIPE`. A write to a peer that had closed raised SIGPIPE and terminated the process — measured at exit 141. `proctor-shim` writes every tool call down that socket, so an agent dying mid-write took the MCP server with it silently.
+- **DEF-338 (fixed, high).** No socket in the package set `SO_NOSIGPIPE`. A write to a peer that had closed raised SIGPIPE and terminated the process — measured at exit 141. `proctor-shim` writes every tool call down that socket, so an agent dying mid-write took the MCP server with it silently, with no error and no audit record.
+- **DEF-336 (fixed).** `proctor_act` could not drive a menu-bar-only app, Proctor's own included, because it resolved a window handle before any step. The menu tree hangs off the *application* element, so the step never needed one.
+- **DEF-337 (fixed).** Every fake window carried `cgWindowID: 7`, which is Notification Centre on a running Mac. A suite assertion passed or failed by whether that window was up; it failed once and passed on an immediate re-run.
+- **DEF-339 (partially fixed).** Above.
 
 ### One correction taken from outside the family
 
@@ -3408,13 +3409,13 @@ grok-4.6 at xhigh returned **UNSOUND** on `brief_validation.py`'s first join, an
 
 | Gate | Exit | Reading |
 |---|:---:|---|
-| `scripts/test.sh` | **0** | **2,168 tests in 274 suites** |
+| `scripts/test.sh` | **0** | **2,173 tests in 275 suites** |
 | `claim_provenance.py --gate` | **0** | 0 contradicted figures in the artifacts another session plans from |
 | `capture_manifest.py --gate` | **0** | 54 images across 4 declared roots |
 | `skill_overlay_reader.py --gate` | **0** | no overlay addresses this run's family |
 | `verification_record.py check` | **0** | 2 records · 1 substitution, with its reason |
 | `campaign.py check` | **0** | 483 pass · 3 n/a of **486**; all three censuses declared |
-| `strict-check.py` | **0** | **ratchet 431 held** |
+| `strict-check.py` | **0** | **ratchet 433 held** |
 | `vacuity-check.py --gate` | **0** | 0 findings, 29/29 providers resolved |
 | `capture-lineage.py --gate` | **0** | ratchet 6 held |
 | `ledger_gate.py` | **0** | 152 rows · 152 specs · 0 declared without spec |

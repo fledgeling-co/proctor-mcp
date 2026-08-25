@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [T3, T11, T17]
 reckon-sources: [REQ-156, REQ-122]
-status: to-triage
+status: retired
+triaged-as: PRO-0151
+validated-by: REQ-122, REQ-156 via CASE-0523, CASE-0524, CASE-0525, CASE-0526, CASE-0528, CASE-0625
+validated-rungs: outcome
+validated-provider: none
 ---
 # Session Claim Provenance Audit Gate
 

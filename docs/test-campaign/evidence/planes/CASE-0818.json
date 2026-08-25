@@ -1,0 +1,27 @@
+{
+  "case": "CASE-0818",
+  "requirement": "REQ-024",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T05:20:27Z",
+  "tree": {
+    "commit": "ab1234d",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "A record cut to prose is a named failure rather than zero commands. An unreadable record parsed as an empty flow is a flow that passed by having nothing in it.",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/MaestroNetworkIsolationTests.swift",
+      "sha256_16": "cc9cf7e9b5ba1407",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorCore/MaestroRun.swift",
+      "sha256_16": "1b5c77df6b2448c4",
+      "present": true
+    }
+  ]
+}

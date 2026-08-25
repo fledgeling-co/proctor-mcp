@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [T9]
 reckon-sources: [REQ-130, REQ-151]
-status: to-triage
+status: retired
+triaged-as: PRO-0148
+validated-by: REQ-130, REQ-151 via CASE-0552, CASE-0554, CASE-0566, CASE-0601
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # Deterministic Lane Routing and Selection Record
 

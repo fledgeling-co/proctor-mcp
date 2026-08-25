@@ -167,7 +167,8 @@ extension Session {
             let debugDirectory = Session.maestroDebugDirectory(run: runIndex)
             let arguments = MaestroInvocation.arguments(flowPath: flowPath, udid: target.udid,
                                                         debugDirectory: debugDirectory)
-            let run = Session.runBounded(binary, arguments, timeoutMs: timeoutMs)
+            let run = Session.runBounded(binary, arguments, timeoutMs: timeoutMs,
+                                         environment: MaestroInvocation.environment)
 
             let record = Session.readMaestroRecord(in: debugDirectory)
             let after = livenessTarget.map {
