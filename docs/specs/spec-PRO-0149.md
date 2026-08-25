@@ -1,7 +1,7 @@
 # Spec PRO-0149 — Skill Overlay Family Guidance Reader
 
 **Brief:** `docs/features-to-triage/141-skill-overlay-family-guidance-reader.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-030
 **Defects:** none

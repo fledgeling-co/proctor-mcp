@@ -1,0 +1,1738 @@
+{
+  "counts": {
+    "substantiated": 3,
+    "unbacked": 5,
+    "contradicted": 0,
+    "waived": 184
+  },
+  "rows": [
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3,
+      "figure": 970,
+      "subject": "row",
+      "text": "**Status:** **Wave 27 open on `main`.** 17 of the 26 rows it opened are Merged; 12 remain `Ready for AI`, and 5 more wer",
+      "class": "unbacked",
+      "why": "the line names a different population \u2014 this tool counts the feature ledger and the campaign registries, and will not assert a contradiction about a register it does not hold"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 4,
+      "figure": 267,
+      "subject": "suite",
+      "text": "**Updated:** 2026-08-25 \u2014 Wave 27. Gate: 2,129 tests in 267 suites, campaign check 0, reckon check and ratchet clean. `m",
+      "class": "unbacked",
+      "why": "the line names a different population \u2014 this tool counts the feature ledger and the campaign registries, and will not assert a contradiction about a register it does not hold"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 9,
+      "figure": 175,
+      "subject": "suite",
+      "text": "- **Verification (as at 2026-08-17, superseded):** 63 features across 175 suites. The live figure is in Wave 27's gate t",
+      "class": "waived",
+      "why": "the line marks itself superseded or dated, in its own words \u2014 a reason a reader can see beside the figure, which is what separates a waiver from an omission"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 103,
+      "figure": 1818,
+      "subject": "test",
+      "text": "| PRO-0077 | `ai/pro-0077` | `85a31f4` | 1,818 tests / 215 suites | CASE-0059..0062, four witnesses, census 0 \u2192 4 witnes",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 103,
+      "figure": 215,
+      "subject": "suite",
+      "text": "| PRO-0077 | `ai/pro-0077` | `85a31f4` | 1,818 tests / 215 suites | CASE-0059..0062, four witnesses, census 0 \u2192 4 witnes",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 208,
+      "figure": 33,
+      "subject": "test",
+      "text": "| PRO-0014 | Step descriptions, derived not supplied | `spec-PRO-0014.md` | \u2014 | \u2014 | 1 | **MERGED** `061ca0a` \u00b7 `StepDesc",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 209,
+      "figure": 19,
+      "subject": "test",
+      "text": "| PRO-0011 | Pointer marker in stability artifacts | `spec-PRO-0011.md` | \u2014 | \u2014 | 1 | **MERGED** `a8d9a7a` \u00b7 `captureEac",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 210,
+      "figure": 23,
+      "subject": "test",
+      "text": "| PRO-0012 | Re-gate flow replay + stability (security) | `spec-PRO-0012.md` | \u2014 | \u2014 | 1 | **MERGED** `d9ae7fd` \u00b7 `Repla",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 211,
+      "figure": 10,
+      "subject": "test",
+      "text": "| PRO-0013 | Audit-log encryption at rest (security) | `spec-PRO-0013.md` | \u2014 | \u2014 | 1 | **MERGED** `62cd969` \u00b7 `AuditSea",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 212,
+      "figure": 57,
+      "subject": "test",
+      "text": "| PRO-0015 | Run HUD panel | `spec-PRO-0015.md` | PRO-0014 \u2713 | `mocks/run-hud.html` (binding) | 2 | **MERGED** `9f497b4`",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 213,
+      "figure": 43,
+      "subject": "test",
+      "text": "| PRO-0016 | Multi-session queue | `spec-PRO-0016.md` | PRO-0015 \u2713 | `docs/design/run-hud-queue.md` | 3 | **MERGED** `aa",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 214,
+      "figure": 23,
+      "subject": "test",
+      "text": "| PRO-0017 | HUD character assets | `spec-PRO-0017.md` | PRO-0015 \u2713 | `docs/design/run-hud-character.md` | 3 | **MERGED*",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 245,
+      "figure": 259,
+      "subject": "test",
+      "text": "- ~~**PRO-0014 quotes a caller-supplied object and not a derived one**~~ \u2014 **RESOLVED 2026-08-14 @ b60e906: quote both.*",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 267,
+      "figure": 42,
+      "subject": "test",
+      "text": "| PRO-0018 | Yield when a person takes the machine back | `19-yield-when-a-person-takes-the-machine.md` | PRO-0019 \u2713 | 2",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 406,
+      "figure": 50,
+      "subject": "defect",
+      "text": "| PRO-0036 | The status window's checks say what they can check | `37-\u2026` | 4 | **MERGED** `c9e42c9` \u00b7 fixed a live PRO-0",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 425,
+      "figure": 17,
+      "subject": "surface",
+      "text": "design of record \u2014 51 states across 17 surfaces, gated \u2014 and this wave converts it.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 502,
+      "figure": 210,
+      "subject": "suite",
+      "text": "- **Verified by the orchestrator:** branch and worktree exist; `main` untouched at `c7fbe29`; `ai/wave-9` untouched; not",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 557,
+      "figure": 214,
+      "subject": "suite",
+      "text": "- **Gates.** `./scripts/test.sh` 1,814 tests in 214 suites, exit 0. `campaign.py check` exit 0, 58 of 58 cases, 58 of 58",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 557,
+      "figure": 58,
+      "subject": "case",
+      "text": "- **Gates.** `./scripts/test.sh` 1,814 tests in 214 suites, exit 0. `campaign.py check` exit 0, 58 of 58 cases, 58 of 58",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 564,
+      "figure": 205,
+      "subject": "suite",
+      "text": "- 1,714 tests in 205 suites, green.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 565,
+      "figure": 1683,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0075: the assay widened to all of ProctorCore \u2014 50% survival, and the second unwatched equality.** Th",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 565,
+      "figure": 201,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0075: the assay widened to all of ProctorCore \u2014 50% survival, and the second unwatched equality.** Th",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 566,
+      "figure": 1666,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0075: mutation survival measured for the first time \u2014 41.7%, then 0%.** `warrant:assay`'s generator r",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 566,
+      "figure": 1669,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0075: mutation survival measured for the first time \u2014 41.7%, then 0%.** `warrant:assay`'s generator r",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 566,
+      "figure": 199,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0075: mutation survival measured for the first time \u2014 41.7%, then 0%.** `warrant:assay`'s generator r",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 567,
+      "figure": 1666,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0075: the live iOS lane run rather than carried, and it was broken two ways.** `MaestroLiveTests` is ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 567,
+      "figure": 198,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0075: the live iOS lane run rather than carried, and it was broken two ways.** `MaestroLiveTests` is ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 568,
+      "figure": 1666,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0075: the suite's fault sensitivity measured as far as the tooling allows, and one assertion that cou",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 568,
+      "figure": 198,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0075: the suite's fault sensitivity measured as far as the tooling allows, and one assertion that cou",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 569,
+      "figure": 1666,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0075: the design of record moved to the build, and a capture was found showing the wrong binary.** DE",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 569,
+      "figure": 198,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0075: the design of record moved to the build, and a capture was found showing the wrong binary.** DE",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 570,
+      "figure": 1666,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0075: the history pane's premise was wrong, and a referral is what caught it.** DEF-008 was recorded ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 570,
+      "figure": 198,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0075: the history pane's premise was wrong, and a referral is what caught it.** DEF-008 was recorded ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 571,
+      "figure": 1657,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0075: the campaign at 0.8.0 found six defects and settled four carried clauses.** The repo was gating",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 571,
+      "figure": 197,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0075: the campaign at 0.8.0 found six defects and settled four carried clauses.** The repo was gating",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 572,
+      "figure": 1647,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0074 merged, and wave 9 closes.** Supervision reaches an operator over SSH for the first time, on a M",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 572,
+      "figure": 193,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0074 merged, and wave 9 closes.** Supervision reaches an operator over SSH for the first time, on a M",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 573,
+      "figure": 1618,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0073 merged.** Proctor is reachable from a shell for the first time: 21 verbs derived from `ToolCatal",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 573,
+      "figure": 189,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0073 merged.** Proctor is reachable from a shell for the first time: 21 verbs derived from `ToolCatal",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 574,
+      "figure": 1591,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0072 merged.** The disclosure SwitchCatalogue has carried since PRO-0029 finally has a surface. Turni",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 574,
+      "figure": 185,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0072 merged.** The disclosure SwitchCatalogue has carried since PRO-0029 finally has a surface. Turni",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 575,
+      "figure": 1582,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0071 merged.** A skipped assertion can never be counted as a pass, the tally keeps three counts rathe",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 575,
+      "figure": 184,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0071 merged.** A skipped assertion can never be counted as a pass, the tally keeps three counts rathe",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 576,
+      "figure": 1574,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0070 merged, and corrected the mock.** The guest-route refusal is not an overlay state: the refusal t",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 576,
+      "figure": 183,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0070 merged, and corrected the mock.** The guest-route refusal is not an overlay state: the refusal t",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 577,
+      "figure": 1569,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0069 merged.** Seven phases get distinct symbols and a per-phase control table; the panel drew Pause ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 577,
+      "figure": 182,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0069 merged.** Seven phases get distinct symbols and a per-phase control table; the panel drew Pause ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 579,
+      "figure": 1563,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0068 merged.** The menu bar went from one command to 20 across four menus, and the kill switch now ha",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 579,
+      "figure": 181,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0068 merged.** The menu bar went from one command to 20 across four menus, and the kill switch now ha",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 580,
+      "figure": 1555,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0067 merged.** Walkthrough step is a pure function tested at all eight combinations; primary actions ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 580,
+      "figure": 180,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0067 merged.** Walkthrough step is a pure function tested at all eight combinations; primary actions ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 581,
+      "figure": 1547,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0066 merged.** Status window draws only the sections its state allows, so a dead agent no longer rend",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 581,
+      "figure": 179,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0066 merged.** Status window draws only the sections its state allows, so a dead agent no longer rend",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 582,
+      "figure": 1535,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0065 merged.** Reflector embedded in ProctorUI (debug-only, release guard verified both ways); Surfac",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 582,
+      "figure": 177,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0065 merged.** Reflector embedded in ProctorUI (debug-only, release guard verified both ways); Surfac",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 583,
+      "figure": 1526,
+      "subject": "test",
+      "text": "- 2026-08-20 **PRO-0064 merged.** Token generator + build plugin; 63 tokens (6 kit, 57 direction) generated from the moc",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 583,
+      "figure": 176,
+      "subject": "suite",
+      "text": "- 2026-08-20 **PRO-0064 merged.** Token generator + build plugin; 63 tokens (6 kit, 57 direction) generated from the moc",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 617,
+      "figure": 1426,
+      "subject": "test",
+      "text": "reporting, the verdict was `1426 tests \u2026 failed with 37 issues`, and **35 of the 37",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 631,
+      "figure": 14,
+      "subject": "test",
+      "text": "`55-\u2026` says three tests redden the gate (it was 14 tests / 37 issues, understated because",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 760,
+      "figure": 157,
+      "subject": "suite",
+      "text": "base ran **1416 tests in 157 suites** while the deaths were reported at ~1523 tests",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 760,
+      "figure": 1523,
+      "subject": "test",
+      "text": "base ran **1416 tests in 157 suites** while the deaths were reported at ~1523 tests",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 776,
+      "figure": 157,
+      "subject": "suite",
+      "text": "- 2026-08-16 **PRO-0038 merged `30324a6`.** 1391 -> **1416 tests in 157 suites**. A determinism",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 804,
+      "figure": 155,
+      "subject": "suite",
+      "text": "- 2026-08-15 **PRO-0029 merged `153951b`.** 1349 -> **1391 tests in 155 suites**. The switches",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 834,
+      "figure": 144,
+      "subject": "suite",
+      "text": "1293 -> **1349 tests in 144 suites**, and this is the first wave 7 item **verified live",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 870,
+      "figure": 140,
+      "subject": "suite",
+      "text": "defects reachable on merged `main`.** 1242 -> **1293 tests in 140 suites**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 917,
+      "figure": 136,
+      "subject": "suite",
+      "text": "`main`.** 1216 -> **1242 tests in 136 suites**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 953,
+      "figure": 133,
+      "subject": "suite",
+      "text": "**1216 tests in 133 suites**. An operator selects the delegated lane deliberately, nothing",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 983,
+      "figure": 131,
+      "subject": "suite",
+      "text": "- 2026-08-15 **PRO-0045 merged `1bff5c2`.** 1162 -> **1193 tests in 131 suites**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1020,
+      "figure": 128,
+      "subject": "suite",
+      "text": "- 2026-08-15 **PRO-0050 merged `0ea6f88`.** 1105 -> **1162 tests in 128 suites**. `doctor`",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1056,
+      "figure": 118,
+      "subject": "suite",
+      "text": "had been using was wrong.** 1101 -> **1105 tests in 118 suites**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1080,
+      "figure": 0,
+      "subject": "test",
+      "text": "`Executed 0 tests, with 0 failures` on failing runs, because these are swift-testing tests",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1082,
+      "figure": 0,
+      "subject": "test",
+      "text": "verdict line reading `Test run with 0 tests ... passed`.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1095,
+      "figure": 118,
+      "subject": "suite",
+      "text": "118 suites**. Actuation now sits behind an injected `ActuationBackend`, with",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1128,
+      "figure": 113,
+      "subject": "suite",
+      "text": "- 2026-08-15 **PRO-0048 merged `8d2fde6`.** 1015 -> **1043 tests in 113 suites**. The iOS",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1153,
+      "figure": 111,
+      "subject": "suite",
+      "text": "- 2026-08-15 **PRO-0047 merged `9756282`.** 943 -> **1015 tests in 111 suites**. History,",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1185,
+      "figure": 106,
+      "subject": "suite",
+      "text": "- 2026-08-15 **PRO-0040 merged `091d6c3`.** 937 -> **943 tests in 106 suites**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1212,
+      "figure": 105,
+      "subject": "suite",
+      "text": "881 (with two suites skipped) -> **937 tests in 105 suites, no skips**, green three times",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1238,
+      "figure": 100,
+      "subject": "suite",
+      "text": "- 2026-08-15 **PRO-0043 merged `d4a1565`.** 879 -> **881 tests in 100 suites**, still with",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1259,
+      "figure": 100,
+      "subject": "suite",
+      "text": "787/92 -> **879 tests in 100 suites**, gated with the PRO-0041 skips throughout.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1289,
+      "figure": 92,
+      "subject": "suite",
+      "text": "- 2026-08-15 **PRO-0035 merged `c30b3c9`.** 768/89 -> **787 tests in 92 suites**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1322,
+      "figure": 89,
+      "subject": "suite",
+      "text": "brief that says write the spec you would have written. 735/87 -> **768 tests in 89 suites**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1349,
+      "figure": 87,
+      "subject": "suite",
+      "text": "Main is **735 tests in 87 suites**, green three consecutive runs, from 692/84 at wave start.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1401,
+      "figure": 692,
+      "subject": "test",
+      "text": "- 2026-08-15 **Wave 5 stage 2 MERGED \u2014 the backlog is empty again.** PRO-0026 `f198936`, PRO-0024 `4afc99c`, PRO-0028 `6",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1405,
+      "figure": 610,
+      "subject": "test",
+      "text": "- 2026-08-15 **Wave 5 stage 1 MERGED** \u2014 PRO-0025 `84062fa`, PRO-0023 `f77df6c`, PRO-0027 `c94799b`. **610 tests / 78 su",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1410,
+      "figure": 544,
+      "subject": "test",
+      "text": "- 2026-08-15 **The three-second linger was already the behaviour; the guard around it was not.** `quietLinger` has been ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1410,
+      "figure": 66,
+      "subject": "suite",
+      "text": "- 2026-08-15 **The three-second linger was already the behaviour; the guard around it was not.** `quietLinger` has been ",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1411,
+      "figure": 542,
+      "subject": "test",
+      "text": "- 2026-08-15 **PRO-0018 MERGED \u2014 the backlog is empty.** **542 tests / 66 suites green** on `main`, from 173/24 when the",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1418,
+      "figure": 500,
+      "subject": "test",
+      "text": "- 2026-08-14 **Wave 4 stage 1 MERGED** \u2014 PRO-0021 `58b3ce4`, PRO-0019 `619bb30`, PRO-0020 `3a3bb5f`. **500 tests / 64 su",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1427,
+      "figure": 382,
+      "subject": "test",
+      "text": "- 2026-08-14 **Wave 3 stage 3 MERGED** \u2014 PRO-0016 @ `aad4f2d`, PRO-0017 @ `4f2fc60`. **382 tests / 46 suites green**. On",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1431,
+      "figure": 315,
+      "subject": "test",
+      "text": "- 2026-08-14 **Wave 3 stage 2 MERGED** @ 9f497b4 \u2014 PRO-0015, the run HUD panel. **315 tests / 35 suites green**. The eve",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1435,
+      "figure": 258,
+      "subject": "test",
+      "text": "- 2026-08-14 **Wave 3 stage 1 MERGED** @ 62cd969 \u2014 four features, **258 tests / 29 suites green** on `main` (was 173/24)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1449,
+      "figure": 169,
+      "subject": "test",
+      "text": "- 2026-08-13 FLEET COMPLETE. All 10 features merged to local main @ d237361; 19 tools, 169 tests / 23 suites green. PRO-",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1451,
+      "figure": 157,
+      "subject": "test",
+      "text": "- 2026-08-13 batch 3 MERGED to main (bd3a08c): PRO-0006 (capture normalize), PRO-0007 (proctor_zoom), PRO-0009 (proctor_",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1453,
+      "figure": 118,
+      "subject": "test",
+      "text": "- 2026-08-13 batch 2 MERGED to main (07d7ea3): PRO-0003 (proctor_menu), PRO-0004 (proctor_dictionary), PRO-0005 (proctor",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1455,
+      "figure": 82,
+      "subject": "test",
+      "text": "- 2026-08-13 batch 1 MERGED to main (670389b): PRO-0001 (14 tools), PRO-0002 (set-of-marks), PRO-0008 (proctor_resource)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1486,
+      "figure": 1818,
+      "subject": "test",
+      "text": "| PRO-0077 | **Done** | 10 pass | 1,818 tests / 215 suites, exit 0 |",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1486,
+      "figure": 215,
+      "subject": "suite",
+      "text": "| PRO-0077 | **Done** | 10 pass | 1,818 tests / 215 suites, exit 0 |",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1536,
+      "figure": 215,
+      "subject": "suite",
+      "text": "Gate after both merges: **1,818 tests in 215 suites, exit 0.** Campaign gates: `check` exit 0,",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1538,
+      "figure": 45,
+      "subject": "requirement",
+      "text": "clean at ratchet 3, `vacuity` 76 findings over 45 requirements.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1577,
+      "figure": 71,
+      "subject": "case",
+      "text": "71 cases, ids unique, nothing dropped.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1582,
+      "figure": 215,
+      "subject": "suite",
+      "text": "**State after the wave.** Gate 1,818 tests in 215 suites, exit 0. `strict-check` 70 of 70 with the",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1708,
+      "figure": 220,
+      "subject": "suite",
+      "text": "Gate **1,862 tests in 220 suites, exit 0**. `strict-check` ratchet raised 81 \u2192 106.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1752,
+      "figure": 234,
+      "subject": "suite",
+      "text": "ran. Gate 1,920 tests in 234 suites, exit 0. Strict ratchet 106 \u2192 124. Lineage judged 6 of 8, ratchet",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1764,
+      "figure": 236,
+      "subject": "suite",
+      "text": "Gate **1,934 tests in 236 suites, exit 0**. `campaign.py check`: examined=27, witnessed=23,",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1798,
+      "figure": 2,
+      "subject": "case",
+      "text": "**Still open, all recorded:** CASE-0126 and CASE-0127 carry empty `source` blocks (2 cases, 4",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1805,
+      "figure": 246,
+      "subject": "suite",
+      "text": "246 suites, exit 0**, twice. `campaign.py check`: examined=29, witnessed=27, unwitnessed=0,",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1846,
+      "figure": 91,
+      "subject": "brief",
+      "text": "- `92-a-spec-says-which-brief-it-came-from.md` \u2014 the reckoning joined 78 of 91 briefs. All thirteen",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1865,
+      "figure": 251,
+      "subject": "suite",
+      "text": "PRO-0082, PRO-0085 and PRO-0099 merged. Gate **2,061 tests in 251 suites, exit 0**, twice.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1949,
+      "figure": 251,
+      "subject": "suite",
+      "text": "| PRO-0100 | `a33ac1c` on `ai/pro-0100` | `./scripts/test.sh` **2,064 tests in 251 suites, EXIT=0** (baseline 2,061), fo",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2104,
+      "figure": 99,
+      "subject": "spec",
+      "text": "the whole population, and re-deriving it would have cost the same 45 calls: 99 specs, 75 citing, 24",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2105,
+      "figure": 23,
+      "subject": "brief",
+      "text": "not (PRO-0001\u20130017, 0034, 0045, 0047, 0063, 0075, 0076, 0096), 0 dangling after `8de8804`; 23 briefs",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2148,
+      "figure": 86,
+      "subject": "case",
+      "text": "| `campaign.py check` | 1, on REQ-007, REQ-024, REQ-086, CASE-0318, CASE-0333\u20130335 \u2014 all other items' |",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2148,
+      "figure": 318,
+      "subject": "case",
+      "text": "| `campaign.py check` | 1, on REQ-007, REQ-024, REQ-086, CASE-0318, CASE-0333\u20130335 \u2014 all other items' |",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2156,
+      "figure": 0,
+      "subject": "test",
+      "text": "bare unwrap fed a nil printed `Fatal error: Unexpectedly found nil`, `Executed 0 tests, with 0",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2199,
+      "figure": 251,
+      "subject": "suite",
+      "text": "| `./scripts/test.sh` | **0** \u2014 2,064 tests in 251 suites |",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2210,
+      "figure": 1,
+      "subject": "row",
+      "text": "keyed on id against `:1`, `:2` and `:3`: 20 cases and 11 rows came from the branch, 11 cases and 1 row",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2247,
+      "figure": 101,
+      "subject": "case",
+      "text": "REQ-100/101, CASE-0430\u20130440, DEF-215, SURF-024.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2276,
+      "figure": 1,
+      "subject": "case",
+      "text": "an identical blocker set** \u2014 CASE-0001, CASE-0318, CASE-0333..0335, REQ-007, REQ-024, REQ-086 \u2014",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2276,
+      "figure": 318,
+      "subject": "case",
+      "text": "an identical blocker set** \u2014 CASE-0001, CASE-0318, CASE-0333..0335, REQ-007, REQ-024, REQ-086 \u2014",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2332,
+      "figure": 251,
+      "subject": "suite",
+      "text": "| `./scripts/test.sh` | **0** \u2014 2,064 tests in 251 suites |",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2333,
+      "figure": 99,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** \u2014 15/15; specs 99, briefs 96 (claimed 92 \u00b7 registered 4 \u00b7 **unclaimed 0**) |",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2411,
+      "figure": 251,
+      "subject": "suite",
+      "text": "`ai/pro-0103` at `97a00fd`, nine commits, tree clean. Suite 2,064 in 251 suites, `TEST_EXIT=0`, a",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2415,
+      "figure": 107,
+      "subject": "case",
+      "text": "naming none of its ids. Allocated REQ-102\u2013107, CASE-0441\u20130456, SURF-025, DEF-216.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2445,
+      "figure": 251,
+      "subject": "suite",
+      "text": "| `./scripts/test.sh` | **0** \u2014 2,064 tests in 251 suites |",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2452,
+      "figure": 320,
+      "subject": "case",
+      "text": "Registry: **320 cases \u00b7 124 defect rows \u00b7 98 requirements \u00b7 25 surfaces.**",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2452,
+      "figure": 98,
+      "subject": "requirement",
+      "text": "Registry: **320 cases \u00b7 124 defect rows \u00b7 98 requirements \u00b7 25 surfaces.**",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2452,
+      "figure": 25,
+      "subject": "surface",
+      "text": "Registry: **320 cases \u00b7 124 defect rows \u00b7 98 requirements \u00b7 25 surfaces.**",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2465,
+      "figure": 20,
+      "subject": "case",
+      "text": "`cases=[CASE-0020, CASE-0021, CASE-0022, CASE-0024] unblocks=4 coverage_gain_pct=16.7` with a join",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2465,
+      "figure": 21,
+      "subject": "case",
+      "text": "`cases=[CASE-0020, CASE-0021, CASE-0022, CASE-0024] unblocks=4 coverage_gain_pct=16.7` with a join",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2465,
+      "figure": 22,
+      "subject": "case",
+      "text": "`cases=[CASE-0020, CASE-0021, CASE-0022, CASE-0024] unblocks=4 coverage_gain_pct=16.7` with a join",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2532,
+      "figure": 13,
+      "subject": "defect",
+      "text": "### PRO-0092 merged \u2014 the last wave-13 defect, closed on a negative result (2026-08-23)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2574,
+      "figure": 335,
+      "subject": "case",
+      "text": "**Registry after the merge:** 335 cases \u00b7 127 defect rows \u00b7 101 requirements \u00b7 26 surfaces. Fifteen",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2574,
+      "figure": 101,
+      "subject": "requirement",
+      "text": "**Registry after the merge:** 335 cases \u00b7 127 defect rows \u00b7 101 requirements \u00b7 26 surfaces. Fifteen",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2574,
+      "figure": 26,
+      "subject": "surface",
+      "text": "**Registry after the merge:** 335 cases \u00b7 127 defect rows \u00b7 101 requirements \u00b7 26 surfaces. Fifteen",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2598,
+      "figure": 335,
+      "subject": "case",
+      "text": "has never been pushed. Registry: 335 cases \u00b7 127 defect rows \u00b7 101 requirements \u00b7 26 surfaces.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2598,
+      "figure": 101,
+      "subject": "requirement",
+      "text": "has never been pushed. Registry: 335 cases \u00b7 127 defect rows \u00b7 101 requirements \u00b7 26 surfaces.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2598,
+      "figure": 26,
+      "subject": "surface",
+      "text": "has never been pushed. Registry: 335 cases \u00b7 127 defect rows \u00b7 101 requirements \u00b7 26 surfaces.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2616,
+      "figure": 209,
+      "subject": "brief",
+      "text": "no subject publishes and no manifest entry names. DEF-209, brief 100, PRO-0107.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2723,
+      "figure": 342,
+      "subject": "case",
+      "text": "Registry after this item: **342 cases \u00b7 134 defect rows \u00b7 104 requirements \u00b7 27 surfaces.** Open defects",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2723,
+      "figure": 104,
+      "subject": "requirement",
+      "text": "Registry after this item: **342 cases \u00b7 134 defect rows \u00b7 104 requirements \u00b7 27 surfaces.** Open defects",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2723,
+      "figure": 27,
+      "subject": "surface",
+      "text": "Registry after this item: **342 cases \u00b7 134 defect rows \u00b7 104 requirements \u00b7 27 surfaces.** Open defects",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2732,
+      "figure": 8,
+      "subject": "case",
+      "text": "disagree about **five files**. CASE-0008, CASE-0010 and CASE-0011 are raster-visual passes citing",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2744,
+      "figure": 344,
+      "subject": "case",
+      "text": "Registry with those two: **344 cases \u00b7 136 defect rows \u00b7 104 requirements \u00b7 27 surfaces**, and open",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2744,
+      "figure": 104,
+      "subject": "requirement",
+      "text": "Registry with those two: **344 cases \u00b7 136 defect rows \u00b7 104 requirements \u00b7 27 surfaces**, and open",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2744,
+      "figure": 27,
+      "subject": "surface",
+      "text": "Registry with those two: **344 cases \u00b7 136 defect rows \u00b7 104 requirements \u00b7 27 surfaces**, and open",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2758,
+      "figure": 373,
+      "subject": "case",
+      "text": "`main` carries PRO-0104 and PRO-0107. Nothing pushed. Registry: **373 cases \u00b7 138 defect rows \u00b7 108",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2759,
+      "figure": 27,
+      "subject": "surface",
+      "text": "requirements \u00b7 27 surfaces**, 22 open defects.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2904,
+      "figure": 104,
+      "subject": "spec",
+      "text": "could have said so. Corrected in the same change. The ledger also carries 107 rows against 104 spec",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2968,
+      "figure": 400,
+      "subject": "case",
+      "text": "`main` carries PRO-0104, PRO-0106 and PRO-0107 from this wave. Nothing pushed. Registry: **400 cases \u00b7",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2969,
+      "figure": 116,
+      "subject": "requirement",
+      "text": "153 defect rows \u00b7 116 requirements \u00b7 27 surfaces**, 19 open defects.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2969,
+      "figure": 27,
+      "subject": "surface",
+      "text": "153 defect rows \u00b7 116 requirements \u00b7 27 surfaces**, 19 open defects.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2971,
+      "figure": 252,
+      "subject": "suite",
+      "text": "Gates on merged `main`: suite **2,074 tests in 252 suites** exit 0; `test_instruments.py` **195**;",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3031,
+      "figure": 690,
+      "subject": "row",
+      "text": "**The control column equals the published previous**, so 1.2.0 versus 1.1.0 did not reclassify any of the 620 rows the e",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3052,
+      "figure": 102,
+      "subject": "brief",
+      "text": "All 19 checks of `spec_citation_measure.py` pass (102 briefs, 100 claimed, 2 registered in `UNCLAIMED-BRIEFS.md`, 0 uncl",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3065,
+      "figure": 102,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | **19/19 checks passed** (102 briefs: 100 claimed 1-to-1, 2 registered, 0 unclaime",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3070,
+      "figure": 426,
+      "subject": "case",
+      "text": "Registry: **426 cases \u00b7 156 defect rows \u00b7 125 requirements \u00b7 30 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3070,
+      "figure": 125,
+      "subject": "requirement",
+      "text": "Registry: **426 cases \u00b7 156 defect rows \u00b7 125 requirements \u00b7 30 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3070,
+      "figure": 30,
+      "subject": "surface",
+      "text": "Registry: **426 cases \u00b7 156 defect rows \u00b7 125 requirements \u00b7 30 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3089,
+      "figure": 113,
+      "subject": "row",
+      "text": "- `ledger_gate.py`: 0 (113 rows, 110 specs, 3 declared without spec, 55 merged in git)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3089,
+      "figure": 110,
+      "subject": "spec",
+      "text": "- `ledger_gate.py`: 0 (113 rows, 110 specs, 3 declared without spec, 55 merged in git)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3090,
+      "figure": 105,
+      "subject": "brief",
+      "text": "- `spec_citation_measure.py`: 19/19 passed (105 briefs, 103 claimed, 2 registered, 0 unclaimed)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3104,
+      "figure": 105,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | **19/19 checks passed** (105 briefs: 103 claimed 1-to-1, 2 registered, 0 unclaime",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3109,
+      "figure": 442,
+      "subject": "case",
+      "text": "Registry: **442 cases \u00b7 159 defect rows \u00b7 134 requirements \u00b7 33 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3109,
+      "figure": 134,
+      "subject": "requirement",
+      "text": "Registry: **442 cases \u00b7 159 defect rows \u00b7 134 requirements \u00b7 33 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3109,
+      "figure": 33,
+      "subject": "surface",
+      "text": "Registry: **442 cases \u00b7 159 defect rows \u00b7 134 requirements \u00b7 33 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3132,
+      "figure": 117,
+      "subject": "row",
+      "text": "- `ledger_gate.py`: PASS (117 rows, 114 specs, 3 declared without spec, 58 merged in git)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3132,
+      "figure": 114,
+      "subject": "spec",
+      "text": "- `ledger_gate.py`: PASS (117 rows, 114 specs, 3 declared without spec, 58 merged in git)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3133,
+      "figure": 109,
+      "subject": "brief",
+      "text": "- `spec_citation_measure.py`: 19/19 passed (109 briefs: 107 claimed, 2 registered, 0 unclaimed)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3146,
+      "figure": 117,
+      "subject": "row",
+      "text": "- `scripts/campaign/ledger_gate.py`: **PASS** (117 rows, 114 specs, 3 declared without spec, 58 merged in git)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3146,
+      "figure": 114,
+      "subject": "spec",
+      "text": "- `scripts/campaign/ledger_gate.py`: **PASS** (117 rows, 114 specs, 3 declared without spec, 58 merged in git)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3162,
+      "figure": 109,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | **19/19 checks passed** (109 briefs: 107 claimed 1-to-1, 2 registered, 0 unclaime",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3167,
+      "figure": 461,
+      "subject": "case",
+      "text": "Registry: **461 cases \u00b7 163 defect rows \u00b7 138 requirements \u00b7 37 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3167,
+      "figure": 138,
+      "subject": "requirement",
+      "text": "Registry: **461 cases \u00b7 163 defect rows \u00b7 138 requirements \u00b7 37 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3167,
+      "figure": 37,
+      "subject": "surface",
+      "text": "Registry: **461 cases \u00b7 163 defect rows \u00b7 138 requirements \u00b7 37 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3190,
+      "figure": 121,
+      "subject": "row",
+      "text": "- `scripts/campaign/ledger_gate.py`: **PASS** (121 rows, 118 specs, 3 declared without spec, 61 merged in git)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3190,
+      "figure": 118,
+      "subject": "spec",
+      "text": "- `scripts/campaign/ledger_gate.py`: **PASS** (121 rows, 118 specs, 3 declared without spec, 61 merged in git)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3191,
+      "figure": 113,
+      "subject": "brief",
+      "text": "- `scripts/campaign/spec_citation_measure.py`: **19/19 passed** (113 briefs: 111 claimed, 2 registered, 0 unclaimed)",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3206,
+      "figure": 113,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | **19/19 checks passed** (113 briefs: 113 claimed 1-to-1, 0 registered, 0 unclaime",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3211,
+      "figure": 466,
+      "subject": "case",
+      "text": "Registry: **466 cases \u00b7 165 defect rows \u00b7 141 requirements \u00b7 40 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3211,
+      "figure": 141,
+      "subject": "requirement",
+      "text": "Registry: **466 cases \u00b7 165 defect rows \u00b7 141 requirements \u00b7 40 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3211,
+      "figure": 40,
+      "subject": "surface",
+      "text": "Registry: **466 cases \u00b7 165 defect rows \u00b7 141 requirements \u00b7 40 surfaces**.",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3247,
+      "figure": 119,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | **19/19 checks passed** (119 briefs: 119 claimed 1-to-1, 0 registered, 0 unclaime",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3273,
+      "figure": 124,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | **19/19 checks passed** (124 briefs: 124 claimed 1-to-1, 0 registered, 0 unclaime",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3299,
+      "figure": 129,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | **19/19 checks passed** (129 briefs: 129 claimed 1-to-1, 0 registered, 0 unclaime",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3325,
+      "figure": 134,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | **19/19 checks passed** (134 briefs: 134 claimed 1-to-1, 0 registered, 0 unclaime",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3351,
+      "figure": 139,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | **19/19 checks passed** (139 briefs: 139 claimed 1-to-1, 0 registered, 0 unclaime",
+      "class": "waived",
+      "why": "stated inside a closed wave entry, which describes a run that is over \u2014 history rather than a claim about now"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3366,
+      "figure": 137,
+      "subject": "row",
+      "text": "| reckon remaining work | 137 rows | **9** \u2014 0 product \u00b7 2 evidence \u00b7 7 decision |",
+      "class": "unbacked",
+      "why": "the line names a different population \u2014 this tool counts the feature ledger and the campaign registries, and will not assert a contradiction about a register it does not hold"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3401,
+      "figure": 267,
+      "subject": "suite",
+      "text": "| `scripts/test.sh` | **0** | **2,129 tests in 267 suites** |",
+      "class": "substantiated",
+      "why": "a registry or a recorded run holds 267 suite(s)"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3406,
+      "figure": 152,
+      "subject": "row",
+      "text": "| `ledger_gate.py` | **0** | 152 rows \u00b7 152 specs \u00b7 0 declared without spec |",
+      "class": "substantiated",
+      "why": "a registry or a recorded run holds 152 row(s)"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3406,
+      "figure": 152,
+      "subject": "spec",
+      "text": "| `ledger_gate.py` | **0** | 152 rows \u00b7 152 specs \u00b7 0 declared without spec |",
+      "class": "substantiated",
+      "why": "a registry or a recorded run holds 152 spec(s)"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3407,
+      "figure": 144,
+      "subject": "brief",
+      "text": "| `spec_citation_measure.py` | **0** | 19/19 (144 briefs, 0 unclaimed) |",
+      "class": "unbacked",
+      "why": "the line names a different population \u2014 this tool counts the feature ledger and the campaign registries, and will not assert a contradiction about a register it does not hold"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3411,
+      "figure": 969,
+      "subject": "row",
+      "text": "| `reckon.py check` | **0** | 969 rows \u00b7 9 remaining \u00b7 gate clean \u00b7 ratchet clean |",
+      "class": "unbacked",
+      "why": "the line names a different population \u2014 this tool counts the feature ledger and the campaign registries, and will not assert a contradiction about a register it does not hold"
+    }
+  ]
+}

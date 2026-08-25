@@ -5,9 +5,9 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
-  "recordedAt": "2026-08-25T03:43:28Z",
+  "recordedAt": "2026-08-25T03:51:53Z",
   "tree": {
-    "commit": "a52d897",
+    "commit": "f420a24",
     "dirty": true
   },
   "witness": null,

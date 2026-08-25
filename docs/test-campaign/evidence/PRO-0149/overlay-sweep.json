@@ -1,0 +1,937 @@
+{
+  "family": "anthropic",
+  "skills": 181,
+  "owed": [],
+  "unrecognised": [],
+  "claimingWithNoOverlay": [],
+  "rows": [
+    {
+      "plugin": "braindump",
+      "skill": "2.4.0",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.4.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/braindump/2.4.0/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "agent-voice",
+      "skill": "agent-voice",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.2.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/agent-voice/0.2.0/skills/agent-voice/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "anvil-errand",
+      "skill": "anvil-errand",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.2.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/anvil-errand/0.2.0/skills/anvil-errand/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "armada-sync",
+      "skill": "armada-sync",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.1.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/armada-sync/1.1.0/skills/armada-sync/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "warrant",
+      "skill": "assay",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/warrant/0.3.0/skills/assay/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "atlas-publish",
+      "skill": "atlas-publish",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.1.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/atlas-publish/2.1.0/skills/atlas-publish/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [
+        "atlas-plugins/atlas-publish"
+      ],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "be-my-witness",
+      "skill": "be-my-witness",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/be-my-witness/0.3.0/skills/be-my-witness/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "better-goal",
+      "skill": "better-goal",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.1.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/better-goal/2.1.0/skills/better-goal/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "better-loop",
+      "skill": "better-loop",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.1.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/better-loop/2.1.0/skills/better-loop/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "warrant",
+      "skill": "charter",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/warrant/0.3.0/skills/charter/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "clarify",
+      "skill": "clarify",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.5.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/clarify/1.5.0/skills/clarify/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "create-mac-icon",
+      "skill": "create-mac-icon",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.7.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/create-mac-icon/1.7.0/skills/create-mac-icon/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "create-skill",
+      "skill": "create-skill",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.4.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/create-skill/1.4.0/skills/create-skill/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "create-swe-project",
+      "skill": "create-swe-project",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.11.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/create-swe-project/1.11.0/skills/create-swe-project/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "deck-craft",
+      "skill": "deck-craft",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.16.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/deck-craft/1.16.0/skills/deck-craft/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [
+        "diolog-plugins/deck-craft"
+      ],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "defer",
+      "skill": "defer",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/defer/1.3.0/skills/defer/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "shipyard",
+      "skill": "design",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.5.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/shipyard/0.5.0/skills/design/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "design-craft",
+      "skill": "design-craft",
+      "marketplace": "diolog-plugins",
+      "version": "1.18.0",
+      "overlays": [
+        {
+          "file": "diolog-plugins/design-craft/1.18.0/skills/design-craft/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [
+        "fledgeling-plugins/design-craft"
+      ],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "design-review",
+      "skill": "design-review",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.1.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/design-review/2.1.0/skills/design-review/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "discipline",
+      "skill": "discipline",
+      "marketplace": "fledgeling-plugins",
+      "version": "4.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/discipline/4.3.0/skills/discipline/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "dossier-report",
+      "skill": "dossier-report",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.4.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/dossier-report/2.4.0/skills/dossier-report/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "email-digest",
+      "skill": "email-digest",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.8.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/email-digest/1.8.0/skills/email-digest/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "warrant",
+      "skill": "feedback",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/warrant/0.3.0/skills/feedback/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "flagship",
+      "skill": "flagship",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.6.5",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/flagship/1.6.5/skills/flagship/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "geminify",
+      "skill": "geminify",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.4.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/geminify/0.4.0/skills/geminify/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "harbourmaster",
+      "skill": "harbourmaster",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.6.1",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/harbourmaster/0.6.1/skills/harbourmaster/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "improve-skill",
+      "skill": "improve-skill",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/improve-skill/1.3.0/skills/improve-skill/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "shipyard",
+      "skill": "intake",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.5.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/shipyard/0.5.0/skills/intake/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "warrant",
+      "skill": "ledger",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/warrant/0.3.0/skills/ledger/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "warrant",
+      "skill": "lot",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/warrant/0.3.0/skills/lot/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "mac-craft",
+      "skill": "mac-craft",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/mac-craft/1.3.0/skills/mac-craft/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "mac-design-digest",
+      "skill": "mac-design-digest",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/mac-design-digest/1.3.0/skills/mac-design-digest/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [
+        "diolog-plugins/mac-design-digest"
+      ],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "mac-doctor",
+      "skill": "mac-doctor",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.1.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/mac-doctor/1.1.0/skills/mac-doctor/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "mockup-fidelity",
+      "skill": "mockup-fidelity",
+      "marketplace": "fledgeling-plugins",
+      "version": "3.4.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/mockup-fidelity/3.4.0/skills/mockup-fidelity/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [
+        "diolog-plugins/mockup-fidelity"
+      ],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "warrant",
+      "skill": "oracle",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/warrant/0.3.0/skills/oracle/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "warrant",
+      "skill": "panel",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/warrant/0.3.0/skills/panel/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "proctor",
+      "skill": "proctor",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.7.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/proctor/0.7.0/skills/proctor/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "warrant",
+      "skill": "ratchet",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/warrant/0.3.0/skills/ratchet/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "reckon",
+      "skill": "reckon",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.7.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/reckon/1.7.0/skills/reckon/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "recover-claude-code",
+      "skill": "recover-claude-code",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.2.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/recover-claude-code/1.2.0/skills/recover-claude-code/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "report",
+      "skill": "report",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/report/2.3.0/skills/report/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "resume-session",
+      "skill": "resume-session",
+      "marketplace": "fledgeling-plugins",
+      "version": "1.1.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/resume-session/1.1.0/skills/resume-session/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "ship-armada",
+      "skill": "ship-armada",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.2.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/ship-armada/2.2.0/skills/ship-armada/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "ship-feature",
+      "skill": "ship-feature",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.4.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/ship-feature/2.4.0/skills/ship-feature/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [
+        "diolog-plugins/ship-feature"
+      ],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "ship-fleet",
+      "skill": "ship-fleet",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.8.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/ship-fleet/2.8.0/skills/ship-fleet/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [
+        "diolog-plugins/ship-fleet"
+      ],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "shipyard",
+      "skill": "shipyard",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.5.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/shipyard/0.5.0/skills/shipyard/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "should-compact",
+      "skill": "should-compact",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.4.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/should-compact/0.4.0/skills/should-compact/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "stocktake",
+      "skill": "stocktake",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.7.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/stocktake/0.7.0/skills/stocktake/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "test-campaign",
+      "skill": "test-campaign",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.14.1",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/test-campaign/0.14.1/skills/test-campaign/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": false,
+      "claimedFile": null
+    },
+    {
+      "plugin": "trawl",
+      "skill": "trawl",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/trawl/2.3.0/skills/trawl/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "tui-craft",
+      "skill": "tui-craft",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.5.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/tui-craft/0.5.0/skills/tui-craft/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "tui-craft",
+      "skill": "tui-design",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.5.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/tui-craft/0.5.0/skills/tui-design/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "ux-craft",
+      "skill": "ux-craft",
+      "marketplace": "fledgeling-plugins",
+      "version": "2.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/ux-craft/2.3.0/skills/ux-craft/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [
+        "diolog-plugins/ux-craft"
+      ],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "shipyard",
+      "skill": "verify",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.5.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/shipyard/0.5.0/skills/verify/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "vouch",
+      "skill": "vouch",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.4.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/vouch/0.4.0/skills/vouch/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "warrant",
+      "skill": "warrant",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/warrant/0.3.0/skills/warrant/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    },
+    {
+      "plugin": "whats-left",
+      "skill": "whats-left",
+      "marketplace": "fledgeling-plugins",
+      "version": "0.3.0",
+      "overlays": [
+        {
+          "file": "fledgeling-plugins/whats-left/0.3.0/skills/whats-left/gemini.md",
+          "family": "google",
+          "state": "not-mine"
+        }
+      ],
+      "alsoCarriedBy": [],
+      "skillClaimsAnOverlay": true,
+      "claimedFile": "gemini.md"
+    }
+  ]
+}

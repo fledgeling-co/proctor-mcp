@@ -1,12 +1,12 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 11 open on `ai/wave-9`, 4 items.** Waves 9 and 10 are closed and merged. Wave 11 is what the 0.9.2 test-campaign census found: 22 external-effect requirements with no `effect-witness` case (12 named by `campaign.py check`), 78 blind-pass findings, two campaign gates never proved able to fail, and one drifted defect record. Gate green at 1,814 tests in 214 suites.
-**Updated:** 2026-08-21 — Wave 11 opened, 4 items (PRO-0077..PRO-0080) from the 0.9.2 effect-boundary census. Branch `ai/wave-9` is 72 commits ahead of local `main`, which is untouched at `c7fbe29` and unpushed. Gate: 1,814 tests / 214 suites.
+**Status:** **Wave 27 open on `main`.** 19 of the 31 rows in it are Merged; 12 remain `Ready for AI`, all of them live-lane fixture harnesses. Waves 9 through 26 are closed and merged. The three censuses test-campaign 0.14.1 added are declared, and reckon reports 9 pieces of work remaining across 970 rows.
+**Updated:** 2026-08-25 — Wave 27. Gate: 2,129 tests in 267 suites, campaign check 0, reckon check and ratchet clean. `main` is 470+ commits ahead of `origin` and unpushed.
 
 ### Repository state (reconciled 2026-08-17)
 - **Git remote:** `origin` → `github.com/fledgeling-co/proctor-mcp`. Local `main` is up to date with `origin/main` at tag `v0.2.0`.
 - **Installed bundle:** `/Applications/Proctor.app` is rebuilt, Developer ID signed, notarised by Apple, and running in launchd `gui/501`.
-- **Verification:** All 63 features verified across 175 test suites (1,520 tests) plus 7 acceptance journeys.
+- **Verification (as at 2026-08-17, superseded):** 63 features across 175 suites. The live figure is in Wave 27's gate table below; this line is kept for provenance and is history rather than a claim about now.
 
 ## How to resume
 You are the fleet orchestrator (ship-fleet skill). Read this file top to bottom, reconcile
@@ -3374,7 +3374,7 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 - `plane_census.py` — places every case by written rule, re-derives on `--write`, and writes one receipt per case with evidence digests, the commit read from, a `dirty` flag and the case's witness. A `-glass` lane is a floor as well as a ceiling.
 - `spec_symbol_linter.py` — 4,565 of 6,182 spec citations resolve in `Sources/`, 790 in `Tests/`, 827 unresolved, ratcheted. Found `ProctorAgentCore`, a target Package.swift never declared. Wired into `.githooks/pre-commit`.
-- `brief_validation.py` — validated 119 briefs against the registry and let reckon award `retirable` rather than asserting it.
+- `brief_validation.py` — validates a brief on the passing cases that CITE its requirement, and records the verdict in frontmatter. An out-of-family review overturned the first version, which read cases by surface; see the Wave 27 correction below.
 - `requirement_evidence.py` — moves an evidence word only where a passing case cites the requirement, and holds back `ceiling` and `deferred` classes by class.
 - `mutation_report.py` — 113 mutants aggregated, 47 survivors named with file, line and enclosing declaration. **48 of 3,241 sites were ever run: 1.5% of the space.**
 - `warrant_promotion.py` — run-lifecycle and release-integrity qualify for tier 1; five classes blocked, each naming the case ids in the way. Dashboard at `docs/test-campaign/evidence/PRO-0137/warrant-tiers.html`.
@@ -3399,13 +3399,17 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | Gate | Exit | Reading |
 |---|:---:|---|
 | `scripts/test.sh` | **0** | **2,129 tests in 267 suites** |
-| `campaign.py check` | **0** | 474 pass · 3 n/a of **477**; all three censuses declared |
-| `strict-check.py` | **0** | **ratchet 415 held** |
+| `claim_provenance.py --gate` | **0** | 0 contradicted figures in the artifacts another session plans from |
+| `capture_manifest.py --gate` | **0** | 54 images across 4 declared roots |
+| `skill_overlay_reader.py --gate` | **0** | no overlay addresses this run's family |
+| `verification_record.py check` | **0** | 2 records · 1 substitution, with its reason |
+| `campaign.py check` | **0** | 477 pass · 3 n/a of **480**; all three censuses declared |
+| `strict-check.py` | **0** | **ratchet 420 held** |
 | `vacuity-check.py --gate` | **0** | 0 findings, 29/29 providers resolved |
 | `capture-lineage.py --gate` | **0** | ratchet 6 held |
-| `ledger_gate.py` | **0** | 147 rows · 147 specs · 0 declared without spec |
+| `ledger_gate.py` | **0** | 152 rows · 152 specs · 0 declared without spec |
 | `spec_citation_measure.py` | **0** | 19/19 (144 briefs, 0 unclaimed) |
 | `spec_symbol_linter.py --gate` | **0** | ratchet 827 held |
 | `mutation_report.py --gate` | **0** | ratchet 47 survivors held |
 | `test_instruments.py` | **0** | **338 passed, 0 failed** |
-| `reckon.py check` | **0** | 969 rows · 9 remaining · gate clean · ratchet clean |
+| `reckon.py check` | **0** | 974 rows · 9 remaining · gate clean · ratchet clean |

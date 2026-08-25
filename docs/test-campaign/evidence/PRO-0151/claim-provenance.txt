@@ -1,0 +1,12 @@
+192 checkable figure(s) across 2 artifact(s)
+  substantiated      3
+  unbacked           5
+  contradicted       0
+  waived           184
+
+Not checked (a figure this tool cannot place is not a figure that passed):
+  every figure whose subject is not one of brief, case, defect, requirement, row, spec, suite, surface, test — the scanner is narrow on purpose, because one that read every number would drown the figure that moved in version strings and dates
+
+wrote docs/test-campaign/evidence/PRO-0151/claim-provenance.json
+
+gate: no durable artifact states a live figure the registries contradict.

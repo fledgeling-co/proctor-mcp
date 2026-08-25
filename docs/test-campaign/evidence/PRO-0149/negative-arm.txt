@@ -1,0 +1,27 @@
+PRO-0149 negative arm — the overlay reader fires on the family it is run as
+date: Tue 25 Aug 2026 13:48:42 AEST
+
+== as anthropic (this run) ==
+family: anthropic · 181 skill(s) at their newest version · 57 carry an overlay
+  owed by this family      0
+  for another family      57   (seen and correctly skipped — printed so a family change cannot pass unnoticed)
+  unrecognised overlay     0
+  claims one, has none     0
+  carried twice           67   (a second marketplace holds an older copy a resolver could pick)
+gate: no overlay addresses anthropic, and every overlay-shaped file on disk has a family this tool can place.
+exit=0
+
+== as google, over the same cache ==
+family: google · 181 skill(s) at their newest version · 57 carry an overlay
+  owed by this family     57
+  for another family       0   (seen and correctly skipped — printed so a family change cannot pass unnoticed)
+  unrecognised overlay     0
+  claims one, has none     0
+  carried twice           67   (a second marketplace holds an older copy a resolver could pick)
+FAIL  57 overlay(s) address this run's family and must be read before the skill is followed.
+exit=1
+
+The same 57 files are 'for another family' in one run and 'owed' in the other.
+That is the distinction the check exists for: reporting another family's overlay
+as clean hides a family change nobody re-checked, and reporting it as owed cries
+wolf on a correct run.

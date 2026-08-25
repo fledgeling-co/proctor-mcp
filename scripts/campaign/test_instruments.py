@@ -2986,6 +2986,69 @@ def test_capture_index_declares_where_the_store_is() -> None:
           "the refusal says why it will not adopt new content on its own", str(src))
 
 
+
+# ── PRO-0149 / PRO-0151 · the pipeline audits its own conduct ───────────────
+def test_skill_overlay_reader_fires_on_the_running_family() -> None:
+    script = ROOT / "scripts" / "campaign" / "skill_overlay_reader.py"
+    ok = subprocess.run([sys.executable, str(script), "--family", "anthropic", "--gate"],
+                        capture_output=True, text=True)
+    check(ok.returncode == 0, "no overlay addresses an anthropic run", ok.stdout[-300:])
+    red = subprocess.run([sys.executable, str(script), "--family", "google", "--gate"],
+                         capture_output=True, text=True)
+    check(red.returncode == 1,
+          "the same cache read as a google run owes every overlay in it",
+          red.stdout[-300:])
+    check("owed by this family" in red.stdout and "OWED" in red.stdout,
+          "and the refusal lists the files rather than a count alone", red.stdout[-400:])
+    # The false positive that made three earlier drafts unusable: another
+    # family's overlay must be SEEN and reported, never silently dropped and
+    # never reported as owed.
+    check("for another family" in ok.stdout,
+          "an overlay for a family this run is not is printed as seen, not dropped",
+          ok.stdout[:400])
+
+
+def test_claim_provenance_gate_and_its_waiver_rule() -> None:
+    script = ROOT / "scripts" / "campaign" / "claim_provenance.py"
+    ok = subprocess.run([sys.executable, str(script), "--gate"],
+                        capture_output=True, text=True)
+    check(ok.returncode == 0,
+          "no durable artifact states a live figure the registries contradict",
+          ok.stdout[-500:])
+    check("Not checked" in ok.stdout,
+          "the run names what it could not check rather than reporting only what it could",
+          ok.stdout[-400:])
+
+    orch = ROOT / "ORCHESTRATOR.md"
+    before = orch.read_text()
+    try:
+        rows = len(re.findall(r"^\| PRO-\d{4} \|", 
+                              (ROOT / "docs/feature-specs/LEDGER.md").read_text(), re.M))
+        orch.write_text(before.replace(f"| **0** | {rows} rows", "| **0** | 999 rows", 1))
+        red = subprocess.run([sys.executable, str(script), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1,
+              "one wrong figure in a durable artifact takes the gate red",
+              f"exit {red.returncode}")
+        check("999" in red.stdout and str(rows) in red.stdout,
+              "and the refusal prints both the stated figure and the registry's",
+              red.stdout[-400:])
+    finally:
+        orch.write_text(before)
+
+    restored = subprocess.run([sys.executable, str(script), "--gate"],
+                              capture_output=True, text=True)
+    check(restored.returncode == 0, "restoring the figure puts the gate back green",
+          restored.stdout[-200:])
+
+    # A waiver must be a sentence somebody wrote, not one the tool granted
+    # itself. The rule is checkable: the only route into `waived` outside a
+    # closed wave block is a line that marks itself superseded or dated.
+    body = script.read_text()
+    check("A waiver a tool grants itself is not a waiver" in body,
+          "the waiver rule states why it requires the writer's own words", "")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3046,7 +3109,9 @@ def main() -> int:
                test_mutation_report_carries_its_denominators,
                test_warrant_promotion_refuses_an_empty_population,
                test_warrant_dashboard_is_self_contained,
-               test_capture_index_declares_where_the_store_is):
+               test_capture_index_declares_where_the_store_is,
+               test_skill_overlay_reader_fires_on_the_running_family,
+               test_claim_provenance_gate_and_its_waiver_rule):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

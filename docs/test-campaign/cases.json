@@ -9005,5 +9005,42 @@
       "docs/test-campaign/evidence/PRO-0152/instrument-sweep.json"
     ],
     "note": "PRO-0148 and PRO-0152. Two records from a real verification act rather than a fixture: the grok-4.6 review that overturned PRO-0133's join, and the OpenAI lane that was asked for and not taken \u2014 recorded as a POLICY substitution (Codex is off for this repository by the reader's standing decision) rather than as a lane failure, which is the distinction T15 exists to keep. The sweep reports 4 of 4 CLIs resolving and says plainly that resolution is presence at a path, not usability."
+  },
+  {
+    "id": "CASE-0804",
+    "req": "REQ-096",
+    "surface": "SURF-029",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "docs/test-campaign/evidence/PRO-0149/negative-arm.txt \u2014 the same 57 files are 'for another family' when the run is anthropic and 'owed' when it is google, exit 0 and exit 1 over one unchanged cache.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/skill_overlay_reader.py",
+      "docs/test-campaign/evidence/PRO-0149/overlay-sweep.txt",
+      "docs/test-campaign/evidence/PRO-0149/negative-arm.txt"
+    ],
+    "note": "PRO-0149. 181 skills at their newest version across every marketplace, 57 carrying a family overlay. Three earlier drafts each cried wolf and each is recorded in the source: keying on (marketplace, plugin) kept a superseded diolog copy alive and reported mac-design-digest as promising an overlay it has; matching the bare word 'model' flagged a benchmark skill's prompts.md; and matching 'Running as a X model?' alone flagged tailings, which points its Gemini readers at references/probes.md rather than at an overlay. The claim must now name a file 'in this directory'."
+  },
+  {
+    "id": "CASE-0805",
+    "req": "REQ-120",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "docs/test-campaign/evidence/PRO-0151/negative-arm.txt \u2014 one figure changed to 999 in ORCHESTRATOR.md takes the gate from exit 0 to exit 1 naming the line and both numbers, and restoring it puts it back.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/claim_provenance.py",
+      "docs/test-campaign/evidence/PRO-0151/claim-provenance.txt",
+      "docs/test-campaign/evidence/PRO-0151/claim-provenance.json",
+      "docs/test-campaign/evidence/PRO-0151/negative-arm.txt"
+    ],
+    "note": "PRO-0151. The tailings partition run standing over the artifacts another session plans from. It found three live contradictions on its first run, all real: ORCHESTRATOR.md's header still said 'Wave 11 open on ai/wave-9' sixteen waves on, and Wave 27's own gate table said 147 rows and 147 specs after briefs 140-144 were triaged to 152. The file was fixed rather than the scanner. `waived` is reachable only when the line marks itself superseded or dated in its own words: a waiver a tool grants itself is not a waiver, and `unbacked` is kept apart from `contradicted` because folding them is how a pass over-reports and loses its reader."
   }
 ]

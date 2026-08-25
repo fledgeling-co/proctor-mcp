@@ -158,7 +158,7 @@
 | PRO-0146 | Continuous Spec-Symbol Citation Linter | 2026-08-25 | Merged |
 | PRO-0147 | Multi-Plane Verification Receipt Generator | 2026-08-25 | Merged |
 | PRO-0148 | Deterministic Lane Routing and Selection Record | 2026-08-25 | Merged |
-| PRO-0149 | Skill Overlay Family Guidance Reader | 2026-08-25 | Ready for AI |
+| PRO-0149 | Skill Overlay Family Guidance Reader | 2026-08-25 | Merged |
 | PRO-0150 | Capture Directory Identity Manifest | 2026-08-25 | Merged |
-| PRO-0151 | Session Claim Provenance Audit Gate | 2026-08-25 | Ready for AI |
+| PRO-0151 | Session Claim Provenance Audit Gate | 2026-08-25 | Merged |
 | PRO-0152 | Instrument Availability Disclosure Reporter | 2026-08-25 | Merged |

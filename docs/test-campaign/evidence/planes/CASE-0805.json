@@ -1,0 +1,37 @@
+{
+  "case": "CASE-0805",
+  "requirement": "REQ-120",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:51:53Z",
+  "tree": {
+    "commit": "f420a24",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "docs/test-campaign/evidence/PRO-0151/negative-arm.txt \u2014 one figure changed to 999 in ORCHESTRATOR.md takes the gate from exit 0 to exit 1 naming the line and both numbers, and restoring it puts it back.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/claim_provenance.py",
+      "sha256_16": "d26bee460757f102",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0151/claim-provenance.txt",
+      "sha256_16": "647f43648a552e74",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0151/claim-provenance.json",
+      "sha256_16": "2170fd5feba1d433",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0151/negative-arm.txt",
+      "sha256_16": "a46ef73b6647359a",
+      "present": true
+    }
+  ]
+}

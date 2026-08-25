@@ -1,0 +1,14 @@
+PRO-0151 negative arm — the provenance gate is proved able to go red
+date: Tue 25 Aug 2026 13:51:17 AEST
+
+with one figure changed to 999 rows in ORCHESTRATOR.md:
+  exit=1
+    ORCHESTRATOR.md:3406  999 row(s)
+        the registries hold 152 row(s), not 999
+        | `ledger_gate.py` | **0** | 999 rows · 152 specs · 0 declared without spec |
+  FAIL  1 contradicted figure(s) stand in artifacts another session plans from.
+
+restored: exit=0
+    substantiated      3
+    waived           184
+  gate: no durable artifact states a live figure the registries contradict.

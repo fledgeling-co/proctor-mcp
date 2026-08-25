@@ -1,0 +1,18 @@
+family: anthropic · 181 skill(s) at their newest version · 57 carry an overlay
+  owed by this family      0
+  for another family      57   (seen and correctly skipped — printed so a family change cannot pass unnoticed)
+  unrecognised overlay     0
+  claims one, has none     0
+  carried twice           67   (a second marketplace holds an older copy a resolver could pick)
+
+Skills a second marketplace also carries — the newest was read, and the other copy is named so a resolver picking it is not a silent change:
+  ai-gateway                   read claude-plugins-official/vercel@0.45.1   also in temp_git_1787203408896_welzm9/skills, temp_git_1787393296905_pjtta3/skills
+  ai-sdk                       read claude-plugins-official/vercel@0.45.1   also in temp_git_1787203408896_welzm9/skills, temp_git_1787393296905_pjtta3/skills
+  atlas-publish                read fledgeling-plugins/atlas-publish@2.1.0   also in atlas-plugins/atlas-publish
+  auth                         read claude-plugins-official/vercel@0.45.1   also in temp_git_1787203408896_welzm9/skills, temp_git_1787393296905_pjtta3/skills
+  benchmark-agents             read claude-plugins-official/vercel@0.45.1   also in temp_git_1787203408896_welzm9/.claude
+  benchmark-e2e                read claude-plugins-official/vercel@0.45.1   also in temp_git_1787203408896_welzm9/.claude
+  benchmark-sandbox            read claude-plugins-official/vercel@0.45.1   also in temp_git_1787203408896_welzm9/.claude
+  benchmark-testing            read claude-plugins-official/vercel@0.45.1   also in temp_git_1787203408896_welzm9/.claude
+
+wrote docs/test-campaign/evidence/PRO-0149/overlay-sweep.json

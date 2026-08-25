@@ -1,7 +1,7 @@
 # Spec PRO-0151 — Session Claim Provenance Audit Gate
 
 **Brief:** `docs/features-to-triage/143-session-claim-provenance-audit-gate.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-029
 **Defects:** none

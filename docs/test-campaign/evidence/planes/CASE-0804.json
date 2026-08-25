@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0804",
+  "requirement": "REQ-096",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:51:53Z",
+  "tree": {
+    "commit": "f420a24",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "docs/test-campaign/evidence/PRO-0149/negative-arm.txt \u2014 the same 57 files are 'for another family' when the run is anthropic and 'owed' when it is google, exit 0 and exit 1 over one unchanged cache.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/skill_overlay_reader.py",
+      "sha256_16": "b50e49f816c3f826",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0149/overlay-sweep.txt",
+      "sha256_16": "1aef148d4f335113",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0149/negative-arm.txt",
+      "sha256_16": "896982ab98d41ce5",
+      "present": true
+    }
+  ]
+}
