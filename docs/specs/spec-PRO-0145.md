@@ -1,7 +1,7 @@
 # Spec PRO-0145 — Hermetic Tool Process Boundary Fixtures
 
 **Brief:** `docs/features-to-triage/137-hermetic-tool-process-boundary-fixtures.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-018
 **Defects:** none

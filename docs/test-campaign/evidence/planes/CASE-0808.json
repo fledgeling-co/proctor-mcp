@@ -1,0 +1,36 @@
+{
+  "case": "CASE-0808",
+  "requirement": "REQ-035",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T04:16:10Z",
+  "tree": {
+    "commit": "68a31a7",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the process exit status itself, read by the shell \u2014 141 is 128 + 13 and is reported by the kernel rather than by any code under test",
+    "effect": "ipc",
+    "count": 1
+  },
+  "armedBy": "The negative arm is the standalone probe at exit 141, recorded before the fix. With SO_NOSIGPIPE removed the test process dies at the write and the suite reports nothing at all \u2014 which is how the fault presented and why nothing had caught it.",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0145/def-338-sigpipe.txt",
+      "sha256_16": "fbaec16922902d4a",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorCoreTests/SocketBoundaryChaosTests.swift",
+      "sha256_16": "a7fb10b3892649ee",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorCore/Transport.swift",
+      "sha256_16": "f070d7510f68cadb",
+      "present": true
+    }
+  ]
+}

@@ -4,6 +4,28 @@ import Foundation
 // length, then payload. Newline framing loses to newlines inside captured UI
 // text, which is exactly the payload this carries.
 
+/// Stop a write to a closed peer from killing the process.
+///
+/// A Unix-domain write to a socket whose far end has gone raises SIGPIPE, and
+/// the default disposition for SIGPIPE is to terminate. Measured 2026-08-25 on
+/// this machine: a two-write probe against a listener that accepts and closes
+/// exits **141** — 128 + 13 — with no error returned and nothing written
+/// anywhere. For `proctor-shim` that means an agent dying mid-write takes the
+/// MCP server with it: the host sees its server vanish, the caller gets no
+/// `agentUnavailable`, and no audit record is written because the process is
+/// already gone.
+///
+/// `SO_NOSIGPIPE` turns it into `EPIPE` on the call, which every send path here
+/// already handles as "the connection closed while sending". Set per socket
+/// rather than by installing a process-wide `SIG_IGN` handler: a library has no
+/// business changing a signal disposition its host may depend on, and a shim
+/// embedded in someone else's process is exactly that case.
+@discardableResult
+public func proctorSuppressSIGPIPE(_ fd: Int32) -> Int32 {
+    var on: Int32 = 1
+    return setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &on, socklen_t(MemoryLayout<Int32>.size))
+}
+
 public struct FrameCodec: Sendable {
     public init() {}
 
@@ -104,6 +126,7 @@ public final class SocketClient {
 
     public func connect() throws {
         let s = socket(AF_UNIX, SOCK_STREAM, 0)
+        if s >= 0 { proctorSuppressSIGPIPE(s) }
         guard s >= 0 else {
             throw AgentError(code: .agentUnavailable, message: "could not create a socket",
                              remedy: "This is a local resource failure; retry.")

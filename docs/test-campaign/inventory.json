@@ -5047,6 +5047,21 @@
         "REQ-046"
       ],
       "note": "Measured 2026-08-25. Every fake window in ProctorAgentTests carried `cgWindowID: 7`, and 7 is a real window on a running Mac \u2014 Notification Centre, layer 21. Session.cursorPlane(for:) resolves a plane by asking whether the id is in the on-screen window list, so 'the plane comes from the window list, not from the handle's beliefs' passed or failed according to whether Notification Centre was up. It failed once in a full run and passed on an immediate re-run of the same suite, which is the worst shape a failure can take: a re-run is what a reader does, and it is what hid this. Fixed by TestWindowIDs.absent(), which reads the live list and takes one above the highest number on it, and by the test asserting that absence before resting on it \u2014 a fixture that stops being absent now makes the test say so rather than silently invert what it proves. evidence/PRO-0148/def-337-flaky-fixture.txt"
+    },
+    {
+      "id": "DEF-338",
+      "title": "A write to a socket whose peer had closed killed the process by signal, silently",
+      "status": "fixed",
+      "severity": "high",
+      "surfaces": [
+        "SURF-001",
+        "SURF-012"
+      ],
+      "requirements": [
+        "REQ-035",
+        "REQ-053"
+      ],
+      "note": "Measured 2026-08-25. SocketClient set no SO_NOSIGPIPE, and neither did the agent's listener or its accepted descriptors. A two-write probe against a listener that accepts and closes exits 141 \u2014 128 + 13 \u2014 with no error returned and nothing written anywhere. proctor-shim writes every tool call down that socket, so an agent dying mid-write took the MCP server with it: the host saw its server vanish, the caller never received agentUnavailable, and no audit record was written because the process was already gone. Fixed by proctorSuppressSIGPIPE() at all four socket sites plus the accepted descriptor, which does not inherit the option. Set per socket rather than by a process-wide SIG_IGN, because the Reflector is embedded in somebody else's application. evidence/PRO-0145/def-338-sigpipe.txt"
     }
   ],
   "journey": [

@@ -38,6 +38,14 @@ final class SocketServer: @unchecked Sendable {
         unlink(path)
 
         let fd = socket(AF_UNIX, SOCK_STREAM, 0)
+        // A write to a peer that has gone raises SIGPIPE, whose default
+        // disposition is to terminate. The Reflector is embedded in somebody
+        // else's application, so taking that process down over a dropped
+        // debugging socket is the worst version of this fault.
+        if fd >= 0 {
+            var on: Int32 = 1
+            setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &on, socklen_t(MemoryLayout<Int32>.size))
+        }
         guard fd >= 0 else { return }
 
         var addr = sockaddr_un()

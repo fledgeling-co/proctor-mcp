@@ -1,0 +1,22 @@
+{
+  "case": "CASE-0809",
+  "requirement": "REQ-053",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T04:16:10Z",
+  "tree": {
+    "commit": "68a31a7",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The relation is between two batch sizes rather than against a fixed count: a leak of one descriptor per call makes the second batch's growth about four times the first's.",
+  "evidence": [
+    {
+      "path": "Tests/ProctorCoreTests/SocketBoundaryChaosTests.swift",
+      "sha256_16": "a7fb10b3892649ee",
+      "present": true
+    }
+  ]
+}

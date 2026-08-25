@@ -1,4 +1,5 @@
 import Foundation
+import ProctorCore
 import Darwin
 import Security
 import os
@@ -96,6 +97,9 @@ final class UnlockBroker: @unchecked Sendable {
         unlink(Self.socketPath)
 
         let fd = socket(AF_UNIX, SOCK_STREAM, 0)
+        // A write to a peer that has gone raises SIGPIPE, whose default
+        // disposition is to terminate. See proctorSuppressSIGPIPE.
+        if fd >= 0 { proctorSuppressSIGPIPE(fd) }
         guard fd >= 0 else { log.error("socket() failed errno=\(errno)"); return }
 
         var addr = sockaddr_un()

@@ -38,6 +38,9 @@ final class Server: @unchecked Sendable {
         unlink(path)
 
         let fd = socket(AF_UNIX, SOCK_STREAM, 0)
+        // A write to a peer that has gone raises SIGPIPE, whose default
+        // disposition is to terminate. See proctorSuppressSIGPIPE.
+        if fd >= 0 { proctorSuppressSIGPIPE(fd) }
         guard fd >= 0 else { throw Server.errno("socket") }
 
         var address = sockaddr_un()
@@ -102,6 +105,11 @@ final class Server: @unchecked Sendable {
     private func acceptLoop(_ fd: Int32) {
         while !isStopping {
             let client = accept(fd, nil, nil)
+            // An ACCEPTED descriptor does not inherit SO_NOSIGPIPE from its
+            // listener, and the accepted side is the one the agent writes
+            // replies down. A shim that hangs up while a long batch is running
+            // is ordinary, and it must not take the agent with it.
+            if client >= 0 { proctorSuppressSIGPIPE(client) }
             if client < 0 {
                 if Darwin.errno == EINTR { continue }
                 if isStopping { break }

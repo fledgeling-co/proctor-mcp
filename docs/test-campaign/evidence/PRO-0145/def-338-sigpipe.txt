@@ -1,0 +1,36 @@
+PRO-0145 / DEF-338 — a write to a closed peer killed the process by signal
+date: Tue 25 Aug 2026 14:15:45 AEST
+
+== THE PROBE, before the fix ==
+A listener that accepts and immediately closes; the client writes twice.
+  /tmp/sigpipe_probe  ->  exit 141   (128 + 13 = SIGPIPE)
+No error was returned, nothing was written anywhere, and the process was gone.
+
+== WHY IT MATTERS ==
+proctor-shim writes every tool call down this socket. An agent dying mid-write
+takes the MCP server with it: the host sees its server vanish, the caller never
+receives agentUnavailable, and no audit record is written because the process is
+already dead. The accepted side has the same fault in reverse — a shim hanging up
+during a long batch would have taken the agent down.
+
+== THE FIX ==
+proctorSuppressSIGPIPE() sets SO_NOSIGPIPE per socket, turning it into EPIPE on
+the call, which every send path here already handles as 'the connection closed
+while sending'. Set per socket rather than by installing a process-wide SIG_IGN:
+a library has no business changing a signal disposition its host may depend on,
+and the Reflector is embedded in somebody else's application.
+
+Four sites, plus the accepted descriptor, which does NOT inherit the option:
+  Sources/ProctorCore/Transport.swift:18:/// `SO_NOSIGPIPE` turns it into `EPIPE` on the call, which every send path here
+  Sources/ProctorCore/Transport.swift:129:        if s >= 0 { proctorSuppressSIGPIPE(s) }
+  Sources/ProctorReflector/SocketServer.swift:47:            setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &on, socklen_t(MemoryLayout<Int32>.size))
+  Sources/ProctorAgent/Server.swift:42:        // disposition is to terminate. See proctorSuppressSIGPIPE.
+  Sources/ProctorAgent/Server.swift:43:        if fd >= 0 { proctorSuppressSIGPIPE(fd) }
+  Sources/ProctorAgent/Server.swift:108:            // An ACCEPTED descriptor does not inherit SO_NOSIGPIPE from its
+  Sources/ProctorAgent/Server.swift:112:            if client >= 0 { proctorSuppressSIGPIPE(client) }
+  Sources/ProctorAgent/Server.swift:120:            setsockopt(client, SOL_SOCKET, SO_NOSIGPIPE, &on, socklen_t(MemoryLayout<Int32>.size))
+
+== AFTER ==
+Test "a listener that hangs up on accept is an error, not a signal" passes.
+Before the fix the whole test process died at that line and the suite reported
+nothing at all, which is exactly how the fault presented.

@@ -1,7 +1,7 @@
 # Spec PRO-0140 — Hermetic Multi-Process Chaos and Recovery Fixture
 
 **Brief:** `docs/features-to-triage/132-hermetic-multi-process-chaos-fixture.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-012, SURF-015
 **Defects:** none

@@ -48,12 +48,12 @@
   },
   "run-lifecycle": {
    "coverage": 1.0,
-   "covered": 44,
+   "covered": 46,
    "green": true,
    "lineage_gaps": 0,
    "surfaces_matched": 9,
    "threshold": 1.0,
-   "total": 44
+   "total": 46
   },
   "surface-conformance": {
    "coverage": 0.8403,
@@ -65,7 +65,7 @@
    "total": 119
   }
  },
- "generated_at": "2026-08-25T04:08:37.202497+00:00",
+ "generated_at": "2026-08-25T04:20:40.868893+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -166,9 +166,9 @@
    "unsourced": 0
   },
   {
-   "figures": 2,
+   "figures": 4,
    "file": "stdio://proctor-shim",
-   "sourced": 2,
+   "sourced": 4,
    "unsourced": 0
   },
   {

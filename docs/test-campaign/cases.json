@@ -9077,5 +9077,46 @@
       "scripts/campaign/mutation_report.py"
     ],
     "note": "A mutation record's byte offset is not durable. Re-applying eleven survivors by `start`/`end` against a tree many commits on refused every one: the offsets are valid only against the tree that produced them. Re-locating by line and content worked, and an anchor appearing twice in a file (TUILayout's overflow guard) is reported AMBIGUOUS rather than spliced at the first match. Only KILLED moves the count; EQUIVALENT and NOT RE-APPLIED are printed and do not."
+  },
+  {
+    "id": "CASE-0808",
+    "req": "REQ-035",
+    "surface": "SURF-001",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The negative arm is the standalone probe at exit 141, recorded before the fix. With SO_NOSIGPIPE removed the test process dies at the write and the suite reports nothing at all \u2014 which is how the fault presented and why nothing had caught it.",
+    "defects": [
+      "DEF-338"
+    ],
+    "witness": {
+      "recorder": "the process exit status itself, read by the shell \u2014 141 is 128 + 13 and is reported by the kernel rather than by any code under test",
+      "effect": "ipc",
+      "count": 1
+    },
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0145/def-338-sigpipe.txt",
+      "Tests/ProctorCoreTests/SocketBoundaryChaosTests.swift",
+      "Sources/ProctorCore/Transport.swift"
+    ],
+    "note": "DEF-338, found by PRO-0145's chaos fixture before it measured anything it was written for. A real AF_UNIX listener that accepts and closes; the client writes into the corpse. Before the fix that raised SIGPIPE and terminated the process. Fixed at four socket sites and at the accepted descriptor, which does not inherit the option \u2014 the agent writing a reply to a shim that hung up mid-batch is the same fault in reverse."
+  },
+  {
+    "id": "CASE-0809",
+    "req": "REQ-053",
+    "surface": "SURF-001",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "plane": "in-tree",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The relation is between two batch sizes rather than against a fixed count: a leak of one descriptor per call makes the second batch's growth about four times the first's.",
+    "defects": [],
+    "evidence": [
+      "Tests/ProctorCoreTests/SocketBoundaryChaosTests.swift"
+    ],
+    "note": "PRO-0140/PRO-0141. Descriptor exhaustion measured by SCALING, not by count. A first version compared a process-wide descriptor count either side of each call and failed at 13 against 5: Swift Testing runs suites in parallel, so the count moves for reasons unrelated to the test \u2014 and a second version failed with a NEGATIVE delta when another suite closed a file between the readings. Growth is what a leak produces, so growth is what is measured, over 10 calls and then 40. Separately: reading the count off getdtablesize() made a million syscalls per call here, because the soft RLIMIT_NOFILE is 1,048,576, and the suite appeared to hang rather than to fail. /dev/fd is exact and costs one readdir."
   }
 ]

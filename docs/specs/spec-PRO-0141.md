@@ -1,7 +1,7 @@
 # Spec PRO-0141 — Process Lifecycle Chaos and Recovery Harness
 
 **Brief:** `docs/features-to-triage/133-process-lifecycle-chaos-and-recovery-harness.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-012
 **Defects:** none

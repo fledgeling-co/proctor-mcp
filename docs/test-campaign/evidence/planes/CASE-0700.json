@@ -5,9 +5,9 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T04:05:03Z",
+  "recordedAt": "2026-08-25T04:16:10Z",
   "tree": {
-    "commit": "b4f94d2",
+    "commit": "68a31a7",
     "dirty": true
   },
   "witness": {
