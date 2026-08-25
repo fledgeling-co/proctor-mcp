@@ -9157,5 +9157,38 @@
       "Sources/ProctorCore/IOSDevice.swift"
     ],
     "note": "PRO-0122 acceptance 2, and the teardown's scoping. A truncated listing is an actionFailed naming how many bytes arrived and what to run by hand, not a DecodingError a caller cannot act on \u2014 measured 2026-08-20 when a loaded parallel run produced 'Unexpected end of file' and the raw error travelled all the way out. An unavailable device is kept and marked rather than filtered, because 'there is a device here you cannot use' and 'there is no device here' are different answers. And a scratch that never minted a udid tears down to a no-op rather than falling back to a delete by name, which is how a cleanup handler reaches a device somebody else was using."
+  },
+  {
+    "id": "CASE-0812",
+    "req": "REQ-190",
+    "surface": "SURF-037",
+    "oracle": "metamorphic",
+    "lane": "headless",
+    "plane": "in-tree",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The relation IS the arm: the same words rendered at two densities. A box reported in pixels moves with the density and one reported in points does not, and the case asserts both directions \u2014 so a field that stopped being normalised fails here rather than on somebody's external display.",
+    "defects": [],
+    "evidence": [
+      "Tests/ProctorAgentTests/HighDPIScaleHarnessTests.swift",
+      "docs/test-campaign/evidence/PRO-0128/scale-and-ocr.txt"
+    ],
+    "note": "PRO-0128. Apple Vision reads the same phrase off a 1x and a 2x render and the two are compared rather than scored. Two API facts were found by getting them wrong first, and both are recorded in the test: VisionCapture.toNative DIVIDES, because it maps a coordinate the model returned in the normalised image back to native pixels \u2014 a draft asserting it multiplied read 10 against 90 at scale 3. And boundingBox is crop PIXELS while pointBox is points; a draft asserting invariance on boundingBox read 22 against 376. Both are the mistake a caller makes, so the case pins both fields."
+  },
+  {
+    "id": "CASE-0813",
+    "req": "REQ-190",
+    "surface": "SURF-037",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "in-tree",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The harness is armed against its own failure path: a throw inside a scoped scale leaves the environment restored, and a second restore is a no-op. A version without the defer leaves the scale set for every test that runs after it.",
+    "defects": [],
+    "evidence": [
+      "Tests/ProctorAgentTests/HighDPIScaleHarnessTests.swift"
+    ],
+    "note": "PRO-0131. Density becomes a thing a test sets rather than one the machine happens to have. Every display on this Mac is 2x, so every geometry assertion here had been written against 2 and a 1x display \u2014 an external monitor, a screen-shared session, a CI runner \u2014 had never been exercised. Regions place at 1, 1.5, 2 and 3 with the origin flooring and the far edge ceiling, so the whole of a requested region survives rather than being shaved by rounding; a region off the frame is clamped and says so; one entirely outside is a named failure rather than an empty image. The restore runs on the throwing path because Swift Testing runs suites in parallel, and a leaked environment value fails somewhere else entirely."
   }
 ]

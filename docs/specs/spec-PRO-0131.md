@@ -1,7 +1,7 @@
 # Spec PRO-0131 — High-DPI Display Scale Factor Injection Helper
 
 **Brief:** `docs/features-to-triage/123-high-dpi-display-scale-factor-injection-helper.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-007
 **Defects:** none

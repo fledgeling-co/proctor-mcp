@@ -1,7 +1,7 @@
 # Spec PRO-0128 — Native OCR and High-DPI Inspection Fixture
 
 **Brief:** `docs/features-to-triage/120-native-ocr-and-high-dpi-inspection-fixture.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-007
 **Defects:** BLOCK-0006

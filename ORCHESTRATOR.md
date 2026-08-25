@@ -3408,13 +3408,13 @@ grok-4.6 at xhigh returned **UNSOUND** on `brief_validation.py`'s first join, an
 
 | Gate | Exit | Reading |
 |---|:---:|---|
-| `scripts/test.sh` | **0** | **2,151 tests in 271 suites** |
+| `scripts/test.sh` | **0** | **2,158 tests in 272 suites** |
 | `claim_provenance.py --gate` | **0** | 0 contradicted figures in the artifacts another session plans from |
 | `capture_manifest.py --gate` | **0** | 54 images across 4 declared roots |
 | `skill_overlay_reader.py --gate` | **0** | no overlay addresses this run's family |
 | `verification_record.py check` | **0** | 2 records · 1 substitution, with its reason |
 | `campaign.py check` | **0** | 483 pass · 3 n/a of **486**; all three censuses declared |
-| `strict-check.py` | **0** | **ratchet 426 held** |
+| `strict-check.py` | **0** | **ratchet 428 held** |
 | `vacuity-check.py --gate` | **0** | 0 findings, 29/29 providers resolved |
 | `capture-lineage.py --gate` | **0** | ratchet 6 held |
 | `ledger_gate.py` | **0** | 152 rows · 152 specs · 0 declared without spec |

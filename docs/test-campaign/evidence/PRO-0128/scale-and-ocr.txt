@@ -1,0 +1,35 @@
+PRO-0128 / PRO-0131 — density as a thing a test sets, and OCR read across two of them
+date: Tue 25 Aug 2026 14:36:56 AEST
+
+== TWO API FACTS THE FIXTURE FOUND BY GETTING THEM WRONG ==
+
+1. VisionCapture.toNative DIVIDES.
+   It takes a coordinate the model returned in the NORMALISED image it was
+   handed and maps it back to native pixels. A first draft asserted it
+   multiplied and read n.w = 10 against an expected 90 at scale 3. Getting
+   this backwards puts every assertion at scale-times the right place on a
+   Retina display, which is every display on this Mac.
+
+2. RecognizedTextItem.boundingBox is CROP PIXELS; pointBox is points.
+   Wire.swift:511-512 says so. A first draft asserted scale invariance on
+   boundingBox and read 22 against 376 across 1x and 2x — the field working
+   exactly as documented, and the test reaching for the wrong one. That is
+   the mistake a caller makes, so the test now pins BOTH: boundingBox must
+   grow with the density, and pointBox must not.
+
+== WHAT RUNS ==
+  􀟈  Test "the same words read the same at 1x and 2x, and the boxes land in the same place" started.
+  􀟈  Test "a region places into a frame at 1x and 2x, and the pixel rect scales with it" started.
+  􀟈  Test "point and pixel transforms round-trip at every scale this lane sees" started.
+  􀟈  Test "a scale is set for the duration and restored afterwards, including on a throw" started.
+  􀟈  Test "restoring twice is a no-op, so a defer and an explicit call cannot fight" started.
+  􀟈  Test "a blank frame reads as nothing found, not as a failure and not as text" started.
+  􀟈  Test "a region past the frame's edge is clamped and says so, at either scale" started.
+  􁁛  Test "a region past the frame's edge is clamped and says so, at either scale" passed after 0.001 seconds.
+  􁁛  Test "point and pixel transforms round-trip at every scale this lane sees" passed after 0.001 seconds.
+  􁁛  Test "a region places into a frame at 1x and 2x, and the pixel rect scales with it" passed after 0.001 seconds.
+  􁁛  Test "restoring twice is a no-op, so a defer and an explicit call cannot fight" passed after 0.001 seconds.
+  􁁛  Test "a scale is set for the duration and restored afterwards, including on a throw" passed after 0.001 seconds.
+  􁁛  Test "a blank frame reads as nothing found, not as a failure and not as text" passed after 0.153 seconds.
+  􁁛  Test "the same words read the same at 1x and 2x, and the boxes land in the same place" passed after 0.251 seconds.
+  􁁛  Test run with 7 tests in 1 suite passed after 0.251 seconds.

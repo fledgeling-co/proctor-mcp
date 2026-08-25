@@ -1,0 +1,22 @@
+{
+  "case": "CASE-0813",
+  "requirement": "REQ-190",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T04:37:17Z",
+  "tree": {
+    "commit": "8dcc784",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The harness is armed against its own failure path: a throw inside a scoped scale leaves the environment restored, and a second restore is a no-op. A version without the defer leaves the scale set for every test that runs after it.",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/HighDPIScaleHarnessTests.swift",
+      "sha256_16": "99cb7cc0c8ad4395",
+      "present": true
+    }
+  ]
+}

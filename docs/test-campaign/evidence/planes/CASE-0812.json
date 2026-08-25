@@ -1,0 +1,27 @@
+{
+  "case": "CASE-0812",
+  "requirement": "REQ-190",
+  "lane": "headless",
+  "oracle": "metamorphic",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T04:37:17Z",
+  "tree": {
+    "commit": "8dcc784",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The relation IS the arm: the same words rendered at two densities. A box reported in pixels moves with the density and one reported in points does not, and the case asserts both directions \u2014 so a field that stopped being normalised fails here rather than on somebody's external display.",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/HighDPIScaleHarnessTests.swift",
+      "sha256_16": "99cb7cc0c8ad4395",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0128/scale-and-ocr.txt",
+      "sha256_16": "504464c9a14119d8",
+      "present": true
+    }
+  ]
+}
