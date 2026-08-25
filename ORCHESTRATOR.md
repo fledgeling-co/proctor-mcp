@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 27 open on `main`.** 19 of the 31 rows in it are Merged; 12 remain `Ready for AI`, all of them live-lane fixture harnesses. Waves 9 through 26 are closed and merged. The three censuses test-campaign 0.14.1 added are declared, and reckon reports 9 pieces of work remaining across 970 rows.
-**Updated:** 2026-08-25 — Wave 27. Gate: 2,129 tests in 267 suites, campaign check 0, reckon check and ratchet clean. `main` is 470+ commits ahead of `origin` and unpushed.
+**Status:** **Wave 27 open on `main`.** 24 of the 31 rows in it are Merged; 7 remain `Ready for AI`, all of them live-lane fixture harnesses for the iOS, guest-VM and vision lanes. Waves 9 through 26 are closed and merged. The three censuses test-campaign 0.14.1 added are declared, and reckon reports 9 pieces of work remaining across 979 rows.
+**Updated:** 2026-08-25 — Wave 27. Gate: 2,146 tests in 270 suites, campaign check 0, reckon check and ratchet clean. `main` is 470+ commits ahead of `origin` and unpushed.
 
 ### Repository state (reconciled 2026-08-17)
 - **Git remote:** `origin` → `github.com/fledgeling-co/proctor-mcp`. Local `main` is up to date with `origin/main` at tag `v0.2.0`.
@@ -3388,23 +3388,33 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 ### What remains
 
-**12 ledger rows at `Ready for AI`** — PRO-0122, 0123, 0124, 0125, 0126, 0127, 0128, 0131, 0138, 0140, 0141, 0145. These are fixture harnesses: iOS simulator boot and teardown, guest VM lifecycle and health telemetry, Maestro flow, native OCR and high-DPI, mutation hardening, and process-chaos and socket-boundary fixtures. **None is lane-blocked** — `proctor_doctor` reports the ios lane ready (simctl 26.6, maestro 2.4.0) and the guest lane ready (lume, prlctl) on this machine, so each is buildable here.
+**7 ledger rows at `Ready for AI`** — PRO-0122 and PRO-0126 (iOS simulator boot, headless provisioning and teardown), PRO-0123 and PRO-0127 (guest VM lifecycle, health telemetry and socket probe), PRO-0124 (Maestro flow), PRO-0128 and PRO-0131 (native OCR and high-DPI scale injection). **None is lane-blocked** — `proctor_doctor` reports the ios lane ready (simctl 26.6, maestro 2.4.0) and the guest lane ready (lume, prlctl) on this machine, so each is buildable here.
 
-**7 untriaged briefs** — 120, 123, 140, 141, 142, 143, 144. They need triage and ids before they can be built.
+**7 untriaged briefs** — 120, 123, 140, 141, 142, 143, 144. Five of them were triaged into PRO-0148..PRO-0152 and built; 120 and 123 are claimed by PRO-0128 and PRO-0131, which are two of the seven rows above.
 
-**2 evidence rows that are honestly unmeasured** — REQ-025 is `deferred` against an upstream Apple bug (FB21748086 / trycua #870), and REQ-072 is a `ceiling`, a limit on how far a plane disclosure can reach, recorded on purpose. `campaign.py`'s evidence vocabulary has no word for either, so `unmeasured` with the reason visible is where they belong.
+**2 evidence rows that are honestly unmeasured** — REQ-025 is `deferred` against an upstream Apple bug (FB21748086 / trycua #870), and REQ-072 is a `ceiling`, a limit on how far a plane disclosure can reach, recorded on purpose. `campaign.py`'s evidence vocabulary has no word for either.
+
+### Three defects this wave found by driving Proctor at Proctor
+
+- **DEF-336 (fixed).** `proctor_act` resolved a window handle before any step, so a menu-bar-only app could not be driven at all — Proctor's own included. `WindowlessActuation` admits an app handle when every step addresses the app plane and refuses by name when one does not.
+- **DEF-337 (fixed).** Every fake window carried `cgWindowID: 7`, which is Notification Centre on a running Mac. A suite assertion passed or failed according to whether that window was up.
+- **DEF-338 (fixed, high).** No socket in this package set `SO_NOSIGPIPE`. A write to a peer that had closed raised SIGPIPE and terminated the process — measured at exit 141. `proctor-shim` writes every tool call down that socket, so an agent dying mid-write took the MCP server with it silently.
+
+### One correction taken from outside the family
+
+grok-4.6 at xhigh returned **UNSOUND** on `brief_validation.py`'s first join, and was right: `case_by_surface` returns every case on a surface, so a brief could be retired on evidence about a different requirement that happened to share one. Brief 01 was retired on six cases where only two cite REQ-001. 112 planted prose sections reverted, 112 briefs re-validated on the citing join with zero mismatches, and the verdict moved to frontmatter where reckon's body scan cannot read it back as a citation.
 
 ### Standing Gates on `main`
 
 | Gate | Exit | Reading |
 |---|:---:|---|
-| `scripts/test.sh` | **0** | **2,129 tests in 267 suites** |
+| `scripts/test.sh` | **0** | **2,146 tests in 270 suites** |
 | `claim_provenance.py --gate` | **0** | 0 contradicted figures in the artifacts another session plans from |
 | `capture_manifest.py --gate` | **0** | 54 images across 4 declared roots |
 | `skill_overlay_reader.py --gate` | **0** | no overlay addresses this run's family |
 | `verification_record.py check` | **0** | 2 records · 1 substitution, with its reason |
-| `campaign.py check` | **0** | 477 pass · 3 n/a of **480**; all three censuses declared |
-| `strict-check.py` | **0** | **ratchet 420 held** |
+| `campaign.py check` | **0** | 483 pass · 3 n/a of **486**; all three censuses declared |
+| `strict-check.py` | **0** | **ratchet 424 held** |
 | `vacuity-check.py --gate` | **0** | 0 findings, 29/29 providers resolved |
 | `capture-lineage.py --gate` | **0** | ratchet 6 held |
 | `ledger_gate.py` | **0** | 152 rows · 152 specs · 0 declared without spec |
@@ -3412,4 +3422,4 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `spec_symbol_linter.py --gate` | **0** | ratchet 827 held |
 | `mutation_report.py --gate` | **0** | ratchet 47 survivors held |
 | `test_instruments.py` | **0** | **338 passed, 0 failed** |
-| `reckon.py check` | **0** | 974 rows · 9 remaining · gate clean · ratchet clean |
+| `reckon.py check` | **0** | 979 rows · 9 remaining · gate clean · ratchet clean |
